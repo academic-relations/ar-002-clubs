@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "paths": {
+      "@sparcs-clubs/api/*": ["./*"]
+      // TODO: change to @/*
+    }
+  },
+  "include": ["./src/**/*.ts"]
+}
