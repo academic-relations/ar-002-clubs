@@ -8,6 +8,12 @@ const fonts = {
   FAMILY: {
     PRETENDARD: "var(--next-font-family-pretendard)",
   },
+  WEIGHT: {
+    REGULAR: 400,
+    MEDIUM: 500,
+    SEMIBOLD: 600,
+    BOLD: 700,
+  },
 };
 
 export default fonts;
