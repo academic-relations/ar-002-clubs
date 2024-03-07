@@ -2,7 +2,7 @@ import path from "path";
 import { createLogger, format, transports } from "winston";
 import DailyRotateFileTransport from "winston-daily-rotate-file";
 
-import { env } from "@biseo/api/env";
+import { env } from "@sparcs-clubs/api/env";
 
 // logger에서 사용할 포맷들을 정의합니다.
 const baseFormat = format.combine(

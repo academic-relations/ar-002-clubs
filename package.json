@@ -13,6 +13,7 @@
     "dev": "dotenv -- pnpm -r --stream --parallel dev",
     "db": "dotenv -- pnpm -F @sparcs-clubs/api db",
     "migrate": "dotenv -- pnpm -F @sparcs-clubs/api migrate",
+    "migrate:dev": "dotenv -- pnpm -F @sparcs-clubs/api migrate:dev",
     "typegen": "pnpm -F @sparcs-clubs/api typegen",
     "typecheck": "pnpm -r typecheck",
     "lint": "pnpm eslint . && pnpm prettier --config ./.prettierrc --check -u .",
