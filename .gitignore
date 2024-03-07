@@ -6,7 +6,8 @@
 
 # IDE Configurations
 .idea
-.vscode
+.vscode/*
+!.vscode/extensions.json
 
 # File system
 **/.DS_Store 
