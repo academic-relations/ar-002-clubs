@@ -1,3 +1,4 @@
+import breakpoint from "./breakpoints";
 import colors from "./colors";
 import sizes from "./sizes";
 import fonts from "./fonts";
@@ -6,6 +7,7 @@ import shadow from "./shadow";
 import zIndices from "./zIndices";
 
 export const theme = {
+  breakpoint,
   colors,
   sizes,
   fonts,
