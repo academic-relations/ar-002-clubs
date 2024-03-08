@@ -15,6 +15,8 @@ import theme from "@sparcs-clubs/web/styles/themes";
 export const UseClientProvider: React.FC<React.PropsWithChildren> = ({
   children = <div />,
 }) => (
-  // @ts-expect-error-next-line
-  <StyledProvider theme={theme}>{children}</StyledProvider>
+  <main>
+    {/* @ts-expect-error-next-line */}
+    <StyledProvider theme={theme}>{children}</StyledProvider>
+  </main>
 );
