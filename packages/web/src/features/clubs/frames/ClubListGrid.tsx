@@ -10,7 +10,7 @@ import type { ClubInfo } from "@sparcs-clubs/web/features/clubs/types/clubs.type
 const ClubListGridInner = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, calc(25% - 16px));
+  grid-template-columns: repeat(4, calc((100% - 48px) / 4));
   row-gap: 16px;
   column-gap: 16px;
   grid-auto-flow: row;

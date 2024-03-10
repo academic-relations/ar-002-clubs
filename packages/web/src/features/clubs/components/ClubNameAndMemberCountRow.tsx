@@ -4,10 +4,13 @@ import React from "react";
 import styled from "styled-components";
 
 const ClubNameBlock = styled.div`
-  width: 129px;
+  width: 100%;
   height: 24px;
   font-size: 20px;
   line-height: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const ClubMemberCountBlock = styled.div`
@@ -28,7 +31,7 @@ const PersonIcon = styled.div`
 const ClubNameAndMemberCountRowInner = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  column-gap: 20px;
   align-items: center;
   width: 100%;
   margin-bottom: 16px;
