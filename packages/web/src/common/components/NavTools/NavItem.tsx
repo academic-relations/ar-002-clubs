@@ -22,12 +22,12 @@ const StyledLink = styled(Link)`
 
 type Path = {
   name: string;
-  path: string;
+  path?: string;
 };
 
-const NavItem = ({ name, path }: Path) => (
+const NavItem = ({ name, path = "" }: Path) => (
   <NavItemInner>
-    <StyledLink href={path}>{name}</StyledLink>
+    {path ? <StyledLink href={path}>{name}</StyledLink> : name}
   </NavItemInner>
 );
 

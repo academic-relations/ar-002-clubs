@@ -7,7 +7,8 @@ import "@sparcs-clubs/web/styles/globals.css";
 import { pretendard } from "@sparcs-clubs/web/styles/fonts/googleFonts";
 import StyledComponentsRegistry from "@sparcs-clubs/web/common/libs/styledComponents/StyledComponentRegistry";
 import Header from "@sparcs-clubs/web/common/components/Header";
-import { constants } from "@sparcs-clubs/web/constants";
+import Footer from "@sparcs-clubs/web/common/components/Footer";
+
 import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
 
 export const metadata: Metadata = {
@@ -20,9 +21,12 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => (
     <body>
       <StyledComponentsRegistry>
         <UseClientProvider>
-          <Header paths={constants.paths} />
+          <Header />
         </UseClientProvider>
         {children}
+        <UseClientProvider>
+          <Footer />
+        </UseClientProvider>
       </StyledComponentsRegistry>
     </body>
   </html>

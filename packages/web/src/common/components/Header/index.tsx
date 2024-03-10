@@ -1,10 +1,11 @@
 "use client";
 
-import type { Paths } from "@sparcs-clubs/web/constants/paths";
+import navPaths from "@sparcs-clubs/web/constants/nav";
+import NavList from "@sparcs-clubs/web/common/components/NavTools/NavList";
+
 import React from "react";
 import styled from "styled-components";
 import Logo from "./Logo";
-import NavList from "./NavList";
 import Login from "./Login";
 
 const TopBar = styled.div`
@@ -51,13 +52,13 @@ const HeaderInner = styled.div`
   background-color: rgba(255, 255, 255, 0.8);
 `;
 
-const Header = ({ paths }: { paths: Paths }) => (
+const Header = () => (
   <HeaderInner>
     <TopBar />
     <NavInner>
       <Logo />
       <Login />
-      <StyledNavList {...paths} />
+      <StyledNavList keys={navPaths.header} />
     </NavInner>
   </HeaderInner>
 );
