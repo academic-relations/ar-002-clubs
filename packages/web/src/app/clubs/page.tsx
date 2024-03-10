@@ -5,6 +5,7 @@ import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientP
 import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import { useState } from "react";
 import clubsData from "./data/clubs";
 
 interface ClubsData {
@@ -31,6 +32,23 @@ const Section = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+`;
+
+const ClubCategoryTitle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: space-between;
+`;
+
+const MoreInfo = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration-line: underline;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
 `;
 
 const CardInner = styled.div`
@@ -126,15 +144,27 @@ const CardGrid: React.FC<CardGridProps> = ({ clubsDataList = [] }) => {
   );
 };
 
-const Clubs = () => (
-  <main>
-    <UseClientProvider>
-      <Section>
-        <SectionTitle size="lg">생활문화 ({clubsData.length})</SectionTitle>
-        <CardGrid clubsDataList={clubsData} />
-      </Section>
-    </UseClientProvider>
-  </main>
-);
+const Clubs = () => {
+  const [isExpanded, setIsExpanded] = useState(true);
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  return (
+    <main>
+      <UseClientProvider>
+        <Section>
+          <ClubCategoryTitle>
+            <SectionTitle size="lg">생활문화 ({clubsData.length})</SectionTitle>
+            <MoreInfo onClick={handleToggle}>
+              {isExpanded ? "접기" : "펼치기"}
+            </MoreInfo>
+          </ClubCategoryTitle>
+          {isExpanded && <CardGrid clubsDataList={clubsData} />}
+        </Section>
+      </UseClientProvider>
+    </main>
+  );
+};
 
 export default Clubs;
