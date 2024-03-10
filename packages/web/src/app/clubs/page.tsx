@@ -36,13 +36,41 @@ const Section = styled.div`
 const CardInner = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 16px;
+  flex: 1 0 0;
 `;
 
 const ClubName = styled.div`
+  flex: 1 0 0;
   font-weight: 500;
   font-size: 20px;
   line-height: 24px;
+`;
+
+const ClubCardHead = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  align-self: stretch;
+`;
+
+const ClubMembers = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
+
+const ClubMembersInner = styled.div`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+`;
+
+const IconPlaceHolder = styled.div`
+  width: 16px;
+  height: 16px;
+  background-color: #000;
 `;
 
 const ClubDetail = styled.div`
@@ -58,7 +86,7 @@ const getTagColor = (clubType: string) => {
     case "가동아리":
       return "ORANGE";
     default:
-      return "BLUE"; // 기본값
+      return "BLUE";
   }
 };
 
@@ -78,7 +106,13 @@ const CardGrid: React.FC<CardGridProps> = ({ clubsDataList = [] }) => {
       {sortedClubs.map(club => (
         <Card key={club.id}>
           <CardInner>
-            <ClubName>{club.clubName}</ClubName>
+            <ClubCardHead>
+              <ClubName>{club.clubName}</ClubName>
+              <ClubMembers>
+                <IconPlaceHolder />
+                <ClubMembersInner>{club.totalMembers}</ClubMembersInner>
+              </ClubMembers>
+            </ClubCardHead>
             <ClubDetail>
               회장 {club.clubPresident}
               {club.advisor ? ` | 지도교수 ${club.advisor}` : ""}
