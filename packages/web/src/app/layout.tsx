@@ -8,6 +8,7 @@ import { pretendard } from "@sparcs-clubs/web/styles/fonts/googleFonts";
 import StyledComponentsRegistry from "@sparcs-clubs/web/common/libs/styledComponents/StyledComponentRegistry";
 import Header from "@sparcs-clubs/web/common/components/Header";
 import { constants } from "@sparcs-clubs/web/constants";
+import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
 
 export const metadata: Metadata = {
   title: "SPARCS Academic Relations Team",
@@ -18,7 +19,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => (
   <html lang="ko-KR" className={classNames(pretendard.variable)}>
     <body>
       <StyledComponentsRegistry>
-        <Header paths={constants.paths} />
+        <UseClientProvider>
+          <Header paths={constants.paths} />
+        </UseClientProvider>
         {children}
       </StyledComponentsRegistry>
     </body>

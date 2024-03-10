@@ -1,17 +1,28 @@
+"use client";
+
 import type { Paths } from "@sparcs-clubs/web/constants/paths";
 import React from "react";
 import styled from "styled-components";
 import NavItem from "./NavItem";
 
 const NavListInner = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 60px;
 `;
 
-const NavList = ({ CLUBS, VOTING, COMMUNITY, SERVICE_REQUEST }: Paths) => (
-  <NavListInner>
+interface NavListProps extends Paths {
+  className?: string;
+}
+
+const NavList: React.FC<NavListProps> = ({
+  className = "",
+  CLUBS,
+  VOTING,
+  COMMUNITY,
+  SERVICE_REQUEST,
+}) => (
+  <NavListInner className={className}>
     <NavItem {...CLUBS} />
     <NavItem {...VOTING} />
     <NavItem {...COMMUNITY} />

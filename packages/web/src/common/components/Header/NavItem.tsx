@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import styled from "styled-components";
 import Link from "next/link";
@@ -13,6 +15,11 @@ const NavItemInner = styled.div`
   color: ${({ theme }) => theme.colors.BLACK};
 `;
 
+const StyledLink = styled(Link)`
+  color: ${({ theme }) => theme.colors.BLACK};
+  text-decoration: none;
+`;
+
 type Path = {
   name: string;
   path: string;
@@ -20,7 +27,7 @@ type Path = {
 
 const NavItem = ({ name, path }: Path) => (
   <NavItemInner>
-    <Link href={path}>{name}</Link>
+    <StyledLink href={path}>{name}</StyledLink>
   </NavItemInner>
 );
 

@@ -5,6 +5,7 @@
  */
 
 const paths = {
+  HOME: { name: "홈", path: "/" },
   CLUBS: { name: "동아리", path: "/clubs" },
   VOTING: { name: "의결기구", path: "/voting" },
   COMMUNITY: { name: "소통", path: "/community" },
