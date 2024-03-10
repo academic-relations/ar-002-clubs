@@ -25,7 +25,7 @@ const ClubsSectionFrame: React.FC<ClubsSectionFrameProps> = ({
   clubs_list,
 }) => (
   <ClubClassSectionFrameInner>
-    <SectionTitle>{`${clubs_class} (${clubs_list.length.toString()})`}</SectionTitle>
+    <SectionTitle size="lg">{`${clubs_class} (${clubs_list.length.toString()})`}</SectionTitle>
     <ClubListGrid clubs_list={clubs_list} />
   </ClubClassSectionFrameInner>
 );
