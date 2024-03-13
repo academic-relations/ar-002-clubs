@@ -16,8 +16,9 @@ const CardInner = styled.div`
   box-shadow: ${({ theme }) => theme.shadow.md};
 `;
 
-const Card: React.FC<React.PropsWithChildren> = ({ children = <div /> }) => (
-  <CardInner>{children}</CardInner>
-);
+const Card: React.FC<React.PropsWithChildren & { className?: string }> = ({
+  className = "",
+  children = <div />,
+}) => <CardInner className={className}>{children}</CardInner>;
 
 export default Card;

@@ -49,7 +49,6 @@ const HeaderInner = styled.div`
   top: 0;
   z-index: 10;
   backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.8);
 `;
 
 const Header = () => (
