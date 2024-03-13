@@ -96,7 +96,10 @@ const Clubs = () => {
                       {club.totalMembers}명
                     </ClubCardPopulation>
                   </ClubCardTitle>
-                  <ClubCardText>회장 {club.clubPresident}</ClubCardText>
+                  <ClubCardText>
+                    회장 {club.clubPresident}{" "}
+                    {club.advisor ? ` | 지도교수 ${club.advisor}` : ""}
+                  </ClubCardText>
                   <ClubCardText>{club.characteristicKr}</ClubCardText>
                   <Tag color={getColor(club.clubType)}>{club.clubType}</Tag>
                 </ClubCard>
