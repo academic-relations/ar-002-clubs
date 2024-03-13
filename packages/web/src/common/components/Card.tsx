@@ -14,6 +14,10 @@ const CardInner = styled.div`
   background-color: ${({ theme }) => theme.colors.WHITE};
   border-radius: ${({ theme }) => theme.round.md};
   box-shadow: ${({ theme }) => theme.shadow.md};
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 const Card: React.FC<React.PropsWithChildren> = ({ children = <div /> }) => (
