@@ -91,12 +91,18 @@ interface ClubData {
   totalMembers: number;
 }
 
-interface SectionProps {
-  title: string;
-  datas: Array<ClubData>;
+enum ClubType {
+  EXECUTIVE = "상임동아리",
+  OFFICIAL = "정동아리",
+  INFORMAL = "가동아리",
 }
 
-const Section: FC<SectionProps> = ({ title, datas }) => {
+interface SectionProps {
+  title: string;
+  dataList: Array<ClubData>;
+}
+
+const Section: FC<SectionProps> = ({ title, dataList }) => {
   const [toggle, setToggle] = useState<boolean>(false);
   const toggleHandler = useCallback(
     () => setToggle(!toggle),
@@ -115,19 +121,29 @@ const Section: FC<SectionProps> = ({ title, datas }) => {
     }
   };
 
+  dataList.sort((a, b) => {
+    const aIndex = Object.values(ClubType).findIndex(
+      club => club === (a.clubType as ClubType),
+    );
+    const bIndex = Object.values(ClubType).findIndex(
+      club => club === (b.clubType as ClubType),
+    );
+    return aIndex - bIndex;
+  });
+
   return (
     <>
       <SectionTitleContainer>
         <SectionTitle size="lg">
-          {title} ({datas.length})
+          {title} ({dataList.length})
         </SectionTitle>
         <Toggle onClick={toggleHandler}>{toggle ? `접기` : `펼치기`}</Toggle>
       </SectionTitleContainer>
 
       {toggle && (
         <SectionContainer>
-          {datas.map(data => (
-            <Card>
+          {dataList.map(data => (
+            <Card key={data.id}>
               <ClubNameAndMemberCountContainer>
                 <ClubName>{data.clubName}</ClubName>
                 <ClubMemberCountWithIcon>
@@ -155,7 +171,7 @@ const Clubs = () => (
     <UseClientProvider>
       <PageTitle>동아리 목록</PageTitle>
       <SizedBox height={60} />
-      <Section title="생화문화" datas={clubsData} />
+      <Section title="생화문화" dataList={clubsData} />
     </UseClientProvider>
   </main>
 );
