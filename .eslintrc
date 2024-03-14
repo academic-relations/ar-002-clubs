@@ -105,6 +105,14 @@
         // default values of the optional props must be provided as function arguments
         "functions": "defaultArguments"
       }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
     ]
   },
   "settings": {
