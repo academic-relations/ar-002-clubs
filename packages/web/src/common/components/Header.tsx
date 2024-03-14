@@ -3,6 +3,9 @@
 import React from "react";
 import styled from "styled-components";
 
+import Logo from "./Logo";
+import Icon from "./Icon";
+
 const IdentityBar = styled.div`
   position: relative;
   width: 100%;
@@ -13,10 +16,11 @@ const IdentityBar = styled.div`
 const HeaderInner = styled.div`
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   justify-content: space-between;
   height: 50px;
-  padding: 20px 0;
+  padding: 0 20px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 16px;
   line-height: 20px;
@@ -24,10 +28,13 @@ const HeaderInner = styled.div`
   color: ${({ theme }) => theme.colors.BLACK};
 `;
 
-const Header: React.FC<React.PropsWithChildren> = ({ children = <div /> }) => (
+const Header: React.FC = () => (
   <>
     <IdentityBar />
-    <HeaderInner>{children}</HeaderInner>
+    <HeaderInner>
+      <Logo />
+      <Icon type="person" size={16} />
+    </HeaderInner>
   </>
 );
 

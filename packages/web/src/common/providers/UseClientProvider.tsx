@@ -11,6 +11,7 @@ import React from "react";
 import styled, { ThemeProvider as StyledProvider } from "styled-components";
 
 import theme from "@sparcs-clubs/web/styles/themes";
+import Header from "@sparcs-clubs/web/common/components/Header";
 
 const ResponsiveContent = styled.div`
   width: 1120px;
@@ -41,6 +42,7 @@ export const UseClientProvider: React.FC<React.PropsWithChildren> = ({
   <main>
     {/* @ts-expect-error-next-line */}
     <StyledProvider theme={theme}>
+      <Header />
       <ResponsiveContent>{children}</ResponsiveContent>
     </StyledProvider>
   </main>
