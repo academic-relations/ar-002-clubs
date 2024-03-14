@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "pnpm start:dev",
+    "dev": "pnpm db up -d && pnpm start:dev",
     "prod": "pnpm migrate:prod && pnpm start:prod",
     "db": "docker compose -f ../../.docker/docker-compose.dev.yml -p ar-002-clubs",
     "env": "echo $NODE_ENV",
