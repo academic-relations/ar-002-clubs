@@ -10,6 +10,8 @@ import {
 } from "@sparcs-clubs/web/styles/fonts/googleFonts";
 import StyledComponentsRegistry from "@sparcs-clubs/web/common/libs/styledComponents/StyledComponentRegistry";
 
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+
 export const metadata: Metadata = {
   title: "SPARCS Academic Relations Team",
   description: "Frontend Standard Stack v1.0.0",
@@ -21,7 +23,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => (
     className={classNames(pretendard.variable, raleway.variable)}
   >
     <body>
-      <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+      <AppRouterCacheProvider>
+        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+      </AppRouterCacheProvider>
     </body>
   </html>
 );
