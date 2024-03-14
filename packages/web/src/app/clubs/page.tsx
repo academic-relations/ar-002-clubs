@@ -78,7 +78,7 @@ const Clubs = () => {
     <main>
       <UseClientProvider>
         <ClubsInner>
-          <PageTitle>동아 목록</PageTitle>
+          <PageTitle>동아리 목록</PageTitle>
           <ClubSection>
             <SectionTitle>{`생활문화 (${clubsData.length})`}</SectionTitle>
             <ClubCardList>
