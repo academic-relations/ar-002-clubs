@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "mock:front": "pnpm dev",
+    "mock:back": "echo \"In mock:back mode, the 'web' package will not be run. Exiting.\""
   },
   "dependencies": {
+    "axios": "^1.6.7",
     "classnames": "^2.3.2",
     "framer-motion": "^10.16.5",
     "loglevel": "^1.9.1",

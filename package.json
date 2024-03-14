@@ -11,6 +11,8 @@
     "api": "dotenv -- pnpm -F @sparcs-clubs/api",
     "interface": "pnpm -F @sparcs-clubs/interface",
     "dev": "dotenv -- pnpm -r --stream --parallel dev",
+    "mock:front": "MOCK=true dotenv -- pnpm -r --stream --parallel mock:front",
+    "mock:back": "MOCK=true dotenv -- pnpm -r --stream --parallel mock:back",
     "db": "dotenv -- pnpm -F @sparcs-clubs/api db",
     "migrate": "dotenv -- pnpm -F @sparcs-clubs/api migrate",
     "migrate:dev": "dotenv -- pnpm -F @sparcs-clubs/api migrate:dev",
