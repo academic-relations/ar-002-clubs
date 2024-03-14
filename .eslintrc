@@ -55,6 +55,7 @@
       }
     ],
     "import/prefer-default-export": "off",
+    "class-methods-use-this": "off",
     "no-param-reassign": [
       "error",
       {
@@ -103,12 +104,6 @@
       {
         // default values of the optional props must be provided as function arguments
         "functions": "defaultArguments"
-      }
-    ],
-    "@typescript-eslint/consistent-type-imports": [
-      "error",
-      {
-        "prefer": "type-imports"
       }
     ]
   },
