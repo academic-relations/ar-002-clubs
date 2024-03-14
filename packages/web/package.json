@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "mock:front": "pnpm dev",
+    "mock:back": "echo \"In mock:back mode, the 'web' package will not be run. Exiting.\""
   },
   "dependencies": {
     "@emotion/cache": "11.11.0",
@@ -15,6 +17,7 @@
     "@mui/icons-material": "5.15.12",
     "@mui/material": "5.15.12",
     "@mui/material-nextjs": "5.15.11",
+    "axios": "^1.6.7",
     "classnames": "^2.3.2",
     "framer-motion": "^10.16.5",
     "loglevel": "^1.9.1",
