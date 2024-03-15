@@ -1,6 +1,11 @@
 import type { Paths } from "./paths";
 
-const headerPaths: (keyof Paths)[] = ["HOME", "CLUBS", "VOTING", "COMMUNITY"];
+const headerPaths: (keyof Paths)[] = [
+  "CLUBS",
+  "VOTING",
+  "COMMUNITY",
+  "SERVICE",
+];
 const footerPaths: (keyof Paths)[] = ["MADE_BY", "LICENSE", "TERMS_OF_SERVICE"];
 
 const navPaths = {
