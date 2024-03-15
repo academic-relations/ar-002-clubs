@@ -15,6 +15,7 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
+    "removeComments": true,
     "noEmit": false
   },
   "exclude": ["node_modules", "dist"]
