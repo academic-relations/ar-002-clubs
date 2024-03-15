@@ -7,14 +7,16 @@
  */
 
 import React from "react";
-
 import styled, { ThemeProvider as StyledProvider } from "styled-components";
 
-import theme from "@sparcs-clubs/web/styles/themes";
 import Header from "@sparcs-clubs/web/common/components/Header";
+import Footer from "@sparcs-clubs/web/common/components/Footer";
+
+import theme from "@sparcs-clubs/web/styles/themes";
 
 const ResponsiveContent = styled.div`
   width: 1120px;
+  min-height: calc(100vh - 105px - 160px);
   margin: 80px auto;
 
   @media (max-width: 1440px) {
@@ -27,11 +29,13 @@ const ResponsiveContent = styled.div`
 
   @media (max-width: 960px) {
     width: 560px;
+    min-height: calc(100vh - 105px - 80px);
     margin: 40px auto;
   }
 
   @media (max-width: 720px) {
     width: calc(100% - 40px);
+    min-height: calc(100vh - 105px - 40px);
     margin: 20px;
   }
 `;
@@ -44,6 +48,7 @@ export const UseClientProvider: React.FC<React.PropsWithChildren> = ({
     <StyledProvider theme={theme}>
       <Header />
       <ResponsiveContent>{children}</ResponsiveContent>
+      <Footer />
     </StyledProvider>
   </main>
 );
