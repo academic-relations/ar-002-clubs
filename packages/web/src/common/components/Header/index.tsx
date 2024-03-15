@@ -3,8 +3,8 @@
 import React from "react";
 import styled from "styled-components";
 
+import Login from "./Login";
 import Logo from "./Logo";
-import Icon from "./Icon";
 
 const IdentityBar = styled.div`
   position: relative;
@@ -33,7 +33,7 @@ const Header: React.FC = () => (
     <IdentityBar />
     <HeaderInner>
       <Logo />
-      <Icon type="person" size={16} />
+      <Login />
     </HeaderInner>
   </>
 );
