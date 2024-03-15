@@ -6,18 +6,18 @@
 
 const responsive = {
   BREAKPOINT: {
-    xl: "1400px",
+    xl: "1440px",
     lg: "1200px",
     md: "960px",
     sm: "720px",
     xs: "320px",
   },
   CONTENT: {
-    xl: "1120px",
-    lg: "880px",
-    md: "640px",
-    sm: "560px",
-    xs: "calc(100% - 40px)",
+    xxl: "1120px",
+    xl: "880px",
+    lg: "640px",
+    md: "560px",
+    sm: "calc(100% - 40px)",
   },
 };
 
