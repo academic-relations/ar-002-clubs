@@ -9,14 +9,15 @@ interface IconProps {
   size: number;
 }
 
-const IconInner = styled(MUIIcon)<{ size: number }>`
+const IconInner = styled.div<{ size: number }>`
+  display: flex;
   font-size: ${({ size }) => size}px;
   color: ${({ theme }) => theme.colors.BLACK};
 `;
 
 const Icon: React.FC<IconProps> = ({ type, size }) => (
-  <IconInner fontSize="inherit" size={size}>
-    {type}
+  <IconInner size={size}>
+    <MUIIcon fontSize="inherit">{type}</MUIIcon>
   </IconInner>
 );
 export default Icon;

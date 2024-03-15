@@ -19,10 +19,15 @@ const NavListInner = styled.div`
   gap: 60px;
 `;
 
+const StyledNavItem = styled(NavItem)`
+  font-size: 16px;
+  line-height: 20px;
+`;
+
 const NavList: React.FC<NavListProps> = ({ keys, className = "" }) => (
   <NavListInner className={className}>
     {keys.map(key => (
-      <NavItem {...paths[key]} />
+      <StyledNavItem {...paths[key]} />
     ))}
   </NavListInner>
 );

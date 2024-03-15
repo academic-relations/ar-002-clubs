@@ -18,6 +18,10 @@ const LoginInner = styled(Link)`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   color: ${({ theme }) => theme.colors.BLACK};
   text-decoration: none;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    display: none;
+  }
 `;
 
 const Login = () => (

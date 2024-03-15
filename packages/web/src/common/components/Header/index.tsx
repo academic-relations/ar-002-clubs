@@ -3,6 +3,7 @@
 import React from "react";
 import styled from "styled-components";
 
+import Icon from "@sparcs-clubs/web/common/components/Icon";
 import NavList from "@sparcs-clubs/web/common/components/NavTools/NavList";
 
 import navPaths from "@sparcs-clubs/web/constants/nav";
@@ -52,12 +53,23 @@ const HeaderInner = styled.div`
   backdrop-filter: blur(10px);
 `;
 
+const Menu = styled.div`
+  display: none;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    display: flex;
+  }
+`;
+
 const Header: React.FC = () => (
   <HeaderInner>
     <IdentityBar />
     <NavInner>
       <Logo />
       <Login />
+      <Menu>
+        <Icon type="menu" size={24} />
+      </Menu>
       <StyledNavList keys={navPaths.header} />
     </NavInner>
   </HeaderInner>
