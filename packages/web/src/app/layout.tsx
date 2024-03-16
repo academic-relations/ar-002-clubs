@@ -4,8 +4,13 @@ import classNames from "classnames";
 
 import "@sparcs-clubs/web/styles/globals.css";
 
-import { pretendard } from "@sparcs-clubs/web/styles/fonts/googleFonts";
+import {
+  pretendard,
+  raleway,
+} from "@sparcs-clubs/web/styles/fonts/googleFonts";
 import StyledComponentsRegistry from "@sparcs-clubs/web/common/libs/styledComponents/StyledComponentRegistry";
+
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 
 export const metadata: Metadata = {
   title: "SPARCS Academic Relations Team",
@@ -13,9 +18,14 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => (
-  <html lang="ko-KR" className={classNames(pretendard.variable)}>
+  <html
+    lang="ko-KR"
+    className={classNames(pretendard.variable, raleway.variable)}
+  >
     <body>
-      <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+      <AppRouterCacheProvider>
+        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+      </AppRouterCacheProvider>
     </body>
   </html>
 );

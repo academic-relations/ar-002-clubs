@@ -2,10 +2,6 @@
 
 import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
 
-const Clubs = () => (
-  <main>
-    <UseClientProvider>{/* TODO */}</UseClientProvider>
-  </main>
-);
+const Clubs = () => <UseClientProvider>{/* TODO */}</UseClientProvider>;
 
 export default Clubs;
