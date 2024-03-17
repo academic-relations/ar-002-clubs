@@ -27,7 +27,7 @@ const StyledNavItem = styled(NavItem)`
 const NavList: React.FC<NavListProps> = ({ keys, className = "" }) => (
   <NavListInner className={className}>
     {keys.map(key => (
-      <StyledNavItem {...paths[key]} />
+      <StyledNavItem key={key} {...paths[key]} />
     ))}
   </NavListInner>
 );
