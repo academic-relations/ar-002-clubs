@@ -10,7 +10,7 @@ import mockupClubList from "@sparcs-clubs/web/features/clubs/types/mockupClubLis
 const Clubs = () => (
   <UseClientProvider>
     <ClubsPageMainFrame
-      clubClassesAndListsPairs={[["생활문화", mockupClubList]]}
+      clubDivisionAndListsPairs={[["생활문화", mockupClubList]]}
     />
   </UseClientProvider>
 );

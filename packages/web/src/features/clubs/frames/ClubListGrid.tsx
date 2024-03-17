@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 import ClubCard from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
-import type { ClubInfo } from "@sparcs-clubs/web/features/clubs/types/clubs.types";
+import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
 
 const ClubListGridInner = styled.div`
   width: 100%;

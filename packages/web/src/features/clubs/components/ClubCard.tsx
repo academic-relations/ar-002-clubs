@@ -9,11 +9,11 @@ import Tag from "@sparcs-clubs/web/common/components/Tag";
 import ClubNameAndMemberCountRow from "@sparcs-clubs/web/features/clubs/components/ClubNameAndMemberCountRow";
 import DescriptionRow from "@sparcs-clubs/web/features/clubs/components/DescriptionRow";
 
-import type { ClubInfo } from "@sparcs-clubs/web/features/clubs/types/clubs.types";
+import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
 import {
   getClubType,
-  getTagcolorFromClubType,
-} from "@sparcs-clubs/web/features/clubs/types/clubs.types";
+  getTagColorFromClubType,
+} from "@sparcs-clubs/web/types/clubs.types";
 
 const ClubCardWrapper = styled.div`
   width: 100%;
@@ -44,7 +44,7 @@ const ClubCard: React.FC<ClubCardProps> = ({ club }) => {
           />
           <DescriptionRow>{presidentAndAdvisor}</DescriptionRow>
           <DescriptionRow>{club.description}</DescriptionRow>
-          <Tag color={getTagcolorFromClubType(club.type)}>
+          <Tag color={getTagColorFromClubType(club.type)}>
             {getClubType(club)}
           </Tag>
         </ClubCardInner>

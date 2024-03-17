@@ -1,5 +1,5 @@
-import type { ClubInfo } from "@sparcs-clubs/web/features/clubs/types/clubs.types";
-import { fromObj } from "@sparcs-clubs/web/features/clubs/types/clubs.types";
+import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
+import { fromObj } from "@sparcs-clubs/web/types/clubs.types";
 
 // mockup model to interface
 const mockupData = [

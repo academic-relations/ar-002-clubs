@@ -6,9 +6,9 @@ import styled from "styled-components";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import ClubListGrid from "@sparcs-clubs/web/features/clubs/frames/ClubListGrid";
 
-import type { ClubInfo } from "@sparcs-clubs/web/features/clubs/types/clubs.types";
+import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
 
-const ClubClassSectionFrameInner = styled.div`
+const ClubDivisionSectionFrameInner = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -16,18 +16,18 @@ const ClubClassSectionFrameInner = styled.div`
 `;
 
 type ClubsSectionFrameProps = {
-  clubs_class: string;
-  clubs_list: Array<ClubInfo>;
+  division: string; // 분과
+  clubList: Array<ClubInfo>;
 };
 
 const ClubsSectionFrame: React.FC<ClubsSectionFrameProps> = ({
-  clubs_class,
-  clubs_list,
+  division,
+  clubList,
 }) => (
-  <ClubClassSectionFrameInner>
-    <SectionTitle size="lg">{`${clubs_class} (${clubs_list.length.toString()})`}</SectionTitle>
-    <ClubListGrid clubs_list={clubs_list} />
-  </ClubClassSectionFrameInner>
+  <ClubDivisionSectionFrameInner>
+    <SectionTitle size="lg">{`${division} (${clubList.length.toString()})`}</SectionTitle>
+    <ClubListGrid clubs_list={clubList} />
+  </ClubDivisionSectionFrameInner>
 );
 
 export default ClubsSectionFrame;

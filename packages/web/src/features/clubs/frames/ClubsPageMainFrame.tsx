@@ -7,7 +7,7 @@ import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
 
-import type { ClubInfo } from "@sparcs-clubs/web/features/clubs/types/clubs.types";
+import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
 
 const ClubsPageMainFrameInner = styled.div`
   display: flex;
@@ -22,21 +22,21 @@ const ClubListsByDepartmentWrapper = styled.div`
 `;
 
 interface ClubsPageMainFrameProps {
-  clubClassesAndListsPairs: Array<[string, Array<ClubInfo>]>;
+  clubDivisionAndListsPairs: Array<[string, Array<ClubInfo>]>;
 }
 
 const ClubsPageMainFrame: React.FC<ClubsPageMainFrameProps> = ({
-  clubClassesAndListsPairs,
+  clubDivisionAndListsPairs,
 }) => (
   <ClubsPageMainFrameInner>
     <PageTitle>동아리 목록</PageTitle>
     <ClubListsByDepartmentWrapper>
-      {clubClassesAndListsPairs.map(
-        (clubClassAndListPair: [string, Array<ClubInfo>]) => (
+      {clubDivisionAndListsPairs.map(
+        (clubDivisionAndListsPair: [string, Array<ClubInfo>]) => (
           <ClubsSectionFrame
-            clubs_class={clubClassAndListPair[0]}
-            clubs_list={clubClassAndListPair[1]}
-            key={clubClassAndListPair[0]}
+            division={clubDivisionAndListsPair[0]}
+            clubList={clubDivisionAndListsPair[1]}
+            key={clubDivisionAndListsPair[0]}
           />
         ),
       )}
