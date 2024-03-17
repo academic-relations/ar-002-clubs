@@ -3,7 +3,9 @@
 import React from "react";
 import styled from "styled-components";
 
-const CardInner = styled.div`
+const Card: React.FC<React.PropsWithChildren> = styled.div`
+  display: flex;
+  flex-direction: column;
   position: relative;
   padding: 16px 20px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
@@ -15,9 +17,5 @@ const CardInner = styled.div`
   border-radius: ${({ theme }) => theme.round.md};
   box-shadow: ${({ theme }) => theme.shadow.md};
 `;
-
-const Card: React.FC<React.PropsWithChildren> = ({ children = <div /> }) => (
-  <CardInner>{children}</CardInner>
-);
 
 export default Card;

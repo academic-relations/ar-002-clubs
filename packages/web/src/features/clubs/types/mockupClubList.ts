@@ -1,0 +1,138 @@
+import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
+import { fromObj } from "@sparcs-clubs/web/types/clubs.types";
+
+// mockup model to interface
+const mockupData = [
+  {
+    id: 1,
+    clubName: "궁극의 맛",
+    characteristicKr: "요리",
+    clubType: "정동아리\n",
+    clubPresident: "장주원",
+    advisor: null,
+    totalMembers: 22,
+  },
+  {
+    id: 2,
+    clubName: "샹그릴라",
+    characteristicKr: "애니메이션 감상 및 서브컬쳐",
+    clubType: "정동아리\n",
+    clubPresident: "김경민",
+    advisor: null,
+    totalMembers: 50,
+  },
+  {
+    id: 3,
+    clubName: "여로",
+    characteristicKr: "여행",
+    clubType: "정동아리\n",
+    clubPresident: "강현성",
+    advisor: "김유식",
+    totalMembers: 25,
+  },
+  {
+    id: 4,
+    clubName: "예쁜영화",
+    characteristicKr: "영화감상",
+    clubType: "정동아리\n",
+    clubPresident: "정재민",
+    advisor: "정재승",
+    totalMembers: 38,
+  },
+  {
+    id: 5,
+    clubName: "칼디",
+    characteristicKr: "커피",
+    clubType: "정동아리\n",
+    clubPresident: "최원준",
+    advisor: "오혜연",
+    totalMembers: 30,
+  },
+  {
+    id: 6,
+    clubName: "판놀음",
+    characteristicKr: "보드 게임",
+    clubType: "정동아리\n",
+    clubPresident: "양동연",
+    advisor: "김혜진",
+    totalMembers: 41,
+  },
+  {
+    id: 7,
+    clubName: "Khartes",
+    characteristicKr: "트레이딩 카드 게임",
+    clubType: "상임동아리",
+    clubPresident: "양진혁",
+    advisor: null,
+    totalMembers: 26,
+  },
+  {
+    id: 8,
+    clubName: "OPTeamus",
+    characteristicKr: "이스포츠",
+    clubType: "정동아리\n",
+    clubPresident: "신승빈",
+    advisor: "박병호",
+    totalMembers: 19,
+  },
+  {
+    id: 9,
+    clubName: "THE MIXER",
+    characteristicKr: "칵테일",
+    clubType: "정동아리\n",
+    clubPresident: "구도훈",
+    advisor: null,
+    totalMembers: 17,
+  },
+  {
+    id: 75,
+    clubName: "패플리",
+    characteristicKr: "패션",
+    clubType: "정동아리\n",
+    clubPresident: "탁한진",
+    advisor: null,
+    totalMembers: 23,
+  },
+  {
+    id: 76,
+    clubName: "Boardom",
+    characteristicKr: "보드게임",
+    clubType: "가동아리\n",
+    clubPresident: "MAMMADLI TURAN\n",
+    advisor: null,
+    totalMembers: 13,
+  },
+  {
+    id: 77,
+    clubName: "Moonshine",
+    characteristicKr: "양조",
+    clubType: "가동아리\n",
+    clubPresident: "임채민",
+    advisor: null,
+    totalMembers: 18,
+  },
+  {
+    id: 89,
+    clubName: "KASTLE",
+    characteristicKr: "체스",
+    clubType: "가동아리\n",
+    clubPresident: "Jaden Jorradol",
+    advisor: null,
+    totalMembers: 29,
+  },
+  {
+    id: 92,
+    clubName: "카이시엘",
+    characteristicKr: "제과제빵 활동을 통해 학우들의 다양한 문화활동을 장려함.",
+    clubType: "가동아리\n",
+    clubPresident: "김나연",
+    advisor: null,
+    totalMembers: 30,
+  },
+];
+
+const mockupClubList: Array<ClubInfo> = mockupData.map(fromObj);
+mockupClubList.sort((a, b) => a.type - b.type);
+// ----
+
+export default mockupClubList;
