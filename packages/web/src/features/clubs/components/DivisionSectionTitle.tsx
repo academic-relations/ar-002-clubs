@@ -14,7 +14,7 @@ const DivisionSectionTitleInner = styled.div`
   gap: 20px;
 `;
 
-const ToggleButton = styled.div`
+const MoreInfo = styled.div`
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 14px;
   line-height: 20px;
@@ -34,9 +34,7 @@ const DivisionSectionTitle: React.FC<{
     <SectionTitle size="lg">
       {division} ({clubList.length})
     </SectionTitle>
-    <ToggleButton onClick={toggleHandler}>
-      {toggle ? `접기` : `펼치기`}
-    </ToggleButton>
+    <MoreInfo onClick={toggleHandler}>{toggle ? `접기` : `펼치기`}</MoreInfo>
   </DivisionSectionTitleInner>
 );
 
