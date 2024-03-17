@@ -55,6 +55,7 @@
       }
     ],
     "import/prefer-default-export": "off",
+    "class-methods-use-this": "off",
     "no-param-reassign": [
       "error",
       {
@@ -105,10 +106,12 @@
         "functions": "defaultArguments"
       }
     ],
-    "@typescript-eslint/consistent-type-imports": [
+    "@typescript-eslint/no-unused-vars": [
       "error",
       {
-        "prefer": "type-imports"
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
       }
     ]
   },
