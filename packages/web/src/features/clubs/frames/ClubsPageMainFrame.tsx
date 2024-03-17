@@ -12,13 +12,13 @@ import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
 const ClubsPageMainFrameInner = styled.div`
   display: flex;
   flex-direction: column;
-  row-gap: 60px;
+  gap: 60px;
 `;
 
 const ClubListsByDepartmentWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  row-gap: 40px;
+  gap: 40px;
 `;
 
 interface ClubsPageMainFrameProps {

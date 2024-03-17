@@ -17,10 +17,7 @@ interface ClubCardProps {
   club: ClubInfo;
 }
 
-const ClubCardInner = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+const ClubCardInner = styled(Card)`
   gap: 16px;
 `;
 
@@ -59,30 +56,26 @@ const ClubMemberCount = styled.div`
 `;
 
 const ClubCard: React.FC<ClubCardProps> = ({ club }) => (
-  <Card>
-    <ClubCardInner>
-      <ClubCardNameRow>
-        <ClubName>{club.name}</ClubName>
-        <ClubMemberCount>
-          <Icon type="person" size={16} />
-          <div>{club.members}</div>
-        </ClubMemberCount>
-      </ClubCardNameRow>
+  <ClubCardInner>
+    <ClubCardNameRow>
+      <ClubName>{club.name}</ClubName>
+      <ClubMemberCount>
+        <Icon type="person" size={16} />
+        <div>{club.members}</div>
+      </ClubMemberCount>
+    </ClubCardNameRow>
 
-      <ClubCardRow>
-        {club.advisor === null
-          ? `회장 ${club.president}`
-          : `회장 ${club.president} | 지도교수 ${club.advisor}`}
-      </ClubCardRow>
-      <ClubCardRow>{club.description}</ClubCardRow>
+    <ClubCardRow>
+      {club.advisor === null
+        ? `회장 ${club.president}`
+        : `회장 ${club.president} | 지도교수 ${club.advisor}`}
+    </ClubCardRow>
+    <ClubCardRow>{club.description}</ClubCardRow>
 
-      <ClubCardRow>
-        <Tag color={getTagColorFromClubType(club.type)}>
-          {getClubType(club)}
-        </Tag>
-      </ClubCardRow>
-    </ClubCardInner>
-  </Card>
+    <ClubCardRow>
+      <Tag color={getTagColorFromClubType(club.type)}>{getClubType(club)}</Tag>
+    </ClubCardRow>
+  </ClubCardInner>
 );
 
 export default ClubCard;

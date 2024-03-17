@@ -1,18 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 
-import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
-import ClubListGrid from "@sparcs-clubs/web/features/clubs/frames/ClubListGrid";
+import ClubListGrid from "@sparcs-clubs/web/features/clubs/components/ClubListGrid";
+import DivisionSectionTitle from "@sparcs-clubs/web/features/clubs/components/DivisionSectionTitle";
 
 import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
 
 const ClubDivisionSectionFrameInner = styled.div`
-  width: 100%;
   display: flex;
   flex-direction: column;
-  row-gap: 20px;
+  gap: 20px;
 `;
 
 type ClubsSectionFrameProps = {
@@ -23,11 +22,24 @@ type ClubsSectionFrameProps = {
 const ClubsSectionFrame: React.FC<ClubsSectionFrameProps> = ({
   division,
   clubList,
-}) => (
-  <ClubDivisionSectionFrameInner>
-    <SectionTitle size="lg">{`${division} (${clubList.length.toString()})`}</SectionTitle>
-    <ClubListGrid clubs_list={clubList} />
-  </ClubDivisionSectionFrameInner>
-);
+}) => {
+  const [toggle, setToggle] = useState(true);
+  const toggleHandler = useCallback(
+    () => setToggle(!toggle),
+    [toggle, setToggle],
+  );
+
+  return (
+    <ClubDivisionSectionFrameInner>
+      <DivisionSectionTitle
+        division={division}
+        clubList={clubList}
+        toggle={toggle}
+        toggleHandler={toggleHandler}
+      />
+      {toggle && <ClubListGrid clubList={clubList} />}
+    </ClubDivisionSectionFrameInner>
+  );
+};
 
 export default ClubsSectionFrame;
