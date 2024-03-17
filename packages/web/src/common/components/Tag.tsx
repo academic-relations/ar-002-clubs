@@ -26,4 +26,5 @@ const Tag: React.FC<TagProps> = ({ children = <div />, color = "BLUE" }) => (
   <TagInner color={color}>{children}</TagInner>
 );
 
+export type { TagColor };
 export default Tag;

@@ -1,8 +1,21 @@
 "use client";
 
-import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
-// import clubsData from "./data/clubs";
+import React from "react";
 
-const Clubs = () => <UseClientProvider>{/* TODO */}</UseClientProvider>;
+import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
+
+import ClubsPageMainFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsPageMainFrame";
+import mockupClubList from "@sparcs-clubs/web/features/clubs/types/mockupClubList";
+
+const Clubs = () => (
+  <UseClientProvider>
+    <ClubsPageMainFrame
+      clubClassesAndListsPairs={[
+        ["생활문화", mockupClubList],
+        ["other sections", []],
+      ]}
+    />
+  </UseClientProvider>
+);
 
 export default Clubs;
