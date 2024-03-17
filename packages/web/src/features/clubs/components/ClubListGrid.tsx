@@ -7,6 +7,10 @@ import ClubCard from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
 import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
 
+interface ClubListGridItemProps {
+  clubList: Array<ClubInfo>;
+}
+
 const ClubListGridInner = styled.div`
   width: 100%;
   display: grid;
@@ -14,10 +18,6 @@ const ClubListGridInner = styled.div`
   gap: 16px;
   padding-left: 24px;
 `;
-
-interface ClubListGridItemProps {
-  clubList: Array<ClubInfo>;
-}
 
 const ClubListGrid: React.FC<ClubListGridItemProps> = ({ clubList }) => (
   <ClubListGridInner>
