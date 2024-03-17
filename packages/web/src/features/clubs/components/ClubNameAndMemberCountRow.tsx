@@ -8,6 +8,7 @@ const ClubNameBlock = styled.div`
   height: 24px;
   font-size: 20px;
   line-height: 24px;
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
