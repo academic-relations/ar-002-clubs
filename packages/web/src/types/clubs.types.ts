@@ -1,5 +1,15 @@
 import type { TagColor } from "@sparcs-clubs/web/common/components/Tag";
 
+interface RawClubsData {
+  id: number;
+  clubName: string;
+  characteristicKr: string;
+  clubType: string;
+  clubPresident: string;
+  advisor: string | null;
+  totalMembers: number;
+}
+
 interface ClubInfo {
   id: number;
   name: string;
@@ -16,7 +26,7 @@ enum ClubType {
   Provisional, // 가동아리
 }
 
-const fromObj = clubObj => {
+const fromObj = (clubObj: RawClubsData) => {
   const clubTypeRelation = new Map<string, ClubType>();
   clubTypeRelation.set("상임동아리", ClubType.Senate);
   clubTypeRelation.set("정동아리", ClubType.Regular);
@@ -28,7 +38,7 @@ const fromObj = clubObj => {
     description: clubObj.characteristicKr,
     type: clubTypeRelation.get(clubObj.clubType.trim()) ?? ClubType.Provisional,
     president: clubObj.clubPresident,
-    advisor: clubObj.advisor,
+    advisor: clubObj.advisor === null ? undefined : clubObj.advisor,
     members: clubObj.totalMembers,
   };
 
