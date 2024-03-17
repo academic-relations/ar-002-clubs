@@ -3,6 +3,8 @@
 import React from "react";
 import styled from "styled-components";
 
+import Icon from "@sparcs-clubs/web/common/components/Icon";
+
 const ClubNameBlock = styled.div`
   width: 100%;
   height: 24px;
@@ -20,13 +22,6 @@ const ClubMemberCountBlock = styled.div`
   column-gap: 4px;
   font-size: 14px;
   line-height: 16px;
-`;
-
-// temporarily set box instead of icon
-const PersonIcon = styled.div`
-  width: 16px;
-  height: 16px;
-  background-color: gray;
 `;
 
 const ClubNameAndMemberCountRowInner = styled.div`
@@ -50,7 +45,7 @@ const ClubNameAndMemberCountRow: React.FC<ClubNameAndMemberCountRowProps> = ({
   <ClubNameAndMemberCountRowInner>
     <ClubNameBlock>{name}</ClubNameBlock>
     <ClubMemberCountBlock>
-      <PersonIcon />
+      <Icon type="person" size={16} />
       <div>{membersCount}</div>
     </ClubMemberCountBlock>
   </ClubNameAndMemberCountRowInner>
