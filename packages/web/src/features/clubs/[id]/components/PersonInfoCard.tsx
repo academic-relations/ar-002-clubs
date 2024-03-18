@@ -6,6 +6,7 @@ import styled from "styled-components";
 import type { ClubDetail } from "@sparcs-clubs/web/types/clubdetail.types";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
+import PersonInfoItem from "./PersonInfoItem";
 
 interface PersonInfoCardProps {
   club: ClubDetail;
@@ -16,7 +17,14 @@ const PersonInfoCardInner = styled(Card)`
 `;
 
 const PersonInfoCard: React.FC<PersonInfoCardProps> = ({ club }) => (
-  <PersonInfoCardInner>{club.representative}</PersonInfoCardInner>
+  <PersonInfoCardInner>
+    <PersonInfoItem title="총원" content={`${club.totalMembers}명`} />
+    <PersonInfoItem title="대표자" content={club.representative} />
+    <PersonInfoItem
+      title="지도교수"
+      content={club.advisor ? club.advisor : "-"}
+    />
+  </PersonInfoCardInner>
 );
 
 export default PersonInfoCard;
