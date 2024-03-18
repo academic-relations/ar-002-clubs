@@ -45,7 +45,6 @@ const colors = {
   },
   RED: {
     600: "#DC2626",
-    300: "#DDDDDD",
   },
 };
 
