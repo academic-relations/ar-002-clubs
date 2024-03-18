@@ -22,6 +22,18 @@ const colors = {
     200: "#E7F0FF",
     600: "#065DAC",
   },
+  PURPLE: {
+    200: "#F6EEFE",
+    600: "#9836EF",
+  },
+  PINK: {
+    200: "#FFF1F9",
+    600: "#DB2777",
+  },
+  YELLOW: {
+    200: "#FFFDE9",
+    600: "#E9A311",
+  },
 };
 
 export default colors;
