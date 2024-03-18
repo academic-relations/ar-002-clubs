@@ -27,7 +27,19 @@ const MoreInfoWrapper = styled.div`
   gap: 60px;
 `;
 
-// 인적사항 personInfo
+const PersonInfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const ClubDetailWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1 0 0;
+`;
+
 interface ClubDetailMainFrameProps {
   club: ClubDetail;
 }
@@ -35,19 +47,21 @@ interface ClubDetailMainFrameProps {
 const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({ club }) => (
   <ClubDetailMainFrameInner>
     <PageTitle>{club.name}</PageTitle>
+
     <ClubInfoWrapper>
       <SectionTitle>동아리 정보</SectionTitle>
       <ClubInfoCard club={club} />
     </ClubInfoWrapper>
+
     <MoreInfoWrapper>
-      <ClubInfoWrapper>
+      <PersonInfoWrapper>
         <SectionTitle>인적 사항 </SectionTitle>
         <PersonInfoCard club={club} />
-      </ClubInfoWrapper>
-      <ClubInfoWrapper>
+      </PersonInfoWrapper>
+      <ClubDetailWrapper>
         <SectionTitle>동아리 설명</SectionTitle>
         <ClubDetailCard club={club} />
-      </ClubInfoWrapper>
+      </ClubDetailWrapper>
     </MoreInfoWrapper>
   </ClubDetailMainFrameInner>
 );
