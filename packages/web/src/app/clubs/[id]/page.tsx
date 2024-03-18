@@ -1,20 +1,27 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-
 import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
 import ClubDetailMainFrame from "@sparcs-clubs/web/features/clubs/[id]/frames/ClubDetailMainFrame";
+import { fromObj } from "@sparcs-clubs/web/types/clubdetail.types";
 
-const ClubDetail = () => {
-  const pathname = usePathname();
-  const splitPath = pathname.split("/"); // pathname을 "/" 기준으로 분할
-  const id = splitPath[2]; // 세 번째 부분이 ID ([id]에 해당)
-
-  return (
-    <UseClientProvider>
-      <ClubDetailMainFrame clubID={id} />
-    </UseClientProvider>
-  );
+const rawClubDetail = {
+  id: 1,
+  name: "궁극의 맛",
+  type: "정동아리\n",
+  characteristic: "요리",
+  representative: "장주원",
+  advisor: null,
+  totalMembers: 1,
+  divisionName: "생활문화",
+  foundingYear: 2015,
+  room: "학부학생회관별관(N12) 3101호",
 };
 
+const clubDetail = fromObj(rawClubDetail);
+
+const ClubDetail = () => (
+  <UseClientProvider>
+    <ClubDetailMainFrame club={clubDetail} />
+  </UseClientProvider>
+);
 export default ClubDetail;
