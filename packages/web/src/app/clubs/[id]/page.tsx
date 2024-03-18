@@ -2,8 +2,8 @@
 
 import { usePathname } from "next/navigation";
 
-import ExampleComponent from "@sparcs-clubs/web/common/components/ExampleComponent";
 import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
+import ClubDetailMainFrame from "@sparcs-clubs/web/features/clubs/[id]/frames/ClubDetailMainFrame";
 
 const ClubDetail = () => {
   const pathname = usePathname();
@@ -12,9 +12,7 @@ const ClubDetail = () => {
 
   return (
     <UseClientProvider>
-      <ExampleComponent>
-        Welcome to SPARCS Clubs! The frontend is working well! ID: {id}
-      </ExampleComponent>
+      <ClubDetailMainFrame clubID={id} />
     </UseClientProvider>
   );
 };
