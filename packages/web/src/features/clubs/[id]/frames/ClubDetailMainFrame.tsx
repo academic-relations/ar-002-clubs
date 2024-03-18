@@ -21,6 +21,10 @@ const ClubInfoWrapper = styled.div`
   gap: 20px;
 `;
 
+const CardWrapper = styled.div`
+  padding-left: 20px;
+`;
+
 const MoreInfoWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -49,18 +53,25 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({ club }) => (
     <PageTitle>{club.name}</PageTitle>
 
     <ClubInfoWrapper>
-      <SectionTitle>동아리 정보</SectionTitle>
-      <ClubInfoCard club={club} />
+      <SectionTitle size="lg">동아리 정보</SectionTitle>
+      <CardWrapper>
+        <ClubInfoCard club={club} />
+      </CardWrapper>
     </ClubInfoWrapper>
 
     <MoreInfoWrapper>
       <PersonInfoWrapper>
-        <SectionTitle>인적 사항 </SectionTitle>
-        <PersonInfoCard club={club} />
+        <SectionTitle size="lg">인적 사항 </SectionTitle>
+        <CardWrapper>
+          <PersonInfoCard club={club} />
+        </CardWrapper>
       </PersonInfoWrapper>
+
       <ClubDetailWrapper>
-        <SectionTitle>동아리 설명</SectionTitle>
-        <ClubDetailCard club={club} />
+        <SectionTitle size="lg">동아리 설명</SectionTitle>
+        <CardWrapper>
+          <ClubDetailCard club={club} />
+        </CardWrapper>
       </ClubDetailWrapper>
     </MoreInfoWrapper>
   </ClubDetailMainFrameInner>
