@@ -1,9 +1,10 @@
+import { env } from "@sparcs-clubs/web/env";
 import { AxiosError, InternalAxiosRequestConfig } from "axios";
 import log from "loglevel";
 
-export const BASE_URL = process.env.REACT_APP_API_URL ?? "";
+export const BASE_URL = env.NEXT_PUBLIC_API_URL ?? "";
 
-const hostInterceptor = {
+const mockInterceptor = {
   async onFulfilled(config: InternalAxiosRequestConfig) {
     const responseConfig = { ...config };
     try {
@@ -15,7 +16,7 @@ const hostInterceptor = {
       // eslint-disable-next-line no-empty
     } catch (error) {}
 
-    if (process.env.MOCK) {
+    if (env.NEXT_PUBLIC_API_MOCK_MODE) {
       const method = config?.method;
       const url = config?.url;
       const requestBody = config?.data || {};
@@ -38,4 +39,4 @@ const hostInterceptor = {
   },
 };
 
-export default hostInterceptor;
+export default mockInterceptor;

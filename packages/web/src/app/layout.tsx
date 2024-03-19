@@ -11,6 +11,7 @@ import {
 import StyledComponentsRegistry from "@sparcs-clubs/web/common/libs/styledComponents/StyledComponentRegistry";
 
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import { UseClientProvider } from "../common/providers/UseClientProvider";
 
 export const metadata: Metadata = {
   title: "SPARCS Academic Relations Team",
@@ -24,7 +25,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => (
   >
     <body>
       <AppRouterCacheProvider>
-        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+        <StyledComponentsRegistry>
+          <UseClientProvider>{children}</UseClientProvider>
+        </StyledComponentsRegistry>
       </AppRouterCacheProvider>
     </body>
   </html>
