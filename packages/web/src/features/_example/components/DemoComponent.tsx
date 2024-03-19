@@ -3,6 +3,7 @@
 import React from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import useExampleStore from "@sparcs-clubs/web/common/providers/store/useExampleStore";
 import { getTemporaryClubSubfeature } from "../services/getTemporaryClubSubfeature";
 
 const DemoComponent: React.FC = () => {
@@ -12,6 +13,8 @@ const DemoComponent: React.FC = () => {
     "3",
     "4",
   );
+
+  const { value, increment } = useExampleStore();
 
   return (
     <div>
@@ -25,6 +28,17 @@ const DemoComponent: React.FC = () => {
       <button type="button" onClick={() => refetch}>
         Refetch
       </button>
+
+      <br />
+      <div>
+        <h1>Global State</h1>
+        <p>Current value is: {value}</p>
+
+        <button type="button" onClick={() => increment()}>
+          {" "}
+          increment!
+        </button>
+      </div>
     </div>
   );
 };
