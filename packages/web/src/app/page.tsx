@@ -4,13 +4,11 @@ import ExampleComponent from "@sparcs-clubs/web/common/components/ExampleCompone
 import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
 
 const Home = () => (
-  <main>
-    <UseClientProvider>
-      <ExampleComponent>
-        Welcome to SPARCS Clubs! The frontend is working well!
-      </ExampleComponent>
-    </UseClientProvider>
-  </main>
+  <UseClientProvider>
+    <ExampleComponent>
+      Welcome to SPARCS Clubs! The frontend is working well!
+    </ExampleComponent>
+  </UseClientProvider>
 );
 
 export default Home;

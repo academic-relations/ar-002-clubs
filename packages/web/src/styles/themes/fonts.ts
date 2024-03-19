@@ -7,6 +7,7 @@
 const fonts = {
   FAMILY: {
     PRETENDARD: "var(--next-font-family-pretendard)",
+    RALEWAY: "var(--next-font-family-raleway)",
   },
   WEIGHT: {
     REGULAR: 400,

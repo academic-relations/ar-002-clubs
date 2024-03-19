@@ -12,6 +12,12 @@
   },
   "dependencies": {
     "axios": "^1.6.7",
+    "@emotion/cache": "11.11.0",
+    "@emotion/react": "11.11.4",
+    "@emotion/styled": "11.11.0",
+    "@mui/icons-material": "5.15.12",
+    "@mui/material": "5.15.12",
+    "@mui/material-nextjs": "5.15.11",
     "classnames": "^2.3.2",
     "framer-motion": "^10.16.5",
     "loglevel": "^1.9.1",
