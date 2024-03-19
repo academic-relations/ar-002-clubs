@@ -7,7 +7,10 @@
  */
 
 import React from "react";
-import { ThemeProvider as StyledProvider } from "styled-components";
+import styled, { ThemeProvider as StyledProvider } from "styled-components";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -37,7 +40,9 @@ export const UseClientProvider: React.FC<React.PropsWithChildren> = ({
       {/* @ts-expect-error-next-line */}
       <StyledProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
-          {children}
+          <Header />
+          <ResponsiveContent>{children}</ResponsiveContent>
+          <Footer />
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </StyledProvider>

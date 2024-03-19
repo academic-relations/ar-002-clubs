@@ -7,7 +7,6 @@ import { apiTmp000 } from "@sparcs-clubs/interface/api/_example/endpoints/apiTmp
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
-// TODO: This might better work using z.discriminatedUnion
 type ISuccessResponseType =
   | z.infer<(typeof apiTmp000.responseBodyMap)[200]>
   | z.infer<(typeof apiTmp000.responseBodyMap)[201]>;
