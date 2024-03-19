@@ -9,6 +9,9 @@
 import React from "react";
 import styled, { ThemeProvider as StyledProvider } from "styled-components";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 import Header from "@sparcs-clubs/web/common/components/Header";
 import Footer from "@sparcs-clubs/web/common/components/Footer";
 
@@ -42,13 +45,33 @@ const ResponsiveContent = styled.div`
 
 export const UseClientProvider: React.FC<React.PropsWithChildren> = ({
   children = <div />,
-}) => (
-  <main>
-    {/* @ts-expect-error-next-line */}
-    <StyledProvider theme={theme}>
-      <Header />
-      <ResponsiveContent>{children}</ResponsiveContent>
-      <Footer />
-    </StyledProvider>
-  </main>
-);
+}) => {
+  const [queryClient] = React.useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            // With SSR, we usually want to set some default staleTime
+
+            // above 0 to avoid refetching immediately on the client
+
+            staleTime: 60 * 1000,
+          },
+        },
+      }),
+  );
+
+  return (
+    <main>
+      {/* @ts-expect-error-next-line */}
+      <StyledProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <Header />
+          <ResponsiveContent>{children}</ResponsiveContent>
+          <Footer />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </StyledProvider>
+    </main>
+  );
+};
