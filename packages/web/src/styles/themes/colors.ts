@@ -8,6 +8,7 @@ const colors = {
   WHITE: "#FFFFFF",
   BLACK: "#333333",
   PRIMARY: "#0099AD",
+  GRAY: "#808080",
   GREEN: {
     200: "#E9F9EF",
     600: "#008B1C",

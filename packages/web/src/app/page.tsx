@@ -2,6 +2,7 @@
 
 import ExampleComponent from "@sparcs-clubs/web/common/components/ExampleComponent";
 import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
+// import clubsData from "./clubs/data/clubs";
 
 const Home = () => (
   <main>

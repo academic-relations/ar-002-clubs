@@ -37,7 +37,9 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
 }) => (
   <SectionTitleInner>
     <IdentityBar />
-    <Title size={size}>{children}</Title>
+    <Title size={size} style={{ fontSize: "24px" }}>
+      {children}
+    </Title>
   </SectionTitleInner>
 );
 
