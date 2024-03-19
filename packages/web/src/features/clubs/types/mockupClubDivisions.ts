@@ -1038,7 +1038,9 @@ const mockupClubDivisions = new Map<string, Array<ClubInfo>>();
 mockupData.forEach(mockupClubDivision => {
   const tempMockupClubDivision: Array<ClubInfo> =
     mockupClubDivision.clubs.map(fromObj);
-  tempMockupClubDivision.sort((a, b) => a.type - b.type);
+  tempMockupClubDivision.sort(
+    (a, b) => a.type - b.type || a.name.localeCompare(b.name),
+  );
   mockupClubDivisions.set(mockupClubDivision.name, tempMockupClubDivision);
 });
 
