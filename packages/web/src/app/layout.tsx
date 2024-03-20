@@ -11,7 +11,12 @@ import {
 import StyledComponentsRegistry from "@sparcs-clubs/web/common/libs/styledComponents/StyledComponentRegistry";
 
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
-import { UseClientProvider } from "../common/providers/UseClientProvider";
+
+import Header from "@sparcs-clubs/web/common/components/Header";
+import Footer from "@sparcs-clubs/web/common/components/Footer";
+
+import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
+import ResponsiveContent from "@sparcs-clubs/web/common/components/Responsive";
 
 export const metadata: Metadata = {
   title: "SPARCS Academic Relations Team",
@@ -26,7 +31,11 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => (
     <body>
       <AppRouterCacheProvider>
         <StyledComponentsRegistry>
-          <UseClientProvider>{children}</UseClientProvider>
+          <UseClientProvider>
+            <Header />
+            <ResponsiveContent>{children}</ResponsiveContent>
+            <Footer />
+          </UseClientProvider>
         </StyledComponentsRegistry>
       </AppRouterCacheProvider>
     </body>
