@@ -70,7 +70,7 @@ const Header: React.FC = () => (
       <Menu>
         <Icon type="menu" size={24} />
       </Menu>
-      <StyledNavList keys={navPaths.header} />
+      <StyledNavList highlight keys={navPaths.header} />
     </NavInner>
   </HeaderInner>
 );

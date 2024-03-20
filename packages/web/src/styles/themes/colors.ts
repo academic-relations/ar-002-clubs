@@ -22,6 +22,9 @@ const colors = {
     200: "#E7F0FF",
     600: "#065DAC",
   },
+  GRAY: {
+    200: "#EEEEEE",
+  },
 };
 
 export default colors;
