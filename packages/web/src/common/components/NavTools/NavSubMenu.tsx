@@ -4,10 +4,15 @@ import React from "react";
 import styled from "styled-components";
 import NavSubItem from "./NavSubItem";
 
-const NavItemInner = styled.div`
+const NavItemOuter = styled.div`
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% - 8px);
   left: -50%;
+  cursor: pointer;
+`;
+
+const NavItemInner = styled.div`
+  margin-top: 16px;
   display: inline-flex;
   padding: 12px;
   flex-direction: column;
@@ -24,11 +29,13 @@ type SubPath = {
 };
 
 const NavSubMenu = ({ sub }: { sub: SubPath[] }) => (
-  <NavItemInner>
-    {sub.map(({ name, path }) => (
-      <NavSubItem key={name} name={name} path={path} />
-    ))}
-  </NavItemInner>
+  <NavItemOuter>
+    <NavItemInner>
+      {sub.map(({ name, path }) => (
+        <NavSubItem key={name} name={name} path={path} />
+      ))}
+    </NavItemInner>
+  </NavItemOuter>
 );
 
 export default NavSubMenu;
