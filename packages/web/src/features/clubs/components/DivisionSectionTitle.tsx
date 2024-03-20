@@ -28,11 +28,12 @@ const DivisionSectionTitle: React.FC<{
   division: string;
   clubList: Array<ClubInfo>;
   toggle: boolean;
+  showLength?: boolean;
   toggleHandler: () => void;
-}> = ({ division, clubList, toggle, toggleHandler }) => (
+}> = ({ division, clubList, toggle, showLength = true, toggleHandler }) => (
   <DivisionSectionTitleInner>
     <SectionTitle size="lg">
-      {division} ({clubList.length})
+      {division} {showLength && `(${clubList.length})`}
     </SectionTitle>
     <MoreInfo onClick={toggleHandler}>{toggle ? `접기` : `펼치기`}</MoreInfo>
   </DivisionSectionTitleInner>

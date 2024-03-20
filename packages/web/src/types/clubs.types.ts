@@ -69,5 +69,5 @@ const getClubType = (club: ClubInfo) => {
   return clubType;
 };
 
-export type { ClubInfo };
+export type { ClubInfo, RawClubsData };
 export { fromObj, getClubType, getTagColorFromClubType };

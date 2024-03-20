@@ -15,11 +15,13 @@ const ClubDivisionSectionFrameInner = styled.div`
 `;
 
 type ClubsSectionFrameProps = {
+  showLength?: boolean; // section title에 길이 보여줄지 여부
   division: string; // 분과
   clubList: Array<ClubInfo>;
 };
 
 const ClubsSectionFrame: React.FC<ClubsSectionFrameProps> = ({
+  showLength = true,
   division,
   clubList,
 }) => {
@@ -35,6 +37,7 @@ const ClubsSectionFrame: React.FC<ClubsSectionFrameProps> = ({
         division={division}
         clubList={clubList}
         toggle={toggle}
+        showLength={showLength}
         toggleHandler={toggleHandler}
       />
       {toggle && <ClubListGrid clubList={clubList} />}
