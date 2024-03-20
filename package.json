@@ -11,6 +11,8 @@
     "api": "dotenv -- pnpm -F @sparcs-clubs/api",
     "interface": "pnpm -F @sparcs-clubs/interface",
     "dev": "dotenv -- pnpm -r --stream --parallel dev",
+    "mock:front": "NEXT_PUBLIC_API_MOCK_MODE=1 dotenv -- pnpm -r --stream --parallel mock:front",
+    "mock:back": "NEXT_PUBLIC_API_MOCK_MODE=1 dotenv -- pnpm -r --stream --parallel mock:back",
     "db": "dotenv -- pnpm -F @sparcs-clubs/api db",
     "migrate": "dotenv -- pnpm -F @sparcs-clubs/api migrate",
     "migrate:dev": "dotenv -- pnpm -F @sparcs-clubs/api migrate:dev",
