@@ -34,7 +34,7 @@ const ClubsPageMainFrame: React.FC<ClubsPageMainFrameProps> = ({
       {clubDivisionAndListsPairs.map(
         (clubDivisionAndListsPair: [string, Array<ClubInfo>]) => (
           <ClubsSectionFrame
-            division={clubDivisionAndListsPair[0]}
+            title={clubDivisionAndListsPair[0]}
             clubList={clubDivisionAndListsPair[1]}
             key={clubDivisionAndListsPair[0]}
           />
