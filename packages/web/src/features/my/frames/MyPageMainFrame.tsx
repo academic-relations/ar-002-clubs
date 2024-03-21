@@ -33,7 +33,7 @@ const MyPageMainFrame: React.FC<MyPageMainFrameProps> = ({ myClubList }) => {
           {myClubList.map((myClub: MyClubsInfo) => (
             <ClubsSectionFrame
               showLength={false}
-              division={myClub.name}
+              title={myClub.name}
               clubList={myClub.clubs}
               key={myClub.semester}
             />

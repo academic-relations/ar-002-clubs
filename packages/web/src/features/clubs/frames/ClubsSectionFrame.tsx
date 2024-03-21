@@ -4,7 +4,7 @@ import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 
 import ClubListGrid from "@sparcs-clubs/web/features/clubs/components/ClubListGrid";
-import DivisionSectionTitle from "@sparcs-clubs/web/features/clubs/components/DivisionSectionTitle";
+import DivisionSectionTitle from "@sparcs-clubs/web/features/clubs/components/FoldableSectionTitle";
 
 import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
 
@@ -16,13 +16,13 @@ const ClubDivisionSectionFrameInner = styled.div`
 
 type ClubsSectionFrameProps = {
   showLength?: boolean; // section title에 길이 보여줄지 여부
-  division: string; // 분과
+  title: string; // 분과
   clubList: Array<ClubInfo>;
 };
 
 const ClubsSectionFrame: React.FC<ClubsSectionFrameProps> = ({
   showLength = true,
-  division,
+  title,
   clubList,
 }) => {
   const [toggle, setToggle] = useState(true);
@@ -34,7 +34,7 @@ const ClubsSectionFrame: React.FC<ClubsSectionFrameProps> = ({
   return (
     <ClubDivisionSectionFrameInner>
       <DivisionSectionTitle
-        division={division}
+        title={title}
         clubList={clubList}
         toggle={toggle}
         showLength={showLength}

@@ -24,19 +24,19 @@ const MoreInfo = styled.div`
   cursor: pointer;
 `;
 
-const DivisionSectionTitle: React.FC<{
-  division: string;
+const FoldableSectionTitle: React.FC<{
+  title: string;
   clubList: Array<ClubInfo>;
   toggle: boolean;
   showLength?: boolean;
   toggleHandler: () => void;
-}> = ({ division, clubList, toggle, showLength = true, toggleHandler }) => (
+}> = ({ title, clubList, toggle, showLength = true, toggleHandler }) => (
   <DivisionSectionTitleInner>
     <SectionTitle size="lg">
-      {division} {showLength && `(${clubList.length})`}
+      {title} {showLength && `(${clubList.length})`}
     </SectionTitle>
     <MoreInfo onClick={toggleHandler}>{toggle ? `접기` : `펼치기`}</MoreInfo>
   </DivisionSectionTitleInner>
 );
 
-export default DivisionSectionTitle;
+export default FoldableSectionTitle;
