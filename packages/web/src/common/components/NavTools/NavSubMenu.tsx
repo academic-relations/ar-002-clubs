@@ -4,10 +4,14 @@ import React from "react";
 import styled from "styled-components";
 import NavSubItem from "./NavSubItem";
 
+type SubPath = {
+  name: string;
+  path?: string;
+};
+
 const NavItemOuter = styled.div`
   position: absolute;
   top: calc(100% - 8px);
-  left: -50%;
   cursor: pointer;
 `;
 
@@ -20,13 +24,8 @@ const NavItemInner = styled.div`
   align-items: center;
   gap: 4px;
   background-color: ${({ theme }) => theme.colors.WHITE};
-  border-radius: 4px;
+  border-radius: 8px;
 `;
-
-type SubPath = {
-  name: string;
-  path?: string;
-};
 
 const NavSubMenu = ({ sub }: { sub: SubPath[] }) => (
   <NavItemOuter>

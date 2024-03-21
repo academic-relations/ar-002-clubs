@@ -23,6 +23,7 @@ const NavItemInner = styled.div<{ highlight?: boolean }>`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   color: ${({ theme }) => theme.colors.BLACK};
   border-bottom: 2px solid transparent;
+  padding: 8px 0;
   &:hover {
     ${({ highlight, theme }) =>
       highlight && `border-bottom: 2px solid ${theme.colors.PRIMARY};`}
