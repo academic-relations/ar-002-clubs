@@ -1,19 +1,16 @@
 "use client";
 
-import React, { ReactElement, ReactNode, cloneElement } from "react";
 import styled from "styled-components";
+import React, { ReactElement, ReactNode, cloneElement } from "react";
 import RadioOption, { type RadioOptionProps } from "./RadioOption";
 
 type RadioProps<T extends string> = {
   children: ReactElement<RadioOptionProps<T>>[];
   value: T;
   onChange: (value: T) => void;
-  className?: string;
+  direction?: "row" | "column";
+  gap?: string;
 };
-
-const RadioInner = styled.div`
-  color: ${({ theme }) => theme.colors.BLACK};
-`;
 
 function isRadioOptionElement<T extends string>(
   child: ReactNode,
@@ -21,11 +18,21 @@ function isRadioOptionElement<T extends string>(
   return React.isValidElement(child) && "value" in child.props;
 }
 
+const StyledRadioInner = styled.div<{
+  direction: "row" | "column";
+  gap: string;
+}>`
+  display: flex;
+  flex-direction: ${({ direction }) => direction};
+  gap: ${({ gap }) => gap};
+`;
+
 const Radio = <T extends string>({
+  direction = "column",
+  gap = "12px",
   value,
   onChange,
   children,
-  className = "",
 }: RadioProps<T>) => {
   const handleChange = (newValue: T) => {
     if (newValue !== value) {
@@ -34,7 +41,7 @@ const Radio = <T extends string>({
   };
 
   return (
-    <RadioInner className={className}>
+    <StyledRadioInner direction={direction} gap={gap}>
       {React.Children.map(children, child => {
         if (isRadioOptionElement<T>(child)) {
           return cloneElement(child, {
@@ -44,7 +51,7 @@ const Radio = <T extends string>({
         }
         return child;
       })}
-    </RadioInner>
+    </StyledRadioInner>
   );
 };
 Radio.Option = RadioOption;

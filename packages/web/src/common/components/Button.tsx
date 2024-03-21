@@ -17,6 +17,7 @@ const ButtonInner = styled.div`
 `;
 
 const ButtonDefaultInner = styled(ButtonInner)`
+  color: ${({ theme }) => theme.colors.WHITE};
   background: ${({ theme }) => theme.colors.PRIMARY};
   cursor: pointer;
   &:hover {
@@ -34,6 +35,7 @@ const ButtonOutlinedInner = styled(ButtonInner)`
 `;
 
 const ButtonDisabledInner = styled(ButtonInner)`
+  color: ${({ theme }) => theme.colors.GRAY[300]};
   border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
   background: ${({ theme }) => theme.colors.GRAY[100]};
   cursor: not-allowed;
