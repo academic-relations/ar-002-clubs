@@ -8,7 +8,7 @@ import NavList from "@sparcs-clubs/web/common/components/NavTools/NavList";
 
 import navPaths from "@sparcs-clubs/web/constants/nav";
 
-import SPARCSLogo from "./SPARCSLogo";
+import SPARCSLogo from "./_atomic/SPARCSLogo";
 
 const FooterInner = styled.div`
   position: relative;
