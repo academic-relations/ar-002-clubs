@@ -3,6 +3,10 @@
 import React from "react";
 import styled from "styled-components";
 
+type CheckboxProps = {
+  checked: boolean;
+};
+
 const CheckboxInner = styled.div`
   display: inline-flex;
   align-items: flex-start;
@@ -11,10 +15,6 @@ const CheckboxInner = styled.div`
   border-radius: 4px;
   border: 1px solid ${({ theme }) => theme.colors.BLACK};
 `;
-
-type CheckboxProps = {
-  checked: boolean;
-};
 
 const Checkbox = ({ checked }: CheckboxProps) => (
   <CheckboxInner>
