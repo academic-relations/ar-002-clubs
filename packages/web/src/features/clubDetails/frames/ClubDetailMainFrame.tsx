@@ -29,6 +29,10 @@ const MoreInfoWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 60px;
+
+  @media (max-width: 1200px) {
+    flex-direction: column;
+  }
 `;
 
 const PersonInfoWrapper = styled.div`

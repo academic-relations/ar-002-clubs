@@ -20,11 +20,17 @@ const PersonInfoItemInner = styled.div`
 const PersonInfoTitle = styled(PersonInfoItemInner)`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   width: 120px;
+  @media (max-width: 1200px) {
+    width: 100%;
+  }
 `;
 
 const PersonInfoContent = styled(PersonInfoItemInner)`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   width: 120px;
+  @media (max-width: 1200px) {
+    width: 100%;
+  }
 `;
 
 const PersonInfoItem: React.FC<PersonInfoItemProps> = ({ title, content }) => (
