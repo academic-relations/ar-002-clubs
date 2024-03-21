@@ -7,7 +7,7 @@ import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 
 import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
 
-const DivisionSectionTitleInner = styled.div`
+const FoldableSectionTitleInner = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -31,12 +31,12 @@ const FoldableSectionTitle: React.FC<{
   showLength?: boolean;
   toggleHandler: () => void;
 }> = ({ title, clubList, toggle, showLength = true, toggleHandler }) => (
-  <DivisionSectionTitleInner>
+  <FoldableSectionTitleInner>
     <SectionTitle size="lg">
       {title} {showLength && `(${clubList.length})`}
     </SectionTitle>
     <MoreInfo onClick={toggleHandler}>{toggle ? `접기` : `펼치기`}</MoreInfo>
-  </DivisionSectionTitleInner>
+  </FoldableSectionTitleInner>
 );
 
 export default FoldableSectionTitle;
