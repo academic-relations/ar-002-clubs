@@ -5,9 +5,9 @@ import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import React from "react";
 import styled from "styled-components";
 import type { ClubDetail } from "@sparcs-clubs/web/types/clubdetail.types";
-import ClubInfoCard from "@sparcs-clubs/web/features/clubs/[id]/components/ClubInfoCard";
-import PersonInfoCard from "@sparcs-clubs/web/features/clubs/[id]/components/PersonInfoCard";
-import ClubDetailCard from "@sparcs-clubs/web/features/clubs/[id]/components/ClubDetailCard";
+import ClubInfoCard from "@sparcs-clubs/web/features/clubDetails/components/ClubInfoCard";
+import PersonInfoCard from "@sparcs-clubs/web/features/clubDetails/components/PersonInfoCard";
+import ClubDetailCard from "@sparcs-clubs/web/features/clubDetails/components/ClubDetailCard";
 
 const ClubDetailMainFrameInner = styled.div`
   display: flex;
