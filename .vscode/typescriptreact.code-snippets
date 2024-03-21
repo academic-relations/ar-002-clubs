@@ -1,5 +1,5 @@
 {
-  "Clubs Template": {
+  "Clubs Component Template": {
     "prefix": "cmptmpl",
     "body": [
       "import React from 'react';",
@@ -20,5 +20,20 @@
       "export default ${TM_FILENAME_BASE};",
     ],
     "description": "Clubs Template",
+  },
+
+  "Clubs Page Template": {
+    "prefix": "pgtmpl",
+    "body": [
+      "import React from 'react';",
+      "",
+      "import { UseClientProvider } from '@sparcs-clubs/web/common/providers/UseClientProvider';",
+      "",
+      "const ${1:PageName} = () => (",
+      "  <UseClientProvider>${1:PageName}</UseClientProvider>",
+      ");",
+      "",
+      "export default ${1:PageName};",
+    ],
   },
 }
