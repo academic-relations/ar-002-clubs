@@ -6,7 +6,7 @@
     "declarationMap": true,
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"]
+      "@sparcs-clubs/interface/*": ["./*"]
     }
   },
   "include": ["./src/**/*.ts"]

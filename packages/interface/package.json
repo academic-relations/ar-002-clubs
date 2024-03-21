@@ -16,6 +16,8 @@
   "scripts": {
     "prepare": "pnpm build",
     "dev": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
+    "mock:front": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
+    "mock:back": "tsc && (concurrently \"tsc -w\" \"tsc-alias -w\")",
     "typecheck": "tsc",
     "build": "tsc && tsc-alias",
     "clean": "rm -rf dist"
@@ -23,5 +25,8 @@
   "exports": {
     ".": "./dist/index.js",
     "./*": "./dist/*.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.7"
   }
 }

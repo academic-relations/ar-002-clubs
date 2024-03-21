@@ -16,6 +16,8 @@
     "build": "prisma generate && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
+    "mock:front": "echo \"In mock:front mode, the 'api' package will not be run. Exiting.\"",
+    "mock:back": "pnpm start:dev",
     "migrate:dev": "pnpm db up --wait && prisma migrate dev",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -39,6 +41,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@sparcs-clubs/interface": "workspace:*",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",

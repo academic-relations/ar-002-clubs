@@ -12,6 +12,12 @@ import StyledComponentsRegistry from "@sparcs-clubs/web/common/libs/styledCompon
 
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 
+import Header from "@sparcs-clubs/web/common/components/Header";
+import Footer from "@sparcs-clubs/web/common/components/Footer";
+
+import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
+import ResponsiveContent from "@sparcs-clubs/web/common/components/Responsive";
+
 export const metadata: Metadata = {
   title: "SPARCS Academic Relations Team",
   description: "Frontend Standard Stack v1.0.0",
@@ -24,7 +30,13 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => (
   >
     <body>
       <AppRouterCacheProvider>
-        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+        <StyledComponentsRegistry>
+          <UseClientProvider>
+            <Header />
+            <ResponsiveContent>{children}</ResponsiveContent>
+            <Footer />
+          </UseClientProvider>
+        </StyledComponentsRegistry>
       </AppRouterCacheProvider>
     </body>
   </html>

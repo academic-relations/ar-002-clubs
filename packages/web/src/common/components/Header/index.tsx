@@ -8,8 +8,8 @@ import NavList from "@sparcs-clubs/web/common/components/NavTools/NavList";
 
 import navPaths from "@sparcs-clubs/web/constants/nav";
 
-import Login from "./Login";
-import Logo from "./Logo";
+import Login from "./_atomic/Login";
+import Logo from "./_atomic/Logo";
 
 const IdentityBar = styled.div`
   position: relative;
