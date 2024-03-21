@@ -30,14 +30,17 @@ const MyPageMainFrame: React.FC<MyPageMainFrameProps> = ({ myClubList }) => {
       <PageTitle>나의 동아리</PageTitle>
       {isMyClubsExist && (
         <ClubListsByDepartmentWrapper>
-          {myClubList.map((myClub: MyClubsInfo) => (
-            <ClubsSectionFrame
-              showLength={false}
-              title={myClub.name}
-              clubList={myClub.clubs}
-              key={myClub.semester}
-            />
-          ))}
+          {myClubList.map(
+            (myClub: MyClubsInfo) =>
+              myClub.clubs.length > 0 && (
+                <ClubsSectionFrame
+                  showLength={false}
+                  title={myClub.name}
+                  clubList={myClub.clubs}
+                  key={myClub.semester}
+                />
+              ),
+          )}
         </ClubListsByDepartmentWrapper>
       )}
     </ClubsPageMainFrameInner>
