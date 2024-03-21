@@ -12,7 +12,6 @@ const ClubInfoItemInner = styled.div`
   display: flex;
   flex-direction: row;
   gap: 40px;
-  height: 24px;
   font-size: 16px;
   line-height: 24px;
 `;
