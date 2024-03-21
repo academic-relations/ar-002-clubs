@@ -11,6 +11,7 @@ import NavItem from "./NavItem";
 interface NavListProps {
   keys: (keyof Paths)[];
   className?: string;
+  highlight?: boolean;
 }
 
 const NavListInner = styled.div`
@@ -24,10 +25,14 @@ const StyledNavItem = styled(NavItem)`
   line-height: 20px;
 `;
 
-const NavList: React.FC<NavListProps> = ({ keys, className = "" }) => (
+const NavList: React.FC<NavListProps> = ({
+  keys,
+  className = "",
+  highlight = false,
+}) => (
   <NavListInner className={className}>
     {keys.map(key => (
-      <StyledNavItem key={key} {...paths[key]} />
+      <StyledNavItem highlight={highlight} key={key} {...paths[key]} />
     ))}
   </NavListInner>
 );
