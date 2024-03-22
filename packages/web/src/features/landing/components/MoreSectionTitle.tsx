@@ -4,6 +4,8 @@ import React from "react";
 import styled from "styled-components";
 
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
+import Link from "next/link";
+import paths from "@sparcs-clubs/web/constants/paths";
 
 const MoreSectionTitleInner = styled.div`
   display: flex;
@@ -28,7 +30,16 @@ const MoreSectionTitle: React.FC<{
 }> = ({ title, showMore = true }) => (
   <MoreSectionTitleInner>
     <SectionTitle size="lg">{title}</SectionTitle>
-    {showMore && <MoreInfo>글 더보기</MoreInfo>}
+    {showMore && (
+      <Link
+        href={
+          paths.HOME.path
+        } /* 추후 올바른 path로 수정 바람 --> paths.NOTICE.path */
+        style={{ display: "flex", flexDirection: "column" }}
+      >
+        <MoreInfo>글 더보기</MoreInfo>
+      </Link>
+    )}
   </MoreSectionTitleInner>
 );
 
