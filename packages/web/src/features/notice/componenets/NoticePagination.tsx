@@ -6,13 +6,16 @@ import styled from "styled-components";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 
 const NoticePaginationInner = styled.div`
+  flex-basis: auto;
+  flex-grow: 0;
+  flex-shrink: 0;
   display: flex;
   flex-direction: row;
   column-gap: 16px;
 `;
 
 // 버튼 스타일 지우기 위해 구성했는데, 올바른 방법인지 잘 모르겠습니다.
-const ButtonWrpper = styled.button`
+const ButtonWrapper = styled.button`
   border: none;
   padding: 0;
   background-color: ${({ theme }) => theme.colors.WHITE};
@@ -51,11 +54,11 @@ const getSliceIndice = (
       range.push(<CurrentIndex key={i}>{i.toString()}</CurrentIndex>);
     } else {
       range.push(
-        <ButtonWrpper key={i}>
+        <ButtonWrapper key={i}>
           <WalkableIndex onClick={() => setPage(i)}>
             {i.toString()}
           </WalkableIndex>
-        </ButtonWrpper>,
+        </ButtonWrapper>,
       );
     }
   }
@@ -101,23 +104,23 @@ const NoticePagination: React.FC<NoticePaginationProps> = ({
   return (
     <NoticePaginationInner>
       {currentRange > 0 ? (
-        <ButtonWrpper
+        <ButtonWrapper
           onClick={() => moveToLeftRange(currentRange, limit, setPage)}
           key="leftRange"
         >
           <Icon type="chevron_left" size={20} />
-        </ButtonWrpper>
+        </ButtonWrapper>
       ) : (
         <div />
       )}
       {getSliceIndice(totalPage, currentPage, currentRange, limit, setPage)}
       {currentRange < lastRange ? (
-        <ButtonWrpper
+        <ButtonWrapper
           onClick={() => moveToRightRange(currentRange, limit, setPage)}
           key="rightRange"
         >
           <Icon type="chevron_right" size={20} />
-        </ButtonWrpper>
+        </ButtonWrapper>
       ) : (
         <div />
       )}

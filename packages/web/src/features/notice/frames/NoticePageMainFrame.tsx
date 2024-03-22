@@ -5,10 +5,11 @@ import styled from "styled-components";
 
 import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 
-import NoticeListAndPagenationFrame from "@sparcs-clubs/web/features/notice/frames/NoticeListAndPagenationFrame";
+import NoticeListAndPaginationFrame from "@sparcs-clubs/web/features/notice/frames/NoticeListAndPaginationFrame";
 
 const NoticePageMainFrameInner = styled.div`
   width: 100%;
+  height: 100%;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   display: flex;
   flex-direction: column;
@@ -17,8 +18,8 @@ const NoticePageMainFrameInner = styled.div`
 
 const NoticePageMainFrame = () => (
   <NoticePageMainFrameInner>
-    <PageTitle>동아리 목록</PageTitle>
-    <NoticeListAndPagenationFrame />
+    <PageTitle>공지사항</PageTitle>
+    <NoticeListAndPaginationFrame />
   </NoticePageMainFrameInner>
 );
 

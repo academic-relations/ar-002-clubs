@@ -8,10 +8,11 @@ import type { NoticeInfo } from "@sparcs-clubs/web/features/notice/types/notice.
 
 const NoticeListInner = styled.div`
   width: 100%;
-  height: calc(100% - 41px);
-  border-width: 1px 0px 0px 0px;
-  border-style: solid;
-  border-color: ${({ theme }) => theme.colors.BLACK};
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow: hidden;
+  border-bottom: 1px solid;
+  border-color: ${({ theme }) => theme.colors.GRAY[200]};
   display: flex;
   flex-direction: column;
 `;
@@ -19,9 +20,8 @@ const NoticeListInner = styled.div`
 const NoticeListItemWrapper = styled.div`
   flex-grow: 1;
   min-height: 48px;
-  border-width: 0px 0px 1px 0px;
-  border-style: solid;
-  border-color: ${({ theme }) => theme.colors.GRAY};
+  border-bottom: 1px solid;
+  border-color: ${({ theme }) => theme.colors.GRAY[200]};
   padding: 8px;
 `;
 

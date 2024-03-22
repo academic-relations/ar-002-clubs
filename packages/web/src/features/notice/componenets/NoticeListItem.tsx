@@ -1,33 +1,45 @@
 "use client";
 
+import Image from "next/image";
 import React from "react";
 import styled from "styled-components";
+
+import clubsLogoSvg from "@sparcs-clubs/web/assets/logo-icon.svg";
 
 const NoticeListItemInner = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
+  flex-wrap: nowrap;
   align-items: center;
   column-gap: 20px;
 `;
 
 const NoticeIconAndTitle = styled.div`
-  width: calc(100% - 84px - 20px);
+  // NoticeListItemInner의 item으로서의 속성
+  // Date 와 gap 이외의 나머지 공간을 전부 채웁니다.
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow: hidden;
+  // NoticeIcon, NoticeTitleWrppaer 의 flex-container로서의 속성
   display: flex;
   flex-direction: row;
+  flex-wrap: nowrap;
   align-items: center;
   column-gap: 12px;
 `;
 
 // 공지사항별 아이콘이 표기되야 하는 구역입니다.
-const NoticeIcon = styled.div`
-  width: 32px;
+const NoticeIconWrapper = styled.div`
+  flex-basis: 32px;
   height: 32px;
-  background-color: gray;
+  flex-grow: 0;
+  flex-shrink: 0;
 `;
 
 const NoticeTitleWrppaer = styled.div`
-  width: calc(100% - 32px - 12px);
+  flex-grow: 1;
+  flex-shrink: 1;
   height: 24px;
   font-weight: 500;
   font-size: 16px;
@@ -38,13 +50,14 @@ const NoticeTitleWrppaer = styled.div`
 `;
 
 const NoticeDate = styled.div`
-  flex-basis: 84px;
-  width: 84px;
+  flex-basis: 90px;
+  flex-grow: 0;
+  flex-shrink: 0;
   height: 24px;
-  font-weight: 400;
+  ${({ theme }) => theme.fonts.WEIGHT.MEDIUM}
   font-size: 16px;
   line-height: 24px;
-  text-align: left;
+  text-align: center;
   overflow: hidden;
 `;
 
@@ -56,7 +69,9 @@ interface NoticeListItemProps {
 const NoticeListItem: React.FC<NoticeListItemProps> = ({ title, date }) => (
   <NoticeListItemInner>
     <NoticeIconAndTitle>
-      <NoticeIcon />
+      <NoticeIconWrapper>
+        <Image src={clubsLogoSvg} alt="clubs-logo" />
+      </NoticeIconWrapper>
       <NoticeTitleWrppaer>{title}</NoticeTitleWrppaer>
     </NoticeIconAndTitle>
     <NoticeDate>{date}</NoticeDate>

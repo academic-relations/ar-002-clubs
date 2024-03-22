@@ -14,16 +14,17 @@ import type { NoticeInfo } from "@sparcs-clubs/web/features/notice/types/notice.
 
 import mockupNoticePagination from "@sparcs-clubs/web/features/notice/types/mockupNoticeList";
 
-const NoticeListAndPagenationFrameInner = styled.div`
+const NoticeListAndPaginationFrameInner = styled.div`
   width: 100%;
-  height: 651px;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  flex-wrap: nowrap;
   align-items: center;
   row-gap: 20px;
 `;
 
-const NoticeListAndPagenationFrame = () => {
+const NoticeListAndPaginationFrame = () => {
   const [totalPage, setTotalPage] = useState<number>(0);
   const [page, setPage] = useState<number>(11);
   const [noticeInfos, setNoticeInfos] = useState<Array<NoticeInfo>>([]);
@@ -37,7 +38,7 @@ const NoticeListAndPagenationFrame = () => {
   }, [page]);
 
   return (
-    <NoticeListAndPagenationFrameInner>
+    <NoticeListAndPaginationFrameInner>
       <NoticeList infos={noticeInfos} />
       <NoticePagination
         totalPage={totalPage}
@@ -45,8 +46,8 @@ const NoticeListAndPagenationFrame = () => {
         limit={indexPerPagination}
         setPage={setPage}
       />
-    </NoticeListAndPagenationFrameInner>
+    </NoticeListAndPaginationFrameInner>
   );
 };
 
-export default NoticeListAndPagenationFrame;
+export default NoticeListAndPaginationFrame;
