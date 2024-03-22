@@ -1,11 +1,6 @@
 "use client";
 
-import ExampleComponent from "@sparcs-clubs/web/common/components/ExampleComponent";
+import MainPageMainFrame from "../features/clubs/frames/MainPageMainFrame";
 
-const Home = () => (
-  <ExampleComponent>
-    Welcome to SPARCS Clubs! The frontend is working well!
-  </ExampleComponent>
-);
-
+const Home = () => <MainPageMainFrame title="temptemp" />;
 export default Home;
