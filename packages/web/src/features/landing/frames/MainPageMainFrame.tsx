@@ -3,6 +3,7 @@
 import React from "react";
 import styled from "styled-components";
 
+import { NoticeInfo } from "@sparcs-clubs/web/features/notice/types/notice.type";
 import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
@@ -27,10 +28,12 @@ const NoticeAndServiceWrapper = styled.div`
 `;
 
 interface MainPageMainFrameProps {
-  title: string;
+  noticeList: Array<NoticeInfo>;
 }
 
-const MainPageMainFrame: React.FC<MainPageMainFrameProps> = ({ title }) => (
+const MainPageMainFrame: React.FC<MainPageMainFrameProps> = ({
+  noticeList,
+}) => (
   <MainPageMainFrameInner>
     <PageTitleWrapper>
       <PageTitle>
@@ -43,8 +46,8 @@ const MainPageMainFrame: React.FC<MainPageMainFrameProps> = ({ title }) => (
     </PageTitleWrapper>
 
     <NoticeAndServiceWrapper>
-      <NoticeSectionFrame title={title} />
-      <ServiceSectionFrame title={title} />
+      <NoticeSectionFrame noticeList={noticeList} />
+      <ServiceSectionFrame title="haha" />
     </NoticeAndServiceWrapper>
   </MainPageMainFrameInner>
 );
