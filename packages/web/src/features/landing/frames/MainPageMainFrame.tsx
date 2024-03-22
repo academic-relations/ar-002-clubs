@@ -24,7 +24,7 @@ const PageTitleWrapper = styled.div`
 const NoticeAndServiceWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 40px;
+  gap: 60px;
 `;
 
 interface MainPageMainFrameProps {
@@ -47,7 +47,7 @@ const MainPageMainFrame: React.FC<MainPageMainFrameProps> = ({
 
     <NoticeAndServiceWrapper>
       <NoticeSectionFrame noticeList={noticeList} />
-      <ServiceSectionFrame title="haha" />
+      <ServiceSectionFrame />
     </NoticeAndServiceWrapper>
   </MainPageMainFrameInner>
 );

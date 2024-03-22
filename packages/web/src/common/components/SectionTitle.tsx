@@ -8,7 +8,7 @@ type Size = "sm" | "lg";
 const SectionTitleInner = styled.div`
   position: relative;
   display: flex;
-  gap: 24px;
+  gap: 20px;
   width: fit-content;
 `;
 

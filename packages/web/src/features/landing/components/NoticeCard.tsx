@@ -9,7 +9,6 @@ const NoticeCardInner = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  margin-left: 28px;
 `;
 
 const NoticeTitle = styled.div`

@@ -9,8 +9,15 @@ import NoticeCard from "../components/NoticeCard";
 const NoticeSectionFrameInner = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
   width: 70%;
+`;
+
+const NoticeWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-left: 24px;
 `;
 
 type NoticeSectionFrameProps = {
@@ -21,10 +28,12 @@ const NoticeSectionFrame: React.FC<NoticeSectionFrameProps> = ({
   noticeList,
 }) => (
   <NoticeSectionFrameInner>
-    <MoreSectionTitle title="동아리" />
-    {noticeList.map(noticeInfo => (
-      <NoticeCard noticeList={noticeInfo} />
-    ))}
+    <MoreSectionTitle title="공지사항" />
+    <NoticeWrapper>
+      {noticeList.map(noticeInfo => (
+        <NoticeCard noticeList={noticeInfo} />
+      ))}
+    </NoticeWrapper>
   </NoticeSectionFrameInner>
 );
 

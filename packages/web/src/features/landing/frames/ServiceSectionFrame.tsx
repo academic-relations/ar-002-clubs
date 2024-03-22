@@ -4,23 +4,32 @@
 import React from "react";
 import styled from "styled-components";
 import MoreSectionTitle from "../components/MoreSectionTitle";
+import ServiceCard from "../components/ServiceCard";
 
-const NoticeSectionFrameInner = styled.div`
+const ServiceSectionFrameInner = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
   width: 30%;
+  gap: 20px;
 `;
 
-type NoticeSectionFrameProps = {
-  title: string;
-};
+const ServiceCardWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-left: 24px;
+`;
 
-const ServiceSectionFrame: React.FC<NoticeSectionFrameProps> = ({ title }) => (
-  <NoticeSectionFrameInner>
-    <MoreSectionTitle title="동아리" showMore={false} />
-    <p>{title}</p>
-  </NoticeSectionFrameInner>
+const ServiceSectionFrame: React.FC = () => (
+  <ServiceSectionFrameInner>
+    <MoreSectionTitle title="서비스 신청" showMore={false} />
+    <ServiceCardWrapper>
+      <ServiceCard serviceTitle="대여 사업" serviceLink="" />
+      <ServiceCard serviceTitle="홍보물 인쇄" serviceLink="" />
+      <ServiceCard serviceTitle="활동확인서 발급 신청" serviceLink="" />
+      <ServiceCard serviceTitle="공용공간 비정기사용신청" serviceLink="" />
+    </ServiceCardWrapper>
+  </ServiceSectionFrameInner>
 );
 
 export default ServiceSectionFrame;
