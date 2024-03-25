@@ -6,6 +6,10 @@ import styled from "styled-components";
 import NoticeListItem from "@sparcs-clubs/web/features/notice/componenets/NoticeListItem";
 import type { NoticeInfo } from "@sparcs-clubs/web/features/notice/types/notice.type";
 
+interface NoticeListProps {
+  infos: Array<NoticeInfo>;
+}
+
 const NoticeListInner = styled.div`
   width: 100%;
   flex-grow: 1;
@@ -24,10 +28,6 @@ const NoticeListItemWrapper = styled.div`
   border-color: ${({ theme }) => theme.colors.GRAY[200]};
   padding: 8px;
 `;
-
-interface NoticeListProps {
-  infos: Array<NoticeInfo>;
-}
 
 const NoticeList: React.FC<NoticeListProps> = ({ infos }) => (
   <NoticeListInner>

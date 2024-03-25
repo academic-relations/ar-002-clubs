@@ -1,0 +1,41 @@
+import { useQuery } from "@tanstack/react-query";
+import { z } from "zod";
+
+import apiNtc001 from "@sparcs-clubs/interface/api/notices/endpoints/apiNtc001";
+import {
+  axiosClient,
+  defineAxiosMock,
+  UnexpectedAPIResponseError,
+} from "@sparcs-clubs/web/lib/axios";
+import mockupNoticePagination from "@sparcs-clubs/web/features/notice/services/mockupNoticeList";
+
+// TODO: This might better work using z.discriminatedUnion
+// 예시는 (typeof apiNtc001.responseBodyMap)[200]의 형태인데, 아래가 맞는 것 같아서 질문 남겨둡니다!
+// ISuccessResponseType == NoticePagination 입니다!(NTC001의 경우 응답 형식이 1개뿐이기 때문)
+type ISuccessResponseType = z.infer<(typeof apiNtc001.responseBodyMap)[200]>;
+type IRequestQueryType = z.infer<typeof apiNtc001.requestQuery>;
+
+export const getNotice = (pageOffset: number, itemCount: number) => {
+  const requestQuery: IRequestQueryType = { pageOffset, itemCount };
+
+  return useQuery<ISuccessResponseType, Error>({
+    queryKey: [apiNtc001.url(), requestQuery],
+    queryFn: async (): Promise<ISuccessResponseType> => {
+      const { data, status } = await axiosClient.get(apiNtc001.url(), {
+        params: requestQuery,
+      });
+
+      // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
+      switch (status) {
+        case 200:
+          return apiNtc001.responseBodyMap[200].parse(data);
+        default:
+          throw new UnexpectedAPIResponseError();
+      }
+    },
+  });
+};
+
+defineAxiosMock(mock => {
+  mock.onGet(apiNtc001.url()).reply(() => [200, mockupNoticePagination]);
+});

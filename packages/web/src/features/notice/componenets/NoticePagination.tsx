@@ -5,6 +5,13 @@ import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 
+interface NoticePaginationProps {
+  totalPage: number;
+  currentPage: number;
+  limit: number;
+  setPage: React.Dispatch<number>;
+}
+
 const NoticePaginationInner = styled.div`
   flex-basis: auto;
   flex-grow: 0;
@@ -83,13 +90,6 @@ const moveToRightRange = (
   const destPage: number = (currentRange + 1) * limit + 1;
   setPage(destPage);
 };
-
-interface NoticePaginationProps {
-  totalPage: number;
-  currentPage: number;
-  limit: number;
-  setPage: React.Dispatch<number>;
-}
 
 const NoticePagination: React.FC<NoticePaginationProps> = ({
   totalPage,

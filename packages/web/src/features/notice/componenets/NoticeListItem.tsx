@@ -6,6 +6,11 @@ import styled from "styled-components";
 
 import clubsLogoSvg from "@sparcs-clubs/web/assets/logo-icon.svg";
 
+interface NoticeListItemProps {
+  title: string;
+  date: Date;
+}
+
 const NoticeListItemInner = styled.div`
   width: 100%;
   display: flex;
@@ -41,7 +46,7 @@ const NoticeTitleWrppaer = styled.div`
   flex-grow: 1;
   flex-shrink: 1;
   height: 24px;
-  font-weight: 500;
+  ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   font-size: 16px;
   line-height: 24px;
   white-space: nowrap;
@@ -50,7 +55,7 @@ const NoticeTitleWrppaer = styled.div`
 `;
 
 const NoticeDate = styled.div`
-  flex-basis: 90px;
+  flex-basis: 100px;
   flex-grow: 0;
   flex-shrink: 0;
   height: 24px;
@@ -61,11 +66,6 @@ const NoticeDate = styled.div`
   overflow: hidden;
 `;
 
-interface NoticeListItemProps {
-  title: string;
-  date: string;
-}
-
 const NoticeListItem: React.FC<NoticeListItemProps> = ({ title, date }) => (
   <NoticeListItemInner>
     <NoticeIconAndTitle>
@@ -74,7 +74,13 @@ const NoticeListItem: React.FC<NoticeListItemProps> = ({ title, date }) => (
       </NoticeIconWrapper>
       <NoticeTitleWrppaer>{title}</NoticeTitleWrppaer>
     </NoticeIconAndTitle>
-    <NoticeDate>{date}</NoticeDate>
+    <NoticeDate>
+      {date.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })}
+    </NoticeDate>
   </NoticeListItemInner>
 );
 
