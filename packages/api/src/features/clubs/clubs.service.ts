@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ClubsRepository } from "@sparcs-clubs/api/prisma/repositories/clubs/clubs.repository";
+import { ClubsRepository } from "@sparcs-clubs/api/prisma/repositories/clubs.repository";
 
 @Injectable()
 export class ClubsService {
