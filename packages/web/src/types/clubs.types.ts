@@ -1,13 +1,14 @@
 import type { TagColor } from "@sparcs-clubs/web/common/components/Tag";
 
+// apiClb001 응답의 clubs에 대응되는 타입입니다.
 interface RawClubsData {
   id: number;
-  clubName: string;
-  characteristicKr: string;
-  clubType: string;
-  clubPresident: string;
+  name: string;
+  type: string;
+  characteristic: string;
+  representative: string;
   advisor: string | null;
-  totalMembers: number;
+  totalMemberCnt: number;
 }
 
 interface ClubInfo {
@@ -34,12 +35,12 @@ const fromObj = (clubObj: RawClubsData) => {
 
   const club: ClubInfo = {
     id: clubObj.id,
-    name: clubObj.clubName,
-    description: clubObj.characteristicKr,
-    type: clubTypeRelation.get(clubObj.clubType.trim()) ?? ClubType.Provisional,
-    president: clubObj.clubPresident,
+    name: clubObj.name,
+    type: clubTypeRelation.get(clubObj.type.trim()) ?? ClubType.Provisional,
+    description: clubObj.characteristic,
+    president: clubObj.representative,
     advisor: clubObj.advisor === null ? undefined : clubObj.advisor,
-    members: clubObj.totalMembers,
+    members: clubObj.totalMemberCnt,
   };
 
   return club;
@@ -70,4 +71,4 @@ const getClubType = (club: ClubInfo) => {
 };
 
 export type { ClubInfo, RawClubsData };
-export { fromObj, getClubType, getTagColorFromClubType };
+export { ClubType, fromObj, getClubType, getTagColorFromClubType };
