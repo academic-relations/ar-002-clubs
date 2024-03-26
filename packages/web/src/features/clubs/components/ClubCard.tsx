@@ -66,7 +66,7 @@ const ClubCard: React.FC<ClubCardProps> = ({ club }) => (
     </ClubCardNameRow>
 
     <ClubCardRow>
-      {club.advisor === null
+      {club.advisor === null || club.advisor === undefined
         ? `회장 ${club.president}`
         : `회장 ${club.president} | 지도교수 ${club.advisor}`}
     </ClubCardRow>
