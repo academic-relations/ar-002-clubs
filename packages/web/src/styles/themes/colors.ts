@@ -23,7 +23,11 @@ const colors = {
     600: "#065DAC",
   },
   GRAY: {
+    100: "#FAFAFA",
     200: "#EEEEEE",
+  },
+  RED: {
+    600: "#DC2626",
   },
 };
 
