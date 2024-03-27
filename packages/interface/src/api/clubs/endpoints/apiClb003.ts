@@ -1,4 +1,3 @@
-import { createErrorResponse } from "@sparcs-clubs/interface/common/api";
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
@@ -38,12 +37,7 @@ const responseBodyMap = {
   }),
 };
 
-const responseErrorMap = {
-  [HttpStatusCode.Unauthorized]: createErrorResponse(
-    "Unauthorized",
-    "You are not authorized to access this resource.",
-  ),
-};
+const responseErrorMap = {};
 
 const apiClb003 = {
   url,

@@ -11,7 +11,7 @@ import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
 import {
   getClubType,
   getTagColorFromClubType,
-} from "@sparcs-clubs/web/types/clubs.types";
+} from "@sparcs-clubs/web/features/clubs/services/clubTypeControl";
 
 interface ClubCardProps {
   club: ClubInfo;
@@ -61,16 +61,16 @@ const ClubCard: React.FC<ClubCardProps> = ({ club }) => (
       <ClubName>{club.name}</ClubName>
       <ClubMemberCount>
         <Icon type="person" size={16} />
-        <div>{club.members}</div>
+        <div>{club.totalMemberCnt}</div>
       </ClubMemberCount>
     </ClubCardNameRow>
 
     <ClubCardRow>
       {club.advisor === null || club.advisor === undefined
-        ? `회장 ${club.president}`
-        : `회장 ${club.president} | 지도교수 ${club.advisor}`}
+        ? `회장 ${club.representative}`
+        : `회장 ${club.advisor} | 지도교수 ${club.advisor}`}
     </ClubCardRow>
-    <ClubCardRow>{club.description}</ClubCardRow>
+    <ClubCardRow>{club.characteristic}</ClubCardRow>
 
     <ClubCardRow>
       <Tag color={getTagColorFromClubType(club.type)}>{getClubType(club)}</Tag>

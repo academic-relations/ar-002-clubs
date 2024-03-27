@@ -8,7 +8,6 @@ import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
 import { getClubsList } from "@sparcs-clubs/web/features/clubs/services/getClubsList";
-import { fromObj } from "@sparcs-clubs/web/types/clubs.types";
 
 const ClubsPageMainFrameInner = styled.div`
   display: flex;
@@ -32,7 +31,7 @@ const ClubsPageMainFrame: React.FC = () => {
           {(data?.divisions ?? []).map(division => (
             <ClubsSectionFrame
               title={division.name}
-              clubList={division.clubs.map(fromObj)}
+              clubList={division.clubs}
               key={division.name}
             />
           ))}
