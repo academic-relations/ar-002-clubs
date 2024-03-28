@@ -8,17 +8,17 @@ import FoldableSectionTitle from "@sparcs-clubs/web/features/clubs/components/Fo
 
 import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
 
-const ClubDivisionSectionFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
 type ClubsSectionFrameProps = {
   showLength?: boolean; // section title에 길이 보여줄지 여부
   title: string; // 분과
   clubList: Array<ClubInfo>;
 };
+
+const ClubDivisionSectionFrameInner = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
 
 const ClubsSectionFrame: React.FC<ClubsSectionFrameProps> = ({
   showLength = true,
