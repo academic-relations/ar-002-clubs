@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 type CheckboxProps = {
   checked: boolean;
+  onClick?: () => void;
 };
 
 const CheckboxInner = styled.div`
@@ -16,8 +17,8 @@ const CheckboxInner = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.BLACK};
 `;
 
-const Checkbox = ({ checked }: CheckboxProps) => (
-  <CheckboxInner>
+const Checkbox = ({ checked, onClick = () => {} }: CheckboxProps) => (
+  <CheckboxInner onClick={onClick}>
     {checked && (
       <svg
         xmlns="http://www.w3.org/2000/svg"
