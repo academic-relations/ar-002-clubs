@@ -1,9 +1,10 @@
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 import React from "react";
 import styled from "styled-components";
-import RentalNoticeFrame from "./RentalNoticeFrame";
+import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
+import RentalInfoFrame from "@sparcs-clubs/web/features/rental-business/frames/RentalInfoFrame";
+
 import type { RentalInterface } from "../types/rental";
-import RentalInfoFrame from "./RentalInfoFrame";
+import RentalNoticeFrame from "./RentalNoticeFrame";
 
 const RentalMainFrameInner = styled.div`
   display: flex;

@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import Info from "@sparcs-clubs/web/features/rental-business/components/Info";
+import Info from "@sparcs-clubs/web/common/components/Info";
 import Radio from "@sparcs-clubs/web/common/components/Radio";
 import ItemButtonList from "@sparcs-clubs/web/features/rental-business/components/ItemButtonList";
-
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
 const StyledCard = styled(Card)`
@@ -72,36 +71,40 @@ const Tool: React.FC<RentalFrameProps> = () => (
   </>
 );
 
+const rentals = {
+  easel: {
+    info: "대충 이젤에 대한 추가 안내사항",
+    component: Easel,
+  },
+  vacuum: {
+    info: "대충 청소기에 대한 추가 안내사항",
+    component: Vacuum,
+  },
+  handCart: {
+    info: "대충 핸드카트에 대한 추가 안내사항",
+    component: HandCart,
+  },
+  mat: {
+    info: "대충 매트에 대한 추가 안내사항",
+    component: Mat,
+  },
+  tool: {
+    info: "대충 툴에 대한 추가 안내사항",
+    component: Tool,
+  },
+};
+
 const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
   rental,
   setRental,
 }) => {
-  const props = { rental, setRental };
   const [value, setValue] = useState<
     "easel" | "vacuum" | "handCart" | "mat" | "tool"
   >("easel");
-  const options = {
-    easel: {
-      info: "대충 이젤에 대한 추가 안내사항",
-      component: <Easel {...props} />,
-    },
-    vacuum: {
-      info: "대충 청소기에 대한 추가 안내사항",
-      component: <Vacuum {...props} />,
-    },
-    handCart: {
-      info: "대충 핸드카트에 대한 추가 안내사항",
-      component: <HandCart {...props} />,
-    },
-    mat: {
-      info: "대충 매트에 대한 추가 안내사항",
-      component: <Mat {...props} />,
-    },
-    tool: {
-      info: "대충 툴에 대한 추가 안내사항",
-      component: <Tool {...props} />,
-    },
-  };
+
+  const Rental = rentals[value].component;
+  const props = { rental, setRental };
+
   return (
     <>
       <ItemButtonList value={value} onChange={setValue} />
@@ -109,7 +112,7 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
       <StyledCard>
         <StyledCardInner>
           <Typography type="h3">새부 물품 정보</Typography>
-          {options[value].component}
+          <Rental {...props} />
         </StyledCardInner>
       </StyledCard>
     </>

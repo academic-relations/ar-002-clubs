@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import { RentalFrameProps } from "../RentalNoticeFrame";
@@ -32,25 +32,24 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
   const [step, setStep] = useState(0);
   const CurrentFrame = frames[step];
 
-  const onPrev = () => {
+  const onPrev = useCallback(() => {
     if (step === 0) {
       setRental({ ...rental, agreement: false });
       return;
     }
     setStep(step - 1);
-  };
+  }, [step, setStep, rental, setRental]);
 
-  const onNext = () => {
+  const onNext = useCallback(() => {
     if (step === frames.length - 1) {
       return;
     }
     setStep(step + 1);
-  };
+  }, [step, setStep]);
 
   return (
     <>
       <RentalNoticeFrameInner>
-        dummy
         <CurrentFrame {...props} />
       </RentalNoticeFrameInner>
       <StyledBottom>
