@@ -1,5 +1,6 @@
 import { ClubsResponseDtoType } from "@sparcs-clubs/interface/common/interfaces/IClubs";
 import { Controller, Get } from "@nestjs/common";
+import { ClubNotFoundException } from "@sparcs-clubs/api/exceptions/club.exception";
 import { ClubsService } from "./clubs.service";
 
 @Controller("clubs")
@@ -9,7 +10,7 @@ export class ClubsController {
   @Get()
   async getClubs(): Promise<ClubsResponseDtoType[]> {
     await this.clubsService.getClubs();
-    return [
+    /* return [
       {
         id: 1,
         name: "clubs",
@@ -25,6 +26,7 @@ export class ClubsController {
           },
         ],
       },
-    ];
+    ]; */
+    throw new ClubNotFoundException();
   }
 }
