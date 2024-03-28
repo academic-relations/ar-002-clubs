@@ -27,10 +27,8 @@
     "body": [
       "import React from 'react';",
       "",
-      "import { UseClientProvider } from '@sparcs-clubs/web/common/providers/UseClientProvider';",
-      "",
       "const ${1:PageName} = () => (",
-      "  <UseClientProvider>${1:PageName}</UseClientProvider>",
+      "  <>${1:PageName}</>",
       ");",
       "",
       "export default ${1:PageName};",
