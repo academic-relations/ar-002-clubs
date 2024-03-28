@@ -74,6 +74,7 @@ const TextInput: React.FC<TextInputProps> = ({
   errorMessage = "",
   area = false,
   disabled = false,
+  ...props
 }) => (
   <InputWrapper>
     {label && <Label>{label}</Label>}
@@ -83,6 +84,7 @@ const TextInput: React.FC<TextInputProps> = ({
         hasError={!!errorMessage}
         area={area}
         disabled={disabled}
+        {...props}
       />
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </InputWrapper>
