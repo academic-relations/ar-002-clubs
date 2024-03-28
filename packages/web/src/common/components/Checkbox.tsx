@@ -6,6 +6,7 @@ import Icon from "./Icon";
 
 type CheckboxProps = {
   checked: boolean;
+  onClick?: () => void;
 };
 
 const CheckboxInner = styled.div`
