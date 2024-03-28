@@ -9,15 +9,21 @@ export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   placeholder: string;
   errorMessage?: string;
   area?: boolean;
+  disabled?: boolean;
 }
 
 const errorBorderStyle = css`
   border-color: ${({ theme }) => theme.colors.RED[600]};
 `;
 
+const disabledStyle = css`
+  background-color: ${({ theme }) => theme.colors.GRAY[100]};
+  border-color: ${({ theme }) => theme.colors.GRAY[200]};
+`;
+
 const areaInputStyle = css`
   height: 100px;
-  resize: vertical;
+  resize: none;
   overflow: auto;
 `;
 
@@ -39,20 +45,17 @@ const Input = styled.input.attrs<TextInputProps>(({ area }) => ({
   color: ${({ theme }) => theme.colors.BLACK};
   background-color: ${({ theme }) => theme.colors.WHITE};
   &:focus {
-    border-color: ${({ theme, hasError }) => !hasError && theme.colors.PRIMARY};
+    border-color: ${({ theme, hasError, disabled }) =>
+      !hasError && !disabled && theme.colors.PRIMARY};
   }
   &:hover:not(:focus) {
-    border-color: ${({ theme, hasError }) =>
-      !hasError && theme.colors.GRAY[300]};
-  }
-  &:disabled {
-    background-color: ${({ theme }) => theme.colors.GRAY[100]};
-    border-color: ${({ theme }) => theme.colors.GRAY[200]};
-    color: ${({ theme }) => theme.colors.RED[600]};
+    border-color: ${({ theme, hasError, disabled }) =>
+      !hasError && !disabled && theme.colors.GRAY[300]};
   }
   ::placeholder {
     color: ${({ theme }) => theme.colors.GRAY[200]};
   }
+  ${({ disabled }) => disabled && disabledStyle}
   ${({ hasError }) => hasError && errorBorderStyle}
   ${({ area }) => area && areaInputStyle} // TextAreaInput
 `;
@@ -70,11 +73,17 @@ const TextInput: React.FC<TextInputProps> = ({
   placeholder,
   errorMessage = "",
   area = false,
+  disabled = false,
 }) => (
   <InputWrapper>
     {label && <Label>{label}</Label>}
     <InputWrapper>
-      <Input placeholder={placeholder} hasError={!!errorMessage} area={area} />
+      <Input
+        placeholder={placeholder}
+        hasError={!!errorMessage}
+        area={area}
+        disabled={disabled}
+      />
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </InputWrapper>
   </InputWrapper>
