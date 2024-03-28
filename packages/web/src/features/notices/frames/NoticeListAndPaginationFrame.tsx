@@ -11,7 +11,7 @@ import {
 import NoticeList from "@sparcs-clubs/web/features/notice/componenets/NoticeList";
 import NoticePagination from "@sparcs-clubs/web/features/notice/componenets/NoticePagination";
 
-import { getNotice } from "@sparcs-clubs/web/features/notice/services/getNotice";
+import { getNotice } from "@sparcs-clubs/web/features/notices/services/getNotice";
 
 const NoticeListAndPaginationFrameInner = styled.div`
   width: 100%;

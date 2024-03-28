@@ -4,7 +4,7 @@ import React from "react";
 import styled from "styled-components";
 
 import NoticeListItem from "@sparcs-clubs/web/features/notice/componenets/NoticeListItem";
-import type { NoticeInfo } from "@sparcs-clubs/web/features/notice/types/notice.type";
+import type { NoticeInfo } from "@sparcs-clubs/web/features/notices/types/notice.type";
 
 interface NoticeListProps {
   infos: Array<NoticeInfo>;

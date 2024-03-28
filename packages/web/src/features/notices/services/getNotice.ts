@@ -7,7 +7,7 @@ import {
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
-import mockupNoticePagination from "@sparcs-clubs/web/features/notice/services/mockupNoticeList";
+import mockupNoticePagination from "@sparcs-clubs/web/features/notices/services/_mock/mockupNoticeList";
 
 // TODO: This might better work using z.discriminatedUnion
 // 예시는 (typeof apiNtc001.responseBodyMap)[200]의 형태인데, 아래가 맞는 것 같아서 질문 남겨둡니다!

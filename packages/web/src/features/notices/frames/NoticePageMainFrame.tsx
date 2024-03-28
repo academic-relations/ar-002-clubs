@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 
-import NoticeListAndPaginationFrame from "@sparcs-clubs/web/features/notice/frames/NoticeListAndPaginationFrame";
+import NoticeListAndPaginationFrame from "@sparcs-clubs/web/features/notices/frames/NoticeListAndPaginationFrame";
 
 const NoticePageMainFrameInner = styled.div`
   width: 100%;

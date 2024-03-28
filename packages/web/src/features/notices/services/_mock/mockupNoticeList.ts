@@ -3,7 +3,7 @@ import { z } from "zod";
 import {
   NoticeInfo,
   NoticePagination,
-} from "@sparcs-clubs/web/features/notice/types/notice.type";
+} from "@sparcs-clubs/web/features/notices/types/notice.type";
 
 // 목업 데이터를 인터페이스로 매핑해주는 임시 함수입니다.
 const fromObj = (noticeObj: (typeof mockupData.posts)[0]): NoticeInfo => {
