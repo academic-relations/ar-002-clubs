@@ -14,6 +14,10 @@ const ButtonInner = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 4px;
+  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
 `;
 
 const ButtonDefaultInner = styled(ButtonInner)`
