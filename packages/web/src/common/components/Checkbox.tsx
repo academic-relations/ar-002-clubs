@@ -2,6 +2,7 @@
 
 import React from "react";
 import styled from "styled-components";
+import Icon from "./Icon";
 
 type CheckboxProps = {
   checked: boolean;
