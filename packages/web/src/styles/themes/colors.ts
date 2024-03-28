@@ -22,8 +22,13 @@ const colors = {
     200: "#E7F0FF",
     600: "#065DAC",
   },
+  MINT: {
+    800: "#0C7F8E",
+  },
   GRAY: {
+    100: "#FAFAFA",
     200: "#EEEEEE",
+    300: "#DDDDDD",
   },
 };
 
