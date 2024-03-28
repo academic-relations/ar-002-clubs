@@ -15,7 +15,7 @@ const RadioOptionInner = styled.div`
   display: flex;
   padding-left: 2px;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
   color: ${({ theme }) => theme.colors.BLACK};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 16px;
