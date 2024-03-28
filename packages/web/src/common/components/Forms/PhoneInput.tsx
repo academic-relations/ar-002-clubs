@@ -6,27 +6,65 @@ import TextInput, {
 const PhoneInput: React.FC<TextInputProps> = ({ label = "", ...props }) => {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
+  const [touched, setTouched] = useState(false);
 
   useEffect(() => {
-    if (value && !/^\d*$/.test(value)) {
-      setError("숫자만 입력 가능합니다");
-    } else {
-      setError("");
+    if (touched) {
+      const isValidFormat =
+        /^(\d{3}-\d{4}-\d{4})$/.test(value) ||
+        /^\d*$/.test(value.replace(/-/g, ""));
+
+      if (!value) {
+        setError("필수로 채워야 하는 항목입니다");
+      } else if (!isValidFormat) {
+        setError("숫자만 입력 가능합니다");
+      } else if (value.replace(/-/g, "").length !== 11) {
+        setError("유효하지 않은 전화번호입니다");
+      } else {
+        setError("");
+      }
     }
-  }, [value]);
+  }, [value, touched]);
+
+  const handleBlur = () => {
+    setTouched(true);
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+    const inputValue = e.target.value;
+
+    if (inputValue.length <= 13) {
+      setValue(inputValue);
+    } else {
+      setError("유효하지 않은 전화번호입니다");
+    }
   };
+  const formatValue = (nums: string) => {
+    const digits = nums.replace(/\D/g, "");
+    let formattedInput = "";
+
+    if (digits.length <= 3) {
+      formattedInput = digits;
+    } else if (digits.length <= 7) {
+      formattedInput = `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    } else if (digits.length <= 11) {
+      formattedInput = `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+    }
+
+    return formattedInput;
+  };
+
   return (
     <TextInput
       label={label}
-      value={value}
+      value={formatValue(value)}
       onChange={handleChange}
       errorMessage={error}
+      onBlur={handleBlur}
       {...props}
     />
   );
 };
+// TODO: DB 값 default로 넣어두기
 
 export default PhoneInput;
