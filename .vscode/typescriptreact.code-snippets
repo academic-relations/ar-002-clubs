@@ -1,0 +1,37 @@
+{
+  "Clubs Component Template": {
+    "prefix": "cmptmpl",
+    "body": [
+      "import React from 'react';",
+      "import styled from 'styled-components';",
+      "",
+      "interface ${TM_FILENAME_BASE}Props {",
+      "  ${1:prop}: string;",
+      "}",
+      "",
+      "const ${TM_FILENAME_BASE}Inner = styled.div`",
+      "  color: ${({ theme }) => theme.colors.BLACK};",
+      "`;",
+      "",
+      "const ${TM_FILENAME_BASE}: React.FC<${TM_FILENAME_BASE}Props> = ({ ${1:props} }) => (",
+      "  <${TM_FILENAME_BASE}Inner>{${1:props}}</${TM_FILENAME_BASE}Inner>",
+      ");",
+      "",
+      "export default ${TM_FILENAME_BASE};",
+    ],
+    "description": "Clubs Template",
+  },
+
+  "Clubs Page Template": {
+    "prefix": "pgtmpl",
+    "body": [
+      "import React from 'react';",
+      "",
+      "const ${1:PageName} = () => (",
+      "  <>${1:PageName}</>",
+      ");",
+      "",
+      "export default ${1:PageName};",
+    ],
+  },
+}
