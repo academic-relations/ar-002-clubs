@@ -10,7 +10,8 @@ type CheckboxProps = {
 
 const CheckboxInner = styled.div`
   display: inline-flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   width: 16px;
   height: 16px;
   border-radius: 4px;
