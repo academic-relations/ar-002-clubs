@@ -1,14 +1,14 @@
 import React, { InputHTMLAttributes } from "react";
 import styled, { css } from "styled-components";
-import Label from "@sparcs-clubs/web/common/components/Forms/_atomic/Label";
-import ErrorMessage from "@sparcs-clubs/web/common/components/Forms/_atomic/ErrorMessage";
+import Label from "./_atomic/Label";
+import ErrorMessage from "./_atomic/ErrorMessage";
 
-// Define the props interface
-interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
+// PhoneInput, RentalInput에서 사용하기 위해 export
+export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   placeholder: string;
   errorMessage?: string;
-  area?: boolean; // Add this line
+  area?: boolean;
 }
 
 const errorBorderStyle = css`
@@ -17,14 +17,17 @@ const errorBorderStyle = css`
 
 const areaInputStyle = css`
   height: 100px;
-  // TODO text 위쪽 정렬
-  // TODO 여러 줄 받기
+  resize: vertical;
+  overflow: auto;
 `;
 
-const Input = styled.input<{ hasError?: boolean; area?: boolean }>`
+const Input = styled.input.attrs<TextInputProps>(({ area }) => ({
+  as: area ? "textarea" : "input",
+}))<TextInputProps & { hasError: boolean }>`
   display: block;
   width: 300px;
   padding: 8px 12px 8px 12px;
+  outline: none;
   border: 1px solid;
   border-color: ${({ theme }) => theme.colors.GRAY[200]};
   border-radius: 4px;
@@ -36,13 +39,11 @@ const Input = styled.input<{ hasError?: boolean; area?: boolean }>`
   color: ${({ theme }) => theme.colors.BLACK};
   background-color: ${({ theme }) => theme.colors.WHITE};
   &:focus {
-    border-color: ${({ theme }) => theme.colors.PRIMARY};
+    border-color: ${({ theme, hasError }) => !hasError && theme.colors.PRIMARY};
   }
-  &:invalid {
-    border-color: ${({ theme }) => theme.colors.RED[600]};
-  }
-  &:hover {
-    border-color: ${({ theme }) => theme.colors.GRAY[300]};
+  &:hover:not(:focus) {
+    border-color: ${({ theme, hasError }) =>
+      !hasError && theme.colors.GRAY[300]};
   }
   &:disabled {
     background-color: ${({ theme }) => theme.colors.GRAY[100]};
@@ -70,19 +71,13 @@ const TextInput: React.FC<TextInputProps> = ({
   errorMessage = "",
   area = false,
 }) => (
-  <div>
+  <InputWrapper>
+    {label && <Label>{label}</Label>}
     <InputWrapper>
-      {label && <Label>{label}</Label>}
-      <InputWrapper>
-        <Input
-          placeholder={placeholder}
-          hasError={!!errorMessage}
-          area={area}
-        />
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      </InputWrapper>
+      <Input placeholder={placeholder} hasError={!!errorMessage} area={area} />
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </InputWrapper>
-  </div>
+  </InputWrapper>
 );
 
 export default TextInput;
