@@ -35,8 +35,6 @@ const PhoneInput: React.FC<TextInputProps> = ({ label = "", ...props }) => {
 
     if (inputValue.length <= 13) {
       setValue(inputValue);
-    } else {
-      setError("유효하지 않은 전화번호입니다");
     }
   };
   const formatValue = (nums: string) => {
