@@ -42,11 +42,12 @@ const NoticeIconWrapper = styled.div`
   flex-shrink: 0;
 `;
 
-const NoticeTitleWrppaer = styled.div`
+const NoticeTitleWrapper = styled.div`
   flex-grow: 1;
   flex-shrink: 1;
   height: 24px;
-  ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
+  color: ${({ theme }) => theme.colors.BLACK};
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   font-size: 16px;
   line-height: 24px;
   white-space: nowrap;
@@ -59,7 +60,7 @@ const NoticeDate = styled.div`
   flex-grow: 0;
   flex-shrink: 0;
   height: 24px;
-  ${({ theme }) => theme.fonts.WEIGHT.MEDIUM}
+  color: ${({ theme }) => theme.colors.BLACK};
   font-size: 16px;
   line-height: 24px;
   text-align: center;
@@ -72,7 +73,7 @@ const NoticeListItem: React.FC<NoticeListItemProps> = ({ title, date }) => (
       <NoticeIconWrapper>
         <Image src={clubsLogoSvg} alt="clubs-logo" />
       </NoticeIconWrapper>
-      <NoticeTitleWrppaer>{title}</NoticeTitleWrppaer>
+      <NoticeTitleWrapper>{title}</NoticeTitleWrapper>
     </NoticeIconAndTitle>
     <NoticeDate>
       {date.toLocaleDateString("ko-KR", {

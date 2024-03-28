@@ -8,8 +8,8 @@ import {
   noticePerPage,
   indexPerPagination,
 } from "@sparcs-clubs/web/constants/noticeList";
-import NoticeList from "@sparcs-clubs/web/features/notice/componenets/NoticeList";
-import NoticePagination from "@sparcs-clubs/web/features/notice/componenets/NoticePagination";
+import NoticeList from "@sparcs-clubs/web/features/notices/components/NoticeList";
+import NoticePagination from "@sparcs-clubs/web/features/notices/components/NoticePagination";
 
 import { getNotice } from "@sparcs-clubs/web/features/notices/services/getNotice";
 

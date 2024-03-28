@@ -29,16 +29,21 @@ const ButtonWrapper = styled.button`
 `;
 
 const WalkableIndex = styled.div`
+  width: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   font-size: 16px;
   line-height: 20px;
+  color: ${({ theme }) => theme.colors.BLACK};
+  text-align: center;
 `;
 
 const CurrentIndex = styled.div`
+  width: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   font-size: 16px;
   line-height: 20px;
   color: ${({ theme }) => theme.colors.PRIMARY};
+  text-align: center;
 `;
 
 const getSliceIndice = (

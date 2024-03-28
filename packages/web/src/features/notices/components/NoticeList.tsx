@@ -3,7 +3,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import NoticeListItem from "@sparcs-clubs/web/features/notice/componenets/NoticeListItem";
+import NoticeListItem from "@sparcs-clubs/web/features/notices/components/NoticeListItem";
 import type { NoticeInfo } from "@sparcs-clubs/web/features/notices/types/notice.type";
 
 interface NoticeListProps {
@@ -24,8 +24,7 @@ const NoticeListInner = styled.div`
 const NoticeListItemWrapper = styled.div`
   flex-grow: 1;
   min-height: 48px;
-  border-bottom: 1px solid;
-  border-color: ${({ theme }) => theme.colors.GRAY[200]};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
   padding: 8px;
 `;
 
