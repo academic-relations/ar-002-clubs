@@ -1,14 +1,14 @@
-"use client";
+// "use client";
 
-import React from "react";
-import styled from "styled-components";
+// import React from "react";
+// import styled from "styled-components";
 
-const ExampleComponentInner = styled.div`
-  color: ${({ theme }) => theme.colors.RED};
-`;
+// const ExampleComponentInner = styled.div`
+//   color: ${({ theme }) => theme.colors.RED};
+// `;
 
-const ExampleComponent: React.FC<React.PropsWithChildren> = ({
-  children = <div />,
-}) => <ExampleComponentInner>{children}</ExampleComponentInner>;
+// const ExampleComponent: React.FC<React.PropsWithChildren> = ({
+//   children = <div />,
+// }) => <ExampleComponentInner>{children}</ExampleComponentInner>;
 
-export default ExampleComponent;
+// export default ExampleComponent;

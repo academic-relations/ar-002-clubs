@@ -1,11 +1,13 @@
 "use client";
 
-import ExampleComponent from "@sparcs-clubs/web/common/components/ExampleComponent";
+import MainPageMainFrame from "../features/landing/frames/MainPageMainFrame";
+import mockupNoticePagination from "../features/notice/types/mockupNoticeList";
 
 const Home = () => (
-  <ExampleComponent>
-    Welcome to SPARCS Clubs! The frontend is working well!
-  </ExampleComponent>
+  <MainPageMainFrame
+    noticeList={mockupNoticePagination.notices
+      .sort((a, b) => b.date.localeCompare(a.date))
+      .slice(0, 6)}
+  />
 );
-
 export default Home;
