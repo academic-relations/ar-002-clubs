@@ -16,7 +16,7 @@ export class ClubException extends HttpException {
   statusCode: number;
 
   constructor(errorString: string, statusCode: number) {
-    super(errorString, statusCode);
+    super(`[Club]${errorString}`, statusCode);
     this.errorString = errorString;
     this.statusCode = statusCode;
   }
