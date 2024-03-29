@@ -4,28 +4,36 @@ import {
   Catch,
   ArgumentsHost,
   HttpStatus,
-  HttpException,
 } from "@nestjs/common";
+import { ClubException } from "./club.exception";
 
 @Catch() // BaseException을 상속한 exception에 대해서 실행됨.
 export class AllExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException, host: ArgumentsHost) {
+  catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
 
-    const resstatus =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
-    console.log(
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : HttpStatus.INTERNAL_SERVER_ERROR,
-    );
-    response.status(resstatus).json({
-      message: exception.getResponse(),
-      statusCode: resstatus,
+    const resStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+    response.status(resStatus).json({
+      statusCode: resStatus,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+    });
+  }
+}
+
+@Catch(ClubException) // BaseException을 상속한 exception에 대해서 실행됨.
+export class ClubExceptionFilter implements ExceptionFilter {
+  catch(exception: ClubException, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse();
+    const request = ctx.getRequest();
+
+    const resStatus = exception.getStatus();
+    response.status(resStatus).json({
+      message: exception.getResponse(), // test를 위한 코드
+      statusCode: resStatus,
       timestamp: new Date().toISOString(),
       path: request.url,
     });

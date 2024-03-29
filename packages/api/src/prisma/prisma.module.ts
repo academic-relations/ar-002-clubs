@@ -4,6 +4,6 @@ import { ClubsRepository } from "./repositories/clubs.repository";
 
 @Module({
   providers: [PrismaService, ClubsRepository],
-  exports: [PrismaService],
+  exports: [PrismaService, ClubsRepository],
 })
 export class PrismaModule {}
