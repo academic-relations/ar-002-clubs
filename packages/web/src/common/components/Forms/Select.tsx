@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
+import Label from "./_atomic/Label";
+import ErrorMessage from "./_atomic/ErrorMessage";
 
 interface SelectItem {
   label: string;
@@ -9,8 +11,8 @@ interface SelectItem {
 
 interface SelectProps {
   items: SelectItem[];
-  // label?: string;
-  // errorMessage?: string;
+  label?: string;
+  errorMessage?: string;
   // disabled?: boolean;
 }
 
@@ -55,10 +57,21 @@ const Option = styled.div`
     background-color: ${({ theme }) => theme.colors.GRAY[100]};
   }
 `;
-// TODO: 옵션, 기본 select box 따로 구현하기 (이게 맞는지 생각해보기) - 만약 아니라면 두개 합쳐서 구현하고, label, error 붙이기
-// TODO: label, error message 붙이기
+
+const SelectWrapper = styled.div`
+  width: 300px;
+  flex-direction: column;
+  display: flex;
+  gap: 4px;
+`;
 // TODO: 아무것도 안 골랐을 때 에러 발생 시키기
-const Select: React.FC<SelectProps> = ({ items }) => {
+// TODO: focus, disable, error
+// TODO: style 맞추기
+const Select: React.FC<SelectProps> = ({
+  items,
+  errorMessage = "",
+  label = "",
+}) => {
   const [selectedValue, setSelectedValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -81,26 +94,32 @@ const Select: React.FC<SelectProps> = ({ items }) => {
   }, [containerRef]);
 
   return (
-    <DropdownContainer ref={containerRef}>
-      <StyledSelect onClick={() => setIsOpen(!isOpen)}>
-        {selectedValue || "항목을 선택해주세요"}
-      </StyledSelect>
-      {isOpen && (
-        <Dropdown>
-          {selectableItems.map(item => (
-            <Option
-              key={item.value}
-              onClick={() => {
-                setSelectedValue(item.label);
-                setIsOpen(false);
-              }}
-            >
-              {item.label}
-            </Option>
-          ))}
-        </Dropdown>
-      )}
-    </DropdownContainer>
+    <SelectWrapper>
+      {label && <Label>{label}</Label>}
+      <SelectWrapper>
+        <DropdownContainer ref={containerRef}>
+          <StyledSelect onClick={() => setIsOpen(!isOpen)}>
+            {selectedValue || "항목을 선택해주세요"}
+          </StyledSelect>
+          {isOpen && (
+            <Dropdown>
+              {selectableItems.map(item => (
+                <Option
+                  key={item.value}
+                  onClick={() => {
+                    setSelectedValue(item.label);
+                    setIsOpen(false);
+                  }}
+                >
+                  {item.label}
+                </Option>
+              ))}
+            </Dropdown>
+          )}
+        </DropdownContainer>
+        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+      </SelectWrapper>
+    </SelectWrapper>
   );
 };
 
