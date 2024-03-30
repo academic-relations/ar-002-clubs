@@ -34,7 +34,11 @@ const colors = {
   YELLOW: {
     200: "#FFFDE9",
     600: "#E9A311",
-
+  },
+  MINT: {
+    300: "#92CCD4",
+    800: "#0C7F8E",
+  },
   GRAY: {
     100: "#FAFAFA",
     200: "#EEEEEE",
@@ -42,6 +46,7 @@ const colors = {
   },
   RED: {
     600: "#DC2626",
+    300: "#DDDDDD",
   },
 };
 
