@@ -5,6 +5,7 @@ import React, {
   useState,
 } from "react";
 import styled, { css } from "styled-components";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Label from "./_atomic/Label";
 import ErrorMessage from "./_atomic/ErrorMessage";
 
@@ -16,6 +17,18 @@ export interface ItemNumberInputProps
   disabled?: boolean;
   itemLimit?: number;
 }
+
+const LabelWithIcon = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const StyledInfoIcon = styled(InfoOutlinedIcon)`
+  color: ${({ theme }) => theme.colors.GRAY[300]};
+  cursor: pointer;
+  font-size: 16px;
+`;
 
 const errorBorderStyle = css`
   border-color: ${({ theme }) => theme.colors.RED[600]};
@@ -127,7 +140,12 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
 
   return (
     <InputWrapper>
-      {label && <Label>{label}</Label>}
+      <LabelWithIcon>
+        {label && <Label>{label}</Label>}
+        <StyledInfoIcon
+          style={{ fontSize: "16px", width: "16px", height: "16px" }}
+        />
+      </LabelWithIcon>
       <InputContainer>
         <Input
           onChange={handleChange}
