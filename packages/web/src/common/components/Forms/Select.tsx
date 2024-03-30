@@ -14,7 +14,7 @@ interface SelectProps {
   items: SelectItem[];
   label?: string;
   errorMessage?: string;
-  // disabled?: boolean;
+  disabled?: boolean;
 }
 
 const DropdownContainer = styled.div`
@@ -22,7 +22,13 @@ const DropdownContainer = styled.div`
   position: relative;
 `;
 
-const StyledSelect = styled.div<{ hasError?: boolean }>`
+const disabledStyle = css`
+  background-color: ${({ theme }) => theme.colors.GRAY[100]};
+  border-color: ${({ theme }) => theme.colors.GRAY[200]};
+  pointer-events: none;
+`;
+
+const StyledSelect = styled.div<{ hasError?: boolean; disabled?: boolean }>`
   width: 300px;
   padding: 8px 12px;
   outline: none;
@@ -43,6 +49,7 @@ const StyledSelect = styled.div<{ hasError?: boolean }>`
     border-color: ${({ theme, hasError }) =>
       !hasError && theme.colors.GRAY[300]};
   }
+  ${({ disabled }) => disabled && disabledStyle}
 `;
 
 const Dropdown = styled.div`
@@ -111,6 +118,7 @@ const Select: React.FC<SelectProps> = ({
   items,
   errorMessage = "",
   label = "",
+  disabled = false,
 }) => {
   const [selectedValue, setSelectedValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -134,7 +142,15 @@ const Select: React.FC<SelectProps> = ({
       {label && <Label>{label}</Label>}
       <SelectWrapper>
         <DropdownContainer ref={containerRef}>
-          <StyledSelect onClick={() => setIsOpen(!isOpen)}>
+          <StyledSelect
+            hasError={Boolean(errorMessage)}
+            disabled={disabled}
+            onClick={() => {
+              if (!disabled) {
+                setIsOpen(!isOpen);
+              }
+            }}
+          >
             {selectedValue || "항목을 선택해주세요"}
             <IconWrapper>
               {isOpen ? (
