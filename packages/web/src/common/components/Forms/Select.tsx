@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import Label from "./_atomic/Label";
 import ErrorMessage from "./_atomic/ErrorMessage";
 
@@ -27,7 +28,9 @@ const StyledSelect = styled.div<{ hasError?: boolean }>`
   outline: none;
   cursor: pointer;
   background-color: ${({ theme }) => theme.colors.WHITE};
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+  border: 1px solid
+    ${({ theme, hasError }) =>
+      hasError ? theme.colors.RED : theme.colors.GRAY[200]};
   border-radius: 4px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 16px;
@@ -46,16 +49,55 @@ const Dropdown = styled.div`
   position: absolute;
   width: 300px;
   margin-top: 4px;
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+  padding: 8px;
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
   border-radius: 4px;
   background-color: ${({ theme }) => theme.colors.WHITE};
+  gap: 4px;
+  z-index: 1000; // Ensure the dropdown appears above other content
 `;
 
-const Option = styled.div`
-  padding: 8px 12px;
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.GRAY[100]};
-  }
+const Option = styled.div<{ selectable?: boolean }>`
+  gap: 10px;
+  border-radius: 4px;
+  padding: 4px 12px;
+  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
+  color: ${({ theme, selectable }) =>
+    selectable ? theme.colors.BLACK : theme.colors.GRAY[300]};
+  ${({ selectable }) =>
+    selectable &&
+    css`
+      &:hover {
+        background-color: ${({ theme }) => theme.colors.GRAY[200]};
+      }
+    `}
+`;
+
+const NoOption = styled.div`
+  padding: 4px 12px;
+  gap: 10px;
+  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
+  text-align: center;
+  pointer-events: none;
+  color: ${({ theme }) => theme.colors.GRAY[300]};
+`;
+
+const IconWrapper = styled.div`
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
 `;
 
 const SelectWrapper = styled.div`
@@ -64,9 +106,7 @@ const SelectWrapper = styled.div`
   display: flex;
   gap: 4px;
 `;
-// TODO: 아무것도 안 골랐을 때 에러 발생 시키기
-// TODO: focus, disable, error
-// TODO: style 맞추기
+
 const Select: React.FC<SelectProps> = ({
   items,
   errorMessage = "",
@@ -76,10 +116,6 @@ const Select: React.FC<SelectProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Filter out the non-selectable items
-  const selectableItems = items.filter(item => item.selectable);
-
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -100,20 +136,34 @@ const Select: React.FC<SelectProps> = ({
         <DropdownContainer ref={containerRef}>
           <StyledSelect onClick={() => setIsOpen(!isOpen)}>
             {selectedValue || "항목을 선택해주세요"}
+            <IconWrapper>
+              {isOpen ? (
+                <KeyboardArrowUp style={{ fontSize: "20px" }} />
+              ) : (
+                <KeyboardArrowDown style={{ fontSize: "20px" }} />
+              )}
+            </IconWrapper>
           </StyledSelect>
           {isOpen && (
             <Dropdown>
-              {selectableItems.map(item => (
-                <Option
-                  key={item.value}
-                  onClick={() => {
-                    setSelectedValue(item.label);
-                    setIsOpen(false);
-                  }}
-                >
-                  {item.label}
-                </Option>
-              ))}
+              {items.length > 0 ? (
+                items.map(item => (
+                  <Option
+                    key={item.value}
+                    selectable={item.selectable}
+                    onClick={() => {
+                      if (item.selectable) {
+                        setSelectedValue(item.label);
+                        setIsOpen(false);
+                      }
+                    }}
+                  >
+                    {item.label}
+                  </Option>
+                ))
+              ) : (
+                <NoOption>항목이 존재하지 않습니다</NoOption>
+              )}
             </Dropdown>
           )}
         </DropdownContainer>
