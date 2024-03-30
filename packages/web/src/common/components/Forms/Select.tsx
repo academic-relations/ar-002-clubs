@@ -36,7 +36,7 @@ const StyledSelect = styled.div<{ hasError?: boolean; disabled?: boolean }>`
   background-color: ${({ theme }) => theme.colors.WHITE};
   border: 1px solid
     ${({ theme, hasError }) =>
-      hasError ? theme.colors.RED : theme.colors.GRAY[200]};
+      hasError ? theme.colors.RED[600] : theme.colors.GRAY[200]};
   border-radius: 4px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 16px;
@@ -114,6 +114,11 @@ const SelectWrapper = styled.div`
   gap: 4px;
 `;
 
+const SelectValue = styled.span<{ isSelected: boolean }>`
+  color: ${({ theme, isSelected }) =>
+    isSelected ? theme.colors.BLACK : theme.colors.GRAY[200]};
+`;
+
 const Select: React.FC<SelectProps> = ({
   items,
   errorMessage = "",
@@ -122,6 +127,7 @@ const Select: React.FC<SelectProps> = ({
 }) => {
   const [selectedValue, setSelectedValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -130,28 +136,47 @@ const Select: React.FC<SelectProps> = ({
         containerRef.current &&
         !containerRef.current.contains(event.target as Node)
       ) {
-        setIsOpen(false);
+        if (isOpen) {
+          setIsOpen(false);
+          if (items.length > 0 && !selectedValue) {
+            setHasOpenedOnce(true);
+          }
+        }
       }
     }
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [containerRef]);
+  }, [containerRef, isOpen, items.length, selectedValue]);
 
+  const handleSelectClick = () => {
+    if (!disabled) {
+      setIsOpen(!isOpen);
+      setHasOpenedOnce(true);
+    }
+  };
+
+  const handleOptionClick = (item: SelectItem) => {
+    if (item.selectable) {
+      setSelectedValue(item.label);
+      setIsOpen(false);
+    }
+  };
   return (
     <SelectWrapper>
       {label && <Label>{label}</Label>}
       <SelectWrapper>
         <DropdownContainer ref={containerRef}>
           <StyledSelect
-            hasError={Boolean(errorMessage)}
+            hasError={
+              hasOpenedOnce && !selectedValue && items.length > 0 && !isOpen
+            }
             disabled={disabled}
-            onClick={() => {
-              if (!disabled) {
-                setIsOpen(!isOpen);
-              }
-            }}
+            onClick={handleSelectClick}
           >
-            {selectedValue || "항목을 선택해주세요"}
+            <SelectValue isSelected={!!selectedValue}>
+              {selectedValue || "항목을 선택해주세요"}
+            </SelectValue>
             <IconWrapper>
               {isOpen ? (
                 <KeyboardArrowUp style={{ fontSize: "20px" }} />
@@ -167,12 +192,7 @@ const Select: React.FC<SelectProps> = ({
                   <Option
                     key={item.value}
                     selectable={item.selectable}
-                    onClick={() => {
-                      if (item.selectable) {
-                        setSelectedValue(item.label);
-                        setIsOpen(false);
-                      }
-                    }}
+                    onClick={() => handleOptionClick(item)}
                   >
                     {item.label}
                   </Option>
@@ -183,7 +203,11 @@ const Select: React.FC<SelectProps> = ({
             </Dropdown>
           )}
         </DropdownContainer>
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+        {hasOpenedOnce && !selectedValue && items.length > 0 && (
+          <ErrorMessage>
+            {errorMessage || "필수로 선택해야 하는 항목입니다"}
+          </ErrorMessage>
+        )}
       </SelectWrapper>
     </SelectWrapper>
   );
