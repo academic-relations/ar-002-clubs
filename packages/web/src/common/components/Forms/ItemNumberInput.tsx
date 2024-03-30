@@ -14,7 +14,7 @@ export interface ItemNumberInputProps
   placeholder: string;
   errorMessage?: string;
   disabled?: boolean;
-  rightContent?: React.ReactNode;
+  itemLimit?: number;
 }
 
 const errorBorderStyle = css`
@@ -61,7 +61,7 @@ const Input = styled.input<ItemNumberInputProps & { hasError: boolean }>`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   color: ${({ theme }) => theme.colors.BLACK};
   background-color: ${({ theme }) => theme.colors.WHITE};
-  padding-right: ${({ rightContent }) => (rightContent ? "48px" : "12px")};
+  padding-right: ${({ itemLimit }) => (itemLimit ? "48px" : "12px")};
 
   &:focus {
     border-color: ${({ theme, hasError, disabled }) =>
@@ -92,21 +92,23 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
   label = "",
   placeholder,
   disabled = false,
-  rightContent = "",
+  itemLimit = 99,
   ...props
 }) => {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
 
-  const isValidFormat = /^\d+(개)?$/.test(value);
-
   useEffect(() => {
+    const isValidFormat = /^\d+$/g.test(value);
+    const numericValue = parseInt(value);
     if (!isValidFormat) {
       setError("숫자만 입력 가능합니다");
+    } else if (numericValue > itemLimit) {
+      setError("신청 가능 개수를 초과했습니다");
     } else {
       setError("");
     }
-  }, [value]);
+  }, [value, itemLimit]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
@@ -132,9 +134,9 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
           hasError={!!error}
           {...props}
         />
-        {rightContent && (
+        {itemLimit && (
           <RightContentWrapper hasError={!!error}>
-            {rightContent}
+            / {itemLimit}개
           </RightContentWrapper>
         )}
       </InputContainer>
