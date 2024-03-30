@@ -28,27 +28,33 @@ const disabledStyle = css`
   pointer-events: none;
 `;
 
-const StyledSelect = styled.div<{ hasError?: boolean; disabled?: boolean }>`
+const StyledSelect = styled.div<{
+  hasError?: boolean;
+  disabled?: boolean;
+  isOpen?: boolean;
+}>`
   width: 300px;
   padding: 8px 12px;
   outline: none;
   cursor: pointer;
   background-color: ${({ theme }) => theme.colors.WHITE};
   border: 1px solid
-    ${({ theme, hasError }) =>
-      hasError ? theme.colors.RED[600] : theme.colors.GRAY[200]};
+    ${({ theme, hasError, isOpen }) => {
+      if (isOpen) return theme.colors.PRIMARY;
+      return hasError ? theme.colors.RED[600] : theme.colors.GRAY[200];
+    }};
   border-radius: 4px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 16px;
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  &:focus {
-    border-color: ${({ theme, hasError }) => !hasError && theme.colors.PRIMARY};
-  }
+
+  &:focus,
   &:hover:not(:focus) {
-    border-color: ${({ theme, hasError }) =>
-      !hasError && theme.colors.GRAY[300]};
+    border-color: ${({ theme, isOpen }) =>
+      isOpen ? theme.colors.PRIMARY : theme.colors.GRAY[300]};
   }
+
   ${({ disabled }) => disabled && disabledStyle}
 `;
 
@@ -173,6 +179,7 @@ const Select: React.FC<SelectProps> = ({
             }
             disabled={disabled}
             onClick={handleSelectClick}
+            isOpen={isOpen}
           >
             <SelectValue isSelected={!!selectedValue}>
               {selectedValue || "항목을 선택해주세요"}
