@@ -101,7 +101,9 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
   useEffect(() => {
     const isValidFormat = /^\d+$/g.test(value);
     const numericValue = parseInt(value);
-    if (!isValidFormat) {
+    if (value === "") {
+      setError("");
+    } else if (!isValidFormat) {
       setError("숫자만 입력 가능합니다");
     } else if (numericValue > itemLimit) {
       setError("신청 가능 개수를 초과했습니다");
@@ -111,16 +113,17 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
   }, [value, itemLimit]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
+    const inputValue = e.target.value.replace(/[^0-9]/g, "");
 
     if (inputValue.length <= 2) {
       setValue(inputValue);
     }
   };
 
+  const displayValue = value ? `${value}개` : "";
+
   // TODO: '개' 앞으로 커서 위치 조절
-  // TODO: '개' 붙이기 & 숫자만 입력 동시 적용
-  // TODO: 선택 가능 개수 초과 판단
+  // TODO: 숫자가 아닌 것 입력했을 때 에러메시지
 
   return (
     <InputWrapper>
@@ -128,7 +131,7 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
       <InputContainer>
         <Input
           onChange={handleChange}
-          value={value}
+          value={displayValue}
           placeholder={placeholder}
           disabled={disabled}
           hasError={!!error}
