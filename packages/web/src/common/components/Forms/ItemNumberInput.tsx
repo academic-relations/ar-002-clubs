@@ -97,45 +97,39 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
 }) => {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
-  const [touched, setTouched] = useState(false);
+
+  const isValidFormat = /^\d+(개)?$/.test(value);
 
   useEffect(() => {
-    if (touched) {
-      if (!value) {
-        setError("필수로 채워야 하는 항목입니다");
-      } else {
-        setError("");
-      }
+    if (!isValidFormat) {
+      setError("숫자만 입력 가능합니다");
+    } else {
+      setError("");
     }
-  }, [value, touched]);
-
-  const handleBlur = () => {
-    setTouched(true);
-  };
+  }, [value]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value.replace(/개$/, ""); // '개' 제거 후 상태 업데이트
-    setValue(inputValue);
+    const inputValue = e.target.value;
+
+    if (inputValue.length <= 2) {
+      setValue(inputValue);
+    }
   };
 
-  const formatValue = (nums: string) => {
-    const digits = nums.replace(/\D/g, "");
-    return digits.length > 0 ? `${digits}개` : "";
-  };
+  // TODO: '개' 앞으로 커서 위치 조절
+  // TODO: '개' 붙이기 & 숫자만 입력 동시 적용
+  // TODO: 선택 가능 개수 초과 판단
 
   return (
     <InputWrapper>
       {label && <Label>{label}</Label>}
       <InputContainer>
         <Input
-          value={formatValue(value)}
           onChange={handleChange}
-          errorMessage={error}
-          onBlur={handleBlur}
+          value={value}
           placeholder={placeholder}
-          hasError={!!error}
           disabled={disabled}
-          rightContent={!!rightContent}
+          hasError={!!error}
           {...props}
         />
         {rightContent && (
