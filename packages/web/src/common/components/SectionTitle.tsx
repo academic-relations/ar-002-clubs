@@ -15,14 +15,14 @@ const SectionTitleInner = styled.div`
 const IdentityBar = styled.div`
   position: relative;
   width: 4px;
-  height: 32px;
+  justify-content: stretch;
   background-color: ${({ theme }) => theme.colors.PRIMARY};
 `;
 
 const Title = styled.p<{ size: Size }>`
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: ${({ size }) => (size === "sm" ? "20px" : "24px")};
-  line-height: ${({ size }) => (size === "sm" ? "24px" : "32px")};
+  line-height: ${({ size }) => (size === "sm" ? "28px" : "32px")};
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   color: ${({ theme }) => theme.colors.BLACK};
 `;
