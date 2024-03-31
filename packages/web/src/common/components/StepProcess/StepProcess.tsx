@@ -34,8 +34,8 @@ const StepContainer = styled.div<{ width: string }>`
     position: absolute;
     background: linear-gradient(
       to right,
-      ${props => props.theme.colors.MINT[300]},
-      ${props => props.theme.colors.GRAY[300]}
+      ${props => props.theme.colors.MINT[300]} 100%,
+      ${props => props.theme.colors.GRAY[300]} 100%
     );
     height: 4px;
     border-radius: 2px;
