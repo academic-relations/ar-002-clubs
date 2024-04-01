@@ -60,6 +60,8 @@ const StyledSelect = styled.div<{
 
 const Dropdown = styled.div`
   position: absolute;
+  display: flex;
+  flex-direction: column;
   width: 300px;
   margin-top: 4px;
   padding: 8px;
