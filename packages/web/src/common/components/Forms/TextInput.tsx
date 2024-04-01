@@ -51,7 +51,7 @@ const Input = styled.input.attrs<TextInputProps>(({ area }) => ({
     border-color: ${({ theme, hasError, disabled }) =>
       !hasError && !disabled && theme.colors.GRAY[300]};
   }
-  ::placeholder {
+  &::placeholder {
     color: ${({ theme }) => theme.colors.GRAY[200]};
   }
   ${({ disabled }) => disabled && disabledStyle}
