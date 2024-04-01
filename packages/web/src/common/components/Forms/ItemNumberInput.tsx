@@ -86,7 +86,7 @@ const Input = styled.input<ItemNumberInputProps & { hasError: boolean }>`
       !hasError && !disabled ? theme.colors.GRAY[300] : undefined};
   }
 
-  ::placeholder {
+  &::placeholder {
     color: ${({ theme }) => theme.colors.GRAY[200]};
   }
 
