@@ -34,8 +34,7 @@ const Input = styled.input.attrs<TextInputProps>(({ area }) => ({
   width: 300px;
   padding: 8px 12px 8px 12px;
   outline: none;
-  border: 1px solid;
-  border-color: ${({ theme }) => theme.colors.GRAY[200]};
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
   border-radius: 4px;
   gap: 8px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
