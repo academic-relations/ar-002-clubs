@@ -16,3 +16,313 @@ model Test {
 
   @@map("test")
 }
+
+//User
+model User {
+  id           Int         @id @default(autoincrement())
+  sid          String      @unique
+  name         String
+  email        String
+  phone_number String?
+  created_at   DateTime    @default(now())
+  updated_at   DateTime?
+  deleted_at   DateTime?
+  Student      Student[]
+  Executive    Executive[]
+  Professor    Professor[]
+  Employee     Employee[]
+}
+
+model Student {
+  id                  Int                   @id @default(autoincrement())
+  user_id             Int
+  created_at          DateTime              @default(now())
+  deleted_at          DateTime?
+  StudentT            StudentT[]
+  User                User                  @relation(fields: [user_id], references: [id])
+  ClubStudentT        ClubStudentT[]
+  DivisionPresidentD  DivisionPresidentD[]
+  ClubRepresentativeD ClubRepresentativeD[]
+}
+
+model StudentT {
+  id                  Int               @id @default(autoincrement())
+  student_id          Int               @unique
+  student_enum        Int
+  student_status_enum Int
+  number              Int               @unique
+  department          Int
+  semester_id         Int
+  start_term          DateTime
+  end_term            DateTime?
+  created_at          DateTime          @default(now())
+  deleted_at          DateTime?
+  Student             Student           @relation(fields: [student_id], references: [id])
+  StudentStatusEnum   StudentStatusEnum @relation(fields: [student_status_enum], references: [id])
+  StudentEnum         StudentEnum       @relation(fields: [student_enum], references: [id])
+}
+
+model StudentStatusEnum {
+  id         Int        @id @default(autoincrement())
+  name       String
+  created_at DateTime   @default(now())
+  deleted_at DateTime?
+  StudentT   StudentT[]
+}
+
+model StudentEnum {
+  id         Int        @id @default(autoincrement())
+  name       String
+  created_at DateTime   @default(now())
+  deleted_at DateTime?
+  StudentT   StudentT[]
+}
+
+model Executive {
+  id         Int          @id @default(autoincrement())
+  user_id    Int
+  student_id Int?
+  created_at DateTime     @default(now())
+  deleted_at DateTime?
+  ExecutiveT ExecutiveT[]
+  User       User         @relation(fields: [user_id], references: [id])
+}
+
+model ExecutiveT {
+  id                    Int                 @id @default(autoincrement())
+  executive_id          Int                 @unique
+  executive_status_enum Int
+  executive_bureau_enum Int
+  start_term            DateTime
+  end_term              DateTime?
+  created_at            DateTime            @default(now())
+  deleted_at            DateTime?
+  Executive             Executive           @relation(fields: [executive_id], references: [id])
+  ExecutiveStatusEnum   ExecutiveStatusEnum @relation(fields: [executive_status_enum], references: [id])
+  ExecutiveBureauEnum   ExecutiveBureauEnum @relation(fields: [executive_bureau_enum], references: [id])
+}
+
+model ExecutiveStatusEnum {
+  id         Int          @id @default(autoincrement())
+  name       String
+  created_at DateTime     @default(now())
+  deleted_at DateTime?
+  ExecutiveT ExecutiveT[]
+}
+
+model ExecutiveBureauEnum {
+  id         Int          @id @default(autoincrement())
+  name       String
+  created_at DateTime     @default(now())
+  deleted_at DateTime?
+  ExecutiveT ExecutiveT[]
+}
+
+model Professor {
+  id         Int          @id @default(autoincrement())
+  user_id    Int
+  created_at DateTime     @default(now())
+  deleted_at DateTime?
+  ProfessorT ProfessorT[]
+  User       User         @relation(fields: [user_id], references: [id])
+}
+
+model ProfessorT {
+  id             Int           @id @default(autoincrement())
+  professor_id   Int           @unique
+  professor_enum Int
+  department     Int
+  start_term     DateTime
+  end_term       DateTime?
+  created_at     DateTime      @default(now())
+  deleted_at     DateTime?
+  Professor      Professor     @relation(fields: [professor_id], references: [id])
+  ProfessorEnum  ProfessorEnum @relation(fields: [professor_enum], references: [id])
+}
+
+model ProfessorEnum {
+  id         Int          @id @default(autoincrement())
+  name       String
+  created_at DateTime     @default(now())
+  deleted_at DateTime?
+  ProfessorT ProfessorT[]
+}
+
+model Employee {
+  id         Int         @id @default(autoincrement())
+  user_id    Int
+  created_at DateTime    @default(now())
+  deleted_at DateTime?
+  EmployeeT  EmployeeT[]
+  User       User        @relation(fields: [user_id], references: [id])
+}
+
+model EmployeeT {
+  id          Int       @id @default(autoincrement())
+  employee_id Int       @unique
+  start_term  DateTime
+  end_term    DateTime?
+  created_at  DateTime  @default(now())
+  deleted_at  DateTime?
+  Employee    Employee  @relation(fields: [employee_id], references: [id])
+}
+
+model Club {
+  id                     Int                      @id @default(autoincrement())
+  name                   String                   @unique
+  division_id            Int                      @unique
+  description            String?
+  founding_year          Int
+  created_at             DateTime                 @default(now())
+  deleted_at             DateTime?
+  ClubT                  ClubT[]
+  ClubStudentT           ClubStudentT[]
+  ClubRoomT              ClubRoomT[]
+  DivisionPresidentD     DivisionPresidentD[]
+  DivisionPermanentClubD DivisionPermanentClubD[]
+  ClubRepresentativeD    ClubRepresentativeD[]
+  // ClubBank      ClubBank?
+  Division               Division                 @relation(fields: [division_id], references: [id])
+}
+
+//Club
+model ClubT {
+  id                  Int            @id @default(autoincrement())
+  club_status_enum_id Int
+  characteristic_kr   String
+  characteristic_en   String
+  advisor             String?
+  advisor_mail        String?
+  semester_id         Int
+  start_term          DateTime
+  end_term            DateTime?
+  created_at          DateTime       @default(now())
+  deleted_at          DateTime?
+  ClubStatusEnum      ClubStatusEnum @relation(fields: [club_status_enum_id], references: [id])
+  SemesterD           SemesterD      @relation(fields: [semester_id], references: [id])
+  Club                Club           @relation(fields: [id], references: [id])
+}
+
+model ClubStatusEnum {
+  id          Int       @id @default(autoincrement())
+  status_name String
+  created_at  DateTime  @default(now())
+  deleted_at  DateTime?
+  ClubT       ClubT[]
+}
+
+model ClubStudentT {
+  id          Int       @id @default(autoincrement())
+  student_id  Int
+  club_id     Int
+  semester_id Int
+  start_term  DateTime
+  end_term    DateTime?
+  created_at  DateTime  @default(now())
+  deleted_at  DateTime?
+  Club        Club      @relation(fields: [club_id], references: [id])
+  Student     Student   @relation(fields: [student_id], references: [id])
+  SemesterD   SemesterD @relation(fields: [semester_id], references: [id])
+}
+
+model ClubRoomT {
+  id                 Int              @id @default(autoincrement())
+  club_id            Int              @unique
+  club_building_enum Int              @unique
+  room_location      Int?
+  room_password      String?
+  semester_id        Int              @unique
+  start_term         DateTime
+  end_term           DateTime?
+  created_at         DateTime         @default(now())
+  deleted_at         DateTime?
+  Club               Club             @relation(fields: [club_id], references: [id])
+  ClubBuildingEnum   ClubBuildingEnum @relation(fields: [club_building_enum], references: [id])
+  SemesterD          SemesterD        @relation(fields: [semester_id], references: [id])
+}
+
+model ClubBuildingEnum {
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  created_at DateTime    @default(now())
+  deleted_at DateTime?
+  ClubRoomT  ClubRoomT[]
+}
+
+model ClubRepresentativeD {
+  id                       Int                    @id @default(autoincrement())
+  club_id                  Int                    @unique
+  student_id               Int                    @unique
+  club_representative_enum Int                    @unique
+  start_term               DateTime
+  end_term                 DateTime?
+  created_at               DateTime               @default(now())
+  deleted_at               DateTime?
+  Club                     Club                   @relation(fields: [club_id], references: [id])
+  Student                  Student                @relation(fields: [student_id], references: [id])
+  ClubRepresentativeEnum   ClubRepresentativeEnum @relation(fields: [club_representative_enum], references: [enum_id])
+}
+
+model ClubRepresentativeEnum {
+  enum_id             Int                   @id @default(autoincrement())
+  enum_name           String
+  created_at          DateTime              @default(now())
+  deleted_at          DateTime?
+  ClubRepresentativeD ClubRepresentativeD[]
+}
+
+model SemesterD {
+  id           Int            @id @default(autoincrement())
+  year         Int
+  name         String
+  start_term   DateTime
+  end_term     DateTime?
+  created_at   DateTime       @default(now())
+  deleted_at   DateTime?
+  ClubT        ClubT[]
+  ClubStudentT ClubStudentT[]
+  ClubRoomT    ClubRoomT[]
+}
+
+model District {
+  id         Int        @id @default(autoincrement())
+  name       String     @unique
+  created_at DateTime   @default(now())
+  deleted_at DateTime?
+  Division   Division[]
+}
+
+model Division {
+  id                 Int                  @id @default(autoincrement())
+  name               String               @unique
+  district_id        Int
+  created_at         DateTime             @default(now())
+  deleted_at         DateTime?
+  District           District             @relation(fields: [district_id], references: [id])
+  Club               Club[]
+  DivisionPresidentD DivisionPresidentD[]
+}
+
+model DivisionPresidentD {
+  id                 Int       @id @default(autoincrement())
+  division_id        Int
+  student_id         Int
+  start_term         DateTime
+  end_term           DateTime?
+  originated_club_id Int?
+  created_at         DateTime  @default(now())
+  deleted_at         DateTime?
+  Division           Division  @relation(fields: [division_id], references: [id])
+  Student            Student   @relation(fields: [student_id], references: [id])
+  Club               Club?     @relation(fields: [originated_club_id], references: [id])
+}
+
+model DivisionPermanentClubD {
+  id         Int       @id @default(autoincrement())
+  club_id    Int       @unique
+  start_term DateTime
+  end_term   DateTime?
+  created_at DateTime  @default(now())
+  deleted_at DateTime?
+  Club       Club      @relation(fields: [club_id], references: [id])
+}
