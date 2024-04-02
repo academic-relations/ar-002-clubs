@@ -1,5 +1,5 @@
-import "./endpoints/apiCms001";
-import "./endpoints/apiCms002";
-import "./endpoints/apiCms003";
-import "./endpoints/apiCms004";
-import "./endpoints/apiCms005";
+import "./endpoint/apiCms001";
+import "./endpoint/apiCms002";
+import "./endpoint/apiCms003";
+import "./endpoint/apiCms004";
+import "./endpoint/apiCms005";
