@@ -5,10 +5,10 @@ import styled from "styled-components";
 
 import ClubCard from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
-import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
+import type { ClubCardProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
 interface ClubListGridItemProps {
-  clubList: Array<ClubInfo>;
+  clubList: Array<ClubCardProps["club"]>;
 }
 
 const ClubListGridInner = styled.div`
@@ -21,7 +21,7 @@ const ClubListGridInner = styled.div`
 
 const ClubListGrid: React.FC<ClubListGridItemProps> = ({ clubList }) => (
   <ClubListGridInner>
-    {clubList.map((club: ClubInfo) => (
+    {clubList.map((club: ClubCardProps["club"]) => (
       <ClubCard key={club.name} club={club} />
     ))}
   </ClubListGridInner>
