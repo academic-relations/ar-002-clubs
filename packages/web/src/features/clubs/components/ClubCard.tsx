@@ -7,14 +7,15 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 
-import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
 import {
   getClubType,
   getTagColorFromClubType,
 } from "@sparcs-clubs/web/features/clubs/services/clubTypeControl";
 
+import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
+
 interface ClubCardProps {
-  club: ClubInfo;
+  club: ApiClb001ResponseOK["divisions"][number]["clubs"][number];
 }
 
 const ClubCardInner = styled(Card)`
@@ -79,3 +80,5 @@ const ClubCard: React.FC<ClubCardProps> = ({ club }) => (
 );
 
 export default ClubCard;
+
+export type { ClubCardProps };

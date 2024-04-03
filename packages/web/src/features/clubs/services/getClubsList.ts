@@ -6,7 +6,7 @@ import {
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
-import apiClb001 from "@sparcs-clubs/interface/api/clubs/endpoints/apiClb001";
+import apiClb001 from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 import mockupData from "@sparcs-clubs/web/features/clubs/services/mockupClubData";
 
 // ISuccessResponseType.clubs는 clubs.types.ts의 ClubInfo와 대응됩니다.
