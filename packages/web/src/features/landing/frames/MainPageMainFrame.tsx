@@ -10,6 +10,10 @@ import colors from "@sparcs-clubs/web/styles/themes/colors";
 import NoticeSectionFrame from "./NoticeSectionFrame";
 import ServiceSectionFrame from "./ServiceSectionFrame";
 
+interface MainPageMainFrameProps {
+  noticeList: Array<NoticeInfo>;
+}
+
 const MainPageMainFrameInner = styled.div`
   display: flex;
   flex-direction: column;
@@ -26,10 +30,6 @@ const NoticeAndServiceWrapper = styled.div`
   flex-direction: row;
   gap: 60px;
 `;
-
-interface MainPageMainFrameProps {
-  noticeList: Array<NoticeInfo>;
-}
 
 const MainPageMainFrame: React.FC<MainPageMainFrameProps> = ({
   noticeList,

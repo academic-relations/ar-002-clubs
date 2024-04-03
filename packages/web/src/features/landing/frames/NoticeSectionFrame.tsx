@@ -10,9 +10,10 @@ import NoticeCard from "../components/NoticeCard";
 
 const NoticeSectionFrameInner = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: column;
-  gap: 15px;
-  width: 70%;
+  gap: 16px;
+  overflow: hidden;
 `;
 
 const NoticeWrapper = styled.div`
@@ -36,7 +37,7 @@ const NoticeSectionFrame: React.FC<NoticeSectionFrameProps> = ({
         <Link
           href={
             paths.HOME.path
-          } /* 추후 각 notice에 따른 올바른 path로 수정 바람 --> paths.NOTICE.path + "/" + noticeInfo.id.toString() */
+          } /* TODO - 각 notice에 따른 올바른 path로 수정 바람 --> paths.NOTICE.path + "/" + noticeInfo.id.toString() */
           style={{ display: "flex", flexDirection: "column" }}
         >
           <NoticeCard noticeList={noticeInfo} />

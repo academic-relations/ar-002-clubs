@@ -11,7 +11,7 @@ import ServiceCard from "../components/ServiceCard";
 const ServiceSectionFrameInner = styled.div`
   display: flex;
   flex-direction: column;
-  width: 30%;
+  width: 320px;
   gap: 20px;
 `;
 
@@ -27,25 +27,25 @@ const ServiceSectionFrame: React.FC = () => (
     <MoreSectionTitle title="서비스 신청" showMore={false} />
     <ServiceCardWrapper>
       <Link
-        href={paths.HOME.path} /* 추후 올바른 path로 수정 바람 */
+        href={paths.HOME.path} /* TODO - 올바른 path로 수정 바람 */
         style={{ display: "flex", flexDirection: "column" }}
       >
         <ServiceCard serviceTitle="대여 사업" serviceLink="" />
       </Link>
       <Link
-        href={paths.HOME.path} /* 추후 올바른 path로 수정 바람 */
+        href={paths.HOME.path} /* TODO - 올바른 path로 수정 바람 */
         style={{ display: "flex", flexDirection: "column" }}
       >
         <ServiceCard serviceTitle="홍보물 인쇄" serviceLink="" />
       </Link>
       <Link
-        href={paths.HOME.path} /* 추후 올바른 path로 수정 바람 */
+        href={paths.HOME.path} /* TODO - 올바른 path로 수정 바람 */
         style={{ display: "flex", flexDirection: "column" }}
       >
         <ServiceCard serviceTitle="활동확인서 발급 신청" serviceLink="" />
       </Link>
       <Link
-        href={paths.HOME.path} /* 추후 올바른 path로 수정 바람 */
+        href={paths.HOME.path} /* TODO - 올바른 path로 수정 바람 */
         style={{ display: "flex", flexDirection: "column" }}
       >
         <ServiceCard serviceTitle="공용공간 비정기사용신청" serviceLink="" />

@@ -29,12 +29,12 @@ const MoreSectionTitle: React.FC<{
   showMore?: boolean;
 }> = ({ title, showMore = true }) => (
   <MoreSectionTitleInner>
-    <SectionTitle size="lg">{title}</SectionTitle>
+    <SectionTitle size="sm">{title}</SectionTitle>
     {showMore && (
       <Link
         href={
           paths.HOME.path
-        } /* 추후 올바른 path로 수정 바람 --> paths.NOTICE.path */
+        } /* TODO - 올바른 path로 수정 바람 --> paths.NOTICE.path */
         style={{ display: "flex", flexDirection: "column" }}
       >
         <MoreInfo>글 더보기</MoreInfo>

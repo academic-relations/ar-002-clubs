@@ -2,11 +2,9 @@
 
 import React from "react";
 import styled from "styled-components";
-import Image from "next/image";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
-
-import arrowRightSvg from "@sparcs-clubs/web/assets/arrow-right.svg";
+import Icon from "@sparcs-clubs/web/common/components/Icon";
 
 interface ServiceCardProps {
   serviceTitle: string;
@@ -38,7 +36,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 }) => (
   <ServiceCardInner>
     <ServiceTitle>{serviceTitle + serviceLink}</ServiceTitle>
-    <Image src={arrowRightSvg} alt="" height={10} />
+    <Icon type="chevron_right" size={20} />
   </ServiceCardInner>
 );
 
