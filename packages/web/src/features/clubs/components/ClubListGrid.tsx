@@ -25,7 +25,8 @@ const ClubListGrid: React.FC<ClubListGridItemProps> = ({ clubList }) => (
   <ClubListGridInner>
     {clubList.map((club: ClubInfo) => (
       <Link
-        href={paths.CLUBS.path + "/".concat(club.id.toString())}
+        key={club.id}
+        href={`${paths.CLUBS.path}/${club.id.toString()}`}
         style={{ display: "flex", flexDirection: "column" }}
       >
         <ClubCard key={club.name} club={club} />
