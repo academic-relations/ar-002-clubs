@@ -7,7 +7,7 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
-import { getClubsList } from "@sparcs-clubs/web/features/clubs/services/getClubsList";
+import { useGetClubsList } from "@sparcs-clubs/web/features/clubs/services/useGetClubsList";
 
 const ClubsPageMainFrameInner = styled.div`
   display: flex;
@@ -22,7 +22,7 @@ const ClubListsByDepartmentWrapper = styled.div`
 `;
 
 const ClubsPageMainFrame: React.FC = () => {
-  const { data, isLoading, isError } = getClubsList();
+  const { data, isLoading, isError } = useGetClubsList();
   return (
     <ClubsPageMainFrameInner>
       <PageTitle>동아리 목록</PageTitle>

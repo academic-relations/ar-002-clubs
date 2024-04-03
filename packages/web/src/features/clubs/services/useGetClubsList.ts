@@ -7,13 +7,13 @@ import {
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 import apiClb001 from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
-import mockupData from "@sparcs-clubs/web/features/clubs/services/mockupClubData";
+import mockupData from "@sparcs-clubs/web/features/clubs/services/_mock/mockupClubData";
 
 // ISuccessResponseType.clubs는 clubs.types.ts의 ClubInfo와 대응됩니다.
 // ClubType의 타입이 불일치하기 때문에, 사용 이전에 ClubType Enum에 매칭하는 과정이 필요합니다.
 type ISuccessResponseType = z.infer<(typeof apiClb001.responseBodyMap)[200]>;
 
-export const getClubsList = () =>
+export const useGetClubsList = () =>
   useQuery<ISuccessResponseType, Error>({
     queryKey: [apiClb001.url()],
     queryFn: async (): Promise<ISuccessResponseType> => {
