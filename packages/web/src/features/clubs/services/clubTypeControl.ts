@@ -1,13 +1,13 @@
-import { ClubType } from "@sparcs-clubs/interface/common/enum/clubs";
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club";
+import type { ClubCardProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
 import type { TagColor } from "@sparcs-clubs/web/common/components/Tag";
-import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
 
-const getTagColorFromClubType = (clubType: ClubType) => {
+const getTagColorFromClubType = (clubType: ClubTypeEnum) => {
   let color: TagColor;
-  if (clubType === ClubType.Senate) {
+  if (clubType === ClubTypeEnum.Senate) {
     color = "GREEN";
-  } else if (clubType === ClubType.Regular) {
+  } else if (clubType === ClubTypeEnum.Regular) {
     color = "BLUE";
   } else {
     color = "ORANGE";
@@ -15,11 +15,11 @@ const getTagColorFromClubType = (clubType: ClubType) => {
   return color;
 };
 
-const getClubType = (club: ClubInfo) => {
+const getClubType = (club: ClubCardProps["club"]) => {
   let clubType: string;
-  if (club.type === ClubType.Senate) {
+  if (club.type === ClubTypeEnum.Senate) {
     clubType = "상임동아리";
-  } else if (club.type === ClubType.Regular) {
+  } else if (club.type === ClubTypeEnum.Regular) {
     clubType = "정동아리";
   } else {
     clubType = "가동아리";
@@ -27,4 +27,4 @@ const getClubType = (club: ClubInfo) => {
   return clubType;
 };
 
-export { ClubType, getClubType, getTagColorFromClubType };
+export { getClubType, getTagColorFromClubType };
