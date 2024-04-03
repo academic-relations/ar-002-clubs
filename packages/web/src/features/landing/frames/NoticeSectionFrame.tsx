@@ -35,6 +35,7 @@ const NoticeSectionFrame: React.FC<NoticeSectionFrameProps> = ({
     <NoticeWrapper>
       {noticeList.map(noticeInfo => (
         <Link
+          key={noticeInfo.id}
           href={
             paths.HOME.path
           } /* TODO - 각 notice에 따른 올바른 path로 수정 바람 --> paths.NOTICE.path + "/" + noticeInfo.id.toString() */

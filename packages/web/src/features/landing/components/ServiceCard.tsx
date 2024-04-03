@@ -15,13 +15,13 @@ const ServiceCardInner = styled(Card)`
   gap: 16px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  height: 45px;
+  flex: 1;
+  padding: 12px 20px;
   align-items: center;
 `;
 
 const ServiceTitle = styled.div`
-  height: 20px;
+  flex: 1;
   font-size: 16px;
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};

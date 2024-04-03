@@ -12,7 +12,8 @@ const NoticeCardInner = styled.div`
 `;
 
 const NoticeTitle = styled.div`
-  height: 20px;
+  color: ${({ theme }) => theme.colors.BLACK};
+  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 16px;
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
@@ -22,7 +23,8 @@ const NoticeTitle = styled.div`
 `;
 
 const NoticeDate = styled.div`
-  height: 20px;
+  color: ${({ theme }) => theme.colors.BLACK};
+  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 14px;
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
