@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 
-import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
+import type { ClubCardProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
 const FoldableSectionTitleInner = styled.div`
   display: flex;
@@ -26,7 +26,7 @@ const MoreInfo = styled.div`
 
 const FoldableSectionTitle: React.FC<{
   title: string;
-  clubList: Array<ClubInfo>;
+  clubList: Array<ClubCardProps["club"]>;
   toggle: boolean;
   showLength?: boolean;
   toggleHandler: () => void;

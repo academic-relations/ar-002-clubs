@@ -3,11 +3,11 @@
 import React from "react";
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
-
-import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
+import { useGetClubsList } from "@sparcs-clubs/web/features/clubs/services/useGetClubsList";
 
 const ClubsPageMainFrameInner = styled.div`
   display: flex;
@@ -21,27 +21,24 @@ const ClubListsByDepartmentWrapper = styled.div`
   gap: 40px;
 `;
 
-interface ClubsPageMainFrameProps {
-  clubDivisionAndListsPairs: Array<[string, Array<ClubInfo>]>;
-}
-
-const ClubsPageMainFrame: React.FC<ClubsPageMainFrameProps> = ({
-  clubDivisionAndListsPairs,
-}) => (
-  <ClubsPageMainFrameInner>
-    <PageTitle>동아리 목록</PageTitle>
-    <ClubListsByDepartmentWrapper>
-      {clubDivisionAndListsPairs.map(
-        (clubDivisionAndListsPair: [string, Array<ClubInfo>]) => (
-          <ClubsSectionFrame
-            title={clubDivisionAndListsPair[0]}
-            clubList={clubDivisionAndListsPair[1]}
-            key={clubDivisionAndListsPair[0]}
-          />
-        ),
-      )}
-    </ClubListsByDepartmentWrapper>
-  </ClubsPageMainFrameInner>
-);
+const ClubsPageMainFrame: React.FC = () => {
+  const { data, isLoading, isError } = useGetClubsList();
+  return (
+    <ClubsPageMainFrameInner>
+      <PageTitle>동아리 목록</PageTitle>
+      <AsyncBoundary isLoading={isLoading} isError={isError}>
+        <ClubListsByDepartmentWrapper>
+          {(data?.divisions ?? []).map(division => (
+            <ClubsSectionFrame
+              title={division.name}
+              clubList={division.clubs}
+              key={division.name}
+            />
+          ))}
+        </ClubListsByDepartmentWrapper>
+      </AsyncBoundary>
+    </ClubsPageMainFrameInner>
+  );
+};
 
 export default ClubsPageMainFrame;
