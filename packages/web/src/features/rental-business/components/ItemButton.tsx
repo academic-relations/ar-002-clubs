@@ -23,7 +23,6 @@ const StyledButton = styled.div<{ selected: boolean }>`
   box-shadow: -1px 2px 4px 0px rgba(0, 0, 0, 0.25);
   color: ${({ theme, selected }) =>
     selected ? theme.colors.WHITE : theme.colors.BLACK};
-  max-width: 160px;
 `;
 
 const StyledImage = styled.img`
