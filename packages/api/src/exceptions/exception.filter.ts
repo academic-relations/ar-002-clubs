@@ -4,18 +4,20 @@ import {
   Catch,
   ArgumentsHost,
   HttpStatus,
+  HttpException,
 } from "@nestjs/common";
 import { ZodError } from "zod";
-import { ClubException } from "./club.exception";
+import logger from "../common/utils/logger";
 
 @Catch() // BaseException을 상속한 exception에 대해서 실행됨.
-export class AllExceptionFilter implements ExceptionFilter {
+export class UnexpectedExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
 
     const resStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+    logger.error("Unexpected exception");
     response.status(resStatus).json({
       statusCode: resStatus,
       timestamp: new Date().toISOString(),
@@ -31,7 +33,8 @@ export class ZodErrorFilter<T extends ZodError> implements ExceptionFilter {
     const response = ctx.getResponse();
     const request = ctx.getRequest();
 
-    const resStatus = HttpStatus.NOT_ACCEPTABLE;
+    const resStatus = HttpStatus.BAD_REQUEST;
+    logger.error("Zod error");
     response.status(resStatus).json({
       message: exception.errors,
       statusCode: resStatus,
@@ -41,8 +44,8 @@ export class ZodErrorFilter<T extends ZodError> implements ExceptionFilter {
   }
 }
 
-@Catch(ClubException) // BaseException을 상속한 exception에 대해서 실행됨.
-export class ClubExceptionFilter<T extends ClubException>
+@Catch(HttpException) // BaseException을 상속한 exception에 대해서 실행됨.
+export class HttpExceptionFilter<T extends HttpException>
   implements ExceptionFilter
 {
   catch(exception: T, host: ArgumentsHost) {
@@ -51,6 +54,7 @@ export class ClubExceptionFilter<T extends ClubException>
     const request = ctx.getRequest();
 
     const resStatus = exception.getStatus();
+    logger.error(exception.getResponse());
     response.status(resStatus).json({
       message: exception.getResponse(), // test를 위한 코드
       statusCode: resStatus,
