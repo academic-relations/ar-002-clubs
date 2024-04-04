@@ -1,8 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { PromotionalPrintingSizeEnum } from "@sparcs-clubs/interface/common/enum/promotional-printing";
-import { zKoreanPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
+import { PromotionalPrintingSizeEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
+import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 
 /**
  * @version v0.1
@@ -21,7 +21,7 @@ const requestQuery = z.object({});
 
 const requestBody = z.object({
   documentFileLink: z.string().max(512),
-  phoneNumber: zKoreanPhoneNumber, // 예시에 따라서 유효성 검사를 위한 정확한 패턴을 추가해야 합니다.
+  phoneNumber: zKrPhoneNumber, // 예시에 따라서 유효성 검사를 위한 정확한 패턴을 추가해야 합니다.
   orders: z
     .object({
       promotionalPrintingSizeEnum: z.nativeEnum(PromotionalPrintingSizeEnum),
