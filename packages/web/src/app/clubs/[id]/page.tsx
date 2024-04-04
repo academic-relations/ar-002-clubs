@@ -3,7 +3,6 @@
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
 import ClubDetailMainFrame from "@sparcs-clubs/web/features/clubDetails/frames/ClubDetailMainFrame";
-// import { fromObj } from "@sparcs-clubs/web/types/clubdetail.types";
 import { getClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
 
 const ClubDetail = () => {

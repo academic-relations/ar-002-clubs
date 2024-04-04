@@ -28,12 +28,6 @@ interface ClubDetail {
   description: string;
 }
 
-// enum ClubType {
-//   Senate, // 상임동아리
-//   Regular, // 정동아리
-//   Provisional, // 가동아리
-// }
-
 const fromObj = (clubObj: RawClubDetail): ClubDetail => {
   const club: ClubDetail = {
     id: clubObj.id,
@@ -67,18 +61,6 @@ const getTagColorFromClubType = (clubType: string) => {
   }
   return color;
 };
-
-// const getClubType = (club: ClubDetail) => {
-//   let clubType: string;
-//   if (club.type === ClubType.Senate) {
-//     clubType = "상임동아리";
-//   } else if (club.type === ClubType.Regular) {
-//     clubType = "정동아리";
-//   } else {
-//     clubType = "가동아리";
-//   }
-//   return clubType;
-// };
 
 const getTagColorFromDivision = (divisionName: string): TagColor => {
   switch (divisionName) {

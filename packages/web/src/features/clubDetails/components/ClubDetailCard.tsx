@@ -3,8 +3,6 @@
 import React from "react";
 import styled from "styled-components";
 
-// import type { ClubDetail } from "@sparcs-clubs/web/types/clubdetail.types";
-
 import Card from "@sparcs-clubs/web/common/components/Card";
 import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
