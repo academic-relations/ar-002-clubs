@@ -6,7 +6,6 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "@sparcs-clubs/interface": "workspace:*",
     "dev": "pnpm db up -d && pnpm start:dev",
     "prod": "pnpm migrate:prod && pnpm start:prod",
     "db": "docker compose -f ../../.docker/docker-compose.dev.yml -p ar-002-clubs",
@@ -42,6 +41,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@sparcs-clubs/interface": "workspace:*",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
