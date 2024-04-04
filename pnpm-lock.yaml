@@ -92,9 +92,6 @@ importers:
       zod:
         specifier: ^3.21.4
         version: 3.22.4
-      zod:
-        specifier: ^3.21.4
-        version: 3.22.4
     devDependencies:
       '@nestjs/cli':
         specifier: ^10.0.0
@@ -164,10 +161,6 @@ importers:
         version: 5.4.2
 
   packages/interface:
-    dependencies:
-      axios:
-        specifier: ^1.6.7
-        version: 1.6.7
     dependencies:
       axios:
         specifier: ^1.6.7
@@ -249,7 +242,6 @@ importers:
       '@tanstack/react-query-devtools':
         specifier: ^5.28.4
         version: 5.28.4(@tanstack/react-query@5.28.4)(react@18.2.0)
-
       '@types/node':
         specifier: ^20
         version: 20.11.25
