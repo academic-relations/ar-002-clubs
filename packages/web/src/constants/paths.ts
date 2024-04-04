@@ -11,7 +11,7 @@ const paths = {
     sub: [
       {
         name: "동아리 목록",
-        path: "/",
+        path: "/clubs",
       },
       {
         name: "공지사항",
