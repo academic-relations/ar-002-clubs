@@ -1,6 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
+
 /**
  * @version v0.1
  * @description 대여를 신청합니다
@@ -15,7 +17,7 @@ const requestQuery = z.object({});
 
 const requestBody = z.object({
   clubId: z.number().int().min(1),
-  studentPhoneNumber: z.string(),
+  studentPhoneNumber: zKrPhoneNumber,
   objects: z
     .object({
       id: z.number().int().min(1),
@@ -32,9 +34,9 @@ const responseBodyMap = {
 };
 
 const responseErrorMap = {
-  [HttpStatusCode.Locked]: z.object({
+  423: z.object({
     status: z.literal("Error"),
-    message: z.literal("Already used by other oreder."),
+    message: z.literal("Already used by other order."),
   }),
 };
 
@@ -52,7 +54,7 @@ type ApiRnt002RequestParam = z.infer<typeof apiRnt002.requestParam>;
 type ApiRnt002RequestQuery = z.infer<typeof apiRnt002.requestQuery>;
 type ApiRnt002RequestBody = z.infer<typeof apiRnt002.requestBody>;
 type ApiRnt002ResponseOK = z.infer<(typeof apiRnt002.responseBodyMap)[201]>;
-type ApiRnt002ErrorLocked = z.infer<(typeof apiRnt002.responseErrorMap)[423]>;
+type ApiRnt002Error423 = z.infer<(typeof apiRnt002.responseErrorMap)[423]>;
 
 export default apiRnt002;
 
@@ -61,5 +63,5 @@ export type {
   ApiRnt002RequestQuery,
   ApiRnt002RequestBody,
   ApiRnt002ResponseOK,
-  ApiRnt002ErrorLocked,
+  ApiRnt002Error423,
 };
