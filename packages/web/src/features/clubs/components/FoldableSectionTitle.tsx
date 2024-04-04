@@ -5,9 +5,9 @@ import styled from "styled-components";
 
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 
-import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
+import type { ClubCardProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
-const DivisionSectionTitleInner = styled.div`
+const FoldableSectionTitleInner = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -24,18 +24,19 @@ const MoreInfo = styled.div`
   cursor: pointer;
 `;
 
-const DivisionSectionTitle: React.FC<{
-  division: string;
-  clubList: Array<ClubInfo>;
+const FoldableSectionTitle: React.FC<{
+  title: string;
+  clubList: Array<ClubCardProps["club"]>;
   toggle: boolean;
+  showLength?: boolean;
   toggleHandler: () => void;
-}> = ({ division, clubList, toggle, toggleHandler }) => (
-  <DivisionSectionTitleInner>
+}> = ({ title, clubList, toggle, showLength = true, toggleHandler }) => (
+  <FoldableSectionTitleInner>
     <SectionTitle size="lg">
-      {division} ({clubList.length})
+      {title} {showLength && `(${clubList.length})`}
     </SectionTitle>
     <MoreInfo onClick={toggleHandler}>{toggle ? `접기` : `펼치기`}</MoreInfo>
-  </DivisionSectionTitleInner>
+  </FoldableSectionTitleInner>
 );
 
-export default DivisionSectionTitle;
+export default FoldableSectionTitle;

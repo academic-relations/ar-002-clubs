@@ -4,9 +4,15 @@ import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 
 import ClubListGrid from "@sparcs-clubs/web/features/clubs/components/ClubListGrid";
-import DivisionSectionTitle from "@sparcs-clubs/web/features/clubs/components/DivisionSectionTitle";
+import FoldableSectionTitle from "@sparcs-clubs/web/features/clubs/components/FoldableSectionTitle";
 
-import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
+import type { ClubCardProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
+
+type ClubsSectionFrameProps = {
+  showLength?: boolean; // section title에 길이 보여줄지 여부
+  title: string; // 분과
+  clubList: Array<ClubCardProps["club"]>;
+};
 
 const ClubDivisionSectionFrameInner = styled.div`
   display: flex;
@@ -14,13 +20,9 @@ const ClubDivisionSectionFrameInner = styled.div`
   gap: 20px;
 `;
 
-type ClubsSectionFrameProps = {
-  division: string; // 분과
-  clubList: Array<ClubInfo>;
-};
-
 const ClubsSectionFrame: React.FC<ClubsSectionFrameProps> = ({
-  division,
+  showLength = true,
+  title,
   clubList,
 }) => {
   const [toggle, setToggle] = useState(true);
@@ -31,10 +33,11 @@ const ClubsSectionFrame: React.FC<ClubsSectionFrameProps> = ({
 
   return (
     <ClubDivisionSectionFrameInner>
-      <DivisionSectionTitle
-        division={division}
+      <FoldableSectionTitle
+        title={title}
         clubList={clubList}
         toggle={toggle}
+        showLength={showLength}
         toggleHandler={toggleHandler}
       />
       {toggle && <ClubListGrid clubList={clubList} />}
