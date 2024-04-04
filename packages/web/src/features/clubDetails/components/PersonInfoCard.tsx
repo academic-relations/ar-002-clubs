@@ -3,13 +3,14 @@
 import React from "react";
 import styled from "styled-components";
 
-import type { ClubDetail } from "@sparcs-clubs/web/types/clubdetail.types";
+// import type { ClubDetail } from "@sparcs-clubs/web/types/clubdetail.types";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
+import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 import PersonInfoItem from "./PersonInfoItem";
 
 interface PersonInfoCardProps {
-  club: ClubDetail;
+  club: ApiClb002ResponseOK;
 }
 
 const PersonInfoCardInner = styled(Card)`
@@ -18,7 +19,7 @@ const PersonInfoCardInner = styled(Card)`
 
 const PersonInfoCard: React.FC<PersonInfoCardProps> = ({ club }) => (
   <PersonInfoCardInner>
-    <PersonInfoItem title="총원" content={`${club.totalMembers}명`} />
+    <PersonInfoItem title="총원" content={`${club.totalMemberCnt}명`} />
     <PersonInfoItem title="대표자" content={club.representative} />
     <PersonInfoItem
       title="지도교수"

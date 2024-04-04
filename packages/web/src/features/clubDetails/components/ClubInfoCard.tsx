@@ -3,19 +3,19 @@
 import React from "react";
 import styled from "styled-components";
 
-import type { ClubDetail } from "@sparcs-clubs/web/types/clubdetail.types";
+// import type { ClubDetail } from "@sparcs-clubs/web/types/clubdetail.types";
 import {
-  getClubType,
   getTagColorFromClubType,
   getTagColorFromDivision,
 } from "@sparcs-clubs/web/types/clubdetail.types";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 import ClubInfoItem from "./ClubInfoItem";
 
 interface ClubInfoCardProps {
-  club: ClubDetail;
+  club: ApiClb002ResponseOK;
 }
 
 const ClubInfoCardInner = styled(Card)`
@@ -37,9 +37,7 @@ const ClubInfoCard: React.FC<ClubInfoCardProps> = ({ club }) => (
       <ClubInfoItem
         title="동아리 지위"
         content={
-          <Tag color={getTagColorFromClubType(club.type)}>
-            {getClubType(club)}
-          </Tag>
+          <Tag color={getTagColorFromClubType(club.type)}>{club.type}</Tag>
         }
       />
       <ClubInfoItem
