@@ -19,6 +19,7 @@ const CheckboxInner = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.BLACK};
 `;
 
+
 const Checkbox: React.FC<CheckboxProps> = ({ checked, onClick = () => {} }) => (
   <CheckboxInner onClick={() => onClick()}>
     {checked && <Icon type="check" size={16} />}
