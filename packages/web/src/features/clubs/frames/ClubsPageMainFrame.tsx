@@ -3,9 +3,10 @@
 import React from "react";
 import styled from "styled-components";
 
-import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 
-import type { ClubInfo } from "@sparcs-clubs/web/types/clubs.types";
+import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
+import { useGetClubsList } from "@sparcs-clubs/web/features/clubs/services/useGetClubsList";
 
 const ClubsPageMainFrameInner = styled.div`
   display: flex;
@@ -19,26 +20,25 @@ const ClubListsByDepartmentWrapper = styled.div`
   gap: 40px;
 `;
 
-interface ClubsPageMainFrameProps {
-  clubDivisionAndListsPairs: Array<[string, Array<ClubInfo>]>;
-}
-
-const ClubsPageMainFrame: React.FC<ClubsPageMainFrameProps> = ({
-  clubDivisionAndListsPairs,
-}) => (
-  <ClubsPageMainFrameInner>
-    <ClubListsByDepartmentWrapper>
-      {clubDivisionAndListsPairs.map(
-        (clubDivisionAndListsPair: [string, Array<ClubInfo>]) => (
-          <ClubsSectionFrame
-            division={clubDivisionAndListsPair[0]}
-            clubList={clubDivisionAndListsPair[1]}
-            key={clubDivisionAndListsPair[0]}
-          />
-        ),
-      )}
-    </ClubListsByDepartmentWrapper>
-  </ClubsPageMainFrameInner>
-);
+const ClubsPageMainFrame: React.FC = () => {
+  const { data, isLoading, isError } = useGetClubsList();
+  return (
+    <ClubsPageMainFrameInner>
+      <AsyncBoundary isLoading={isLoading} isError={isError}>
+        <ClubListsByDepartmentWrapper>
+          {(data?.divisions ?? []).map(division => (
+            <ClubsSectionFrame
+              title={division.name}
+              clubList={division.clubs.sort(
+                (a, b) => a.type - b.type || a.name.localeCompare(b.name),
+              )}
+              key={division.name}
+            />
+          ))}
+        </ClubListsByDepartmentWrapper>
+      </AsyncBoundary>
+    </ClubsPageMainFrameInner>
+  );
+};
 
 export default ClubsPageMainFrame;
