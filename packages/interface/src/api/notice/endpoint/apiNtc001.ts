@@ -45,4 +45,16 @@ const apiNtc001 = {
   responseErrorMap,
 };
 
+type ApiNtc001RequestParam = z.infer<typeof apiNtc001.requestParam>;
+type ApiNtc001RequestQuery = z.infer<typeof apiNtc001.requestQuery>;
+type ApiNtc001RequestBody = z.infer<typeof apiNtc001.requestBody>;
+type ApiNtc001ResponseOK = z.infer<(typeof apiNtc001.responseBodyMap)[200]>;
+
 export default apiNtc001;
+
+export type {
+  ApiNtc001RequestParam,
+  ApiNtc001RequestQuery,
+  ApiNtc001RequestBody,
+  ApiNtc001ResponseOK,
+};

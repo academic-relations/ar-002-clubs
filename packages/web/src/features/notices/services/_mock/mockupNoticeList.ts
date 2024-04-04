@@ -1,31 +1,15 @@
 import { z } from "zod";
 
-import {
-  NoticeInfo,
-  NoticePagination,
-} from "@sparcs-clubs/web/features/notices/types/notice.type";
-
-// 목업 데이터를 인터페이스로 매핑해주는 임시 함수입니다.
-const fromObj = (noticeObj: (typeof mockupData.posts)[0]): NoticeInfo => {
-  const notice = {
-    id: Number(noticeObj.id),
-    title: noticeObj.title,
-    author: noticeObj.author,
-    date: z.coerce.date().parse(noticeObj.date),
-    link: noticeObj.link,
-  };
-
-  return notice;
-};
+import type { ApiNtc001ResponseOK } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 
 // mockup model to interface
-const mockupData = {
-  posts: [
+const mockupNoticeList: ApiNtc001ResponseOK = {
+  notices: [
     {
       id: 314,
       title: "[기획국] 2024년 동아리소개백서 온라인 배포",
       author: "조현준1",
-      date: "2024-03-03",
+      date: z.coerce.date().parse("2024-03-03"),
       link: "https://cafe.naver.com/kaistclubs/ArticleRead.nhn?clubid=26985838&page=1&menuid=1&boardtype=L&articleid=33591&referrerAllArticles=false",
     },
     {
@@ -33,7 +17,7 @@ const mockupData = {
       title:
         "[사무국] [For everyone / Translated] 2024년 봄학기 등록 절차 / 2024 Spring Club Registration Process",
       author: "황윤호",
-      date: "2024-03-02",
+      date: z.coerce.date().parse("2024-03-02"),
       link: "https://cafe.naver.com/kaistclubs/ArticleRead.nhn?clubid=26985838&page=1&menuid=1&boardtype=L&articleid=33590&referrerAllArticles=false",
     },
     {
@@ -41,14 +25,14 @@ const mockupData = {
       title:
         "[관리국] [For everyone / Translated] 2024 봄 공용공간 정기사용신청 안내 / Announcement of Regular Common Space Usage Application of Spring 2024 Semester",
       author: "유효근",
-      date: "2024-03-01",
+      date: z.coerce.date().parse("2024-03-01"),
       link: "https://cafe.naver.com/kaistclubs/ArticleRead.nhn?clubid=26985838&page=1&menuid=1&boardtype=L&articleid=33589&referrerAllArticles=false",
     },
     {
       id: 311,
       title: "[집행부] 2024 봄학기 동아리연합회 집행부원 모집",
       author: "황윤호",
-      date: "2024-02-25",
+      date: z.coerce.date().parse("2024-02-25"),
       link: "https://cafe.naver.com/kaistclubs/ArticleRead.nhn?clubid=26985838&page=1&menuid=1&boardtype=L&articleid=33587&referrerAllArticles=false",
     },
     {
@@ -56,28 +40,28 @@ const mockupData = {
       title:
         "[사무국] [For everyone / Translated] 2023가을 동아리 지원금 지급액 확정 안내 / Announcement of the Actual Amount of 2023Fall Club Support Fund Payment",
       author: "안희진",
-      date: "2024-02-19",
+      date: z.coerce.date().parse("2024-02-19"),
       link: "https://cafe.naver.com/kaistclubs/ArticleRead.nhn?clubid=26985838&page=1&menuid=1&boardtype=L&articleid=33566&referrerAllArticles=false",
     },
     {
       id: 308,
       title: "[집행부] 1월 집행부 사업보고",
       author: "조현준1",
-      date: "2024-02-08",
+      date: z.coerce.date().parse("2024-02-08"),
       link: "https://cafe.naver.com/kaistclubs/ArticleRead.nhn?clubid=26985838&page=1&menuid=1&boardtype=L&articleid=33561&referrerAllArticles=false",
     },
     {
       id: 307,
       title: "[관리국] [가구 폐기] 2월 14일 가구 폐기 안내",
       author: "권혁원",
-      date: "2024-02-07",
+      date: z.coerce.date().parse("2024-02-07"),
       link: "https://cafe.naver.com/kaistclubs/ArticleRead.nhn?clubid=26985838&page=1&menuid=1&boardtype=L&articleid=33560&referrerAllArticles=false",
     },
     {
       id: 306,
       title: "전체동아리대표자톡 갱신",
       author: "황윤호",
-      date: "2024-02-06",
+      date: z.coerce.date().parse("2024-02-06"),
       link: "https://cafe.naver.com/kaistclubs/ArticleRead.nhn?clubid=26985838&page=1&menuid=1&boardtype=L&articleid=33559&referrerAllArticles=false",
     },
     {
@@ -85,7 +69,7 @@ const mockupData = {
       title:
         "[For everyone / Translated] 전체동아리대표자톡 갱신 / Replacement of the Chatroom of Club Representatives",
       author: "황윤호",
-      date: "2024-02-06",
+      date: z.coerce.date().parse("2024-02-06"),
       link: "https://cafe.naver.com/kaistclubs/ArticleRead.nhn?clubid=26985838&menuid=1&boardtype=L&page=1&specialmenutype=&userDisplay=15&articleid=33559",
     },
     {
@@ -93,7 +77,7 @@ const mockupData = {
       title:
         "[사무국] [For everyone / Translated] 2023 하반기 활동보고서 & 2023가을 동아리 지원금 증빙서류 검토 결과 이의제기 안내 / Objection for 2023 2nd half Activity Report & 2023 Fall Support Fund Document Review",
       author: "안희진",
-      date: "2024-02-06",
+      date: z.coerce.date().parse("2024-02-06"),
       link: "https://cafe.naver.com/kaistclubs/ArticleRead.nhn?clubid=26985838&page=1&menuid=1&boardtype=L&articleid=33558&referrerAllArticles=false",
     },
     {
@@ -101,7 +85,7 @@ const mockupData = {
       title:
         "[For everyone / Translated] 전체동아리대표자톡 갱신 / Replacement of the Chatroom of Club Representatives",
       author: "황윤호",
-      date: "2024-02-06",
+      date: z.coerce.date().parse("2024-02-06"),
       link: "https://cafe.naver.com/kaistclubs/ArticleRead.nhn?clubid=26985838&menuid=1&boardtype=L&page=1&specialmenutype=&userDisplay=15&articleid=33559",
     },
     {
@@ -109,16 +93,11 @@ const mockupData = {
       title:
         "[사무국] [For everyone / Translated] 2023 하반기 활동보고서 & 2023가을 동아리 지원금 증빙서류 검토 결과 이의제기 안내 / Objection for 2023 2nd half Activity Report & 2023 Fall Support Fund Document Review",
       author: "안희진",
-      date: "2024-02-06",
+      date: z.coerce.date().parse("2024-02-06"),
       link: "https://cafe.naver.com/kaistclubs/ArticleRead.nhn?clubid=26985838&page=1&menuid=1&boardtype=L&articleid=33558&referrerAllArticles=false",
     },
   ],
   totalPosts: 302,
 };
 
-const mockupNoticePagination: NoticePagination = {
-  notices: mockupData.posts.map(fromObj),
-  totalPosts: mockupData.totalPosts,
-};
-
-export default mockupNoticePagination;
+export default mockupNoticeList;

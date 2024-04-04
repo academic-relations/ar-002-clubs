@@ -11,7 +11,7 @@ import {
 import NoticeList from "@sparcs-clubs/web/features/notices/components/NoticeList";
 import NoticePagination from "@sparcs-clubs/web/features/notices/components/NoticePagination";
 
-import { getNotice } from "@sparcs-clubs/web/features/notices/services/getNotice";
+import { useGetNotice } from "@sparcs-clubs/web/features/notices/services/useGetNotice";
 
 const NoticeListAndPaginationFrameInner = styled.div`
   width: 100%;
@@ -25,7 +25,7 @@ const NoticeListAndPaginationFrameInner = styled.div`
 
 const NoticeListAndPaginationFrame = () => {
   const [page, setPage] = useState<number>(1);
-  const { data, isLoading, isError } = getNotice(page, noticePerPage);
+  const { data, isLoading, isError } = useGetNotice(page, noticePerPage);
 
   const totalPage = Math.floor((data?.totalPosts ?? 0) / noticePerPage) + 2;
 

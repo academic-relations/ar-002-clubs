@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
-import apiNtc001 from "@sparcs-clubs/interface/api/notices/endpoints/apiNtc001";
+import apiNtc001 from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 import {
   axiosClient,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
-import mockupNoticePagination from "@sparcs-clubs/web/features/notices/services/_mock/mockupNoticeList";
+import mockupNoticeList from "@sparcs-clubs/web/features/notices/services/_mock/mockupNoticeList";
 
 // TODO: This might better work using z.discriminatedUnion
 // 예시는 (typeof apiNtc001.responseBodyMap)[200]의 형태인데, 아래가 맞는 것 같아서 질문 남겨둡니다!
@@ -15,7 +15,7 @@ import mockupNoticePagination from "@sparcs-clubs/web/features/notices/services/
 type ISuccessResponseType = z.infer<(typeof apiNtc001.responseBodyMap)[200]>;
 type IRequestQueryType = z.infer<typeof apiNtc001.requestQuery>;
 
-export const getNotice = (pageOffset: number, itemCount: number) => {
+export const useGetNotice = (pageOffset: number, itemCount: number) => {
   const requestQuery: IRequestQueryType = { pageOffset, itemCount };
 
   return useQuery<ISuccessResponseType, Error>({
@@ -37,5 +37,5 @@ export const getNotice = (pageOffset: number, itemCount: number) => {
 };
 
 defineAxiosMock(mock => {
-  mock.onGet(apiNtc001.url()).reply(() => [200, mockupNoticePagination]);
+  mock.onGet(apiNtc001.url()).reply(() => [200, mockupNoticeList]);
 });

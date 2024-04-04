@@ -4,10 +4,11 @@ import React from "react";
 import styled from "styled-components";
 
 import NoticeListItem from "@sparcs-clubs/web/features/notices/components/NoticeListItem";
-import type { NoticeInfo } from "@sparcs-clubs/web/features/notices/types/notice.type";
+
+import type { ApiNtc001ResponseOK } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 
 interface NoticeListProps {
-  infos: Array<NoticeInfo>;
+  infos: ApiNtc001ResponseOK["notices"];
 }
 
 const NoticeListInner = styled.div`
@@ -39,3 +40,5 @@ const NoticeList: React.FC<NoticeListProps> = ({ infos }) => (
 );
 
 export default NoticeList;
+
+export type { NoticeListProps };
