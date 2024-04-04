@@ -7,7 +7,7 @@ interface RawClubDetail {
   characteristic: string;
   representative: string;
   advisor: string | null;
-  totalMembers: number;
+  totalMemberCnt: number;
   divisionName: string;
   foundingYear: number;
   room: string;
@@ -17,36 +17,31 @@ interface RawClubDetail {
 interface ClubDetail {
   id: number;
   name: string;
-  type: ClubType;
+  type: string;
   characteristic: string;
   representative: string;
   advisor?: string;
-  totalMembers: number;
+  totalMemberCnt: number;
   divisionName: string;
   foundingYear: number;
   room: string;
   description: string;
 }
 
-enum ClubType {
-  Senate, // 상임동아리
-  Regular, // 정동아리
-  Provisional, // 가동아리
-}
+// enum ClubType {
+//   Senate, // 상임동아리
+//   Regular, // 정동아리
+//   Provisional, // 가동아리
+// }
 
-const fromObj = (clubObj: RawClubDetail) => {
-  const clubTypeRelation = new Map<string, ClubType>();
-  clubTypeRelation.set("상임동아리", ClubType.Senate);
-  clubTypeRelation.set("정동아리", ClubType.Regular);
-  clubTypeRelation.set("가동아리", ClubType.Provisional);
-
+const fromObj = (clubObj: RawClubDetail): ClubDetail => {
   const club: ClubDetail = {
     id: clubObj.id,
     name: clubObj.name,
-    type: clubTypeRelation.get(clubObj.type.trim()) ?? ClubType.Provisional,
+    type: clubObj.type.trim(),
     representative: clubObj.representative,
     advisor: clubObj.advisor === null ? undefined : clubObj.advisor,
-    totalMembers: clubObj.totalMembers,
+    totalMemberCnt: clubObj.totalMemberCnt,
     characteristic: clubObj.characteristic,
     divisionName: clubObj.divisionName,
     foundingYear: clubObj.foundingYear,
@@ -57,29 +52,33 @@ const fromObj = (clubObj: RawClubDetail) => {
   return club;
 };
 
-const getTagColorFromClubType = (clubType: ClubType) => {
+const getTagColorFromClubType = (clubType: string) => {
   let color: TagColor;
-  if (clubType === ClubType.Senate) {
-    color = "GREEN";
-  } else if (clubType === ClubType.Regular) {
-    color = "BLUE";
-  } else {
-    color = "ORANGE";
+  switch (clubType) {
+    case "상임동아리":
+      color = "GREEN";
+      break;
+    case "정동아리":
+      color = "BLUE";
+      break;
+    default:
+      color = "ORANGE";
+      break;
   }
   return color;
 };
 
-const getClubType = (club: ClubDetail) => {
-  let clubType: string;
-  if (club.type === ClubType.Senate) {
-    clubType = "상임동아리";
-  } else if (club.type === ClubType.Regular) {
-    clubType = "정동아리";
-  } else {
-    clubType = "가동아리";
-  }
-  return clubType;
-};
+// const getClubType = (club: ClubDetail) => {
+//   let clubType: string;
+//   if (club.type === ClubType.Senate) {
+//     clubType = "상임동아리";
+//   } else if (club.type === ClubType.Regular) {
+//     clubType = "정동아리";
+//   } else {
+//     clubType = "가동아리";
+//   }
+//   return clubType;
+// };
 
 const getTagColorFromDivision = (divisionName: string): TagColor => {
   switch (divisionName) {
@@ -107,9 +106,4 @@ const getTagColorFromDivision = (divisionName: string): TagColor => {
 };
 
 export type { ClubDetail };
-export {
-  fromObj,
-  getClubType,
-  getTagColorFromClubType,
-  getTagColorFromDivision,
-};
+export { fromObj, getTagColorFromClubType, getTagColorFromDivision };
