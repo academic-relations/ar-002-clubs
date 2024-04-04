@@ -4,7 +4,6 @@ import React from "react";
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
 import { useGetClubsList } from "@sparcs-clubs/web/features/clubs/services/useGetClubsList";
@@ -12,7 +11,7 @@ import { useGetClubsList } from "@sparcs-clubs/web/features/clubs/services/useGe
 const ClubsPageMainFrameInner = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 60px;
+  margin-top: 60px;
 `;
 
 const ClubListsByDepartmentWrapper = styled.div`
@@ -25,13 +24,14 @@ const ClubsPageMainFrame: React.FC = () => {
   const { data, isLoading, isError } = useGetClubsList();
   return (
     <ClubsPageMainFrameInner>
-      <PageTitle>동아리 목록</PageTitle>
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         <ClubListsByDepartmentWrapper>
           {(data?.divisions ?? []).map(division => (
             <ClubsSectionFrame
               title={division.name}
-              clubList={division.clubs}
+              clubList={division.clubs.sort(
+                (a, b) => a.type - b.type || a.name.localeCompare(b.name),
+              )}
               key={division.name}
             />
           ))}

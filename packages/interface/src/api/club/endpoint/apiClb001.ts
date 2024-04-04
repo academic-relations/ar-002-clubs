@@ -26,7 +26,7 @@ const responseBodyMap = {
         clubs: z // 동아리
           .object({
             id: z.number().int().min(1),
-            name: z.string().max(20),
+            name: z.string().max(128),
             type: z.nativeEnum(ClubTypeEnum), // 동아리 유형(정동아리 | 가동아리 | 상임동아리)
             characteristic: z.string().max(50), // 동아리 소개
             representative: z.string().max(20), // 동아리 대표

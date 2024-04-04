@@ -19,21 +19,17 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    divisions: z // 분과
-      .object({
-        id: z.number().int().min(1),
-        name: z.string().max(20),
-        type: z.string().max(10), // 동아리 유형(정동아리 | 가동아리 | 상임동아리)
-        characteristic: z.string().max(50), // 동아리 소개
-        representative: z.string().max(20), // 동아리 대표
-        advisor: z.string().max(20).nullable(), // 동아리 지도교수
-        totalMemberCnt: z.number().int().min(1),
-        description: z.string(),
-        divisionName: z.string().max(20), // 분과명
-        foundingYear: z.number().int().min(1985).max(2100),
-        room: z.string().max(50), // 동아리방 위치
-      })
-      .array(),
+    id: z.number().int().min(1),
+    name: z.string().max(20),
+    type: z.string().max(10), // 동아리 유형(정동아리 | 가동아리 | 상임동아리)
+    characteristic: z.string().max(50), // 동아리 소개
+    representative: z.string().max(20), // 동아리 대표
+    advisor: z.string().max(20).nullable(), // 동아리 지도교수
+    totalMemberCnt: z.number().int().min(1),
+    description: z.string(),
+    divisionName: z.string().max(20), // 분과명
+    foundingYear: z.number().int().min(1985).max(2100),
+    room: z.string().max(50), // 동아리방 위치
   }),
 };
 

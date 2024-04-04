@@ -6,6 +6,7 @@ import Icon from "./Icon";
 
 type CheckboxProps = {
   checked: boolean;
+  onClick?: () => void;
 };
 
 const CheckboxInner = styled.div`
@@ -18,8 +19,11 @@ const CheckboxInner = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.BLACK};
 `;
 
-const Checkbox = ({ checked }: CheckboxProps) => (
-  <CheckboxInner>{checked && <Icon type="check" size={16} />}</CheckboxInner>
+
+const Checkbox: React.FC<CheckboxProps> = ({ checked, onClick = () => {} }) => (
+  <CheckboxInner onClick={() => onClick()}>
+    {checked && <Icon type="check" size={16} />}
+  </CheckboxInner>
 );
 
 export default Checkbox;
