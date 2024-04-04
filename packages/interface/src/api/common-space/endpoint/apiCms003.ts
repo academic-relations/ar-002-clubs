@@ -29,7 +29,7 @@ const responseBodyMap = {
 };
 
 const responseErrorMap = {
-  [HttpStatusCode.Locked]: z.object({
+  423: z.object({
     status: z.literal("Error"), // status는 "Error"여야 합니다.
     message: z.literal("Already used by other order."), // message는 문자열이어야 합니다.
   }),
