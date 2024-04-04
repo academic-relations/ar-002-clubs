@@ -51,7 +51,7 @@ type ApiCms003RequestBody = z.infer<typeof apiCms003.requestBody>;
 type ApiCms003ResponseCreated = z.infer<
   (typeof apiCms003.responseBodyMap)[201]
 >;
-type ApiCms003ErrorLocked = z.infer<(typeof apiCms003.responseErrorMap)[423]>;
+type ApiCms003Error423 = z.infer<(typeof apiCms003.responseErrorMap)[423]>;
 
 export default apiCms003;
 
@@ -60,5 +60,5 @@ export type {
   ApiCms003RequestQuery,
   ApiCms003RequestBody,
   ApiCms003ResponseCreated,
-  ApiCms003ErrorLocked,
+  ApiCms003Error423,
 };
