@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { commonSpaceEnum } from "@sparcs-clubs/interface/common/enum/commonSpace";
+import { CommonSpaceEnum } from "@sparcs-clubs/interface/common/enum/commonSpace";
 
 /**
  * @version v0.1
@@ -22,7 +22,7 @@ const responseBodyMap = {
     commonSpaces: z.array(
       z.object({
         id: z.number().int(),
-        commonSpaceEnum,
+        commonSpaceEnum: z.nativeEnum(CommonSpaceEnum),
         name: z.string().max(30),
         availableHoursPerWeek: z.number().int().min(0).max(24),
         availableHoursPerDay: z.number().int().min(0).max(24),
