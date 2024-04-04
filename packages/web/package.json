@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "mock:front": "pnpm dev",
+    "mock:back": "echo \"In mock:back mode, the 'web' package will not be run. Exiting.\"",
+    "lint": "next lint",
+    "mock:front": "pnpm dev",
     "mock:back": "echo \"In mock:back mode, the 'web' package will not be run. Exiting.\""
   },
   "dependencies": {

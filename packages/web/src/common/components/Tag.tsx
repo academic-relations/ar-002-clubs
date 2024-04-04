@@ -3,7 +3,7 @@
 import React from "react";
 import styled from "styled-components";
 
-type TagColor = "BLUE" | "GREEN" | "ORANGE";
+type TagColor = "GREEN" | "BLUE" | "ORANGE" | "PURPLE" | "PINK" | "YELLOW";
 
 const TagInner = styled.div<{ color: TagColor }>`
   position: relative;

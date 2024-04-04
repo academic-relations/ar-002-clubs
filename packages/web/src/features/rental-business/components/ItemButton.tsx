@@ -1,0 +1,44 @@
+import Card from "@sparcs-clubs/web/common/components/Card";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+import React from "react";
+import styled from "styled-components";
+
+interface ItemButtonProps {
+  image?: string;
+  name: string;
+  selected: boolean;
+  onClick: () => void;
+}
+
+const StyledButton = styled(Card)<{ selected: boolean; onClick: () => void }>`
+  padding: 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex: 1 0 0;
+  background-color: ${({ theme, selected }) =>
+    selected ? theme.colors.PRIMARY : theme.colors.WHITE};
+  color: ${({ theme, selected }) =>
+    selected ? theme.colors.WHITE : theme.colors.BLACK};
+`;
+
+const StyledImage = styled.img`
+  border-radius: 4px;
+  background: ${({ theme }) => theme.colors.GRAY[200]};
+  width: 80px;
+  height: 80px;
+`;
+
+const ItemButton: React.FC<ItemButtonProps> = ({
+  name,
+  image = "",
+  selected,
+  onClick,
+}) => (
+  <StyledButton selected={selected} onClick={onClick}>
+    <StyledImage src={image} />
+    <Typography type={selected ? "h3_b" : "h3"}>{name}</Typography>
+  </StyledButton>
+);
+
+export default ItemButton;
