@@ -17,7 +17,7 @@ const requestQuery = z.object({});
 
 const requestBody = z.object({
   clubId: z.number().int().min(1),
-  studentPhoneNumber: zKrPhoneNumber,
+  krPhoneNumber: zKrPhoneNumber,
   objects: z
     .object({
       id: z.number().int().min(1),
