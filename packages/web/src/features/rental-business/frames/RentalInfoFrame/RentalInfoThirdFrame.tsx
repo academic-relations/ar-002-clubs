@@ -5,14 +5,10 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
-const StyledCard = styled(Card)`
+const StyledCard = styled(Card)<{ type: string }>`
   padding: 32px;
   gap: 20px;
   align-self: stretch;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
-  background: ${({ theme }) => theme.colors.WHITE};
-  box-shadow: none;
 `;
 
 const StyledTypography = styled(Typography)`
@@ -37,7 +33,7 @@ const StyledList = styled.ul`
 `;
 
 const RentalInfoThirdFrame: React.FC<RentalFrameProps> = () => (
-  <StyledCard>
+  <StyledCard type="outline">
     <CardInner>
       <StyledTypography type="p">대여 물품</StyledTypography>
       <StyledList>

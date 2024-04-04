@@ -7,14 +7,10 @@ import Radio from "@sparcs-clubs/web/common/components/Radio";
 import ItemButtonList from "@sparcs-clubs/web/features/rental-business/components/ItemButtonList";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
-const StyledCard = styled(Card)`
+const StyledCard = styled(Card)<{ type: string }>`
   padding: 32px;
   gap: 40px;
   align-self: stretch;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
-  background: ${({ theme }) => theme.colors.WHITE};
-  box-shadow: none;
 `;
 
 const StyledCardInner = styled.div`
@@ -109,7 +105,7 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
     <>
       <ItemButtonList value={value} onChange={setValue} />
       <Info text="대충 이젤에 대한 추가 안내사항" />
-      <StyledCard>
+      <StyledCard type="outline">
         <StyledCardInner>
           <Typography type="h3">새부 물품 정보</Typography>
           <Rental {...props} />

@@ -19,14 +19,10 @@ const RentalNoticeFrameInner = styled.div`
   align-self: stretch;
 `;
 
-const StyledCard = styled(Card)`
+const StyledCard = styled(Card)<{ type: string }>`
   padding: 32px;
   gap: 16px;
   align-self: stretch;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
-  background: ${({ theme }) => theme.colors.WHITE};
-  box-shadow: none;
 `;
 
 const StyledTypography = styled(Typography)`
@@ -55,7 +51,7 @@ const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
 
   return (
     <RentalNoticeFrameInner>
-      <StyledCard>
+      <StyledCard type="outline">
         <Typography type="h3">안내사항</Typography>
         <StyledTypography type="p">
           모든 대여 사업은 동연 소속 동아리를 대상으로 하며, 신청은 각 동아리의
