@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
 import Button from "@sparcs-clubs/web/common/components/Button";
-import { ActivityCertificateInterface } from "./types/activityCertificate";
+import { ActivityCertificateInterface } from "../types/activityCertificate";
 
 export interface ActivityCertificateFrameProps {
   activityCertificate: ActivityCertificateInterface;

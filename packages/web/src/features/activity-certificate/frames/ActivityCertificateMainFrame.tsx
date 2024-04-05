@@ -3,8 +3,9 @@
 import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 import React from "react";
 import styled from "styled-components";
-import { ActivityCertificateInterface } from "./types/activityCertificate";
+import { ActivityCertificateInterface } from "../types/activityCertificate";
 import ActivityCertificateNoticeFrame from "./ActivityCertificateNoticeFrame";
+import ActivityCertificateInfoFrame from "./ActivityCertificateInfoFrame";
 
 const ActivityCertificatePageMainFrameInner = styled.div`
   width: 100%;
@@ -16,7 +17,7 @@ const ActivityCertificatePageMainFrameInner = styled.div`
   display: inline-flex;
 `;
 
-const ActivityCertificatePageMainFrame: React.FC = () => {
+const ActivityCertificateMainFrame: React.FC = () => {
   const [activityCertificate, setActivityCertificate] =
     React.useState<ActivityCertificateInterface>({
       agreement: false,
@@ -26,8 +27,7 @@ const ActivityCertificatePageMainFrame: React.FC = () => {
     <ActivityCertificatePageMainFrameInner>
       <PageTitle>활동확인서 발급</PageTitle>
       {activityCertificate.agreement ? (
-        // <ActivityCertificateInfoFrame {...props} />
-        <>Temp</>
+        <ActivityCertificateInfoFrame {...props} />
       ) : (
         <ActivityCertificateNoticeFrame {...props} />
       )}
@@ -35,4 +35,4 @@ const ActivityCertificatePageMainFrame: React.FC = () => {
   );
 };
 
-export default ActivityCertificatePageMainFrame;
+export default ActivityCertificateMainFrame;
