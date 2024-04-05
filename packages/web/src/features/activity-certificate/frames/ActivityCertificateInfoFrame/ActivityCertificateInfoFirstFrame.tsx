@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
 
+import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
+
+import Select from "@sparcs-clubs/web/common/components/Forms/Select";
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 
 const StyledCard = styled(Card)<{ type: string }>`
@@ -13,34 +15,26 @@ const StyledCard = styled(Card)<{ type: string }>`
   align-self: stretch;
 `;
 
-const LabelWithInputWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 4px;
-  display: inline-flex;
-`;
-
 const ActivityCertificateInfoFirstFrame: React.FC<
   ActivityCertificateFrameProps
 > = () => {
-  const [itemNumberText, setItemNumberText] = useState("");
-
+  const [itemNumber, setItemNumber] = useState("");
   return (
     <StyledCard type="outline">
-      <LabelWithInputWrapper>
-        <Typography type="p">동아리 이름</Typography>
-        <ItemNumberInput
-          placeholder=""
-          onNumberChange={changedNumber => {
-            setItemNumberText(changedNumber);
-          }}
-          // onChange={e => setIssueCountText(e.target.value)}
-        />
-      </LabelWithInputWrapper>
-      <Typography type="p">{itemNumberText}</Typography>
+      <Select label="동아리 이름" items={[]} />
+      <TextInput label="활동 기간" placeholder="" />
+      <ItemNumberInput
+        label="발급 매수"
+        placeholder=""
+        onNumberChange={changedNumber => {
+          setItemNumber(changedNumber);
+          console.log(itemNumber); // TODO - 이 줄 지우기
+        }}
+      />
+      <TextInput label="신청자 이름" placeholder="" />
+      <TextInput label="신청자 학과" placeholder="" />
+      <TextInput label="신청자 학번" placeholder="" />
+      <TextInput label="신청자 전화번호" placeholder="" />
     </StyledCard>
   );
 };

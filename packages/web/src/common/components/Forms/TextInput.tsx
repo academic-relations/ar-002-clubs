@@ -31,7 +31,7 @@ const Input = styled.input.attrs<TextInputProps>(({ area }) => ({
   as: area ? "textarea" : "input",
 }))<TextInputProps & { hasError: boolean }>`
   display: block;
-  width: 300px;
+  width: 100%;
   padding: 8px 12px 8px 12px;
   outline: none;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
@@ -60,7 +60,7 @@ const Input = styled.input.attrs<TextInputProps>(({ area }) => ({
 `;
 
 const InputWrapper = styled.div`
-  width: 300px;
+  width: 100%;
   flex-direction: column;
   display: flex;
   gap: 4px;

@@ -12,6 +12,7 @@ import ErrorMessage from "./_atomic/ErrorMessage";
 export interface ItemNumberInputProps
   extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
+  hasIcon?: boolean;
   placeholder: string;
   errorMessage?: string;
   disabled?: boolean;
@@ -96,7 +97,7 @@ const Input = styled.input<ItemNumberInputProps & { hasError: boolean }>`
 `;
 
 const InputWrapper = styled.div`
-  width: 300px;
+  width: 100%;
   flex-direction: column;
   display: flex;
   gap: 4px;
@@ -104,6 +105,7 @@ const InputWrapper = styled.div`
 
 const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
   label = "",
+  hasIcon = false,
   placeholder,
   disabled = false,
   itemLimit = 99,
@@ -152,9 +154,11 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
     <InputWrapper>
       <LabelWithIcon>
         {label && <Label>{label}</Label>}
-        <StyledInfoIcon
-          style={{ fontSize: "16px", width: "16px", height: "16px" }}
-        />
+        {hasIcon ? (
+          <StyledInfoIcon
+            style={{ fontSize: "16px", width: "16px", height: "16px" }}
+          />
+        ) : null}
       </LabelWithIcon>
       <InputContainer>
         <Input
