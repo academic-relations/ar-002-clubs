@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes } from "react";
+import React, { ChangeEvent, InputHTMLAttributes } from "react";
 import styled, { css } from "styled-components";
 import Label from "./_atomic/Label";
 import ErrorMessage from "./_atomic/ErrorMessage";
@@ -12,9 +12,7 @@ export interface TextInputProps
   area?: boolean;
   disabled?: boolean;
   value?: string;
-  onChange?: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void;
+  handleChange?: (value: string) => void;
 }
 
 const errorBorderStyle = css`
@@ -79,24 +77,30 @@ const TextInput: React.FC<TextInputProps> = ({
   area = false,
   disabled = false,
   value = "",
-  onChange = () => {},
+  handleChange = () => {},
   ...props
-}) => (
-  <InputWrapper>
-    {label && <Label>{label}</Label>}
+}) => {
+  const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    handleChange(inputValue);
+  };
+  return (
     <InputWrapper>
-      <Input
-        placeholder={placeholder}
-        hasError={!!errorMessage}
-        area={area}
-        disabled={disabled}
-        value={value}
-        onChange={onChange}
-        {...props}
-      />
-      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+      {label && <Label>{label}</Label>}
+      <InputWrapper>
+        <Input
+          placeholder={placeholder}
+          hasError={!!errorMessage}
+          area={area}
+          disabled={disabled}
+          value={value}
+          onChange={handleValueChange}
+          {...props}
+        />
+        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+      </InputWrapper>
     </InputWrapper>
-  </InputWrapper>
-);
+  );
+};
 
 export default TextInput;
