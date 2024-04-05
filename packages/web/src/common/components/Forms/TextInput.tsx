@@ -4,12 +4,17 @@ import Label from "./_atomic/Label";
 import ErrorMessage from "./_atomic/ErrorMessage";
 
 // PhoneInput, RentalInput에서 사용하기 위해 export
-export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface TextInputProps
+  extends InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
   placeholder: string;
   errorMessage?: string;
   area?: boolean;
   disabled?: boolean;
+  value?: string;
+  onChange?: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
 }
 
 const errorBorderStyle = css`
@@ -73,6 +78,8 @@ const TextInput: React.FC<TextInputProps> = ({
   errorMessage = "",
   area = false,
   disabled = false,
+  value = "",
+  onChange = () => {},
   ...props
 }) => (
   <InputWrapper>
@@ -83,6 +90,8 @@ const TextInput: React.FC<TextInputProps> = ({
         hasError={!!errorMessage}
         area={area}
         disabled={disabled}
+        value={value}
+        onChange={onChange}
         {...props}
       />
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
