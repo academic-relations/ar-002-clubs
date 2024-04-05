@@ -4,7 +4,7 @@ import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import Label from "./_atomic/Label";
 import ErrorMessage from "./_atomic/ErrorMessage";
 
-interface SelectItem {
+export interface SelectItem {
   label: string;
   value: string;
   selectable: boolean;
@@ -15,6 +15,8 @@ interface SelectProps {
   label?: string;
   errorMessage?: string;
   disabled?: boolean;
+  selectedValue?: string;
+  onSelect?: (value: string) => void;
 }
 
 const DropdownContainer = styled.div`
@@ -132,8 +134,9 @@ const Select: React.FC<SelectProps> = ({
   errorMessage = "",
   label = "",
   disabled = false,
+  selectedValue = "",
+  onSelect = () => {},
 }) => {
-  const [selectedValue, setSelectedValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -166,7 +169,7 @@ const Select: React.FC<SelectProps> = ({
 
   const handleOptionClick = (item: SelectItem) => {
     if (item.selectable) {
-      setSelectedValue(item.label);
+      onSelect(item.label);
       setIsOpen(false);
     }
   };
