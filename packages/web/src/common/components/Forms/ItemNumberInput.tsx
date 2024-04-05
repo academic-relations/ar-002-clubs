@@ -16,6 +16,8 @@ export interface ItemNumberInputProps
   errorMessage?: string;
   disabled?: boolean;
   itemLimit?: number;
+  value?: string;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const LabelWithIcon = styled.div`
@@ -106,9 +108,10 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
   placeholder,
   disabled = false,
   itemLimit = 99,
+  value = "",
+  onChange = () => {},
   ...props
 }) => {
-  const [value, setValue] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -129,7 +132,7 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
     const inputValue = e.target.value.replace(/[^0-9]/g, "");
 
     if (inputValue.length <= 2) {
-      setValue(inputValue);
+      onChange(e);
     }
   };
 
