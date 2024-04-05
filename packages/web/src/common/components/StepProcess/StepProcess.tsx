@@ -12,6 +12,16 @@ interface StepProcessProps {
   activeStepIndex: number;
 }
 
+const StepProcessInner = styled.div`
+  width: 100%;
+  // 디자인에서 고정값이라 일단 고정해 두었습니다.
+  height: 68px;
+  padding: 0px 60px;
+
+  display: flex;
+  flex-direction: column;
+`;
+
 const StepContainer = styled.div<{ width: string }>`
   display: flex;
   justify-content: space-between;
@@ -78,21 +88,23 @@ const StepProcess: React.FC<StepProcessProps> = ({
   const width = `${(100 / (totalSteps - 1)) * (activeStepIndex - 1)}%`;
 
   return (
-    <StepContainer width={width}>
-      {steps.map(({ stepIndex, label }) => (
-        <StepWrapper key={stepIndex}>
-          <StepDot step={getStep(activeStepIndex, stepIndex)} />
-          <StepsLabelContainer>
-            <StepLabel
-              key={stepIndex}
-              step={getStep(activeStepIndex, stepIndex)}
-            >
-              {label}
-            </StepLabel>
-          </StepsLabelContainer>
-        </StepWrapper>
-      ))}
-    </StepContainer>
+    <StepProcessInner>
+      <StepContainer width={width}>
+        {steps.map(({ stepIndex, label }) => (
+          <StepWrapper key={stepIndex}>
+            <StepDot step={getStep(activeStepIndex, stepIndex)} />
+            <StepsLabelContainer>
+              <StepLabel
+                key={stepIndex}
+                step={getStep(activeStepIndex, stepIndex)}
+              >
+                {label}
+              </StepLabel>
+            </StepsLabelContainer>
+          </StepWrapper>
+        ))}
+      </StepContainer>
+    </StepProcessInner>
   );
 };
 
