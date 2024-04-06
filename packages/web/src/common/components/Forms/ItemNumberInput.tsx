@@ -16,6 +16,7 @@ export interface ItemNumberInputProps
   errorMessage?: string;
   disabled?: boolean;
   itemLimit?: number;
+  unit?: string;
   value?: string;
   handleChange?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
@@ -110,6 +111,7 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
   disabled = false,
   itemLimit = 99,
   value = "",
+  unit = "개",
   handleChange = () => {},
   setErrorStatus = () => {},
   ...props
@@ -142,7 +144,7 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
     }
   };
 
-  const displayValue = value ? `${value}개` : "";
+  const displayValue = value ? `${value}${unit}` : "";
 
   // TODO: '개' 앞으로 커서 위치 조절
   // TODO: 숫자가 아닌 것 입력했을 때 에러메시지
@@ -166,7 +168,8 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
         />
         {itemLimit && (
           <RightContentWrapper hasError={!!error}>
-            / {itemLimit}개
+            / {itemLimit}
+            {unit}
           </RightContentWrapper>
         )}
       </InputContainer>
