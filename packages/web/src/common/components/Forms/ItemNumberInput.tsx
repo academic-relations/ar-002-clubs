@@ -16,8 +16,10 @@ export interface ItemNumberInputProps
   errorMessage?: string;
   disabled?: boolean;
   itemLimit?: number;
+  unit?: string;
   value?: string;
   handleChange?: (value: string) => void;
+  setErrorStatus?: (hasError: boolean) => void;
 }
 
 const LabelWithIcon = styled.div`
@@ -97,7 +99,7 @@ const Input = styled.input<ItemNumberInputProps & { hasError: boolean }>`
 `;
 
 const InputWrapper = styled.div`
-  width: 300px;
+  width: 100%;
   flex-direction: column;
   display: flex;
   gap: 4px;
@@ -109,7 +111,9 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
   disabled = false,
   itemLimit = 99,
   value = "",
+  unit = "개",
   handleChange = () => {},
+  setErrorStatus = () => {},
   ...props
 }) => {
   const [error, setError] = useState("");
@@ -119,14 +123,18 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
     const numericValue = parseInt(value);
     if (value === "") {
       setError("");
+      setErrorStatus(false);
     } else if (!isValidFormat) {
       setError("숫자만 입력 가능합니다");
+      setErrorStatus(true);
     } else if (numericValue > itemLimit) {
       setError("신청 가능 개수를 초과했습니다");
+      setErrorStatus(true);
     } else {
       setError("");
+      setErrorStatus(false);
     }
-  }, [value, itemLimit]);
+  }, [value, itemLimit, setErrorStatus]);
 
   const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value.replace(/[^0-9]/g, "");
@@ -136,7 +144,7 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
     }
   };
 
-  const displayValue = value ? `${value}개` : "";
+  const displayValue = value ? `${value}${unit}` : "";
 
   // TODO: '개' 앞으로 커서 위치 조절
   // TODO: 숫자가 아닌 것 입력했을 때 에러메시지
@@ -160,7 +168,8 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
         />
         {itemLimit && (
           <RightContentWrapper hasError={!!error}>
-            / {itemLimit}개
+            / {itemLimit}
+            {unit}
           </RightContentWrapper>
         )}
       </InputContainer>

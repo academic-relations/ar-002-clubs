@@ -17,6 +17,7 @@ interface SelectProps {
   disabled?: boolean;
   selectedValue?: string;
   onSelect?: (value: string) => void;
+  setErrorStatus?: (hasError: boolean) => void;
 }
 
 const DropdownContainer = styled.div`
@@ -35,7 +36,7 @@ const StyledSelect = styled.div<{
   disabled?: boolean;
   isOpen?: boolean;
 }>`
-  width: 300px;
+  width: 100%;
   padding: 8px 12px;
   outline: none;
   cursor: pointer;
@@ -64,7 +65,7 @@ const Dropdown = styled.div`
   position: absolute;
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 100%;
   margin-top: 4px;
   padding: 8px;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
@@ -118,7 +119,7 @@ const IconWrapper = styled.div`
 `;
 
 const SelectWrapper = styled.div`
-  width: 300px;
+  width: 100%;
   flex-direction: column;
   display: flex;
   gap: 4px;
@@ -136,10 +137,15 @@ const Select: React.FC<SelectProps> = ({
   disabled = false,
   selectedValue = "",
   onSelect = () => {},
+  setErrorStatus = () => {},
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setErrorStatus(!!errorMessage || (!selectedValue && items.length > 0));
+  }, [errorMessage, selectedValue, items.length, setErrorStatus]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -169,10 +175,15 @@ const Select: React.FC<SelectProps> = ({
 
   const handleOptionClick = (item: SelectItem) => {
     if (item.selectable) {
-      onSelect(item.label);
+      onSelect(item.value);
       setIsOpen(false);
     }
   };
+
+  const selectedLabel =
+    items.find(item => item.value === selectedValue)?.label ||
+    "항목을 선택해주세요";
+
   return (
     <SelectWrapper>
       {label && <Label>{label}</Label>}
@@ -187,7 +198,7 @@ const Select: React.FC<SelectProps> = ({
             isOpen={isOpen}
           >
             <SelectValue isSelected={!!selectedValue}>
-              {selectedValue || "항목을 선택해주세요"}
+              {selectedLabel}
             </SelectValue>
             <IconWrapper>
               {isOpen ? (
