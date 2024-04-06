@@ -169,10 +169,15 @@ const Select: React.FC<SelectProps> = ({
 
   const handleOptionClick = (item: SelectItem) => {
     if (item.selectable) {
-      onSelect(item.label);
+      onSelect(item.value);
       setIsOpen(false);
     }
   };
+
+  const selectedLabel =
+    items.find(item => item.value === selectedValue)?.label ||
+    "항목을 선택해주세요";
+
   return (
     <SelectWrapper>
       {label && <Label>{label}</Label>}
@@ -187,7 +192,7 @@ const Select: React.FC<SelectProps> = ({
             isOpen={isOpen}
           >
             <SelectValue isSelected={!!selectedValue}>
-              {selectedValue || "항목을 선택해주세요"}
+              {selectedLabel}
             </SelectValue>
             <IconWrapper>
               {isOpen ? (
