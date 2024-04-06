@@ -97,7 +97,7 @@ const Input = styled.input<ItemNumberInputProps & { hasError: boolean }>`
 `;
 
 const InputWrapper = styled.div`
-  width: 300px;
+  width: 100%;
   flex-direction: column;
   display: flex;
   gap: 4px;
