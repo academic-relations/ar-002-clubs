@@ -17,6 +17,7 @@ interface SelectProps {
   disabled?: boolean;
   selectedValue?: string;
   onSelect?: (value: string) => void;
+  setErrorStatus?: (hasError: boolean) => void;
 }
 
 const DropdownContainer = styled.div`
@@ -136,10 +137,15 @@ const Select: React.FC<SelectProps> = ({
   disabled = false,
   selectedValue = "",
   onSelect = () => {},
+  setErrorStatus = () => {},
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setErrorStatus(!!errorMessage || (!selectedValue && items.length > 0));
+  }, [errorMessage, selectedValue, items.length, setErrorStatus]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

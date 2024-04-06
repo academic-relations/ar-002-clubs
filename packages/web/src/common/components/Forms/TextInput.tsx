@@ -1,4 +1,4 @@
-import React, { ChangeEvent, InputHTMLAttributes } from "react";
+import React, { ChangeEvent, InputHTMLAttributes, useEffect } from "react";
 import styled, { css } from "styled-components";
 import Label from "./_atomic/Label";
 import ErrorMessage from "./_atomic/ErrorMessage";
@@ -13,6 +13,7 @@ export interface TextInputProps
   disabled?: boolean;
   value?: string;
   handleChange?: (value: string) => void;
+  setErrorStatus?: (hasError: boolean) => void;
 }
 
 const errorBorderStyle = css`
@@ -78,12 +79,21 @@ const TextInput: React.FC<TextInputProps> = ({
   disabled = false,
   value = "",
   handleChange = () => {},
+  setErrorStatus = () => {},
   ...props
 }) => {
   const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     handleChange(inputValue);
   };
+
+  useEffect(() => {
+    const hasError = !!errorMessage;
+    if (setErrorStatus) {
+      setErrorStatus(hasError);
+    }
+  }, [errorMessage, setErrorStatus]);
+
   return (
     <InputWrapper>
       {label && <Label>{label}</Label>}

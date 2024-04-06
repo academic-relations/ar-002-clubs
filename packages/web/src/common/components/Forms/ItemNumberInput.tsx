@@ -18,6 +18,7 @@ export interface ItemNumberInputProps
   itemLimit?: number;
   value?: string;
   handleChange?: (value: string) => void;
+  setErrorStatus?: (hasError: boolean) => void;
 }
 
 const LabelWithIcon = styled.div`
@@ -110,6 +111,7 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
   itemLimit = 99,
   value = "",
   handleChange = () => {},
+  setErrorStatus = () => {},
   ...props
 }) => {
   const [error, setError] = useState("");
@@ -119,14 +121,18 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
     const numericValue = parseInt(value);
     if (value === "") {
       setError("");
+      setErrorStatus(false);
     } else if (!isValidFormat) {
       setError("숫자만 입력 가능합니다");
+      setErrorStatus(true);
     } else if (numericValue > itemLimit) {
       setError("신청 가능 개수를 초과했습니다");
+      setErrorStatus(true);
     } else {
       setError("");
+      setErrorStatus(false);
     }
-  }, [value, itemLimit]);
+  }, [value, itemLimit, setErrorStatus]);
 
   const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value.replace(/[^0-9]/g, "");
