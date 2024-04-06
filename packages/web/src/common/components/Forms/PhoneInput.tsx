@@ -3,8 +3,17 @@ import TextInput, {
   TextInputProps,
 } from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
-const PhoneInput: React.FC<TextInputProps> = ({ label = "", ...props }) => {
-  const [value, setValue] = useState("");
+interface PhoneInputProps extends Omit<TextInputProps, "onChange"> {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+const PhoneInput: React.FC<PhoneInputProps> = ({
+  label = "",
+  value = "",
+  onChange = () => {},
+  ...props
+}) => {
   const [error, setError] = useState("");
   const [touched, setTouched] = useState(false);
 
@@ -30,13 +39,16 @@ const PhoneInput: React.FC<TextInputProps> = ({ label = "", ...props }) => {
     setTouched(true);
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const inputValue = e.target.value;
 
     if (inputValue.length <= 13) {
-      setValue(inputValue);
+      onChange(inputValue);
     }
   };
+
   const formatValue = (nums: string) => {
     const digits = nums.replace(/\D/g, "");
     let formattedInput = "";
