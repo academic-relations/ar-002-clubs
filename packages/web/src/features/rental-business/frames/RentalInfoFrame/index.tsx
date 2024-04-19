@@ -43,10 +43,9 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
 
   const onNext = useCallback(() => {
     if (nextEnabled && step < frames.length - 1) {
-      return;
+      setStep(step + 1);
     }
-    setStep(step + 1);
-  }, [step, setStep]);
+  }, [nextEnabled, step, setStep]);
 
   return (
     <>
