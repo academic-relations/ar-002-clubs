@@ -1,10 +1,17 @@
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import Button from "@sparcs-clubs/web/common/components/Button";
+import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 import RentalInfoFirstFrame from "./RentalInfoFirstFrame";
 import RentalInfoSecondFrame from "./RentalInfoSecondFrame";
 import RentalInfoThirdFrame from "./RentalInfoThirdFrame";
+
+const RentalFrame = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+`;
 
 const RentalNoticeFrameInner = styled.div`
   display: flex;
@@ -25,6 +32,21 @@ const frames = [
   RentalInfoFirstFrame,
   RentalInfoSecondFrame,
   RentalInfoThirdFrame,
+];
+
+const steps = [
+  {
+    label: "기본 정보 입력",
+    stepIndex: 1,
+  },
+  {
+    label: "대여 물품 선택",
+    stepIndex: 2,
+  },
+  {
+    label: "최종확인",
+    stepIndex: 3,
+  },
 ];
 
 const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
@@ -48,7 +70,8 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
   }, [nextEnabled, step, setStep]);
 
   return (
-    <>
+    <RentalFrame>
+      <StepProcess steps={steps} activeStepIndex={step + 1} />
       <RentalNoticeFrameInner>
         <CurrentFrame {...props} setNextEnabled={setNextEnabled} />
       </RentalNoticeFrameInner>
@@ -58,7 +81,7 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
           {step === frames.length - 1 ? "신청" : "다음"}
         </Button>
       </StyledBottom>
-    </>
+    </RentalFrame>
   );
 };
 
