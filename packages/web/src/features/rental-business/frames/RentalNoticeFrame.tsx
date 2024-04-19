@@ -49,6 +49,12 @@ const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
 }) => {
   const [checked, setChecked] = useState(false);
 
+  const handleNextClick = () => {
+    if (checked) {
+      setRental({ ...rental, agreement: true });
+    }
+  };
+
   return (
     <RentalNoticeFrameInner>
       <StyledCard type="outline">
@@ -72,7 +78,7 @@ const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
         </StyledCheckboxOuter>
         <Button
           type={checked ? "default" : "disabled"}
-          onClick={() => setRental({ ...rental, agreement: true })}
+          onClick={handleNextClick}
         >
           다음
         </Button>
