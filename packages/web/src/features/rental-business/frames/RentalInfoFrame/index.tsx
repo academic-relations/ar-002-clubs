@@ -30,6 +30,7 @@ const frames = [
 const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
   const props = { rental, setRental };
   const [step, setStep] = useState(0);
+  const [nextEnabled, setNextEnabled] = useState(true);
   const CurrentFrame = frames[step];
 
   const onPrev = useCallback(() => {
@@ -41,7 +42,7 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
   }, [step, setStep, rental, setRental]);
 
   const onNext = useCallback(() => {
-    if (step === frames.length - 1) {
+    if (nextEnabled && step < frames.length - 1) {
       return;
     }
     setStep(step + 1);
@@ -50,11 +51,11 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
   return (
     <>
       <RentalNoticeFrameInner>
-        <CurrentFrame {...props} />
+        <CurrentFrame {...props} setNextEnabled={setNextEnabled} />
       </RentalNoticeFrameInner>
       <StyledBottom>
         <Button onClick={onPrev}>이전</Button>
-        <Button onClick={onNext}>
+        <Button onClick={onNext} type={nextEnabled ? "default" : "disabled"}>
           {step === frames.length - 1 ? "신청" : "다음"}
         </Button>
       </StyledBottom>
