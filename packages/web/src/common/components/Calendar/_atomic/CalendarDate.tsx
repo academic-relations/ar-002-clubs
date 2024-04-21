@@ -94,6 +94,7 @@ const DateWrapper = styled.div<{
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 1;
   width: ${({ type, size }) => {
     if (type === "Start" || type === "End" || type === "Pass") {
       switch (size) {

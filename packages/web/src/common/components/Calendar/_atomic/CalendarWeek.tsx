@@ -17,7 +17,7 @@ interface WeekWrapperProps {
 
 const WeekWrapper = styled.div<WeekWrapperProps>`
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   width: ${({ size }) => {
     switch (size) {
