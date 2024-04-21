@@ -1,4 +1,3 @@
-// MonthNavigator.tsx
 import React, { useState } from "react";
 import styled from "styled-components";
 import { addMonths, format, subMonths } from "date-fns";
