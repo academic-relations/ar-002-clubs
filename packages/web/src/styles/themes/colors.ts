@@ -7,9 +7,6 @@
 const colors = {
   WHITE: "#FFFFFF",
   BLACK: "#333333",
-  GRAY: {
-    200: "#EEEEEE",
-  },
   PRIMARY: "#0099AD",
   BACKGROUND:
     "linear-gradient(180deg, #EAFAFC 0%, #FFFFFF 33.33%, #FFFFFF 66.67%, #FFFFFF 100%)",
