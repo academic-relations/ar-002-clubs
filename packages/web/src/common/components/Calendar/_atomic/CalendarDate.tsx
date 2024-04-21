@@ -2,7 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { DefaultTheme } from "styled-components/dist/types";
 
-interface CalendarDateProps {
+export interface CalendarDateProps {
   date: number;
   exist: boolean;
   type?: "Default" | "Pass" | "Start" | "End" | "Selected" | "Past/Future";
@@ -87,12 +87,36 @@ const DateContainer = styled.div<CalendarDateProps>`
   }};
 `;
 
-const DateWrapper = styled.div<{ type?: CalendarDateProps["type"] }>`
+const DateWrapper = styled.div<{
+  type?: CalendarDateProps["type"];
+  size?: CalendarDateProps["size"];
+}>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: ${({ type }) =>
-    type === "Start" || type === "End" || type === "Pass" ? "60px" : "48px"};
+  width: ${({ type, size }) => {
+    if (type === "Start" || type === "End" || type === "Pass") {
+      switch (size) {
+        case "sm":
+          return "40px";
+        case "md":
+          return "48px";
+        case "lg":
+        default:
+          return "60px";
+      }
+    } else {
+      switch (size) {
+        case "sm":
+          return "32px";
+        case "md":
+          return "40px";
+        case "lg":
+        default:
+          return "48px";
+      }
+    }
+  }};
   background: ${({ type, theme }) => {
     switch (type) {
       case "End":
