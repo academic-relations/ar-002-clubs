@@ -11,11 +11,11 @@ interface CalendarWeekProps {
   size?: CalendarDateProps["size"];
 }
 
-interface WeekWrapperProps {
+export interface CalendarSizeProps {
   size: CalendarDateProps["size"];
 }
 
-const WeekWrapper = styled.div<WeekWrapperProps>`
+const WeekWrapper = styled.div<CalendarSizeProps>`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
