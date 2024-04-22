@@ -67,7 +67,11 @@ const Calendar: React.FC<CalendarProps> = ({
         | "End"
         | "Selected" = isCurrentMonth ? "Default" : "Past/Future";
 
-      if (selectedDates.some(selectedDate => isSameDay(selectedDate, day))) {
+      if (!isCurrentMonth) {
+        type = "Past/Future";
+      } else if (
+        selectedDates.some(selectedDate => isSameDay(selectedDate, day))
+      ) {
         type = "Selected";
       } else {
         eventPeriods.forEach(period => {
