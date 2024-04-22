@@ -12,6 +12,17 @@ import MonthNavigator from "./_atomic/MonthNavigator";
 import CalendarWeek, { CalendarSizeProps } from "./_atomic/CalendarWeek";
 import { CalendarDateProps } from "./_atomic/CalendarDate";
 
+interface EventPeriod {
+  start: Date;
+  end: Date;
+}
+
+interface CalendarProps extends CalendarSizeProps {
+  existDates: Date[];
+  eventPeriods: EventPeriod[];
+  selectedDates: Date[];
+}
+
 const CalendarWrapper = styled.div<CalendarSizeProps>`
   display: flex;
   flex-direction: column;
@@ -25,17 +36,6 @@ const WeekWrapper = styled.div`
   align-items: center;
   gap: 8px;
 `;
-
-interface EventPeriod {
-  start: Date;
-  end: Date;
-}
-
-interface CalendarProps extends CalendarSizeProps {
-  existDates: Date[];
-  eventPeriods: EventPeriod[];
-  selectedDates: Date[];
-}
 
 const Calendar: React.FC<CalendarProps> = ({
   size = "md",
