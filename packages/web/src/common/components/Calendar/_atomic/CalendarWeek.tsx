@@ -36,6 +36,7 @@ const CalendarWeek: React.FC<CalendarWeekProps> = ({ week, size = "lg" }) => (
   <WeekWrapper size={size}>
     {week.map(day => (
       <CalendarDate
+        key={day.date}
         date={day.date}
         exist={day.exist}
         type={day.type}
