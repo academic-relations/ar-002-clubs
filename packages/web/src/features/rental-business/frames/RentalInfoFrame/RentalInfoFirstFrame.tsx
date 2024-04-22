@@ -16,7 +16,7 @@ const StyledCard = styled(Card)<{ type: string }>`
 
 const RentalInfoFirstFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
-> = ({ setNextEnabled }) => {
+> = ({ setNextEnabled, rental, setRental }) => {
   const mockName = "스팍스";
   const mockPhone = "000-0000-0000";
   const mockClubList: SelectItem[] = [
@@ -39,6 +39,13 @@ const RentalInfoFirstFrame: React.FC<
       !hasSelectError;
     setNextEnabled(allConditionsMet);
   }, [selectedValue, phone, hasPhoneError, hasSelectError, setNextEnabled]);
+
+  useEffect(() => {
+    setRental({
+      ...rental,
+      info: { clubName: selectedValue, applicant: mockName, phone },
+    });
+  }, [selectedValue, phone, setRental]);
 
   return (
     <StyledCard type="outline">
