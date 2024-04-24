@@ -21,6 +21,7 @@ interface CalendarProps extends CalendarSizeProps {
   existDates: Date[];
   eventPeriods: EventPeriod[];
   selectedDates: Date[];
+  onDateClick?: (date: Date) => void;
 }
 
 const CalendarWrapper = styled.div<CalendarSizeProps>`
@@ -42,6 +43,7 @@ const Calendar: React.FC<CalendarProps> = ({
   existDates,
   eventPeriods,
   selectedDates,
+  onDateClick = () => {},
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -53,19 +55,24 @@ const Calendar: React.FC<CalendarProps> = ({
     { weekStartsOn: 0 },
   );
 
+  const handleDateClick = (date: Date) => {
+    console.log(
+      `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 클릭됨`,
+    );
+    if (date.getMonth() !== currentDate.getMonth()) {
+      setCurrentDate(date);
+    }
+    onDateClick?.(date);
+  };
+
   const getWeekData = (startDate: Date): CalendarDateProps[] =>
     Array.from({ length: 7 }).map((_, index) => {
       const day = addDays(startDate, index);
       const isCurrentMonth = isSameMonth(day, currentDate);
       const exist = existDates.some(existDate => isSameDay(existDate, day));
-
-      let type:
-        | "Default"
-        | "Past/Future"
-        | "Start"
-        | "Pass"
-        | "End"
-        | "Selected" = isCurrentMonth ? "Default" : "Past/Future";
+      let type: CalendarDateProps["type"] = isCurrentMonth
+        ? "Default"
+        : "Past/Future";
 
       if (!isCurrentMonth) {
         type = "Past/Future";
@@ -86,25 +93,22 @@ const Calendar: React.FC<CalendarProps> = ({
       }
 
       return {
-        date: day.getDate(),
+        date: day,
         exist,
         type,
       };
     });
 
-  const handleMonthChange = (newDate: Date) => {
-    setCurrentDate(newDate);
-  };
-
   return (
     <CalendarWrapper size={size}>
-      <MonthNavigator initialDate={currentDate} onChange={handleMonthChange} />
+      <MonthNavigator currentDate={currentDate} onChange={setCurrentDate} />
       <WeekWrapper>
         {weeks.map((weekStart: Date) => (
           <CalendarWeek
             week={getWeekData(weekStart)}
             size={size}
             key={weekStart.toISOString()}
+            onDateClick={handleDateClick}
           />
         ))}
       </WeekWrapper>

@@ -3,10 +3,11 @@ import styled, { css } from "styled-components";
 import { DefaultTheme } from "styled-components/dist/types";
 
 export interface CalendarDateProps {
-  date: number;
+  date: Date;
   exist: boolean;
   type?: "Default" | "Pass" | "Start" | "End" | "Selected" | "Past/Future";
   size?: "lg" | "md" | "sm";
+  onDateClick?: (date: Date) => void;
 }
 
 const getBackgroundColor = (
@@ -95,6 +96,7 @@ const DateWrapper = styled.div<{
   align-items: center;
   justify-content: center;
   flex: 1;
+  cursor: ${({ onClick }) => (onClick ? "pointer" : "default")};
   width: ${({ type, size }) => {
     if (type === "Start" || type === "End" || type === "Pass") {
       switch (size) {
@@ -137,14 +139,22 @@ const CalendarDate: React.FC<CalendarDateProps> = ({
   exist,
   type = "Default",
   size = "lg",
-}) => (
-  <DateWrapper type={type}>
-    <DateContainer date={date} exist={exist} type={type} size={size}>
-      <ExistWrapper exist={exist} type={type}>
-        {date}
-      </ExistWrapper>
-    </DateContainer>
-  </DateWrapper>
-);
+  onDateClick = () => {},
+}) => {
+  const handleClick = () => {
+    if (onDateClick) {
+      onDateClick(date);
+    }
+  };
+  return (
+    <DateWrapper type={type} onClick={handleClick}>
+      <DateContainer date={date} exist={exist} type={type} size={size}>
+        <ExistWrapper exist={exist} type={type}>
+          {date.getDate()}
+        </ExistWrapper>
+      </DateContainer>
+    </DateWrapper>
+  );
+};
 
 export default CalendarDate;

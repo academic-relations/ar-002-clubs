@@ -4,7 +4,7 @@ import CalendarDate, { CalendarDateProps } from "./CalendarDate";
 
 interface CalendarWeekProps {
   week: {
-    date: number;
+    date: Date;
     exist: boolean;
     type?: CalendarDateProps["type"];
   }[];
@@ -32,15 +32,18 @@ const WeekWrapper = styled.div<CalendarSizeProps>`
   }};
 `;
 
-const CalendarWeek: React.FC<CalendarWeekProps> = ({ week, size = "lg" }) => (
+const CalendarWeek: React.FC<
+  CalendarWeekProps & { onDateClick: (date: Date) => void }
+> = ({ week, size = "lg", onDateClick }) => (
   <WeekWrapper size={size}>
     {week.map(day => (
       <CalendarDate
-        key={day.date}
+        key={day.date.toISOString()}
         date={day.date}
         exist={day.exist}
         type={day.type}
         size={size}
+        onDateClick={onDateClick}
       />
     ))}
   </WeekWrapper>
