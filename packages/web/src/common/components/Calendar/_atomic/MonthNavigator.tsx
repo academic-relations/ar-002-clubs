@@ -1,19 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { addMonths, format, subMonths } from "date-fns";
 import { ko } from "date-fns/locale";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 
 interface MonthNavigatorProps {
-  initialDate?: Date;
-  onChange?: (date: Date) => void;
+  currentDate: Date;
+  onChange: (date: Date) => void;
 }
 
-const NavigatorWrapper = styled.div`
+const NavigatorWrapper = styled.div<{ sameYear: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 108px;
+  width: ${({ sameYear }) => (sameYear ? "108px" : "160px")};
   font-size: 16px;
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
@@ -30,27 +30,31 @@ const MonthDisplay = styled.div`
 `;
 
 const MonthNavigator: React.FC<MonthNavigatorProps> = ({
-  initialDate = new Date(),
+  currentDate,
   onChange = () => {},
 }) => {
-  const [currentDate, setCurrentDate] = useState(initialDate);
+  const currentYear = new Date().getFullYear();
+  const dateYear = currentDate.getFullYear();
+  const sameYear = dateYear === currentYear;
 
   const handlePrevious = () => {
     const newDate = subMonths(currentDate, 1);
-    setCurrentDate(newDate);
-    onChange?.(newDate);
+    onChange(newDate);
   };
 
   const handleNext = () => {
     const newDate = addMonths(currentDate, 1);
-    setCurrentDate(newDate);
-    onChange?.(newDate);
+    onChange(newDate);
   };
 
+  const displayFormat = sameYear ? "M월" : "yyyy년 M월";
+
   return (
-    <NavigatorWrapper>
+    <NavigatorWrapper sameYear={sameYear}>
       <Icon type="chevron_left" size={20} onClick={handlePrevious} />
-      <MonthDisplay>{format(currentDate, "M월", { locale: ko })}</MonthDisplay>
+      <MonthDisplay>
+        {format(currentDate, displayFormat, { locale: ko })}
+      </MonthDisplay>
       <Icon type="chevron_right" size={20} onClick={handleNext} />
     </NavigatorWrapper>
   );
