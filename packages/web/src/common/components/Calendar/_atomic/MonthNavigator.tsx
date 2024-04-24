@@ -36,6 +36,7 @@ const MonthNavigator: React.FC<MonthNavigatorProps> = ({
   const currentYear = new Date().getFullYear();
   const dateYear = currentDate.getFullYear();
   const sameYear = dateYear === currentYear;
+  const today = new Date();
 
   const handlePrevious = () => {
     const newDate = subMonths(currentDate, 1);
@@ -47,12 +48,16 @@ const MonthNavigator: React.FC<MonthNavigatorProps> = ({
     onChange(newDate);
   };
 
+  const handleTodayClick = () => {
+    onChange(today);
+  };
+
   const displayFormat = sameYear ? "M월" : "yyyy년 M월";
 
   return (
     <NavigatorWrapper sameYear={sameYear}>
       <Icon type="chevron_left" size={20} onClick={handlePrevious} />
-      <MonthDisplay>
+      <MonthDisplay onClick={handleTodayClick}>
         {format(currentDate, displayFormat, { locale: ko })}
       </MonthDisplay>
       <Icon type="chevron_right" size={20} onClick={handleNext} />
