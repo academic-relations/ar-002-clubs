@@ -30,7 +30,7 @@ const TitleWrapper = styled.div`
 
 const SelectRangeInfo: React.FC<SelectRangeInfoProps> = ({
   isRental,
-  date = null,
+  date = undefined,
 }) => (
   <div>
     <LabelWrapper>
