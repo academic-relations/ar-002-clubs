@@ -19,12 +19,15 @@ const RangeWrapper = styled.div`
 const SelectRange: React.FC<SelectRangeProps> = ({
   rentalDate = undefined,
   returnDate = undefined,
-}) => (
-  <RangeWrapper>
-    <SelectRangeInfo isRental date={rentalDate} />
-    <SelectRangeInfo isRental={false} date={returnDate} />
-    <TextButton text="초기화" />
-  </RangeWrapper>
-);
+}) => {
+  const isButtonDisabled = !rentalDate && !returnDate;
 
+  return (
+    <RangeWrapper>
+      <SelectRangeInfo isRental date={rentalDate} />
+      <SelectRangeInfo isRental={false} date={returnDate} />
+      <TextButton text="초기화" disabled={isButtonDisabled} />
+    </RangeWrapper>
+  );
+};
 export default SelectRange;
