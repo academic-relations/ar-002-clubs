@@ -56,9 +56,6 @@ const Calendar: React.FC<CalendarProps> = ({
   );
 
   const handleDateClick = (date: Date) => {
-    console.log(
-      `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 클릭됨`,
-    );
     if (date.getMonth() !== currentDate.getMonth()) {
       setCurrentDate(date);
     }
