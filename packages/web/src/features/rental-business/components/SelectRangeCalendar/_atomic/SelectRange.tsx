@@ -6,6 +6,8 @@ import SelectRangeInfo from "./SelectRangeInfo";
 interface SelectRangeProps {
   rentalDate?: Date;
   returnDate?: Date;
+  setRentalDate: (date: Date | undefined) => void;
+  setReturnDate: (date: Date | undefined) => void;
 }
 
 const RangeWrapper = styled.div`
@@ -19,14 +21,25 @@ const RangeWrapper = styled.div`
 const SelectRange: React.FC<SelectRangeProps> = ({
   rentalDate = undefined,
   returnDate = undefined,
+  setRentalDate,
+  setReturnDate,
 }) => {
   const isButtonDisabled = !rentalDate && !returnDate;
+
+  const handleReset = () => {
+    setRentalDate(undefined);
+    setReturnDate(undefined);
+  };
 
   return (
     <RangeWrapper>
       <SelectRangeInfo isRental date={rentalDate} />
       <SelectRangeInfo isRental={false} date={returnDate} />
-      <TextButton text="초기화" disabled={isButtonDisabled} />
+      <TextButton
+        text="초기화"
+        disabled={isButtonDisabled}
+        onClick={handleReset}
+      />
     </RangeWrapper>
   );
 };
