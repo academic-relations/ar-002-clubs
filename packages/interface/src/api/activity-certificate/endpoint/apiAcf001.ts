@@ -17,7 +17,7 @@ const requestBody = z.object({
   studentNumber: z.number().int(),
   krPhoneNumber: z.string(),
   department: z.string(),
-  issuedNumber: z.number().int().min(1), // 이건 무슨 넘버죠?
+  issuedNumber: z.number().int().min(1),
   items: z
     .object({
       clubId: z.number().int().min(1),

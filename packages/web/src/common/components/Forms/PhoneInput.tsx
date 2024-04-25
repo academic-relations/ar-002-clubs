@@ -1,28 +1,49 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
-import TextInput, {
-  TextInputProps,
-} from "@sparcs-clubs/web/common/components/Forms/TextInput";
+import React, {
+  ChangeEvent,
+  InputHTMLAttributes,
+  useEffect,
+  useState,
+} from "react";
+import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
-const PhoneInput: React.FC<TextInputProps> = ({ label = "", ...props }) => {
+interface PhoneInputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  placeholder: string;
+  errorMessage?: string;
+  area?: boolean;
+  disabled?: boolean;
+  onPhoneChange?: (value: string) => void;
+}
+
+export const phoneInputEval = (value: string) => {
+  const isValidFormat =
+    /^(\d{3}-\d{4}-\d{4})$/.test(value) ||
+    /^\d*$/.test(value.replace(/-/g, ""));
+
+  if (!value) {
+    return "필수로 채워야 하는 항목입니다";
+  }
+  if (!isValidFormat) {
+    return "숫자만 입력 가능합니다";
+  }
+  if (value.replace(/-/g, "").length !== 11) {
+    return "유효하지 않은 전화번호입니다";
+  }
+  return "";
+};
+
+const PhoneInput: React.FC<PhoneInputProps> = ({
+  label = "",
+  onPhoneChange = () => {},
+  ...props
+}) => {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
   const [touched, setTouched] = useState(false);
 
   useEffect(() => {
     if (touched) {
-      const isValidFormat =
-        /^(\d{3}-\d{4}-\d{4})$/.test(value) ||
-        /^\d*$/.test(value.replace(/-/g, ""));
-
-      if (!value) {
-        setError("필수로 채워야 하는 항목입니다");
-      } else if (!isValidFormat) {
-        setError("숫자만 입력 가능합니다");
-      } else if (value.replace(/-/g, "").length !== 11) {
-        setError("유효하지 않은 전화번호입니다");
-      } else {
-        setError("");
-      }
+      setError(phoneInputEval(value));
     }
   }, [value, touched]);
 
@@ -35,6 +56,7 @@ const PhoneInput: React.FC<TextInputProps> = ({ label = "", ...props }) => {
 
     if (inputValue.length <= 13) {
       setValue(inputValue);
+      onPhoneChange(inputValue);
     }
   };
   const formatValue = (nums: string) => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
 
@@ -7,6 +7,11 @@ import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumbe
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
 import Select from "@sparcs-clubs/web/common/components/Forms/Select";
+
+import PhoneInput, {
+  phoneInputEval,
+} from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
+
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 
 const StyledCard = styled(Card)<{ type: string }>`
@@ -17,24 +22,80 @@ const StyledCard = styled(Card)<{ type: string }>`
 
 const ActivityCertificateInfoFirstFrame: React.FC<
   ActivityCertificateFrameProps
-> = () => {
-  const [itemNumber, setItemNumber] = useState("");
+> = ({
+  activityCertificate,
+  setActivityCertificate,
+  activityCertificateProgress,
+  setActivityCertificateProgress,
+}) => {
+  useEffect(() => {
+    // if (!activityCertificate.info.clubId) {
+    //   // TODO - 에러 메세지
+    // } else if (
+    //   !activityCertificate.info.startMonth ||
+    //   !activityCertificate.info.endMonth
+    // ) {
+    //   // TODO - 에러 메세지
+    // } else
+    if (
+      activityCertificate.issuedNumber === null ||
+      Number.isNaN(activityCertificate.issuedNumber)
+    ) {
+      // TODO - 에러 메세지
+      setActivityCertificateProgress({
+        ...activityCertificateProgress,
+        firstFilled: false,
+      });
+      // } else if (!activityCertificate.info.applicant) {
+      //   // TODO - 에러 메세지
+      // } else if (!activityCertificate.info.department) {
+      //   // TODO - 에러 메세지
+      // } else if (!activityCertificate.info.studentNumber) {
+      //   // TODO - 에러 메세지
+    } else if (
+      activityCertificate.krPhoneNumber === "" ||
+      phoneInputEval(activityCertificate.krPhoneNumber) !== ""
+    ) {
+      setActivityCertificateProgress({
+        ...activityCertificateProgress,
+        firstFilled: false,
+      });
+    } else {
+      setActivityCertificateProgress({
+        ...activityCertificateProgress,
+        firstFilled: true,
+      });
+    }
+  }, [activityCertificate]);
+
   return (
     <StyledCard type="outline">
-      <Select label="동아리 이름" items={[]} />
-      <TextInput label="활동 기간" placeholder="" />
+      <Select label="동아리 이름" items={[]} />{" "}
+      {/* TODO - 유저 동아리 목록 받아서 채우고 onchange 시 state 업데이트 */}
+      <TextInput label="활동 기간" placeholder="" disabled />
       <ItemNumberInput
         label="발급 매수"
-        placeholder=""
+        placeholder="X개"
         onNumberChange={changedNumber => {
-          setItemNumber(changedNumber);
-          console.log(itemNumber); // TODO - 이 줄 지우기
+          setActivityCertificate({
+            ...activityCertificate,
+            issuedNumber: parseInt(changedNumber),
+          });
         }}
       />
-      <TextInput label="신청자 이름" placeholder="" />
-      <TextInput label="신청자 학과" placeholder="" />
-      <TextInput label="신청자 학번" placeholder="" />
-      <TextInput label="신청자 전화번호" placeholder="" />
+      <TextInput label="신청자 이름" placeholder="" disabled />
+      <TextInput label="신청자 학과" placeholder="" disabled />
+      <TextInput label="신청자 학번" placeholder="" disabled />
+      <PhoneInput
+        label="신청자 전화번호"
+        placeholder="010-XXXX-XXXX"
+        onPhoneChange={changedText => {
+          setActivityCertificate({
+            ...activityCertificate,
+            krPhoneNumber: changedText,
+          });
+        }}
+      />
     </StyledCard>
   );
 };

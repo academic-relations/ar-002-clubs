@@ -4,12 +4,19 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
 import Button from "@sparcs-clubs/web/common/components/Button";
-import { ActivityCertificateInterface } from "../types/activityCertificate";
+import {
+  ActivityCertificateInterface,
+  ActivityCertificateProgress,
+} from "../types/activityCertificate";
 
 export interface ActivityCertificateFrameProps {
   activityCertificate: ActivityCertificateInterface;
   setActivityCertificate: React.Dispatch<
     React.SetStateAction<ActivityCertificateInterface>
+  >;
+  activityCertificateProgress: ActivityCertificateProgress;
+  setActivityCertificateProgress: React.Dispatch<
+    React.SetStateAction<ActivityCertificateProgress>
   >;
 }
 
@@ -47,7 +54,14 @@ const StyledCheckboxOuter = styled.div`
 
 const ActivityCertificateNoticeFrame: React.FC<
   ActivityCertificateFrameProps
-> = ({ activityCertificate, setActivityCertificate }) => {
+> = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  activityCertificate,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  setActivityCertificate,
+  activityCertificateProgress,
+  setActivityCertificateProgress,
+}) => {
   const [checked, setChecked] = useState(false);
 
   return (
@@ -72,8 +86,14 @@ const ActivityCertificateNoticeFrame: React.FC<
         </StyledCheckboxOuter>
         <Button
           type={checked ? "default" : "disabled"}
-          onClick={() =>
-            setActivityCertificate({ ...activityCertificate, agreement: true })
+          onClick={
+            checked
+              ? () =>
+                  setActivityCertificateProgress({
+                    ...activityCertificateProgress,
+                    agreement: true,
+                  })
+              : undefined
           }
         >
           다음

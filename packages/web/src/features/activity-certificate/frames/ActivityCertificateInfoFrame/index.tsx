@@ -1,6 +1,9 @@
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import Button from "@sparcs-clubs/web/common/components/Button";
+import StepProcess, {
+  StepInputType,
+} from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 import ActivityCertificateInfoFirstFrame from "./ActivityCertificateInfoFirstFrame";
 import ActivityCertificateInfoSecondFrame from "./ActivityCertificateInfoSecondFrame";
@@ -10,7 +13,7 @@ const RentalNoticeFrameInner = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 20px;
+  gap: 60px;
   align-self: stretch;
 `;
 
@@ -27,17 +30,54 @@ const frames = [
   ActivityCertificateInfoThirdFrame,
 ];
 
+const steps: StepInputType[] = [
+  {
+    label: "기본 정보 입력",
+    stepIndex: 1,
+  },
+  {
+    label: "활동 내역 입력",
+    stepIndex: 2,
+  },
+  {
+    label: "최종 확인",
+    stepIndex: 3,
+  },
+];
+
 const ActivityCertificateInfoFrame: React.FC<ActivityCertificateFrameProps> = ({
   activityCertificate,
   setActivityCertificate,
+  activityCertificateProgress,
+  setActivityCertificateProgress,
 }) => {
-  const props = { activityCertificate, setActivityCertificate };
+  const props = {
+    activityCertificate,
+    setActivityCertificate,
+    activityCertificateProgress,
+    setActivityCertificateProgress,
+  };
   const [step, setStep] = useState(0);
   const CurrentFrame = frames[step];
 
+  const nextButtonDisabler = () => {
+    if (step === 0) {
+      if (activityCertificateProgress.firstFilled) return "default";
+      return "disabled";
+    }
+    if (step === 1) {
+      if (activityCertificateProgress.secondFilled) return "default";
+      return "disabled";
+    }
+    return "default";
+  };
+
   const onPrev = useCallback(() => {
     if (step === 0) {
-      setActivityCertificate({ ...activityCertificate, agreement: false });
+      setActivityCertificateProgress({
+        ...activityCertificateProgress,
+        agreement: false,
+      });
       return;
     }
     setStep(step - 1);
@@ -53,11 +93,15 @@ const ActivityCertificateInfoFrame: React.FC<ActivityCertificateFrameProps> = ({
   return (
     <>
       <RentalNoticeFrameInner>
+        <StepProcess steps={steps} activeStepIndex={step + 1} />
         <CurrentFrame {...props} />
       </RentalNoticeFrameInner>
       <StyledBottom>
         <Button onClick={onPrev}>이전</Button>
-        <Button onClick={onNext}>
+        <Button
+          onClick={nextButtonDisabler() === "default" ? onNext : undefined}
+          type={nextButtonDisabler()}
+        >
           {step === frames.length - 1 ? "신청" : "다음"}
         </Button>
       </StyledBottom>
