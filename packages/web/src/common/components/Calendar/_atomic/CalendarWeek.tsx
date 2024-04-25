@@ -9,6 +9,7 @@ interface CalendarWeekProps {
     type?: CalendarDateProps["type"];
   }[];
   size?: CalendarDateProps["size"];
+  onDateClick: (date: Date) => void;
 }
 
 export interface CalendarSizeProps {
@@ -32,9 +33,11 @@ const WeekWrapper = styled.div<CalendarSizeProps>`
   }};
 `;
 
-const CalendarWeek: React.FC<
-  CalendarWeekProps & { onDateClick: (date: Date) => void }
-> = ({ week, size = "lg", onDateClick }) => (
+const CalendarWeek: React.FC<CalendarWeekProps> = ({
+  week,
+  size = "lg",
+  onDateClick,
+}) => (
   <WeekWrapper size={size}>
     {week.map(day => (
       <CalendarDate
