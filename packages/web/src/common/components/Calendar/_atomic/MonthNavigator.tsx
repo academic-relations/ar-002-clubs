@@ -13,7 +13,7 @@ const NavigatorWrapper = styled.div<{ sameYear: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: ${({ sameYear }) => (sameYear ? "108px" : "160px")};
+  width: 160px;
   font-size: 16px;
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
@@ -33,9 +33,6 @@ const MonthNavigator: React.FC<MonthNavigatorProps> = ({
   currentDate,
   onChange = () => {},
 }) => {
-  const currentYear = new Date().getFullYear();
-  const dateYear = currentDate.getFullYear();
-  const sameYear = dateYear === currentYear;
   const today = new Date();
 
   const handlePrevious = () => {
@@ -52,13 +49,11 @@ const MonthNavigator: React.FC<MonthNavigatorProps> = ({
     onChange(today);
   };
 
-  const displayFormat = sameYear ? "M월" : "yyyy년 M월";
-
   return (
-    <NavigatorWrapper sameYear={sameYear}>
+    <NavigatorWrapper>
       <Icon type="chevron_left" size={20} onClick={handlePrevious} />
       <MonthDisplay onClick={handleTodayClick}>
-        {format(currentDate, displayFormat, { locale: ko })}
+        {format(currentDate, "yyyy년 M월", { locale: ko })}
       </MonthDisplay>
       <Icon type="chevron_right" size={20} onClick={handleNext} />
     </NavigatorWrapper>
