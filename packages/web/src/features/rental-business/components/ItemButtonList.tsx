@@ -3,7 +3,7 @@ import styled from "styled-components";
 import ItemButton from "./ItemButton";
 
 interface ItemButtonListProps {
-  value: "easel" | "vacuum" | "handCart" | "mat" | "tool";
+  value: "easel" | "vacuum" | "handCart" | "mat" | "tool" | "none";
   onChange: (value: "easel" | "vacuum" | "handCart" | "mat" | "tool") => void;
 }
 
@@ -47,7 +47,11 @@ const ItemButtonList: React.FC<ItemButtonListProps> = ({ value, onChange }) => (
         selected={value === key}
         name={buttonInfo[key as keyof typeof buttonInfo].text}
         image={buttonInfo[key as keyof typeof buttonInfo].image}
-        onClick={() => onChange(key as keyof typeof buttonInfo)}
+        onClick={() => {
+          if (value !== "none") {
+            onChange(key as keyof typeof buttonInfo);
+          }
+        }}
       />
     ))}
   </ItemButtonListInner>

@@ -68,7 +68,15 @@ const Tool: React.FC<RentalFrameProps> = () => (
   </>
 );
 
+const NoneRental: React.FC<RentalFrameProps> = () => (
+  <Typography type="p">대충 선택 먼저 하세요</Typography>
+);
+
 const rentals = {
+  none: {
+    info: "대충 대여 기간 먼저 선택해야 한다는 안내문구 어딘가에",
+    component: NoneRental,
+  },
   easel: {
     info: "대충 이젤에 대한 추가 안내사항",
     component: Easel,
@@ -96,8 +104,8 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
   setRental,
 }) => {
   const [value, setValue] = useState<
-    "easel" | "vacuum" | "handCart" | "mat" | "tool"
-  >("easel");
+    "none" | "easel" | "vacuum" | "handCart" | "mat" | "tool"
+  >("none");
 
   const Rental = rentals[value].component;
   const props = { rental, setRental };
@@ -106,14 +114,19 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
   const [returnDate, setReturnDate] = useState<Date | undefined>();
 
   const handleDatesChange = (
-    rentalDatefromCal: Date | undefined,
-    returnDatefromCal: Date | undefined,
+    rentalDateFromCal: Date | undefined,
+    returnDateFromCal: Date | undefined,
   ) => {
-    setRentalDate(rentalDatefromCal);
-    setReturnDate(returnDatefromCal);
+    setRentalDate(rentalDateFromCal);
+    setReturnDate(returnDateFromCal);
+    setValue(!rentalDateFromCal || !returnDateFromCal ? "none" : value);
   };
 
   useEffect(() => {
+    if (!rentalDate || !returnDate) {
+      setValue("none");
+    }
+
     setRental({
       ...rental,
       date: { start: rentalDate, end: returnDate },
@@ -127,7 +140,7 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
         <SelectRangeCalendar onDatesChange={handleDatesChange} />
       </StyledCard>
       <ItemButtonList value={value} onChange={setValue} />
-      <Info text="대충 이젤에 대한 추가 안내사항" />
+      <Info text={rentals[value].info} />
       <StyledCard type="outline">
         <StyledCardInner>
           <Typography type="h3">세부 물품 정보</Typography>
