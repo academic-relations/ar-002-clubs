@@ -18,7 +18,7 @@ const LabelWrapper = styled.div`
 `;
 
 const DateWrapper = styled.div`
-  width: 150px;
+  width: 160px;
   text-align: center;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
 `;
