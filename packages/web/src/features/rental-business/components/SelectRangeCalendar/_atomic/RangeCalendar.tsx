@@ -1,5 +1,5 @@
 import React from "react";
-import { isAfter, isSameDay } from "date-fns";
+import { isAfter } from "date-fns";
 
 import Calendar from "@sparcs-clubs/web/common/components/Calendar/Calendar";
 
@@ -18,8 +18,6 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
 }) => {
   const onDateClick = (date: Date) => {
     if (rentalDate && !returnDate && isAfter(date, rentalDate)) {
-      setReturnDate(date);
-    } else if (rentalDate && !returnDate && isSameDay(rentalDate, date)) {
       setReturnDate(date);
     } else {
       setRentalDate(date);
