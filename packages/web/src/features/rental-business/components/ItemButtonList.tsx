@@ -47,11 +47,7 @@ const ItemButtonList: React.FC<ItemButtonListProps> = ({ value, onChange }) => (
         selected={value === key}
         name={buttonInfo[key as keyof typeof buttonInfo].text}
         image={buttonInfo[key as keyof typeof buttonInfo].image}
-        onClick={() => {
-          if (value !== "none") {
-            onChange(key as keyof typeof buttonInfo);
-          }
-        }}
+        onClick={() => onChange(key as keyof typeof buttonInfo)}
       />
     ))}
   </ItemButtonListInner>

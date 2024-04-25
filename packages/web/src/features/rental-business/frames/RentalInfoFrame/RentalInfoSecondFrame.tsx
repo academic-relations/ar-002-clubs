@@ -132,6 +132,14 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
       date: { start: rentalDate, end: returnDate },
     });
   }, [rentalDate, returnDate, setRental]);
+  // 대여 기간 초기화할 때 modal 띄우는거 추가해야 함
+  const itemOnChange = (
+    newValue: "easel" | "vacuum" | "handCart" | "mat" | "tool",
+  ) => {
+    if (rentalDate && returnDate) {
+      setValue(newValue);
+    }
+  };
 
   return (
     <>
@@ -139,7 +147,7 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
         <Typography type="h3">대여 기간 선택</Typography>
         <SelectRangeCalendar onDatesChange={handleDatesChange} />
       </StyledCard>
-      <ItemButtonList value={value} onChange={setValue} />
+      <ItemButtonList value={value} onChange={itemOnChange} />
       <Info text={rentals[value].info} />
       <StyledCard type="outline">
         <StyledCardInner>
