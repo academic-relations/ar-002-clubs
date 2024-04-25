@@ -5,6 +5,10 @@ export interface RentalInterface {
     applicant: string;
     phone: string;
   };
+  date?: {
+    start?: Date;
+    end?: Date;
+  };
   easel?: number;
   vacuum?: "corded" | "cordless";
   handCart?: {

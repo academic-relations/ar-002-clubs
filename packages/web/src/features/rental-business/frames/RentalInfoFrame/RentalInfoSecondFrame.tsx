@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Radio from "@sparcs-clubs/web/common/components/Radio";
 import ItemButtonList from "@sparcs-clubs/web/features/rental-business/components/ItemButtonList";
+import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
 const StyledCard = styled(Card)<{ type: string }>`
@@ -101,13 +102,35 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
   const Rental = rentals[value].component;
   const props = { rental, setRental };
 
+  const [rentalDate, setRentalDate] = useState<Date | undefined>();
+  const [returnDate, setReturnDate] = useState<Date | undefined>();
+
+  const handleDatesChange = (
+    rentalDatefromCal: Date | undefined,
+    returnDatefromCal: Date | undefined,
+  ) => {
+    setRentalDate(rentalDatefromCal);
+    setReturnDate(returnDatefromCal);
+  };
+
+  useEffect(() => {
+    setRental({
+      ...rental,
+      date: { start: rentalDate, end: returnDate },
+    });
+  }, [rentalDate, returnDate, setRental]);
+
   return (
     <>
+      <StyledCard type="outline">
+        <Typography type="h3">대여 기간 선택</Typography>
+        <SelectRangeCalendar onDatesChange={handleDatesChange} />
+      </StyledCard>
       <ItemButtonList value={value} onChange={setValue} />
       <Info text="대충 이젤에 대한 추가 안내사항" />
       <StyledCard type="outline">
         <StyledCardInner>
-          <Typography type="h3">새부 물품 정보</Typography>
+          <Typography type="h3">세부 물품 정보</Typography>
           <Rental {...props} />
         </StyledCardInner>
       </StyledCard>
