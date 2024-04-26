@@ -1,4 +1,4 @@
-import { PrismaClientOptions } from "@prisma/client/runtime";
+// import type { Config } from "drizzle-kit";
 import { z } from "zod";
 
 const schema = z.object({
@@ -10,19 +10,15 @@ const schema = z.object({
 
 const env = schema.parse(process.env);
 
-const prismaConfig: PrismaClientOptions = {
-  datasources: {
-    db: {
-      url: env.DATABASE_URL,
-    },
-  },
-  errorFormat: "pretty",
-  log: [
-    {
-      emit: "event",
-      level: "query",
-    },
-  ],
-};
+// const drizzleConfig: Config = {
+//   driver: "mysql2",
+//   out: "./src/drizzle",
+//   schema: "./src/drizzle/schema",
+//   dbCredentials: {
+//     uri: env.DATABASE_URL,
+//   },
+//   verbose: true,
+//   strict: false,
+// };
 
-export { env, prismaConfig };
+export { env };

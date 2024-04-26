@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { UserRepository } from "@sparcs-clubs/api/drizzle/repositories/user.repository";
+import { UserRepository } from "@sparcs-clubs/api/common/repository/user.repository";
 
 @Injectable()
 export class UserService {
