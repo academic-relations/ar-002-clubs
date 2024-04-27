@@ -1,13 +1,14 @@
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 interface ItemButtonProps {
   image?: string;
   name: string;
   selected: boolean;
   onClick: () => void;
+  have?: boolean;
 }
 
 const StyledButton = styled(Card)<{ selected: boolean; onClick: () => void }>`
@@ -20,13 +21,41 @@ const StyledButton = styled(Card)<{ selected: boolean; onClick: () => void }>`
     selected ? theme.colors.PRIMARY : theme.colors.WHITE};
   color: ${({ theme, selected }) =>
     selected ? theme.colors.WHITE : theme.colors.BLACK};
+  position: relative;
 `;
 
-const StyledImage = styled.img`
+const ImageContent = styled.img`
+  border-radius: 4px;
+  max-width: 100%;
+  max-height: 100%;
+`;
+const HaveIndicator = styled.div<{ have: boolean; selected: boolean }>`
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: ${({ theme, selected }) =>
+    selected ? theme.colors.WHITE : theme.colors.PRIMARY};
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+
+  ${({ have }) =>
+    !have &&
+    css`
+      display: none;
+    `}
+`;
+
+const StyledImage = styled.div`
   border-radius: 4px;
   background: ${({ theme }) => theme.colors.GRAY[200]};
   width: 80px;
   height: 80px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ItemButton: React.FC<ItemButtonProps> = ({
@@ -34,9 +63,13 @@ const ItemButton: React.FC<ItemButtonProps> = ({
   image = "",
   selected,
   onClick,
+  have = true,
 }) => (
   <StyledButton selected={selected} onClick={onClick}>
-    <StyledImage src={image} />
+    <StyledImage>
+      <ImageContent src={image} alt="item image" />
+      {have && <HaveIndicator have={have} selected={selected} />}
+    </StyledImage>
     <Typography type={selected ? "h3_b" : "h3"}>{name}</Typography>
   </StyledButton>
 );
