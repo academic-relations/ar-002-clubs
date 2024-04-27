@@ -11,6 +11,7 @@ import Vacuum from "@sparcs-clubs/web/features/rental-business//components/Renta
 import HandCart from "@sparcs-clubs/web/features/rental-business//components/Rentals/HandCart";
 import Mat from "@sparcs-clubs/web/features/rental-business//components/Rentals/Mat";
 import Tool from "@sparcs-clubs/web/features/rental-business//components/Rentals/Tool";
+import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
 const StyledCard = styled(Card)<{ type: string }>`
@@ -160,6 +161,7 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
       <StyledCard type="outline">
         <StyledCardInner>
           <Typography type="h3">대여 물품 목록</Typography>
+          <RentalList rental={rental} />
         </StyledCardInner>
       </StyledCard>
     </>
