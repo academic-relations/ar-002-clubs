@@ -12,6 +12,7 @@
     "env": "echo $NODE_ENV",
     "clean": "rm -rf dist",
     "generate": "pnpm db up --wait && pnpm drizzle-kit push:mysql --config ./src/drizzle/drizzle.config.ts",
+    "pull": "drizzle-kit introspect:mysql --config ./src/drizzle/drizzle.config.ts",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",

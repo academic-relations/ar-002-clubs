@@ -15,6 +15,7 @@
     "mock:back": "NEXT_PUBLIC_API_MOCK_MODE=1 dotenv -- pnpm -r --stream --parallel mock:back",
     "db": "dotenv -- pnpm -F api db",
     "generate": "dotenv -- pnpm -F api generate",
+    "pull": "dotenv -- pnpm -F api pull",
     "migrate": "dotenv -- pnpm -F api migrate",
     "migrate:dev": "dotenv -- pnpm -F api migrate:dev",
     "typecheck": "pnpm -r typecheck",

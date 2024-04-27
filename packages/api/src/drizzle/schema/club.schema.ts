@@ -6,6 +6,7 @@ import {
   date,
   datetime,
   timestamp,
+  index,
 } from "drizzle-orm/mysql-core";
 import { Student } from "./user.schema";
 // eslint-disable-next-line import/no-cycle
@@ -110,21 +111,27 @@ export const ClubRepresentativeEnum = mysqlTable("club_representative_enum", {
   deletedAt: timestamp("deleted_at"),
 });
 
-export const ClubRepresentativeD = mysqlTable("club_representative_d", {
-  id: int("id").autoincrement().primaryKey(),
-  clubId: int("club_id")
-    .notNull()
-    .references(() => Club.id),
-  studentId: int("student_id")
-    .notNull()
-    .references(() => Student.id),
-  clubRepresentativeEnum: int("club_representative_enum").notNull(),
-  // .references(() => ClubRepresentativeEnum.id, {
-  //   onDelete: "cascade",
-  //   onUpdate: "cascade",
-  // }),
-  startTerm: datetime("start_term").notNull(),
-  endTerm: datetime("end_term"),
-  createdAt: timestamp("created_at").defaultNow(),
-  deletedAt: timestamp("deleted_at"),
-});
+export const clubRepresentativeD = mysqlTable(
+  "club_representative_d",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    clubId: int("club_id")
+      .notNull()
+      .references(() => Club.id),
+    studentId: int("student_id")
+      .notNull()
+      .references(() => Student.id),
+    clubRepresentativeEnum: int("club_representative_enum").notNull(),
+    // .references(() => ClubRepresentativeEnum.id),
+    startTerm: datetime("start_term", { mode: "string" }).notNull(),
+    endTerm: datetime("end_term", { mode: "string" }),
+    createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
+    deletedAt: timestamp("deleted_at", { mode: "string" }),
+  },
+  // references로 설정했을 때 MySQL의 바이트수 초과로 인해 생성이 불가능하여 명시적으로 FK 이름을 지정해야함
+  table => ({
+    clubRepresentativeEnumIdFk: index(
+      "club_representative_d_club_representative_enum_id_fk",
+    ).on(table.clubRepresentativeEnum),
+  }),
+);

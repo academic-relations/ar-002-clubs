@@ -1,6 +1,8 @@
 import mysql from "mysql2/promise";
 import { drizzle } from "drizzle-orm/mysql2";
-import * as schema from "./schema";
+import * as userSchema from "./schema/user.schema";
+import * as divisionSchema from "./schema/division.schema";
+import * as clubSchema from "./schema/club.schema";
 import { env } from "../env";
 
 export const DrizzleAsyncProvider = "drizzleProvider";
@@ -20,7 +22,10 @@ export const getConnection = async () => {
 export const getDbInstance = async () => {
   if (!dbInstance) {
     const connection = await getConnection();
-    dbInstance = drizzle(connection, { schema, mode: "default" });
+    dbInstance = drizzle(connection, {
+      schema: { userSchema, divisionSchema, clubSchema },
+      mode: "default",
+    });
   }
   return dbInstance;
 };
