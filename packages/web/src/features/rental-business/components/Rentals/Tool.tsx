@@ -55,7 +55,7 @@ const Tool: React.FC<RentalFrameProps & ToolLimitProps> = ({
       }
     />
     <ItemNumberInput
-      label="롤테이너 개수"
+      label="순간접착제 개수"
       placeholder="0개"
       itemLimit={superGlueLimit}
       value={
@@ -72,7 +72,7 @@ const Tool: React.FC<RentalFrameProps & ToolLimitProps> = ({
       }
     />
     <ItemNumberInput
-      label="대형 개수"
+      label="니퍼 개수"
       placeholder="0개"
       itemLimit={nipperLimit}
       value={rental?.tool?.nipper ? String(rental?.tool?.nipper) : undefined}
@@ -87,7 +87,7 @@ const Tool: React.FC<RentalFrameProps & ToolLimitProps> = ({
       }
     />
     <ItemNumberInput
-      label="중형 개수"
+      label="펜치 개수"
       placeholder="0개"
       itemLimit={plierLimit}
       value={rental?.tool?.plier ? String(rental?.tool?.plier) : undefined}
@@ -102,7 +102,7 @@ const Tool: React.FC<RentalFrameProps & ToolLimitProps> = ({
       }
     />
     <ItemNumberInput
-      label="소형 개수"
+      label="롱노우즈 개수"
       placeholder="0개"
       itemLimit={longNosePlierLimit}
       value={

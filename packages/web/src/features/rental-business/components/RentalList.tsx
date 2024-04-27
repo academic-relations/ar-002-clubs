@@ -76,6 +76,9 @@ const RentalList: React.FC<RentalListProps> = ({ rental }) => {
     if (rental.tool.superGlue && rental.tool.superGlue > 0) {
       itemList.push(`공구 > 순간접착제 ${rental.tool.superGlue}개`);
     }
+    if (rental.tool.nipper && rental.tool.nipper > 0) {
+      itemList.push(`공구 > 니퍼 ${rental.tool.nipper}개`);
+    }
     if (rental.tool.plier && rental.tool.plier > 0) {
       itemList.push(`공구 > 펜치 ${rental.tool.plier}개`);
     }
