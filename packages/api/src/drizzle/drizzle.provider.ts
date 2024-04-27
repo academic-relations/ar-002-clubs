@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/mysql2";
 import * as userSchema from "./schema/user.schema";
 import * as divisionSchema from "./schema/division.schema";
 import * as clubSchema from "./schema/club.schema";
+import * as noticeSchema from "./schema/notice.schema";
 import { env } from "../env";
 
 export const DrizzleAsyncProvider = "drizzleProvider";
@@ -23,7 +24,7 @@ export const getDbInstance = async () => {
   if (!dbInstance) {
     const connection = await getConnection();
     dbInstance = drizzle(connection, {
-      schema: { userSchema, divisionSchema, clubSchema },
+      schema: { userSchema, divisionSchema, clubSchema, noticeSchema },
       mode: "default",
     });
   }
