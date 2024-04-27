@@ -27,9 +27,7 @@ const StyledCardInner = styled.div`
   align-self: stretch;
 `;
 
-const NoneRental: React.FC<RentalFrameProps> = () => (
-  <Typography type="p">대충 선택 먼저 하세요</Typography>
-);
+const NoneRental: React.FC<RentalFrameProps> = () => <>none</>;
 
 const rentals = {
   none: {
@@ -151,10 +149,17 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
       </StyledCard>
       <ItemButtonList value={value} onChange={itemOnChange} />
       <Info text={rentals[value].info} />
+      {value !== "none" && (
+        <StyledCard type="outline">
+          <StyledCardInner>
+            <Typography type="h3">세부 물품 정보</Typography>
+            <Rental {...props} />
+          </StyledCardInner>
+        </StyledCard>
+      )}
       <StyledCard type="outline">
         <StyledCardInner>
-          <Typography type="h3">세부 물품 정보</Typography>
-          <Rental {...props} />
+          <Typography type="h3">대여 물품 목록</Typography>
         </StyledCardInner>
       </StyledCard>
     </>
