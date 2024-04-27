@@ -43,15 +43,15 @@ const rentals = {
     component: Vacuum,
   },
   handCart: {
-    info: "대충 핸드카트에 대한 추가 안내사항",
+    info: "대충 수레에 대한 추가 안내사항",
     component: HandCart,
   },
   mat: {
-    info: "대충 매트에 대한 추가 안내사항",
+    info: "대충 돗자리에 대한 추가 안내사항",
     component: Mat,
   },
   tool: {
-    info: "대충 툴에 대한 추가 안내사항",
+    info: "대충 공구에 대한 추가 안내사항",
     component: Tool,
   },
 };

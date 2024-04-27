@@ -26,11 +26,11 @@ const buttonInfo = {
     image: "https://via.placeholder.com/150",
   },
   handCart: {
-    text: "핸드카트",
+    text: "수레",
     image: "https://via.placeholder.com/150",
   },
   mat: {
-    text: "매트",
+    text: "돗자리",
     image: "https://via.placeholder.com/150",
   },
   tool: {
