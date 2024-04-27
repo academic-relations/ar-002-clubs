@@ -122,13 +122,25 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
   useEffect(() => {
     if (!rentalDate || !returnDate) {
       setValue("none");
+      setRental({
+        agreement: rental.agreement,
+        info: rental.info,
+      });
+    } else {
+      setRental({
+        ...rental,
+        date: { start: rentalDate, end: returnDate },
+      });
     }
+  }, [
+    rentalDate,
+    returnDate,
+    setValue,
+    setRental,
+    rental.agreement,
+    rental.info,
+  ]);
 
-    setRental({
-      ...rental,
-      date: { start: rentalDate, end: returnDate },
-    });
-  }, [rentalDate, returnDate, setRental]);
   // 대여 기간 초기화할 때 modal 띄우는거 추가해야 함
 
   const itemOnChange = (
