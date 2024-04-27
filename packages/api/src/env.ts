@@ -1,4 +1,3 @@
-// import type { Config } from "drizzle-kit";
 import { z } from "zod";
 
 const schema = z.object({
@@ -9,16 +8,5 @@ const schema = z.object({
 });
 
 const env = schema.parse(process.env);
-
-// const drizzleConfig: Config = {
-//   driver: "mysql2",
-//   out: "./src/drizzle",
-//   schema: "./src/drizzle/schema",
-//   dbCredentials: {
-//     uri: env.DATABASE_URL,
-//   },
-//   verbose: true,
-//   strict: false,
-// };
 
 export { env };
