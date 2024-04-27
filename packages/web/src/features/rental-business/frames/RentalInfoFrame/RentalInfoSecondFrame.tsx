@@ -12,6 +12,7 @@ import HandCart from "@sparcs-clubs/web/features/rental-business//components/Ren
 import Mat from "@sparcs-clubs/web/features/rental-business//components/Rentals/Mat";
 import Tool from "@sparcs-clubs/web/features/rental-business//components/Rentals/Tool";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
+import TextButton from "@sparcs-clubs/web/common/components/TextButton";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
 const StyledCard = styled(Card)<{ type: string }>`
@@ -26,6 +27,17 @@ const StyledCardInner = styled.div`
   align-items: flex-start;
   gap: 16px;
   align-self: stretch;
+`;
+
+const ResetTitleWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 20px;
+`;
+
+const FlexGrowTypography = styled.div`
+  flex-grow: 1;
 `;
 
 const NoneRental: React.FC<RentalFrameProps> = () => <>none</>;
@@ -165,14 +177,24 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
       {value !== "none" && (
         <StyledCard type="outline">
           <StyledCardInner>
-            <Typography type="h3">세부 물품 정보</Typography>
+            <ResetTitleWrapper>
+              <FlexGrowTypography>
+                <Typography type="h3">세부 물품 정보</Typography>
+              </FlexGrowTypography>
+              <TextButton text="초기화" />
+            </ResetTitleWrapper>
             <Rental {...props} />
           </StyledCardInner>
         </StyledCard>
       )}
       <StyledCard type="outline">
         <StyledCardInner>
-          <Typography type="h3">대여 물품 목록</Typography>
+          <ResetTitleWrapper>
+            <FlexGrowTypography>
+              <Typography type="h3">대여 물품 목록</Typography>
+            </FlexGrowTypography>{" "}
+            <TextButton text="초기화" />
+          </ResetTitleWrapper>
           <RentalList rental={rental} />
         </StyledCardInner>
       </StyledCard>
