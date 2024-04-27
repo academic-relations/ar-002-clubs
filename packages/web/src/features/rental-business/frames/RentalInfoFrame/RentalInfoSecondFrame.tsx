@@ -108,10 +108,9 @@ const mockExistDates = [
   actualDate(2024, 5, 30),
 ];
 
-const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
-  rental,
-  setRental,
-}) => {
+const RentalInfoSecondFrame: React.FC<
+  RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
+> = ({ rental, setRental, setNextEnabled }) => {
   const [value, setValue] = useState<
     "none" | "easel" | "vacuum" | "handCart" | "mat" | "tool"
   >("none");
@@ -130,6 +129,12 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
     setReturnDate(returnDateFromCal);
     setValue(!rentalDateFromCal || !returnDateFromCal ? "none" : value);
   };
+
+  useEffect(() => {
+    const enableNext = !(!rental.date?.start || !rental.date?.end);
+    setNextEnabled(enableNext);
+  }, [rental, setNextEnabled]);
+  // TODO: 선택된 물건 없을 때도 안 넘어가게 하기
 
   useEffect(() => {
     if (!rentalDate || !returnDate) {
@@ -152,7 +157,6 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
     rental.agreement,
     rental.info,
   ]);
-
   // 대여 기간 초기화할 때 modal 띄우는거 추가해야 함
 
   const itemOnChange = (
@@ -195,45 +199,51 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
       info: rental.info,
     });
   };
-
   const handleResetCurrent = () => {
-    const newRental = {
-      ...rental,
-    };
-
-    switch (value) {
-      case "easel":
-        newRental.easel = undefined;
-        break;
-      case "vacuum":
-        newRental.vacuum = undefined;
-        break;
-      case "handCart":
-        newRental.handCart = {
-          rolltainer: undefined,
-          large: undefined,
-          medium: undefined,
-          small: undefined,
-        };
-        break;
-      case "mat":
-        newRental.mat = undefined;
-        break;
-      case "tool":
-        newRental.tool = {
-          powerDrill: undefined,
-          driver: undefined,
-          superGlue: undefined,
-          nipper: undefined,
-          plier: undefined,
-          longNosePlier: undefined,
-        };
-        break;
-      default:
-        break;
-    }
-    setRental(newRental);
+    setRental(prevRental => ({
+      ...prevRental,
+      [value]: undefined,
+    }));
   };
+
+  // const handleResetCurrent = () => {
+  //   const newRental = {
+  //     ...rental,
+  //   };
+
+  //   switch (value) {
+  //     case "easel":
+  //       newRental.easel = undefined;
+  //       break;
+  //     case "vacuum":
+  //       newRental.vacuum = undefined;
+  //       break;
+  //     case "handCart":
+  //       newRental.handCart = {
+  //         rolltainer: undefined,
+  //         large: undefined,
+  //         medium: undefined,
+  //         small: undefined,
+  //       };
+  //       break;
+  //     case "mat":
+  //       newRental.mat = undefined;
+  //       break;
+  //     case "tool":
+  //       newRental.tool = {
+  //         powerDrill: undefined,
+  //         driver: undefined,
+  //         superGlue: undefined,
+  //         nipper: undefined,
+  //         plier: undefined,
+  //         longNosePlier: undefined,
+  //       };
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  //   setRental(newRental);
+  // };
 
   return (
     <>
