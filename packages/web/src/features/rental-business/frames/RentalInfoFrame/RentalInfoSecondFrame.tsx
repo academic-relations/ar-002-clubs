@@ -166,15 +166,73 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
   const isRentalListEmpty = () =>
     !rental.easel &&
     !rental.vacuum &&
-    !rental.handCart &&
+    (!rental.handCart || Object.values(rental.handCart).every(val => !val)) &&
     !rental.mat &&
-    !rental.tool;
+    (!rental.tool || Object.values(rental.tool).every(val => !val));
+
+  const isCurrentItemEmpty = () => {
+    switch (value) {
+      case "easel":
+        return !rental.easel;
+      case "vacuum":
+        return !rental.vacuum;
+      case "handCart":
+        return (
+          !rental.handCart || Object.values(rental.handCart).every(val => !val)
+        );
+      case "mat":
+        return !rental.mat;
+      case "tool":
+        return !rental.tool || Object.values(rental.tool).every(val => !val);
+      default:
+        return true; // If none, assume empty for safety
+    }
+  };
 
   const handleResetAll = () => {
     setRental({
       agreement: rental.agreement,
       info: rental.info,
     });
+  };
+
+  const handleResetCurrent = () => {
+    const newRental = {
+      ...rental,
+    };
+
+    switch (value) {
+      case "easel":
+        newRental.easel = undefined;
+        break;
+      case "vacuum":
+        newRental.vacuum = undefined;
+        break;
+      case "handCart":
+        newRental.handCart = {
+          rolltainer: undefined,
+          large: undefined,
+          medium: undefined,
+          small: undefined,
+        };
+        break;
+      case "mat":
+        newRental.mat = undefined;
+        break;
+      case "tool":
+        newRental.tool = {
+          powerDrill: undefined,
+          driver: undefined,
+          superGlue: undefined,
+          nipper: undefined,
+          plier: undefined,
+          longNosePlier: undefined,
+        };
+        break;
+      default:
+        break;
+    }
+    setRental(newRental);
   };
 
   return (
@@ -195,7 +253,11 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
               <FlexGrowTypography>
                 <Typography type="h3">세부 물품 정보</Typography>
               </FlexGrowTypography>
-              <TextButton text="초기화" />
+              <TextButton
+                text="초기화"
+                disabled={isCurrentItemEmpty()}
+                onClick={handleResetCurrent}
+              />
             </ResetTitleWrapper>
             <Rental {...props} />
           </StyledCardInner>
@@ -208,8 +270,8 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
               <Typography type="h3">대여 물품 목록</Typography>
             </FlexGrowTypography>
             <TextButton
-              disabled={isRentalListEmpty()}
               text="초기화"
+              disabled={isRentalListEmpty()}
               onClick={handleResetAll}
             />
           </ResetTitleWrapper>
