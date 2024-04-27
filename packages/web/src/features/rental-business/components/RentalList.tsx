@@ -12,8 +12,17 @@ const RentalListContainer = styled.ul`
   margin: 0;
 `;
 
+const EmptyListWrapper = styled.text`
+  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
+  font-size: 16px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.colors.GRAY[300]};
+`;
+
 const RentalListItem = styled.li`
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   font-size: 16px;
   line-height: 20px;
 
@@ -35,7 +44,7 @@ const RentalList: React.FC<RentalListProps> = ({ rental }) => {
   }
 
   if (rental.vacuum) {
-    itemList.push(`청소기 ${rental.vacuum === "corded" ? "유선" : "무선"}`);
+    itemList.push(`${rental.vacuum === "corded" ? "유선" : "무선"} 청소기`);
   }
 
   if (rental.handCart) {
@@ -79,7 +88,15 @@ const RentalList: React.FC<RentalListProps> = ({ rental }) => {
     <RentalListItem key={item}>{item}</RentalListItem>
   ));
 
-  return <RentalListContainer>{listItems}</RentalListContainer>;
+  return (
+    <RentalListContainer>
+      {itemList.length > 0 ? (
+        listItems
+      ) : (
+        <EmptyListWrapper>선택한 물품이 없습니다</EmptyListWrapper>
+      )}
+    </RentalListContainer>
+  );
 };
 
 export default RentalList;
