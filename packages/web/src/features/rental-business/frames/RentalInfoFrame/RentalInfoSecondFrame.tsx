@@ -3,10 +3,14 @@ import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import Info from "@sparcs-clubs/web/common/components/Info";
-import Radio from "@sparcs-clubs/web/common/components/Radio";
 import ItemButtonList from "@sparcs-clubs/web/features/rental-business/components/ItemButtonList";
 import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
 import { actualDate } from "@sparcs-clubs/web/utils/Date/actualDate";
+import Easel from "@sparcs-clubs/web/features/rental-business//components/Rentals/Easel";
+import Vacuum from "@sparcs-clubs/web/features/rental-business//components/Rentals/Vacuum";
+import HandCart from "@sparcs-clubs/web/features/rental-business//components/Rentals/HandCart";
+import Mat from "@sparcs-clubs/web/features/rental-business//components/Rentals/Mat";
+import Tool from "@sparcs-clubs/web/features/rental-business//components/Rentals/Tool";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
 const StyledCard = styled(Card)<{ type: string }>`
@@ -22,52 +26,6 @@ const StyledCardInner = styled.div`
   gap: 16px;
   align-self: stretch;
 `;
-
-const Easel: React.FC<RentalFrameProps> = () => (
-  <Typography type="p">대여 개수</Typography>
-);
-
-const Vacuum: React.FC<RentalFrameProps> = ({ rental, setRental }) => (
-  <>
-    <Typography type="p">청소기 종류</Typography>
-    <Radio
-      value={rental?.vacuum || "cordless"}
-      onChange={value =>
-        setRental({
-          ...rental,
-          vacuum: value,
-        })
-      }
-    >
-      <Radio.Option value="cordless">무선 청소기</Radio.Option>
-      <Radio.Option value="corded">유선 청소기</Radio.Option>
-    </Radio>
-  </>
-);
-
-const HandCart: React.FC<RentalFrameProps> = () => (
-  <>
-    <Typography type="p">롤테이너 개수</Typography>
-    <Typography type="p">대형 개수</Typography>
-    <Typography type="p">중형 개수</Typography>
-    <Typography type="p">소형 개수</Typography>
-  </>
-);
-
-const Mat: React.FC<RentalFrameProps> = () => (
-  <Typography type="p">대여 개수</Typography>
-);
-
-const Tool: React.FC<RentalFrameProps> = () => (
-  <>
-    <Typography type="p">전동 드릴 세트 개수</Typography>
-    <Typography type="p">드라이버 개수</Typography>
-    <Typography type="p">슈퍼글루 개수</Typography>
-    <Typography type="p">니퍼 개수</Typography>
-    <Typography type="p">플라이어 개수</Typography>
-    <Typography type="p">롱노즈플라이어 개수</Typography>
-  </>
-);
 
 const NoneRental: React.FC<RentalFrameProps> = () => (
   <Typography type="p">대충 선택 먼저 하세요</Typography>
