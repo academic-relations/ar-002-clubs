@@ -5,6 +5,25 @@ import ItemButton from "./ItemButton";
 interface ItemButtonListProps {
   value: "easel" | "vacuum" | "handCart" | "mat" | "tool" | "none";
   onChange: (value: "easel" | "vacuum" | "handCart" | "mat" | "tool") => void;
+  rental: {
+    easel?: number;
+    vacuum?: "corded" | "cordless";
+    handCart?: {
+      rolltainer?: number;
+      large?: number;
+      medium?: number;
+      small?: number;
+    };
+    mat?: number;
+    tool?: {
+      powerDrill?: number;
+      driver?: number;
+      superGlue?: number;
+      nipper?: number;
+      plier?: number;
+      longNosePlier?: number;
+    };
+  };
 }
 
 const ItemButtonListInner = styled.div`
@@ -39,17 +58,27 @@ const buttonInfo = {
   },
 };
 
-const ItemButtonList: React.FC<ItemButtonListProps> = ({ value, onChange }) => (
+const ItemButtonList: React.FC<ItemButtonListProps> = ({
+  value,
+  onChange,
+  rental,
+}) => (
   <ItemButtonListInner>
-    {Object.keys(buttonInfo).map(key => (
-      <ItemButton
-        key={key}
-        selected={value === key}
-        name={buttonInfo[key as keyof typeof buttonInfo].text}
-        image={buttonInfo[key as keyof typeof buttonInfo].image}
-        onClick={() => onChange(key as keyof typeof buttonInfo)}
-      />
-    ))}
+    {Object.keys(buttonInfo).map(key => {
+      const itemValue = rental[key as keyof typeof buttonInfo];
+      const hasItem = Boolean(itemValue);
+
+      return (
+        <ItemButton
+          key={key}
+          selected={value === key}
+          name={buttonInfo[key as keyof typeof buttonInfo].text}
+          image={buttonInfo[key as keyof typeof buttonInfo].image}
+          have={hasItem}
+          onClick={() => onChange(key as keyof typeof buttonInfo)}
+        />
+      );
+    })}
   </ItemButtonListInner>
 );
 

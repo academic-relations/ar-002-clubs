@@ -63,7 +63,7 @@ const ItemButton: React.FC<ItemButtonProps> = ({
   image = "",
   selected,
   onClick,
-  have = true,
+  have = false,
 }) => (
   <StyledButton selected={selected} onClick={onClick}>
     <StyledImage>

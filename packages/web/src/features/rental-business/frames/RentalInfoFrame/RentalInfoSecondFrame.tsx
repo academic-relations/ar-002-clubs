@@ -244,7 +244,7 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
           workDates={mockExistDates}
         />
       </StyledCard>
-      <ItemButtonList value={value} onChange={itemOnChange} />
+      <ItemButtonList value={value} onChange={itemOnChange} rental={rental} />
       <Info text={rentals[value].info} />
       {value !== "none" && (
         <StyledCard type="outline">
