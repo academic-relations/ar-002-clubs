@@ -17,7 +17,7 @@
     "start": "nest start",
     "mock:front": "echo \"In mock:front mode, the 'api' package will not be run. Exiting.\"",
     "mock:back": "pnpm start:dev",
-    "migrate:dev": "pnpm db up --wait && pnpm drizzle-kit generate:mysql --config ./src/drizzle/drizzle.config.ts && pnpm ts-node src/drizzle/migration/migration.ts",
+    "migrate:dev": "pnpm db up --wait && pnpm drizzle-kit generate:mysql --config ./src/drizzle/drizzle.config.ts && pnpm ts-node src/drizzle/drizzle.migrate.ts",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",

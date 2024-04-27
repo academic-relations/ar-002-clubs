@@ -4,7 +4,7 @@ import { env } from "src/env";
 export default {
   driver: "mysql2",
   out: "./src/drizzle/migration",
-  schema: "./src/drizzle/schema",
+  schema: "./src/drizzle/schema/*",
   dbCredentials: {
     uri: env.DATABASE_URL,
   },

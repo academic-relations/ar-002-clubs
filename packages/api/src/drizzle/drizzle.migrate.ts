@@ -1,5 +1,5 @@
 import { migrate } from "drizzle-orm/mysql2/migrator";
-import { getConnection, getDbInstance } from "../drizzle.provider";
+import { getConnection, getDbInstance } from "./drizzle.provider";
 
 async function runMigrations() {
   try {
