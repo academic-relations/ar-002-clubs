@@ -2,8 +2,18 @@ import React from "react";
 import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
 import { RentalFrameProps } from "@sparcs-clubs/web/features/rental-business/frames/RentalNoticeFrame";
 
-const HandCart: React.FC<RentalFrameProps & { limit?: number }> = ({
-  limit = 99,
+interface HandCartLimitProps {
+  rolltainerLimit?: number;
+  largeLimit?: number;
+  mediumLimit?: number;
+  smallLimit?: number;
+}
+
+const HandCart: React.FC<RentalFrameProps & HandCartLimitProps> = ({
+  rolltainerLimit = 99,
+  largeLimit = 99,
+  mediumLimit = 99,
+  smallLimit = 99,
   rental,
   setRental,
 }) => (
@@ -11,7 +21,7 @@ const HandCart: React.FC<RentalFrameProps & { limit?: number }> = ({
     <ItemNumberInput
       label="롤테이너 개수"
       placeholder="0개"
-      itemLimit={limit}
+      itemLimit={rolltainerLimit}
       value={
         rental?.handCart?.rolltainer
           ? String(rental?.handCart?.rolltainer)
@@ -30,7 +40,7 @@ const HandCart: React.FC<RentalFrameProps & { limit?: number }> = ({
     <ItemNumberInput
       label="대형 개수"
       placeholder="0개"
-      itemLimit={limit}
+      itemLimit={largeLimit}
       value={
         rental?.handCart?.large ? String(rental?.handCart?.large) : undefined
       }
@@ -47,7 +57,7 @@ const HandCart: React.FC<RentalFrameProps & { limit?: number }> = ({
     <ItemNumberInput
       label="중형 개수"
       placeholder="0개"
-      itemLimit={limit}
+      itemLimit={mediumLimit}
       value={
         rental?.handCart?.medium ? String(rental?.handCart?.medium) : undefined
       }
@@ -64,7 +74,7 @@ const HandCart: React.FC<RentalFrameProps & { limit?: number }> = ({
     <ItemNumberInput
       label="소형 개수"
       placeholder="0개"
-      itemLimit={limit}
+      itemLimit={smallLimit}
       value={
         rental?.handCart?.small ? String(rental?.handCart?.small) : undefined
       }
