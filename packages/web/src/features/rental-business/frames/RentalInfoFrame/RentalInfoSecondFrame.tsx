@@ -163,6 +163,20 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
     }
   };
 
+  const isRentalListEmpty = () =>
+    !rental.easel &&
+    !rental.vacuum &&
+    !rental.handCart &&
+    !rental.mat &&
+    !rental.tool;
+
+  const handleResetAll = () => {
+    setRental({
+      agreement: rental.agreement,
+      info: rental.info,
+    });
+  };
+
   return (
     <>
       <StyledCard type="outline">
@@ -192,8 +206,12 @@ const RentalInfoSecondFrame: React.FC<RentalFrameProps> = ({
           <ResetTitleWrapper>
             <FlexGrowTypography>
               <Typography type="h3">대여 물품 목록</Typography>
-            </FlexGrowTypography>{" "}
-            <TextButton text="초기화" />
+            </FlexGrowTypography>
+            <TextButton
+              disabled={isRentalListEmpty()}
+              text="초기화"
+              onClick={handleResetAll}
+            />
           </ResetTitleWrapper>
           <RentalList rental={rental} />
         </StyledCardInner>
