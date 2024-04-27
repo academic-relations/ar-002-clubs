@@ -157,7 +157,7 @@ const RentalInfoSecondFrame: React.FC<
     rental.agreement,
     rental.info,
   ]);
-  // 대여 기간 초기화할 때 modal 띄우는거 추가해야 함
+  // TODO: 대여 기간 초기화할 때 modal 띄우는거 추가
 
   const itemOnChange = (
     newValue: "easel" | "vacuum" | "handCart" | "mat" | "tool",
@@ -189,7 +189,7 @@ const RentalInfoSecondFrame: React.FC<
       case "tool":
         return !rental.tool || Object.values(rental.tool).every(val => !val);
       default:
-        return true; // If none, assume empty for safety
+        return true;
     }
   };
 
@@ -205,45 +205,6 @@ const RentalInfoSecondFrame: React.FC<
       [value]: undefined,
     }));
   };
-
-  // const handleResetCurrent = () => {
-  //   const newRental = {
-  //     ...rental,
-  //   };
-
-  //   switch (value) {
-  //     case "easel":
-  //       newRental.easel = undefined;
-  //       break;
-  //     case "vacuum":
-  //       newRental.vacuum = undefined;
-  //       break;
-  //     case "handCart":
-  //       newRental.handCart = {
-  //         rolltainer: undefined,
-  //         large: undefined,
-  //         medium: undefined,
-  //         small: undefined,
-  //       };
-  //       break;
-  //     case "mat":
-  //       newRental.mat = undefined;
-  //       break;
-  //     case "tool":
-  //       newRental.tool = {
-  //         powerDrill: undefined,
-  //         driver: undefined,
-  //         superGlue: undefined,
-  //         nipper: undefined,
-  //         plier: undefined,
-  //         longNosePlier: undefined,
-  //       };
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  //   setRental(newRental);
-  // };
 
   return (
     <>
