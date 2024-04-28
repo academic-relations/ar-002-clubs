@@ -1,5 +1,5 @@
 import React from "react";
-import { isAfter } from "date-fns";
+import { isAfter, isSameDay } from "date-fns";
 
 import Calendar from "@sparcs-clubs/web/common/components/Calendar/Calendar";
 
@@ -8,6 +8,7 @@ interface RangeCalendarProps {
   returnDate: Date | undefined;
   setRentalDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   setReturnDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  workDates: Date[];
 }
 
 const RangeCalendar: React.FC<RangeCalendarProps> = ({
@@ -15,20 +16,22 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
   returnDate,
   setRentalDate,
   setReturnDate,
+  workDates,
 }) => {
   const onDateClick = (date: Date) => {
-    if (rentalDate && !returnDate && isAfter(date, rentalDate)) {
-      setReturnDate(date);
-    } else {
-      setRentalDate(date);
-      setReturnDate(undefined);
+    if (workDates.some(selectedDate => isSameDay(selectedDate, date))) {
+      if (rentalDate && !returnDate && isAfter(date, rentalDate)) {
+        setReturnDate(date);
+      } else {
+        setRentalDate(date);
+        setReturnDate(undefined);
+      }
     }
   };
-
   return (
     <Calendar
       size="lg"
-      existDates={[]}
+      existDates={workDates}
       eventPeriods={
         rentalDate && returnDate ? [{ start: rentalDate, end: returnDate }] : []
       }

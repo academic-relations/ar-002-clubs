@@ -8,6 +8,7 @@ interface SelectRangeCalendarProps {
     rentalDate: Date | undefined,
     returnDate: Date | undefined,
   ) => void;
+  workDates?: Date[];
 }
 
 const SelectRangeCalendarWrapper = styled.div`
@@ -20,6 +21,7 @@ const SelectRangeCalendarWrapper = styled.div`
 
 const SelectRangeCalendar: React.FC<SelectRangeCalendarProps> = ({
   onDatesChange,
+  workDates = [],
 }) => {
   const [rentalDate, setRentalDate] = useState<Date | undefined>();
   const [returnDate, setReturnDate] = useState<Date | undefined>();
@@ -35,6 +37,7 @@ const SelectRangeCalendar: React.FC<SelectRangeCalendarProps> = ({
         returnDate={returnDate}
         setRentalDate={setRentalDate}
         setReturnDate={setReturnDate}
+        workDates={workDates}
       />
       <SelectRange
         rentalDate={rentalDate}
