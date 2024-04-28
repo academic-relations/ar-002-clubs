@@ -7,24 +7,6 @@ interface ItemButtonListProps {
   value: "easel" | "vacuum" | "handCart" | "mat" | "tool" | "none";
   onChange: (value: "easel" | "vacuum" | "handCart" | "mat" | "tool") => void;
   rental: RentalInterface;
-  // rental: {
-  //   easel?: number;
-  //   vacuum?: "corded" | "cordless";
-  //   handCart?: {
-  //     rolltainer?: number;
-  //     large?: number;
-  //     medium?: number;
-  //     small?: number;
-  //   };
-  //   mat?: number;
-  //   tool?: {
-  //     powerDrill?: number;
-  //     driver?: number;
-  //     superGlue?: number;
-  //     nipper?: number;
-  //     plier?: number;
-  //     longNosePlier?: number;
-  //   };
 }
 
 const ItemButtonListInner = styled.div`
