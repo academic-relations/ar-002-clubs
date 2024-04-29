@@ -58,10 +58,9 @@ const UserInfoListItem = styled.li`
   }
 `;
 
-const RentalInfoThirdFrame: React.FC<RentalFrameProps> = ({
-  rental,
-  setRental,
-}) => {
+const RentalInfoThirdFrame: React.FC<
+  RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
+> = ({ rental, setRental, setNextEnabled }) => {
   const [purpose, setPurpose] = useState("");
 
   useEffect(() => {
@@ -70,6 +69,11 @@ const RentalInfoThirdFrame: React.FC<RentalFrameProps> = ({
       purpose,
     });
   }, [purpose, setRental]);
+
+  useEffect(() => {
+    const enableNext = !!rental.purpose;
+    setNextEnabled(enableNext);
+  }, [rental, setNextEnabled]);
 
   return (
     <StyledCard type="outline">
