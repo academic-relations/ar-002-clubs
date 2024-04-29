@@ -6,7 +6,6 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
-    "postinstall": "pnpm typegen",
     "web": "pnpm -F web",
     "api": "dotenv -- pnpm -F api",
     "interface": "pnpm -F interface",
