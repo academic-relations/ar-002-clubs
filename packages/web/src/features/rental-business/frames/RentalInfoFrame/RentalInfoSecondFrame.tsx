@@ -157,8 +157,10 @@ const RentalInfoSecondFrame: React.FC<
     setRental({
       agreement: rental.agreement,
       info: rental.info,
+      date: { start: rental.date?.start, end: rental.date?.end },
     });
   };
+
   const handleResetCurrent = () => {
     setRental(prevRental => ({
       ...prevRental,
