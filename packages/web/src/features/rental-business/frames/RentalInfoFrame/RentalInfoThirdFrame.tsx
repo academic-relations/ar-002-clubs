@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { format } from "date-fns";
+import { ko } from "date-fns/locale";
 import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
@@ -23,6 +25,17 @@ const CardInner = styled.div`
   gap: 16px;
   align-self: stretch;
 `;
+
+const RentalPeriodWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+`;
+
+const RentalPeriodInner = styled.div`
+  display: flex;
+`;
+
 const UserInfoListContainer = styled.ul`
   list-style: none;
   padding: 0;
@@ -67,7 +80,13 @@ const RentalInfoThirdFrame: React.FC<RentalFrameProps> = ({
           <UserInfoListItem>담당자: {rental.info?.applicant}</UserInfoListItem>
           <UserInfoListItem>연락처: {rental.info?.phone}</UserInfoListItem>
         </UserInfoListContainer>
-        <StyledTypography type="p">대여 기간</StyledTypography>
+        <RentalPeriodWrapper>
+          <StyledTypography type="p">대여 기간</StyledTypography>
+          <RentalPeriodInner>
+            {format(rental.date?.start, "yyyy년 M월 d일 (EEE)", { locale: ko })}{" "}
+            ~ {format(rental.date?.end, "yyyy년 M월 d일 (EEE)", { locale: ko })}
+          </RentalPeriodInner>
+        </RentalPeriodWrapper>
         <StyledTypography type="p">대여 물품</StyledTypography>
         <RentalList rental={rental} />
       </CardInner>
