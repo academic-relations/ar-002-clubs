@@ -101,6 +101,7 @@ const RentalInfoThirdFrame: React.FC<
         value={purpose}
         handleChange={setPurpose}
       />
+      {/* TODO: 대여 목적 비어있을 때 에러메시지 */}
     </StyledCard>
   );
 };
