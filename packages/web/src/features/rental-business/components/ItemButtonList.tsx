@@ -41,6 +41,9 @@ const buttonInfo = {
   },
 };
 
+const checkNonZeroItems = (items?: { [key: string]: number }): boolean =>
+  items ? Object.values(items).some(value => value > 0) : false;
+
 const ItemButtonList: React.FC<ItemButtonListProps> = ({
   value,
   onChange,
@@ -49,7 +52,15 @@ const ItemButtonList: React.FC<ItemButtonListProps> = ({
   <ItemButtonListInner>
     {Object.keys(buttonInfo).map(key => {
       const itemValue = rental[key as keyof typeof buttonInfo];
-      const hasItem = Boolean(itemValue);
+      let hasItem = false;
+
+      if (typeof itemValue === "number") {
+        hasItem = itemValue > 0;
+      } else if (typeof itemValue === "object") {
+        hasItem = checkNonZeroItems(itemValue);
+      } else if (typeof itemValue === "string") {
+        hasItem = true;
+      }
 
       return (
         <ItemButton
