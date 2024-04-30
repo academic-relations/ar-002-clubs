@@ -97,29 +97,7 @@ const DateWrapper = styled.div<{
   justify-content: center;
   flex: 1;
   cursor: ${({ onClick }) => (onClick ? "pointer" : "default")};
-  width: ${({ type, size }) => {
-    if (type === "Start" || type === "End" || type === "Pass") {
-      switch (size) {
-        case "sm":
-          return "40px";
-        case "md":
-          return "48px";
-        case "lg":
-        default:
-          return "60px";
-      }
-    } else {
-      switch (size) {
-        case "sm":
-          return "32px";
-        case "md":
-          return "40px";
-        case "lg":
-        default:
-          return "48px";
-      }
-    }
-  }};
+  width: 100%;
   background: ${({ type, theme }) => {
     switch (type) {
       case "End":

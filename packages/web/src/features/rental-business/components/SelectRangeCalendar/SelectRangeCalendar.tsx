@@ -13,11 +13,11 @@ interface SelectRangeCalendarProps {
 
 const SelectRangeCalendarWrapper = styled.div`
   display: inline-flex;
-  width: 1000px;
-  /* 나중에 calendar 관련 width 확인할 때 여기도 봐야함 */
+  width: 100%;
   gap: 20px;
   align-items: flex-end;
 `;
+// TODO: 반응형 적용 (화면 너비 줄이면 SelectRange 카드 밖으로 튀어나감)
 
 const SelectRangeCalendar: React.FC<SelectRangeCalendarProps> = ({
   onDatesChange,

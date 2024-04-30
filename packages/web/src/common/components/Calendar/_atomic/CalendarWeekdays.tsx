@@ -17,6 +17,7 @@ const DayWrapper = styled.div<{
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   line-height: 20px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+  width: 100%;
   ${({ size }) => {
     switch (size) {
       case "sm":
@@ -40,17 +41,7 @@ const WeekWrapper = styled.div<CalendarSizeProps>`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  width: ${({ size }) => {
-    switch (size) {
-      case "sm":
-        return "296px";
-      case "md":
-        return "352px";
-      case "lg":
-      default:
-        return "408px";
-    }
-  }};
+  width: 100%;
 `;
 
 const CalendarWeekdays: React.FC<CalendarSizeProps> = ({ size }) => (

@@ -30,6 +30,7 @@ const CalendarWrapper = styled.div<CalendarSizeProps>`
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  width: 100%;
 `;
 
 const WeekWrapper = styled.div`
@@ -37,6 +38,7 @@ const WeekWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  width: 100%;
 `;
 
 const Calendar: React.FC<CalendarProps> = ({
