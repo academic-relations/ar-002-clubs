@@ -43,6 +43,7 @@ const colors = {
     100: "#FAFAFA",
     200: "#EEEEEE",
     300: "#DDDDDD",
+    600: "#555555",
   },
   RED: {
     600: "#DC2626",

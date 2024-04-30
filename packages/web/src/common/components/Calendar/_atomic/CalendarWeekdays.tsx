@@ -17,6 +17,7 @@ const DayWrapper = styled.div<{
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   line-height: 20px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+  color: ${({ theme }) => theme.colors.GRAY[600]};
   width: 100%;
   ${({ size }) => {
     switch (size) {
