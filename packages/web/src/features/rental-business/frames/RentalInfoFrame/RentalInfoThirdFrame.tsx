@@ -62,6 +62,14 @@ const RentalInfoThirdFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
 > = ({ rental, setRental, setNextEnabled }) => {
   const [purpose, setPurpose] = useState("");
+  const [noPurposeError, setNoPurposeError] = useState("");
+  const [purposeTouched, setPurposeTouched] = useState(false);
+
+  const handlePurposeTouched = () => {
+    if (!purposeTouched) {
+      setPurposeTouched(true);
+    }
+  };
 
   useEffect(() => {
     setRental({
@@ -72,8 +80,13 @@ const RentalInfoThirdFrame: React.FC<
 
   useEffect(() => {
     const enableNext = !!rental.purpose;
+    if (enableNext || !purposeTouched) {
+      setNoPurposeError("");
+    } else {
+      setNoPurposeError("대여 목적을 입력하세요");
+    }
     setNextEnabled(enableNext);
-  }, [rental, setNextEnabled]);
+  }, [rental, purposeTouched, setNextEnabled, setNoPurposeError]);
 
   return (
     <StyledCard type="outline">
@@ -100,8 +113,9 @@ const RentalInfoThirdFrame: React.FC<
         label="대여 목적"
         value={purpose}
         handleChange={setPurpose}
+        errorMessage={noPurposeError}
+        onBlur={handlePurposeTouched}
       />
-      {/* TODO: 대여 목적 비어있을 때 에러메시지 */}
     </StyledCard>
   );
 };
