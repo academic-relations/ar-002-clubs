@@ -98,6 +98,23 @@ const DateWrapper = styled.div<{
   flex: 1;
   cursor: ${({ onClick }) => (onClick ? "pointer" : "default")};
   width: 100%;
+  ${({ size }) => {
+    switch (size) {
+      case "sm":
+        return css`
+          height: 32px;
+        `;
+      case "md":
+        return css`
+          height: 40px;
+        `;
+      case "lg":
+      default:
+        return css`
+          height: 48px;
+        `;
+    }
+  }}
   background: ${({ type, theme }) => {
     switch (type) {
       case "End":
@@ -125,7 +142,7 @@ const CalendarDate: React.FC<CalendarDateProps> = ({
     }
   };
   return (
-    <DateWrapper type={type} onClick={handleClick}>
+    <DateWrapper type={type} onClick={handleClick} size={size}>
       <DateContainer date={date} exist={exist} type={type} size={size}>
         <ExistWrapper exist={exist} type={type}>
           {date.getDate()}
