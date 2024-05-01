@@ -4,11 +4,12 @@ import CalendarDate, { CalendarDateProps } from "./CalendarDate";
 
 interface CalendarWeekProps {
   week: {
-    date: number;
+    date: Date;
     exist: boolean;
     type?: CalendarDateProps["type"];
   }[];
   size?: CalendarDateProps["size"];
+  onDateClick: (date: Date) => void;
 }
 
 export interface CalendarSizeProps {
@@ -32,15 +33,20 @@ const WeekWrapper = styled.div<CalendarSizeProps>`
   }};
 `;
 
-const CalendarWeek: React.FC<CalendarWeekProps> = ({ week, size = "lg" }) => (
+const CalendarWeek: React.FC<CalendarWeekProps> = ({
+  week,
+  size = "lg",
+  onDateClick,
+}) => (
   <WeekWrapper size={size}>
     {week.map(day => (
       <CalendarDate
-        key={day.date}
+        key={day.date.toISOString()}
         date={day.date}
         exist={day.exist}
         type={day.type}
         size={size}
+        onDateClick={onDateClick}
       />
     ))}
   </WeekWrapper>

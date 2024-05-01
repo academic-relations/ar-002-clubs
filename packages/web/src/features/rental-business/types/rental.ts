@@ -5,21 +5,26 @@ export interface RentalInterface {
     applicant: string;
     phone: string;
   };
+  date?: {
+    start?: Date;
+    end?: Date;
+  };
   easel?: number;
   vacuum?: "corded" | "cordless";
   handCart?: {
-    rolltainer: number;
-    large: number;
-    medium: number;
-    small: number;
+    rolltainer?: number;
+    large?: number;
+    medium?: number;
+    small?: number;
   };
   mat?: number;
   tool?: {
-    powerDrill: number;
-    driver: number;
-    superGlue: number;
-    nipper: number;
-    plier: number;
-    longNosePlier: number;
+    powerDrill?: number;
+    driver?: number;
+    superGlue?: number;
+    nipper?: number;
+    plier?: number;
+    longNosePlier?: number;
   };
+  purpose?: string;
 }
