@@ -16,8 +16,10 @@ const SelectRangeCalendarWrapper = styled.div`
   width: 100%;
   gap: 20px;
   align-items: flex-end;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    flex-direction: column;
+  }
 `;
-// TODO: 반응형 적용 (화면 너비 줄이면 SelectRange 카드 밖으로 튀어나감)
 
 const SelectRangeCalendar: React.FC<SelectRangeCalendarProps> = ({
   onDatesChange,
