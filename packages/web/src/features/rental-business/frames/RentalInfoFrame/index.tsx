@@ -77,9 +77,12 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
       </RentalNoticeFrameInner>
       <StyledBottom>
         <Button onClick={onPrev}>이전</Button>
+        {/* TODO: 2에서 1로 돌아가려고 하면 초기화 경고 modal */}
         <Button onClick={onNext} type={nextEnabled ? "default" : "disabled"}>
           {step === frames.length - 1 ? "신청" : "다음"}
         </Button>
+        {/* TODO: 신청 완료 modal */}
+        {/* TODO: 백이랑 연결 */}
       </StyledBottom>
     </RentalFrame>
   );
