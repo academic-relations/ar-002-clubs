@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import CalendarDate, { CalendarDateProps } from "./CalendarDate";
 
 interface CalendarWeekProps {
@@ -16,30 +16,13 @@ export interface CalendarSizeProps {
   size: CalendarDateProps["size"];
 }
 
-const WeekWrapper = styled.div<CalendarSizeProps>`
+const WeekWrapper = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   align-self: stretch;
   width: 100%;
   flex: 1;
-  ${({ size }) => {
-    switch (size) {
-      case "sm":
-        return css`
-          height: 32px;
-        `;
-      case "md":
-        return css`
-          height: 40px;
-        `;
-      case "lg":
-      default:
-        return css`
-          height: 48px;
-        `;
-    }
-  }}
 `;
 
 const CalendarWeek: React.FC<CalendarWeekProps> = ({
