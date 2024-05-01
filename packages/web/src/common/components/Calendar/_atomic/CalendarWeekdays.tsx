@@ -43,23 +43,6 @@ const WeekWrapper = styled.div<CalendarSizeProps>`
   justify-content: space-evenly;
   align-items: center;
   width: 100%;
-  ${({ size }) => {
-    switch (size) {
-      case "sm":
-        return css`
-          height: 32px;
-        `;
-      case "md":
-        return css`
-          height: 40px;
-        `;
-      case "lg":
-      default:
-        return css`
-          height: 48px;
-        `;
-    }
-  }}
 `;
 
 const CalendarWeekdays: React.FC<CalendarSizeProps> = ({ size }) => (
