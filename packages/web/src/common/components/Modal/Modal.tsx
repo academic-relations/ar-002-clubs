@@ -39,7 +39,7 @@ const ModalBlockContainer = styled.div`
 
 const Modal: FC<React.PropsWithChildren<ModalProps>> = ({
   onClose = () => {},
-  children = <div>{}</div>,
+  children = <div />,
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
 
