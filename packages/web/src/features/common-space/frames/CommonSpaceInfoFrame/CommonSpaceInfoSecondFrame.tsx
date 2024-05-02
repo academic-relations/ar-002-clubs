@@ -45,37 +45,37 @@ const CommonSpaceInfoSecondFrame: React.FC<
   const mockCommonSpaceList: SelectItem[] = [
     {
       label: "제1공용동아리방 (태울관 2101호)",
-      value: "제1공용동아리방 (태울관 2101호)",
+      value: "1",
       selectable: true,
     },
     {
       label: "제2공용동아리방 (태울관 2102호)",
-      value: "제2공용동아리방 (태울관 2102호)",
+      value: "2",
       selectable: true,
     },
     {
       label: "다용도실 (학부 학생회관 별관 3104호-3105호)",
-      value: "다용도실 (학부 학생회관 별관 3104호-3105호)",
+      value: "3",
       selectable: false,
     },
     {
       label: "체조실 (스포츠 콤플렉스 101호)",
-      value: "체조실 (스포츠 콤플렉스 101호)",
+      value: "4",
       selectable: true,
     },
     {
       label: "제1무예실 (스포츠 컴플렉스 102호)",
-      value: "제1무예실 (스포츠 컴플렉스 102호)",
+      value: "5",
       selectable: true,
     },
     {
       label: "제2무예실 (스포츠 컴플렉스 103호)",
-      value: "제2무예실 (스포츠 컴플렉스 103호)",
+      value: "6",
       selectable: true,
     },
     {
       label: "제3무예실 (스포츠 컴플렉스 106호)",
-      value: "제3무예실 (스포츠 컴플렉스 106호)",
+      value: "7",
       selectable: true,
     },
   ];
@@ -95,7 +95,9 @@ const CommonSpaceInfoSecondFrame: React.FC<
   useEffect(() => {
     setCommonSpace({
       ...commonSpace,
-      space: selectedValue,
+      space:
+        mockCommonSpaceList.find(item => item.value === selectedValue)?.label ||
+        "",
     });
   }, [selectedValue, setCommonSpace]);
 
@@ -103,6 +105,18 @@ const CommonSpaceInfoSecondFrame: React.FC<
     dateTimeRange && differenceInHours(dateTimeRange[1], dateTimeRange[0]);
   const diffMinutes =
     dateTimeRange && differenceInMinutes(dateTimeRange[1], dateTimeRange[0]);
+
+  useEffect(() => {
+    if (dateTimeRange) {
+      setCommonSpace(prev => ({
+        ...prev,
+        reservation: {
+          start: dateTimeRange[0],
+          end: dateTimeRange[1],
+        },
+      }));
+    }
+  }, [dateTimeRange, setCommonSpace]);
 
   return (
     <>

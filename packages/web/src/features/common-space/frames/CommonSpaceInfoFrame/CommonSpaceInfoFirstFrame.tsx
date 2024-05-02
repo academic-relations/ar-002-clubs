@@ -42,7 +42,12 @@ const CommonSpaceInfoFirstFrame: React.FC<
   useEffect(() => {
     setCommonSpace({
       ...commonSpace,
-      info: { clubName: selectedValue, applicant: mockName, phone },
+      info: {
+        clubName:
+          mockClubList.find(item => item.value === selectedValue)?.label || "",
+        applicant: mockName,
+        phone,
+      },
     });
   }, [selectedValue, phone, setCommonSpace]);
 

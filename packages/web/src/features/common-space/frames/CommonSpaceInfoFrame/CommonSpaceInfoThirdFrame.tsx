@@ -4,6 +4,8 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import Info from "@sparcs-clubs/web/common/components/Info";
 
+import { differenceInHours, differenceInMinutes, format } from "date-fns";
+import { ko } from "date-fns/locale";
 import { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 
 const StyledCard = styled(Card)<{ type: string }>`
@@ -40,26 +42,37 @@ const ReservationInfo = styled.div`
   align-self: stretch;
 `;
 
-const CommonSpaceInfoThirdFrame: React.FC<CommonSpaceFrameProps> = () => (
-  <>
-    <StyledCard type="outline">
-      <CardInner>
-        <StyledTypography type="p">신청자 정보</StyledTypography>
-        <StyledList>
-          <li>동아리: 술박스</li>
-          <li>담장자: 이지윤</li>
-          <li>연락처: 010-9612-4975</li>
-        </StyledList>
-      </CardInner>
-      <ReservationInfo>
-        <Typography type="p_b">예약 공간</Typography>
-        <Typography type="p">
-          제1공용동아리방 (태울관 2101호), 3/27(수) 17:00 ~ 20:00 (3시간)
-        </Typography>
-      </ReservationInfo>
-    </StyledCard>
-    <Info text="먼가 넣을 것이 없을까나" />
-  </>
-);
+const CommonSpaceInfoThirdFrame: React.FC<CommonSpaceFrameProps> = ({
+  commonSpace,
+}) => {
+  const { start, end } = commonSpace.reservation!;
+  const diffHours = differenceInHours(end, start);
+  const diffMinutes = differenceInMinutes(end, start);
+
+  return (
+    <>
+      <StyledCard type="outline">
+        <CardInner>
+          <StyledTypography type="p">신청자 정보</StyledTypography>
+          <StyledList>
+            <li>동아리: {commonSpace.info?.clubName}</li>
+            <li>담장자: {commonSpace.info?.applicant}</li>
+            <li>연락처: {commonSpace.info?.phone}</li>
+          </StyledList>
+        </CardInner>
+        <ReservationInfo>
+          <Typography type="p_b">예약 공간</Typography>
+          <Typography type="p">
+            {commonSpace.space}, {format(start, "M/d(E) ", { locale: ko })}
+            {format(start, "HH:mm", { locale: ko })} ~
+            {format(end, "HH:mm", { locale: ko })} ({`${diffHours}시간`}
+            {diffMinutes! % 60 ? ` ${diffMinutes! % 60}분` : ""})
+          </Typography>
+        </ReservationInfo>
+      </StyledCard>
+      <Info text="먼가 넣을 것이 없을까나" />
+    </>
+  );
+};
 
 export default CommonSpaceInfoThirdFrame;
