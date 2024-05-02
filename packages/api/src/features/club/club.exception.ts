@@ -1,15 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
-import { HttpException, HttpStatus } from "@nestjs/common";
+import { HttpException } from "@nestjs/common";
 
-// export class ClubNotFoundException extends HttpException {
-//   constructor() {
-//     super(
-//       'Club not found',
-//       HttpStatus.NOT_FOUND,
-//     );
-//   }
-// }
-
+// example
 export class ClubException extends HttpException {
   errorString: string;
 
@@ -22,8 +14,9 @@ export class ClubException extends HttpException {
   }
 }
 
+// example. 실제로는 club에 specific한 exception만 구현해야함.
 export class ClubNotFoundException extends ClubException {
   constructor() {
-    super("Club not found", HttpStatus.NOT_FOUND);
+    super("Club not found", 403);
   }
 }

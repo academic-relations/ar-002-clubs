@@ -1,6 +1,6 @@
 import { ClubsResponseDtoType } from "@sparcs-clubs/interface/common/interfaces/IClubs";
 import { Controller, Get } from "@nestjs/common";
-import { ClubNotFoundException } from "@sparcs-clubs/api/exceptions/club.exception";
+import { ClubNotFoundException } from "@sparcs-clubs/api/features/club/club.exception";
 import { ClubsService } from "./clubs.service";
 
 @Controller("clubs")

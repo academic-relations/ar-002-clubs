@@ -4,7 +4,7 @@ import {
   UnexpectedExceptionFilter,
   HttpExceptionFilter,
   ZodErrorFilter,
-} from "@sparcs-clubs/api/exceptions/exception.filter";
+} from "@sparcs-clubs/api/common/utils/exception.filter";
 import { ZodError } from "zod";
 import { HttpException } from "@nestjs/common";
 import { AppModule } from "./app.module";
