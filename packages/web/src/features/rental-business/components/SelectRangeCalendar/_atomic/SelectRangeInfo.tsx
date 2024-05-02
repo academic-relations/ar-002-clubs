@@ -14,7 +14,10 @@ const LabelWrapper = styled.div`
   font-size: 16px;
   line-height: 20px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  gap: 20px;
+  gap: 12px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xs}) {
+    gap: 8px;
+  }
 `;
 
 const DateWrapper = styled.div`
@@ -26,6 +29,16 @@ const TitleWrapper = styled.div`
   width: 60px;
   text-align: center;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
+  &::before {
+    content: attr(data-full-label);
+    display: block;
+  }
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xs}) {
+    &::before {
+      content: attr(data-short-label);
+    }
+    width: 28px;
+  }
 `;
 
 const SelectRangeInfo: React.FC<SelectRangeInfoProps> = ({
@@ -34,7 +47,10 @@ const SelectRangeInfo: React.FC<SelectRangeInfoProps> = ({
 }) => (
   <div>
     <LabelWrapper>
-      <TitleWrapper>{isRental ? "대여 일자" : "반납 일자"}</TitleWrapper>
+      <TitleWrapper
+        data-full-label={isRental ? "대여 일자" : "반납 일자"}
+        data-short-label={isRental ? "대여" : "반납"}
+      />
       <DateWrapper>
         {date ? format(date, "yyyy년 M월 d일 (EEE)", { locale: ko }) : "미선택"}
       </DateWrapper>

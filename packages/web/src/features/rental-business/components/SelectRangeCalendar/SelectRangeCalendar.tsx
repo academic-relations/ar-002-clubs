@@ -13,10 +13,12 @@ interface SelectRangeCalendarProps {
 
 const SelectRangeCalendarWrapper = styled.div`
   display: inline-flex;
-  width: 1000px;
-  /* 나중에 calendar 관련 width 확인할 때 여기도 봐야함 */
+  width: 100%;
   gap: 20px;
   align-items: flex-end;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    flex-direction: column;
+  }
 `;
 
 const SelectRangeCalendar: React.FC<SelectRangeCalendarProps> = ({

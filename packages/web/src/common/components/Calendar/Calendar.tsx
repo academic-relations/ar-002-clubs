@@ -11,6 +11,7 @@ import styled from "styled-components";
 import MonthNavigator from "./_atomic/MonthNavigator";
 import CalendarWeek, { CalendarSizeProps } from "./_atomic/CalendarWeek";
 import { CalendarDateProps } from "./_atomic/CalendarDate";
+import CalendarWeekdays from "./_atomic/CalendarWeekdays";
 
 interface EventPeriod {
   start: Date;
@@ -29,6 +30,7 @@ const CalendarWrapper = styled.div<CalendarSizeProps>`
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  width: 100%;
 `;
 
 const WeekWrapper = styled.div`
@@ -36,6 +38,7 @@ const WeekWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  width: 100%;
 `;
 
 const Calendar: React.FC<CalendarProps> = ({
@@ -99,6 +102,7 @@ const Calendar: React.FC<CalendarProps> = ({
   return (
     <CalendarWrapper size={size}>
       <MonthNavigator currentDate={currentDate} onChange={setCurrentDate} />
+      <CalendarWeekdays size={size} />
       <WeekWrapper>
         {weeks.map((weekStart: Date) => (
           <CalendarWeek

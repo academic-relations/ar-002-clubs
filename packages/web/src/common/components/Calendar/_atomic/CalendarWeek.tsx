@@ -16,21 +16,13 @@ export interface CalendarSizeProps {
   size: CalendarDateProps["size"];
 }
 
-const WeekWrapper = styled.div<CalendarSizeProps>`
+const WeekWrapper = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  width: ${({ size }) => {
-    switch (size) {
-      case "sm":
-        return "296px";
-      case "md":
-        return "352px";
-      case "lg":
-      default:
-        return "408px";
-    }
-  }};
+  align-self: stretch;
+  width: 100%;
+  flex: 1;
 `;
 
 const CalendarWeek: React.FC<CalendarWeekProps> = ({
