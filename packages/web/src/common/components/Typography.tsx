@@ -3,7 +3,17 @@ import styled from "styled-components";
 
 interface TypographyProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  type?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span" | "h3_b";
+  type?:
+    | "h1"
+    | "h2"
+    | "h3"
+    | "h4"
+    | "h5"
+    | "h6"
+    | "p"
+    | "p_b"
+    | "span"
+    | "h3_b";
 }
 
 const TypographyInner = styled.div`
@@ -26,6 +36,11 @@ const P = styled(TypographyInner)`
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
 `;
+const P_B = styled(TypographyInner)`
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
+`;
 
 /**
  * ## Typography component.
@@ -46,6 +61,8 @@ const Typography: React.FC<TypographyProps> = ({
       return <H3_B {...divProps}>{children}</H3_B>;
     case "p":
       return <P {...divProps}>{children}</P>;
+    case "p_b":
+      return <P_B {...divProps}>{children}</P_B>;
     default:
       return <TypographyInner {...divProps}>{children}</TypographyInner>;
   }
