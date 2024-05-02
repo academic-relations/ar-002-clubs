@@ -1,15 +1,19 @@
-import React, { InputHTMLAttributes } from "react";
+import React, { ChangeEvent, InputHTMLAttributes, useEffect } from "react";
 import styled, { css } from "styled-components";
 import Label from "./_atomic/Label";
 import ErrorMessage from "./_atomic/ErrorMessage";
 
 // PhoneInput, RentalInput에서 사용하기 위해 export
-export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface TextInputProps
+  extends InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
   placeholder: string;
   errorMessage?: string;
   area?: boolean;
   disabled?: boolean;
+  value?: string;
+  handleChange?: (value: string) => void;
+  setErrorStatus?: (hasError: boolean) => void;
 }
 
 const errorBorderStyle = css`
@@ -73,21 +77,40 @@ const TextInput: React.FC<TextInputProps> = ({
   errorMessage = "",
   area = false,
   disabled = false,
+  value = "",
+  handleChange = () => {},
+  setErrorStatus = () => {},
   ...props
-}) => (
-  <InputWrapper>
-    {label && <Label>{label}</Label>}
+}) => {
+  const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    handleChange(inputValue);
+  };
+
+  useEffect(() => {
+    const hasError = !!errorMessage;
+    if (setErrorStatus) {
+      setErrorStatus(hasError);
+    }
+  }, [errorMessage, setErrorStatus]);
+
+  return (
     <InputWrapper>
-      <Input
-        placeholder={placeholder}
-        hasError={!!errorMessage}
-        area={area}
-        disabled={disabled}
-        {...props}
-      />
-      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+      {label && <Label>{label}</Label>}
+      <InputWrapper>
+        <Input
+          placeholder={placeholder}
+          hasError={!!errorMessage}
+          area={area}
+          disabled={disabled}
+          value={value}
+          onChange={handleValueChange}
+          {...props}
+        />
+        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+      </InputWrapper>
     </InputWrapper>
-  </InputWrapper>
-);
+  );
+};
 
 export default TextInput;

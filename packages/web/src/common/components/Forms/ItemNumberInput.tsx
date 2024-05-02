@@ -133,6 +133,7 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
       setErrorStatus(true);
     } else {
       setError("");
+
       setErrorStatus(false);
     }
   }, [value, itemLimit, setErrorStatus]);

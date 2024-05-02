@@ -8,9 +8,7 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
 import Select from "@sparcs-clubs/web/common/components/Forms/Select";
 
-import PhoneInput, {
-  phoneInputEval,
-} from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
+import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 
@@ -52,15 +50,19 @@ const ActivityCertificateInfoFirstFrame: React.FC<
       //   // TODO - 에러 메세지
       // } else if (!activityCertificate.info.studentNumber) {
       //   // TODO - 에러 메세지
-    } else if (
-      activityCertificate.krPhoneNumber === "" ||
-      phoneInputEval(activityCertificate.krPhoneNumber) !== ""
-    ) {
-      setActivityCertificateProgress({
-        ...activityCertificateProgress,
-        firstFilled: false,
-      });
-    } else {
+    }
+    // 지금 5/2/2024 오후 9시 51분 기준으로 fix 위해 임시 주석 처리
+    //
+    // else if (
+    //   activityCertificate.krPhoneNumber === "" ||
+    //   phoneInputEval(activityCertificate.krPhoneNumber) !== ""
+    // ) {
+    //   setActivityCertificateProgress({
+    //     ...activityCertificateProgress,
+    //     firstFilled: false,
+    //   });
+    // }
+    else {
       setActivityCertificateProgress({
         ...activityCertificateProgress,
         firstFilled: true,
@@ -94,7 +96,8 @@ const ActivityCertificateInfoFirstFrame: React.FC<
       <PhoneInput
         label="신청자 전화번호"
         placeholder="010-XXXX-XXXX"
-        onPhoneChange={changedText => {
+        value={activityCertificate.krPhoneNumber}
+        onChange={changedText => {
           setActivityCertificate({
             ...activityCertificate,
             krPhoneNumber: changedText,

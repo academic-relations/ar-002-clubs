@@ -4,7 +4,7 @@ import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import Label from "./_atomic/Label";
 import ErrorMessage from "./_atomic/ErrorMessage";
 
-interface SelectItem {
+export interface SelectItem {
   label: string;
   value: string;
   selectable: boolean;
@@ -15,6 +15,9 @@ interface SelectProps {
   label?: string;
   errorMessage?: string;
   disabled?: boolean;
+  selectedValue?: string;
+  onSelect?: (value: string) => void;
+  setErrorStatus?: (hasError: boolean) => void;
 }
 
 const DropdownContainer = styled.div`
@@ -132,11 +135,17 @@ const Select: React.FC<SelectProps> = ({
   errorMessage = "",
   label = "",
   disabled = false,
+  selectedValue = "",
+  onSelect = () => {},
+  setErrorStatus = () => {},
 }) => {
-  const [selectedValue, setSelectedValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setErrorStatus(!!errorMessage || (!selectedValue && items.length > 0));
+  }, [errorMessage, selectedValue, items.length, setErrorStatus]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -166,10 +175,15 @@ const Select: React.FC<SelectProps> = ({
 
   const handleOptionClick = (item: SelectItem) => {
     if (item.selectable) {
-      setSelectedValue(item.label);
+      onSelect(item.value);
       setIsOpen(false);
     }
   };
+
+  const selectedLabel =
+    items.find(item => item.value === selectedValue)?.label ||
+    "항목을 선택해주세요";
+
   return (
     <SelectWrapper>
       {label && <Label>{label}</Label>}
@@ -184,7 +198,7 @@ const Select: React.FC<SelectProps> = ({
             isOpen={isOpen}
           >
             <SelectValue isSelected={!!selectedValue}>
-              {selectedValue || "항목을 선택해주세요"}
+              {selectedLabel}
             </SelectValue>
             <IconWrapper>
               {isOpen ? (
