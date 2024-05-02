@@ -30,12 +30,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   disabled = false,
 }) => (
   <CheckboxInner onClick={!disabled ? onClick : undefined} disabled={disabled}>
-    {checked &&
-      (disabled ? (
-        <Icon type="check" size={16} color={colors.GRAY[300]} />
-      ) : (
-        <Icon type="check" size={16} />
-      ))}
+    {checked && <Icon type="check" size={16} color={disabled ? colors.GRAY[300] : colors.BLACK} />}
   </CheckboxInner>
 );
 
