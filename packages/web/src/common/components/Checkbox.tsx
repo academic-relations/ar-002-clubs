@@ -22,8 +22,6 @@ const CheckboxInner = styled.div<{ disabled: boolean }>`
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   background-color: ${({ disabled, theme }) =>
     disabled ? theme.colors.GRAY[100] : "transparent"};
-  color: ${({ disabled, theme }) =>
-    disabled ? theme.colors.GRAY[100] : "transparent"};
 `;
 
 const Checkbox: React.FC<CheckboxProps> = ({
