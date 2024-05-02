@@ -57,6 +57,8 @@ const Timetable: React.FC<TimetableProps> = ({ data, setDateTimeRange }) => {
         addMinutes(date, indexRange[0] * 30),
         addMinutes(date, (indexRange[1] + 1) * 30),
       ]);
+    } else {
+      setDateTimeRange(undefined);
     }
   }, [indexRange, date, setDateTimeRange]);
 
@@ -71,6 +73,7 @@ const Timetable: React.FC<TimetableProps> = ({ data, setDateTimeRange }) => {
           rows={48}
           columns={7}
           data={convertDataToTimetableCell()}
+          update={date.toString()}
         />
       </TimetableGridInner>
     </TimetableInner>

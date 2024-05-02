@@ -87,9 +87,10 @@ const CommonSpaceInfoSecondFrame: React.FC<
   const [dateTimeRange, setDateTimeRange] = useState<[Date, Date]>();
 
   useEffect(() => {
-    const allConditionsMet = Boolean(selectedValue) && !hasSelectError;
+    const allConditionsMet =
+      Boolean(selectedValue) && !hasSelectError && !!dateTimeRange;
     setNextEnabled(allConditionsMet);
-  }, [selectedValue, hasSelectError, setNextEnabled]);
+  }, [selectedValue, hasSelectError, setNextEnabled, dateTimeRange]);
 
   useEffect(() => {
     setCommonSpace({

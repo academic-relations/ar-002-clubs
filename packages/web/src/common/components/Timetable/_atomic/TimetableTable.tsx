@@ -7,6 +7,7 @@ interface TimetableTableProps {
   columns: number;
   data: TimetableCellType[];
   setIndexRange: React.Dispatch<React.SetStateAction<number[]>>;
+  update?: string;
 }
 
 const TimetableTableInner = styled.div<{
@@ -27,6 +28,7 @@ const TimetableTable: React.FC<TimetableTableProps> = ({
   columns,
   data,
   setIndexRange,
+  update = "",
 }) => {
   const [start, setStart] = useState<number>();
   const [end, setEnd] = useState<number>();
@@ -34,6 +36,15 @@ const TimetableTable: React.FC<TimetableTableProps> = ({
   const [selecting, setSelecting] = useState<boolean>(false);
 
   const [selectedData, setSelectedData] = useState<TimetableCellType[]>(data);
+
+  useEffect(() => {
+    setStart(undefined);
+    setEnd(undefined);
+    setHover(undefined);
+    setSelecting(false);
+    setSelectedData(data);
+    setIndexRange([]);
+  }, [update]);
 
   const checkValidCell = (id: number) =>
     data[id] !== "disabled" && data[id] !== "past";
@@ -63,7 +74,8 @@ const TimetableTable: React.FC<TimetableTableProps> = ({
     if (id && selecting && start) {
       if (
         checkValidCell(parseInt(id)) &&
-        checkSameColumn(start, parseInt(id))
+        checkSameColumn(start, parseInt(id)) &&
+        Math.abs(start - parseInt(id)) < 8
       ) {
         setEnd(parseInt(id));
       } else {

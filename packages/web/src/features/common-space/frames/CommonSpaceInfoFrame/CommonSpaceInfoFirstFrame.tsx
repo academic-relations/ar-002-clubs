@@ -25,8 +25,6 @@ const CommonSpaceInfoFirstFrame: React.FC<
     { label: "안되는동아리", value: "3", selectable: false },
   ];
 
-  // TODO: 이름 전화번호 동아리 목록 백에서 받아오기
-
   const [phone, setPhone] = useState(mockPhone);
   const [hasPhoneError, setHasPhoneError] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
