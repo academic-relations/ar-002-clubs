@@ -1,6 +1,7 @@
 import React, {
   ChangeEvent,
   InputHTMLAttributes,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -12,12 +13,14 @@ import ErrorMessage from "./_atomic/ErrorMessage";
 export interface ItemNumberInputProps
   extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  hasIcon?: boolean;
   placeholder: string;
   errorMessage?: string;
   disabled?: boolean;
   itemLimit?: number;
-  onNumberChange?: (value: string) => void;
+  unit?: string;
+  value?: string;
+  handleChange?: (value: string) => void;
+  setErrorStatus?: (hasError: boolean) => void;
 }
 
 const LabelWithIcon = styled.div`
@@ -105,39 +108,45 @@ const InputWrapper = styled.div`
 
 const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
   label = "",
-  hasIcon = false,
   placeholder,
   disabled = false,
   itemLimit = 99,
-  onNumberChange = () => {},
+  value = "",
+  unit = "개",
+  handleChange = () => {},
+  setErrorStatus = () => {},
   ...props
 }) => {
-  const [value, setValue] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState("");
 
-  const mainInputRef = useRef<HTMLInputElement>(null);
-
-  const displayValue = value ? `${value}개` : "";
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.replace("개", "").search(/[^0-9]/g) >= 0) {
+  useEffect(() => {
+    const isValidFormat = /^\d+$/g.test(value);
+    const numericValue = parseInt(value);
+    if (value === "") {
+      setError("");
+      setErrorStatus(false);
+    } else if (!isValidFormat) {
       setError("숫자만 입력 가능합니다");
+      setErrorStatus(true);
+    } else if (numericValue > itemLimit) {
+      setError("신청 가능 개수를 초과했습니다");
+      setErrorStatus(true);
     } else {
       setError("");
+      setErrorStatus(false);
     }
+  }, [value, itemLimit, setErrorStatus]);
 
+  const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value.replace(/[^0-9]/g, "");
 
     if (inputValue.length <= 2) {
-      setValue(inputValue);
-      onNumberChange(inputValue);
-
-      // ItemNumberInput을 사용하는 파일에서 위 inputValu을 받기 위해 onChange를 지정하게 되면
-      // ItemNumberInput 파일의 Input에서 지정한 onChange가 오버라이딩 되며 ItemNumberInput의 handleChange 자체가 실행되지 않는다
-      // 따라서 onNumberChange라는 새로운 function을 넘겨주게 하여 해결했다 (근데 뭔가 더 나은 해결법이 있는 것 같은데...)
-      // TODO - onNumberChange 같은 새로운 function을 받지 말고 기존처럼 onChange를 받으면서도 ItemNumberInput이 본 기능을 하게 만들어보자
+      handleChange(inputValue);
     }
   };
+
+  const displayValue = value ? `${value}${unit}` : "";
+  const mainInputRef = useRef<HTMLInputElement>(null);
 
   const handleCursor = () => {
     mainInputRef.current?.setSelectionRange(
@@ -150,21 +159,21 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
     );
   };
 
+  // TODO: 숫자가 아닌 것 입력했을 때 에러메시지
+
   return (
     <InputWrapper>
       <LabelWithIcon>
         {label && <Label>{label}</Label>}
-        {hasIcon ? (
-          <StyledInfoIcon
-            style={{ fontSize: "16px", width: "16px", height: "16px" }}
-          />
-        ) : null}
+        <StyledInfoIcon
+          style={{ fontSize: "16px", width: "16px", height: "16px" }}
+        />
       </LabelWithIcon>
       <InputContainer>
         <Input
           ref={mainInputRef}
+          onChange={handleValueChange}
           value={displayValue}
-          onChange={handleChange}
           placeholder={placeholder}
           disabled={disabled}
           hasError={!!error}
@@ -173,7 +182,8 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
         />
         {itemLimit && (
           <RightContentWrapper hasError={!!error}>
-            / {itemLimit}개
+            / {itemLimit}
+            {unit}
           </RightContentWrapper>
         )}
       </InputContainer>

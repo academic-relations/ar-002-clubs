@@ -76,7 +76,12 @@ const ActivityCertificateInfoFirstFrame: React.FC<
       <ItemNumberInput
         label="발급 매수"
         placeholder="X개"
-        onNumberChange={changedNumber => {
+        value={
+          activityCertificate?.issuedNumber
+            ? String(activityCertificate?.issuedNumber)
+            : undefined
+        }
+        handleChange={changedNumber => {
           setActivityCertificate({
             ...activityCertificate,
             issuedNumber: parseInt(changedNumber),

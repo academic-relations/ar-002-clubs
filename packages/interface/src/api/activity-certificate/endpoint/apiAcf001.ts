@@ -14,13 +14,12 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
+  clubId: z.number().int().min(1),
   studentNumber: z.number().int(),
   krPhoneNumber: z.string(),
-  department: z.string(),
   issuedNumber: z.number().int().min(1),
   items: z
     .object({
-      clubId: z.number().int().min(1),
       startMonth: z.date(),
       endMonth: z.date(),
       detail: z.string().max(100),
