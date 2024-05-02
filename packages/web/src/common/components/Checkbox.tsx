@@ -15,10 +15,14 @@ const CheckboxInner = styled.div<{ disabled: boolean }>`
   width: 16px;
   height: 16px;
   border-radius: 4px;
-  border: 1px solid ${({ theme }) => theme.colors.BLACK};
+  border: 1px solid
+    ${({ disabled, theme }) =>
+      disabled ? theme.colors.GRAY[300] : theme.colors.BLACK};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   background-color: ${({ disabled, theme }) =>
-    disabled ? theme.colors.GRAY[200] : "transparent"};
+    disabled ? theme.colors.GRAY[100] : "transparent"};
+  color: ${({ disabled, theme }) =>
+    disabled ? theme.colors.GRAY[100] : "transparent"};
 `;
 
 const Checkbox: React.FC<CheckboxProps> = ({
