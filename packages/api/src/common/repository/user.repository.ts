@@ -16,4 +16,22 @@ export class UserRepository {
       .leftJoin(User, eq(User.id, Student.userId));
     return user;
   }
+
+  // async createUser(
+  //   user: Prisma.session_userprofileCreateInput,
+  // ): Promise<session_userprofile> {
+  //   return await this.prisma.session_userprofile.create({
+  //     data: user,
+  //   });
+  // }
+
+  // async updateUser(
+  //   userId: number,
+  //   user: Prisma.session_userprofileUpdateInput,
+  // ): Promise<session_userprofile> {
+  //   return await this.prisma.session_userprofile.update({
+  //     data: user,
+  //     where: { id: userId },
+  //   });
+  // }
 }
