@@ -3,12 +3,13 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { Icon as MUIIcon } from "@mui/material";
+import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 interface IconProps {
   type: string;
   size: number;
   onClick?: () => void;
-  isWhite?: boolean;
+  color?: string;
 }
 
 const IconInner = styled.div<{
@@ -18,8 +19,7 @@ const IconInner = styled.div<{
 }>`
   display: flex;
   font-size: ${({ size }) => size}px;
-  color: ${({ theme, isWhite }) =>
-    isWhite ? theme.colors.WHITE : theme.colors.BLACK};
+  color: ${({ color, theme }) => color || theme.colors.BLACK};
   ${({ clickable }) =>
     clickable &&
     css`
@@ -31,14 +31,9 @@ const Icon: React.FC<IconProps> = ({
   type,
   size,
   onClick = () => {},
-  isWhite = false,
+  color = colors.BLACK,
 }) => (
-  <IconInner
-    size={size}
-    clickable={!!onClick}
-    onClick={onClick}
-    isWhite={isWhite}
-  >
+  <IconInner size={size} clickable={!!onClick} color={color} onClick={onClick}>
     <MUIIcon fontSize="inherit">{type}</MUIIcon>
   </IconInner>
 );
