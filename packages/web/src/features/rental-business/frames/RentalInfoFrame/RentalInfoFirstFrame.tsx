@@ -20,9 +20,9 @@ const RentalInfoFirstFrame: React.FC<
   const mockName = "스팍스";
   const mockPhone = "000-0000-0000";
   const mockClubList: SelectItem[] = [
-    { label: "동아리", value: "1", selectable: true },
-    { label: "또다른동아리", value: "2", selectable: true },
-    { label: "안되는동아리", value: "3", selectable: false },
+    { label: "동아리", value: "동아리", selectable: true },
+    { label: "또다른동아리", value: "또다른동아리", selectable: true },
+    { label: "안되는동아리", value: "안되는동아리", selectable: false },
   ];
   // TODO: 이름 전화번호 동아리 목록 백에서 받아오기
 

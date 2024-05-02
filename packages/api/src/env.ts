@@ -1,4 +1,3 @@
-import { PrismaClientOptions } from "@prisma/client/runtime";
 import { z } from "zod";
 
 const schema = z.object({
@@ -10,19 +9,4 @@ const schema = z.object({
 
 const env = schema.parse(process.env);
 
-const prismaConfig: PrismaClientOptions = {
-  datasources: {
-    db: {
-      url: env.DATABASE_URL,
-    },
-  },
-  errorFormat: "pretty",
-  log: [
-    {
-      emit: "event",
-      level: "query",
-    },
-  ],
-};
-
-export { env, prismaConfig };
+export { env };

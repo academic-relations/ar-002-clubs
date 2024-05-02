@@ -3,10 +3,11 @@ import styled, { css } from "styled-components";
 import { DefaultTheme } from "styled-components/dist/types";
 
 export interface CalendarDateProps {
-  date: number;
+  date: Date;
   exist: boolean;
   type?: "Default" | "Pass" | "Start" | "End" | "Selected" | "Past/Future";
   size?: "lg" | "md" | "sm";
+  onDateClick?: (date: Date) => void;
 }
 
 const getBackgroundColor = (
@@ -95,29 +96,25 @@ const DateWrapper = styled.div<{
   align-items: center;
   justify-content: center;
   flex: 1;
-  width: ${({ type, size }) => {
-    if (type === "Start" || type === "End" || type === "Pass") {
-      switch (size) {
-        case "sm":
-          return "40px";
-        case "md":
-          return "48px";
-        case "lg":
-        default:
-          return "60px";
-      }
-    } else {
-      switch (size) {
-        case "sm":
-          return "32px";
-        case "md":
-          return "40px";
-        case "lg":
-        default:
-          return "48px";
-      }
+  cursor: ${({ onClick }) => (onClick ? "pointer" : "default")};
+  width: 100%;
+  ${({ size }) => {
+    switch (size) {
+      case "sm":
+        return css`
+          height: 32px;
+        `;
+      case "md":
+        return css`
+          height: 40px;
+        `;
+      case "lg":
+      default:
+        return css`
+          height: 48px;
+        `;
     }
-  }};
+  }}
   background: ${({ type, theme }) => {
     switch (type) {
       case "End":
@@ -137,14 +134,22 @@ const CalendarDate: React.FC<CalendarDateProps> = ({
   exist,
   type = "Default",
   size = "lg",
-}) => (
-  <DateWrapper type={type}>
-    <DateContainer date={date} exist={exist} type={type} size={size}>
-      <ExistWrapper exist={exist} type={type}>
-        {date}
-      </ExistWrapper>
-    </DateContainer>
-  </DateWrapper>
-);
+  onDateClick = () => {},
+}) => {
+  const handleClick = () => {
+    if (onDateClick) {
+      onDateClick(date);
+    }
+  };
+  return (
+    <DateWrapper type={type} onClick={handleClick} size={size}>
+      <DateContainer date={date} exist={exist} type={type} size={size}>
+        <ExistWrapper exist={exist} type={type}>
+          {date.getDate()}
+        </ExistWrapper>
+      </DateContainer>
+    </DateWrapper>
+  );
+};
 
 export default CalendarDate;

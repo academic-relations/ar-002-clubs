@@ -11,6 +11,7 @@ import styled from "styled-components";
 import MonthNavigator from "./_atomic/MonthNavigator";
 import CalendarWeek, { CalendarSizeProps } from "./_atomic/CalendarWeek";
 import { CalendarDateProps } from "./_atomic/CalendarDate";
+import CalendarWeekdays from "./_atomic/CalendarWeekdays";
 
 interface EventPeriod {
   start: Date;
@@ -21,6 +22,7 @@ interface CalendarProps extends CalendarSizeProps {
   existDates: Date[];
   eventPeriods: EventPeriod[];
   selectedDates: Date[];
+  onDateClick?: (date: Date) => void;
 }
 
 const CalendarWrapper = styled.div<CalendarSizeProps>`
@@ -28,6 +30,7 @@ const CalendarWrapper = styled.div<CalendarSizeProps>`
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  width: 100%;
 `;
 
 const WeekWrapper = styled.div`
@@ -35,6 +38,7 @@ const WeekWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  width: 100%;
 `;
 
 const Calendar: React.FC<CalendarProps> = ({
@@ -42,6 +46,7 @@ const Calendar: React.FC<CalendarProps> = ({
   existDates,
   eventPeriods,
   selectedDates,
+  onDateClick = () => {},
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -53,19 +58,21 @@ const Calendar: React.FC<CalendarProps> = ({
     { weekStartsOn: 0 },
   );
 
+  const handleDateClick = (date: Date) => {
+    if (date.getMonth() !== currentDate.getMonth()) {
+      setCurrentDate(date);
+    }
+    onDateClick?.(date);
+  };
+
   const getWeekData = (startDate: Date): CalendarDateProps[] =>
     Array.from({ length: 7 }).map((_, index) => {
       const day = addDays(startDate, index);
       const isCurrentMonth = isSameMonth(day, currentDate);
       const exist = existDates.some(existDate => isSameDay(existDate, day));
-
-      let type:
-        | "Default"
-        | "Past/Future"
-        | "Start"
-        | "Pass"
-        | "End"
-        | "Selected" = isCurrentMonth ? "Default" : "Past/Future";
+      let type: CalendarDateProps["type"] = isCurrentMonth
+        ? "Default"
+        : "Past/Future";
 
       if (!isCurrentMonth) {
         type = "Past/Future";
@@ -86,25 +93,23 @@ const Calendar: React.FC<CalendarProps> = ({
       }
 
       return {
-        date: day.getDate(),
+        date: day,
         exist,
         type,
       };
     });
 
-  const handleMonthChange = (newDate: Date) => {
-    setCurrentDate(newDate);
-  };
-
   return (
     <CalendarWrapper size={size}>
-      <MonthNavigator initialDate={currentDate} onChange={handleMonthChange} />
+      <MonthNavigator currentDate={currentDate} onChange={setCurrentDate} />
+      <CalendarWeekdays size={size} />
       <WeekWrapper>
         {weeks.map((weekStart: Date) => (
           <CalendarWeek
             week={getWeekData(weekStart)}
             size={size}
             key={weekStart.toISOString()}
+            onDateClick={handleDateClick}
           />
         ))}
       </WeekWrapper>
