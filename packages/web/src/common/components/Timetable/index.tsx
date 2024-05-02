@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { addMinutes, startOfWeek } from "date-fns";
 import { ko } from "date-fns/locale";
@@ -11,6 +11,9 @@ import TimetableTimeList from "./_atomic/TimetableTimeList";
 
 interface TimetableProps {
   data: boolean[];
+  setDateTimeRange: React.Dispatch<
+    React.SetStateAction<[Date, Date] | undefined>
+  >;
 }
 
 const TimetableInner = styled.div`
@@ -28,7 +31,7 @@ const TimetableGridInner = styled.div`
   align-self: stretch;
 `;
 
-const Timetable: React.FC<TimetableProps> = ({ data }) => {
+const Timetable: React.FC<TimetableProps> = ({ data, setDateTimeRange }) => {
   const [indexRange, setIndexRange] = useState<number[]>([]);
   const [date, setDate] = useState(startOfWeek(new Date(), { locale: ko }));
   const convertDataToTimetableCell = useCallback((): TimetableCellType[] => {
@@ -48,7 +51,14 @@ const Timetable: React.FC<TimetableProps> = ({ data }) => {
     });
   }, [data, date]);
 
-  console.log(indexRange);
+  useEffect(() => {
+    if (indexRange.length === 2) {
+      setDateTimeRange([
+        addMinutes(date, indexRange[0] * 30),
+        addMinutes(date, (indexRange[1] + 1) * 30),
+      ]);
+    }
+  }, [indexRange, date, setDateTimeRange]);
 
   return (
     <TimetableInner>

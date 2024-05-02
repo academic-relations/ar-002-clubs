@@ -4,13 +4,14 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
 import Button from "@sparcs-clubs/web/common/components/Button";
+import { CommonSpaceInterface } from "../types/commonSpace";
 
-export interface RentalFrameProps {
-  rental: RentalInterface;
-  setRental: React.Dispatch<React.SetStateAction<RentalInterface>>;
+export interface CommonSpaceFrameProps {
+  commonSpace: CommonSpaceInterface;
+  setCommonSpace: React.Dispatch<React.SetStateAction<CommonSpaceInterface>>;
 }
 
-const RentalNoticeFrameInner = styled.div`
+const CommonSpaceNoticeFrameInner = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -42,25 +43,24 @@ const StyledCheckboxOuter = styled.div`
   gap: 12px;
 `;
 
-const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
-  rental,
-  setRental,
+const CommonSpaceNoticeFrame: React.FC<CommonSpaceFrameProps> = ({
+  commonSpace,
+  setCommonSpace,
 }) => {
   const [checked, setChecked] = useState(false);
 
   const handleNextClick = () => {
     if (checked) {
-      setRental({ ...rental, agreement: true });
+      setCommonSpace({ ...commonSpace, agreement: true });
     }
   };
 
   return (
-    <RentalNoticeFrameInner>
+    <CommonSpaceNoticeFrameInner>
       <StyledCard type="outline">
         <Typography type="h3">안내사항</Typography>
         <StyledTypography type="p">
-          모든 대여 사업은 동연 소속 동아리를 대상으로 하며, 신청은 각 동아리의
-          대표자 또는 대의원만 가능합니다
+          대충 공용공간 비정기사용에 대한 안내사항
           <br />
           기타 등등 안내 내용 -{">"} 이건 동연 측에서 준비해주겠죠?
         </StyledTypography>
@@ -82,8 +82,8 @@ const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
           다음
         </Button>
       </StyledBottom>
-    </RentalNoticeFrameInner>
+    </CommonSpaceNoticeFrameInner>
   );
 };
 
-export default RentalNoticeFrame;
+export default CommonSpaceNoticeFrame;
