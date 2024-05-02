@@ -50,8 +50,5 @@
   "engines": {
     "node": "^20.9.0",
     "pnpm": "^8.0.0"
-  },
-  "dependencies": {
-    "data-fns": "^1.1.0"
   }
 }
