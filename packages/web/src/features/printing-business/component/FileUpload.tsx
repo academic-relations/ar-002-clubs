@@ -58,8 +58,6 @@ const UploadIcon = styled.div`
   width: 40px;
   border-radius: 0px 4px 4px 0px;
 
-  color: ${({ theme }) => theme.colors.WHITE};
-
   /* primary */
   background: ${({ theme }) => theme.colors.MINT[800]};
 
@@ -74,7 +72,7 @@ const FileUpload: React.FC<FileUploadProps> = () => (
   <FileUploadInner>
     <FileName />
     <UploadIcon>
-      <Icon type="file_upload_outlined" size={20} isWhite />
+      <Icon type="file_upload_outlined" size={20} color="white" />
     </UploadIcon>
   </FileUploadInner>
 );

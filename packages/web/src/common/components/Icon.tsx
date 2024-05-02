@@ -15,7 +15,6 @@ interface IconProps {
 const IconInner = styled.div<{
   size: number;
   clickable: boolean;
-  isWhite: boolean;
 }>`
   display: flex;
   font-size: ${({ size }) => size}px;
@@ -30,7 +29,7 @@ const IconInner = styled.div<{
 const Icon: React.FC<IconProps> = ({
   type,
   size,
-  onClick = () => {},
+  onClick = undefined,
   color = colors.BLACK,
 }) => (
   <IconInner size={size} clickable={!!onClick} color={color} onClick={onClick}>

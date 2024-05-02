@@ -1,8 +1,10 @@
-import React from "react";
-import styled from "styled-components";
-import { setHours } from "date-fns";
+import React, { useEffect, useState } from "react";
+import { isSameDay, setHours } from "date-fns";
 
+import responsive from "@sparcs-clubs/web/styles/themes/responsive";
 import Calendar from "@sparcs-clubs/web/common/components/Calendar/Calendar";
+
+import { executiveWorkingHourStart } from "@sparcs-clubs/web/constants/printingBusiness";
 
 interface SingleDateSelectionCalendarProps {
   executiveWorkDates: Date[];
@@ -10,27 +12,50 @@ interface SingleDateSelectionCalendarProps {
   onDatesChange: (date: Date) => void;
 }
 
-const SingleDateSelectionCalendarInner = styled.div`
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 1;
-`;
-
 const SingleDateSelectionCalendar: React.FC<
   SingleDateSelectionCalendarProps
-> = ({ executiveWorkDates, value, onDatesChange }) => (
-  <SingleDateSelectionCalendarInner>
+> = ({ executiveWorkDates, value, onDatesChange }) => {
+  const [calendarSize, setCalendarSize] = useState<"sm" | "md" | "lg">("lg");
+
+  useEffect(() => {
+    const updateSize = () => {
+      const width = window.innerWidth;
+      const parsePx = (val: string) => parseInt(val.replace("px", ""));
+      if (width < parsePx(responsive.BREAKPOINT.sm)) {
+        setCalendarSize("sm");
+      } else if (
+        width > parsePx(responsive.BREAKPOINT.sm) &&
+        width <= parsePx(responsive.BREAKPOINT.lg)
+      ) {
+        setCalendarSize("md");
+      } else if (width > parsePx(responsive.BREAKPOINT.lg)) {
+        setCalendarSize("lg");
+      }
+    };
+
+    window.addEventListener("resize", updateSize);
+    updateSize();
+
+    return () => window.removeEventListener("resize", updateSize);
+  }, [window, setCalendarSize]);
+
+  const onDateClick = (date: Date) => {
+    if (
+      executiveWorkDates.some(selectedDate => isSameDay(selectedDate, date))
+    ) {
+      onDatesChange(date);
+    }
+  };
+  return (
     <Calendar
-      size="lg"
+      size={calendarSize}
       existDates={executiveWorkDates}
       eventPeriods={[]}
       selectedDates={[value]}
       onDateClick={date => {
-        onDatesChange(setHours(date, 21));
+        onDateClick(setHours(date, executiveWorkingHourStart));
       }}
     />
-  </SingleDateSelectionCalendarInner>
-);
-
+  );
+};
 export default SingleDateSelectionCalendar;

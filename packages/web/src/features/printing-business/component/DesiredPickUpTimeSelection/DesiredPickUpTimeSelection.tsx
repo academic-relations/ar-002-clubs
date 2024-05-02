@@ -22,7 +22,7 @@ const DesiredPickUpTimeSelectionInner = styled.div`
 
 const StyledLabel = styled.label`
   display: block;
-  margin: 0px 2px 0px 2px;
+  margin: 0 2px;
   gap: 10px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 16px;

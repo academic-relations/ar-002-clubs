@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
@@ -36,7 +36,7 @@ const PrintingBusinessFormInner = styled.div`
   gap: 60px;
 `;
 
-const StyledBotton = styled.div`
+const StyledButton = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -78,6 +78,8 @@ const PrintingBusinessForm: React.FC<PrintingBusinessFormProps> = ({
     setStep(step + 1);
   }, [step, setStep]);
 
+  const [formError, setFormError] = useState<boolean>(false);
+
   return (
     <PrintingBusinessFormInner>
       <StepProcess steps={printingBusinessOrderSteps} activeStepIndex={step} />
@@ -88,13 +90,14 @@ const PrintingBusinessForm: React.FC<PrintingBusinessFormProps> = ({
         setRequestParam={setRequestParam}
         requestForm={requestForm}
         setRequestForm={setRequestForm}
+        setFormError={setFormError}
       />
-      <StyledBotton>
+      <StyledButton>
         <Button onClick={onPrev}>이전</Button>
-        <Button onClick={onNext}>
+        <Button type={formError ? "disabled" : "default"} onClick={onNext}>
           {step === Step2Form.length ? "신청" : "다음"}
         </Button>
-      </StyledBotton>
+      </StyledButton>
     </PrintingBusinessFormInner>
   );
 };

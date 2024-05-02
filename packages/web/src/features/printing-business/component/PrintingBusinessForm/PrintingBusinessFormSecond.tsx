@@ -17,6 +17,7 @@ import BinaryRadio from "./_atomic/BinaryRadio";
 interface PrintingBusinessFormSecondProps {
   requestForm: PrintingBusinessFormProps["requestForm"];
   setRequestForm: PrintingBusinessFormProps["setRequestForm"];
+  setFormError: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const PrintingBusinessFormSecondInner = styled.div`
@@ -35,7 +36,14 @@ const StyledCard = styled(Card)<{ type: string }>`
 const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
   requestForm,
   setRequestForm,
+  setFormError,
 }) => {
+  const [a3printCount, setA3printCount] = useState<number>(
+    requestForm?.orders?.at(0)?.numberOfPrints ?? 0,
+  );
+  const [a4printCount, setA4printCount] = useState<number>(
+    requestForm?.orders?.at(1)?.numberOfPrints ?? 0,
+  );
   const [isColorPrint, setIsColorPrint] = useState<boolean>(
     requestForm.isColorPrint ?? true,
   );
@@ -52,8 +60,26 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
       isColorPrint,
       fitPrintSizeToPaper,
       requireMarginChopping,
+      orders: [
+        {
+          promotionalPrintingSizeEnum: PromotionalPrintingSizeEnum.A3,
+          numberOfPrints: a3printCount,
+        },
+        {
+          promotionalPrintingSizeEnum: PromotionalPrintingSizeEnum.A4,
+          numberOfPrints: a4printCount,
+        },
+      ],
     });
-  }, [isColorPrint, fitPrintSizeToPaper, requireMarginChopping]);
+
+    setFormError(a3printCount === 0 && a4printCount === 0);
+  }, [
+    a3printCount,
+    a4printCount,
+    isColorPrint,
+    fitPrintSizeToPaper,
+    requireMarginChopping,
+  ]);
 
   return (
     <PrintingBusinessFormSecondInner>
@@ -65,21 +91,9 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
           placeholder="A3 크기로 인쇄하고 싶은 매수를 적어 주세요"
           itemLimit={45}
           unit="매"
-          value={requestForm?.orders?.at(0)?.numberOfPrints.toString() ?? "0"}
+          value={a3printCount.toString()}
           handleChange={value => {
-            setRequestForm({
-              ...requestForm,
-              orders: [
-                {
-                  promotionalPrintingSizeEnum: PromotionalPrintingSizeEnum.A3,
-                  numberOfPrints: Number(value),
-                },
-                requestForm?.orders?.at(1) ?? {
-                  promotionalPrintingSizeEnum: PromotionalPrintingSizeEnum.A4,
-                  numberOfPrints: 0,
-                },
-              ],
-            });
+            setA3printCount(Number(value));
           }}
         />
         <ItemNumberInput
@@ -87,21 +101,9 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
           placeholder="A4 크기로 인쇄하고 싶은 매수를 적어 주세요"
           itemLimit={45}
           unit="매"
-          value={requestForm?.orders?.at(1)?.numberOfPrints.toString() ?? "0"}
+          value={a4printCount.toString()}
           handleChange={value => {
-            setRequestForm({
-              ...requestForm,
-              orders: [
-                requestForm?.orders?.at(1) ?? {
-                  promotionalPrintingSizeEnum: PromotionalPrintingSizeEnum.A3,
-                  numberOfPrints: 0,
-                },
-                {
-                  promotionalPrintingSizeEnum: PromotionalPrintingSizeEnum.A4,
-                  numberOfPrints: Number(value),
-                },
-              ],
-            });
+            setA4printCount(Number(value));
           }}
         />
       </StyledCard>
