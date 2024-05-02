@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import colors from "@sparcs-clubs/web/styles/themes/colors";
 import Icon from "./Icon";
 
 type CheckboxProps = {
@@ -31,7 +32,12 @@ const Checkbox: React.FC<CheckboxProps> = ({
   disabled = false,
 }) => (
   <CheckboxInner onClick={!disabled ? onClick : undefined} disabled={disabled}>
-    {checked && <Icon type="check" size={16} />}
+    {checked &&
+      (disabled ? (
+        <Icon type="check" size={16} color={colors.GRAY[300]} />
+      ) : (
+        <Icon type="check" size={16} />
+      ))}
   </CheckboxInner>
 );
 
