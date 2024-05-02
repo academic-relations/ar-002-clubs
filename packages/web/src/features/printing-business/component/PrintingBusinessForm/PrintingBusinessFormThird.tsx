@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
+import { setHours } from "date-fns";
 import Card from "@sparcs-clubs/web/common/components/Card";
 
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
 import { printingBusinessOrderSteps } from "@sparcs-clubs/web/constants/printingBusiness";
+import DesiredPickUpTimeSelection from "@sparcs-clubs/web/features/printing-business/component/DesiredPickUpTimeSelection/DesiredPickUpTimeSelection";
 
 import type { PrintingBusinessFormProps } from ".";
 import FormCheck from "./_atomic/FormCheck";
@@ -14,7 +16,7 @@ interface PrintingBusinessFormThirdProps {
   clubs: PrintingBusinessFormProps["clubs"];
   requestParam: PrintingBusinessFormProps["requestParam"];
   requestForm: PrintingBusinessFormProps["requestForm"];
-  // setRequestForm: PrintingBusinessFormProps["setRequestForm"];
+  setRequestForm: PrintingBusinessFormProps["setRequestForm"];
 }
 
 const StyledCard = styled(Card)<{ type: string }>`
@@ -28,7 +30,7 @@ const PrintingBusinessFormThird: React.FC<PrintingBusinessFormThirdProps> = ({
   clubs,
   requestParam,
   requestForm,
-  // setRequestForm,
+  setRequestForm,
 }) => {
   useEffect(() => {}, []);
 
@@ -79,7 +81,17 @@ const PrintingBusinessFormThird: React.FC<PrintingBusinessFormThirdProps> = ({
         placeholder="인쇄목적을 간단히 적어주세요"
         area
       />
-      <TextInput label="수령일" placeholder="달력으로 바꿀거임" area />
+      <DesiredPickUpTimeSelection
+        label="수령일"
+        executiveWorkDates={[new Date()]}
+        value={requestForm.desiredPickUpTime ?? setHours(new Date(), 21)}
+        onDateChange={date =>
+          setRequestForm({
+            ...requestForm,
+            desiredPickUpTime: date,
+          })
+        }
+      />
     </StyledCard>
   );
 };

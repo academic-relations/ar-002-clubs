@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { setHours } from "date-fns";
+
 import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -61,7 +63,11 @@ const PrintingBusinessMainFrame: React.FC = () => {
   }, [agreement, activeStep, requestParam, requestForm]);
 
   useEffect(() => {
-    setRequestForm({ ...requestForm, krPhoneNumber: data?.phoneNumber });
+    setRequestForm({
+      ...requestForm,
+      krPhoneNumber: data?.phoneNumber,
+      desiredPickUpTime: setHours(new Date(), 21),
+    });
   }, [data]);
 
   return (

@@ -8,12 +8,18 @@ interface IconProps {
   type: string;
   size: number;
   onClick?: () => void;
+  isWhite?: boolean;
 }
 
-const IconInner = styled.div<{ size: number; clickable: boolean }>`
+const IconInner = styled.div<{
+  size: number;
+  clickable: boolean;
+  isWhite: boolean;
+}>`
   display: flex;
   font-size: ${({ size }) => size}px;
-  color: ${({ theme }) => theme.colors.BLACK};
+  color: ${({ theme, isWhite }) =>
+    isWhite ? theme.colors.WHITE : theme.colors.BLACK};
   ${({ clickable }) =>
     clickable &&
     css`
@@ -21,8 +27,18 @@ const IconInner = styled.div<{ size: number; clickable: boolean }>`
     `}
 `;
 
-const Icon: React.FC<IconProps> = ({ type, size, onClick = () => {} }) => (
-  <IconInner size={size} clickable={!!onClick} onClick={onClick}>
+const Icon: React.FC<IconProps> = ({
+  type,
+  size,
+  onClick = () => {},
+  isWhite = false,
+}) => (
+  <IconInner
+    size={size}
+    clickable={!!onClick}
+    onClick={onClick}
+    isWhite={isWhite}
+  >
     <MUIIcon fontSize="inherit">{type}</MUIIcon>
   </IconInner>
 );

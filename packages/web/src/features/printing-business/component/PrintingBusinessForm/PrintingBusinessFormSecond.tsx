@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import Info from "@sparcs-clubs/web/common/components/Info";
-
 import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
-import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
+
+import FileUpload from "@sparcs-clubs/web/features/printing-business/component/FileUpload";
 
 import { formSecondInfoText } from "@sparcs-clubs/web/constants/printingBusiness";
 
@@ -127,12 +128,7 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
       </StyledCard>
       <StyledCard type="outline">
         <Typography>인쇄 파일 업로드</Typography>
-        <TextInput
-          placeholder="신청인의 이름이 자동으로 입력됩니다. 이 안내가 보일 경우 관리자에게 연락해 주세요"
-          label="신청자 이름"
-          disabled
-          value="홍길동"
-        />
+        <FileUpload />
       </StyledCard>
     </PrintingBusinessFormSecondInner>
   );
