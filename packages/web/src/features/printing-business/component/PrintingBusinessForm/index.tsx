@@ -15,6 +15,8 @@ import PrintingBusinessFormSecond from "./PrintingBusinessFormSecond";
 import PrintingBusinessFormThird from "./PrintingBusinessFormThird";
 
 interface PrintingBusinessFormProps {
+  username: string;
+  clubs: Array<{ id: ApiPrt002RequestParam["clubId"]; name: string }>;
   setAgreement: React.Dispatch<React.SetStateAction<boolean>>;
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -49,6 +51,8 @@ const Step2Form = [
 ];
 
 const PrintingBusinessForm: React.FC<PrintingBusinessFormProps> = ({
+  username,
+  clubs,
   setAgreement,
   step,
   setStep,
@@ -78,6 +82,8 @@ const PrintingBusinessForm: React.FC<PrintingBusinessFormProps> = ({
     <PrintingBusinessFormInner>
       <StepProcess steps={printingBusinessOrderSteps} activeStepIndex={step} />
       <CurrentForm
+        username={username}
+        clubs={clubs}
         requestParam={requestParam}
         setRequestParam={setRequestParam}
         requestForm={requestForm}

@@ -4,10 +4,12 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import Info from "@sparcs-clubs/web/common/components/Info";
 
+import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
 import { formSecondInfoText } from "@sparcs-clubs/web/constants/printingBusiness";
 
+import { PromotionalPrintingSizeEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
 import type { PrintingBusinessFormProps } from ".";
 import BinaryRadio from "./_atomic/BinaryRadio";
 
@@ -57,11 +59,49 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
       <Info text={formSecondInfoText} />
       <StyledCard type="outline">
         <Typography>인쇄 매수</Typography>
-        <TextInput
-          placeholder="신청인의 이름이 자동으로 입력됩니다. 이 안내가 보일 경우 관리자에게 연락해 주세요"
-          label="신청자 이름"
-          disabled
-          value="홍길동"
+        <ItemNumberInput
+          label="A3"
+          placeholder="A3 크기로 인쇄하고 싶은 매수를 적어 주세요"
+          itemLimit={45}
+          unit="매"
+          value={requestForm?.orders?.at(0)?.numberOfPrints.toString() ?? "0"}
+          handleChange={value => {
+            setRequestForm({
+              ...requestForm,
+              orders: [
+                {
+                  promotionalPrintingSizeEnum: PromotionalPrintingSizeEnum.A3,
+                  numberOfPrints: Number(value),
+                },
+                requestForm?.orders?.at(1) ?? {
+                  promotionalPrintingSizeEnum: PromotionalPrintingSizeEnum.A4,
+                  numberOfPrints: 0,
+                },
+              ],
+            });
+          }}
+        />
+        <ItemNumberInput
+          label="A4"
+          placeholder="A4 크기로 인쇄하고 싶은 매수를 적어 주세요"
+          itemLimit={45}
+          unit="매"
+          value={requestForm?.orders?.at(1)?.numberOfPrints.toString() ?? "0"}
+          handleChange={value => {
+            setRequestForm({
+              ...requestForm,
+              orders: [
+                requestForm?.orders?.at(1) ?? {
+                  promotionalPrintingSizeEnum: PromotionalPrintingSizeEnum.A3,
+                  numberOfPrints: 0,
+                },
+                {
+                  promotionalPrintingSizeEnum: PromotionalPrintingSizeEnum.A4,
+                  numberOfPrints: Number(value),
+                },
+              ],
+            });
+          }}
         />
       </StyledCard>
       <StyledCard type="outline">

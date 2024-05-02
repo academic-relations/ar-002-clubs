@@ -11,6 +11,8 @@ import type { SelectItem } from "@sparcs-clubs/web/common/components/Forms/Selec
 import type { PrintingBusinessFormProps } from ".";
 
 interface PrintingBusinessFormFirstProps {
+  username: PrintingBusinessFormProps["username"];
+  clubs: PrintingBusinessFormProps["clubs"];
   requestParam: PrintingBusinessFormProps["requestParam"];
   setRequestParam: PrintingBusinessFormProps["setRequestParam"];
   requestForm: PrintingBusinessFormProps["requestForm"];
@@ -23,20 +25,20 @@ const StyledCard = styled(Card)<{ type: string }>`
   align-self: stretch;
 `;
 
-// 아직 useGetMyClub 서비스가 안정되지 않아, 목업 리스트를 두었습니다
-// 후에 requestParam으로 대체되어야 합니다
-const mockClubSelection: Array<SelectItem> = [
-  { label: "club 1", value: "1", selectable: true },
-  { label: "club 2", value: "2", selectable: true },
-  { label: "club 3", value: "3", selectable: false },
-];
-
 const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
+  username,
+  clubs,
   requestParam,
   setRequestParam,
   requestForm,
   setRequestForm,
 }) => {
+  const clubSelection: Array<SelectItem> = clubs.map(club => ({
+    label: club.name,
+    value: club.id.toString(),
+    selectable: true,
+  }));
+
   const [clubId, setClubId] = useState<string>(
     String(requestParam.clubId) ?? "",
   );
@@ -52,7 +54,7 @@ const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
   return (
     <StyledCard type="outline">
       <Select
-        items={mockClubSelection}
+        items={clubSelection}
         label="동아리 이름"
         selectedValue={clubId}
         onSelect={setClubId}
@@ -61,10 +63,11 @@ const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
         placeholder="신청인의 이름이 자동으로 입력됩니다. 이 안내가 보일 경우 관리자에게 연락해 주세요"
         label="신청자 이름"
         disabled
-        value="홍길동"
+        value={username}
       />
       <PhoneInput
         placeholder="신청자 전화번호"
+        label="신청자 전화번호"
         value={phoneNumber}
         onChange={setPhoneNumber}
       />

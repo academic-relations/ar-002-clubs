@@ -10,7 +10,9 @@ import type { PrintingBusinessFormProps } from ".";
 import FormCheck from "./_atomic/FormCheck";
 
 interface PrintingBusinessFormThirdProps {
-  // requestParam: PrintingBusinessFormProps["requestParam"];
+  username: PrintingBusinessFormProps["username"];
+  clubs: PrintingBusinessFormProps["clubs"];
+  requestParam: PrintingBusinessFormProps["requestParam"];
   requestForm: PrintingBusinessFormProps["requestForm"];
   // setRequestForm: PrintingBusinessFormProps["setRequestForm"];
 }
@@ -22,7 +24,9 @@ const StyledCard = styled(Card)<{ type: string }>`
 `;
 
 const PrintingBusinessFormThird: React.FC<PrintingBusinessFormThirdProps> = ({
-  // requestParam,
+  username,
+  clubs,
+  requestParam,
   requestForm,
   // setRequestForm,
 }) => {
@@ -33,8 +37,14 @@ const PrintingBusinessFormThird: React.FC<PrintingBusinessFormThirdProps> = ({
       <FormCheck
         label={printingBusinessOrderSteps[0].label}
         formContents={[
-          ["동아리", "동아리: clubId로 동아리명 받아오기"],
-          ["담당자", "담당: 아직 안채웠어용"],
+          [
+            "동아리",
+            `동아리: ${
+              clubs.at(requestParam.clubId ?? 0)?.name.toString() ??
+              "동아리 선택에 오류가 있습니요, 이전 단계를 검토해주세요"
+            }`,
+          ],
+          ["담당자", `담당: ${username}`],
           [
             "연락처",
             `연락처: ${
@@ -47,8 +57,14 @@ const PrintingBusinessFormThird: React.FC<PrintingBusinessFormThirdProps> = ({
       <FormCheck
         label={printingBusinessOrderSteps[1].label}
         formContents={[
-          ["A3용지", "A3용지: todo!()"],
-          ["A4용지", "A4용지: todo!()"],
+          [
+            "A3용지",
+            `A3용지: ${requestForm.orders?.at(0)?.numberOfPrints ?? 0}매`,
+          ],
+          [
+            "A4용지",
+            `A4용지: ${requestForm.orders?.at(1)?.numberOfPrints ?? 0}매`,
+          ],
           [
             "기타",
             `색상: ${requestForm.isColorPrint ? "컬러" : "흑백"} / 
