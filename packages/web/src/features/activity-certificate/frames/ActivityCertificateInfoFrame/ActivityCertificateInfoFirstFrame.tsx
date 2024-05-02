@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
 
@@ -26,6 +26,11 @@ const ActivityCertificateInfoFirstFrame: React.FC<
   activityCertificateProgress,
   setActivityCertificateProgress,
 }) => {
+  const [errorStatus, setErrorStatus] = useState<{
+    hasIssuedNumberError: boolean;
+    hasKrPhoneNumberError: boolean;
+  }>({ hasIssuedNumberError: false, hasKrPhoneNumberError: false });
+
   useEffect(() => {
     // if (!activityCertificate.info.clubId) {
     //   // TODO - 에러 메세지
@@ -37,7 +42,8 @@ const ActivityCertificateInfoFirstFrame: React.FC<
     // } else
     if (
       activityCertificate.issuedNumber === null ||
-      Number.isNaN(activityCertificate.issuedNumber)
+      Number.isNaN(activityCertificate.issuedNumber) ||
+      errorStatus.hasIssuedNumberError
     ) {
       // TODO - 에러 메세지
       setActivityCertificateProgress({
@@ -50,19 +56,15 @@ const ActivityCertificateInfoFirstFrame: React.FC<
       //   // TODO - 에러 메세지
       // } else if (!activityCertificate.info.studentNumber) {
       //   // TODO - 에러 메세지
-    }
-    // 지금 5/2/2024 오후 9시 51분 기준으로 fix 위해 임시 주석 처리
-    //
-    // else if (
-    //   activityCertificate.krPhoneNumber === "" ||
-    //   phoneInputEval(activityCertificate.krPhoneNumber) !== ""
-    // ) {
-    //   setActivityCertificateProgress({
-    //     ...activityCertificateProgress,
-    //     firstFilled: false,
-    //   });
-    // }
-    else {
+    } else if (
+      activityCertificate.krPhoneNumber === "" ||
+      errorStatus.hasKrPhoneNumberError
+    ) {
+      setActivityCertificateProgress({
+        ...activityCertificateProgress,
+        firstFilled: false,
+      });
+    } else {
       setActivityCertificateProgress({
         ...activityCertificateProgress,
         firstFilled: true,
@@ -78,6 +80,9 @@ const ActivityCertificateInfoFirstFrame: React.FC<
       <ItemNumberInput
         label="발급 매수"
         placeholder="X개"
+        setErrorStatus={value =>
+          setErrorStatus({ ...errorStatus, hasIssuedNumberError: value })
+        }
         value={
           activityCertificate?.issuedNumber
             ? String(activityCertificate?.issuedNumber)
@@ -97,6 +102,9 @@ const ActivityCertificateInfoFirstFrame: React.FC<
         label="신청자 전화번호"
         placeholder="010-XXXX-XXXX"
         value={activityCertificate.krPhoneNumber}
+        setErrorStatus={value =>
+          setErrorStatus({ ...errorStatus, hasKrPhoneNumberError: value })
+        }
         onChange={changedText => {
           setActivityCertificate({
             ...activityCertificate,
