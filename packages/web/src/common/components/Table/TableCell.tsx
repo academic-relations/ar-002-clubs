@@ -28,12 +28,13 @@ const ButtonsWrapper = styled.div`
   gap: 12px;
 `;
 
-const GrayText = styled.div`
+const CellText = styled.div<{ isGray: boolean }>`
   font-size: 16px;
   line-height: 24px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  color: ${({ theme }) => theme.colors.GRAY[300]};
+  color: ${({ isGray, theme }) =>
+    isGray ? theme.colors.GRAY[300] : theme.colors.BLACK};
 `;
 
 const TableCell: React.FC<TableCellProps> = ({
@@ -44,14 +45,14 @@ const TableCell: React.FC<TableCellProps> = ({
   onClickSecond = () => {},
 }) => (
   <CommonCellWrapper>
-    {type === "Default" && <>test</>}
-    {type === "None" && <GrayText>None</GrayText>}
+    {type === "Default" && <CellText isGray={false}>default</CellText>}
+    {type === "None" && <CellText isGray>None</CellText>}
     {type === "Tag" && <>tag</>}
     {type === "Button" && <TextButton text={text} onClick={onClick} />}
     {type === "Buttons" && (
       <ButtonsWrapper>
         <TextButton text={text} onClick={onClick} />
-        <GrayText>/</GrayText>
+        <CellText isGray>/</CellText>
         <TextButton text={secondText} onClick={onClickSecond} />
       </ButtonsWrapper>
     )}
