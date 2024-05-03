@@ -4,12 +4,9 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Button from "@sparcs-clubs/web/common/components/Button";
-import MonthInput, {
-  monthInputEval,
-} from "@sparcs-clubs/web/common/components/Forms/MonthInput";
+import DateRangeInput from "@sparcs-clubs/web/common/components/Forms/DateRangeInput";
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 // eslint-disable-next-line no-restricted-imports
 import { ActivityDescription } from "../../types/activityCertificate";
@@ -60,24 +57,16 @@ const IconInnerFrameInner = styled.div`
 
 const InputFrameInner = styled.div`
   flex: 1 1 0;
-  height: 36px;
+  /* height: 36px; */
   justify-content: center;
   align-items: flex-start;
   gap: 20px;
   display: flex;
 `;
 
-const StartEndMonthInputFrameInner = styled.div`
-  height: 36px;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 12px;
-  display: flex;
-`;
-
 const DescriptionInputFrameinner = styled.div`
   width: 100%;
-  height: 36px;
+  /* height: 36px; */
   justify-content: flex-start;
   align-items: center;
   gap: 12px;
@@ -91,92 +80,45 @@ const ActivityCertificateInfoSecondFrame: React.FC<
   setActivityCertificate,
   activityCertificateProgress,
   setActivityCertificateProgress,
+  secondErrorStatus,
+  setSecondErrorStatus,
 }) => {
-  const outOfMonthBoundError = (
-    startMonth: string,
-    endMonth: string,
-    selfIdentity: "startMonth" | "endMonth",
-  ) => {
-    // 1. 전에 적은 기간을 벗어나거나
-    // 2. startMonth가 endMonth보다 늦거나
-    if (
-      monthInputEval(startMonth, "startMonth") === "" &&
-      monthInputEval(endMonth, "endMonth") === ""
-    ) {
-      if (new Date(startMonth).getTime() > new Date(endMonth).getTime()) {
-        return "입력 기간이 올바르지 않습니다";
-      }
-    }
-    if (
-      selfIdentity === "startMonth" &&
-      monthInputEval(startMonth, "startMonth") === ""
-    ) {
-      if (
-        new Date(startMonth).getTime() <
-          new Date(activityCertificate.startMonth!).getTime() ||
-        new Date(activityCertificate.endMonth!).getTime() <
-          new Date(startMonth).getTime()
-      ) {
-        return "입력 기간이 올바르지 않습니다";
-      }
-    }
-    if (
-      selfIdentity === "endMonth" &&
-      monthInputEval(endMonth, "endMonth") === ""
-    ) {
-      if (
-        new Date(endMonth).getTime() <
-          new Date(activityCertificate.startMonth!).getTime() ||
-        new Date(activityCertificate.endMonth!).getTime() <
-          new Date(endMonth).getTime()
-      ) {
-        return "입력 기간이 올바르지 않습니다";
-      }
-    }
-    return "";
-  };
-
   useEffect(() => {
-    console.log(activityCertificate);
+    let canPass = true;
 
-    let tempSecondFilled = true;
     activityCertificate.detail.forEach(activityDescription => {
       if (
-        activityDescription.startMonth === null ||
-        monthInputEval(activityDescription.startMonth, "startMonth") !== ""
+        activityDescription.startMonth.length < 7 ||
+        activityDescription.endMonth.length < 7 ||
+        activityDescription.description.length === 0
       ) {
-        // TODO - 에러 메세지
-        tempSecondFilled = false;
-      } else if (
-        activityDescription.endMonth === null ||
-        monthInputEval(activityDescription.endMonth, "endMonth") !== ""
-      ) {
-        // TODO - 에러 메세지
-        tempSecondFilled = false;
-      } else if (!activityDescription.description) {
-        // TODO - 에러 메세지
-        tempSecondFilled = false;
-      } else if (
-        outOfMonthBoundError(
-          activityDescription.startMonth,
-          activityDescription.endMonth,
-          "startMonth",
-        ) ||
-        outOfMonthBoundError(
-          activityDescription.startMonth,
-          activityDescription.endMonth,
-          "endMonth",
-        )
-      ) {
-        tempSecondFilled = false;
+        canPass = false;
       }
     });
 
     setActivityCertificateProgress({
       ...activityCertificateProgress,
-      secondFilled: tempSecondFilled,
+      secondFilled: canPass,
     });
   }, [activityCertificate]);
+
+  useEffect(() => {
+    let canPass = true;
+
+    secondErrorStatus.forEach(activityDescriptionErrorStatus => {
+      if (
+        activityDescriptionErrorStatus.hasDescriptionError ||
+        activityDescriptionErrorStatus.hasStartEndMonthError
+      ) {
+        canPass = false;
+      }
+    });
+
+    setActivityCertificateProgress({
+      ...activityCertificateProgress,
+      secondNoError: canPass,
+    });
+  }, [secondErrorStatus]);
 
   const [draggingActivityDescription, setDraggingActivityDescription] =
     useState<ActivityDescription | null>(null);
@@ -217,7 +159,6 @@ const ActivityCertificateInfoSecondFrame: React.FC<
         0,
         draggingActivityDescription,
       );
-      console.log(tempActivityDescriptions);
 
       setActivityCertificate({
         ...activityCertificate,
@@ -243,6 +184,14 @@ const ActivityCertificateInfoSecondFrame: React.FC<
           },
         ],
       });
+      setSecondErrorStatus([
+        ...secondErrorStatus,
+        {
+          key: maxKey + 1,
+          hasStartEndMonthError: false,
+          hasDescriptionError: false,
+        },
+      ]);
     }
   };
 
@@ -255,20 +204,23 @@ const ActivityCertificateInfoSecondFrame: React.FC<
             activityDescription.key !== activityDescriptionKey,
         ),
       });
+      setSecondErrorStatus(
+        secondErrorStatus.filter(
+          activityDescriptionErrorStatus =>
+            activityDescriptionErrorStatus.key !== activityDescriptionKey,
+        ),
+      );
     }
   };
 
-  const handleActivityDescriptionChange = (
-    key: number,
-    inputType: "startMonth" | "endMonth" | "description",
-    newValue: string,
-  ) => {
+  const handleActivityDescriptionChange = (key: number, newValue: string) => {
     const tempActivityDescriptions = activityCertificate.detail.map(
       tempActivityDescription => {
         if (tempActivityDescription.key === key) {
-          return Object.assign(tempActivityDescription, {
-            [inputType]: newValue,
-          });
+          return {
+            ...tempActivityDescription,
+            description: newValue,
+          };
         }
         return tempActivityDescription;
       },
@@ -278,6 +230,46 @@ const ActivityCertificateInfoSecondFrame: React.FC<
       ...activityCertificate,
       detail: tempActivityDescriptions,
     });
+  };
+
+  const handleActivityStartEndMonthChange = (key: number, newValue: string) => {
+    const tempActivityDescriptions = activityCertificate.detail.map(
+      tempActivityDescription => {
+        if (tempActivityDescription.key === key) {
+          return {
+            ...tempActivityDescription,
+            startMonth: newValue.split("|")[0],
+            endMonth: newValue.split("|")[1],
+          };
+        }
+        return tempActivityDescription;
+      },
+    );
+
+    setActivityCertificate({
+      ...activityCertificate,
+      detail: tempActivityDescriptions,
+    });
+  };
+
+  const handleError = (
+    key: number,
+    inputType: "hasStartEndMonthError" | "hasDescriptionError",
+    hasError: boolean,
+  ) => {
+    const tempErrorStatus = secondErrorStatus.map(tempRowErrorStatus => {
+      if (tempRowErrorStatus.key === key) {
+        return {
+          ...tempRowErrorStatus,
+          [inputType]: hasError,
+        };
+      }
+      return tempRowErrorStatus;
+    });
+
+    if (JSON.stringify(secondErrorStatus) !== JSON.stringify(tempErrorStatus)) {
+      setSecondErrorStatus(tempErrorStatus);
+    }
   };
 
   return (
@@ -300,84 +292,54 @@ const ActivityCertificateInfoSecondFrame: React.FC<
             </IconOuterFrameInner>
 
             <InputFrameInner>
-              <StartEndMonthInputFrameInner>
-                {outOfMonthBoundError(
-                  activityDescription.startMonth,
-                  activityDescription.endMonth,
-                  "startMonth",
-                ) === "" ? (
-                  <MonthInput
-                    placeholder="20XX.XX"
-                    startEndType="startMonth"
-                    onMonthChange={changedMonth =>
-                      handleActivityDescriptionChange(
-                        activityDescription.key,
-                        "startMonth",
-                        changedMonth,
-                      )
-                    }
-                  />
-                ) : (
-                  <MonthInput
-                    placeholder="20XX.XX"
-                    startEndType="startMonth"
-                    errorMessage={outOfMonthBoundError(
-                      activityDescription.startMonth,
-                      activityDescription.endMonth,
-                      "startMonth",
-                    )}
-                    onMonthChange={changedMonth =>
-                      handleActivityDescriptionChange(
-                        activityDescription.key,
-                        "startMonth",
-                        changedMonth,
-                      )
-                    }
-                  />
-                )}
-                <Typography type="p">~</Typography>
-                {outOfMonthBoundError(
-                  activityDescription.startMonth,
-                  activityDescription.endMonth,
-                  "endMonth",
-                ) === "" ? (
-                  <MonthInput
-                    placeholder="20XX.XX"
-                    startEndType="endMonth"
-                    onMonthChange={changedMonth =>
-                      handleActivityDescriptionChange(
-                        activityDescription.key,
-                        "endMonth",
-                        changedMonth,
-                      )
-                    }
-                  />
-                ) : (
-                  <MonthInput
-                    placeholder="20XX.XX"
-                    startEndType="endMonth"
-                    errorMessage={outOfMonthBoundError(
-                      activityDescription.startMonth,
-                      activityDescription.endMonth,
-                      "endMonth",
-                    )}
-                    onMonthChange={changedMonth =>
-                      handleActivityDescriptionChange(
-                        activityDescription.key,
-                        "endMonth",
-                        changedMonth,
-                      )
-                    }
-                  />
-                )}
-              </StartEndMonthInputFrameInner>
               <DescriptionInputFrameinner>
+                <DateRangeInput
+                  setErrorStatus={e =>
+                    handleError(
+                      activityDescription.key,
+                      "hasStartEndMonthError",
+                      e,
+                    )
+                  }
+                  placeholder="20XX.XX"
+                  limitStartValue={activityCertificate.startMonth}
+                  limitEndValue={activityCertificate.endMonth}
+                  startValue={activityDescription.startMonth}
+                  endValue={activityDescription.endMonth}
+                  onChange={e =>
+                    handleActivityStartEndMonthChange(
+                      activityDescription.key,
+                      e,
+                    )
+                  }
+                />
                 <TextInput
+                  setErrorStatus={e =>
+                    handleError(
+                      activityDescription.key,
+                      "hasDescriptionError",
+                      e,
+                    )
+                  }
+                  style={
+                    secondErrorStatus.filter(
+                      activityDescriptionErrorStatus =>
+                        activityDescriptionErrorStatus.key ===
+                        activityDescription.key,
+                    )[0] &&
+                    secondErrorStatus.filter(
+                      activityDescriptionErrorStatus =>
+                        activityDescriptionErrorStatus.key ===
+                        activityDescription.key,
+                    )[0].hasStartEndMonthError
+                      ? { marginBottom: "20px" }
+                      : {}
+                  }
                   placeholder="활동 내역을 작성해주세요"
+                  value={activityDescription.description}
                   onChange={e =>
                     handleActivityDescriptionChange(
                       activityDescription.key,
-                      "description",
                       e.target.value,
                     )
                   }

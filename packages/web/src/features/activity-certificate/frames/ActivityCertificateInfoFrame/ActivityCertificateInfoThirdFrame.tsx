@@ -83,7 +83,7 @@ const ActivityCertificateInfoThirdFrame: React.FC<
           {/* TODO - 실제 클럽 이름으로 바꾸기 */}
         </Typography>
         <Typography type="p" style={{ whiteSpace: "pre-wrap" }}>
-          {`  •  활동 기간: ${activityCertificate.startMonth} ${activityCertificate.endMonth}`}
+          {`  •  활동 기간: ${activityCertificate.startMonth} ~ ${activityCertificate.endMonth}`}
           {/* TODO - DB 형식에 의거해서 startMonth endMonth 형식으로 있다면 포맷하고 string이라면 그냥 넣기 */}
         </Typography>
         <Typography type="p" style={{ whiteSpace: "pre-wrap" }}>

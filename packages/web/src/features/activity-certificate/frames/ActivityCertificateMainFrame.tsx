@@ -6,6 +6,8 @@ import styled from "styled-components";
 import {
   ActivityCertificateInterface,
   ActivityCertificateProgress,
+  FirstErrorStatus,
+  SecondErrorStatus,
 } from "../types/activityCertificate";
 import ActivityCertificateNoticeFrame from "./ActivityCertificateNoticeFrame";
 import ActivityCertificateInfoFrame from "./ActivityCertificateInfoFrame";
@@ -25,7 +27,9 @@ const ActivityCertificateMainFrame: React.FC = () => {
     useState<ActivityCertificateProgress>({
       agreement: false,
       firstFilled: false,
+      firstNoError: false,
       secondFilled: false,
+      secondNoError: false,
     });
   const [activityCertificate, setActivityCertificate] =
     useState<ActivityCertificateInterface>({
@@ -46,12 +50,30 @@ const ActivityCertificateMainFrame: React.FC = () => {
         },
       ],
     });
+  const [firstErrorStatus, setFirstErrorStatus] = useState<FirstErrorStatus>({
+    hasClubIdError: false,
+    hasIssuedNumberError: false,
+    hasKrPhoneNumberError: false,
+  });
+  const [secondErrorStatus, setSecondErrorStatus] = useState<
+    Array<SecondErrorStatus>
+  >([
+    {
+      key: 0,
+      hasStartEndMonthError: false,
+      hasDescriptionError: false,
+    },
+  ]);
 
   const props = {
     activityCertificate,
     setActivityCertificate,
     activityCertificateProgress,
     setActivityCertificateProgress,
+    firstErrorStatus,
+    setFirstErrorStatus,
+    secondErrorStatus,
+    setSecondErrorStatus,
   };
 
   return (

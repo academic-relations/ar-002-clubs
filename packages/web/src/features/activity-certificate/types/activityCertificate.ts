@@ -20,5 +20,18 @@ export interface ActivityCertificateInterface {
 export interface ActivityCertificateProgress {
   agreement: boolean;
   firstFilled: boolean;
+  firstNoError: boolean;
   secondFilled: boolean;
+  secondNoError: boolean;
+}
+
+export interface FirstErrorStatus {
+  hasClubIdError: boolean;
+  hasIssuedNumberError: boolean;
+  hasKrPhoneNumberError: boolean;
+}
+export interface SecondErrorStatus {
+  key: number;
+  hasStartEndMonthError: boolean;
+  hasDescriptionError: boolean;
 }

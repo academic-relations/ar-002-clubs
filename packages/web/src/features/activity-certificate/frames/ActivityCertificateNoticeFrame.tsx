@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import React, { useState } from "react";
@@ -7,6 +8,8 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import {
   ActivityCertificateInterface,
   ActivityCertificateProgress,
+  FirstErrorStatus,
+  SecondErrorStatus,
 } from "../types/activityCertificate";
 
 export interface ActivityCertificateFrameProps {
@@ -17,6 +20,12 @@ export interface ActivityCertificateFrameProps {
   activityCertificateProgress: ActivityCertificateProgress;
   setActivityCertificateProgress: React.Dispatch<
     React.SetStateAction<ActivityCertificateProgress>
+  >;
+  firstErrorStatus: FirstErrorStatus;
+  setFirstErrorStatus: React.Dispatch<React.SetStateAction<FirstErrorStatus>>;
+  secondErrorStatus: Array<SecondErrorStatus>;
+  setSecondErrorStatus: React.Dispatch<
+    React.SetStateAction<Array<SecondErrorStatus>>
   >;
 }
 
@@ -55,12 +64,14 @@ const StyledCheckboxOuter = styled.div`
 const ActivityCertificateNoticeFrame: React.FC<
   ActivityCertificateFrameProps
 > = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   activityCertificate,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setActivityCertificate,
   activityCertificateProgress,
   setActivityCertificateProgress,
+  firstErrorStatus,
+  setFirstErrorStatus,
+  secondErrorStatus,
+  setSecondErrorStatus,
 }) => {
   const [checked, setChecked] = useState(false);
 

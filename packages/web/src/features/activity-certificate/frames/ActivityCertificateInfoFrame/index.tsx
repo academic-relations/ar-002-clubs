@@ -50,23 +50,39 @@ const ActivityCertificateInfoFrame: React.FC<ActivityCertificateFrameProps> = ({
   setActivityCertificate,
   activityCertificateProgress,
   setActivityCertificateProgress,
+  firstErrorStatus,
+  setFirstErrorStatus,
+  secondErrorStatus,
+  setSecondErrorStatus,
 }) => {
   const props = {
     activityCertificate,
     setActivityCertificate,
     activityCertificateProgress,
     setActivityCertificateProgress,
+    firstErrorStatus,
+    setFirstErrorStatus,
+    secondErrorStatus,
+    setSecondErrorStatus,
   };
   const [step, setStep] = useState(0);
   const CurrentFrame = frames[step];
 
   const nextButtonDisabler = () => {
     if (step === 0) {
-      if (activityCertificateProgress.firstFilled) return "default";
+      if (
+        activityCertificateProgress.firstFilled &&
+        activityCertificateProgress.firstNoError
+      )
+        return "default";
       return "disabled";
     }
     if (step === 1) {
-      if (activityCertificateProgress.secondFilled) return "default";
+      if (
+        activityCertificateProgress.secondFilled &&
+        activityCertificateProgress.secondNoError
+      )
+        return "default";
       return "disabled";
     }
     return "default";
