@@ -20,11 +20,14 @@ interface TableCellProps {
   onClick?: () => void;
   onClickSecond?: () => void;
   color?: CellTagColor;
+  width?: string | number;
 }
 
-const CommonCellWrapper = styled.div<{ isHeader: boolean }>`
-  width: 150px;
-  /* TODO: width 조절 */
+const CommonCellWrapper = styled.div<{
+  isHeader: boolean;
+  width: string | number;
+}>`
+  width: ${({ width }) => (typeof width === "number" ? `${width}px` : width)};
   display: flex;
   justify-content: center;
   height: 48px;
@@ -80,8 +83,12 @@ const TableCell: React.FC<TableCellProps> = ({
   onClick = () => {},
   onClickSecond = () => {},
   color = "BLUE",
+  width = "150px",
 }) => (
-  <CommonCellWrapper isHeader={type === "Header" || type === "HeaderSort"}>
+  <CommonCellWrapper
+    width={width}
+    isHeader={type === "Header" || type === "HeaderSort"}
+  >
     {type === "Default" && <CellText isGray={false}>default</CellText>}
     {type === "None" && <CellText isGray>None</CellText>}
     {type === "Tag" && <CellTagInner color={color}>{text}</CellTagInner>}
