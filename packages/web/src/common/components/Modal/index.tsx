@@ -5,7 +5,7 @@ export interface ModalProps {
   onClose?: () => void;
 }
 
-const ModalBlockBackground = styled.div`
+const ModalBackground = styled.div`
   position: fixed;
   left: 0;
   top: 0;
@@ -22,11 +22,11 @@ const ModalBlockBackground = styled.div`
   z-index: 100;
 `;
 
-const ModalBlockContainer = styled.div`
+const ModalContainer = styled.div`
   display: flex;
-  flex-flow: column nowrap;
-  overflow: auto;
-  overflow-x: hidden;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   height: max-content;
   max-width: 600px;
@@ -37,6 +37,15 @@ const ModalBlockContainer = styled.div`
   box-shadow: ${({ theme }) => theme.shadow.md};
 `;
 
+const ModalScrollContainer = styled.div`
+  display: inline-flex;
+  flex-direction: column;
+  overflow: auto;
+  overflow-x: hidden;
+
+  padding: 32px;
+`;
+
 const Modal: FC<React.PropsWithChildren<ModalProps>> = ({
   onClose = () => {},
   children = <div />,
@@ -44,7 +53,7 @@ const Modal: FC<React.PropsWithChildren<ModalProps>> = ({
   const ref = useRef<HTMLDivElement | null>(null);
 
   return (
-    <ModalBlockBackground
+    <ModalBackground
       ref={ref}
       onClick={e => {
         if (e.target !== ref.current) {
@@ -53,8 +62,10 @@ const Modal: FC<React.PropsWithChildren<ModalProps>> = ({
         onClose();
       }}
     >
-      <ModalBlockContainer>{children}</ModalBlockContainer>
-    </ModalBlockBackground>
+      <ModalContainer>
+        <ModalScrollContainer>{children}</ModalScrollContainer>
+      </ModalContainer>
+    </ModalBackground>
   );
 };
 
