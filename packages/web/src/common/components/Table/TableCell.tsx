@@ -17,7 +17,7 @@ interface TableCellProps {
     | "HeaderSort";
   text: string;
   secondText?: string;
-  onClick?: () => void;
+  onClickFirst?: () => void;
   onClickSecond?: () => void;
   color?: CellTagColor;
   width?: string | number;
@@ -80,7 +80,7 @@ const TableCell: React.FC<TableCellProps> = ({
   type,
   text,
   secondText = "",
-  onClick = () => {},
+  onClickFirst = () => {},
   onClickSecond = () => {},
   color = "BLUE",
   width = "150px",
@@ -92,10 +92,10 @@ const TableCell: React.FC<TableCellProps> = ({
     {type === "Default" && <CellText isGray={false}>default</CellText>}
     {type === "None" && <CellText isGray>None</CellText>}
     {type === "Tag" && <CellTagInner color={color}>{text}</CellTagInner>}
-    {type === "Button" && <TextButton text={text} onClick={onClick} />}
+    {type === "Button" && <TextButton text={text} onClick={onClickFirst} />}
     {type === "Buttons" && (
       <ButtonsWrapper>
-        <TextButton text={text} onClick={onClick} />
+        <TextButton text={text} onClick={onClickFirst} />
         <CellText isGray>/</CellText>
         <TextButton text={secondText} onClick={onClickSecond} />
       </ButtonsWrapper>
