@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import colors from "@sparcs-clubs/web/styles/themes/colors";
 import TextButton from "../TextButton";
+import Icon from "../Icon";
 
 type CellTagColor = "GREEN" | "BLUE" | "ORANGE" | "PURPLE" | "RED" | "GRAY";
 
@@ -20,9 +22,16 @@ interface TableCellProps {
   color?: CellTagColor;
 }
 
-const CommonCellWrapper = styled.div`
+const CommonCellWrapper = styled.div<{ isHeader: boolean }>`
+  width: 150px;
+  /* TODO: width 조절 */
+  display: flex;
+  justify-content: center;
   height: 48px;
   padding: 12px 8px;
+  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+  background-color: ${({ theme, isHeader }) =>
+    isHeader ? theme.colors.PRIMARY : "transparent"};
 `;
 
 const ButtonsWrapper = styled.div`
@@ -34,7 +43,6 @@ const ButtonsWrapper = styled.div`
 const CellText = styled.div<{ isGray: boolean }>`
   font-size: 16px;
   line-height: 24px;
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   color: ${({ isGray, theme }) =>
     isGray ? theme.colors.GRAY[300] : theme.colors.BLACK};
@@ -42,9 +50,7 @@ const CellText = styled.div<{ isGray: boolean }>`
 
 const CellTagInner = styled.div<{ color: CellTagColor }>`
   position: relative;
-  width: fit-content;
   padding: 4px 12px;
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 14px;
   line-height: 16px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
@@ -55,6 +61,18 @@ const CellTagInner = styled.div<{ color: CellTagColor }>`
   border-radius: ${({ theme }) => theme.round.sm};
 `;
 
+const HeaderInner = styled.div`
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
+  color: ${({ theme }) => theme.colors.WHITE};
+`;
+
+const SortWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  padding-left: 20px;
+`;
+
 const TableCell: React.FC<TableCellProps> = ({
   type,
   text,
@@ -63,7 +81,7 @@ const TableCell: React.FC<TableCellProps> = ({
   onClickSecond = () => {},
   color = "BLUE",
 }) => (
-  <CommonCellWrapper>
+  <CommonCellWrapper isHeader={type === "Header" || type === "HeaderSort"}>
     {type === "Default" && <CellText isGray={false}>default</CellText>}
     {type === "None" && <CellText isGray>None</CellText>}
     {type === "Tag" && <CellTagInner color={color}>{text}</CellTagInner>}
@@ -75,8 +93,13 @@ const TableCell: React.FC<TableCellProps> = ({
         <TextButton text={secondText} onClick={onClickSecond} />
       </ButtonsWrapper>
     )}
-    {type === "Header" && <>h</>}
-    {type === "HeaderSort" && <>hs</>}
+    {type === "Header" && <HeaderInner>{text}</HeaderInner>}
+    {type === "HeaderSort" && (
+      <SortWrapper>
+        <HeaderInner>{text}</HeaderInner>
+        <Icon type="arrow_drop_down" size={24} color={colors.WHITE} />
+      </SortWrapper>
+    )}
   </CommonCellWrapper>
 );
 
