@@ -1,13 +1,11 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import styled from "styled-components";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 import Icon from "../Icon";
-import Tag, { type TagColor } from "../Tag";
 
 interface TableCellProps {
   type: "Default" | "None" | "Tag" | "Header" | "HeaderSort";
-  text: string;
-  color?: TagColor;
+  children: ReactNode;
   width?: string | number;
   minWidth?: number;
 }
@@ -55,8 +53,7 @@ const SortWrapper = styled.div`
 
 const TableCell: React.FC<TableCellProps> = ({
   type,
-  text,
-  color = "BLUE",
+  children,
   width = "150px",
   minWidth = 150,
 }) => (
@@ -65,13 +62,13 @@ const TableCell: React.FC<TableCellProps> = ({
     minWidth={minWidth}
     isHeader={type === "Header" || type === "HeaderSort"}
   >
-    {type === "Default" && <CellText isGray={false}>{text}</CellText>}
-    {type === "None" && <CellText isGray>{text}</CellText>}
-    {type === "Tag" && <Tag color={color}>{text}</Tag>}
-    {type === "Header" && <HeaderInner>{text}</HeaderInner>}
+    {type === "Default" && <CellText isGray={false}>{children}</CellText>}
+    {type === "None" && <CellText isGray>{children}</CellText>}
+    {type === "Tag" && children}
+    {type === "Header" && <HeaderInner>{children}</HeaderInner>}
     {type === "HeaderSort" && (
       <SortWrapper>
-        <HeaderInner>{text}</HeaderInner>
+        <HeaderInner>{children}</HeaderInner>
         <Icon type="arrow_drop_down" size={24} color={colors.WHITE} />
       </SortWrapper>
     )}
