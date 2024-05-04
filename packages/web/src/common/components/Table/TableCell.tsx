@@ -56,23 +56,40 @@ const TableCell: React.FC<TableCellProps> = ({
   children,
   width = "150px",
   minWidth = 150,
-}) => (
-  <CommonCellWrapper
-    width={width}
-    minWidth={minWidth}
-    isHeader={type === "Header" || type === "HeaderSort"}
-  >
-    {type === "Default" && <CellText isGray={false}>{children}</CellText>}
-    {type === "None" && <CellText isGray>{children}</CellText>}
-    {type === "Tag" && children}
-    {type === "Header" && <HeaderInner>{children}</HeaderInner>}
-    {type === "HeaderSort" && (
-      <SortWrapper>
-        <HeaderInner>{children}</HeaderInner>
-        <Icon type="arrow_drop_down" size={24} color={colors.WHITE} />
-      </SortWrapper>
-    )}
-  </CommonCellWrapper>
-);
+}) => {
+  const isHeader = type === "Header" || type === "HeaderSort";
+  let content;
+
+  switch (type) {
+    case "Default":
+      content = <CellText isGray={false}>{children}</CellText>;
+      break;
+    case "None":
+      content = <CellText isGray>{children}</CellText>;
+      break;
+    case "Tag":
+      content = children;
+      break;
+    case "Header":
+      content = <HeaderInner>{children}</HeaderInner>;
+      break;
+    case "HeaderSort":
+      content = (
+        <SortWrapper>
+          <HeaderInner>{children}</HeaderInner>
+          <Icon type="arrow_drop_down" size={24} color={colors.WHITE} />
+        </SortWrapper>
+      );
+      break;
+    default:
+      throw new Error(`Unhandled cell type: ${type}`);
+  }
+
+  return (
+    <CommonCellWrapper width={width} minWidth={minWidth} isHeader={isHeader}>
+      {content}
+    </CommonCellWrapper>
+  );
+};
 
 export default TableCell;
