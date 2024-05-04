@@ -71,6 +71,7 @@ const HeaderInner = styled.div`
 
 const SortWrapper = styled.div`
   display: flex;
+  align-items: center;
   flex-direction: row;
   gap: 0px;
   padding-left: 20px;
