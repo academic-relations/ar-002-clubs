@@ -1,23 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
-import TextButton from "../TextButton";
 import Icon from "../Icon";
 import Tag, { type TagColor } from "../Tag";
 
 interface TableCellProps {
-  type:
-    | "Default"
-    | "None"
-    | "Tag"
-    | "Button"
-    | "Buttons"
-    | "Header"
-    | "HeaderSort";
+  type: "Default" | "None" | "Tag" | "Header" | "HeaderSort";
   text: string;
-  secondText?: string;
-  onClickFirst?: () => void;
-  onClickSecond?: () => void;
   color?: TagColor;
   width?: string | number;
   minWidth?: number;
@@ -37,12 +26,6 @@ const CommonCellWrapper = styled.div<{
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   background-color: ${({ theme, isHeader }) =>
     isHeader ? theme.colors.PRIMARY : "transparent"};
-`;
-
-const ButtonsWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
 `;
 
 const CellText = styled.div<{ isGray: boolean }>`
@@ -69,9 +52,6 @@ const SortWrapper = styled.div`
 const TableCell: React.FC<TableCellProps> = ({
   type,
   text,
-  secondText = "",
-  onClickFirst = () => {},
-  onClickSecond = () => {},
   color = "BLUE",
   width = "150px",
   minWidth = 150,
@@ -84,14 +64,6 @@ const TableCell: React.FC<TableCellProps> = ({
     {type === "Default" && <CellText isGray={false}>{text}</CellText>}
     {type === "None" && <CellText isGray>{text}</CellText>}
     {type === "Tag" && <Tag color={color}>{text}</Tag>}
-    {type === "Button" && <TextButton text={text} onClick={onClickFirst} />}
-    {type === "Buttons" && (
-      <ButtonsWrapper>
-        <TextButton text={text} onClick={onClickFirst} />
-        <CellText isGray>/</CellText>
-        <TextButton text={secondText} onClick={onClickSecond} />
-      </ButtonsWrapper>
-    )}
     {type === "Header" && <HeaderInner>{text}</HeaderInner>}
     {type === "HeaderSort" && (
       <SortWrapper>
