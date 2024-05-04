@@ -3,6 +3,7 @@ import styled from "styled-components";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 import TextButton from "../TextButton";
 import Icon from "../Icon";
+import Tag from "../Tag";
 
 type CellTagColor = "GREEN" | "BLUE" | "ORANGE" | "PURPLE" | "RED" | "GRAY";
 
@@ -54,19 +55,6 @@ const CellText = styled.div<{ isGray: boolean }>`
     isGray ? theme.colors.GRAY[300] : theme.colors.BLACK};
 `;
 
-const CellTagInner = styled.div<{ color: CellTagColor }>`
-  position: relative;
-  padding: 4px 12px;
-  font-size: 14px;
-  line-height: 16px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
-  color: ${({ theme, color }) =>
-    color === "RED" ? theme.colors.WHITE : theme.colors[color][600]};
-  background-color: ${({ theme, color }) =>
-    color === "RED" ? theme.colors.RED[600] : theme.colors[color][200]};
-  border-radius: ${({ theme }) => theme.round.sm};
-`;
-
 const HeaderInner = styled.div`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   color: ${({ theme }) => theme.colors.WHITE};
@@ -97,7 +85,7 @@ const TableCell: React.FC<TableCellProps> = ({
   >
     {type === "Default" && <CellText isGray={false}>{text}</CellText>}
     {type === "None" && <CellText isGray>{text}</CellText>}
-    {type === "Tag" && <CellTagInner color={color}>{text}</CellTagInner>}
+    {type === "Tag" && <Tag color={color}>{text}</Tag>}
     {type === "Button" && <TextButton text={text} onClick={onClickFirst} />}
     {type === "Buttons" && (
       <ButtonsWrapper>
