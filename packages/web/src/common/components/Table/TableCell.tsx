@@ -21,6 +21,7 @@ const CommonCellWrapper = styled.div<{
   min-width: ${({ width }) => `${width}px`};
   display: flex;
   justify-content: center;
+  align-items: center;
   height: 48px;
   padding: 12px 8px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
@@ -34,6 +35,9 @@ const CellText = styled.div<{ isGray: boolean }>`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   color: ${({ isGray, theme }) =>
     isGray ? theme.colors.GRAY[300] : theme.colors.BLACK};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const HeaderInner = styled.div`
