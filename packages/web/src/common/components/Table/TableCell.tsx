@@ -3,9 +3,7 @@ import styled from "styled-components";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 import TextButton from "../TextButton";
 import Icon from "../Icon";
-import Tag from "../Tag";
-
-type CellTagColor = "GREEN" | "BLUE" | "ORANGE" | "PURPLE" | "RED" | "GRAY";
+import Tag, { type TagColor } from "../Tag";
 
 interface TableCellProps {
   type:
@@ -20,7 +18,7 @@ interface TableCellProps {
   secondText?: string;
   onClickFirst?: () => void;
   onClickSecond?: () => void;
-  color?: CellTagColor;
+  color?: TagColor;
   width?: string | number;
   minWidth?: number;
 }
