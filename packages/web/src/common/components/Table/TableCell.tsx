@@ -90,7 +90,7 @@ const TableCell: React.FC<TableCellProps> = ({
     width={width}
     isHeader={type === "Header" || type === "HeaderSort"}
   >
-    {type === "Default" && <CellText isGray={false}>default</CellText>}
+    {type === "Default" && <CellText isGray={false}>{text}</CellText>}
     {type === "None" && <CellText isGray>None</CellText>}
     {type === "Tag" && <CellTagInner color={color}>{text}</CellTagInner>}
     {type === "Button" && <TextButton text={text} onClick={onClickFirst} />}
