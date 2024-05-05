@@ -45,10 +45,10 @@ const TableButtonCell: React.FC<TableButtonCellProps> = ({
   <CommonCellWrapper width={width} minWidth={minWidth}>
     <ButtonsWrapper>
       {text.map((item, index) => (
-        <>
+        <React.Fragment key={item}>
           <TextButton text={item} onClick={onClick[index]} />
           {index < text.length - 1 && <CellText isGray>/</CellText>}
-        </>
+        </React.Fragment>
       ))}
     </ButtonsWrapper>
   </CommonCellWrapper>
