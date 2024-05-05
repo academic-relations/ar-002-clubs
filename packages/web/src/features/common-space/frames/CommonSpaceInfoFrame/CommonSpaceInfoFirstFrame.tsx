@@ -6,7 +6,7 @@ import Select, {
 } from "@sparcs-clubs/web/common/components/Forms/Select";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
-import { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
+import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 
 const StyledCard = styled(Card)<{ type: string }>`
   padding: 32px;
