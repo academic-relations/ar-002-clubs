@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { addMinutes, startOfWeek } from "date-fns";
 import { ko } from "date-fns/locale";
 
-import { TimetableCellType } from "./_atomic/TimetableCell";
+import type { TimetableCellType } from "./_atomic/TimetableCell";
 import TimetableTable from "./_atomic/TimetableTable";
 import WeekNavigator from "./_atomic/WeekNavigator";
 import TimetableDateList from "./_atomic/TimetableDateList";
