@@ -32,7 +32,7 @@ const styleSwitch = (theme: DefaultTheme, type: TimetableCellType) => {
     case "past":
       return {
         background: theme.colors.MINT[300],
-        border: `1px solid ${theme.colors.WHITE}`,
+        border: `1px solid ${theme.colors.GRAY[200]}`,
       };
     default:
       return {
