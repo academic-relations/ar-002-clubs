@@ -3,35 +3,55 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 import { eq } from "drizzle-orm";
 import { Student, User } from "src/drizzle/schema/user.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
+import {
+  UserTokenDto,
+  UserProfileCreateInput,
+  UserProfileUpdateInput,
+} from "src/common/dto/user.dto";
 
 @Injectable()
 export class UserRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  async create(studentId: number) {
+  async findById(userId: number): Promise<UserTokenDto | null> {
     const user = await this.db
       .select()
-      .from(Student)
-      .where(eq(Student.id, studentId))
-      .leftJoin(User, eq(User.id, Student.userId));
-    return user;
+      .from(User)
+      .where(eq(User.id, userId))
+      .leftJoin(Student, eq(User.id, Student.userId));
+    return user ? this.mapToProfileDto(user[0]) : null;
   }
 
-  // async createUser(
-  //   user: Prisma.session_userprofileCreateInput,
-  // ): Promise<session_userprofile> {
-  //   return await this.prisma.session_userprofile.create({
-  //     data: user,
-  //   });
-  // }
+  async findBySid(sid: string): Promise<UserTokenDto | null> {
+    const user = await this.db
+      .select()
+      .from(User)
+      .where(eq(User.sid, sid))
+      .leftJoin(Student, eq(User.id, Student.userId));
+    return user[0] ? this.mapToProfileDto(user[0]) : null;
+  }
 
-  // async updateUser(
-  //   userId: number,
-  //   user: Prisma.session_userprofileUpdateInput,
-  // ): Promise<session_userprofile> {
-  //   return await this.prisma.session_userprofile.update({
-  //     data: user,
-  //     where: { id: userId },
-  //   });
-  // }
+  async createUser(user: UserProfileCreateInput): Promise<UserTokenDto> {
+    await this.db.insert(User).values(user);
+    return this.findBySid(user.sid) as Promise<UserTokenDto>;
+  }
+
+  async updateUser(
+    userId: number,
+    user: UserProfileUpdateInput,
+  ): Promise<UserTokenDto> {
+    await this.db.update(User).set(user).where(eq(User.id, userId));
+    return this.findBySid(user.sid) as Promise<UserTokenDto>;
+  }
+
+  private mapToProfileDto(dbRecord): UserTokenDto {
+    const { user } = dbRecord;
+    return {
+      id: user.id,
+      sid: user.sid,
+      email: user.email,
+      name: user.name,
+      refreshToken: user.refreshToken,
+    };
+  }
 }

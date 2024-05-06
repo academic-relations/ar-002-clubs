@@ -2,6 +2,7 @@ import { ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { AuthGuard } from "@nestjs/passport";
 import { IS_PUBLIC_KEY } from "src/common/decorator/skip-auth.decorator";
+import { Observable } from "rxjs";
 import { AuthService } from "../service/auth.service";
 
 @Injectable()
@@ -13,7 +14,9 @@ export class JwtCookieGuard extends AuthGuard("jwt-cookie") {
     super();
   }
 
-  canActivate(context: ExecutionContext) {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),

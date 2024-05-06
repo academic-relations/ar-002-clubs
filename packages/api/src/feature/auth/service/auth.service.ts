@@ -3,7 +3,7 @@ import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { getJwtConfig } from "@sparcs-clubs/api/env";
 import { UserRepository } from "src/common/repository/user.repository";
-// import { ProfileDto } from "@sparcs-clubs/api/common/dto/auth.dto";
+import { UserTokenDto } from "@sparcs-clubs/api/common/dto/user.dto";
 import { SSOUser } from "../dto/sso.dto";
 
 @Injectable()
@@ -21,8 +21,8 @@ export class AuthService {
     const { sid } = ssoProfile;
     let user = await this.findBySid(sid);
 
-    const kaistInfo = ssoProfile.kaist_info;
-    const studentId = kaistInfo.ku_std_no ?? "";
+    // const kaistInfo = ssoProfile.kaist_info;
+    // const studentId = kaistInfo.ku_std_no ?? "";
 
     const { accessToken, ...accessTokenOptions } =
       this.getCookieWithAccessToken(sid);
@@ -36,23 +36,19 @@ export class AuthService {
       user = await this.createUser(
         sid,
         ssoProfile.email,
-        studentId,
         ssoProfile.first_name,
         ssoProfile.last_name,
         encryptedRefreshToken,
       );
-      // } else {
-      //   if (user.student_id !== studentId) {
-      //     await import_student_lectures(studentId);
-      //   }
-
-      const updateData = {
-        first_name: ssoProfile.first_name,
-        last_name: ssoProfile.last_name,
-        student_id: studentId,
-        refresh_token: encryptedRefreshToken,
-      };
-      user = await this.updateUser(user.id, updateData);
+    } else {
+      user = await this.updateUser(
+        user.id,
+        sid,
+        ssoProfile.email,
+        ssoProfile.first_name,
+        ssoProfile.last_name,
+        encryptedRefreshToken,
+      );
     }
 
     return {
@@ -103,30 +99,37 @@ export class AuthService {
     };
   }
 
-  // async createUser(
-  //   sid: string,
-  //   email: string,
-  //   studentId: string,
-  //   firstName: string,
-  //   lastName: string,
-  //   refreshToken: string,
-  // ): Promise<ProfileDto> {
-  //   const user = {
-  //     sid,
-  //     email,
-  //     first_name: firstName,
-  //     last_name: lastName,
-  //     date_joined: new Date(),
-  //     student_id: studentId,
-  //     refresh_token: refreshToken,
-  //   };
-  //   return await this.userRepository.createUser(user);
-  // }
+  async createUser(
+    sid: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+    refreshToken: string,
+  ): Promise<UserTokenDto> {
+    const user = {
+      sid,
+      email,
+      name: `${lastName}${firstName}`,
+      refreshToken,
+    };
+    return this.userRepository.createUser(user);
+  }
 
-  // async updateUser(
-  //   userId: number,
-  //   user: Prisma.session_userprofileUpdateInput,
-  // ): Promise<ProfileDto> {
-  //   return await this.userRepository.updateUser(userId, user);
-  // }
+  async updateUser(
+    userId: number,
+    sid: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+    refreshToken: string,
+  ): Promise<UserTokenDto> {
+    const user = {
+      sid,
+      email,
+      firstName,
+      lastName,
+      refreshToken,
+    };
+    return this.userRepository.updateUser(userId, user);
+  }
 }

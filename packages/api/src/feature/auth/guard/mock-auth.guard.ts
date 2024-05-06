@@ -9,9 +9,9 @@ import {
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-import { Request } from "express";
 import { IS_PUBLIC_KEY } from "src/common/decorator/skip-auth.decorator";
 import { getJwtConfig } from "@sparcs-clubs/api/env";
+import { Request } from "../dto/auth.dto";
 import { AuthService } from "../service/auth.service";
 
 @Injectable()
@@ -45,7 +45,8 @@ export class MockAuthGuard implements CanActivate {
       const payload = await this.jwtService.verify(accessTokenFromCookie, {
         secret: getJwtConfig().secret,
       });
-      const user = this.authService.findBySid(payload.sid);
+      const user = await this.authService.findBySid(payload.sid);
+
       request.user = user;
       return this.determineAuth(context, true);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -65,8 +66,8 @@ export class MockAuthGuard implements CanActivate {
             throw new NotFoundException("user is not found");
           }
           if (
-            user.refresh_token &&
-            (await bcrypt.compare(refreshToken, user.refresh_token))
+            user.refreshToken &&
+            (await bcrypt.compare(refreshToken, user.refreshToken))
           ) {
             const { accessToken, ...accessTokenOptions } =
               this.authService.getCookieWithAccessToken(payload.sid);

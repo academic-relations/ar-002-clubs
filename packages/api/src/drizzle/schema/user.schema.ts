@@ -12,6 +12,7 @@ export const User = mysqlTable("user", {
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }),
   phoneNumber: varchar("phone_number", { length: 255 }),
+  refreshToken: varchar("refresh_token", { length: 255 }),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
   deletedAt: timestamp("deleted_at"),

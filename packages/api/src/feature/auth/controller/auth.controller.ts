@@ -1,5 +1,5 @@
 import { Controller, Get, Query, Req, Res, Session } from "@nestjs/common";
-import { ProfileDto } from "src/common/dto/auth.dto";
+import { ProfileDto } from "src/common/dto/user.dto";
 import { GetUser } from "src/common/decorator/get-user.decorator";
 import { Public } from "src/common/decorator/skip-auth.decorator";
 import { UserService } from "src/feature/user/service/user.service";
@@ -9,7 +9,7 @@ import { SSOUser } from "../dto/sso.dto";
 import { AuthService } from "../service/auth.service";
 import { Client } from "../util/sparcs-sso";
 
-@Controller("session")
+@Controller("api/auth")
 export class AuthController {
   private readonly ssoClient;
 
@@ -91,7 +91,7 @@ export class AuthController {
   @Public()
   @Get("/")
   async home(@Req() req: Request, @Res() res: Response) {
-    return res.redirect("/session/login");
+    return res.redirect("/auth/login");
   }
 
   @Public()
@@ -114,7 +114,7 @@ export class AuthController {
       res.clearCookie("accessToken", { path: "/", maxAge: 0, httpOnly: true });
       res.clearCookie("refreshToken", { path: "/", maxAge: 0, httpOnly: true });
 
-      console.log(logoutUrl);
+      // console.log(logoutUrl);
       return res.redirect(logoutUrl);
     }
 

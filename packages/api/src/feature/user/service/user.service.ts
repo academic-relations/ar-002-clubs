@@ -6,7 +6,7 @@ export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   async findStudentById(query: number) {
-    const student = await this.userRepository.create(query);
+    const student = await this.userRepository.findById(query);
     if (!student) {
       throw new HttpException("Student Doesn't exist", HttpStatus.NOT_FOUND);
     }
