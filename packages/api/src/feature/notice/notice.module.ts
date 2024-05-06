@@ -1,9 +1,13 @@
 import { Module } from "@nestjs/common";
-import { NoticeController } from "./controller/notice.controller";
-import { NoticeService } from "./service/notice.service";
+import { DrizzleModule } from "src/drizzle/drizzle.module";
+
+import { NoticesRepository } from "./repository/notices.repository";
+import { NoticesController } from "./controller/notices.controller";
+import { NoticesService } from "./service/notices.service";
 
 @Module({
-  controllers: [NoticeController],
-  providers: [NoticeService],
+  imports: [DrizzleModule],
+  controllers: [NoticesController],
+  providers: [NoticesService, NoticesRepository],
 })
 export class NoticeModule {}
