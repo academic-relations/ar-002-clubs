@@ -52,14 +52,14 @@ const UploadIcon = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 8px 0px 8px 0px;
+  padding: 8px 0;
   gap: 10px;
 
   width: 40px;
   border-radius: 0px 4px 4px 0px;
 
   /* primary */
-  background: ${({ theme }) => theme.colors.MINT[800]};
+  background: ${({ theme }) => theme.colors.PRIMARY};
 
   /* Inside auto layout */
   /* flex: none;

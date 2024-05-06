@@ -10,15 +10,15 @@ import type { SelectItem } from "@sparcs-clubs/web/common/components/Forms/Selec
 
 import type { PrintingBusinessFormProps } from ".";
 
-interface PrintingBusinessFormFirstProps {
-  username: PrintingBusinessFormProps["username"];
-  clubs: PrintingBusinessFormProps["clubs"];
-  requestParam: PrintingBusinessFormProps["requestParam"];
-  setRequestParam: PrintingBusinessFormProps["setRequestParam"];
-  requestForm: PrintingBusinessFormProps["requestForm"];
-  setRequestForm: PrintingBusinessFormProps["setRequestForm"];
-  setFormError: React.Dispatch<React.SetStateAction<boolean>>;
-}
+type PrintingBusinessFormFirstProps = Pick<
+  PrintingBusinessFormProps,
+  | "username"
+  | "clubs"
+  | "requestParam"
+  | "setRequestParam"
+  | "requestForm"
+  | "setRequestForm"
+> & { setFormError: React.Dispatch<React.SetStateAction<boolean>> };
 
 const StyledCard = styled(Card)<{ type: string }>`
   padding: 32px;

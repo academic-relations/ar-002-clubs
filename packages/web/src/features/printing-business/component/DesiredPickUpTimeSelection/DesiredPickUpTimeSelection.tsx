@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+
+import responsive from "@sparcs-clubs/web/styles/themes/responsive";
 
 import SingleDateSelectionCalendar from "./_atomic/SingleDateSelectionCalendar";
 import TimeSlotList from "./_atomic/TimeSlotList";
@@ -12,7 +14,7 @@ interface DesiredPickUpTimeSelectionProps {
 }
 
 const DesiredPickUpTimeSelectionInner = styled.div`
-  width: 1056px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -32,12 +34,13 @@ const StyledLabel = styled.label`
   text-align: left;
 `;
 
-const CalendarAndTimeSlot = styled.div`
+const CalendarAndTimeSlot = styled.div<{ calendarSize: "sm" | "md" | "lg" }>`
   width: 100%;
 
   /* Auto layout */
   display: flex;
   flex-direction: row;
+  ${({ calendarSize }) => (calendarSize !== "lg" ? "flex-wrap: wrap;" : "")}
   align-items: center;
   padding: 0px;
   gap: 20px;
@@ -48,18 +51,47 @@ const DesiredPickUpTimeSelection: React.FC<DesiredPickUpTimeSelectionProps> = ({
   executiveWorkDates,
   value,
   onDateChange,
-}) => (
-  <DesiredPickUpTimeSelectionInner>
-    <StyledLabel>{label}</StyledLabel>
-    <CalendarAndTimeSlot>
-      <SingleDateSelectionCalendar
-        executiveWorkDates={executiveWorkDates}
-        value={value}
-        onDatesChange={onDateChange}
-      />
-      <TimeSlotList value={value} onDatesChange={onDateChange} />
-    </CalendarAndTimeSlot>
-  </DesiredPickUpTimeSelectionInner>
-);
+}) => {
+  const [calendarSize, setCalendarSize] = useState<"sm" | "md" | "lg">("lg");
+
+  useEffect(() => {
+    const updateSize = () => {
+      const width = window.innerWidth;
+      if (width < parseInt(responsive.BREAKPOINT.sm)) {
+        setCalendarSize("sm");
+      } else if (
+        width > parseInt(responsive.BREAKPOINT.sm) &&
+        width <= parseInt(responsive.BREAKPOINT.lg)
+      ) {
+        setCalendarSize("md");
+      } else if (width > parseInt(responsive.BREAKPOINT.lg)) {
+        setCalendarSize("lg");
+      }
+    };
+
+    window.addEventListener("resize", updateSize);
+    updateSize();
+
+    return () => window.removeEventListener("resize", updateSize);
+  }, [window, setCalendarSize]);
+  return (
+    <DesiredPickUpTimeSelectionInner>
+      <StyledLabel>{label}</StyledLabel>
+      <CalendarAndTimeSlot calendarSize={calendarSize}>
+        <SingleDateSelectionCalendar
+          calendarSize={calendarSize}
+          executiveWorkDates={executiveWorkDates}
+          value={value}
+          onDatesChange={onDateChange}
+        />
+        <TimeSlotList
+          value={value}
+          onDatesChange={onDateChange}
+          calendarSize={calendarSize}
+        />
+      </CalendarAndTimeSlot>
+    </DesiredPickUpTimeSelectionInner>
+  );
+};
 
 export default DesiredPickUpTimeSelection;

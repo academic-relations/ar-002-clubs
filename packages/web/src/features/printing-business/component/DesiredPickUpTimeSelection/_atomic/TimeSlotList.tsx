@@ -5,12 +5,13 @@ import { getHours, getMinutes, setHours, setMinutes } from "date-fns";
 import { executiveWorkingHourStart } from "@sparcs-clubs/web/constants/printingBusiness";
 
 interface TimeSlotListProps {
+  calendarSize: "sm" | "md" | "lg";
   value: Date;
   onDatesChange: (date: Date) => void;
 }
 
-const TimeSlotListInner = styled.div`
-  width: 300px;
+const TimeSlotListInner = styled.div<{ calendarSize: "sm" | "md" | "lg" }>`
+  width: ${({ calendarSize }) => (calendarSize === "md" ? "450px" : "300px")};
   flex: none;
   order: 1;
   align-self: stretch;
@@ -45,10 +46,11 @@ const TimeSlotSelection = styled.button<{ isSelected: boolean }>`
 `;
 
 const TimeSlotList: React.FC<TimeSlotListProps> = ({
+  calendarSize,
   value,
   onDatesChange,
 }) => (
-  <TimeSlotListInner>
+  <TimeSlotListInner calendarSize={calendarSize}>
     <TimeSlotSelection
       isSelected={
         getHours(value) === executiveWorkingHourStart && getMinutes(value) === 0

@@ -95,6 +95,7 @@ const PrintingBusinessForm: React.FC<PrintingBusinessFormProps> = ({
       <StyledButton>
         <Button onClick={onPrev}>이전</Button>
         <Button type={formError ? "disabled" : "default"} onClick={onNext}>
+          {/* todo!: 신청 버튼 클릭시 신청이 POST되는 API 호출이 필요합니다. */}
           {step === Step2Form.length ? "신청" : "다음"}
         </Button>
       </StyledButton>

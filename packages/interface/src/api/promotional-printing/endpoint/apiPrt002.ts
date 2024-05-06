@@ -31,6 +31,7 @@ const requestBody = z.object({
   isColorPrint: z.boolean(),
   fitPrintSizeToPaper: z.boolean(),
   requireMarginChopping: z.boolean(),
+  printingPurpose: z.string().max(512),
   desiredPickUpTime: z.date(), // datetime 유형에 대한 유효성 검사를 추가해야 합니다.
 });
 
