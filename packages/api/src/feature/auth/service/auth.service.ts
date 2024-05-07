@@ -1,15 +1,17 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { getJwtConfig } from "@sparcs-clubs/api/env";
 import { UserRepository } from "src/common/repository/user.repository";
-import { UserTokenDto } from "@sparcs-clubs/api/common/dto/user.dto";
+import { UserDto } from "@sparcs-clubs/api/common/dto/user.dto";
 import { SSOUser } from "../dto/sso.dto";
+import { AuthRepository } from "../repository/auth.repository";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly authRepository: AuthRepository,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -23,9 +25,10 @@ export class AuthService {
 
     // const kaistInfo = ssoProfile.kaist_info;
     // const studentId = kaistInfo.ku_std_no ?? "";
+    const role = "";
 
     const { accessToken, ...accessTokenOptions } =
-      this.getCookieWithAccessToken(sid);
+      this.getCookieWithAccessToken(sid, role);
     const { refreshToken, ...refreshTokenOptions } =
       this.getCookieWithRefreshToken(sid);
 
@@ -63,9 +66,43 @@ export class AuthService {
   //   sid: string,
   // ) {}
 
-  public getCookieWithAccessToken(sid: string) {
+  public async getRoles(userId: number): Promise<string[]> {
+    const roles = this.authRepository.findRolesById(userId);
+    return roles;
+  }
+
+  public async getCookieWithRoleAccessToken(
+    userId: number,
+    sid: string,
+    role: string,
+  ) {
+    const roles = await this.authRepository.findRolesById(userId);
+    if (!roles.includes(role)) {
+      throw new UnauthorizedException(`No access rights for role: ${role}`);
+    }
+
     const payload = {
       sid,
+      role,
+    };
+
+    const jwtConfig = getJwtConfig();
+    const token = this.jwtService.sign(payload, {
+      secret: jwtConfig.secret,
+      expiresIn: `${jwtConfig.signOptions.expiresIn}s`,
+    });
+    return {
+      accessToken: token,
+      path: "/",
+      httpOnly: true,
+      maxAge: Number(jwtConfig.signOptions.expiresIn) * 1000,
+    };
+  }
+
+  public getCookieWithAccessToken(sid: string, role: string) {
+    const payload = {
+      sid,
+      role,
     };
 
     const jwtConfig = getJwtConfig();
@@ -105,7 +142,7 @@ export class AuthService {
     firstName: string,
     lastName: string,
     refreshToken: string,
-  ): Promise<UserTokenDto> {
+  ): Promise<UserDto> {
     const user = {
       sid,
       email,
@@ -122,7 +159,7 @@ export class AuthService {
     firstName: string,
     lastName: string,
     refreshToken: string,
-  ): Promise<UserTokenDto> {
+  ): Promise<UserDto> {
     const user = {
       sid,
       email,

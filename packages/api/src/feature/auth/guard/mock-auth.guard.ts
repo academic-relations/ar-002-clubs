@@ -69,8 +69,9 @@ export class MockAuthGuard implements CanActivate {
             user.refreshToken &&
             (await bcrypt.compare(refreshToken, user.refreshToken))
           ) {
+            const role = "";
             const { accessToken, ...accessTokenOptions } =
-              this.authService.getCookieWithAccessToken(payload.sid);
+              this.authService.getCookieWithAccessToken(payload.sid, role);
 
             if (!request.res) {
               throw new InternalServerErrorException(

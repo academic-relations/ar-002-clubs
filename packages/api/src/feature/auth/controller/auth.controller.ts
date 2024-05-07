@@ -1,5 +1,5 @@
 import { Controller, Get, Query, Req, Res, Session } from "@nestjs/common";
-import { ProfileDto } from "src/common/dto/user.dto";
+import { UserDto } from "src/common/dto/user.dto";
 import { GetUser } from "src/common/decorator/get-user.decorator";
 import { Public } from "src/common/decorator/skip-auth.decorator";
 import { UserService } from "src/feature/user/service/user.service";
@@ -82,8 +82,32 @@ export class AuthController {
     response.redirect(next_url);
   }
 
+  @Get("roles")
+  async getRoles(@GetUser() user: UserDto): Promise<string[]> {
+    const roles = await this.authService.getRoles(user.id);
+    return roles;
+  }
+
+  @Get("roles/role")
+  async selectRole(
+    @Query("role") role: string,
+    @GetUser() user: UserDto,
+    @Res() response: Response,
+    @Query("next") next: string,
+  ) {
+    const { accessToken, ...accessTokenOptions } =
+      await this.authService.getCookieWithRoleAccessToken(
+        user.id,
+        user.sid,
+        role,
+      );
+
+    response.cookie("accessToken", accessToken, accessTokenOptions);
+    response.redirect(next ?? "/");
+  }
+
   @Get("info")
-  async getUserProfile(@GetUser() user: ProfileDto): Promise<ProfileDto> {
+  async getUserProfile(@GetUser() user: UserDto): Promise<UserDto> {
     const profile = user;
     return profile;
   }
@@ -100,9 +124,8 @@ export class AuthController {
     @Req() req: Request,
     @Res() res: Response,
     @Query("next") next: string,
-    @GetUser() user: ProfileDto,
+    @GetUser() user: UserDto,
   ) {
-    const webURL = process.env.WEB_URL;
     if (user) {
       const { sid } = user;
       const { protocol } = req;
@@ -118,6 +141,6 @@ export class AuthController {
       return res.redirect(logoutUrl);
     }
 
-    return res.redirect(`${webURL}/`);
+    return res.redirect(next ?? "/");
   }
 }

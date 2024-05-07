@@ -7,6 +7,7 @@ import { UserService } from "../user/service/user.service";
 import { AuthController } from "./controller/auth.controller";
 import { AuthService } from "./service/auth.service";
 import { JwtCookieStrategy } from "./strategy/jwt-cookie.strategy";
+import { AuthRepository } from "./repository/auth.repository";
 
 @Module({
   imports: [
@@ -15,7 +16,13 @@ import { JwtCookieStrategy } from "./strategy/jwt-cookie.strategy";
     JwtModule.register({}),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtCookieStrategy, UserService, UserRepository],
+  providers: [
+    AuthService,
+    JwtCookieStrategy,
+    UserService,
+    UserRepository,
+    AuthRepository,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

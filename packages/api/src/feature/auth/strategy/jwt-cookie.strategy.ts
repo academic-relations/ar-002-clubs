@@ -1,7 +1,8 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { getJwtConfig } from "@sparcs-clubs/api/env";
+import { UserDto } from "@sparcs-clubs/api/common/dto/user.dto";
 import { JwtPayload } from "../dto/auth.dto";
 import { AuthService } from "../service/auth.service";
 
@@ -26,14 +27,12 @@ export class JwtCookieStrategy extends PassportStrategy(
     });
   }
 
-  async validate(payload: JwtPayload) {
-    console.log("JWT Payload:", payload);
-    const user = await this.authService.findBySid(payload.sid);
-    if (!user) {
-      console.log("User not found with SID:", payload.sid);
-      throw new UnauthorizedException();
-    }
-    console.log("Authenticated User:", user);
-    return user; // This should be the complete user object
+  async validate(payload: JwtPayload): Promise<UserDto> {
+    const userInfo = await this.authService.findBySid(payload.sid);
+    // if (payload.role === "student") {
+    const roleInfo = { studentId: 20230000, studentNumber: 2929292 };
+    // }
+    const user = { ...userInfo, ...roleInfo };
+    return user;
   }
 }
