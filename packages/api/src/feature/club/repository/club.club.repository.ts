@@ -31,7 +31,6 @@ export class ClubRepository {
       .where(eq(Club.id, clubId))
       .limit(1)
       .then(takeUniqueOrThrow);
-    console.log(clubInfo);
 
     // TODO 아래 내용은 division Repository 로 옮겨야 함.
     const divisionName = await this.db
@@ -39,7 +38,6 @@ export class ClubRepository {
       .from(Club)
       .leftJoin(Division, eq(Division.id, Club.divisionId))
       .then(takeUniqueOrThrow); // club 이 여러 division 에도 속할 수 있는지?
-    console.log(divisionName);
 
     return { clubInfo, divisionName };
   }

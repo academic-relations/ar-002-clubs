@@ -21,7 +21,7 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     id: z.number().int().min(1),
     name: z.string().max(20),
-    type: z.number().int().max(10), // 동아리 유형(정동아리 | 가동아리 | 상임동아리)
+    type: z.number().int(), // 동아리 유형(정동아리 | 가동아리 | 상임동아리)
     characteristic: z.string().max(50), // 동아리 소개
     representative: z.string().max(20), // 동아리 대표
     advisor: z.string().max(20).nullable(), // 동아리 지도교수
