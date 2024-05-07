@@ -28,11 +28,9 @@ export class JwtCookieStrategy extends PassportStrategy(
   }
 
   async validate(payload: JwtPayload): Promise<UserDto> {
-    const userInfo = await this.authService.findBySid(payload.sid);
-    // if (payload.role === "student") {
-    const roleInfo = { studentId: 20230000, studentNumber: 2929292 };
-    // }
-    const user = { ...userInfo, ...roleInfo };
-    return user;
+    const userInfo = await this.authService.findAllProfileInfoBySid(
+      payload.sid,
+    );
+    return userInfo;
   }
 }

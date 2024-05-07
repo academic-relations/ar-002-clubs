@@ -31,6 +31,15 @@ export class UserRepository {
     return user[0] ? this.mapToUserDto(user[0]) : null;
   }
 
+  async findAllProfileInfoBySid(sid: string): Promise<UserDto | null> {
+    const user = await this.db
+      .select()
+      .from(User)
+      .where(eq(User.sid, sid))
+      .leftJoin(Student, eq(User.id, Student.userId));
+    return user[0] ? this.mapToUserDto(user[0]) : null;
+  }
+
   async createUser(user: UserProfileCreateInput): Promise<UserDto> {
     await this.db.insert(User).values(user);
     return this.findBySid(user.sid) as Promise<UserDto>;
@@ -53,6 +62,7 @@ export class UserRepository {
       name: user.name,
       phoneNumber: user.phoneNumber,
       refreshToken: user.refreshToken,
+      studentId: 1111111,
     };
   }
 }

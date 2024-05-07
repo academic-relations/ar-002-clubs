@@ -19,6 +19,10 @@ export class AuthService {
     return this.userRepository.findBySid(sid);
   }
 
+  public async findAllProfileInfoBySid(sid: string) {
+    return this.userRepository.findAllProfileInfoBySid(sid);
+  }
+
   public async ssoLogin(ssoProfile: SSOUser) {
     const { sid } = ssoProfile;
     let user = await this.findBySid(sid);
