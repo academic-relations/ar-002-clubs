@@ -10,6 +10,7 @@ export class AuthRepository {
     private readonly userRepository: UserRepository,
   ) {}
 
+  // TODO: 임시 로직이므로 제대로된 역할을 불러오도록 수정 필요
   async findRolesById(userId: number) {
     this.userRepository.findById(userId);
     const roles = ["student", "executive"];

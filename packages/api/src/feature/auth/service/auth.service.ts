@@ -43,8 +43,7 @@ export class AuthService {
       user = await this.createUser(
         sid,
         ssoProfile.email,
-        ssoProfile.first_name,
-        ssoProfile.last_name,
+        `${ssoProfile.last_name}${ssoProfile.first_name}`,
         encryptedRefreshToken,
       );
     } else {
@@ -52,8 +51,7 @@ export class AuthService {
         user.id,
         sid,
         ssoProfile.email,
-        ssoProfile.first_name,
-        ssoProfile.last_name,
+        `${ssoProfile.last_name}${ssoProfile.first_name}`,
         encryptedRefreshToken,
       );
     }
@@ -65,10 +63,6 @@ export class AuthService {
       refreshTokenOptions,
     };
   }
-
-  // public getCookieWithToken<T extends "refreshToken" | "accessToken">(
-  //   sid: string,
-  // ) {}
 
   public async getRoles(userId: number): Promise<string[]> {
     const roles = this.authRepository.findRolesById(userId);
@@ -95,6 +89,7 @@ export class AuthService {
       secret: jwtConfig.secret,
       expiresIn: `${jwtConfig.signOptions.expiresIn}s`,
     });
+
     return {
       accessToken: token,
       path: "/",
@@ -143,14 +138,13 @@ export class AuthService {
   async createUser(
     sid: string,
     email: string,
-    firstName: string,
-    lastName: string,
+    name: string,
     refreshToken: string,
   ): Promise<UserDto> {
     const user = {
       sid,
       email,
-      name: `${lastName}${firstName}`,
+      name,
       refreshToken,
     };
     return this.userRepository.createUser(user);
@@ -160,15 +154,13 @@ export class AuthService {
     userId: number,
     sid: string,
     email: string,
-    firstName: string,
-    lastName: string,
+    name: string,
     refreshToken: string,
   ): Promise<UserDto> {
     const user = {
       sid,
       email,
-      firstName,
-      lastName,
+      name,
       refreshToken,
     };
     return this.userRepository.updateUser(userId, user);

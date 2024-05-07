@@ -7,6 +7,7 @@ interface _UserDto {
   email: string;
   phoneNumber: string;
   name: string;
+  role: string;
   refreshToken: string;
 }
 

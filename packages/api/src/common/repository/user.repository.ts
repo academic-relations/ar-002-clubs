@@ -31,6 +31,7 @@ export class UserRepository {
     return user[0] ? this.mapToUserDto(user[0]) : null;
   }
 
+  // TODO: 임시 로직이므로 실제 정보를 받아오도록 수정 필요
   async findAllProfileInfoBySid(sid: string): Promise<UserDto | null> {
     const user = await this.db
       .select()
@@ -53,6 +54,7 @@ export class UserRepository {
     return this.findBySid(user.sid) as Promise<UserDto>;
   }
 
+  // TODO: 임시 로직이므로 실제 학번 정보를 받아서 입력하도록수정 필요
   private mapToUserDto(dbRecord): UserDto {
     const { user } = dbRecord;
     return {
@@ -62,7 +64,10 @@ export class UserRepository {
       name: user.name,
       phoneNumber: user.phoneNumber,
       refreshToken: user.refreshToken,
-      studentId: 1111111,
+      // 이 부분에 대한 수정 필요
+      role: "student",
+      studentId: 1,
+      studentNumber: 20210227,
     };
   }
 }
