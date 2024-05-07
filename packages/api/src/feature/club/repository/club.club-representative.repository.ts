@@ -2,8 +2,8 @@ import { Injectable, Inject } from "@nestjs/common";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { ClubRepresentativeD } from "src/drizzle/schema/club.schema";
-import { eq, and, desc } from "drizzle-orm";
 import { User } from "src/drizzle/schema/user.schema";
+import { eq, and, desc } from "drizzle-orm";
 
 const takeUniqueOrThrow = <T>(values: T[]): T => {
   if (values.length !== 1)
