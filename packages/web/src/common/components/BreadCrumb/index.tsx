@@ -12,6 +12,7 @@ interface BreadCrumbItemDetails {
 
 interface BreadCrumbProps {
   items: BreadCrumbItemDetails[];
+  enableLast?: boolean;
 }
 
 const BreadCrumbContainer = styled.div`
@@ -20,7 +21,10 @@ const BreadCrumbContainer = styled.div`
   gap: 12px;
 `;
 
-const BreadCrumb: React.FC<BreadCrumbProps> = ({ items }) => {
+const BreadCrumb: React.FC<BreadCrumbProps> = ({
+  items,
+  enableLast = false,
+}) => {
   const itemsWithMain = [{ name: "메인", path: "/" }, ...items];
 
   return (
@@ -30,7 +34,9 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({ items }) => {
           <Link href={item.path} passHref>
             <BreadCrumbItem
               text={item.name}
-              disabled={index === itemsWithMain.length - 1}
+              disabled={
+                index === itemsWithMain.length - 1 ? !enableLast : false
+              }
             />
           </Link>
           {index < itemsWithMain.length - 1 && (
