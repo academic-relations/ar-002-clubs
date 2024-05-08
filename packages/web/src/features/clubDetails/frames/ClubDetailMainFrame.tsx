@@ -9,7 +9,7 @@ import ClubInfoCard from "@sparcs-clubs/web/features/clubDetails/components/Club
 import PersonInfoCard from "@sparcs-clubs/web/features/clubDetails/components/PersonInfoCard";
 import ClubDetailCard from "@sparcs-clubs/web/features/clubDetails/components/ClubDetailCard";
 import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb/BreadCrumb";
+import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
 
 interface ClubDetailMainFrameProps {
   club: ApiClb002ResponseOK;

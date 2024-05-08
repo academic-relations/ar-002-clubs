@@ -5,7 +5,7 @@ import React from "react";
 import ClubsPageMainFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsPageMainFrame";
 
 import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb/BreadCrumb";
+import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
 import styled from "styled-components";
 // import { DivisionType } from "@sparcs-clubs/web/types/divisions.types";
 
