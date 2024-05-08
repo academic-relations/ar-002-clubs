@@ -26,7 +26,7 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({ items }) => {
   return (
     <BreadCrumbContainer>
       {itemsWithMain.map((item, index) => (
-        <>
+        <React.Fragment key={item.name}>
           <Link href={item.path} passHref>
             <BreadCrumbItem
               text={item.name}
@@ -36,7 +36,7 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({ items }) => {
           {index < itemsWithMain.length - 1 && (
             <Icon type="chevron_right" size={20} color={colors.PRIMARY} />
           )}
-        </>
+        </React.Fragment>
       ))}
     </BreadCrumbContainer>
   );
