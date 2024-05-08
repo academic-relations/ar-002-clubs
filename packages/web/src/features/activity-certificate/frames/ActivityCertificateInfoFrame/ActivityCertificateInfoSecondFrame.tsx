@@ -359,6 +359,7 @@ const ActivityCertificateInfoSecondFrame: React.FC<
         <IconButton
           type={activityCertificate.detail.length < 5 ? "default" : "disabled"}
           onClick={handleAddActivityDescription}
+          buttonText="활동 내역 추가"
           iconType="add"
         />
       </StyledCard>

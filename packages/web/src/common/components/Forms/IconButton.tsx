@@ -6,6 +6,7 @@ import Icon from "../Icon";
 
 export interface IconButtonProps extends HTMLAttributes<HTMLDivElement> {
   type: "default" | "disabled" | "outlined";
+  buttonText: string;
   iconType: string;
 }
 
@@ -20,13 +21,14 @@ const ButtonInner = styled.div`
 
 const IconButton: React.FC<IconButtonProps> = ({
   type = "default",
+  buttonText = "",
   iconType = "",
   ...props
 }) => (
   <Button type={type} {...props}>
     <ButtonInner>
       <Icon type={iconType} size={16} color="white" />
-      <Typography type="span">활동 내역 추가</Typography>
+      <Typography type="span">{buttonText}</Typography>
     </ButtonInner>
   </Button>
 );
