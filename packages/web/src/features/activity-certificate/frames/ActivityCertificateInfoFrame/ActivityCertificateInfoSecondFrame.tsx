@@ -5,8 +5,8 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import Button from "@sparcs-clubs/web/common/components/Button";
 import DateRangeInput from "@sparcs-clubs/web/common/components/Forms/DateRangeInput";
+import IconButton from "@sparcs-clubs/web/common/components/Forms/IconButton";
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 // eslint-disable-next-line no-restricted-imports
 import { ActivityDescription } from "../../types/activityCertificate";
@@ -57,16 +57,14 @@ const IconInnerFrameInner = styled.div`
 
 const InputFrameInner = styled.div`
   flex: 1 1 0;
-  /* height: 36px; */
   justify-content: center;
   align-items: flex-start;
   gap: 20px;
   display: flex;
 `;
 
-const DescriptionInputFrameinner = styled.div`
+const DescriptionInputFrameInner = styled.div`
   width: 100%;
-  /* height: 36px; */
   justify-content: flex-start;
   align-items: center;
   gap: 12px;
@@ -292,7 +290,7 @@ const ActivityCertificateInfoSecondFrame: React.FC<
             </IconOuterFrameInner>
 
             <InputFrameInner>
-              <DescriptionInputFrameinner>
+              <DescriptionInputFrameInner>
                 <DateRangeInput
                   setErrorStatus={e =>
                     handleError(
@@ -344,7 +342,7 @@ const ActivityCertificateInfoSecondFrame: React.FC<
                     )
                   }
                 />
-              </DescriptionInputFrameinner>
+              </DescriptionInputFrameInner>
             </InputFrameInner>
 
             <IconOuterFrameInner
@@ -358,12 +356,11 @@ const ActivityCertificateInfoSecondFrame: React.FC<
             </IconOuterFrameInner>
           </ActivityCertificateRow>
         ))}
-        <Button
+        <IconButton
           type={activityCertificate.detail.length < 5 ? "default" : "disabled"}
           onClick={handleAddActivityDescription}
-        >
-          + 활동 내역 추가
-        </Button>
+          iconType="add"
+        />
       </StyledCard>
     </ActivityCertificateSecondFrameInner>
   );

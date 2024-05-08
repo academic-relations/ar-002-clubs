@@ -94,7 +94,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
             ? activityCertificate.clubId.toString()
             : undefined
         }
-      />{" "}
+      />
       {/* TODO - 유저 동아리 목록 받아서 채우고 onchange 시 state 업데이트 */}
       <TextInput label="활동 기간" placeholder="" disabled />
       <ItemNumberInput
