@@ -42,6 +42,7 @@ interface TypographyPropsWithCustomStyles extends TypographyPropsBase {
   fs?: number;
   lh?: number;
   fw?: keyof Theme["fonts"]["WEIGHT"];
+  ff?: keyof Theme["fonts"]["FAMILY"];
   color?: ThemeColors;
 }
 
@@ -57,7 +58,7 @@ type TypographyProps =
 const TypographyInner = styled.div<TypographyPropsWithCustomStyles>`
   color: ${({ color, theme }) =>
     color ? getColorFromTheme(theme, color) : "inherit"};
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+  font-family: ${({ theme, ff }) => (ff ? theme.fonts.FAMILY[ff] : "inherit")};
   font-size: ${({ fs }) => (fs ? `${fs}px` : "inherit")};
   line-height: ${({ lh }) => (lh ? `${lh}px` : "inherit")};
   font-weight: ${({ fw, theme }) => (fw ? theme.fonts.WEIGHT[fw] : "inherit")};
