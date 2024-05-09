@@ -124,7 +124,7 @@ export const clubRepresentativeD = mysqlTable(
     clubRepresentativeEnum: int("club_representative_enum").notNull(),
     // .references(() => ClubRepresentativeEnum.id),
     startTerm: datetime("start_term", { mode: "string" }).notNull(),
-    endTerm: datetime("end_term", { mode: "string" }),
+    endTerm: datetime("end_term"),
     createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
     deletedAt: timestamp("deleted_at", { mode: "string" }),
   },
