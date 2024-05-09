@@ -6,8 +6,8 @@ export class ClubController {
   constructor(private readonly clubService: ClubService) {}
 
   @Get("clubs")
-  async getAllClubs() {
-    const result = await this.clubService.getAllClubs();
+  async getClubs() {
+    const result = await this.clubService.getClubs();
     return result;
   }
 }

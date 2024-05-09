@@ -13,21 +13,8 @@ import { Student, User } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { and, count, eq, sql, isNull, or, gte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
+import { IClubs } from "../dto/club.getclubs.dto";
 
-export interface IClubs {
-  divisionId: number;
-  divisionName: string;
-  clubs: {
-    clubId: number;
-    clubName: string;
-    clubType: number;
-    isPermanent: boolean;
-    characteristic: string;
-    representative: string;
-    advisor: string;
-    totalMemberCnt: number;
-  }[];
-}
 @Injectable()
 export class ClubRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
@@ -103,27 +90,3 @@ export class ClubRepository {
     return result;
   }
 }
-
-/*
-200: 정상 응답
-{
-   divisions:
-   [{
-      "id": (int, Division.id),
-      "name": (string, 20),
-      "clubs":
-      [{
-         "id": (int, Clubs.id), --> clubT에 있음.
-         "name": (string, 20), --> clubT에 있음.
-         "type": (int, ClubStatusEnum.id), --> clubT에 있음.
-         "isPermanent": (bool), --> division에 DivisionPermanentClubD있음.
-         "characteristic": (string, 50), --> clubT에 있음.
-         "representative": (string, 20), --> ClbuRepresentative에 있음.
-         "advisor": (string?, 20), --> ClubT에 있음.
-         "totalMemberCnt": (number, 0 < cnt), --> ClubStudentT의 count.
-      }]
-   }]
-}
-*/
-// 1. division 전체 목록 가져오기
-// 2. club과 join
