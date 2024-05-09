@@ -9,7 +9,9 @@ import { z } from "zod";
 const url = () => `/student/clubs/club/{club_id}/representatives`;
 const method = "GET";
 
-const requestParam = z.object({});
+const requestParam = z.object({
+  clubId: z.number().int(),
+});
 
 const requestQuery = z.object({});
 

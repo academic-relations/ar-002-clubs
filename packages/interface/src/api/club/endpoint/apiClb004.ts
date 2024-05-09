@@ -9,14 +9,19 @@ import { z } from "zod";
 const url = () => `/student/clubs/club/{club_id}/brief`;
 const method = "GET";
 
-const requestParam = z.object({});
+const requestParam = z.object({
+  clubId: z.number().int(),
+});
 
 const requestQuery = z.object({});
 
 const requestBody = z.object({});
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({}),
+  [HttpStatusCode.Ok]: z.object({
+    description: z.string(),
+    roomPassword: z.string().max(20),
+  }),
 };
 
 const responseErrorMap = {};
