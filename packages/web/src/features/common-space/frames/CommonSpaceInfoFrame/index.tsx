@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
-import { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
+import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 import CommonSpaceInfoFirstFrame from "./CommonSpaceInfoFirstFrame";
 import CommonSpaceInfoSecondFrame from "./CommonSpaceInfoSecondFrame";
 import CommonSpaceInfoThirdFrame from "./CommonSpaceInfoThirdFrame";

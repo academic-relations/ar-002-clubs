@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import TimetableCell, { TimetableCellType } from "./TimetableCell";
+import TimetableCell, { type TimetableCellType } from "./TimetableCell";
 
 interface TimetableTableProps {
   data: TimetableCellType[];

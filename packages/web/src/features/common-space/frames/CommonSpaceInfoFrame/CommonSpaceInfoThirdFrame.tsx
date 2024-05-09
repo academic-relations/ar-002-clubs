@@ -6,7 +6,7 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 
 import { differenceInHours, differenceInMinutes, format } from "date-fns";
 import { ko } from "date-fns/locale";
-import { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
+import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 
 const StyledCard = styled(Card)<{ type: string }>`
   padding: 32px;
