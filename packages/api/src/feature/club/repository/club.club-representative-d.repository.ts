@@ -3,13 +3,8 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { ClubRepresentativeD } from "src/drizzle/schema/club.schema";
 import { User } from "src/drizzle/schema/user.schema";
-import { eq, and, desc } from "drizzle-orm";
-
-const takeUniqueOrThrow = <T>(values: T[]): T => {
-  if (values.length !== 1)
-    throw new Error("Found non unique or inexistent value");
-  return values[0];
-};
+import { eq, and, lte, gte, or, isNull } from "drizzle-orm";
+import { takeUnique } from "src/common/util/util";
 
 @Injectable()
 export class ClubRepresentativeDRepository {
@@ -19,6 +14,8 @@ export class ClubRepresentativeDRepository {
   async findRepresentativeNameByClubId(
     clubId: number,
   ): Promise<{ name: string }> {
+    const currentDate = new Date().toISOString().slice(0, 19).replace("T", " ");
+
     const representative = await this.db
       .select({ name: User.name })
       .from(ClubRepresentativeD)
@@ -27,12 +24,17 @@ export class ClubRepresentativeDRepository {
         and(
           eq(ClubRepresentativeD.clubId, clubId),
           eq(ClubRepresentativeD.clubRepresentativeEnum, 1),
+          lte(ClubRepresentativeD.startTerm, currentDate),
+          or(
+            gte(ClubRepresentativeD.endTerm, currentDate),
+            isNull(ClubRepresentativeD.endTerm),
+          ),
         ),
       )
-      .orderBy(desc(ClubRepresentativeD.createdAt))
+      .orderBy(ClubRepresentativeD.endTerm)
       .limit(1)
-      .then(takeUniqueOrThrow);
+      .then(takeUnique);
 
-    return representative; // 또는 then 을 지우고 representativeName[0]
+    return representative;
   }
 }

@@ -1,21 +1,20 @@
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 import { Module } from "@nestjs/common";
+import { ClubRepository } from "@sparcs-clubs/api/common/repository/club.repository";
+import { ClubStudentTRepository } from "@sparcs-clubs/api/common/repository/club.club-student-t.repository";
 import { ClubController } from "./controller/club.controller";
 import { ClubService } from "./service/club.service";
-import { ClubRepository } from "./repository/club.club.repository";
-import { UserModule } from "../user/user.module";
 import { ClubRoomTRepository } from "./repository/club.club-room-t.repository";
-import { ClubRepresentativeDRepository } from "./repository/club.club-representative.repository";
-import { ClubStudentTRepository } from "./repository/club.club-student-t.repository";
+import { ClubRepresentativeDRepository } from "./repository/club.club-representative-d.repository";
 
 @Module({
-  imports: [DrizzleModule, UserModule],
+  imports: [DrizzleModule],
   controllers: [ClubController],
   providers: [
     ClubService,
-    ClubRepository,
     ClubRoomTRepository,
     ClubRepresentativeDRepository,
+    ClubRepository,
     ClubStudentTRepository,
   ],
   exports: [ClubService],
