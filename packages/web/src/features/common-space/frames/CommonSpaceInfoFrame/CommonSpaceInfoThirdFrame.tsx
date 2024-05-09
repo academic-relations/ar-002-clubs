@@ -56,7 +56,7 @@ const CommonSpaceInfoThirdFrame: React.FC<CommonSpaceFrameProps> = ({
           <StyledTypography type="p">신청자 정보</StyledTypography>
           <StyledList>
             <li>동아리: {commonSpace.info?.clubName}</li>
-            <li>담장자: {commonSpace.info?.applicant}</li>
+            <li>담당자: {commonSpace.info?.applicant}</li>
             <li>연락처: {commonSpace.info?.phone}</li>
           </StyledList>
         </CardInner>

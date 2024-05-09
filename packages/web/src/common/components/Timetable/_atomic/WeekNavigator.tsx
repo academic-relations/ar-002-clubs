@@ -53,7 +53,7 @@ const WeekNavigator: React.FC<WeekNavigatorProps> = ({
     <NavigatorWrapper>
       <Icon type="chevron_left" size={20} onClick={handlePrevious} />
       <WeekDisplay>
-        {`${format(currentDate, "M월", { locale: ko })} ${getWeekOfMonth(currentDate)}주`}
+        {`${format(currentDate, "yyyy년 M월", { locale: ko })} ${getWeekOfMonth(currentDate)}주`}
       </WeekDisplay>
       <Icon type="chevron_right" size={20} onClick={handleNext} />
     </NavigatorWrapper>

@@ -6,7 +6,7 @@ const TimetableTimeListInner = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  height: 1152px;
+  height: calc(24px * 48); // chage to 24px * 48
 `;
 
 const TimetableTime = styled.div`

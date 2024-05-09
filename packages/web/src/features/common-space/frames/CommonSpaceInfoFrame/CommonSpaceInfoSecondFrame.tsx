@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import Select, {
-  SelectItem,
-} from "@sparcs-clubs/web/common/components/Forms/Select";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Timetable from "@sparcs-clubs/web/common/components/Timetable";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import Select from "@sparcs-clubs/web/common/components/Forms/Select";
+
 import { differenceInHours, differenceInMinutes, format } from "date-fns";
 import { ko } from "date-fns/locale";
 
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
+import { mockCommonSpaceList } from "./mockCommonSpaceList";
 
 const StyledCard = styled(Card)<{ type: string }>`
   padding: 32px;
@@ -42,44 +42,6 @@ const StyledInfoCard = styled(Card)<{ type: string }>`
 const CommonSpaceInfoSecondFrame: React.FC<
   CommonSpaceFrameProps & { setNextEnabled: (enabled: boolean) => void }
 > = ({ setNextEnabled, commonSpace, setCommonSpace }) => {
-  const mockCommonSpaceList: SelectItem[] = [
-    {
-      label: "제1공용동아리방 (태울관 2101호)",
-      value: "1",
-      selectable: true,
-    },
-    {
-      label: "제2공용동아리방 (태울관 2102호)",
-      value: "2",
-      selectable: true,
-    },
-    {
-      label: "다용도실 (학부 학생회관 별관 3104호-3105호)",
-      value: "3",
-      selectable: false,
-    },
-    {
-      label: "체조실 (스포츠 콤플렉스 101호)",
-      value: "4",
-      selectable: true,
-    },
-    {
-      label: "제1무예실 (스포츠 컴플렉스 102호)",
-      value: "5",
-      selectable: true,
-    },
-    {
-      label: "제2무예실 (스포츠 컴플렉스 103호)",
-      value: "6",
-      selectable: true,
-    },
-    {
-      label: "제3무예실 (스포츠 컴플렉스 106호)",
-      value: "7",
-      selectable: true,
-    },
-  ];
-
   // TODO: 이름 전화번호 동아리 목록 백에서 받아오기
 
   const [selectedValue, setSelectedValue] = useState("");

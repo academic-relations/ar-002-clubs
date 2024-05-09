@@ -70,8 +70,6 @@ const Timetable: React.FC<TimetableProps> = ({ data, setDateTimeRange }) => {
         <TimetableTimeList />
         <TimetableTable
           setIndexRange={setIndexRange}
-          rows={48}
-          columns={7}
           data={convertDataToTimetableCell()}
           update={date.toString()}
         />

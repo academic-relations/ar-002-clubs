@@ -3,8 +3,6 @@ import styled from "styled-components";
 import TimetableCell, { TimetableCellType } from "./TimetableCell";
 
 interface TimetableTableProps {
-  rows: number;
-  columns: number;
   data: TimetableCellType[];
   setIndexRange: React.Dispatch<React.SetStateAction<number[]>>;
   update?: string;
@@ -20,12 +18,9 @@ const TimetableTableInner = styled.div<{
   grid-template-rows: repeat(${({ rows }) => rows}, 24px);
   width: 100%;
   height: auto;
-  height: 1000px !important;
 `;
 
 const TimetableTable: React.FC<TimetableTableProps> = ({
-  rows,
-  columns,
   data,
   setIndexRange,
   update = "",
@@ -36,6 +31,9 @@ const TimetableTable: React.FC<TimetableTableProps> = ({
   const [selecting, setSelecting] = useState<boolean>(false);
 
   const [selectedData, setSelectedData] = useState<TimetableCellType[]>(data);
+
+  const columns = 7; // 7 days
+  const rows = 48; // 48 half hours
 
   useEffect(() => {
     setStart(undefined);

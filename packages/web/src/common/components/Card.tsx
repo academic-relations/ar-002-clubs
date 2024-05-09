@@ -4,7 +4,7 @@ import React from "react";
 import styled from "styled-components";
 
 const Card: React.FC<React.PropsWithChildren> = styled.div<{
-  type?: "default" | "outline" | "error";
+  type?: "default" | "outline";
 }>`
   display: flex;
   flex-direction: column;
@@ -21,7 +21,6 @@ const Card: React.FC<React.PropsWithChildren> = styled.div<{
     type === "default" ? theme.shadow.md : "none"};
   border: ${({ theme, type }) => {
     if (type === "outline") return `1px solid ${theme.colors.GRAY[200]}`;
-    if (type === "error") return `1px solid ${theme.colors.RED[600]}`;
     return "none";
   }};
 `;
