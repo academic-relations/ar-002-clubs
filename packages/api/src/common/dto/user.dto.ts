@@ -12,7 +12,7 @@ interface _UserDto {
 }
 
 export interface UserDto extends _UserDto {
-  // stduent
+  // student
   studentId?: number; // executive
   studentNumber?: number;
   department?: string;

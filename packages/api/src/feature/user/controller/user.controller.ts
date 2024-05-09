@@ -1,6 +1,5 @@
 import { Controller, Get, Query } from "@nestjs/common";
-import { GetStudent } from "@sparcs-clubs/api/common/decorator/get-user.decorator";
-import { UserDto } from "@sparcs-clubs/api/common/dto/user.dto";
+import { GetProfileStudent } from "@sparcs-clubs/api/common/decorator/get-user.decorator";
 import { UserService } from "../service/user.service";
 
 @Controller("/api/user")
@@ -16,7 +15,7 @@ export class UserController {
 
   // auth 사용 예시
   @Get("student")
-  async getStudent(@GetStudent student: UserDto) {
+  async getStudent(@GetProfileStudent student) {
     return student;
   }
 }

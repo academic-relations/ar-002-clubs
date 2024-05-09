@@ -25,7 +25,7 @@ function roleBasedDecorator(role: string) {
   })();
 }
 
-export const GetStudent = roleBasedDecorator("student");
-export const GetExecutive = roleBasedDecorator("executive");
-export const GetProfessor = roleBasedDecorator("professor");
-export const GetEmployee = roleBasedDecorator("employee");
+export const GetProfileStudent = roleBasedDecorator("student");
+export const GetProfileExecutive = roleBasedDecorator("executive");
+export const GetProfileProfessor = roleBasedDecorator("professor");
+export const GetProfileEmployee = roleBasedDecorator("employee");
