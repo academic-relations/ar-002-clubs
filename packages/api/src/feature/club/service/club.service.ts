@@ -18,10 +18,8 @@ export class ClubService {
     const [clubDetails, totalMemberCnt, representative, roomDetails] =
       await Promise.all([
         this.clubRepository.findClubDetail(clubId),
-        this.clubStudentTRepository.findTotalMemberCntByClubId(clubId),
-        this.clubRepresentativeDRepository.findRepresentativeNameByClubId(
-          clubId,
-        ),
+        this.clubStudentTRepository.findTotalMemberCnt(clubId),
+        this.clubRepresentativeDRepository.findRepresentativeName(clubId),
         this.clubRoomTRepository.findClubLocationById(clubId),
       ]);
 
@@ -44,9 +42,7 @@ export class ClubService {
       description: clubDetails.description,
       foundingYear: clubDetails.foundingYear,
       totalMemberCnt: totalMemberCnt.totalMemberCnt,
-      representative: representative
-        ? representative.name
-        : "No representative assigned",
+      representative: representative.name,
       room: roomDetails.room,
       buildingName: roomDetails.buildingName,
     };

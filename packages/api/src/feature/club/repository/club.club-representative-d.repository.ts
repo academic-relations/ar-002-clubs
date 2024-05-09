@@ -11,9 +11,7 @@ export class ClubRepresentativeDRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
   // 가장 최근 대표자의 이름을 가져오기
-  async findRepresentativeNameByClubId(
-    clubId: number,
-  ): Promise<{ name: string }> {
+  async findRepresentativeName(clubId: number): Promise<{ name: string }> {
     const currentDate = new Date().toISOString().slice(0, 19).replace("T", " ");
 
     const representative = await this.db

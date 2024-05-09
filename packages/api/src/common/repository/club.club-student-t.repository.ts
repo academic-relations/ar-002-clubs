@@ -9,15 +9,15 @@ import { takeUnique } from "../util/util";
 export class ClubStudentTRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  async findTotalMemberCntByClubId(
+  async findTotalMemberCnt(
     clubId: number,
   ): Promise<{ totalMemberCnt: number }> {
     const totalMemberCnt = await this.db
       .select({ totalMemberCnt: count() })
       .from(ClubStudentT)
-      .where(eq(ClubStudentT.clubId, clubId)) // TODO  여기 현재 semester만 필터링하는 것도 추가해야 함.
+      .where(eq(ClubStudentT.clubId, clubId)) // TODO 현재는 모든 club 회원 수를 반환. 여기 현재 semester만 필터링하는 것도 추가해야 함.
       .then(takeUnique);
 
-    return totalMemberCnt; // 아니면 위 then 지우고 totalMemberCnt[0]
+    return totalMemberCnt;
   }
 }
