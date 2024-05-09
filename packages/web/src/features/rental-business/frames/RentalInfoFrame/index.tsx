@@ -7,6 +7,7 @@ import { RentalFrameProps } from "../RentalNoticeFrame";
 import RentalInfoFirstFrame from "./RentalInfoFirstFrame";
 import RentalInfoSecondFrame from "./RentalInfoSecondFrame";
 import RentalInfoThirdFrame from "./RentalInfoThirdFrame";
+import ReturnModalContent from "./_atomic/ReturnModal";
 
 const RentalFrame = styled.div`
   display: flex;
@@ -101,10 +102,7 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
       </StyledBottom>
       {showReturnModal && (
         <Modal onClose={onCloseReturnModal}>
-          <div>
-            정말로 이전 단계로 돌아가시겠습니까? 모든 입력 정보가 초기화됩니다.
-          </div>
-          <Button onClick={onCloseReturnModal}>확인</Button>
+          <ReturnModalContent onCloseReturnModal={onCloseReturnModal} />
         </Modal>
       )}
       {showAssignModal && (
