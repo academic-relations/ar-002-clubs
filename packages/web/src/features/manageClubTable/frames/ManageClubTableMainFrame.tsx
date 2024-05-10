@@ -5,14 +5,20 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import NoticePagination from "@sparcs-clubs/web/features/notices/components/NoticePagination";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { tempHeaders } from "../types/ManageClubTableHeader";
 import { mockData } from "../types/mock";
 import {
+  ManageClubRentalBusinessStatus,
+  ManageClubTagColorsInterface,
+} from "../types/ManageClubTable";
+import {
+  ManageClubTagColors,
   dateAndTimeFormatKeys,
   dateFormatKeys,
   numberFormatKeys,
   startEndTimeFormatKeys,
-} from "../types/ManageClubTable";
+} from "../types/ManageClubTableConst";
 
 const ManageClubTablePageMainFrameInner = styled.div`
   display: flex;
@@ -123,7 +129,23 @@ const ManageClubTableMainFrame: React.FC = () => {
                 key={key}
               >
                 <TableCell type="Default" width="100%">
-                  {formattedString(key, value)}
+                  {key === "status" ? (
+                    <Tag
+                      color={
+                        ManageClubTagColors[
+                          Object.keys(ManageClubRentalBusinessStatus)[
+                            Object.values(
+                              ManageClubRentalBusinessStatus,
+                            ).indexOf(value)
+                          ] as keyof ManageClubTagColorsInterface
+                        ]
+                      }
+                    >
+                      {value}
+                    </Tag>
+                  ) : (
+                    formattedString(key, value)
+                  )}
                 </TableCell>
               </TableCellInner>
             ))}

@@ -1,3 +1,5 @@
+import { TagColor } from "@sparcs-clubs/web/common/components/Tag";
+
 export enum ManageClubRentalBusinessStatus {
   submit = "신청",
   cancel = "취소",
@@ -66,7 +68,15 @@ export interface ManageClubCommonSpaceData {
   reserveRoom: string;
 }
 
-export const dateAndTimeFormatKeys = ["submitTime", "receiveTime"];
-export const dateFormatKeys = ["rentTime", "returnTime", "reserveTime"];
-export const startEndTimeFormatKeys = ["reserveStartEndHour"];
-export const numberFormatKeys = ["issueNumber"];
+export interface ManageClubTagColorsInterface {
+  submit: TagColor;
+  cancel: TagColor;
+  approve: TagColor;
+  rent: TagColor;
+  return: TagColor;
+  print: TagColor;
+  receive: TagColor;
+  issue: TagColor;
+  reject: TagColor;
+  use: TagColor;
+}
