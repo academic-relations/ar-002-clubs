@@ -20,7 +20,7 @@ export const mockData: ManageClubRentalBusinessData[] = [
     phoneNumber: "010-1234-5678",
     rentTime: new Date("2024-03-11 00:00"),
     returnTime: new Date("2024-03-18 00:00"),
-    rentProducts: "돗자리 3개 외 2항목",
+    rentProducts: "돗자리 3개 외 2항목wdwddwdwdwddwdw",
   }),
   ...Array(3).fill({
     status: ManageClubRentalBusinessStatus.approve,

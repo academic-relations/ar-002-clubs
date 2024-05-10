@@ -9,5 +9,9 @@ export const tempHeaders: {
   { headerName: "연락처", headerWidth: "130px", headerType: "Header" },
   { headerName: "대여 일자", headerWidth: "180px", headerType: "HeaderSort" },
   { headerName: "반납 일자", headerWidth: "180px", headerType: "HeaderSort" },
-  { headerName: "대여 물품", headerWidth: "auto", headerType: "Header" },
+  {
+    headerName: "대여 물품",
+    headerWidth: "minmax(0,100%)",
+    headerType: "Header",
+  },
 ];

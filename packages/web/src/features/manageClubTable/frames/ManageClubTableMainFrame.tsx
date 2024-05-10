@@ -135,8 +135,6 @@ const ManageClubTableMainFrame: React.FC = () => {
     .sort(columnSort(sortColumnName))
     .slice((page - 1) * 10, page * 10);
 
-  //   const columnSort = (headerName:string) => {};
-
   return (
     <ManageClubTablePageMainFrameInner>
       <Typography
@@ -180,7 +178,7 @@ const ManageClubTableMainFrame: React.FC = () => {
           ))}
         </TableRowFrameInner>
 
-        {data.map(rowInfo => (
+        {data.map((rowInfo, rowIndex) => (
           <TableRowFrameInner
             style={{
               gridTemplateColumns: tempHeaders
@@ -188,6 +186,7 @@ const ManageClubTableMainFrame: React.FC = () => {
                 .join(" "),
               borderBottom: "1px #EEEEEE solid",
             }}
+            id={`row${rowIndex.toString()}`}
           >
             {Object.entries(rowInfo).map(([key, value], index) => (
               <TableCellInner
