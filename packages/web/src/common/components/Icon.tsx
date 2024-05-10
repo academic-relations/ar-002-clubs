@@ -12,7 +12,10 @@ interface IconProps {
   color?: string;
 }
 
-const IconInner = styled.div<{ size: number; clickable: boolean }>`
+const IconInner = styled.div<{
+  size: number;
+  clickable: boolean;
+}>`
   display: flex;
   font-size: ${({ size }) => size}px;
   color: ${({ color, theme }) => color || theme.colors.BLACK};
