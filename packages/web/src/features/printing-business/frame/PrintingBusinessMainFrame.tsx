@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { setHours } from "date-fns";
+import { setHours, setMinutes, setSeconds } from "date-fns";
 
 import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 
@@ -66,7 +66,7 @@ const PrintingBusinessMainFrame: React.FC = () => {
     setRequestForm({
       ...requestForm,
       krPhoneNumber: data?.phoneNumber,
-      desiredPickUpTime: setHours(new Date(), 21),
+      desiredPickUpTime: setSeconds(setMinutes(setHours(new Date(), 21), 0), 0),
     });
   }, [data]);
 
