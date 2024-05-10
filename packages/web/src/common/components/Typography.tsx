@@ -42,11 +42,11 @@ const P_B = styled(TypographyInner)`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
 `;
 
-const P_B = styled(TypographyInner)`
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
-`;
+// const P_B = styled(TypographyInner)`
+//   font-size: 16px;
+//   line-height: 20px;
+//   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
+// `;
 
 /**
  * ## Typography component.
