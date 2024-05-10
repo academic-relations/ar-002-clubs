@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
@@ -10,6 +10,7 @@ import navPaths from "@sparcs-clubs/web/constants/nav";
 
 import Login from "./_atomic/Login";
 import Logo from "./_atomic/Logo";
+import MobileNavMenu from "../NavTools/MobileNavMenu";
 
 const IdentityBar = styled.div`
   position: relative;
@@ -61,18 +62,26 @@ const Menu = styled.div`
   }
 `;
 
-const Header: React.FC = () => (
-  <HeaderInner>
-    <IdentityBar />
-    <NavInner>
-      <Logo />
-      <Login />
-      <Menu>
-        <Icon type="menu" size={24} />
-      </Menu>
-      <StyledNavList highlight keys={navPaths.header} />
-    </NavInner>
-  </HeaderInner>
-);
+const Header: React.FC = () => {
+  const [isMobileMenuVisible, setIsMobileMenuVisible] = useState<boolean>();
+  return (
+    <HeaderInner>
+      <IdentityBar />
+      <NavInner>
+        <Logo />
+        <Login />
+        <Menu>
+          <Icon
+            type="menu"
+            size={24}
+            onClick={() => setIsMobileMenuVisible(!isMobileMenuVisible)}
+          />
+        </Menu>
+        <StyledNavList highlight keys={navPaths.header} />
+      </NavInner>
+      {isMobileMenuVisible && <MobileNavMenu keys={navPaths.header} />}
+    </HeaderInner>
+  );
+};
 
 export default Header;
