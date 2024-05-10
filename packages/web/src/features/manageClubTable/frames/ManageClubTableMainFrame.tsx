@@ -11,6 +11,7 @@ import { mockData } from "../types/mock";
 import {
   ManageClubRentalBusinessStatus,
   ManageClubTagColorsInterface,
+  ManageClubRentalBusinessData,
 } from "../types/ManageClubTable";
 import {
   ManageClubTagColors,
@@ -55,6 +56,10 @@ const formattedString = (
   key: string,
   value: Date | number | string,
 ): string => {
+  if (value === undefined) {
+    return "";
+  }
+
   const days = "일월화수목금토";
 
   if (dateAndTimeFormatKeys.includes(key)) {
@@ -73,13 +78,64 @@ const formattedString = (
   return value as string;
 };
 
+const columnSort = (headerName: string) => {
+  switch (headerName) {
+    case tempHeaders[1].headerName:
+      return (
+        a: ManageClubRentalBusinessData,
+        b: ManageClubRentalBusinessData,
+      ) => b.submitTime.getTime() - a.submitTime.getTime();
+    case tempHeaders[2].headerName:
+      return (
+        a: ManageClubRentalBusinessData,
+        b: ManageClubRentalBusinessData,
+      ) =>
+        a.name.localeCompare(b.name) ||
+        b.submitTime.getTime() - a.submitTime.getTime();
+    case tempHeaders[4].headerName:
+      return (
+        a: ManageClubRentalBusinessData,
+        b: ManageClubRentalBusinessData,
+      ) => {
+        if (a.rentTime === undefined && b.rentTime === undefined) return 0;
+        if (a.rentTime === undefined) return 1;
+        if (b.rentTime === undefined) return -1;
+        return (
+          b.rentTime.getTime() - a.rentTime.getTime() ||
+          b.submitTime.getTime() - a.submitTime.getTime()
+        );
+      };
+    case tempHeaders[5].headerName:
+      return (
+        a: ManageClubRentalBusinessData,
+        b: ManageClubRentalBusinessData,
+      ) => {
+        if (a.returnTime === undefined && b.returnTime === undefined) return 0;
+        if (a.returnTime === undefined) return 1;
+        if (b.returnTime === undefined) return -1;
+        return (
+          b.returnTime.getTime() - a.returnTime.getTime() ||
+          b.submitTime.getTime() - a.submitTime.getTime()
+        );
+      };
+    default:
+      return (
+        a: ManageClubRentalBusinessData,
+        b: ManageClubRentalBusinessData,
+      ) => b.submitTime.getTime() - a.submitTime.getTime();
+  }
+};
+
 const ManageClubTableMainFrame: React.FC = () => {
   // TODO - 실제 API 연결 시 올바른 형식으로 실제 데이터 값 넣어주기
 
   const [page, setPage] = useState<number>(1);
+  const [sortColumnName, setSortColumnName] = useState<string>("신청 일시");
   const data = mockData
-    .sort((a, b) => b.submitTime.getTime() - a.submitTime.getTime())
+    .sort(columnSort(sortColumnName))
     .slice((page - 1) * 10, page * 10);
+
+  //   const columnSort = (headerName:string) => {};
 
   return (
     <ManageClubTablePageMainFrameInner>
@@ -102,8 +158,20 @@ const ManageClubTableMainFrame: React.FC = () => {
         >
           {tempHeaders.map((headerInfo, index) => (
             <TableCellInner
-              style={{ gridColumn: `${index + 1} / ${index + 2}` }}
+              style={
+                headerInfo.headerType === "HeaderSort"
+                  ? {
+                      gridColumn: `${index + 1} / ${index + 2}`,
+                      cursor: "pointer",
+                    }
+                  : { gridColumn: `${index + 1} / ${index + 2}` }
+              }
               key={headerInfo.headerName}
+              onClick={
+                headerInfo.headerType === "HeaderSort"
+                  ? () => setSortColumnName(headerInfo.headerName)
+                  : () => {}
+              }
             >
               <TableCell type={headerInfo.headerType} width="100%">
                 {headerInfo.headerName}
