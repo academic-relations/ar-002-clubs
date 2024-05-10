@@ -5,7 +5,7 @@ interface AssignModalContentProps {
   onCloseAssignModal: () => void;
 }
 
-const ReturnModalContent: React.FC<AssignModalContentProps> = ({
+const AssignModalContent: React.FC<AssignModalContentProps> = ({
   onCloseAssignModal,
 }) => (
   <div>
@@ -14,4 +14,4 @@ const ReturnModalContent: React.FC<AssignModalContentProps> = ({
   </div>
 );
 
-export default ReturnModalContent;
+export default AssignModalContent;

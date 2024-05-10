@@ -8,6 +8,7 @@ import RentalInfoFirstFrame from "./RentalInfoFirstFrame";
 import RentalInfoSecondFrame from "./RentalInfoSecondFrame";
 import RentalInfoThirdFrame from "./RentalInfoThirdFrame";
 import ReturnModalContent from "./_atomic/ReturnModal";
+import AssignModalContent from "./_atomic/AssignModal";
 
 const RentalFrame = styled.div`
   display: flex;
@@ -107,8 +108,7 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
       )}
       {showAssignModal && (
         <Modal onClose={onCloseAssignModal}>
-          <div>신청하시겠습니까? 신청 후에는 수정이 불가능합니다.</div>
-          <Button onClick={onCloseAssignModal}>확인</Button>
+          <AssignModalContent onCloseAssignModal={onCloseAssignModal} />
         </Modal>
       )}
     </RentalFrame>
