@@ -13,8 +13,8 @@ export interface ManageClubRentalBusinessData {
   submitTime: Date;
   name: string;
   phoneNumber: string;
-  rentTime?: Date;
-  returnTime?: Date;
+  rentTime: Date;
+  returnTime: Date;
   rentProducts: string;
 }
 
@@ -31,7 +31,7 @@ export interface ManageClubPrintingBusinessData {
   submitTime: Date;
   name: string;
   phoneNumber: string;
-  receiveTime?: Date;
+  receiveTime: Date;
   printNumber: string;
 }
 
@@ -48,7 +48,7 @@ export interface ManageClubActivityCertificateData {
   submitTime: Date;
   name: string;
   phoneNumber: string;
-  issueNumber?: number;
+  issueNumber: number;
   note: string;
 }
 

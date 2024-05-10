@@ -13,19 +13,22 @@ const PageHeadWrapper = styled.div`
   gap: 20px;
 `;
 
-const ManageClubRentalBusiness = () => (
+const ManageClubActivityCertificate = () => (
   <>
     <PageHeadWrapper>
       <BreadCrumb
         items={[
           { name: "대표 동아리 관리", path: "/manage-club" },
-          { name: "대여 사업 신청 내역", path: "/manage-club/rental-business" },
+          {
+            name: "활동확인서 발급 내역",
+            path: "/manage-club/activity-certificate",
+          },
         ]}
       />
-      <PageTitle>대여 사업 신청 내역</PageTitle>
+      <PageTitle>활동확인서 발급 내역</PageTitle>
     </PageHeadWrapper>
-    <ManageClubTableMainFrame pageType="rental-business" />
+    <ManageClubTableMainFrame pageType="activity-certificate" />
   </>
 );
 
-export default ManageClubRentalBusiness;
+export default ManageClubActivityCertificate;

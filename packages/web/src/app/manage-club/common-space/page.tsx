@@ -13,19 +13,22 @@ const PageHeadWrapper = styled.div`
   gap: 20px;
 `;
 
-const ManageClubRentalBusiness = () => (
+const ManageClubCommonSpace = () => (
   <>
     <PageHeadWrapper>
       <BreadCrumb
         items={[
           { name: "대표 동아리 관리", path: "/manage-club" },
-          { name: "대여 사업 신청 내역", path: "/manage-club/rental-business" },
+          {
+            name: "공용공간 비정기사용 내역",
+            path: "/manage-club/common-space",
+          },
         ]}
       />
-      <PageTitle>대여 사업 신청 내역</PageTitle>
+      <PageTitle>공용공간 비정기사용 내역</PageTitle>
     </PageHeadWrapper>
-    <ManageClubTableMainFrame pageType="rental-business" />
+    <ManageClubTableMainFrame pageType="common-space" />
   </>
 );
 
-export default ManageClubRentalBusiness;
+export default ManageClubCommonSpace;

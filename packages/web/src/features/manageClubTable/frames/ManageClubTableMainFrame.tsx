@@ -1,3 +1,5 @@
+/* eslint-disable no-nested-ternary */
+
 "use client";
 
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
@@ -6,20 +8,45 @@ import styled from "styled-components";
 import NoticePagination from "@sparcs-clubs/web/features/notices/components/NoticePagination";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import { tempHeaders } from "../types/ManageClubTableHeader";
-import { mockData } from "../types/mock";
+import {
+  activityCertificateMockData,
+  commonSpaceMockData,
+  printingBusinessMockData,
+  rentalBusinessMockData,
+} from "../types/mock";
 import {
   ManageClubRentalBusinessStatus,
   ManageClubTagColorsInterface,
   ManageClubRentalBusinessData,
+  ManageClubPrintingBusinessData,
+  ManageClubActivityCertificateData,
+  ManageClubCommonSpaceData,
 } from "../types/ManageClubTable";
 import {
   ManageClubTagColors,
+  activityCertificateStepOrder,
+  commonSpaceStepOrder,
   dateAndTimeFormatKeys,
   dateFormatKeys,
   numberFormatKeys,
+  printingBusinessStepOrder,
+  rentalBusinessStepOrder,
   startEndTimeFormatKeys,
 } from "../types/ManageClubTableConst";
+import {
+  activityCertificateHeaders,
+  commonSpaceHeaders,
+  printingBusinessHeaders,
+  rentalBusinessHeaders,
+} from "../types/ManageClubTableHeader";
+
+type ManageClubTableMainFrameProps = {
+  pageType:
+    | "rental-business"
+    | "printing-business"
+    | "activity-certificate"
+    | "common-space";
+};
 
 const ManageClubTablePageMainFrameInner = styled.div`
   display: flex;
@@ -57,7 +84,7 @@ const formattedString = (
   value: Date | number | string,
 ): string => {
   if (value === undefined) {
-    return "";
+    return "-";
   }
 
   const days = "일월화수목금토";
@@ -78,46 +105,44 @@ const formattedString = (
   return value as string;
 };
 
-const columnSort = (headerName: string) => {
+const rentalBusinessColumnSort = (headerName: string) => {
   switch (headerName) {
-    case tempHeaders[1].headerName:
+    case rentalBusinessHeaders[0].headerName:
+      return (
+        a: ManageClubRentalBusinessData,
+        b: ManageClubRentalBusinessData,
+      ) =>
+        rentalBusinessStepOrder.indexOf(a.status) -
+          rentalBusinessStepOrder.indexOf(b.status) ||
+        b.submitTime.getTime() - a.submitTime.getTime();
+    case rentalBusinessHeaders[1].headerName:
       return (
         a: ManageClubRentalBusinessData,
         b: ManageClubRentalBusinessData,
       ) => b.submitTime.getTime() - a.submitTime.getTime();
-    case tempHeaders[2].headerName:
+    case rentalBusinessHeaders[2].headerName:
       return (
         a: ManageClubRentalBusinessData,
         b: ManageClubRentalBusinessData,
       ) =>
         a.name.localeCompare(b.name) ||
         b.submitTime.getTime() - a.submitTime.getTime();
-    case tempHeaders[4].headerName:
+    case rentalBusinessHeaders[4].headerName:
       return (
         a: ManageClubRentalBusinessData,
         b: ManageClubRentalBusinessData,
-      ) => {
-        if (a.rentTime === undefined && b.rentTime === undefined) return 0;
-        if (a.rentTime === undefined) return 1;
-        if (b.rentTime === undefined) return -1;
-        return (
-          b.rentTime.getTime() - a.rentTime.getTime() ||
-          b.submitTime.getTime() - a.submitTime.getTime()
-        );
-      };
-    case tempHeaders[5].headerName:
+      ) =>
+        b.rentTime.getTime() - a.rentTime.getTime() ||
+        b.submitTime.getTime() - a.submitTime.getTime();
+
+    case rentalBusinessHeaders[5].headerName:
       return (
         a: ManageClubRentalBusinessData,
         b: ManageClubRentalBusinessData,
-      ) => {
-        if (a.returnTime === undefined && b.returnTime === undefined) return 0;
-        if (a.returnTime === undefined) return 1;
-        if (b.returnTime === undefined) return -1;
-        return (
-          b.returnTime.getTime() - a.returnTime.getTime() ||
-          b.submitTime.getTime() - a.submitTime.getTime()
-        );
-      };
+      ) =>
+        b.returnTime.getTime() - a.returnTime.getTime() ||
+        b.submitTime.getTime() - a.submitTime.getTime();
+
     default:
       return (
         a: ManageClubRentalBusinessData,
@@ -126,14 +151,157 @@ const columnSort = (headerName: string) => {
   }
 };
 
-const ManageClubTableMainFrame: React.FC = () => {
+const printingBusinessColumnSort = (headerName: string) => {
+  switch (headerName) {
+    case printingBusinessHeaders[0].headerName:
+      return (
+        a: ManageClubPrintingBusinessData,
+        b: ManageClubPrintingBusinessData,
+      ) =>
+        printingBusinessStepOrder.indexOf(a.status) -
+          printingBusinessStepOrder.indexOf(b.status) ||
+        b.submitTime.getTime() - a.submitTime.getTime();
+    case printingBusinessHeaders[1].headerName:
+      return (
+        a: ManageClubPrintingBusinessData,
+        b: ManageClubPrintingBusinessData,
+      ) => b.submitTime.getTime() - a.submitTime.getTime();
+    case printingBusinessHeaders[2].headerName:
+      return (
+        a: ManageClubPrintingBusinessData,
+        b: ManageClubPrintingBusinessData,
+      ) =>
+        a.name.localeCompare(b.name) ||
+        b.submitTime.getTime() - a.submitTime.getTime();
+    case printingBusinessHeaders[4].headerName:
+      return (
+        a: ManageClubPrintingBusinessData,
+        b: ManageClubPrintingBusinessData,
+      ) =>
+        b.receiveTime.getTime() - a.receiveTime.getTime() ||
+        b.submitTime.getTime() - a.submitTime.getTime();
+    default:
+      return (
+        a: ManageClubPrintingBusinessData,
+        b: ManageClubPrintingBusinessData,
+      ) => b.submitTime.getTime() - a.submitTime.getTime();
+  }
+};
+
+const activityCertificateColumnSort = (headerName: string) => {
+  switch (headerName) {
+    case activityCertificateHeaders[0].headerName:
+      return (
+        a: ManageClubActivityCertificateData,
+        b: ManageClubActivityCertificateData,
+      ) =>
+        activityCertificateStepOrder.indexOf(a.status) -
+          activityCertificateStepOrder.indexOf(b.status) ||
+        b.submitTime.getTime() - a.submitTime.getTime();
+    case activityCertificateHeaders[1].headerName:
+      return (
+        a: ManageClubActivityCertificateData,
+        b: ManageClubActivityCertificateData,
+      ) => b.submitTime.getTime() - a.submitTime.getTime();
+    case activityCertificateHeaders[2].headerName:
+      return (
+        a: ManageClubActivityCertificateData,
+        b: ManageClubActivityCertificateData,
+      ) =>
+        a.name.localeCompare(b.name) ||
+        b.submitTime.getTime() - a.submitTime.getTime();
+    default:
+      return (
+        a: ManageClubActivityCertificateData,
+        b: ManageClubActivityCertificateData,
+      ) => b.submitTime.getTime() - a.submitTime.getTime();
+  }
+};
+
+const commonSpaceColumnSort = (headerName: string) => {
+  switch (headerName) {
+    case commonSpaceHeaders[0].headerName:
+      return (a: ManageClubCommonSpaceData, b: ManageClubCommonSpaceData) =>
+        commonSpaceStepOrder.indexOf(a.status) -
+          commonSpaceStepOrder.indexOf(b.status) ||
+        b.submitTime.getTime() - a.submitTime.getTime();
+    case commonSpaceHeaders[1].headerName:
+      return (a: ManageClubCommonSpaceData, b: ManageClubCommonSpaceData) =>
+        b.submitTime.getTime() - a.submitTime.getTime();
+    case commonSpaceHeaders[2].headerName:
+      return (a: ManageClubCommonSpaceData, b: ManageClubCommonSpaceData) =>
+        a.name.localeCompare(b.name) ||
+        b.submitTime.getTime() - a.submitTime.getTime();
+    case commonSpaceHeaders[4].headerName:
+      return (a: ManageClubCommonSpaceData, b: ManageClubCommonSpaceData) =>
+        b.reserveTime.getTime() - a.reserveTime.getTime() ||
+        b.submitTime.getTime() - a.submitTime.getTime();
+    case commonSpaceHeaders[5].headerName:
+      return (a: ManageClubCommonSpaceData, b: ManageClubCommonSpaceData) =>
+        b.reserveStartEndHour.localeCompare(a.reserveStartEndHour) ||
+        b.submitTime.getTime() - a.submitTime.getTime();
+    case commonSpaceHeaders[6].headerName:
+      return (a: ManageClubCommonSpaceData, b: ManageClubCommonSpaceData) =>
+        b.reserveRoom.localeCompare(a.reserveRoom) ||
+        b.submitTime.getTime() - a.submitTime.getTime();
+    default:
+      return (a: ManageClubCommonSpaceData, b: ManageClubCommonSpaceData) =>
+        b.submitTime.getTime() - a.submitTime.getTime();
+  }
+};
+
+const ManageClubTableMainFrame: React.FC<ManageClubTableMainFrameProps> = ({
+  pageType,
+}) => {
   // TODO - 실제 API 연결 시 올바른 형식으로 실제 데이터 값 넣어주기
 
   const [page, setPage] = useState<number>(1);
   const [sortColumnName, setSortColumnName] = useState<string>("신청 일시");
-  const data = mockData
-    .sort(columnSort(sortColumnName))
-    .slice((page - 1) * 10, page * 10);
+
+  const mockDataChooser = () => {
+    switch (pageType) {
+      case "rental-business":
+        return rentalBusinessMockData;
+      case "printing-business":
+        return printingBusinessMockData;
+      case "activity-certificate":
+        return activityCertificateMockData;
+      default: // "common-space"
+        return commonSpaceMockData;
+    }
+  };
+
+  //   const mockData = mockDataChooser(pageType);
+  //   const data = mockData
+  //     .sort(columnSort(pageType, sortColumnName))
+  //     .slice((page - 1) * 10, page * 10);
+  const mockData = mockDataChooser();
+
+  const data =
+    pageType === "rental-business"
+      ? (mockData as ManageClubRentalBusinessData[])
+          .sort(rentalBusinessColumnSort(sortColumnName))
+          .slice((page - 1) * 10, page * 10)
+      : pageType === "printing-business"
+        ? (mockData as ManageClubPrintingBusinessData[])
+            .sort(printingBusinessColumnSort(sortColumnName))
+            .slice((page - 1) * 10, page * 10)
+        : pageType === "activity-certificate"
+          ? (mockData as ManageClubActivityCertificateData[])
+              .sort(activityCertificateColumnSort(sortColumnName))
+              .slice((page - 1) * 10, page * 10)
+          : (mockData as ManageClubCommonSpaceData[])
+              .sort(commonSpaceColumnSort(sortColumnName))
+              .slice((page - 1) * 10, page * 10);
+
+  const headers =
+    pageType === "rental-business"
+      ? rentalBusinessHeaders
+      : pageType === "printing-business"
+        ? printingBusinessHeaders
+        : pageType === "activity-certificate"
+          ? activityCertificateHeaders
+          : commonSpaceHeaders;
 
   return (
     <ManageClubTablePageMainFrameInner>
@@ -149,12 +317,12 @@ const ManageClubTableMainFrame: React.FC = () => {
       <TableFrameInner>
         <TableRowFrameInner
           style={{
-            gridTemplateColumns: tempHeaders
+            gridTemplateColumns: headers
               .map(headerInfo => headerInfo.headerWidth)
               .join(" "),
           }}
         >
-          {tempHeaders.map((headerInfo, index) => (
+          {headers.map((headerInfo, index) => (
             <TableCellInner
               style={
                 headerInfo.headerType === "HeaderSort"
@@ -181,7 +349,7 @@ const ManageClubTableMainFrame: React.FC = () => {
         {data.map((rowInfo, rowIndex) => (
           <TableRowFrameInner
             style={{
-              gridTemplateColumns: tempHeaders
+              gridTemplateColumns: headers
                 .map(headerInfo => headerInfo.headerWidth)
                 .join(" "),
               borderBottom: "1px #EEEEEE solid",
