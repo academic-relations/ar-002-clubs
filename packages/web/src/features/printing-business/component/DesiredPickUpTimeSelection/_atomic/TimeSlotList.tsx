@@ -32,6 +32,8 @@ const TimeSlotSelection = styled.button<{ isSelected: boolean }>`
   /* primary */
   background: ${({ theme, isSelected }) =>
     isSelected ? theme.colors.PRIMARY : theme.colors.WHITE};
+  color: ${({ theme, isSelected }) =>
+    isSelected ? theme.colors.WHITE : theme.colors.BLACK};
   /* mint800 */
   border: 1px solid
     ${({ theme, isSelected }) =>
