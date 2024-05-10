@@ -6,11 +6,11 @@ import { z } from "zod";
  * @description 동아리의 상세정보를 가져옵니다
  */
 
-const url = (club_id: string) => `/clubs/club/${club_id}`;
+const url = (clubId: string) => `/clubs/club/${clubId}`;
 const method = "GET";
 
 const requestParam = z.object({
-  club_id: z.number().int().min(1),
+  clubId: z.number().int().min(1),
 });
 
 const requestQuery = z.object({});

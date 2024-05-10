@@ -29,7 +29,7 @@ const responseBodyMap = {
             characteristic: z.string().max(50), // 동아리 소개
             representative: z.string().max(20), // 동아리 대표
             advisor: z.string().max(20).nullable(), // 동아리 지도교수
-            totalMemberCnt: z.number().int().min(1),
+            totalMembers: z.number().int().min(1),
           })
           .array(),
       })
