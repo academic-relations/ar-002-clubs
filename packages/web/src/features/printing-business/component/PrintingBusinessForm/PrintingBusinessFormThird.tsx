@@ -87,6 +87,11 @@ const PrintingBusinessFormThird: React.FC<PrintingBusinessFormThirdProps> = ({
         placeholder="인쇄목적을 간단히 적어주세요"
         value={requestForm.printingPurpose}
         handleChange={setPrintingPurpose}
+        errorMessage={
+          requestForm.printingPurpose?.length === 0
+            ? "필수로 채워야 하는 항목입니다."
+            : ""
+        }
         area
       />
       <DesiredPickUpTimeSelection

@@ -11,7 +11,7 @@ interface TimeSlotListProps {
 }
 
 const TimeSlotListInner = styled.div<{ calendarSize: "sm" | "md" | "lg" }>`
-  width: ${({ calendarSize }) => (calendarSize === "md" ? "450px" : "300px")};
+  width: ${({ calendarSize }) => (calendarSize === "lg" ? "300px" : "100%")};
   flex: none;
   order: 1;
   align-self: stretch;
