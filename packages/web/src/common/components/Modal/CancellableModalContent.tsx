@@ -6,6 +6,8 @@ import Typography from "../Typography";
 interface CancellableModalContentProps {
   onClose: () => void;
   onConfirm: () => void;
+  closeButtonText?: string;
+  confirmButtonText?: string;
   children: React.ReactNode;
 }
 
@@ -24,6 +26,8 @@ const CancellableModalContent: React.FC<CancellableModalContentProps> = ({
   onClose,
   onConfirm,
   children,
+  closeButtonText = "취소",
+  confirmButtonText = "확인",
 }) => (
   <ModalContentInner>
     <Typography fs={16} lh={28} fw="MEDIUM" style={{ textAlign: "center" }}>
@@ -31,10 +35,9 @@ const CancellableModalContent: React.FC<CancellableModalContentProps> = ({
     </Typography>
     <ButtonWrapper>
       <Button type="outlined" onClick={onClose}>
-        취소
+        {closeButtonText}
       </Button>
-      <Button onClick={onConfirm}>확인</Button>
-      {/* TODO: (필요시) 버튼 텍스트 수정할 수 있도록 */}
+      <Button onClick={onConfirm}>{confirmButtonText}</Button>
     </ButtonWrapper>
   </ModalContentInner>
 );

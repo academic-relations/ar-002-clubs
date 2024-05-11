@@ -5,6 +5,7 @@ import Typography from "../Typography";
 
 interface ConfirmModalContentProps {
   onConfirm: () => void;
+  confirmButtonText?: string;
   children: React.ReactNode;
 }
 
@@ -22,14 +23,14 @@ const ButtonWrapper = styled.div`
 const ConfirmModalContent: React.FC<ConfirmModalContentProps> = ({
   onConfirm,
   children,
+  confirmButtonText = "확인",
 }) => (
   <ModalContentInner>
     <Typography fs={16} lh={28} fw="MEDIUM" style={{ textAlign: "center" }}>
       {children}
     </Typography>
     <ButtonWrapper>
-      <Button onClick={onConfirm}>확인</Button>
-      {/* TODO: (필요시) 버튼 텍스트 수정할 수 있도록 */}
+      <Button onClick={onConfirm}>{confirmButtonText}</Button>
     </ButtonWrapper>
   </ModalContentInner>
 );
