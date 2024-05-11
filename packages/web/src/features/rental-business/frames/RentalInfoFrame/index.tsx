@@ -61,7 +61,6 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
 
   const onConfirmReturn = useCallback(() => {
     setShowReturnModal(false);
-    setRental({ ...rental, agreement: false });
     setStep(step - 1);
   }, [step, setStep, rental, setRental]);
 
@@ -69,6 +68,9 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
 
   const onPrev = useCallback(() => {
     if (step === 0) {
+      setRental({ ...rental, agreement: false });
+    }
+    if (step === 1) {
       setShowReturnModal(true);
       return;
     }
