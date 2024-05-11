@@ -9,6 +9,9 @@ interface RangeCalendarProps {
   setRentalDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   setReturnDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   workDates: Date[];
+  setShowPeriodModal: React.Dispatch<
+    React.SetStateAction<"none" | "reset" | "change">
+  >;
 }
 
 const RangeCalendar: React.FC<RangeCalendarProps> = ({
@@ -17,6 +20,7 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
   setRentalDate,
   setReturnDate,
   workDates,
+  setShowPeriodModal,
 }) => {
   const [calendarSize, setCalendarSize] = useState<"sm" | "md" | "lg">("lg");
 
@@ -42,16 +46,18 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
     return () => window.removeEventListener("resize", updateSize);
   }, [window, setCalendarSize]);
 
+  // TODO: 기간 변경될 경우 modal 띄우기
   const onDateClick = (date: Date) => {
     if (workDates.some(selectedDate => isSameDay(selectedDate, date))) {
       if (rentalDate && !returnDate && isAfter(date, rentalDate)) {
         setReturnDate(date);
-      } else {
-        setRentalDate(date);
-        setReturnDate(undefined);
+      } else if (!rentalDate) setRentalDate(date);
+      else {
+        setShowPeriodModal("change");
       }
     }
   };
+
   return (
     <Calendar
       size={calendarSize}
