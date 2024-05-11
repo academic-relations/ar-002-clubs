@@ -4,6 +4,7 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
+import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 import RentalInfoFirstFrame from "./RentalInfoFirstFrame";
 import RentalInfoSecondFrame from "./RentalInfoSecondFrame";
@@ -58,6 +59,7 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
   const CurrentFrame = frames[step];
 
   const [showReturnModal, setShowReturnModal] = useState(false);
+  const [showAssignModal, setShowAssignModal] = useState(false);
 
   const onConfirmReturn = useCallback(() => {
     setShowReturnModal(false);
@@ -81,7 +83,15 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
     if (nextEnabled && step < frames.length - 1) {
       setStep(step + 1);
     }
+    if (step === frames.length - 1) {
+      setShowAssignModal(true);
+    }
   }, [nextEnabled, step, setStep]);
+
+  const onConfirm = () => {
+    setShowAssignModal(false);
+    window.location.href = "/my";
+  };
 
   return (
     <RentalFrame>
@@ -94,7 +104,6 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
         <Button onClick={onNext} type={nextEnabled ? "default" : "disabled"}>
           {step === frames.length - 1 ? "신청" : "다음"}
         </Button>
-        {/* TODO: 신청 완료 modal */}
         {/* TODO: 백이랑 연결 */}
       </StyledBottom>
       {showReturnModal && (
@@ -107,6 +116,15 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
             <br />
             현재 단계에서 입력한 내용은 저장되지 않고 초기화됩니다.
           </CancellableModalContent>
+        </Modal>
+      )}
+      {showAssignModal && (
+        <Modal>
+          <ConfirmModalContent onConfirm={onConfirm}>
+            신청이 완료되었습니다.
+            <br />
+            확인을 누르면 신청 내역 화면으로 이동합니다.
+          </ConfirmModalContent>
         </Modal>
       )}
     </RentalFrame>
