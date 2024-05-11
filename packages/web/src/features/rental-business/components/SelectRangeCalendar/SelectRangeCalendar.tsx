@@ -12,6 +12,8 @@ interface SelectRangeCalendarProps {
   setShowPeriodModal: React.Dispatch<
     React.SetStateAction<"none" | "reset" | "change">
   >;
+  pendingDate: Date | undefined;
+  setPendingDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
 }
 
 const SelectRangeCalendarWrapper = styled.div`
@@ -31,11 +33,21 @@ const SelectRangeCalendar: React.FC<SelectRangeCalendarProps> = ({
   setReturnDate,
   workDates = [],
   setShowPeriodModal,
+  pendingDate,
+  setPendingDate,
 }) => {
   useEffect(() => {
     setRentalDate(rentalDate);
     setReturnDate(returnDate);
-  }, [rentalDate, returnDate, setRentalDate, setReturnDate]);
+    setPendingDate(pendingDate);
+  }, [
+    rentalDate,
+    returnDate,
+    pendingDate,
+    setRentalDate,
+    setReturnDate,
+    setPendingDate,
+  ]);
 
   return (
     <SelectRangeCalendarWrapper>
@@ -46,6 +58,7 @@ const SelectRangeCalendar: React.FC<SelectRangeCalendarProps> = ({
         setReturnDate={setReturnDate}
         workDates={workDates}
         setShowPeriodModal={setShowPeriodModal}
+        setPendingDate={setPendingDate}
       />
       <SelectRange
         rentalDate={rentalDate}

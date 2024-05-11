@@ -82,6 +82,7 @@ const RentalInfoSecondFrame: React.FC<
 
   const [rentalDate, setRentalDate] = useState<Date | undefined>();
   const [returnDate, setReturnDate] = useState<Date | undefined>();
+  const [pendingDate, setPendingDate] = useState<Date | undefined>();
 
   const [showPeriodModal, setShowPeriodModal] = useState<
     "none" | "reset" | "change"
@@ -95,17 +96,16 @@ const RentalInfoSecondFrame: React.FC<
         ...rental,
         date: { start: undefined, end: undefined },
       });
+    } else if (showPeriodModal === "change") {
+      setRentalDate(pendingDate);
+      setReturnDate(undefined);
+      setPendingDate(undefined);
+      setRental({
+        ...rental,
+        date: { start: rentalDate, end: undefined },
+      });
     }
-    // else if (showPeriodModal === "change") {
-    //   setRentalDate(date);
-    //   setReturnDate(undefined);
-    // }
     setShowPeriodModal("none");
-    // setRental({
-    //   agreement: rental.agreement,
-    //   info: rental.info,
-    //   date: { start: rentalDate, end: returnDate },
-    // });
   };
 
   useEffect(() => {
@@ -135,7 +135,6 @@ const RentalInfoSecondFrame: React.FC<
     rental.agreement,
     rental.info,
   ]);
-  // TODO: 대여 기간 초기화할 때 modal 띄우는거 추가
 
   const itemOnChange = (
     newValue: "easel" | "vacuum" | "handCart" | "mat" | "tool",
@@ -197,6 +196,8 @@ const RentalInfoSecondFrame: React.FC<
           setReturnDate={setReturnDate}
           workDates={mockExistDates}
           setShowPeriodModal={setShowPeriodModal}
+          pendingDate={pendingDate}
+          setPendingDate={setPendingDate}
         />
       </StyledCard>
       <ItemButtonList value={value} onChange={itemOnChange} rental={rental} />
