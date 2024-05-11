@@ -151,6 +151,12 @@ const RentalInfoSecondFrame: React.FC<
     !rental.mat &&
     (!rental.tool || Object.values(rental.tool).every(val => !val));
 
+  useEffect(() => {
+    const enableNext =
+      !isRentalListEmpty && !(!rental.date?.start || !rental.date?.end);
+    setNextEnabled(enableNext);
+  }, [rental, setNextEnabled]);
+
   const isCurrentItemEmpty = () => {
     switch (value) {
       case "easel":
