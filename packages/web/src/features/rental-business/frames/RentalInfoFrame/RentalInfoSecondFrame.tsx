@@ -195,6 +195,7 @@ const RentalInfoSecondFrame: React.FC<
           setRentalDate={setRentalDate}
           setReturnDate={setReturnDate}
           workDates={mockExistDates}
+          // TODO: 상근일자 받아오기
           setShowPeriodModal={setShowPeriodModal}
           pendingDate={pendingDate}
           setPendingDate={setPendingDate}
@@ -240,7 +241,7 @@ const RentalInfoSecondFrame: React.FC<
             onConfirm={handleConfirm}
             onClose={() => setShowPeriodModal("none")}
           >
-            대여 기간을 변경하면 입력한 대여 물품 정보가 모두 초기화됩니다.{" "}
+            대여 기간을 변경하면 입력한 대여 물품 정보가 모두 초기화됩니다.
             <br />
             ㄱㅊ?
           </CancellableModalContent>
