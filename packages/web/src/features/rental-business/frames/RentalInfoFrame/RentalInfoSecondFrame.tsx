@@ -176,6 +176,12 @@ const RentalInfoSecondFrame: React.FC<
     }
   };
 
+  useEffect(() => {
+    const enableNext =
+      !isCurrentItemEmpty() && !(!rental.date?.start || !rental.date?.end);
+    setNextEnabled(enableNext);
+  }, [rental, setNextEnabled, isCurrentItemEmpty]);
+
   const handleResetAll = () => {
     setRental({
       agreement: rental.agreement,
