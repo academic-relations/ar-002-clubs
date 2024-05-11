@@ -2,6 +2,8 @@ import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 import RentalInfoFirstFrame from "./RentalInfoFirstFrame";
 import RentalInfoSecondFrame from "./RentalInfoSecondFrame";
@@ -55,9 +57,19 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
   const [nextEnabled, setNextEnabled] = useState(true);
   const CurrentFrame = frames[step];
 
+  const [showReturnModal, setShowReturnModal] = useState(false);
+
+  const onConfirmReturn = useCallback(() => {
+    setShowReturnModal(false);
+    setRental({ ...rental, agreement: false });
+    setStep(step - 1);
+  }, [step, setStep, rental, setRental]);
+
+  const onCloseReturn = () => setShowReturnModal(false);
+
   const onPrev = useCallback(() => {
     if (step === 0) {
-      setRental({ ...rental, agreement: false });
+      setShowReturnModal(true);
       return;
     }
     setStep(step - 1);
@@ -77,13 +89,24 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
       </RentalNoticeFrameInner>
       <StyledBottom>
         <Button onClick={onPrev}>이전</Button>
-        {/* TODO: 2에서 1로 돌아가려고 하면 초기화 경고 modal */}
         <Button onClick={onNext} type={nextEnabled ? "default" : "disabled"}>
           {step === frames.length - 1 ? "신청" : "다음"}
         </Button>
         {/* TODO: 신청 완료 modal */}
         {/* TODO: 백이랑 연결 */}
       </StyledBottom>
+      {showReturnModal && (
+        <Modal>
+          <CancellableModalContent
+            onConfirm={onConfirmReturn}
+            onClose={onCloseReturn}
+          >
+            이전 단계로 이동할 경우
+            <br />
+            현재 단계에서 입력한 내용은 저장되지 않고 초기화됩니다.
+          </CancellableModalContent>
+        </Modal>
+      )}
     </RentalFrame>
   );
 };
