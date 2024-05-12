@@ -36,7 +36,7 @@ const SingleSemesterTitleRow = styled.div`
 
 const SingleSemesterTitle = styled.div`
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: ${({ theme }) => theme.fonts.WEIGHT.SEMIBOLD};
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   color: ${({ theme }) => theme.colors.BLACK};
 `;
 
@@ -125,7 +125,7 @@ const PastSingleSemesterFundingListSection: React.FC = () => {
           {toggle ? `접기` : `펼치기`}
         </MoreInfo>
       </SingleSemesterTitleRow>
-      {toggle ? <PastFundingListTable /> : <div />}
+      {toggle ? <PastFundingListTable /> : null}
     </PastSingleSemesterFundingListSectionInner>
   );
 };

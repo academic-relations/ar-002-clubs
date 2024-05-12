@@ -99,9 +99,7 @@ const NewFundingListSection: React.FC = () => {
           {/* TODO: ManageClubFundingMainFrame으로부터 주입받은 테이블 데이터 전달하기 */}
           <NewFundingListTable />
         </NewFundingListSectionContents>
-      ) : (
-        <div />
-      )}
+      ) : null}
     </NewFundingListSectionInner>
   );
 };

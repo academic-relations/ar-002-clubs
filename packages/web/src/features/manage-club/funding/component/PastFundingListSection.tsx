@@ -15,7 +15,7 @@ const PastFundingListSectionInner = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 20px;
+  gap: 40px;
 
   width: 100%;
 
@@ -60,9 +60,7 @@ const PastFundingListSection: React.FC = () => {
           <PastSingleSemesterFundingListSection />
           <PastSingleSemesterFundingListSection />
         </PastFundingListSectionContents>
-      ) : (
-        <div />
-      )}
+      ) : null}
     </PastFundingListSectionInner>
   );
 };
