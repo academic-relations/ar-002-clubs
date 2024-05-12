@@ -173,7 +173,7 @@ const PastFundingListTable: React.FC = () => (
         </TableCell>
       </HeaderRow>
       {mockData.map(data => (
-        <ContentRow>
+        <ContentRow key={data.id}>
           <TableCell type="Default" width="55%">
             {data.activityName}
           </TableCell>

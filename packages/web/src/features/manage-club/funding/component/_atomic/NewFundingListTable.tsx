@@ -194,7 +194,7 @@ const NewFundingListTable: React.FC = () => (
         </TableCell>
       </HeaderRow>
       {mockData.map(data => (
-        <ContentRow>
+        <ContentRow key={data.id}>
           <TableCell type="Tag" width="10%">
             <Tag color={mockStatusToTagColor(data.status)}>{data.status}</Tag>
           </TableCell>
