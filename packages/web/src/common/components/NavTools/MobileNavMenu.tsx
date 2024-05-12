@@ -6,6 +6,8 @@ import styled from "styled-components";
 import paths, { Paths } from "@sparcs-clubs/web/constants/paths";
 
 import MobileNavItem from "./MobileNavItem";
+import Icon from "../Icon";
+import Button from "../Button";
 
 type MobileNavMenuProps = {
   className?: string;
@@ -19,12 +21,16 @@ type Path = {
 };
 
 const MobileNavMenuInner = styled.div`
+  position: absolute;
   display: flex;
-  width: 300px;
+  width: 100%;
+  min-height: calc(100vh - 105px - 40px);
   padding: 16px;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
+
+  background: ${({ theme }) => theme.colors.BACKGROUND};
 `;
 
 const MobileSubMenuInner = styled.div`
@@ -35,6 +41,10 @@ const MobileSubMenuInner = styled.div`
   align-items: flex-start;
   gap: 4px;
   align-self: stretch;
+`;
+
+const LoginButton = styled(Button)`
+  gap: 4px;
 `;
 
 const MobileNavMenu: React.FC<MobileNavMenuProps> = ({
@@ -83,6 +93,16 @@ const MobileNavMenu: React.FC<MobileNavMenuProps> = ({
           </>
         );
       })}
+      <LoginButton
+        type="outlined"
+        onClick={
+          // TODO. paths.LOGIN.path 로 이동 로직 추가
+          () => {}
+        }
+      >
+        <Icon type="person" size={16} />
+        {paths.LOGIN.name}
+      </LoginButton>
     </MobileNavMenuInner>
   );
 };
