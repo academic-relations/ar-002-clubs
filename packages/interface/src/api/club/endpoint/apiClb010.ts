@@ -1,3 +1,4 @@
+import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 /**
@@ -26,7 +27,7 @@ const responseBodyMap = {
         studentNumber: z.number().int().min(20000000).max(30000000),
         name: z.string().max(30),
         email: z.string().max(50),
-        phoneNumber: z.string().max(20).optional(),
+        krPhoneNumber: zKrPhoneNumber,
       })
       .array(),
   }),
