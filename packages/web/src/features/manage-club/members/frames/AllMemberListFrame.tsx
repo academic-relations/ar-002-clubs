@@ -53,7 +53,7 @@ const AllMemberListFrame = () => {
           <ExcelButtonWrapper>
             <ExcelButton onClick={() => {}}>
               {/* TODO: 엑셀 다운로드 기능 구현 */}
-              <Icon type="download" size={16} color={colors.WHITE} />
+              <Icon type="save_alt" size={16} color={colors.WHITE} />
               엑셀로 다운로드
             </ExcelButton>
           </ExcelButtonWrapper>

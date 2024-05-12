@@ -1,4 +1,4 @@
-import FilterButton from "@sparcs-clubs/web/common/components/FilterButton";
+import Filter from "@sparcs-clubs/web/common/components/Filter/Index";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 import TextButton from "@sparcs-clubs/web/common/components/TextButton";
 import React from "react";
@@ -27,7 +27,10 @@ const MemberSearchAndFilter = () => (
   <MemberSearchAndFilterWrapper>
     <SearchAndFilterWrapper>
       <SearchInput />
-      <FilterButton />
+      <Filter
+        semesters={["2024년 봄학기", "2023년 가을학기", "2023년 봄학기"]}
+        selectedSemesters={["2024년 봄학기", "2023년 가을학기"]}
+      />
     </SearchAndFilterWrapper>
     <ResetButtonWrapper>
       <TextButton text="검색/필터 초기화" />
