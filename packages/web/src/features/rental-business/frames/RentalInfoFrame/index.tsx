@@ -5,6 +5,7 @@ import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepPro
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
+import { useRouter } from "next/navigation";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 import RentalInfoFirstFrame from "./RentalInfoFirstFrame";
 import RentalInfoSecondFrame from "./RentalInfoSecondFrame";
@@ -87,10 +88,11 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
       setShowAssignModal(true);
     }
   }, [nextEnabled, step, setStep]);
+  const router = useRouter();
 
   const onConfirm = () => {
     setShowAssignModal(false);
-    window.location.href = "/my";
+    router.push("/my");
   };
 
   return (
@@ -106,7 +108,7 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
         </Button>
         {/* TODO: 백이랑 연결 */}
       </StyledBottom>
-      {showReturnModal && (
+      {showReturnModal ? (
         <Modal>
           <CancellableModalContent
             onConfirm={onConfirmReturn}
@@ -117,8 +119,8 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
             현재 단계에서 입력한 내용은 저장되지 않고 초기화됩니다.
           </CancellableModalContent>
         </Modal>
-      )}
-      {showAssignModal && (
+      ) : null}
+      {showAssignModal ? (
         <Modal>
           <ConfirmModalContent onConfirm={onConfirm}>
             신청이 완료되었습니다.
@@ -126,7 +128,7 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
             확인을 누르면 신청 내역 화면으로 이동합니다.
           </ConfirmModalContent>
         </Modal>
-      )}
+      ) : null}
     </RentalFrame>
   );
 };
