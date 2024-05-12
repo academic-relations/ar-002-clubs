@@ -6,17 +6,20 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 interface FilterButtonProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  semesters: string[];
   selectedSemesters: string[];
 }
 
-const FilterButtonWrapper = styled.div`
+const FilterButtonWrapper = styled.div<{ isOpen: boolean }>`
   width: max-content;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   padding: 8px 12px;
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+  border: 1px solid
+    ${({ theme, isOpen }) =>
+      isOpen ? theme.colors.PRIMARY : theme.colors.GRAY[200]};
   border-radius: 4px;
   cursor: pointer;
   gap: 8px;
@@ -25,12 +28,14 @@ const FilterButtonWrapper = styled.div`
 const FilterButton: React.FC<FilterButtonProps> = ({
   isOpen,
   setIsOpen,
+  semesters,
   selectedSemesters,
 }) => {
   const changeOpen = () => setIsOpen(!isOpen);
   return (
-    <FilterButtonWrapper onClick={changeOpen}>
-      {selectedSemesters.length > 0 ? (
+    <FilterButtonWrapper isOpen={isOpen} onClick={changeOpen}>
+      {selectedSemesters.length > 0 &&
+      selectedSemesters.length !== semesters.length ? (
         <Typography fs={16} lh={20} fw="REGULAR">
           {selectedSemesters[0]} 외 {selectedSemesters.length - 1}개
         </Typography>
