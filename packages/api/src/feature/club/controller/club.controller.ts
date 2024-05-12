@@ -7,6 +7,7 @@ export class ClubController {
 
   @Get("clubs")
   async getClubs() {
+    // todo: return type 추가하기 : Promise<ApiClb001ResponseOK>
     const result = await this.clubService.getClubs();
     return result;
   }
