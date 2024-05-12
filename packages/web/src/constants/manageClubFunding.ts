@@ -1,5 +1,6 @@
 import { getDate, getHours, getMinutes, getMonth, getYear } from "date-fns";
 
+const manageClubFundingPageBreadCrumbName = "지원금";
 const manageClubFundingPageName = "지원금";
 const manageClubFundingPagePath = "/manage-club/funding";
 
@@ -26,6 +27,7 @@ const singleSemesterFundingListSectionTitleText = (
 ) => `${semester} (총 ${itemCount}개)`;
 
 export {
+  manageClubFundingPageBreadCrumbName,
   manageClubFundingPageName,
   manageClubFundingPagePath,
   newFundingListSectionInfoText,

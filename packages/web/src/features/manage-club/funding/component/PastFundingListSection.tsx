@@ -55,6 +55,7 @@ const PastFundingListSection: React.FC = () => {
       />
       {toggle ? (
         <PastFundingListSectionContents>
+          {/* TODO: ManageClubFundingMainFrame으로부터 주입받은 테이블 데이터 전달하기 */}
           <PastSingleSemesterFundingListSection />
           <PastSingleSemesterFundingListSection />
           <PastSingleSemesterFundingListSection />

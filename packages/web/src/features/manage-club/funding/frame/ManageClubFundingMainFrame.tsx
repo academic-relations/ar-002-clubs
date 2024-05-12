@@ -24,6 +24,7 @@ const ManageClubFundingMainFrameInner = styled.div`
 
 const ManageClubFundingMainFrame: React.FC = () => (
   <ManageClubFundingMainFrameInner>
+    {/* TODO: API 구현 이후엔 테이블 데이터 전부 프레임에서 주입해줄 것! */}
     <NewFundingListSection />
     <PastFundingListSection />
   </ManageClubFundingMainFrameInner>

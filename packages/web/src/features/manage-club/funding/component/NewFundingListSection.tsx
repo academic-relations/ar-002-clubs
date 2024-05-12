@@ -18,8 +18,6 @@ import FoldableSectionTitle from "./_atomic/FoldableSectionTitle";
 import NewFundingListTable from "./_atomic/NewFundingListTable";
 
 const NewFundingListSectionInner = styled.div`
-  /* New FundingListFrame */
-
   /* Auto layout */
   display: flex;
   flex-direction: column;
@@ -88,7 +86,7 @@ const NewFundingListSection: React.FC = () => {
       />
       {toggle ? (
         <NewFundingListSectionContents>
-          {/* TODO!: 지원금 신청 기간 받아오는 API 생기면 대체해야함! */}
+          {/* TODO: 지원금 신청 기간 받아오는 API 생기면 대체해야함! */}
           <Info text={newFundingListSectionInfoText("2024 봄", new Date())} />
           <NewFundingOrderButtonRow>
             <Button>
@@ -98,7 +96,7 @@ const NewFundingListSection: React.FC = () => {
               </NewFundingOrderButtonText>
             </Button>
           </NewFundingOrderButtonRow>
-
+          {/* TODO: ManageClubFundingMainFrame으로부터 주입받은 테이블 데이터 전달하기 */}
           <NewFundingListTable />
         </NewFundingListSectionContents>
       ) : (
