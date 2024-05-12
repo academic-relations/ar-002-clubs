@@ -31,7 +31,7 @@ const PastFundingListSectionContents = styled.div`
   flex-direction: column;
   align-items: flex-start;
   padding-left: 24px;
-  gap: 20px;
+  gap: 40px;
 
   width: 100%;
 

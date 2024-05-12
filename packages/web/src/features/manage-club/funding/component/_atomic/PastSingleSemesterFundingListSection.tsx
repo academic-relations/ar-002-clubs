@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+
 import { singleSemesterFundingListSectionTitleText } from "@sparcs-clubs/web/constants/manageClubFunding";
 
 import PastFundingListTable from "./PastFundingListTable";
@@ -32,12 +34,6 @@ const SingleSemesterTitleRow = styled.div`
   gap: 20px;
 
   width: 100%;
-`;
-
-const SingleSemesterTitle = styled.div`
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
-  color: ${({ theme }) => theme.colors.BLACK};
 `;
 
 const MoreInfo = styled.div`
@@ -115,12 +111,12 @@ const PastSingleSemesterFundingListSection: React.FC = () => {
   return (
     <PastSingleSemesterFundingListSectionInner>
       <SingleSemesterTitleRow>
-        <SingleSemesterTitle>
+        <Typography ff="PRETENDARD" fw="MEDIUM" fs={20} lh={24}>
           {singleSemesterFundingListSectionTitleText(
             mockData.name,
             mockData.fundings.length,
           )}
-        </SingleSemesterTitle>
+        </Typography>
         <MoreInfo onClick={() => setToggle(!toggle)}>
           {toggle ? `접기` : `펼치기`}
         </MoreInfo>
