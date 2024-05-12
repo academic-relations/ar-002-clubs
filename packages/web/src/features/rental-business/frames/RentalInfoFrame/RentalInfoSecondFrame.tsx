@@ -109,12 +109,6 @@ const RentalInfoSecondFrame: React.FC<
   };
 
   useEffect(() => {
-    const enableNext = !(!rental.date?.start || !rental.date?.end);
-    setNextEnabled(enableNext);
-  }, [rental, setNextEnabled]);
-  // TODO: 선택된 물건 없을 때도 안 넘어가게 하기
-
-  useEffect(() => {
     if (!rentalDate || !returnDate) {
       setValue("none");
       setRental({
@@ -150,12 +144,6 @@ const RentalInfoSecondFrame: React.FC<
     (!rental.handCart || Object.values(rental.handCart).every(val => !val)) &&
     !rental.mat &&
     (!rental.tool || Object.values(rental.tool).every(val => !val));
-
-  useEffect(() => {
-    const enableNext =
-      !isRentalListEmpty && !(!rental.date?.start || !rental.date?.end);
-    setNextEnabled(enableNext);
-  }, [rental, setNextEnabled]);
 
   const isCurrentItemEmpty = () => {
     switch (value) {
