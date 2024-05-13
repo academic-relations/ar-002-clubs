@@ -41,7 +41,7 @@ const MyPageMainFrame: React.FC = () => {
                     showLength={false}
                     title={myClub.name}
                     clubList={myClub.clubs}
-                    key={myClub.semester}
+                    key={myClub.name}
                   />
                 ),
             )}

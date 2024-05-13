@@ -1,5 +1,7 @@
+import type { ApiClb003ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb003";
+
 // mockup model to interface
-const mockMyClubList = {
+const mockMyClubList: ApiClb003ResponseOK = {
   semesters: [
     {
       id: 15,
@@ -8,11 +10,12 @@ const mockMyClubList = {
         {
           id: 42,
           name: "KAINATION",
-          type: "가동아리\n",
+          type: 1,
+          isPermanent: false,
           characteristic: "기부",
           representative: "강현우",
           advisor: "신병하",
-          totalMembers: 5,
+          totalMemberCnt: 5,
         },
       ],
     },
@@ -23,11 +26,12 @@ const mockMyClubList = {
         {
           id: 42,
           name: "KAINATION",
-          type: "정동아리\n",
+          type: 0,
+          isPermanent: false,
           characteristic: "기부",
           representative: "강현우",
           advisor: "신병하",
-          totalMembers: 5,
+          totalMemberCnt: 5,
         },
       ],
     },
@@ -38,20 +42,22 @@ const mockMyClubList = {
         {
           id: 34,
           name: "MUSE",
-          type: "가동아리\n",
+          type: 1,
+          isPermanent: false,
           characteristic: "밴드세션&코러스",
           representative: "정민호",
           advisor: "이해신",
-          totalMembers: 27,
+          totalMemberCnt: 27,
         },
         {
           id: 42,
           name: "KAINATION",
-          type: "정동아리\n",
+          type: 0,
+          isPermanent: false,
           characteristic: "기부",
           representative: "강현우",
           advisor: "신병하",
-          totalMembers: 5,
+          totalMemberCnt: 5,
         },
       ],
     },
