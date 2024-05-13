@@ -16,7 +16,7 @@ const CommonCellWrapper = styled.div<{
   minWidth: number;
 }>`
   width: ${({ width }) => (typeof width === "number" ? `${width}px` : width)};
-  min-width: ${({ width }) => `${width}px`};
+  min-width: ${({ minWidth }) => `${minWidth}px`};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -55,7 +55,7 @@ const TableCell: React.FC<TableCellProps> = ({
   type,
   children,
   width = "150px",
-  minWidth = 150,
+  minWidth = 100,
 }) => {
   const isHeader = type === "Header" || type === "HeaderSort";
   let content;
