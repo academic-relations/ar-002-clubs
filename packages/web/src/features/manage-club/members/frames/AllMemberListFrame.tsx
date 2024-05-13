@@ -1,10 +1,9 @@
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
-import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
-import TextButton from "@sparcs-clubs/web/common/components/TextButton";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 import React, { useState } from "react";
 import styled from "styled-components";
+import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import MemberSearchAndFilter from "../components/MemberSearchAndFilter";
 import AllMemberList from "../components/AllMemberList";
 
@@ -19,12 +18,6 @@ const AllMemberListWrapper = styled.div`
   flex-direction: column;
   gap: 40px;
   padding-left: 24px;
-`;
-
-const ClubCategoryTitle = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
 `;
 
 const ExcelButton = styled(Button)`
@@ -43,11 +36,11 @@ const AllMemberListFrame = () => {
   const [toggle, setToggle] = useState<boolean>(true);
   return (
     <AllMemberWrapper>
-      <ClubCategoryTitle>
-        <SectionTitle>전체 회원 명단</SectionTitle>
-        <TextButton onClick={() => setToggle(!toggle)} text="임시 토글" />
-        {/* TODO: funding 머지 되면 foldable section title 가져오기 */}
-      </ClubCategoryTitle>
+      <FoldableSectionTitle
+        title="전체 회원 명단"
+        toggle={toggle}
+        toggleHandler={() => setToggle(!toggle)}
+      />
       {toggle ? (
         <AllMemberListWrapper>
           <ExcelButtonWrapper>
