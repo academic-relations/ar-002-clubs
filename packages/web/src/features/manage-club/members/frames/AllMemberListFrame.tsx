@@ -62,13 +62,16 @@ const AllMemberListFrame = () => {
             selectedSemesters={selectedSemesters}
             setSelectedSemesters={setSelectedSemesters}
           />
-          {mockAllSemesters.semesters.map(semester => (
-            <AllMemberList
-              key={semester.id}
-              semester={`${semester.year}년 ${semester.name}학기`}
-              members={mockSemesterMembers.members}
-            />
-          ))}
+          {/* TODO: 필터랑 연동하기 */}
+          {mockAllSemesters.semesters
+            .sort((a, b) => b.id - a.id) // 최신 학기부터 정렬(ID가 클수록 최신 학기라고 가정)
+            .map(semester => (
+              <AllMemberList
+                key={semester.id}
+                semester={`${semester.year}년 ${semester.name}학기`}
+                members={mockSemesterMembers.members}
+              />
+            ))}
         </AllMemberListWrapper>
       )}
     </AllMemberWrapper>

@@ -12,6 +12,12 @@ const SerchInputWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
   align-items: center;
   flex: 1;
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.GRAY[300]};
+  }
+  &:focus-within {
+    border-color: ${({ theme }) => theme.colors.PRIMARY};
+  }
 `;
 
 const SeachInput = styled.input`
@@ -24,6 +30,10 @@ const SeachInput = styled.input`
   font-size: 16px;
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
+  color: ${({ theme }) => theme.colors.BLACK};
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.GRAY[200]};
+  }
 `;
 
 const SearchInput = () => (

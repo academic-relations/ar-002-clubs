@@ -23,6 +23,7 @@ const FilterButtonWrapper = styled.div<{ isOpen: boolean }>`
   border-radius: 4px;
   cursor: pointer;
   gap: 8px;
+  background-color: ${({ theme }) => theme.colors.WHITE};
 `;
 
 const FilterButton: React.FC<FilterButtonProps> = ({

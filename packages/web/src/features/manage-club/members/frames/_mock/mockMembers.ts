@@ -12,7 +12,6 @@ const mockAllSemesters = {
     { id: 7, year: 2023, name: "봄" },
     { id: 8, year: 2023, name: "가을" },
     { id: 9, year: 2024, name: "봄" },
-    { id: 10, year: 2024, name: "가을" },
   ],
 };
 
