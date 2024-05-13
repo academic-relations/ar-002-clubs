@@ -6,6 +6,7 @@ import styled from "styled-components";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import MemberSearchAndFilter from "../components/MemberSearchAndFilter";
 import AllMemberList from "../components/AllMemberList";
+import { mockAllSemesters } from "./_mock/mockMembers";
 
 const AllMemberWrapper = styled.div`
   display: flex;
@@ -36,6 +37,10 @@ const AllMemberListFrame = () => {
   const [toggle, setToggle] = useState<boolean>(true);
   const [selectedSemesters, setSelectedSemesters] = useState<string[]>([]);
 
+  const semesters = mockAllSemesters.semesters.map(
+    semester => `${semester.year}년 ${semester.name}학기`,
+  );
+
   return (
     <AllMemberWrapper>
       <FoldableSectionTitle
@@ -53,8 +58,7 @@ const AllMemberListFrame = () => {
             </ExcelButton>
           </ExcelButtonWrapper>
           <MemberSearchAndFilter
-            semesters={["2024년 봄학기", "2023년 가을학기", "2023년 봄학기"]}
-            // TODO: semesters mock data로 넣기
+            semesters={semesters}
             selectedSemesters={selectedSemesters}
             setSelectedSemesters={setSelectedSemesters}
           />

@@ -31,6 +31,7 @@ const SearchInput = () => (
     <Icon type="search" size={20} />
     <SeachInput placeholder="검색" />
   </SerchInputWrapper>
+  //   TODO: SearchInput 기능 넣기
 );
 
 export default SearchInput;

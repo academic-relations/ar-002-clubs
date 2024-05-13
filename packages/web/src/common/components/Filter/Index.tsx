@@ -22,7 +22,7 @@ const Filter: React.FC<FilterSelectProps> = ({
   setSelectedSemesters,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
+  // TODO: filter 아닌 곳 클릭했을 때 닫히게 하기
   return (
     <FilterWrapper>
       <FilterButton
