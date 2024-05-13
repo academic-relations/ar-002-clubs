@@ -14,7 +14,7 @@ import {
   newFundingOrderButtonText,
 } from "@sparcs-clubs/web/constants/manageClubFunding";
 
-import FoldableSectionTitle from "./_atomic/FoldableSectionTitle";
+import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import NewFundingListTable from "./_atomic/NewFundingListTable";
 
 const NewFundingListSectionInner = styled.div`
