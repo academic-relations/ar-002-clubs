@@ -21,7 +21,6 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    semesterId: z.number().int().min(1),
     members: z
       .object({
         studentNumber: z.number().int().min(20000000).max(30000000),
