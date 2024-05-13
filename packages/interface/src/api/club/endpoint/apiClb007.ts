@@ -1,3 +1,4 @@
+import { ClubRepresentativeEnum } from "@sparcs-clubs/interface/common/enum/club";
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
@@ -10,11 +11,16 @@ const url = () =>
   `/student/clubs/club/{clubId}/representatives/representative/{representativeId}`;
 const method = "PUT";
 
-const requestParam = z.object({});
+const requestParam = z.object({
+  clubId: z.number().int(),
+  representativeEnumId: z.nativeEnum(ClubRepresentativeEnum),
+});
 
 const requestQuery = z.object({});
 
-const requestBody = z.object({});
+const requestBody = z.object({
+  studentId: z.number().int(),
+});
 
 const responseBodyMap = {
   [HttpStatusCode.Created]: z.object({}),
@@ -25,7 +31,9 @@ const responseErrorMap = {};
 type ApiClb007RequestParam = z.infer<typeof apiClb007.requestParam>;
 type ApiClb007RequestQuery = z.infer<typeof apiClb007.requestQuery>;
 type ApiClb007RequestBody = z.infer<typeof apiClb007.requestBody>;
-type ApiClb007ResponseOK = z.infer<(typeof apiClb007.responseBodyMap)[201]>;
+type ApiClb007ResponseCreated = z.infer<
+  (typeof apiClb007.responseBodyMap)[201]
+>;
 
 const apiClb007 = {
   url,
@@ -43,5 +51,5 @@ export type {
   ApiClb007RequestParam,
   ApiClb007RequestQuery,
   ApiClb007RequestBody,
-  ApiClb007ResponseOK,
+  ApiClb007ResponseCreated,
 };

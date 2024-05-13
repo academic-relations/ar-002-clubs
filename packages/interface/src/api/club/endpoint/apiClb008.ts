@@ -1,3 +1,5 @@
+import { ClubRepresentativeEnum } from "@sparcs-clubs/interface/common/enum/club";
+import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
@@ -10,11 +12,22 @@ const url = () =>
   `/student/clubs/club/{clubId}/representatives/representative/{representativeId}/candidates`;
 const method = "GET";
 
-const requestParam = z.object({});
+const requestParam = z.object({
+  clubId: z.number().int(),
+  representativeEnumId: z.nativeEnum(ClubRepresentativeEnum),
+});
 
 const requestQuery = z.object({});
 
-const requestBody = z.object({});
+const requestBody = z.object({
+  students: z.array(
+    z.object({
+      id: z.number().int(),
+      name: z.string().max(20),
+      phoneNumber: zKrPhoneNumber,
+    }),
+  ),
+});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({}),

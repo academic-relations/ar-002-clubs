@@ -1,3 +1,5 @@
+import { ClubRepresentativeEnum } from "@sparcs-clubs/interface/common/enum/club";
+import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
@@ -19,23 +21,14 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    semesters: z
-      .object({
-        id: z.number().int().min(1), // 학기 id
-        name: z.string().max(20), // 학기명
-        clubs: z // 활동 동아리 목록
-          .object({
-            id: z.number().int().min(1),
-            name: z.string().max(20),
-            type: z.string().max(10), // 동아리 유형(정동아리 | 가동아리 | 상임동아리)
-            characteristic: z.string().max(50), // 동아리 소개
-            representative: z.string().max(20), // 동아리 대표
-            advisor: z.string().max(20).nullable(), // 동아리 지도교수
-            totalMemberCnt: z.number().int().min(1),
-          })
-          .array(),
-      })
-      .array(),
+    representatives: z.array(
+      z.object({
+        representitiveEnum: z.nativeEnum(ClubRepresentativeEnum),
+        studentId: z.number().int(),
+        name: z.string().max(20),
+        phoneNumber: zKrPhoneNumber,
+      }),
+    ),
   }),
 };
 
