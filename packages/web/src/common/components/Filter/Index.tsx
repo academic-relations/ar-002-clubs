@@ -31,13 +31,13 @@ const Filter: React.FC<FilterSelectProps> = ({
         semesters={semesters}
         selectedSemesters={selectedSemesters}
       />
-      {isOpen ? (
+      {isOpen && (
         <FilterDropdown
           semesters={semesters}
           selectedSemesters={selectedSemesters}
           setSelectedSemesters={setSelectedSemesters}
         />
-      ) : null}
+      )}
     </FilterWrapper>
   );
 };

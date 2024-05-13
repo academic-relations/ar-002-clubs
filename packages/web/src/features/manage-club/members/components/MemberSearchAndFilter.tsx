@@ -8,7 +8,7 @@ interface MemberSearchAndFilterProps {
   semesters: string[];
   selectedSemesters: string[];
   setSelectedSemesters: React.Dispatch<React.SetStateAction<string[]>>;
-}
+} // TODO: 겹치는 props 정리하기
 
 const MemberSearchAndFilterWrapper = styled.div`
   display: flex;
@@ -21,6 +21,7 @@ const SearchAndFilterWrapper = styled.div`
   flex-direction: row;
   gap: 20px;
 `;
+// TODO: searchinput이랑 filter 높이 맞추기
 
 const ResetButtonWrapper = styled.div`
   display: flex;
@@ -33,20 +34,25 @@ const MemberSearchAndFilter: React.FC<MemberSearchAndFilterProps> = ({
   semesters,
   selectedSemesters,
   setSelectedSemesters,
-}) => (
-  <MemberSearchAndFilterWrapper>
-    <SearchAndFilterWrapper>
-      <SearchInput />
-      <Filter
-        semesters={semesters}
-        selectedSemesters={selectedSemesters}
-        setSelectedSemesters={setSelectedSemesters}
-      />
-    </SearchAndFilterWrapper>
-    <ResetButtonWrapper>
-      <TextButton text="검색/필터 초기화" />
-    </ResetButtonWrapper>
-  </MemberSearchAndFilterWrapper>
-);
+}) => {
+  const handleReset = () => {
+    setSelectedSemesters([]);
+  };
+  return (
+    <MemberSearchAndFilterWrapper>
+      <SearchAndFilterWrapper>
+        <SearchInput />
+        <Filter
+          semesters={semesters}
+          selectedSemesters={selectedSemesters}
+          setSelectedSemesters={setSelectedSemesters}
+        />
+      </SearchAndFilterWrapper>
+      <ResetButtonWrapper>
+        <TextButton text="검색/필터 초기화" onClick={handleReset} />
+      </ResetButtonWrapper>
+    </MemberSearchAndFilterWrapper>
+  );
+};
 
 export default MemberSearchAndFilter;

@@ -54,6 +54,7 @@ const AllMemberListFrame = () => {
           </ExcelButtonWrapper>
           <MemberSearchAndFilter
             semesters={["2024년 봄학기", "2023년 가을학기", "2023년 봄학기"]}
+            // TODO: semesters mock data로 넣기
             selectedSemesters={selectedSemesters}
             setSelectedSemesters={setSelectedSemesters}
           />

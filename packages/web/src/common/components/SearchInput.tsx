@@ -1,5 +1,36 @@
 import React from "react";
+import styled from "styled-components";
+import Icon from "./Icon";
 
-const SearchInput = () => <div>검색</div>;
+const SerchInputWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: ${({ theme }) => theme.colors.WHITE};
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+  align-items: center;
+  flex: 1;
+`;
+
+const SeachInput = styled.input`
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  outline: none;
+  border: none;
+  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
+`;
+
+const SearchInput = () => (
+  <SerchInputWrapper>
+    <Icon type="search" size={20} />
+    <SeachInput placeholder="검색" />
+  </SerchInputWrapper>
+);
 
 export default SearchInput;

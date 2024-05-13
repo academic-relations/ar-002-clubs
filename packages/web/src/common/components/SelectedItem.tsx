@@ -19,6 +19,7 @@ const SelectedItemWrapper = styled.div`
   border-radius: 4px;
   background-color: ${({ theme }) => theme.colors.WHITE};
   font-size: 14px;
+  cursor: pointer;
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.GRAY[200]};
