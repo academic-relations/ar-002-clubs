@@ -6,7 +6,7 @@ import styled from "styled-components";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import MemberSearchAndFilter from "../components/MemberSearchAndFilter";
 import AllMemberList from "../components/AllMemberList";
-import { mockAllSemesters } from "./_mock/mockMembers";
+import { mockAllSemesters, mockSemesterMembers } from "./_mock/mockMembers";
 
 const AllMemberWrapper = styled.div`
   display: flex;
@@ -62,7 +62,13 @@ const AllMemberListFrame = () => {
             selectedSemesters={selectedSemesters}
             setSelectedSemesters={setSelectedSemesters}
           />
-          <AllMemberList />
+          {mockAllSemesters.semesters.map(semester => (
+            <AllMemberList
+              key={semester.id}
+              semester={`${semester.year}년 ${semester.name}학기`}
+              members={mockSemesterMembers.members}
+            />
+          ))}
         </AllMemberListWrapper>
       )}
     </AllMemberWrapper>
