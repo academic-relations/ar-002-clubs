@@ -100,8 +100,13 @@ const RentalInfoThirdFrame: React.FC<
         <RentalPeriodWrapper>
           <StyledTypography type="p">대여 기간</StyledTypography>
           <RentalPeriodInner>
-            {format(rental.date?.start, "yyyy년 M월 d일 (EEE)", { locale: ko })}{" "}
-            ~ {format(rental.date?.end, "yyyy년 M월 d일 (EEE)", { locale: ko })}
+            {format(rental.date?.start || "", "yyyy년 M월 d일 (EEE)", {
+              locale: ko,
+            })}{" "}
+            ~{" "}
+            {format(rental.date?.end || "", "yyyy년 M월 d일 (EEE)", {
+              locale: ko,
+            })}
           </RentalPeriodInner>
         </RentalPeriodWrapper>
         <StyledTypography type="p">대여 물품</StyledTypography>

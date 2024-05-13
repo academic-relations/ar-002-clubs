@@ -9,7 +9,7 @@ interface MonthNavigatorProps {
   onChange: (date: Date) => void;
 }
 
-const NavigatorWrapper = styled.div<{ sameYear: boolean }>`
+const NavigatorWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,7 +17,6 @@ const NavigatorWrapper = styled.div<{ sameYear: boolean }>`
   font-size: 16px;
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
-  line-height: 20px;
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   color: ${({ theme }) => theme.colors.BLACK};
   user-select: none;
