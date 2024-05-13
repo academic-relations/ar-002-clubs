@@ -35,11 +35,13 @@ const FilterButton: React.FC<FilterButtonProps> = ({
   return (
     <FilterButtonWrapper isOpen={isOpen} onClick={changeOpen}>
       {selectedSemesters.length > 0 &&
-      selectedSemesters.length !== semesters.length ? (
-        <Typography fs={16} lh={20} fw="REGULAR">
-          {selectedSemesters[0]} 외 {selectedSemesters.length - 1}개
-        </Typography>
-      ) : null}
+        selectedSemesters.length !== semesters.length && (
+          <Typography fs={16} lh={20} fw="REGULAR">
+            {selectedSemesters.length > 1
+              ? `${selectedSemesters[0]} 외 ${selectedSemesters.length - 1}개`
+              : selectedSemesters[0]}
+          </Typography>
+        )}
       <Icon type="filter_list" size={20} />
     </FilterButtonWrapper>
   );

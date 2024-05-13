@@ -6,6 +6,7 @@ import FilterDropdown from "./_atomic/FilterDropdown";
 interface FilterSelectProps {
   semesters: string[];
   selectedSemesters?: string[];
+  setSelectedSemesters: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const FilterWrapper = styled.div`
@@ -18,8 +19,10 @@ const FilterWrapper = styled.div`
 const Filter: React.FC<FilterSelectProps> = ({
   semesters,
   selectedSemesters = [],
+  setSelectedSemesters,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
   return (
     <FilterWrapper>
       <FilterButton
@@ -32,6 +35,7 @@ const Filter: React.FC<FilterSelectProps> = ({
         <FilterDropdown
           semesters={semesters}
           selectedSemesters={selectedSemesters}
+          setSelectedSemesters={setSelectedSemesters}
         />
       ) : null}
     </FilterWrapper>

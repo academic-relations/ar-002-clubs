@@ -7,9 +7,10 @@ interface SelectedItemProps {
   text: string;
   isDisabled?: boolean;
   isSelected?: boolean;
+  onClick?: () => void;
 }
 
-const SelectedItemWrapper = styled.div<{ isSelected: boolean }>`
+const SelectedItemWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -18,23 +19,25 @@ const SelectedItemWrapper = styled.div<{ isSelected: boolean }>`
   border-radius: 4px;
   background-color: ${({ theme }) => theme.colors.WHITE};
   font-size: 14px;
-  background-color: ${({ isSelected, theme }) =>
-    isSelected ? theme.colors.GRAY[200] : "transparent"};
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.GRAY[200]};
+  }
 `;
 
 const SelectedItem: React.FC<SelectedItemProps> = ({
   text,
   isDisabled = false,
   isSelected = false,
+  onClick = () => {},
 }) => (
-  <SelectedItemWrapper isSelected={isSelected}>
+  <SelectedItemWrapper onClick={onClick}>
     <Typography
       fs={16}
       lh={20}
       color={isDisabled ? "GRAY.300" : "BLACK"}
       style={{ flex: 1 }}
     >
-      {/* TODO: hover */}
       {text}
     </Typography>
     {isSelected && !isDisabled ? <Icon type="check" size={16} /> : null}

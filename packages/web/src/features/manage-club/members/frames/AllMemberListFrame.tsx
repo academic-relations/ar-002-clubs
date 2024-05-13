@@ -34,6 +34,8 @@ const ExcelButtonWrapper = styled.div`
 
 const AllMemberListFrame = () => {
   const [toggle, setToggle] = useState<boolean>(true);
+  const [selectedSemesters, setSelectedSemesters] = useState<string[]>([]);
+
   return (
     <AllMemberWrapper>
       <FoldableSectionTitle
@@ -41,7 +43,7 @@ const AllMemberListFrame = () => {
         toggle={toggle}
         toggleHandler={() => setToggle(!toggle)}
       />
-      {toggle ? (
+      {toggle && (
         <AllMemberListWrapper>
           <ExcelButtonWrapper>
             <ExcelButton onClick={() => {}}>
@@ -50,10 +52,14 @@ const AllMemberListFrame = () => {
               엑셀로 다운로드
             </ExcelButton>
           </ExcelButtonWrapper>
-          <MemberSearchAndFilter />
+          <MemberSearchAndFilter
+            semesters={["2024년 봄학기", "2023년 가을학기", "2023년 봄학기"]}
+            selectedSemesters={selectedSemesters}
+            setSelectedSemesters={setSelectedSemesters}
+          />
           <AllMemberList />
         </AllMemberListWrapper>
-      ) : null}
+      )}
     </AllMemberWrapper>
   );
 };

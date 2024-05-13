@@ -4,6 +4,12 @@ import TextButton from "@sparcs-clubs/web/common/components/TextButton";
 import React from "react";
 import styled from "styled-components";
 
+interface MemberSearchAndFilterProps {
+  semesters: string[];
+  selectedSemesters: string[];
+  setSelectedSemesters: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
 const MemberSearchAndFilterWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -23,13 +29,18 @@ const ResetButtonWrapper = styled.div`
   align-items: flex-end;
 `;
 
-const MemberSearchAndFilter = () => (
+const MemberSearchAndFilter: React.FC<MemberSearchAndFilterProps> = ({
+  semesters,
+  selectedSemesters,
+  setSelectedSemesters,
+}) => (
   <MemberSearchAndFilterWrapper>
     <SearchAndFilterWrapper>
       <SearchInput />
       <Filter
-        semesters={["2024년 봄학기", "2023년 가을학기", "2023년 봄학기"]}
-        selectedSemesters={["2024년 봄학기", "2023년 가을학기"]}
+        semesters={semesters}
+        selectedSemesters={selectedSemesters}
+        setSelectedSemesters={setSelectedSemesters}
       />
     </SearchAndFilterWrapper>
     <ResetButtonWrapper>

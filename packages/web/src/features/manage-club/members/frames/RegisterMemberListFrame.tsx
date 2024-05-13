@@ -29,14 +29,14 @@ const RegisterMemberListFrame = () => {
         toggle={toggle}
         toggleHandler={() => setToggle(!toggle)}
       />
-      {toggle ? (
+      {toggle && (
         <RegisterMemberListWrapper>
           <Info
             text={newMemberListSectionInfoText(mockSemester, mockDeadline)}
           />
           <RegisterMemberList />
         </RegisterMemberListWrapper>
-      ) : null}
+      )}
     </RegisterMemberWrapper>
   );
 };

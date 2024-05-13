@@ -5,6 +5,7 @@ import SelectedItem from "@sparcs-clubs/web/common/components/SelectedItem";
 interface FilterDropdownProps {
   semesters: string[];
   selectedSemesters: string[];
+  setSelectedSemesters: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const SelectList = styled.div`
@@ -24,16 +25,32 @@ const SelectList = styled.div`
 const FilterDropdown: React.FC<FilterDropdownProps> = ({
   semesters,
   selectedSemesters,
-}) => (
-  <SelectList>
-    {semesters.map(semester => (
-      <SelectedItem
-        key={semester}
-        text={semester}
-        isSelected={selectedSemesters.includes(semester)}
-      />
-    ))}
-  </SelectList>
-);
+  setSelectedSemesters,
+}) => {
+  const handleSelect = (semester: string) => {
+    if (selectedSemesters.includes(semester)) {
+      const updatedSelectedSemesters = selectedSemesters.filter(
+        selectedSemester => selectedSemester !== semester,
+      );
+      setSelectedSemesters(updatedSelectedSemesters);
+    } else {
+      const updatedSelectedSemesters = [...selectedSemesters, semester];
+      setSelectedSemesters(updatedSelectedSemesters);
+    }
+  };
+
+  return (
+    <SelectList>
+      {semesters.map(semester => (
+        <SelectedItem
+          key={semester}
+          text={semester}
+          isSelected={selectedSemesters.includes(semester)}
+          onClick={() => handleSelect(semester)}
+        />
+      ))}
+    </SelectList>
+  );
+};
 
 export default FilterDropdown;
