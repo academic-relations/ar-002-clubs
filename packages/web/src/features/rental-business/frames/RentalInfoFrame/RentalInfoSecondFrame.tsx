@@ -17,7 +17,7 @@ import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/C
 import { RentalFrameProps } from "../RentalNoticeFrame";
 import { mockExistDates } from "./_atomic/mockExistDate";
 
-const StyledCard = styled(Card)<{ type: string }>`
+const StyledCard = styled(Card)<{ outline: boolean }>`
   padding: 32px;
   gap: 40px;
   align-self: stretch;
@@ -187,7 +187,7 @@ const RentalInfoSecondFrame: React.FC<
 
   return (
     <>
-      <StyledCard type="outline">
+      <StyledCard outline>
         <Typography type="h3">대여 기간 선택</Typography>
         <SelectRangeCalendar
           rentalDate={rentalDate}
@@ -204,7 +204,7 @@ const RentalInfoSecondFrame: React.FC<
       <ItemButtonList value={value} onChange={itemOnChange} rental={rental} />
       <Info text={rentals[value].info} />
       {value !== "none" && (
-        <StyledCard type="outline">
+        <StyledCard outline>
           <StyledCardInner>
             <ResetTitleWrapper>
               <FlexGrowTypography>
@@ -220,7 +220,7 @@ const RentalInfoSecondFrame: React.FC<
           </StyledCardInner>
         </StyledCard>
       )}
-      <StyledCard type="outline">
+      <StyledCard outline>
         <StyledCardInner>
           <ResetTitleWrapper>
             <FlexGrowTypography>

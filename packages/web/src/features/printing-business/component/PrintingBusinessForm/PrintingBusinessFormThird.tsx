@@ -17,7 +17,7 @@ type PrintingBusinessFormThirdProps = Pick<
   "username" | "clubs" | "requestParam" | "requestForm" | "setRequestForm"
 > & { setFormError: React.Dispatch<React.SetStateAction<boolean>> };
 
-const StyledCard = styled(Card)<{ type: string }>`
+const StyledCard = styled(Card)<{ outline: boolean }>`
   padding: 32px;
   gap: 20px;
   align-self: stretch;
@@ -41,7 +41,7 @@ const PrintingBusinessFormThird: React.FC<PrintingBusinessFormThirdProps> = ({
   }, [printingPurpose]);
 
   return (
-    <StyledCard type="outline">
+    <StyledCard outline>
       <FormCheck
         label={printingBusinessOrderSteps[0].label}
         formContents={[
