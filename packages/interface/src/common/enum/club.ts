@@ -10,4 +10,4 @@ enum ClubRepresentativeEnum {
   Representative2, // 대의원 2
 }
 
-export { ClubTypeEnum, ClubRepresentativeEnum };
+export { ClubRepresentativeEnum, ClubTypeEnum };
