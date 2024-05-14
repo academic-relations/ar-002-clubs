@@ -1,0 +1,69 @@
+import { HttpStatusCode } from "axios";
+import { z } from "zod";
+
+import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
+
+/**
+ * @version v0.1
+ * @description 해당 동아리의 공용공간 사용신청 내역을 가져옵니다.
+ */
+
+const url = () => `/student/common-spaces/usage-order`;
+const method = "GET";
+
+const requestParam = z.object({});
+
+const requestQuery = z.object({
+  clubId: z.number().min(1),
+  startDate: z.date().optional(),
+  endDate: z.date().optional(),
+  pageOffset: z.number().min(1),
+  itemCount: z.number().min(1),
+});
+
+const requestBody = z.object({});
+
+const responseBodyMap = {
+  [HttpStatusCode.Ok]: z.object({
+    items: z.array(
+      z.object({
+        orderId: z.number().int().min(1),
+        // 상태에 관한 prop이 없어서 임의로 추가했습니다. 리뷰하실 때 시트와 함께 검토해 주세요!
+        statusEnum: z.nativeEnum(CommonSpaceUsageOrderStatusEnum),
+        spaceName: z.string(),
+        chargeStudentName: z.string().max(255),
+        startTerm: z.date(), // Assuming startTerm is a datetime
+        endTerm: z.date(), // Assuming endTerm is a datetime
+        createdAt: z.date(), // Assuming createdAt is a datetime
+      }),
+    ),
+    total: z.number().int().min(0),
+    offset: z.number().int().min(1),
+  }),
+};
+
+const responseErrorMap = {};
+
+const apiCms006 = {
+  url,
+  method,
+  requestParam,
+  requestQuery,
+  requestBody,
+  responseBodyMap,
+  responseErrorMap,
+};
+
+type ApiCms006RequestParam = z.infer<typeof apiCms006.requestParam>;
+type ApiCms006RequestQuery = z.infer<typeof apiCms006.requestQuery>;
+type ApiCms006RequestBody = z.infer<typeof apiCms006.requestBody>;
+type ApiCms006ResponseOk = z.infer<(typeof apiCms006.responseBodyMap)[200]>;
+
+export default apiCms006;
+
+export type {
+  ApiCms006RequestParam,
+  ApiCms006RequestQuery,
+  ApiCms006RequestBody,
+  ApiCms006ResponseOk,
+};

@@ -7,11 +7,11 @@ const Vacuum: React.FC<RentalFrameProps> = ({ rental, setRental }) => (
   <>
     <Typography type="p">청소기 종류</Typography>
     <Radio
-      value={rental?.vacuum}
+      value={rental?.vacuum as string}
       onChange={value =>
         setRental({
           ...rental,
-          vacuum: value,
+          vacuum: value as RentalFrameProps["rental"]["vacuum"],
         })
       }
     >

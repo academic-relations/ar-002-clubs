@@ -3,7 +3,8 @@ import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpo
 const mockupData: ApiClb002ResponseOK = {
   id: 1,
   name: "궁극의 맛",
-  type: "정동아리",
+  type: 0,
+  isPermanent: false,
   characteristic: "요리",
   representative: "장주원",
   advisor: null,

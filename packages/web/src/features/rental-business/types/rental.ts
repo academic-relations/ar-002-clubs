@@ -26,4 +26,5 @@ export interface RentalInterface {
     plier?: number;
     longNosePlier?: number;
   };
+  purpose?: string;
 }

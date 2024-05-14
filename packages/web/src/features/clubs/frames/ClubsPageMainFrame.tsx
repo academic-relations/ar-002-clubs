@@ -29,9 +29,11 @@ const ClubsPageMainFrame: React.FC = () => {
           {(data?.divisions ?? []).map(division => (
             <ClubsSectionFrame
               title={division.name}
-              clubList={division.clubs.sort(
-                (a, b) => a.type - b.type || a.name.localeCompare(b.name),
-              )}
+              clubList={division.clubs.sort((a, b) => {
+                if (a.isPermanent && !b.isPermanent) return -1;
+                if (!a.isPermanent && b.isPermanent) return 1;
+                return a.type - b.type || a.name.localeCompare(b.name);
+              })}
               key={division.name}
             />
           ))}
