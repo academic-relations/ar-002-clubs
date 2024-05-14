@@ -74,7 +74,9 @@ const ClubCard: React.FC<ClubCardProps> = ({ club }) => (
     <ClubCardRow>{club.characteristic}</ClubCardRow>
 
     <ClubCardRow>
-      <Tag color={getTagColorFromClubType(club.type)}>{getClubType(club)}</Tag>
+      <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
+        {getClubType(club)}
+      </Tag>
     </ClubCardRow>
   </ClubCardInner>
 );

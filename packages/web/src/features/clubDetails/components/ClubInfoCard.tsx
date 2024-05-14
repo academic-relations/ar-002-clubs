@@ -6,6 +6,7 @@ import styled from "styled-components";
 import {
   getTagColorFromClubType,
   getTagColorFromDivision,
+  getTagContentFromClubType,
 } from "@sparcs-clubs/web/types/clubdetail.types";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -36,7 +37,9 @@ const ClubInfoCard: React.FC<ClubInfoCardProps> = ({ club }) => (
       <ClubInfoItem
         title="동아리 지위"
         content={
-          <Tag color={getTagColorFromClubType(club.type)}>{club.type}</Tag>
+          <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
+            {getTagContentFromClubType(club.type, club.isPermanent)}
+          </Tag>
         }
       />
       <ClubInfoItem

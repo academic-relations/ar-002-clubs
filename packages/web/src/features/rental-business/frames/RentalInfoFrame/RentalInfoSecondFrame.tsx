@@ -12,6 +12,8 @@ import Mat from "@sparcs-clubs/web/features/rental-business//components/Rentals/
 import Tool from "@sparcs-clubs/web/features/rental-business//components/Rentals/Tool";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
 import TextButton from "@sparcs-clubs/web/common/components/TextButton";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 import { mockExistDates } from "./_atomic/mockExistDate";
 
@@ -80,21 +82,31 @@ const RentalInfoSecondFrame: React.FC<
 
   const [rentalDate, setRentalDate] = useState<Date | undefined>();
   const [returnDate, setReturnDate] = useState<Date | undefined>();
+  const [pendingDate, setPendingDate] = useState<Date | undefined>();
 
-  const handleDatesChange = (
-    rentalDateFromCal: Date | undefined,
-    returnDateFromCal: Date | undefined,
-  ) => {
-    setRentalDate(rentalDateFromCal);
-    setReturnDate(returnDateFromCal);
-    setValue(!rentalDateFromCal || !returnDateFromCal ? "none" : value);
+  const [showPeriodModal, setShowPeriodModal] = useState<
+    "none" | "reset" | "change"
+  >("none");
+
+  const handleConfirm = () => {
+    if (showPeriodModal === "reset") {
+      setRentalDate(undefined);
+      setReturnDate(undefined);
+      setRental({
+        ...rental,
+        date: { start: undefined, end: undefined },
+      });
+    } else if (showPeriodModal === "change") {
+      setRentalDate(pendingDate);
+      setReturnDate(undefined);
+      setPendingDate(undefined);
+      setRental({
+        ...rental,
+        date: { start: rentalDate, end: undefined },
+      });
+    }
+    setShowPeriodModal("none");
   };
-
-  useEffect(() => {
-    const enableNext = !(!rental.date?.start || !rental.date?.end);
-    setNextEnabled(enableNext);
-  }, [rental, setNextEnabled]);
-  // TODO: 선택된 물건 없을 때도 안 넘어가게 하기
 
   useEffect(() => {
     if (!rentalDate || !returnDate) {
@@ -117,7 +129,6 @@ const RentalInfoSecondFrame: React.FC<
     rental.agreement,
     rental.info,
   ]);
-  // TODO: 대여 기간 초기화할 때 modal 띄우는거 추가
 
   const itemOnChange = (
     newValue: "easel" | "vacuum" | "handCart" | "mat" | "tool",
@@ -153,6 +164,12 @@ const RentalInfoSecondFrame: React.FC<
     }
   };
 
+  useEffect(() => {
+    const enableNext =
+      !isCurrentItemEmpty() && !(!rental.date?.start || !rental.date?.end);
+    setNextEnabled(enableNext);
+  }, [rental, setNextEnabled, isCurrentItemEmpty]);
+
   const handleResetAll = () => {
     setRental({
       agreement: rental.agreement,
@@ -173,8 +190,15 @@ const RentalInfoSecondFrame: React.FC<
       <StyledCard type="outline">
         <Typography type="h3">대여 기간 선택</Typography>
         <SelectRangeCalendar
-          onDatesChange={handleDatesChange}
+          rentalDate={rentalDate}
+          returnDate={returnDate}
+          setRentalDate={setRentalDate}
+          setReturnDate={setReturnDate}
           workDates={mockExistDates}
+          // TODO: 상근일자 받아오기
+          setShowPeriodModal={setShowPeriodModal}
+          pendingDate={pendingDate}
+          setPendingDate={setPendingDate}
         />
       </StyledCard>
       <ItemButtonList value={value} onChange={itemOnChange} rental={rental} />
@@ -211,6 +235,18 @@ const RentalInfoSecondFrame: React.FC<
           <RentalList rental={rental} />
         </StyledCardInner>
       </StyledCard>
+      {showPeriodModal !== "none" && (
+        <Modal>
+          <CancellableModalContent
+            onConfirm={handleConfirm}
+            onClose={() => setShowPeriodModal("none")}
+          >
+            대여 기간을 변경하면 입력한 대여 물품 정보가 모두 초기화됩니다.
+            <br />
+            ㄱㅊ?
+          </CancellableModalContent>
+        </Modal>
+      )}
     </>
   );
 };
