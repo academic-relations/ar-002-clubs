@@ -6,10 +6,10 @@ import { NoticeRepository } from "../repository/notice.repository";
 
 @Injectable()
 export class NoticeService {
-  constructor(private readonly noticesRepository: NoticeRepository) {}
+  constructor(private readonly noticeRepository: NoticeRepository) {}
 
-  async getNotice(pageOffset: number, itemCount: number) {
-    const notices = await this.noticesRepository.getNoticePagination(
+  async getNotices(pageOffset: number, itemCount: number) {
+    const notices = await this.noticeRepository.getNoticePagination(
       pageOffset,
       itemCount,
     );

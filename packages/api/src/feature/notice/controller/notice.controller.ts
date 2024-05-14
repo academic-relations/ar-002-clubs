@@ -14,7 +14,7 @@ export class NoticeController {
   constructor(private readonly noticesService: NoticeService) {}
 
   @Get("/notices")
-  async getNotice(
+  async getNotices(
     @Query("pageOffset") pageOffset: ApiNtc001RequestQuery["pageOffset"],
     @Query("itemCount") itemCount: ApiNtc001RequestQuery["itemCount"],
   ): Promise<ApiNtc001ResponseOK> {
@@ -28,7 +28,7 @@ export class NoticeController {
     // console.log(
     //   `[/notices] getting notice with offset ${query.pageOffset}, count ${query.itemCount}`,
     // );
-    const notices = await this.noticesService.getNotice(
+    const notices = await this.noticesService.getNotices(
       query.pageOffset,
       query.itemCount,
     );
