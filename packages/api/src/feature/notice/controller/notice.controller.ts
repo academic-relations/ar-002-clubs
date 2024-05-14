@@ -7,14 +7,14 @@ import type {
   ApiNtc001ResponseOK,
 } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 
-import { NoticesService } from "../service/notices.service";
+import { NoticeService } from "../service/notice.service";
 
-@Controller("/api/notices")
-export class NoticesController {
-  constructor(private readonly noticesService: NoticesService) {}
+@Controller()
+export class NoticeController {
+  constructor(private readonly noticesService: NoticeService) {}
 
-  @Get()
-  async notices(
+  @Get("/notices")
+  async getNotice(
     @Query("pageOffset") pageOffset: ApiNtc001RequestQuery["pageOffset"],
     @Query("itemCount") itemCount: ApiNtc001RequestQuery["itemCount"],
   ): Promise<ApiNtc001ResponseOK> {
@@ -25,10 +25,10 @@ export class NoticesController {
       itemCount: Number(itemCount),
     });
     // 백엔드도 동일하게 로그레벨 활용하나요?
-    console.log(
-      `[/notices] getting notice with offset ${query.pageOffset}, count ${query.itemCount}`,
-    );
-    const notices = await this.noticesService.notices(
+    // console.log(
+    //   `[/notices] getting notice with offset ${query.pageOffset}, count ${query.itemCount}`,
+    // );
+    const notices = await this.noticesService.getNotice(
       query.pageOffset,
       query.itemCount,
     );

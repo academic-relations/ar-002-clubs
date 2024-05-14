@@ -4,23 +4,23 @@ import { count, desc } from "drizzle-orm";
 import { Notice } from "src/drizzle/schema/notice.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
-import type { NoticesRepositoryResponse } from "@sparcs-clubs/api/feature/notice/dto/notices.dto";
+import type { GetNoticePaginationReturn } from "@sparcs-clubs/api/feature/notice/dto/notice.dto";
 
 @Injectable()
-export class NoticesRepository {
+export class NoticeRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
   // Notice 의 id 내림차순으로 정렬된 상태에서, 페이지네이션을 수행합니다.
-  async notices(
+  async getNoticePagination(
     pageOffset: number,
     itemCount: number,
-  ): Promise<NoticesRepositoryResponse> {
+  ): Promise<GetNoticePaginationReturn> {
     const numberOfNotices = (
       await this.db.select({ count: count() }).from(Notice)
     ).at(0).count;
 
     const startIndex = (pageOffset - 1) * itemCount + 1;
-    const notices: NoticesRepositoryResponse["notices"] = await this.db
+    const notices: GetNoticePaginationReturn["notices"] = await this.db
       .select()
       .from(Notice)
       .orderBy(desc(Notice.id))

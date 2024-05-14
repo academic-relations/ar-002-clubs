@@ -1,4 +1,4 @@
-type NoticesRepositoryResponse = {
+type GetNoticePaginationReturn = {
   notices: Array<{
     date: Date;
     id: number;
@@ -12,4 +12,4 @@ type NoticesRepositoryResponse = {
   offset: number;
 };
 
-export type { NoticesRepositoryResponse };
+export type { GetNoticePaginationReturn };
