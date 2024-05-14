@@ -123,10 +123,10 @@ export const clubRepresentativeD = mysqlTable(
       .references(() => Student.id),
     clubRepresentativeEnum: int("club_representative_enum").notNull(),
     // .references(() => ClubRepresentativeEnum.id),
-    startTerm: datetime("start_term", { mode: "string" }).notNull(),
-    endTerm: datetime("end_term", { mode: "string" }),
-    createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
-    deletedAt: timestamp("deleted_at", { mode: "string" }),
+    startTerm: datetime("start_term").notNull(),
+    endTerm: datetime("end_term"),
+    createdAt: timestamp("created_at").defaultNow(),
+    deletedAt: timestamp("deleted_at"),
   },
   // references로 설정했을 때 MySQL의 바이트수 초과로 인해 생성이 불가능하여 명시적으로 FK 이름을 지정해야함
   table => ({
