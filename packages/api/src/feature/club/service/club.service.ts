@@ -1,16 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { ClubRepository } from "../repository/club.getclubs.repository";
+import { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
+import { ClubRepository } from "../repository/club.repository";
 
 @Injectable()
 export class ClubService {
   constructor(private readonly clubRepository: ClubRepository) {}
 
-  async getClubs() {
-    // todo: return type 추가하기 : Promise<ApiClb001ResponseOK>
-    const record = await this.clubRepository.getAllClubs();
-    const result = {
-      divisions: Object.values(record),
-    };
+  async getClubs(): Promise<ApiClb001ResponseOK> {
+    const result = await this.clubRepository.getAllClubs();
     return result;
   }
 }

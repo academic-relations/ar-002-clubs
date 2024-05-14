@@ -1,3 +1,4 @@
+import { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 import { Injectable, Inject } from "@nestjs/common";
 import {
   Club,
@@ -13,22 +14,36 @@ import { Student, User } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { and, count, eq, sql, isNull, or, gte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-import { IClubs } from "../dto/club.getclubs.dto";
+
+interface IClubs {
+  id: number;
+  name: string;
+  clubs: {
+    type: number;
+    id: number;
+    name: string;
+    isPermanent: boolean;
+    characteristic: string;
+    representative: string;
+    advisor: string;
+    totalMemberCnt: number;
+  }[];
+}
 
 @Injectable()
 export class ClubRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  async getAllClubs(): Promise<Record<number, IClubs>> {
+  async getAllClubs(): Promise<ApiClb001ResponseOK> {
     const crt = new Date();
     const rows = await this.db
       .select({
-        divisionId: Division.id,
-        divisionName: Division.name,
+        id: Division.id,
+        name: Division.name,
         clubs: {
-          clubId: Club.id,
-          clubName: Club.name,
-          clubType: ClubT.clubStatusEnumId,
+          type: ClubT.clubStatusEnumId,
+          id: Club.id,
+          name: Club.name,
           isPermanent: sql<boolean>`COALESCE(MAX(CASE WHEN DivisionPermanentClubD.id IS NOT NULL THEN 'true' ELSE 'false' END),'false')`,
           characteristic: ClubT.characteristicKr,
           representative: User.name,
@@ -72,14 +87,14 @@ export class ClubRepository {
         User.name,
         ClubT.advisor,
       );
-    const result = rows.reduce<Record<number, IClubs>>((acc, row) => {
-      const divId = row.divisionId;
-      const divName = row.divisionName;
+    const record = rows.reduce<Record<number, IClubs>>((acc, row) => {
+      const divId = row.id;
+      const divName = row.name;
       const club = row.clubs;
 
       if (!acc[divId]) {
         // eslint-disable-next-line no-param-reassign
-        acc[divId] = { divisionId: divId, divisionName: divName, clubs: [] };
+        acc[divId] = { id: divId, name: divName, clubs: [] };
       }
 
       if (club) {
@@ -87,6 +102,9 @@ export class ClubRepository {
       }
       return acc;
     }, {});
+    const result = {
+      divisions: Object.values(record),
+    };
     return result;
   }
 }
