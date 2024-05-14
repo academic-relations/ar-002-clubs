@@ -35,11 +35,13 @@ const ExcelButtonWrapper = styled.div`
 
 const AllMemberListFrame = () => {
   const [toggle, setToggle] = useState<boolean>(true);
-  const [selectedSemesters, setSelectedSemesters] = useState<string[]>([]);
 
   const semesters = mockAllSemesters.semesters.map(
     semester => `${semester.year}년 ${semester.name}학기`,
   );
+
+  const [selectedSemesters, setSelectedSemesters] =
+    useState<string[]>(semesters);
 
   return (
     <AllMemberWrapper>
@@ -69,7 +71,7 @@ const AllMemberListFrame = () => {
               <AllMemberList
                 key={semester.id}
                 semester={`${semester.year}년 ${semester.name}학기`}
-                members={mockSemesterMembers.members}
+                members={mockSemesterMembers.members} // TODO: 지금은 학기 상관없이 다 똑같은 멤버 불러오고 있음. 실제 API 연결하면 수정해야함
               />
             ))}
         </AllMemberListWrapper>

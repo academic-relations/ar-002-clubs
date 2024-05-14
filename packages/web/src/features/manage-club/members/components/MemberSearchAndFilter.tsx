@@ -36,7 +36,7 @@ const MemberSearchAndFilter: React.FC<MemberSearchAndFilterProps> = ({
   setSelectedSemesters,
 }) => {
   const handleReset = () => {
-    setSelectedSemesters([]);
+    setSelectedSemesters(semesters);
   };
   return (
     <MemberSearchAndFilterWrapper>

@@ -32,6 +32,7 @@ const Members = () => (
       <PageTitle>회원 명단</PageTitle>
     </PageHeadWrapper>
     <RegisterMemberListFrame />
+    {/* TODO: registereMember는 신청 시기에만 나오도록 */}
     <AllMemberListFrame />
   </MembersPageWrapper>
 );
