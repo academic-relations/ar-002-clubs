@@ -9,6 +9,10 @@ interface RangeCalendarProps {
   setRentalDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   setReturnDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   workDates: Date[];
+  setShowPeriodModal: React.Dispatch<
+    React.SetStateAction<"none" | "reset" | "change">
+  >;
+  setPendingDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
 }
 
 const RangeCalendar: React.FC<RangeCalendarProps> = ({
@@ -17,6 +21,8 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
   setRentalDate,
   setReturnDate,
   workDates,
+  setShowPeriodModal,
+  setPendingDate,
 }) => {
   const [calendarSize, setCalendarSize] = useState<"sm" | "md" | "lg">("lg");
 
@@ -46,12 +52,14 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
     if (workDates.some(selectedDate => isSameDay(selectedDate, date))) {
       if (rentalDate && !returnDate && isAfter(date, rentalDate)) {
         setReturnDate(date);
-      } else {
-        setRentalDate(date);
-        setReturnDate(undefined);
+      } else if (!rentalDate) setRentalDate(date);
+      else {
+        setPendingDate(date);
+        setShowPeriodModal("change");
       }
     }
   };
+
   return (
     <Calendar
       size={calendarSize}
