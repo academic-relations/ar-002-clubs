@@ -26,7 +26,7 @@ const responseBodyMap = {
         studentNumber: z.number().int().min(20000000).max(30000000),
         name: z.string().max(30),
         email: z.string().max(50),
-        krPhoneNumber: zKrPhoneNumber,
+        krPhoneNumber: zKrPhoneNumber.optional(),
       })
       .array(),
   }),

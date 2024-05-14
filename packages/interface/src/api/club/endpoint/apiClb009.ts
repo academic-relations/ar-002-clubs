@@ -19,7 +19,6 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    clubId: z.number().int().min(1),
     semesters: z
       .object({
         id: z.number().int().min(1),
