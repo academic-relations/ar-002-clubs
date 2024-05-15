@@ -62,6 +62,13 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
   const [showReturnModal, setShowReturnModal] = useState(false);
   const [showAssignModal, setShowAssignModal] = useState(false);
 
+  const isRentalListEmpty = () =>
+    !rental.easel &&
+    !rental.vacuum &&
+    (!rental.handCart || Object.values(rental.handCart).every(val => !val)) &&
+    !rental.mat &&
+    (!rental.tool || Object.values(rental.tool).every(val => !val));
+
   const onConfirmReturn = useCallback(() => {
     setShowReturnModal(false);
     setStep(step - 1);
@@ -74,8 +81,14 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
       setRental({ ...rental, agreement: false });
     }
     if (step === 1) {
-      setShowReturnModal(true);
-      return;
+      if (!isRentalListEmpty()) {
+        setShowReturnModal(true);
+        return;
+      }
+      if (rental.date?.start !== undefined) {
+        setShowReturnModal(true);
+        return;
+      }
     }
     setStep(step - 1);
   }, [step, setStep, rental, setRental]);

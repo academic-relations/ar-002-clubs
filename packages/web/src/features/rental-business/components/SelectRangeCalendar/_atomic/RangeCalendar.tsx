@@ -54,8 +54,9 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
     if (workDates.some(selectedDate => isSameDay(selectedDate, date))) {
       if (rentalDate && !returnDate && isAfter(date, rentalDate)) {
         setReturnDate(date);
-      } else if (!rentalDate) setRentalDate(date);
-      else if (isRentalListEmpty) {
+      } else if (!rentalDate) {
+        setRentalDate(date);
+      } else if (isRentalListEmpty) {
         setReturnDate(undefined);
         setRentalDate(date);
       } else {
