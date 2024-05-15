@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import Select, {
-  SelectItem,
-} from "@sparcs-clubs/web/common/components/Forms/Select";
+import Select from "@sparcs-clubs/web/common/components/Forms/Select";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
+import useGetUserProfile from "@sparcs-clubs/web/features/printing-business/service/getUserProfile";
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
 const StyledCard = styled(Card)<{ type: string }>`
@@ -17,16 +17,16 @@ const StyledCard = styled(Card)<{ type: string }>`
 const RentalInfoFirstFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
 > = ({ setNextEnabled, rental, setRental }) => {
-  const mockName = "스팍스";
-  const mockPhone = "000-0000-0000";
-  const mockClubList: SelectItem[] = [
-    { label: "동아리", value: "동아리", selectable: true },
-    { label: "또다른동아리", value: "또다른동아리", selectable: true },
-    { label: "안되는동아리", value: "안되는동아리", selectable: false },
-  ];
-  // TODO: 이름 전화번호 동아리 목록 백에서 받아오기
+  const { data, isLoading, isError } = useGetUserProfile();
+  const clubList = data?.clubs.map(club => ({
+    label: club.name,
+    value: club.id,
+    selectable: true,
+  }));
+  const userName = data?.name;
+  const userPhone = data?.phoneNumber;
 
-  const [phone, setPhone] = useState(mockPhone);
+  const [phone, setPhone] = useState(userPhone);
   const [hasPhoneError, setHasPhoneError] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
   const [hasSelectError, setHasSelectError] = useState(false);
@@ -43,28 +43,30 @@ const RentalInfoFirstFrame: React.FC<
   useEffect(() => {
     setRental({
       ...rental,
-      info: { clubName: selectedValue, applicant: mockName, phone },
+      info: { clubName: selectedValue, applicant: userName, phone },
     });
   }, [selectedValue, phone, setRental]);
 
   return (
-    <StyledCard type="outline">
-      <Select
-        items={mockClubList}
-        selectedValue={selectedValue}
-        onSelect={setSelectedValue}
-        label="동아리 이름"
-        setErrorStatus={setHasSelectError}
-      />
-      <TextInput label="신청자 이름" placeholder={mockName} disabled />
-      <PhoneInput
-        label="신청자 전화번호"
-        value={phone}
-        onChange={setPhone}
-        placeholder={mockPhone}
-        setErrorStatus={setHasPhoneError}
-      />
-    </StyledCard>
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <StyledCard type="outline">
+        <Select
+          items={clubList}
+          selectedValue={selectedValue}
+          onSelect={setSelectedValue}
+          label="동아리 이름"
+          setErrorStatus={setHasSelectError}
+        />
+        <TextInput label="신청자 이름" placeholder={userName} disabled />
+        <PhoneInput
+          label="신청자 전화번호"
+          value={phone}
+          onChange={setPhone}
+          placeholder={userPhone}
+          setErrorStatus={setHasPhoneError}
+        />
+      </StyledCard>
+    </AsyncBoundary>
   );
 };
 
