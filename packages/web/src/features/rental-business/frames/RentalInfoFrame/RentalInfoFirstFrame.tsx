@@ -43,7 +43,7 @@ const RentalInfoFirstFrame: React.FC<
   useEffect(() => {
     if (selectedValue) {
       const selectClub = clubList.find(
-        selectclub => selectclub.value === selectedValue,
+        selectclub => selectclub.value === Number(selectedValue),
       );
       setRental({
         ...rental,

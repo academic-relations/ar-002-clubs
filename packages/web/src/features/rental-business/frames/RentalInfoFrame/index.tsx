@@ -123,6 +123,8 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
     return { id, number: item.quantity };
   });
 
+  const filteredObjectsWithId = objectsWithId.filter(item => item.number !== 0);
+
   const onNext = useCallback(() => {
     if (nextEnabled && step < frames.length - 1) {
       setStep(step + 1);
@@ -133,7 +135,7 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
         { clubId: rental.info?.clubId },
         {
           studentPhoneNumber: rental.info?.phone,
-          objects: objectsWithId,
+          objects: filteredObjectsWithId,
           purpose: rental.purpose,
           desiredStart: rental.date?.start,
           desiredEnd: rental.date?.end,
@@ -161,7 +163,6 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
         <Button onClick={onNext} type={nextEnabled ? "default" : "disabled"}>
           {step === frames.length - 1 ? "신청" : "다음"}
         </Button>
-        {/* TODO: 백이랑 연결 */}
       </StyledBottom>
       {showReturnModal ? (
         <Modal>
