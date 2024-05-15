@@ -111,7 +111,7 @@ export const ClubRepresentativeEnum = mysqlTable("club_representative_enum", {
   deletedAt: timestamp("deleted_at"),
 });
 
-export const clubRepresentativeD = mysqlTable(
+export const ClubRepresentativeD = mysqlTable(
   "club_representative_d",
   {
     id: int("id").autoincrement().primaryKey(),
