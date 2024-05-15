@@ -89,7 +89,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
         label="공용공간"
         setErrorStatus={setHasSelectError}
       />
-      {commonSpace.space &&
+      {commonSpace.space && (
         <>
           <Info
             text={`${commonSpace.space}는 하루에 최대 4시간, 일주일에 최대 10시간 사용할 수 있습니다.`}
@@ -115,7 +115,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
             </StyledCardOuter>
           </StyledCard>
         </>
-      }
+      )}
     </>
   );
 };

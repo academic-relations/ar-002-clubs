@@ -98,8 +98,8 @@ export const ClubRoomT = mysqlTable("club_room_t", {
     .unique()
     .notNull()
     .references(() => SemesterD.id),
-  startTerm: datetime("start_term", { mode: "string" }).notNull(),
-  endTerm: datetime("end_term", { mode: "string" }),
+  startTerm: datetime("start_term").notNull(),
+  endTerm: datetime("end_term"),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
