@@ -13,6 +13,7 @@ interface RangeCalendarProps {
     React.SetStateAction<"none" | "reset" | "change">
   >;
   setPendingDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  isRentalListEmpty: boolean;
 }
 
 const RangeCalendar: React.FC<RangeCalendarProps> = ({
@@ -23,6 +24,7 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
   workDates,
   setShowPeriodModal,
   setPendingDate,
+  isRentalListEmpty,
 }) => {
   const [calendarSize, setCalendarSize] = useState<"sm" | "md" | "lg">("lg");
 
@@ -53,7 +55,10 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
       if (rentalDate && !returnDate && isAfter(date, rentalDate)) {
         setReturnDate(date);
       } else if (!rentalDate) setRentalDate(date);
-      else {
+      else if (isRentalListEmpty) {
+        setReturnDate(undefined);
+        setRentalDate(date);
+      } else {
         setPendingDate(date);
         setShowPeriodModal("change");
       }

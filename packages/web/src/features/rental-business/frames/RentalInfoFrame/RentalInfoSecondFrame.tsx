@@ -166,9 +166,9 @@ const RentalInfoSecondFrame: React.FC<
 
   useEffect(() => {
     const enableNext =
-      !isCurrentItemEmpty() && !(!rental.date?.start || !rental.date?.end);
+      !isRentalListEmpty() && !(!rental.date?.start || !rental.date?.end);
     setNextEnabled(enableNext);
-  }, [rental, setNextEnabled, isCurrentItemEmpty]);
+  }, [rental, setNextEnabled, isRentalListEmpty]);
 
   const handleResetAll = () => {
     setRental({
@@ -199,6 +199,7 @@ const RentalInfoSecondFrame: React.FC<
           setShowPeriodModal={setShowPeriodModal}
           pendingDate={pendingDate}
           setPendingDate={setPendingDate}
+          isRentalListEmpty={isRentalListEmpty()}
         />
       </StyledCard>
       <ItemButtonList value={value} onChange={itemOnChange} rental={rental} />
