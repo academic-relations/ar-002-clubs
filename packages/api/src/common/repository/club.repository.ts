@@ -1,59 +1,136 @@
+import { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 import { Injectable, Inject } from "@nestjs/common";
+import {
+  Club,
+  ClubStudentT,
+  ClubT,
+  ClubRepresentativeD,
+} from "@sparcs-clubs/api/drizzle/schema/club.schema";
+import {
+  Division,
+  DivisionPermanentClubD,
+} from "@sparcs-clubs/api/drizzle/schema/division.schema";
+import { Student, User } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+import { and, count, eq, sql, isNull, or, gte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-// import { eq } from "drizzle-orm";
-// import {
-//   Club,
-//   ClubT,
-//   ClubStatusEnum,
-//   clubRepresentativeD,
-//   SemesterD,
-// } from "src/drizzle/schema/club.schema";
-// import { Student, User } from "src/drizzle/schema/user.schema";
+import { takeUnique } from "@sparcs-clubs/api/common/util/util";
+
+interface IClubs {
+  id: number;
+  name: string;
+  clubs: {
+    type: number;
+    id: number;
+    name: string;
+    isPermanent: boolean;
+    characteristic: string;
+    representative: string;
+    advisor: string;
+    totalMemberCnt: number;
+  }[];
+}
 
 @Injectable()
 export class ClubRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  // async findAllClubsBySemester(studentId: number) {
-  //   const semesters = await this.db
-  //     .select({
-  //       semesterId: SemesterD.id,
-  //       semesterName: SemesterD.name,
-  //       clubId: Club.id,
-  //       clubName: Club.name,
-  //       clubStatus: ClubStatusEnum.statusName,
-  //       characteristic: ClubT.characteristicKr,
-  //       representativeName: User.name,
-  //       advisorName: User.name,
-  //       // totalMembers: "COUNT(DISTINCT Student.id)", // Example of how you might calculate members, adjust as necessary
-  //     })
-  //     .from(SemesterD)
-  //     .leftJoin(ClubT, eq(ClubT.semesterId, SemesterD.id))
-  //     .leftJoin(Club, eq(Club.id, ClubT.id))
-  //     .leftJoin(ClubStatusEnum, eq(ClubStatusEnum.id, ClubT.clubStatusEnumId))
-  //     .leftJoin(clubRepresentativeD, eq(clubRepresentativeD.clubId, Club.id))
-  //     .leftJoin(Student, eq(Student.id, clubRepresentativeD.studentId))
-  //     .leftJoin(User, eq(User.id, Student.userId))
-  //     .groupBy(SemesterD.id, Club.id)
-  //     .execute();
+  async findClubDetail(clubId: number) {
+    const clubInfo = await this.db
+      .select({
+        id: Club.id,
+        name: Club.name,
+        type: ClubT.clubStatusEnumId,
+        characteristic: ClubT.characteristicKr,
+        advisor: ClubT.advisor,
+        description: Club.description,
+        foundingYear: Club.foundingYear,
+      })
+      .from(Club)
+      .leftJoin(ClubT, eq(ClubT.id, Club.id))
+      .where(eq(Club.id, clubId))
+      .limit(1)
+      .then(takeUnique);
 
-  //   return semesters.map(semester => ({
-  //     id: semester.semesterId,
-  //     name: semester.semesterName,
-  //     clubs: semesters
-  //       .filter(s => s.semesterId === semester.semesterId)
-  //       .map(club => ({
-  //         id: club.clubId,
-  //         name: club.clubName,
-  //         type: club.clubStatus,
-  //         // Include the following line if 'isPermanent' exists in your schema
-  //         isPermanent: false,
-  //         characteristic: club.characteristic,
-  //         representative: club.representativeName,
-  //         advisor: club.advisorName,
-  //         // totalMembers: club.totalMembers,
-  //       })),
-  //   }));
-  // }
+    const divisionName = await this.db
+      .select({ name: Division.name })
+      .from(Club)
+      .leftJoin(Division, eq(Division.id, Club.divisionId))
+      .then(takeUnique);
+    return { ...clubInfo, divisionName };
+  }
+
+  async getClubs(): Promise<ApiClb001ResponseOK> {
+    const crt = new Date();
+    const rows = await this.db
+      .select({
+        id: Division.id,
+        name: Division.name,
+        clubs: {
+          type: ClubT.clubStatusEnumId,
+          id: Club.id,
+          name: Club.name,
+          isPermanent: sql<boolean>`COALESCE(MAX(CASE WHEN DivisionPermanentClubD.id IS NOT NULL THEN 'true' ELSE 'false' END),'false')`,
+          characteristic: ClubT.characteristicKr,
+          representative: User.name,
+          advisor: ClubT.advisor,
+          totalMemberCnt: count(ClubStudentT),
+        },
+      })
+      .from(Division)
+      .leftJoin(Club, eq(Club.divisionId, Division.id))
+      .leftJoin(ClubT, eq(Club.id, ClubT.id))
+      .leftJoin(
+        ClubStudentT,
+        and(
+          eq(Club.id, ClubStudentT.clubId),
+          or(isNull(ClubStudentT.endTerm), gte(ClubStudentT.endTerm, crt)),
+        ),
+      )
+      .leftJoin(
+        ClubRepresentativeD,
+        and(
+          eq(Club.id, ClubRepresentativeD.clubId),
+          eq(ClubRepresentativeD.clubRepresentativeEnum, 1),
+          or(
+            isNull(ClubRepresentativeD.endTerm),
+            gte(ClubRepresentativeD.endTerm, crt),
+          ),
+        ),
+      )
+      .leftJoin(Student, eq(ClubRepresentativeD.studentId, Student.id))
+      .leftJoin(User, eq(Student.userId, User.id))
+      .leftJoin(
+        DivisionPermanentClubD,
+        eq(Club.id, DivisionPermanentClubD.clubId),
+      )
+      .groupBy(
+        Division.id,
+        Club.id,
+        Club.name,
+        ClubT.clubStatusEnumId,
+        ClubT.characteristicKr,
+        User.name,
+        ClubT.advisor,
+      );
+    const record = rows.reduce<Record<number, IClubs>>((acc, row) => {
+      const divId = row.id;
+      const divName = row.name;
+      const club = row.clubs;
+
+      if (!acc[divId]) {
+        // eslint-disable-next-line no-param-reassign
+        acc[divId] = { id: divId, name: divName, clubs: [] };
+      }
+
+      if (club) {
+        acc[divId].clubs.push(club);
+      }
+      return acc;
+    }, {});
+    const result = {
+      divisions: Object.values(record),
+    };
+    return result;
+  }
 }
