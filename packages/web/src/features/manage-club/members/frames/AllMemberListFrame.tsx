@@ -36,12 +36,9 @@ const ExcelButtonWrapper = styled.div`
 const AllMemberListFrame = () => {
   const [toggle, setToggle] = useState<boolean>(true);
 
-  const semesters = mockAllSemesters.semesters.map(
-    semester => `${semester.year}년 ${semester.name}학기`,
-  );
-
-  const [selectedSemesters, setSelectedSemesters] =
-    useState<string[]>(semesters);
+  const [selectedSemesters, setSelectedSemesters] = useState<
+    { id: number; year: number; name: string }[]
+  >(mockAllSemesters.semesters);
 
   return (
     <AllMemberWrapper>
@@ -60,12 +57,11 @@ const AllMemberListFrame = () => {
             </ExcelButton>
           </ExcelButtonWrapper>
           <MemberSearchAndFilter
-            semesters={semesters}
+            semesters={mockAllSemesters.semesters}
             selectedSemesters={selectedSemesters}
             setSelectedSemesters={setSelectedSemesters}
           />
-          {/* TODO: 필터랑 연동하기 */}
-          {mockAllSemesters.semesters
+          {selectedSemesters
             .sort((a, b) => b.id - a.id) // 최신 학기부터 정렬(ID가 클수록 최신 학기라고 가정)
             .map(semester => (
               <AllMemberList

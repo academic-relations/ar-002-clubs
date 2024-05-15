@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { SemesterListProps } from "@sparcs-clubs/web/features/manage-club/members/types/semesterList";
 import FilterButton from "./_atomic/FilterButton";
 import FilterDropdown from "./_atomic/FilterDropdown";
-
-interface FilterSelectProps {
-  semesters: string[];
-  selectedSemesters?: string[];
-  setSelectedSemesters: React.Dispatch<React.SetStateAction<string[]>>;
-}
 
 const FilterWrapper = styled.div`
   display: flex;
@@ -16,9 +11,9 @@ const FilterWrapper = styled.div`
   gap: 4px;
 `;
 
-const Filter: React.FC<FilterSelectProps> = ({
+const Filter: React.FC<SemesterListProps> = ({
   semesters,
-  selectedSemesters = [],
+  selectedSemesters = semesters,
   setSelectedSemesters,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);

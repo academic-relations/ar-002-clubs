@@ -1,12 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import SelectedItem from "@sparcs-clubs/web/common/components/SelectedItem";
-
-interface FilterDropdownProps {
-  semesters: string[];
-  selectedSemesters: string[];
-  setSelectedSemesters: React.Dispatch<React.SetStateAction<string[]>>;
-}
+import {
+  SemesterListProps,
+  SemesterProps,
+} from "@sparcs-clubs/web/features/manage-club/members/types/semesterList";
 
 const SelectList = styled.div`
   width: max-content;
@@ -22,12 +20,12 @@ const SelectList = styled.div`
   z-index: 1000; // Ensure the dropdown appears above other content
 `;
 
-const FilterDropdown: React.FC<FilterDropdownProps> = ({
+const FilterDropdown: React.FC<SemesterListProps> = ({
   semesters,
   selectedSemesters,
   setSelectedSemesters,
 }) => {
-  const handleSelect = (semester: string) => {
+  const handleSelect = (semester: SemesterProps) => {
     if (selectedSemesters.includes(semester)) {
       const updatedSelectedSemesters = selectedSemesters.filter(
         selectedSemester => selectedSemester !== semester,
@@ -43,8 +41,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
     <SelectList>
       {semesters.map(semester => (
         <SelectedItem
-          key={semester}
-          text={semester}
+          key={semester.id}
+          text={`${semester.year}년 ${semester.name}학기`}
           isSelected={selectedSemesters.includes(semester)}
           onClick={() => handleSelect(semester)}
         />

@@ -3,12 +3,7 @@ import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 import TextButton from "@sparcs-clubs/web/common/components/TextButton";
 import React from "react";
 import styled from "styled-components";
-
-interface MemberSearchAndFilterProps {
-  semesters: string[];
-  selectedSemesters: string[];
-  setSelectedSemesters: React.Dispatch<React.SetStateAction<string[]>>;
-} // TODO: 겹치는 props 정리하기
+import { SemesterListProps } from "../types/semesterList";
 
 const MemberSearchAndFilterWrapper = styled.div`
   display: flex;
@@ -30,7 +25,7 @@ const ResetButtonWrapper = styled.div`
   align-items: flex-end;
 `;
 
-const MemberSearchAndFilter: React.FC<MemberSearchAndFilterProps> = ({
+const MemberSearchAndFilter: React.FC<SemesterListProps> = ({
   semesters,
   selectedSemesters,
   setSelectedSemesters,
