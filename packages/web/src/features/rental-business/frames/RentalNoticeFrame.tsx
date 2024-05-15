@@ -11,6 +11,13 @@ export interface RentalFrameProps {
   setRental: React.Dispatch<React.SetStateAction<RentalInterface>>;
 }
 
+export interface RentalLimitProps {
+  rentalDate: Date;
+  returnDate: Date;
+  rental: RentalInterface;
+  setRental: React.Dispatch<React.SetStateAction<RentalInterface>>;
+}
+
 const RentalNoticeFrameInner = styled.div`
   display: flex;
   flex-direction: column;

@@ -44,6 +44,7 @@ const FlexGrowTypography = styled.div`
 
 const NoneRental: React.FC<RentalFrameProps> = () => <>none</>;
 
+// TODO: rentals에 입력한 것 중에 limit 넘는 거 있으면 다음 못 넘어가게 하기
 const rentals = {
   none: {
     info: "대충 대여 기간 먼저 선택해야 한다는 안내문구 어딘가에",
@@ -217,7 +218,11 @@ const RentalInfoSecondFrame: React.FC<
                 onClick={handleResetCurrent}
               />
             </ResetTitleWrapper>
-            <Rental {...props} />
+            <Rental
+              rentalDate={rentalDate}
+              returnDate={returnDate}
+              {...props}
+            />
           </StyledCardInner>
         </StyledCard>
       )}
