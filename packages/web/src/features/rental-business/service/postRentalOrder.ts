@@ -4,15 +4,23 @@ import {
 } from "@sparcs-clubs/web/lib/axios";
 
 import type {
+  ApiRnt002RequestQuery,
   ApiRnt002RequestBody,
   ApiRnt002ResponseOK,
 } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt002";
 import apiRnt002 from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt002";
 
 const postRentalOrder = async (
-  reuestBody: ApiRnt002RequestBody,
+  requestQuery: ApiRnt002RequestQuery,
+  requestBody: ApiRnt002RequestBody,
 ): Promise<ApiRnt002ResponseOK> => {
-  const { data, status } = await axiosClient.post(apiRnt002.url(), reuestBody);
+  const { data, status } = await axiosClient.post(
+    apiRnt002.url(),
+    requestBody,
+    {
+      params: requestQuery,
+    },
+  );
 
   switch (status) {
     case 201:

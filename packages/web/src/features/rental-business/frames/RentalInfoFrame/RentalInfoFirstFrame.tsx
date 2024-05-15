@@ -41,10 +41,20 @@ const RentalInfoFirstFrame: React.FC<
   }, [selectedValue, phone, hasPhoneError, hasSelectError, setNextEnabled]);
 
   useEffect(() => {
-    setRental({
-      ...rental,
-      info: { clubName: selectedValue, applicant: userName, phone },
-    });
+    if (selectedValue) {
+      const selectClub = clubList.find(
+        selectclub => selectclub.value === selectedValue,
+      );
+      setRental({
+        ...rental,
+        info: {
+          clubId: Number(selectedValue),
+          clubName: selectClub?.label,
+          applicant: userName,
+          phone,
+        },
+      });
+    }
   }, [selectedValue, phone, setRental]);
 
   return (
@@ -61,6 +71,7 @@ const RentalInfoFirstFrame: React.FC<
         <PhoneInput
           label="신청자 전화번호"
           value={phone}
+          // TODO: interface 연결 후 기본 value가 제대로 로딩되지 않는 문제 수정
           onChange={setPhone}
           placeholder={userPhone}
           setErrorStatus={setHasPhoneError}

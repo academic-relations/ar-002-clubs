@@ -6,6 +6,8 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import { useRouter } from "next/navigation";
+import postRentalOrder from "@sparcs-clubs/web/features/rental-business/service/postRentalOrder";
+import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 import RentalInfoFirstFrame from "./RentalInfoFirstFrame";
 import RentalInfoSecondFrame from "./RentalInfoSecondFrame";
@@ -93,12 +95,52 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
     setStep(step - 1);
   }, [step, setStep, rental, setRental]);
 
+  const { data } = useGetAvailableRentals(rental.date?.start, rental.date?.end);
+
+  const objectsWithQuantity = [
+    { name: "Easel", quantity: rental.easel || 0 },
+    { name: "Vacuum Corded", quantity: rental.vacuum === "corded" ? 1 : 0 },
+    {
+      name: "Hand Cart Rolltainer",
+      quantity: rental.handCart?.rolltainer || 0,
+    },
+    { name: "Hand Cart Large", quantity: rental.handCart?.large || 0 },
+    { name: "Hand Cart Medium", quantity: rental.handCart?.medium || 0 },
+    { name: "Hand Cart Small", quantity: rental.handCart?.small || 0 },
+    { name: "Mat", quantity: rental.mat || 0 },
+    { name: "Power Drill Set", quantity: rental.tool?.powerDrill || 0 },
+    { name: "Driver Set", quantity: rental.tool?.driver || 0 },
+    { name: "Super Glue", quantity: rental.tool?.superGlue || 0 },
+    { name: "Nipper", quantity: rental.tool?.nipper || 0 },
+    { name: "Plier", quantity: rental.tool?.plier || 0 },
+    { name: "Long Nose Plier", quantity: rental.tool?.longNosePlier || 0 },
+  ];
+
+  const objectsWithId = objectsWithQuantity.map(item => {
+    const { id } = data?.objects.find(obj => obj.name === item.name) || {
+      id: -1,
+    };
+    return { id, number: item.quantity };
+  });
+
   const onNext = useCallback(() => {
     if (nextEnabled && step < frames.length - 1) {
       setStep(step + 1);
     }
     if (step === frames.length - 1) {
-      setShowAssignModal(true);
+      // TODO?: 신청 제대로 안 됐을 때 modal?
+      postRentalOrder(
+        { clubId: rental.info?.clubId },
+        {
+          studentPhoneNumber: rental.info?.phone,
+          objects: objectsWithId,
+          purpose: rental.purpose,
+          desiredStart: rental.date?.start,
+          desiredEnd: rental.date?.end,
+        },
+      ).then(() => {
+        setShowAssignModal(true);
+      });
     }
   }, [nextEnabled, step, setStep]);
   const router = useRouter();
