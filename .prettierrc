@@ -7,5 +7,13 @@
   "bracketSpacing": true,
   "arrowParens": "avoid",
   "quoteProps": "consistent",
-  "bracketSameLine": false
+  "bracketSameLine": false,
+  "overrides": [
+    {
+      "files": ["*.json", ".prettierrc", ".eslintrc", ".stylelintrc"],
+      "options": {
+        "trailingComma": "none"
+      }
+    }
+  ]
 }

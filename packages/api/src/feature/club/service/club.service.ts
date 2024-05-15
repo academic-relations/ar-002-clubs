@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
+import { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 import { ClubRepository } from "@sparcs-clubs/api/common/repository/club.repository";
 import { ClubRepresentativeDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-representative-d.repository";
@@ -13,6 +14,11 @@ export class ClubService {
     private clubRoomTRepository: ClubRoomTRepository,
     private clubStudentTRepository: ClubStudentTRepository,
   ) {}
+
+  async getClubs(): Promise<ApiClb001ResponseOK> {
+    const result = await this.clubRepository.getClubs();
+    return result;
+  }
 
   async getClub(clubId: number): Promise<ApiClb002ResponseOK> {
     const [clubDetails, totalMemberCnt, representative, roomDetails] =
@@ -40,11 +46,11 @@ export class ClubService {
       advisor: clubDetails.advisor,
       divisionName: clubDetails.divisionName.name,
       description: clubDetails.description,
+      isPermanent: false,
       foundingYear: clubDetails.foundingYear,
       totalMemberCnt: totalMemberCnt.totalMemberCnt,
       representative: representative.name,
-      room: roomDetails.room,
-      buildingName: roomDetails.buildingName,
+      room: `${roomDetails.buildingName} ${roomDetails.room}`,
     };
   }
 }

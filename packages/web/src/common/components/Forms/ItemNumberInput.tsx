@@ -2,6 +2,7 @@ import React, {
   ChangeEvent,
   InputHTMLAttributes,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import styled, { css } from "styled-components";
@@ -132,6 +133,7 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
       setErrorStatus(true);
     } else {
       setError("");
+
       setErrorStatus(false);
     }
   }, [value, itemLimit, setErrorStatus]);
@@ -145,8 +147,19 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
   };
 
   const displayValue = value ? `${value}${unit}` : "";
+  const mainInputRef = useRef<HTMLInputElement>(null);
 
-  // TODO: '개' 앞으로 커서 위치 조절
+  const handleCursor = () => {
+    mainInputRef.current?.setSelectionRange(
+      mainInputRef.current.selectionStart! >= displayValue.length
+        ? displayValue.length - 1
+        : mainInputRef.current.selectionStart,
+      mainInputRef.current.selectionEnd! >= displayValue.length
+        ? displayValue.length - 1
+        : mainInputRef.current.selectionEnd,
+    );
+  };
+
   // TODO: 숫자가 아닌 것 입력했을 때 에러메시지
 
   return (
@@ -159,11 +172,13 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
       </LabelWithIcon>
       <InputContainer>
         <Input
+          ref={mainInputRef}
           onChange={handleValueChange}
           value={displayValue}
           placeholder={placeholder}
           disabled={disabled}
           hasError={!!error}
+          onSelect={handleCursor}
           {...props}
         />
         {itemLimit && (

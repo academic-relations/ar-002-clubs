@@ -30,7 +30,7 @@ const CalendarWeek: React.FC<CalendarWeekProps> = ({
   size = "lg",
   onDateClick,
 }) => (
-  <WeekWrapper size={size}>
+  <WeekWrapper>
     {week.map(day => (
       <CalendarDate
         key={day.date.toISOString()}

@@ -12,7 +12,7 @@ export class ClubRepresentativeDRepository {
 
   // 가장 최근 대표자의 이름을 가져오기
   async findRepresentativeName(clubId: number): Promise<{ name: string }> {
-    const currentDate = new Date().toISOString().slice(0, 19).replace("T", " ");
+    const currentDate = new Date();
 
     const representative = await this.db
       .select({ name: User.name })

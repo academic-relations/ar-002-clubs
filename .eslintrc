@@ -33,6 +33,7 @@
   "plugins": ["import", "@typescript-eslint", "react"],
   "ignorePatterns": ["node_modules/", "dist/"],
   "rules": {
+    "react/no-array-index-key": "warn",
     "import/extensions": [
       "error",
       "ignorePackages",

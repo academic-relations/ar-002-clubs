@@ -1,16 +1,18 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+
 /**
  * @version v0.1
  * @description 동아리의 상세정보를 가져옵니다
  */
 
-const url = (club_id: string) => `/clubs/club/${club_id}`;
+const url = (clubId: string) => `/clubs/club/${clubId}`;
 const method = "GET";
 
 const requestParam = z.object({
-  club_id: z.number().int().min(1),
+  clubId: z.number().int().min(1),
 });
 
 const requestQuery = z.object({});
@@ -21,7 +23,8 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     id: z.number().int().min(1),
     name: z.string().max(20),
-    type: z.number().int(), // 동아리 유형(정동아리 | 가동아리 | 상임동아리)
+    type: z.nativeEnum(ClubTypeEnum), // 동아리 유형(정동아리 | 가동아리)
+    isPermanent: z.boolean(), // 상임동아리 여부
     characteristic: z.string().max(50), // 동아리 소개
     representative: z.string().max(20), // 동아리 대표
     advisor: z.string().max(20).nullable(), // 동아리 지도교수
@@ -29,8 +32,7 @@ const responseBodyMap = {
     description: z.string(),
     divisionName: z.string().max(20), // 분과명
     foundingYear: z.number().int().min(1985).max(2100),
-    room: z.number().int(), // 동아리방 위치
-    buildingName: z.string().max(50), // 동아리방 건물명
+    room: z.string().max(50), // 동아리방 위치
   }),
 };
 

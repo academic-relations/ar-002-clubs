@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import colors from "@sparcs-clubs/web/styles/themes/colors";
 import Icon from "./Icon";
 
 type CheckboxProps = {
@@ -15,10 +16,12 @@ const CheckboxInner = styled.div<{ disabled: boolean }>`
   width: 16px;
   height: 16px;
   border-radius: 4px;
-  border: 1px solid ${({ theme }) => theme.colors.BLACK};
+  border: 1px solid
+    ${({ disabled, theme }) =>
+      disabled ? theme.colors.GRAY[300] : theme.colors.BLACK};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   background-color: ${({ disabled, theme }) =>
-    disabled ? theme.colors.GRAY[200] : "transparent"};
+    disabled ? theme.colors.GRAY[100] : "transparent"};
 `;
 
 const Checkbox: React.FC<CheckboxProps> = ({
@@ -27,7 +30,13 @@ const Checkbox: React.FC<CheckboxProps> = ({
   disabled = false,
 }) => (
   <CheckboxInner onClick={!disabled ? onClick : undefined} disabled={disabled}>
-    {checked && <Icon type="check" size={16} />}
+    {checked && (
+      <Icon
+        type="check"
+        size={16}
+        color={disabled ? colors.GRAY[300] : colors.BLACK}
+      />
+    )}
   </CheckboxInner>
 );
 
