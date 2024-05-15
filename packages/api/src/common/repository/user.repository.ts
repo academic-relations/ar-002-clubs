@@ -16,4 +16,12 @@ export class UserRepository {
       .leftJoin(User, eq(User.id, Student.userId));
     return user;
   }
+
+  async findUserNameById(userId: number) {
+    const userName = await this.db
+      .select({ name: User.name })
+      .from(User)
+      .where(eq(User.id, userId));
+    return userName;
+  }
 }

@@ -27,7 +27,7 @@ const NoticeListAndPaginationFrame = () => {
   const [page, setPage] = useState<number>(1);
   const { data, isLoading, isError } = useGetNotice(page, noticePerPage);
 
-  const totalPage = Math.floor((data?.totalPosts ?? 0) / noticePerPage) + 2;
+  const totalPage = Math.floor((data?.total ?? 0) / noticePerPage) + 2;
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>

@@ -6,3 +6,5 @@ import "./endpoint/apiClb005";
 import "./endpoint/apiClb006";
 import "./endpoint/apiClb007";
 import "./endpoint/apiClb008";
+import "./endpoint/apiClb009";
+import "./endpoint/apiClb010";
