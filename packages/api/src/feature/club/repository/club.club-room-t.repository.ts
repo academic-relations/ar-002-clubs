@@ -12,7 +12,7 @@ export class ClubRoomTRepository {
   async findClubLocationById(
     clubId: number,
   ): Promise<{ room: number; buildingName: string }> {
-    const currentDate = new Date().toISOString().slice(0, 19).replace("T", " ");
+    const currentDate = new Date();
 
     const roomDetails = await this.db
       .select({
