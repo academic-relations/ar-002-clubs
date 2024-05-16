@@ -11,7 +11,7 @@ import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame
 // eslint-disable-next-line no-restricted-imports
 import { ActivityDescription } from "../../types/activityCertificate";
 
-const StyledCard = styled(Card)<{ type: string }>`
+const StyledCard = styled(Card)<{ outline: boolean }>`
   padding: 32px;
   gap: 20px;
   align-self: stretch;
@@ -273,7 +273,7 @@ const ActivityCertificateInfoSecondFrame: React.FC<
   return (
     <ActivityCertificateSecondFrameInner>
       <Info text="활동 내역 최대 5개까지 입력 가능, 날짜 포함 => 워딩은 병찬이나 동연에서 고쳐주겟징~~" />
-      <StyledCard type="outline">
+      <StyledCard outline>
         {activityCertificate.detail.map(activityDescription => (
           <ActivityCertificateRow
             key={activityDescription.key}

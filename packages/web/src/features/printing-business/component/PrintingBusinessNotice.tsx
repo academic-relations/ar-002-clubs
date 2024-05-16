@@ -21,7 +21,7 @@ const PrintingBusinessNoticeInner = styled.div`
   align-self: stretch;
 `;
 
-const StyledCard = styled(Card)<{ type: string }>`
+const StyledCard = styled(Card)<{ outline: boolean }>`
   padding: 32px;
   gap: 16px;
   align-self: stretch;
@@ -52,7 +52,7 @@ const PrintingBusinessNotice: React.FC<PrintingBusinessNoticeProps> = ({
 
   return (
     <PrintingBusinessNoticeInner>
-      <StyledCard type="outline">
+      <StyledCard outline>
         <Typography type="h3">안내사항</Typography>
         <StyledTypography type="p">
           동연 소속 회원 모두 홍보물 신청 가능~ 한 번의 신청은 하나의 파일에

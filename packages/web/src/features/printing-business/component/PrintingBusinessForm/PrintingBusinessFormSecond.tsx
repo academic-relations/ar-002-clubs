@@ -26,7 +26,7 @@ const PrintingBusinessFormSecondInner = styled.div`
   gap: 20px;
 `;
 
-const StyledCard = styled(Card)<{ type: string }>`
+const StyledCard = styled(Card)<{ outline: boolean }>`
   padding: 32px;
   gap: 20px;
   align-self: stretch;
@@ -84,7 +84,7 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
     <PrintingBusinessFormSecondInner>
       {/* todo!: 이후 동아리의 홍보물 인쇄가능 매수 확인 API 추가후 수정이 필요합니다. */}
       <Info text={leftoverPrintsInfoText("술박스", 45, 45)} />
-      <StyledCard type="outline">
+      <StyledCard outline>
         <Typography>인쇄 매수</Typography>
         <ItemNumberInput
           label="A3"
@@ -107,7 +107,7 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
           }}
         />
       </StyledCard>
-      <StyledCard type="outline">
+      <StyledCard outline>
         <Typography>인쇄 설정</Typography>
         <BinaryRadio
           label="색상"
@@ -131,7 +131,7 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
           setIsFirstOptionSelected={value => setRequireMarginChopping(!value)}
         />
       </StyledCard>
-      <StyledCard type="outline">
+      <StyledCard outline>
         <Typography>인쇄 파일 업로드</Typography>
         {/* todo!: 파일 업로드 api 완성 이후 적용이 필요합니다. */}
         <FileUpload />

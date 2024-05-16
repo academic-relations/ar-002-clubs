@@ -20,7 +20,7 @@ type PrintingBusinessFormFirstProps = Pick<
   | "setRequestForm"
 > & { setFormError: React.Dispatch<React.SetStateAction<boolean>> };
 
-const StyledCard = styled(Card)<{ type: string }>`
+const StyledCard = styled(Card)<{ outline: boolean }>`
   padding: 32px;
   gap: 20px;
   align-self: stretch;
@@ -64,7 +64,7 @@ const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
   }, [clubIdSelectionError, usernameError, phoneNumberError]);
 
   return (
-    <StyledCard type="outline">
+    <StyledCard outline>
       <Select
         items={clubSelection}
         label="동아리 이름"
