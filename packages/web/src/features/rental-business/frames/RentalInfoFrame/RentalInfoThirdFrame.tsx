@@ -8,7 +8,7 @@ import RentalList from "@sparcs-clubs/web/features/rental-business/components/Re
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
-const StyledCard = styled(Card)<{ type: string }>`
+const StyledCard = styled(Card)<{ outline: boolean }>`
   padding: 32px;
   gap: 20px;
   align-self: stretch;
@@ -89,7 +89,7 @@ const RentalInfoThirdFrame: React.FC<
   }, [rental, purposeTouched, setNextEnabled, setNoPurposeError]);
 
   return (
-    <StyledCard type="outline">
+    <StyledCard outline>
       <CardInner>
         <StyledTypography type="p">신청자 정보</StyledTypography>
         <UserInfoListContainer>
@@ -100,8 +100,13 @@ const RentalInfoThirdFrame: React.FC<
         <RentalPeriodWrapper>
           <StyledTypography type="p">대여 기간</StyledTypography>
           <RentalPeriodInner>
-            {format(rental.date?.start, "yyyy년 M월 d일 (EEE)", { locale: ko })}{" "}
-            ~ {format(rental.date?.end, "yyyy년 M월 d일 (EEE)", { locale: ko })}
+            {format(rental.date?.start || "", "yyyy년 M월 d일 (EEE)", {
+              locale: ko,
+            })}{" "}
+            ~{" "}
+            {format(rental.date?.end || "", "yyyy년 M월 d일 (EEE)", {
+              locale: ko,
+            })}
           </RentalPeriodInner>
         </RentalPeriodWrapper>
         <StyledTypography type="p">대여 물품</StyledTypography>

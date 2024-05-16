@@ -6,8 +6,9 @@ import SelectRangeInfo from "./SelectRangeInfo";
 interface SelectRangeProps {
   rentalDate?: Date;
   returnDate?: Date;
-  setRentalDate: (date: Date | undefined) => void;
-  setReturnDate: (date: Date | undefined) => void;
+  setShowPeriodModal: React.Dispatch<
+    React.SetStateAction<"none" | "reset" | "change">
+  >;
 }
 
 const RangeWrapper = styled.div`
@@ -21,14 +22,12 @@ const RangeWrapper = styled.div`
 const SelectRange: React.FC<SelectRangeProps> = ({
   rentalDate = undefined,
   returnDate = undefined,
-  setRentalDate,
-  setReturnDate,
+  setShowPeriodModal,
 }) => {
   const isButtonDisabled = !rentalDate && !returnDate;
 
   const handleReset = () => {
-    setRentalDate(undefined);
-    setReturnDate(undefined);
+    setShowPeriodModal("reset");
   };
 
   return (

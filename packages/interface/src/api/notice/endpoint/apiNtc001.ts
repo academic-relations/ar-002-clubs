@@ -12,8 +12,8 @@ const method = "GET";
 const requestParam = z.object({});
 
 const requestQuery = z.object({
-  pageOffset: z.number().int().positive(),
-  itemCount: z.number().int().positive(),
+  pageOffset: z.number().int().min(1),
+  itemCount: z.number().int().min(1),
 });
 
 const requestBody = z.object({});
@@ -29,7 +29,8 @@ const zNotice = z.object({
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     notices: zNotice.array(),
-    totalPosts: z.number().int().positive(),
+    total: z.number().int().min(0),
+    offset: z.number().int().min(0),
   }),
 };
 

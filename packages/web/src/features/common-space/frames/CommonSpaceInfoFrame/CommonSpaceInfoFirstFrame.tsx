@@ -8,7 +8,7 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 
-const StyledCard = styled(Card)<{ type: string }>`
+const StyledCard = styled(Card)<{ outline: boolean }>`
   padding: 32px;
   gap: 40px;
   align-self: stretch;
@@ -52,7 +52,7 @@ const CommonSpaceInfoFirstFrame: React.FC<
   }, [selectedValue, phone, setCommonSpace]);
 
   return (
-    <StyledCard type="outline">
+    <StyledCard outline>
       <Select
         items={mockClubList}
         selectedValue={selectedValue}

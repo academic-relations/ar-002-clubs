@@ -12,7 +12,7 @@ import { ko } from "date-fns/locale";
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 import { mockCommonSpaceList } from "./mockCommonSpaceList";
 
-const StyledCard = styled(Card)<{ type: string }>`
+const StyledCard = styled(Card)<{ outline: boolean }>`
   padding: 32px;
   gap: 20px;
   align-self: stretch;
@@ -29,7 +29,7 @@ const StyledCardOuter = styled.div`
   align-self: stretch;
 `;
 
-const StyledInfoCard = styled(Card)<{ type: string }>`
+const StyledInfoCard = styled(Card)<{ outline: boolean }>`
   display: flex;
   padding: 32px;
   flex-direction: column;
@@ -89,19 +89,19 @@ const CommonSpaceInfoSecondFrame: React.FC<
         label="공용공간"
         setErrorStatus={setHasSelectError}
       />
-      {commonSpace.space &&
+      {commonSpace.space && (
         <>
           <Info
             text={`${commonSpace.space}는 하루에 최대 4시간, 일주일에 최대 10시간 사용할 수 있습니다.`}
           />
-          <StyledCard type="outline">
+          <StyledCard outline>
             <Timetable
               data={Array(7 * 48).fill(false)}
               setDateTimeRange={setDateTimeRange}
             />
             <StyledCardOuter>
               {dateTimeRange && (
-                <StyledInfoCard type="outline">
+                <StyledInfoCard outline>
                   <Typography type="p">선택 시간</Typography>
                   <Typography type="p">
                     {format(dateTimeRange[0], "M/d(E) ", { locale: ko })}
@@ -115,7 +115,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
             </StyledCardOuter>
           </StyledCard>
         </>
-      }
+      )}
     </>
   );
 };

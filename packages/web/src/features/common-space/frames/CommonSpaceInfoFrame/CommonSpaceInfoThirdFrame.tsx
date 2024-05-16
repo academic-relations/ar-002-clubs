@@ -8,7 +8,7 @@ import { differenceInHours, differenceInMinutes, format } from "date-fns";
 import { ko } from "date-fns/locale";
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 
-const StyledCard = styled(Card)<{ type: string }>`
+const StyledCard = styled(Card)<{ outline: boolean }>`
   padding: 32px;
   gap: 20px;
   align-self: stretch;
@@ -51,7 +51,7 @@ const CommonSpaceInfoThirdFrame: React.FC<CommonSpaceFrameProps> = ({
 
   return (
     <>
-      <StyledCard type="outline">
+      <StyledCard outline>
         <CardInner>
           <StyledTypography type="p">신청자 정보</StyledTypography>
           <StyledList>

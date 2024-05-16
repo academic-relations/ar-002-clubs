@@ -12,7 +12,7 @@ import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 
-const StyledCard = styled(Card)<{ type: string }>`
+const StyledCard = styled(Card)<{ outline: boolean }>`
   padding: 32px;
   gap: 40px;
   align-self: stretch;
@@ -65,7 +65,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
   }, [firstErrorStatus]);
 
   return (
-    <StyledCard type="outline">
+    <StyledCard outline>
       <Select
         label="동아리 이름"
         items={[

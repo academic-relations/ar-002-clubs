@@ -19,7 +19,7 @@ const CommonSpaceNoticeFrameInner = styled.div`
   align-self: stretch;
 `;
 
-const StyledCard = styled(Card)<{ type: string }>`
+const StyledCard = styled(Card)<{ outline: boolean }>`
   padding: 32px;
   gap: 16px;
   align-self: stretch;
@@ -57,7 +57,7 @@ const CommonSpaceNoticeFrame: React.FC<CommonSpaceFrameProps> = ({
 
   return (
     <CommonSpaceNoticeFrameInner>
-      <StyledCard type="outline">
+      <StyledCard outline>
         <Typography type="h3">안내사항</Typography>
         <StyledTypography type="p">
           대충 공용공간 비정기사용에 대한 안내사항
