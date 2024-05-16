@@ -61,7 +61,7 @@ const UserInfoListItem = styled.li`
 const RentalInfoThirdFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
 > = ({ rental, setRental, setNextEnabled }) => {
-  const [purpose, setPurpose] = useState("");
+  const [purpose, setPurpose] = useState(rental.purpose || "");
   const [noPurposeError, setNoPurposeError] = useState("");
   const [purposeTouched, setPurposeTouched] = useState(false);
 

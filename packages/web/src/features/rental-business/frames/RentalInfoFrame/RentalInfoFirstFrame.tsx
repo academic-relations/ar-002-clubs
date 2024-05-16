@@ -28,7 +28,7 @@ const RentalInfoFirstFrame: React.FC<
 
   const [phone, setPhone] = useState(rental.info?.phone ?? userPhone);
   const [hasPhoneError, setHasPhoneError] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState(rental.info?.clubId ?? "");
   const [hasSelectError, setHasSelectError] = useState(false);
 
   useEffect(() => {

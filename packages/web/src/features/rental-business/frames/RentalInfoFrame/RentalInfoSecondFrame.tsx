@@ -81,8 +81,12 @@ const RentalInfoSecondFrame: React.FC<
   const Rental = rentals[value].component;
   const props = { rental, setRental };
 
-  const [rentalDate, setRentalDate] = useState<Date | undefined>();
-  const [returnDate, setReturnDate] = useState<Date | undefined>();
+  const [rentalDate, setRentalDate] = useState<Date | undefined>(
+    rental.date?.start,
+  );
+  const [returnDate, setReturnDate] = useState<Date | undefined>(
+    rental.date?.end,
+  );
   const [pendingDate, setPendingDate] = useState<Date | undefined>();
 
   const [showPeriodModal, setShowPeriodModal] = useState<
