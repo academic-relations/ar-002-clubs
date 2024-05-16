@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
-import { CommonSpace } from "@sparcs-clubs/api/drizzle/schema/commonspace.schema";
+import { CommonSpace } from "@sparcs-clubs/api/drizzle/schema/common-space.schema";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 @Injectable()
