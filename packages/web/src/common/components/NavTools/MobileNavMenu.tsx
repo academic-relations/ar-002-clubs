@@ -26,7 +26,7 @@ const MobileNavMenuInner = styled.div`
   position: absolute;
   display: flex;
   width: 100%;
-  min-height: calc(100vh - 105px);
+  min-height: calc(100vh - 55px);
   padding: 16px;
   flex-direction: column;
   justify-content: flex-start;
