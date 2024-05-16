@@ -13,7 +13,7 @@ export const CommonSpaceEnum = mysqlTable("common_space_enum", {
   typeName: varchar("type_name", { length: 30 }).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
-  deleteAt: timestamp("delete_at"),
+  deleteAt: timestamp("deleted_at"),
 });
 
 export const CommonSpace = mysqlTable("common_space", {
@@ -26,7 +26,7 @@ export const CommonSpace = mysqlTable("common_space", {
   spaceName: varchar("space_name", { length: 30 }).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
-  deleteAt: timestamp("delete_at"),
+  deleteAt: timestamp("deleted_at"),
 });
 
 export const CommonSpaceUsageOrderD = mysqlTable("common_space_usage_order_d", {
@@ -37,13 +37,13 @@ export const CommonSpaceUsageOrderD = mysqlTable("common_space_usage_order_d", {
   clubId: int("club_id")
     .notNull()
     .references(() => Club.id),
-  chargeStudent: int("charge_student")
+  chargeStudentId: int("charge_student_id")
     .notNull()
     .references(() => Student.id),
   studentPhoneNumber: varchar("student_phone_number", { length: 30 }).notNull(),
   startTerm: datetime("start_term").notNull(),
   endTerm: datetime("end_term").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_updated"),
+  updatedAt: timestamp("updated_at"),
   deletedAt: timestamp("deleted_at"),
 });
