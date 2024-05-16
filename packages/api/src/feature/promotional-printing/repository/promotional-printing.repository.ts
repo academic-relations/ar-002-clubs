@@ -8,20 +8,16 @@ import {
 } from "src/drizzle/schema/promotional-printing.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
-import type { GetPrintingOrderPaginationReturn } from "../dto/promotional-printing.dto";
+import type {
+  FindPromotionalPrintingOrderSizeBypromotionalPrintingOrderIdReturn,
+  GetStudentPromotionalPrintingsOrdersReturn,
+} from "../dto/promotional-printing.dto";
 
 @Injectable()
 export class PromotionalPrintingRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  // Notice 의 id 내림차순으로 정렬된 상태에서, 페이지네이션을 수행합니다.
-  async getPrintingOrderPagination(
-    clubId: number,
-    pageOffset: number,
-    itemCount: number,
-    startDate?: Date,
-    endDate?: Date,
-  ): Promise<GetPrintingOrderPaginationReturn> {
+  async countByCreatedAtIn(startDate?: Date, endDate?: Date): Promise<number> {
     const numberOfOrders = (
       await this.db
         .select({ count: count() })
@@ -38,6 +34,16 @@ export class PromotionalPrintingRepository {
         )
     ).at(0).count;
 
+    return numberOfOrders;
+  }
+
+  async getStudentPromotionalPrintingsOrders(
+    clubId: number,
+    pageOffset: number,
+    itemCount: number,
+    startDate?: Date,
+    endDate?: Date,
+  ): Promise<GetStudentPromotionalPrintingsOrdersReturn> {
     const startIndex = (pageOffset - 1) * itemCount + 1;
     const orders = await this.db
       .select({
@@ -65,30 +71,26 @@ export class PromotionalPrintingRepository {
       .limit(itemCount)
       .offset(startIndex - 1);
 
-    const ordersWithSizes: GetPrintingOrderPaginationReturn["items"] =
-      await Promise.all(
-        orders.map(async row => ({
-          ...row,
-          orders: await this.db
-            .select({
-              promotionalPrintingSizeEnum:
-                PromotionalPrintingOrderSize.promotionalPrintingSizeEnumId,
-              numberOfPrints: PromotionalPrintingOrderSize.numberOfPrints,
-            })
-            .from(PromotionalPrintingOrderSize)
-            .where(
-              eq(
-                PromotionalPrintingOrderSize.promotionalPrintingOrderId,
-                row.id,
-              ),
-            ),
-        })),
+    return orders;
+  }
+
+  async findPromotionalPrintingOrderSizeBypromotionalPrintingOrderId(
+    promotionalPrintingOrderId: number,
+  ): Promise<FindPromotionalPrintingOrderSizeBypromotionalPrintingOrderIdReturn> {
+    const orderSize = await this.db
+      .select({
+        promotionalPrintingSizeEnum:
+          PromotionalPrintingOrderSize.promotionalPrintingSizeEnumId,
+        numberOfPrints: PromotionalPrintingOrderSize.numberOfPrints,
+      })
+      .from(PromotionalPrintingOrderSize)
+      .where(
+        eq(
+          PromotionalPrintingOrderSize.promotionalPrintingOrderId,
+          promotionalPrintingOrderId,
+        ),
       );
 
-    return {
-      items: ordersWithSizes,
-      total: numberOfOrders,
-      offset: pageOffset,
-    };
+    return orderSize;
   }
 }
