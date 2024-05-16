@@ -15,8 +15,8 @@ const SearchAndFilterWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 20px;
+  height: 36px;
 `;
-// TODO: searchinput이랑 filter 높이 맞추기
 
 const ResetButtonWrapper = styled.div`
   display: flex;
@@ -44,7 +44,12 @@ const MemberSearchAndFilter: React.FC<SemesterListProps> = ({
         />
       </SearchAndFilterWrapper>
       <ResetButtonWrapper>
-        <TextButton text="검색/필터 초기화" onClick={handleReset} />
+        <TextButton
+          text="검색/필터 초기화"
+          onClick={handleReset}
+          disabled={semesters === selectedSemesters}
+        />
+        {/* TODO: 검색어 있는지 여부 확인 */}
       </ResetButtonWrapper>
     </MemberSearchAndFilterWrapper>
   );

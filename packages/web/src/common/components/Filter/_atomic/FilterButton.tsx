@@ -14,6 +14,7 @@ interface FilterButtonProps {
 const FilterButtonWrapper = styled.div<{ isOpen: boolean }>`
   width: max-content;
   display: flex;
+  height: 36px;
   flex-direction: row;
   align-items: center;
   justify-content: center;
