@@ -5,25 +5,27 @@ import type {
   ApiPrt001ResponseOk,
 } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
 
-import { PromotionalPrintingRepository } from "../repository/promotional-printing.repository";
+import { PromotionalPrintingOrderRepository } from "../repository/promotional-printing-order.repository";
+import { PromotionalPrintingOrderSizeRepository } from "../repository/promotional-printing-order-size.repository";
 
 @Injectable()
 export class PromotionalPrintingService {
   constructor(
-    private readonly promotionalPrintingRepository: PromotionalPrintingRepository,
+    private readonly promotionalPrintingOrderRepository: PromotionalPrintingOrderRepository,
+    private readonly promotionalPrintingOrderSizeRepository: PromotionalPrintingOrderSizeRepository,
   ) {}
 
   async getStudentPromotionalPrintingsOrders(
     query: ApiPrt001RequestQuery,
   ): Promise<ApiPrt001ResponseOk> {
     const numberOfOrders =
-      await this.promotionalPrintingRepository.countByCreatedAtIn(
+      await this.promotionalPrintingOrderRepository.countByCreatedAtIn(
         query.startDate,
         query.endDate,
       );
 
     const orders =
-      await this.promotionalPrintingRepository.getStudentPromotionalPrintingsOrders(
+      await this.promotionalPrintingOrderRepository.getStudentPromotionalPrintingsOrders(
         query.clubId,
         query.pageOffset,
         query.itemCount,
@@ -35,7 +37,7 @@ export class PromotionalPrintingService {
       orders.map(async row => ({
         ...row,
         orders:
-          await this.promotionalPrintingRepository.findPromotionalPrintingOrderSizeBypromotionalPrintingOrderId(
+          await this.promotionalPrintingOrderSizeRepository.findPromotionalPrintingOrderSizeBypromotionalPrintingOrderId(
             row.id,
           ),
       })),

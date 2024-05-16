@@ -2,19 +2,13 @@ import { Injectable, Inject } from "@nestjs/common";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { and, count, desc, eq, gte, lte } from "drizzle-orm";
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
-import {
-  PromotionalPrintingOrder,
-  PromotionalPrintingOrderSize,
-} from "src/drizzle/schema/promotional-printing.schema";
+import { PromotionalPrintingOrder } from "src/drizzle/schema/promotional-printing.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
-import type {
-  FindPromotionalPrintingOrderSizeBypromotionalPrintingOrderIdReturn,
-  GetStudentPromotionalPrintingsOrdersReturn,
-} from "../dto/promotional-printing.dto";
+import type { GetStudentPromotionalPrintingsOrdersReturn } from "../dto/promotional-printing.dto";
 
 @Injectable()
-export class PromotionalPrintingRepository {
+export class PromotionalPrintingOrderRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
   async countByCreatedAtIn(startDate?: Date, endDate?: Date): Promise<number> {
@@ -71,25 +65,5 @@ export class PromotionalPrintingRepository {
       .offset(startIndex - 1);
 
     return orders;
-  }
-
-  async findPromotionalPrintingOrderSizeBypromotionalPrintingOrderId(
-    promotionalPrintingOrderId: number,
-  ): Promise<FindPromotionalPrintingOrderSizeBypromotionalPrintingOrderIdReturn> {
-    const orderSize = await this.db
-      .select({
-        promotionalPrintingSizeEnum:
-          PromotionalPrintingOrderSize.promotionalPrintingSizeEnumId,
-        numberOfPrints: PromotionalPrintingOrderSize.numberOfPrints,
-      })
-      .from(PromotionalPrintingOrderSize)
-      .where(
-        eq(
-          PromotionalPrintingOrderSize.promotionalPrintingOrderId,
-          promotionalPrintingOrderId,
-        ),
-      );
-
-    return orderSize;
   }
 }

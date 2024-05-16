@@ -11,13 +11,13 @@ import { PromotionalPrintingModule } from "./feature/promotional-printing/promot
 
 @Module({
   imports: [
-    DrizzleModule,
     ClubModule,
+    CommonSpaceModule,
+    DrizzleModule,
     NoticeModule,
-    UserModule,
     PromotionalPrintingModule,
     RentalModule,
-    CommonSpaceModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
