@@ -4,7 +4,7 @@ import React from "react";
 import styled from "styled-components";
 
 const Card: React.FC<React.PropsWithChildren> = styled.div<{
-  type?: "default" | "outline";
+  outline?: boolean;
 }>`
   display: flex;
   flex-direction: column;
@@ -17,12 +17,10 @@ const Card: React.FC<React.PropsWithChildren> = styled.div<{
   color: ${({ theme }) => theme.colors.BLACK};
   background-color: ${({ theme }) => theme.colors.WHITE};
   border-radius: ${({ theme }) => theme.round.md};
-  box-shadow: ${({ theme, type }) =>
-    type === "default" ? theme.shadow.md : "none"};
-  border: ${({ theme, type }) => {
-    if (type === "outline") return `1px solid ${theme.colors.GRAY[200]}`;
-    return "none";
-  }};
+  box-shadow: ${({ theme, outline }) =>
+    outline ? "inherit" : theme.shadow.md};
+  border: ${({ theme, outline }) =>
+    outline ? `1px solid ${theme.colors.GRAY[200]}` : "inherit"};
 `;
 
 export default Card;

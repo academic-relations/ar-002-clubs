@@ -13,7 +13,7 @@ const ActivityCertificateThirdFrameInner = styled.div`
   align-self: stretch;
 `;
 
-const StyledCard = styled(Card)<{ type: string }>`
+const StyledCard = styled(Card)<{ outline: boolean }>`
   padding: 32px;
   gap: 20px;
   align-self: stretch;
@@ -52,7 +52,7 @@ const ActivityCertificateInfoThirdFrame: React.FC<
   ActivityCertificateFrameProps
 > = ({ activityCertificate }) => (
   <ActivityCertificateThirdFrameInner>
-    <StyledCard type="outline">
+    <StyledCard outline>
       <BasicInfoSummaryFrameInner>
         <Typography
           type="p"

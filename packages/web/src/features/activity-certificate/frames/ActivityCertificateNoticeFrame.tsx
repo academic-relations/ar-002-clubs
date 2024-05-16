@@ -37,7 +37,7 @@ const ActivityCertificateNoticeFrameInner = styled.div`
   align-self: stretch;
 `;
 
-const StyledCard = styled(Card)<{ type: string }>`
+const StyledCard = styled(Card)<{ outline: boolean }>`
   padding: 32px;
   gap: 16px;
   align-self: stretch;
@@ -77,7 +77,7 @@ const ActivityCertificateNoticeFrame: React.FC<
 
   return (
     <ActivityCertificateNoticeFrameInner>
-      <StyledCard type="outline">
+      <StyledCard outline>
         <Typography type="h3">안내사항</Typography>
         <StyledTypography type="p">
           대충 활동확인서 발급에 대한 안내사항
