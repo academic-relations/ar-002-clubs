@@ -37,6 +37,10 @@ const MobileNavMenuInner = styled.div`
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xs}) {
     display: none;
   }
+
+  @media (min-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    display: none;
+  }
 `;
 
 const MobileSubMenuInner = styled.div`
