@@ -26,7 +26,7 @@ const RentalInfoFirstFrame: React.FC<
   const userName = data?.name;
   const userPhone = data?.phoneNumber;
 
-  const [phone, setPhone] = useState(userPhone);
+  const [phone, setPhone] = useState(rental.info?.phone ?? userPhone);
   const [hasPhoneError, setHasPhoneError] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
   const [hasSelectError, setHasSelectError] = useState(false);
