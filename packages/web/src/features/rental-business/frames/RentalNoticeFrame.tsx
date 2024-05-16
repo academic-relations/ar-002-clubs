@@ -1,3 +1,5 @@
+"use client";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import React, { useState } from "react";

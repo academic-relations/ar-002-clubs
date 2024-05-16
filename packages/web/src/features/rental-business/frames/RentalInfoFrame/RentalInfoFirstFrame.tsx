@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -18,13 +20,27 @@ const RentalInfoFirstFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
 > = ({ setNextEnabled, rental, setRental }) => {
   const { data, isLoading, isError } = useGetUserProfile();
-  const clubList = data?.clubs.map(club => ({
-    label: club.name,
-    value: club.id,
-    selectable: true,
-  }));
-  const userName = data?.name;
-  const userPhone = data?.phoneNumber;
+
+  const [clubList, setClubList] = useState<
+    { label: string; value: number; selectable: boolean }[]
+  >([]);
+  const [userName, setUserName] = useState("");
+  const [userPhone, setUserPhone] = useState<string | undefined>();
+
+  useEffect(() => {
+    if (data) {
+      setClubList(
+        data.clubs.map(club => ({
+          label: club.name,
+          value: club.id,
+          selectable: true,
+        })),
+      );
+      setUserName(data.name);
+      setUserPhone(data?.phoneNumber);
+      setUserPhone(rental.info?.phone ?? data.phoneNumber);
+    }
+  }, [data, rental.info?.phone]);
 
   const [phone, setPhone] = useState(rental.info?.phone ?? userPhone);
   const [hasPhoneError, setHasPhoneError] = useState(false);
@@ -41,7 +57,7 @@ const RentalInfoFirstFrame: React.FC<
   }, [selectedValue, phone, hasPhoneError, hasSelectError, setNextEnabled]);
 
   useEffect(() => {
-    if (selectedValue) {
+    if (selectedValue !== "") {
       const selectClub = clubList.find(
         selectclub => selectclub.value === Number(selectedValue),
       );
