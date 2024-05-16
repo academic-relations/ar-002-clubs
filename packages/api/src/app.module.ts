@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ClubModule } from "./feature/club/club.module";
+import { CommonSpaceModule } from "./feature/commonspace/common-space.module";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { DrizzleModule } from "./drizzle/drizzle.module";
@@ -10,12 +11,13 @@ import { PromotionalPrintingModule } from "./feature/promotional-printing/promot
 
 @Module({
   imports: [
-    ClubModule,
     DrizzleModule,
+    ClubModule,
     NoticeModule,
+    UserModule,
     PromotionalPrintingModule,
     RentalModule,
-    UserModule,
+    CommonSpaceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
