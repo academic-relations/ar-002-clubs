@@ -2,7 +2,7 @@ import {
   mysqlTable,
   int,
   varchar,
-  datetime,
+  date,
   timestamp,
 } from "drizzle-orm/mysql-core";
 
@@ -36,9 +36,9 @@ export const StudentT = mysqlTable("student_t", {
   studentStatusEnum: int("student_status_enum").notNull(),
   number: int("number").unique(),
   department: int("department").notNull(),
-  semesterId: int("semester_id").unique().notNull(),
-  startTerm: datetime("start_term").notNull(),
-  endTerm: datetime("end_term"),
+  semesterId: int("semester_id").notNull(),
+  startTerm: date("start_term").notNull(),
+  endTerm: date("end_term"),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
@@ -79,8 +79,8 @@ export const ExecutiveT = mysqlTable("executive_t", {
   executiveBureauEnum: int("executive_bureau_enum")
     .notNull()
     .references(() => ExecutiveBureauEnum.id),
-  startTerm: datetime("start_term").notNull(),
-  endTerm: datetime("end_term"),
+  startTerm: date("start_term").notNull(),
+  endTerm: date("end_term"),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
@@ -102,8 +102,8 @@ export const ProfessorT = mysqlTable("professor_t", {
     .references(() => Professor.id),
   professorEnum: int("professor_enum").unique(),
   department: int("department"),
-  startTerm: datetime("start_term").notNull(),
-  endTerm: datetime("end_term"),
+  startTerm: date("start_term").notNull(),
+  endTerm: date("end_term"),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
@@ -124,8 +124,8 @@ export const EmployeeT = mysqlTable("employee_t", {
   employeeId: int("employee_id")
     .notNull()
     .references(() => Employee.id),
-  startTerm: datetime("start_term").notNull(),
-  endTerm: datetime("end_term"),
+  startTerm: date("start_term").notNull(),
+  endTerm: date("end_term"),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
