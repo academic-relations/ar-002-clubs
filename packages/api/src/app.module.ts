@@ -5,9 +5,10 @@ import { AppService } from "./app.service";
 import { DrizzleModule } from "./drizzle/drizzle.module";
 import { UserModule } from "./feature/user/user.module";
 import { NoticeModule } from "./feature/notice/notice.module";
+import { RentalModule } from "./feature/rental/rental.module";
 
 @Module({
-  imports: [DrizzleModule, ClubModule, NoticeModule, UserModule],
+  imports: [DrizzleModule, ClubModule, NoticeModule, UserModule, RentalModule],
   controllers: [AppController],
   providers: [AppService],
 })
