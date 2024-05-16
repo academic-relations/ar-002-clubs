@@ -29,14 +29,9 @@ const StyledCardOuter = styled.div`
   align-self: stretch;
 `;
 
-const StyledInfoCard = styled(Card)<{ outline: boolean }>`
-  display: flex;
-  padding: 32px;
-  flex-direction: column;
+const StyledInfoCard = styled(Card).attrs({ outline: true, gap: 20 })`
   align-items: flex-start;
   margin-top: 64px;
-  gap: 20px;
-  align-self: stretch;
 `;
 
 const CommonSpaceInfoSecondFrame: React.FC<
@@ -101,7 +96,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
             />
             <StyledCardOuter>
               {dateTimeRange && (
-                <StyledInfoCard outline>
+                <StyledInfoCard>
                   <Typography type="p">선택 시간</Typography>
                   <Typography type="p">
                     {format(dateTimeRange[0], "M/d(E) ", { locale: ko })}
