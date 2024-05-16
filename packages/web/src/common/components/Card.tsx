@@ -17,12 +17,10 @@ const Card: React.FC<React.PropsWithChildren> = styled.div<{
   color: ${({ theme }) => theme.colors.BLACK};
   background-color: ${({ theme }) => theme.colors.WHITE};
   border-radius: ${({ theme }) => theme.round.md};
-  ${({ theme, outline }) => {
-    if (outline) {
-      return `border: 1px solid ${theme.colors.GRAY[200]};`;
-    }
-    return `box-shadow: ${theme.shadow.md};`;
-  }}
+  box-shadow: ${({ theme, outline }) =>
+    outline ? "inherit" : theme.shadow.md};
+  border: ${({ theme, outline }) =>
+    outline ? `1px solid ${theme.colors.GRAY[200]}` : "inherit"};
 `;
 
 export default Card;
