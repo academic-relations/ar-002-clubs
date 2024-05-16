@@ -51,7 +51,6 @@ export const RentalOrderItemD = mysqlTable("rental_order_item_d", {
   objectId: int("object_id")
     .notNull()
     .references(() => RentalObject.id),
-  // number: int("number"),
   startTerm: datetime("start_term"),
   endTerm: datetime("end_term"),
   createdAt: timestamp("created_at").defaultNow(),

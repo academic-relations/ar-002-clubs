@@ -14,11 +14,10 @@ export class RentalController {
   async getRentalsObjectsAvailable(
     @Query() query: ApiRnt001RequestQuery,
   ): Promise<ApiRnt001ResponseOK> {
+    const startDate = new Date(query.startDate);
+    const endDate = new Date(query.endDate);
     const availableObjects =
-      await this.rentalService.getRentalsObjectsAvailable(
-        query.startDate,
-        query.endDate,
-      );
+      await this.rentalService.getRentalsObjectsAvailable(startDate, endDate);
 
     return availableObjects;
   }

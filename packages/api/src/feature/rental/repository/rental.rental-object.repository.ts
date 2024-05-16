@@ -1,8 +1,9 @@
 import { Injectable, Inject } from "@nestjs/common";
-import { sql, eq, or, gte, lte } from "drizzle-orm";
+import { eq, or, gt, lt, count } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
+  RentalEnum,
   RentalObject,
   RentalOrderItemD,
 } from "src/drizzle/schema/rental.schema";
@@ -15,18 +16,19 @@ export class RentalObjectRepository {
     const availableObjects = await this.db
       .select({
         id: RentalObject.rentalEnum,
-        name: RentalObject.objectName,
-        maximum: sql<number>`cast(count(${RentalObject.id}) as int)`,
+        name: RentalEnum.typeName,
+        maximum: count(RentalObject.rentalEnum),
       })
       .from(RentalObject)
       .leftJoin(
         RentalOrderItemD,
         eq(RentalOrderItemD.objectId, RentalObject.id),
       )
+      .leftJoin(RentalEnum, eq(RentalObject.rentalEnum, RentalEnum.id))
       .where(
         or(
-          gte(RentalOrderItemD.startTerm, endDate),
-          lte(RentalOrderItemD.endTerm, startDate),
+          gt(RentalOrderItemD.startTerm, endDate),
+          lt(RentalOrderItemD.endTerm, startDate),
         ),
       )
       .groupBy(RentalObject.rentalEnum);
