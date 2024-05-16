@@ -97,7 +97,8 @@ const mockupNoticeList: ApiNtc001ResponseOK = {
       link: "https://cafe.naver.com/kaistclubs/ArticleRead.nhn?clubid=26985838&page=1&menuid=1&boardtype=L&articleid=33558&referrerAllArticles=false",
     },
   ],
-  totalPosts: 302,
+  offset: 0,
+  total: 302,
 };
 
 export default mockupNoticeList;
