@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
-import Info from "@sparcs-clubs/web/common/components/Info";
 import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
+import Info from "@sparcs-clubs/web/common/components/Info";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import FileUpload from "@sparcs-clubs/web/features/printing-business/component/FileUpload";
 
@@ -26,11 +26,11 @@ const PrintingBusinessFormSecondInner = styled.div`
   gap: 20px;
 `;
 
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
-  gap: 20px;
-  align-self: stretch;
-`;
+const StyledCard = styled(Card).attrs({
+  outline: true,
+  padding: "32px",
+  gap: 20,
+})``;
 
 const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
   requestForm,
@@ -84,7 +84,7 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
     <PrintingBusinessFormSecondInner>
       {/* todo!: 이후 동아리의 홍보물 인쇄가능 매수 확인 API 추가후 수정이 필요합니다. */}
       <Info text={leftoverPrintsInfoText("술박스", 45, 45)} />
-      <StyledCard outline>
+      <StyledCard>
         <Typography>인쇄 매수</Typography>
         <ItemNumberInput
           label="A3"
@@ -107,7 +107,7 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
           }}
         />
       </StyledCard>
-      <StyledCard outline>
+      <StyledCard>
         <Typography>인쇄 설정</Typography>
         <BinaryRadio
           label="색상"
@@ -131,7 +131,7 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
           setIsFirstOptionSelected={value => setRequireMarginChopping(!value)}
         />
       </StyledCard>
-      <StyledCard outline>
+      <StyledCard>
         <Typography>인쇄 파일 업로드</Typography>
         {/* todo!: 파일 업로드 api 완성 이후 적용이 필요합니다. */}
         <FileUpload />

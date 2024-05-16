@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 import Info from "@sparcs-clubs/web/common/components/Info";
-import ItemButtonList from "@sparcs-clubs/web/features/rental-business/components/ItemButtonList";
-import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
+import TextButton from "@sparcs-clubs/web/common/components/TextButton";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import Easel from "@sparcs-clubs/web/features/rental-business//components/Rentals/Easel";
-import Vacuum from "@sparcs-clubs/web/features/rental-business//components/Rentals/Vacuum";
 import HandCart from "@sparcs-clubs/web/features/rental-business//components/Rentals/HandCart";
 import Mat from "@sparcs-clubs/web/features/rental-business//components/Rentals/Mat";
 import Tool from "@sparcs-clubs/web/features/rental-business//components/Rentals/Tool";
+import Vacuum from "@sparcs-clubs/web/features/rental-business//components/Rentals/Vacuum";
+import ItemButtonList from "@sparcs-clubs/web/features/rental-business/components/ItemButtonList";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
-import TextButton from "@sparcs-clubs/web/common/components/TextButton";
-import Modal from "@sparcs-clubs/web/common/components/Modal";
-import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
+import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 import { mockExistDates } from "./_atomic/mockExistDate";
 
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
-  gap: 40px;
-  align-self: stretch;
-`;
+const StyledCard = styled(Card).attrs({
+  outline: true,
+  padding: "32px",
+  gap: 40,
+})``;
 
 const StyledCardInner = styled.div`
   display: flex;
@@ -187,7 +187,7 @@ const RentalInfoSecondFrame: React.FC<
 
   return (
     <>
-      <StyledCard outline>
+      <StyledCard>
         <Typography type="h3">대여 기간 선택</Typography>
         <SelectRangeCalendar
           rentalDate={rentalDate}
@@ -204,7 +204,7 @@ const RentalInfoSecondFrame: React.FC<
       <ItemButtonList value={value} onChange={itemOnChange} rental={rental} />
       <Info text={rentals[value].info} />
       {value !== "none" && (
-        <StyledCard outline>
+        <StyledCard>
           <StyledCardInner>
             <ResetTitleWrapper>
               <FlexGrowTypography>
@@ -220,7 +220,7 @@ const RentalInfoSecondFrame: React.FC<
           </StyledCardInner>
         </StyledCard>
       )}
-      <StyledCard outline>
+      <StyledCard>
         <StyledCardInner>
           <ResetTitleWrapper>
             <FlexGrowTypography>

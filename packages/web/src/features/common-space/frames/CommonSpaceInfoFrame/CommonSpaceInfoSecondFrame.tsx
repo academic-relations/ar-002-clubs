@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import Select from "@sparcs-clubs/web/common/components/Forms/Select";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Timetable from "@sparcs-clubs/web/common/components/Timetable";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import Select from "@sparcs-clubs/web/common/components/Forms/Select";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 
 import { differenceInHours, differenceInMinutes, format } from "date-fns";
 import { ko } from "date-fns/locale";
@@ -12,11 +12,11 @@ import { ko } from "date-fns/locale";
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 import { mockCommonSpaceList } from "./mockCommonSpaceList";
 
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
-  gap: 20px;
-  align-self: stretch;
-  display: flex;
+const StyledCard = styled(Card).attrs({
+  outline: true,
+  padding: "32px",
+  gap: 20,
+})`
   flex-direction: row;
 `;
 
@@ -94,7 +94,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
           <Info
             text={`${commonSpace.space}는 하루에 최대 4시간, 일주일에 최대 10시간 사용할 수 있습니다.`}
           />
-          <StyledCard outline>
+          <StyledCard>
             <Timetable
               data={Array(7 * 48).fill(false)}
               setDateTimeRange={setDateTimeRange}
