@@ -98,25 +98,27 @@ const AllMemberList: React.FC<AllMemberListProps> = ({ semester, members }) => {
                 비고
               </TableCell>
             </TableRow>
-            {members.map(member => (
-              <TableRow key={member.studentNumber}>
-                <TableCell type="Default" width="20%">
-                  {member.studentNumber}
-                </TableCell>
-                <TableCell type="Default" width="20%">
-                  {member.name}
-                </TableCell>
-                <TableCell type="Default" width="20%">
-                  {member.phoneNumber}
-                </TableCell>
-                <TableCell type="Default" width="20%">
-                  {member.email}
-                </TableCell>
-                <TableCell type="Default" width="20%">
-                  {" "}
-                </TableCell>
-              </TableRow>
-            ))}
+            {members
+              .sort((a, b) => a.studentNumber - b.studentNumber)
+              .map(member => (
+                <TableRow key={member.studentNumber}>
+                  <TableCell type="Default" width="20%">
+                    {member.studentNumber}
+                  </TableCell>
+                  <TableCell type="Default" width="20%">
+                    {member.name}
+                  </TableCell>
+                  <TableCell type="Default" width="20%">
+                    {member.phoneNumber}
+                  </TableCell>
+                  <TableCell type="Default" width="20%">
+                    {member.email}
+                  </TableCell>
+                  <TableCell type="Default" width="20%">
+                    {" "}
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableWrapper>
         </TableWithCount>
       )}
