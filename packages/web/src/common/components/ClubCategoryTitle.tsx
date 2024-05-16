@@ -24,7 +24,7 @@ const MoreInfo = styled.div`
   cursor: pointer;
 `;
 
-const FoldableSectionTitle: React.FC<{
+const ClubCategoryTitle: React.FC<{
   title: string;
   clubList: Array<ClubCardProps["club"]>;
   toggle: boolean;
@@ -39,4 +39,4 @@ const FoldableSectionTitle: React.FC<{
   </FoldableSectionTitleInner>
 );
 
-export default FoldableSectionTitle;
+export default ClubCategoryTitle;

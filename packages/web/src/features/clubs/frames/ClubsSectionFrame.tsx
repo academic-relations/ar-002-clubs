@@ -4,7 +4,7 @@ import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 
 import ClubListGrid from "@sparcs-clubs/web/features/clubs/components/ClubListGrid";
-import FoldableSectionTitle from "@sparcs-clubs/web/features/clubs/components/FoldableSectionTitle";
+import ClubCategoryTitle from "@sparcs-clubs/web/common/components/ClubCategoryTitle";
 
 import type { ClubCardProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
@@ -33,7 +33,7 @@ const ClubsSectionFrame: React.FC<ClubsSectionFrameProps> = ({
 
   return (
     <ClubDivisionSectionFrameInner>
-      <FoldableSectionTitle
+      <ClubCategoryTitle
         title={title}
         clubList={clubList}
         toggle={toggle}

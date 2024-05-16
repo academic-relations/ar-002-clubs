@@ -18,6 +18,7 @@
     "@mui/material": "5.15.12",
     "@mui/material-nextjs": "5.15.11",
     "@tanstack/react-query": "^5.28.4",
+    "@tanstack/react-table": "^8.17.3",
     "axios": "^1.6.7",
     "axios-mock-adapter": "^1.22.0",
     "classnames": "^2.3.2",
