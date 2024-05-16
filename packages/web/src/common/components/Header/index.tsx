@@ -8,9 +8,9 @@ import NavList from "@sparcs-clubs/web/common/components/NavTools/NavList";
 
 import navPaths from "@sparcs-clubs/web/constants/nav";
 
+import MobileNavMenu from "../NavTools/MobileNavMenu";
 import Login from "./_atomic/Login";
 import Logo from "./_atomic/Logo";
-import MobileNavMenu from "../NavTools/MobileNavMenu";
 
 const IdentityBar = styled.div`
   position: relative;
@@ -79,7 +79,12 @@ const Header: React.FC = () => {
         </Menu>
         <StyledNavList highlight keys={navPaths.header} />
       </NavInner>
-      {isMobileMenuVisible && <MobileNavMenu keys={navPaths.header} />}
+      {isMobileMenuVisible && (
+        <MobileNavMenu
+          keys={navPaths.header}
+          onClose={() => setIsMobileMenuVisible(!isMobileMenuVisible)}
+        />
+      )}
     </HeaderInner>
   );
 };

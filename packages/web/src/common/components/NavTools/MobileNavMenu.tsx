@@ -4,14 +4,16 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 import paths, { Paths } from "@sparcs-clubs/web/constants/paths";
+import { usePathname } from "next/navigation";
 
-import MobileNavItem from "./MobileNavItem";
-import Icon from "../Icon";
 import Button from "../Button";
+import Icon from "../Icon";
+import MobileNavItem from "./MobileNavItem";
 
 type MobileNavMenuProps = {
   className?: string;
   keys: (keyof Paths)[];
+  onClose: VoidFunction;
 };
 
 type Path = {
@@ -24,13 +26,17 @@ const MobileNavMenuInner = styled.div`
   position: absolute;
   display: flex;
   width: 100%;
-  min-height: calc(100vh - 105px - 40px);
+  min-height: calc(100vh - 105px);
   padding: 16px;
   flex-direction: column;
   justify-content: flex-start;
   gap: 8px;
 
   background: ${({ theme }) => theme.colors.BACKGROUND};
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xs}) {
+    display: none;
+  }
 `;
 
 const MobileSubMenuInner = styled.div`
@@ -50,9 +56,10 @@ const LoginButton = styled(Button)`
 const MobileNavMenu: React.FC<MobileNavMenuProps> = ({
   className = "",
   keys,
+  onClose,
 }) => {
   const [selectedMenu, setSelectedMenu] = useState<keyof Paths | null>(null);
-  const [selectedSubMenu, setSelectedSubMenu] = useState<string>();
+  const currentPath = usePathname();
 
   const isSelected = (key: keyof Paths) => selectedMenu === key;
 
@@ -72,7 +79,6 @@ const MobileNavMenu: React.FC<MobileNavMenuProps> = ({
                   setSelectedMenu(null);
                 } else {
                   setSelectedMenu(key);
-                  setSelectedSubMenu(subPath?.at(0)?.name);
                 }
               }}
             />
@@ -84,8 +90,8 @@ const MobileNavMenu: React.FC<MobileNavMenuProps> = ({
                     key={name}
                     name={name}
                     path={path}
-                    highlight={selectedSubMenu === name}
-                    onClick={() => setSelectedSubMenu(name)}
+                    highlight={currentPath === path}
+                    onClick={onClose}
                   />
                 ))}
               </MobileSubMenuInner>
