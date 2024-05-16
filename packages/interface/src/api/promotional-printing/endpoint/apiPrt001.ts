@@ -14,9 +14,7 @@ import {
 const url = () => `/student/promotional-printings/orders`;
 const method = "GET";
 
-const requestParam = z.object({
-  clubId: z.number().int().min(1),
-});
+const requestParam = z.object({});
 
 const requestQuery = z.object({
   clubId: z.number().min(1),
@@ -32,7 +30,7 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     items: z.array(
       z.object({
-        orderId: z.number().int().min(1),
+        id: z.number().int().min(1),
         studentName: z.string(),
         status: z.nativeEnum(PromotionalPrintingOrderStatusEnum),
         orders: z.array(
