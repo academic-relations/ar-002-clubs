@@ -9,7 +9,7 @@ import {
 export const User = mysqlTable("user", {
   id: int("id").autoincrement().primaryKey(),
   sid: varchar("sid", { length: 30 }).unique(),
-  name: varchar("name", { length: 255 }),
+  name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }),
   phoneNumber: varchar("phone_number", { length: 255 }),
   createdAt: timestamp("created_at").defaultNow(),
@@ -19,9 +19,10 @@ export const User = mysqlTable("user", {
 
 export const Student = mysqlTable("student", {
   id: int("id").autoincrement().primaryKey(),
-  userId: int("user_id")
-    .notNull()
-    .references(() => User.id),
+  userId: int("user_id").references(() => User.id),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }),
+  phoneNumber: varchar("phone_number", { length: 255 }),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
@@ -44,12 +45,13 @@ export const StudentT = mysqlTable("student_t", {
 
 export const Executive = mysqlTable("executive", {
   id: int("id").autoincrement().primaryKey(),
-  userId: int("user_id")
-    .notNull()
-    .references(() => User.id),
+  userId: int("user_id").references(() => User.id),
   studentId: int("student_id")
     .notNull()
     .references(() => Student.id),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }),
+  phoneNumber: varchar("phone_number", { length: 255 }),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
@@ -85,9 +87,10 @@ export const ExecutiveT = mysqlTable("executive_t", {
 
 export const Professor = mysqlTable("professor", {
   id: int("id").autoincrement().primaryKey(),
-  userId: int("user_id")
-    .notNull()
-    .references(() => User.id),
+  userId: int("user_id").references(() => User.id),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }),
+  phoneNumber: varchar("phone_number", { length: 255 }),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
@@ -107,9 +110,11 @@ export const ProfessorT = mysqlTable("professor_t", {
 
 export const Employee = mysqlTable("employee", {
   id: int("id").autoincrement().primaryKey(),
-  userId: int("user_id")
-    .notNull()
-    .references(() => User.id),
+  userId: int("user_id").references(() => User.id),
+
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }),
+  phoneNumber: varchar("phone_number", { length: 255 }),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
