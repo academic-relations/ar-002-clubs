@@ -10,4 +10,4 @@ import { PromotionalPrintingService } from "./service/promotional-printing.servi
   controllers: [PromotionalPrintingController],
   providers: [PromotionalPrintingService, PromotionalPrintingRepository],
 })
-export class NoticeModule {}
+export class PromotionalPrintingModule {}

@@ -1,7 +1,7 @@
 import { Injectable, Inject } from "@nestjs/common";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { and, count, desc, eq, gte, lte } from "drizzle-orm";
-import { Student, User } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import {
   PromotionalPrintingOrder,
   PromotionalPrintingOrderSize,
@@ -48,7 +48,7 @@ export class PromotionalPrintingRepository {
     const orders = await this.db
       .select({
         id: PromotionalPrintingOrder.id,
-        studentName: User.name,
+        studentName: Student.name,
         status: PromotionalPrintingOrder.promotionalPrintingOrderStatusEnum,
         desiredPickUpDate: PromotionalPrintingOrder.desiredPickUpTime,
         pickUpTime: PromotionalPrintingOrder.pickUpAt,
@@ -56,7 +56,6 @@ export class PromotionalPrintingRepository {
       })
       .from(PromotionalPrintingOrder)
       .leftJoin(Student, eq(PromotionalPrintingOrder.studentId, Student.id))
-      .leftJoin(User, eq(Student.userId, User.id))
       .where(
         and(
           startDate !== undefined

@@ -4,6 +4,7 @@ import {
   varchar,
   boolean,
   datetime,
+  index,
   text,
   timestamp,
 } from "drizzle-orm/mysql-core";
@@ -12,7 +13,7 @@ import { Club } from "./club.schema";
 import { StudentT } from "./user.schema";
 
 export const PromotionalPrintingOrderStatusEnum = mysqlTable(
-  "PromotionalPrintingOrderStatusEnum",
+  "promotional_printing_order_status_enum",
   {
     id: int("id").autoincrement().primaryKey(),
     statusName: varchar("status_name", { length: 30 }),
@@ -23,7 +24,7 @@ export const PromotionalPrintingOrderStatusEnum = mysqlTable(
 );
 
 export const PromotionalPrintingSizeEnum = mysqlTable(
-  "PromotionalPrintingOrderStatusEnum",
+  "promotional_printing_size_enum",
   {
     id: int("id").autoincrement().primaryKey(),
     statusName: varchar("printing_size", { length: 30 }),
@@ -34,49 +35,64 @@ export const PromotionalPrintingSizeEnum = mysqlTable(
 );
 
 // PromotionalPrintingOrder 테이블 정의
-export const PromotionalPrintingOrder = mysqlTable("PromotionalPrintingOrder", {
-  id: int("id").autoincrement().primaryKey(),
-  clubId: int("club_id")
-    .notNull()
-    .references(() => Club.id),
-  studentId: int("student_id")
-    .notNull()
-    .references(() => StudentT.id),
-  studentPhoneNumber: varchar("student_phone_number", { length: 30 }),
-  promotionalPrintingOrderStatusEnum: int(
-    "promotional_printing_order_status_enum",
-  )
-    .notNull()
-    .references(() => PromotionalPrintingOrderStatusEnum.id),
-  documentFileLink: text("document_file_link"),
-  isColorPrint: boolean("is_color_print").default(true).notNull(),
-  fitPrintSizeToPaper: boolean("fit_print_size_to_paper")
-    .default(true)
-    .notNull(),
-  requireMarginChopping: boolean("require_margin_chopping")
-    .default(false)
-    .notNull(),
-  numberOfPrints: int("number_of_prints").notNull(),
-  desiredPickUpTime: datetime("desired_pick_up_time").notNull(),
-  pickUpAt: datetime("pick_up_at"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
-  deletedAt: timestamp("deleted_at"),
-});
-
-export const PromotionalPrintingOrderSize = mysqlTable(
-  "PromotionalPrintingOrderSize",
+export const PromotionalPrintingOrder = mysqlTable(
+  "promotional_printing_order",
   {
     id: int("id").autoincrement().primaryKey(),
-    promotionalPrintingOrderId: int("promotional_printing_order_id")
+    clubId: int("club_id")
       .notNull()
-      .references(() => PromotionalPrintingOrder.id),
-    promotionalPrintingSizeEnumId: int("promotional_printing_size_enum_id")
+      .references(() => Club.id),
+    studentId: int("student_id")
       .notNull()
-      .references(() => PromotionalPrintingSizeEnum.id),
+      .references(() => StudentT.id),
+    studentPhoneNumber: varchar("student_phone_number", { length: 30 }),
+    promotionalPrintingOrderStatusEnum: int(
+      "promotional_printing_order_status_enum",
+    ).notNull(),
+    // .references(() => PromotionalPrintingOrderStatusEnum.id),
+    documentFileLink: text("document_file_link"),
+    isColorPrint: boolean("is_color_print").default(true).notNull(),
+    fitPrintSizeToPaper: boolean("fit_print_size_to_paper")
+      .default(true)
+      .notNull(),
+    requireMarginChopping: boolean("require_margin_chopping")
+      .default(false)
+      .notNull(),
+    numberOfPrints: int("number_of_prints").notNull(),
+    desiredPickUpTime: datetime("desired_pick_up_time").notNull(),
+    pickUpAt: datetime("pick_up_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    promotionalPrintingOrderStatusEnumIdFk: index(
+      "pp_order_pp_order_status_enum_id_fk",
+    ).on(table.promotionalPrintingOrderStatusEnum),
+  }),
+);
+
+export const PromotionalPrintingOrderSize = mysqlTable(
+  "promotional_printing_order_size",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    promotionalPrintingOrderId: int("promotional_printing_order_id").notNull(),
+    // .references(() => PromotionalPrintingOrder.id),
+    promotionalPrintingSizeEnumId: int(
+      "promotional_printing_size_enum_id",
+    ).notNull(),
+    // .references(() => PromotionalPrintingSizeEnum.id),
     numberOfPrints: int("number_of_prints").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
     deletedAt: timestamp("deleted_at"),
   },
+  table => ({
+    promotionalPrintingOrderIdFk: index("pp_order_size_pp_order_id_fk").on(
+      table.promotionalPrintingOrderId,
+    ),
+    promotionalPrintingSizeEnumIdFk: index(
+      "pp_order_size_pp_size_enum_id_fk",
+    ).on(table.promotionalPrintingSizeEnumId),
+  }),
 );

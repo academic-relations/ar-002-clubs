@@ -27,11 +27,11 @@ export class PromotionalPrintingController {
     // TODO: qeury param을 validation해주는 미들웨어?가 아직 없어 수동으로 validation을 수행하고 있습니다.
     // 생기고 나면 교체해줄것
     const query: ApiPrt001RequestQuery = apiPrt001.requestQuery.parse({
-      clubId,
-      startDate,
-      endDate,
-      pageOffset,
-      itemCount,
+      clubId: Number(clubId),
+      startDate: startDate === undefined ? undefined : new Date(startDate),
+      endDate: endDate === undefined ? undefined : new Date(endDate),
+      pageOffset: Number(pageOffset),
+      itemCount: Number(itemCount),
     });
 
     // console.log(

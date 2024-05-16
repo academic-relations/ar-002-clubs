@@ -41,7 +41,11 @@ export class PromotionalPrintingService {
       })),
     );
 
-    if (!numberOfOrders || !orders || !ordersWithSizes) {
+    if (
+      numberOfOrders === undefined ||
+      orders === undefined ||
+      ordersWithSizes === undefined
+    ) {
       throw new HttpException(
         "[getStudentPromotionalPrintingsOrders] Error occurs while getting orders",
         HttpStatus.NOT_FOUND,
