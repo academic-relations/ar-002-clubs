@@ -3,4 +3,10 @@ enum CommonSpaceEnum {
   NotUsed,
 }
 
-export { CommonSpaceEnum };
+enum CommonSpaceUsageOrderStatusEnum {
+  Applied, // 신청
+  Used, // 사용
+  Canceled, // 취소
+}
+
+export { CommonSpaceEnum, CommonSpaceUsageOrderStatusEnum };

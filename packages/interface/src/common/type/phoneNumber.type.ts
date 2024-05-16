@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const krPhoneNumberRegex = /^010-(\d{4})-(\d{4})$/;
 
-const zKrPhoneNumber = z.custom<`${number}-${number}-${number}`>(val =>
+const zKrPhoneNumber = z.custom<string>(val =>
   typeof val === "string" ? krPhoneNumberRegex.test(val) : false,
 );
 
