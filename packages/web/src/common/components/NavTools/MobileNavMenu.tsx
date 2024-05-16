@@ -90,7 +90,7 @@ const MobileNavMenu: React.FC<MobileNavMenuProps> = ({
                     key={name}
                     name={name}
                     path={path}
-                    highlight={currentPath === path}
+                    highlight={!!path && currentPath.includes(path)}
                     onClick={onClose}
                   />
                 ))}
