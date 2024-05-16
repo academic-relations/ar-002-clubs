@@ -39,6 +39,7 @@ const MemberSearchAndFilter: React.FC<
 }) => {
   const handleReset = () => {
     setSelectedSemesters(semesters);
+    handleChange("");
   };
   return (
     <MemberSearchAndFilterWrapper>
