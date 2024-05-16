@@ -12,6 +12,7 @@ interface AllMemberListProps {
     email: string;
     phoneNumber?: string;
   }[];
+  searchText?: string;
 }
 
 const AllMemberListWrapper = styled.div`
@@ -48,10 +49,18 @@ const TableRow = styled.div`
   gap: 0px;
 `;
 
-const AllMemberList: React.FC<AllMemberListProps> = ({ semester, members }) => {
+const AllMemberList: React.FC<AllMemberListProps> = ({
+  semester,
+  members,
+  searchText = "",
+}) => {
   const [toggle, setToggle] = useState<boolean>(false);
   const toggleHandler = () => setToggle(!toggle);
-  const memberCount = members.length;
+  const searchedMembers = members.filter(member =>
+    member.name.startsWith(searchText),
+  );
+
+  const memberCount = searchedMembers.length;
   return (
     <AllMemberListWrapper>
       <AllMemberListTitle>
@@ -98,7 +107,7 @@ const AllMemberList: React.FC<AllMemberListProps> = ({ semester, members }) => {
                 비고
               </TableCell>
             </TableRow>
-            {members
+            {searchedMembers
               .sort((a, b) => a.studentNumber - b.studentNumber)
               .map(member => (
                 <TableRow key={member.studentNumber}>

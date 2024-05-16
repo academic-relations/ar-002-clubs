@@ -1,6 +1,11 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import styled from "styled-components";
 import Icon from "./Icon";
+
+interface SearchInputProps {
+  searchText: string;
+  handleChange?: (value: string) => void;
+}
 
 const SerchInputWrapper = styled.div`
   display: flex;
@@ -36,12 +41,25 @@ const SeachInput = styled.input`
   }
 `;
 
-const SearchInput = () => (
-  <SerchInputWrapper>
-    <Icon type="search" size={20} />
-    <SeachInput placeholder="검색" />
-  </SerchInputWrapper>
-  //   TODO: SearchInput 기능 넣기
-);
+const SearchInput: React.FC<SearchInputProps> = ({
+  searchText,
+  handleChange = () => {},
+}) => {
+  const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    handleChange(inputValue);
+  };
+  return (
+    <SerchInputWrapper>
+      <Icon type="search" size={20} />
+      <SeachInput
+        value={searchText}
+        placeholder="검색"
+        onChange={handleValueChange}
+      />
+    </SerchInputWrapper>
+    //   TODO: SearchInput 기능 넣기
+  );
+};
 
 export default SearchInput;

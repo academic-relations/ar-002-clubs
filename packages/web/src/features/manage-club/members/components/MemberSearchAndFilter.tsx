@@ -25,10 +25,17 @@ const ResetButtonWrapper = styled.div`
   align-items: flex-end;
 `;
 
-const MemberSearchAndFilter: React.FC<SemesterListProps> = ({
+const MemberSearchAndFilter: React.FC<
+  SemesterListProps & {
+    searchText: string;
+    handleChange: (value: string) => void;
+  }
+> = ({
   semesters,
   selectedSemesters,
   setSelectedSemesters,
+  searchText,
+  handleChange,
 }) => {
   const handleReset = () => {
     setSelectedSemesters(semesters);
@@ -36,7 +43,7 @@ const MemberSearchAndFilter: React.FC<SemesterListProps> = ({
   return (
     <MemberSearchAndFilterWrapper>
       <SearchAndFilterWrapper>
-        <SearchInput />
+        <SearchInput searchText={searchText} handleChange={handleChange} />
         <Filter
           semesters={semesters}
           selectedSemesters={selectedSemesters}
@@ -47,9 +54,8 @@ const MemberSearchAndFilter: React.FC<SemesterListProps> = ({
         <TextButton
           text="검색/필터 초기화"
           onClick={handleReset}
-          disabled={semesters === selectedSemesters}
+          disabled={semesters === selectedSemesters && searchText === ""}
         />
-        {/* TODO: 검색어 있는지 여부 확인 */}
       </ResetButtonWrapper>
     </MemberSearchAndFilterWrapper>
   );
