@@ -3,7 +3,10 @@ import { StudentT } from "src/drizzle/schema/user.schema";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { eq } from "drizzle-orm";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-import { ActivityCertificate } from "src/drizzle/schema/activity-certificate.schema";
+import {
+  ActivityCertificate,
+  ActivityCertificateItem,
+} from "src/drizzle/schema/activity-certificate.schema";
 
 @Injectable()
 export class ActivityCertificateRepository {
@@ -14,11 +17,13 @@ export class ActivityCertificateRepository {
     studentNumber,
     studentPhoneNumber,
     issuedNumber,
+    items,
   }: {
     clubId: number;
     studentNumber: number;
     studentPhoneNumber: string;
     issuedNumber: number;
+    items: { startMonth: Date; endMonth: Date; detail: string }[];
   }) {
     const students = await this.db
       .select()
@@ -35,6 +40,15 @@ export class ActivityCertificateRepository {
       issueNumber: issuedNumber,
       activityCertificateStatusEnum: 1,
     });
-    return result[0].insertId;
+
+    items.forEach(item => {
+      this.db.insert(ActivityCertificateItem).values({
+        activityCertificateId: result[0].insertId,
+        order: items.indexOf(item),
+        startMonth: item.startMonth,
+        endMonth: item.endMonth,
+        detail: item.detail,
+      });
+    });
   }
 }
