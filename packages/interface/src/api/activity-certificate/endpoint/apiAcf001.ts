@@ -1,3 +1,4 @@
+import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
@@ -16,7 +17,7 @@ const requestQuery = z.object({});
 const requestBody = z.object({
   clubId: z.number().int().min(1),
   studentNumber: z.number().int(),
-  krPhoneNumber: z.string(),
+  studentPhoneNumber: zKrPhoneNumber,
   issuedNumber: z.number().int().min(1),
   items: z
     .object({
