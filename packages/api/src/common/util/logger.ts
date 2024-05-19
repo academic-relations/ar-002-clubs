@@ -84,9 +84,9 @@ const logger =
       })
     : // "development", "test" 환경에서 사용되는 Logger 객체
       createLogger({
-        level: "info",
+        level: "debug",
         format: colorizedFormat,
-        defaultMeta: { service: "biseo" },
+        defaultMeta: { service: "clubs" },
         transports: [new transports.Console()],
         exceptionHandlers: [new transports.Console()],
       });
