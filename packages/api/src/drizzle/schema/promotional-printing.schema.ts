@@ -58,7 +58,6 @@ export const PromotionalPrintingOrder = mysqlTable(
     requireMarginChopping: boolean("require_margin_chopping")
       .default(false)
       .notNull(),
-    numberOfPrints: int("number_of_prints").notNull(),
     desiredPickUpTime: datetime("desired_pick_up_time").notNull(),
     pickUpAt: datetime("pick_up_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),

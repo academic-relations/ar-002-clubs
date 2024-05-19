@@ -14,25 +14,29 @@ const url = (clubId: string) =>
 const method = "POST";
 
 const requestParam = z.object({
-  clubId: z.number(),
+  clubId: z.coerce.number().int().min(1),
 });
 
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  documentFileLink: z.string().max(512),
+  documentFileLink: z.coerce.string(),
   krPhoneNumber: zKrPhoneNumber, // 예시에 따라서 유효성 검사를 위한 정확한 패턴을 추가해야 합니다.
   orders: z
     .object({
-      promotionalPrintingSizeEnum: z.nativeEnum(PromotionalPrintingSizeEnum),
+      promotionalPrintingSizeEnum: z.coerce
+        .number()
+        .int()
+        .min(1)
+        .pipe(z.nativeEnum(PromotionalPrintingSizeEnum)),
       numberOfPrints: z.number().min(0), // 음수를 허용하지 않는 것으로 변경하고 있습니다.
     })
     .array(),
-  isColorPrint: z.boolean(),
-  fitPrintSizeToPaper: z.boolean(),
-  requireMarginChopping: z.boolean(),
-  printingPurpose: z.string().max(512),
-  desiredPickUpTime: z.date(), // datetime 유형에 대한 유효성 검사를 추가해야 합니다.
+  isColorPrint: z.coerce.boolean(),
+  fitPrintSizeToPaper: z.coerce.boolean(),
+  requireMarginChopping: z.coerce.boolean(),
+  printingPurpose: z.coerce.string().max(512),
+  desiredPickUpTime: z.coerce.date(),
 });
 
 const responseBodyMap = {

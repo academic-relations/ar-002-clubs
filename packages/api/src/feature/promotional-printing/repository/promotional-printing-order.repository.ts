@@ -2,10 +2,20 @@ import { Injectable, Inject } from "@nestjs/common";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { and, count, desc, eq, gte, lte } from "drizzle-orm";
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
-import { PromotionalPrintingOrder } from "src/drizzle/schema/promotional-printing.schema";
+import {
+  PromotionalPrintingOrder,
+  PromotionalPrintingOrderSize,
+} from "src/drizzle/schema/promotional-printing.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
-import type { GetStudentPromotionalPrintingsOrdersReturn } from "../dto/promotional-printing.dto";
+import { PromotionalPrintingOrderStatusEnum as Status } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
+
+import logger from "@sparcs-clubs/api/common/util/logger";
+
+import type {
+  GetStudentPromotionalPrintingsOrdersReturn,
+  PostStudentPromotionalPrintingsOrderParam,
+} from "../dto/promotional-printing.dto";
 
 @Injectable()
 export class PromotionalPrintingOrderRepository {
@@ -52,6 +62,7 @@ export class PromotionalPrintingOrderRepository {
       .leftJoin(Student, eq(PromotionalPrintingOrder.studentId, Student.id))
       .where(
         and(
+          eq(PromotionalPrintingOrder.clubId, clubId),
           startDate !== undefined
             ? gte(PromotionalPrintingOrder.createdAt, startDate)
             : undefined,
@@ -65,5 +76,56 @@ export class PromotionalPrintingOrderRepository {
       .offset(startIndex - 1);
 
     return orders;
+  }
+
+  async postStudentPromotionalPrintingsOrder(
+    parameter: PostStudentPromotionalPrintingsOrderParam,
+  ) {
+    // 트랜잭션에 실패했을 경우의 에러 핸들링을 어떻게 하는것이 좋을까요?
+    await this.db.transaction(async tx => {
+      const [orderInsertResult] = await tx
+        .insert(PromotionalPrintingOrder)
+        .values({
+          clubId: parameter.clubId,
+          // 아직 인증 구현이 안되어서 임의의값을 집어넣은 상태입니다
+          studentId: 1,
+          studentPhoneNumber: parameter.krPhoneNumber,
+          promotionalPrintingOrderStatusEnum: Status.Applied,
+          documentFileLink: parameter.documentFileLink,
+          isColorPrint: parameter.isColorPrint,
+          fitPrintSizeToPaper: parameter.fitPrintSizeToPaper,
+          requireMarginChopping: parameter.requireMarginChopping,
+          desiredPickUpTime: parameter.desiredPickUpTime,
+        });
+      if (orderInsertResult.affectedRows !== 1) {
+        logger.debug("[postStudentPromotionalPrintingsOrder] rollback occurs");
+        tx.rollback();
+      }
+
+      logger.debug(
+        `[postStudentPromotionalPrintingsOrder] PromotionalPrintingOrder inserted with id ${orderInsertResult.insertId}`,
+      );
+
+      parameter.orders.forEach(async order => {
+        const [sizeInsertResult] = await tx
+          .insert(PromotionalPrintingOrderSize)
+          .values({
+            promotionalPrintingOrderId: orderInsertResult.insertId,
+            promotionalPrintingSizeEnumId: order.promotionalPrintingSizeEnum,
+            numberOfPrints: order.numberOfPrints,
+          });
+        if (sizeInsertResult.affectedRows !== 1) {
+          logger.debug(
+            "[postStudentPromotionalPrintingsOrder] rollback occurs",
+          );
+          tx.rollback();
+        }
+      });
+    });
+    logger.debug(
+      "[postStudentPromotionalPrintingsOrder] insertion ends successfully",
+    );
+
+    return {};
   }
 }
