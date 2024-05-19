@@ -11,14 +11,17 @@ export class ActivityCertificateService {
   ) {}
 
   async postActivityCertificate(body: ApiAcf001RequestBody) {
-    await this.activityCertificateRepository.create({
-      clubId: body.clubId,
-      studentId: body.studentNumber,
-      // TODO: studentNumber 이용해서 studentId를 가져오기
-      studentPhoneNumber: body.studentPhoneNumber,
-      issuedNumber: body.issuedNumber,
-    });
-    await this.activityCertificateItemRepository.create({
+    // TODO: transaction 추가
+    const activityCertificateId =
+      await this.activityCertificateRepository.postActivityCertificate({
+        clubId: body.clubId,
+        studentNumber: body.studentNumber,
+        studentPhoneNumber: body.studentPhoneNumber,
+        issuedNumber: body.issuedNumber,
+      });
+
+    await this.activityCertificateItemRepository.postActivityCertificate({
+      activityCertificateId,
       items: body.items,
     });
   }
