@@ -1,5 +1,6 @@
-import { Controller, Post, Body } from "@nestjs/common";
-import {
+import { Controller, Post, Body, UsePipes } from "@nestjs/common";
+import { ZodPipe } from "@sparcs-clubs/api/common/pipes/zod-pipe";
+import apiAcf001, {
   ApiAcf001RequestBody,
   ApiAcf001ResponseCreated,
 } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf001";
@@ -13,6 +14,7 @@ export class ActivityCertificateController {
 
   // TODO: Implement zod validation
   @Post("/student/activity-certificates/activity-certificate")
+  @UsePipes(new ZodPipe(apiAcf001))
   async postActivityCertificate(
     @Body() body: ApiAcf001RequestBody,
   ): Promise<ApiAcf001ResponseCreated> {
