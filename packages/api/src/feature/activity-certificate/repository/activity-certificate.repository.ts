@@ -1,7 +1,5 @@
 import { Injectable, Inject } from "@nestjs/common";
-import { StudentT } from "src/drizzle/schema/user.schema";
 import { MySql2Database } from "drizzle-orm/mysql2";
-import { eq } from "drizzle-orm";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
   ActivityCertificate,
@@ -14,26 +12,18 @@ export class ActivityCertificateRepository {
 
   async postActivityCertificate({
     clubId,
-    studentNumber,
+    studentId,
     studentPhoneNumber,
     issuedNumber,
     items,
   }: {
     clubId: number;
-    studentNumber: number;
+    studentId: number;
     studentPhoneNumber: string;
     issuedNumber: number;
     items: { startMonth: Date; endMonth: Date; detail: string }[];
   }) {
     await this.db.transaction(async tx => {
-      const students = await tx
-        .select()
-        .from(StudentT)
-        .where(eq(StudentT.number, studentNumber));
-      const student = students[0];
-
-      const { studentId } = student;
-
       const result = await tx.insert(ActivityCertificate).values({
         clubId,
         studentId,
@@ -42,8 +32,8 @@ export class ActivityCertificateRepository {
         activityCertificateStatusEnum: 1,
       });
 
-      items.forEach(item => {
-        tx.insert(ActivityCertificateItem).values({
+      items.forEach(async item => {
+        await tx.insert(ActivityCertificateItem).values({
           activityCertificateId: result[0].insertId,
           order: items.indexOf(item),
           startMonth: item.startMonth,

@@ -11,7 +11,7 @@ export class ActivityCertificateService {
   async postActivityCertificate(body: ApiAcf001RequestBody) {
     await this.activityCertificateRepository.postActivityCertificate({
       clubId: body.clubId,
-      studentNumber: body.studentNumber,
+      studentId: 1, // TODO: 실제 studentId 적용
       studentPhoneNumber: body.studentPhoneNumber,
       issuedNumber: body.issuedNumber,
       items: body.items,
