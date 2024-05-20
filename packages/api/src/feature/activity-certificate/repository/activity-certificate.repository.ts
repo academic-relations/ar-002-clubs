@@ -25,29 +25,31 @@ export class ActivityCertificateRepository {
     issuedNumber: number;
     items: { startMonth: Date; endMonth: Date; detail: string }[];
   }) {
-    const students = await this.db
-      .select()
-      .from(StudentT)
-      .where(eq(StudentT.number, studentNumber));
-    const student = students[0];
+    await this.db.transaction(async tx => {
+      const students = await tx
+        .select()
+        .from(StudentT)
+        .where(eq(StudentT.number, studentNumber));
+      const student = students[0];
 
-    const { studentId } = student;
+      const { studentId } = student;
 
-    const result = await this.db.insert(ActivityCertificate).values({
-      clubId,
-      studentId,
-      studentPhoneNumber,
-      issueNumber: issuedNumber,
-      activityCertificateStatusEnum: 1,
-    });
+      const result = await tx.insert(ActivityCertificate).values({
+        clubId,
+        studentId,
+        studentPhoneNumber,
+        issueNumber: issuedNumber,
+        activityCertificateStatusEnum: 1,
+      });
 
-    items.forEach(item => {
-      this.db.insert(ActivityCertificateItem).values({
-        activityCertificateId: result[0].insertId,
-        order: items.indexOf(item),
-        startMonth: item.startMonth,
-        endMonth: item.endMonth,
-        detail: item.detail,
+      items.forEach(item => {
+        tx.insert(ActivityCertificateItem).values({
+          activityCertificateId: result[0].insertId,
+          order: items.indexOf(item),
+          startMonth: item.startMonth,
+          endMonth: item.endMonth,
+          detail: item.detail,
+        });
       });
     });
   }
