@@ -38,9 +38,8 @@ const getStatusDetails = (status: number): StatusDetail => {
   }
 };
 
-const formatDate = (date: Date) => {
+const formatDate = (date: Date) =>
   format(date, "yyyy년 M월 d일 (iii)", { locale: ko });
-};
 
 const ActivityReportTable: React.FC<ActivityTableProps> = ({
   activityList,
