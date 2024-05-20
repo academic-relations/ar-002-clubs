@@ -22,7 +22,7 @@ export interface Activity {
 
 export interface Funding {
   id: number;
-  status: string;
+  status: number;
   name: string;
   itemName: string;
   requestedAmount: number;
@@ -38,6 +38,13 @@ export interface Members {
   phoneNumber: string;
   email: string;
   memo?: string;
+}
+
+export enum FundingStatusEnum {
+  Writing = 1, // 작성 중
+  Applied, // 신청
+  Approved, // 승인
+  Rejected, // 반려
 }
 
 const mockupManageMems: Members[] = [
@@ -92,7 +99,7 @@ const mockupManageMems: Members[] = [
 const mockupManageFunding: Funding[] = [
   {
     id: 1,
-    status: "작성 중",
+    status: 1,
     name: "개발개발한 어떠한 활동",
     itemName: "모니터",
     requestedAmount: 300000,
@@ -100,7 +107,7 @@ const mockupManageFunding: Funding[] = [
   },
   {
     id: 2,
-    status: "작성 중",
+    status: 1,
     name: "개발개발한 어떠한 활동",
     itemName: "모니터",
     requestedAmount: 300000,
@@ -108,7 +115,7 @@ const mockupManageFunding: Funding[] = [
   },
   {
     id: 3,
-    status: "신청 완료",
+    status: 2,
     name: "개발개발한 어떠한 활동",
     itemName: "모니터",
     requestedAmount: 300000,
@@ -116,7 +123,7 @@ const mockupManageFunding: Funding[] = [
   },
   {
     id: 4,
-    status: "신청 반려",
+    status: 4,
     name: "개발개발한 어떠한 활동",
     itemName: "모니터",
     requestedAmount: 300000,
@@ -124,7 +131,7 @@ const mockupManageFunding: Funding[] = [
   },
   {
     id: 5,
-    status: "승인 완료",
+    status: 3,
     name: "개발개발한 어떠한 활동",
     itemName: "모니터",
     requestedAmount: 300000,
@@ -132,7 +139,7 @@ const mockupManageFunding: Funding[] = [
   },
   {
     id: 6,
-    status: "승인 완료",
+    status: 3,
     name: "2024년도 봄학기 MT",
     itemName: "모니터",
     requestedAmount: 300000,
