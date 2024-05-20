@@ -8,7 +8,7 @@ import {
 import Tag, { TagColor } from "@sparcs-clubs/web/common/components/Tag";
 
 import {
-  FundingStatusEnum,
+  ActivityStatusEnum,
   type Funding,
 } from "../service/_mock/mockManageClub";
 
@@ -23,13 +23,13 @@ interface StatusDetail {
 
 const getStatusDetails = (status: number): StatusDetail => {
   switch (status) {
-    case FundingStatusEnum.Writing:
+    case ActivityStatusEnum.Writing:
       return { text: "작성 중", color: "BLUE" };
-    case FundingStatusEnum.Applied:
+    case ActivityStatusEnum.Applied:
       return { text: "신청 완료", color: "PURPLE" };
-    case FundingStatusEnum.Approved:
+    case ActivityStatusEnum.Approved:
       return { text: "승인 완료", color: "GREEN" };
-    case FundingStatusEnum.Rejected:
+    case ActivityStatusEnum.Rejected:
       return { text: "신청 반려", color: "RED" };
     default:
       return { text: "None", color: "GRAY" };

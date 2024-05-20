@@ -13,7 +13,7 @@ import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/
 
 export interface Activity {
   id: number;
-  status: string;
+  status: number;
   name: string;
   type: string;
   startDate: Date;
@@ -40,7 +40,7 @@ export interface Members {
   memo?: string;
 }
 
-export enum FundingStatusEnum {
+export enum ActivityStatusEnum {
   Writing = 1, // 작성 중
   Applied, // 신청
   Approved, // 승인
@@ -150,7 +150,7 @@ const mockupManageFunding: Funding[] = [
 const mockupManageReport: Activity[] = [
   {
     id: 1,
-    status: "작성 중",
+    status: 1,
     name: "개발개발한 어떠한 활동",
     type: "동아리 성격에 합치하는 내부 활동",
     startDate: new Date("2024-03-11"),
@@ -158,7 +158,7 @@ const mockupManageReport: Activity[] = [
   },
   {
     id: 2,
-    status: "신청 완료",
+    status: 2,
     name: "개발개발한 어떠한 활동",
     type: "동아리 성격에 합치하는 내부 활동",
     startDate: new Date("2024-03-11"),
@@ -166,7 +166,7 @@ const mockupManageReport: Activity[] = [
   },
   {
     id: 3,
-    status: "신청 완료",
+    status: 2,
     name: "개발개발한 어떠한 활동",
     type: "동아리 성격에 합치하는 외부 활동",
     startDate: new Date("2024-03-11"),
@@ -174,7 +174,7 @@ const mockupManageReport: Activity[] = [
   },
   {
     id: 4,
-    status: "신청 반려",
+    status: 4,
     name: "개발개발한 어떠한 활동",
     type: "동아리 성격에 합치하는 외부 활동",
     startDate: new Date("2024-03-11"),
@@ -182,7 +182,7 @@ const mockupManageReport: Activity[] = [
   },
   {
     id: 5,
-    status: "승인 완료",
+    status: 3,
     name: "개발개발한 어떠한 활동",
     type: "동아리 성격에 합치하는 내부 활동",
     startDate: new Date("2024-03-11"),
@@ -190,7 +190,7 @@ const mockupManageReport: Activity[] = [
   },
   {
     id: 6,
-    status: "승인 완료",
+    status: 3,
     name: "2024년도 봄학기 MT",
     type: "동아리 성격에 합치하지 않는 활동",
     startDate: new Date("2024-03-11"),
