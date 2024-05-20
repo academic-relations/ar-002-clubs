@@ -23,6 +23,7 @@ export class ActivityCertificateRepository {
     issuedNumber: number;
     items: { startMonth: Date; endMonth: Date; detail: string }[];
   }) {
+    // TODO: transaction 실패했을 때 에러핸들링
     await this.db.transaction(async tx => {
       const result = await tx.insert(ActivityCertificate).values({
         clubId,
