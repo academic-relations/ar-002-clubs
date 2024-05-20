@@ -10,7 +10,6 @@ import { RentalService } from "../service/rental.service";
 export class RentalController {
   constructor(private readonly rentalService: RentalService) {}
 
-  // TODO: Implement zod validation
   @Get("/rentals/objects/available")
   @UsePipes(new ZodPipe(apiRnt001))
   async getRentalsObjectsAvailable(
