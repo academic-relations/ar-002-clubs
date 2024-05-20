@@ -11,7 +11,7 @@ import {
 } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
 
-interface Activity {
+export interface Activity {
   id: number;
   status: string;
   name: string;
@@ -20,7 +20,7 @@ interface Activity {
   endDate: Date;
 }
 
-interface Funding {
+export interface Funding {
   id: number;
   status: string;
   name: string;
@@ -29,7 +29,7 @@ interface Funding {
   approvedAmount: number | null;
 }
 
-interface Members {
+export interface Members {
   id: number;
   status: string;
   applicationDate: Date;
@@ -459,7 +459,7 @@ const mockupManageCms: ApiCms006ResponseOk = {
   offset: 1,
 };
 
-export default {
+export {
   mockupManageReport,
   mockupManageFunding,
   mockupManageMems,

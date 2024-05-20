@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import MoreDetailTitle from "@sparcs-clubs/web/features/manage-club/component/MoreDetailTitle";
 import FundingTable from "@sparcs-clubs/web/features/manage-club/component/FundingTable";
+import { mockupManageFunding } from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
 
 const ActivityManageWrapper = styled.div`
   display: flex;
@@ -32,7 +33,7 @@ const ActivityManageFrame: React.FC = () => (
         moreDetail="내역 더보기"
         moreDetailPath="/manage-club/funding"
       />
-      <FundingTable />
+      <FundingTable fundingList={mockupManageFunding} />
     </SectionWrapper>
   </ActivityManageWrapper>
 );
