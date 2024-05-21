@@ -13,7 +13,7 @@ on:
 jobs:
   publish-docker-image:
     name: "Build and Publish Latest Docker Image"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
@@ -36,7 +36,7 @@ jobs:
         with:
           registry: "ghcr.io"
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ github.token }}
 
       - name: "Extract Metadata"
         id: meta
