@@ -1,4 +1,4 @@
-name: AR-002 Dev Push Stage
+name: AR-002 Main Push Demo
 
 permissions:
   contents: read
@@ -6,11 +6,11 @@ permissions:
 
 on:
   push:
-    branches: ["dev"]
+    branches: ["main"]
   workflow_call:
     secrets:
       WEBHOOK_ENDPOINT:
-        description: "The webhook endpoint to trigger the staging workflow"
+        description: "The webhook endpoint to trigger the demo workflow"
         required: true
 
 
@@ -24,9 +24,9 @@ jobs:
       matrix:
         include:
           - dockerfile: ./.docker/dockerfile/web.Dockerfile
-            image: ghcr.io/academic-relations/ar-002-clubs-web-stage
+            image: ghcr.io/academic-relations/ar-002-clubs-web-demo
           - dockerfile: ./.docker/dockerfile/api.Dockerfile
-            image: ghcr.io/academic-relations/ar-002-clubs-api-stage
+            image: ghcr.io/academic-relations/ar-002-clubs-api-demo
 
     steps:
       - name: Checkout code
