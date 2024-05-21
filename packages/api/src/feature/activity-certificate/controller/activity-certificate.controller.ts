@@ -18,7 +18,7 @@ export class ActivityCertificateController {
   async postActivityCertificate(
     @Body() body: ApiAcf001RequestBody,
   ): Promise<ApiAcf001ResponseCreated> {
-    this.activityCertificateService.postActivityCertificate(body);
+    await this.activityCertificateService.postActivityCertificate(body);
     return {};
   }
 }
