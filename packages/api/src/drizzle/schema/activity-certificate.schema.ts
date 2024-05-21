@@ -17,7 +17,7 @@ export const ActivityCertificateStatusEnum = mysqlTable(
     id: int("id").autoincrement().primaryKey(),
     statusName: varchar("status_name", { length: 30 }).notNull(),
     createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at"),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
     deletedAt: timestamp("deleted_at"),
   },
 );
