@@ -12,7 +12,6 @@ export class ActivityCertificateController {
     private readonly activityCertificateService: ActivityCertificateService,
   ) {}
 
-  // TODO: Implement zod validation
   @Post("/student/activity-certificates/activity-certificate")
   @UsePipes(new ZodPipe(apiAcf001))
   async postActivityCertificate(
