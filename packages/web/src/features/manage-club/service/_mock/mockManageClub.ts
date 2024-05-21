@@ -31,7 +31,7 @@ export interface Funding {
 
 export interface Members {
   id: number;
-  status: string;
+  status: number;
   applicationDate: Date;
   studentId: string;
   applicantName: string;
@@ -53,10 +53,16 @@ export enum ActivityTypeEnum {
   NotFit, // 동아리 성격에 합치하지 않는 활동
 }
 
+export enum MemberStatusEnum {
+  Applied = 1, // 신청
+  Approved, // 승인
+  Rejected, // 반려
+}
+
 const mockupManageMems: Members[] = [
   {
     id: 1,
-    status: "신청",
+    status: 1,
     applicationDate: new Date("2024-03-04T21:00:00"),
     studentId: "20200510",
     applicantName: "이지윤",
@@ -65,7 +71,7 @@ const mockupManageMems: Members[] = [
   },
   {
     id: 2,
-    status: "신청",
+    status: 1,
     applicationDate: new Date("2024-03-04T22:00:00"),
     studentId: "20200510",
     applicantName: "박지호",
@@ -74,7 +80,7 @@ const mockupManageMems: Members[] = [
   },
   {
     id: 3,
-    status: "신청",
+    status: 1,
     applicationDate: new Date("2024-03-04T23:00:00"),
     studentId: "20200510",
     applicantName: "박병찬",
@@ -83,7 +89,7 @@ const mockupManageMems: Members[] = [
   },
   {
     id: 4,
-    status: "승인",
+    status: 2,
     applicationDate: new Date("2024-03-04T21:30:00"),
     studentId: "20200510",
     applicantName: "이도라",
@@ -92,7 +98,7 @@ const mockupManageMems: Members[] = [
   },
   {
     id: 5,
-    status: "반려",
+    status: 3,
     applicationDate: new Date("2024-03-04T20:30:00"),
     studentId: "20200510",
     applicantName: "스팍스",
