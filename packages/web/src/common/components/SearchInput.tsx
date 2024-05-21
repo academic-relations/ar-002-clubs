@@ -54,7 +54,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       <Icon type="search" size={20} />
       <SeachInput
         value={searchText}
-        placeholder="검색"
+        placeholder="회원 이름을 검색하세요"
         onChange={handleValueChange}
       />
     </SerchInputWrapper>
