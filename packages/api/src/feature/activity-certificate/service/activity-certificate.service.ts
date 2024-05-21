@@ -17,4 +17,10 @@ export class ActivityCertificateService {
       items: body.items, // TODO: item validation
     });
   }
+
+  async getStudentActivityCertificatesClubHistory() {
+    const clubHistory =
+      await this.activityCertificateRepository.getStudentActivityCertificatesClubHistory();
+    return clubHistory;
+  }
 }

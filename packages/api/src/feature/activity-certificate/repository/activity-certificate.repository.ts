@@ -44,4 +44,8 @@ export class ActivityCertificateRepository {
       });
     });
   }
+
+  async getStudentActivityCertificatesClubHistory() {
+    return {};
+  }
 }
