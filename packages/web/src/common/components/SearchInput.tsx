@@ -7,7 +7,7 @@ interface SearchInputProps {
   handleChange?: (value: string) => void;
 }
 
-const SerchInputWrapper = styled.div`
+const SearchInputWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 8px;
@@ -50,15 +50,14 @@ const SearchInput: React.FC<SearchInputProps> = ({
     handleChange(inputValue);
   };
   return (
-    <SerchInputWrapper>
+    <SearchInputWrapper>
       <Icon type="search" size={20} />
       <SeachInput
         value={searchText}
         placeholder="회원 이름을 검색하세요"
         onChange={handleValueChange}
       />
-    </SerchInputWrapper>
-    //   TODO: SearchInput 기능 넣기
+    </SearchInputWrapper>
   );
 };
 

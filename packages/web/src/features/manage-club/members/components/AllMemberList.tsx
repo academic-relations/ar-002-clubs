@@ -85,7 +85,7 @@ const AllMemberList: React.FC<AllMemberListProps> = ({
             fs={16}
             lh={20}
             ff="PRETENDARD"
-            color="BLACK"
+            color="GRAY.600"
           >
             총 {memberCount}명
           </Typography>

@@ -10,6 +10,7 @@ interface SelectedItemProps {
   onClick?: () => void;
 }
 
+// TODO: Select 컴포넌트에 있는 코드 리팩토링해서 가져다 쓰기
 const SelectedItemWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -33,6 +34,7 @@ const SelectedItem: React.FC<SelectedItemProps> = ({
   onClick = () => {},
 }) => (
   <SelectedItemWrapper onClick={onClick}>
+    {/* // TODO: 글자 위아래 정렬 안 맞는 문제 해결 */}
     <Typography
       fs={16}
       lh={20}

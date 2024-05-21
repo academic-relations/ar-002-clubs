@@ -54,6 +54,7 @@ const AllMemberListFrame = () => {
           {mockAllSemesters.semesters.length > 0 && (
             <>
               <ExcelButtonWrapper>
+                {/* TODO: IconButton 리팩토링 되면 수정하기 */}
                 <ExcelButton onClick={() => {}}>
                   {/* TODO: 엑셀 다운로드 기능 구현 */}
                   <Icon type="save_alt" size={16} color={colors.WHITE} />

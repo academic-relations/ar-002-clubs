@@ -43,7 +43,13 @@ const RegisterMemberList = () => {
   return (
     <TableWithPaginationWrapper>
       <TableWithCount>
-        <Typography fs={16} fw="REGULAR" lh={20} ff="PRETENDARD" color="BLACK">
+        <Typography
+          fs={16}
+          fw="REGULAR"
+          lh={20}
+          ff="PRETENDARD"
+          color="GRAY.600"
+        >
           총 00명
         </Typography>
         <TableWrapper>
