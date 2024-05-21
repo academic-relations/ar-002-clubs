@@ -9,7 +9,7 @@ on:
     branches: ["dev"]
   workflow_call:
     secrets:
-      WEBHOOK_ENDPOINT:
+      STAGE_WEBHOOK_ENDPOINT:
         description: "The webhook endpoint to trigger the staging workflow"
         required: true
 
@@ -66,5 +66,5 @@ jobs:
       - name: "Image push via webhook"
         uses: distributhor/workflow-webhook@v3
         with:
-          url: ${{ secrets.WEBHOOK_ENDPOINT }}
+          url: ${{ secrets.STAGE_WEBHOOK_ENDPOINT }}
 
