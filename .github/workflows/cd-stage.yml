@@ -1,0 +1,20 @@
+name: AR-002 Dev Push Stage
+
+on:
+  push:
+    branches: ["dev"]
+
+
+jobs:
+  publish-docker-image:
+    name: "Build and Publish Latest Docker Image"
+    runs-on: ubuntu-22.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: ./.docker/Front.Dockerfile
+            image: ghcr.io/academic-relations
+          - dockerfile: ./.docker/Back.Dockerfile
+            image: ghcr.io/sparcs-kaist/sparcs-clubs-back
