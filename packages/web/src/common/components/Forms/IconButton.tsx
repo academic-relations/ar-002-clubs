@@ -4,6 +4,7 @@ import Button from "../Button";
 import Typography from "../Typography";
 import Icon from "../Icon";
 
+// TODO: 나중에 Buttons 폴더로 묶으면 어떨지
 export interface IconButtonProps extends HTMLAttributes<HTMLDivElement> {
   type: "default" | "disabled" | "outlined";
   buttonText: string;

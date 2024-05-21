@@ -35,6 +35,7 @@ FROM base
 # COPY --from=production-deps /app/node_modules /app/node_modules
 COPY --from=build /app/node_modules /app/node_modules
 COPY --from=build /app/packages/web /app/packages/web
+COPY --from=build /app/packages/interface /app/packages/interface
 WORKDIR /app/packages/web
 
 EXPOSE 3000

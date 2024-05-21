@@ -40,7 +40,7 @@ const TableButtonCell: React.FC<TableButtonCellProps> = ({
   text,
   onClick,
   width = "150px",
-  minWidth = 150,
+  minWidth = 100,
 }) => (
   <CommonCellWrapper width={width} minWidth={minWidth}>
     <ButtonsWrapper>
