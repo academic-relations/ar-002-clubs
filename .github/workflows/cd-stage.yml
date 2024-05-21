@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: "Image push via webhook"
-        uses: distributhor/workflow-webhook
+        uses: distributhor/workflow-webhook@v3
         with:
           url: ${{ secrets.WEBHOOK_ENDPOINT }}
 
