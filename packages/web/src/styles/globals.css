@@ -1,3 +1,16 @@
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+:root {
+  background: linear-gradient(
+    180deg,
+    #eafafc 0%,
+    #ffffff 33.33%,
+    #ffffff 66.67%,
+    #ffffff 100%
+  );
+  min-height: 100vh;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -5,6 +18,7 @@
 p,
 body {
   margin: 0;
+  min-width: 320px;
 }
 ul,
 li {
@@ -13,5 +27,12 @@ li {
 }
 
 button {
+  all: unset;
   cursor: pointer;
+}
+
+a {
+  display: flex;
+  text-decoration: none;
+  color: inherit;
 }

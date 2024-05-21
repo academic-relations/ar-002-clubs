@@ -3,3 +3,6 @@ pnpm-lock.yaml
 deployment/**/*.yaml
 .github/**/*.yml
 **/*.md
+
+# NextJS
+**/.next

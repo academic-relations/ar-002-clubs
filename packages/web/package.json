@@ -6,22 +6,39 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "mock:front": "pnpm dev",
+    "mock:back": "echo \"In mock:back mode, the 'web' package will not be run. Exiting.\""
   },
   "dependencies": {
+    "@emotion/cache": "11.11.0",
+    "@emotion/react": "11.11.4",
+    "@emotion/styled": "11.11.0",
+    "@mui/icons-material": "5.15.12",
+    "@mui/material": "5.15.12",
+    "@mui/material-nextjs": "5.15.11",
+    "@tanstack/react-query": "^5.28.4",
+    "axios": "^1.6.7",
+    "axios-mock-adapter": "^1.22.0",
     "classnames": "^2.3.2",
+    "date-fns": "^3.6.0",
     "framer-motion": "^10.16.5",
+    "immer": "^10.0.4",
     "loglevel": "^1.9.1",
     "next": "14.1.3",
     "react": "^18",
     "react-dom": "^18",
-    "styled-components": "^6.1.8"
+    "styled-components": "^6.1.8",
+    "zod": "^3.21.4",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@sparcs-clubs/interface": "workspace:*",
+    "@tanstack/react-query-devtools": "^5.28.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@8.15.8"
 }

@@ -30,9 +30,10 @@
     },
     "project": ["./packages/*/tsconfig.json", "./tsconfig.json"]
   },
-  "plugins": ["import", "@typescript-eslint", "react"],
+  "plugins": ["import", "@typescript-eslint", "react", "@next/eslint-plugin-next"],
   "ignorePatterns": ["node_modules/", "dist/"],
   "rules": {
+    "react/no-array-index-key": "warn",
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -44,17 +45,18 @@
     ],
     "import/named": "error",
     "import/no-extraneous-dependencies": [
-      "error",
+      "warn", // TODO: change to error
       {
         "packageDir": [
-          "./packages/web",
-          "./packages/api",
-          "./packages/interface",
-          "."
+          "./packages/web/",
+          "./packages/api/",
+          "./packages/interface/",
+          "./"
         ]
-      }
+      },
     ],
     "import/prefer-default-export": "off",
+    "class-methods-use-this": "off",
     "no-param-reassign": [
       "error",
       {
@@ -68,7 +70,7 @@
       {
         "patterns": [
           {
-            "group": ["../*"],
+            "group": ["../../*"],
             "message": "Usage of relative parent imports is not allowed. Use path alias instead."
           }
         ]
@@ -105,10 +107,12 @@
         "functions": "defaultArguments"
       }
     ],
-    "@typescript-eslint/consistent-type-imports": [
+    "@typescript-eslint/no-unused-vars": [
       "error",
       {
-        "prefer": "type-imports"
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
       }
     ]
   },

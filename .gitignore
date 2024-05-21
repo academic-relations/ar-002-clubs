@@ -8,6 +8,10 @@
 .idea
 .vscode/*
 !.vscode/extensions.json
+!.vscode/*.code-snippets
 
 # File system
 **/.DS_Store 
+
+# Git Submodules
+.clubs-secrets
