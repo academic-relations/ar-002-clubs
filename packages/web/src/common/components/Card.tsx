@@ -9,11 +9,7 @@ interface CardProps {
   gap?: number;
 }
 
-const CardInner = styled.div<{
-  outline?: boolean;
-  padding?: string;
-  gap?: number;
-}>`
+const CardInner = styled.div<CardProps>`
   display: flex;
   flex-direction: column;
   position: relative;
