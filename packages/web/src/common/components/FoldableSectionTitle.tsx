@@ -14,7 +14,7 @@ const FoldableSectionTitleInner = styled.div`
   width: 100%;
 `;
 
-const MoreInfo = styled.div`
+export const MoreInfo = styled.div`
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 14px;
   line-height: 20px;
