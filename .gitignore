@@ -13,3 +13,5 @@
 # File system
 **/.DS_Store 
 
+# Git Submodules
+.clubs-secrets
