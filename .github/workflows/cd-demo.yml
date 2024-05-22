@@ -24,9 +24,9 @@ jobs:
       matrix:
         include:
           - dockerfile: ./.docker/dockerfile/web.Dockerfile
-            image: ghcr.io/academic-relations/ar-002-clubs-web-demo
+            image: ghcr.io/academic-relations/ar-002-clubs-demo-web
           - dockerfile: ./.docker/dockerfile/api.Dockerfile
-            image: ghcr.io/academic-relations/ar-002-clubs-api-demo
+            image: ghcr.io/academic-relations/ar-002-clubs-demo-api
 
     steps:
       - name: Checkout code
