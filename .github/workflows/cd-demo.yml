@@ -66,5 +66,5 @@ jobs:
       - name: "Image push via webhook"
         uses: distributhor/workflow-webhook@v3
         with:
-          url: ${{ secrets.DEMO_WEBHOOK_ENDPOINT }}
+          webhook_url: ${{ secrets.DEMO_WEBHOOK_ENDPOINT }}
 
