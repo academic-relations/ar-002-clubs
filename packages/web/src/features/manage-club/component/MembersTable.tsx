@@ -96,6 +96,7 @@ const MembersTable: React.FC<MembersTableProps> = ({ memberList }) => (
           <TableCell type="Default" width="15%">
             {" "}
           </TableCell>
+          // TODO: 비고에 넣을 텍스트는 DB 어디에서 들고오는지
         )}
       </TableRow>
     ))}

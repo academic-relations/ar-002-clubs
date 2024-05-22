@@ -6,6 +6,16 @@ import {
   ManageWrapper,
 } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
+import RentalTable from "@sparcs-clubs/web/features/manage-club/component/RentalTable";
+import PrintingTable from "@sparcs-clubs/web/features/manage-club/component/PrintingTable";
+import ActivityCertificateTable from "@sparcs-clubs/web/features/manage-club/component/ActivityCertificateTable";
+import CommonSpaceTable from "@sparcs-clubs/web/features/manage-club/component/CommonSpaceTable";
+import {
+  mockupManageAcf,
+  mockupManageCms,
+  mockupManagePrint,
+  mockupManageRental,
+} from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
 
 const ServiceManageFrame: React.FC = () => {
   const [toggle, setToggle] = React.useState<boolean>(true);
@@ -23,25 +33,25 @@ const ServiceManageFrame: React.FC = () => {
             moreDetail="내역 더보기"
             moreDetailPath="/rental-business"
           />
-          대여 table
+          <RentalTable rentalList={mockupManageRental} />
           <MoreDetailTitle
             title="홍보물 인쇄"
             moreDetail="내역 더보기"
             moreDetailPath="/printing-business"
           />
-          홍보물 table
+          <PrintingTable printingList={mockupManagePrint} />
           <MoreDetailTitle
             title="활동확인서 발급"
             moreDetail="내역 더보기"
             moreDetailPath="/activity-certificate"
           />
-          활동확인서 table
+          <ActivityCertificateTable certificateList={mockupManageAcf} />
           <MoreDetailTitle
             title="공용공간 비정기사용"
             moreDetail="내역 더보기"
             moreDetailPath="/common-space"
           />
-          공용공간 table
+          <CommonSpaceTable spaceList={mockupManageCms} />
         </ManageTablesWrapper>
       )}
     </ManageWrapper>
