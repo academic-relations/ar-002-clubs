@@ -10,6 +10,7 @@ import { CommonSpaceRepository } from "../repository/common-space.repository";
 import { CommonSpaceUsageOrderDRepository } from "../repository/common-space-usage-order-d.repository";
 import { Reservation } from "../dto/common-space.dto";
 import { canMakeReservation } from "./calculate-time.util";
+import { GetCommonSpacesUsageOrderRepository } from "../repository/getCommonSpacesUsageOrder.repository";
 
 @Injectable()
 export class CommonSpaceService {
@@ -18,6 +19,7 @@ export class CommonSpaceService {
     private readonly getCommonSpaceUsageOrderRepository: GetCommonSpaceUsageOrderRepository,
     private readonly commonSpaceUsageOrderDRepository: CommonSpaceUsageOrderDRepository,
     private readonly clubStudentTRepository: ClubStudentTRepository,
+    private readonly getCommonSpacesUsageOrderRepository: GetCommonSpacesUsageOrderRepository,
   ) {}
 
   async getCommonSpaces(): Promise<ApiCms001ResponseOK> {
@@ -135,6 +137,38 @@ export class CommonSpaceService {
     const result =
       await this.commonSpaceUsageOrderDRepository.deleteCommonSpaceUsageOrderD(
         orderId,
+      );
+    return result;
+  }
+
+  // async postExecutive
+
+  async getStudentCommonSpacesUsageOrder(
+    studentId: number,
+    clubId: number,
+    startDate: Date,
+    endDate: Date,
+    pageOffset: number,
+    itemCount: number,
+  ) {
+    const student =
+      await this.clubStudentTRepository.findClubStudentByClubIdAndStudentId(
+        clubId,
+        studentId,
+      );
+    if (isEmptyObject(student.student)) {
+      throw new HttpException(
+        "Student is not in the club.",
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    const result =
+      await this.getCommonSpacesUsageOrderRepository.getStudentCommonSpacesUsageOrder(
+        clubId,
+        startDate,
+        endDate,
+        pageOffset,
+        itemCount,
       );
     return result;
   }

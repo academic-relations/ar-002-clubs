@@ -6,6 +6,7 @@ import { CommonSpaceRepository } from "./repository/common-space.repository";
 import { GetCommonSpaceUsageOrderRepository } from "./repository/getCommonSpaceUsageOrder.repository";
 import { CommonSpaceUsageOrderDRepository } from "./repository/common-space-usage-order-d.repository";
 import { ClubModule } from "../club/club.module";
+import { GetCommonSpacesUsageOrderRepository } from "./repository/getCommonSpacesUsageOrder.repository";
 
 @Module({
   imports: [DrizzleModule, ClubModule],
@@ -15,6 +16,7 @@ import { ClubModule } from "../club/club.module";
     CommonSpaceRepository,
     GetCommonSpaceUsageOrderRepository,
     CommonSpaceUsageOrderDRepository,
+    GetCommonSpacesUsageOrderRepository,
   ],
   exports: [CommonSpaceService],
 })

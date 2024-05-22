@@ -3,7 +3,7 @@ import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { CommonSpaceUsageOrderD } from "@sparcs-clubs/api/drizzle/schema/common-space.schema";
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
-import { and, between, eq, or, sql } from "drizzle-orm";
+import { and, between, eq, isNull, or, sql } from "drizzle-orm";
 import { ApiCms002ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
 
 @Injectable()
@@ -32,6 +32,7 @@ export class GetCommonSpaceUsageOrderRepository {
             between(CommonSpaceUsageOrderD.startTerm, startDate, endDate),
             between(CommonSpaceUsageOrderD.endTerm, startDate, endDate),
           ),
+          isNull(CommonSpaceUsageOrderD.deletedAt),
         ),
       );
     return { usageOrders: result };

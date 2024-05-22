@@ -49,6 +49,7 @@ export class CommonSpaceUsageOrderDRepository {
             between(CommonSpaceUsageOrderD.startTerm, startDate, endDate),
             between(CommonSpaceUsageOrderD.endTerm, startDate, endDate),
           ),
+          isNull(CommonSpaceUsageOrderD.deletedAt),
         ),
       );
     return result;
