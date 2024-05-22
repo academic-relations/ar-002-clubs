@@ -3,7 +3,8 @@ import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { CommonSpaceUsageOrderD } from "@sparcs-clubs/api/drizzle/schema/common-space.schema";
 import { ApiCms003ResponseCreated } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms003";
-import { and, between, eq, or } from "drizzle-orm";
+import { and, between, eq, or, isNull, sql } from "drizzle-orm";
+import { takeUnique } from "@sparcs-clubs/api/common/util/util";
 
 @Injectable()
 export class CommonSpaceUsageOrderDRepository {
@@ -50,6 +51,32 @@ export class CommonSpaceUsageOrderDRepository {
           ),
         ),
       );
+    return result;
+  }
+
+  async findCommonSpaceUsageOrderByIdAndSpaceId(
+    orderId: number,
+    spaceId: number,
+  ) {
+    const result = await this.db
+      .select()
+      .from(CommonSpaceUsageOrderD)
+      .where(
+        and(
+          eq(CommonSpaceUsageOrderD.id, orderId),
+          eq(CommonSpaceUsageOrderD.commonSpaceId, spaceId),
+          isNull(CommonSpaceUsageOrderD.deletedAt),
+        ),
+      )
+      .then(takeUnique);
+    return result;
+  }
+
+  async deleteCommonSpaceUsageOrderD(orderId: number) {
+    const result = await this.db
+      .update(CommonSpaceUsageOrderD)
+      .set({ deletedAt: sql<Date>`NOW()` })
+      .where(eq(CommonSpaceUsageOrderD.id, orderId));
     return result;
   }
 }

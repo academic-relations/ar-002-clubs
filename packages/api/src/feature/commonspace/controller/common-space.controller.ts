@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from "@nestjs/common";
 import { ApiCms001ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
 import apiCms002, {
   ApiCms002RequestParam,
@@ -10,6 +18,10 @@ import apiCms003, {
   ApiCms003RequestBody,
   ApiCms003ResponseCreated,
 } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms003";
+import apiCms004, {
+  ApiCms004RequestParam,
+  ApiCms004ResponseOK,
+} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms004";
 import { CommonSpaceService } from "../service/common-space.service";
 
 @Controller()
@@ -65,6 +77,24 @@ export class CommonSpaceController {
         studentId,
         tmpbody.startTerm,
         tmpbody.endTerm,
+      );
+    return result;
+  }
+
+  @Delete("student/common-spaces/common-space/:spaceId/usage-order/:orderId")
+  async deleteStudentCommonSpaceUsageOrder(
+    @Param() param: ApiCms004RequestParam,
+  ): Promise<ApiCms004ResponseOK> {
+    const tmpparam = apiCms004.requestParam.parse({
+      spaceId: Number(param.spaceId),
+      orderId: Number(param.orderId),
+    });
+    const studentId = 1;
+    const result =
+      await this.commonspaceService.deleteStudentCommonSpaceUsageOrder(
+        tmpparam.spaceId,
+        tmpparam.orderId,
+        studentId,
       );
     return result;
   }

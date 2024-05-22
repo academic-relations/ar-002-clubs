@@ -4,6 +4,7 @@ import { ApiCms001ResponseOK } from "@sparcs-clubs/interface/api/common-space/en
 import { ApiCms002ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
 import { ApiCms003ResponseCreated } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms003";
 import { isEmptyObject } from "@sparcs-clubs/api/common/util/util";
+import { ApiCms004ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms004";
 import { GetCommonSpaceUsageOrderRepository } from "../repository/getCommonSpaceUsageOrder.repository";
 import { CommonSpaceRepository } from "../repository/common-space.repository";
 import { CommonSpaceUsageOrderDRepository } from "../repository/common-space-usage-order-d.repository";
@@ -102,5 +103,39 @@ export class CommonSpaceService {
       return result;
     }
     throw new HttpException("Available time exceeded", HttpStatus.BAD_REQUEST);
+  }
+
+  // todo: spaceid와 orderid 기존 예약 검색했을 때 존재해야함.
+  // todo: studentId와 신ㅊ어 학새이 일치하지 않으면 error
+  // todo: orderid로 검색했을때 startDate가 현재보다 미래여야 한다.
+  // todo: 모두 만족하면 삭제 진행.
+  async deleteStudentCommonSpaceUsageOrder(
+    spaceId: number,
+    orderId: number,
+    studentId: number,
+  ): Promise<ApiCms004ResponseOK> {
+    const current = new Date();
+    const order =
+      await this.commonSpaceUsageOrderDRepository.findCommonSpaceUsageOrderByIdAndSpaceId(
+        orderId,
+        spaceId,
+      );
+    if (order.chargeStudentId !== studentId) {
+      throw new HttpException(
+        "You are not allowed to delete this order",
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    if (order.startTerm < current) {
+      throw new HttpException(
+        "Reservation can only be deleted before the start time",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const result =
+      await this.commonSpaceUsageOrderDRepository.deleteCommonSpaceUsageOrderD(
+        orderId,
+      );
+    return result;
   }
 }
