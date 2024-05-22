@@ -71,19 +71,29 @@ const MOCK_STATUS = process.env.NEXT_PUBLIC_API_MOCK_MODE
   ? "--mock=true"
   : "--mock=false";
 
-const DebugBadge: React.FC = () => (
-  <Container>
-    {environment && (
-      <>
-        <Badge>
-          {`${environment} ${MOCK_STATUS}`}
-          <br />
-          {process.env.NEXT_PUBLIC_BUILD_TIME}
-        </Badge>
-        <BadgeBottom>©️SPARCS AR-002 Internal</BadgeBottom>
-      </>
-    )}
-  </Container>
-);
+const DebugBadge: React.FC = () => {
+  const [date, setDate] = React.useState("loading");
+
+  React.useEffect(() => {
+    setDate(
+      `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
+    );
+  });
+
+  return (
+    <Container>
+      {environment && (
+        <>
+          <Badge>
+            {`${environment} ${MOCK_STATUS}`}
+            <br />
+            {process.env.NEXT_PUBLIC_BUILD_TIME || date}
+          </Badge>
+          <BadgeBottom>©️SPARCS AR-002 Internal</BadgeBottom>
+        </>
+      )}
+    </Container>
+  );
+};
 
 export default DebugBadge;
