@@ -19,10 +19,10 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     clubs: z.array(
       z.object({
-        id: z.coerce.number().int(), // TODO: "id": (int, Club.id) 이건 어떻게 설정하나요
-        name: z.coerce.string().max(30),
-        startMonth: z.coerce.date(),
-        endMonth: z.coerce.date(),
+        id: z.number().int(),
+        name: z.string().max(30),
+        startMonth: z.date(),
+        endMonth: z.date(),
       }),
     ),
   }),
