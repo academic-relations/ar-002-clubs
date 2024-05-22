@@ -4,7 +4,7 @@ import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/a
 import { ClubRepository } from "@sparcs-clubs/api/common/repository/club.repository";
 import { ClubRepresentativeDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-representative-d.repository";
 import { ClubRoomTRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-room-t.repository";
-import { ClubStudentTRepository } from "@sparcs-clubs/api/common/repository/club.club-student-t.repository";
+import { ClubStudentTRepository } from "@sparcs-clubs/api/common/repository/club-student-t.repository";
 
 @Injectable()
 export class ClubService {

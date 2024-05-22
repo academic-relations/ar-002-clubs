@@ -1,7 +1,7 @@
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 import { Module } from "@nestjs/common";
 import { ClubRepository } from "@sparcs-clubs/api/common/repository/club.repository";
-import { ClubStudentTRepository } from "@sparcs-clubs/api/common/repository/club.club-student-t.repository";
+import { ClubStudentTRepository } from "@sparcs-clubs/api/common/repository/club-student-t.repository";
 import { ClubController } from "./controller/club.controller";
 import { ClubService } from "./service/club.service";
 import { ClubRoomTRepository } from "./repository/club.club-room-t.repository";
@@ -17,6 +17,12 @@ import { ClubRepresentativeDRepository } from "./repository/club.club-representa
     ClubRepository,
     ClubStudentTRepository,
   ],
-  exports: [ClubService],
+  exports: [
+    ClubService,
+    ClubRoomTRepository,
+    ClubRepresentativeDRepository,
+    ClubRepository,
+    ClubStudentTRepository,
+  ],
 })
 export class ClubModule {}
