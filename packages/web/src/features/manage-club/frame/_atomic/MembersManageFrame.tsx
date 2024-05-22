@@ -27,7 +27,7 @@ const MembersManageFrame: React.FC = () => {
   const totalCount = mockupManageMems.length;
 
   const title = `2024년 봄학기 (신청 ${appliedCount}명, 승인 ${approvedCount}명, 반려 ${rejectedCount}명 / 총 ${totalCount}명)`;
-
+  // TODO: 학기 받아올 수 있도록 수정
   return (
     <ManageWrapper>
       <FoldableSectionTitle
