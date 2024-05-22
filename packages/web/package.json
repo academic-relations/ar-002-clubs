@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "build-start": "next build && next start",
     "mock:front": "pnpm dev",
     "mock:back": "echo \"In mock:back mode, the 'web' package will not be run. Exiting.\""
   },
