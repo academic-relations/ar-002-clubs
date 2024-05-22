@@ -19,8 +19,9 @@ import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientP
 import ResponsiveContent from "@sparcs-clubs/web/common/components/Responsive";
 
 export const metadata: Metadata = {
-  title: "SPARCS Academic Relations Team",
-  description: "Frontend Standard Stack v1.0.0",
+  title: "SPARCS Clubs for ClubsUA",
+  description:
+    "Created by SPARCS Academic Relations AR-002 TF Team, Copyright 2024",
 };
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => (

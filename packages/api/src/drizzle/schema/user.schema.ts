@@ -2,14 +2,14 @@ import {
   mysqlTable,
   int,
   varchar,
-  datetime,
+  date,
   timestamp,
 } from "drizzle-orm/mysql-core";
 
 export const User = mysqlTable("user", {
   id: int("id").autoincrement().primaryKey(),
   sid: varchar("sid", { length: 30 }).unique(),
-  name: varchar("name", { length: 255 }),
+  name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }),
   phoneNumber: varchar("phone_number", { length: 255 }),
   refreshToken: varchar("refresh_token", { length: 255 }),
@@ -20,9 +20,10 @@ export const User = mysqlTable("user", {
 
 export const Student = mysqlTable("student", {
   id: int("id").autoincrement().primaryKey(),
-  userId: int("user_id")
-    .notNull()
-    .references(() => User.id),
+  userId: int("user_id").references(() => User.id),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }),
+  phoneNumber: varchar("phone_number", { length: 30 }),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
@@ -36,21 +37,22 @@ export const StudentT = mysqlTable("student_t", {
   studentStatusEnum: int("student_status_enum").notNull(),
   number: int("number").unique(),
   department: int("department").notNull(),
-  semesterId: int("semester_id").unique().notNull(),
-  startTerm: datetime("start_term").notNull(),
-  endTerm: datetime("end_term"),
+  semesterId: int("semester_id").notNull(),
+  startTerm: date("start_term").notNull(),
+  endTerm: date("end_term"),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
 
 export const Executive = mysqlTable("executive", {
   id: int("id").autoincrement().primaryKey(),
-  userId: int("user_id")
-    .notNull()
-    .references(() => User.id),
+  userId: int("user_id").references(() => User.id),
   studentId: int("student_id")
     .notNull()
     .references(() => Student.id),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }),
+  phoneNumber: varchar("phone_number", { length: 30 }),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
@@ -78,17 +80,18 @@ export const ExecutiveT = mysqlTable("executive_t", {
   executiveBureauEnum: int("executive_bureau_enum")
     .notNull()
     .references(() => ExecutiveBureauEnum.id),
-  startTerm: datetime("start_term").notNull(),
-  endTerm: datetime("end_term"),
+  startTerm: date("start_term").notNull(),
+  endTerm: date("end_term"),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
 
 export const Professor = mysqlTable("professor", {
   id: int("id").autoincrement().primaryKey(),
-  userId: int("user_id")
-    .notNull()
-    .references(() => User.id),
+  userId: int("user_id").references(() => User.id),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }),
+  phoneNumber: varchar("phone_number", { length: 30 }),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
@@ -100,17 +103,19 @@ export const ProfessorT = mysqlTable("professor_t", {
     .references(() => Professor.id),
   professorEnum: int("professor_enum").unique(),
   department: int("department"),
-  startTerm: datetime("start_term").notNull(),
-  endTerm: datetime("end_term"),
+  startTerm: date("start_term").notNull(),
+  endTerm: date("end_term"),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
 
 export const Employee = mysqlTable("employee", {
   id: int("id").autoincrement().primaryKey(),
-  userId: int("user_id")
-    .notNull()
-    .references(() => User.id),
+  userId: int("user_id").references(() => User.id),
+
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }),
+  phoneNumber: varchar("phone_number", { length: 30 }),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
@@ -120,8 +125,8 @@ export const EmployeeT = mysqlTable("employee_t", {
   employeeId: int("employee_id")
     .notNull()
     .references(() => Employee.id),
-  startTerm: datetime("start_term").notNull(),
-  endTerm: datetime("end_term"),
+  startTerm: date("start_term").notNull(),
+  endTerm: date("end_term"),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });

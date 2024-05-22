@@ -70,4 +70,12 @@ export class UserRepository {
       studentNumber: 20210227,
     };
   }
+
+  async findUserNameById(userId: number) {
+    const userName = await this.db
+      .select({ name: User.name })
+      .from(User)
+      .where(eq(User.id, userId));
+    return userName;
+  }
 }

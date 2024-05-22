@@ -3,9 +3,12 @@
 import React, { useMemo } from "react";
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+
 import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
-import { MyClubsInfo } from "@sparcs-clubs/web/types/myClubs.types";
+
+import useGetMyClub from "@sparcs-clubs/web/features/my/service/useGetMyClub";
 
 const ClubsPageMainFrameInner = styled.div`
   display: flex;
@@ -19,30 +22,32 @@ const ClubListsByDepartmentWrapper = styled.div`
   gap: 60px;
 `;
 
-interface MyPageMainFrameProps {
-  myClubList: Array<MyClubsInfo>;
-}
-
-const MyPageMainFrame: React.FC<MyPageMainFrameProps> = ({ myClubList }) => {
-  const isMyClubsExist = useMemo(() => myClubList.length > 0, [myClubList]);
+const MyPageMainFrame: React.FC = () => {
+  const { data, isLoading, isError } = useGetMyClub();
+  const isMyClubsExist = useMemo(
+    () => (data?.semesters ?? []).length > 0,
+    [data],
+  );
   return (
     <ClubsPageMainFrameInner>
       <PageTitle>나의 동아리</PageTitle>
-      {isMyClubsExist && (
-        <ClubListsByDepartmentWrapper>
-          {myClubList.map(
-            (myClub: MyClubsInfo) =>
-              myClub.clubs.length > 0 && (
-                <ClubsSectionFrame
-                  showLength={false}
-                  title={myClub.name}
-                  clubList={myClub.clubs}
-                  key={myClub.semester}
-                />
-              ),
-          )}
-        </ClubListsByDepartmentWrapper>
-      )}
+      <AsyncBoundary isLoading={isLoading} isError={isError}>
+        {isMyClubsExist && (
+          <ClubListsByDepartmentWrapper>
+            {(data?.semesters ?? []).map(
+              myClub =>
+                myClub.clubs.length > 0 && (
+                  <ClubsSectionFrame
+                    showLength={false}
+                    title={myClub.name}
+                    clubList={myClub.clubs}
+                    key={myClub.name}
+                  />
+                ),
+            )}
+          </ClubListsByDepartmentWrapper>
+        )}
+      </AsyncBoundary>
     </ClubsPageMainFrameInner>
   );
 };

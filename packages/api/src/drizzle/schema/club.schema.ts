@@ -8,7 +8,7 @@ import {
   timestamp,
   index,
 } from "drizzle-orm/mysql-core";
-import { Student } from "./user.schema";
+import { Professor, Student } from "./user.schema";
 // eslint-disable-next-line import/no-cycle
 import { Division } from "./division.schema";
 
@@ -48,10 +48,8 @@ export const ClubT = mysqlTable("club_t", {
     .references(() => ClubStatusEnum.id),
   characteristicKr: varchar("characteristic_kr", { length: 50 }),
   characteristicEn: varchar("characteristic_en", { length: 50 }),
-  advisor: varchar("advisor", { length: 30 }),
-  advisorMail: varchar("advisor_mail", { length: 30 }),
+  professorId: int("professor_id").references(() => Professor.id),
   semesterId: int("semester_id")
-    .unique()
     .notNull()
     .references(() => SemesterD.id),
   startTerm: date("start_term").notNull(),
@@ -92,14 +90,13 @@ export const ClubRoomT = mysqlTable("club_room_t", {
   clubBuildingEnum: int("club_building_enum")
     .notNull()
     .references(() => ClubBuildingEnum.id),
-  roomLocation: int("room_location"),
+  roomLocation: varchar("room_location", { length: 20 }),
   roomPassword: varchar("room_password", { length: 20 }),
   semesterId: int("semester_id")
-    .unique()
     .notNull()
     .references(() => SemesterD.id),
-  startTerm: datetime("start_term").notNull(),
-  endTerm: datetime("end_term"),
+  startTerm: date("start_term").notNull(),
+  endTerm: date("end_term"),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
@@ -111,7 +108,7 @@ export const ClubRepresentativeEnum = mysqlTable("club_representative_enum", {
   deletedAt: timestamp("deleted_at"),
 });
 
-export const clubRepresentativeD = mysqlTable(
+export const ClubRepresentativeD = mysqlTable(
   "club_representative_d",
   {
     id: int("id").autoincrement().primaryKey(),
@@ -123,10 +120,10 @@ export const clubRepresentativeD = mysqlTable(
       .references(() => Student.id),
     clubRepresentativeEnum: int("club_representative_enum").notNull(),
     // .references(() => ClubRepresentativeEnum.id),
-    startTerm: datetime("start_term", { mode: "string" }).notNull(),
-    endTerm: datetime("end_term", { mode: "string" }),
-    createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
-    deletedAt: timestamp("deleted_at", { mode: "string" }),
+    startTerm: datetime("start_term").notNull(),
+    endTerm: datetime("end_term"),
+    createdAt: timestamp("created_at").defaultNow(),
+    deletedAt: timestamp("deleted_at"),
   },
   // references로 설정했을 때 MySQL의 바이트수 초과로 인해 생성이 불가능하여 명시적으로 FK 이름을 지정해야함
   table => ({

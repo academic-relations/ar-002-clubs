@@ -52,7 +52,7 @@ const logger =
       createLogger({
         level: "info",
         format: uncolorizedFormat,
-        defaultMeta: { service: "biseo" },
+        defaultMeta: { service: "clubs" },
         transports: [
           // 전체 로그("info", "warn", "error")를 파일로 출력합니다.
           new DailyRotateFileTransport({
@@ -84,9 +84,9 @@ const logger =
       })
     : // "development", "test" 환경에서 사용되는 Logger 객체
       createLogger({
-        level: "info",
+        level: "debug",
         format: colorizedFormat,
-        defaultMeta: { service: "biseo" },
+        defaultMeta: { service: "clubs" },
         transports: [new transports.Console()],
         exceptionHandlers: [new transports.Console()],
       });

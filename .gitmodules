@@ -1,0 +1,3 @@
+[submodule ".clubs-secrets"]
+	path = .clubs-secrets
+	url = https://github.com/academic-relations/ar-002-clubs-secrets.git

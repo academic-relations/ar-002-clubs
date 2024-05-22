@@ -9,7 +9,6 @@ export class UserController {
   @Get("user")
   async getUserById(@Query("studentId") query: number) {
     const student = await this.userService.findStudentById(query);
-
     return student;
   }
 
