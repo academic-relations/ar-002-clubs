@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import styled from "styled-components";
 
 interface CardProps {
@@ -9,7 +8,7 @@ interface CardProps {
   gap?: number;
 }
 
-const CardInner = styled.div<CardProps>`
+const Card = styled.div<CardProps>`
   display: flex;
   flex-direction: column;
   position: relative;
@@ -30,10 +29,5 @@ const CardInner = styled.div<CardProps>`
   border: ${({ theme, outline }) =>
     outline ? `1px solid ${theme.colors.GRAY[200]}` : "inherit"};
 `;
-
-const Card: React.FC<React.PropsWithChildren<CardProps>> = ({
-  children = <div />,
-  ...props
-}) => <CardInner {...props}>{children}</CardInner>;
 
 export default Card;

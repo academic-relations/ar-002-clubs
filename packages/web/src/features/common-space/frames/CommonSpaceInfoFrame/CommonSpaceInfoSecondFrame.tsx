@@ -12,14 +12,6 @@ import { ko } from "date-fns/locale";
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 import { mockCommonSpaceList } from "./mockCommonSpaceList";
 
-const StyledCard = styled(Card).attrs({
-  outline: true,
-  padding: "32px",
-  gap: 20,
-})`
-  flex-direction: row;
-`;
-
 const StyledCardOuter = styled.div`
   display: flex;
   flex-direction: column;
@@ -27,11 +19,6 @@ const StyledCardOuter = styled.div`
   gap: 20px;
   flex: 1 0 0;
   align-self: stretch;
-`;
-
-const StyledInfoCard = styled(Card).attrs({ outline: true, gap: 20 })`
-  align-items: flex-start;
-  margin-top: 64px;
 `;
 
 const CommonSpaceInfoSecondFrame: React.FC<
@@ -89,14 +76,14 @@ const CommonSpaceInfoSecondFrame: React.FC<
           <Info
             text={`${commonSpace.space}는 하루에 최대 4시간, 일주일에 최대 10시간 사용할 수 있습니다.`}
           />
-          <StyledCard>
+          <Card outline gap={20} style={{ flexDirection: "row" }}>
             <Timetable
               data={Array(7 * 48).fill(false)}
               setDateTimeRange={setDateTimeRange}
             />
             <StyledCardOuter>
               {dateTimeRange && (
-                <StyledInfoCard>
+                <Card outline gap={20} style={{ marginTop: 64 }}>
                   <Typography type="p">선택 시간</Typography>
                   <Typography type="p">
                     {format(dateTimeRange[0], "M/d(E) ", { locale: ko })}
@@ -105,10 +92,10 @@ const CommonSpaceInfoSecondFrame: React.FC<
                     {`${diffHours}시간`}
                     {diffMinutes! % 60 ? ` ${diffMinutes! % 60}분` : ""})
                   </Typography>
-                </StyledInfoCard>
+                </Card>
               )}
             </StyledCardOuter>
-          </StyledCard>
+          </Card>
         </>
       )}
     </>

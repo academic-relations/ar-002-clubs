@@ -17,12 +17,6 @@ import styled from "styled-components";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 import { mockExistDates } from "./_atomic/mockExistDate";
 
-const StyledCard = styled(Card).attrs({
-  outline: true,
-  padding: "32px",
-  gap: 40,
-})``;
-
 const StyledCardInner = styled.div`
   display: flex;
   flex-direction: column;
@@ -187,7 +181,7 @@ const RentalInfoSecondFrame: React.FC<
 
   return (
     <>
-      <StyledCard>
+      <Card outline gap={40}>
         <Typography type="h3">대여 기간 선택</Typography>
         <SelectRangeCalendar
           rentalDate={rentalDate}
@@ -200,11 +194,11 @@ const RentalInfoSecondFrame: React.FC<
           pendingDate={pendingDate}
           setPendingDate={setPendingDate}
         />
-      </StyledCard>
+      </Card>
       <ItemButtonList value={value} onChange={itemOnChange} rental={rental} />
       <Info text={rentals[value].info} />
       {value !== "none" && (
-        <StyledCard>
+        <Card outline gap={40}>
           <StyledCardInner>
             <ResetTitleWrapper>
               <FlexGrowTypography>
@@ -218,9 +212,9 @@ const RentalInfoSecondFrame: React.FC<
             </ResetTitleWrapper>
             <Rental {...props} />
           </StyledCardInner>
-        </StyledCard>
+        </Card>
       )}
-      <StyledCard>
+      <Card outline gap={40}>
         <StyledCardInner>
           <ResetTitleWrapper>
             <FlexGrowTypography>
@@ -234,7 +228,7 @@ const RentalInfoSecondFrame: React.FC<
           </ResetTitleWrapper>
           <RentalList rental={rental} />
         </StyledCardInner>
-      </StyledCard>
+      </Card>
       {showPeriodModal !== "none" && (
         <Modal>
           <CancellableModalContent
