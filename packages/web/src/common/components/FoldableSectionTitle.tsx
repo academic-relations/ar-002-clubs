@@ -5,9 +5,6 @@ import styled from "styled-components";
 
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 
-const FoldableSectionOuter = styled.div`
-  width: 100%;
-`;
 
 const FoldableSectionTitleInner = styled.div`
   display: flex;
@@ -17,7 +14,8 @@ const FoldableSectionTitleInner = styled.div`
   width: 100%;
 `;
 
-const MoreInfo = styled.div`
+
+export const MoreInfo = styled.div`
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 14px;
   line-height: 20px;
