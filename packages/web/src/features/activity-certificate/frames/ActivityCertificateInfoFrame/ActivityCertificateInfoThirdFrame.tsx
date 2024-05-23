@@ -1,20 +1,14 @@
+import Card from "@sparcs-clubs/web/common/components/Card";
+import Info from "@sparcs-clubs/web/common/components/Info";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import React from "react";
 import styled from "styled-components";
-import Card from "@sparcs-clubs/web/common/components/Card";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
-import Info from "@sparcs-clubs/web/common/components/Info";
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 
 const ActivityCertificateThirdFrameInner = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 20px;
-  align-self: stretch;
-`;
-
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
   gap: 20px;
   align-self: stretch;
 `;
@@ -52,7 +46,7 @@ const ActivityCertificateInfoThirdFrame: React.FC<
   ActivityCertificateFrameProps
 > = ({ activityCertificate }) => (
   <ActivityCertificateThirdFrameInner>
-    <StyledCard outline>
+    <Card outline gap={20}>
       <BasicInfoSummaryFrameInner>
         <Typography
           type="p"
@@ -135,7 +129,7 @@ const ActivityCertificateInfoThirdFrame: React.FC<
           ))}
         </ActivityDescriptionSummaryFrameInner>
       </BasicInfoSummaryFrameInner>
-    </StyledCard>
+    </Card>
     <Info text="활동확인서 발급이 완료되면 이메일 또는 문자를 통해 (방법은 동연에서 정해주세요) 연락이 갈 것이라는 안내 문구" />
   </ActivityCertificateThirdFrameInner>
 );

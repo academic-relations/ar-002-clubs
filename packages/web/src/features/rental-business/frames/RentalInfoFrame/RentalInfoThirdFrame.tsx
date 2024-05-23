@@ -1,18 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { format } from "date-fns";
-import { ko } from "date-fns/locale";
-import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
-import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
+import { format } from "date-fns";
+import { ko } from "date-fns/locale";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import { RentalFrameProps } from "../RentalNoticeFrame";
-
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
-  gap: 20px;
-  align-self: stretch;
-`;
 
 const StyledTypography = styled(Typography)`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
@@ -89,7 +83,7 @@ const RentalInfoThirdFrame: React.FC<
   }, [rental, purposeTouched, setNextEnabled, setNoPurposeError]);
 
   return (
-    <StyledCard outline>
+    <Card outline gap={20}>
       <CardInner>
         <StyledTypography type="p">신청자 정보</StyledTypography>
         <UserInfoListContainer>
@@ -121,7 +115,7 @@ const RentalInfoThirdFrame: React.FC<
         errorMessage={noPurposeError}
         onBlur={handlePurposeTouched}
       />
-    </StyledCard>
+    </Card>
   );
 };
 
