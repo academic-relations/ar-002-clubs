@@ -41,7 +41,7 @@ const formatDate = (date: Date) =>
 const MembersTable: React.FC<MembersTableProps> = ({ memberList }) => (
   <TableWrapper>
     <TableRow>
-      <TableCell type="HeaderSort" width="10%">
+      <TableCell type="HeaderSort" width="10%" minWidth={120}>
         상태
       </TableCell>
       <TableCell type="HeaderSort" width="20%">
@@ -59,13 +59,13 @@ const MembersTable: React.FC<MembersTableProps> = ({ memberList }) => (
       <TableCell type="Header" width="20%">
         이메일
       </TableCell>
-      <TableCell type="Header" width="15%">
+      <TableCell type="Header" width="15%" minWidth={110}>
         비고
       </TableCell>
     </TableRow>
     {memberList.map(member => (
-      <TableRow isBoarder>
-        <TableCell type="Tag" width="10%">
+      <TableRow isBorder>
+        <TableCell type="Tag" width="10%" minWidth={120}>
           <Tag color={getStatusDetails(member.status).color}>
             {getStatusDetails(member.status).text}
           </Tag>
@@ -91,6 +91,7 @@ const MembersTable: React.FC<MembersTableProps> = ({ memberList }) => (
             text={["승인", "반려"]}
             onClick={[() => {}, () => {}]}
             //   TODO: 승인 반려 기능 넣기
+            minWidth={110}
           />
         ) : (
           <TableCell type="Default" width="15%">

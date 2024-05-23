@@ -50,7 +50,7 @@ const FundingTable: React.FC<FundingTableProps> = ({ fundingList }) => {
   return (
     <TableWrapper>
       <TableRow>
-        <TableCell type="Header" width="10%">
+        <TableCell type="Header" width="10%" minWidth={120}>
           상태
         </TableCell>
         <TableCell type="Header" width="50%">
@@ -67,8 +67,8 @@ const FundingTable: React.FC<FundingTableProps> = ({ fundingList }) => {
         </TableCell>
       </TableRow>
       {fundingList.map(funding => (
-        <TableRow isBoarder>
-          <TableCell type="Tag" width="10%">
+        <TableRow isBorder>
+          <TableCell type="Tag" width="10%" minWidth={120}>
             <Tag color={getStatusDetails(funding.status).color}>
               {getStatusDetails(funding.status).text}
             </Tag>

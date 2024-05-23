@@ -39,7 +39,7 @@ const getStatusDetails = (status: number): TagDetail => {
 const CommonSpaceTable: React.FC<CommonSpaceTableProps> = ({ spaceList }) => (
   <TableWrapper>
     <TableRow>
-      <TableCell type="Header" width="10%">
+      <TableCell type="Header" width="10%" minWidth={120}>
         상태
       </TableCell>
       <TableCell type="Header" width="20%">
@@ -59,8 +59,8 @@ const CommonSpaceTable: React.FC<CommonSpaceTableProps> = ({ spaceList }) => (
       </TableCell>
     </TableRow>
     {spaceList.items.map(space => (
-      <TableRow isBoarder>
-        <TableCell type="Tag" width="10%">
+      <TableRow isBorder>
+        <TableCell type="Tag" width="10%" minWidth={120}>
           <Tag color={getStatusDetails(space.statusEnum).color}>
             {getStatusDetails(space.statusEnum).text}
           </Tag>

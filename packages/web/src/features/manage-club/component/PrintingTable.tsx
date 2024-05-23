@@ -49,7 +49,7 @@ const getPrintSize = (type: number): string => {
 const PrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
   <TableWrapper>
     <TableRow>
-      <TableCell type="Header" width="10%">
+      <TableCell type="Header" width="10%" minWidth={120}>
         상태
       </TableCell>
       <TableCell type="Header" width="24%">
@@ -66,8 +66,8 @@ const PrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
       </TableCell>
     </TableRow>
     {printingList.items.map(printing => (
-      <TableRow isBoarder>
-        <TableCell type="Tag" width="10%">
+      <TableRow isBorder>
+        <TableCell type="Tag" width="10%" minWidth={120}>
           <Tag color={getStatusDetails(printing.status).color}>
             {getStatusDetails(printing.status).text}
           </Tag>

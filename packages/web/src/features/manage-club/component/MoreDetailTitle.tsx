@@ -35,6 +35,7 @@ const MoreDetailTitle: React.FC<MoreDetailTitleProps> = ({
         fs={20}
         fw="MEDIUM"
         lh={24}
+        color="BLACK"
         style={{ flex: 1 }}
       >
         {title}

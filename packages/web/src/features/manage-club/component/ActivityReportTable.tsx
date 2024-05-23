@@ -60,22 +60,22 @@ const ActivityReportTable: React.FC<ActivityTableProps> = ({
 }) => (
   <TableWrapper>
     <TableRow>
-      <TableCell type="Header" width="15%">
+      <TableCell type="Header" width="10%" minWidth={120}>
         상태
       </TableCell>
       <TableCell type="Header" width="30%">
         활동명
       </TableCell>
-      <TableCell type="Header" width="25%">
+      <TableCell type="Header" width="25%" minWidth={250}>
         활동 분류
       </TableCell>
-      <TableCell type="Header" width="30%">
+      <TableCell type="Header" width="35%">
         활동 기간
       </TableCell>
     </TableRow>
     {activityList.map(activity => (
-      <TableRow isBoarder>
-        <TableCell type="Tag" width="15%">
+      <TableRow isBorder>
+        <TableCell type="Tag" width="10%" minWidth={120}>
           <Tag color={getStatusDetails(activity.status).color}>
             {getStatusDetails(activity.status).text}
           </Tag>
@@ -83,12 +83,12 @@ const ActivityReportTable: React.FC<ActivityTableProps> = ({
         <TableCell type="Default" width="30%">
           {activity.name}
         </TableCell>
-        <TableCell type="Tag" width="25%">
+        <TableCell type="Tag" width="25%" minWidth={250}>
           <Tag color={getTypeTags(activity.type).color}>
             {getTypeTags(activity.type).text}
           </Tag>
         </TableCell>
-        <TableCell type="Default" width="30%">
+        <TableCell type="Default" width="35%">
           {formatDate(activity.startDate)} ~ {formatDate(activity.endDate)}
         </TableCell>
       </TableRow>

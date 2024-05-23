@@ -10,10 +10,10 @@ export const TableWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
 `;
 
-export const TableRow = styled.div<{ isBoarder?: boolean }>`
+export const TableRow = styled.div<{ isBorder?: boolean }>`
   display: flex;
   flex-direction: row;
   gap: 0px;
-  border: ${({ isBoarder = false, theme }) =>
-    isBoarder ? `1px solid ${theme.colors.GRAY[200]}` : "none"};
+  border: ${({ isBorder = false, theme }) =>
+    isBorder ? `1px solid ${theme.colors.GRAY[200]}` : "none"};
 `;

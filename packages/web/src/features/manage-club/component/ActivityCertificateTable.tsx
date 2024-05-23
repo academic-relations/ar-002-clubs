@@ -39,7 +39,7 @@ const ActivityCertificateTable: React.FC<AcfTableProps> = ({
 }) => (
   <TableWrapper>
     <TableRow>
-      <TableCell type="Header" width="10%">
+      <TableCell type="Header" width="10%" minWidth={120}>
         상태
       </TableCell>
       <TableCell type="Header" width="50%">
@@ -53,8 +53,8 @@ const ActivityCertificateTable: React.FC<AcfTableProps> = ({
       </TableCell>
     </TableRow>
     {certificateList.items.map(certificate => (
-      <TableRow isBoarder>
-        <TableCell type="Tag" width="10%">
+      <TableRow isBorder>
+        <TableCell type="Tag" width="10%" minWidth={120}>
           <Tag color={getStatusDetails(certificate.statusEnum).color}>
             {getStatusDetails(certificate.statusEnum).text}
           </Tag>

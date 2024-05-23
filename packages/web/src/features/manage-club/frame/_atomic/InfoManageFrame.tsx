@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import { ManageWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
@@ -29,6 +29,9 @@ const InfoManageFrame: React.FC = () => {
   const [password, setPassword] = React.useState<string>(
     mockClubDescription.roomPassword,
   );
+  const [errorDescription, setErrorDescription] = React.useState<string>("");
+  const [errorPassword, setErrorPassword] = React.useState<string>("");
+
   const [president, setPresident] = React.useState<string>("");
   const [representative1, setRepresentative1] = React.useState<string>("");
   const [representative2, setRepresentative2] = React.useState<string>("");
@@ -36,10 +39,29 @@ const InfoManageFrame: React.FC = () => {
   // TODO: 중복 선택 막는 로직 추가
 
   const buttonType =
-    description === mockClubDescription.description &&
-    password === mockClubDescription.roomPassword
+    (description === mockClubDescription.description &&
+      password === mockClubDescription.roomPassword) ||
+    errorDescription === "" ||
+    errorPassword === ""
       ? "disabled"
       : "default";
+
+  useEffect(() => {
+    if (description === "") {
+      setErrorDescription("동아리 설명을 입력하세요");
+    } else {
+      setErrorDescription("");
+    }
+  }, [description, setErrorDescription]);
+
+  useEffect(() => {
+    if (password === "") {
+      setErrorPassword("동아리방 비밀번호를 입력하세요");
+    } else {
+      setErrorPassword("");
+    }
+  }, [password, setErrorPassword]);
+  // TODO: 동방 없는 곳은 비밀번호 입력 안 해도 에러 안 뜨게 수정
 
   const selectItems: SelectItem[] = mockClubMembers.members.map(member => ({
     label: `${member.studentNumber} ${member.name} (${member.krPhoneNumber})`,
@@ -66,12 +88,14 @@ const InfoManageFrame: React.FC = () => {
               area
               value={description}
               handleChange={setDescription}
+              errorMessage={errorDescription}
             />
             <TextInput
               label="동아리방 비밀번호"
               placeholder="동아리방 비밀번호를 입력하세요"
               value={password}
               handleChange={setPassword}
+              errorMessage={errorPassword}
             />
             <Button
               type={buttonType}
