@@ -5,8 +5,14 @@ import { ManageWrapper } from "@sparcs-clubs/web/features/manage-club/component/
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import Select from "@sparcs-clubs/web/common/components/Forms/Select";
+import Select, {
+  SelectItem,
+} from "@sparcs-clubs/web/common/components/Forms/Select";
 import Button from "@sparcs-clubs/web/common/components/Button";
+import {
+  mockClubDescription,
+  mockClubMembers,
+} from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
 
 const InfoManageMainWrapper = styled.div`
   display: flex;
@@ -17,8 +23,27 @@ const InfoManageMainWrapper = styled.div`
 
 const InfoManageFrame: React.FC = () => {
   const [toggle, setToggle] = React.useState<boolean>(true);
-  const [description, setDescription] = React.useState<string>("");
-  const [password, setPassword] = React.useState<string>("");
+  const [description, setDescription] = React.useState<string>(
+    mockClubDescription.description,
+  );
+  const [password, setPassword] = React.useState<string>(
+    mockClubDescription.roomPassword,
+  );
+  const [president, setPresident] = React.useState<string>("");
+  const [representative1, setRepresentative1] = React.useState<string>("");
+  const [representative2, setRepresentative2] = React.useState<string>("");
+
+  const buttonType =
+    description === mockClubDescription.description &&
+    password === mockClubDescription.roomPassword
+      ? "disabled"
+      : "default";
+
+  const selectItems: SelectItem[] = mockClubMembers.members.map(member => ({
+    label: `${member.studentNumber} ${member.name} (${member.krPhoneNumber})`,
+    value: member.studentNumber.toString(),
+    selectable: true,
+  }));
 
   return (
     <ManageWrapper>
@@ -46,7 +71,10 @@ const InfoManageFrame: React.FC = () => {
               value={password}
               handleChange={setPassword}
             />
-            <Button style={{ width: "max-content", alignSelf: "flex-end" }}>
+            <Button
+              type={buttonType}
+              style={{ width: "max-content", alignSelf: "flex-end" }}
+            >
               저장
             </Button>
           </Card>
@@ -54,9 +82,24 @@ const InfoManageFrame: React.FC = () => {
             <Typography ff="PRETENDARD" fw="MEDIUM" fs={20} lh={24}>
               대표자 및 대의원
             </Typography>
-            <Select label="대표자" items={[]} />
-            <Select label="대의원 1" items={[]} />
-            <Select label="대의원 2" items={[]} />
+            <Select
+              label="대표자"
+              items={selectItems}
+              selectedValue={president}
+              onSelect={setPresident}
+            />
+            <Select
+              label="대의원 1"
+              items={selectItems}
+              selectedValue={representative1}
+              onSelect={setRepresentative1}
+            />
+            <Select
+              label="대의원 2"
+              items={selectItems}
+              selectedValue={representative2}
+              onSelect={setRepresentative2}
+            />
           </Card>
         </InfoManageMainWrapper>
       )}
