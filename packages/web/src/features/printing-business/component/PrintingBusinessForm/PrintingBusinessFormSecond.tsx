@@ -6,7 +6,7 @@ import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumbe
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import FileUpload from "@sparcs-clubs/web/features/printing-business/component/FileUpload";
+import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 
 import { leftoverPrintsInfoText } from "@sparcs-clubs/web/constants/printingBusiness";
 
