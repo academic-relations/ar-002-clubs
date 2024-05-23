@@ -10,6 +10,9 @@ import {
   PromotionalPrintingSizeEnum,
 } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
+import type { ApiClb004ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb004";
+import type { ApiClb006ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb006";
+import type { ApiClb010ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
 
 export interface Activity {
   id: number;
@@ -58,6 +61,86 @@ export enum MemberStatusEnum {
   Approved, // 승인
   Rejected, // 반려
 }
+const mockClubDescription: ApiClb004ResponseOK = {
+  description: "동아리 설명입니다",
+  roomPassword: "password",
+};
+
+const mockClubRepresentatives: ApiClb006ResponseOK = {
+  representatives: [
+    {
+      representitiveEnum: 1,
+      studentId: 20200510,
+      name: "이지윤",
+      phoneNumber: "010-1234-5678",
+    },
+    {
+      representitiveEnum: 2,
+      studentId: 20200511,
+      name: "박지호",
+      phoneNumber: "010-1234-5678",
+    },
+    {
+      representitiveEnum: 2,
+      studentId: 20200512,
+      name: "박병찬",
+      phoneNumber: "010-1234-5678",
+    },
+  ],
+};
+
+const mockClubMembers: ApiClb010ResponseOk = {
+  members: [
+    {
+      studentNumber: 20200510,
+      name: "이지윤",
+      email: "test@kaist.ac.kr",
+      krPhoneNumber: "010-1234-5678",
+    },
+    {
+      studentNumber: 20200511,
+      name: "박지호",
+      email: "test@kaist.ac.kr",
+      krPhoneNumber: "010-1234-5678",
+    },
+    {
+      studentNumber: 20200512,
+      name: "박병찬",
+      email: "test@kaist.ac.kr",
+      krPhoneNumber: "010-1234-5678",
+    },
+    {
+      studentNumber: 20200000,
+      name: "일지윤",
+      email: "test@kaist.ac.kr",
+      krPhoneNumber: "010-1234-5678",
+    },
+    {
+      studentNumber: 20200000,
+      name: "이지윤",
+      email: "test@kaist.ac.kr",
+      krPhoneNumber: "010-1234-5678",
+    },
+    {
+      studentNumber: 20200000,
+      name: "삼지윤",
+      email: "test@kaist.ac.kr",
+      krPhoneNumber: "010-1234-5678",
+    },
+    {
+      studentNumber: 20200000,
+      name: "사지윤",
+      email: "test@kaist.ac.kr",
+      krPhoneNumber: "010-1234-5678",
+    },
+    {
+      studentNumber: 20200000,
+      name: "오지윤",
+      email: "test@kaist.ac.kr",
+      krPhoneNumber: "010-1234-5678",
+    },
+  ],
+};
 
 const mockupManageMems: Members[] = [
   {
@@ -486,4 +569,7 @@ export {
   mockupManageRental,
   mockupManagePrint,
   mockupManageCms,
+  mockClubDescription,
+  mockClubRepresentatives,
+  mockClubMembers,
 };
