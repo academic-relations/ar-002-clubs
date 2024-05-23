@@ -42,7 +42,8 @@ export class ClubRepository {
         name: Club.name,
         type: ClubT.clubStatusEnumId,
         characteristic: ClubT.characteristicKr,
-        advisor: ClubT.advisor,
+        // TODO: professor table에서 join하도록 변경
+        // advisor: ClubT.advisor,
         description: Club.description,
         foundingYear: Club.foundingYear,
       })
@@ -73,7 +74,8 @@ export class ClubRepository {
           isPermanent: sql<boolean>`COALESCE(MAX(CASE WHEN DivisionPermanentClubD.id IS NOT NULL THEN 'true' ELSE 'false' END),'false')`,
           characteristic: ClubT.characteristicKr,
           representative: User.name,
-          advisor: ClubT.advisor,
+          // TODO: professor table에서 join하도록 변경
+          // advisor: ClubT.advisor,
           totalMemberCnt: count(ClubStudentT),
         },
       })
@@ -111,7 +113,8 @@ export class ClubRepository {
         ClubT.clubStatusEnumId,
         ClubT.characteristicKr,
         User.name,
-        ClubT.advisor,
+        // TODO: professor table에서 join하도록 변경
+        // ClubT.advisor,
       );
     const record = rows.reduce<Record<number, IClubs>>((acc, row) => {
       const divId = row.id;
@@ -124,7 +127,8 @@ export class ClubRepository {
       }
 
       if (club) {
-        acc[divId].clubs.push(club);
+        // acc[divId].clubs.push(club);
+        acc[divId].clubs.push({ ...club, advisor: "" });
       }
       return acc;
     }, {});

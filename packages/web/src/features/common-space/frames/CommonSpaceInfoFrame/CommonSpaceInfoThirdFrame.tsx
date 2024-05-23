@@ -1,18 +1,12 @@
+import Card from "@sparcs-clubs/web/common/components/Card";
+import Info from "@sparcs-clubs/web/common/components/Info";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import React from "react";
 import styled from "styled-components";
-import Card from "@sparcs-clubs/web/common/components/Card";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
-import Info from "@sparcs-clubs/web/common/components/Info";
 
 import { differenceInHours, differenceInMinutes, format } from "date-fns";
 import { ko } from "date-fns/locale";
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
-
-const StyledCard = styled(Card)<{ type: string }>`
-  padding: 32px;
-  gap: 20px;
-  align-self: stretch;
-`;
 
 const StyledTypography = styled(Typography)`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
@@ -51,7 +45,7 @@ const CommonSpaceInfoThirdFrame: React.FC<CommonSpaceFrameProps> = ({
 
   return (
     <>
-      <StyledCard type="outline">
+      <Card outline gap={20}>
         <CardInner>
           <StyledTypography type="p">신청자 정보</StyledTypography>
           <StyledList>
@@ -69,7 +63,7 @@ const CommonSpaceInfoThirdFrame: React.FC<CommonSpaceFrameProps> = ({
             {diffMinutes! % 60 ? ` ${diffMinutes! % 60}분` : ""})
           </Typography>
         </ReservationInfo>
-      </StyledCard>
+      </Card>
       <Info text="먼가 넣을 것이 없을까나" />
     </>
   );

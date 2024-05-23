@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 
-import Icon from "@sparcs-clubs/web/common/components/Icon";
-import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import DateRangeInput from "@sparcs-clubs/web/common/components/Forms/DateRangeInput";
 import IconButton from "@sparcs-clubs/web/common/components/Forms/IconButton";
+import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
+import Icon from "@sparcs-clubs/web/common/components/Icon";
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 // eslint-disable-next-line no-restricted-imports
 import { ActivityDescription } from "../../types/activityCertificate";
-
-const StyledCard = styled(Card)<{ type: string }>`
-  padding: 32px;
-  gap: 20px;
-  align-self: stretch;
-`;
 
 const ActivityCertificateSecondFrameInner = styled.div`
   display: flex;
@@ -273,7 +267,7 @@ const ActivityCertificateInfoSecondFrame: React.FC<
   return (
     <ActivityCertificateSecondFrameInner>
       <Info text="활동 내역 최대 5개까지 입력 가능, 날짜 포함 => 워딩은 병찬이나 동연에서 고쳐주겟징~~" />
-      <StyledCard type="outline">
+      <Card outline gap={20}>
         {activityCertificate.detail.map(activityDescription => (
           <ActivityCertificateRow
             key={activityDescription.key}
@@ -362,7 +356,7 @@ const ActivityCertificateInfoSecondFrame: React.FC<
           buttonText="활동 내역 추가"
           iconType="add"
         />
-      </StyledCard>
+      </Card>
     </ActivityCertificateSecondFrameInner>
   );
 };

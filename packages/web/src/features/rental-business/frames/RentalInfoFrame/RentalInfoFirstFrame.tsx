@@ -1,20 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import Select from "@sparcs-clubs/web/common/components/Forms/Select";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import useGetUserProfile from "@sparcs-clubs/web/features/printing-business/service/getUserProfile";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import Select from "@sparcs-clubs/web/common/components/Forms/Select";
 import { RentalFrameProps } from "../RentalNoticeFrame";
-
-const StyledCard = styled(Card)<{ type: string }>`
-  padding: 32px;
-  gap: 40px;
-  align-self: stretch;
-`;
 
 const RentalInfoFirstFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
@@ -75,7 +68,7 @@ const RentalInfoFirstFrame: React.FC<
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <StyledCard type="outline">
+      <Card outline gap={40}>
         <Select
           items={clubList}
           selectedValue={selectedValue}
@@ -92,7 +85,7 @@ const RentalInfoFirstFrame: React.FC<
           placeholder={userPhone}
           setErrorStatus={setHasPhoneError}
         />
-      </StyledCard>
+      </Card>
     </AsyncBoundary>
   );
 };

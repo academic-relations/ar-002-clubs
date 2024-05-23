@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import Select from "@sparcs-clubs/web/common/components/Forms/Select";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Timetable from "@sparcs-clubs/web/common/components/Timetable";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import Select from "@sparcs-clubs/web/common/components/Forms/Select";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 
 import { differenceInHours, differenceInMinutes, format } from "date-fns";
 import { ko } from "date-fns/locale";
@@ -12,30 +12,12 @@ import { ko } from "date-fns/locale";
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 import { mockCommonSpaceList } from "./mockCommonSpaceList";
 
-const StyledCard = styled(Card)<{ type: string }>`
-  padding: 32px;
-  gap: 20px;
-  align-self: stretch;
-  display: flex;
-  flex-direction: row;
-`;
-
 const StyledCardOuter = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
   flex: 1 0 0;
-  align-self: stretch;
-`;
-
-const StyledInfoCard = styled(Card)<{ type: string }>`
-  display: flex;
-  padding: 32px;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-top: 64px;
-  gap: 20px;
   align-self: stretch;
 `;
 
@@ -94,14 +76,14 @@ const CommonSpaceInfoSecondFrame: React.FC<
           <Info
             text={`${commonSpace.space}는 하루에 최대 4시간, 일주일에 최대 10시간 사용할 수 있습니다.`}
           />
-          <StyledCard type="outline">
+          <Card outline gap={20} style={{ flexDirection: "row" }}>
             <Timetable
               data={Array(7 * 48).fill(false)}
               setDateTimeRange={setDateTimeRange}
             />
             <StyledCardOuter>
               {dateTimeRange && (
-                <StyledInfoCard type="outline">
+                <Card outline gap={20} style={{ marginTop: 64 }}>
                   <Typography type="p">선택 시간</Typography>
                   <Typography type="p">
                     {format(dateTimeRange[0], "M/d(E) ", { locale: ko })}
@@ -110,10 +92,10 @@ const CommonSpaceInfoSecondFrame: React.FC<
                     {`${diffHours}시간`}
                     {diffMinutes! % 60 ? ` ${diffMinutes! % 60}분` : ""})
                   </Typography>
-                </StyledInfoCard>
+                </Card>
               )}
             </StyledCardOuter>
-          </StyledCard>
+          </Card>
         </>
       )}
     </>

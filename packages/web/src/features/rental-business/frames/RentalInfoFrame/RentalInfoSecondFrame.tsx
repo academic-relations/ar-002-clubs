@@ -3,27 +3,21 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 import Info from "@sparcs-clubs/web/common/components/Info";
-import ItemButtonList from "@sparcs-clubs/web/features/rental-business/components/ItemButtonList";
-import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
+import TextButton from "@sparcs-clubs/web/common/components/TextButton";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import Easel from "@sparcs-clubs/web/features/rental-business//components/Rentals/Easel";
-import Vacuum from "@sparcs-clubs/web/features/rental-business//components/Rentals/Vacuum";
 import HandCart from "@sparcs-clubs/web/features/rental-business//components/Rentals/HandCart";
 import Mat from "@sparcs-clubs/web/features/rental-business//components/Rentals/Mat";
 import Tool from "@sparcs-clubs/web/features/rental-business//components/Rentals/Tool";
+import Vacuum from "@sparcs-clubs/web/features/rental-business//components/Rentals/Vacuum";
+import ItemButtonList from "@sparcs-clubs/web/features/rental-business/components/ItemButtonList";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
-import TextButton from "@sparcs-clubs/web/common/components/TextButton";
-import Modal from "@sparcs-clubs/web/common/components/Modal";
-import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
+import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 import { mockExistDates } from "./_atomic/mockExistDate";
-
-const StyledCard = styled(Card)<{ type: string }>`
-  padding: 32px;
-  gap: 40px;
-  align-self: stretch;
-`;
 
 const StyledCardInner = styled.div`
   display: flex;
@@ -194,7 +188,7 @@ const RentalInfoSecondFrame: React.FC<
 
   return (
     <>
-      <StyledCard type="outline">
+      <Card outline gap={40}>
         <Typography type="h3">대여 기간 선택</Typography>
         <SelectRangeCalendar
           rentalDate={rentalDate}
@@ -208,11 +202,11 @@ const RentalInfoSecondFrame: React.FC<
           setPendingDate={setPendingDate}
           isRentalListEmpty={isRentalListEmpty()}
         />
-      </StyledCard>
+      </Card>
       <ItemButtonList value={value} onChange={itemOnChange} rental={rental} />
       <Info text={rentals[value].info} />
       {value !== "none" && (
-        <StyledCard type="outline">
+        <Card outline gap={40}>
           <StyledCardInner>
             <ResetTitleWrapper>
               <FlexGrowTypography>
@@ -230,9 +224,9 @@ const RentalInfoSecondFrame: React.FC<
               {...props}
             />
           </StyledCardInner>
-        </StyledCard>
+        </Card>
       )}
-      <StyledCard type="outline">
+      <Card outline gap={40}>
         <StyledCardInner>
           <ResetTitleWrapper>
             <FlexGrowTypography>
@@ -246,7 +240,7 @@ const RentalInfoSecondFrame: React.FC<
           </ResetTitleWrapper>
           <RentalList rental={rental} />
         </StyledCardInner>
-      </StyledCard>
+      </Card>
       {showPeriodModal !== "none" && (
         <Modal>
           <CancellableModalContent

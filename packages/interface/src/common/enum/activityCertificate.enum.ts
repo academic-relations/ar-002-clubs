@@ -4,7 +4,7 @@ enum ActivityCertificateOrderStatusEnum {
   Approved, // 승인
   Rejected, // 반려
   Issued, // 발급
-  Recieved, // 수령
+  Received, // 수령
 }
 
 export { ActivityCertificateOrderStatusEnum };

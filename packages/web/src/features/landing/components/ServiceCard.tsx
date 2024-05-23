@@ -11,12 +11,9 @@ interface ServiceCardProps {
   serviceLink: string;
 }
 
-const ServiceCardInner = styled(Card)`
-  gap: 16px;
-  display: flex;
+const ServiceCardInner = styled(Card).attrs({ padding: "12px 20px", gap: 16 })`
   flex-direction: row;
   flex: 1;
-  padding: 12px 20px;
   align-items: center;
 `;
 

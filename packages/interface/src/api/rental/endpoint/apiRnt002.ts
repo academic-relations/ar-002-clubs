@@ -13,11 +13,12 @@ const method = "POST";
 
 const requestParam = z.object({});
 
-const requestQuery = z.object({});
+const requestQuery = z.object({
+  clubId: z.number().int().min(1),
+});
 
 const requestBody = z.object({
-  clubId: z.number().int().min(1),
-  krPhoneNumber: zKrPhoneNumber,
+  studentPhoneNumber: zKrPhoneNumber,
   objects: z
     .object({
       id: z.number().int().min(1),
