@@ -66,8 +66,8 @@ const FundingTable: React.FC<FundingTableProps> = ({ fundingList }) => {
           승인 금액
         </TableCell>
       </TableRow>
-      {fundingList.map(funding => (
-        <TableRow isBorder>
+      {fundingList.map((funding, index) => (
+        <TableRow key={funding.name + String(index)} isBorder>
           <TableCell type="Tag" width="10%" minWidth={120}>
             <Tag color={getStatusDetails(funding.status).color}>
               {getStatusDetails(funding.status).text}

@@ -52,8 +52,8 @@ const ActivityCertificateTable: React.FC<AcfTableProps> = ({
         발급 매수
       </TableCell>
     </TableRow>
-    {certificateList.items.map(certificate => (
-      <TableRow isBorder>
+    {certificateList.items.map((certificate, index) => (
+      <TableRow isBorder key={certificate.studentName + String(index)}>
         <TableCell type="Tag" width="10%" minWidth={120}>
           <Tag color={getStatusDetails(certificate.statusEnum).color}>
             {getStatusDetails(certificate.statusEnum).text}

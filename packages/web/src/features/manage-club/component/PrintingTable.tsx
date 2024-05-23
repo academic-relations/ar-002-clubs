@@ -65,8 +65,8 @@ const PrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
         인쇄 매수
       </TableCell>
     </TableRow>
-    {printingList.items.map(printing => (
-      <TableRow isBorder>
+    {printingList.items.map((printing, index) => (
+      <TableRow isBorder key={printing.studentName + String(index)}>
         <TableCell type="Tag" width="10%" minWidth={120}>
           <Tag color={getStatusDetails(printing.status).color}>
             {getStatusDetails(printing.status).text}

@@ -73,8 +73,8 @@ const ActivityReportTable: React.FC<ActivityTableProps> = ({
         활동 기간
       </TableCell>
     </TableRow>
-    {activityList.map(activity => (
-      <TableRow isBorder>
+    {activityList.map((activity, index) => (
+      <TableRow key={activity.name + String(index)} isBorder>
         <TableCell type="Tag" width="10%" minWidth={120}>
           <Tag color={getStatusDetails(activity.status).color}>
             {getStatusDetails(activity.status).text}

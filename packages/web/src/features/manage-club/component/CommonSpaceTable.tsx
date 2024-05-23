@@ -58,8 +58,8 @@ const CommonSpaceTable: React.FC<CommonSpaceTableProps> = ({ spaceList }) => (
         예약 호실
       </TableCell>
     </TableRow>
-    {spaceList.items.map(space => (
-      <TableRow isBorder>
+    {spaceList.items.map((space, index) => (
+      <TableRow isBorder key={space.chargeStudentName + String(index)}>
         <TableCell type="Tag" width="10%" minWidth={120}>
           <Tag color={getStatusDetails(space.statusEnum).color}>
             {getStatusDetails(space.statusEnum).text}

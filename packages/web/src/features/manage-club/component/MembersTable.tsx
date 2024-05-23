@@ -64,7 +64,7 @@ const MembersTable: React.FC<MembersTableProps> = ({ memberList }) => (
       </TableCell>
     </TableRow>
     {memberList.map(member => (
-      <TableRow isBorder>
+      <TableRow isBorder key={member.studentId}>
         <TableCell type="Tag" width="10%" minWidth={120}>
           <Tag color={getStatusDetails(member.status).color}>
             {getStatusDetails(member.status).text}

@@ -61,7 +61,7 @@ const RentalTable: React.FC<RentalTableProps> = ({ rentalList }) => (
       </TableCell>
     </TableRow>
     {rentalList.items.map(rental => (
-      <TableRow isBorder>
+      <TableRow key={rental.id} isBorder>
         <TableCell type="Tag" width="10%" minWidth={120}>
           <Tag color={getStatusDetails(rental.statusEnum).color}>
             {getStatusDetails(rental.statusEnum).text}
