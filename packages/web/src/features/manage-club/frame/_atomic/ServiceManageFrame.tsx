@@ -28,6 +28,7 @@ const ServiceManageFrame: React.FC = () => {
       />
       {toggle && (
         <ManageTablesWrapper>
+          {/* TODO: moreDetailPath 수정 */}
           <MoreDetailTitle
             title="대여 사업"
             moreDetail="내역 더보기"
