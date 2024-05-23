@@ -137,4 +137,23 @@ export class ClubRepository {
     };
     return result;
   }
+
+  async findClubActivities(studentId: number): Promise<{
+    clubs: { id: number; name: string; startMonth: Date; endMonth: Date }[];
+  }> {
+    const clubActivities = await this.db
+      .select()
+      .from(ClubStudentT)
+      .leftJoin(Club, eq(Club.id, ClubStudentT.clubId))
+      .where(eq(ClubStudentT.studentId, studentId))
+      .then(rows =>
+        rows.map(row => ({
+          id: row.club_student_t.clubId,
+          name: row.club.name,
+          startMonth: row.club_student_t.startTerm,
+          endMonth: row.club_student_t.endTerm,
+        })),
+      );
+    return { clubs: clubActivities };
+  }
 }

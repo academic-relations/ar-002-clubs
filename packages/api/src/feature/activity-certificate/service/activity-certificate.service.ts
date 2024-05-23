@@ -1,11 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { ApiAcf001RequestBody } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf001";
+import { ClubRepository } from "@sparcs-clubs/api/common/repository/club.repository";
 import { ActivityCertificateRepository } from "../repository/activity-certificate.repository";
 
 @Injectable()
 export class ActivityCertificateService {
   constructor(
     private readonly activityCertificateRepository: ActivityCertificateRepository,
+    private readonly Club: ClubRepository,
   ) {}
 
   async postActivityCertificate(body: ApiAcf001RequestBody) {
@@ -19,8 +21,7 @@ export class ActivityCertificateService {
   }
 
   async getStudentActivityCertificatesClubHistory() {
-    const clubHistory =
-      await this.activityCertificateRepository.getStudentActivityCertificatesClubHistory();
+    const clubHistory = await this.Club.findClubActivities(1); // TODO: 실제 studentId 적용
     return clubHistory;
   }
 }
