@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import Select, {
   SelectItem,
 } from "@sparcs-clubs/web/common/components/Forms/Select";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
+import React, { useEffect, useState } from "react";
 import { RentalFrameProps } from "../RentalNoticeFrame";
-
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
-  gap: 40px;
-  align-self: stretch;
-`;
 
 const RentalInfoFirstFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
@@ -48,7 +41,7 @@ const RentalInfoFirstFrame: React.FC<
   }, [selectedValue, phone, setRental]);
 
   return (
-    <StyledCard outline>
+    <Card outline gap={40}>
       <Select
         items={mockClubList}
         selectedValue={selectedValue}
@@ -64,7 +57,7 @@ const RentalInfoFirstFrame: React.FC<
         placeholder={mockPhone}
         setErrorStatus={setHasPhoneError}
       />
-    </StyledCard>
+    </Card>
   );
 };
 
