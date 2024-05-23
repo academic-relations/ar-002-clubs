@@ -4,9 +4,10 @@ import { flexRender, type Table as TableType } from "@tanstack/react-table";
 
 interface TableProps<T> {
   table: TableType<T>;
+  height?: number | undefined;
 }
 
-const TableInner = styled.table`
+const TableInner = styled.table<{ height?: number }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -14,7 +15,8 @@ const TableInner = styled.table`
   border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
   border-radius: 8px;
   overflow: hidden;
-  border-collapse: collapse;
+  border-spacing: 0;
+  height: ${({ height }) => (height ? `${height}px` : "none")};
 `;
 
 const Header = styled.thead`
@@ -30,23 +32,25 @@ const HeaderRow = styled.tr`
 `;
 
 const Content = styled.tbody`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  display: block;
+  flex: 1;
+  overflow-y: auto;
   width: 100%;
 `;
 
-const ContentRow = styled.tr`
+const ContentRow = styled.tr<{ selected: boolean }>`
   width: 100%;
   display: flex;
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+  background-color: ${({ selected, theme }) =>
+    selected ? theme.colors.MINT[100] : "transparent"};
 `;
 
-const Table = <T,>({ table }: TableProps<T>) => (
-  <TableInner>
+const Table = <T,>({ table, height = undefined }: TableProps<T>) => (
+  <TableInner height={height}>
     <Header>
       {table.getHeaderGroups().map(headerGroup => (
-        <HeaderRow>
+        <HeaderRow key={headerGroup.id}>
           {headerGroup.headers.map(header => {
             if (header.isPlaceholder) {
               return null;
@@ -67,7 +71,7 @@ const Table = <T,>({ table }: TableProps<T>) => (
     </Header>
     <Content>
       {table.getRowModel().rows.map(row => (
-        <ContentRow key={row.id}>
+        <ContentRow key={row.id} selected={row.getIsSelected()}>
           {row
             .getVisibleCells()
             .map(cell =>

@@ -1,5 +1,6 @@
 import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import Button from "@sparcs-clubs/web/common/components/Button";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 // import DateRangeInput from "@sparcs-clubs/web/common/components/Forms/DateRangeInput";
 import Select from "@sparcs-clubs/web/common/components/Forms/Select";
@@ -8,6 +9,8 @@ import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import React from "react";
 import styled from "styled-components";
+import SelectParticipant from "../components/SelectParticipant";
+import { mockParticipantData } from "../_mock/mock";
 
 const ActivityReportMainFrameInner = styled.div`
   color: ${({ theme }) => theme.colors.BLACK};
@@ -30,18 +33,16 @@ const SectionInner = styled.div`
   align-self: stretch;
 `;
 
-const StyledCard = styled(Card)<{ type: string }>`
-  display: flex;
-  padding: 32px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 32px;
-  align-self: stretch;
-`;
-
 const HorizontalPlacer = styled.div`
   display: flex;
   gap: 32px;
+`;
+
+const ButtonPlaceRight = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  align-self: stretch;
 `;
 
 const ActivityReportCreateFrame: React.FC = () => (
@@ -56,7 +57,7 @@ const ActivityReportCreateFrame: React.FC = () => (
       <PageTitle>활동 보고서 작성</PageTitle>
       <SectionTitle>활동 정보</SectionTitle>
       <SectionInner>
-        <StyledCard type="outline">
+        <Card outline padding="32px" gap={32}>
           <TextInput label="활동명" placeholder="활동명을 입력해주세요" />
           <HorizontalPlacer>
             <Select
@@ -88,20 +89,25 @@ const ActivityReportCreateFrame: React.FC = () => (
             label="활동 내용"
             placeholder="활동 내용을 입력해주세요"
           />
-        </StyledCard>
+        </Card>
       </SectionInner>
       <SectionTitle>활동 인원</SectionTitle>
-      <SectionInner>table</SectionInner>
+      <SectionInner>
+        <SelectParticipant data={mockParticipantData} />
+      </SectionInner>
       <SectionTitle>활동 증빙</SectionTitle>
       <SectionInner>
-        <StyledCard type="outline">
+        <Card outline padding="32px" gap={32}>
           <FileUpload placeholder="파일을 선택해주세요" />
           <TextInput
             area
             placeholder="(선택) 활동 증빙에 대해서 작성하고 싶은 것이 있다면 입력해주세요"
           />
-        </StyledCard>
+        </Card>
       </SectionInner>
+      <ButtonPlaceRight>
+        <Button type="default">저장</Button>
+      </ButtonPlaceRight>
     </PageTitleOuter>
   </ActivityReportMainFrameInner>
 );

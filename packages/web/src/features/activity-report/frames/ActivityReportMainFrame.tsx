@@ -6,6 +6,7 @@ import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import React from "react";
 import styled from "styled-components";
+import Link from "next/link";
 import FoldableSection from "@sparcs-clubs/web/common/components/FoldableSection";
 import NewActivityReportList from "../components/NewActivityReportList";
 import PastActivityReportList from "../components/PastActivityReportList";
@@ -74,7 +75,9 @@ const ActivityReportMainFrame: React.FC = () => (
           >
             활동 보고서는 최대 20개까지 작성 가능합니다
           </Typography>
-          <Button type="default">+ 활동 보고서 작성</Button>
+          <Link href="/manage-club/activity-report/create">
+            <Button type="default">+ 활동 보고서 작성</Button>
+          </Link>
         </OptionOuter>
         <NewActivityReportList data={mockNewActivityData} />
       </SectionInner>

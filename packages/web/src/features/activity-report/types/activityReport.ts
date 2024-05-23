@@ -9,9 +9,20 @@ export interface NewActivityReport extends PastActivityReport {
   status: string;
 }
 
-export type Participant = {
+export interface Participant {
   studentId: string;
   name: string;
   phoneNumber: string;
   email: string;
-};
+}
+
+export interface ActivityReport {
+  name: string;
+  category: string;
+  dateRange: string;
+  location: string;
+  goal: string;
+  description: string;
+  participants: Participant[];
+  proof: string;
+}

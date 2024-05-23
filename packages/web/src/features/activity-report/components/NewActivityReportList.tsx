@@ -9,6 +9,8 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import styled from "styled-components";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { type NewActivityReport } from "../types/activityReport";
 
 interface ActivityReportListProps {
@@ -81,12 +83,12 @@ const columns = [
     {
       id: "date-range",
       header: () => (
-        <TableCell minWidth={304} width="30%" type="Header">
+        <TableCell minWidth={304} width="35%" type="Header">
           활동 기간
         </TableCell>
       ),
       cell: info => (
-        <TableCell minWidth={304} width="30%" type="Default">
+        <TableCell minWidth={304} width="35%" type="Default">
           {info.getValue()}
         </TableCell>
       ),
@@ -95,13 +97,29 @@ const columns = [
   ),
 ];
 
+const TableOuter = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: 8px;
+  align-self: stretch;
+`;
+
 const NewActivityReportList: React.FC<ActivityReportListProps> = ({ data }) => {
   const table = useReactTable({
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
   });
-  return <Table table={table} />;
+  return (
+    <TableOuter>
+      <Typography fs={14} fw="REGULAR" lh={20} ff="PRETENDARD">
+        총 {data.length}개
+      </Typography>
+      <Table table={table} />
+    </TableOuter>
+  );
 };
 
 export default NewActivityReportList;

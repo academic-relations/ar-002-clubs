@@ -1,3 +1,5 @@
+import { Participant } from "../types/activityReport";
+
 export const mockNewActivityData = [
   {
     status: "신청",
@@ -79,5 +81,44 @@ export const mockPastActivityData = [
     category: "동아리 성격에 합치하지 않는 활동",
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
+  },
+];
+
+export const mockParticipantData: Participant[] = [
+  {
+    studentId: "20200510",
+    name: "이지윤",
+    phoneNumber: "XXX-XXXX-XXXX",
+    email: "nicolelee2001@kaist.ac.kr",
+  },
+  {
+    studentId: "20210510",
+    name: "박지윤",
+    phoneNumber: "XXX-XXXX-XXXX",
+    email: "nicolelee2001@kaist.ac.kr",
+  },
+  {
+    studentId: "20200510",
+    name: "박병찬",
+    phoneNumber: "XXX-XXXX-XXXX",
+    email: "nicolelee2001@kaist.ac.kr",
+  },
+  {
+    studentId: "20230510",
+    name: "이도라",
+    phoneNumber: "XXX-XXXX-XXXX",
+    email: "nicolelee2001@kaist.ac.kr",
+  },
+  {
+    studentId: "20240510",
+    name: "스팍스",
+    phoneNumber: "XXX-XXXX-XXXX",
+    email: "nicolelee2001@kaist.ac.kr",
+  },
+  {
+    studentId: "20200230",
+    name: "스팍스",
+    phoneNumber: "XXX-XXXX-XXXX",
+    email: "nicolelee2001@kaist.ac.kr",
   },
 ];
