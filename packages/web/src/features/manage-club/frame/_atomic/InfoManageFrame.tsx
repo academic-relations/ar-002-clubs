@@ -32,6 +32,8 @@ const InfoManageFrame: React.FC = () => {
   const [president, setPresident] = React.useState<string>("");
   const [representative1, setRepresentative1] = React.useState<string>("");
   const [representative2, setRepresentative2] = React.useState<string>("");
+  // TODO: 현재 대표자, 대의원으로 기본값 설정
+  // TODO: 중복 선택 막는 로직 추가
 
   const buttonType =
     description === mockClubDescription.description &&
@@ -41,7 +43,7 @@ const InfoManageFrame: React.FC = () => {
 
   const selectItems: SelectItem[] = mockClubMembers.members.map(member => ({
     label: `${member.studentNumber} ${member.name} (${member.krPhoneNumber})`,
-    value: member.studentNumber.toString(),
+    value: member.studentNumber.toString(), // TODO: studentNumber 말고 studentId로 바꿔야하나?
     selectable: true,
   }));
 
