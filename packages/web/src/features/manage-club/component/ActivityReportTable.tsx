@@ -60,13 +60,13 @@ const ActivityReportTable: React.FC<ActivityTableProps> = ({
 }) => (
   <TableWrapper>
     <TableRow>
-      <TableCell type="Header" width="10%" minWidth={120}>
+      <TableCell type="Header" width="10%" minWidth={116}>
         상태
       </TableCell>
       <TableCell type="Header" width="30%">
         활동명
       </TableCell>
-      <TableCell type="Header" width="25%" minWidth={250}>
+      <TableCell type="Header" width="25%" minWidth={248}>
         활동 분류
       </TableCell>
       <TableCell type="Header" width="35%">
@@ -75,7 +75,7 @@ const ActivityReportTable: React.FC<ActivityTableProps> = ({
     </TableRow>
     {activityList.map((activity, index) => (
       <TableRow key={activity.name + String(index)} isBorder>
-        <TableCell type="Tag" width="10%" minWidth={120}>
+        <TableCell type="Tag" width="10%" minWidth={116}>
           <Tag color={getStatusDetails(activity.status).color}>
             {getStatusDetails(activity.status).text}
           </Tag>
@@ -83,7 +83,7 @@ const ActivityReportTable: React.FC<ActivityTableProps> = ({
         <TableCell type="Default" width="30%">
           {activity.name}
         </TableCell>
-        <TableCell type="Tag" width="25%" minWidth={250}>
+        <TableCell type="Tag" width="25%" minWidth={248}>
           <Tag color={getTypeTags(activity.type).color}>
             {getTypeTags(activity.type).text}
           </Tag>

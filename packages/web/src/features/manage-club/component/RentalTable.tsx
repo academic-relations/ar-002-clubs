@@ -41,13 +41,13 @@ interface RentalTableProps {
 const RentalTable: React.FC<RentalTableProps> = ({ rentalList }) => (
   <TableWrapper>
     <TableRow>
-      <TableCell type="Header" width="10%" minWidth={120}>
+      <TableCell type="Header" width="10%" minWidth={90}>
         상태
       </TableCell>
       <TableCell type="Header" width="20%">
         신청 일시
       </TableCell>
-      <TableCell type="Header" width="14%">
+      <TableCell type="Header" width="14%" minWidth={120}>
         신청자
       </TableCell>
       <TableCell type="Header" width="18%">
@@ -62,7 +62,7 @@ const RentalTable: React.FC<RentalTableProps> = ({ rentalList }) => (
     </TableRow>
     {rentalList.items.map(rental => (
       <TableRow key={rental.id} isBorder>
-        <TableCell type="Tag" width="10%" minWidth={120}>
+        <TableCell type="Tag" width="10%" minWidth={90}>
           <Tag color={getStatusDetails(rental.statusEnum).color}>
             {getStatusDetails(rental.statusEnum).text}
           </Tag>
@@ -70,7 +70,7 @@ const RentalTable: React.FC<RentalTableProps> = ({ rentalList }) => (
         <TableCell type="Default" width="20%">
           {formatDateTime(rental.createdAt)}
         </TableCell>
-        <TableCell type="Default" width="14%">
+        <TableCell type="Default" width="14%" minWidth={120}>
           {rental.studentName}
         </TableCell>
         <TableCell type="Default" width="18%">

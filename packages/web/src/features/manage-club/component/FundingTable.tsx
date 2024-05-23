@@ -50,25 +50,25 @@ const FundingTable: React.FC<FundingTableProps> = ({ fundingList }) => {
   return (
     <TableWrapper>
       <TableRow>
-        <TableCell type="Header" width="10%" minWidth={120}>
+        <TableCell type="Header" width="10%" minWidth={116}>
           상태
         </TableCell>
         <TableCell type="Header" width="50%">
           활동명
         </TableCell>
-        <TableCell type="Header" width="20%">
+        <TableCell type="Header" width="20%" minWidth={200}>
           항목명
         </TableCell>
-        <TableCell type="Header" width="10%">
+        <TableCell type="Header" width="10%" minWidth={120}>
           신청 금액
         </TableCell>
-        <TableCell type="Header" width="10%">
+        <TableCell type="Header" width="10%" minWidth={120}>
           승인 금액
         </TableCell>
       </TableRow>
       {fundingList.map((funding, index) => (
         <TableRow key={funding.name + String(index)} isBorder>
-          <TableCell type="Tag" width="10%" minWidth={120}>
+          <TableCell type="Tag" width="10%" minWidth={116}>
             <Tag color={getStatusDetails(funding.status).color}>
               {getStatusDetails(funding.status).text}
             </Tag>
@@ -76,13 +76,13 @@ const FundingTable: React.FC<FundingTableProps> = ({ fundingList }) => {
           <TableCell type="Default" width="50%">
             {funding.name}
           </TableCell>
-          <TableCell type="Default" width="20%">
+          <TableCell type="Default" width="20%" minWidth={200}>
             {funding.itemName}
           </TableCell>
-          <TableCell type="Default" width="10%">
+          <TableCell type="Default" width="10%" minWidth={120}>
             {funding.requestedAmount.toLocaleString()}원
           </TableCell>
-          <TableCell type="Default" width="10%">
+          <TableCell type="Default" width="10%" minWidth={120}>
             {funding.approvedAmount === null
               ? "-"
               : `${funding.approvedAmount.toLocaleString()}원`}
@@ -93,10 +93,10 @@ const FundingTable: React.FC<FundingTableProps> = ({ fundingList }) => {
         <TableCell type="Default" width="80%">
           {" "}
         </TableCell>
-        <TableCell type="Default" width="10%">
+        <TableCell type="Default" width="10%" minWidth={120}>
           {totalRequested.toLocaleString()}원
         </TableCell>
-        <TableCell type="Default" width="10%">
+        <TableCell type="Default" width="10%" minWidth={120}>
           {totalApproved === null ? "-" : `${totalApproved.toLocaleString()}원`}
         </TableCell>
       </TableRow>

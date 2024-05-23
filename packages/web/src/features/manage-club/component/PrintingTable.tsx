@@ -49,13 +49,13 @@ const getPrintSize = (type: number): string => {
 const PrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
   <TableWrapper>
     <TableRow>
-      <TableCell type="Header" width="10%" minWidth={120}>
+      <TableCell type="Header" width="10%" minWidth={90}>
         상태
       </TableCell>
       <TableCell type="Header" width="24%">
         신청 일시
       </TableCell>
-      <TableCell type="Header" width="18%">
+      <TableCell type="Header" width="18%" minWidth={120}>
         신청자
       </TableCell>
       <TableCell type="Header" width="24%">
@@ -67,7 +67,7 @@ const PrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
     </TableRow>
     {printingList.items.map((printing, index) => (
       <TableRow isBorder key={printing.studentName + String(index)}>
-        <TableCell type="Tag" width="10%" minWidth={120}>
+        <TableCell type="Tag" width="10%" minWidth={90}>
           <Tag color={getStatusDetails(printing.status).color}>
             {getStatusDetails(printing.status).text}
           </Tag>
@@ -75,7 +75,7 @@ const PrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
         <TableCell type="Default" width="24%">
           {formatDateTime(printing.createdAt)}
         </TableCell>
-        <TableCell type="Default" width="18%">
+        <TableCell type="Default" width="18%" minWidth={120}>
           {printing.studentName}
         </TableCell>
         <TableCell type="Default" width="24%">
