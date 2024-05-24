@@ -17,7 +17,7 @@ import {
 import { and, eq, sql, isNull, or, gte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-import { takeUnique } from "@sparcs-clubs/api/common/util/util";
+import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 
 interface IClubs {
   id: number;
@@ -65,6 +65,7 @@ export class ClubRepository {
   }
 
   async getClubs(): Promise<ApiClb001ResponseOK> {
+    const crt = getKSTDate();
     const rows = await this.db
       .select({
         id: Division.id,
@@ -88,10 +89,7 @@ export class ClubRepository {
         ClubStudentT,
         and(
           eq(Club.id, ClubStudentT.clubId),
-          or(
-            isNull(ClubStudentT.endTerm),
-            gte(ClubStudentT.endTerm, sql`NOW()`),
-          ),
+          or(isNull(ClubStudentT.endTerm), gte(ClubStudentT.endTerm, crt)),
         ),
       )
       .leftJoin(
@@ -101,7 +99,7 @@ export class ClubRepository {
           eq(ClubRepresentativeD.clubRepresentativeEnum, 1),
           or(
             isNull(ClubRepresentativeD.endTerm),
-            gte(ClubRepresentativeD.endTerm, sql`NOW()`),
+            gte(ClubRepresentativeD.endTerm, crt),
           ),
         ),
       )

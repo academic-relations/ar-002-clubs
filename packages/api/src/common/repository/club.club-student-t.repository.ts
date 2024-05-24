@@ -3,6 +3,7 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { ClubStudentT, SemesterD } from "src/drizzle/schema/club.schema";
 import { and, count, eq } from "drizzle-orm";
+import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { takeUnique } from "../util/util";
 
 @Injectable()
@@ -59,5 +60,38 @@ export class ClubStudentTRepository {
       )
       .then(takeUnique);
     return totalMemberCnt.totalMemberCnt;
+  }
+
+  async findClubStudentByClubIdAndStudentId(
+    clubId: number,
+    studentId: number,
+  ): Promise<{
+    club_student_id: number;
+    student_id: number;
+    club_id: number;
+    name: string;
+    phoneNumber: string;
+    email: string;
+  }> {
+    const student = await this.db
+      .select({
+        club_student_id: ClubStudentT.id,
+        student_id: Student.id,
+        club_id: ClubStudentT.clubId,
+        name: Student.name,
+        phoneNumber: Student.phoneNumber,
+        email: Student.email,
+      })
+      .from(ClubStudentT)
+      .leftJoin(Student, eq(Student.id, studentId))
+      .where(
+        and(
+          eq(ClubStudentT.clubId, clubId),
+          eq(ClubStudentT.studentId, studentId),
+        ),
+      )
+      .then(takeUnique);
+    // Todo: 현재 학기에 활동 중인지 필터링 해야함.
+    return student;
   }
 }
