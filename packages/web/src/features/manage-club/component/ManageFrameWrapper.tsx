@@ -1,5 +1,11 @@
 import styled from "styled-components";
 
+const FrameWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+`;
+
 const ManageWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -27,6 +33,7 @@ const ManageSingleWrapper = styled.div`
 `;
 
 export {
+  FrameWrapper,
   ManageSingleWrapper,
   SectionWrapper,
   ManageWrapper,
