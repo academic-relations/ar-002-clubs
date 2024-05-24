@@ -15,15 +15,15 @@ const paths = {
       },
       {
         name: "공지사항",
-        path: "/",
+        path: "/notice",
       },
       {
         name: "나의 동아리",
-        path: "/",
+        path: "/my/clubs",
       },
       {
         name: "동아리 관리",
-        path: "/",
+        path: "/manage-club",
       },
       {
         name: "동아리 등록 신청",
@@ -78,26 +78,26 @@ const paths = {
     sub: [
       {
         name: "대여 사업",
-        path: "/",
+        path: "/rental-business",
       },
       {
         name: "홍보물 인쇄",
-        path: "/",
+        path: "/printing-business",
       },
       {
         name: "활동확인서 발급",
-        path: "/",
+        path: "/activity-certificate",
       },
       {
         name: "공용공간 비정기사용",
-        path: "/",
+        path: "/common-space",
       },
     ],
   },
   MADE_BY: { name: "만든 사람들", path: "/" },
   LICENSE: { name: "라이센스", path: "/" },
   TERMS_OF_SERVICE: { name: "이용 약관", path: "/" },
-  LOGIN: { name: "로그인", path: "/login" },
+  LOGIN: { name: "로그인", path: "/" }, // TODO: 아마 로그인 사라질듯?
 };
 
 export type Paths = typeof paths;
