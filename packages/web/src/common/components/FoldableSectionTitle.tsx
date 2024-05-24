@@ -5,16 +5,16 @@ import styled from "styled-components";
 
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 
-import type { ClubCardProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
-
 const FoldableSectionTitleInner = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+
+  width: 100%;
 `;
 
-const MoreInfo = styled.div`
+export const MoreInfo = styled.div`
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 14px;
   line-height: 20px;
@@ -26,15 +26,11 @@ const MoreInfo = styled.div`
 
 const FoldableSectionTitle: React.FC<{
   title: string;
-  clubList: Array<ClubCardProps["club"]>;
   toggle: boolean;
-  showLength?: boolean;
   toggleHandler: () => void;
-}> = ({ title, clubList, toggle, showLength = true, toggleHandler }) => (
+}> = ({ title, toggle, toggleHandler }) => (
   <FoldableSectionTitleInner>
-    <SectionTitle size="lg">
-      {title} {showLength && `(${clubList.length})`}
-    </SectionTitle>
+    <SectionTitle size="lg">{title}</SectionTitle>
     <MoreInfo onClick={toggleHandler}>{toggle ? `접기` : `펼치기`}</MoreInfo>
   </FoldableSectionTitleInner>
 );

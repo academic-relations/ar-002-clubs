@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { setHours } from "date-fns";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import { setHours } from "date-fns";
+import React, { useEffect, useState } from "react";
 
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
@@ -16,12 +15,6 @@ type PrintingBusinessFormThirdProps = Pick<
   PrintingBusinessFormProps,
   "username" | "clubs" | "requestParam" | "requestForm" | "setRequestForm"
 > & { setFormError: React.Dispatch<React.SetStateAction<boolean>> };
-
-const StyledCard = styled(Card)<{ type: string }>`
-  padding: 32px;
-  gap: 20px;
-  align-self: stretch;
-`;
 
 const PrintingBusinessFormThird: React.FC<PrintingBusinessFormThirdProps> = ({
   username,
@@ -41,7 +34,7 @@ const PrintingBusinessFormThird: React.FC<PrintingBusinessFormThirdProps> = ({
   }, [printingPurpose]);
 
   return (
-    <StyledCard type="outline">
+    <Card outline gap={20}>
       <FormCheck
         label={printingBusinessOrderSteps[0].label}
         formContents={[
@@ -105,7 +98,7 @@ const PrintingBusinessFormThird: React.FC<PrintingBusinessFormThirdProps> = ({
           })
         }
       />
-    </StyledCard>
+    </Card>
   );
 };
 

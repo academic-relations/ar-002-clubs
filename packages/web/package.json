@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "build-start": "next build && next start",
     "mock:front": "pnpm dev",
     "mock:back": "echo \"In mock:back mode, the 'web' package will not be run. Exiting.\""
   },
@@ -39,5 +40,6 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@8.15.8"
 }

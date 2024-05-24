@@ -1,9 +1,9 @@
+import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import React, { useState } from "react";
 import styled from "styled-components";
-import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
-import Button from "@sparcs-clubs/web/common/components/Button";
 import { CommonSpaceInterface } from "../types/commonSpace";
 
 export interface CommonSpaceFrameProps {
@@ -16,12 +16,6 @@ const CommonSpaceNoticeFrameInner = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-  align-self: stretch;
-`;
-
-const StyledCard = styled(Card)<{ type: string }>`
-  padding: 32px;
-  gap: 16px;
   align-self: stretch;
 `;
 
@@ -57,14 +51,14 @@ const CommonSpaceNoticeFrame: React.FC<CommonSpaceFrameProps> = ({
 
   return (
     <CommonSpaceNoticeFrameInner>
-      <StyledCard type="outline">
+      <Card outline gap={16}>
         <Typography type="h3">안내사항</Typography>
         <StyledTypography type="p">
           대충 공용공간 비정기사용에 대한 안내사항
           <br />
           기타 등등 안내 내용 -{">"} 이건 동연 측에서 준비해주겠죠?
         </StyledTypography>
-      </StyledCard>
+      </Card>
       <StyledBottom>
         <StyledCheckboxOuter>
           <Checkbox

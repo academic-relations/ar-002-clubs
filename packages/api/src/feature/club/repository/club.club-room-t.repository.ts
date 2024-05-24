@@ -11,7 +11,7 @@ export class ClubRoomTRepository {
 
   async findClubLocationById(
     clubId: number,
-  ): Promise<{ room: number; buildingName: string }> {
+  ): Promise<{ room: string; buildingName: string }> {
     const currentDate = new Date();
 
     const roomDetails = await this.db

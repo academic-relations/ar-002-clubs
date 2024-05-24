@@ -43,7 +43,9 @@ export class ClubService {
       name: clubDetails.name,
       type: clubDetails.type,
       characteristic: clubDetails.characteristic,
-      advisor: clubDetails.advisor,
+      // TODO: professor에서 join 하도록 수정
+      // advisor: clubDetails.advisor,
+      advisor: "",
       divisionName: clubDetails.divisionName.name,
       description: clubDetails.description,
       isPermanent: false,
