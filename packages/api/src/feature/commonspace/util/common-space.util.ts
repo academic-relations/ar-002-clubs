@@ -79,6 +79,10 @@ export function splitReservationByWeek(start: Date, end: Date): Reservation[] {
   return reservations;
 }
 
+// 1. 시작시간과 끝나는 시간이 나오면 해당 시간을 시작시간은 00:00 끝나는 시간은 23:59로 변경한 후에 해당하는 예약을 전부 가져온다.
+// 2. 가져온 예약들을 일별로 나누고 주별로 나눈다. 이때 위에서 00:00으로 맞춘 시작시간보다 빠른 시간대는 삭제하고 23:59로 맞춘 끝나는 시간보다 늦은 시간대는 삭제한다.
+// 3. 그럼 이제 같은 날에 여러개 있는 예약들의 배열이 나오는데 이걸일별로 나눌때는 합쳐서 시간을 계산해줘야 함. 그리고 주별로 나눌때도 마찬가지로 같은 주에 포함된 예약들은 전부 합쳐서 시간을 계산해줘야 함.
+
 export function canMakeReservation(
   startTerm: Date,
   endTerm: Date,
@@ -101,7 +105,6 @@ export function canMakeReservation(
         }
         return total;
       }, 0) + calculateMinutes(newRes.start, newRes.end);
-
     return dailyMinutes > availableMinutesPerDay;
   });
 
@@ -111,7 +114,6 @@ export function canMakeReservation(
 
   const weeklyLimitExceeded = newReservationsByWeek.some(newRes => {
     const { weekStart, weekEnd } = getWeekRange(newRes.start);
-
     const weeklyMinutes =
       existingReservations.reduce((total, res) => {
         if (res.start <= weekEnd && res.end >= weekStart) {
@@ -121,7 +123,6 @@ export function canMakeReservation(
         }
         return total;
       }, 0) + calculateMinutes(newRes.start, newRes.end);
-
     return weeklyMinutes > availableMinutesPerWeek;
   });
 

@@ -15,8 +15,9 @@ import { CommonSpaceUsageOrderDRepository } from "../repository/common-space-usa
 import { Reservation, TermList } from "../dto/common-space.dto";
 import {
   canMakeReservation,
+  getWeekRange,
   periodicScheduleMake,
-} from "./calculate-time.util";
+} from "../util/common-space.util";
 import { GetCommonSpacesUsageOrderRepository } from "../repository/getCommonSpacesUsageOrder.repository";
 
 @Injectable()
@@ -87,12 +88,14 @@ export class CommonSpaceService {
       );
     }
 
+    const startDateforPrevSearch = getWeekRange(startTerm).weekStart;
+    const endDateforPrevSearch = getWeekRange(endTerm).weekEnd;
     const prevReservation: Reservation[] =
       await this.commonSpaceUsageOrderDRepository.findBySpaceIdAndClubIdAndStartTermBetweenAndEndTermBetween(
         spaceId,
         clubId,
-        startTerm,
-        endTerm,
+        startDateforPrevSearch,
+        endDateforPrevSearch,
       );
     const isAvailable = canMakeReservation(
       startTerm,
@@ -203,7 +206,7 @@ export class CommonSpaceService {
         clubId,
         startDate,
         endDate,
-        pageOffset,
+        pageOffset - 1,
         itemCount,
       );
     return result;

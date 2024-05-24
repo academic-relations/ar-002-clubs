@@ -83,10 +83,10 @@ export class CommonSpaceUsageOrderDRepository {
   }
 
   async deleteCommonSpaceUsageOrderD(orderId: number) {
-    const result = await this.db
+    await this.db
       .update(CommonSpaceUsageOrderD)
       .set({ deletedAt: sql<Date>`NOW()` })
       .where(eq(CommonSpaceUsageOrderD.id, orderId));
-    return result;
+    return {};
   }
 }
