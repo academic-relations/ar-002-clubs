@@ -14,8 +14,8 @@ interface ProfileListProps {
 const ProfileListWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: 300px;
   gap: 12px;
+  width: 100%;
 `;
 
 const ProfileList: React.FC<ProfileListProps> = ({ profiles }) => {

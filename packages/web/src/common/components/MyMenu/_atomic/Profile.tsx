@@ -15,7 +15,7 @@ const ProfileWrapper = styled.div<{ isSelected: boolean }>`
   display: flex;
   flex-direction: row;
   gap: 8px;
-  width: 300px;
+  flex: 1;
   border-radius: 4px;
   padding: 8px 12px;
   align-items: center;
