@@ -8,6 +8,7 @@ interface ProfileProps {
   profileNumber: number;
   email: string;
   isSelected?: boolean;
+  onClick: () => void;
 }
 
 const ProfileWrapper = styled.div<{ isSelected: boolean }>`
@@ -18,8 +19,11 @@ const ProfileWrapper = styled.div<{ isSelected: boolean }>`
   border-radius: 4px;
   padding: 8px 12px;
   align-items: center;
+  cursor: pointer;
   border: ${({ theme, isSelected }) =>
-    isSelected ? `1px solid ${theme.colors.GRAY[200]}` : "none"};
+    isSelected
+      ? `1px solid ${theme.colors.GRAY[200]}`
+      : `1px solid transparent`};
   &:hover {
     background-color: ${({ theme }) => theme.colors.GRAY[200]};
   }
@@ -37,8 +41,9 @@ const Profile: React.FC<ProfileProps> = ({
   profileNumber,
   email,
   isSelected = false,
+  onClick,
 }) => (
-  <ProfileWrapper isSelected={isSelected}>
+  <ProfileWrapper isSelected={isSelected} onClick={onClick}>
     <ProfileText>
       <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
         {profileName}
