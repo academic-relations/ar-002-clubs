@@ -44,7 +44,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
   CommonSpaceFrameProps & { setNextEnabled: (enabled: boolean) => void }
 > = ({ setNextEnabled, commonSpace, setCommonSpace }) => {
   const { data, isLoading, isError } = useGetCommonSpaces();
-  const [date, setDate] = useState(startOfWeek(new Date(), { locale: ko }));
+  const [date, setDate] = useState(startOfWeek(new Date()));
 
   const [selectedValue, setSelectedValue] = useState("");
   const [hasSelectError, setHasSelectError] = useState(false);
@@ -57,7 +57,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
     isError: isUsageOrdersError,
   } = useGetCommonSpaceUsageOrders(
     {
-      spaceId: selectedSpace?.id || 0,
+      spaceId: selectedSpace?.id || 1,
     },
     { startDate: date, endDate: addWeeks(date, 1) },
   );

@@ -1,5 +1,6 @@
 import {
   axiosClient,
+  defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 import apiCms002 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
@@ -10,6 +11,9 @@ import type {
   ApiCms002ResponseOK,
 } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
 import { useQuery } from "@tanstack/react-query";
+import { addWeeks, startOfWeek } from "date-fns";
+
+import { mockUsageOrders } from "./_mock/mockupCommonSpaceUsageOrders";
 
 export const useGetCommonSpaceUsageOrders = (
   requestParam: ApiCms002RequestParam,
@@ -31,5 +35,14 @@ export const useGetCommonSpaceUsageOrders = (
       }
     },
   });
+
+defineAxiosMock(mock => {
+  mock
+    .onGet(
+      `${apiCms002.url(1)}?startDate=${startOfWeek(new Date())}&endDate=${addWeeks(startOfWeek(new Date()), 1)}`,
+      {},
+    )
+    .reply(() => [200, mockUsageOrders]);
+});
 
 export default useGetCommonSpaceUsageOrders;
