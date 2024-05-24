@@ -10,7 +10,7 @@ const mockMyClubList: ApiClb003ResponseOK = {
         {
           id: 42,
           name: "KAINATION",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "기부",
           representative: "강현우",
@@ -26,7 +26,7 @@ const mockMyClubList: ApiClb003ResponseOK = {
         {
           id: 42,
           name: "KAINATION",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "기부",
           representative: "강현우",
@@ -42,7 +42,7 @@ const mockMyClubList: ApiClb003ResponseOK = {
         {
           id: 34,
           name: "MUSE",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "밴드세션&코러스",
           representative: "정민호",
@@ -52,7 +52,7 @@ const mockMyClubList: ApiClb003ResponseOK = {
         {
           id: 42,
           name: "KAINATION",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "기부",
           representative: "강현우",
