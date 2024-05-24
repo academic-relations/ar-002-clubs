@@ -27,7 +27,7 @@ const CommonSpaceInfoFirstFrame: React.FC<
       setCommonSpace({
         ...commonSpace,
         body: {
-          clubdId: club.id,
+          clubId: club.id,
           email: data?.email || "",
         },
         userInfo: {

@@ -70,13 +70,13 @@ const CommonSpaceInfoFrame: React.FC<CommonSpaceFrameProps> = ({
   }, [step, setStep, commonSpace, setCommonSpace]);
 
   const handleSubmit = useCallback(() => {
-    const { email, clubdId, startTerm, endTerm } = commonSpace.body;
+    const { email, clubId, startTerm, endTerm } = commonSpace.body;
     const { spaceId } = commonSpace.param;
-    const correct = email && clubdId && startTerm && endTerm && spaceId;
+    const correct = email && clubId && startTerm && endTerm && spaceId;
     if (correct) {
       postCommonSpaceUsageOrder(
         { spaceId },
-        { email, clubdId, startTerm, endTerm: subSeconds(endTerm, 1) },
+        { email, clubId, startTerm, endTerm: subSeconds(endTerm, 1) },
       );
     }
   }, [commonSpace]);

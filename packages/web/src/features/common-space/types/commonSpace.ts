@@ -37,5 +37,5 @@ export interface CommonSpaceInterface {
 //   email: string;
 //   startTerm: Date;
 //   endTerm: Date;
-//   clubdId: number;
+//   clubId: number;
 // }

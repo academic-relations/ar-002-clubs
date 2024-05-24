@@ -39,9 +39,9 @@ const ReservationInfo = styled.div`
 const CommonSpaceInfoThirdFrame: React.FC<
   CommonSpaceFrameProps & { setNextEnabled: (enabled: boolean) => void }
 > = ({ commonSpace, setNextEnabled }) => {
-  const { email, clubdId, startTerm, endTerm } = commonSpace.body;
+  const { email, clubId, startTerm, endTerm } = commonSpace.body;
   const { spaceId } = commonSpace.param;
-  const correct = email && clubdId && startTerm && endTerm && spaceId;
+  const correct = email && clubId && startTerm && endTerm && spaceId;
 
   useEffect(() => {
     setNextEnabled(!!correct);
