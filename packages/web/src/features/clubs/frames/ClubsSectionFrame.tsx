@@ -4,9 +4,9 @@ import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 
 import ClubListGrid from "@sparcs-clubs/web/features/clubs/components/ClubListGrid";
-import FoldableSectionTitle from "@sparcs-clubs/web/features/clubs/components/FoldableSectionTitle";
 
 import type { ClubCardProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
+import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 
 type ClubsSectionFrameProps = {
   showLength?: boolean; // section title에 길이 보여줄지 여부
@@ -34,10 +34,8 @@ const ClubsSectionFrame: React.FC<ClubsSectionFrameProps> = ({
   return (
     <ClubDivisionSectionFrameInner>
       <FoldableSectionTitle
-        title={title}
-        clubList={clubList}
+        title={`${title} ${showLength ? `(${clubList.length})` : ""}`}
         toggle={toggle}
-        showLength={showLength}
         toggleHandler={toggleHandler}
       />
       {toggle && <ClubListGrid clubList={clubList} />}

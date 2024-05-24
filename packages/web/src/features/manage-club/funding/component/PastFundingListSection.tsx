@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 import { pastFundingListSectionTitle } from "@sparcs-clubs/web/constants/manageClubFunding";
 
-import FoldableSectionTitle from "./_atomic/FoldableSectionTitle";
+import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import PastSingleSemesterFundingListSection from "./_atomic/PastSingleSemesterFundingListSection";
 
 const PastFundingListSectionInner = styled.div`

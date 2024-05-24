@@ -52,7 +52,7 @@ const logger =
       createLogger({
         level: "info",
         format: uncolorizedFormat,
-        defaultMeta: { service: "biseo" },
+        defaultMeta: { service: "clubs" },
         transports: [
           // 전체 로그("info", "warn", "error")를 파일로 출력합니다.
           new DailyRotateFileTransport({

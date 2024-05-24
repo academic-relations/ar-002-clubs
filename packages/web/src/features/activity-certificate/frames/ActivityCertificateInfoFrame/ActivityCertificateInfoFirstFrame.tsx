@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import React, { useEffect } from "react";
 
 import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
 
@@ -11,12 +10,6 @@ import Select from "@sparcs-clubs/web/common/components/Forms/Select";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
-
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
-  gap: 40px;
-  align-self: stretch;
-`;
 
 const ActivityCertificateInfoFirstFrame: React.FC<
   ActivityCertificateFrameProps
@@ -65,7 +58,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
   }, [firstErrorStatus]);
 
   return (
-    <StyledCard outline>
+    <Card outline gap={40}>
       <Select
         label="동아리 이름"
         items={[
@@ -144,7 +137,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
           });
         }}
       />
-    </StyledCard>
+    </Card>
   );
 };
 

@@ -26,7 +26,7 @@ axiosClient.interceptors.request.use(
 );
 
 /**
- * @name axiosClientWithCredentials
+ * @name.axiosClientWithCredentials
  * @author Jiho Park
  * @description Axios Client used for backend API requests that REQUIRE authentication
  */

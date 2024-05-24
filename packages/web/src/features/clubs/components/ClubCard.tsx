@@ -18,10 +18,6 @@ interface ClubCardProps {
   club: ApiClb001ResponseOK["divisions"][number]["clubs"][number];
 }
 
-const ClubCardInner = styled(Card)`
-  gap: 16px;
-`;
-
 const ClubCardRow = styled.div`
   width: 100%;
   white-space: nowrap;
@@ -57,7 +53,7 @@ const ClubMemberCount = styled.div`
 `;
 
 const ClubCard: React.FC<ClubCardProps> = ({ club }) => (
-  <ClubCardInner>
+  <Card gap={16} padding="16px 20px">
     <ClubCardNameRow>
       <ClubName>{club.name}</ClubName>
       <ClubMemberCount>
@@ -78,7 +74,7 @@ const ClubCard: React.FC<ClubCardProps> = ({ club }) => (
         {getClubType(club)}
       </Tag>
     </ClubCardRow>
-  </ClubCardInner>
+  </Card>
 );
 
 export default ClubCard;
