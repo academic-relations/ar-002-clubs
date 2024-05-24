@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useMemo } from "react";
 import styled from "styled-components";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 import Icon from "../Icon";
@@ -10,7 +10,24 @@ interface TableCellProps {
   minWidth?: number;
 }
 
-const CommonCellWrapper = styled.div<{
+const CommonCellHeaderWrapper = styled.th<{
+  isHeader: boolean;
+  width: string | number;
+  minWidth: number;
+}>`
+  width: ${({ width }) => (typeof width === "number" ? `${width}px` : width)};
+  min-width: ${({ minWidth }) => `${minWidth}px`};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  padding: 12px 8px;
+  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+  background-color: ${({ theme, isHeader }) =>
+    isHeader ? theme.colors.PRIMARY : "transparent"};
+`;
+
+const CommonCellBodyWrapper = styled.td<{
   isHeader: boolean;
   width: string | number;
   minWidth: number;
@@ -58,6 +75,11 @@ const TableCell: React.FC<TableCellProps> = ({
   minWidth = 100,
 }) => {
   const isHeader = type === "Header" || type === "HeaderSort";
+  const CommonCellWrapper = useMemo(
+    () => (isHeader ? CommonCellHeaderWrapper : CommonCellBodyWrapper),
+    [isHeader],
+  );
+
   let content;
 
   switch (type) {

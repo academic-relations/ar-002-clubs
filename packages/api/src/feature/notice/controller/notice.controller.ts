@@ -7,6 +7,8 @@ import type {
   ApiNtc001ResponseOK,
 } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 
+import logger from "@sparcs-clubs/api/common/util/logger";
+
 import { NoticeService } from "../service/notice.service";
 
 @Controller()
@@ -24,10 +26,12 @@ export class NoticeController {
       pageOffset: Number(pageOffset),
       itemCount: Number(itemCount),
     });
-    // 백엔드도 동일하게 로그레벨 활용하나요?
-    // console.log(
-    //   `[/notices] getting notice with offset ${query.pageOffset}, count ${query.itemCount}`,
-    // );
+
+    // 로거 사용예시입니다.
+    logger.debug(
+      `[/notices] offset: ${query.pageOffset}, count: ${query.itemCount}`,
+    );
+
     const notices = await this.noticesService.getNotices(
       query.pageOffset,
       query.itemCount,

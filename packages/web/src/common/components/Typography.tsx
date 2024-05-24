@@ -23,7 +23,7 @@ type NestedColors = {
     : `${C}.${NestedColorKeys<C>}`;
 }[ColorKeys];
 
-type ThemeColors = ColorKeys | NestedColors;
+export type ThemeColors = ColorKeys | NestedColors;
 
 const getColorFromTheme = (theme: Theme, colorString: ThemeColors) => {
   if (typeof colorString === "string" && colorString.includes(".")) {

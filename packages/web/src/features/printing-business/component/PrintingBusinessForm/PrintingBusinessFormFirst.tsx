@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import React, { useEffect, useState } from "react";
 
+import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import Select from "@sparcs-clubs/web/common/components/Forms/Select";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 
 import type { SelectItem } from "@sparcs-clubs/web/common/components/Forms/Select";
 
@@ -19,12 +18,6 @@ type PrintingBusinessFormFirstProps = Pick<
   | "requestForm"
   | "setRequestForm"
 > & { setFormError: React.Dispatch<React.SetStateAction<boolean>> };
-
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
-  gap: 20px;
-  align-self: stretch;
-`;
 
 const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
   username,
@@ -64,7 +57,7 @@ const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
   }, [clubIdSelectionError, usernameError, phoneNumberError]);
 
   return (
-    <StyledCard outline>
+    <Card outline gap={20}>
       <Select
         items={clubSelection}
         label="동아리 이름"
@@ -86,7 +79,7 @@ const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
         onChange={setPhoneNumber}
         setErrorStatus={setPhoneNumberError}
       />
-    </StyledCard>
+    </Card>
   );
 };
 

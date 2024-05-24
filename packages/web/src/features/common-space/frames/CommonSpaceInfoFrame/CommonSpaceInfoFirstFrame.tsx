@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import Select, {
   SelectItem,
 } from "@sparcs-clubs/web/common/components/Forms/Select";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
+import React, { useEffect, useState } from "react";
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
-
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
-  gap: 40px;
-  align-self: stretch;
-`;
 
 const CommonSpaceInfoFirstFrame: React.FC<
   CommonSpaceFrameProps & { setNextEnabled: (enabled: boolean) => void }
@@ -52,7 +45,7 @@ const CommonSpaceInfoFirstFrame: React.FC<
   }, [selectedValue, phone, setCommonSpace]);
 
   return (
-    <StyledCard outline>
+    <Card outline gap={40}>
       <Select
         items={mockClubList}
         selectedValue={selectedValue}
@@ -68,7 +61,7 @@ const CommonSpaceInfoFirstFrame: React.FC<
         placeholder={mockPhone}
         setErrorStatus={setHasPhoneError}
       />
-    </StyledCard>
+    </Card>
   );
 };
 

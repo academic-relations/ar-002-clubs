@@ -12,8 +12,8 @@ const method = "GET";
 const requestParam = z.object({});
 
 const requestQuery = z.object({
-  startDate: z.date(),
-  endDate: z.date(),
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
 });
 
 const requestBody = z.object({});
