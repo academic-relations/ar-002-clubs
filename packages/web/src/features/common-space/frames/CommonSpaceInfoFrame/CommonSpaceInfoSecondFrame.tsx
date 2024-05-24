@@ -5,12 +5,15 @@ import Timetable from "@sparcs-clubs/web/common/components/Timetable";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import { useGetCommonSpaces } from "@sparcs-clubs/web/features/common-space/service/getCommonSpaces";
+import apiCms001 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
+import { z } from "zod";
 
 import { differenceInHours, differenceInMinutes, format } from "date-fns";
 import { ko } from "date-fns/locale";
 
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
-import { mockCommonSpaceList } from "./mockCommonSpaceList";
 
 const StyledCardOuter = styled.div`
   display: flex;
@@ -21,14 +24,21 @@ const StyledCardOuter = styled.div`
   align-self: stretch;
 `;
 
+type CommonSpaceItem = z.infer<
+  (typeof apiCms001.responseBodyMap)[200]["shape"]["commonSpaces"]["element"]
+>;
+
 const CommonSpaceInfoSecondFrame: React.FC<
   CommonSpaceFrameProps & { setNextEnabled: (enabled: boolean) => void }
 > = ({ setNextEnabled, commonSpace, setCommonSpace }) => {
-  // TODO: 이름 전화번호 동아리 목록 백에서 받아오기
+  const { data, isLoading, isError } = useGetCommonSpaces();
+
+  console.log(data);
 
   const [selectedValue, setSelectedValue] = useState("");
   const [hasSelectError, setHasSelectError] = useState(false);
   const [dateTimeRange, setDateTimeRange] = useState<[Date, Date]>();
+  const [selectedSpace, setSelectedSpace] = useState<CommonSpaceItem>();
 
   useEffect(() => {
     const allConditionsMet =
@@ -37,12 +47,20 @@ const CommonSpaceInfoSecondFrame: React.FC<
   }, [selectedValue, hasSelectError, setNextEnabled, dateTimeRange]);
 
   useEffect(() => {
-    setCommonSpace({
-      ...commonSpace,
-      space:
-        mockCommonSpaceList.find(item => item.value === selectedValue)?.label ||
-        "",
-    });
+    const space = data?.commonSpaces.find(
+      item => item.id.toString() === selectedValue,
+    );
+
+    if (space)
+      setCommonSpace({
+        ...commonSpace,
+        param: {
+          spaceId: space?.id,
+        },
+        spaceName: space?.name,
+      });
+
+    setSelectedSpace(space);
   }, [selectedValue, setCommonSpace]);
 
   const diffHours =
@@ -54,32 +72,40 @@ const CommonSpaceInfoSecondFrame: React.FC<
     if (dateTimeRange) {
       setCommonSpace(prev => ({
         ...prev,
-        reservation: {
-          start: dateTimeRange[0],
-          end: dateTimeRange[1],
+        body: {
+          ...prev.body,
+          startTerm: dateTimeRange[0],
+          endTerm: dateTimeRange[1],
         },
       }));
     }
   }, [dateTimeRange, setCommonSpace]);
 
   return (
-    <>
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
       <Select
-        items={mockCommonSpaceList}
+        items={
+          data?.commonSpaces.map(space => ({
+            value: space.id.toString(),
+            label: space.name,
+            selectable: true,
+          })) || []
+        }
         selectedValue={selectedValue}
         onSelect={setSelectedValue}
         label="공용공간"
         setErrorStatus={setHasSelectError}
       />
-      {commonSpace.space && (
+      {selectedSpace && (
         <>
           <Info
-            text={`${commonSpace.space}는 하루에 최대 4시간, 일주일에 최대 10시간 사용할 수 있습니다.`}
+            text={`${selectedSpace.name}는 하루에 최대 4시간, 일주일에 최대 10시간 사용할 수 있습니다.`}
           />
           <Card outline gap={20} style={{ flexDirection: "row" }}>
             <Timetable
               data={Array(7 * 48).fill(false)}
               setDateTimeRange={setDateTimeRange}
+              availableHoursPerDay={selectedSpace.availableHoursPerDay}
             />
             <StyledCardOuter>
               {dateTimeRange && (
@@ -98,7 +124,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
           </Card>
         </>
       )}
-    </>
+    </AsyncBoundary>
   );
 };
 

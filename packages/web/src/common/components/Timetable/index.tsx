@@ -14,6 +14,7 @@ interface TimetableProps {
   setDateTimeRange: React.Dispatch<
     React.SetStateAction<[Date, Date] | undefined>
   >;
+  availableHoursPerDay: number;
 }
 
 const TimetableInner = styled.div`
@@ -31,7 +32,11 @@ const TimetableGridInner = styled.div`
   align-self: stretch;
 `;
 
-const Timetable: React.FC<TimetableProps> = ({ data, setDateTimeRange }) => {
+const Timetable: React.FC<TimetableProps> = ({
+  data,
+  setDateTimeRange,
+  availableHoursPerDay,
+}) => {
   const [indexRange, setIndexRange] = useState<number[]>([]);
   const [date, setDate] = useState(startOfWeek(new Date(), { locale: ko }));
   const convertDataToTimetableCell = useCallback((): TimetableCellType[] => {
@@ -72,6 +77,7 @@ const Timetable: React.FC<TimetableProps> = ({ data, setDateTimeRange }) => {
           setIndexRange={setIndexRange}
           data={convertDataToTimetableCell()}
           update={date.toString()}
+          availableHoursPerDay={availableHoursPerDay}
         />
       </TimetableGridInner>
     </TimetableInner>
