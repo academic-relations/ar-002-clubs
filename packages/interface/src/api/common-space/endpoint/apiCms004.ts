@@ -9,7 +9,7 @@ import { z } from "zod";
  */
 
 const url = (spaceId: number, orderId: number) =>
-  `/student/common-spaces/common-space/${spaceId}/usage-order/${orderId}`;
+  `/student/common-spaces/common-space/${spaceId}/orders/order/${orderId}`;
 const method = "DELETE";
 
 const requestParam = z.object({

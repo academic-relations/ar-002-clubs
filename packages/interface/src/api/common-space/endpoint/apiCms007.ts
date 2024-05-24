@@ -8,7 +8,7 @@ import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/
  * @description 자신의 공용공간 사용신청 내역을 가져옵니다.
  */
 
-const url = () => `/student/common-spaces/usage-order/my`;
+const url = () => `/student/common-spaces/orders/my`;
 const method = "GET";
 
 const requestParam = z.object({});
