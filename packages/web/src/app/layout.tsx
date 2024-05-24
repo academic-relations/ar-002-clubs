@@ -18,6 +18,7 @@ import Footer from "@sparcs-clubs/web/common/components/Footer";
 import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
 import ResponsiveContent from "@sparcs-clubs/web/common/components/Responsive";
 import DebugBadge from "../common/components/DebugBadge";
+import { AuthProvider } from "../common/providers/AuthContext";
 
 export const metadata: Metadata = {
   title: "SPARCS Clubs for ClubsUA",
@@ -34,10 +35,12 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => (
       <AppRouterCacheProvider>
         <StyledComponentsRegistry>
           <UseClientProvider>
-            <DebugBadge />
-            <Header />
-            <ResponsiveContent>{children}</ResponsiveContent>
-            <Footer />
+            <AuthProvider>
+              <DebugBadge />
+              <Header />
+              <ResponsiveContent>{children}</ResponsiveContent>
+              <Footer />
+            </AuthProvider>
           </UseClientProvider>
         </StyledComponentsRegistry>
       </AppRouterCacheProvider>

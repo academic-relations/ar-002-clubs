@@ -8,7 +8,7 @@ import { z } from "zod";
  */
 
 const url = (spaceId: number) =>
-  `/common-spaces/common-space/${spaceId}/usage-order`;
+  `/common-spaces/common-space/${spaceId}/orders`;
 const method = "GET";
 
 const requestParam = z.object({

@@ -36,6 +36,7 @@ const colors = {
   },
 
   MINT: {
+    100: "#F4FAFA",
     300: "#92CCD4",
     800: "#0C7F8E",
   },

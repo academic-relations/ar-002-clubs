@@ -13,7 +13,7 @@ import { zWeekTime } from "@sparcs-clubs/interface/common/type/time.type";
  */
 
 const url = (spaceId: number) =>
-  `/executive/common-spaces/common-space/${spaceId}/usage-order`;
+  `/executive/common-spaces/common-space/${spaceId}/orders`;
 const method = "POST";
 
 const requestParam = z.object({
