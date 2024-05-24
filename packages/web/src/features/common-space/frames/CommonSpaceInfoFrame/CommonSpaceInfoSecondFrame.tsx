@@ -33,8 +33,6 @@ const CommonSpaceInfoSecondFrame: React.FC<
 > = ({ setNextEnabled, commonSpace, setCommonSpace }) => {
   const { data, isLoading, isError } = useGetCommonSpaces();
 
-  console.log(data);
-
   const [selectedValue, setSelectedValue] = useState("");
   const [hasSelectError, setHasSelectError] = useState(false);
   const [dateTimeRange, setDateTimeRange] = useState<[Date, Date]>();
@@ -82,24 +80,26 @@ const CommonSpaceInfoSecondFrame: React.FC<
   }, [dateTimeRange, setCommonSpace]);
 
   return (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <Select
-        items={
-          data?.commonSpaces.map(space => ({
-            value: space.id.toString(),
-            label: space.name,
-            selectable: true,
-          })) || []
-        }
-        selectedValue={selectedValue}
-        onSelect={setSelectedValue}
-        label="공용공간"
-        setErrorStatus={setHasSelectError}
-      />
+    <>
+      <AsyncBoundary isLoading={isLoading} isError={isError}>
+        <Select
+          items={
+            data?.commonSpaces.map(space => ({
+              value: space.id.toString(),
+              label: space.name,
+              selectable: true,
+            })) || []
+          }
+          selectedValue={selectedValue}
+          onSelect={setSelectedValue}
+          label="공용공간"
+          setErrorStatus={setHasSelectError}
+        />
+      </AsyncBoundary>
       {selectedSpace && (
         <>
           <Info
-            text={`${selectedSpace.name}는 하루에 최대 4시간, 일주일에 최대 10시간 사용할 수 있습니다.`}
+            text={`${selectedSpace.name}는 하루에 최대 ${selectedSpace.availableHoursPerDay}시간, 일주일에 최대 ${selectedSpace.availableHoursPerWeek}시간 사용할 수 있습니다.`}
           />
           <Card outline gap={20} style={{ flexDirection: "row" }}>
             <Timetable
@@ -124,7 +124,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
           </Card>
         </>
       )}
-    </AsyncBoundary>
+    </>
   );
 };
 

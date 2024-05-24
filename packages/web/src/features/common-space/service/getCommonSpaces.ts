@@ -13,7 +13,7 @@ export const useGetCommonSpaces = () =>
   useQuery<ApiCms001ResponseOK, Error>({
     queryKey: [apiCms001.url()],
     queryFn: async (): Promise<ApiCms001ResponseOK> => {
-      const { data, status } = await axiosClient.get(apiCms001.url());
+      const { data, status } = await axiosClient.get(apiCms001.url(), {});
 
       switch (status) {
         case 200:
