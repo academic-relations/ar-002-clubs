@@ -6,6 +6,10 @@ import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import {
+  ListItem,
+  ListContainer,
+} from "@sparcs-clubs/web/common/components/ListItem";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
 const StyledTypography = styled(Typography)`
@@ -28,28 +32,6 @@ const RentalPeriodWrapper = styled.div`
 
 const RentalPeriodInner = styled.div`
   display: flex;
-`;
-
-const UserInfoListContainer = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-`;
-
-const UserInfoListItem = styled.li`
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  font-size: 16px;
-  line-height: 20px;
-
-  &:before {
-    content: "• ";
-    padding-right: 8px;
-  }
-
-  &:not(:last-child) {
-    margin-bottom: 16px;
-  }
 `;
 
 const RentalInfoThirdFrame: React.FC<
@@ -86,11 +68,11 @@ const RentalInfoThirdFrame: React.FC<
     <Card outline gap={20}>
       <CardInner>
         <StyledTypography type="p">신청자 정보</StyledTypography>
-        <UserInfoListContainer>
-          <UserInfoListItem>동아리: {rental.info?.clubName}</UserInfoListItem>
-          <UserInfoListItem>담당자: {rental.info?.applicant}</UserInfoListItem>
-          <UserInfoListItem>연락처: {rental.info?.phone}</UserInfoListItem>
-        </UserInfoListContainer>
+        <ListContainer>
+          <ListItem>동아리: {rental.info?.clubName}</ListItem>
+          <ListItem>담당자: {rental.info?.applicant}</ListItem>
+          <ListItem>연락처: {rental.info?.phone}</ListItem>
+        </ListContainer>
         <RentalPeriodWrapper>
           <StyledTypography type="p">대여 기간</StyledTypography>
           <RentalPeriodInner>

@@ -37,7 +37,7 @@ const ProgressCheckSection: React.FC<ProgressCheckSectionProps> = ({
         <Progress status={status[index]} label={label} date={dates[index]} />
         {index < labels.length - 1 && (
           <ProgressLineWrapper>
-            <ProgressLine status={status[index]} />{" "}
+            <ProgressLine status={status[index + 1]} />
           </ProgressLineWrapper>
         )}
       </React.Fragment>
