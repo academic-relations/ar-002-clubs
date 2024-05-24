@@ -18,7 +18,7 @@ import {
   canMakeReservation,
   getWeekRange,
   periodicScheduleMake,
-} from "./common-space.util";
+} from "../util/common-space.util";
 import { GetCommonSpacesUsageOrderRepository } from "../repository/getCommonSpacesUsageOrder.repository";
 import { GetCommonSpacesUsageOrderMyRepository } from "../repository/getCommonSpacesUsageOrderMy.repository";
 
