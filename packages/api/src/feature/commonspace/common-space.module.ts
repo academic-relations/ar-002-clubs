@@ -1,5 +1,7 @@
 import { Module } from "@nestjs/common";
 import { DrizzleModule } from "@sparcs-clubs/api/drizzle/drizzle.module";
+import { StudentRepository } from "@sparcs-clubs/api/common/repository/student.repository";
+import { SemesterRepository } from "@sparcs-clubs/api/common/repository/semester.repository";
 import { CommonSpaceController } from "./controller/common-space.controller";
 import { CommonSpaceService } from "./service/common-space.service";
 import { CommonSpaceRepository } from "./repository/common-space.repository";
@@ -16,7 +18,9 @@ import { GetCommonSpacesUsageOrderRepository } from "./repository/getCommonSpace
     CommonSpaceRepository,
     GetCommonSpaceUsageOrderRepository,
     CommonSpaceUsageOrderDRepository,
+    StudentRepository,
     GetCommonSpacesUsageOrderRepository,
+    SemesterRepository,
   ],
   exports: [CommonSpaceService],
 })

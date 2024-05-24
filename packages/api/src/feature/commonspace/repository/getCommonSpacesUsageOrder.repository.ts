@@ -44,7 +44,6 @@ export class GetCommonSpacesUsageOrderRepository {
           isNull(CommonSpaceUsageOrderD.deletedAt),
         ),
       );
-
     const result = {
       total,
       items: rows,

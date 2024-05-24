@@ -1,3 +1,4 @@
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import {
   Body,
   Controller,
@@ -22,6 +23,11 @@ import apiCms004, {
   ApiCms004RequestParam,
   ApiCms004ResponseOK,
 } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms004";
+import apiCms005, {
+  ApiCms005RequestParam,
+  ApiCms005RequestBody,
+  ApiCms005ResponseCreated,
+} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms005";
 import apiCms006, {
   ApiCms006RequestQuery,
   ApiCms006ResponseOk,
@@ -47,8 +53,8 @@ export class CommonSpaceController {
       spaceId: Number(param.spaceId),
     });
     const tmpquery = apiCms002.requestQuery.parse({
-      startDate: new Date(query.startDate),
-      endDate: new Date(query.endDate),
+      startDate: getKSTDate(query.startDate),
+      endDate: getKSTDate(query.endDate),
     });
     const result = await this.commonspaceService.getCommonSpaceUsageOrder(
       tmpparam.spaceId,
@@ -68,12 +74,12 @@ export class CommonSpaceController {
     });
     const tmpbody = apiCms003.requestBody.parse({
       clubId: Number(body.clubId),
-      email: Number(body.email),
-      startTerm: new Date(body.startTerm),
-      endTerm: new Date(body.endTerm),
+      email: body.email,
+      startTerm: getKSTDate(body.startTerm),
+      endTerm: getKSTDate(body.endTerm),
     });
-    const studentId = 1;
 
+    const studentId = 1;
     const result =
       await this.commonspaceService.postStudentCommonSpaceUsageOrder(
         tmpparam.spaceId,
@@ -103,14 +109,41 @@ export class CommonSpaceController {
     return result;
   }
 
+  @Post("executive/common-spaces/common-space/:spaceId/usage-order")
+  async postExecutiveCommonSpaecUsageOrder(
+    @Param() param: ApiCms005RequestParam,
+    @Body() body: ApiCms005RequestBody,
+  ): Promise<ApiCms005ResponseCreated> {
+    const tmpparam = apiCms005.requestParam.parse({
+      spaceId: Number(param.spaceId),
+    });
+    const tmpbody = apiCms005.requestBody.parse({
+      clubId: Number(body.clubId),
+      startTime: Number(body.startTime),
+      endTime: Number(body.endTime),
+    });
+    const studentId = 1;
+
+    // 정기신청의 경우 사전에 미리 예약된 내역이 없고, 신청 과정에서 사용 가능한 시간에 대한 확인이 필요없다고 가정함.
+    const result =
+      await this.commonspaceService.postExecutiveCommonSpaecUsageOrder(
+        tmpparam.spaceId,
+        tmpbody.clubId,
+        studentId,
+        tmpbody.startTime,
+        tmpbody.endTime,
+      );
+    return result;
+  }
+
   @Get("student/common-spaces/usage-order")
   async getStudentCommonSpacesUsageOrder(
     @Query() query: ApiCms006RequestQuery,
   ): Promise<ApiCms006ResponseOk> {
     const tmpquery = apiCms006.requestQuery.parse({
       clubId: Number(query.clubId),
-      startDate: new Date(query.startDate),
-      endDate: new Date(query.endDate),
+      startDate: getKSTDate(query.startDate),
+      endDate: getKSTDate(query.endDate),
       pageOffset: Number(query.pageOffset),
       itemCount: Number(query.itemCount),
     });

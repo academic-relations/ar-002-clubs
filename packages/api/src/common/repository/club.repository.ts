@@ -14,7 +14,7 @@ import { Student, User } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { and, count, eq, sql, isNull, or, gte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-import { takeUnique } from "@sparcs-clubs/api/common/util/util";
+import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 
 interface IClubs {
   id: number;
@@ -62,7 +62,7 @@ export class ClubRepository {
   }
 
   async getClubs(): Promise<ApiClb001ResponseOK> {
-    const crt = new Date();
+    const crt = getKSTDate();
     const rows = await this.db
       .select({
         id: Division.id,

@@ -5,6 +5,8 @@ import { CommonSpaceUsageOrderD } from "@sparcs-clubs/api/drizzle/schema/common-
 import { ApiCms003ResponseCreated } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms003";
 import { and, between, eq, or, isNull, sql } from "drizzle-orm";
 import { takeUnique } from "@sparcs-clubs/api/common/util/util";
+import { ApiCms005ResponseCreated } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms005";
+import { TermList } from "../dto/common-space.dto";
 
 @Injectable()
 export class CommonSpaceUsageOrderDRepository {
@@ -26,6 +28,13 @@ export class CommonSpaceUsageOrderDRepository {
       startTerm,
       endTerm,
     });
+    return {};
+  }
+
+  async setManyCommonSpaceUsageOrderD(
+    insertValue: TermList[],
+  ): Promise<ApiCms005ResponseCreated> {
+    await this.db.insert(CommonSpaceUsageOrderD).values(insertValue);
     return {};
   }
 

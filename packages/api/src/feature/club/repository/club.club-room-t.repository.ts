@@ -3,7 +3,7 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { ClubRoomT, ClubBuildingEnum } from "src/drizzle/schema/club.schema";
 import { eq, and, desc, lte, gte, isNull, or } from "drizzle-orm";
-import { takeUnique } from "src/common/util/util";
+import { getKSTDate, takeUnique } from "src/common/util/util";
 
 @Injectable()
 export class ClubRoomTRepository {
@@ -12,7 +12,7 @@ export class ClubRoomTRepository {
   async findClubLocationById(
     clubId: number,
   ): Promise<{ room: string; buildingName: string }> {
-    const currentDate = new Date();
+    const currentDate = getKSTDate();
 
     const roomDetails = await this.db
       .select({

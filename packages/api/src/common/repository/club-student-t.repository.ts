@@ -22,9 +22,26 @@ export class ClubStudentTRepository {
     return totalMemberCnt;
   }
 
-  async findClubStudentByClubIdAndStudentId(clubId: number, studentId: number) {
+  async findClubStudentByClubIdAndStudentId(
+    clubId: number,
+    studentId: number,
+  ): Promise<{
+    club_student_id: number;
+    student_id: number;
+    club_id: number;
+    name: string;
+    phoneNumber: string;
+    email: string;
+  }> {
     const student = await this.db
-      .select()
+      .select({
+        club_student_id: ClubStudentT.id,
+        student_id: Student.id,
+        club_id: ClubStudentT.clubId,
+        name: Student.name,
+        phoneNumber: Student.phoneNumber,
+        email: Student.email,
+      })
       .from(ClubStudentT)
       .leftJoin(Student, eq(Student.id, studentId))
       .where(

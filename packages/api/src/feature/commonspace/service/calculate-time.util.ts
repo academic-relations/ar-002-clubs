@@ -1,26 +1,27 @@
-import { Reservation } from "../dto/common-space.dto";
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
+import { Reservation, TermList } from "../dto/common-space.dto";
 
 export function getDayRange(date: Date): { dayStart: Date; dayEnd: Date } {
-  const dayStart = new Date(date);
-  dayStart.setHours(0, 0, 0, 0);
+  const dayStart = getKSTDate(date);
+  dayStart.setUTCHours(0, 0, 0, 0);
 
-  const dayEnd = new Date(date);
-  dayEnd.setHours(23, 59, 59, 999);
+  const dayEnd = getKSTDate(date);
+  dayEnd.setUTCHours(23, 59, 59, 999);
 
   return { dayStart, dayEnd };
 }
 
 export function getWeekRange(date: Date): { weekStart: Date; weekEnd: Date } {
-  const dayOfWeek = date.getDay();
+  const dayOfWeek = date.getUTCDay();
   const diffToMonday = (dayOfWeek + 6) % 7;
 
-  const weekStart = new Date(date);
-  weekStart.setDate(date.getDate() - diffToMonday);
-  weekStart.setHours(0, 0, 0, 0);
+  const weekStart = getKSTDate(date);
+  weekStart.setUTCDate(date.getUTCDate() - diffToMonday);
+  weekStart.setUTCHours(0, 0, 0, 0);
 
-  const weekEnd = new Date(weekStart);
-  weekEnd.setDate(weekStart.getDate() + 6);
-  weekEnd.setHours(23, 59, 59, 999);
+  const weekEnd = getKSTDate(weekStart);
+  weekEnd.setUTCDate(weekStart.getUTCDate() + 6);
+  weekEnd.setUTCHours(23, 59, 59, 999);
 
   return { weekStart, weekEnd };
 }
@@ -31,25 +32,24 @@ export function calculateMinutes(start: Date, end: Date): number {
 
 export function splitReservationByDay(start: Date, end: Date): Reservation[] {
   const reservations: Reservation[] = [];
-  let currentStart = new Date(start);
-  let currentEnd = new Date(start);
-  currentEnd.setHours(23, 59, 59, 999);
-
+  let currentStart = getKSTDate(start);
+  let currentEnd = getKSTDate(start);
+  currentEnd.setUTCHours(23, 59, 59, 999);
   while (currentStart < end) {
     if (currentEnd > end) {
-      currentEnd = new Date(end);
+      currentEnd = getKSTDate(end);
     }
 
     reservations.push({
-      start: new Date(currentStart),
-      end: new Date(currentEnd),
+      start: getKSTDate(currentStart),
+      end: getKSTDate(currentEnd),
     });
 
-    currentStart = new Date(currentEnd);
-    currentStart.setHours(0, 0, 0, 0);
-    currentStart.setDate(currentStart.getDate() + 1);
-    currentEnd = new Date(currentStart);
-    currentEnd.setHours(23, 59, 59, 999);
+    currentStart = getKSTDate(currentEnd);
+    currentStart.setUTCHours(0, 0, 0, 0);
+    currentStart.setUTCDate(currentStart.getUTCDate() + 1);
+    currentEnd = getKSTDate(currentStart);
+    currentEnd.setUTCHours(23, 59, 59, 999);
   }
 
   return reservations;
@@ -57,22 +57,22 @@ export function splitReservationByDay(start: Date, end: Date): Reservation[] {
 
 export function splitReservationByWeek(start: Date, end: Date): Reservation[] {
   const reservations: Reservation[] = [];
-  let currentStart = new Date(start);
+  let currentStart = getKSTDate(start);
   let currentEnd = getWeekRange(currentStart).weekEnd;
 
   while (currentStart < end) {
     if (currentEnd > end) {
-      currentEnd = new Date(end);
+      currentEnd = getKSTDate(end);
     }
 
     reservations.push({
-      start: new Date(currentStart),
-      end: new Date(currentEnd),
+      start: getKSTDate(currentStart),
+      end: getKSTDate(currentEnd),
     });
 
-    currentStart = new Date(currentEnd);
-    currentStart.setHours(0, 0, 0, 0);
-    currentStart.setDate(currentStart.getDate() + 1);
+    currentStart = getKSTDate(currentEnd);
+    currentStart.setUTCHours(0, 0, 0, 0);
+    currentStart.setUTCDate(currentStart.getUTCDate() + 1);
     currentEnd = getWeekRange(currentStart).weekEnd;
   }
 
@@ -83,8 +83,8 @@ export function canMakeReservation(
   startTerm: Date,
   endTerm: Date,
   existingReservations: Reservation[],
-  availableHoursPerDay: number,
-  availableHoursPerWeek: number,
+  availableMinutesPerDay: number,
+  availableMinutesPerWeek: number,
 ): boolean {
   const newReservationsByDay = splitReservationByDay(startTerm, endTerm);
   const newReservationsByWeek = splitReservationByWeek(startTerm, endTerm);
@@ -102,7 +102,7 @@ export function canMakeReservation(
         return total;
       }, 0) + calculateMinutes(newRes.start, newRes.end);
 
-    return dailyMinutes > availableHoursPerDay;
+    return dailyMinutes > availableMinutesPerDay;
   });
 
   if (dailyLimitExceeded) {
@@ -122,7 +122,7 @@ export function canMakeReservation(
         return total;
       }, 0) + calculateMinutes(newRes.start, newRes.end);
 
-    return weeklyMinutes > availableHoursPerWeek;
+    return weeklyMinutes > availableMinutesPerWeek;
   });
 
   if (weeklyLimitExceeded) {
@@ -130,4 +130,51 @@ export function canMakeReservation(
   }
 
   return true;
+}
+
+export function periodicScheduleMake(
+  commonSpaceId: number,
+  clubId: number,
+  chargeStudentId: number,
+  studentPhoneNumber: string,
+  startTime: number,
+  endTime: number,
+  startDate: Date,
+  endDate: Date,
+): TermList[] {
+  const schedule: TermList[] = [];
+
+  const startWeekday = Math.floor(startTime / 24);
+  const startHour = startTime % 24;
+  const endWeekday = Math.floor(endTime / 24);
+  const endHour = endTime % 24;
+
+  const currentStartDate = getKSTDate(startDate);
+  let startOffset = startWeekday - currentStartDate.getUTCDay() + 1;
+  if (startOffset < 0) {
+    startOffset += 7;
+  }
+  currentStartDate.setUTCDate(currentStartDate.getUTCDate() + startOffset);
+  currentStartDate.setUTCHours(startHour, 0, 0, 0);
+
+  const currentEndDate = getKSTDate(startDate);
+  let endOffset = endWeekday - currentStartDate.getUTCDay() + 1;
+  if (endOffset < 0) {
+    endOffset += 7;
+  }
+  currentEndDate.setUTCDate(currentEndDate.getUTCDate() + endOffset);
+  currentEndDate.setUTCHours(endHour, 0, 0, 0);
+  while (currentEndDate <= endDate) {
+    schedule.push({
+      commonSpaceId,
+      clubId,
+      chargeStudentId,
+      studentPhoneNumber,
+      startTerm: getKSTDate(currentStartDate),
+      endTerm: getKSTDate(currentEndDate),
+    });
+    currentStartDate.setUTCDate(currentStartDate.getUTCDate() + 7);
+    currentEndDate.setUTCDate(currentEndDate.getUTCDate() + 7);
+  }
+  return schedule;
 }
