@@ -19,6 +19,7 @@ import {
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
+import { useRouter } from "next/navigation";
 
 const ActivityWrapper = styled.div`
   display: flex;
@@ -44,6 +45,11 @@ const ButtonWrapper = styled.div`
 const ManageCertificateDetailFrame = () => {
   const [rejectReason, setRejectReason] = useState("");
   const rejectButtonType = rejectReason !== "" ? "default" : "disabled";
+
+  const router = useRouter();
+  const onClick = () => {
+    router.push("/manage-club/activity-certificate");
+  };
   return (
     <SectionWrapper>
       <BreadCrumb
@@ -147,7 +153,9 @@ const ManageCertificateDetailFrame = () => {
           </ListContainer>
         </ColumnTextWrapper>
       </Card>
-      <Button style={{ width: "max-content" }}>목록으로 돌아가기</Button>
+      <Button style={{ width: "max-content" }} onClick={onClick}>
+        목록으로 돌아가기
+      </Button>
     </SectionWrapper>
   );
 };
