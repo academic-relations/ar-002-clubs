@@ -15,9 +15,20 @@ interface ProgressProps {
 const ProgressWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  height: 24px;
+  position: relative;
+`;
+
+const TextWrapper = styled.div`
+  display: flex;
+  margin-top: 32px;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  position: absolute;
+  width: max-content;
 `;
 
 const Progress = ({ status, label, date }: ProgressProps) => {
@@ -36,26 +47,28 @@ const Progress = ({ status, label, date }: ProgressProps) => {
   return (
     <ProgressWrapper>
       <ProgressDot status={status} />
-      <Typography
-        ff="PRETENDARD"
-        fw="MEDIUM"
-        fs={16}
-        lh={20}
-        color={labelColor}
-      >
-        {label}
-      </Typography>
-      {date && (
+      <TextWrapper>
         <Typography
           ff="PRETENDARD"
-          fw="REGULAR"
-          fs={14}
-          lh={16}
+          fw="MEDIUM"
+          fs={16}
+          lh={20}
           color={labelColor}
         >
-          {formatSlashDateTime(date)}
+          {label}
         </Typography>
-      )}
+        {date && (
+          <Typography
+            ff="PRETENDARD"
+            fw="REGULAR"
+            fs={14}
+            lh={16}
+            color={labelColor}
+          >
+            {formatSlashDateTime(date)}
+          </Typography>
+        )}
+      </TextWrapper>
     </ProgressWrapper>
   );
 };

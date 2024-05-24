@@ -4,6 +4,7 @@ import { Status } from "./ProgressDot";
 const ProgressLine = styled.div<{ status: Status }>`
   display: flex;
   height: 2px;
+  flex: 1;
   background-color: ${props => {
     switch (props.status) {
       case Status.Approved:
