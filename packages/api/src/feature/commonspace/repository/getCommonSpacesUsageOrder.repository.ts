@@ -6,7 +6,7 @@ import {
 } from "@sparcs-clubs/api/drizzle/schema/common-space.schema";
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
-import { and, between, eq, isNull } from "drizzle-orm";
+import { and, between, eq, isNull, desc } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 @Injectable()
@@ -43,7 +43,10 @@ export class GetCommonSpacesUsageOrderRepository {
           between(CommonSpaceUsageOrderD.endTerm, startDate, endDate),
           isNull(CommonSpaceUsageOrderD.deletedAt),
         ),
-      );
+      )
+      .orderBy(desc(CommonSpaceUsageOrderD.startTerm))
+      .offset(offset * total)
+      .limit(total);
     const result = {
       total,
       items: rows,
