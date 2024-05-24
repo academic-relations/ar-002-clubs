@@ -170,7 +170,11 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
           {searchText && `검색 결과 ${table.getRowModel().rows.length}명 / `}
           {`총 ${data.length}명`}
         </Typography>
-        <Table table={table} height={320} />
+        <Table
+          table={table}
+          height={320}
+          emptyMessage="검색 결과가 존재하지 않습니다"
+        />
       </SelectParticipantInner>
       <Toggle
         label={

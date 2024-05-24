@@ -1,10 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 import { flexRender, type Table as TableType } from "@tanstack/react-table";
+import Typography from "./Typography";
 
 interface TableProps<T> {
   table: TableType<T>;
   height?: number | undefined;
+  emptyMessage?: string;
 }
 
 const TableInner = styled.table<{ height?: number }>`
@@ -46,7 +48,19 @@ const ContentRow = styled.tr<{ selected: boolean }>`
     selected ? theme.colors.MINT[100] : "transparent"};
 `;
 
-const Table = <T,>({ table, height = undefined }: TableProps<T>) => (
+const EmptyCenterPlacer = styled.div`
+  height: 100%;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Table = <T,>({
+  table,
+  height = undefined,
+  emptyMessage = "",
+}: TableProps<T>) => (
   <TableInner height={height}>
     <Header>
       {table.getHeaderGroups().map(headerGroup => (
@@ -70,15 +84,29 @@ const Table = <T,>({ table, height = undefined }: TableProps<T>) => (
       ))}
     </Header>
     <Content>
-      {table.getRowModel().rows.map(row => (
-        <ContentRow key={row.id} selected={row.getIsSelected()}>
-          {row
-            .getVisibleCells()
-            .map(cell =>
-              flexRender(cell.column.columnDef.cell, cell.getContext()),
-            )}
-        </ContentRow>
-      ))}
+      {table.getRowModel().rows.length ? (
+        table.getRowModel().rows.map(row => (
+          <ContentRow key={row.id} selected={row.getIsSelected()}>
+            {row
+              .getVisibleCells()
+              .map(cell =>
+                flexRender(cell.column.columnDef.cell, cell.getContext()),
+              )}
+          </ContentRow>
+        ))
+      ) : (
+        <EmptyCenterPlacer>
+          <Typography
+            fs={16}
+            lh={24}
+            color="GRAY.300"
+            ff="PRETENDARD"
+            fw="REGULAR"
+          >
+            {emptyMessage}
+          </Typography>
+        </EmptyCenterPlacer>
+      )}
     </Content>
   </TableInner>
 );
