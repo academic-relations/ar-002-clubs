@@ -19,16 +19,14 @@ interface ActivityReportListProps {
 
 const columnHelper = createColumnHelper<PastActivityReport>();
 
-const getStatusTagColor = (category: string): TagColor => {
+const getCategoryTagColor = (category: string): TagColor => {
   switch (category) {
-    case "작성중":
+    case "동아리 성격에 합치하는 내부 활동":
+      return "ORANGE";
+    case "동아리 성격에 합치하는 외부 활동":
       return "BLUE";
-    case "신청 완료":
+    case "동아리 성격에 합치하지 않는 활동":
       return "PURPLE";
-    case "신청 반려":
-      return "RED";
-    case "승인 완료":
-      return "GREEN";
     default:
       return "GRAY";
   }
@@ -58,7 +56,9 @@ const columns = [
     ),
     cell: info => (
       <TableCell minWidth={248} width="30%" type="Default">
-        <Tag color={getStatusTagColor(info.getValue())}>{info.getValue()}</Tag>
+        <Tag color={getCategoryTagColor(info.getValue())}>
+          {info.getValue()}
+        </Tag>
       </TableCell>
     ),
     enableSorting: false,
