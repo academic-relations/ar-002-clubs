@@ -18,6 +18,7 @@ const MyMenuWrapper = styled.div`
   position: absolute;
   top: 50px;
   right: 16px;
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
 `;
 
 const Divider = styled.div`
