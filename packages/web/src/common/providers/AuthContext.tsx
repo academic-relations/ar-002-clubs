@@ -19,10 +19,19 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
+    Boolean(localStorage.getItem("isLoggedIn") === "true") ?? false,
+  );
 
-  const login = () => setIsLoggedIn(true);
-  const logout = () => setIsLoggedIn(false);
+  const login = () => {
+    setIsLoggedIn(true);
+    localStorage.setItem("isLoggedIn", "true");
+  };
+
+  const logout = () => {
+    setIsLoggedIn(false);
+    localStorage.setItem("isLoggedIn", "false");
+  };
 
   const value = useMemo(() => ({ isLoggedIn, login, logout }), [isLoggedIn]);
 
