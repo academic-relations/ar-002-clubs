@@ -1,4 +1,4 @@
-import { ClubStudentTRepository } from "@sparcs-clubs/api/common/repository/club-student-t.repository";
+import { ClubStudentTRepository } from "@sparcs-clubs/api/common/repository/club.club-student-t.repository";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { ApiCms001ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
 import { ApiCms002ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
@@ -18,7 +18,7 @@ import {
   canMakeReservation,
   getWeekRange,
   periodicScheduleMake,
-} from "../util/common-space.util";
+} from "./common-space.util";
 import { GetCommonSpacesUsageOrderRepository } from "../repository/getCommonSpacesUsageOrder.repository";
 import { GetCommonSpacesUsageOrderMyRepository } from "../repository/getCommonSpacesUsageOrderMy.repository";
 
