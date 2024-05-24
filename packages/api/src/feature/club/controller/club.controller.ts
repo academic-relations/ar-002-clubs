@@ -1,4 +1,6 @@
-import { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
+import apiClb001, {
+  ApiClb001ResponseOK,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 import {
   ApiClb002RequestParam,
   ApiClb002ResponseOK,
@@ -13,7 +15,8 @@ export class ClubController {
   @Get("clubs")
   async getClubs(): Promise<ApiClb001ResponseOK> {
     const result = await this.clubService.getClubs();
-    return result;
+    const res = apiClb001.responseBodyMap[200].parse(result);
+    return res;
   }
 
   @Get("clubs/club/:id")
