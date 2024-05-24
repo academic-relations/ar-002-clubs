@@ -14,11 +14,11 @@ const method = "GET";
 const requestParam = z.object({});
 
 const requestQuery = z.object({
-  clubId: z.number().int().min(0),
-  startDate: z.date().optional(),
-  endDate: z.date().optional(),
-  pageOffset: z.number().min(1),
-  itemCount: z.number().min(1),
+  clubId: z.coerce.number().int().min(0),
+  startDate: z.coerce.date().optional(),
+  endDate: z.coerce.date().optional(),
+  pageOffset: z.coerce.number().min(1),
+  itemCount: z.coerce.number().min(1),
 });
 
 const requestBody = z.object({});
@@ -37,8 +37,6 @@ const responseBodyMap = {
           }),
         ),
         statusEnum: z.nativeEnum(RentalOrderStatusEnum),
-        desiredStart: z.date(),
-        desiredEnd: z.date(),
         startDate: z.date().optional(),
         endDate: z.date().optional(),
         createdAt: z.date(),

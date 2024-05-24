@@ -6,13 +6,18 @@ import {
   timestamp,
   text,
 } from "drizzle-orm/mysql-core";
-
+import { Club } from "./club.schema";
+import { Student } from "./user.schema";
 // RentalOrder table
 export const RentalOrder = mysqlTable("rental_order", {
   id: int("id").autoincrement().primaryKey(),
-  studentId: int("student_id").notNull(),
+  studentId: int("student_id")
+    .notNull()
+    .references(() => Student.id),
   studentPhoneNumber: varchar("student_phone_number", { length: 30 }),
-  clubId: int("club_id").notNull(),
+  clubId: int("club_id")
+    .notNull()
+    .references(() => Club.id),
   purpose: text("purpose"),
   desiredStart: datetime("desired_start"),
   desiredEnd: datetime("desired_end"),

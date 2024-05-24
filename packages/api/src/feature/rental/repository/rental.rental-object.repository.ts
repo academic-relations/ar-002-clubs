@@ -1,10 +1,11 @@
 import { Injectable, Inject } from "@nestjs/common";
-import { eq, or, gt, lt, count } from "drizzle-orm";
+import { eq, and, or, gt, lt, count } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
   RentalEnum,
   RentalObject,
+  RentalOrder,
   RentalOrderItemD,
 } from "src/drizzle/schema/rental.schema";
 
@@ -12,7 +13,8 @@ import {
 export class RentalObjectRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  async getAvailableRentals(startDate: Date, endDate: Date) {
+  // RNT-001 에서 사용됨.
+  async getAvailableRentals(desiredStart: Date, desiredEnd: Date) {
     const availableObjects = await this.db
       .select({
         id: RentalObject.rentalEnum,
@@ -26,13 +28,15 @@ export class RentalObjectRepository {
       )
       .leftJoin(RentalEnum, eq(RentalObject.rentalEnum, RentalEnum.id))
       .where(
-        or(
-          gt(RentalOrderItemD.startTerm, endDate),
-          lt(RentalOrderItemD.endTerm, startDate),
+        and(
+          gt(RentalOrder.desiredStart, desiredEnd),
+          or(
+            RentalOrderItemD.endTerm,
+            lt(RentalOrder.desiredEnd, desiredStart),
+          ),
         ),
       )
       .groupBy(RentalObject.rentalEnum);
-
     return availableObjects;
   }
 }
