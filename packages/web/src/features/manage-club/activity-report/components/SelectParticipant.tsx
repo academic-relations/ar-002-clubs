@@ -176,7 +176,13 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
         placeholder="학번 또는 이름을 검색해주세요"
       />
       <SelectParticipantInner>
-        <Typography type="p" color="GRAY.600">
+        <Typography
+          fs={16}
+          fw="REGULAR"
+          ff="PRETENDARD"
+          lh={20}
+          color="GRAY.600"
+        >
           {searchText && `검색 결과 ${table.getRowModel().rows.length}명 / `}
           {`총 ${data.length}명`}
         </Typography>
