@@ -7,6 +7,7 @@ import {
   createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
@@ -140,12 +141,21 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
     data,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     state: {
       rowSelection: selectedRowIds,
       globalFilter: searchText,
     },
     onRowSelectionChange: setSelectedRowIds,
     globalFilterFn: containsTextFilter,
+    initialState: {
+      sorting: [
+        {
+          id: "studentId",
+          desc: true,
+        },
+      ],
+    },
   });
 
   return (

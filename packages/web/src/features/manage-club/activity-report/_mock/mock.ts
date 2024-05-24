@@ -86,25 +86,25 @@ export const mockPastActivityData = [
 
 export const mockParticipantData: Participant[] = [
   {
-    studentId: "20200510",
+    studentId: "20200515",
     name: "이지윤",
     phoneNumber: "XXX-XXXX-XXXX",
     email: "nicolelee2001@kaist.ac.kr",
   },
   {
-    studentId: "20210510",
+    studentId: "20210514",
     name: "박지윤",
     phoneNumber: "XXX-XXXX-XXXX",
     email: "nicolelee2001@kaist.ac.kr",
   },
   {
-    studentId: "20200510",
+    studentId: "20200513",
     name: "박병찬",
     phoneNumber: "XXX-XXXX-XXXX",
     email: "nicolelee2001@kaist.ac.kr",
   },
   {
-    studentId: "20230510",
+    studentId: "20230512",
     name: "이도라",
     phoneNumber: "XXX-XXXX-XXXX",
     email: "nicolelee2001@kaist.ac.kr",

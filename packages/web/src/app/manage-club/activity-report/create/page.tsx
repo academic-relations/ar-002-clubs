@@ -1,6 +1,6 @@
 "use client";
 
-import ActivityReportCreateFrame from "@sparcs-clubs/web/features/activity-report/frames/ActivityReportCreateFrame";
+import ActivityReportCreateFrame from "@sparcs-clubs/web/features/manage-club/activity-report/frames/ActivityReportCreateFrame";
 import React from "react";
 
 const Clubs = () => <ActivityReportCreateFrame />;
