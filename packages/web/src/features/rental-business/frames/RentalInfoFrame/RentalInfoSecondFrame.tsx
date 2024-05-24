@@ -219,8 +219,9 @@ const RentalInfoSecondFrame: React.FC<
               />
             </ResetTitleWrapper>
             <Rental
-              rentalDate={rentalDate}
-              returnDate={returnDate}
+              rentalDate={rentalDate ?? new Date()}
+              returnDate={returnDate ?? new Date()}
+              // TODO: 임시로 error 피하려고 넣어둠, 실제로는 영향 없음
               {...props}
             />
           </StyledCardInner>

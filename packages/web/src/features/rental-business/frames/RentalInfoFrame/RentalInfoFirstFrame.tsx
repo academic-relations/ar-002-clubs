@@ -6,7 +6,9 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import useGetUserProfile from "@sparcs-clubs/web/features/printing-business/service/getUserProfile";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
-import Select from "@sparcs-clubs/web/common/components/Forms/Select";
+import Select, {
+  SelectItem,
+} from "@sparcs-clubs/web/common/components/Forms/Select";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
 const RentalInfoFirstFrame: React.FC<
@@ -14,9 +16,7 @@ const RentalInfoFirstFrame: React.FC<
 > = ({ setNextEnabled, rental, setRental }) => {
   const { data, isLoading, isError } = useGetUserProfile();
 
-  const [clubList, setClubList] = useState<
-    { label: string; value: number; selectable: boolean }[]
-  >([]);
+  const [clubList, setClubList] = useState<SelectItem[]>([]);
   const [userName, setUserName] = useState("");
   const [userPhone, setUserPhone] = useState<string | undefined>();
 
@@ -25,7 +25,7 @@ const RentalInfoFirstFrame: React.FC<
       setClubList(
         data.clubs.map(club => ({
           label: club.name,
-          value: club.id,
+          value: String(club.id),
           selectable: true,
         })),
       );
@@ -52,15 +52,18 @@ const RentalInfoFirstFrame: React.FC<
   useEffect(() => {
     if (selectedValue !== "") {
       const selectClub = clubList.find(
-        selectclub => selectclub.value === Number(selectedValue),
+        selectclub => selectclub.value === selectedValue,
       );
+      if (!selectClub) {
+        return;
+      }
       setRental({
         ...rental,
         info: {
           clubId: Number(selectedValue),
           clubName: selectClub?.label,
           applicant: userName,
-          phone,
+          phone: phone ?? "",
         },
       });
     }
@@ -71,7 +74,7 @@ const RentalInfoFirstFrame: React.FC<
       <Card outline gap={40}>
         <Select
           items={clubList}
-          selectedValue={selectedValue}
+          selectedValue={String(selectedValue)}
           onSelect={setSelectedValue}
           label="동아리 이름"
           setErrorStatus={setHasSelectError}
@@ -79,10 +82,10 @@ const RentalInfoFirstFrame: React.FC<
         <TextInput label="신청자 이름" placeholder={userName} disabled />
         <PhoneInput
           label="신청자 전화번호"
-          value={phone}
+          value={phone ?? ""}
           // TODO: interface 연결 후 기본 value가 제대로 로딩되지 않는 문제 수정
           onChange={setPhone}
-          placeholder={userPhone}
+          placeholder={userPhone ?? ""}
           setErrorStatus={setHasPhoneError}
         />
       </Card>
