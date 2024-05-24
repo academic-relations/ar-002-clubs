@@ -9,6 +9,7 @@ import { StudentRepository } from "@sparcs-clubs/api/common/repository/student.r
 import { SemesterRepository } from "@sparcs-clubs/api/common/repository/semester.repository";
 import { ApiCms005ResponseCreated } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms005";
 import { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
+import { ApiCms007ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
 import { GetCommonSpaceUsageOrderRepository } from "../repository/getCommonSpaceUsageOrder.repository";
 import { CommonSpaceRepository } from "../repository/common-space.repository";
 import { CommonSpaceUsageOrderDRepository } from "../repository/common-space-usage-order-d.repository";
@@ -19,6 +20,7 @@ import {
   periodicScheduleMake,
 } from "../util/common-space.util";
 import { GetCommonSpacesUsageOrderRepository } from "../repository/getCommonSpacesUsageOrder.repository";
+import { GetCommonSpacesUsageOrderMyRepository } from "../repository/getCommonSpacesUsageOrderMy.repository";
 
 @Injectable()
 export class CommonSpaceService {
@@ -30,6 +32,7 @@ export class CommonSpaceService {
     private readonly studentRepository: StudentRepository,
     private readonly getCommonSpacesUsageOrderRepository: GetCommonSpacesUsageOrderRepository,
     private readonly semesterRepository: SemesterRepository,
+    private readonly getCommonSpacesUsageOrderMyRepository: GetCommonSpacesUsageOrderMyRepository,
   ) {}
 
   async getCommonSpaces(): Promise<ApiCms001ResponseOK> {
@@ -204,6 +207,24 @@ export class CommonSpaceService {
     const result =
       await this.getCommonSpacesUsageOrderRepository.getStudentCommonSpacesUsageOrder(
         clubId,
+        startDate,
+        endDate,
+        pageOffset - 1,
+        itemCount,
+      );
+    return result;
+  }
+
+  async getStudentCommonSpacesUsageOrderMy(
+    studentId: number,
+    startDate: Date,
+    endDate: Date,
+    pageOffset: number,
+    itemCount: number,
+  ): Promise<ApiCms007ResponseOk> {
+    const result =
+      await this.getCommonSpacesUsageOrderMyRepository.getStudentCommonSpacesUsageOrderMy(
+        studentId,
         startDate,
         endDate,
         pageOffset - 1,

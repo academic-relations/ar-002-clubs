@@ -32,6 +32,10 @@ import apiCms006, {
   ApiCms006RequestQuery,
   ApiCms006ResponseOk,
 } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
+import apiCms007, {
+  ApiCms007RequestQuery,
+  ApiCms007ResponseOk,
+} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
 import { CommonSpaceService } from "../service/common-space.service";
 
 @Controller()
@@ -152,6 +156,28 @@ export class CommonSpaceController {
       await this.commonspaceService.getStudentCommonSpacesUsageOrder(
         studentId,
         tmpquery.clubId,
+        tmpquery.startDate,
+        tmpquery.endDate,
+        tmpquery.pageOffset,
+        tmpquery.itemCount,
+      );
+    return result;
+  }
+
+  @Get("student/common-spaces/usage-order/my")
+  async getStudentCommonSpacesUsageOrderMy(
+    @Query() query: ApiCms007RequestQuery,
+  ): Promise<ApiCms007ResponseOk> {
+    const tmpquery = apiCms007.requestQuery.parse({
+      startDate: getKSTDate(query.startDate),
+      endDate: getKSTDate(query.endDate),
+      pageOffset: Number(query.pageOffset),
+      itemCount: Number(query.itemCount),
+    });
+    const studentId = 1;
+    const result =
+      await this.commonspaceService.getStudentCommonSpacesUsageOrderMy(
+        studentId,
         tmpquery.startDate,
         tmpquery.endDate,
         tmpquery.pageOffset,

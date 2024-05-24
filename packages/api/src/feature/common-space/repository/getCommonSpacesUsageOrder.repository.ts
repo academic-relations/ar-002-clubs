@@ -6,7 +6,7 @@ import {
 } from "@sparcs-clubs/api/drizzle/schema/common-space.schema";
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
-import { and, between, eq, isNull, desc } from "drizzle-orm";
+import { and, between, eq, isNull, desc, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 @Injectable()
@@ -20,33 +20,45 @@ export class GetCommonSpacesUsageOrderRepository {
     offset: number,
     total: number,
   ): Promise<ApiCms006ResponseOk> {
-    const rows = await this.db
+    const sq = this.db
       .select({
         createdAt: CommonSpaceUsageOrderD.createdAt,
         orderId: CommonSpaceUsageOrderD.id,
-        statusEnum: CommonSpace.commonSpaceEnum,
-        spaceName: CommonSpace.spaceName,
-        chargeStudentName: Student.name,
+        commonSpaceId: CommonSpaceUsageOrderD.commonSpaceId,
+        chargeStudentId: CommonSpaceUsageOrderD.chargeStudentId,
         startTerm: CommonSpaceUsageOrderD.startTerm,
         endTerm: CommonSpaceUsageOrderD.endTerm,
       })
       .from(CommonSpaceUsageOrderD)
-      .leftJoin(
-        CommonSpace,
-        eq(CommonSpaceUsageOrderD.commonSpaceId, CommonSpace.id),
-      )
-      .leftJoin(Student, eq(CommonSpaceUsageOrderD.chargeStudentId, Student.id))
       .where(
         and(
           eq(CommonSpaceUsageOrderD.clubId, clubId),
-          between(CommonSpaceUsageOrderD.startTerm, startDate, endDate),
-          between(CommonSpaceUsageOrderD.endTerm, startDate, endDate),
+          or(
+            between(CommonSpaceUsageOrderD.startTerm, startDate, endDate),
+            between(CommonSpaceUsageOrderD.endTerm, startDate, endDate),
+          ),
           isNull(CommonSpaceUsageOrderD.deletedAt),
         ),
       )
-      .orderBy(desc(CommonSpaceUsageOrderD.startTerm))
+      .as("sq");
+
+    const rows = await this.db
+      .select({
+        createdAt: sq.createdAt,
+        orderId: sq.orderId,
+        statusEnum: CommonSpace.commonSpaceEnum,
+        spaceName: CommonSpace.spaceName,
+        chargeStudentName: Student.name,
+        startTerm: sq.startTerm,
+        endTerm: sq.endTerm,
+      })
+      .from(sq)
+      .leftJoin(CommonSpace, eq(sq.commonSpaceId, CommonSpace.id))
+      .leftJoin(Student, eq(sq.chargeStudentId, Student.id))
+      .orderBy(desc(sq.startTerm))
       .offset(offset * total)
       .limit(total);
+
     const result = {
       total,
       items: rows,

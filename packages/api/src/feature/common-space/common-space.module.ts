@@ -9,6 +9,7 @@ import { GetCommonSpaceUsageOrderRepository } from "./repository/getCommonSpaceU
 import { CommonSpaceUsageOrderDRepository } from "./repository/common-space-usage-order-d.repository";
 import { ClubModule } from "../club/club.module";
 import { GetCommonSpacesUsageOrderRepository } from "./repository/getCommonSpacesUsageOrder.repository";
+import { GetCommonSpacesUsageOrderMyRepository } from "./repository/getCommonSpacesUsageOrderMy.repository";
 
 @Module({
   imports: [DrizzleModule, ClubModule],
@@ -21,6 +22,7 @@ import { GetCommonSpacesUsageOrderRepository } from "./repository/getCommonSpace
     StudentRepository,
     GetCommonSpacesUsageOrderRepository,
     SemesterRepository,
+    GetCommonSpacesUsageOrderMyRepository,
   ],
   exports: [CommonSpaceService],
 })
