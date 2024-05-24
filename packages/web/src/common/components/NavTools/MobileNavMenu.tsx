@@ -72,8 +72,20 @@ const MobileNavMenu: React.FC<MobileNavMenuProps> = ({
   const router = useRouter();
 
   const handleMyPageClick = () => {
+    onClose();
     router.push("/my");
   };
+
+  const loginButton = () => {
+    onClose();
+    login();
+  };
+
+  const logoutButton = () => {
+    onClose();
+    logout();
+  };
+
   return (
     <MobileNavMenuInner className={className}>
       {keys.map(key => {
@@ -116,13 +128,13 @@ const MobileNavMenu: React.FC<MobileNavMenuProps> = ({
             <Icon type="person" size={16} />
             마이페이지
           </LoginButton>
-          <LoginButton type="outlined" onClick={logout}>
+          <LoginButton type="outlined" onClick={logoutButton}>
             <Icon type="logout" size={16} />
             로그아웃
           </LoginButton>
         </>
       ) : (
-        <LoginButton type="outlined" onClick={login}>
+        <LoginButton type="outlined" onClick={loginButton}>
           <Icon type="login" size={16} />
           {paths.LOGIN.name}
         </LoginButton>
