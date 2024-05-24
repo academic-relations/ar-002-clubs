@@ -3,13 +3,13 @@
 import React from "react";
 import styled from "styled-components";
 
-import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
+import Typography from "./Typography";
 
 const FoldableSectionOuter = styled.div`
   width: 100%;
 `;
 
-const FoldableSectionTitleInner = styled.div`
+const FoldableSectionInner = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,7 +17,7 @@ const FoldableSectionTitleInner = styled.div`
   width: 100%;
 `;
 
-export const MoreInfo = styled.div`
+const MoreInfo = styled.div`
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 14px;
   line-height: 20px;
@@ -29,10 +29,9 @@ export const MoreInfo = styled.div`
 
 const ChildrenOuter = styled.div<{ margin?: string }>`
   margin-top: ${({ margin }) => margin};
-  margin-left: 24px;
 `;
 
-const FoldableSectionTitle: React.FC<{
+const FoldableSection: React.FC<{
   title: string;
   toggle?: boolean;
   toggleHandler?: () => void;
@@ -50,12 +49,12 @@ const FoldableSectionTitle: React.FC<{
 
   return (
     <FoldableSectionOuter>
-      <FoldableSectionTitleInner>
-        <SectionTitle size="lg">{title}</SectionTitle>
+      <FoldableSectionInner>
+        <Typography type="h3">{title}</Typography>
         <MoreInfo onClick={toggleHandler ?? openHandler}>
           {toggle ?? open ? `접기` : `펼치기`}
         </MoreInfo>
-      </FoldableSectionTitleInner>
+      </FoldableSectionInner>
       {(toggle ?? open) && children && (
         <ChildrenOuter margin={childrenMargin}>{children}</ChildrenOuter>
       )}
@@ -63,4 +62,4 @@ const FoldableSectionTitle: React.FC<{
   );
 };
 
-export default FoldableSectionTitle;
+export default FoldableSection;

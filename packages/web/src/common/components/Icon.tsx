@@ -10,6 +10,7 @@ interface IconProps {
   size: number;
   onClick?: () => void;
   color?: string;
+  className?: string;
 }
 
 const IconInner = styled.div<{
@@ -31,8 +32,15 @@ const Icon: React.FC<IconProps> = ({
   size,
   onClick = undefined,
   color = colors.BLACK,
+  className = "",
 }) => (
-  <IconInner size={size} clickable={!!onClick} color={color} onClick={onClick}>
+  <IconInner
+    className={className}
+    size={size}
+    clickable={!!onClick}
+    color={color}
+    onClick={onClick}
+  >
     <MUIIcon fontSize="inherit">{type}</MUIIcon>
   </IconInner>
 );

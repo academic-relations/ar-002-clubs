@@ -2,8 +2,11 @@ import React from "react";
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
+import Typography from "./Typography";
 
-interface FileUploadProps {}
+interface FileUploadProps {
+  placeholder?: string;
+}
 
 const FileUploadInner = styled.div`
   /* Auto layout */
@@ -32,7 +35,6 @@ const FileName = styled.div`
   /* Auto layout */
   display: flex;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
   padding: 8px 12px;
   gap: 10px;
@@ -68,9 +70,13 @@ const UploadIcon = styled.div`
   flex-grow: 0; */
 `;
 
-const FileUpload: React.FC<FileUploadProps> = () => (
+const FileUpload: React.FC<FileUploadProps> = ({ placeholder = "" }) => (
   <FileUploadInner>
-    <FileName />
+    <FileName>
+      <Typography color="GRAY.200" fs={16} lh={20} fw="REGULAR">
+        {placeholder}
+      </Typography>
+    </FileName>
     <UploadIcon>
       <Icon type="file_upload_outlined" size={20} color="white" />
     </UploadIcon>
