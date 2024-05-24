@@ -1,7 +1,7 @@
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
 import { differenceInHours, differenceInMinutes, format } from "date-fns";
@@ -36,12 +36,16 @@ const ReservationInfo = styled.div`
   align-self: stretch;
 `;
 
-const CommonSpaceInfoThirdFrame: React.FC<CommonSpaceFrameProps> = ({
-  commonSpace,
-}) => {
+const CommonSpaceInfoThirdFrame: React.FC<
+  CommonSpaceFrameProps & { setNextEnabled: (enabled: boolean) => void }
+> = ({ commonSpace, setNextEnabled }) => {
   const { email, clubdId, startTerm, endTerm } = commonSpace.body;
   const { spaceId } = commonSpace.param;
   const correct = email && clubdId && startTerm && endTerm && spaceId;
+
+  useEffect(() => {
+    setNextEnabled(!!correct);
+  }, [correct, setNextEnabled]);
 
   return correct ? (
     <>
