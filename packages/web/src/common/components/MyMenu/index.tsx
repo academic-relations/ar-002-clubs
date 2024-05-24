@@ -19,6 +19,10 @@ const MyMenuWrapper = styled.div`
   top: 50px;
   right: 16px;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    display: none;
+  }
 `;
 
 const Divider = styled.div`
