@@ -19,8 +19,6 @@ RUN pnpm fetch
 COPY . .
 # Build dependencies
 RUN pnpm install -r --offline
-# Build web
-RUN pnpm --filter=web build
 
 # Only include production dependencies (Did not make much of a difference in image size)
 # FROM base AS production-deps
@@ -35,7 +33,8 @@ FROM base
 # COPY --from=production-deps /app/node_modules /app/node_modules
 COPY --from=build /app/node_modules /app/node_modules
 COPY --from=build /app/packages/web /app/packages/web
+COPY --from=build /app/packages/interface /app/packages/interface
 WORKDIR /app/packages/web
 
 EXPOSE 3000
-CMD [ "pnpm", "start" ]
+CMD [ "pnpm", "build-start" ]

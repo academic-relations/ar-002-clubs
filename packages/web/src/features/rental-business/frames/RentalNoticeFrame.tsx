@@ -1,9 +1,9 @@
+import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import React, { useState } from "react";
 import styled from "styled-components";
-import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
-import Button from "@sparcs-clubs/web/common/components/Button";
 import type { RentalInterface } from "../types/rental";
 
 export interface RentalFrameProps {
@@ -16,12 +16,6 @@ const RentalNoticeFrameInner = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-  align-self: stretch;
-`;
-
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
-  gap: 16px;
   align-self: stretch;
 `;
 
@@ -57,7 +51,7 @@ const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
 
   return (
     <RentalNoticeFrameInner>
-      <StyledCard outline>
+      <Card outline gap={16}>
         <Typography type="h3">안내사항</Typography>
         <StyledTypography type="p">
           모든 대여 사업은 동연 소속 동아리를 대상으로 하며, 신청은 각 동아리의
@@ -65,7 +59,7 @@ const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
           <br />
           기타 등등 안내 내용 -{">"} 이건 동연 측에서 준비해주겠죠?
         </StyledTypography>
-      </StyledCard>
+      </Card>
       <StyledBottom>
         <StyledCheckboxOuter>
           <Checkbox

@@ -24,7 +24,6 @@ const Funding = () => (
     <PageHeadWrapper>
       <BreadCrumb
         items={[
-          // TODO: 중간 경로(대표 동아리 관리)는 일단 넣어두긴 했는데... 언젠가 생기겠죠??
           { name: "대표 동아리 관리", path: "/manage-club" },
           {
             name: manageClubFundingPageBreadCrumbName,

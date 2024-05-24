@@ -3,16 +3,12 @@
 import React from "react";
 import styled from "styled-components";
 
-import Card from "@sparcs-clubs/web/common/components/Card";
 import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
+import Card from "@sparcs-clubs/web/common/components/Card";
 
 interface ClubDetailCardProps {
   club: ApiClb002ResponseOK;
 }
-
-const ClubDetailCardInner = styled(Card)`
-  gap: 10px;
-`;
 
 const ClubDetailText = styled.div`
   width: 100%;
@@ -22,9 +18,9 @@ const ClubDetailText = styled.div`
 `;
 
 const ClubDetailCard: React.FC<ClubDetailCardProps> = ({ club }) => (
-  <ClubDetailCardInner>
+  <Card gap={10} padding="16px 20px">
     <ClubDetailText>{club.description}</ClubDetailText>
-  </ClubDetailCardInner>
+  </Card>
 );
 
 export default ClubDetailCard;
