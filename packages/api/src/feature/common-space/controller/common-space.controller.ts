@@ -48,7 +48,7 @@ export class CommonSpaceController {
     return result;
   }
 
-  @Get("common-spaces/common-space/:spaceId/usage-order")
+  @Get("common-spaces/common-space/:spaceId/usage-orders")
   async getCommonSpaceUsageOrder(
     @Param() param: ApiCms002RequestParam,
     @Query() query: ApiCms002RequestQuery,
@@ -68,7 +68,7 @@ export class CommonSpaceController {
     return result;
   }
 
-  @Post("student/common-spaces/common-space/:spaceId/usage-order")
+  @Post("student/common-spaces/common-space/:spaceId/usage-orders/usage-order")
   async postStudentCommonSpaceUsageOrder(
     @Param() param: ApiCms003RequestParam,
     @Body() body: ApiCms003RequestBody,
@@ -95,7 +95,9 @@ export class CommonSpaceController {
     return result;
   }
 
-  @Delete("student/common-spaces/common-space/:spaceId/usage-order/:orderId")
+  @Delete(
+    "student/common-spaces/common-space/:spaceId/usage-orders/usage-order/:orderId",
+  )
   async deleteStudentCommonSpaceUsageOrder(
     @Param() param: ApiCms004RequestParam,
   ): Promise<ApiCms004ResponseOK> {
@@ -113,7 +115,7 @@ export class CommonSpaceController {
     return result;
   }
 
-  @Post("executive/common-spaces/common-space/:spaceId/usage-order")
+  @Post("executive/common-spaces/common-space/:spaceId/usage-orders")
   async postExecutiveCommonSpaecUsageOrder(
     @Param() param: ApiCms005RequestParam,
     @Body() body: ApiCms005RequestBody,
@@ -140,7 +142,7 @@ export class CommonSpaceController {
     return result;
   }
 
-  @Get("student/common-spaces/usage-order")
+  @Get("student/common-spaces/usage-orders")
   async getStudentCommonSpacesUsageOrder(
     @Query() query: ApiCms006RequestQuery,
   ): Promise<ApiCms006ResponseOk> {
@@ -164,7 +166,7 @@ export class CommonSpaceController {
     return result;
   }
 
-  @Get("student/common-spaces/usage-order/my")
+  @Get("student/common-spaces/usage-orders/my")
   async getStudentCommonSpacesUsageOrderMy(
     @Query() query: ApiCms007RequestQuery,
   ): Promise<ApiCms007ResponseOk> {
