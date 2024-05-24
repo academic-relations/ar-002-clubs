@@ -57,7 +57,7 @@ const Progress = ({ status = Status.Pending, label, date }: ProgressProps) => {
         >
           {label}
         </Typography>
-        {date && (
+        {date !== undefined && (
           <Typography
             ff="PRETENDARD"
             fw="REGULAR"
