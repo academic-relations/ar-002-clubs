@@ -56,7 +56,7 @@ const ActivityReportMainFrame: React.FC = () => (
       <BreadCrumb
         items={[
           { name: "대표 동아리 관리", path: "/manage-club" },
-          { name: "활동 보고서", path: "/activity-report" },
+          { name: "활동 보고서", path: "/manage-club/activity-report" },
         ]}
       />
       <PageTitle>활동 보고서</PageTitle>

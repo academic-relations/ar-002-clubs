@@ -3,6 +3,6 @@
 import ActivityReportCreateFrame from "@sparcs-clubs/web/features/manage-club/activity-report/frames/ActivityReportCreateFrame";
 import React from "react";
 
-const Clubs = () => <ActivityReportCreateFrame />;
+const ActivityReportCreate = () => <ActivityReportCreateFrame />;
 
-export default Clubs;
+export default ActivityReportCreate;
