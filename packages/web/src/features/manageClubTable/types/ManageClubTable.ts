@@ -1,5 +1,11 @@
 import { TagColor } from "@sparcs-clubs/web/common/components/Tag";
 
+export type ServiceType =
+  | "rental-business"
+  | "printing-business"
+  | "activity-certificate"
+  | "common-space";
+
 export enum ManageClubRentalBusinessStatus {
   submit = "신청",
   cancel = "취소",
