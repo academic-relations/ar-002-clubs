@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
 import postCommonSpaceUsageOrder from "@sparcs-clubs/web/features/common-space/service/postCommonSpaceUsageOrder";
+import { subSeconds } from "date-fns";
 
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 import CommonSpaceInfoFirstFrame from "./CommonSpaceInfoFirstFrame";
@@ -75,7 +76,7 @@ const CommonSpaceInfoFrame: React.FC<CommonSpaceFrameProps> = ({
     if (correct) {
       postCommonSpaceUsageOrder(
         { spaceId },
-        { email, clubdId, startTerm, endTerm },
+        { email, clubdId, startTerm, endTerm: subSeconds(endTerm, 1) },
       );
     }
   }, [commonSpace]);
