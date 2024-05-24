@@ -10,7 +10,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 1,
           name: "궁극의 맛",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "요리",
           representative: "장주원",
@@ -20,7 +20,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 2,
           name: "샹그릴라",
-          type: 0,
+          type: 1,
           isPermanent: true,
           characteristic: "애니메이션 감상 및 서브컬쳐",
           representative: "김경민",
@@ -30,7 +30,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 3,
           name: "여로",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "여행",
           representative: "강현성",
@@ -40,7 +40,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 4,
           name: "예쁜영화",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "영화감상",
           representative: "정재민",
@@ -50,7 +50,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 5,
           name: "칼디",
-          type: 0,
+          type: 1,
           isPermanent: true,
           characteristic: "커피&바리스타",
           representative: "최원준",
@@ -60,7 +60,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 6,
           name: "판놀음",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "보드 게임",
           representative: "양동연",
@@ -70,7 +70,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 7,
           name: "Khartes",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "트레이딩 카드 게임",
           representative: "양진혁",
@@ -80,7 +80,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 8,
           name: "OPTeamus",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "이스포츠",
           representative: "신승빈",
@@ -90,7 +90,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 9,
           name: "THE MIXER",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "칵테일",
           representative: "구도훈",
@@ -100,7 +100,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 75,
           name: "패플리",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "패션",
           representative: "탁한진",
@@ -110,7 +110,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 76,
           name: "Boardom",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "보드게임",
           representative: "Munim Hasan Wasi",
@@ -120,7 +120,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 77,
           name: "Moonshine",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "양조",
           representative: "임채민",
@@ -130,7 +130,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 89,
           name: "KASTLE",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "체스",
           representative: "Jaden Jorradol",
@@ -140,7 +140,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 92,
           name: "카이시엘",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic:
             "제과제빵 활동을 통해 학우들의 다양한 문화활동을 장려함.",
@@ -151,7 +151,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 104,
           name: "COKAIN",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "코스프레",
           representative: "김강민",
@@ -161,7 +161,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 106,
           name: "모닥불",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "캠핑",
           representative: "김지하",
@@ -171,7 +171,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 107,
           name: "카슐랭",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "맛집탐방",
           representative: "이정민",
@@ -181,7 +181,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 110,
           name: "웅(熊)",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "고기굽기에 대한 연구",
           representative: "이서윤",
@@ -197,7 +197,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 10,
           name: "이박터",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "연극",
           representative: "허수영",
@@ -207,7 +207,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 11,
           name: "일루젼 카이스트",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "힙합, 스트릿 및 K-POP댄스",
           representative: "정민혁",
@@ -217,7 +217,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 12,
           name: "Lunatic",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "스트릿 댄스",
           representative: "박선우",
@@ -227,7 +227,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 13,
           name: "MindFreak",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "마술 및 타로",
           representative: "이창섭",
@@ -237,7 +237,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 14,
           name: "Number",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "뮤지컬",
           representative: "김동현",
@@ -253,7 +253,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 15,
           name: "곰발바닥",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "수공예",
           representative: "김채현",
@@ -263,7 +263,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 16,
           name: "그리미주아",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "순수미술",
           representative: "예건희",
@@ -273,7 +273,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 17,
           name: "문학의 뜨락",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "문예창작 및 합평",
           representative: "신승운",
@@ -283,7 +283,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 18,
           name: "별바라기",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "별 관측 및 사진 촬영, 사진 전시회 운영과 외부 출사",
           representative: "오윤종",
@@ -293,7 +293,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 19,
           name: "빛따라",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "사진",
           representative: "김휘용",
@@ -303,7 +303,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 20,
           name: "열정부",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic:
             "만화창작 및 디지털 일러스트레이션 및 애니메이션 제작",
@@ -314,7 +314,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 21,
           name: "은막",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "독립영화 제작",
           representative: "김나희",
@@ -324,7 +324,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 91,
           name: "KAIST Chronicles",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "영문",
           representative: "김동은",
@@ -334,7 +334,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 95,
           name: "위로자전거",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "새활용",
           representative: "방민솔",
@@ -344,7 +344,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 98,
           name: "LEtsGO",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "일반 레고 및 나노블럭 조립 후 전시활동",
           representative: "김진현",
@@ -360,7 +360,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 22,
           name: "강적",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "하드 락 밴드",
           representative: "조한빈",
@@ -370,7 +370,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 23,
           name: "동틀무렵",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "모던락 밴드",
           representative: "이해인",
@@ -380,7 +380,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 24,
           name: "인피니트",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "메탈 및 얼터너티브 메탈 관련 밴드음악",
           representative: "김준호",
@@ -390,7 +390,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 25,
           name: "창작동화",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "재즈 및 창작곡 공연",
           representative: "최홍일",
@@ -400,7 +400,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 26,
           name: "CarpeDiem",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "팝 밴드",
           representative: "김예찬",
@@ -410,7 +410,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 27,
           name: "Praiser",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "KAIST 내 크리스천들을 위한 CCM을 연주하는 밴드",
           representative: "박동민",
@@ -420,7 +420,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 28,
           name: "STURGEON",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "EMO/CORE/PUNK 장르의 밴드음악 합주 및 공연",
           representative: "김예린",
@@ -430,7 +430,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 29,
           name: "Twenties Dream",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "펑크락 밴드",
           representative: "조원준",
@@ -440,7 +440,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 111,
           name: "Shift",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "International Rock Band",
           representative: "Nurlybay Akmerey",
@@ -456,7 +456,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 30,
           name: "구토스",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "힙합, R&B",
           representative: "신동환",
@@ -466,7 +466,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 31,
           name: "여섯줄",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "어쿠스틱 보컬",
           representative: "이유섭",
@@ -476,7 +476,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 32,
           name: "HUG",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "버스킹 및 실용음악",
           representative: "김시은",
@@ -486,7 +486,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 33,
           name: "KAIST CHORUS",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "합창 및 아카펠라",
           representative: "성민석",
@@ -496,7 +496,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 34,
           name: "MUSE",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "밴드세션&코러스",
           representative: "정민호",
@@ -512,7 +512,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 35,
           name: "소리모음",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "사물놀이 및 풍물",
           representative: "김수진",
@@ -522,7 +522,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 36,
           name: "FingS",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "핑거스타일 기타",
           representative: "유기민",
@@ -532,7 +532,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 37,
           name: "LP",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "작곡",
           representative: "윤남석",
@@ -542,7 +542,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 38,
           name: "PIAST",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "피아노 연주",
           representative: "주선우",
@@ -552,7 +552,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 80,
           name: "FUZE",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "디제잉 및 파티플래닝",
           representative: "김현규",
@@ -568,7 +568,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 39,
           name: "디딤돌",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "교육봉사 및 장애인 보조",
           representative: "허지운",
@@ -578,7 +578,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 40,
           name: "EWB-KAIST",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "적정 기술 개발 및 보급",
           representative: "김수민",
@@ -588,7 +588,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 41,
           name: "K-Let",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "청소년 대상 강연 및 멘토링",
           representative: "고채현",
@@ -598,7 +598,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 42,
           name: "KAINATION",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "기부",
           representative: "강현우",
@@ -608,7 +608,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 43,
           name: "SEED KAIST",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "과학 분야 교육봉사",
           representative: "김준성",
@@ -618,7 +618,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 44,
           name: "Silver Lining",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "봉사",
           representative: "임지민",
@@ -628,7 +628,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 94,
           name: "KAIST-SAE",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "지역사회 봉사 및 환경 보호",
           representative: "권효진",
@@ -644,7 +644,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 45,
           name: "네비게이토",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "크리스천 리더십",
           representative: "김예찬",
@@ -654,7 +654,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 46,
           name: "사나래",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "가톨릭(천주교)",
           representative: "정서경",
@@ -664,7 +664,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 47,
           name: "CCC",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "대학생 기독교 선교",
           representative: "황은빈",
@@ -674,7 +674,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 48,
           name: "IVF",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "성경연구, 공동체 활동",
           representative: "김재용",
@@ -690,7 +690,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 49,
           name: "루키",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "야구",
           representative: "박정원",
@@ -700,7 +700,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 50,
           name: "아퀼라",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "풋살",
           representative: "김도윤",
@@ -710,7 +710,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 51,
           name: "카이큐",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "배구",
           representative: "이서준",
@@ -720,7 +720,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 52,
           name: "투 (TU)",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "농구",
           representative: "이승헌",
@@ -730,7 +730,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 53,
           name: "허리케인",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "축구",
           representative: "이서진",
@@ -740,7 +740,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 54,
           name: "DOOLLY",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "5 대 5 정통 농구",
           representative: "김주형",
@@ -750,7 +750,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 55,
           name: "EDGE",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "탁구",
           representative: "정유찬",
@@ -760,7 +760,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 56,
           name: "K-Bird",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "배드민턴",
           representative: "박시우",
@@ -770,7 +770,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 57,
           name: "STROKE",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "테니스",
           representative: "김지환",
@@ -780,7 +780,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 81,
           name: "스페어",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "볼링",
           representative: "서민준",
@@ -790,7 +790,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 82,
           name: "UM",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "족구",
           representative: "안제휘",
@@ -800,7 +800,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 93,
           name: "매버릭스",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "미식축구",
           representative: "장준영",
@@ -810,7 +810,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 101,
           name: "고래당",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "구(4구, 8볼)",
           representative: "장원혁",
@@ -820,7 +820,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 108,
           name: "PUD",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "캐주얼 배드민턴",
           representative: "Calvin Samuel",
@@ -836,7 +836,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 58,
           name: "검우회",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "대한검도",
           representative: "심한보",
@@ -846,7 +846,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 59,
           name: "울랄라",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "스포츠 클라이밍",
           representative: "김율",
@@ -856,7 +856,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 60,
           name: "카이스트 수영팀 가오리",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "경영(競泳) 및 핀수영",
           representative: "김나령",
@@ -866,7 +866,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 61,
           name: "KAKI",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "스노우보드 및 익스트림 스포츠",
           representative: "신승헌",
@@ -876,7 +876,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 83,
           name: "감성",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "자전거 라이딩",
           representative: "김문수",
@@ -886,7 +886,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 85,
           name: "주짓스님",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "주짓수, MMA, 킥복싱",
           representative: "노영래",
@@ -896,7 +896,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 90,
           name: "KAIST Winner Wrestling",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "레슬링",
           representative: "김영진",
@@ -906,7 +906,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 96,
           name: "ASCEND",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "국제 종합운동 동아리",
           representative: "김근형",
@@ -916,7 +916,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 103,
           name: "쨉쨉원투",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "복싱",
           representative: "임수연",
@@ -926,7 +926,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 105,
           name: "북극곰",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "유도",
           representative: "김창헌",
@@ -942,7 +942,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 62,
           name: "숲",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "생물의 관찰 및 탐구",
           representative: "신동엽",
@@ -952,7 +952,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 63,
           name: "질주",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "모터스포츠",
           representative: "이관형",
@@ -962,7 +962,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 64,
           name: "하제",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "게임 연구 및 제작",
           representative: "김경완",
@@ -972,7 +972,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 65,
           name: "GoN",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "정보보안 및 해킹",
           representative: "조정훈",
@@ -982,7 +982,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 66,
           name: "KAIST 수학문제연구회",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "수학",
           representative: "이준혁",
@@ -992,7 +992,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 67,
           name: "KAIST Puple",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "퍼즐 연구 및 공유",
           representative: "황윤찬",
@@ -1002,7 +1002,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 68,
           name: "MR",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "로봇 연구 및 제작, 메이커 활동",
           representative: "임준범",
@@ -1012,7 +1012,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 69,
           name: "RUN",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "알고리즘 문제 해결",
           representative: "이예린",
@@ -1022,7 +1022,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 70,
           name: "Vlab",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "과학퀴즈와 인공지능",
           representative: "이서현",
@@ -1032,7 +1032,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 86,
           name: "Include",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "AI 학술",
           representative: "김중현",
@@ -1042,7 +1042,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 100,
           name: "GDSC",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "KAIST 개발자 네트워킹 및 개발 관련 행사 주최",
           representative: "윤지훈",
@@ -1052,7 +1052,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 102,
           name: "우주벌레",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "우주생물학 탐구 및 외계지적생명체 탐사",
           representative: "이진우",
@@ -1062,7 +1062,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 109,
           name: "NUPS(NUPzuki Search club)",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic:
             "외계행성 관측 및 관측 기술 개발과 새로운 행성 발견, 외계생명체 거주 가능성 조사",
@@ -1079,7 +1079,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 71,
           name: "Freethinkers KAIST",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "자유사상",
           representative: "이윤섭",
@@ -1089,7 +1089,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 72,
           name: "ICISTS",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "학술행사 개최",
           representative: "김지환",
@@ -1099,7 +1099,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 73,
           name: "KFAC",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "금융 학술 동아리",
           representative: "김희상",
@@ -1109,7 +1109,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 74,
           name: "MSK",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "경영전략",
           representative: "조은현",
@@ -1119,7 +1119,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 87,
           name: "KAIST 법학회 Lawgical",
-          type: 0,
+          type: 1,
           isPermanent: false,
           characteristic: "법학",
           representative: "김경래",
@@ -1129,7 +1129,7 @@ const mockupData: ApiClb001ResponseOK = {
         {
           id: 99,
           name: "KAIST LOOKIE",
-          type: 1,
+          type: 2,
           isPermanent: false,
           characteristic: "사회 문제 소셜 임팩트 창출, 소셜 벤처 창업 동아리",
           representative: "양준원",
