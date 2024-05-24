@@ -73,7 +73,7 @@ export class ClubRepository {
           type: ClubT.clubStatusEnumId,
           id: Club.id,
           name: Club.name,
-          isPermanent: sql<boolean>`COALESCE(MAX(CASE WHEN ${DivisionPermanentClubD.id} IS NOT NULL THEN 'true' ELSE 'false' END), 'false')`,
+          isPermanent: sql`COALESCE(MAX(CASE WHEN ${DivisionPermanentClubD.id} IS NOT NULL THEN TRUE ELSE FALSE END), FALSE)`,
           characteristic: ClubT.characteristicKr,
           representative: Student.name,
           advisor: Professor.name,
@@ -131,7 +131,7 @@ export class ClubRepository {
       }
 
       if (club) {
-        acc[divId].clubs.push(club);
+        acc[divId].clubs.push({ ...club, isPermanent: club.isPermanent === 1 });
       }
       return acc;
     }, {});
