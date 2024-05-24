@@ -15,10 +15,17 @@ const ProgressCheckSectionWrapper = styled.div`
   flex-direction: row;
   gap: 4px;
   align-items: flex-start;
-  justify-content: center;
   height: 76px;
   width: 100%;
+  padding: 0 48px;
 `;
+
+const ProgressLineWrapper = styled.div`
+  display: flex;
+  flex: 1;
+  margin-top: 12px;
+`;
+
 const ProgressCheckSection: React.FC<ProgressCheckSectionProps> = ({
   labels,
   status,
@@ -26,9 +33,13 @@ const ProgressCheckSection: React.FC<ProgressCheckSectionProps> = ({
 }) => (
   <ProgressCheckSectionWrapper>
     {labels.map((label, index) => (
-      <React.Fragment key={index}>
+      <React.Fragment key={String(index) + label}>
         <Progress status={status[index]} label={label} date={dates[index]} />
-        {index < labels.length - 1 && <ProgressLine status={status[index]} />}
+        {index < labels.length - 1 && (
+          <ProgressLineWrapper>
+            <ProgressLine status={status[index]} />{" "}
+          </ProgressLineWrapper>
+        )}
       </React.Fragment>
     ))}
   </ProgressCheckSectionWrapper>
