@@ -33,6 +33,12 @@ const SelectParticipantInner = styled.div`
   align-self: stretch;
 `;
 
+const CheckboxCenterPlacer = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: center;
+`;
+
 const columnHelper = createColumnHelper<Participant>();
 
 const columns = [
@@ -40,18 +46,22 @@ const columns = [
     id: "multiSelect",
     header: ({ table }) => (
       <TableCell minWidth={40} width="5%" type="Header">
-        <Checkbox
-          checked={table.getIsAllRowsSelected()}
-          onClick={table.getToggleAllRowsSelectedHandler()}
-        />
+        <CheckboxCenterPlacer>
+          <Checkbox
+            checked={table.getIsAllRowsSelected()}
+            onClick={table.getToggleAllRowsSelectedHandler()}
+          />
+        </CheckboxCenterPlacer>
       </TableCell>
     ),
     cell: ({ row }) => (
       <TableCell minWidth={40} width="5%" type="Default">
-        <Checkbox
-          checked={row.getIsSelected()}
-          onClick={row.getToggleSelectedHandler()}
-        />
+        <CheckboxCenterPlacer>
+          <Checkbox
+            checked={row.getIsSelected()}
+            onClick={row.getToggleSelectedHandler()}
+          />
+        </CheckboxCenterPlacer>
       </TableCell>
     ),
   }),

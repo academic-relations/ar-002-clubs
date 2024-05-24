@@ -102,7 +102,7 @@ const PastActivityReportList: React.FC<ActivityReportListProps> = ({
   });
   return (
     <TableOuter>
-      <Typography fs={14} fw="REGULAR" lh={20} ff="PRETENDARD">
+      <Typography fs={14} fw="REGULAR" lh={20} ff="PRETENDARD" color="GRAY.600">
         총 {data.length}개
       </Typography>
       <Table table={table} />
