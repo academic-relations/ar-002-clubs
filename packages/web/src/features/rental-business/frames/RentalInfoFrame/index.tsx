@@ -95,8 +95,11 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
     setStep(step - 1);
   }, [step, setStep, rental, setRental]);
 
-  const { data } = useGetAvailableRentals(rental.date?.start, rental.date?.end);
-
+  const { data } = useGetAvailableRentals(
+    rental.date?.start ?? new Date(),
+    rental.date?.end ?? new Date(),
+  );
+  // TODO: 임시로 달아둠, 고쳐야 함
   const objectsWithQuantity = [
     { name: "Easel", quantity: rental.easel || 0 },
     { name: "Vacuum Corded", quantity: rental.vacuum === "corded" ? 1 : 0 },
@@ -132,13 +135,14 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
     if (step === frames.length - 1) {
       // TODO?: 신청 제대로 안 됐을 때 modal?
       postRentalOrder(
-        { clubId: rental.info?.clubId },
+        // TODO: 임시로 달아둠, 고쳐야 함
+        { clubId: rental.info?.clubId ?? 1 },
         {
-          studentPhoneNumber: rental.info?.phone,
+          studentPhoneNumber: rental.info?.phone ?? "",
           objects: filteredObjectsWithId,
-          purpose: rental.purpose,
-          desiredStart: rental.date?.start,
-          desiredEnd: rental.date?.end,
+          purpose: rental.purpose ?? "",
+          desiredStart: rental.date?.start ?? new Date(),
+          desiredEnd: rental.date?.end ?? new Date(),
         },
       ).then(() => {
         setShowAssignModal(true);
