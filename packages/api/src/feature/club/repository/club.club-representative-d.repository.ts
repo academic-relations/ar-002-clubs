@@ -35,4 +35,29 @@ export class ClubRepresentativeDRepository {
 
     return representative;
   }
+
+  async findSemesterRepresentativeName(
+    clubId: number,
+    startTerm: Date,
+    endTerm: Date,
+  ): Promise<string> {
+    return this.db
+      .select({ name: User.name })
+      .from(ClubRepresentativeD)
+      .leftJoin(User, eq(User.id, ClubRepresentativeD.studentId))
+      .where(
+        and(
+          eq(ClubRepresentativeD.clubId, clubId),
+          eq(ClubRepresentativeD.clubRepresentativeEnum, 1),
+          lte(ClubRepresentativeD.startTerm, startTerm),
+          or(
+            gte(ClubRepresentativeD.endTerm, endTerm),
+            isNull(ClubRepresentativeD.endTerm),
+          ),
+        ),
+      )
+      .orderBy(ClubRepresentativeD.endTerm)
+      .limit(1)
+      .then(result => result[0]?.name);
+  }
 }

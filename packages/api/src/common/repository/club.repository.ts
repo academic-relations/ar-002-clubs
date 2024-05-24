@@ -140,4 +140,12 @@ export class ClubRepository {
     };
     return result;
   }
+
+  async findClubName(clubId: number): Promise<string> {
+    return this.db
+      .select({ name: Club.name })
+      .from(Club)
+      .where(eq(Club.id, clubId))
+      .then(result => result[0]?.name);
+  }
 }
