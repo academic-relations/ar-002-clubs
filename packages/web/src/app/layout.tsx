@@ -17,10 +17,12 @@ import Footer from "@sparcs-clubs/web/common/components/Footer";
 
 import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
 import ResponsiveContent from "@sparcs-clubs/web/common/components/Responsive";
+import DebugBadge from "../common/components/DebugBadge";
 
 export const metadata: Metadata = {
-  title: "SPARCS Academic Relations Team",
-  description: "Frontend Standard Stack v1.0.0",
+  title: "SPARCS Clubs for ClubsUA",
+  description:
+    "Created by SPARCS Academic Relations AR-002 TF Team, Copyright 2024",
 };
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => (
@@ -32,6 +34,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => (
       <AppRouterCacheProvider>
         <StyledComponentsRegistry>
           <UseClientProvider>
+            <DebugBadge />
             <Header />
             <ResponsiveContent>{children}</ResponsiveContent>
             <Footer />

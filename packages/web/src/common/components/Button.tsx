@@ -53,7 +53,14 @@ const ButtonTypeInner = {
 
 const Button = ({ type = "default", children, ...divProps }: ButtonProps) => {
   const ButtonChosenInner = ButtonTypeInner[type];
-  return <ButtonChosenInner {...divProps}>{children}</ButtonChosenInner>;
+  return (
+    <ButtonChosenInner
+      {...divProps}
+      onClick={type === "disabled" ? undefined : divProps.onClick}
+    >
+      {children}
+    </ButtonChosenInner>
+  );
 };
 
 export default Button;

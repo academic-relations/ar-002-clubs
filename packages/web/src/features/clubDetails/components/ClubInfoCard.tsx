@@ -6,20 +6,17 @@ import styled from "styled-components";
 import {
   getTagColorFromClubType,
   getTagColorFromDivision,
+  getTagContentFromClubType,
 } from "@sparcs-clubs/web/types/clubdetail.types";
 
+import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 import ClubInfoItem from "./ClubInfoItem";
 
 interface ClubInfoCardProps {
   club: ApiClb002ResponseOK;
 }
-
-const ClubInfoCardInner = styled(Card)`
-  gap: 16px;
-`;
 
 const ClubInfoRow = styled.div`
   display: flex;
@@ -31,12 +28,14 @@ const ClubInfoRow = styled.div`
 `;
 
 const ClubInfoCard: React.FC<ClubInfoCardProps> = ({ club }) => (
-  <ClubInfoCardInner>
+  <Card gap={16} padding="16px 20px">
     <ClubInfoRow>
       <ClubInfoItem
         title="동아리 지위"
         content={
-          <Tag color={getTagColorFromClubType(club.type)}>{club.type}</Tag>
+          <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
+            {getTagContentFromClubType(club.type, club.isPermanent)}
+          </Tag>
         }
       />
       <ClubInfoItem
@@ -53,7 +52,7 @@ const ClubInfoCard: React.FC<ClubInfoCardProps> = ({ club }) => (
       <ClubInfoItem title="설립 연도" content={`${club.foundingYear}년`} />
     </ClubInfoRow>
     <ClubInfoItem title="동아리방" content={club.room} />
-  </ClubInfoCardInner>
+  </Card>
 );
 
 export default ClubInfoCard;

@@ -134,3 +134,4 @@ const NoticePagination: React.FC<NoticePaginationProps> = ({
 };
 
 export default NoticePagination;
+// TODO: common component로 이동

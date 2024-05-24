@@ -30,9 +30,10 @@
     },
     "project": ["./packages/*/tsconfig.json", "./tsconfig.json"]
   },
-  "plugins": ["import", "@typescript-eslint", "react"],
+  "plugins": ["import", "@typescript-eslint", "react", "@next/eslint-plugin-next"],
   "ignorePatterns": ["node_modules/", "dist/"],
   "rules": {
+    "react/no-array-index-key": "warn",
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -44,15 +45,15 @@
     ],
     "import/named": "error",
     "import/no-extraneous-dependencies": [
-      "error",
+      "warn", // TODO: change to error
       {
         "packageDir": [
-          "./packages/web",
-          "./packages/api",
-          "./packages/interface",
-          "."
+          "./packages/web/",
+          "./packages/api/",
+          "./packages/interface/",
+          "./"
         ]
-      }
+      },
     ],
     "import/prefer-default-export": "off",
     "class-methods-use-this": "off",

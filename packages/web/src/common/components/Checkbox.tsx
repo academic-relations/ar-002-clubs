@@ -1,11 +1,11 @@
-import React from "react";
+import React, { MouseEvent } from "react";
 import styled from "styled-components";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 import Icon from "./Icon";
 
 type CheckboxProps = {
   checked: boolean;
-  onClick?: () => void;
+  onClick?: (event?: MouseEvent) => void;
   disabled?: boolean;
 };
 
@@ -30,7 +30,13 @@ const Checkbox: React.FC<CheckboxProps> = ({
   disabled = false,
 }) => (
   <CheckboxInner onClick={!disabled ? onClick : undefined} disabled={disabled}>
-    {checked && <Icon type="check" size={16} color={disabled ? colors.GRAY[300] : colors.BLACK} />}
+    {checked && (
+      <Icon
+        type="check"
+        size={16}
+        color={disabled ? colors.GRAY[300] : colors.BLACK}
+      />
+    )}
   </CheckboxInner>
 );
 
