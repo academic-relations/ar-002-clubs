@@ -7,7 +7,7 @@ import { formatSlashDateTime } from "@sparcs-clubs/web/utils/Date/formateDate";
 import ProgressDot, { Status } from "./ProgressDot";
 
 interface ProgressProps {
-  status: Status;
+  status?: Status;
   label: string;
   date: Date | undefined;
 }
@@ -31,7 +31,7 @@ const TextWrapper = styled.div`
   width: max-content;
 `;
 
-const Progress = ({ status, label, date }: ProgressProps) => {
+const Progress = ({ status = Status.Pending, label, date }: ProgressProps) => {
   let labelColor: ThemeColors;
   switch (status) {
     case Status.Approved:
