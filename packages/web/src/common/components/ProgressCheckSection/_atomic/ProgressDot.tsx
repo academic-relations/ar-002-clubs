@@ -4,7 +4,7 @@ import Icon from "@sparcs-clubs/web/common/components/Icon";
 export enum Status {
   Approved, // 체크
   Canceled, // X
-  NotYet, // 빈 원
+  Pending, // 빈 원
 }
 
 const ProgressDotBack = styled.div<{ status: Status }>`
@@ -16,7 +16,7 @@ const ProgressDotBack = styled.div<{ status: Status }>`
   gap: 8px;
   border-radius: 12px;
   border: ${props =>
-    props.status === Status.NotYet
+    props.status === Status.Pending
       ? `2px solid ${props.theme.colors.GRAY[300]}`
       : "none"};
   background-color: ${props => {
@@ -25,7 +25,7 @@ const ProgressDotBack = styled.div<{ status: Status }>`
         return props.theme.colors.PRIMARY;
       case Status.Canceled:
         return props.theme.colors.RED[600];
-      case Status.NotYet:
+      case Status.Pending:
       default:
         return props.theme.colors.WHITE;
     }
