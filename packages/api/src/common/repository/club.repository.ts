@@ -51,7 +51,7 @@ export class ClubRepository {
         foundingYear: Club.foundingYear,
       })
       .from(Club)
-      .leftJoin(ClubT, eq(ClubT.id, Club.id))
+      .leftJoin(ClubT, eq(ClubT.clubId, Club.id))
       .where(eq(Club.id, clubId))
       .limit(1)
       .then(takeUnique);
@@ -83,7 +83,7 @@ export class ClubRepository {
       })
       .from(Division)
       .leftJoin(Club, eq(Club.divisionId, Division.id))
-      .leftJoin(ClubT, eq(Club.id, ClubT.id))
+      .innerJoin(ClubT, and(eq(Club.id, ClubT.clubId)))
       .leftJoin(Professor, eq(ClubT.professorId, Professor.id))
       .leftJoin(
         ClubStudentT,

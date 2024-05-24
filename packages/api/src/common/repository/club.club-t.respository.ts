@@ -18,7 +18,7 @@ export class ClubTRepository {
         professorName: Professor.name,
       })
       .from(ClubT)
-      .where(and(eq(ClubT.semesterId, semesterId), eq(ClubT.id, clubId)))
+      .where(and(eq(ClubT.semesterId, semesterId), eq(ClubT.clubId, clubId)))
       .leftJoin(Professor, eq(Professor.id, ClubT.professorId))
       .then(result => ({
         clubStatusEnumId: result[0]?.clubStatusEnumId,
