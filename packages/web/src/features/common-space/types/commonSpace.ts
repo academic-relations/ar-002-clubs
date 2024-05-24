@@ -1,17 +1,3 @@
-// export interface CommonSpaceInterface {
-//   agreement: boolean;
-//   info?: {
-//     clubName: string;
-//     applicant: string;
-//     phone: string;
-//   };
-//   space?: string;
-//   reservation?: {
-//     start: Date;
-//     end: Date;
-//   };
-// }
-
 import {
   ApiCms003RequestBody,
   ApiCms003RequestParam,
@@ -28,14 +14,3 @@ export interface CommonSpaceInterface {
   body: Partial<ApiCms003RequestBody>;
   param: Partial<ApiCms003RequestParam>;
 }
-
-// {
-//   spaceId: number;
-// }
-
-// {
-//   email: string;
-//   startTerm: Date;
-//   endTerm: Date;
-//   clubId: number;
-// }
