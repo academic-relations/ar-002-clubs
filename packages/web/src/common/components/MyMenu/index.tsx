@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import ProfileList from "./_atomic/ProfileList";
 import Button from "../Button";
 import Icon from "../Icon";
@@ -14,6 +15,9 @@ const MyMenuWrapper = styled.div`
   border-radius: 8px;
   background-color: ${({ theme }) => theme.colors.WHITE};
   align-items: center;
+  position: absolute;
+  top: 50px;
+  right: 16px;
 `;
 
 const Divider = styled.div`
@@ -29,6 +33,7 @@ const MyMenu: React.FC = () => {
   const handleMyPageClick = () => {
     router.push("/my");
   };
+  const { logout } = useAuth();
 
   return (
     <MyMenuWrapper>
@@ -36,7 +41,7 @@ const MyMenu: React.FC = () => {
         profiles={[
           { profileName: "학부생", profileNumber: 20202222, email: "test" },
           { profileName: "집행부원", profileNumber: 20202222, email: "test" },
-        ]}
+        ]} // TODO: 나중에는 실제로 받아오기
       />
       <Divider />
       {/* TODO: #333333으로 써놓은거 수정하기 */}
@@ -50,7 +55,7 @@ const MyMenu: React.FC = () => {
       </Button>
       <Button
         type="outlined"
-        onClick={() => {}}
+        onClick={logout}
         style={{ gap: "4px", color: "#333333", width: "100%" }}
       >
         <Icon type="logout" size={16} color="#333333" />
