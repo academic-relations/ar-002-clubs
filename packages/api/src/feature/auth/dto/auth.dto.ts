@@ -6,7 +6,7 @@ export type Request = _Request & RequestExtra;
 export interface RequestExtra {
   session: {
     next: string;
-    sso_state: string;
+    ssoState: string;
   };
   user: UserDto;
 }
