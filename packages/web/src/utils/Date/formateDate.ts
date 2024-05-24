@@ -9,4 +9,7 @@ const formatDateTime = (date: Date) =>
 
 const formatTime = (date: Date) => format(date, "HH:mm", { locale: ko });
 
-export { formatDate, formatDateTime, formatTime };
+const formatSlashDateTime = (date: Date) =>
+  format(date, "yyyy/MM/dd HH:mm", { locale: ko });
+
+export { formatDate, formatDateTime, formatTime, formatSlashDateTime };
