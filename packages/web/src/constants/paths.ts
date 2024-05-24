@@ -22,54 +22,56 @@ const paths = {
         path: "/my/clubs",
       },
       {
-        name: "동아리 관리",
-        path: "/manage-club",
+        name: "동아리 등록 신청",
+        path: "/register-club", // TODO: 임시 링크
       },
       {
-        name: "동아리 등록 신청",
-        path: "/",
+        name: "대표 동아리 관리",
+        path: "/manage-club",
       },
     ],
   },
   VOTING: {
     name: "의결기구",
+    // TODO: 임시 링크
     sub: [
       {
         name: "최근 회의",
-        path: "/",
+        path: "/recent-meeting",
       },
       {
-        name: "전동대회(전체동아리대표자회의)",
-        path: "/",
+        name: "전동대회",
+        path: "/all-club-representative-meeting",
       },
       {
         name: "확대운영위원회",
-        path: "/",
+        path: "/expanded-operating-committee",
       },
       {
         name: "운영위원회",
-        path: "/",
+        path: "/operating-committee",
       },
       {
         name: "분과회의",
-        path: "/",
+        path: "/division-meeting",
       },
     ],
   },
   COMMUNITY: {
     name: "소통",
+    // TODO: 임시 링크
     sub: [
       {
         name: "소통채널 안내",
-        path: "/",
+        path: "/communication-channel",
       },
       {
         name: "카카오톡 문의하기",
-        path: "/",
+        path: "/kakaotalk",
       },
       {
         name: "동아리연합회칙",
-        path: "/",
+        path: "/rules",
       },
     ],
   },
@@ -94,6 +96,7 @@ const paths = {
       },
     ],
   },
+  // TODO: 임시 링크
   MADE_BY: { name: "만든 사람들", path: "/" },
   LICENSE: { name: "라이센스", path: "/" },
   TERMS_OF_SERVICE: { name: "이용 약관", path: "/" },
