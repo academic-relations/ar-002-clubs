@@ -4,7 +4,7 @@ enum ClubTypeEnum {
 }
 
 enum ClubRepresentativeEnum {
-  President, // 대표자
+  President = 1, // 대표자
   Representative1, // 대의원 1
   Representative2, // 대의원 2
 }

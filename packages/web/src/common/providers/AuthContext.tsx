@@ -4,6 +4,7 @@ import React, {
   createContext,
   useContext,
   useState,
+  useEffect,
   ReactNode,
   useMemo,
 } from "react";
@@ -21,8 +22,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-  const login = () => setIsLoggedIn(true);
-  const logout = () => setIsLoggedIn(false);
+  useEffect(() => {
+    const storedIsLoggedIn = localStorage.getItem("isLoggedIn");
+    if (storedIsLoggedIn === "true") {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const login = () => {
+    setIsLoggedIn(true);
+    localStorage.setItem("isLoggedIn", "true");
+  };
+
+  const logout = () => {
+    setIsLoggedIn(false);
+    localStorage.setItem("isLoggedIn", "false");
+  };
 
   const value = useMemo(() => ({ isLoggedIn, login, logout }), [isLoggedIn]);
 
