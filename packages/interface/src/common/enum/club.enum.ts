@@ -1,5 +1,5 @@
 enum ClubTypeEnum {
-  Regular, // 정동아리
+  Regular = 1, // 정동아리
   Provisional, // 가동아리
 }
 
