@@ -1,6 +1,6 @@
 import React from "react";
 
-import MoreDetailTitle from "@sparcs-clubs/web/features/manage-club/component/MoreDetailTitle";
+import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
 import {
   ManageTablesWrapper,
   ManageWrapper,
