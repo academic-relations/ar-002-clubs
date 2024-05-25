@@ -1,67 +1,47 @@
 import React from "react";
+import styled from "styled-components";
 
-import MoreDetailTitle from "@sparcs-clubs/web/features/manage-club/component/MoreDetailTitle";
-import {
-  ManageTablesWrapper,
-  ManageWrapper,
-  SectionWrapper,
-} from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
+import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
+import { ManageWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import RentalTable from "@sparcs-clubs/web/features/manage-club/component/RentalTable";
-import PrintingTable from "@sparcs-clubs/web/features/manage-club/component/PrintingTable";
-import ActivityCertificateTable from "@sparcs-clubs/web/features/manage-club/component/ActivityCertificateTable";
-import CommonSpaceTable from "@sparcs-clubs/web/features/manage-club/component/CommonSpaceTable";
-import {
-  mockupManageAcf,
-  mockupManageCms,
-  mockupManagePrint,
-  mockupManageRental,
-} from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+import ClubListGrid from "@sparcs-clubs/web/features/clubs/components/ClubListGrid";
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import useGetMyClub from "@sparcs-clubs/web/features/my/clubs/service/useGetMyClub";
+
+const ClubsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const DetailTitleWrapper = styled.div`
+  padding-left: 24px;
+`;
 
 const MyClubFrame: React.FC = () => {
   const [toggle, setToggle] = React.useState<boolean>(true);
+  const { data, isLoading, isError } = useGetMyClub();
+
   return (
     <ManageWrapper>
       <FoldableSectionTitle
-        title="서비스 신청"
+        title="나의 동아리"
         toggle={toggle}
         toggleHandler={() => setToggle(!toggle)}
       />
       {toggle && (
-        <ManageTablesWrapper>
-          <SectionWrapper>
-            <MoreDetailTitle
-              title="대여 사업"
-              moreDetail="내역 더보기"
-              moreDetailPath="/manage-club/rental-business"
-            />
-            <RentalTable rentalList={mockupManageRental} />
-          </SectionWrapper>
-          <SectionWrapper>
-            <MoreDetailTitle
-              title="홍보물 인쇄"
-              moreDetail="내역 더보기"
-              moreDetailPath="/manage-club/printing-business"
-            />
-            <PrintingTable printingList={mockupManagePrint} />
-          </SectionWrapper>
-          <SectionWrapper>
-            <MoreDetailTitle
-              title="활동확인서 발급"
-              moreDetail="내역 더보기"
-              moreDetailPath="/manage-club/activity-certificate"
-            />
-            <ActivityCertificateTable certificateList={mockupManageAcf} />
-          </SectionWrapper>
-          <SectionWrapper>
-            <MoreDetailTitle
-              title="공용공간 비정기사용"
-              moreDetail="내역 더보기"
-              moreDetailPath="/manage-club/common-space"
-            />
-            <CommonSpaceTable spaceList={mockupManageCms} />
-          </SectionWrapper>
-        </ManageTablesWrapper>
+        <AsyncBoundary isLoading={isLoading} isError={isError}>
+          <ClubsWrapper>
+            <DetailTitleWrapper>
+              <MoreDetailTitle
+                title="2024년 봄학기"
+                moreDetail="전체 보기"
+                moreDetailPath="/my/clubs"
+              />
+            </DetailTitleWrapper>
+            <ClubListGrid clubList={data?.semesters[0].clubs ?? []} />
+          </ClubsWrapper>
+        </AsyncBoundary>
       )}
     </ManageWrapper>
   );
