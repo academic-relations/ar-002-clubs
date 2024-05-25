@@ -9,7 +9,7 @@ export interface ActivityCertificateInterface {
   clubId: number | null;
   applicant: string | null;
   department: string | null;
-  studentNumber: number | null;
+  studentNumber: string | null;
   krPhoneNumber: string;
   issuedNumber: number | null;
   startMonth: string;
@@ -35,3 +35,8 @@ export interface SecondErrorStatus {
   hasStartEndMonthError: boolean;
   hasDescriptionError: boolean;
 }
+
+export const stringToDate = (dateString: string) => new Date(dateString);
+
+export const dateToString = (date: Date) =>
+  `${date.getFullYear()}년 ${date.getMonth() + 1}월`;

@@ -5,7 +5,9 @@ import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumbe
 
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
-import Select from "@sparcs-clubs/web/common/components/Forms/Select";
+import Select, {
+  SelectItem,
+} from "@sparcs-clubs/web/common/components/Forms/Select";
 
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 
@@ -21,6 +23,13 @@ const ActivityCertificateInfoFirstFrame: React.FC<
   firstErrorStatus,
   setFirstErrorStatus,
 }) => {
+  const mockClubList: SelectItem[] = [
+    { label: "동아리", value: "1", selectable: true },
+    { label: "또다른동아리", value: "2", selectable: true },
+    { label: "안되는동아리", value: "3", selectable: false },
+  ];
+  // TODO: 이름 전화번호 동아리 목록 백에서 받아오기
+
   useEffect(() => {
     if (
       !activityCertificate.clubId ||
@@ -61,11 +70,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
     <Card outline gap={40}>
       <Select
         label="동아리 이름"
-        items={[
-          { label: "이런 동아리", value: "1", selectable: true },
-          { label: "저런 동아리", value: "2", selectable: true },
-          { label: "요런 동아리", value: "3", selectable: true },
-        ]}
+        items={mockClubList}
         // TODO - 아래 clubId를 넘겨줄 때 parseInt를 통해서 clubId 값을 받기 때문에 실제 items를 넣어줄 때는 value가 해당 동아리의 실제 clubId여야 함
         setErrorStatus={value =>
           JSON.stringify(firstErrorStatus) ===
@@ -114,9 +119,29 @@ const ActivityCertificateInfoFirstFrame: React.FC<
           });
         }}
       />
-      <TextInput label="신청자 이름" placeholder="" disabled />
-      <TextInput label="신청자 학과" placeholder="" disabled />
-      <TextInput label="신청자 학번" placeholder="" disabled />
+      <TextInput
+        label="신청자 이름"
+        placeholder={
+          activityCertificate.applicant ? activityCertificate.applicant : ""
+        }
+        disabled
+      />
+      <TextInput
+        label="신청자 학과"
+        placeholder={
+          activityCertificate.department ? activityCertificate.department : ""
+        }
+        disabled
+      />
+      <TextInput
+        label="신청자 학번"
+        placeholder={
+          activityCertificate.studentNumber
+            ? activityCertificate.studentNumber
+            : ""
+        }
+        disabled
+      />
       <PhoneInput
         label="신청자 전화번호"
         placeholder="010-XXXX-XXXX"
