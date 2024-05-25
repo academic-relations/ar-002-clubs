@@ -18,12 +18,14 @@ export class UnexpectedExceptionFilter implements ExceptionFilter {
 
     const resStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     logger.error("Unexpected exception");
+    logger.error("exeption");
     //
     response.status(resStatus).json({
       // todo: exception의 response 형식 결정되면 변경해야함.
       statusCode: resStatus,
       timestamp: new Date().toISOString(),
       path: request.url,
+      exception,
     });
   }
 }
