@@ -3,16 +3,11 @@
 import React from "react";
 import styled from "styled-components";
 
-import { NoticeInfo } from "@sparcs-clubs/web/features/notice/types/notice.type";
 import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 import NoticeSectionFrame from "./NoticeSectionFrame";
 import ServiceSectionFrame from "./ServiceSectionFrame";
-
-interface MainPageMainFrameProps {
-  noticeList: Array<NoticeInfo>;
-}
 
 const MainPageMainFrameInner = styled.div`
   display: flex;
@@ -31,9 +26,7 @@ const NoticeAndServiceWrapper = styled.div`
   gap: 60px;
 `;
 
-const MainPageMainFrame: React.FC<MainPageMainFrameProps> = ({
-  noticeList,
-}) => (
+const MainPageMainFrame: React.FC = () => (
   <MainPageMainFrameInner>
     <PageTitleWrapper>
       <PageTitle>
@@ -46,7 +39,7 @@ const MainPageMainFrame: React.FC<MainPageMainFrameProps> = ({
     </PageTitleWrapper>
 
     <NoticeAndServiceWrapper>
-      <NoticeSectionFrame noticeList={noticeList} />
+      <NoticeSectionFrame />
       <ServiceSectionFrame />
     </NoticeAndServiceWrapper>
   </MainPageMainFrameInner>

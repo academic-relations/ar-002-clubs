@@ -34,7 +34,13 @@ const NoticeDate = styled.div`
 const NoticeCard: React.FC<{ noticeList: NoticeInfo }> = ({ noticeList }) => (
   <NoticeCardInner>
     <NoticeTitle>{noticeList.title}</NoticeTitle>
-    <NoticeDate>{noticeList.date}</NoticeDate>
+    <NoticeDate>
+      {noticeList.date.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })}
+    </NoticeDate>
   </NoticeCardInner>
 );
 
