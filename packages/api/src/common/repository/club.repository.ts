@@ -14,7 +14,7 @@ import {
   Professor,
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
-import { and, eq, sql, isNull, or, gte } from "drizzle-orm";
+import { and, eq, sql, isNull, or, gte, lte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
@@ -99,7 +99,7 @@ export class ClubRepository {
         and(
           eq(Club.id, ClubT.clubId),
           or(
-            and(isNull(ClubT.endTerm), gte(ClubT.startTerm, crt)),
+            and(isNull(ClubT.endTerm), lte(ClubT.startTerm, crt)),
             gte(ClubT.endTerm, crt),
           ),
           or(eq(ClubT.clubStatusEnumId, 1), eq(ClubT.clubStatusEnumId, 2)),
