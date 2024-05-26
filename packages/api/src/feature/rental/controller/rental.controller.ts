@@ -3,7 +3,7 @@ import apiRnt001, {
   ApiRnt001ResponseOK,
   ApiRnt001RequestQuery,
 } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
-import { ZodPipe } from "@sparcs-clubs/api/common/pipes/zod-pipe";
+import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { RentalService } from "../service/rental.service";
 
 @Controller()

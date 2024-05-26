@@ -9,7 +9,7 @@ import apiClb003, {
   ApiClb003ResponseOK,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb003";
 import { Controller, Get, Param, UsePipes } from "@nestjs/common";
-import { ZodPipe } from "@sparcs-clubs/api/common/pipes/zod-pipe";
+import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { ClubService } from "../service/club.service";
 
 @Controller()
