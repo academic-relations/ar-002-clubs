@@ -83,7 +83,17 @@ export class ClubRepository {
       })
       .from(Division)
       .leftJoin(Club, eq(Club.divisionId, Division.id))
-      .innerJoin(ClubT, and(eq(Club.id, ClubT.clubId)))
+      .innerJoin(
+        ClubT,
+        and(
+          eq(Club.id, ClubT.clubId),
+          or(
+            and(isNull(ClubT.endTerm), gte(ClubT.startTerm, crt)),
+            gte(ClubT.endTerm, crt),
+          ),
+          or(eq(ClubT.clubStatusEnumId, 1), eq(ClubT.clubStatusEnumId, 2)),
+        ),
+      )
       .leftJoin(Professor, eq(ClubT.professorId, Professor.id))
       .leftJoin(
         ClubStudentT,

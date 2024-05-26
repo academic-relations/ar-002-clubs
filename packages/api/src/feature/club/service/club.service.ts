@@ -80,7 +80,7 @@ export class ClubService {
                 semester.id,
               );
             const representative =
-              await this.clubRepresentativeDRepository.findSemesterRepresentativeName(
+              await this.clubRepresentativeDRepository.findRepresentativeName(
                 club.id,
                 semester.startTerm,
                 semester.endTerm,
@@ -98,7 +98,7 @@ export class ClubService {
               name: clubName,
               isPermanent,
               characteristic: clubInfo.characteristicKr,
-              representative,
+              representative: representative.name,
               advisor: clubInfo.advisor,
               totalMemberCnt,
             };

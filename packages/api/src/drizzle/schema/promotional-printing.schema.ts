@@ -10,7 +10,7 @@ import {
 } from "drizzle-orm/mysql-core";
 
 import { Club } from "./club.schema";
-import { StudentT } from "./user.schema";
+import { Student } from "./user.schema";
 
 export const PromotionalPrintingOrderStatusEnum = mysqlTable(
   "promotional_printing_order_status_enum",
@@ -44,7 +44,7 @@ export const PromotionalPrintingOrder = mysqlTable(
       .references(() => Club.id),
     studentId: int("student_id")
       .notNull()
-      .references(() => StudentT.id),
+      .references(() => Student.id),
     studentPhoneNumber: varchar("student_phone_number", { length: 30 }),
     promotionalPrintingOrderStatusEnum: int(
       "promotional_printing_order_status_enum",
