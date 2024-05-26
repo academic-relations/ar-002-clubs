@@ -1,2 +1,2 @@
-export const noticePageOffset = 0;
+export const noticePageOffset = 1;
 export const noticeItemCount = 6;
