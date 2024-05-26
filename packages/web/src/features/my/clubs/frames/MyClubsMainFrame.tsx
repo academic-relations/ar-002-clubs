@@ -17,7 +17,7 @@ const ClubsPageMainFrameInner = styled.div`
   gap: 60px;
 `;
 
-const ClubListsByDepartmentWrapper = styled.div`
+const ClubListWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 60px;
@@ -48,7 +48,7 @@ const MyClubsMainFrame: React.FC = () => {
       </PageHeadWrapper>
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         {isMyClubsExist && (
-          <ClubListsByDepartmentWrapper>
+          <ClubListWrapper>
             {(data?.semesters ?? []).map(
               myClub =>
                 myClub.clubs.length > 0 && (
@@ -60,7 +60,7 @@ const MyClubsMainFrame: React.FC = () => {
                   />
                 ),
             )}
-          </ClubListsByDepartmentWrapper>
+          </ClubListWrapper>
         )}
       </AsyncBoundary>
     </ClubsPageMainFrameInner>

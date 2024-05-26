@@ -19,12 +19,12 @@ interface ActivityTableProps {
   activityList: Activity[];
 }
 
-interface TagDetail {
+const getStatusDetails = (
+  status: number,
+): {
   text: string;
   color: TagColor;
-}
-
-const getStatusDetails = (status: number): TagDetail => {
+} => {
   switch (status) {
     case ActivityStatusEnum.Writing:
       return { text: "작성 중", color: "BLUE" };
@@ -39,7 +39,12 @@ const getStatusDetails = (status: number): TagDetail => {
   }
 };
 
-const getTypeTags = (type: number): TagDetail => {
+const getTypeTags = (
+  type: number,
+): {
+  text: string;
+  color: TagColor;
+} => {
   switch (type) {
     case ActivityTypeEnum.FitInside:
       return { text: "동아리 성격에 합치하는 내부 활동", color: "YELLOW" };
