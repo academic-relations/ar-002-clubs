@@ -36,7 +36,7 @@ import apiCms007, {
   ApiCms007RequestQuery,
   ApiCms007ResponseOk,
 } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
-import { ZodPipe } from "@sparcs-clubs/api/common/pipes/zod-pipe";
+import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { CommonSpaceService } from "../service/common-space.service";
 
 @Controller()
