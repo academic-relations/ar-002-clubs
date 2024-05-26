@@ -51,7 +51,7 @@ const ClubInfoCard: React.FC<ClubInfoCardProps> = ({ club }) => (
       <ClubInfoItem title="성격" content={club.characteristic} />
       <ClubInfoItem title="설립 연도" content={`${club.foundingYear}년`} />
     </ClubInfoRow>
-    <ClubInfoItem title="동아리방" content={club.room} />
+    <ClubInfoItem title="동아리방" content={club.room ? club.room : "-"} />
   </Card>
 );
 
