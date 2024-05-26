@@ -48,7 +48,7 @@ const Login = () => {
           로그인
         </LoginInner>
       )}
-      {isMenuOpen && <MyMenu />}
+      {isMenuOpen && <MyMenu setIsMenuOpen={setIsMenuOpen} />}
     </>
   );
 };
