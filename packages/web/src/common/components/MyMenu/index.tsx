@@ -32,14 +32,20 @@ const Divider = styled.div`
   border-radius: 4px;
 `;
 
-const MyMenu: React.FC = () => {
+const MyMenu: React.FC<{
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ setIsMenuOpen }) => {
   const router = useRouter();
 
   const handleMyPageClick = () => {
     router.push("/my");
+    setIsMenuOpen(false);
   };
   const { logout } = useAuth();
-
+  const handleLogout = () => {
+    logout();
+    setIsMenuOpen(false);
+  };
   return (
     <MyMenuWrapper>
       <ProfileList
@@ -47,6 +53,7 @@ const MyMenu: React.FC = () => {
           { profileName: "학부생", profileNumber: 20202222, email: "test" },
           { profileName: "집행부원", profileNumber: 20202222, email: "test" },
         ]} // TODO: 나중에는 실제로 받아오기
+        setIsMenuOpen={setIsMenuOpen}
       />
       <Divider />
       {/* TODO: #333333으로 써놓은거 수정하기 */}
@@ -60,7 +67,7 @@ const MyMenu: React.FC = () => {
       </Button>
       <Button
         type="outlined"
-        onClick={logout}
+        onClick={handleLogout}
         style={{ gap: "4px", color: "#333333", width: "100%" }}
       >
         <Icon type="logout" size={16} color="#333333" />
