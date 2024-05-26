@@ -34,7 +34,7 @@ const getStatusDetails = (
       return { text: "None", color: "GRAY" };
   }
 };
-const ActivityCertificateTable: React.FC<AcfTableProps> = ({
+const MyActivityCertificateTable: React.FC<AcfTableProps> = ({
   certificateList,
 }) => (
   <TableWrapper>
@@ -46,31 +46,32 @@ const ActivityCertificateTable: React.FC<AcfTableProps> = ({
         신청 일시
       </TableCell>
       <TableCell type="Header" width="20%" minWidth={180}>
-        신청자
+        동아리
       </TableCell>
       <TableCell type="Header" width="20%" minWidth={180}>
         발급 매수
       </TableCell>
     </TableRow>
-    {certificateList.items.map((certificate, index) => (
-      <TableRow isBorder key={certificate.studentName + String(index)}>
-        <TableCell type="Tag" width="10%" minWidth={90}>
-          <Tag color={getStatusDetails(certificate.statusEnum).color}>
-            {getStatusDetails(certificate.statusEnum).text}
-          </Tag>
-        </TableCell>
-        <TableCell type="Default" width="50%">
-          {formatDateTime(new Date(certificate.createdAt))}
-        </TableCell>
-        <TableCell type="Default" width="20%" minWidth={180}>
-          {certificate.studentName}
-        </TableCell>
-        <TableCell type="Default" width="20%" minWidth={180}>
-          {certificate.issuedNumber}매
-        </TableCell>
-      </TableRow>
-    ))}
+    {certificateList.items.map((certificate, index) => {
+      const { color, text } = getStatusDetails(certificate.statusEnum);
+      return (
+        <TableRow isBorder key={certificate.studentName + String(index)}>
+          <TableCell type="Tag" width="10%" minWidth={90}>
+            <Tag color={color}>{text}</Tag>
+          </TableCell>
+          <TableCell type="Default" width="50%">
+            {formatDateTime(new Date(certificate.createdAt))}
+          </TableCell>
+          <TableCell type="Default" width="20%" minWidth={180}>
+            {certificate.studentName}
+          </TableCell>
+          <TableCell type="Default" width="20%" minWidth={180}>
+            {certificate.issuedNumber}매
+          </TableCell>
+        </TableRow>
+      );
+    })}
   </TableWrapper>
 );
 
-export default ActivityCertificateTable;
+export default MyActivityCertificateTable;

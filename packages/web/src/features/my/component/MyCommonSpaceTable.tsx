@@ -36,7 +36,7 @@ const getStatusDetails = (
   }
 };
 
-const CommonSpaceTable: React.FC<CommonSpaceTableProps> = ({ spaceList }) => (
+const MyCommonSpaceTable: React.FC<CommonSpaceTableProps> = ({ spaceList }) => (
   <TableWrapper>
     <TableRow>
       <TableCell type="Header" width="10%" minWidth={90}>
@@ -46,7 +46,7 @@ const CommonSpaceTable: React.FC<CommonSpaceTableProps> = ({ spaceList }) => (
         신청 일시
       </TableCell>
       <TableCell type="Header" width="10%" minWidth={120}>
-        신청자
+        동아리
       </TableCell>
       <TableCell type="Header" width="16%" minWidth={180}>
         예약 일자
@@ -58,31 +58,32 @@ const CommonSpaceTable: React.FC<CommonSpaceTableProps> = ({ spaceList }) => (
         예약 호실
       </TableCell>
     </TableRow>
-    {spaceList.items.map((space, index) => (
-      <TableRow isBorder key={space.chargeStudentName + String(index)}>
-        <TableCell type="Tag" width="10%" minWidth={90}>
-          <Tag color={getStatusDetails(space.statusEnum).color}>
-            {getStatusDetails(space.statusEnum).text}
-          </Tag>
-        </TableCell>
-        <TableCell type="Default" width="20%" minWidth={220}>
-          {formatDateTime(space.createdAt)}
-        </TableCell>
-        <TableCell type="Default" width="10%" minWidth={120}>
-          {space.chargeStudentName}
-        </TableCell>
-        <TableCell type="Default" width="16%" minWidth={180}>
-          {formatDate(space.startTerm)}
-        </TableCell>
-        <TableCell type="Default" width="16%" minWidth={160}>
-          {formatTime(space.startTerm)} ~ {formatTime(space.endTerm)}
-        </TableCell>
-        <TableCell type="Default" width="28%">
-          {space.spaceName}
-        </TableCell>
-      </TableRow>
-    ))}
+    {spaceList.items.map((space, index) => {
+      const { color, text } = getStatusDetails(space.statusEnum);
+      return (
+        <TableRow isBorder key={space.chargeStudentName + String(index)}>
+          <TableCell type="Tag" width="10%" minWidth={90}>
+            <Tag color={color}>{text}</Tag>
+          </TableCell>
+          <TableCell type="Default" width="20%" minWidth={220}>
+            {formatDateTime(space.createdAt)}
+          </TableCell>
+          <TableCell type="Default" width="10%" minWidth={120}>
+            {space.chargeStudentName}
+          </TableCell>
+          <TableCell type="Default" width="16%" minWidth={180}>
+            {formatDate(space.startTerm)}
+          </TableCell>
+          <TableCell type="Default" width="16%" minWidth={160}>
+            {formatTime(space.startTerm)} ~ {formatTime(space.endTerm)}
+          </TableCell>
+          <TableCell type="Default" width="28%">
+            {space.spaceName}
+          </TableCell>
+        </TableRow>
+      );
+    })}
   </TableWrapper>
 );
 
-export default CommonSpaceTable;
+export default MyCommonSpaceTable;

@@ -44,9 +44,9 @@ const getPrintSize = (type: number): string => {
     default:
       return "None";
   }
-};
+}; // TODO: enum 1로 시작함. 나중에 interface 수정할 때 같이 고치기
 
-const PrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
+const MyPrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
   <TableWrapper>
     <TableRow>
       <TableCell type="Header" width="10%" minWidth={90}>
@@ -56,7 +56,7 @@ const PrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
         신청 일시
       </TableCell>
       <TableCell type="Header" width="18%" minWidth={120}>
-        신청자
+        동아리
       </TableCell>
       <TableCell type="Header" width="24%">
         수령 일시
@@ -98,4 +98,4 @@ const PrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
   </TableWrapper>
 );
 
-export default PrintingTable;
+export default MyPrintingTable;

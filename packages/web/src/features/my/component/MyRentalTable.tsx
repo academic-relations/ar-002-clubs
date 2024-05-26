@@ -38,7 +38,7 @@ interface RentalTableProps {
   rentalList: ApiRnt003ResponseOK;
 }
 
-const RentalTable: React.FC<RentalTableProps> = ({ rentalList }) => (
+const MyRentalTable: React.FC<RentalTableProps> = ({ rentalList }) => (
   <TableWrapper>
     <TableRow>
       <TableCell type="Header" width="10%" minWidth={90}>
@@ -48,7 +48,7 @@ const RentalTable: React.FC<RentalTableProps> = ({ rentalList }) => (
         신청 일시
       </TableCell>
       <TableCell type="Header" width="14%" minWidth={120}>
-        신청자
+        동아리
       </TableCell>
       <TableCell type="Header" width="18%">
         대여 일자
@@ -88,4 +88,4 @@ const RentalTable: React.FC<RentalTableProps> = ({ rentalList }) => (
   </TableWrapper>
 );
 
-export default RentalTable;
+export default MyRentalTable;

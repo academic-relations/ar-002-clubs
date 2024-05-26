@@ -7,23 +7,23 @@ import {
   SectionWrapper,
 } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import RentalTable from "@sparcs-clubs/web/features/manage-club/component/RentalTable";
-import PrintingTable from "@sparcs-clubs/web/features/manage-club/component/PrintingTable";
-import ActivityCertificateTable from "@sparcs-clubs/web/features/manage-club/component/ActivityCertificateTable";
-import CommonSpaceTable from "@sparcs-clubs/web/features/manage-club/component/CommonSpaceTable";
 import {
-  mockupManageAcf,
-  mockupManageCms,
-  mockupManagePrint,
-  mockupManageRental,
-} from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+  mockupMyAcf,
+  mockupMyCms,
+  mockupMyPrint,
+  mockupMyRental,
+} from "@sparcs-clubs/web/features/my/service/_mock/mockMyClub";
+import MyRentalTable from "@sparcs-clubs/web/features/my/component/MyRentalTable";
+import MyActivityCertificateTable from "@sparcs-clubs/web/features/my/component/MyActivityCertificateTable";
+import MyCommonSpaceTable from "@sparcs-clubs/web/features/my/component/MyCommonSpaceTable";
+import MyPrintingTable from "@sparcs-clubs/web/features/my/component/MyPrintingTable";
 
-const ServiceManageFrame: React.FC = () => {
+const MyServiceFrame: React.FC = () => {
   const [toggle, setToggle] = React.useState<boolean>(true);
   return (
     <ManageWrapper>
       <FoldableSectionTitle
-        title="서비스 신청"
+        title="서비스 신청 내역"
         toggle={toggle}
         toggleHandler={() => setToggle(!toggle)}
       />
@@ -33,33 +33,33 @@ const ServiceManageFrame: React.FC = () => {
             <MoreDetailTitle
               title="대여 사업"
               moreDetail="내역 더보기"
-              moreDetailPath="/manage-club/rental-business"
+              moreDetailPath="/my/rental-business"
             />
-            <RentalTable rentalList={mockupManageRental} />
+            <MyRentalTable rentalList={mockupMyRental} />
           </SectionWrapper>
           <SectionWrapper>
             <MoreDetailTitle
               title="홍보물 인쇄"
               moreDetail="내역 더보기"
-              moreDetailPath="/manage-club/printing-business"
+              moreDetailPath="/my/printing-business"
             />
-            <PrintingTable printingList={mockupManagePrint} />
+            <MyPrintingTable printingList={mockupMyPrint} />
           </SectionWrapper>
           <SectionWrapper>
             <MoreDetailTitle
               title="활동확인서 발급"
               moreDetail="내역 더보기"
-              moreDetailPath="/manage-club/activity-certificate"
+              moreDetailPath="/my/activity-certificate"
             />
-            <ActivityCertificateTable certificateList={mockupManageAcf} />
+            <MyActivityCertificateTable certificateList={mockupMyAcf} />
           </SectionWrapper>
           <SectionWrapper>
             <MoreDetailTitle
               title="공용공간 비정기사용"
               moreDetail="내역 더보기"
-              moreDetailPath="/manage-club/common-space"
+              moreDetailPath="/my/common-space"
             />
-            <CommonSpaceTable spaceList={mockupManageCms} />
+            <MyCommonSpaceTable spaceList={mockupMyCms} />
           </SectionWrapper>
         </ManageTablesWrapper>
       )}
@@ -67,4 +67,4 @@ const ServiceManageFrame: React.FC = () => {
   );
 };
 
-export default ServiceManageFrame;
+export default MyServiceFrame;
