@@ -11,7 +11,11 @@ export class ClubRepresentativeDRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
   // 가장 최근 대표자의 이름을 가져오기
-  async findRepresentativeName(clubId: number): Promise<{ name: string }> {
+  async findRepresentativeName(
+    clubId: number,
+    startTerm?: Date,
+    endTerm?: Date,
+  ): Promise<{ name: string }> {
     const currentDate = getKSTDate();
 
     const representative = await this.db
@@ -22,9 +26,9 @@ export class ClubRepresentativeDRepository {
         and(
           eq(ClubRepresentativeD.clubId, clubId),
           eq(ClubRepresentativeD.clubRepresentativeEnum, 1),
-          lte(ClubRepresentativeD.startTerm, currentDate),
+          lte(ClubRepresentativeD.startTerm, startTerm || currentDate),
           or(
-            gte(ClubRepresentativeD.endTerm, currentDate),
+            gte(ClubRepresentativeD.endTerm, endTerm || currentDate),
             isNull(ClubRepresentativeD.endTerm),
           ),
         ),
@@ -34,30 +38,5 @@ export class ClubRepresentativeDRepository {
       .then(takeUnique);
 
     return representative;
-  }
-
-  async findSemesterRepresentativeName(
-    clubId: number,
-    startTerm: Date,
-    endTerm: Date,
-  ): Promise<string> {
-    return this.db
-      .select({ name: User.name })
-      .from(ClubRepresentativeD)
-      .leftJoin(User, eq(User.id, ClubRepresentativeD.studentId))
-      .where(
-        and(
-          eq(ClubRepresentativeD.clubId, clubId),
-          eq(ClubRepresentativeD.clubRepresentativeEnum, 1),
-          lte(ClubRepresentativeD.startTerm, startTerm),
-          or(
-            gte(ClubRepresentativeD.endTerm, endTerm),
-            isNull(ClubRepresentativeD.endTerm),
-          ),
-        ),
-      )
-      .orderBy(ClubRepresentativeD.endTerm)
-      .limit(1)
-      .then(result => result[0]?.name);
   }
 }
