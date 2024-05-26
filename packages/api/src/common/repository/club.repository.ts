@@ -39,6 +39,7 @@ export class ClubRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
   async findClubDetail(clubId: number) {
+    const crt = getKSTDate();
     const clubInfo = await this.db
       .select({
         id: Club.id,
@@ -52,7 +53,16 @@ export class ClubRepository {
       .from(Club)
       .leftJoin(ClubT, eq(ClubT.clubId, Club.id))
       .leftJoin(Professor, eq(Professor.id, ClubT.professorId))
-      .where(eq(Club.id, clubId))
+      .where(
+        and(
+          eq(Club.id, clubId),
+          or(
+            and(isNull(ClubT.endTerm), gte(ClubT.startTerm, crt)),
+            gte(ClubT.endTerm, crt),
+          ),
+          or(eq(ClubT.clubStatusEnumId, 1), eq(ClubT.clubStatusEnumId, 2)),
+        ),
+      )
       .limit(1)
       .then(takeUnique);
 
