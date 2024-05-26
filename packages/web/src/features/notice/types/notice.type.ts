@@ -10,7 +10,7 @@ interface NoticeInfo {
   id: number;
   title: string;
   author: string;
-  date: string;
+  date: Date;
   link: string;
 }
 
