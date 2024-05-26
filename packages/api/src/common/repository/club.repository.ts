@@ -45,13 +45,13 @@ export class ClubRepository {
         name: Club.name,
         type: ClubT.clubStatusEnumId,
         characteristic: ClubT.characteristicKr,
-        // TODO: professor table에서 join하도록 변경
-        // advisor: ClubT.advisor,
+        advisor: Professor.name,
         description: Club.description,
         foundingYear: Club.foundingYear,
       })
       .from(Club)
       .leftJoin(ClubT, eq(ClubT.clubId, Club.id))
+      .leftJoin(Professor, eq(Professor.id, ClubT.professorId))
       .where(eq(Club.id, clubId))
       .limit(1)
       .then(takeUnique);
@@ -60,6 +60,7 @@ export class ClubRepository {
       .select({ name: Division.name })
       .from(Club)
       .leftJoin(Division, eq(Division.id, Club.divisionId))
+      .where(eq(Club.id, clubId))
       .then(takeUnique);
     return { ...clubInfo, divisionName };
   }

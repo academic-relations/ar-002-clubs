@@ -1,7 +1,7 @@
 import apiClb001, {
   ApiClb001ResponseOK,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
-import {
+import apiClb002, {
   ApiClb002RequestParam,
   ApiClb002ResponseOK,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
@@ -17,17 +17,19 @@ export class ClubController {
   constructor(private readonly clubService: ClubService) {}
 
   @Get("clubs")
+  @UsePipes(new ZodPipe(apiClb001))
   async getClubs(): Promise<ApiClb001ResponseOK> {
     const result = await this.clubService.getClubs();
-    const res = apiClb001.responseBodyMap[200].parse(result);
-    return res;
+    return apiClb001.responseBodyMap[200].parse(result);
   }
 
-  @Get("clubs/club/:id")
+  @Get("clubs/club/:clubId")
+  @UsePipes(new ZodPipe(apiClb002))
   async getClub(
-    @Param("id") clubId: ApiClb002RequestParam,
+    @Param() param: ApiClb002RequestParam,
   ): Promise<ApiClb002ResponseOK> {
-    const clubInfo = await this.clubService.getClub(Number(clubId));
+    const clubInfo = await this.clubService.getClub(param);
+    // return apiClb002.responseBodyMap[200].parse(clubInfo);
     return clubInfo;
   }
 

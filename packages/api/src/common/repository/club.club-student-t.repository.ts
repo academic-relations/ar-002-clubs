@@ -2,7 +2,7 @@ import { Injectable, Inject } from "@nestjs/common";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { ClubStudentT, SemesterD } from "src/drizzle/schema/club.schema";
-import { and, count, eq } from "drizzle-orm";
+import { and, or, count, eq, gte, lte } from "drizzle-orm";
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { takeUnique } from "../util/util";
 
@@ -12,13 +12,28 @@ export class ClubStudentTRepository {
 
   async findTotalMemberCnt(
     clubId: number,
-  ): Promise<{ totalMemberCnt: number }> {
+    semesterId?: number,
+  ): Promise<number> {
+    const today = new Date();
+
     const totalMemberCnt = await this.db
       .select({ totalMemberCnt: count() })
       .from(ClubStudentT)
-      .where(eq(ClubStudentT.clubId, clubId)) // TODO 현재는 모든 club 회원 수를 반환. 여기 현재 semester만 필터링하는 것도 추가해야 함.
-      .then(takeUnique);
-
+      .where(
+        and(
+          eq(ClubStudentT.clubId, clubId),
+          semesterId
+            ? eq(ClubStudentT.semesterId, semesterId)
+            : and(
+                lte(ClubStudentT.startTerm, today),
+                or(
+                  gte(ClubStudentT.endTerm, today),
+                  eq(ClubStudentT.endTerm, null),
+                ),
+              ),
+        ),
+      )
+      .then(result => result[0].totalMemberCnt);
     return totalMemberCnt;
   }
 
@@ -43,23 +58,6 @@ export class ClubStudentTRepository {
           clubs: [{ id: row.clubs.id }],
         })),
       );
-  }
-
-  async findSemesterTotalMemberCnt(
-    clubId: number,
-    semesterId: number,
-  ): Promise<number> {
-    const totalMemberCnt = await this.db
-      .select({ totalMemberCnt: count() })
-      .from(ClubStudentT)
-      .where(
-        and(
-          eq(ClubStudentT.clubId, clubId),
-          eq(ClubStudentT.semesterId, semesterId),
-        ),
-      )
-      .then(takeUnique);
-    return totalMemberCnt.totalMemberCnt;
   }
 
   async findClubStudentByClubIdAndStudentId(
