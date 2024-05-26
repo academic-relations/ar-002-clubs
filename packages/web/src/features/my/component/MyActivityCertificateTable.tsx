@@ -20,7 +20,7 @@ interface TagDetail {
   color: TagColor;
 }
 
-const getStatusDetails = (status: number): TagDetail => {
+const getStatusDetails = (status: number): { text: string; color: TagColor; } => {
   switch (status) {
     case ActivityCertificateOrderStatusEnum.Applied:
       return { text: "신청", color: "BLUE" };
