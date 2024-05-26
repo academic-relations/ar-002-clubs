@@ -74,7 +74,6 @@ export class ClubService {
   async getStudentClubsMy(studentId: number): Promise<ApiClb003ResponseOK> {
     const studentSemesters =
       await this.clubStudentTRepository.findStudentSemester(studentId);
-
     const result = await Promise.all(
       studentSemesters.map(async semester => {
         const clubs = await Promise.all(
@@ -89,7 +88,6 @@ export class ClubService {
                 club.id,
                 semester.id,
               );
-            // console.log(totalMemberCnt);
             const representative =
               await this.clubRepresentativeDRepository.findRepresentativeName(
                 club.id,
@@ -107,7 +105,9 @@ export class ClubService {
               name: clubName,
               isPermanent,
               characteristic: clubInfo.characteristicKr,
-              representative: representative.name,
+              representative: representative
+                ? representative.name
+                : "기록 없음",
               advisor: clubInfo.advisor,
               totalMemberCnt,
             };
@@ -122,6 +122,16 @@ export class ClubService {
       }),
     );
 
-    return { semesters: result };
+    const uniqueSemesters = result.reduce((acc, curr) => {
+      const existingSemester = acc.find(s => s.id === curr.id);
+      if (existingSemester) {
+        existingSemester.clubs.push(...curr.clubs);
+      } else {
+        acc.push(curr);
+      }
+      return acc;
+    }, []);
+
+    return { semesters: uniqueSemesters };
   }
 }

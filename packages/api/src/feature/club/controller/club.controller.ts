@@ -20,7 +20,8 @@ export class ClubController {
   @UsePipes(new ZodPipe(apiClb001))
   async getClubs(): Promise<ApiClb001ResponseOK> {
     const result = await this.clubService.getClubs();
-    return apiClb001.responseBodyMap[200].parse(result);
+    // return apiClb001.responseBodyMap[200].parse(result);
+    return result;
   }
 
   @Get("clubs/club/:clubId")
@@ -37,8 +38,9 @@ export class ClubController {
   @UsePipes(new ZodPipe(apiClb003))
   async getStudentClubsMy(): Promise<ApiClb003ResponseOK> {
     // TODO: getProfileStudent로 인증 로직 이용해 수정 필요
-    const studentId = 1;
+    const studentId = 605;
     const result = await this.clubService.getStudentClubsMy(studentId);
+    // return apiClb003.responseBodyMap[200].parse(result);
     return result;
   }
 }
