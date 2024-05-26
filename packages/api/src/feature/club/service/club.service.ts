@@ -89,7 +89,7 @@ export class ClubService {
                 club.id,
                 semester.id,
               );
-            console.log(totalMemberCnt);
+            // console.log(totalMemberCnt);
             const representative =
               await this.clubRepresentativeDRepository.findRepresentativeName(
                 club.id,
