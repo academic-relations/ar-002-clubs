@@ -1,5 +1,5 @@
 import { Controller, Post, Body, UsePipes, Get } from "@nestjs/common";
-import { ZodPipe } from "@sparcs-clubs/api/common/pipes/zod-pipe";
+import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import apiAcf001, {
   ApiAcf001RequestBody,
   ApiAcf001ResponseCreated,

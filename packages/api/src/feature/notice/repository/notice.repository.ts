@@ -23,7 +23,7 @@ export class NoticeRepository {
     const notices: GetNoticePaginationReturn["notices"] = await this.db
       .select()
       .from(Notice)
-      .orderBy(desc(Notice.id))
+      .orderBy(desc(Notice.date))
       .limit(itemCount)
       .offset(startIndex - 1);
 
