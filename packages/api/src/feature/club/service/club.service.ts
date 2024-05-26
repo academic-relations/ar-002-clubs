@@ -1,6 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
-import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
+import {
+  ApiClb002RequestParam,
+  ApiClb002ResponseOK,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 import { ApiClb003ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb003";
 import { ClubRepository } from "@sparcs-clubs/api/common/repository/club.repository";
 import { ClubRepresentativeDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-representative-d.repository";
@@ -25,19 +28,26 @@ export class ClubService {
     return result;
   }
 
-  async getClub(clubId: number): Promise<ApiClb002ResponseOK> {
-    const [clubDetails, totalMemberCnt, representative, roomDetails] =
-      await Promise.all([
-        this.clubRepository.findClubDetail(clubId),
-        this.clubStudentTRepository.findTotalMemberCnt(clubId),
-        this.clubRepresentativeDRepository.findRepresentativeName(clubId),
-        this.clubRoomTRepository.findClubLocationById(clubId),
-      ]);
+  async getClub(param: ApiClb002RequestParam): Promise<ApiClb002ResponseOK> {
+    const { clubId } = param;
+    const [
+      clubDetails,
+      totalMemberCnt,
+      representative,
+      roomDetails,
+      isPermanent,
+    ] = await Promise.all([
+      this.clubRepository.findClubDetail(clubId),
+      this.clubStudentTRepository.findTotalMemberCnt(clubId),
+      this.clubRepresentativeDRepository.findRepresentativeName(clubId),
+      this.clubRoomTRepository.findClubLocationById(clubId),
+      this.divisionPermanentClubDRepository.findPermenantClub(clubId),
+    ]);
 
     if (!clubDetails) {
       throw new NotFoundException(`Club with ID ${clubId} not found.`);
     }
-    if (!totalMemberCnt || !representative || !roomDetails) {
+    if (!totalMemberCnt || !representative) {
       throw new NotFoundException(
         `Some details for club ID ${clubId} are missing.`,
       );
@@ -48,23 +58,22 @@ export class ClubService {
       name: clubDetails.name,
       type: clubDetails.type,
       characteristic: clubDetails.characteristic,
-      // TODO: professor에서 join 하도록 수정
-      // advisor: clubDetails.advisor,
-      advisor: "",
+      advisor: clubDetails.advisor,
       divisionName: clubDetails.divisionName.name,
-      description: clubDetails.description,
-      isPermanent: false,
+      description: clubDetails.description ? clubDetails.description : "",
+      isPermanent,
       foundingYear: clubDetails.foundingYear,
-      totalMemberCnt: totalMemberCnt.totalMemberCnt,
+      totalMemberCnt,
       representative: representative.name,
-      room: `${roomDetails.buildingName} ${roomDetails.room}`,
+      room: roomDetails
+        ? `${roomDetails.buildingName} ${roomDetails.room}`
+        : "",
     };
   }
 
   async getStudentClubsMy(studentId: number): Promise<ApiClb003ResponseOK> {
     const studentSemesters =
       await this.clubStudentTRepository.findStudentSemester(studentId);
-
     const result = await Promise.all(
       studentSemesters.map(async semester => {
         const clubs = await Promise.all(
@@ -75,21 +84,19 @@ export class ClubService {
               club.id,
             );
             const totalMemberCnt =
-              await this.clubStudentTRepository.findSemesterTotalMemberCnt(
+              await this.clubStudentTRepository.findTotalMemberCnt(
                 club.id,
                 semester.id,
               );
             const representative =
-              await this.clubRepresentativeDRepository.findSemesterRepresentativeName(
+              await this.clubRepresentativeDRepository.findRepresentativeName(
                 club.id,
                 semester.startTerm,
-                semester.endTerm,
               );
             const isPermanent =
               await this.divisionPermanentClubDRepository.findPermenantClub(
                 club.id,
                 semester.startTerm,
-                semester.endTerm,
               );
 
             return {
@@ -98,7 +105,9 @@ export class ClubService {
               name: clubName,
               isPermanent,
               characteristic: clubInfo.characteristicKr,
-              representative,
+              representative: representative
+                ? representative.name
+                : "기록 없음",
               advisor: clubInfo.advisor,
               totalMemberCnt,
             };
@@ -113,6 +122,16 @@ export class ClubService {
       }),
     );
 
-    return { semesters: result };
+    const uniqueSemesters = result.reduce((acc, curr) => {
+      const existingSemester = acc.find(s => s.id === curr.id);
+      if (existingSemester) {
+        existingSemester.clubs.push(...curr.clubs);
+      } else {
+        acc.push(curr);
+      }
+      return acc;
+    }, []);
+
+    return { semesters: uniqueSemesters };
   }
 }
