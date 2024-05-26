@@ -15,12 +15,12 @@ interface AcfTableProps {
   certificateList: ApiAcf003ResponseOk;
 }
 
-interface TagDetail {
+const getStatusDetails = (
+  status: number,
+): {
   text: string;
   color: TagColor;
-}
-
-const getStatusDetails = (status: number): { text: string; color: TagColor; } => {
+} => {
   switch (status) {
     case ActivityCertificateOrderStatusEnum.Applied:
       return { text: "신청", color: "BLUE" };
@@ -52,24 +52,25 @@ const MyActivityCertificateTable: React.FC<AcfTableProps> = ({
         발급 매수
       </TableCell>
     </TableRow>
-    {certificateList.items.map((certificate, index) => (
-      <TableRow isBorder key={certificate.studentName + String(index)}>
-        <TableCell type="Tag" width="10%" minWidth={90}>
-          <Tag color={getStatusDetails(certificate.statusEnum).color}>
-            {getStatusDetails(certificate.statusEnum).text}
-          </Tag>
-        </TableCell>
-        <TableCell type="Default" width="50%">
-          {formatDateTime(new Date(certificate.createdAt))}
-        </TableCell>
-        <TableCell type="Default" width="20%" minWidth={180}>
-          {certificate.studentName}
-        </TableCell>
-        <TableCell type="Default" width="20%" minWidth={180}>
-          {certificate.issuedNumber}매
-        </TableCell>
-      </TableRow>
-    ))}
+    {certificateList.items.map((certificate, index) => {
+      const { color, text } = getStatusDetails(certificate.statusEnum);
+      return (
+        <TableRow isBorder key={certificate.studentName + String(index)}>
+          <TableCell type="Tag" width="10%" minWidth={90}>
+            <Tag color={color}>{text}</Tag>
+          </TableCell>
+          <TableCell type="Default" width="50%">
+            {formatDateTime(new Date(certificate.createdAt))}
+          </TableCell>
+          <TableCell type="Default" width="20%" minWidth={180}>
+            {certificate.studentName}
+          </TableCell>
+          <TableCell type="Default" width="20%" minWidth={180}>
+            {certificate.issuedNumber}매
+          </TableCell>
+        </TableRow>
+      );
+    })}
   </TableWrapper>
 );
 

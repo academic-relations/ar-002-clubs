@@ -15,12 +15,12 @@ interface AcfTableProps {
   certificateList: ApiAcf003ResponseOk;
 }
 
-interface TagDetail {
+const getStatusDetails = (
+  status: number,
+): {
   text: string;
   color: TagColor;
-}
-
-const getStatusDetails = (status: number): TagDetail => {
+} => {
   switch (status) {
     case ActivityCertificateOrderStatusEnum.Applied:
       return { text: "신청", color: "BLUE" };

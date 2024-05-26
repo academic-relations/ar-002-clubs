@@ -15,12 +15,12 @@ interface PrintingTableProps {
   printingList: ApiPrt001ResponseOk;
 }
 
-interface TagDetail {
+const getStatusDetails = (
+  status: number,
+): {
   text: string;
   color: TagColor;
-}
-
-const getStatusDetails = (status: number): TagDetail => {
+} => {
   switch (status) {
     case PromotionalPrintingOrderStatusEnum.Applied:
       return { text: "신청", color: "BLUE" };

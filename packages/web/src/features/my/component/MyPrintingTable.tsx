@@ -15,12 +15,12 @@ interface PrintingTableProps {
   printingList: ApiPrt001ResponseOk;
 }
 
-interface TagDetail {
+const getStatusDetails = (
+  status: number,
+): {
   text: string;
   color: TagColor;
-}
-
-const getStatusDetails = (status: number): TagDetail => {
+} => {
   switch (status) {
     case PromotionalPrintingOrderStatusEnum.Applied:
       return { text: "신청", color: "BLUE" };
@@ -44,7 +44,7 @@ const getPrintSize = (type: number): string => {
     default:
       return "None";
   }
-};
+}; // TODO: enum 1로 시작함. 나중에 interface 수정할 때 같이 고치기
 
 const MyPrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
   <TableWrapper>
