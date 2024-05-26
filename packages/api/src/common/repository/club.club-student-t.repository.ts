@@ -2,7 +2,7 @@ import { Injectable, Inject } from "@nestjs/common";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { ClubStudentT, SemesterD } from "src/drizzle/schema/club.schema";
-import { and, or, count, eq, gte, lte } from "drizzle-orm";
+import { and, or, count, eq, gte, lte, desc } from "drizzle-orm";
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { takeUnique } from "../util/util";
 
@@ -42,6 +42,7 @@ export class ClubStudentTRepository {
       .select({
         id: SemesterD.id,
         name: SemesterD.name,
+        year: SemesterD.year,
         startTerm: SemesterD.startTerm,
         endTerm: SemesterD.endTerm,
         clubs: { id: ClubStudentT.clubId },
@@ -49,10 +50,11 @@ export class ClubStudentTRepository {
       .from(ClubStudentT)
       .leftJoin(SemesterD, eq(SemesterD.id, ClubStudentT.semesterId))
       .where(eq(ClubStudentT.studentId, studentId))
+      .orderBy(desc(SemesterD.id))
       .then(result =>
         result.map(row => ({
           id: row.id,
-          name: row.name,
+          name: `${row.year} ${row.name}`,
           startTerm: row.startTerm,
           endTerm: row.endTerm,
           clubs: [{ id: row.clubs.id }],
