@@ -1,12 +1,41 @@
 import { Injectable, Inject } from "@nestjs/common";
 import { MySql2Database } from "drizzle-orm/mysql2";
-import { eq } from "drizzle-orm";
-import { Student, User } from "src/drizzle/schema/user.schema";
+import { eq, lte, gte, or, and, isNull } from "drizzle-orm";
+import {
+  Department,
+  Student,
+  StudentT,
+  User,
+} from "src/drizzle/schema/user.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 @Injectable()
 export class UserRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
+
+  async findStudentById(studentId: number) {
+    const crt = new Date();
+    const user = await this.db
+      .select({
+        name: Student.name,
+        email: Student.email,
+        department: Department.name,
+        studentNumber: Student.number,
+        phoneNumber: Student.phoneNumber,
+      })
+      .from(Student)
+      .where(eq(Student.id, studentId))
+      .leftJoin(
+        StudentT,
+        and(
+          eq(StudentT.studentId, Student.id),
+          lte(StudentT.startTerm, crt),
+          or(gte(StudentT.endTerm, crt), isNull(StudentT.endTerm)),
+        ),
+      )
+      .leftJoin(Department, eq(Department.id, StudentT.department));
+    return user;
+  }
 
   async create(studentId: number) {
     const user = await this.db

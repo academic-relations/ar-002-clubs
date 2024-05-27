@@ -6,7 +6,7 @@ import { z } from "zod";
  * @description 서비스를 신청하는 유저의 정보를 가져옵니다
  */
 
-const url = () => `/user/my`;
+const url = () => `student/user/my`;
 const method = "GET";
 
 const requestParam = z.object({});
