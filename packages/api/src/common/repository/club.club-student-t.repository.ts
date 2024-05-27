@@ -1,7 +1,7 @@
 import { Injectable, Inject } from "@nestjs/common";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-import { ClubStudentT, SemesterD } from "src/drizzle/schema/club.schema";
+import { Club, ClubStudentT, SemesterD } from "src/drizzle/schema/club.schema";
 import { and, or, count, eq, gte, lte, desc } from "drizzle-orm";
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { takeUnique } from "../util/util";
@@ -93,5 +93,24 @@ export class ClubStudentTRepository {
       .then(takeUnique);
     // Todo: 현재 학기에 활동 중인지 필터링 해야함.
     return student;
+  }
+
+  async getClubsByStudentId(studentId: number) {
+    const today = new Date();
+    const clubs = await this.db
+      .select({
+        id: ClubStudentT.clubId,
+        name: Club.name,
+      })
+      .from(ClubStudentT)
+      .leftJoin(Club, eq(Club.id, ClubStudentT.clubId))
+      .where(
+        and(
+          eq(ClubStudentT.studentId, studentId),
+          lte(ClubStudentT.startTerm, today),
+          or(gte(ClubStudentT.endTerm, today), eq(ClubStudentT.endTerm, null)),
+        ),
+      );
+    return clubs;
   }
 }

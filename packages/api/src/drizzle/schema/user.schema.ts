@@ -151,3 +151,12 @@ export const ProfessorEnum = mysqlTable("professor_enum", {
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
+
+export const Department = mysqlTable("department", {
+  id: int("id").autoincrement().primaryKey(),
+  departmentId: int("department_id").unique(),
+  name: varchar("name", { length: 255 }).notNull(),
+  nameEn: varchar("name_en", { length: 255 }),
+  createdAt: timestamp("created_at").defaultNow(),
+  deletedAt: timestamp("deleted_at"),
+});

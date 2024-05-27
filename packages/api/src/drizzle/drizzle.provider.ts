@@ -1,11 +1,14 @@
 import mysql from "mysql2/promise";
 import { drizzle } from "drizzle-orm/mysql2";
-import * as userSchema from "./schema/user.schema";
-import * as divisionSchema from "./schema/division.schema";
+import * as activityCertificateSchema from "./schema/activity-certificate.schema";
 import * as clubSchema from "./schema/club.schema";
+import * as commonSpaceSchema from "./schema/common-space.schema";
+import * as divisionSchema from "./schema/division.schema";
 import * as noticeSchema from "./schema/notice.schema";
 import * as promotionalPrintingSchema from "./schema/promotional-printing.schema";
-import * as activityCertificateSchema from "./schema/activity-certificate.schema";
+import * as rentalSchema from "./schema/rental.schema";
+import * as userSchema from "./schema/user.schema";
+
 import { env } from "../env";
 
 export const DrizzleAsyncProvider = "drizzleProvider";
@@ -27,12 +30,14 @@ export const getDbInstance = async () => {
     const connection = await getConnection();
     dbInstance = drizzle(connection, {
       schema: {
-        userSchema,
-        divisionSchema,
+        activityCertificateSchema,
         clubSchema,
+        commonSpaceSchema,
+        divisionSchema,
         noticeSchema,
         promotionalPrintingSchema,
-        activityCertificateSchema,
+        rentalSchema,
+        userSchema,
       },
       mode: "default",
     });
