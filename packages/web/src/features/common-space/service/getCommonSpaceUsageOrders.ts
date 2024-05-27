@@ -11,7 +11,7 @@ import type {
   ApiCms002ResponseOK,
 } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
 import { useQuery } from "@tanstack/react-query";
-import { addWeeks, startOfWeek } from "date-fns";
+// import { addWeeks, startOfWeek } from "date-fns";
 
 import { mockUsageOrders } from "./_mock/mockupCommonSpaceUsageOrders";
 
@@ -37,11 +37,12 @@ export const useGetCommonSpaceUsageOrders = (
   });
 
 defineAxiosMock(mock => {
+  // Base URL for your API
+  const baseUrl = apiCms002.url(1); // Assuming this returns something like '/api/resource/1'
+
+  // Use a regular expression to match the URL with any additional params
   mock
-    .onGet(
-      `${apiCms002.url(1)}?startDate=${startOfWeek(new Date())}&endDate=${addWeeks(startOfWeek(new Date()), 1)}`,
-      {},
-    )
+    .onGet(new RegExp(`^${baseUrl}(/|$)`))
     .reply(() => [200, mockUsageOrders]);
 });
 

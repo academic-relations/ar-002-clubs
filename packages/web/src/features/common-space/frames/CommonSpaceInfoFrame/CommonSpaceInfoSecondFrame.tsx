@@ -9,8 +9,9 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import { useGetCommonSpaces } from "@sparcs-clubs/web/features/common-space/service/getCommonSpaces";
 import apiCms001 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
 import { z } from "zod";
-import { useGetCommonSpaceUsageOrders } from "@sparcs-clubs/web/features/common-space/service/getCommonSpaceUsageOrders";
+// import { useGetCommonSpaceUsageOrders } from "@sparcs-clubs/web/features/common-space/service/getCommonSpaceUsageOrders";
 import apiCms002 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
+import { mockUsageOrders } from "@sparcs-clubs/web/features/common-space/service/_mock/mockupCommonSpaceUsageOrders";
 
 import {
   addWeeks,
@@ -51,16 +52,18 @@ const CommonSpaceInfoSecondFrame: React.FC<
   const [dateTimeRange, setDateTimeRange] = useState<[Date, Date]>();
   const [selectedSpace, setSelectedSpace] = useState<CommonSpaceItem>();
 
-  const {
-    data: usageOrdersData,
-    isLoading: isUsageOrdersLoading,
-    isError: isUsageOrdersError,
-  } = useGetCommonSpaceUsageOrders(
-    {
-      spaceId: selectedSpace?.id || 1,
-    },
-    { startDate: date, endDate: addWeeks(date, 1) },
-  );
+  // const {
+  //   data: usageOrdersData,
+  //   isLoading: isUsageOrdersLoading,
+  //   isError: isUsageOrdersError,
+  // } = useGetCommonSpaceUsageOrders(
+  //   {
+  //     spaceId: selectedSpace?.id || 1,
+  //   },
+  //   { startDate: date, endDate: addWeeks(date, 1) },
+  // );
+
+  const usageOrdersData = mockUsageOrders;
 
   const disabledCells = useMemo(() => {
     if (!usageOrdersData) return [];
@@ -157,18 +160,18 @@ const CommonSpaceInfoSecondFrame: React.FC<
             text={`${selectedSpace.name}는 하루에 최대 ${selectedSpace.availableHoursPerDay}시간, 일주일에 최대 ${selectedSpace.availableHoursPerWeek}시간 사용할 수 있습니다.`}
           />
           <Card outline gap={20} style={{ flexDirection: "row" }}>
-            <AsyncBoundary
+            {/* <AsyncBoundary
               isLoading={isUsageOrdersLoading}
               isError={isUsageOrdersError}
-            >
-              <Timetable
-                data={disabledCells}
-                setDateTimeRange={setDateTimeRange}
-                availableHoursPerDay={selectedSpace.availableHoursPerDay}
-                startDate={date}
-                setStartDate={setDate}
-              />
-            </AsyncBoundary>
+            > */}
+            <Timetable
+              data={disabledCells}
+              setDateTimeRange={setDateTimeRange}
+              availableHoursPerDay={selectedSpace.availableHoursPerDay}
+              startDate={date}
+              setStartDate={setDate}
+            />
+            {/* </AsyncBoundary> */}
 
             <StyledCardOuter>
               {dateTimeRange && (
