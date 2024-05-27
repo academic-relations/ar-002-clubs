@@ -1,3 +1,4 @@
+import isPropValid from "@emotion/is-prop-valid";
 import React, { useState } from "react";
 import styled from "styled-components";
 import Icon from "./Icon";
@@ -31,7 +32,9 @@ const ChildrenOuter = styled.div`
   align-self: stretch;
 `;
 
-const RotatableIcon = styled(Icon)<{ isOpen: boolean }>`
+const RotatableIcon = styled(Icon).withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isOpen: boolean }>`
   transform: rotate(${({ isOpen }) => (isOpen ? 90 : 0)}deg);
   transition: transform 0.3s;
 `;

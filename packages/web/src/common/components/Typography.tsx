@@ -1,3 +1,4 @@
+import isPropValid from "@emotion/is-prop-valid";
 import { Theme } from "@sparcs-clubs/web/styles/themes";
 import React from "react";
 import styled from "styled-components";
@@ -55,7 +56,9 @@ type TypographyProps =
     })
   | (TypographyPropsWithCustomStyles & { type?: never });
 
-const TypographyInner = styled.div<TypographyPropsWithCustomStyles>`
+const TypographyInner = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<TypographyPropsWithCustomStyles>`
   color: ${({ color, theme }) =>
     color ? getColorFromTheme(theme, color) : "inherit"};
   font-family: ${({ theme, ff }) => (ff ? theme.fonts.FAMILY[ff] : "inherit")};

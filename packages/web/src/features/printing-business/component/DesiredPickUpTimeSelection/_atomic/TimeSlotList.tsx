@@ -1,3 +1,4 @@
+import isPropValid from "@emotion/is-prop-valid";
 import React from "react";
 import styled from "styled-components";
 import { getHours, getMinutes, setHours, setMinutes } from "date-fns";
@@ -10,7 +11,9 @@ interface TimeSlotListProps {
   onDatesChange: (date: Date) => void;
 }
 
-const TimeSlotListInner = styled.div<{ calendarSize: "sm" | "md" | "lg" }>`
+const TimeSlotListInner = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ calendarSize: "sm" | "md" | "lg" }>`
   width: ${({ calendarSize }) => (calendarSize === "lg" ? "300px" : "100%")};
   flex: none;
   order: 1;
@@ -22,7 +25,9 @@ const TimeSlotListInner = styled.div<{ calendarSize: "sm" | "md" | "lg" }>`
   gap: 12px;
 `;
 
-const TimeSlotSelection = styled.button<{ isSelected: boolean }>`
+const TimeSlotSelection = styled.button.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isSelected: boolean }>`
   /* Auto layout */
   display: flex;
   flex-direction: row;

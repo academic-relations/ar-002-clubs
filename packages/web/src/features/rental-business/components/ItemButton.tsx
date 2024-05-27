@@ -3,6 +3,8 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import React from "react";
 import styled, { css } from "styled-components";
 
+import isPropValid from "@emotion/is-prop-valid";
+
 interface ItemButtonProps {
   image?: string;
   name: string;
@@ -29,7 +31,9 @@ const ImageContent = styled.img`
   max-width: 100%;
   max-height: 100%;
 `;
-const HaveIndicator = styled.div<{ have: boolean; selected: boolean }>`
+const HaveIndicator = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ have: boolean; selected: boolean }>`
   width: 16px;
   height: 16px;
   border-radius: 50%;

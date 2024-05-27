@@ -1,3 +1,4 @@
+import isPropValid from "@emotion/is-prop-valid";
 import React, {
   ChangeEvent,
   InputHTMLAttributes,
@@ -51,7 +52,9 @@ const InputContainer = styled.div`
   align-items: center;
 `;
 
-const RightContentWrapper = styled.div<{ hasError: boolean }>`
+const RightContentWrapper = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ hasError: boolean }>`
   position: absolute;
   right: 12px;
   display: flex;
@@ -65,7 +68,9 @@ const RightContentWrapper = styled.div<{ hasError: boolean }>`
     hasError ? theme.colors.RED[600] : theme.colors.GRAY[300]};
 `;
 
-const Input = styled.input<ItemNumberInputProps & { hasError: boolean }>`
+const Input = styled.input.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<ItemNumberInputProps & { hasError: boolean }>`
   display: block;
   width: 100%;
   padding: 8px 12px;
