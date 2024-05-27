@@ -8,7 +8,7 @@ import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
  * @description 내가 활동했던 전체 동아리 목록을 가져옵니다
  */
 
-const url = () => `/clubs/my`;
+const url = () => `/student/clubs/my`;
 const method = "GET";
 
 const requestParam = z.object({});

@@ -17,7 +17,8 @@ export class UnexpectedExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest();
 
     const resStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-    logger.error("Unexpected exception");
+    logger.error("Unexpected exception", exception);
+    logger.error(exception);
     //
     response.status(resStatus).json({
       // todo: exception의 response 형식 결정되면 변경해야함.

@@ -14,12 +14,12 @@ import {
 } from "@sparcs-clubs/web/utils/Date/formateDate";
 import { ApiRnt003ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt003";
 
-interface TagDetail {
+const getStatusDetails = (
+  status: number,
+): {
   text: string;
   color: TagColor;
-}
-
-const getStatusDetails = (status: number): TagDetail => {
+} => {
   switch (status) {
     case RentalOrderStatusEnum.Applied:
       return { text: "신청", color: "BLUE" };

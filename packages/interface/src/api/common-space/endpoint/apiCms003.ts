@@ -1,3 +1,4 @@
+import { getKSTDate } from "@sparcs-clubs/interface/common/util";
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
@@ -8,21 +9,26 @@ import { z } from "zod";
  */
 
 const url = (spaceId: number) =>
-  `/student/common-spaces/common-space/${spaceId}/usage-order`;
+  `/student/common-spaces/common-space/${spaceId}/orders/order`;
 const method = "POST";
 
 const requestParam = z.object({
-  spaceId: z.number().int().min(1), // spaceId는 양의 정수여야 합니다.
+  spaceId: z.coerce.number().int().min(1), // spaceId는 양의 정수여야 합니다.
 });
 
 const requestQuery = z.object({});
 
-const requestBody = z.object({
-  clubId: z.number().int().min(1),
-  email: z.string().max(50), // email은 최대 50자의 문자열이어야 합니다.
-  startTerm: z.date(), // startTerm은 날짜 및 시간이어야 합니다.
-  endTerm: z.date(), // endTerm은 날짜 및 시간이어야 합니다.
-});
+const requestBody = z
+  .object({
+    clubId: z.coerce.number().int().min(1),
+    email: z.coerce.string().max(50), // email은 최대 50자의 문자열이어야 합니다.
+    startTerm: z.preprocess(getKSTDate, z.date()), // startTerm은 날짜 및 시간이어야 합니다.
+    endTerm: z.preprocess(getKSTDate, z.date()), // endTerm은 날짜 및 시간이어야 합니다.
+  })
+  .refine(data => data.startTerm < data.endTerm, {
+    message: "startTerm must be earlier than endTerm",
+    path: ["startTerm", "endTerm"],
+  });
 
 const responseBodyMap = {
   [HttpStatusCode.Created]: z.object({}),

@@ -21,6 +21,12 @@ import { DivisionPermanentClubDRepository } from "./repository/club.division-per
     ClubStudentTRepository,
     DivisionPermanentClubDRepository,
   ],
-  exports: [ClubService],
+  exports: [
+    ClubService,
+    ClubRoomTRepository,
+    ClubRepresentativeDRepository,
+    ClubRepository,
+    ClubStudentTRepository,
+  ],
 })
 export class ClubModule {}

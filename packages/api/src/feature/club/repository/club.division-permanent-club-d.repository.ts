@@ -8,20 +8,19 @@ import { DivisionPermanentClubD } from "@sparcs-clubs/api/drizzle/schema/divisio
 export class DivisionPermanentClubDRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  async findPermenantClub(
-    clubId: number,
-    startTerm: Date,
-    endTerm: Date,
-  ): Promise<boolean> {
+  async findPermenantClub(clubId: number, startTerm?: Date): Promise<boolean> {
+    const now = new Date();
+    const baseStartTerm = startTerm || now;
+
     return this.db
       .select({ id: DivisionPermanentClubD.id })
       .from(DivisionPermanentClubD)
       .where(
         and(
           eq(DivisionPermanentClubD.clubId, clubId),
-          lte(DivisionPermanentClubD.startTerm, startTerm),
+          lte(DivisionPermanentClubD.startTerm, baseStartTerm),
           or(
-            gte(DivisionPermanentClubD.endTerm, endTerm),
+            gte(DivisionPermanentClubD.endTerm, baseStartTerm),
             isNull(DivisionPermanentClubD.endTerm),
           ),
         ),

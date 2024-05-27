@@ -43,6 +43,9 @@ export const SemesterD = mysqlTable("semester_d", {
 
 export const ClubT = mysqlTable("club_t", {
   id: int("id").autoincrement().primaryKey(),
+  clubId: int("club_id")
+    .notNull()
+    .references(() => Club.id),
   clubStatusEnumId: int("club_status_enum_id")
     .notNull()
     .references(() => ClubStatusEnum.id),
