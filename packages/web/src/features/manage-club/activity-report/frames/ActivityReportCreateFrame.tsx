@@ -1,6 +1,6 @@
 import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
-import Card from "@sparcs-clubs/web/common/components/Card";
 import Button from "@sparcs-clubs/web/common/components/Button";
+import Card from "@sparcs-clubs/web/common/components/Card";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 // import DateRangeInput from "@sparcs-clubs/web/common/components/Forms/DateRangeInput";
 import Select from "@sparcs-clubs/web/common/components/Forms/Select";
@@ -9,8 +9,8 @@ import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import React from "react";
 import styled from "styled-components";
-import SelectParticipant from "../components/SelectParticipant";
 import { mockParticipantData } from "../_mock/mock";
+import SelectParticipant from "../components/SelectParticipant";
 
 const ActivityReportMainFrameInner = styled.div`
   display: flex;
@@ -56,6 +56,7 @@ const ActivityReportCreateFrame: React.FC = () => (
           { name: "대표 동아리 관리", path: "/manage-club" },
           { name: "활동 보고서", path: "/manage-club/activity-report" },
         ]}
+        enableLast
       />
       <PageTitle>활동 보고서 작성</PageTitle>
     </PageTitleOuter>
