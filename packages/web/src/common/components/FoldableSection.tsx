@@ -1,5 +1,6 @@
 "use client";
 
+import isPropValid from "@emotion/is-prop-valid";
 import React from "react";
 import styled from "styled-components";
 
@@ -27,7 +28,9 @@ const MoreInfo = styled.div`
   cursor: pointer;
 `;
 
-const ChildrenOuter = styled.div<{ margin?: string }>`
+const ChildrenOuter = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ margin?: string }>`
   margin-top: ${({ margin }) => margin};
 `;
 

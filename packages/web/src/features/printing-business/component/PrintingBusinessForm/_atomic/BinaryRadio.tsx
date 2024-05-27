@@ -49,8 +49,12 @@ const BinaryRadio: React.FC<BinaryRadioProps> = ({
       }
     >
       {[
-        <RadioOption value="true">{firstOptionLabel}</RadioOption>,
-        <RadioOption value="false">{secondOptionLabel}</RadioOption>,
+        <RadioOption key={`${label}_true`} value="true">
+          {firstOptionLabel}
+        </RadioOption>,
+        <RadioOption key={`${label}_false`} value="false">
+          {secondOptionLabel}
+        </RadioOption>,
       ]}
     </Radio>
   </BinaryRadioInner>
