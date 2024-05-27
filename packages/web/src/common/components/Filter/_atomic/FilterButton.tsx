@@ -1,3 +1,4 @@
+import isPropValid from "@emotion/is-prop-valid";
 import React from "react";
 import styled from "styled-components";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
@@ -11,7 +12,9 @@ interface FilterButtonProps {
   selectedSemesters: SemesterProps[];
 }
 
-const FilterButtonWrapper = styled.div<{ isOpen: boolean }>`
+const FilterButtonWrapper = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isOpen: boolean }>`
   width: max-content;
   display: flex;
   height: 36px;

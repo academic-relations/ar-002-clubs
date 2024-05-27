@@ -1,3 +1,4 @@
+import isPropValid from "@emotion/is-prop-valid";
 import React, { useState, useRef, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
@@ -31,7 +32,9 @@ const disabledStyle = css`
   pointer-events: none;
 `;
 
-const StyledSelect = styled.div<{
+const StyledSelect = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   hasError?: boolean;
   disabled?: boolean;
   isOpen?: boolean;
@@ -75,7 +78,9 @@ const Dropdown = styled.div`
   z-index: 1000; // Ensure the dropdown appears above other content
 `;
 
-const Option = styled.div<{ selectable?: boolean }>`
+const Option = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ selectable?: boolean }>`
   gap: 10px;
   border-radius: 4px;
   padding: 4px 12px;
@@ -125,7 +130,9 @@ const SelectWrapper = styled.div`
   gap: 4px;
 `;
 
-const SelectValue = styled.span<{ isSelected: boolean }>`
+const SelectValue = styled.span.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isSelected: boolean }>`
   color: ${({ theme, isSelected }) =>
     isSelected ? theme.colors.BLACK : theme.colors.GRAY[200]};
 `;

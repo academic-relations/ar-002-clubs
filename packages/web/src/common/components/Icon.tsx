@@ -1,5 +1,6 @@
 "use client";
 
+import isPropValid from "@emotion/is-prop-valid";
 import React from "react";
 import styled, { css } from "styled-components";
 import { Icon as MUIIcon } from "@mui/material";
@@ -13,7 +14,9 @@ interface IconProps {
   className?: string;
 }
 
-const IconInner = styled.div<{
+const IconInner = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   size: number;
   clickable: boolean;
 }>`

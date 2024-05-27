@@ -1,5 +1,6 @@
 "use client";
 
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 
 interface CardProps {
@@ -8,7 +9,9 @@ interface CardProps {
   gap?: number;
 }
 
-const Card = styled.div<CardProps>`
+const Card = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<CardProps>`
   display: flex;
   flex-direction: column;
   position: relative;
