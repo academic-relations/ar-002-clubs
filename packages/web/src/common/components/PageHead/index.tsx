@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
 import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
+import BreadCrumb from "./_atomic/BreadCrumb";
 
 interface PageHeadProps {
   items: { name: string; path: string }[];
