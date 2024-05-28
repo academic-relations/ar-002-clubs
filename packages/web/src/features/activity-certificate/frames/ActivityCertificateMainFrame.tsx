@@ -1,9 +1,8 @@
 "use client";
 
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 import React, { useState } from "react";
 import styled from "styled-components";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import {
   ActivityCertificateInterface,
   ActivityCertificateProgress,
@@ -21,12 +20,6 @@ const ActivityCertificatePageMainFrameInner = styled.div`
   align-items: flex-start;
   gap: 60px;
   display: inline-flex;
-`;
-
-const PageHeadWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 `;
 
 const ActivityCertificateMainFrame: React.FC = () => {
@@ -85,12 +78,10 @@ const ActivityCertificateMainFrame: React.FC = () => {
 
   return (
     <ActivityCertificatePageMainFrameInner>
-      <PageHeadWrapper>
-        <BreadCrumb
-          items={[{ name: "활동확인서 발급", path: "/activity-certificate" }]}
-        />
-        <PageTitle>활동확인서 발급</PageTitle>
-      </PageHeadWrapper>
+      <PageHead
+        items={[{ name: "활동확인서 발급", path: "/activity-certificate" }]}
+        title="활동확인서 발급"
+      />
       {activityCertificateProgress.agreement ? (
         <ActivityCertificateInfoFrame {...props} />
       ) : (

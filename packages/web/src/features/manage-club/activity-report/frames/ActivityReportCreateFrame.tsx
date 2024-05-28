@@ -1,14 +1,14 @@
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
+import React from "react";
+import styled from "styled-components";
+
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 // import DateRangeInput from "@sparcs-clubs/web/common/components/Forms/DateRangeInput";
 import Select from "@sparcs-clubs/web/common/components/Forms/Select";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
-import React from "react";
-import styled from "styled-components";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import { mockParticipantData } from "../_mock/mock";
 import SelectParticipant from "../components/SelectParticipant";
 
@@ -17,14 +17,6 @@ const ActivityReportMainFrameInner = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 60px;
-`;
-
-const PageTitleOuter = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-  align-self: stretch;
 `;
 
 const SectionInner = styled.div`
@@ -50,17 +42,14 @@ const ButtonPlaceRight = styled.div`
 
 const ActivityReportCreateFrame: React.FC = () => (
   <ActivityReportMainFrameInner>
-    <PageTitleOuter>
-      <BreadCrumb
-        items={[
-          { name: "대표 동아리 관리", path: "/manage-club" },
-          { name: "활동 보고서", path: "/manage-club/activity-report" },
-        ]}
-        enableLast
-      />
-      <PageTitle>활동 보고서 작성</PageTitle>
-    </PageTitleOuter>
-
+    <PageHead
+      items={[
+        { name: "대표 동아리 관리", path: "/manage-club" },
+        { name: "활동 보고서", path: "/manage-club/activity-report" },
+      ]}
+      title="활동 보고서 작성"
+      enableLast
+    />
     <SectionTitle>활동 정보</SectionTitle>
     <SectionInner>
       <Card outline padding="32px" gap={32}>

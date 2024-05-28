@@ -5,11 +5,9 @@ import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
-
 import useGetMyClub from "@sparcs-clubs/web/features/my/clubs/service/useGetMyClub";
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 const ClubsPageMainFrameInner = styled.div`
   display: flex;
@@ -23,12 +21,6 @@ const ClubListWrapper = styled.div`
   gap: 60px;
 `;
 
-const PageHeadWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
 const MyClubsMainFrame: React.FC = () => {
   const { data, isLoading, isError } = useGetMyClub();
   const isMyClubsExist = useMemo(
@@ -37,15 +29,13 @@ const MyClubsMainFrame: React.FC = () => {
   );
   return (
     <ClubsPageMainFrameInner>
-      <PageHeadWrapper>
-        <BreadCrumb
-          items={[
-            { name: "마이페이지", path: "/my" },
-            { name: "나의 동아리", path: "/my/clubs" },
-          ]}
-        />
-        <PageTitle>나의 동아리</PageTitle>
-      </PageHeadWrapper>
+      <PageHead
+        items={[
+          { name: "마이페이지", path: "/my" },
+          { name: "나의 동아리", path: "/my/clubs" },
+        ]}
+        title="나의 동아리"
+      />
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         {isMyClubsExist && (
           <ClubListWrapper>
