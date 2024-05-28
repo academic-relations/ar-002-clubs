@@ -14,6 +14,8 @@ const PageHeadWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  align-items: flex-start;
+  align-self: stretch;
 `;
 
 const PageHead: React.FC<PageHeadProps> = ({
