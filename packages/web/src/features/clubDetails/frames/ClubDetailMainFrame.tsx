@@ -1,7 +1,5 @@
 "use client";
 
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
-import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import React from "react";
 import styled from "styled-components";
 
@@ -9,7 +7,8 @@ import ClubInfoCard from "@sparcs-clubs/web/features/clubDetails/components/Club
 import PersonInfoCard from "@sparcs-clubs/web/features/clubDetails/components/PersonInfoCard";
 import ClubDetailCard from "@sparcs-clubs/web/features/clubDetails/components/ClubDetailCard";
 import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 
 interface ClubDetailMainFrameProps {
   club: ApiClb002ResponseOK;
@@ -53,24 +52,15 @@ const ClubDetailWrapper = styled.div`
   flex: 1 0 0;
 `;
 
-const PageHeadWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
 const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({ club }) => (
   <ClubDetailMainFrameInner>
-    <PageHeadWrapper>
-      <BreadCrumb
-        items={[
-          { name: "동아리 목록", path: "/clubs" },
-          { name: club.name, path: `/clubs/${club.id}` },
-        ]}
-      />
-      <PageTitle>{club.name}</PageTitle>
-    </PageHeadWrapper>
-
+    <PageHead
+      items={[
+        { name: "동아리 목록", path: "/clubs" },
+        { name: club.name, path: `/clubs/${club.id}` },
+      ]}
+      title={club.name}
+    />
     <ClubInfoWrapper>
       <SectionTitle size="lg">동아리 정보</SectionTitle>
       <CardWrapper>

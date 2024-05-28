@@ -2,31 +2,21 @@
 
 import React from "react";
 
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
-import styled from "styled-components";
 import ManageClubTableMainFrame from "@sparcs-clubs/web/features/manageClubTable/frames/ManageClubTableMainFrame";
-
-const PageHeadWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 const ManageClubActivityCertificate = () => (
   <>
-    <PageHeadWrapper>
-      <BreadCrumb
-        items={[
-          { name: "대표 동아리 관리", path: "/manage-club" },
-          {
-            name: "활동확인서 발급 내역",
-            path: "/manage-club/activity-certificate",
-          },
-        ]}
-      />
-      <PageTitle>활동확인서 발급 내역</PageTitle>
-    </PageHeadWrapper>
+    <PageHead
+      items={[
+        { name: "대표 동아리 관리", path: "/manage-club" },
+        {
+          name: "활동확인서 발급 내역",
+          path: "/manage-club/activity-certificate",
+        },
+      ]}
+      title="활동확인서 발급 내역"
+    />
     <ManageClubTableMainFrame pageType="activity-certificate" />
   </>
 );

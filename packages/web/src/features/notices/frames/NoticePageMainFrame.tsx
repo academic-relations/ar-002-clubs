@@ -2,9 +2,8 @@
 
 import styled from "styled-components";
 
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 import NoticeListAndPaginationFrame from "@sparcs-clubs/web/features/notices/frames/NoticeListAndPaginationFrame";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 const NoticePageMainFrameInner = styled.div`
   width: 100%;
@@ -15,18 +14,12 @@ const NoticePageMainFrameInner = styled.div`
   row-gap: 60px;
 `;
 
-const PageHeadWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
 const NoticePageMainFrame = () => (
   <NoticePageMainFrameInner>
-    <PageHeadWrapper>
-      <BreadCrumb items={[{ name: "공지사항", path: "/notice" }]} />
-      <PageTitle>공지사항</PageTitle>
-    </PageHeadWrapper>
+    <PageHead
+      items={[{ name: "공지사항", path: "/notice" }]}
+      title="공지사항"
+    />
     <NoticeListAndPaginationFrame />
   </NoticePageMainFrameInner>
 );
