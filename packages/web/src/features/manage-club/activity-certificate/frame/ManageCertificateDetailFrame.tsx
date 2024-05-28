@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-import {
-  FrameWrapper,
-  SectionWrapper,
-} from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
+import { FrameWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import {
@@ -23,6 +18,7 @@ import {
 } from "@sparcs-clubs/web/common/components/ListItem";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import { useRouter } from "next/navigation";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 const ActivityWrapper = styled.div`
   display: flex;
@@ -55,19 +51,17 @@ const ManageCertificateDetailFrame = () => {
   };
   return (
     <FrameWrapper>
-      <SectionWrapper>
-        <BreadCrumb
-          items={[
-            { name: "대표 동아리 관리", path: "/manage-club" },
-            {
-              name: "활동확인서 발급 내역",
-              path: "/manage-club/activity-certificate",
-            },
-          ]}
-          enableLast
-        />
-        <PageTitle>활동확인서 발급 내역</PageTitle>
-      </SectionWrapper>
+      <PageHead
+        items={[
+          { name: "대표 동아리 관리", path: "/manage-club" },
+          {
+            name: "활동확인서 발급 내역",
+            path: "/manage-club/activity-certificate",
+          },
+        ]}
+        title="활동확인서 발급 내역"
+        enableLast
+      />
       <Card outline gap={20}>
         {/* TODO: 너무 길다면.. 나중에 컴포넌트로 따로 빼기 */}
         <ProgressCheckSectionWrapper>

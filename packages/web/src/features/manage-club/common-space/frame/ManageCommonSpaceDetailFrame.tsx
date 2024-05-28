@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  FrameWrapper,
-  SectionWrapper,
-} from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
+import { FrameWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import {
@@ -21,6 +16,7 @@ import {
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
 import { useRouter } from "next/navigation";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 const ManageCommonSpaceDetailFrame = () => {
   const router = useRouter();
@@ -29,19 +25,17 @@ const ManageCommonSpaceDetailFrame = () => {
   };
   return (
     <FrameWrapper>
-      <SectionWrapper>
-        <BreadCrumb
-          items={[
-            { name: "대표 동아리 관리", path: "/manage-club" },
-            {
-              name: "공용공간 비정기사용 내역",
-              path: "/manage-club/common-space",
-            },
-          ]}
-          enableLast
-        />
-        <PageTitle>공용공간 비정기사용 내역</PageTitle>
-      </SectionWrapper>
+      <PageHead
+        items={[
+          { name: "대표 동아리 관리", path: "/manage-club" },
+          {
+            name: "공용공간 비정기사용 내역",
+            path: "/manage-club/common-space",
+          },
+        ]}
+        title="공용공간 비정기사용 내역"
+        enableLast
+      />
       <Card outline gap={20}>
         {/* TODO: 너무 길다면.. 나중에 컴포넌트로 따로 빼기 */}
         <ProgressCheckSectionWrapper>
