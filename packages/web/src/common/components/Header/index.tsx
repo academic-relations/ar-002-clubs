@@ -51,6 +51,9 @@ const HeaderInner = styled.div`
   position: sticky;
   top: 0;
   z-index: 10;
+  -webkit-backdrop-filter: blur(
+    10px
+  ); /* Add this line first, it fixes blur for Safari*/
   backdrop-filter: blur(10px);
 `;
 
