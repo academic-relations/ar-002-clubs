@@ -22,7 +22,7 @@ import type {
   ApiPrt002ResponseCreated,
 } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt002";
 
-import { ZodPipe } from "@sparcs-clubs/api/common/pipes/zod-pipe";
+import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import logger from "@sparcs-clubs/api/common/util/logger";
 
 import { PromotionalPrintingService } from "../service/promotional-printing.service";
