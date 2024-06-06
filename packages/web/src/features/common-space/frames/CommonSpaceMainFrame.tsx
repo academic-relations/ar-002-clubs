@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import type { CommonSpaceInterface } from "../types/commonSpace";
-import CommonSpaceNoticeFrame from "./CommonSpaceNoticeFrame";
 import CommonSpaceInfoFrame from "./CommonSpaceInfoFrame";
+import CommonSpaceNoticeFrame from "./CommonSpaceNoticeFrame";
 
 const CommonSpaceMainFrameInner = styled.div`
   display: flex;
@@ -18,7 +18,10 @@ const CommonSpaceMainFrame: React.FC = () => {
   const props = { commonSpace, setCommonSpace };
   return (
     <CommonSpaceMainFrameInner>
-      <PageTitle>공용공간 비정기사용</PageTitle>
+      <PageHead
+        items={[{ name: "공용공간 비정기사용", path: "/common-space" }]}
+        title="공용공간 비정기사용"
+      />
       {commonSpace.agreement ? (
         <CommonSpaceInfoFrame {...props} />
       ) : (

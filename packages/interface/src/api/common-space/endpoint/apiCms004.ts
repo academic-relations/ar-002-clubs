@@ -9,18 +9,15 @@ import { z } from "zod";
  */
 
 const url = (spaceId: number, orderId: number) =>
-  `/student/common-spaces/common-space/${spaceId}/usage-order/${orderId}`;
+  `/student/common-spaces/common-space/${spaceId}/orders/order/${orderId}`;
 const method = "DELETE";
 
 const requestParam = z.object({
-  spaceId: z.number().int().min(1), // spaceId는 양의 정수여야 합니다.
-  orderId: z.number().int().min(1), // orderId는 양의 정수여야 합니다.
+  spaceId: z.coerce.number().int().min(1), // spaceId는 양의 정수여야 합니다.
+  orderId: z.coerce.number().int().min(1), // orderId는 양의 정수여야 합니다.
 });
 
-const requestQuery = z.object({
-  startDate: z.date(), // startDate는 날짜여야 합니다.
-  endDate: z.date(), // endDate는 날짜여야 합니다.
-});
+const requestQuery = z.object({});
 
 const requestBody = z.object({});
 

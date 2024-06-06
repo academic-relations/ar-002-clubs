@@ -4,8 +4,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 import paths, { Paths } from "@sparcs-clubs/web/constants/paths";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import Button from "../Button";
 import Icon from "../Icon";
 import MobileNavItem from "./MobileNavItem";
@@ -64,8 +65,26 @@ const MobileNavMenu: React.FC<MobileNavMenuProps> = ({
 }) => {
   const [selectedMenu, setSelectedMenu] = useState<keyof Paths | null>(null);
   const currentPath = usePathname();
+  const { isLoggedIn, login, logout } = useAuth();
 
   const isSelected = (key: keyof Paths) => selectedMenu === key;
+
+  const router = useRouter();
+
+  const handleMyPageClick = () => {
+    onClose();
+    router.push("/my");
+  };
+
+  const loginButton = () => {
+    onClose();
+    login();
+  };
+
+  const logoutButton = () => {
+    onClose();
+    logout();
+  };
 
   return (
     <MobileNavMenuInner className={className}>
@@ -103,16 +122,23 @@ const MobileNavMenu: React.FC<MobileNavMenuProps> = ({
           </>
         );
       })}
-      <LoginButton
-        type="outlined"
-        onClick={
-          // TODO. paths.LOGIN.path 로 이동 로직 추가
-          () => {}
-        }
-      >
-        <Icon type="person" size={16} />
-        {paths.LOGIN.name}
-      </LoginButton>
+      {isLoggedIn ? (
+        <>
+          <LoginButton type="outlined" onClick={handleMyPageClick}>
+            <Icon type="person" size={16} />
+            마이페이지
+          </LoginButton>
+          <LoginButton type="outlined" onClick={logoutButton}>
+            <Icon type="logout" size={16} />
+            로그아웃
+          </LoginButton>
+        </>
+      ) : (
+        <LoginButton type="outlined" onClick={loginButton}>
+          <Icon type="login" size={16} />
+          {paths.LOGIN.name}
+        </LoginButton>
+      )}
     </MobileNavMenuInner>
   );
 };

@@ -1,8 +1,9 @@
 import { Injectable, Inject } from "@nestjs/common";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-import { ClubStudentT } from "src/drizzle/schema/club.schema";
-import { count, eq } from "drizzle-orm";
+import { Club, ClubStudentT, SemesterD } from "src/drizzle/schema/club.schema";
+import { and, or, count, eq, gte, lte, desc } from "drizzle-orm";
+import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { takeUnique } from "../util/util";
 
 @Injectable()
@@ -11,13 +12,105 @@ export class ClubStudentTRepository {
 
   async findTotalMemberCnt(
     clubId: number,
-  ): Promise<{ totalMemberCnt: number }> {
+    semesterId?: number,
+  ): Promise<number> {
+    const today = new Date();
+
     const totalMemberCnt = await this.db
       .select({ totalMemberCnt: count() })
       .from(ClubStudentT)
-      .where(eq(ClubStudentT.clubId, clubId)) // TODO 현재는 모든 club 회원 수를 반환. 여기 현재 semester만 필터링하는 것도 추가해야 함.
-      .then(takeUnique);
-
+      .where(
+        and(
+          eq(ClubStudentT.clubId, clubId),
+          semesterId
+            ? eq(ClubStudentT.semesterId, semesterId)
+            : and(
+                lte(ClubStudentT.startTerm, today),
+                or(
+                  gte(ClubStudentT.endTerm, today),
+                  eq(ClubStudentT.endTerm, null),
+                ),
+              ),
+        ),
+      )
+      .then(result => result[0].totalMemberCnt);
     return totalMemberCnt;
+  }
+
+  async findStudentSemester(studentId: number) {
+    return this.db
+      .select({
+        id: SemesterD.id,
+        name: SemesterD.name,
+        year: SemesterD.year,
+        startTerm: SemesterD.startTerm,
+        endTerm: SemesterD.endTerm,
+        clubs: { id: ClubStudentT.clubId },
+      })
+      .from(ClubStudentT)
+      .leftJoin(SemesterD, eq(SemesterD.id, ClubStudentT.semesterId))
+      .where(eq(ClubStudentT.studentId, studentId))
+      .orderBy(desc(SemesterD.id))
+      .then(result =>
+        result.map(row => ({
+          id: row.id,
+          name: `${row.year} ${row.name}`,
+          startTerm: row.startTerm,
+          endTerm: row.endTerm,
+          clubs: [{ id: row.clubs.id }],
+        })),
+      );
+  }
+
+  async findClubStudentByClubIdAndStudentId(
+    clubId: number,
+    studentId: number,
+  ): Promise<{
+    club_student_id: number;
+    student_id: number;
+    club_id: number;
+    name: string;
+    phoneNumber: string;
+    email: string;
+  }> {
+    const student = await this.db
+      .select({
+        club_student_id: ClubStudentT.id,
+        student_id: Student.id,
+        club_id: ClubStudentT.clubId,
+        name: Student.name,
+        phoneNumber: Student.phoneNumber,
+        email: Student.email,
+      })
+      .from(ClubStudentT)
+      .leftJoin(Student, eq(Student.id, studentId))
+      .where(
+        and(
+          eq(ClubStudentT.clubId, clubId),
+          eq(ClubStudentT.studentId, studentId),
+        ),
+      )
+      .then(takeUnique);
+    // Todo: 현재 학기에 활동 중인지 필터링 해야함.
+    return student;
+  }
+
+  async getClubsByStudentId(studentId: number) {
+    const today = new Date();
+    const clubs = await this.db
+      .select({
+        id: ClubStudentT.clubId,
+        name: Club.name,
+      })
+      .from(ClubStudentT)
+      .leftJoin(Club, eq(Club.id, ClubStudentT.clubId))
+      .where(
+        and(
+          eq(ClubStudentT.studentId, studentId),
+          lte(ClubStudentT.startTerm, today),
+          or(gte(ClubStudentT.endTerm, today), eq(ClubStudentT.endTerm, null)),
+        ),
+      );
+    return clubs;
   }
 }

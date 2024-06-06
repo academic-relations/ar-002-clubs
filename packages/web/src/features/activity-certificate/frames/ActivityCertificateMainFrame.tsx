@@ -1,16 +1,16 @@
 "use client";
 
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
 import React, { useState } from "react";
 import styled from "styled-components";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import {
   ActivityCertificateInterface,
   ActivityCertificateProgress,
   FirstErrorStatus,
   SecondErrorStatus,
 } from "../types/activityCertificate";
-import ActivityCertificateNoticeFrame from "./ActivityCertificateNoticeFrame";
 import ActivityCertificateInfoFrame from "./ActivityCertificateInfoFrame";
+import ActivityCertificateNoticeFrame from "./ActivityCertificateNoticeFrame";
 
 const ActivityCertificatePageMainFrameInner = styled.div`
   width: 100%;
@@ -78,7 +78,10 @@ const ActivityCertificateMainFrame: React.FC = () => {
 
   return (
     <ActivityCertificatePageMainFrameInner>
-      <PageTitle>활동확인서 발급</PageTitle>
+      <PageHead
+        items={[{ name: "활동확인서 발급", path: "/activity-certificate" }]}
+        title="활동확인서 발급"
+      />
       {activityCertificateProgress.agreement ? (
         <ActivityCertificateInfoFrame {...props} />
       ) : (

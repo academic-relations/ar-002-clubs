@@ -12,7 +12,7 @@ const url = (clubId: string) => `/clubs/club/${clubId}`;
 const method = "GET";
 
 const requestParam = z.object({
-  clubId: z.number().int().min(1),
+  clubId: z.coerce.number().int().min(1),
 });
 
 const requestQuery = z.object({});

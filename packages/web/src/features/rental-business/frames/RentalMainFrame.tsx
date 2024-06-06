@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
-import RentalInfoFrame from "@sparcs-clubs/web/features/rental-business/frames/RentalInfoFrame";
 
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import RentalInfoFrame from "@sparcs-clubs/web/features/rental-business/frames/RentalInfoFrame";
 import type { RentalInterface } from "../types/rental";
 import RentalNoticeFrame from "./RentalNoticeFrame";
 
@@ -19,7 +19,10 @@ const RentalMainFrame: React.FC = () => {
   const props = { rental, setRental };
   return (
     <RentalMainFrameInner>
-      <PageTitle>대여 사업</PageTitle>
+      <PageHead
+        items={[{ name: "대여 사업", path: "/rental-business" }]}
+        title="대여 사업"
+      />
       {rental.agreement ? (
         <RentalInfoFrame {...props} />
       ) : (
