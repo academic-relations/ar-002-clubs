@@ -21,6 +21,10 @@ const ServiceSectionFrameInner = styled.div`
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
     width: 560px;
   }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    width: 100%;
+  }
 `;
 
 const ServiceCardWrapper = styled.div`
