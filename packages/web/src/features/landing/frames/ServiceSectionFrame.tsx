@@ -13,6 +13,14 @@ const ServiceSectionFrameInner = styled.div`
   flex-direction: column;
   width: 320px;
   gap: 20px;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    width: 640px;
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    width: 560px;
+  }
 `;
 
 const ServiceCardWrapper = styled.div`
