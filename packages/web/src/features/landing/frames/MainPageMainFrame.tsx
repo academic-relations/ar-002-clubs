@@ -24,6 +24,10 @@ const NoticeAndServiceWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 60px;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    flex-direction: column;
+  }
 `;
 
 const MainPageMainFrame: React.FC = () => (
