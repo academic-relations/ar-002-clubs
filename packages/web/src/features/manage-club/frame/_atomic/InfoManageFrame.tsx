@@ -5,7 +5,9 @@ import { ManageWrapper } from "@sparcs-clubs/web/features/manage-club/component/
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
+import Select, {
+  SelectItemProps,
+} from "@sparcs-clubs/web/common/components/Select";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import {
   mockClubDescription,
@@ -61,11 +63,13 @@ const InfoManageFrame: React.FC = () => {
   }, [password, setErrorPassword]);
   // TODO: 동방 없는 곳은 비밀번호 입력 안 해도 에러 안 뜨게 수정
 
-  const selectItems: SelectItem[] = mockClubMembers.members.map(member => ({
-    label: `${member.studentNumber} ${member.name} (${member.krPhoneNumber})`,
-    value: member.studentNumber.toString(), // TODO: studentNumber 말고 studentId로 바꿔야하나?
-    selectable: true,
-  }));
+  const selectItems: SelectItemProps[] = mockClubMembers.members.map(
+    member => ({
+      label: `${member.studentNumber} ${member.name} (${member.krPhoneNumber})`,
+      value: member.studentNumber.toString(), // TODO: studentNumber 말고 studentId로 바꿔야하나?
+      selectable: true,
+    }),
+  );
 
   return (
     <ManageWrapper>
