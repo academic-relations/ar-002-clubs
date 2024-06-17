@@ -85,7 +85,9 @@ const RentalInfoFirstFrame: React.FC<
           value={phone ?? ""}
           // TODO: interface 연결 후 기본 value가 제대로 로딩되지 않는 문제 수정
           onChange={setPhone}
-          placeholder={userPhone ?? ""}
+          placeholder={
+            /^(\d{3}-\d{4}-\d{4})$/.test(userPhone ?? "") ? userPhone ?? "" : ""
+          }
           setErrorStatus={setHasPhoneError}
         />
       </Card>
