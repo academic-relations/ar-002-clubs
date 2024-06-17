@@ -5,8 +5,10 @@ import {
   TableRow,
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
-import Tag, { TagColor } from "@sparcs-clubs/web/common/components/Tag";
+import Tag from "@sparcs-clubs/web/common/components/Tag";
 
+import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 import {
   ActivityStatusEnum,
   type Funding,
@@ -16,24 +18,13 @@ interface FundingTableProps {
   fundingList: Funding[];
 }
 
-interface StatusDetail {
-  text: string;
-  color: TagColor;
-}
-
-const getStatusDetails = (status: number): StatusDetail => {
-  switch (status) {
-    case ActivityStatusEnum.Writing:
-      return { text: "작성 중", color: "BLUE" };
-    case ActivityStatusEnum.Applied:
-      return { text: "신청 완료", color: "PURPLE" };
-    case ActivityStatusEnum.Approved:
-      return { text: "승인 완료", color: "GREEN" };
-    case ActivityStatusEnum.Rejected:
-      return { text: "신청 반려", color: "RED" };
-    default:
-      return { text: "None", color: "GRAY" };
-  }
+const TagList: {
+  [key in ActivityStatusEnum]: StatusDetail;
+} = {
+  [ActivityStatusEnum.Writing]: { text: "작성 중", color: "BLUE" },
+  [ActivityStatusEnum.Applied]: { text: "신청 완료", color: "PURPLE" },
+  [ActivityStatusEnum.Approved]: { text: "승인 완료", color: "GREEN" },
+  [ActivityStatusEnum.Rejected]: { text: "신청 반려", color: "RED" },
 };
 
 const FundingTable: React.FC<FundingTableProps> = ({ fundingList }) => {
@@ -66,29 +57,30 @@ const FundingTable: React.FC<FundingTableProps> = ({ fundingList }) => {
           승인 금액
         </TableCell>
       </TableRow>
-      {fundingList.map((funding, index) => (
-        <TableRow key={funding.name + String(index)} isBorder>
-          <TableCell type="Tag" width="10%" minWidth={116}>
-            <Tag color={getStatusDetails(funding.status).color}>
-              {getStatusDetails(funding.status).text}
-            </Tag>
-          </TableCell>
-          <TableCell type="Default" width="50%">
-            {funding.name}
-          </TableCell>
-          <TableCell type="Default" width="20%" minWidth={200}>
-            {funding.itemName}
-          </TableCell>
-          <TableCell type="Default" width="10%" minWidth={120}>
-            {funding.requestedAmount.toLocaleString()}원
-          </TableCell>
-          <TableCell type="Default" width="10%" minWidth={120}>
-            {funding.approvedAmount === null
-              ? "-"
-              : `${funding.approvedAmount.toLocaleString()}원`}
-          </TableCell>
-        </TableRow>
-      ))}
+      {fundingList.map((funding, index) => {
+        const { color, text } = getTagDetail(funding.status, TagList);
+        return (
+          <TableRow key={funding.name + String(index)} isBorder>
+            <TableCell type="Tag" width="10%" minWidth={116}>
+              <Tag color={color}>{text}</Tag>
+            </TableCell>
+            <TableCell type="Default" width="50%">
+              {funding.name}
+            </TableCell>
+            <TableCell type="Default" width="20%" minWidth={200}>
+              {funding.itemName}
+            </TableCell>
+            <TableCell type="Default" width="10%" minWidth={120}>
+              {funding.requestedAmount.toLocaleString()}원
+            </TableCell>
+            <TableCell type="Default" width="10%" minWidth={120}>
+              {funding.approvedAmount === null
+                ? "-"
+                : `${funding.approvedAmount.toLocaleString()}원`}
+            </TableCell>
+          </TableRow>
+        );
+      })}
       <TableRow>
         <TableCell type="Default" width="80%">
           {" "}
