@@ -69,24 +69,24 @@ const ActivityReportTable: React.FC<ActivityTableProps> = ({
       </TableCell>
     </TableRow>
     {activityList.map((activity, index) => {
-      const { color: actcolor, text: acttext } = getTagDetail(
+      const { color: actColor, text: actText } = getTagDetail(
         activity.status,
         ActivityTagList,
       );
-      const { color: typecolor, text: typetext } = getTagDetail(
+      const { color: typeColor, text: typeText } = getTagDetail(
         activity.type,
         TypeTagList,
       );
       return (
         <TableRow key={activity.name + String(index)} isBorder>
           <TableCell type="Tag" width="10%" minWidth={116}>
-            <Tag color={actcolor}>{acttext}</Tag>
+            <Tag color={actColor}>{actText}</Tag>
           </TableCell>
           <TableCell type="Default" width="30%">
             {activity.name}
           </TableCell>
           <TableCell type="Tag" width="25%" minWidth={248}>
-            <Tag color={typecolor}>{typetext}</Tag>
+            <Tag color={typeColor}>{typeText}</Tag>
           </TableCell>
           <TableCell type="Default" width="35%">
             {formatDate(activity.startDate)} ~ {formatDate(activity.endDate)}
