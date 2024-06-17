@@ -1,5 +1,5 @@
 import Card from "@sparcs-clubs/web/common/components/Card";
-import Select from "@sparcs-clubs/web/common/components/Forms/Select";
+import Select from "@sparcs-clubs/web/common/components/Select";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Timetable from "@sparcs-clubs/web/common/components/Timetable";
 import Typography from "@sparcs-clubs/web/common/components/Typography";

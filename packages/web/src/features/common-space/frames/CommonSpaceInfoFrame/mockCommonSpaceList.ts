@@ -1,4 +1,4 @@
-import { SelectItem } from "@sparcs-clubs/web/common/components/Forms/Select";
+import { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 export const mockCommonSpaceList: SelectItem[] = [
   {

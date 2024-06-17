@@ -5,9 +5,7 @@ import { ManageWrapper } from "@sparcs-clubs/web/features/manage-club/component/
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import Select, {
-  SelectItem,
-} from "@sparcs-clubs/web/common/components/Forms/Select";
+import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import {
   mockClubDescription,

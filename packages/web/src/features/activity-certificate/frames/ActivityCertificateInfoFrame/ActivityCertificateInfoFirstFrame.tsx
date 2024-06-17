@@ -5,7 +5,7 @@ import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumbe
 
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
-import Select from "@sparcs-clubs/web/common/components/Forms/Select";
+import Select from "@sparcs-clubs/web/common/components/Select";
 
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 

@@ -1,9 +1,12 @@
 import isPropValid from "@emotion/is-prop-valid";
 import React, { useState, useRef, useEffect } from "react";
 import styled, { css } from "styled-components";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import Label from "./_atomic/Label";
-import ErrorMessage from "./_atomic/ErrorMessage";
+import Label from "../Forms/_atomic/Label";
+import ErrorMessage from "../Forms/_atomic/ErrorMessage";
+import Icon from "../Icon";
+import NoOption from "./_atomic/NoOption";
+import Dropdown from "./DropDown";
+import SelectOption from "./SelectOption";
 
 export interface SelectItem {
   label: string;
@@ -62,53 +65,6 @@ const StyledSelect = styled.div.withConfig({
   }
 
   ${({ disabled }) => disabled && disabledStyle}
-`;
-
-const Dropdown = styled.div`
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-top: 4px;
-  padding: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
-  border-radius: 4px;
-  background-color: ${({ theme }) => theme.colors.WHITE};
-  gap: 4px;
-  z-index: 1000; // Ensure the dropdown appears above other content
-`;
-
-const Option = styled.div.withConfig({
-  shouldForwardProp: prop => isPropValid(prop),
-})<{ selectable?: boolean }>`
-  gap: 10px;
-  border-radius: 4px;
-  padding: 4px 12px;
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  color: ${({ theme, selectable }) =>
-    selectable ? theme.colors.BLACK : theme.colors.GRAY[300]};
-  ${({ selectable }) =>
-    selectable &&
-    css`
-      &:hover {
-        background-color: ${({ theme }) => theme.colors.GRAY[200]};
-      }
-    `}
-`;
-
-const NoOption = styled.div`
-  padding: 4px 12px;
-  gap: 10px;
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  text-align: center;
-  pointer-events: none;
-  color: ${({ theme }) => theme.colors.GRAY[300]};
 `;
 
 const IconWrapper = styled.div`
@@ -209,9 +165,9 @@ const Select: React.FC<SelectProps> = ({
             </SelectValue>
             <IconWrapper>
               {isOpen ? (
-                <KeyboardArrowUp style={{ fontSize: "20px" }} />
+                <Icon type="keyboard_arrow_up" size={20} />
               ) : (
-                <KeyboardArrowDown style={{ fontSize: "20px" }} />
+                <Icon type="keyboard_arrow_down" size={20} />
               )}
             </IconWrapper>
           </StyledSelect>
@@ -219,13 +175,13 @@ const Select: React.FC<SelectProps> = ({
             <Dropdown>
               {items.length > 0 ? (
                 items.map(item => (
-                  <Option
+                  <SelectOption
                     key={item.value}
                     selectable={item.selectable}
                     onClick={() => handleOptionClick(item)}
                   >
                     {item.label}
-                  </Option>
+                  </SelectOption>
                 ))
               ) : (
                 <NoOption>항목이 존재하지 않습니다</NoOption>

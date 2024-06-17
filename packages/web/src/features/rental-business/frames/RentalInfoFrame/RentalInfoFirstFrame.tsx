@@ -1,8 +1,6 @@
 import Card from "@sparcs-clubs/web/common/components/Card";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
-import Select, {
-  SelectItem,
-} from "@sparcs-clubs/web/common/components/Forms/Select";
+import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import React, { useEffect, useState } from "react";
 import { RentalFrameProps } from "../RentalNoticeFrame";
