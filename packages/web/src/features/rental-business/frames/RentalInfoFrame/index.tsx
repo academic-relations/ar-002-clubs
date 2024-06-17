@@ -73,14 +73,16 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
 
   const onConfirmReturn = useCallback(() => {
     setShowReturnModal(false);
+    setRental({ agreement: true, info: rental.info });
     setStep(step - 1);
   }, [step, setStep, rental, setRental]);
 
   const onCloseReturn = () => setShowReturnModal(false);
 
   const onPrev = useCallback(() => {
+    // TODO: step 0으로 돌아갈 때 agreement true로 두기
     if (step === 0) {
-      setRental({ ...rental, agreement: false });
+      setRental({ agreement: false, info: rental.info });
     }
     if (step === 1) {
       if (!isRentalListEmpty()) {

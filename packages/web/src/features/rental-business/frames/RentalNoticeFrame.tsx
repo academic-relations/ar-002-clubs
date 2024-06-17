@@ -51,7 +51,7 @@ const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
   setRental,
 }) => {
   const [checked, setChecked] = useState(false);
-
+  // TODO: 동의하고 돌아왔을 때 체크된 상태로 두기
   const handleNextClick = () => {
     if (checked) {
       setRental({ ...rental, agreement: true });
