@@ -20,7 +20,6 @@ import {
 interface ActivityTableProps {
   activityList: Activity[];
 }
-
 const ActivityTagList: {
   [key in ActivityStatusEnum]: StatusDetail;
 } = {

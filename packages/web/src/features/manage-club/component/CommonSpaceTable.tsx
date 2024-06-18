@@ -19,7 +19,6 @@ import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 interface CommonSpaceTableProps {
   spaceList: ApiCms006ResponseOk;
 }
-
 const TagList: {
   [key in CommonSpaceUsageOrderStatusEnum]: StatusDetail;
 } = {

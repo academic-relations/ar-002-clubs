@@ -1,11 +1,13 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { format } from "date-fns";
+import { ko } from "date-fns/locale";
+import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
-import { format } from "date-fns";
-import { ko } from "date-fns/locale";
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import {
   ListItem,
   ListContainer,
@@ -37,7 +39,7 @@ const RentalPeriodInner = styled.div`
 const RentalInfoThirdFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
 > = ({ rental, setRental, setNextEnabled }) => {
-  const [purpose, setPurpose] = useState("");
+  const [purpose, setPurpose] = useState(rental.purpose || "");
   const [noPurposeError, setNoPurposeError] = useState("");
   const [purposeTouched, setPurposeTouched] = useState(false);
 
