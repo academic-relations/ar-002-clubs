@@ -51,9 +51,7 @@ const RentalInfoFirstFrame: React.FC<
 
   useEffect(() => {
     if (selectedValue !== "") {
-      const selectClub = clubList.find(
-        selectclub => selectclub.value === selectedValue,
-      );
+      const selectClub = clubList.find(club => club.value === selectedValue);
       if (!selectClub) {
         return;
       }
