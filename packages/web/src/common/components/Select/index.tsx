@@ -24,7 +24,7 @@ interface SelectProps {
   setErrorStatus?: (hasError: boolean) => void;
 }
 
-const DropdownContainer = styled.div`
+const SelectInner = styled.div`
   gap: 4px;
   position: relative;
 `;
@@ -151,7 +151,7 @@ const Select: React.FC<SelectProps> = ({
     <SelectWrapper>
       {label && <Label>{label}</Label>}
       <SelectWrapper>
-        <DropdownContainer ref={containerRef}>
+        <SelectInner ref={containerRef}>
           <StyledSelect
             hasError={
               hasOpenedOnce && !selectedValue && items.length > 0 && !isOpen
@@ -188,7 +188,7 @@ const Select: React.FC<SelectProps> = ({
               )}
             </Dropdown>
           )}
-        </DropdownContainer>
+        </SelectInner>
         {hasOpenedOnce && !selectedValue && items.length > 0 && (
           <ErrorMessage>
             {errorMessage || "필수로 선택해야 하는 항목입니다"}
