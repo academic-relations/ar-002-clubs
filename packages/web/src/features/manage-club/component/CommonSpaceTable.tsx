@@ -4,7 +4,7 @@ import {
   TableRow,
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
-import Tag, { TagColor } from "@sparcs-clubs/web/common/components/Tag";
+import Tag from "@sparcs-clubs/web/common/components/Tag";
 
 import {
   formatDate,
@@ -13,27 +13,19 @@ import {
 } from "@sparcs-clubs/web/utils/Date/formateDate";
 import { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
+import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface CommonSpaceTableProps {
   spaceList: ApiCms006ResponseOk;
 }
 
-const getStatusDetails = (
-  status: number,
-): {
-  text: string;
-  color: TagColor;
-} => {
-  switch (status) {
-    case CommonSpaceUsageOrderStatusEnum.Applied:
-      return { text: "신청", color: "BLUE" };
-    case CommonSpaceUsageOrderStatusEnum.Canceled:
-      return { text: "취소", color: "GRAY" };
-    case CommonSpaceUsageOrderStatusEnum.Used:
-      return { text: "사용", color: "GREEN" };
-    default:
-      return { text: "None", color: "GRAY" };
-  }
+const TagList: {
+  [key in CommonSpaceUsageOrderStatusEnum]: StatusDetail;
+} = {
+  [CommonSpaceUsageOrderStatusEnum.Applied]: { text: "신청", color: "BLUE" },
+  [CommonSpaceUsageOrderStatusEnum.Used]: { text: "사용", color: "GREEN" },
+  [CommonSpaceUsageOrderStatusEnum.Canceled]: { text: "취소", color: "GRAY" },
 };
 
 const CommonSpaceTable: React.FC<CommonSpaceTableProps> = ({ spaceList }) => (
@@ -58,30 +50,31 @@ const CommonSpaceTable: React.FC<CommonSpaceTableProps> = ({ spaceList }) => (
         예약 호실
       </TableCell>
     </TableRow>
-    {spaceList.items.map((space, index) => (
-      <TableRow isBorder key={space.chargeStudentName + String(index)}>
-        <TableCell type="Tag" width="10%" minWidth={90}>
-          <Tag color={getStatusDetails(space.statusEnum).color}>
-            {getStatusDetails(space.statusEnum).text}
-          </Tag>
-        </TableCell>
-        <TableCell type="Default" width="20%" minWidth={220}>
-          {formatDateTime(space.createdAt)}
-        </TableCell>
-        <TableCell type="Default" width="10%" minWidth={120}>
-          {space.chargeStudentName}
-        </TableCell>
-        <TableCell type="Default" width="16%" minWidth={180}>
-          {formatDate(space.startTerm)}
-        </TableCell>
-        <TableCell type="Default" width="16%" minWidth={160}>
-          {formatTime(space.startTerm)} ~ {formatTime(space.endTerm)}
-        </TableCell>
-        <TableCell type="Default" width="28%">
-          {space.spaceName}
-        </TableCell>
-      </TableRow>
-    ))}
+    {spaceList.items.map((space, index) => {
+      const { color, text } = getTagDetail(space.statusEnum, TagList);
+      return (
+        <TableRow isBorder key={space.chargeStudentName + String(index)}>
+          <TableCell type="Tag" width="10%" minWidth={90}>
+            <Tag color={color}>{text}</Tag>
+          </TableCell>
+          <TableCell type="Default" width="20%" minWidth={220}>
+            {formatDateTime(space.createdAt)}
+          </TableCell>
+          <TableCell type="Default" width="10%" minWidth={120}>
+            {space.chargeStudentName}
+          </TableCell>
+          <TableCell type="Default" width="16%" minWidth={180}>
+            {formatDate(space.startTerm)}
+          </TableCell>
+          <TableCell type="Default" width="16%" minWidth={160}>
+            {formatTime(space.startTerm)} ~ {formatTime(space.endTerm)}
+          </TableCell>
+          <TableCell type="Default" width="28%">
+            {space.spaceName}
+          </TableCell>
+        </TableRow>
+      );
+    })}
   </TableWrapper>
 );
 
