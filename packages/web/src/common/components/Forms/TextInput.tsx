@@ -1,7 +1,7 @@
 import React, { ChangeEvent, InputHTMLAttributes, useEffect } from "react";
 import styled, { css } from "styled-components";
-import Label from "./_atomic/Label";
-import ErrorMessage from "./_atomic/ErrorMessage";
+import Label from "../FormLabel";
+import FormError from "../FormError";
 
 // PhoneInput, RentalInput에서 사용하기 위해 export
 export interface TextInputProps
@@ -107,7 +107,7 @@ const TextInput: React.FC<TextInputProps> = ({
           onChange={handleValueChange}
           {...props}
         />
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+        {errorMessage && <FormError>{errorMessage}</FormError>}
       </InputWrapper>
     </InputWrapper>
   );

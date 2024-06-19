@@ -4,7 +4,7 @@ import TextInput, {
 } from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import styled from "styled-components";
 import Typography from "../Typography";
-import ErrorMessage from "./_atomic/ErrorMessage";
+import FormError from "../FormError";
 
 interface DateRangeInputProps extends Omit<TextInputProps, "onChange"> {
   startValue: string;
@@ -156,7 +156,7 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
           {...props}
         />
       </DateRangeInputFrameInner>
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+      {error && <FormError>{error}</FormError>}
     </DateRangeInputErrorFrameInner>
   );
 };

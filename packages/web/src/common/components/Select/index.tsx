@@ -1,8 +1,8 @@
 import isPropValid from "@emotion/is-prop-valid";
 import React, { useState, useRef, useEffect } from "react";
 import styled, { css } from "styled-components";
-import Label from "../Forms/_atomic/Label";
-import ErrorMessage from "../Forms/_atomic/ErrorMessage";
+import Label from "../FormLabel";
+import FormError from "../FormError";
 import Icon from "../Icon";
 import NoOption from "./_atomic/NoOption";
 import Dropdown from "./DropDown";
@@ -190,9 +190,9 @@ const Select: React.FC<SelectProps> = ({
           )}
         </SelectInner>
         {hasOpenedOnce && !selectedValue && items.length > 0 && (
-          <ErrorMessage>
+          <FormError>
             {errorMessage || "필수로 선택해야 하는 항목입니다"}
-          </ErrorMessage>
+          </FormError>
         )}
       </SelectWrapper>
     </SelectWrapper>
