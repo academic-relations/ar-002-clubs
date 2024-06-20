@@ -172,7 +172,7 @@ const Select: React.FC<SelectProps> = ({
             </IconWrapper>
           </StyledSelect>
           {isOpen && (
-            <Dropdown>
+            <Dropdown marginTop={4}>
               {items.length > 0 ? (
                 items.map(item => (
                   <SelectOption
