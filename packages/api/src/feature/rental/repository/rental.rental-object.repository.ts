@@ -33,6 +33,6 @@ export class RentalObjectRepository {
       )
       .groupBy(RentalObject.rentalEnum);
 
-    return availableObjects;
+    return { objects: availableObjects };
   }
 }

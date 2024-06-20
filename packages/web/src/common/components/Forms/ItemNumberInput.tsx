@@ -186,7 +186,7 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
           onSelect={handleCursor}
           {...props}
         />
-        {itemLimit && (
+        {itemLimit !== undefined && (
           <RightContentWrapper hasError={!!error}>
             / {itemLimit}
             {unit}

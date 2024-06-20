@@ -1,6 +1,7 @@
 export interface RentalInterface {
   agreement: boolean;
   info?: {
+    clubId: number;
     clubName: string;
     applicant: string;
     phone: string;
