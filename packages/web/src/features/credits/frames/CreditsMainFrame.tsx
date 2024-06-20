@@ -3,6 +3,7 @@ import styled from "styled-components";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import credits from "../credits";
+import MemberCard from "../components/MemberCard";
 
 const CreditsMainFrameInner = styled.div`
   display: flex;
@@ -26,10 +27,7 @@ const CreditsMainFrame: React.FC = () => (
       <CreditsSectionWrapper key={credit.semester}>
         <FoldableSectionTitle title={credit.semester}>
           {credit.members.map(member => (
-            <div key={member.nickname}>
-              {member.name} ({member.role})
-              {member.comment && <span> - {member.comment}</span>}
-            </div>
+            <MemberCard key={member.nickname} member={member} />
           ))}
         </FoldableSectionTitle>
       </CreditsSectionWrapper>
