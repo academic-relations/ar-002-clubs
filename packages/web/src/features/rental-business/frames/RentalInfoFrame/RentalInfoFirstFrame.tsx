@@ -1,8 +1,8 @@
 import Card from "@sparcs-clubs/web/common/components/Card";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
-import Select, {
-  SelectItemProps,
-} from "@sparcs-clubs/web/common/components/Select";
+import Select from "@sparcs-clubs/web/common/components/Select";
+import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
+
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import React, { useEffect, useState } from "react";
 import { RentalFrameProps } from "../RentalNoticeFrame";
@@ -12,7 +12,7 @@ const RentalInfoFirstFrame: React.FC<
 > = ({ setNextEnabled, rental, setRental }) => {
   const mockName = "스팍스";
   const mockPhone = "000-0000-0000";
-  const mockClubList: SelectItemProps[] = [
+  const mockClubList: SelectItem[] = [
     { label: "동아리", value: "동아리", selectable: true },
     { label: "또다른동아리", value: "또다른동아리", selectable: true },
     { label: "안되는동아리", value: "안되는동아리", selectable: false },

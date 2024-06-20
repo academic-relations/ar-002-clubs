@@ -8,14 +8,14 @@ import NoOption from "./_atomic/NoOption";
 import Dropdown from "./DropDown";
 import SelectOption from "./SelectOption";
 
-export interface SelectItemProps {
+export interface SelectItem {
   label: string;
   value: string;
   selectable: boolean;
 }
 
 interface SelectProps {
-  items: SelectItemProps[];
+  items: SelectItem[];
   label?: string;
   errorMessage?: string;
   disabled?: boolean;
@@ -136,7 +136,7 @@ const Select: React.FC<SelectProps> = ({
     }
   };
 
-  const handleOptionClick = (item: SelectItemProps) => {
+  const handleOptionClick = (item: SelectItem) => {
     if (item.selectable) {
       onSelect(item.value);
       setIsOpen(false);

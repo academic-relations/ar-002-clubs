@@ -5,7 +5,7 @@ import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
-import type { SelectItemProps } from "@sparcs-clubs/web/common/components/Select";
+import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 import type { PrintingBusinessFormProps } from ".";
 
@@ -28,7 +28,7 @@ const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
   setRequestForm,
   setFormError,
 }) => {
-  const clubSelection: Array<SelectItemProps> = clubs.map(club => ({
+  const clubSelection: Array<SelectItem> = clubs.map(club => ({
     label: club.name,
     value: club.id.toString(),
     selectable: true,

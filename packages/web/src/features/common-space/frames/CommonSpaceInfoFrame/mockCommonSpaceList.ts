@@ -1,6 +1,6 @@
-import { SelectItemProps } from "@sparcs-clubs/web/common/components/Select";
+import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
-export const mockCommonSpaceList: SelectItemProps[] = [
+export const mockCommonSpaceList: SelectItem[] = [
   {
     label: "제1공용동아리방 (태울관 2101호)",
     value: "1",
