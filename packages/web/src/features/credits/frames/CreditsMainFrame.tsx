@@ -17,6 +17,31 @@ const CreditsSectionWrapper = styled.div`
   gap: 40px;
 `;
 
+const MemberCardWrapper = styled.div`
+  display: grid;
+  grid-gap: 20px;
+
+  @media (min-width: 1441px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  @media (min-width: 1201px) and (max-width: 1440px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (min-width: 961px) and (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 721px) and (max-width: 960px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
 const CreditsMainFrame: React.FC = () => (
   <CreditsMainFrameInner>
     <PageHead
@@ -26,9 +51,11 @@ const CreditsMainFrame: React.FC = () => (
     {credits.map(credit => (
       <CreditsSectionWrapper key={credit.semester}>
         <FoldableSectionTitle title={credit.semester}>
-          {credit.members.map(member => (
-            <MemberCard key={member.nickname} member={member} />
-          ))}
+          <MemberCardWrapper>
+            {credit.members.map(member => (
+              <MemberCard key={member.nickname} member={member} />
+            ))}
+          </MemberCardWrapper>
         </FoldableSectionTitle>
       </CreditsSectionWrapper>
     ))}

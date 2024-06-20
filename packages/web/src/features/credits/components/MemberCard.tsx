@@ -19,7 +19,7 @@ const MemberCard = ({
   member: Member;
   isSmall?: boolean;
 }) => (
-  <Card style={{ width: isSmall ? "150px" : "200px" }}>
+  <Card padding="16px 20px" gap={8}>
     <MemberWrapper>
       <Image src={SparcsLogo} alt="SPARCS Logo" height={isSmall ? 20 : 24} />
       <Typography
