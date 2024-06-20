@@ -14,6 +14,7 @@ const fonts = {
     MEDIUM: 500,
     SEMIBOLD: 600,
     BOLD: 700,
+    EXTRABOLD: 800,
   },
 };
 

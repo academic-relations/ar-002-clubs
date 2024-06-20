@@ -8,19 +8,35 @@ import type { Member } from "../credits";
 const MemberWrapper = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: flex-end;
   gap: 6px;
 `;
 
-// TODO: 작은 사이즈 추가
-// TODO: style 적용
-const MemberCard = ({ member }: { member: Member }) => (
-  <Card style={{ width: "200px" }}>
+const MemberCard = ({
+  member,
+  isSmall = false,
+}: {
+  member: Member;
+  isSmall?: boolean;
+}) => (
+  <Card style={{ width: isSmall ? "150px" : "200px" }}>
     <MemberWrapper>
-      <Image src={SparcsLogo} alt="SPARCS Logo" height={20} />
-      <Typography ff="RALEWAY" fs={16} lh={24}>
+      <Image src={SparcsLogo} alt="SPARCS Logo" height={isSmall ? 20 : 24} />
+      <Typography
+        ff="RALEWAY"
+        fs={isSmall ? 14 : 16}
+        lh={isSmall ? 20 : 24}
+        fw="EXTRABOLD" // TODO: EXTRABOLD가 적용되지 않는 것 같음
+        color="SPARCS.main"
+      >
         {member.nickname}
       </Typography>
-      <Typography fs={12} lh={20}>
+      {/* TODO: 나눔스퀘어 글꼴 적용 */}
+      <Typography
+        fs={isSmall ? 10 : 12}
+        lh={isSmall ? 16 : 20}
+        color="SPARCS.member"
+      >
         {member.name}
       </Typography>
     </MemberWrapper>
