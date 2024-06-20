@@ -13,6 +13,7 @@ const SelectOption = styled.div.withConfig({
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   color: ${({ theme, selectable }) =>
     selectable ? theme.colors.BLACK : theme.colors.GRAY[300]};
+  background-color: ${({ theme }) => theme.colors.WHITE};
   ${({ selectable }) =>
     selectable &&
     css`
@@ -20,6 +21,7 @@ const SelectOption = styled.div.withConfig({
         background-color: ${({ theme }) => theme.colors.GRAY[200]};
       }
     `}
+  cursor: ${({ selectable }) => (selectable ? `pointer` : null)};
 `;
 
 export default SelectOption;
