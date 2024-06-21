@@ -4,7 +4,7 @@ import {
   SemesterListProps,
   SemesterProps,
 } from "@sparcs-clubs/web/features/manage-club/members/types/semesterList";
-import Dropdown from "@sparcs-clubs/web/common/components/Select/DropDown";
+import Dropdown from "@sparcs-clubs/web/common/components/Select/Dropdown";
 
 const FilterDropdown: React.FC<SemesterListProps> = ({
   semesters,

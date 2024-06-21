@@ -5,7 +5,7 @@ import Label from "../FormLabel";
 import FormError from "../FormError";
 import Icon from "../Icon";
 import NoOption from "./_atomic/NoOption";
-import Dropdown from "./DropDown";
+import Dropdown from "./Dropdown";
 import SelectOption from "./SelectOption";
 
 export interface SelectItem {
