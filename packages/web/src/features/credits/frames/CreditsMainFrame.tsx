@@ -20,24 +20,21 @@ const CreditsSectionWrapper = styled.div`
 const MemberCardWrapper = styled.div`
   display: grid;
   grid-gap: 20px;
+  grid-template-columns: repeat(5, 1fr);
 
-  @media (min-width: 1441px) {
-    grid-template-columns: repeat(5, 1fr);
-  }
-
-  @media (min-width: 1201px) and (max-width: 1440px) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
     grid-template-columns: repeat(4, 1fr);
   }
 
-  @media (min-width: 961px) and (max-width: 1200px) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  @media (min-width: 721px) and (max-width: 960px) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (max-width: 720px) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
     grid-template-columns: 1fr;
   }
 `;
