@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-import { FrameWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Button from "@sparcs-clubs/web/common/components/Button";
-import {
-  ColumnTextWrapper,
-  ProgressCheckSectionWrapper,
-} from "@sparcs-clubs/web/common/components/ProgressCheckSection/ProgressCheckSectionWrapper";
+import ProgressCheckSectionWrapper from "@sparcs-clubs/web/common/components/ProgressCheckSection/ProgressCheckSectionWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
 import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
@@ -45,7 +41,7 @@ const ManageCertificateDetailFrame = () => {
     router.push("/manage-club/activity-certificate");
   };
   return (
-    <FrameWrapper>
+    <FlexWrapper direction="column" gap={60}>
       <PageHead
         items={[
           { name: "대표 동아리 관리", path: "/manage-club" },
@@ -97,7 +93,7 @@ const ManageCertificateDetailFrame = () => {
           </ButtonWrapper>
         </ProgressCheckSectionWrapper>
         {/* TODO: 아래 정보들 백 연결하기 */}
-        <ColumnTextWrapper>
+        <FlexWrapper direction="column" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
             신청자 정보
           </Typography>
@@ -107,8 +103,8 @@ const ManageCertificateDetailFrame = () => {
             <ListItem>학번: 20200510</ListItem>
             <ListItem>연락처: 010-0000-0000</ListItem>
           </ListContainer>
-        </ColumnTextWrapper>
-        <ColumnTextWrapper>
+        </FlexWrapper>
+        <FlexWrapper direction="column" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
             활동확인서 발급 신청 정보{" "}
           </Typography>
@@ -145,12 +141,12 @@ const ManageCertificateDetailFrame = () => {
               {/* TODO: 나중에 list로 활동 내역 추가 */}
             </ActivityWrapper>
           </ListContainer>
-        </ColumnTextWrapper>
+        </FlexWrapper>
       </Card>
       <Button style={{ width: "max-content" }} onClick={onClick}>
         목록으로 돌아가기
       </Button>
-    </FrameWrapper>
+    </FlexWrapper>
   );
 };
 export default ManageCertificateDetailFrame;
