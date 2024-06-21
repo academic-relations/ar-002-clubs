@@ -4,9 +4,8 @@ import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSe
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import Select, {
-  SelectItem,
-} from "@sparcs-clubs/web/common/components/Forms/Select";
+import Select from "@sparcs-clubs/web/common/components/Select";
+import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import {
   mockClubDescription,

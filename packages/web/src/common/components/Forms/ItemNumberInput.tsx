@@ -8,8 +8,8 @@ import React, {
 } from "react";
 import styled, { css } from "styled-components";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import Label from "./_atomic/Label";
-import ErrorMessage from "./_atomic/ErrorMessage";
+import Label from "../FormLabel";
+import FormError from "../FormError";
 
 export interface ItemNumberInputProps
   extends InputHTMLAttributes<HTMLInputElement> {
@@ -193,7 +193,7 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
           </RightContentWrapper>
         )}
       </InputContainer>
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+      {error && <FormError>{error}</FormError>}
     </InputWrapper>
   );
 };

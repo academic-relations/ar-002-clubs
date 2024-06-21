@@ -1,4 +1,4 @@
-// ErrorMessage.tsx
+// FormError.tsx
 import React from "react";
 import styled from "styled-components";
 
@@ -12,12 +12,12 @@ const StyledErrorMessage = styled.span`
   line-height: 16px;
 `;
 
-interface ErrorMessageProps {
+interface FormErrorProps {
   children: React.ReactNode;
 }
 
-const ErrorMessage: React.FC<ErrorMessageProps> = ({ children }) => (
+const FormError: React.FC<FormErrorProps> = ({ children }) => (
   <StyledErrorMessage>{children}</StyledErrorMessage>
 );
 
-export default ErrorMessage;
+export default FormError;

@@ -6,9 +6,8 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import useGetUserProfile from "@sparcs-clubs/web/features/printing-business/service/getUserProfile";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
-import Select, {
-  SelectItem,
-} from "@sparcs-clubs/web/common/components/Forms/Select";
+import Select from "@sparcs-clubs/web/common/components/Select";
+import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
 const RentalInfoFirstFrame: React.FC<
