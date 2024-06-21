@@ -65,7 +65,7 @@ const ManageCommonSpaceDetailFrame = () => {
             <ListItem>연락처: 010-0000-0000</ListItem>
           </ListContainer>
         </FlexWrapper>
-        <FlexWrapper direction="row" gap={10}>
+        <FlexWrapper direction="row" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
             예약 공간
           </Typography>

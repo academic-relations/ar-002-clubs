@@ -93,7 +93,7 @@ const ManagePrintingDetailFrame = () => {
             </ListItem>
           </ListContainer>
         </FlexWrapper>
-        <FlexWrapper direction="row" gap={10}>
+        <FlexWrapper direction="row" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
             수령 일시
           </Typography>
