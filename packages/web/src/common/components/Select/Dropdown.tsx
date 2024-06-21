@@ -4,6 +4,7 @@ import isPropValid from "@emotion/is-prop-valid";
 const Dropdown = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<{ marginTop?: number; maxContent?: boolean }>`
+  /* TODO: marginTop magic number인데 좀 더 깔끔하게 바꾸는 방법 */
   position: absolute;
   display: flex;
   flex-direction: column;
