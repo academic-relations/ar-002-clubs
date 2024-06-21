@@ -13,13 +13,7 @@ const MemberWrapper = styled.div`
   gap: 6px;
 `;
 
-const MemberCard = ({
-  member,
-  isSmall = false,
-}: {
-  member: Member;
-  isSmall?: boolean;
-}) => {
+const MemberCard = ({ member }: { member: Member }) => {
   const [displayText, setDisplayText] = useState(member.role);
 
   const handleMouseEnter = () => {
@@ -35,22 +29,18 @@ const MemberCard = ({
   return (
     <Card padding="16px 20px" gap={8}>
       <MemberWrapper>
-        <Image src={SparcsLogo} alt="SPARCS Logo" height={isSmall ? 20 : 24} />
+        <Image src={SparcsLogo} alt="SPARCS Logo" height={24} />
         <Typography
           ff="RALEWAY"
-          fs={isSmall ? 14 : 16}
-          lh={isSmall ? 20 : 24}
+          fs={16}
+          lh={24}
           fw="EXTRABOLD" // TODO: EXTRABOLD가 적용되지 않는 것 같음
           color="SPARCS.main"
         >
           {member.nickname}
         </Typography>
         {/* TODO: 나눔스퀘어 글꼴 적용 */}
-        <Typography
-          fs={isSmall ? 10 : 12}
-          lh={isSmall ? 16 : 20}
-          color="SPARCS.member"
-        >
+        <Typography fs={12} lh={20} color="SPARCS.member">
           {member.name}
         </Typography>
       </MemberWrapper>
