@@ -18,7 +18,7 @@ const ClubDetailText = styled.div`
 `;
 
 const ClubDetailCard: React.FC<ClubDetailCardProps> = ({ club }) => (
-  <Card gap={10} padding="16px 20px">
+  <Card gap={16} padding="16px 20px">
     <ClubDetailText>{club.description}</ClubDetailText>
   </Card>
 );

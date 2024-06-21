@@ -1,6 +1,6 @@
 "use client";
 
-import ManagePrintingDetailFrame from "@sparcs-clubs/web/features/manage-club/printing/frame/ManagePringtingDetailFrame";
+import ManagePrintingDetailFrame from "@sparcs-clubs/web/features/manage-club/printing/frame/ManagePrintingDetailFrame";
 import React from "react";
 
 const ManagePrintingDetail = () => <ManagePrintingDetailFrame />;

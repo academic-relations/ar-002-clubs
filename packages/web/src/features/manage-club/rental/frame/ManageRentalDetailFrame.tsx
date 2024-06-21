@@ -1,12 +1,7 @@
 import React from "react";
-import { FrameWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Button from "@sparcs-clubs/web/common/components/Button";
-import {
-  ColumnTextWrapper,
-  ProgressCheckSectionWrapper,
-  RowTextWrapper,
-} from "@sparcs-clubs/web/common/components/ProgressCheckSection/ProgressCheckSectionWrapper";
+import ProgressCheckSectionWrapper from "@sparcs-clubs/web/common/components/ProgressCheckSection/ProgressCheckSectionWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
 import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
@@ -17,6 +12,7 @@ import {
 } from "@sparcs-clubs/web/common/components/ListItem";
 import { useRouter } from "next/navigation";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 const ManageRentalDetailFrame = () => {
   const router = useRouter();
@@ -24,7 +20,7 @@ const ManageRentalDetailFrame = () => {
     router.push("/manage-club/rental-business");
   };
   return (
-    <FrameWrapper>
+    <FlexWrapper direction="column" gap={60}>
       <PageHead
         items={[
           { name: "대표 동아리 관리", path: "/manage-club" },
@@ -64,7 +60,7 @@ const ManageRentalDetailFrame = () => {
           {/* TODO: onClick 달기 */}
         </ProgressCheckSectionWrapper>
         {/* TODO: 아래 정보들 백 연결하기 */}
-        <ColumnTextWrapper>
+        <FlexWrapper direction="column" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
             신청자 정보
           </Typography>
@@ -73,16 +69,16 @@ const ManageRentalDetailFrame = () => {
             <ListItem>담당자: 이지윤</ListItem>
             <ListItem>연락처: 010-0000-0000</ListItem>
           </ListContainer>
-        </ColumnTextWrapper>
-        <RowTextWrapper>
+        </FlexWrapper>
+        <FlexWrapper direction="row" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
             대여 기간
           </Typography>
           <Typography ff="PRETENDARD" fs={16} lh={20} color="BLACK">
             2024년 3월 11일 (월) ~ 2024년 3월 18일 (월)
           </Typography>
-        </RowTextWrapper>
-        <ColumnTextWrapper>
+        </FlexWrapper>
+        <FlexWrapper direction="column" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
             대여 물품
           </Typography>
@@ -92,8 +88,8 @@ const ManageRentalDetailFrame = () => {
             <ListItem>공구 {">"} 드라이버 세트 3개</ListItem>
             <ListItem>공구 {">"} 롱노우즈 3개</ListItem>
           </ListContainer>
-        </ColumnTextWrapper>
-        <ColumnTextWrapper>
+        </FlexWrapper>
+        <FlexWrapper direction="column" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
             대여 목적
           </Typography>
@@ -103,12 +99,12 @@ const ManageRentalDetailFrame = () => {
               이 정도의 길이는 될 수 있을 것 같아요
             </ListItem>
           </ListContainer>
-        </ColumnTextWrapper>
+        </FlexWrapper>
       </Card>
       <Button style={{ width: "max-content" }} onClick={onClick}>
         목록으로 돌아가기
       </Button>
-    </FrameWrapper>
+    </FlexWrapper>
   );
 };
 export default ManageRentalDetailFrame;

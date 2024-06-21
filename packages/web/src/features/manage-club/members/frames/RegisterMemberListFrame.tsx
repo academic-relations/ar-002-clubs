@@ -4,14 +4,9 @@ import styled from "styled-components";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import { newMemberListSectionInfoText } from "@sparcs-clubs/web/constants/manageClubMembers";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import { mockDeadline, mockSemester } from "./_mock/mockMembers";
 import RegisterMemberList from "../components/RegisterMemberList";
-
-const RegisterMemberWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
 
 const RegisterMemberListWrapper = styled.div`
   display: flex;
@@ -23,7 +18,7 @@ const RegisterMemberListWrapper = styled.div`
 const RegisterMemberListFrame = () => {
   const [toggle, setToggle] = useState<boolean>(true);
   return (
-    <RegisterMemberWrapper>
+    <FlexWrapper direction="column" gap={20}>
       <FoldableSectionTitle
         title="신청 회원 명단"
         toggle={toggle}
@@ -37,7 +32,7 @@ const RegisterMemberListFrame = () => {
           <RegisterMemberList />
         </RegisterMemberListWrapper>
       )}
-    </RegisterMemberWrapper>
+    </FlexWrapper>
   );
 };
 

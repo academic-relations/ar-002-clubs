@@ -1,25 +1,13 @@
 "use client";
 
 import React, { useMemo } from "react";
-import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
 import useGetMyClub from "@sparcs-clubs/web/features/my/clubs/service/useGetMyClub";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-
-const ClubsPageMainFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
-
-const ClubListWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 const MyClubsMainFrame: React.FC = () => {
   const { data, isLoading, isError } = useGetMyClub();
@@ -28,7 +16,7 @@ const MyClubsMainFrame: React.FC = () => {
     [data],
   );
   return (
-    <ClubsPageMainFrameInner>
+    <FlexWrapper direction="column" gap={60}>
       <PageHead
         items={[
           { name: "마이페이지", path: "/my" },
@@ -38,7 +26,7 @@ const MyClubsMainFrame: React.FC = () => {
       />
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         {isMyClubsExist && (
-          <ClubListWrapper>
+          <FlexWrapper direction="column" gap={60}>
             {(data?.semesters ?? []).map(
               myClub =>
                 myClub.clubs.length > 0 && (
@@ -50,10 +38,10 @@ const MyClubsMainFrame: React.FC = () => {
                   />
                 ),
             )}
-          </ClubListWrapper>
+          </FlexWrapper>
         )}
       </AsyncBoundary>
-    </ClubsPageMainFrameInner>
+    </FlexWrapper>
   );
 };
 

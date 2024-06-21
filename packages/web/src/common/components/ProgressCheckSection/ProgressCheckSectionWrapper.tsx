@@ -8,16 +8,4 @@ const ProgressCheckSectionWrapper = styled.div`
   align-items: flex-end;
 `;
 
-const RowTextWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-`;
-
-const ColumnTextWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-export { ProgressCheckSectionWrapper, RowTextWrapper, ColumnTextWrapper };
+export default ProgressCheckSectionWrapper;

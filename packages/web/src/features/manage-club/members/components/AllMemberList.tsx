@@ -1,3 +1,4 @@
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import { MoreInfo } from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
@@ -14,12 +15,6 @@ interface AllMemberListProps {
   }[];
   searchText?: string;
 }
-
-const AllMemberListWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
 
 const AllMemberListTitle = styled.div`
   display: flex;
@@ -43,12 +38,6 @@ const TableWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
 `;
 
-const TableRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 0px;
-`;
-
 const AllMemberList: React.FC<AllMemberListProps> = ({
   semester,
   members,
@@ -62,7 +51,7 @@ const AllMemberList: React.FC<AllMemberListProps> = ({
 
   const memberCount = searchedMembers.length;
   return (
-    <AllMemberListWrapper>
+    <FlexWrapper direction="column" gap={20}>
       <AllMemberListTitle>
         <Typography
           fs={20}
@@ -90,7 +79,7 @@ const AllMemberList: React.FC<AllMemberListProps> = ({
             총 {memberCount}명
           </Typography>
           <TableWrapper>
-            <TableRow>
+            <FlexWrapper direction="row" gap={0}>
               <TableCell type="HeaderSort" width="20%">
                 학번
               </TableCell>
@@ -106,11 +95,11 @@ const AllMemberList: React.FC<AllMemberListProps> = ({
               <TableCell type="Header" width="20%">
                 비고
               </TableCell>
-            </TableRow>
+            </FlexWrapper>
             {searchedMembers
               .sort((a, b) => a.studentNumber - b.studentNumber)
               .map(member => (
-                <TableRow key={member.studentNumber}>
+                <FlexWrapper direction="row" gap={0} key={member.studentNumber}>
                   <TableCell type="Default" width="20%">
                     {member.studentNumber}
                   </TableCell>
@@ -126,12 +115,12 @@ const AllMemberList: React.FC<AllMemberListProps> = ({
                   <TableCell type="Default" width="20%">
                     {" "}
                   </TableCell>
-                </TableRow>
+                </FlexWrapper>
               ))}
           </TableWrapper>
         </TableWithCount>
       )}
-    </AllMemberListWrapper>
+    </FlexWrapper>
   );
 };
 

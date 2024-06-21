@@ -1,20 +1,14 @@
 "use client";
 
 import React from "react";
-import styled from "styled-components";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import MyInfoFrame from "./_atomic/MyInfoFrame";
 import MyServiceFrame from "./_atomic/MyServiceFrame";
 import MyClubFrame from "./_atomic/MyClubFrame";
 
-const MyPageMainFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
-
 const MyPageMainFrame: React.FC = () => (
-  <MyPageMainFrameInner>
+  <FlexWrapper direction="column" gap={60}>
     <PageHead
       items={[{ name: "마이페이지", path: "/my" }]}
       title="마이페이지"
@@ -22,7 +16,7 @@ const MyPageMainFrame: React.FC = () => (
     <MyInfoFrame />
     <MyClubFrame />
     <MyServiceFrame />
-  </MyPageMainFrameInner>
+  </FlexWrapper>
 );
 
 export default MyPageMainFrame;

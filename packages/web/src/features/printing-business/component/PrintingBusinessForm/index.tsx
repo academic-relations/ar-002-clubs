@@ -10,6 +10,7 @@ import type {
   ApiPrt002RequestBody,
 } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt002";
 
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PrintingBusinessFormFirst from "./PrintingBusinessFormFirst";
 import PrintingBusinessFormSecond from "./PrintingBusinessFormSecond";
 import PrintingBusinessFormThird from "./PrintingBusinessFormThird";
@@ -29,12 +30,6 @@ interface PrintingBusinessFormProps {
     React.SetStateAction<Partial<ApiPrt002RequestBody>>
   >;
 }
-
-const PrintingBusinessFormInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
 
 const StyledButton = styled.div`
   display: flex;
@@ -81,7 +76,7 @@ const PrintingBusinessForm: React.FC<PrintingBusinessFormProps> = ({
   const [formError, setFormError] = useState<boolean>(false);
 
   return (
-    <PrintingBusinessFormInner>
+    <FlexWrapper direction="column" gap={60}>
       <StepProcess steps={printingBusinessOrderSteps} activeStepIndex={step} />
       <CurrentForm
         username={username}
@@ -99,7 +94,7 @@ const PrintingBusinessForm: React.FC<PrintingBusinessFormProps> = ({
           {step === Step2Form.length ? "신청" : "다음"}
         </Button>
       </StyledButton>
-    </PrintingBusinessFormInner>
+    </FlexWrapper>
   );
 };
 

@@ -1,6 +1,5 @@
 import { setHours, setMinutes, setSeconds } from "date-fns";
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 
@@ -13,13 +12,8 @@ import useGetUserProfile from "@sparcs-clubs/web/features/printing-business/serv
 
 import PrintingBusinessNotice from "@sparcs-clubs/web/features/printing-business/component/PrintingBusinessNotice";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PrintingBusinessForm from "../component/PrintingBusinessForm";
-
-const PrintingBusinessMainFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
 
 const PrintingBusinessMainFrame: React.FC = () => {
   // state 설명
@@ -69,7 +63,7 @@ const PrintingBusinessMainFrame: React.FC = () => {
   }, [data]);
 
   return (
-    <PrintingBusinessMainFrameInner>
+    <FlexWrapper direction="column" gap={60}>
       <PageHead
         items={[{ name: "홍보물 인쇄", path: "/printing-business" }]}
         title="홍보물 인쇄"
@@ -93,7 +87,7 @@ const PrintingBusinessMainFrame: React.FC = () => {
           <PrintingBusinessNotice setAgreement={setAgreement} />
         )}
       </AsyncBoundary>
-    </PrintingBusinessMainFrameInner>
+    </FlexWrapper>
   );
 };
 

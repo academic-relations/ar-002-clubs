@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import TextButton from "../TextButton";
+import FlexWrapper from "../FlexWrapper";
 
 interface TableButtonCellProps {
   text: string[];
@@ -22,12 +23,6 @@ const CommonCellWrapper = styled.div<{
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
 `;
 
-const ButtonsWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-`;
-
 const CellText = styled.div<{ isGray: boolean }>`
   font-size: 16px;
   line-height: 24px;
@@ -43,14 +38,14 @@ const TableButtonCell: React.FC<TableButtonCellProps> = ({
   minWidth = 100,
 }) => (
   <CommonCellWrapper width={width} minWidth={minWidth}>
-    <ButtonsWrapper>
+    <FlexWrapper direction="row" gap={12}>
       {text.map((item, index) => (
         <React.Fragment key={item}>
           <TextButton text={item} onClick={onClick[index]} />
           {index < text.length - 1 && <CellText isGray>/</CellText>}
         </React.Fragment>
       ))}
-    </ButtonsWrapper>
+    </FlexWrapper>
   </CommonCellWrapper>
 );
 

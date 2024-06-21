@@ -9,21 +9,11 @@ import ClubDetailCard from "@sparcs-clubs/web/features/clubDetails/components/Cl
 import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 interface ClubDetailMainFrameProps {
   club: ApiClb002ResponseOK;
 }
-const ClubDetailMainFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
-
-const ClubInfoWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
 
 const CardWrapper = styled.div`
   padding-left: 20px;
@@ -39,12 +29,6 @@ const MoreInfoWrapper = styled.div`
   }
 `;
 
-const PersonInfoWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
 const ClubDetailWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -53,7 +37,7 @@ const ClubDetailWrapper = styled.div`
 `;
 
 const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({ club }) => (
-  <ClubDetailMainFrameInner>
+  <FlexWrapper direction="column" gap={60}>
     <PageHead
       items={[
         { name: "동아리 목록", path: "/clubs" },
@@ -61,20 +45,20 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({ club }) => (
       ]}
       title={club.name}
     />
-    <ClubInfoWrapper>
+    <FlexWrapper direction="column" gap={20}>
       <SectionTitle size="lg">동아리 정보</SectionTitle>
       <CardWrapper>
         <ClubInfoCard club={club} />
       </CardWrapper>
-    </ClubInfoWrapper>
+    </FlexWrapper>
 
     <MoreInfoWrapper>
-      <PersonInfoWrapper>
+      <FlexWrapper direction="column" gap={20}>
         <SectionTitle size="lg">인적 사항 </SectionTitle>
         <CardWrapper>
           <PersonInfoCard club={club} />
         </CardWrapper>
-      </PersonInfoWrapper>
+      </FlexWrapper>
 
       <ClubDetailWrapper>
         <SectionTitle size="lg">동아리 설명</SectionTitle>
@@ -83,7 +67,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({ club }) => (
         </CardWrapper>
       </ClubDetailWrapper>
     </MoreInfoWrapper>
-  </ClubDetailMainFrameInner>
+  </FlexWrapper>
 );
 
 export default ClubDetailMainFrame;

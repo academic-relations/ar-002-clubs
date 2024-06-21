@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import { ManageWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
@@ -13,6 +12,7 @@ import {
   mockClubDescription,
   mockClubMembers,
 } from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 const InfoManageMainWrapper = styled.div`
   display: flex;
@@ -70,7 +70,7 @@ const InfoManageFrame: React.FC = () => {
   }));
 
   return (
-    <ManageWrapper>
+    <FlexWrapper direction="column" gap={40}>
       <FoldableSectionTitle
         title="동아리 정보"
         toggle={toggle}
@@ -129,7 +129,7 @@ const InfoManageFrame: React.FC = () => {
           </Card>
         </InfoManageMainWrapper>
       )}
-    </ManageWrapper>
+    </FlexWrapper>
   );
 };
 

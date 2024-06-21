@@ -6,14 +6,9 @@ import styled from "styled-components";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import NoticeSectionFrame from "./NoticeSectionFrame";
 import ServiceSectionFrame from "./ServiceSectionFrame";
-
-const MainPageMainFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
 
 const PageTitleWrapper = styled.div`
   display: flex;
@@ -31,7 +26,7 @@ const NoticeAndServiceWrapper = styled.div`
 `;
 
 const MainPageMainFrame: React.FC = () => (
-  <MainPageMainFrameInner>
+  <FlexWrapper direction="column" gap={60}>
     <PageTitleWrapper>
       <Typography
         ff="PRETENDARD"
@@ -60,7 +55,7 @@ const MainPageMainFrame: React.FC = () => (
       <NoticeSectionFrame />
       <ServiceSectionFrame />
     </NoticeAndServiceWrapper>
-  </MainPageMainFrameInner>
+  </FlexWrapper>
 );
 
 export default MainPageMainFrame;
