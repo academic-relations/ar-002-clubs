@@ -49,6 +49,10 @@ const colors = {
   RED: {
     600: "#DC2626",
   },
+  SPARCS: {
+    main: "#EBA12A",
+    member: "#EBA12A66",
+  },
 };
 
 export default colors;
