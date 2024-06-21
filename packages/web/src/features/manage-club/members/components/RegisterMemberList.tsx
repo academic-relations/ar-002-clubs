@@ -5,6 +5,7 @@ import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import TableButtonCell from "@sparcs-clubs/web/common/components/Table/TableButtonCell";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import NoticePagination from "@sparcs-clubs/web/features/notices/components/NoticePagination";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 const TableWithPaginationWrapper = styled.div`
   display: flex;
@@ -31,12 +32,6 @@ const TableWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
 `;
 
-const TableRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 0px;
-`;
-
 const RegisterMemberList = () => {
   const [page, setPage] = useState<number>(1);
 
@@ -53,7 +48,7 @@ const RegisterMemberList = () => {
           총 00명
         </Typography>
         <TableWrapper>
-          <TableRow>
+          <FlexWrapper direction="row" gap={0}>
             <TableCell type="HeaderSort" width="10%">
               상태
             </TableCell>
@@ -75,8 +70,8 @@ const RegisterMemberList = () => {
             <TableCell type="Header" width="15%">
               비고
             </TableCell>
-          </TableRow>
-          <TableRow>
+          </FlexWrapper>
+          <FlexWrapper direction="row" gap={0}>
             <TableCell type="Tag" width="10%">
               <Tag>신청</Tag>
             </TableCell>
@@ -100,7 +95,7 @@ const RegisterMemberList = () => {
               onClick={[() => {}, () => {}]}
               // TODO: 승인 반려 onClick 기능 넣기
             />
-          </TableRow>
+          </FlexWrapper>
         </TableWrapper>
       </TableWithCount>
       <NoticePagination

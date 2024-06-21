@@ -19,18 +19,13 @@ import {
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import { useRouter } from "next/navigation";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 const ActivityWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 0 24px;
-`;
-
-const ActivityRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
 `;
 
 const ButtonWrapper = styled.div`
@@ -127,7 +122,7 @@ const ManageCertificateDetailFrame = () => {
             <ListItem>발급 매수: 3매</ListItem>
             <ListItem>활동 내역</ListItem>
             <ActivityWrapper>
-              <ActivityRow>
+              <FlexWrapper direction="row" gap={12}>
                 <Typography
                   ff="PRETENDARD"
                   fw="REGULAR"
@@ -146,7 +141,7 @@ const ManageCertificateDetailFrame = () => {
                 >
                   신입생 세미나 이수
                 </Typography>
-              </ActivityRow>
+              </FlexWrapper>
               {/* TODO: 나중에 list로 활동 내역 추가 */}
             </ActivityWrapper>
           </ListContainer>

@@ -13,6 +13,8 @@ import {
 } from "@sparcs-clubs/web/features/clubs/services/clubTypeControl";
 
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 interface ClubCardProps {
   club: ApiClb001ResponseOK["divisions"][number]["clubs"][number];
@@ -44,22 +46,16 @@ const ClubName = styled.div`
   text-overflow: ellipsis;
 `;
 
-const ClubMemberCount = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-  font-size: 14px;
-  line-height: 16px;
-`;
-
 const ClubCard: React.FC<ClubCardProps> = ({ club }) => (
   <Card gap={16} padding="16px 20px">
     <ClubCardNameRow>
       <ClubName>{club.name}</ClubName>
-      <ClubMemberCount>
+      <FlexWrapper direction="row" gap={4}>
         <Icon type="person" size={16} />
-        <div>{club.totalMemberCnt}</div>
-      </ClubMemberCount>
+        <Typography fs={14} lh={16}>
+          {club.totalMemberCnt}
+        </Typography>
+      </FlexWrapper>
     </ClubCardNameRow>
 
     <ClubCardRow>

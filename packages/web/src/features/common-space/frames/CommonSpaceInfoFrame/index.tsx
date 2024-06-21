@@ -2,16 +2,11 @@ import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 import CommonSpaceInfoFirstFrame from "./CommonSpaceInfoFirstFrame";
 import CommonSpaceInfoSecondFrame from "./CommonSpaceInfoSecondFrame";
 import CommonSpaceInfoThirdFrame from "./CommonSpaceInfoThirdFrame";
-
-const CommonSpaceFrame = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
 
 const CommonSpaceNoticeFrameInner = styled.div`
   display: flex;
@@ -73,7 +68,7 @@ const CommonSpaceInfoFrame: React.FC<CommonSpaceFrameProps> = ({
   }, [nextEnabled, step, setStep]);
 
   return (
-    <CommonSpaceFrame>
+    <FlexWrapper direction="column" gap={60}>
       <StepProcess steps={steps} activeStepIndex={step + 1} />
       <CommonSpaceNoticeFrameInner>
         <CurrentFrame {...props} setNextEnabled={setNextEnabled} />
@@ -84,7 +79,7 @@ const CommonSpaceInfoFrame: React.FC<CommonSpaceFrameProps> = ({
           {step === frames.length - 1 ? "신청" : "다음"}
         </Button>
       </StyledBottom>
-    </CommonSpaceFrame>
+    </FlexWrapper>
   );
 };
 

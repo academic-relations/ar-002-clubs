@@ -12,6 +12,7 @@ import {
   ListItem,
   ListContainer,
 } from "@sparcs-clubs/web/common/components/ListItem";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
 const StyledTypography = styled(Typography)`
@@ -24,12 +25,6 @@ const CardInner = styled.div`
   align-items: flex-start;
   gap: 16px;
   align-self: stretch;
-`;
-
-const RentalPeriodWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
 `;
 
 const RentalPeriodInner = styled.div`
@@ -75,7 +70,7 @@ const RentalInfoThirdFrame: React.FC<
           <ListItem>담당자: {rental.info?.applicant}</ListItem>
           <ListItem>연락처: {rental.info?.phone}</ListItem>
         </ListContainer>
-        <RentalPeriodWrapper>
+        <FlexWrapper direction="row" gap={16}>
           <StyledTypography type="p">대여 기간</StyledTypography>
           <RentalPeriodInner>
             {format(rental.date?.start || "", "yyyy년 M월 d일 (EEE)", {
@@ -86,7 +81,7 @@ const RentalInfoThirdFrame: React.FC<
               locale: ko,
             })}
           </RentalPeriodInner>
-        </RentalPeriodWrapper>
+        </FlexWrapper>
         <StyledTypography type="p">대여 물품</StyledTypography>
         <RentalList rental={rental} />
       </CardInner>

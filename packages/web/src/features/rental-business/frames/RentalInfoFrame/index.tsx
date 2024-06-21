@@ -8,16 +8,11 @@ import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/Confi
 import { useRouter } from "next/navigation";
 import postRentalOrder from "@sparcs-clubs/web/features/rental-business/service/postRentalOrder";
 import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import { RentalFrameProps } from "../RentalNoticeFrame";
 import RentalInfoFirstFrame from "./RentalInfoFirstFrame";
 import RentalInfoSecondFrame from "./RentalInfoSecondFrame";
 import RentalInfoThirdFrame from "./RentalInfoThirdFrame";
-
-const RentalFrame = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
 
 const RentalNoticeFrameInner = styled.div`
   display: flex;
@@ -159,7 +154,7 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
   };
 
   return (
-    <RentalFrame>
+    <FlexWrapper direction="column" gap={60}>
       <StepProcess steps={steps} activeStepIndex={step + 1} />
       <RentalNoticeFrameInner>
         <CurrentFrame {...props} setNextEnabled={setNextEnabled} />
@@ -191,7 +186,7 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
           </ConfirmModalContent>
         </Modal>
       ) : null}
-    </RentalFrame>
+    </FlexWrapper>
   );
 };
 

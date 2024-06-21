@@ -7,12 +7,7 @@ import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSe
 import ClubListGrid from "@sparcs-clubs/web/features/clubs/components/ClubListGrid";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import useGetMyClub from "@sparcs-clubs/web/features/my/clubs/service/useGetMyClub";
-
-const ClubsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 const DetailTitleWrapper = styled.div`
   padding-left: 24px;
@@ -31,7 +26,7 @@ const MyClubFrame: React.FC = () => {
       />
       {toggle && (
         <AsyncBoundary isLoading={isLoading} isError={isError}>
-          <ClubsWrapper>
+          <FlexWrapper direction="column" gap={20}>
             <DetailTitleWrapper>
               <MoreDetailTitle
                 title="2024년 봄학기"
@@ -40,7 +35,7 @@ const MyClubFrame: React.FC = () => {
               />
             </DetailTitleWrapper>
             <ClubListGrid clubList={data?.semesters[0].clubs ?? []} />
-          </ClubsWrapper>
+          </FlexWrapper>
         </AsyncBoundary>
       )}
     </ManageWrapper>
