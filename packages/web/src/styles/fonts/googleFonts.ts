@@ -8,7 +8,7 @@ export const pretendard = localFont({
 
 export const raleway = Raleway({
   subsets: ["latin"],
-  weight: ["800"], // EXTRABOLD only
+  weight: ["700", "800"], // BOLD, EXTRABOLD only
   variable: "--next-font-family-raleway",
 });
 
