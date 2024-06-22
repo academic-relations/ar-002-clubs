@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import styled from "styled-components";
 
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
-import Link from "next/link";
 import paths from "@sparcs-clubs/web/constants/paths";
 
 const MoreSectionTitleInner = styled.div`

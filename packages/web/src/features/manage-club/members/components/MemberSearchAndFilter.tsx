@@ -1,9 +1,11 @@
-import Filter from "@sparcs-clubs/web/common/components/Filter/Index";
-import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
-import TextButton from "@sparcs-clubs/web/common/components/TextButton";
 import React from "react";
 import styled from "styled-components";
+
+import Filter from "@sparcs-clubs/web/common/components/Filter/Index";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
+import TextButton from "@sparcs-clubs/web/common/components/TextButton";
+
 import { SemesterListProps } from "../types/semesterList";
 
 const SearchAndFilterWrapper = styled.div`

@@ -1,8 +1,10 @@
+import React from "react";
+import styled from "styled-components";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import React from "react";
-import styled from "styled-components";
+
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 
 const ActivityCertificateThirdFrameInner = styled.div`

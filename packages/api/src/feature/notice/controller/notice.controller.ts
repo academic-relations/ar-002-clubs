@@ -4,8 +4,8 @@ import type {
   ApiNtc001RequestQuery,
   ApiNtc001ResponseOK,
 } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
-import logger from "@sparcs-clubs/api/common/util/logger";
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
+import logger from "@sparcs-clubs/api/common/util/logger";
 import { NoticeService } from "../service/notice.service";
 
 @Controller()

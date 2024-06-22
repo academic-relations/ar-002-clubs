@@ -1,3 +1,5 @@
+import apiClb003 from "@sparcs-clubs/interface/api/club/endpoint/apiClb003";
+import type { ApiClb003ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb003";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -5,9 +7,6 @@ import {
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
-import apiClb003 from "@sparcs-clubs/interface/api/club/endpoint/apiClb003";
-
-import type { ApiClb003ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb003";
 
 import mockMyClubList from "./_mock/mockMyClubList";
 

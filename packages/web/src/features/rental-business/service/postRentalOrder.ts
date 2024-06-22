@@ -1,14 +1,13 @@
+import type {
+  ApiRnt002RequestBody,
+  ApiRnt002RequestQuery,
+  ApiRnt002ResponseOK,
+} from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt002";
+import apiRnt002 from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt002";
 import {
   axiosClient,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
-
-import type {
-  ApiRnt002RequestQuery,
-  ApiRnt002RequestBody,
-  ApiRnt002ResponseOK,
-} from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt002";
-import apiRnt002 from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt002";
 
 const postRentalOrder = async (
   requestQuery: ApiRnt002RequestQuery,

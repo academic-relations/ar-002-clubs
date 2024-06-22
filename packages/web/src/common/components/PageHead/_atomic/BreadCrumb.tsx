@@ -1,8 +1,8 @@
 import React from "react";
-import styled from "styled-components";
-import colors from "@sparcs-clubs/web/styles/themes/colors";
 import Link from "next/link";
+import styled from "styled-components";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
+import colors from "@sparcs-clubs/web/styles/themes/colors";
 import BreadCrumbItem from "./BreadCrumbItem";
 
 interface BreadCrumbItemDetails {

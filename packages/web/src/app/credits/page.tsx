@@ -1,7 +1,7 @@
 "use client";
 
-import CreditsMainFrame from "@sparcs-clubs/web/features/credits/frames/CreditsMainFrame";
 import React from "react";
+import CreditsMainFrame from "@sparcs-clubs/web/features/credits/frames/CreditsMainFrame";
 
 const Credits = () => <CreditsMainFrame />;
 

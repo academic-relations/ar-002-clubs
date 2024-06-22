@@ -1,7 +1,7 @@
 import React from "react";
-import styled from "styled-components";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
+import styled from "styled-components";
 
 interface SelectRangeInfoProps {
   isRental: boolean;

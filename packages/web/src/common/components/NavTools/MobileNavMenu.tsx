@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import paths, { Paths } from "@sparcs-clubs/web/constants/paths";
-import { usePathname, useRouter } from "next/navigation";
-
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import paths, { Paths } from "@sparcs-clubs/web/constants/paths";
+
+import MobileNavItem from "./MobileNavItem";
 import Button from "../Button";
 import Icon from "../Icon";
-import MobileNavItem from "./MobileNavItem";
 
 type MobileNavMenuProps = {
   className?: string;

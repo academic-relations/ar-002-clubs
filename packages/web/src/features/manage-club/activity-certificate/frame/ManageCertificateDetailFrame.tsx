@@ -1,21 +1,21 @@
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import Card from "@sparcs-clubs/web/common/components/Card";
 import Button from "@sparcs-clubs/web/common/components/Button";
-import ProgressCheckSectionWrapper from "@sparcs-clubs/web/common/components/ProgressCheckSection/ProgressCheckSectionWrapper";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
-import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
-import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
+import Card from "@sparcs-clubs/web/common/components/Card";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import {
   ListContainer,
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
-import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import { useRouter } from "next/navigation";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
+import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
+import ProgressCheckSectionWrapper from "@sparcs-clubs/web/common/components/ProgressCheckSection/ProgressCheckSectionWrapper";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 const ActivityWrapper = styled.div`
   display: flex;

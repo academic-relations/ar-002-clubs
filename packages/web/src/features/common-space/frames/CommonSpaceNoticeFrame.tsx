@@ -1,9 +1,11 @@
+import React, { useState } from "react";
+import styled from "styled-components";
+
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import React, { useState } from "react";
-import styled from "styled-components";
+
 import { CommonSpaceInterface } from "../types/commonSpace";
 
 export interface CommonSpaceFrameProps {

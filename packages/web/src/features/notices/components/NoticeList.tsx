@@ -1,12 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import React from "react";
+import type { ApiNtc001ResponseOK } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
+import Link from "next/link";
 import styled from "styled-components";
 
 import NoticeListItem from "@sparcs-clubs/web/features/notices/components/NoticeListItem";
-
-import type { ApiNtc001ResponseOK } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 
 interface NoticeListProps {
   infos: ApiNtc001ResponseOK["notices"];

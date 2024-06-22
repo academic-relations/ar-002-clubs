@@ -1,6 +1,6 @@
 import { Controller, Get, Query, UsePipes } from "@nestjs/common";
-import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import apiUsr001 from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
+import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { UserService } from "../service/user.service";
 
 @Controller()

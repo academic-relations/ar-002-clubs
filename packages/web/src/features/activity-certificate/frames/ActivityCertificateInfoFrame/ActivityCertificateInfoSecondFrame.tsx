@@ -1,15 +1,16 @@
-import Card from "@sparcs-clubs/web/common/components/Card";
-import Info from "@sparcs-clubs/web/common/components/Info";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import Card from "@sparcs-clubs/web/common/components/Card";
 import DateRangeInput from "@sparcs-clubs/web/common/components/Forms/DateRangeInput";
 import IconButton from "@sparcs-clubs/web/common/components/Forms/IconButton";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
-import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
+import Info from "@sparcs-clubs/web/common/components/Info";
+
 // eslint-disable-next-line no-restricted-imports
 import { ActivityDescription } from "../../types/activityCertificate";
+import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 
 const ActivityCertificateSecondFrameInner = styled.div`
   display: flex;

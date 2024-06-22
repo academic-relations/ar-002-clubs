@@ -1,5 +1,4 @@
-import { Controller, Post, Body, UsePipes, Get } from "@nestjs/common";
-import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
+import { Body, Controller, Get, Post, UsePipes } from "@nestjs/common";
 import apiAcf001, {
   ApiAcf001RequestBody,
   ApiAcf001ResponseCreated,
@@ -7,6 +6,7 @@ import apiAcf001, {
 import apiAcf002, {
   ApiAcf002ResponseOk,
 } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf002";
+import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { ActivityCertificateService } from "../service/activity-certificate.service";
 
 @Controller()

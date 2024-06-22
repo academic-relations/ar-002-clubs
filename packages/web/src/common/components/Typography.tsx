@@ -1,7 +1,7 @@
-import isPropValid from "@emotion/is-prop-valid";
-import { Theme } from "@sparcs-clubs/web/styles/themes";
 import React from "react";
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
+import { Theme } from "@sparcs-clubs/web/styles/themes";
 
 interface TypographyPropsBase extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;

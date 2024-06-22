@@ -30,7 +30,13 @@
     },
     "project": ["./packages/*/tsconfig.json", "./tsconfig.json"]
   },
-  "plugins": ["import", "@typescript-eslint", "react", "@next/eslint-plugin-next"],
+  "plugins": [
+    "import",
+    "@typescript-eslint",
+    "react",
+    "@next/eslint-plugin-next",
+    "eslint-plugin-import"
+  ],
   "ignorePatterns": ["node_modules/", "dist/"],
   "rules": {
     "react/no-array-index-key": "warn",
@@ -53,7 +59,7 @@
           "./packages/interface/",
           "./"
         ]
-      },
+      }
     ],
     "import/prefer-default-export": "off",
     "class-methods-use-this": "off",
@@ -113,6 +119,27 @@
         "argsIgnorePattern": "^_",
         "varsIgnorePattern": "^_",
         "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal"],
+        "pathGroups": [
+          { "pattern": "react", "group": "builtin", "position": "after" }
+        ],
+        "pathGroupsExcludedImportTypes": ["react"],
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "sort-imports": [
+      "error",
+      {
+        "ignoreCase": true,
+        "ignoreDeclarationSort": true
       }
     ]
   },

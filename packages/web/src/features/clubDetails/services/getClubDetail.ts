@@ -1,14 +1,14 @@
+import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
+import apiClb002 from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
+import mockupData from "@sparcs-clubs/web/features/clubDetails/services/_mock/mockupClubDetail";
 import {
   axiosClient,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
-import mockupData from "@sparcs-clubs/web/features/clubDetails/services/_mock/mockupClubDetail";
-import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
-import apiClb002 from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
 export const getClubDetail = (club_id: string) =>
   useQuery<ApiClb002ResponseOK, Error>({

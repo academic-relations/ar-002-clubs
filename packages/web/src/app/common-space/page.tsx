@@ -1,7 +1,7 @@
 "use client";
 
-import CommonSpaceMainFrame from "@sparcs-clubs/web/features/common-space/frames/CommonSpaceMainFrame";
 import React from "react";
+import CommonSpaceMainFrame from "@sparcs-clubs/web/features/common-space/frames/CommonSpaceMainFrame";
 
 const CommonSpaceBusiness = () => <CommonSpaceMainFrame />;
 

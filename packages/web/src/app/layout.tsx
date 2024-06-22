@@ -1,22 +1,20 @@
-import type { Metadata } from "next";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 
 import classNames from "classnames";
+import type { Metadata } from "next";
 
 import "@sparcs-clubs/web/styles/globals.css";
 
+import Footer from "@sparcs-clubs/web/common/components/Footer";
+import Header from "@sparcs-clubs/web/common/components/Header";
+import ResponsiveContent from "@sparcs-clubs/web/common/components/Responsive";
+import StyledComponentsRegistry from "@sparcs-clubs/web/common/libs/styledComponents/StyledComponentRegistry";
+import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
 import {
   pretendard,
   raleway,
 } from "@sparcs-clubs/web/styles/fonts/googleFonts";
-import StyledComponentsRegistry from "@sparcs-clubs/web/common/libs/styledComponents/StyledComponentRegistry";
 
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
-
-import Header from "@sparcs-clubs/web/common/components/Header";
-import Footer from "@sparcs-clubs/web/common/components/Footer";
-
-import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
-import ResponsiveContent from "@sparcs-clubs/web/common/components/Responsive";
 import DebugBadge from "../common/components/DebugBadge";
 import { AuthProvider } from "../common/providers/AuthContext";
 

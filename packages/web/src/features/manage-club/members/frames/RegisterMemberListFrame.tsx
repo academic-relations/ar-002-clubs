@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import { newMemberListSectionInfoText } from "@sparcs-clubs/web/constants/manageClubMembers";
-import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+
 import { mockDeadline, mockSemester } from "./_mock/mockMembers";
 import RegisterMemberList from "../components/RegisterMemberList";
 

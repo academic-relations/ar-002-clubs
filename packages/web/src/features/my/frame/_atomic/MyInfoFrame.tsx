@@ -1,9 +1,10 @@
 import React from "react";
-import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import Card from "@sparcs-clubs/web/common/components/Card";
+
 import Button from "@sparcs-clubs/web/common/components/Button";
-import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
+import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
+import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 
 const MyInfoFrame: React.FC = () => {
   const [mockPhone, setMockPhone] = React.useState<string>("01000000000");

@@ -1,10 +1,10 @@
 // eslint-disable-next-line max-classes-per-file
 import {
-  ExceptionFilter,
-  Catch,
   ArgumentsHost,
-  HttpStatus,
+  Catch,
+  ExceptionFilter,
   HttpException,
+  HttpStatus,
 } from "@nestjs/common";
 import { ZodError } from "zod";
 import logger from "./logger";

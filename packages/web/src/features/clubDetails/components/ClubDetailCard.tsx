@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
+import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 import styled from "styled-components";
 
-import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 import Card from "@sparcs-clubs/web/common/components/Card";
 
 interface ClubDetailCardProps {

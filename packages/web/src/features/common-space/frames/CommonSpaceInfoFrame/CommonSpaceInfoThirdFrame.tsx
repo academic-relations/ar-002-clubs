@@ -1,11 +1,12 @@
+import React from "react";
+import { differenceInHours, differenceInMinutes, format } from "date-fns";
+import { ko } from "date-fns/locale";
+import styled from "styled-components";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import React from "react";
-import styled from "styled-components";
 
-import { differenceInHours, differenceInMinutes, format } from "date-fns";
-import { ko } from "date-fns/locale";
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 
 const StyledTypography = styled(Typography)`

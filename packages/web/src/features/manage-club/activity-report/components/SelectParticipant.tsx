@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import {
-  FilterFn,
-  Row,
-  RowSelectionState,
   createColumnHelper,
+  FilterFn,
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
+  Row,
+  RowSelectionState,
   useReactTable,
 } from "@tanstack/react-table";
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
-import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
-import Table from "@sparcs-clubs/web/common/components/Table";
-import Card from "@sparcs-clubs/web/common/components/Card";
-import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 import { hangulIncludes } from "es-hangul";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
+import styled from "styled-components";
+
+import Card from "@sparcs-clubs/web/common/components/Card";
+import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
+import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
+import Table from "@sparcs-clubs/web/common/components/Table";
+import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import Toggle from "@sparcs-clubs/web/common/components/Toggle";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+
 import { type Participant } from "../types/activityReport";
 
 interface SelectParticipantProps {

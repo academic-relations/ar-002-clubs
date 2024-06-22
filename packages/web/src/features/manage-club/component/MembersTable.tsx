@@ -1,18 +1,20 @@
 import React from "react";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
+
+import TableButtonCell from "@sparcs-clubs/web/common/components/Table/TableButtonCell";
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
   TableRow,
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import TableButtonCell from "@sparcs-clubs/web/common/components/Table/TableButtonCell";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
 import {
-  MemberStatusEnum,
   type Members,
+  MemberStatusEnum,
 } from "../service/_mock/mockManageClub";
 
 interface MembersTableProps {

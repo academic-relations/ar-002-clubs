@@ -3,10 +3,10 @@
 import React from "react";
 import styled from "styled-components";
 
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
-import Typography from "@sparcs-clubs/web/common/components/Typography";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import NoticeSectionFrame from "./NoticeSectionFrame";
 import ServiceSectionFrame from "./ServiceSectionFrame";
 

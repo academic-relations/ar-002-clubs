@@ -1,7 +1,7 @@
 "use client";
 
-import ManageCommonSpaceDetailFrame from "@sparcs-clubs/web/features/manage-club/common-space/frame/ManageCommonSpaceDetailFrame";
 import React from "react";
+import ManageCommonSpaceDetailFrame from "@sparcs-clubs/web/features/manage-club/common-space/frame/ManageCommonSpaceDetailFrame";
 
 const ManageCommonSpaceDetail = () => <ManageCommonSpaceDetailFrame />;
 

@@ -1,9 +1,8 @@
-import { addWeeks, format, getWeekOfMonth, subWeeks } from "date-fns";
-
 import React, { useState } from "react";
+import { addWeeks, format, getWeekOfMonth, subWeeks } from "date-fns";
+import { ko } from "date-fns/locale";
 import styled from "styled-components";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
-import { ko } from "date-fns/locale";
 
 interface WeekNavigatorProps {
   initialDate?: Date;

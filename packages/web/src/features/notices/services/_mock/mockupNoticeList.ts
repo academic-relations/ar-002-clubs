@@ -1,6 +1,5 @@
-import { z } from "zod";
-
 import type { ApiNtc001ResponseOK } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
+import { z } from "zod";
 
 // mockup model to interface
 const mockupNoticeList: ApiNtc001ResponseOK = {

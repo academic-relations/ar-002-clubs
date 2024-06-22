@@ -5,8 +5,8 @@ import type {
   ApiPrt001ResponseOk,
 } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
 
-import { PromotionalPrintingOrderRepository } from "../repository/promotional-printing-order.repository";
 import { PromotionalPrintingOrderSizeRepository } from "../repository/promotional-printing-order-size.repository";
+import { PromotionalPrintingOrderRepository } from "../repository/promotional-printing-order.repository";
 
 @Injectable()
 export class PromotionalPrintingService {

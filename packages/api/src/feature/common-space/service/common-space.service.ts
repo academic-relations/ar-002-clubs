@@ -1,26 +1,26 @@
-import { ClubStudentTRepository } from "@sparcs-clubs/api/common/repository/club.club-student-t.repository";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { ApiCms001ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
 import { ApiCms002ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
 import { ApiCms003ResponseCreated } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms003";
-import { getKSTDate, isEmptyObject } from "@sparcs-clubs/api/common/util/util";
 import { ApiCms004ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms004";
-import { StudentRepository } from "@sparcs-clubs/api/common/repository/student.repository";
-import { SemesterRepository } from "@sparcs-clubs/api/common/repository/semester.repository";
 import { ApiCms005ResponseCreated } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms005";
 import { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
 import { ApiCms007ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
-import { GetCommonSpaceUsageOrderRepository } from "../repository/getCommonSpaceUsageOrder.repository";
-import { CommonSpaceRepository } from "../repository/common-space.repository";
-import { CommonSpaceUsageOrderDRepository } from "../repository/common-space-usage-order-d.repository";
+import { ClubStudentTRepository } from "@sparcs-clubs/api/common/repository/club.club-student-t.repository";
+import { SemesterRepository } from "@sparcs-clubs/api/common/repository/semester.repository";
+import { StudentRepository } from "@sparcs-clubs/api/common/repository/student.repository";
+import { getKSTDate, isEmptyObject } from "@sparcs-clubs/api/common/util/util";
 import { Reservation, TermList } from "../dto/common-space.dto";
+import { CommonSpaceUsageOrderDRepository } from "../repository/common-space-usage-order-d.repository";
+import { CommonSpaceRepository } from "../repository/common-space.repository";
+import { GetCommonSpacesUsageOrderRepository } from "../repository/getCommonSpacesUsageOrder.repository";
+import { GetCommonSpacesUsageOrderMyRepository } from "../repository/getCommonSpacesUsageOrderMy.repository";
+import { GetCommonSpaceUsageOrderRepository } from "../repository/getCommonSpaceUsageOrder.repository";
 import {
   canMakeReservation,
   getWeekRange,
   periodicScheduleMake,
 } from "../util/common-space.util";
-import { GetCommonSpacesUsageOrderRepository } from "../repository/getCommonSpacesUsageOrder.repository";
-import { GetCommonSpacesUsageOrderMyRepository } from "../repository/getCommonSpacesUsageOrderMy.repository";
 
 @Injectable()
 export class CommonSpaceService {

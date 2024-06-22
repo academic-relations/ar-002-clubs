@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
-import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import ClubListGrid from "@sparcs-clubs/web/features/clubs/components/ClubListGrid";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
-import useGetMyClub from "@sparcs-clubs/web/features/my/clubs/service/useGetMyClub";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
+import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
+import ClubListGrid from "@sparcs-clubs/web/features/clubs/components/ClubListGrid";
+import useGetMyClub from "@sparcs-clubs/web/features/my/clubs/service/useGetMyClub";
 
 const DetailTitleWrapper = styled.div`
   padding-left: 24px;

@@ -1,17 +1,18 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
+
+import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
-import Button from "@sparcs-clubs/web/common/components/Button";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   mockClubDescription,
   mockClubMembers,
 } from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 const InfoManageMainWrapper = styled.div`
   display: flex;

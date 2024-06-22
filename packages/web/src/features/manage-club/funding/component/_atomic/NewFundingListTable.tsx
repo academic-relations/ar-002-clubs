@@ -5,14 +5,12 @@ import styled from "styled-components";
 
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-
+import type { TagColor } from "@sparcs-clubs/web/common/components/Tag";
 import {
   numberToKrWon,
   tableHeaderText,
   tableRowCountText,
 } from "@sparcs-clubs/web/constants/manageClubFunding";
-
-import type { TagColor } from "@sparcs-clubs/web/common/components/Tag";
 
 const TableWithCount = styled.div`
   /* Auto layout */

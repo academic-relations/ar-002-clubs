@@ -1,5 +1,5 @@
-import isPropValid from "@emotion/is-prop-valid";
 import React from "react";
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Typography from "@sparcs-clubs/web/common/components/Typography";

@@ -1,11 +1,11 @@
 import React from "react";
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Radio from "@sparcs-clubs/web/common/components/Radio";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   RentalFrameProps,
   RentalLimitProps,
 } from "@sparcs-clubs/web/features/rental-business/frames/RentalNoticeFrame";
-import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
 
 const Vacuum: React.FC<RentalLimitProps> = ({

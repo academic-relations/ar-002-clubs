@@ -1,9 +1,9 @@
-import { Injectable, Inject } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { and, count, desc, eq, gte, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
+import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { Club, ClubStudentT, SemesterD } from "src/drizzle/schema/club.schema";
-import { and, or, count, eq, gte, lte, desc } from "drizzle-orm";
-import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { takeUnique } from "../util/util";
 
 @Injectable()

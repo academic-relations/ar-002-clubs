@@ -1,13 +1,10 @@
-import Card from "@sparcs-clubs/web/common/components/Card";
 import React, { useEffect } from "react";
 
+import Card from "@sparcs-clubs/web/common/components/Card";
 import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
-
-import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-
-import Select from "@sparcs-clubs/web/common/components/Select";
-
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
+import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
+import Select from "@sparcs-clubs/web/common/components/Select";
 
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 

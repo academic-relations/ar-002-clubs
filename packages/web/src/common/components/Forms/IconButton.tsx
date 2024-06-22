@@ -1,8 +1,8 @@
 import React, { HTMLAttributes } from "react";
 import styled from "styled-components";
 import Button from "../Button";
-import Typography from "../Typography";
 import Icon from "../Icon";
+import Typography from "../Typography";
 
 // TODO: 나중에 Buttons 폴더로 묶으면 어떨지
 export interface IconButtonProps extends HTMLAttributes<HTMLDivElement> {

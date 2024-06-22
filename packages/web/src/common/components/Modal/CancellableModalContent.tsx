@@ -1,8 +1,8 @@
-import Button from "@sparcs-clubs/web/common/components/Button";
 import React from "react";
 import styled from "styled-components";
-import Typography from "../Typography";
+import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "../FlexWrapper";
+import Typography from "../Typography";
 
 interface CancellableModalContentProps {
   onClose: () => void;

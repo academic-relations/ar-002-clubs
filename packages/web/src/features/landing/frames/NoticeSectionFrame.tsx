@@ -1,16 +1,14 @@
 "use client";
 
 import React from "react";
-import styled from "styled-components";
 import Link from "next/link";
+import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
-
 import {
   noticeItemCount,
   noticePageOffset,
 } from "@sparcs-clubs/web/constants/mainPage";
-
 import { useGetNotice } from "@sparcs-clubs/web/features/notices/services/useGetNotice";
 
 import MoreSectionTitle from "../components/MoreSectionTitle";

@@ -1,9 +1,10 @@
+import React, { useState } from "react";
+import styled from "styled-components";
+
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import { MoreInfo } from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import React, { useState } from "react";
-import styled from "styled-components";
 
 interface AllMemberListProps {
   semester: string;

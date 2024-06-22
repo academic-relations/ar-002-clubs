@@ -1,10 +1,10 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
+import styled from "styled-components";
 import TextInput, {
   TextInputProps,
 } from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import styled from "styled-components";
-import Typography from "../Typography";
 import FormError from "../FormError";
+import Typography from "../Typography";
 
 interface DateRangeInputProps extends Omit<TextInputProps, "onChange"> {
   startValue: string;

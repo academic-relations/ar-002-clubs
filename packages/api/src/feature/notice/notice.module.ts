@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 
-import { NoticeRepository } from "./repository/notice.repository";
 import { NoticeController } from "./controller/notice.controller";
+import { NoticeRepository } from "./repository/notice.repository";
 import { NoticeService } from "./service/notice.service";
 
 @Module({

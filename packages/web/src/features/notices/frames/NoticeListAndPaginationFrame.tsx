@@ -5,12 +5,11 @@ import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import {
-  noticePerPage,
   indexPerPagination,
+  noticePerPage,
 } from "@sparcs-clubs/web/constants/noticeList";
 import NoticeList from "@sparcs-clubs/web/features/notices/components/NoticeList";
 import NoticePagination from "@sparcs-clubs/web/features/notices/components/NoticePagination";
-
 import { useGetNotice } from "@sparcs-clubs/web/features/notices/services/useGetNotice";
 
 const NoticeListAndPaginationFrameInner = styled.div`
