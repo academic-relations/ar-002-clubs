@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { and, eq } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
+
 import { Professor } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { ClubT } from "src/drizzle/schema/club.schema";

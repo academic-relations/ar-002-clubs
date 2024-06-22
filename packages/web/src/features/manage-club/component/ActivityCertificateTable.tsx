@@ -2,15 +2,16 @@ import React from "react";
 
 import { ApiAcf003ResponseOk } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf003";
 import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
+
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
   TableRow,
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formateDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
 import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface AcfTableProps {

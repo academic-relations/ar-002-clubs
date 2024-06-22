@@ -11,6 +11,7 @@ import {
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formateDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
 import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface PrintingTableProps {

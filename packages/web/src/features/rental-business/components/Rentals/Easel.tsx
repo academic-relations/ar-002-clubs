@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
 import { RentalLimitProps } from "@sparcs-clubs/web/features/rental-business/frames/RentalNoticeFrame";

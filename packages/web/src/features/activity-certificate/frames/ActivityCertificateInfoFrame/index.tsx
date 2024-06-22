@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -7,6 +8,7 @@ import StepProcess, {
 } from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
 
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
+
 import ActivityCertificateInfoFirstFrame from "./ActivityCertificateInfoFirstFrame";
 import ActivityCertificateInfoSecondFrame from "./ActivityCertificateInfoSecondFrame";
 import ActivityCertificateInfoThirdFrame from "./ActivityCertificateInfoThirdFrame";

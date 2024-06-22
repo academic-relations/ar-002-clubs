@@ -1,11 +1,13 @@
 "use client";
 
 import React from "react";
+
 import Link from "next/link";
 import styled from "styled-components";
 
 import paths from "@sparcs-clubs/web/constants/paths";
 import ClubCard from "@sparcs-clubs/web/features/clubs/components/ClubCard";
+
 import type { ClubCardProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
 interface ClubListGridItemProps {

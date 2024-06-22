@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+
 import styled from "styled-components";
 
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
@@ -11,6 +12,7 @@ import {
   FirstErrorStatus,
   SecondErrorStatus,
 } from "../types/activityCertificate";
+
 import ActivityCertificateInfoFrame from "./ActivityCertificateInfoFrame";
 import ActivityCertificateNoticeFrame from "./ActivityCertificateNoticeFrame";
 

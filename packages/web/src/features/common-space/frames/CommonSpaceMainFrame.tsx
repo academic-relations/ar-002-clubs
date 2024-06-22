@@ -5,6 +5,7 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 import CommonSpaceInfoFrame from "./CommonSpaceInfoFrame";
 import CommonSpaceNoticeFrame from "./CommonSpaceNoticeFrame";
+
 import type { CommonSpaceInterface } from "../types/commonSpace";
 
 const CommonSpaceMainFrame: React.FC = () => {

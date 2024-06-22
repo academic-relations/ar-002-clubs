@@ -8,6 +8,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
+
 // eslint-disable-next-line import/no-cycle
 import { Division } from "./division.schema";
 import { Professor, Student } from "./user.schema";

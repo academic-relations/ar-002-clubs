@@ -138,6 +138,7 @@
           { "pattern": "react", "group": "builtin", "position": "after" }
         ],
         "pathGroupsExcludedImportTypes": ["react"],
+        "newlines-between": "always",
         "alphabetize": {
           "order": "asc",
           "caseInsensitive": true

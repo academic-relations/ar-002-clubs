@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
 import ClubDetailMainFrame from "@sparcs-clubs/web/features/clubDetails/frames/ClubDetailMainFrame";

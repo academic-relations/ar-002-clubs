@@ -5,6 +5,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
+
 // eslint-disable-next-line import/no-cycle
 import { Club } from "./club.schema";
 import { Student } from "./user.schema";

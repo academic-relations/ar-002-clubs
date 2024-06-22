@@ -3,7 +3,9 @@ import apiRnt001, {
   ApiRnt001RequestQuery,
   ApiRnt001ResponseOK,
 } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
+
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
+
 import { RentalService } from "../service/rental.service";
 
 @Controller()

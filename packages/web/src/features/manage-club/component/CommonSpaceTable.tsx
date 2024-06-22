@@ -2,6 +2,7 @@ import React from "react";
 
 import { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
+
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
   TableRow,
@@ -14,6 +15,7 @@ import {
   formatTime,
 } from "@sparcs-clubs/web/utils/Date/formateDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
 import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface CommonSpaceTableProps {

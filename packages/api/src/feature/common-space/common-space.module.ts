@@ -5,6 +5,7 @@ import { StudentRepository } from "@sparcs-clubs/api/common/repository/student.r
 import { DrizzleModule } from "@sparcs-clubs/api/drizzle/drizzle.module";
 
 import { ClubModule } from "../club/club.module";
+
 import { CommonSpaceController } from "./controller/common-space.controller";
 import { CommonSpaceUsageOrderDRepository } from "./repository/common-space-usage-order-d.repository";
 import { CommonSpaceRepository } from "./repository/common-space.repository";

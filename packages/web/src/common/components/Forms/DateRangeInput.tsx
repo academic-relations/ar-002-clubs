@@ -1,8 +1,11 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
+
 import styled from "styled-components";
+
 import TextInput, {
   TextInputProps,
 } from "@sparcs-clubs/web/common/components/Forms/TextInput";
+
 import FormError from "../FormError";
 import Typography from "../Typography";
 

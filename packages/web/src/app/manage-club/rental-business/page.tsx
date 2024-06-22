@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import ManageClubTableMainFrame from "@sparcs-clubs/web/features/manageClubTable/frames/ManageClubTableMainFrame";
 

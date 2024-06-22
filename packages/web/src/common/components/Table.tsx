@@ -1,6 +1,8 @@
 import React from "react";
+
 import { flexRender, type Table as TableType } from "@tanstack/react-table";
 import styled from "styled-components";
+
 import Typography from "./Typography";
 
 interface TableProps<T> {

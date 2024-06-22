@@ -1,7 +1,9 @@
 import { HttpException } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { ZodError } from "zod";
+
 import { env } from "@sparcs-clubs/api/env";
+
 import { AppModule } from "./app.module";
 import {
   HttpExceptionFilter,

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 
@@ -15,6 +16,7 @@ import {
   type Members,
   MemberStatusEnum,
 } from "../service/_mock/mockManageClub";
+
 import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface MembersTableProps {

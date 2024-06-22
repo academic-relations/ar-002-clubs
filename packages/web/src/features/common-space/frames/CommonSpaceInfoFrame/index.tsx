@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -8,6 +9,7 @@ import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepPro
 import CommonSpaceInfoFirstFrame from "./CommonSpaceInfoFirstFrame";
 import CommonSpaceInfoSecondFrame from "./CommonSpaceInfoSecondFrame";
 import CommonSpaceInfoThirdFrame from "./CommonSpaceInfoThirdFrame";
+
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 
 const CommonSpaceNoticeFrameInner = styled.div`

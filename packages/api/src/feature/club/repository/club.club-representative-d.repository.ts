@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, gte, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
+
 import { getKSTDate, takeUnique } from "src/common/util/util";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { ClubRepresentativeD } from "src/drizzle/schema/club.schema";

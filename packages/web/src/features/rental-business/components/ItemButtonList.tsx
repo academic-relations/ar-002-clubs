@@ -1,6 +1,9 @@
 import React from "react";
+
 import styled from "styled-components";
+
 import { RentalInterface } from "../types/rental";
+
 import ItemButton from "./ItemButton";
 
 interface ItemButtonListProps {

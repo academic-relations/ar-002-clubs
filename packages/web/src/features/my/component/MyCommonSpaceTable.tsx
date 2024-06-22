@@ -15,6 +15,7 @@ import {
   formatTime,
 } from "@sparcs-clubs/web/utils/Date/formateDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
 import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface CommonSpaceTableProps {

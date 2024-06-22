@@ -2,6 +2,7 @@
 
 // import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import React from "react";
+
 import Link from "next/link";
 import styled from "styled-components";
 

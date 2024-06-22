@@ -10,6 +10,7 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 import useGetUserProfile from "@sparcs-clubs/web/features/printing-business/service/getUserProfile";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
+
 import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 const RentalInfoFirstFrame: React.FC<

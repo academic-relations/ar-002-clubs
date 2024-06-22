@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import { differenceInHours, differenceInMinutes, format } from "date-fns";
 import { ko } from "date-fns/locale";
 import styled from "styled-components";
@@ -10,6 +11,7 @@ import Timetable from "@sparcs-clubs/web/common/components/Timetable";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { mockCommonSpaceList } from "./mockCommonSpaceList";
+
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 
 const StyledCardOuter = styled.div`

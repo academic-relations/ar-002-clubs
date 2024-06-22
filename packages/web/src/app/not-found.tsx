@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+
 import myGif from "../assets/notImplementedChan.gif";
 
 import type { NextPage } from "next";

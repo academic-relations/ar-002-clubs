@@ -1,5 +1,4 @@
 import { Controller, Get, Query } from "@nestjs/common";
-
 import apiPrt001 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
 
 import { PromotionalPrintingService } from "../service/promotional-printing.service";

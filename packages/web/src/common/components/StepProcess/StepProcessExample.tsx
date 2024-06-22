@@ -1,5 +1,7 @@
 import { useState } from "react";
+
 import styled from "styled-components";
+
 import StepProcess, { StepInputType } from "./StepProcess";
 
 const ButtonsContainer = styled.div`

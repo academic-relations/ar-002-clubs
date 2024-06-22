@@ -5,6 +5,7 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import RentalInfoFrame from "@sparcs-clubs/web/features/rental-business/frames/RentalInfoFrame";
 
 import RentalNoticeFrame from "./RentalNoticeFrame";
+
 import type { RentalInterface } from "../types/rental";
 
 const RentalMainFrame: React.FC = () => {
