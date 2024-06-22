@@ -42,8 +42,13 @@ const MemberCard = ({ member }: { member: Member }) => {
         >
           {member.nickname}
         </Typography>
-        {/* TODO: 나눔스퀘어 글꼴 적용 */}
-        <Typography fs={12} lh={20} color="SPARCS.member">
+        <Typography
+          ff="NANUM_SQUARE"
+          fw="EXTRABOLD" // TODO: 현재 NANUM_SQUARE는 EXTRABOLD만 존재함
+          fs={12}
+          lh={20}
+          color="SPARCS.member"
+        >
           {member.name}
         </Typography>
       </MemberWrapper>
