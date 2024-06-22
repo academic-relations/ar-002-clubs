@@ -8,38 +8,45 @@ import {
   Query,
   UsePipes,
 } from "@nestjs/common";
-import { ApiCms001ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
-import apiCms002, {
-  ApiCms002RequestParam,
-  ApiCms002RequestQuery,
-  ApiCms002ResponseOK,
-} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
-import apiCms003, {
-  ApiCms003RequestBody,
-  ApiCms003RequestParam,
-  ApiCms003ResponseCreated,
-} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms003";
-import apiCms004, {
-  ApiCms004RequestParam,
-  ApiCms004ResponseOK,
-} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms004";
-import apiCms005, {
-  ApiCms005RequestBody,
-  ApiCms005RequestParam,
-  ApiCms005ResponseCreated,
-} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms005";
-import apiCms006, {
-  ApiCms006RequestQuery,
-  ApiCms006ResponseOk,
-} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
-import apiCms007, {
-  ApiCms007RequestQuery,
-  ApiCms007ResponseOk,
-} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
+import apiCms002 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
+import apiCms003 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms003";
+import apiCms004 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms004";
+import apiCms005 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms005";
+import apiCms006 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
+import apiCms007 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
 import { CommonSpaceService } from "../service/common-space.service";
+
+import type { ApiCms001ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
+import type {
+  ApiCms002RequestParam,
+  ApiCms002RequestQuery,
+  ApiCms002ResponseOK,
+} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
+import type {
+  ApiCms003RequestBody,
+  ApiCms003RequestParam,
+  ApiCms003ResponseCreated,
+} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms003";
+import type {
+  ApiCms004RequestParam,
+  ApiCms004ResponseOK,
+} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms004";
+import type {
+  ApiCms005RequestBody,
+  ApiCms005RequestParam,
+  ApiCms005ResponseCreated,
+} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms005";
+import type {
+  ApiCms006RequestQuery,
+  ApiCms006ResponseOk,
+} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
+import type {
+  ApiCms007RequestQuery,
+  ApiCms007ResponseOk,
+} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
 
 @Controller()
 export class CommonSpaceController {

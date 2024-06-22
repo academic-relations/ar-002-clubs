@@ -1,5 +1,4 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 import { and, eq, gte, isNull, lte, or, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -19,6 +18,8 @@ import {
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
+
+import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 
 interface IClubs {
   id: number;

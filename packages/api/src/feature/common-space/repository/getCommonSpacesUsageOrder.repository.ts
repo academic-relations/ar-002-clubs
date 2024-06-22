@@ -1,5 +1,4 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
 import { and, between, desc, eq, isNull, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -9,6 +8,8 @@ import {
   CommonSpaceUsageOrderD,
 } from "@sparcs-clubs/api/drizzle/schema/common-space.schema";
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+
+import type { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
 
 @Injectable()
 export class GetCommonSpacesUsageOrderRepository {

@@ -1,6 +1,5 @@
 import React from "react";
 
-import { ApiRnt003ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt003";
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
 
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
@@ -15,6 +14,7 @@ import {
 } from "@sparcs-clubs/web/utils/Date/formateDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
+import type { ApiRnt003ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt003";
 import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface RentalTableProps {

@@ -2,7 +2,6 @@
 
 import React from "react";
 
-import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -14,6 +13,8 @@ import {
 } from "@sparcs-clubs/web/types/clubdetail.types";
 
 import ClubInfoItem from "./ClubInfoItem";
+
+import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
 interface ClubInfoCardProps {
   club: ApiClb002ResponseOK;
