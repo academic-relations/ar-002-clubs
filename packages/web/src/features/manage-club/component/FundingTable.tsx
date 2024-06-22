@@ -6,13 +6,14 @@ import {
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
-import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
 import {
   ActivityStatusEnum,
   type Funding,
 } from "../service/_mock/mockManageClub";
+
+import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface FundingTableProps {
   fundingList: Funding[];

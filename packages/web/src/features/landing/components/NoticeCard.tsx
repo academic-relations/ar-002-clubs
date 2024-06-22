@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import type { ApiNtc001ResponseOK } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 import styled from "styled-components";
+
+import type { ApiNtc001ResponseOK } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 
 const NoticeCardInner = styled.div`
   display: flex;

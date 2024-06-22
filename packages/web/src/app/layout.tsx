@@ -1,7 +1,6 @@
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 
 import classNames from "classnames";
-import type { Metadata } from "next";
 
 import "@sparcs-clubs/web/styles/globals.css";
 
@@ -17,6 +16,8 @@ import {
 
 import DebugBadge from "../common/components/DebugBadge";
 import { AuthProvider } from "../common/providers/AuthContext";
+
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "SPARCS Clubs for ClubsUA",

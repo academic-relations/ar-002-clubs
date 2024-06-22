@@ -6,8 +6,8 @@ import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSe
 import Info from "@sparcs-clubs/web/common/components/Info";
 import { newMemberListSectionInfoText } from "@sparcs-clubs/web/constants/manageClubMembers";
 
-import { mockDeadline, mockSemester } from "./_mock/mockMembers";
 import RegisterMemberList from "../components/RegisterMemberList";
+import { mockDeadline, mockSemester } from "./_mock/mockMembers";
 
 const RegisterMemberListWrapper = styled.div`
   display: flex;

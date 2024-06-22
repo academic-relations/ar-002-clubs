@@ -7,8 +7,8 @@ import { printingBusinessOrderSteps } from "@sparcs-clubs/web/constants/printing
 import DesiredPickUpTimeSelection from "@sparcs-clubs/web/features/printing-business/component/DesiredPickUpTimeSelection/DesiredPickUpTimeSelection";
 import { mockExistDates } from "@sparcs-clubs/web/features/rental-business/frames/RentalInfoFrame/_atomic/mockExistDate";
 
-import type { PrintingBusinessFormProps } from ".";
 import FormCheck from "./_atomic/FormCheck";
+import type { PrintingBusinessFormProps } from ".";
 
 type PrintingBusinessFormThirdProps = Pick<
   PrintingBusinessFormProps,

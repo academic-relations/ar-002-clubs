@@ -9,8 +9,8 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { leftoverPrintsInfoText } from "@sparcs-clubs/web/constants/printingBusiness";
 
-import type { PrintingBusinessFormProps } from ".";
 import BinaryRadio from "./_atomic/BinaryRadio";
+import type { PrintingBusinessFormProps } from ".";
 
 type PrintingBusinessFormSecondProps = Pick<
   PrintingBusinessFormProps,

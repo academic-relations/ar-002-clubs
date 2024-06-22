@@ -9,13 +9,14 @@ import {
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
-import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import {
   type Activity,
   ActivityStatusEnum,
   ActivityTypeEnum,
 } from "../service/_mock/mockManageClub";
+
+import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface ActivityTableProps {
   activityList: Activity[];

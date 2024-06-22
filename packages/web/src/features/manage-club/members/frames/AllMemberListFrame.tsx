@@ -8,9 +8,9 @@ import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
-import { mockAllSemesters, mockSemesterMembers } from "./_mock/mockMembers";
 import AllMemberList from "../components/AllMemberList";
 import MemberSearchAndFilter from "../components/MemberSearchAndFilter";
+import { mockAllSemesters, mockSemesterMembers } from "./_mock/mockMembers";
 
 const AllMemberListWrapper = styled.div`
   display: flex;

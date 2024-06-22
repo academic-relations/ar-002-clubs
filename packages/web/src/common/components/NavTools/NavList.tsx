@@ -3,10 +3,11 @@
 import React from "react";
 import styled from "styled-components";
 
-import type { Paths } from "@sparcs-clubs/web/constants/paths";
 import paths from "@sparcs-clubs/web/constants/paths";
 
 import NavItem from "./NavItem";
+
+import type { Paths } from "@sparcs-clubs/web/constants/paths";
 
 interface NavListProps {
   keys: (keyof Paths)[];

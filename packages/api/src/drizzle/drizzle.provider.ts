@@ -3,13 +3,14 @@
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 
+import { env } from "../env";
+
 import * as commonSpaceSchema from "./schema/common-space.schema";
 import * as divisionSchema from "./schema/division.schema";
 import * as noticeSchema from "./schema/notice.schema";
 import * as promotionalPrintingSchema from "./schema/promotional-printing.schema";
 import * as rentalSchema from "./schema/rental.schema";
 import * as userSchema from "./schema/user.schema";
-import { env } from "../env";
 
 export const DrizzleAsyncProvider = "drizzleProvider";
 

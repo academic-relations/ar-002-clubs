@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -13,6 +12,8 @@ import {
   getClubType,
   getTagColorFromClubType,
 } from "@sparcs-clubs/web/features/clubs/services/clubTypeControl";
+
+import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 
 interface ClubCardProps {
   club: ApiClb001ResponseOK["divisions"][number]["clubs"][number];

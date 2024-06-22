@@ -10,12 +10,12 @@ import {
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
-import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import {
   type Members,
   MemberStatusEnum,
 } from "../service/_mock/mockManageClub";
+import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface MembersTableProps {
   memberList: Members[];

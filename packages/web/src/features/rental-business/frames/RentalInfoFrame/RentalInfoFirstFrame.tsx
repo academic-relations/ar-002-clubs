@@ -7,10 +7,10 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
-import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import useGetUserProfile from "@sparcs-clubs/web/features/printing-business/service/getUserProfile";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
+import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 const RentalInfoFirstFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }

@@ -11,10 +11,10 @@ import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepPro
 import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
 import postRentalOrder from "@sparcs-clubs/web/features/rental-business/service/postRentalOrder";
 
+import { RentalFrameProps } from "../RentalNoticeFrame";
 import RentalInfoFirstFrame from "./RentalInfoFirstFrame";
 import RentalInfoSecondFrame from "./RentalInfoSecondFrame";
 import RentalInfoThirdFrame from "./RentalInfoThirdFrame";
-import { RentalFrameProps } from "../RentalNoticeFrame";
 
 const RentalNoticeFrameInner = styled.div`
   display: flex;
