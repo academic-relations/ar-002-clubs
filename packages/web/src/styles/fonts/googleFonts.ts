@@ -1,3 +1,4 @@
+import { Raleway } from "next/font/google";
 import localFont from "next/font/local";
 
 export const pretendard = localFont({
@@ -5,8 +6,9 @@ export const pretendard = localFont({
   variable: "--next-font-family-pretendard",
 });
 
-export const raleway = localFont({
-  src: "./local/RalewayVariable.woff2",
+export const raleway = Raleway({
+  subsets: ["latin"],
+  weight: ["800"], // EXTRABOLD only
   variable: "--next-font-family-raleway",
 });
 

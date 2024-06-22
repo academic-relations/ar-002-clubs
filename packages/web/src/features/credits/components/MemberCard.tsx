@@ -35,9 +35,9 @@ const MemberCard = ({ member }: { member: Member }) => {
         <Image src={SparcsLogo} alt="SPARCS Logo" height={24} />
         <Typography
           ff="RALEWAY"
+          fw="EXTRABOLD"
           fs={16}
           lh={24}
-          fw="EXTRABOLD" // TODO: EXTRABOLD가 적용되지 않는 것 같음
           color="SPARCS.main"
         >
           {member.nickname}
