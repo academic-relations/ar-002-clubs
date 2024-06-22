@@ -1,7 +1,8 @@
 import React from "react";
+
 import Icon from "./Icon";
-import Typography from "./Typography";
 import SelectOption from "./Select/SelectOption";
+import Typography from "./Typography";
 
 interface SelectedItemProps {
   text: string;

@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+
+import Image from "next/image";
+import styled from "styled-components";
+
+import SparcsLogo from "@sparcs-clubs/web/assets/sparcs-orange.svg";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import styled from "styled-components";
-import SparcsLogo from "@sparcs-clubs/web/assets/sparcs-orange.svg";
-import Image from "next/image";
+
 import type { Member } from "../credits";
 
 const MemberWrapper = styled.div`

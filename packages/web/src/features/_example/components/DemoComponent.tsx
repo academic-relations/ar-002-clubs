@@ -4,6 +4,7 @@ import React from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import useExampleStore from "@sparcs-clubs/web/common/providers/store/useExampleStore";
+
 import { getTemporaryClubSubfeature } from "../services/getTemporaryClubSubfeature";
 
 const DemoComponent: React.FC = () => {

@@ -1,19 +1,19 @@
 import React from "react";
 
-import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
-import { ManageTablesWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import RentalTable from "@sparcs-clubs/web/features/manage-club/component/RentalTable";
-import PrintingTable from "@sparcs-clubs/web/features/manage-club/component/PrintingTable";
+import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
 import ActivityCertificateTable from "@sparcs-clubs/web/features/manage-club/component/ActivityCertificateTable";
 import CommonSpaceTable from "@sparcs-clubs/web/features/manage-club/component/CommonSpaceTable";
+import { ManageTablesWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
+import PrintingTable from "@sparcs-clubs/web/features/manage-club/component/PrintingTable";
+import RentalTable from "@sparcs-clubs/web/features/manage-club/component/RentalTable";
 import {
   mockupManageAcf,
   mockupManageCms,
   mockupManagePrint,
   mockupManageRental,
 } from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 const ServiceManageFrame: React.FC = () => {
   const [toggle, setToggle] = React.useState<boolean>(true);

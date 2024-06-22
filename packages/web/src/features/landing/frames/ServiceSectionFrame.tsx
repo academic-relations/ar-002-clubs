@@ -2,9 +2,12 @@
 
 // import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import React from "react";
-import styled from "styled-components";
+
 import Link from "next/link";
+import styled from "styled-components";
+
 import paths from "@sparcs-clubs/web/constants/paths";
+
 import MoreSectionTitle from "../components/MoreSectionTitle";
 import ServiceCard from "../components/ServiceCard";
 

@@ -1,10 +1,12 @@
 import React from "react";
 
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import RentalInfoFrame from "@sparcs-clubs/web/features/rental-business/frames/RentalInfoFrame";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import type { RentalInterface } from "../types/rental";
+
 import RentalNoticeFrame from "./RentalNoticeFrame";
+
+import type { RentalInterface } from "../types/rental";
 
 const RentalMainFrame: React.FC = () => {
   const [rental, setRental] = React.useState<RentalInterface>({

@@ -1,20 +1,20 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   getClubType,
   getTagColorFromClubType,
 } from "@sparcs-clubs/web/features/clubs/services/clubTypeControl";
 
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 interface ClubCardProps {
   club: ApiClb001ResponseOK["divisions"][number]["clubs"][number];

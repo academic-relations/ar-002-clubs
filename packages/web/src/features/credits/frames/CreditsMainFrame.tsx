@@ -1,9 +1,12 @@
 import React from "react";
+
 import styled from "styled-components";
-import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import credits from "../credits";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+
 import MemberCard from "../components/MemberCard";
+import credits from "../credits";
 
 const CreditsMainFrameInner = styled.div`
   display: flex;

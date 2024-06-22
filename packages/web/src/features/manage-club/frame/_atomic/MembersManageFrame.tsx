@@ -1,14 +1,14 @@
 import React from "react";
 
-import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
+import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
 import { ManageSingleWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
+import MembersTable from "@sparcs-clubs/web/features/manage-club/component/MembersTable";
 import {
   MemberStatusEnum,
   mockupManageMems,
 } from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
-import MembersTable from "@sparcs-clubs/web/features/manage-club/component/MembersTable";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 const MembersManageFrame: React.FC = () => {
   const [toggle, setToggle] = React.useState<boolean>(true);

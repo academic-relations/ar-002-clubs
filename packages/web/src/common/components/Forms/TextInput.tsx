@@ -1,7 +1,9 @@
 import React, { ChangeEvent, InputHTMLAttributes, useEffect } from "react";
+
 import styled, { css } from "styled-components";
-import Label from "../FormLabel";
+
 import FormError from "../FormError";
+import Label from "../FormLabel";
 
 // PhoneInput, RentalInput에서 사용하기 위해 export
 export interface TextInputProps

@@ -1,7 +1,8 @@
 "use client";
 
-import MyPageMainFrame from "@sparcs-clubs/web/features/my/frame/MyPageMainFrame";
 import React from "react";
+
+import MyPageMainFrame from "@sparcs-clubs/web/features/my/frame/MyPageMainFrame";
 
 const My = () => <MyPageMainFrame />;
 

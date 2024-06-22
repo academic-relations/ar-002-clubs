@@ -1,18 +1,20 @@
 import React from "react";
-import Card from "@sparcs-clubs/web/common/components/Card";
+
+import { useRouter } from "next/navigation";
+
 import Button from "@sparcs-clubs/web/common/components/Button";
-import ProgressCheckSectionWrapper from "@sparcs-clubs/web/common/components/ProgressCheckSection/ProgressCheckSectionWrapper";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
-import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
-import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
+import Card from "@sparcs-clubs/web/common/components/Card";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import {
   ListContainer,
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
-import { useRouter } from "next/navigation";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
+import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
+import ProgressCheckSectionWrapper from "@sparcs-clubs/web/common/components/ProgressCheckSection/ProgressCheckSectionWrapper";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 const ManageRentalDetailFrame = () => {
   const router = useRouter();

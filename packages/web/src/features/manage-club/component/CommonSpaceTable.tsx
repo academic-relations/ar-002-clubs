@@ -1,19 +1,21 @@
 import React from "react";
+
+import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
+
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
   TableRow,
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-
 import {
   formatDate,
   formatDateTime,
   formatTime,
 } from "@sparcs-clubs/web/utils/Date/formateDate";
-import { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
-import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
+import type { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
 import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface CommonSpaceTableProps {

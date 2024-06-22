@@ -1,16 +1,15 @@
 import React from "react";
 
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
-import FundingTable from "@sparcs-clubs/web/features/manage-club/component/FundingTable";
 import ActivityReportTable from "@sparcs-clubs/web/features/manage-club/component/ActivityReportTable";
+import FundingTable from "@sparcs-clubs/web/features/manage-club/component/FundingTable";
 import { ManageTablesWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
-
 import {
   mockupManageFunding,
   mockupManageReport,
 } from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
-import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 const ActivityManageFrame: React.FC = () => {
   const [toggle, setToggle] = React.useState<boolean>(true);

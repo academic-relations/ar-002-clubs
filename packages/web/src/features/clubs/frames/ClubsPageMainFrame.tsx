@@ -3,10 +3,9 @@
 import React from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
-
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
 import { useGetClubsList } from "@sparcs-clubs/web/features/clubs/services/useGetClubsList";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 const ClubsPageMainFrame: React.FC = () => {
   const { data, isLoading, isError } = useGetClubsList();

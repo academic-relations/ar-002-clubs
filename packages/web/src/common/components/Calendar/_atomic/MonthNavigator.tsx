@@ -1,7 +1,9 @@
 import React from "react";
-import styled from "styled-components";
+
 import { addMonths, format, subMonths } from "date-fns";
 import { ko } from "date-fns/locale";
+import styled from "styled-components";
+
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 
 interface MonthNavigatorProps {

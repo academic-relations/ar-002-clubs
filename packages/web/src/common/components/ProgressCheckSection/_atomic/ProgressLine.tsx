@@ -1,4 +1,5 @@
 import styled from "styled-components";
+
 import { Status } from "./ProgressDot";
 
 const ProgressLine = styled.div<{ status: Status }>`

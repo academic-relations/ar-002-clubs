@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
+
 import { RentalObjectRepository } from "../repository/rental.rental-object.repository";
 
 @Injectable()

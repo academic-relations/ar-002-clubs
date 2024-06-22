@@ -1,15 +1,17 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
 
-import ClubInfoCard from "@sparcs-clubs/web/features/clubDetails/components/ClubInfoCard";
-import PersonInfoCard from "@sparcs-clubs/web/features/clubDetails/components/PersonInfoCard";
-import ClubDetailCard from "@sparcs-clubs/web/features/clubDetails/components/ClubDetailCard";
-import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import ClubDetailCard from "@sparcs-clubs/web/features/clubDetails/components/ClubDetailCard";
+import ClubInfoCard from "@sparcs-clubs/web/features/clubDetails/components/ClubInfoCard";
+import PersonInfoCard from "@sparcs-clubs/web/features/clubDetails/components/PersonInfoCard";
+
+import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
 interface ClubDetailMainFrameProps {
   club: ApiClb002ResponseOK;

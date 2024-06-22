@@ -1,13 +1,17 @@
-import Button from "@sparcs-clubs/web/common/components/Button";
-import Icon from "@sparcs-clubs/web/common/components/Icon";
-import colors from "@sparcs-clubs/web/styles/themes/colors";
 import React, { useState } from "react";
+
 import styled from "styled-components";
-import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
+
+import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import MemberSearchAndFilter from "../components/MemberSearchAndFilter";
+import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
+import Icon from "@sparcs-clubs/web/common/components/Icon";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+import colors from "@sparcs-clubs/web/styles/themes/colors";
+
 import AllMemberList from "../components/AllMemberList";
+import MemberSearchAndFilter from "../components/MemberSearchAndFilter";
+
 import { mockAllSemesters, mockSemesterMembers } from "./_mock/mockMembers";
 
 const AllMemberListWrapper = styled.div`

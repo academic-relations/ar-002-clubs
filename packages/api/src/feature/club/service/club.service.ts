@@ -1,16 +1,19 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
-import {
-  ApiClb002RequestParam,
-  ApiClb002ResponseOK,
-} from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
-import { ApiClb003ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb003";
+
+import { ClubStudentTRepository } from "@sparcs-clubs/api/common/repository/club.club-student-t.repository";
+import { ClubTRepository } from "@sparcs-clubs/api/common/repository/club.club-t.respository";
 import { ClubRepository } from "@sparcs-clubs/api/common/repository/club.repository";
 import { ClubRepresentativeDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-representative-d.repository";
 import { ClubRoomTRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-room-t.repository";
-import { ClubStudentTRepository } from "@sparcs-clubs/api/common/repository/club.club-student-t.repository";
-import { ClubTRepository } from "@sparcs-clubs/api/common/repository/club.club-t.respository";
+
 import { DivisionPermanentClubDRepository } from "../repository/club.division-permanent-club-d.repository";
+
+import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
+import type {
+  ApiClb002RequestParam,
+  ApiClb002ResponseOK,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
+import type { ApiClb003ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb003";
 
 @Injectable()
 export class ClubService {

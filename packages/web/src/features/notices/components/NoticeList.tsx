@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import React from "react";
+
+import Link from "next/link";
 import styled from "styled-components";
 
 import NoticeListItem from "@sparcs-clubs/web/features/notices/components/NoticeListItem";

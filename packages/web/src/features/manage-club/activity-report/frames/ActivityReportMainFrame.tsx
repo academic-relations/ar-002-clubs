@@ -1,16 +1,18 @@
 import React from "react";
-import styled from "styled-components";
+
 import Link from "next/link";
+import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
+import FoldableSection from "@sparcs-clubs/web/common/components/FoldableSection";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Info from "@sparcs-clubs/web/common/components/Info";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
-import FoldableSection from "@sparcs-clubs/web/common/components/FoldableSection";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+
+import { mockNewActivityData, mockPastActivityData } from "../_mock/mock";
 import NewActivityReportList from "../components/NewActivityReportList";
 import PastActivityReportList from "../components/PastActivityReportList";
-import { mockNewActivityData, mockPastActivityData } from "../_mock/mock";
 
 const ActivityReportMainFrameInner = styled.div`
   display: flex;

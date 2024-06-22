@@ -1,16 +1,18 @@
-import Card from "@sparcs-clubs/web/common/components/Card";
-import Select from "@sparcs-clubs/web/common/components/Select";
-import Info from "@sparcs-clubs/web/common/components/Info";
-import Timetable from "@sparcs-clubs/web/common/components/Timetable";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 
 import { differenceInHours, differenceInMinutes, format } from "date-fns";
 import { ko } from "date-fns/locale";
+import styled from "styled-components";
+
+import Card from "@sparcs-clubs/web/common/components/Card";
+import Info from "@sparcs-clubs/web/common/components/Info";
+import Select from "@sparcs-clubs/web/common/components/Select";
+import Timetable from "@sparcs-clubs/web/common/components/Timetable";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+
+import { mockCommonSpaceList } from "./mockCommonSpaceList";
 
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
-import { mockCommonSpaceList } from "./mockCommonSpaceList";
 
 const StyledCardOuter = styled.div`
   display: flex;

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+
 import { isAfter, isSameDay } from "date-fns";
+
 import Calendar from "@sparcs-clubs/web/common/components/Calendar/Calendar";
 import responsive from "@sparcs-clubs/web/styles/themes/responsive";
 

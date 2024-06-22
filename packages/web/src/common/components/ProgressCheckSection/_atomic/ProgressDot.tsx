@@ -1,4 +1,5 @@
 import styled from "styled-components";
+
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 
 export enum Status {

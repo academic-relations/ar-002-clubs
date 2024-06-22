@@ -1,16 +1,19 @@
 import React from "react";
-import { format } from "date-fns";
-import { ko } from "date-fns/locale";
-import Tag, { type TagColor } from "@sparcs-clubs/web/common/components/Tag";
-import Table from "@sparcs-clubs/web/common/components/Table";
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
+
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { ko } from "date-fns/locale";
 import styled from "styled-components";
+
+import Table from "@sparcs-clubs/web/common/components/Table";
+import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
+import Tag, { type TagColor } from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+
 import { type PastActivityReport } from "../types/activityReport";
 
 interface ActivityReportListProps {
