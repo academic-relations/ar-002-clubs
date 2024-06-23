@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 
 import responsive from "@sparcs-clubs/web/styles/themes/responsive";
@@ -34,7 +36,9 @@ const StyledLabel = styled.label`
   text-align: left;
 `;
 
-const CalendarAndTimeSlot = styled.div<{ calendarSize: "sm" | "md" | "lg" }>`
+const CalendarAndTimeSlot = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ calendarSize: "sm" | "md" | "lg" }>`
   width: 100%;
 
   /* Auto layout */

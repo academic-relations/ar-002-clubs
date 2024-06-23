@@ -1,3 +1,9 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+
+import styled from "styled-components";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
@@ -12,9 +18,9 @@ import Vacuum from "@sparcs-clubs/web/features/rental-business//components/Renta
 import ItemButtonList from "@sparcs-clubs/web/features/rental-business/components/ItemButtonList";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
 import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+
 import { RentalFrameProps } from "../RentalNoticeFrame";
+
 import { mockExistDates } from "./_atomic/mockExistDate";
 
 const StyledCardInner = styled.div`
@@ -38,6 +44,7 @@ const FlexGrowTypography = styled.div`
 
 const NoneRental: React.FC<RentalFrameProps> = () => <>none</>;
 
+// TODO: rentals에 입력한 것 중에 limit 넘는 거 있으면 다음 못 넘어가게 하기
 const rentals = {
   none: {
     info: "대충 대여 기간 먼저 선택해야 한다는 안내문구 어딘가에",
@@ -74,8 +81,12 @@ const RentalInfoSecondFrame: React.FC<
   const Rental = rentals[value].component;
   const props = { rental, setRental };
 
-  const [rentalDate, setRentalDate] = useState<Date | undefined>();
-  const [returnDate, setReturnDate] = useState<Date | undefined>();
+  const [rentalDate, setRentalDate] = useState<Date | undefined>(
+    rental.date?.start,
+  );
+  const [returnDate, setReturnDate] = useState<Date | undefined>(
+    rental.date?.end,
+  );
   const [pendingDate, setPendingDate] = useState<Date | undefined>();
 
   const [showPeriodModal, setShowPeriodModal] = useState<
@@ -160,9 +171,9 @@ const RentalInfoSecondFrame: React.FC<
 
   useEffect(() => {
     const enableNext =
-      !isCurrentItemEmpty() && !(!rental.date?.start || !rental.date?.end);
+      !isRentalListEmpty() && !(!rental.date?.start || !rental.date?.end);
     setNextEnabled(enableNext);
-  }, [rental, setNextEnabled, isCurrentItemEmpty]);
+  }, [rental, setNextEnabled, isRentalListEmpty]);
 
   const handleResetAll = () => {
     setRental({
@@ -193,6 +204,7 @@ const RentalInfoSecondFrame: React.FC<
           setShowPeriodModal={setShowPeriodModal}
           pendingDate={pendingDate}
           setPendingDate={setPendingDate}
+          isRentalListEmpty={isRentalListEmpty()}
         />
       </Card>
       <ItemButtonList value={value} onChange={itemOnChange} rental={rental} />
@@ -210,7 +222,12 @@ const RentalInfoSecondFrame: React.FC<
                 onClick={handleResetCurrent}
               />
             </ResetTitleWrapper>
-            <Rental {...props} />
+            <Rental
+              rentalDate={rentalDate ?? new Date()}
+              returnDate={returnDate ?? new Date()}
+              // TODO: 임시로 error 피하려고 넣어둠, 실제로는 영향 없음
+              {...props}
+            />
           </StyledCardInner>
         </Card>
       )}

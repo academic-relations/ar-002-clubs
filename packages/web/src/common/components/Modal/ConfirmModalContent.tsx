@@ -1,6 +1,10 @@
-import Button from "@sparcs-clubs/web/common/components/Button";
 import React from "react";
+
 import styled from "styled-components";
+
+import Button from "@sparcs-clubs/web/common/components/Button";
+
+import FlexWrapper from "../FlexWrapper";
 import Typography from "../Typography";
 
 interface ConfirmModalContentProps {
@@ -8,12 +12,6 @@ interface ConfirmModalContentProps {
   confirmButtonText?: string;
   children: React.ReactNode;
 }
-
-const ModalContentInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -25,14 +23,14 @@ const ConfirmModalContent: React.FC<ConfirmModalContentProps> = ({
   children,
   confirmButtonText = "확인",
 }) => (
-  <ModalContentInner>
+  <FlexWrapper direction="column" gap={12}>
     <Typography fs={16} lh={28} fw="MEDIUM" style={{ textAlign: "center" }}>
       {children}
     </Typography>
     <ButtonWrapper>
       <Button onClick={onConfirm}>{confirmButtonText}</Button>
     </ButtonWrapper>
-  </ModalContentInner>
+  </FlexWrapper>
 );
 
 export default ConfirmModalContent;

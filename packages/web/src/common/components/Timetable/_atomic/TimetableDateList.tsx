@@ -1,6 +1,8 @@
+import React from "react";
+
+import isPropValid from "@emotion/is-prop-valid";
 import { addDays, format } from "date-fns";
 import { ko } from "date-fns/locale";
-import React from "react";
 import styled from "styled-components";
 
 interface TimetableDateListProps {
@@ -8,7 +10,9 @@ interface TimetableDateListProps {
   paddingLeft?: string;
 }
 
-const TimetableDateListInner = styled.div<{ paddingLeft: string }>`
+const TimetableDateListInner = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ paddingLeft: string }>`
   display: flex;
   width: 600px;
   justify-content: flex-end;

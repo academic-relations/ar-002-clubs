@@ -1,27 +1,27 @@
-import { Injectable, Inject } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { and, eq, gte, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
-import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-import { eq, and, lte, gte, or, isNull } from "drizzle-orm";
+
 import { DivisionPermanentClubD } from "@sparcs-clubs/api/drizzle/schema/division.schema";
+import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 @Injectable()
 export class DivisionPermanentClubDRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  async findPermenantClub(
-    clubId: number,
-    startTerm: Date,
-    endTerm: Date,
-  ): Promise<boolean> {
+  async findPermenantClub(clubId: number, startTerm?: Date): Promise<boolean> {
+    const now = new Date();
+    const baseStartTerm = startTerm || now;
+
     return this.db
       .select({ id: DivisionPermanentClubD.id })
       .from(DivisionPermanentClubD)
       .where(
         and(
           eq(DivisionPermanentClubD.clubId, clubId),
-          lte(DivisionPermanentClubD.startTerm, startTerm),
+          lte(DivisionPermanentClubD.startTerm, baseStartTerm),
           or(
-            gte(DivisionPermanentClubD.endTerm, endTerm),
+            gte(DivisionPermanentClubD.endTerm, baseStartTerm),
             isNull(DivisionPermanentClubD.endTerm),
           ),
         ),

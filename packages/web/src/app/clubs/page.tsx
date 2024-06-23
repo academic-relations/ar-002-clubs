@@ -2,25 +2,16 @@
 
 import React from "react";
 
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import ClubsPageMainFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsPageMainFrame";
-
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
-import styled from "styled-components";
 // import { DivisionType } from "@sparcs-clubs/web/types/divisions.types";
-
-const PageHeadWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
 
 const Clubs = () => (
   <>
-    <PageHeadWrapper>
-      <BreadCrumb items={[{ name: "동아리 목록", path: "/clubs" }]} />
-      <PageTitle>동아리 목록</PageTitle>
-    </PageHeadWrapper>
+    <PageHead
+      items={[{ name: "동아리 목록", path: "/clubs" }]}
+      title="동아리 목록"
+    />
     <ClubsPageMainFrame />
   </>
 );

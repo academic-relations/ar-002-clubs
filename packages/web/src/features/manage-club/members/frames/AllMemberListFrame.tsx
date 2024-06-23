@@ -1,19 +1,18 @@
-import Button from "@sparcs-clubs/web/common/components/Button";
-import Icon from "@sparcs-clubs/web/common/components/Icon";
-import colors from "@sparcs-clubs/web/styles/themes/colors";
 import React, { useState } from "react";
-import styled from "styled-components";
-import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
-import MemberSearchAndFilter from "../components/MemberSearchAndFilter";
-import AllMemberList from "../components/AllMemberList";
-import { mockAllSemesters, mockSemesterMembers } from "./_mock/mockMembers";
 
-const AllMemberWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
+import styled from "styled-components";
+
+import Button from "@sparcs-clubs/web/common/components/Button";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
+import Icon from "@sparcs-clubs/web/common/components/Icon";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+import colors from "@sparcs-clubs/web/styles/themes/colors";
+
+import AllMemberList from "../components/AllMemberList";
+import MemberSearchAndFilter from "../components/MemberSearchAndFilter";
+
+import { mockAllSemesters, mockSemesterMembers } from "./_mock/mockMembers";
 
 const AllMemberListWrapper = styled.div`
   display: flex;
@@ -43,7 +42,7 @@ const AllMemberListFrame = () => {
   >(mockAllSemesters.semesters);
 
   return (
-    <AllMemberWrapper>
+    <FlexWrapper direction="column" gap={20}>
       <FoldableSectionTitle
         title="전체 회원 명단"
         toggle={toggle}
@@ -98,7 +97,7 @@ const AllMemberListFrame = () => {
           )}
         </AllMemberListWrapper>
       )}
-    </AllMemberWrapper>
+    </FlexWrapper>
   );
 };
 

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const zWeekTime = z.custom<number>(val => {
-  const time = z
+  const time = z.coerce
     .number()
     .int()
     .min(0)

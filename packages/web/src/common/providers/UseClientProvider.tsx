@@ -7,10 +7,10 @@
  */
 
 import React from "react";
-import { ThemeProvider as StyledProvider } from "styled-components";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ThemeProvider as StyledProvider } from "styled-components";
 
 import theme from "@sparcs-clubs/web/styles/themes";
 

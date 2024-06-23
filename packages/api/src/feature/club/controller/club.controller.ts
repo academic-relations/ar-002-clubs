@@ -1,15 +1,17 @@
+import { Controller, Get, Param, UsePipes } from "@nestjs/common";
 import apiClb001, {
   ApiClb001ResponseOK,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
-import {
+import apiClb002, {
   ApiClb002RequestParam,
   ApiClb002ResponseOK,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 import apiClb003, {
   ApiClb003ResponseOK,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb003";
-import { Controller, Get, Param, UsePipes } from "@nestjs/common";
-import { ZodPipe } from "@sparcs-clubs/api/common/pipes/zod-pipe";
+
+import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
+
 import { ClubService } from "../service/club.service";
 
 @Controller()
@@ -17,17 +19,20 @@ export class ClubController {
   constructor(private readonly clubService: ClubService) {}
 
   @Get("clubs")
+  @UsePipes(new ZodPipe(apiClb001))
   async getClubs(): Promise<ApiClb001ResponseOK> {
     const result = await this.clubService.getClubs();
-    const res = apiClb001.responseBodyMap[200].parse(result);
-    return res;
+    // return apiClb001.responseBodyMap[200].parse(result);
+    return result;
   }
 
-  @Get("clubs/club/:id")
+  @Get("clubs/club/:clubId")
+  @UsePipes(new ZodPipe(apiClb002))
   async getClub(
-    @Param("id") clubId: ApiClb002RequestParam,
+    @Param() param: ApiClb002RequestParam,
   ): Promise<ApiClb002ResponseOK> {
-    const clubInfo = await this.clubService.getClub(Number(clubId));
+    const clubInfo = await this.clubService.getClub(param);
+    // return apiClb002.responseBodyMap[200].parse(clubInfo);
     return clubInfo;
   }
 
@@ -35,8 +40,9 @@ export class ClubController {
   @UsePipes(new ZodPipe(apiClb003))
   async getStudentClubsMy(): Promise<ApiClb003ResponseOK> {
     // TODO: getProfileStudent로 인증 로직 이용해 수정 필요
-    const studentId = 1;
+    const studentId = 605;
     const result = await this.clubService.getStudentClubsMy(studentId);
+    // return apiClb003.responseBodyMap[200].parse(result);
     return result;
   }
 }

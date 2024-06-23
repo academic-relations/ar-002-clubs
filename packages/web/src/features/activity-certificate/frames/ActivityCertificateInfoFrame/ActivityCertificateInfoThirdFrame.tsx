@@ -1,8 +1,11 @@
+import React from "react";
+
+import styled from "styled-components";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import React from "react";
-import styled from "styled-components";
+
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 
 const ActivityCertificateThirdFrameInner = styled.div`
@@ -49,51 +52,86 @@ const ActivityCertificateInfoThirdFrame: React.FC<
     <Card outline gap={20}>
       <BasicInfoSummaryFrameInner>
         <Typography
+          key="orderUserInfo"
           type="p"
           style={{ whiteSpace: "pre-wrap", fontWeight: 500 }}
         >
           신청자 정보
         </Typography>
-        <Typography type="p" style={{ whiteSpace: "pre-wrap" }}>
+        <Typography
+          key="orderUserName"
+          type="p"
+          style={{ whiteSpace: "pre-wrap" }}
+        >
           {`  •  이름: ${activityCertificate.applicant}`}
         </Typography>
-        <Typography type="p" style={{ whiteSpace: "pre-wrap" }}>
+        <Typography
+          key="orderUserDepartment"
+          type="p"
+          style={{ whiteSpace: "pre-wrap" }}
+        >
           {`  •  학과: ${activityCertificate.department}`}
         </Typography>
-        <Typography type="p" style={{ whiteSpace: "pre-wrap" }}>
+        <Typography
+          key="orderUserStudentNumber"
+          type="p"
+          style={{ whiteSpace: "pre-wrap" }}
+        >
           {`  •  학번: ${activityCertificate.studentNumber}`}
         </Typography>
-        <Typography type="p" style={{ whiteSpace: "pre-wrap" }}>
+        <Typography
+          key="orderUserPhoneNumber"
+          type="p"
+          style={{ whiteSpace: "pre-wrap" }}
+        >
           {`  •  연락처: ${activityCertificate.krPhoneNumber}`}
         </Typography>
         <Typography
+          key="orderInfo"
           type="p"
           style={{ whiteSpace: "pre-wrap", fontWeight: 500 }}
         >
           활동확인서 발급 신청 정보
         </Typography>
-        <Typography type="p" style={{ whiteSpace: "pre-wrap" }}>
+        <Typography
+          key="orderInfoClub"
+          type="p"
+          style={{ whiteSpace: "pre-wrap" }}
+        >
           {`  •  동아리: ${activityCertificate.clubId!}`}{" "}
           {/* TODO - 실제 클럽 이름으로 바꾸기 */}
         </Typography>
-        <Typography type="p" style={{ whiteSpace: "pre-wrap" }}>
+        <Typography
+          key="orderInfoDuration"
+          type="p"
+          style={{ whiteSpace: "pre-wrap" }}
+        >
           {`  •  활동 기간: ${activityCertificate.startMonth} ~ ${activityCertificate.endMonth}`}
           {/* TODO - DB 형식에 의거해서 startMonth endMonth 형식으로 있다면 포맷하고 string이라면 그냥 넣기 */}
         </Typography>
-        <Typography type="p" style={{ whiteSpace: "pre-wrap" }}>
+        <Typography
+          key="orderInfoIssueCount"
+          type="p"
+          style={{ whiteSpace: "pre-wrap" }}
+        >
           {`  •  발급 매수: ${activityCertificate.issuedNumber!}매`}
         </Typography>
-        <Typography type="p" style={{ whiteSpace: "pre-wrap" }}>
+        <Typography
+          key="orderInfoText"
+          type="p"
+          style={{ whiteSpace: "pre-wrap" }}
+        >
           {`  •  활동 내역`}
         </Typography>
         <ActivityDescriptionSummaryFrameInner>
           {activityCertificate.detail.map(activityDescription => (
-            <ActivityDescriptionSummaryRow>
+            <ActivityDescriptionSummaryRow key={activityDescription.key}>
               {activityDescription.startMonth.split(".")[0] ===
                 activityDescription.endMonth.split(".")[0] &&
               parseInt(activityDescription.startMonth.split(".")[1]) ===
                 parseInt(activityDescription.endMonth.split(".")[1]) ? (
                 <Typography
+                  key={`${activityDescription.key}_start`}
                   type="p"
                   style={{
                     whiteSpace: "pre-wrap",
@@ -105,6 +143,7 @@ const ActivityCertificateInfoThirdFrame: React.FC<
                 </Typography>
               ) : (
                 <Typography
+                  key={`${activityDescription.key}_end`}
                   type="p"
                   style={{
                     whiteSpace: "pre-wrap",
@@ -117,6 +156,7 @@ const ActivityCertificateInfoThirdFrame: React.FC<
               )}
 
               <Typography
+                key={`${activityDescription.key}_description`}
                 type="p"
                 style={{
                   whiteSpace: "pre-wrap",

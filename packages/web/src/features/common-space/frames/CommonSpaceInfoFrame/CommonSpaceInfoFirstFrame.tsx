@@ -1,11 +1,12 @@
+import React, { useEffect, useState } from "react";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
-import Select, {
-  SelectItem,
-} from "@sparcs-clubs/web/common/components/Forms/Select";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import React, { useEffect, useState } from "react";
+import Select from "@sparcs-clubs/web/common/components/Select";
+
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
+import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 const CommonSpaceInfoFirstFrame: React.FC<
   CommonSpaceFrameProps & { setNextEnabled: (enabled: boolean) => void }

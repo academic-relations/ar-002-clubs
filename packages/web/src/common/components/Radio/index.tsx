@@ -1,7 +1,10 @@
 "use client";
 
+import React, { cloneElement, ReactElement, ReactNode } from "react";
+
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
-import React, { ReactElement, ReactNode, cloneElement } from "react";
+
 import RadioOption, { type RadioOptionProps } from "./RadioOption";
 
 type RadioProps<T extends string> = {
@@ -18,7 +21,9 @@ function isRadioOptionElement<T extends string>(
   return React.isValidElement(child) && "value" in child.props;
 }
 
-const StyledRadioInner = styled.div<{
+const StyledRadioInner = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   direction: "row" | "column";
   gap: string;
 }>`

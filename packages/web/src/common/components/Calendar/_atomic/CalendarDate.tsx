@@ -1,4 +1,6 @@
 import React from "react";
+
+import isPropValid from "@emotion/is-prop-valid";
 import styled, { css } from "styled-components";
 import { DefaultTheme } from "styled-components/dist/types";
 
@@ -19,7 +21,9 @@ const getBackgroundColor = (
   return theme.colors.WHITE;
 };
 
-const ExistWrapper = styled.div<{
+const ExistWrapper = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   exist: boolean;
   type?: CalendarDateProps["type"];
 }>`
@@ -46,7 +50,9 @@ const ExistWrapper = styled.div<{
     `}
 `;
 
-const DateContainer = styled.div<CalendarDateProps>`
+const DateContainer = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<CalendarDateProps>`
   display: flex;
   align-items: center;
   justify-content: center;

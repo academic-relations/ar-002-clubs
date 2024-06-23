@@ -2,9 +2,12 @@
 
 // import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import React from "react";
-import styled from "styled-components";
+
 import Link from "next/link";
+import styled from "styled-components";
+
 import paths from "@sparcs-clubs/web/constants/paths";
+
 import MoreSectionTitle from "../components/MoreSectionTitle";
 import ServiceCard from "../components/ServiceCard";
 
@@ -13,6 +16,18 @@ const ServiceSectionFrameInner = styled.div`
   flex-direction: column;
   width: 320px;
   gap: 20px;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    width: 640px;
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    width: 560px;
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    width: 100%;
+  }
 `;
 
 const ServiceCardWrapper = styled.div`
@@ -27,25 +42,25 @@ const ServiceSectionFrame: React.FC = () => (
     <MoreSectionTitle title="서비스 신청" showMore={false} />
     <ServiceCardWrapper>
       <Link
-        href={paths.HOME.path} /* TODO - 올바른 path로 수정 바람 */
+        href={paths.SERVICE.sub[0].path}
         style={{ display: "flex", flexDirection: "column" }}
       >
         <ServiceCard serviceTitle="대여 사업" serviceLink="" />
       </Link>
       <Link
-        href={paths.HOME.path} /* TODO - 올바른 path로 수정 바람 */
+        href={paths.SERVICE.sub[1].path}
         style={{ display: "flex", flexDirection: "column" }}
       >
         <ServiceCard serviceTitle="홍보물 인쇄" serviceLink="" />
       </Link>
       <Link
-        href={paths.HOME.path} /* TODO - 올바른 path로 수정 바람 */
+        href={paths.SERVICE.sub[2].path}
         style={{ display: "flex", flexDirection: "column" }}
       >
         <ServiceCard serviceTitle="활동확인서 발급 신청" serviceLink="" />
       </Link>
       <Link
-        href={paths.HOME.path} /* TODO - 올바른 path로 수정 바람 */
+        href={paths.SERVICE.sub[3].path}
         style={{ display: "flex", flexDirection: "column" }}
       >
         <ServiceCard serviceTitle="공용공간 비정기사용신청" serviceLink="" />

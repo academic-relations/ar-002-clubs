@@ -1,5 +1,9 @@
 import React from "react";
+
 import styled from "styled-components";
+
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+
 import { RentalInterface } from "../types/rental";
 
 interface RentalListProps {
@@ -10,14 +14,6 @@ const RentalListContainer = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
-`;
-
-const EmptyListWrapper = styled.text`
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  font-size: 16px;
-  line-height: 20px;
-  color: ${({ theme }) => theme.colors.GRAY[300]};
 `;
 
 const RentalListItem = styled.li`
@@ -96,7 +92,9 @@ const RentalList: React.FC<RentalListProps> = ({ rental }) => {
       {itemList.length > 0 ? (
         listItems
       ) : (
-        <EmptyListWrapper>선택한 물품이 없습니다</EmptyListWrapper>
+        <Typography fs={16} lh={20} color="GRAY.300">
+          선택한 물품이 없습니다
+        </Typography>
       )}
     </RentalListContainer>
   );

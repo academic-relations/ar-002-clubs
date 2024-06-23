@@ -1,6 +1,9 @@
 import React, { ReactNode, useMemo } from "react";
+
 import styled from "styled-components";
+
 import colors from "@sparcs-clubs/web/styles/themes/colors";
+
 import Icon from "../Icon";
 
 interface TableCellProps {
