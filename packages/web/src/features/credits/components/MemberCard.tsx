@@ -35,15 +35,20 @@ const MemberCard = ({ member }: { member: Member }) => {
         <Image src={SparcsLogo} alt="SPARCS Logo" height={24} />
         <Typography
           ff="RALEWAY"
+          fw="EXTRABOLD"
           fs={16}
           lh={24}
-          fw="EXTRABOLD" // TODO: EXTRABOLD가 적용되지 않는 것 같음
           color="SPARCS.main"
         >
           {member.nickname}
         </Typography>
-        {/* TODO: 나눔스퀘어 글꼴 적용 */}
-        <Typography fs={12} lh={20} color="SPARCS.member">
+        <Typography
+          ff="NANUM_SQUARE"
+          fw="EXTRABOLD" // TODO: 현재 NANUM_SQUARE는 EXTRABOLD만 존재함
+          fs={12}
+          lh={20}
+          color="SPARCS.member"
+        >
           {member.name}
         </Typography>
       </MemberWrapper>

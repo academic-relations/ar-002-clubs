@@ -9,6 +9,7 @@ import ResponsiveContent from "@sparcs-clubs/web/common/components/Responsive";
 import StyledComponentsRegistry from "@sparcs-clubs/web/common/libs/styledComponents/StyledComponentRegistry";
 import { UseClientProvider } from "@sparcs-clubs/web/common/providers/UseClientProvider";
 import {
+  nanumSquare,
   pretendard,
   raleway,
 } from "@sparcs-clubs/web/styles/fonts/googleFonts";
@@ -27,7 +28,11 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => (
   <html
     lang="ko-KR"
-    className={classNames(pretendard.variable, raleway.variable)}
+    className={classNames(
+      nanumSquare.variable,
+      pretendard.variable,
+      raleway.variable,
+    )}
   >
     <body>
       <AppRouterCacheProvider>
