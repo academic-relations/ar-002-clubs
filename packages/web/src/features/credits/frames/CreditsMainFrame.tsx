@@ -9,6 +9,8 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import MemberCard from "../components/MemberCard";
 import credits from "../credits";
 
+import type { Member } from "../credits";
+
 const MemberCardWrapper = styled.div`
   display: grid;
   grid-gap: 20px;
@@ -31,24 +33,35 @@ const MemberCardWrapper = styled.div`
   }
 `;
 
-const CreditsMainFrame: React.FC = () => (
-  <FlexWrapper direction="column" gap={60}>
-    <PageHead
-      items={[{ name: "만든 사람들", path: "/credits" }]}
-      title="만든 사람들"
-    />
-    {credits.map(credit => (
-      <FlexWrapper direction="column" gap={40} key={credit.semester}>
-        <FoldableSectionTitle title={credit.semester}>
-          <MemberCardWrapper>
-            {credit.members.map(member => (
-              <MemberCard key={member.nickname} member={member} />
-            ))}
-          </MemberCardWrapper>
-        </FoldableSectionTitle>
-      </FlexWrapper>
-    ))}
-  </FlexWrapper>
-);
+const CreditsMainFrame: React.FC = () => {
+  const compareMembers = (a: Member, b: Member) => {
+    if (a.roleType === b.roleType) {
+      return a.nickname.localeCompare(b.nickname);
+    }
+    return a.roleType - b.roleType;
+  };
+
+  return (
+    <FlexWrapper direction="column" gap={60}>
+      <PageHead
+        items={[{ name: "만든 사람들", path: "/credits" }]}
+        title="만든 사람들"
+      />
+      {credits.map(credit => (
+        <FlexWrapper direction="column" gap={40} key={credit.semester}>
+          <FoldableSectionTitle title={credit.semester}>
+            <MemberCardWrapper>
+              {credit.members
+                .sort((a, b) => compareMembers(a, b))
+                .map(member => (
+                  <MemberCard key={member.nickname} member={member} />
+                ))}
+            </MemberCardWrapper>
+          </FoldableSectionTitle>
+        </FlexWrapper>
+      ))}
+    </FlexWrapper>
+  );
+};
 
 export default CreditsMainFrame;
