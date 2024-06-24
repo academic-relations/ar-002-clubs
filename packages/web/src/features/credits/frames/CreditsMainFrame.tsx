@@ -2,23 +2,12 @@ import React from "react";
 
 import styled from "styled-components";
 
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 import MemberCard from "../components/MemberCard";
 import credits from "../credits";
-
-const CreditsMainFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
-
-const CreditsSectionWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-`;
 
 const MemberCardWrapper = styled.div`
   display: grid;
@@ -43,13 +32,13 @@ const MemberCardWrapper = styled.div`
 `;
 
 const CreditsMainFrame: React.FC = () => (
-  <CreditsMainFrameInner>
+  <FlexWrapper direction="column" gap={60}>
     <PageHead
       items={[{ name: "만든 사람들", path: "/credits" }]}
       title="만든 사람들"
     />
     {credits.map(credit => (
-      <CreditsSectionWrapper key={credit.semester}>
+      <FlexWrapper direction="column" gap={40} key={credit.semester}>
         <FoldableSectionTitle title={credit.semester}>
           <MemberCardWrapper>
             {credit.members.map(member => (
@@ -57,9 +46,9 @@ const CreditsMainFrame: React.FC = () => (
             ))}
           </MemberCardWrapper>
         </FoldableSectionTitle>
-      </CreditsSectionWrapper>
+      </FlexWrapper>
     ))}
-  </CreditsMainFrameInner>
+  </FlexWrapper>
 );
 
 export default CreditsMainFrame;
