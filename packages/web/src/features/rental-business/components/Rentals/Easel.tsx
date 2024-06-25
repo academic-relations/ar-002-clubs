@@ -12,6 +12,7 @@ const Easel: React.FC<RentalLimitProps> = ({
   returnDate,
   rental,
   setRental,
+  setHasError,
 }) => {
   const { data, isLoading, isError } = useGetAvailableRentals(
     rentalDate,
@@ -34,6 +35,7 @@ const Easel: React.FC<RentalLimitProps> = ({
             easel: Number(value),
           })
         }
+        setErrorStatus={setHasError}
       />
     </AsyncBoundary>
   );

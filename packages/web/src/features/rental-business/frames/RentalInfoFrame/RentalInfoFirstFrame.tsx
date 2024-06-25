@@ -32,15 +32,24 @@ const RentalInfoFirstFrame: React.FC<
         })),
       );
       setUserName(data.name);
-      setUserPhone(data?.phoneNumber);
       setUserPhone(rental.info?.phone ?? data.phoneNumber);
     }
-  }, [data, rental.info?.phone]);
+  }, [data, rental.info?.phone, setClubList, setUserName, setUserPhone]);
 
   const [phone, setPhone] = useState(rental.info?.phone ?? userPhone);
   const [hasPhoneError, setHasPhoneError] = useState(false);
   const [selectedValue, setSelectedValue] = useState(rental.info?.clubId ?? "");
   const [hasSelectError, setHasSelectError] = useState(false);
+
+  useEffect(() => {
+    setRental({
+      ...rental,
+      info: {
+        ...rental.info,
+        phone,
+      },
+    });
+  }, [phone, setRental]);
 
   useEffect(() => {
     const allConditionsMet =

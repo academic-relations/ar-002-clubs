@@ -50,7 +50,9 @@ const Calendar: React.FC<CalendarProps> = ({
   selectedDates,
   onDateClick = () => {},
 }) => {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(
+    eventPeriods[0]?.start || new Date(),
+  );
 
   const weeks = eachWeekOfInterval(
     {

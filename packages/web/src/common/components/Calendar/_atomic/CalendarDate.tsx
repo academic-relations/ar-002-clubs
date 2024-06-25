@@ -95,6 +95,7 @@ const DateContainer = styled.div.withConfig({
 `;
 
 const DateWrapper = styled.div<{
+  exist: boolean;
   type?: CalendarDateProps["type"];
   size?: CalendarDateProps["size"];
 }>`
@@ -102,7 +103,7 @@ const DateWrapper = styled.div<{
   align-items: center;
   justify-content: center;
   flex: 1;
-  cursor: ${({ onClick }) => (onClick ? "pointer" : "default")};
+  cursor: ${({ onClick, exist }) => (onClick && exist ? "pointer" : "default")};
   width: 100%;
   ${({ size }) => {
     switch (size) {
@@ -148,7 +149,7 @@ const CalendarDate: React.FC<CalendarDateProps> = ({
     }
   };
   return (
-    <DateWrapper type={type} onClick={handleClick} size={size}>
+    <DateWrapper exist={exist} type={type} onClick={handleClick} size={size}>
       <DateContainer date={date} exist={exist} type={type} size={size}>
         <ExistWrapper exist={exist} type={type}>
           {date.getDate()}
