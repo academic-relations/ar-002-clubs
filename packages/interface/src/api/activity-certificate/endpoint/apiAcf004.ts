@@ -31,7 +31,7 @@ const responseBodyMap = {
     statusEnum: z.nativeEnum(ActivityCertificateOrderStatusEnum),
     items: z.array(
       z.object({
-        id: z.number().int(),
+        id: z.number().int().min(1),
         startMonth: z.coerce.date(),
         endMonth: z.coerce.date(),
         detail: z.string().max(100),
