@@ -44,7 +44,6 @@ const FlexGrowTypography = styled.div`
 
 const NoneRental: React.FC<RentalFrameProps> = () => <>none</>;
 
-// TODO: rentals에 입력한 것 중에 limit 넘는 거 있으면 다음 못 넘어가게 하기
 const rentals = {
   none: {
     info: "대충 대여 기간 먼저 선택해야 한다는 안내문구 어딘가에",
@@ -80,6 +79,8 @@ const RentalInfoSecondFrame: React.FC<
 
   const Rental = rentals[value].component;
   const props = { rental, setRental };
+
+  const [hasError, setHasError] = useState(false);
 
   const [rentalDate, setRentalDate] = useState<Date | undefined>(
     rental.date?.start,
@@ -171,9 +172,12 @@ const RentalInfoSecondFrame: React.FC<
 
   useEffect(() => {
     const enableNext =
-      !isRentalListEmpty() && !(!rental.date?.start || !rental.date?.end);
+      !hasError &&
+      !isRentalListEmpty() &&
+      !(!rental.date?.start || !rental.date?.end);
+    // console.log("hasError", hasError);
     setNextEnabled(enableNext);
-  }, [rental, setNextEnabled, isRentalListEmpty]);
+  }, [rental, hasError, setNextEnabled, isRentalListEmpty]);
 
   const handleResetAll = () => {
     setRental({
@@ -225,7 +229,7 @@ const RentalInfoSecondFrame: React.FC<
             <Rental
               rentalDate={rentalDate ?? new Date()}
               returnDate={returnDate ?? new Date()}
-              // TODO: 임시로 error 피하려고 넣어둠, 실제로는 영향 없음
+              setHasError={setHasError}
               {...props}
             />
           </StyledCardInner>

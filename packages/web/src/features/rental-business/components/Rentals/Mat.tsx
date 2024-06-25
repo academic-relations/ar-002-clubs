@@ -10,6 +10,7 @@ const Mat: React.FC<RentalLimitProps> = ({
   returnDate,
   rental,
   setRental,
+  setHasError,
 }) => {
   const { data, isLoading, isError } = useGetAvailableRentals(
     rentalDate,
@@ -32,6 +33,7 @@ const Mat: React.FC<RentalLimitProps> = ({
             mat: Number(value),
           })
         }
+        setErrorStatus={setHasError}
       />
     </AsyncBoundary>
   );

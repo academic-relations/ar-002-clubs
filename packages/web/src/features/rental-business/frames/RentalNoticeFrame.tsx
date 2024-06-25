@@ -21,6 +21,7 @@ export interface RentalLimitProps {
   returnDate: Date;
   rental: RentalInterface;
   setRental: React.Dispatch<React.SetStateAction<RentalInterface>>;
+  setHasError: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const RentalNoticeFrameInner = styled.div`
