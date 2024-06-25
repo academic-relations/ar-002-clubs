@@ -14,7 +14,7 @@ const url = (id: number) =>
 const method = "GET";
 
 const requestParam = z.object({
-  id: z.number().int().min(1),
+  id: z.coerce.number().int().min(1),
 });
 
 const requestQuery = z.object({});
@@ -23,18 +23,18 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    id: z.number().int().min(1),
-    clubId: z.number().int().min(1),
-    studentNumber: z.number().int().min(1),
+    id: z.coerce.number().int().min(1),
+    clubId: z.coerce.number().int().min(1),
+    studentNumber: z.coerce.number().int().min(1),
     studentPhoneNumber: zKrPhoneNumber,
-    issuedNumber: z.number().int().min(1),
+    issuedNumber: z.coerce.number().int().min(1),
     statusEnum: z.nativeEnum(ActivityCertificateOrderStatusEnum),
     items: z.array(
       z.object({
-        id: z.number().int().min(1),
+        id: z.coerce.number().int().min(1),
         startMonth: z.coerce.date(),
         endMonth: z.coerce.date(),
-        detail: z.string().max(100),
+        detail: z.coerce.string().max(100),
       }),
     ),
   }),
