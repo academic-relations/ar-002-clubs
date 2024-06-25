@@ -32,8 +32,8 @@ const responseBodyMap = {
     items: z.array(
       z.object({
         id: z.number().int(),
-        startMonth: z.date(),
-        endMonth: z.date(),
+        startMonth: z.coerce.date(),
+        endMonth: z.coerce.date(),
         detail: z.string().max(100),
       }),
     ),
