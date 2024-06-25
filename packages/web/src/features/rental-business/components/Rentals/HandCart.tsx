@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
@@ -10,6 +10,7 @@ const HandCart: React.FC<RentalLimitProps> = ({
   returnDate,
   rental,
   setRental,
+  setHasError,
 }) => {
   const { data, isLoading, isError } = useGetAvailableRentals(
     rentalDate,
@@ -25,6 +26,16 @@ const HandCart: React.FC<RentalLimitProps> = ({
     data?.objects.find(item => item.name === "Hand Cart Medium")?.maximum ?? 0;
   const smallLimit =
     data?.objects.find(item => item.name === "Hand Cart Small")?.maximum ?? 0;
+
+  const [rolltainerError, setRolltainerError] = useState(false);
+  const [largeError, setLargeError] = useState(false);
+  const [mediumError, setMediumError] = useState(false);
+  const [smallError, setSmallError] = useState(false);
+
+  useEffect(() => {
+    const hasError = rolltainerError || largeError || mediumError || smallError;
+    setHasError(hasError);
+  }, [rolltainerError, largeError, mediumError, smallError, setHasError]);
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
@@ -46,6 +57,7 @@ const HandCart: React.FC<RentalLimitProps> = ({
             },
           })
         }
+        setErrorStatus={setRolltainerError}
       />
       <ItemNumberInput
         label="대형 개수"
@@ -63,6 +75,7 @@ const HandCart: React.FC<RentalLimitProps> = ({
             },
           })
         }
+        setErrorStatus={setLargeError}
       />
       <ItemNumberInput
         label="중형 개수"
@@ -82,6 +95,7 @@ const HandCart: React.FC<RentalLimitProps> = ({
             },
           })
         }
+        setErrorStatus={setMediumError}
       />
       <ItemNumberInput
         label="소형 개수"
@@ -99,6 +113,7 @@ const HandCart: React.FC<RentalLimitProps> = ({
             },
           })
         }
+        setErrorStatus={setSmallError}
       />
     </AsyncBoundary>
   );

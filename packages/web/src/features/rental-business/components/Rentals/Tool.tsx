@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
@@ -10,6 +10,7 @@ const Tool: React.FC<RentalLimitProps> = ({
   returnDate,
   rental,
   setRental,
+  setHasError,
 }) => {
   const { data, isLoading, isError } = useGetAvailableRentals(
     rentalDate,
@@ -28,6 +29,33 @@ const Tool: React.FC<RentalLimitProps> = ({
     data?.objects.find(item => item.name === "Plier")?.maximum ?? 0;
   const longNosePlierLimit =
     data?.objects.find(item => item.name === "Long Nose Plier")?.maximum ?? 0;
+
+  const [powerDrillError, setPowerDrillError] = React.useState(false);
+  const [driverError, setDriverError] = React.useState(false);
+  const [superGlueError, setSuperGlueError] = React.useState(false);
+  const [nipperError, setNipperError] = React.useState(false);
+  const [plierError, setPlierError] = React.useState(false);
+  const [longNosePlierError, setLongNosePlierError] = React.useState(false);
+
+  useEffect(() => {
+    const hasError =
+      powerDrillError ||
+      driverError ||
+      superGlueError ||
+      nipperError ||
+      plierError ||
+      longNosePlierError;
+    setHasError(hasError);
+  }, [
+    powerDrillError,
+    driverError,
+    superGlueError,
+    nipperError,
+    plierError,
+    longNosePlierError,
+    setHasError,
+  ]);
+
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <ItemNumberInput
@@ -48,6 +76,7 @@ const Tool: React.FC<RentalLimitProps> = ({
             },
           })
         }
+        setErrorStatus={setPowerDrillError}
       />
       <ItemNumberInput
         label="드라이버 세트 개수"
@@ -63,6 +92,7 @@ const Tool: React.FC<RentalLimitProps> = ({
             },
           })
         }
+        setErrorStatus={setDriverError}
       />
       <ItemNumberInput
         label="순간접착제 개수"
@@ -80,6 +110,7 @@ const Tool: React.FC<RentalLimitProps> = ({
             },
           })
         }
+        setErrorStatus={setSuperGlueError}
       />
       <ItemNumberInput
         label="니퍼 개수"
@@ -95,6 +126,7 @@ const Tool: React.FC<RentalLimitProps> = ({
             },
           })
         }
+        setErrorStatus={setNipperError}
       />
       <ItemNumberInput
         label="펜치 개수"
@@ -110,6 +142,7 @@ const Tool: React.FC<RentalLimitProps> = ({
             },
           })
         }
+        setErrorStatus={setPlierError}
       />
       <ItemNumberInput
         label="롱노우즈 개수"
@@ -129,6 +162,7 @@ const Tool: React.FC<RentalLimitProps> = ({
             },
           })
         }
+        setErrorStatus={setLongNosePlierError}
       />
     </AsyncBoundary>
   );
