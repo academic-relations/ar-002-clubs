@@ -14,7 +14,7 @@ const url = (id: number) =>
 const method = "GET";
 
 const requestParam = z.object({
-  id: z.number().int().positive(),
+  id: z.number().int().min(1),
 });
 
 const requestQuery = z.object({});
@@ -27,7 +27,7 @@ const responseBodyMap = {
     clubId: z.number().int().min(1),
     studentNumber: z.number().int().min(1),
     studentPhoneNumber: zKrPhoneNumber,
-    issuedNumber: z.number().int().positive(),
+    issuedNumber: z.number().int().min(1),
     statusEnum: z.nativeEnum(ActivityCertificateOrderStatusEnum),
     items: z.array(
       z.object({

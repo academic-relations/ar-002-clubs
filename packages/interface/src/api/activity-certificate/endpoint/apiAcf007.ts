@@ -16,8 +16,8 @@ const requestParam = z.object({});
 const requestQuery = z.object({
   startDate: z.date().optional(),
   endDate: z.date().optional(),
-  pageOffset: z.number().positive(),
-  itemCount: z.number().positive(),
+  pageOffset: z.number().min(1),
+  itemCount: z.number().min(1),
 });
 
 const requestBody = z.object({});
@@ -26,11 +26,11 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     items: z.array(
       z.object({
-        orderId: z.number().int(),
+        orderId: z.number().int().min(1),
         studentName: z.string(),
-        issuedNumber: z.number().int().positive(),
+        issuedNumber: z.number().int().min(1),
         statusEnum: z.nativeEnum(ActivityCertificateOrderStatusEnum),
-        createdAt: z.date(),
+        createdAt: z.coerce.date(),
       }),
     ),
     total: z.number().int().min(0),
