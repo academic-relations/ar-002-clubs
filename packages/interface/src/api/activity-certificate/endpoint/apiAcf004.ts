@@ -24,8 +24,8 @@ const requestBody = z.object({});
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     id: z.number().int(),
-    clubId: z.number().int(),
-    studentNumber: z.number().int(),
+    clubId: z.number().int().min(1),
+    studentNumber: z.number().int().min(1),
     studentPhoneNumber: zKrPhoneNumber,
     issuedNumber: z.number().int().positive(),
     statusEnum: z.nativeEnum(ActivityCertificateOrderStatusEnum),
