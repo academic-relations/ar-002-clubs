@@ -1,5 +1,8 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get, Query, UsePipes } from "@nestjs/common";
 import apiPrt001 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
+import apiPrt005 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt005";
+
+import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
 import { PromotionalPrintingService } from "../service/promotional-printing.service";
 
@@ -7,6 +10,10 @@ import type {
   ApiPrt001RequestQuery,
   ApiPrt001ResponseOk,
 } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
+import type {
+  ApiPrt005RequestQuery,
+  ApiPrt005ResponseOk,
+} from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt005";
 
 @Controller()
 export class PromotionalPrintingController {
@@ -39,6 +46,20 @@ export class PromotionalPrintingController {
 
     const orders =
       await this.promotionalPrintingService.getStudentPromotionalPrintingsOrders(
+        query,
+      );
+
+    return orders;
+  }
+
+  @Get("/student/promotional-printings/orders/my")
+  @UsePipes(new ZodPipe(apiPrt005))
+  async getStudentPromotionalPrintingsOrdersMy(
+    @Query() query: ApiPrt005RequestQuery,
+  ): Promise<ApiPrt005ResponseOk> {
+    // TODO: studentId 넘겨주기
+    const orders =
+      await this.promotionalPrintingService.getStudentPromotionalPrintingsOrdersMy(
         query,
       );
 
