@@ -1,5 +1,18 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UsePipes,
+} from "@nestjs/common";
+
 import apiPrt001 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
+import apiPrt002 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt002";
+
+import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
+import logger from "@sparcs-clubs/api/common/util/logger";
 
 import { PromotionalPrintingService } from "../service/promotional-printing.service";
 
@@ -7,6 +20,11 @@ import type {
   ApiPrt001RequestQuery,
   ApiPrt001ResponseOk,
 } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
+import type {
+  ApiPrt002RequestBody,
+  ApiPrt002RequestParam,
+  ApiPrt002ResponseCreated,
+} from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt002";
 
 @Controller()
 export class PromotionalPrintingController {
@@ -43,5 +61,23 @@ export class PromotionalPrintingController {
       );
 
     return orders;
+  }
+
+  @Post("/student/promotional-printings/orders/order/:clubId")
+  @UsePipes(new ZodPipe(apiPrt002))
+  async postStudentPromotionalPrintingsOrder(
+    @Param() parameter: ApiPrt002RequestParam,
+    @Body() body: ApiPrt002RequestBody,
+  ): Promise<ApiPrt002ResponseCreated> {
+    logger.debug(
+      `[/student/promotional-printings/orders/order/:clubId] clubId: ${parameter.clubId}`,
+    );
+
+    this.promotionalPrintingService.postStudentPromotionalPrintingsOrder({
+      ...parameter,
+      ...body,
+    });
+
+    return {};
   }
 }
