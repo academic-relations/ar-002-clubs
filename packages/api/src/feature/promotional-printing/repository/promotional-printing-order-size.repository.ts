@@ -11,7 +11,7 @@ import type { FindPromotionalPrintingOrderSizeBypromotionalPrintingOrderIdReturn
 export class PromotionalPrintingOrderSizeRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  async findPromotionalPrintingOrderSizeBypromotionalPrintingOrderId(
+  async findPromotionalPrintingOrderSizeByPromotionalPrintingOrderId(
     promotionalPrintingOrderId: number,
   ): Promise<FindPromotionalPrintingOrderSizeBypromotionalPrintingOrderIdReturn> {
     const orderSize = await this.db

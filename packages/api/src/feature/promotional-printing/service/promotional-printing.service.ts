@@ -16,6 +16,10 @@ import type {
   ApiPrt002RequestParam,
   ApiPrt002ResponseCreated,
 } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt002";
+import type {
+  ApiPrt005RequestQuery,
+  ApiPrt005ResponseOk,
+} from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt005";
 
 @Injectable()
 export class PromotionalPrintingService {
@@ -47,7 +51,7 @@ export class PromotionalPrintingService {
       orders.map(async row => ({
         ...row,
         orders:
-          await this.promotionalPrintingOrderSizeRepository.findPromotionalPrintingOrderSizeBypromotionalPrintingOrderId(
+          await this.promotionalPrintingOrderSizeRepository.findPromotionalPrintingOrderSizeByPromotionalPrintingOrderId(
             row.id,
           ),
       })),
@@ -96,5 +100,52 @@ export class PromotionalPrintingService {
     );
 
     return {};
+  }
+
+  async getStudentPromotionalPrintingsOrdersMy(
+    query: ApiPrt005RequestQuery,
+  ): Promise<ApiPrt005ResponseOk> {
+    const numberOfOrders =
+      await this.promotionalPrintingOrderRepository.countByStudentIdAndCreatedAtIn(
+        1,
+        query.startDate,
+        query.endDate,
+      );
+
+    const orders =
+      await this.promotionalPrintingOrderRepository.getStudentPromotionalPrintingsOrders(
+        1,
+        query.pageOffset,
+        query.itemCount,
+        query.startDate,
+        query.endDate,
+      );
+
+    const ordersWithSizes = await Promise.all(
+      orders.map(async row => ({
+        ...row,
+        orders:
+          await this.promotionalPrintingOrderSizeRepository.findPromotionalPrintingOrderSizeByPromotionalPrintingOrderId(
+            row.id,
+          ),
+      })),
+    );
+
+    if (
+      numberOfOrders === undefined ||
+      orders === undefined ||
+      ordersWithSizes === undefined
+    ) {
+      throw new HttpException(
+        "[getStudentPromotionalPrintingsOrders] Error occurs while getting orders",
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return {
+      items: ordersWithSizes,
+      offset: query.pageOffset,
+      total: numberOfOrders,
+    };
   }
 }
