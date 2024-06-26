@@ -51,7 +51,7 @@ export class PromotionalPrintingService {
       orders.map(async row => ({
         ...row,
         orders:
-          await this.promotionalPrintingOrderSizeRepository.findPromotionalPrintingOrderSizeBypromotionalPrintingOrderId(
+          await this.promotionalPrintingOrderSizeRepository.findPromotionalPrintingOrderSizeByPromotionalPrintingOrderId(
             row.id,
           ),
       })),
@@ -125,7 +125,7 @@ export class PromotionalPrintingService {
       orders.map(async row => ({
         ...row,
         orders:
-          await this.promotionalPrintingOrderSizeRepository.findPromotionalPrintingOrderSizeBypromotionalPrintingOrderId(
+          await this.promotionalPrintingOrderSizeRepository.findPromotionalPrintingOrderSizeByPromotionalPrintingOrderId(
             row.id,
           ),
       })),
