@@ -1,9 +1,10 @@
 // dizzle.provider.ts
 
-import mysql from "mysql2/promise";
 import { drizzle } from "drizzle-orm/mysql2";
+import mysql from "mysql2/promise";
 
 import { env } from "../env";
+
 import * as commonSpaceSchema from "./schema/common-space.schema";
 import * as divisionSchema from "./schema/division.schema";
 import * as noticeSchema from "./schema/notice.schema";

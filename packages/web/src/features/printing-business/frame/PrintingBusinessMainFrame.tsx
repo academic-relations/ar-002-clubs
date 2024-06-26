@@ -1,25 +1,20 @@
-import { setHours, setMinutes, setSeconds } from "date-fns";
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+
+import { PromotionalPrintingSizeEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
+import { setHours, setMinutes, setSeconds } from "date-fns";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import PrintingBusinessNotice from "@sparcs-clubs/web/features/printing-business/component/PrintingBusinessNotice";
+import useGetUserProfile from "@sparcs-clubs/web/features/printing-business/service/getUserProfile";
+
+import PrintingBusinessForm from "../component/PrintingBusinessForm";
 
 import type {
   ApiPrt002RequestBody,
   ApiPrt002RequestParam,
 } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt002";
-import { PromotionalPrintingSizeEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
-import useGetUserProfile from "@sparcs-clubs/web/features/printing-business/service/getUserProfile";
-
-import PrintingBusinessNotice from "@sparcs-clubs/web/features/printing-business/component/PrintingBusinessNotice";
-import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import PrintingBusinessForm from "../component/PrintingBusinessForm";
-
-const PrintingBusinessMainFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
 
 const PrintingBusinessMainFrame: React.FC = () => {
   // state 설명
@@ -69,7 +64,7 @@ const PrintingBusinessMainFrame: React.FC = () => {
   }, [data]);
 
   return (
-    <PrintingBusinessMainFrameInner>
+    <FlexWrapper direction="column" gap={60}>
       <PageHead
         items={[{ name: "홍보물 인쇄", path: "/printing-business" }]}
         title="홍보물 인쇄"
@@ -93,7 +88,7 @@ const PrintingBusinessMainFrame: React.FC = () => {
           <PrintingBusinessNotice setAgreement={setAgreement} />
         )}
       </AsyncBoundary>
-    </PrintingBusinessMainFrameInner>
+    </FlexWrapper>
   );
 };
 

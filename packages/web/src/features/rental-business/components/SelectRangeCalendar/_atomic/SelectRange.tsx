@@ -1,14 +1,20 @@
 import React from "react";
+
 import styled from "styled-components";
+
 import TextButton from "@sparcs-clubs/web/common/components/TextButton";
+
 import SelectRangeInfo from "./SelectRangeInfo";
 
 interface SelectRangeProps {
   rentalDate?: Date;
   returnDate?: Date;
+  setRentalDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  setReturnDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   setShowPeriodModal: React.Dispatch<
     React.SetStateAction<"none" | "reset" | "change">
   >;
+  isRentalListEmpty: boolean;
 }
 
 const RangeWrapper = styled.div`
@@ -22,12 +28,20 @@ const RangeWrapper = styled.div`
 const SelectRange: React.FC<SelectRangeProps> = ({
   rentalDate = undefined,
   returnDate = undefined,
+  setRentalDate,
+  setReturnDate,
   setShowPeriodModal,
+  isRentalListEmpty,
 }) => {
   const isButtonDisabled = !rentalDate && !returnDate;
 
   const handleReset = () => {
-    setShowPeriodModal("reset");
+    if (isRentalListEmpty) {
+      setRentalDate(undefined);
+      setReturnDate(undefined);
+    } else {
+      setShowPeriodModal("reset");
+    }
   };
 
   return (

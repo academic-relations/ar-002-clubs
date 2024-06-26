@@ -1,3 +1,9 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+
+import styled from "styled-components";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
@@ -12,9 +18,9 @@ import Vacuum from "@sparcs-clubs/web/features/rental-business//components/Renta
 import ItemButtonList from "@sparcs-clubs/web/features/rental-business/components/ItemButtonList";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
 import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+
 import { RentalFrameProps } from "../RentalNoticeFrame";
+
 import { mockExistDates } from "./_atomic/mockExistDate";
 
 const StyledCardInner = styled.div`
@@ -74,8 +80,14 @@ const RentalInfoSecondFrame: React.FC<
   const Rental = rentals[value].component;
   const props = { rental, setRental };
 
-  const [rentalDate, setRentalDate] = useState<Date | undefined>();
-  const [returnDate, setReturnDate] = useState<Date | undefined>();
+  const [hasError, setHasError] = useState(false);
+
+  const [rentalDate, setRentalDate] = useState<Date | undefined>(
+    rental.date?.start,
+  );
+  const [returnDate, setReturnDate] = useState<Date | undefined>(
+    rental.date?.end,
+  );
   const [pendingDate, setPendingDate] = useState<Date | undefined>();
 
   const [showPeriodModal, setShowPeriodModal] = useState<
@@ -160,9 +172,12 @@ const RentalInfoSecondFrame: React.FC<
 
   useEffect(() => {
     const enableNext =
-      !isCurrentItemEmpty() && !(!rental.date?.start || !rental.date?.end);
+      !hasError &&
+      !isRentalListEmpty() &&
+      !(!rental.date?.start || !rental.date?.end);
+    // console.log("hasError", hasError);
     setNextEnabled(enableNext);
-  }, [rental, setNextEnabled, isCurrentItemEmpty]);
+  }, [rental, hasError, setNextEnabled, isRentalListEmpty]);
 
   const handleResetAll = () => {
     setRental({
@@ -193,6 +208,7 @@ const RentalInfoSecondFrame: React.FC<
           setShowPeriodModal={setShowPeriodModal}
           pendingDate={pendingDate}
           setPendingDate={setPendingDate}
+          isRentalListEmpty={isRentalListEmpty()}
         />
       </Card>
       <ItemButtonList value={value} onChange={itemOnChange} rental={rental} />
@@ -210,7 +226,12 @@ const RentalInfoSecondFrame: React.FC<
                 onClick={handleResetCurrent}
               />
             </ResetTitleWrapper>
-            <Rental {...props} />
+            <Rental
+              rentalDate={rentalDate ?? new Date()}
+              returnDate={returnDate ?? new Date()}
+              setHasError={setHasError}
+              {...props}
+            />
           </StyledCardInner>
         </Card>
       )}

@@ -1,16 +1,17 @@
 import {
-  mysqlTable,
-  int,
-  varchar,
-  text,
   date,
   datetime,
-  timestamp,
   index,
+  int,
+  mysqlTable,
+  text,
+  timestamp,
+  varchar,
 } from "drizzle-orm/mysql-core";
-import { Professor, Student } from "./user.schema";
+
 // eslint-disable-next-line import/no-cycle
 import { Division } from "./division.schema";
+import { Professor, Student } from "./user.schema";
 
 export const Club = mysqlTable("club", {
   id: int("id").autoincrement().primaryKey(),

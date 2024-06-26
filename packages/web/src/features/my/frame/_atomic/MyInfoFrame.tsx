@@ -1,8 +1,9 @@
 import React from "react";
-import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import { ManageWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
-import Card from "@sparcs-clubs/web/common/components/Card";
+
 import Button from "@sparcs-clubs/web/common/components/Button";
+import Card from "@sparcs-clubs/web/common/components/Card";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 
 const MyInfoFrame: React.FC = () => {
@@ -16,7 +17,7 @@ const MyInfoFrame: React.FC = () => {
   const buttonType = phone === mockPhone || errorPhone ? "disabled" : "default";
 
   return (
-    <ManageWrapper>
+    <FlexWrapper direction="column" gap={40}>
       <FoldableSectionTitle
         title="나의 정보"
         toggle={toggle}
@@ -40,7 +41,7 @@ const MyInfoFrame: React.FC = () => {
           </Button>
         </Card>
       )}
-    </ManageWrapper>
+    </FlexWrapper>
   );
 };
 

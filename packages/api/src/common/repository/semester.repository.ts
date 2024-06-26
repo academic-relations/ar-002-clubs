@@ -1,8 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { and, between, isNull, sql } from "drizzle-orm";
+import { MySql2Database } from "drizzle-orm/mysql2";
+
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import { SemesterD } from "@sparcs-clubs/api/drizzle/schema/club.schema";
-import { MySql2Database } from "drizzle-orm/mysql2";
-import { and, between, isNull, sql } from "drizzle-orm";
+
 import { takeUnique } from "../util/util";
 
 @Injectable()

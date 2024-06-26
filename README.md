@@ -3,7 +3,7 @@
 ## How to run (as of 24.05.17)
 
 1. Login to `github` if not already done so.
-2. Run `git submoudle init` && `git submodule update --remote`
+2. Run `git submodule init` && `git submodule update --remote`
 
 <hr/>
 

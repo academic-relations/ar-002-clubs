@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
+
 import Image from "next/image";
+import Link from "next/link";
 
 import sparcsSvg from "@sparcs-clubs/web/assets/sparcs-black.svg";
 import paths from "@sparcs-clubs/web/constants/paths";

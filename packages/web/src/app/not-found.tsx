@@ -1,8 +1,10 @@
 "use client";
 
-import type { NextPage } from "next";
 import Image from "next/image";
+
 import myGif from "../assets/notImplementedChan.gif";
+
+import type { NextPage } from "next";
 
 const Custom404: NextPage = () => (
   <div>

@@ -1,19 +1,15 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
 
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 import NoticeSectionFrame from "./NoticeSectionFrame";
 import ServiceSectionFrame from "./ServiceSectionFrame";
-
-const MainPageMainFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
 
 const PageTitleWrapper = styled.div`
   display: flex;
@@ -24,10 +20,14 @@ const NoticeAndServiceWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 60px;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    flex-direction: column;
+  }
 `;
 
 const MainPageMainFrame: React.FC = () => (
-  <MainPageMainFrameInner>
+  <FlexWrapper direction="column" gap={60}>
     <PageTitleWrapper>
       <Typography
         ff="PRETENDARD"
@@ -56,7 +56,7 @@ const MainPageMainFrame: React.FC = () => (
       <NoticeSectionFrame />
       <ServiceSectionFrame />
     </NoticeAndServiceWrapper>
-  </MainPageMainFrameInner>
+  </FlexWrapper>
 );
 
 export default MainPageMainFrame;

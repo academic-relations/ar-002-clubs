@@ -1,9 +1,11 @@
 import axios, { AxiosError } from "axios";
 import MockAdapter from "axios-mock-adapter";
+
 import { env } from "@sparcs-clubs/web/env";
-import mockInterceptor from "./_axios/axiosMockInterceptor";
+
 import tokenInterceptor from "./_axios/axiosAuthTokenInterceptor";
 import errorInterceptor from "./_axios/axiosErrorInterceptor";
+import mockInterceptor from "./_axios/axiosMockInterceptor";
 
 /**
  * @name axiosClient

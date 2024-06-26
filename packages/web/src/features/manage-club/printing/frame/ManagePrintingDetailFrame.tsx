@@ -1,22 +1,20 @@
 import React from "react";
-import { FrameWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
-import Card from "@sparcs-clubs/web/common/components/Card";
+
+import { useRouter } from "next/navigation";
+
 import Button from "@sparcs-clubs/web/common/components/Button";
+import Card from "@sparcs-clubs/web/common/components/Card";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Info from "@sparcs-clubs/web/common/components/Info";
 import {
   ListContainer,
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
-import {
-  ColumnTextWrapper,
-  ProgressCheckSectionWrapper,
-  RowTextWrapper,
-} from "@sparcs-clubs/web/common/components/ProgressCheckSection/ProgressCheckSectionWrapper";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
-import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
-import Info from "@sparcs-clubs/web/common/components/Info";
-import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
-import { useRouter } from "next/navigation";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
+import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
+import ProgressCheckSectionWrapper from "@sparcs-clubs/web/common/components/ProgressCheckSection/ProgressCheckSectionWrapper";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 const ManagePrintingDetailFrame = () => {
   const router = useRouter();
@@ -24,7 +22,7 @@ const ManagePrintingDetailFrame = () => {
     router.push("/manage-club/printing-business");
   };
   return (
-    <FrameWrapper>
+    <FlexWrapper direction="column" gap={60}>
       <PageHead
         items={[
           { name: "대표 동아리 관리", path: "/manage-club" },
@@ -64,7 +62,7 @@ const ManagePrintingDetailFrame = () => {
           {/* TODO: onClick 달기 */}
         </ProgressCheckSectionWrapper>
         {/* TODO: 아래 정보들 백 연결하기 */}
-        <ColumnTextWrapper>
+        <FlexWrapper direction="column" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
             신청자 정보
           </Typography>
@@ -73,8 +71,8 @@ const ManagePrintingDetailFrame = () => {
             <ListItem>담당자: 이지윤</ListItem>
             <ListItem>연락처: 010-0000-0000</ListItem>
           </ListContainer>
-        </ColumnTextWrapper>
-        <ColumnTextWrapper>
+        </FlexWrapper>
+        <FlexWrapper direction="column" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
             대여 물품
           </Typography>
@@ -85,8 +83,8 @@ const ManagePrintingDetailFrame = () => {
               색상: 컬러 / 크기: 용지에 맞춤 / 마무리 작업: 없음
             </ListItem>
           </ListContainer>
-        </ColumnTextWrapper>
-        <ColumnTextWrapper>
+        </FlexWrapper>
+        <FlexWrapper direction="column" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
             인쇄 목적
           </Typography>
@@ -96,20 +94,20 @@ const ManagePrintingDetailFrame = () => {
               이 정도의 길이는 될 수 있을 것 같아요
             </ListItem>
           </ListContainer>
-        </ColumnTextWrapper>
-        <RowTextWrapper>
+        </FlexWrapper>
+        <FlexWrapper direction="row" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
             수령 일시
           </Typography>
           <Typography ff="PRETENDARD" fs={16} lh={20} color="BLACK">
             2024년 3월 11일 (월) 21:00
           </Typography>
-        </RowTextWrapper>
+        </FlexWrapper>
       </Card>
       <Button style={{ width: "max-content" }} onClick={onClick}>
         목록으로 돌아가기
       </Button>
-    </FrameWrapper>
+    </FlexWrapper>
   );
 };
 export default ManagePrintingDetailFrame;

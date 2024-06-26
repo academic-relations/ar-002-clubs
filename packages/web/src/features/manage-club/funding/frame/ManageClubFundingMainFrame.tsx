@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
 
 import NewFundingListSection from "@sparcs-clubs/web/features/manage-club/funding/component/NewFundingListSection";

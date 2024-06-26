@@ -2,9 +2,12 @@
 
 // import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import React from "react";
-import styled from "styled-components";
+
 import Link from "next/link";
+import styled from "styled-components";
+
 import paths from "@sparcs-clubs/web/constants/paths";
+
 import MoreSectionTitle from "../components/MoreSectionTitle";
 import ServiceCard from "../components/ServiceCard";
 
@@ -13,6 +16,18 @@ const ServiceSectionFrameInner = styled.div`
   flex-direction: column;
   width: 320px;
   gap: 20px;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    width: 640px;
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    width: 560px;
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    width: 100%;
+  }
 `;
 
 const ServiceCardWrapper = styled.div`

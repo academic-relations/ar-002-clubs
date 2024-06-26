@@ -1,6 +1,7 @@
-import { Injectable, Inject } from "@nestjs/common";
-import { eq, or, gt, lt, count } from "drizzle-orm";
+import { Inject, Injectable } from "@nestjs/common";
+import { count, eq, gt, lt, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
+
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
   RentalEnum,
@@ -33,6 +34,6 @@ export class RentalObjectRepository {
       )
       .groupBy(RentalObject.rentalEnum);
 
-    return availableObjects;
+    return { objects: availableObjects };
   }
 }

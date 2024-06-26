@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
+
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import NavList from "@sparcs-clubs/web/common/components/NavTools/NavList";
-
 import navPaths from "@sparcs-clubs/web/constants/nav";
 
 import MobileNavMenu from "../NavTools/MobileNavMenu";
+
 import Login from "./_atomic/Login";
 import Logo from "./_atomic/Logo";
 

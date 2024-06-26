@@ -1,5 +1,7 @@
 import React from "react";
+
 import styled from "styled-components";
+
 import CircleSpinner from "./Spinner/CircleSpinner";
 
 interface IAsyncHandler {

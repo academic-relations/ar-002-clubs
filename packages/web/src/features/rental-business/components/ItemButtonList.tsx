@@ -1,7 +1,10 @@
 import React from "react";
+
 import styled from "styled-components";
-import ItemButton from "./ItemButton";
+
 import { RentalInterface } from "../types/rental";
+
+import ItemButton from "./ItemButton";
 
 interface ItemButtonListProps {
   value: "easel" | "vacuum" | "handCart" | "mat" | "tool" | "none";

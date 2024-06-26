@@ -1,4 +1,3 @@
-import isPropValid from "@emotion/is-prop-valid";
 import React, {
   ChangeEvent,
   InputHTMLAttributes,
@@ -6,10 +5,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import styled, { css } from "styled-components";
+
+import isPropValid from "@emotion/is-prop-valid";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import Label from "./_atomic/Label";
-import ErrorMessage from "./_atomic/ErrorMessage";
+import styled, { css } from "styled-components";
+
+import FormError from "../FormError";
+import Label from "../FormLabel";
 
 export interface ItemNumberInputProps
   extends InputHTMLAttributes<HTMLInputElement> {
@@ -186,14 +188,14 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
           onSelect={handleCursor}
           {...props}
         />
-        {itemLimit && (
+        {itemLimit !== undefined && (
           <RightContentWrapper hasError={!!error}>
             / {itemLimit}
             {unit}
           </RightContentWrapper>
         )}
       </InputContainer>
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+      {error && <FormError>{error}</FormError>}
     </InputWrapper>
   );
 };

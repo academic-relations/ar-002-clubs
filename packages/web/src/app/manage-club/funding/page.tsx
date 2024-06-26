@@ -1,13 +1,12 @@
 "use client";
 
-import ManageClubFundingMainFrame from "@sparcs-clubs/web/features/manage-club/funding/frame/ManageClubFundingMainFrame";
-
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import {
   manageClubFundingPageBreadCrumbName,
   manageClubFundingPageName,
   manageClubFundingPagePath,
 } from "@sparcs-clubs/web/constants/manageClubFunding";
-import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import ManageClubFundingMainFrame from "@sparcs-clubs/web/features/manage-club/funding/frame/ManageClubFundingMainFrame";
 
 const Funding = () => (
   <>

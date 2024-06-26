@@ -1,15 +1,12 @@
 import React from "react";
-import styled from "styled-components";
+
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import type { CommonSpaceInterface } from "../types/commonSpace";
+
 import CommonSpaceInfoFrame from "./CommonSpaceInfoFrame";
 import CommonSpaceNoticeFrame from "./CommonSpaceNoticeFrame";
 
-const CommonSpaceMainFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
+import type { CommonSpaceInterface } from "../types/commonSpace";
 
 const CommonSpaceMainFrame: React.FC = () => {
   const [commonSpace, setCommonSpace] = React.useState<CommonSpaceInterface>({
@@ -17,7 +14,7 @@ const CommonSpaceMainFrame: React.FC = () => {
   });
   const props = { commonSpace, setCommonSpace };
   return (
-    <CommonSpaceMainFrameInner>
+    <FlexWrapper direction="column" gap={60}>
       <PageHead
         items={[{ name: "공용공간 비정기사용", path: "/common-space" }]}
         title="공용공간 비정기사용"
@@ -27,7 +24,7 @@ const CommonSpaceMainFrame: React.FC = () => {
       ) : (
         <CommonSpaceNoticeFrame {...props} />
       )}
-    </CommonSpaceMainFrameInner>
+    </FlexWrapper>
   );
 };
 

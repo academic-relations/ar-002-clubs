@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
 
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
-
 import {
   numberToKrWon,
   tableHeaderText,

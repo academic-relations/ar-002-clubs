@@ -2,19 +2,13 @@
 
 import React from "react";
 
-import styled from "styled-components";
-import RegisterMemberListFrame from "@sparcs-clubs/web/features/manage-club/members/frames/RegisterMemberListFrame";
-import AllMemberListFrame from "@sparcs-clubs/web/features/manage-club/members/frames/AllMemberListFrame";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-
-const MembersPageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
+import AllMemberListFrame from "@sparcs-clubs/web/features/manage-club/members/frames/AllMemberListFrame";
+import RegisterMemberListFrame from "@sparcs-clubs/web/features/manage-club/members/frames/RegisterMemberListFrame";
 
 const Members = () => (
-  <MembersPageWrapper>
+  <FlexWrapper direction="column" gap={60}>
     <PageHead
       items={[
         { name: "대표 동아리 관리", path: "/manage-club" },
@@ -25,7 +19,7 @@ const Members = () => (
     <RegisterMemberListFrame />
     {/* TODO: registereMember는 신청 시기에만 나오도록 */}
     <AllMemberListFrame />
-  </MembersPageWrapper>
+  </FlexWrapper>
 );
 
 export default Members;

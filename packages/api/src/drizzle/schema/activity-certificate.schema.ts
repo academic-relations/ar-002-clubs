@@ -1,14 +1,15 @@
 import {
-  mysqlTable,
-  int,
-  varchar,
-  datetime,
-  timestamp,
   date,
+  datetime,
   index,
+  int,
+  mysqlTable,
+  timestamp,
+  varchar,
 } from "drizzle-orm/mysql-core";
-import { Student } from "./user.schema";
+
 import { Club } from "./club.schema";
+import { Student } from "./user.schema";
 
 // ActivityCertificateStatusEnum table
 export const ActivityCertificateStatusEnum = mysqlTable(
