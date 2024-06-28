@@ -13,7 +13,6 @@
     "mock:front": "NEXT_PUBLIC_API_MOCK_MODE=1 dotenv -- pnpm -r --stream --parallel mock:front",
     "mock:back": "NEXT_PUBLIC_API_MOCK_MODE=1 dotenv -- pnpm -r --stream --parallel mock:back",
     "db": "dotenv -- pnpm -F api db",
-    "boot-local-db": "dotenv -- pnpm -F api db up -d",
     "generate": "dotenv -- pnpm -F api generate",
     "pull": "dotenv -- pnpm -F api pull",
     "migrate": "dotenv -- pnpm -F api migrate",
