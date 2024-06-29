@@ -39,4 +39,28 @@ export class ClubRepresentativeDRepository {
 
     return representative;
   }
+
+  // 현재 동아리 대표자 목록 가져오기
+  async findRepresentativeIdListByClubId(
+    clubId: number,
+  ): Promise<Array<{ studentId: number }>> {
+    const currentDate = getKSTDate();
+
+    const representative = await this.db
+      .select({ studentId: ClubRepresentativeD.studentId })
+      .from(ClubRepresentativeD)
+      .where(
+        and(
+          eq(ClubRepresentativeD.clubId, clubId),
+          lte(ClubRepresentativeD.startTerm, currentDate),
+          or(
+            gte(ClubRepresentativeD.endTerm, currentDate),
+            isNull(ClubRepresentativeD.endTerm),
+          ),
+        ),
+      )
+      .orderBy(ClubRepresentativeD.endTerm);
+
+    return representative;
+  }
 }

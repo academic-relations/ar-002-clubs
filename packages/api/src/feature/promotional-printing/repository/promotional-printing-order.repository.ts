@@ -66,6 +66,15 @@ export class PromotionalPrintingOrderRepository {
     return numberOfOrders;
   }
 
+  async findByOrderId(orderId: number) {
+    const orders = await this.db
+      .select()
+      .from(PromotionalPrintingOrder)
+      .where(eq(PromotionalPrintingOrder.id, orderId));
+
+    return orders;
+  }
+
   async getStudentPromotionalPrintingsOrders(
     clubId: number,
     pageOffset: number,
@@ -112,8 +121,8 @@ export class PromotionalPrintingOrderRepository {
         .insert(PromotionalPrintingOrder)
         .values({
           clubId: parameter.clubId,
-          // 아직 인증 구현이 안되어서 임의의값을 집어넣은 상태입니다
-          studentId: 1,
+          // 아직 인증 구현이 안되어서 임의의값을 집어넣은 상태입니다(하승종 Id)
+          studentId: 605,
           studentPhoneNumber: parameter.krPhoneNumber,
           promotionalPrintingOrderStatusEnum: Status.Applied,
           documentFileLink: parameter.documentFileLink,
