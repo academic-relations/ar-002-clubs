@@ -1,5 +1,7 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import TableCell, {
   TableCellType,
 } from "@sparcs-clubs/web/common/components/Table/TableCell";
@@ -7,6 +9,7 @@ import {
   TableRow,
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 interface TableHeaderProps {
   type: TableCellType;
@@ -26,35 +29,61 @@ const MyServiceTable: React.FC<MyServiceTableProps> = ({
   minWidths,
   contentsTypes,
   contents,
-}) => (
-  <TableWrapper>
-    <TableRow>
-      {headers.map((header, index) => (
-        <TableCell
-          key={String(index) + header.text}
-          type={header.type}
-          width={`${widths[index]}%`}
-          minWidth={minWidths[index]}
+}) => {
+  const [page, setPage] = useState<number>(1);
+
+  return (
+    <FlexWrapper direction="column" gap={20} style={{ alignItems: "center" }}>
+      <FlexWrapper direction="column" gap={8} style={{ width: "100%" }}>
+        <Typography
+          ff="PRETENDARD"
+          fw="REGULAR"
+          fs={16}
+          lh={20}
+          color="GRAY.600"
+          style={{
+            textAlign: "right",
+          }}
         >
-          {header.text}
-        </TableCell>
-      ))}
-    </TableRow>
-    {contents.map((content, rowIndex) => (
-      <TableRow key={String(rowIndex) + content[0]}>
-        {content.map((cell, cellIndex) => (
-          <TableCell
-            key={String(cellIndex) + cell}
-            type={contentsTypes[cellIndex]}
-            width={`${widths[cellIndex]}%`}
-            minWidth={minWidths[cellIndex]}
-          >
-            {cell}
-          </TableCell>
-        ))}
-      </TableRow>
-    ))}
-  </TableWrapper>
-);
+          {`총 ${contents.length}개`}
+        </Typography>
+        <TableWrapper>
+          <TableRow>
+            {headers.map((header, index) => (
+              <TableCell
+                key={String(index) + header.text}
+                type={header.type}
+                width={`${widths[index]}%`}
+                minWidth={minWidths[index]}
+              >
+                {header.text}
+              </TableCell>
+            ))}
+          </TableRow>
+          {contents.map((content, rowIndex) => (
+            <TableRow key={String(rowIndex) + content[0]}>
+              {content.map((cell, cellIndex) => (
+                <TableCell
+                  key={String(cellIndex) + cell}
+                  type={contentsTypes[cellIndex]}
+                  width={`${widths[cellIndex]}%`}
+                  minWidth={minWidths[cellIndex]}
+                >
+                  {cell}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableWrapper>
+      </FlexWrapper>
+      <Pagination // 페이지 한 개일 때도 Pagination 보이는지?
+        totalPage={Math.ceil(contents.length / 10)}
+        currentPage={page}
+        limit={10}
+        setPage={setPage}
+      />
+    </FlexWrapper>
+  );
+};
 
 export default MyServiceTable;
