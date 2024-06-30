@@ -135,4 +135,3 @@ const Pagination: React.FC<PaginationProps> = ({
 };
 
 export default Pagination;
-// TODO: common component로 이동
