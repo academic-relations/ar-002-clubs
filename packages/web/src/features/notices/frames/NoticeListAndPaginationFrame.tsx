@@ -5,12 +5,12 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import {
   indexPerPagination,
   noticePerPage,
 } from "@sparcs-clubs/web/constants/noticeList";
 import NoticeList from "@sparcs-clubs/web/features/notices/components/NoticeList";
-import NoticePagination from "@sparcs-clubs/web/features/notices/components/NoticePagination";
 import { useGetNotice } from "@sparcs-clubs/web/features/notices/services/useGetNotice";
 
 const NoticeListAndPaginationFrameInner = styled.div`
@@ -33,7 +33,7 @@ const NoticeListAndPaginationFrame = () => {
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <NoticeListAndPaginationFrameInner>
         <NoticeList infos={data?.notices ?? []} />
-        <NoticePagination
+        <Pagination
           totalPage={totalPage}
           currentPage={page}
           limit={indexPerPagination}
