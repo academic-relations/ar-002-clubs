@@ -31,6 +31,8 @@ const MyServiceTable: React.FC<MyServiceTableProps> = ({
   contents,
 }) => {
   const [page, setPage] = useState<number>(1);
+  const pageLimit = 2;
+  const data = contents.slice((page - 1) * pageLimit, page * pageLimit);
 
   return (
     <FlexWrapper direction="column" gap={20} style={{ alignItems: "center" }}>
@@ -60,7 +62,7 @@ const MyServiceTable: React.FC<MyServiceTableProps> = ({
               </TableCell>
             ))}
           </TableRow>
-          {contents.map((content, rowIndex) => (
+          {data.map((content, rowIndex) => (
             <TableRow key={String(rowIndex) + content[0]}>
               {content.map((cell, cellIndex) => (
                 <TableCell
@@ -77,9 +79,9 @@ const MyServiceTable: React.FC<MyServiceTableProps> = ({
         </TableWrapper>
       </FlexWrapper>
       <Pagination // 페이지 한 개일 때도 Pagination 보이는지?
-        totalPage={Math.ceil(contents.length / 10)}
+        totalPage={Math.ceil(contents.length / pageLimit)}
         currentPage={page}
-        limit={10}
+        limit={pageLimit}
         setPage={setPage}
       />
     </FlexWrapper>
