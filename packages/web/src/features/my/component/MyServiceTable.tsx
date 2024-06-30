@@ -31,7 +31,7 @@ const MyServiceTable: React.FC<MyServiceTableProps> = ({
   contents,
 }) => {
   const [page, setPage] = useState<number>(1);
-  const pageLimit = 2;
+  const pageLimit = 10;
   const data = contents.slice((page - 1) * pageLimit, page * pageLimit);
 
   return (
