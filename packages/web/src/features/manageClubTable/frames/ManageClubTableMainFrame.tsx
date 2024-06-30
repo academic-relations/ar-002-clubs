@@ -4,10 +4,10 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 
+import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import NoticePagination from "@sparcs-clubs/web/features/notices/components/NoticePagination";
 
 import {
   activityCertificateColumnSort,
@@ -220,7 +220,7 @@ const ManageClubTableMainFrame: React.FC<ManageClubTableMainFrameProps> = ({
         ))}
       </TableFrameInner>
       {unslicedData.length > 1 && (
-        <NoticePagination
+        <Pagination
           totalPage={Math.ceil(unslicedData.length / 10)}
           currentPage={page}
           limit={10}
