@@ -2,11 +2,12 @@
 
 import React from "react";
 
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import ManageClubTableMainFrame from "@sparcs-clubs/web/features/manageClubTable/frames/ManageClubTableMainFrame";
+import MyServiceTable from "@sparcs-clubs/web/features/my/component/MyServiceTable";
 
 const MyActivityCertificate = () => (
-  <>
+  <FlexWrapper direction="column" gap={20}>
     <PageHead
       items={[
         { name: "마이페이지", path: "/my" },
@@ -17,8 +18,8 @@ const MyActivityCertificate = () => (
       ]}
       title="활동확인서 발급 내역"
     />
-    <ManageClubTableMainFrame pageType="activity-certificate" />
-  </>
+    <MyServiceTable />
+  </FlexWrapper>
 );
 
 export default MyActivityCertificate;
