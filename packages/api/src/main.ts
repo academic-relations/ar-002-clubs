@@ -1,5 +1,6 @@
 import { HttpException } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import cookieParser from "cookie-parser";
 import { ZodError } from "zod";
 
 import { env } from "@sparcs-clubs/api/env";
@@ -18,6 +19,7 @@ async function bootstrap() {
     new ZodErrorFilter<ZodError>(),
     new HttpExceptionFilter<HttpException>(),
   ); // 만약 global추가하는 경우 AllExceptionFilter 뒤에 추가하면 됨.
+  app.use(cookieParser());
   // localhost에서의 cors 해결
   if (process.env.NODE_ENV === "development") {
     app.enableCors({
