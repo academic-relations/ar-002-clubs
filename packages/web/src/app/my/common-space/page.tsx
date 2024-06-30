@@ -2,11 +2,10 @@
 
 import React, { useMemo } from "react";
 
-import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
-
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import { CmsTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import MyServiceTable from "@sparcs-clubs/web/features/my/component/MyServiceTable";
 import { mockupMyCms } from "@sparcs-clubs/web/features/my/service/_mock/mockMyClub";
 import {
@@ -14,18 +13,7 @@ import {
   formatDateTime,
   formatTime,
 } from "@sparcs-clubs/web/utils/Date/formateDate";
-import {
-  getTagDetail,
-  StatusDetail,
-} from "@sparcs-clubs/web/utils/getTagDetail";
-
-const TagList: {
-  [key in CommonSpaceUsageOrderStatusEnum]: StatusDetail;
-} = {
-  [CommonSpaceUsageOrderStatusEnum.Applied]: { text: "신청", color: "BLUE" },
-  [CommonSpaceUsageOrderStatusEnum.Canceled]: { text: "취소", color: "GRAY" },
-  [CommonSpaceUsageOrderStatusEnum.Used]: { text: "사용", color: "GREEN" },
-};
+import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 const MyCommonSpace = () => (
   <FlexWrapper direction="column" gap={20}>
@@ -53,7 +41,7 @@ const MyCommonSpace = () => (
       contents={useMemo(
         () =>
           mockupMyCms.items.map(item => {
-            const { color, text } = getTagDetail(item.statusEnum, TagList);
+            const { color, text } = getTagDetail(item.statusEnum, CmsTagList);
             return [
               <Tag color={color}>{text}</Tag>,
               formatDateTime(item.createdAt),
