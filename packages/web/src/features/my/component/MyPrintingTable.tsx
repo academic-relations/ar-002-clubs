@@ -1,40 +1,20 @@
 import React from "react";
 
-import { PromotionalPrintingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
-
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
   TableRow,
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import { PrtTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formateDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import type { ApiPrt001ResponseOk } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
-import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface PrintingTableProps {
   printingList: ApiPrt001ResponseOk;
 }
-
-const TagList: {
-  [key in PromotionalPrintingOrderStatusEnum]: StatusDetail;
-} = {
-  [PromotionalPrintingOrderStatusEnum.Applied]: { text: "신청", color: "BLUE" },
-  [PromotionalPrintingOrderStatusEnum.Approved]: {
-    text: "승인",
-    color: "YELLOW",
-  },
-  [PromotionalPrintingOrderStatusEnum.Printed]: {
-    text: "출력",
-    color: "PURPLE",
-  },
-  [PromotionalPrintingOrderStatusEnum.Received]: {
-    text: "수령",
-    color: "GREEN",
-  },
-};
 
 const getPrintSize = (type: number): string => {
   switch (type) {
@@ -67,7 +47,7 @@ const MyPrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
       </TableCell>
     </TableRow>
     {printingList.items.map((printing, index) => {
-      const { color, text } = getTagDetail(printing.status, TagList);
+      const { color, text } = getTagDetail(printing.status, PrtTagList);
       return (
         <TableRow isBorder key={printing.studentName + String(index)}>
           <TableCell type="Tag" width="10%" minWidth={90}>

@@ -6,27 +6,14 @@ import {
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import { ApplyTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-import {
-  ActivityStatusEnum,
-  type Funding,
-} from "../service/_mock/mockManageClub";
-
-import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+import { type Funding } from "../service/_mock/mockManageClub";
 
 interface FundingTableProps {
   fundingList: Funding[];
 }
-
-const TagList: {
-  [key in ActivityStatusEnum]: StatusDetail;
-} = {
-  [ActivityStatusEnum.Writing]: { text: "작성 중", color: "BLUE" },
-  [ActivityStatusEnum.Applied]: { text: "신청 완료", color: "PURPLE" },
-  [ActivityStatusEnum.Approved]: { text: "승인 완료", color: "GREEN" },
-  [ActivityStatusEnum.Rejected]: { text: "신청 반려", color: "RED" },
-};
 
 const FundingTable: React.FC<FundingTableProps> = ({ fundingList }) => {
   const totalRequested = fundingList.reduce(
@@ -59,7 +46,7 @@ const FundingTable: React.FC<FundingTableProps> = ({ fundingList }) => {
         </TableCell>
       </TableRow>
       {fundingList.map((funding, index) => {
-        const { color, text } = getTagDetail(funding.status, TagList);
+        const { color, text } = getTagDetail(funding.status, ApplyTagList);
         return (
           <TableRow key={funding.name + String(index)} isBorder>
             <TableCell type="Tag" width="10%" minWidth={116}>
