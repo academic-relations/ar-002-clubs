@@ -2,8 +2,8 @@
 
 import React from "react";
 
-import ManageCertificateDetailFrame from "@sparcs-clubs/web/features/manage-club/activity-certificate/frame/ManageCertificateDetailFrame";
+import MyCertificateDetailFrame from "@sparcs-clubs/web/features/my/activity-certificate/frame/MyCertificateDetailFrame";
 
-const MyAcfDetail = () => <ManageCertificateDetailFrame />;
+const MyAcfDetail = () => <MyCertificateDetailFrame />;
 
 export default MyAcfDetail;

@@ -2,8 +2,8 @@
 
 import React from "react";
 
-import ManageCommonSpaceDetailFrame from "@sparcs-clubs/web/features/manage-club/common-space/frame/ManageCommonSpaceDetailFrame";
+import MyCommonSpaceDetailFrame from "@sparcs-clubs/web/features/my/common-space/frame/MyCommonSpaceDetailFrame";
 
-const MyCommonSpaceDetail = () => <ManageCommonSpaceDetailFrame />;
+const MyCommonSpaceDetail = () => <MyCommonSpaceDetailFrame />;
 
 export default MyCommonSpaceDetail;

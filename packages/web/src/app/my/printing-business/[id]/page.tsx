@@ -2,8 +2,8 @@
 
 import React from "react";
 
-import ManagePrintingDetailFrame from "@sparcs-clubs/web/features/manage-club/printing/frame/ManagePrintingDetailFrame";
+import MyPrintingDetailFrame from "@sparcs-clubs/web/features/my/printing-business/frame/MyPrintingDetailFrame";
 
-const MyPrintingDetail = () => <ManagePrintingDetailFrame />;
+const MyPrintingDetail = () => <MyPrintingDetailFrame />;
 
 export default MyPrintingDetail;

@@ -25,7 +25,7 @@ const MyPrintingDetailFrame = () => {
     <FlexWrapper direction="column" gap={60}>
       <PageHead
         items={[
-          { name: "대표 동아리 관리", path: "/my" },
+          { name: "마이페이지", path: "/my" },
           {
             name: "홍보물 인쇄 내역",
             path: "/my/printing-business",

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
@@ -6,7 +6,6 @@ import styled from "styled-components";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import {
   ListContainer,
@@ -25,18 +24,7 @@ const ActivityWrapper = styled.div`
   padding: 0 24px;
 `;
 
-const ButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-  justify-content: flex-end;
-  width: 100%;
-`;
-
 const MyCertificateDetailFrame = () => {
-  const [rejectReason, setRejectReason] = useState("");
-  const rejectButtonType = rejectReason !== "" ? "default" : "disabled";
-
   const router = useRouter();
   const onClick = () => {
     router.push("/my/activity-certificate");
@@ -77,21 +65,9 @@ const MyCertificateDetailFrame = () => {
             status={[Status.Approved]}
             dates={[new Date()]}
           />
-          <Info text="동아리 대표자의 승인이 있어야 다음 단계로 넘어갈 수 있습니다. 반려 시 사유를 입력해야함" />
-          <TextInput
-            placeholder="반려 사유를 입력해주세요"
-            label="반려 사유 (반려 시에만 입력)"
-            area
-            value={rejectReason}
-            handleChange={setRejectReason}
-          />
-          <ButtonWrapper>
-            <Button style={{ width: "max-content" }}>신청 승인</Button>
-            <Button style={{ width: "max-content" }} type={rejectButtonType}>
-              신청 반려
-            </Button>
-            {/* TODO: onClick 달기 */}
-          </ButtonWrapper>
+          <Info text="승인이 완료되기 전까지 신청을 취소할 수 있습니다" />
+          <Button style={{ width: "max-content" }}>신청 취소</Button>
+          {/* TODO: onClick 달기 */}
         </ProgressCheckSectionWrapper>
         {/* TODO: 아래 정보들 백 연결하기 */}
         <FlexWrapper direction="column" gap={16}>

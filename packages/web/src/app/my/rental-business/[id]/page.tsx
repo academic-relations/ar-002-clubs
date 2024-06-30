@@ -2,8 +2,8 @@
 
 import React from "react";
 
-import ManageRentalDetailFrame from "@sparcs-clubs/web/features/manage-club/rental/frame/ManageRentalDetailFrame";
+import MyRentalDetailFrame from "@sparcs-clubs/web/features/my/rental-business/frame/MyRentalDetailFrame";
 
-const MyRentalDetail = () => <ManageRentalDetailFrame />;
+const MyRentalDetail = () => <MyRentalDetailFrame />;
 
 export default MyRentalDetail;
