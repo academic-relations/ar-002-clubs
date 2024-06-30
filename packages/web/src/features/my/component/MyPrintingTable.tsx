@@ -18,14 +18,14 @@ interface PrintingTableProps {
 
 const getPrintSize = (type: number): string => {
   switch (type) {
-    case 0:
-      return "A4";
     case 1:
+      return "A4";
+    case 2:
       return "A3";
     default:
       return "None";
   }
-}; // TODO: enum 1로 시작함. 나중에 interface 수정할 때 같이 고치기
+};
 
 const MyPrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
   <TableWrapper>

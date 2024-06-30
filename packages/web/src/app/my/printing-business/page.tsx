@@ -14,9 +14,9 @@ import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 // TODO: printing 관련 table마다 중복
 const getPrintSize = (type: number): string => {
   switch (type) {
-    case 0:
-      return "A4";
     case 1:
+      return "A4";
+    case 2:
       return "A3";
     default:
       return "None";
