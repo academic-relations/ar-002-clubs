@@ -6,14 +6,14 @@ import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 
-interface NoticePaginationProps {
+interface PaginationProps {
   totalPage: number;
   currentPage: number;
   limit: number;
   setPage: React.Dispatch<number>;
 }
 
-const NoticePaginationInner = styled.div`
+const PaginationInner = styled.div`
   flex-basis: auto;
   flex-grow: 0;
   flex-shrink: 0;
@@ -97,7 +97,7 @@ const moveToRightRange = (
   setPage(destPage);
 };
 
-const NoticePagination: React.FC<NoticePaginationProps> = ({
+const Pagination: React.FC<PaginationProps> = ({
   totalPage,
   currentPage,
   limit,
@@ -108,7 +108,7 @@ const NoticePagination: React.FC<NoticePaginationProps> = ({
   const currentRange = Math.floor((currentPage - 1) / limit);
   const lastRange = Math.floor(totalPage / limit);
   return (
-    <NoticePaginationInner>
+    <PaginationInner>
       {currentRange > 0 ? (
         <ButtonWrapper
           onClick={() => moveToLeftRange(currentRange, limit, setPage)}
@@ -130,9 +130,9 @@ const NoticePagination: React.FC<NoticePaginationProps> = ({
       ) : (
         <div />
       )}
-    </NoticePaginationInner>
+    </PaginationInner>
   );
 };
 
-export default NoticePagination;
+export default Pagination;
 // TODO: common component로 이동
