@@ -49,10 +49,34 @@ export class AuthRepository {
       .then(takeUnique);
 
     let result: {
-      [key: string]:
-        | string
-        | number
-        | { id: number; number?: number; studentId?: number };
+      id: number;
+      sid: string;
+      name: string;
+      email: string;
+      undergraduate?: {
+        id: number;
+        number: number;
+      };
+      master?: {
+        id: number;
+        number: number;
+      };
+      doctor?: {
+        id: number;
+        number: number;
+      };
+      executive?: {
+        id: number;
+        studentId: number;
+      };
+      professor?: {
+        id: number;
+        email: string;
+      };
+      employee?: {
+        id: number;
+        email: string;
+      };
     } = {
       id: user.id,
       sid: user.sid,

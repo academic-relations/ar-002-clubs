@@ -1,33 +1,17 @@
-interface UserRefreshToken {
+interface User {
   id: number;
   sid: string;
   name: string;
-  emial: string;
-}
-
-interface UserAccesstoken {
-  id: number;
-  sid: string;
-  name: string;
-  emial: string;
+  email: string;
   studentId?: number;
   studentNumber?: number;
   executiveId?: number;
 }
 
 export interface UserRefreshTokenPayload {
-  user: Pick<UserRefreshToken, "id" | "sid" | "name" | "emial">;
+  user: Pick<User, "id" | "sid" | "name" | "email">;
 }
 
 export interface UserAccessTokenPayload {
-  user: Pick<
-    UserAccesstoken,
-    | "id"
-    | "sid"
-    | "name"
-    | "emial"
-    | "executiveId"
-    | "studentId"
-    | "studentNumber"
-  >;
+  user: User;
 }

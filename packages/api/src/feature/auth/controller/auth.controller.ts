@@ -2,6 +2,8 @@ import { Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { Response } from "express";
 
+import logger from "@sparcs-clubs/api/common/util/logger";
+
 import {
   UserAccessTokenPayload,
   UserRefreshTokenPayload,
@@ -23,13 +25,13 @@ export class AuthController {
   @UseGuards(AuthGuard("refresh"))
   @Post("/auth/refresh")
   getAuthRefresh(@Req() req: Request & UserRefreshTokenPayload) {
-    console.log(req.user);
+    logger.debug(req.user);
     // return this.authService.postAuthRefresh({ user: req.user });
   }
 
   @UseGuards(AuthGuard("access"))
   @Get("/auth/test")
   test(@Req() req: Request & UserAccessTokenPayload) {
-    console.log(req.user);
+    logger.debug(req.user);
   }
 }
