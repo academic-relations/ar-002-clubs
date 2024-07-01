@@ -1,38 +1,20 @@
 import React from "react";
 
-import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
-
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
   TableRow,
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import { AcfTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formateDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import type { ApiAcf003ResponseOk } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf003";
-import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface AcfTableProps {
   certificateList: ApiAcf003ResponseOk;
 }
-
-const TagList: {
-  [key in ActivityCertificateOrderStatusEnum]: StatusDetail;
-} = {
-  [ActivityCertificateOrderStatusEnum.Applied]: { text: "신청", color: "BLUE" },
-  [ActivityCertificateOrderStatusEnum.Approved]: {
-    text: "승인",
-    color: "YELLOW",
-  },
-  [ActivityCertificateOrderStatusEnum.Issued]: { text: "발급", color: "GREEN" },
-  [ActivityCertificateOrderStatusEnum.Rejected]: { text: "반려", color: "RED" },
-  [ActivityCertificateOrderStatusEnum.Received]: {
-    text: "수령",
-    color: "GREEN",
-  }, // TODO: 수령 따로 필요한지 확인
-};
 
 const MyActivityCertificateTable: React.FC<AcfTableProps> = ({
   certificateList,
@@ -53,7 +35,7 @@ const MyActivityCertificateTable: React.FC<AcfTableProps> = ({
       </TableCell>
     </TableRow>
     {certificateList.items.map((certificate, index) => {
-      const { color, text } = getTagDetail(certificate.statusEnum, TagList);
+      const { color, text } = getTagDetail(certificate.statusEnum, AcfTagList);
       return (
         <TableRow isBorder key={certificate.studentName + String(index)}>
           <TableCell type="Tag" width="10%" minWidth={90}>

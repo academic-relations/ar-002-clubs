@@ -1,13 +1,12 @@
 import React from "react";
 
-import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
-
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
   TableRow,
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import { RntTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import {
   formatDate,
   formatDateTime,
@@ -15,21 +14,10 @@ import {
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import type { ApiRnt003ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt003";
-import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface RentalTableProps {
   rentalList: ApiRnt003ResponseOK;
 }
-
-const TagList: {
-  [key in RentalOrderStatusEnum]: StatusDetail;
-} = {
-  [RentalOrderStatusEnum.Applied]: { text: "신청", color: "BLUE" },
-  [RentalOrderStatusEnum.Approved]: { text: "승인", color: "YELLOW" },
-  [RentalOrderStatusEnum.Rented]: { text: "대여", color: "PURPLE" },
-  [RentalOrderStatusEnum.Returned]: { text: "반납", color: "GREEN" },
-};
-
 const RentalTable: React.FC<RentalTableProps> = ({ rentalList }) => (
   <TableWrapper>
     <TableRow>
@@ -53,7 +41,7 @@ const RentalTable: React.FC<RentalTableProps> = ({ rentalList }) => (
       </TableCell>
     </TableRow>
     {rentalList.items.map(rental => {
-      const { color, text } = getTagDetail(rental.statusEnum, TagList);
+      const { color, text } = getTagDetail(rental.statusEnum, RntTagList);
       return (
         <TableRow key={rental.id} isBorder>
           <TableCell type="Tag" width="10%" minWidth={90}>
