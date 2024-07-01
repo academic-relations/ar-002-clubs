@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UsePipes } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, UsePipes } from "@nestjs/common";
 import apiAcf001, {
   ApiAcf001RequestBody,
   ApiAcf001ResponseCreated,
@@ -6,10 +6,16 @@ import apiAcf001, {
 import apiAcf002, {
   ApiAcf002ResponseOk,
 } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf002";
+import apiAcf003 from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf003";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
 import { ActivityCertificateService } from "../service/activity-certificate.service";
+
+import type {
+  ApiAcf003RequestQuery,
+  ApiAcf003ResponseOk,
+} from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf003";
 
 @Controller()
 export class ActivityCertificateController {
@@ -32,5 +38,19 @@ export class ActivityCertificateController {
     const clubHistory =
       await this.activityCertificateService.getStudentActivityCertificatesClubHistory();
     return clubHistory;
+  }
+
+  // // TODO: add club validation
+  @Get("/student/activity-certificates")
+  @UsePipes(new ZodPipe(apiAcf003))
+  async getStudentActivityCertificates(
+    @Query() query: ApiAcf003RequestQuery,
+  ): Promise<ApiAcf003ResponseOk> {
+    const orders =
+      await this.activityCertificateService.getStudentActivityCertificates(
+        query,
+      );
+
+    return orders;
   }
 }

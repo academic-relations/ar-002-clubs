@@ -9,6 +9,7 @@ import { ClubController } from "./controller/club.controller";
 import { ClubRepresentativeDRepository } from "./repository/club.club-representative-d.repository";
 import { ClubRoomTRepository } from "./repository/club.club-room-t.repository";
 import { DivisionPermanentClubDRepository } from "./repository/club.division-permanent-club-d.repository";
+import { SemesterDRepository } from "./repository/club.semester-d.repository";
 import { ClubService } from "./service/club.service";
 
 @Module({
@@ -22,6 +23,7 @@ import { ClubService } from "./service/club.service";
     ClubTRepository,
     ClubStudentTRepository,
     DivisionPermanentClubDRepository,
+    SemesterDRepository,
   ],
   exports: [
     ClubService,
