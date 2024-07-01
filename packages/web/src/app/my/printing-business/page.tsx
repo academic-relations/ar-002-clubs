@@ -9,19 +9,8 @@ import { PrtTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import MyServiceTable from "@sparcs-clubs/web/features/my/component/MyServiceTable";
 import { mockupMyPrint } from "@sparcs-clubs/web/features/my/service/_mock/mockMyClub";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formateDate";
+import getPrintSize from "@sparcs-clubs/web/utils/getPrintSize";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
-
-// TODO: printing 관련 table마다 중복
-const getPrintSize = (type: number): string => {
-  switch (type) {
-    case 1:
-      return "A4";
-    case 2:
-      return "A3";
-    default:
-      return "None";
-  }
-};
 
 const MyPrintingBusiness = () => (
   <FlexWrapper direction="column" gap={20}>
