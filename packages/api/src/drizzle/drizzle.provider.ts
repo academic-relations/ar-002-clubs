@@ -6,6 +6,7 @@ import * as clubSchema from "./schema/club.schema";
 import * as noticeSchema from "./schema/notice.schema";
 import * as promotionalPrintingSchema from "./schema/promotional-printing.schema";
 import * as activityCertificateSchema from "./schema/activity-certificate.schema";
+import * as rentalSchema from "./schema/rental.schema";
 import { env } from "../env";
 
 export const DrizzleAsyncProvider = "drizzleProvider";
@@ -33,6 +34,7 @@ export const getDbInstance = async () => {
         noticeSchema,
         promotionalPrintingSchema,
         activityCertificateSchema,
+        rentalSchema,
       },
       mode: "default",
     });

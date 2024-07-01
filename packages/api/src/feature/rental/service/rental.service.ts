@@ -1,7 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-// import { ApiRnt002RequestBody, ApiRnt002ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt002";
-import { ApiRnt003RequestQuery } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt003";
-import { ApiRnt001ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
+import { HttpException, Injectable, NotFoundException } from "@nestjs/common";
+import { ApiRnt002RequestBody } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt002";
+import {
+  ApiRnt003RequestQuery,
+  ApiRnt003ResponseOK,
+} from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt003";
 import { RentalObjectRepository } from "../repository/rental.rental-object.repository";
 import { RentalServiceRepository } from "../repository/rental.rental-service.repository";
 
@@ -24,26 +26,29 @@ export class RentalService {
     return availableObjectIds;
   }
 
-  // async postRental(studentId: number, clubId: number,  body: ApiRnt002RequestBody){
+  async postRental(
+    studentId: number,
+    clubId: number,
+    body: ApiRnt002RequestBody,
+  ) {
+    const { objects, studentPhoneNumber, purpose, desiredStart, desiredEnd } =
+      body;
 
-  //   const { objects, studentPhoneNumber, purpose, desiredStart, desiredEnd } = body;
-  //   const result = await this.rentalServiceRepository.createRental(
-  //     studentId,
-  //     clubId,
-  //     objects,
-  //     purpose,
-  //     desiredStart,
-  //     desiredEnd,
-  //     studentPhoneNumber,
-  //   );
-  //   console.log(result);
-  //   // if (!result) {
-  //   //   throw new HttpException('Failed to post rental', 400);
-  //   // }
-  //   // return result;
-  // }
+    const result = await this.rentalServiceRepository.createRental(
+      studentId,
+      clubId,
+      objects,
+      purpose,
+      desiredStart,
+      desiredEnd,
+      studentPhoneNumber,
+    );
+    if (!result) {
+      throw new HttpException("Failed to post rental", 423);
+    }
+  }
 
-  async getRentals(query: ApiRnt003RequestQuery): Promise<ApiRnt001ResponseOK> {
+  async getRentals(query: ApiRnt003RequestQuery): Promise<ApiRnt003ResponseOK> {
     const { clubId, pageOffset, itemCount } = query;
     const rentals = await this.rentalServiceRepository.getRentals(
       clubId,

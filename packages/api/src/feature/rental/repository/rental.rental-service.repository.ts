@@ -1,6 +1,6 @@
 import { Injectable, Inject } from "@nestjs/common";
-// import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
-import { eq, gte, lte, and, count } from "drizzle-orm";
+import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
+import { eq, gte, lte, and, count, gt, lt, isNull, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
@@ -11,78 +11,118 @@ import {
 } from "src/drizzle/schema/rental.schema";
 import { Student } from "src/drizzle/schema/user.schema";
 
+// 나중에 수정이 필요할 수 있음.
+function getRentalOrderStatus(
+  createdAt?: Date,
+  startDate?: Date,
+  endDate?: Date,
+): RentalOrderStatusEnum {
+  const currentDate = new Date();
+  if (createdAt && createdAt < currentDate) {
+    return RentalOrderStatusEnum.Applied;
+  }
+  if (startDate && !endDate) {
+    return RentalOrderStatusEnum.Rented;
+  }
+  return RentalOrderStatusEnum.Returned;
+}
+
 @Injectable()
 export class RentalServiceRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  // async createRental(
-  //   studentId,
-  //   clubId,
-  //   objects,
-  //   purpose,
-  //   desiredStart,
-  //   desiredEnd,
-  //   studentPhoneNumber
-  // ) {
-  //   try {
-  //     const availableObjectIds = await Promise.all(
-  //       objects.map(async object => {
-  //         const result = await this.db
-  //           .select({
-  //             rentalEnumid: RentalObject.rentalEnum,
-  //             id: RentalObject.id,
-  //           })
-  //           .from(RentalObject)
-  //           .leftJoin(RentalEnum, eq(RentalObject.rentalEnum, RentalEnum.id))
-  //           .leftJoin(
-  //             RentalOrderItemD,
-  //             eq(RentalOrderItemD.objectId, RentalObject.id),
-  //           )
-  //           .leftJoin(RentalOrder, eq(RentalOrder.id, RentalOrderItemD.rentalOrderId))
-  //           .where(
-  //             or(
-  //               RentalOrder.desiredStart ? gt(RentalOrder.desiredStart, desiredEnd) : undefined,
-  //               RentalOrder.desiredEnd ? lt(RentalOrder.desiredEnd, desiredStart) : undefined,
-  //             ),
-  //           )
-  //           .limit(object.number);
-  //         return result;
-  //       })
-  //     );
-  //     console.log(availableObjectIds);
-  //     if (availableObjectIds.length === 0) {
-  //       throw new HttpException('There are no available objects', 404);
-  //     }
-  //     const filteredAvailableObjectIds = availableObjectIds.map(item => {item.id;});
-  //     if (filteredAvailableObjectIds.length === 0) {
-  //       throw new HttpException('There are no available objects', 404);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error creating rental:', error);
-  //     throw new HttpException('Error creating rental', 500);
-  //   }
+  async createRental(
+    studentId,
+    clubId,
+    objects,
+    purpose,
+    desiredStart,
+    desiredEnd,
+    studentPhoneNumber,
+  ) {
+    // 필요한 수의 객체가 있는지 확인
+    const availableObjects = await this.getAvailableObjects(
+      objects,
+      desiredStart,
+      desiredEnd,
+    ); // matchingObjects : {rentalEnumId: int, objectId: int}[]
 
-  //     // 3. If available, create a rental order
+    // request의 object 들 중 사용 가능하지 않은 것이 하나라도 있는 경우 오류 발생
+    if (availableObjects.includes(false)) {
+      return false;
+    }
 
-  //     // await this.db.transaction(async tx => {
-  //     //   const result = await tx.insert(RentalOrder).values({
-  //     //     clubId,
-  //     //     studentId,
-  //     //     studentPhoneNumber,
-  //     //     purpose,
-  //     //     desiredStart,
-  //     //     desiredEnd,
-  //     //   })
-  //     //  filteredAvailableObjectIds.forEach(async objectId => {
-  //     //       await tx.insert(RentalOrderItemD).values({
-  //     //         rentalOrderId: result[0].insertId,
-  //     //         objectId: objectId,
-  //     //       });
-  //     //     });
-  //     //   }
-  //     // );
+    await this.db.transaction(async tx => {
+      // RentalOrder에 삽입
+      const [result] = await tx.insert(RentalOrder).values({
+        studentId,
+        clubId,
+        studentPhoneNumber,
+        purpose,
+        desiredStart,
+        desiredEnd,
+      });
 
-  // }
+      const rentalOrderId = result.insertId;
+
+      // RentalOrderItemD에 매칭되는 객체 삽입
+      await Promise.all(
+        availableObjects.map(async obj => {
+          await tx.insert(RentalOrderItemD).values({
+            rentalOrderId,
+            objectId: obj.objectId,
+          });
+        }),
+      );
+    });
+    return true;
+  }
+
+  private async getAvailableObjects(objects, desiredStart, desiredEnd) {
+    // 각 obj에 대해 비동기 작업을 병렬로 수행
+    const matchingObjects = await Promise.all(
+      objects.map(async obj => {
+        // RentalObject와 RentalOrderItemD 테이블을 조인하여 조건에 맞는 레코드 선택
+        const results = await this.db
+          .select({
+            rentalEnumId: RentalObject.rentalEnum, // rentalEnumId 컬럼 선택
+            objectId: RentalObject.id,
+            desiredStart: RentalOrder.desiredStart, // startTerm 컬럼 선택
+            desiredEnd: RentalOrder.desiredEnd, // endTerm 컬럼 선택
+          })
+          .from(RentalObject) // RentalObject 테이블로부터
+          .leftJoin(
+            RentalOrderItemD,
+            eq(RentalObject.id, RentalOrderItemD.objectId),
+          ) // RentalOrderItemD와 조인
+          .leftJoin(
+            RentalOrder,
+            eq(RentalOrderItemD.rentalOrderId, RentalOrder.id),
+          )
+          .where(
+            and(
+              eq(RentalObject.rentalEnum, obj.id), // rentalEnum이 obj.rentalEnumId와 같은 조건
+              or(
+                lt(RentalOrder.desiredEnd, desiredStart), // 대여하는 물건의 desiredStart가 종료 날짜보다 큰 조건
+                gt(RentalOrder.desiredStart, desiredEnd),
+              ),
+              isNull(RentalObject.deletedAt), // RentalObject의 deletedAt이 null인 조건
+              isNull(RentalOrder.deletedAt), // RentalOrder의 deletedAt이 null인 조건
+            ),
+          )
+          .limit(obj.number); // 최대 obj.number 만큼의 레코드를 제한
+
+        // 결과의 개수가 obj.number보다 적은 경우 false 반환
+        if (results.length < obj.number) {
+          return false;
+        }
+        return results;
+      }),
+    );
+
+    // 2차원 배열을 1차원 배열로 평탄화
+    return matchingObjects.flat();
+  }
 
   // 1. 동아리의 특정 기간 내의 모든 주문 건을 찾습니다.
   async getRentals(
@@ -149,6 +189,11 @@ export class RentalServiceRepository {
           id: rental.id,
           studentName: rental.studentName,
           studentPhoneNumber: rental.studentPhoneNumber,
+          statusEnum: getRentalOrderStatus(
+            rental.createdAt,
+            rental.startDate,
+            rental.endDate,
+          ),
           startDate: rental.startDate,
           endDate: rental.endDate,
           objects: [rental.object],
@@ -157,7 +202,6 @@ export class RentalServiceRepository {
 
       return acc;
     }, []);
-
     return transformedRentals;
   }
 }

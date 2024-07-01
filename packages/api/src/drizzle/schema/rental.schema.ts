@@ -19,8 +19,8 @@ export const RentalOrder = mysqlTable("rental_order", {
     .notNull()
     .references(() => Club.id),
   purpose: text("purpose"),
-  desiredStart: datetime("desired_start"),
-  desiredEnd: datetime("desired_end"),
+  desiredStart: datetime("desired_start").notNull(),
+  desiredEnd: datetime("desired_end").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
   deletedAt: timestamp("deleted_at"),

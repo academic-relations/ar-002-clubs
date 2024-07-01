@@ -1,13 +1,12 @@
-import { Controller, Get, Query, UsePipes } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, UsePipes } from "@nestjs/common";
 import apiRnt001, {
   ApiRnt001ResponseOK,
   ApiRnt001RequestQuery,
 } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
-// import apiRnt002, {
-//   ApiRnt002RequestQuery,
-//   ApiRnt002RequestBody,
-//   // ApiRnt002ResponseOK,
-// } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt002";
+import apiRnt002, {
+  ApiRnt002RequestQuery,
+  ApiRnt002RequestBody,
+} from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt002";
 import apiRnt003, {
   ApiRnt003RequestQuery,
   ApiRnt003ResponseOK,
@@ -32,19 +31,16 @@ export class RentalController {
     return availableObjects;
   }
 
-  // @Post("/student/rentals/rental")
-  // @UsePipes(new ZodPipe(apiRnt002))
-  // async postRental(
-
-  //   @Query() query: ApiRnt002RequestQuery,
-  //   @Body() body: ApiRnt002RequestBody,
-  // ) {
-  //   const clubId = query.clubId;
-  //   const studentId = 1;
-  //   const result = await this.rentalService.postRental( studentId, clubId, body);
-  //   console.log(result);
-  //   // return result;
-  // }
+  @Post("/student/rentals/rental")
+  @UsePipes(new ZodPipe(apiRnt002))
+  async postRental(
+    @Query() query: ApiRnt002RequestQuery,
+    @Body() body: ApiRnt002RequestBody,
+  ) {
+    const { clubId } = query;
+    const studentId = 1;
+    await this.rentalService.postRental(studentId, clubId, body);
+  }
 
   @Get("/student/rentals")
   @UsePipes(new ZodPipe(apiRnt003))

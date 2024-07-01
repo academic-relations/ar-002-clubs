@@ -1,5 +1,5 @@
 import { Injectable, Inject } from "@nestjs/common";
-import { eq, and, or, gt, lt, count } from "drizzle-orm";
+import { eq, or, gt, lt, count } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
@@ -26,17 +26,40 @@ export class RentalObjectRepository {
         RentalOrderItemD,
         eq(RentalOrderItemD.objectId, RentalObject.id),
       )
+      .leftJoin(RentalOrder, eq(RentalOrder.id, RentalOrderItemD.rentalOrderId))
       .leftJoin(RentalEnum, eq(RentalObject.rentalEnum, RentalEnum.id))
       .where(
-        and(
+        or(
           gt(RentalOrder.desiredStart, desiredEnd),
-          or(
-            RentalOrderItemD.endTerm,
-            lt(RentalOrder.desiredEnd, desiredStart),
-          ),
+          RentalOrderItemD.endTerm !== undefined
+            ? undefined
+            : lt(RentalOrder.desiredEnd, desiredEnd),
         ),
       )
-      .groupBy(RentalObject.rentalEnum);
+      .groupBy(RentalObject.id);
     return availableObjects;
+  }
+
+  async useGetAvailableRentalObjectIds(desiredStart: Date, desiredEnd: Date) {
+    const objectIds = this.db
+      .select({
+        id: RentalObject.id,
+        rentalEnum: RentalObject.rentalEnum,
+      })
+      .from(RentalObject)
+      .leftJoin(
+        RentalOrderItemD,
+        eq(RentalOrderItemD.objectId, RentalObject.id),
+      )
+      .leftJoin(RentalOrder, eq(RentalOrder.id, RentalOrderItemD.rentalOrderId))
+      .where(
+        or(
+          gt(RentalOrder.desiredStart, desiredEnd),
+          RentalOrderItemD.endTerm !== undefined
+            ? undefined
+            : lt(RentalOrder.desiredEnd, desiredEnd),
+        ),
+      );
+    return objectIds;
   }
 }
