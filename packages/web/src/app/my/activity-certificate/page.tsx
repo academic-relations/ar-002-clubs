@@ -26,7 +26,7 @@ const MyActivityCertificate = () => (
     />
     <MyServiceTable
       headers={[
-        { type: "Header", text: "상태" },
+        { type: "HeaderSort", text: "상태" },
         { type: "Header", text: "신청 일시" },
         { type: "Header", text: "동아리" },
         { type: "Header", text: "발급 매수" },
