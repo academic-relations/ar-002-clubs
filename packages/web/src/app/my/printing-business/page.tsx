@@ -74,7 +74,7 @@ const MyPrintingBusiness = () => (
         "Default",
         "Default",
       ]}
-    />{" "}
+    />
   </FlexWrapper>
 );
 
