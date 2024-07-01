@@ -1,8 +1,8 @@
 import React from "react";
 
-import { format } from "date-fns";
-import { ko } from "date-fns/locale";
 import styled from "styled-components";
+
+import { formatDate } from "@sparcs-clubs/web/utils/Date/formateDate";
 
 interface SelectRangeInfoProps {
   isRental: boolean;
@@ -52,9 +52,7 @@ const SelectRangeInfo: React.FC<SelectRangeInfoProps> = ({
         data-full-label={isRental ? "대여 일자" : "반납 일자"}
         data-short-label={isRental ? "대여" : "반납"}
       />
-      <DateWrapper>
-        {date ? format(date, "yyyy년 M월 d일 (EEE)", { locale: ko }) : "미선택"}
-      </DateWrapper>
+      <DateWrapper>{date ? formatDate(date) : "미선택"}</DateWrapper>
     </LabelWrapper>
   </div>
 );
