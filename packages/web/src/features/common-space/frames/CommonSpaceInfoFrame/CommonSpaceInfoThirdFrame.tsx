@@ -1,12 +1,15 @@
 import React from "react";
 
-import { differenceInHours, differenceInMinutes, format } from "date-fns";
-import { ko } from "date-fns/locale";
+import { differenceInHours, differenceInMinutes } from "date-fns";
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import {
+  formatSimpleSlashDate,
+  formatTime,
+} from "@sparcs-clubs/web/utils/Date/formateDate";
 
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 
@@ -59,9 +62,8 @@ const CommonSpaceInfoThirdFrame: React.FC<CommonSpaceFrameProps> = ({
         <ReservationInfo>
           <Typography type="p_b">예약 공간</Typography>
           <Typography type="p">
-            {commonSpace.space}, {format(start, "M/d(E) ", { locale: ko })}
-            {format(start, "HH:mm", { locale: ko })} ~
-            {format(end, "HH:mm", { locale: ko })} ({`${diffHours}시간`}
+            {commonSpace.space}, {formatSimpleSlashDate(start)}
+            {formatTime(start)}~{formatTime(end)} ({`${diffHours}시간`}
             {diffMinutes! % 60 ? ` ${diffMinutes! % 60}분` : ""})
           </Typography>
         </ReservationInfo>

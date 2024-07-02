@@ -1,8 +1,5 @@
 import React from "react";
 
-import { format } from "date-fns";
-import { ko } from "date-fns/locale";
-
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
   TableRow,
@@ -13,6 +10,7 @@ import {
   ActTypeTagList,
   ApplyTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
+import { formatDate } from "@sparcs-clubs/web/utils/Date/formateDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import { type Activity } from "../service/_mock/mockManageClub";
@@ -20,9 +18,6 @@ import { type Activity } from "../service/_mock/mockManageClub";
 interface ActivityTableProps {
   activityList: Activity[];
 }
-
-const formatDate = (date: Date) =>
-  format(date, "yyyy년 M월 d일 (iii)", { locale: ko });
 
 const ActivityReportTable: React.FC<ActivityTableProps> = ({
   activityList,
