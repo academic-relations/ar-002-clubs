@@ -10,6 +10,7 @@ import {
 
 import apiPrt001 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
 import apiPrt002 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt002";
+import apiprt003 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt003";
 import apiPrt005 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt005";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
@@ -26,6 +27,10 @@ import type {
   ApiPrt002RequestParam,
   ApiPrt002ResponseCreated,
 } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt002";
+import type {
+  ApiPrt003RequestParam,
+  ApiPrt003ResponseOk,
+} from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt003";
 import type {
   ApiPrt005RequestQuery,
   ApiPrt005ResponseOk,
@@ -84,6 +89,19 @@ export class PromotionalPrintingController {
     });
 
     return {};
+  }
+
+  @Get("/student/promotional-printings/orders/order/:orderId")
+  @UsePipes(new ZodPipe(apiprt003))
+  async getStudentPromotionalPrintingsOrder(
+    @Param() parameter: ApiPrt003RequestParam,
+  ): Promise<ApiPrt003ResponseOk> {
+    const order =
+      await this.promotionalPrintingService.getStudentPromotionalPrintingsOrder(
+        parameter,
+      );
+
+    return order;
   }
 
   @Get("/student/promotional-printings/orders/my")
