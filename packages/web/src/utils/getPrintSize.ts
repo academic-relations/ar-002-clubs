@@ -1,4 +1,6 @@
-const getPrintSize = (type: number): string => {
+import { PromotionalPrintingSizeEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
+
+const getPrintSize = (type: PromotionalPrintingSizeEnum): string => {
   switch (type) {
     case 1:
       return "A4";
