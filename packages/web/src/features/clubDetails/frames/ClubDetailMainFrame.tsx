@@ -26,7 +26,7 @@ const MoreInfoWrapper = styled.div`
   flex-direction: row;
   gap: 60px;
 
-  @media (max-width: 1200px) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
     flex-direction: column;
   }
 `;
