@@ -20,6 +20,22 @@ const ClubListGridInner = styled.div`
   grid-template-columns: repeat(4, calc((100% - 48px) / 4));
   gap: 16px;
   padding-left: 24px;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
+    grid-template-columns: repeat(4, calc((100% - 48px) / 4));
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    grid-template-columns: repeat(3, calc((100% - 48px) / 3));
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    grid-template-columns: repeat(2, calc((100% - 48px) / 2));
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xs}) {
+    grid-template-columns: calc((100% - 48px));
+  }
 `;
 
 const ClubListGrid: React.FC<ClubListGridItemProps> = ({ clubList }) => (
