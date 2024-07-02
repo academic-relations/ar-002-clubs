@@ -2,9 +2,9 @@ import { PromotionalPrintingSizeEnum } from "@sparcs-clubs/interface/common/enum
 
 const getPrintSize = (type: PromotionalPrintingSizeEnum): string => {
   switch (type) {
-    case 1:
+    case PromotionalPrintingSizeEnum.A4:
       return "A4";
-    case 2:
+    case PromotionalPrintingSizeEnum.A3:
       return "A3";
     default:
       return "None";
