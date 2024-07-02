@@ -15,26 +15,26 @@ interface ClubListGridItemProps {
 }
 
 const ClubListGridInner = styled.div`
-  width: 100%;
+  width: calc(100% - 48px);
   display: grid;
-  grid-template-columns: repeat(4, calc((100% - 48px) / 4));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
   padding-left: 24px;
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
-    grid-template-columns: repeat(4, calc((100% - 48px) / 4));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
-    grid-template-columns: repeat(3, calc((100% - 48px) / 3));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
-    grid-template-columns: repeat(2, calc((100% - 48px) / 2));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xs}) {
-    grid-template-columns: calc((100% - 48px));
+    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 `;
 
