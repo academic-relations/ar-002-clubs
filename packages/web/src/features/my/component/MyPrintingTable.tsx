@@ -8,6 +8,7 @@ import {
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { PrtTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formateDate";
+import getPrintSize from "@sparcs-clubs/web/utils/getPrintSize";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import type { ApiPrt001ResponseOk } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
@@ -15,17 +16,6 @@ import type { ApiPrt001ResponseOk } from "@sparcs-clubs/interface/api/promotiona
 interface PrintingTableProps {
   printingList: ApiPrt001ResponseOk;
 }
-
-const getPrintSize = (type: number): string => {
-  switch (type) {
-    case 1:
-      return "A4";
-    case 2:
-      return "A3";
-    default:
-      return "None";
-  }
-};
 
 const MyPrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
   <TableWrapper>
