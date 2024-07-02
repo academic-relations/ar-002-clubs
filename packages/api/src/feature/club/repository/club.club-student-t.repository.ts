@@ -1,17 +1,33 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, count, desc, eq, gte, lte, or } from "drizzle-orm";
+import { and, count, desc, eq, gte, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
+import { takeUnique } from "@sparcs-clubs/api/common/util/util";
+import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
+
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
-import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { Club, ClubStudentT, SemesterD } from "src/drizzle/schema/club.schema";
 
-import { takeUnique } from "../util/util";
-
 @Injectable()
-export class ClubStudentTRepository {
+export default class ClubStudentTRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
+  async findByClubIdAndSemesterId(clubId: number, semesterId: number) {
+    const result = await this.db
+      .select()
+      .from(ClubStudentT)
+      .where(
+        and(
+          eq(ClubStudentT.clubId, clubId),
+          eq(ClubStudentT.semesterId, semesterId),
+          isNull(ClubStudentT.deletedAt),
+        ),
+      );
+
+    return result;
+  }
+
+  // 아래는 common 폴더에 있던 club.club-student-t.repository.ts를 그대로 옮겨온 메소드들입니다.
   async findTotalMemberCnt(
     clubId: number,
     semesterId?: number,
