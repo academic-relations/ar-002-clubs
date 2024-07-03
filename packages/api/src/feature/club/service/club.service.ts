@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 
 import { ClubStudentTRepository } from "@sparcs-clubs/api/common/repository/club.club-student-t.repository";
 import { ClubTRepository } from "@sparcs-clubs/api/common/repository/club.club-t.respository";
@@ -7,6 +12,8 @@ import { ClubRepresentativeDRepository } from "@sparcs-clubs/api/feature/club/re
 import { ClubRoomTRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-room-t.repository";
 
 import { DivisionPermanentClubDRepository } from "../repository/club.division-permanent-club-d.repository";
+import { ClubGetStudentClubBrief } from "../repository/club.get-student-club-brief";
+import { ClubPutStudentClubBrief } from "../repository/club.put-student-club-brief";
 
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 import type {
@@ -14,6 +21,15 @@ import type {
   ApiClb002ResponseOK,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 import type { ApiClb003ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb003";
+import type {
+  ApiClb004RequestParam,
+  ApiClb004ResponseOK,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb004";
+import type {
+  ApiClb005RequestBody,
+  ApiClb005RequestParam,
+  ApiClb005ResponseCreated,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb005";
 
 @Injectable()
 export class ClubService {
@@ -24,6 +40,8 @@ export class ClubService {
     private clubStudentTRepository: ClubStudentTRepository,
     private clubTRepository: ClubTRepository,
     private divisionPermanentClubDRepository: DivisionPermanentClubDRepository,
+    private clubGetStudentClubBrief: ClubGetStudentClubBrief,
+    private clubPutStudentClubBrief: ClubPutStudentClubBrief,
   ) {}
 
   async getClubs(): Promise<ApiClb001ResponseOK> {
@@ -136,5 +154,66 @@ export class ClubService {
     }, []);
 
     return { semesters: uniqueSemesters };
+  }
+
+  async getStudentClubBrief(
+    studentId: number,
+    param: ApiClb004RequestParam,
+  ): Promise<ApiClb004ResponseOK> {
+    const { clubId } = param;
+    const isAvailableClub = await this.clubTRepository.findClubById(clubId);
+    if (!isAvailableClub) {
+      throw new HttpException("Club not available", HttpStatus.NOT_FOUND);
+    }
+    const isAvailableRepresentative =
+      await this.clubRepresentativeDRepository.findRepresentativeByClubIdAndStudentId(
+        studentId,
+        clubId,
+      );
+    if (!isAvailableRepresentative) {
+      throw new HttpException(
+        "Representative not available",
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    const result =
+      await this.clubGetStudentClubBrief.getStudentClubBrief(clubId);
+    // result가 null인지 확인해서 null인 경우 에러?
+    return result;
+  }
+
+  async putStudentClubBrief(
+    studentId: number,
+    param: ApiClb005RequestParam,
+    body: ApiClb005RequestBody,
+  ): Promise<ApiClb005ResponseCreated> {
+    const { clubId } = param;
+    const isAvailableClub = await this.clubTRepository.findClubById(clubId);
+    if (!isAvailableClub) {
+      throw new HttpException("Club not available", HttpStatus.NOT_FOUND);
+    }
+    const isAvailableRepresentative =
+      await this.clubRepresentativeDRepository.findRepresentativeByClubIdAndStudentId(
+        studentId,
+        clubId,
+      );
+    if (!isAvailableRepresentative) {
+      throw new HttpException(
+        "Representative not available",
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    const result = await this.clubPutStudentClubBrief.putStudentClubBrief(
+      clubId,
+      body.description,
+      body.roomPassword,
+    );
+    if (!result)
+      throw new HttpException(
+        "Failed to update club brief",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    // result가 null인지 확인해서 null인 경우 에러?
+    return {};
   }
 }
