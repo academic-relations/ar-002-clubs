@@ -22,6 +22,7 @@ interface MyServiceTableProps {
   contentsTypes: TableCellType[];
   contents: ReactNode[][];
   pageLimit?: number;
+  topComment?: string;
 }
 
 const MyServiceTable: React.FC<MyServiceTableProps> = ({
@@ -31,6 +32,7 @@ const MyServiceTable: React.FC<MyServiceTableProps> = ({
   contentsTypes,
   contents,
   pageLimit = 10,
+  topComment = "",
 }) => {
   const [page, setPage] = useState<number>(1);
   const data = contents.slice((page - 1) * pageLimit, page * pageLimit);
@@ -38,18 +40,20 @@ const MyServiceTable: React.FC<MyServiceTableProps> = ({
   return (
     <FlexWrapper direction="column" gap={20} style={{ alignItems: "center" }}>
       <FlexWrapper direction="column" gap={8} style={{ width: "100%" }}>
-        <Typography
-          ff="PRETENDARD"
-          fw="REGULAR"
-          fs={16}
-          lh={20}
-          color="GRAY.600"
-          style={{
-            textAlign: "right",
-          }}
-        >
-          {`총 ${contents.length}개`}
-        </Typography>
+        {topComment && (
+          <Typography
+            ff="PRETENDARD"
+            fw="REGULAR"
+            fs={16}
+            lh={20}
+            color="GRAY.600"
+            style={{
+              textAlign: "right",
+            }}
+          >
+            {topComment}
+          </Typography>
+        )}
         <TableWrapper>
           <TableRow>
             {headers.map((header, index) => (
