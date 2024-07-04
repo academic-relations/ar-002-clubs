@@ -30,6 +30,11 @@ const requestBody = z.object({
       uid: z.string().max(255),
     }),
   ),
+  participants: z.array(
+    z.object({
+      studentId: z.coerce.number().min(1),
+    }),
+  ),
 });
 
 const responseBodyMap = {
