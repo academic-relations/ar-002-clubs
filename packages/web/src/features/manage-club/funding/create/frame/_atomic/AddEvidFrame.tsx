@@ -29,76 +29,79 @@ const AddEvidFrame = () => {
         toggleHandler={() => setToggle(!toggle)}
       />
       {toggle && (
-        <Card outline style={{ marginLeft: 24 }}>
-          <FlexWrapper direction="column" gap={16}>
-            <Typography
-              ff="PRETENDARD"
-              fw="MEDIUM"
-              fs={16}
-              lh={20}
-              color="BLACK"
-            >
-              추가 증빙 분류
-            </Typography>
-            <FlexWrapper direction="column" gap={12}>
-              <CheckboxOption
-                optionText="물품"
-                checked={productChecked}
-                onClick={() => setproductChecked(!productChecked)}
-              />
-              <CheckboxOption
-                optionText="비품"
-                checked={fixedChecked}
-                onClick={() => setfixedChecked(!fixedChecked)}
-              />
-              <CheckboxOption
-                optionText="교통비"
-                checked={transportChecked}
-                onClick={() => settransportChecked(!transportChecked)}
-              />
-              <CheckboxOption
-                optionText="비법인 거래"
-                checked={nonCorpChecked}
-                onClick={() => setnonCorpChecked(!nonCorpChecked)}
-              />
-              <CheckboxOption
-                optionText="식비"
-                checked={foodChecked}
-                onClick={() => setfoodChecked(!foodChecked)}
-              />
-              <CheckboxOption
-                optionText="근로 계약"
-                checked={workChecked}
-                onClick={() => setworkChecked(!workChecked)}
-              />
-              <CheckboxOption
-                optionText="외부 행사 참가비"
-                checked={externalChecked}
-                onClick={() => setexternalChecked(!externalChecked)}
-              />
-              <CheckboxOption
-                optionText="발간물"
-                checked={printChecked}
-                onClick={() => setprintChecked(!printChecked)}
-              />
-              <CheckboxOption
-                optionText="수익 사업"
-                checked={profitChecked}
-                onClick={() => setprofitChecked(!profitChecked)}
-              />
-              <CheckboxOption
-                optionText="공동 경비"
-                checked={commonChecked}
-                onClick={() => setcommonChecked(!commonChecked)}
-              />
-              <CheckboxOption
-                optionText="기타"
-                checked={othersChecked}
-                onClick={() => setothersChecked(!othersChecked)}
-              />
+        <FlexWrapper direction="column" gap={40}>
+          <Card outline style={{ marginLeft: 24 }}>
+            <FlexWrapper direction="column" gap={16}>
+              <Typography
+                ff="PRETENDARD"
+                fw="MEDIUM"
+                fs={16}
+                lh={20}
+                color="BLACK"
+              >
+                추가 증빙 분류
+              </Typography>
+              <FlexWrapper direction="column" gap={12}>
+                <CheckboxOption
+                  optionText="물품"
+                  checked={productChecked}
+                  onClick={() => setproductChecked(!productChecked)}
+                />
+                <CheckboxOption
+                  optionText="비품"
+                  checked={fixedChecked}
+                  onClick={() => setfixedChecked(!fixedChecked)}
+                />
+                <CheckboxOption
+                  optionText="교통비"
+                  checked={transportChecked}
+                  onClick={() => settransportChecked(!transportChecked)}
+                />
+                <CheckboxOption
+                  optionText="비법인 거래"
+                  checked={nonCorpChecked}
+                  onClick={() => setnonCorpChecked(!nonCorpChecked)}
+                />
+                <CheckboxOption
+                  optionText="식비"
+                  checked={foodChecked}
+                  onClick={() => setfoodChecked(!foodChecked)}
+                />
+                <CheckboxOption
+                  optionText="근로 계약"
+                  checked={workChecked}
+                  onClick={() => setworkChecked(!workChecked)}
+                />
+                <CheckboxOption
+                  optionText="외부 행사 참가비"
+                  checked={externalChecked}
+                  onClick={() => setexternalChecked(!externalChecked)}
+                />
+                <CheckboxOption
+                  optionText="발간물"
+                  checked={printChecked}
+                  onClick={() => setprintChecked(!printChecked)}
+                />
+                <CheckboxOption
+                  optionText="수익 사업"
+                  checked={profitChecked}
+                  onClick={() => setprofitChecked(!profitChecked)}
+                />
+                <CheckboxOption
+                  optionText="공동 경비"
+                  checked={commonChecked}
+                  onClick={() => setcommonChecked(!commonChecked)}
+                />
+                <CheckboxOption
+                  optionText="기타"
+                  checked={othersChecked}
+                  onClick={() => setothersChecked(!othersChecked)}
+                />
+              </FlexWrapper>
             </FlexWrapper>
-          </FlexWrapper>
-        </Card>
+          </Card>
+          {/* TODO: evidence block 달기 */}
+        </FlexWrapper>
       )}
     </FlexWrapper>
   );
