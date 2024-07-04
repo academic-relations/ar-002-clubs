@@ -1,17 +1,35 @@
-import { Body, Controller, Get, Post, Query, UsePipes } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UsePipes,
+} from "@nestjs/common";
 import apiRnt001, {
-  ApiRnt001ResponseOK,
   ApiRnt001RequestQuery,
+  ApiRnt001ResponseOK,
 } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
 import apiRnt002, {
-  ApiRnt002RequestQuery,
   ApiRnt002RequestBody,
+  ApiRnt002RequestQuery,
 } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt002";
 import apiRnt003, {
   ApiRnt003RequestQuery,
   ApiRnt003ResponseOK,
 } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt003";
+import apiRnt004, {
+  ApiRnt004RequestParam,
+  ApiRnt004ResponseOK,
+} from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt004";
+import apiRnt006, {
+  ApiRnt006RequestQuery,
+  ApiRnt006ResponseOK,
+} from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt006";
+
 import { ZodPipe } from "@sparcs-clubs/api/common/pipes/zod-pipe";
+
 import { RentalService } from "../service/rental.service";
 
 @Controller()
@@ -49,5 +67,23 @@ export class RentalController {
   ): Promise<ApiRnt003ResponseOK> {
     const rentals = await this.rentalService.getRentals(query);
     return rentals;
+  }
+
+  @Get("/student/rentals/rental/:rentalId")
+  @UsePipes(new ZodPipe(apiRnt004))
+  async getRental(
+    @Param() param: ApiRnt004RequestParam,
+  ): Promise<ApiRnt004ResponseOK> {
+    const rental = await this.rentalService.getRental(param.rentalId);
+    return rental;
+  }
+
+  @Get("/student/rentals/my")
+  @UsePipes(new ZodPipe(apiRnt006))
+  async getRentalsMy(
+    @Query() query: ApiRnt006RequestQuery,
+  ): Promise<ApiRnt006ResponseOK> {
+    const rental = await this.rentalService.getRentalsMy(query);
+    return rental;
   }
 }

@@ -5,6 +5,7 @@ import { RentalController } from "./controller/rental.controller";
 import { RentalService } from "./service/rental.service";
 import { RentalObjectRepository } from "./repository/rental.rental-object.repository";
 import { RentalServiceRepository } from "./repository/rental.rental-service.repository";
+import { RentalOrderRepository } from "./repository/rental.rental-order.repository";
 
 @Module({
   imports: [DrizzleModule],
@@ -14,7 +15,13 @@ import { RentalServiceRepository } from "./repository/rental.rental-service.repo
     RentalService,
     RentalObjectRepository,
     RentalServiceRepository,
+    RentalOrderRepository,
   ],
-  exports: [RentalService, RentalObjectRepository, RentalServiceRepository],
+  exports: [
+    RentalService,
+    RentalObjectRepository,
+    RentalServiceRepository,
+    RentalOrderRepository,
+  ],
 })
 export class RentalModule {}
