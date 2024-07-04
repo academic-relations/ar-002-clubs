@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
+import DateInput from "@sparcs-clubs/web/common/components/Forms/DateInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 const FundingInfoFrame = () => {
   const [toggle, setToggle] = useState(true);
@@ -21,7 +23,18 @@ const FundingInfoFrame = () => {
           <TextInput label="항목명" placeholder="항목명을 입력하세요" />
           <FlexWrapper direction="row" gap={32}>
             <Select items={[]} label="지출 목적" />
-            {/* TODO: dateInput */}
+            <FlexWrapper direction="column" gap={4} style={{ width: "100%" }}>
+              <Typography
+                ff="PRETENDARD"
+                fw="MEDIUM"
+                fs={16}
+                lh={20}
+                color="BLACK"
+              >
+                지출 일자
+              </Typography>
+              <DateInput date={new Date()} />
+            </FlexWrapper>
             {/* TODO: 지출 금액 입력 */}
           </FlexWrapper>
         </Card>
