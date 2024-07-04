@@ -21,6 +21,7 @@ interface MyServiceTableProps {
   minWidths: number[];
   contentsTypes: TableCellType[];
   contents: ReactNode[][];
+  pageLimit?: number;
 }
 
 const MyServiceTable: React.FC<MyServiceTableProps> = ({
@@ -29,9 +30,9 @@ const MyServiceTable: React.FC<MyServiceTableProps> = ({
   minWidths,
   contentsTypes,
   contents,
+  pageLimit = 10,
 }) => {
   const [page, setPage] = useState<number>(1);
-  const pageLimit = 10;
   const data = contents.slice((page - 1) * pageLimit, page * pageLimit);
 
   return (
@@ -78,12 +79,14 @@ const MyServiceTable: React.FC<MyServiceTableProps> = ({
           ))}
         </TableWrapper>
       </FlexWrapper>
-      <Pagination // 페이지 한 개일 때도 Pagination 보이는지?
-        totalPage={Math.ceil(contents.length / pageLimit)}
-        currentPage={page}
-        limit={pageLimit}
-        setPage={setPage}
-      />
+      {contents.length > pageLimit && (
+        <Pagination
+          totalPage={Math.ceil(contents.length / pageLimit)}
+          currentPage={page}
+          limit={pageLimit}
+          setPage={setPage}
+        />
+      )}
     </FlexWrapper>
   );
 };
