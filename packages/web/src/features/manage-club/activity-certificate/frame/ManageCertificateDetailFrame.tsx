@@ -55,7 +55,6 @@ const ManageCertificateDetailFrame = () => {
         enableLast
       />
       <Card outline gap={20}>
-        {/* TODO: 너무 길다면.. 나중에 컴포넌트로 따로 빼기 */}
         <ProgressCheckSectionWrapper>
           <Typography
             ff="PRETENDARD"
@@ -78,6 +77,7 @@ const ManageCertificateDetailFrame = () => {
             dates={[new Date()]}
           />
           <Info text="동아리 대표자의 승인이 있어야 다음 단계로 넘어갈 수 있습니다. 반려 시 사유를 입력해야함" />
+          {/* TODO: 반려 사유 input 어떻게 처리할지 */}
           <TextInput
             placeholder="반려 사유를 입력해주세요"
             label="반려 사유 (반려 시에만 입력)"
