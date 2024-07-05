@@ -30,8 +30,7 @@ const FundingInfoFrame = () => {
         title="지원금 정보"
         toggle={toggle}
         toggleHandler={() => setToggle(!toggle)}
-      />
-      {toggle && (
+      >
         <Card outline style={{ marginLeft: 24 }}>
           <TextInput
             label="항목명"
@@ -49,15 +48,15 @@ const FundingInfoFrame = () => {
             {/* TODO: 지출 일자, 지출 금액 해당 컴포넌트로 구현 */}
             <FlexWrapper direction="column" gap={4} style={{ width: "100%" }}>
               {/* <Typography
-                ff="PRETENDARD"
-                fw="MEDIUM"
-                fs={16}
-                lh={20}
-                color="BLACK"
-              >
-                지출 일자
-              </Typography>
-              <DateInput date={new Date()} /> */}
+                    ff="PRETENDARD"
+                    fw="MEDIUM"
+                    fs={16}
+                    lh={20}
+                    color="BLACK"
+                  >
+                    지출 일자
+                  </Typography>
+                  <DateInput date={new Date()} /> */}
               <TextInput
                 label="지출 일자"
                 placeholder="20XX.XX.XX"
@@ -73,7 +72,7 @@ const FundingInfoFrame = () => {
             />
           </FlexWrapper>
         </Card>
-      )}
+      </FoldableSectionTitle>
     </FlexWrapper>
   );
 };

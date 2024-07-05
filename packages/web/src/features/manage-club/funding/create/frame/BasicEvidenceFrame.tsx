@@ -18,8 +18,7 @@ const BasicEvidenceFrame = () => {
         title="필수 증빙"
         toggle={toggle}
         toggleHandler={() => setToggle(!toggle)}
-      />
-      {toggle && (
+      >
         <Card outline style={{ marginLeft: 24 }}>
           <FlexWrapper direction="column" gap={4}>
             <Typography
@@ -52,7 +51,7 @@ const BasicEvidenceFrame = () => {
             <FileUpload placeholder="파일을 선택해주세요" />
           </FlexWrapper>
         </Card>
-      )}
+      </FoldableSectionTitle>
     </FlexWrapper>
   );
 };
