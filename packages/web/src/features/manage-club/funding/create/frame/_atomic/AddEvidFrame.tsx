@@ -14,12 +14,12 @@ const AddEvidFrame = () => {
   const [transportChecked, settransportChecked] = useState(false);
   const [nonCorpChecked, setnonCorpChecked] = useState(false);
   const [foodChecked, setfoodChecked] = useState(false);
-  const [workChecked, setworkChecked] = useState(false);
+  const [laborChecked, setlaborChecked] = useState(false);
   const [externalChecked, setexternalChecked] = useState(false);
-  const [printChecked, setprintChecked] = useState(false);
+  const [publChecked, setpublChecked] = useState(false);
   const [profitChecked, setprofitChecked] = useState(false);
-  const [commonChecked, setcommonChecked] = useState(false);
-  const [othersChecked, setothersChecked] = useState(false);
+  const [jointChecked, setjointChecked] = useState(false);
+  const [etcChecked, setetcChecked] = useState(false);
 
   return (
     <FlexWrapper direction="column" gap={40}>
@@ -69,8 +69,8 @@ const AddEvidFrame = () => {
                 />
                 <CheckboxOption
                   optionText="근로 계약"
-                  checked={workChecked}
-                  onClick={() => setworkChecked(!workChecked)}
+                  checked={laborChecked}
+                  onClick={() => setlaborChecked(!laborChecked)}
                 />
                 <CheckboxOption
                   optionText="외부 행사 참가비"
@@ -79,8 +79,8 @@ const AddEvidFrame = () => {
                 />
                 <CheckboxOption
                   optionText="발간물"
-                  checked={printChecked}
-                  onClick={() => setprintChecked(!printChecked)}
+                  checked={publChecked}
+                  onClick={() => setpublChecked(!publChecked)}
                 />
                 <CheckboxOption
                   optionText="수익 사업"
@@ -89,13 +89,13 @@ const AddEvidFrame = () => {
                 />
                 <CheckboxOption
                   optionText="공동 경비"
-                  checked={commonChecked}
-                  onClick={() => setcommonChecked(!commonChecked)}
+                  checked={jointChecked}
+                  onClick={() => setjointChecked(!jointChecked)}
                 />
                 <CheckboxOption
                   optionText="기타"
-                  checked={othersChecked}
-                  onClick={() => setothersChecked(!othersChecked)}
+                  checked={etcChecked}
+                  onClick={() => setetcChecked(!etcChecked)}
                 />
               </FlexWrapper>
             </FlexWrapper>
