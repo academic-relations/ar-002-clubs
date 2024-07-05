@@ -14,7 +14,7 @@ import SelectOption from "./SelectOption";
 export interface SelectItem {
   label: string;
   value: string;
-  selectable: boolean;
+  selectable?: boolean;
 }
 
 interface SelectProps {
@@ -140,7 +140,7 @@ const Select: React.FC<SelectProps> = ({
   };
 
   const handleOptionClick = (item: SelectItem) => {
-    if (item.selectable) {
+    if (item.selectable || item.selectable === undefined) {
       onSelect(item.value);
       setIsOpen(false);
     }
@@ -180,7 +180,9 @@ const Select: React.FC<SelectProps> = ({
                 items.map(item => (
                   <SelectOption
                     key={item.value}
-                    selectable={item.selectable}
+                    selectable={
+                      item.selectable || item.selectable === undefined
+                    }
                     onClick={() => handleOptionClick(item)}
                   >
                     {item.label}
