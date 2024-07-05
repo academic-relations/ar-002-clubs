@@ -9,7 +9,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 const AddEvidFrame = () => {
   const [toggle, setToggle] = useState(true);
 
-  const [productChecked, setproductChecked] = useState(false);
+  const [productChecked, setProductChecked] = useState(false);
   const [fixedChecked, setfixedChecked] = useState(false);
   const [transportChecked, settransportChecked] = useState(false);
   const [nonCorpChecked, setnonCorpChecked] = useState(false);
