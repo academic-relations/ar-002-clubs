@@ -48,8 +48,7 @@ const MyCertificateDetailFrame = () => {
             "동아리 연합회 승인 대기",
             "발급 대기",
           ]}
-          status={[Status.Approved]}
-          dates={[new Date()]}
+          progress={[{ status: Status.Approved, date: new Date() }]}
           infoText="승인이 완료되기 전까지 신청을 취소할 수 있습니다"
         />
         {/* TODO: 아래 정보들 백 연결하기 */}

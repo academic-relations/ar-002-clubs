@@ -35,8 +35,7 @@ const MyCommonSpaceDetailFrame = () => {
       <Card outline gap={20}>
         <ProgressStatus
           labels={["신청 완료", "사용 대기"]}
-          status={[Status.Approved]}
-          dates={[new Date()]}
+          progress={[{ status: Status.Approved, date: new Date() }]}
           infoText="사용 일시가 지나기 전까지 신청을 취소할 수 있습니다"
         />
         {/* TODO: 아래 정보들 백 연결하기 */}
