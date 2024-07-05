@@ -42,6 +42,7 @@ const MyRentalDetailFrame = () => {
           ]}
           progress={[{ status: Status.Approved, date: new Date() }]}
           infoText="승인이 완료되기 전까지 신청을 취소할 수 있습니다"
+          optional={<Button style={{ width: "max-content" }}>신청 취소</Button>}
         />
         {/* TODO: 아래 정보들 백 연결하기 */}
         <FlexWrapper direction="column" gap={16}>

@@ -2,7 +2,6 @@ import React from "react";
 
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import ProgressCheckSection, {
   StatusAndDate,
@@ -12,7 +11,8 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 interface ProgressStatusProps {
   labels: string[];
   progress: StatusAndDate[];
-  infoText: string;
+  infoText?: string;
+  optional?: React.ReactNode;
 }
 
 const ProgressCheckSectionWrapper = styled.div`
@@ -26,7 +26,8 @@ const ProgressCheckSectionWrapper = styled.div`
 const ProgressStatus: React.FC<ProgressStatusProps> = ({
   labels,
   progress,
-  infoText,
+  infoText = "",
+  optional = undefined,
 }) => (
   <ProgressCheckSectionWrapper>
     <Typography
@@ -40,8 +41,8 @@ const ProgressStatus: React.FC<ProgressStatusProps> = ({
       신청 상태
     </Typography>
     <ProgressCheckSection labels={labels} progress={progress} />
-    <Info text={infoText} />
-    <Button style={{ width: "max-content" }}>신청 취소</Button>
+    {infoText && <Info text={infoText} />}
+    {optional && optional}
     {/* TODO: onClick 달기 */}
   </ProgressCheckSectionWrapper>
 );

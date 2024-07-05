@@ -37,6 +37,7 @@ const MyCommonSpaceDetailFrame = () => {
           labels={["신청 완료", "사용 대기"]}
           progress={[{ status: Status.Approved, date: new Date() }]}
           infoText="사용 일시가 지나기 전까지 신청을 취소할 수 있습니다"
+          optional={<Button style={{ width: "max-content" }}>신청 취소</Button>}
         />
         {/* TODO: 아래 정보들 백 연결하기 */}
         <FlexWrapper direction="column" gap={16}>
