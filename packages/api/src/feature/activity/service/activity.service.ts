@@ -8,6 +8,7 @@ import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.publi
 import ActivityRepository from "../repository/activity.repositroy";
 
 import type { ApiAct001RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct001";
+import type { ApiAct005ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
 
 @Injectable()
 export default class ActivityService {
@@ -15,6 +16,41 @@ export default class ActivityService {
     private activityRepository: ActivityRepository,
     private clubPublicService: ClubPublicService,
   ) {}
+
+  async getStudentActivity(
+    clubId: number,
+    studentId: number,
+  ): Promise<ApiAct005ResponseOk> {
+    if (
+      !(await this.clubPublicService.isStudentRepresentative(studentId, clubId))
+    )
+      throw new HttpException(
+        "It seems that student is not representative.",
+        HttpStatus.FORBIDDEN,
+      );
+    const semesterId =
+      await this.clubPublicService.dateToSemesterId(getKSTDate());
+    if (semesterId === undefined)
+      throw new HttpException(
+        "Today is not in semester",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+
+    const result =
+      await this.activityRepository.selectActivityByClubIdAndSemesterId(
+        clubId,
+        semesterId,
+      );
+
+    return result.map(row => ({
+      id: row.id,
+      activityStatusEnumId: row.activityStatusEnumId,
+      name: row.name,
+      activityTypeEnumId: row.activityTypeEnumId,
+      startTerm: row.startTerm,
+      endTerm: row.endTerm,
+    }));
+  }
 
   async postStudentActivity(body: ApiAct001RequestBody): Promise<void> {
     const mockUpStudentId = 605;

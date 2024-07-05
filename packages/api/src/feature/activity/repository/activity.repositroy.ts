@@ -3,7 +3,7 @@ import {
   ActivityStatusEnum,
   ActivityTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { and, gt, isNull, lte } from "drizzle-orm";
+import { and, eq, gt, isNull, lte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -113,6 +113,23 @@ export default class ActivityRepository {
     });
 
     return isInsertionSucceed;
+  }
+
+  async selectActivityByClubIdAndSemesterId(
+    clubId: number,
+    semesterId: number,
+  ) {
+    const result = await this.db
+      .select()
+      .from(Activity)
+      .where(
+        and(
+          eq(Activity.clubId, clubId),
+          eq(Activity.semesterId, semesterId),
+          isNull(Activity.deletedAt),
+        ),
+      );
+    return result;
   }
 
   async selectDeadlineByDate(date: Date) {
