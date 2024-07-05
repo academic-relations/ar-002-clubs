@@ -10,6 +10,8 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 const BasicEvidFrame = () => {
   const [toggle, setToggle] = useState(true);
 
+  const [tradeDetail, setTradeDetail] = useState<string>("");
+
   return (
     <FlexWrapper direction="column" gap={40}>
       <FoldableSectionTitle
@@ -41,7 +43,12 @@ const BasicEvidFrame = () => {
             >
               거래 세부항목 증빙
             </Typography>
-            <TextInput placeholder="거래 세부항목 증빙을 입력하세요" area />
+            <TextInput
+              placeholder="거래 세부항목 증빙을 입력하세요"
+              area
+              value={tradeDetail}
+              handleChange={setTradeDetail}
+            />
             <FileUpload placeholder="파일을 선택해주세요" />
           </FlexWrapper>
         </Card>

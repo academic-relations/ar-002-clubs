@@ -9,7 +9,20 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 // import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 const FundingInfoFrame = () => {
-  const [toggle, setToggle] = useState(true);
+  const [toggle, setToggle] = useState<boolean>(true);
+
+  const [name, setName] = useState<string>("");
+  const [date, setDate] = useState<string>("");
+  const [amount, setAmount] = useState<string>("");
+
+  const [selectedPurpose, setSelectedPurpose] = useState<string>("");
+
+  const purposeItems = [
+    { value: "1", label: "활동보고서 1" },
+    { value: "2", label: "활동보고서 2" },
+    { value: "3", label: "활동보고서 3" },
+    { value: "0", label: "활동보고서로 증빙 불가" },
+  ];
 
   return (
     <FlexWrapper direction="column" gap={40}>
@@ -20,9 +33,19 @@ const FundingInfoFrame = () => {
       />
       {toggle && (
         <Card outline style={{ marginLeft: 24 }}>
-          <TextInput label="항목명" placeholder="항목명을 입력하세요" />
+          <TextInput
+            label="항목명"
+            placeholder="항목명을 입력하세요"
+            value={name}
+            handleChange={setName}
+          />
           <FlexWrapper direction="row" gap={32}>
-            <Select items={[]} label="지출 목적" />
+            <Select
+              items={purposeItems}
+              label="지출 목적"
+              selectedValue={selectedPurpose}
+              onSelect={setSelectedPurpose}
+            />
             {/* TODO: 지출 일자, 지출 금액 해당 컴포넌트로 구현 */}
             <FlexWrapper direction="column" gap={4} style={{ width: "100%" }}>
               {/* <Typography
@@ -35,9 +58,19 @@ const FundingInfoFrame = () => {
                 지출 일자
               </Typography>
               <DateInput date={new Date()} /> */}
-              <TextInput label="지출 일자" placeholder="20XX.XX.XX" />
+              <TextInput
+                label="지출 일자"
+                placeholder="20XX.XX.XX"
+                value={date}
+                handleChange={setDate}
+              />
             </FlexWrapper>
-            <TextInput label="지출 금액" placeholder="금액을 입력해주세요" />
+            <TextInput
+              label="지출 금액"
+              placeholder="금액을 입력해주세요"
+              value={amount}
+              handleChange={setAmount}
+            />
           </FlexWrapper>
         </Card>
       )}
