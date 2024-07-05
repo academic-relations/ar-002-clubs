@@ -13,46 +13,32 @@ const BasicEvidenceFrame = () => {
   const [tradeDetail, setTradeDetail] = useState<string>("");
 
   return (
-    <FlexWrapper direction="column" gap={40}>
-      <FoldableSectionTitle
-        title="필수 증빙"
-        toggle={toggle}
-        toggleHandler={() => setToggle(!toggle)}
-      >
-        <Card outline style={{ marginLeft: 24 }}>
-          <FlexWrapper direction="column" gap={4}>
-            <Typography
-              ff="PRETENDARD"
-              fw="MEDIUM"
-              fs={16}
-              lh={20}
-              color="BLACK"
-            >
-              거래 사실 증빙
-            </Typography>
-            <FileUpload placeholder="파일을 선택해주세요" />
-          </FlexWrapper>
-          <FlexWrapper direction="column" gap={4}>
-            <Typography
-              ff="PRETENDARD"
-              fw="MEDIUM"
-              fs={16}
-              lh={20}
-              color="BLACK"
-            >
-              거래 세부항목 증빙
-            </Typography>
-            <TextInput
-              placeholder="거래 세부항목 증빙을 입력하세요"
-              area
-              value={tradeDetail}
-              handleChange={setTradeDetail}
-            />
-            <FileUpload placeholder="파일을 선택해주세요" />
-          </FlexWrapper>
-        </Card>
-      </FoldableSectionTitle>
-    </FlexWrapper>
+    <FoldableSectionTitle
+      title="필수 증빙"
+      toggle={toggle}
+      toggleHandler={() => setToggle(!toggle)}
+    >
+      <Card outline gap={32}>
+        <FlexWrapper direction="column" gap={4}>
+          <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
+            거래 사실 증빙
+          </Typography>
+          <FileUpload placeholder="파일을 선택해주세요" />
+        </FlexWrapper>
+        <FlexWrapper direction="column" gap={4}>
+          <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
+            거래 세부항목 증빙
+          </Typography>
+          <TextInput
+            placeholder="거래 세부항목 증빙을 입력하세요"
+            area
+            value={tradeDetail}
+            handleChange={setTradeDetail}
+          />
+          <FileUpload placeholder="파일을 선택해주세요" />
+        </FlexWrapper>
+      </Card>
+    </FoldableSectionTitle>
   );
 };
 export default BasicEvidenceFrame;
