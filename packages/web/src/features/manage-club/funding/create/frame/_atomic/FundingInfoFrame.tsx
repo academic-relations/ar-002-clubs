@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import DateInput from "@sparcs-clubs/web/common/components/Forms/DateInput";
+// import DateInput from "@sparcs-clubs/web/common/components/Forms/DateInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
+// import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 const FundingInfoFrame = () => {
   const [toggle, setToggle] = useState(true);
@@ -23,8 +23,9 @@ const FundingInfoFrame = () => {
           <TextInput label="항목명" placeholder="항목명을 입력하세요" />
           <FlexWrapper direction="row" gap={32}>
             <Select items={[]} label="지출 목적" />
+            {/* TODO: 지출 일자, 지출 금액 해당 컴포넌트로 구현 */}
             <FlexWrapper direction="column" gap={4} style={{ width: "100%" }}>
-              <Typography
+              {/* <Typography
                 ff="PRETENDARD"
                 fw="MEDIUM"
                 fs={16}
@@ -33,9 +34,10 @@ const FundingInfoFrame = () => {
               >
                 지출 일자
               </Typography>
-              <DateInput date={new Date()} />
+              <DateInput date={new Date()} /> */}
+              <TextInput label="지출 일자" placeholder="20XX.XX.XX" />
             </FlexWrapper>
-            {/* TODO: 지출 금액 입력 */}
+            <TextInput label="지출 금액" placeholder="금액을 입력해주세요" />
           </FlexWrapper>
         </Card>
       )}
