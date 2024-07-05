@@ -7,7 +7,7 @@ import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSe
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-const BasicEvidFrame = () => {
+const BasicEvidenceFrame = () => {
   const [toggle, setToggle] = useState(true);
 
   const [tradeDetail, setTradeDetail] = useState<string>("");
@@ -56,4 +56,4 @@ const BasicEvidFrame = () => {
     </FlexWrapper>
   );
 };
-export default BasicEvidFrame;
+export default BasicEvidenceFrame;

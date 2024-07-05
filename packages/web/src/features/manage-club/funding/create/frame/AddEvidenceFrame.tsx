@@ -6,9 +6,10 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-const AddEvidFrame = () => {
+const AddEvidenceFrame = () => {
   const [toggle, setToggle] = useState(true);
 
+  // TODO: 코드 좀 더 예쁘게 바꾸기
   const [productChecked, setProductChecked] = useState(false);
   const [fixedChecked, setfixedChecked] = useState(false);
   const [transportChecked, settransportChecked] = useState(false);
@@ -45,7 +46,7 @@ const AddEvidFrame = () => {
                 <CheckboxOption
                   optionText="물품"
                   checked={productChecked}
-                  onClick={() => setproductChecked(!productChecked)}
+                  onClick={() => setProductChecked(!productChecked)}
                 />
                 <CheckboxOption
                   optionText="비품"
@@ -106,4 +107,4 @@ const AddEvidFrame = () => {
     </FlexWrapper>
   );
 };
-export default AddEvidFrame;
+export default AddEvidenceFrame;
