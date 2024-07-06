@@ -11,8 +11,8 @@ import EvidenceBlockTitle from "./EvidenceBlockTitle";
 interface OtherEvidenceBlockProps {
   content: string;
   info?: string;
-  value?: string;
-  onChange?: (value: string) => void;
+  value: string;
+  onChange: (value: string) => void;
 }
 
 const EvidenceInfo = [
@@ -45,8 +45,8 @@ const EvidenceInfo = [
 const OtherEvidenceBlock: React.FC<OtherEvidenceBlockProps> = ({
   content,
   info = "",
-  value = "",
-  onChange = () => {},
+  value,
+  onChange,
 }) => {
   const [toggle, setToggle] = useState<boolean>(true);
   return (
