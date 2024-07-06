@@ -74,7 +74,7 @@ const OtherEvidenceBlock: React.FC<OtherEvidenceBlockProps> = ({
               value={value}
               handleChange={onChange}
             />
-            <FileUpload />
+            <FileUpload placeholder="파일을 선택해주세요" />
           </FlexWrapper>
         </Card>
       </EvidenceBlockTitle>

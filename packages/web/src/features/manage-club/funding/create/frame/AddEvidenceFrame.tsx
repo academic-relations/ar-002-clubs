@@ -6,6 +6,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import FixtureEvidenceBlock from "../components/FixtureEvidenceBlock";
 import OtherEvidenceBlock from "../components/OtherEvidenceBlock";
 
 const AddEvidenceFrame = () => {
@@ -109,6 +110,8 @@ const AddEvidenceFrame = () => {
             </FlexWrapper>
           </FlexWrapper>
         </Card>
+        {productChecked && <FixtureEvidenceBlock isFixture={false} />}
+        {fixedChecked && <FixtureEvidenceBlock isFixture />}
         {foodChecked && (
           <OtherEvidenceBlock
             content="식비"
