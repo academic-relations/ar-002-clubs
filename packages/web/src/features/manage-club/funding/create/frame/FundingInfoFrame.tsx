@@ -41,6 +41,7 @@ const FundingInfoFrame = () => {
             label="지출 목적"
             selectedValue={selectedPurpose}
             onSelect={setSelectedPurpose}
+            placeholder="지출 목적을 선택해주세요"
           />
           {/* TODO: 지출 일자, 지출 금액 해당 컴포넌트로 구현 */}
           <TextInput
