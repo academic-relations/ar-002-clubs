@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { ClubStudentTRepository } from "@sparcs-clubs/api/common/repository/club.club-student-t.repository";
 import { SemesterRepository } from "@sparcs-clubs/api/common/repository/semester.repository";
 import { StudentRepository } from "@sparcs-clubs/api/common/repository/student.repository";
 import { getKSTDate, isEmptyObject } from "@sparcs-clubs/api/common/util/util";
+import ClubStudentTRepository from "@sparcs-clubs/api/feature/club/repository/club.club-student-t.repository";
 
 import { Reservation, TermList } from "../dto/common-space.dto";
 import { CommonSpaceUsageOrderDRepository } from "../repository/common-space-usage-order-d.repository";

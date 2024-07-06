@@ -40,7 +40,7 @@ interface IClubs {
 export class ClubRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  // clubI가 일치하는 club을 리스트로 가져옵니다.
+  // clubId가 일치하는 club을 리스트로 가져옵니다.
   async findByClubId(clubId: number) {
     const clubList = await this.db
       .select()

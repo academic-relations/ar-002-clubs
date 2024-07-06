@@ -3,8 +3,7 @@ import { Module } from "@nestjs/common";
 import { SemesterRepository } from "@sparcs-clubs/api/common/repository/semester.repository";
 import { StudentRepository } from "@sparcs-clubs/api/common/repository/student.repository";
 import { DrizzleModule } from "@sparcs-clubs/api/drizzle/drizzle.module";
-
-import { ClubModule } from "../club/club.module";
+import ClubStudentTRepository from "@sparcs-clubs/api/feature/club/repository/club.club-student-t.repository";
 
 import { CommonSpaceController } from "./controller/common-space.controller";
 import { CommonSpaceUsageOrderDRepository } from "./repository/common-space-usage-order-d.repository";
@@ -15,7 +14,7 @@ import { GetCommonSpaceUsageOrderRepository } from "./repository/getCommonSpaceU
 import { CommonSpaceService } from "./service/common-space.service";
 
 @Module({
-  imports: [DrizzleModule, ClubModule],
+  imports: [DrizzleModule],
   controllers: [CommonSpaceController],
   providers: [
     CommonSpaceService,
@@ -26,6 +25,7 @@ import { CommonSpaceService } from "./service/common-space.service";
     GetCommonSpacesUsageOrderRepository,
     SemesterRepository,
     GetCommonSpacesUsageOrderMyRepository,
+    ClubStudentTRepository, // TODO: should be removed
   ],
   exports: [CommonSpaceService],
 })

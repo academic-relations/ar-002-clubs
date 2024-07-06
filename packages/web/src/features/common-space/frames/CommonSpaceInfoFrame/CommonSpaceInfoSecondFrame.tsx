@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { differenceInHours, differenceInMinutes, format } from "date-fns";
-import { ko } from "date-fns/locale";
+import { differenceInHours, differenceInMinutes } from "date-fns";
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -9,6 +8,10 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Timetable from "@sparcs-clubs/web/common/components/Timetable";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import {
+  formatSimpleSlashDate,
+  formatTime,
+} from "@sparcs-clubs/web/utils/Date/formateDate";
 
 import { mockCommonSpaceList } from "./mockCommonSpaceList";
 
@@ -88,10 +91,9 @@ const CommonSpaceInfoSecondFrame: React.FC<
                 <Card outline gap={20} style={{ marginTop: 64 }}>
                   <Typography type="p">선택 시간</Typography>
                   <Typography type="p">
-                    {format(dateTimeRange[0], "M/d(E) ", { locale: ko })}
-                    {format(dateTimeRange[0], "HH:mm", { locale: ko })} ~
-                    {format(dateTimeRange[1], "HH:mm", { locale: ko })} (
-                    {`${diffHours}시간`}
+                    {formatSimpleSlashDate(dateTimeRange[0])}
+                    {formatTime(dateTimeRange[0])}~
+                    {formatTime(dateTimeRange[1])} ({`${diffHours}시간`}
                     {diffMinutes! % 60 ? ` ${diffMinutes! % 60}분` : ""})
                   </Typography>
                 </Card>

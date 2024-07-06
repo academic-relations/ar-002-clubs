@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import TableButtonCell from "@sparcs-clubs/web/common/components/Table/TableButtonCell";
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import NoticePagination from "@sparcs-clubs/web/features/notices/components/NoticePagination";
 
 const TableWithPaginationWrapper = styled.div`
   display: flex;
@@ -100,7 +100,7 @@ const RegisterMemberList = () => {
           </FlexWrapper>
         </TableWrapper>
       </TableWithCount>
-      <NoticePagination
+      <Pagination
         totalPage={10}
         currentPage={page}
         limit={10}
