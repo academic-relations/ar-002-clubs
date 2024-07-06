@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+
 import styled from "styled-components";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
 import { singleSemesterFundingListSectionTitleText } from "@sparcs-clubs/web/constants/manageClubFunding";
 
 import PastFundingListTable from "./PastFundingListTable";

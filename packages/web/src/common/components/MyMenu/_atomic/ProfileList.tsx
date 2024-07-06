@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+
 import styled from "styled-components";
+
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+
 import Profile from "./Profile";
 
 interface ProfileListProps {

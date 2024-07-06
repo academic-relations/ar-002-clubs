@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import styled from "styled-components";
-
-import ClubCard from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
 import Link from "next/link";
+import styled from "styled-components";
+
 import paths from "@sparcs-clubs/web/constants/paths";
+import ClubCard from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
 import type { ClubCardProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
@@ -15,11 +15,27 @@ interface ClubListGridItemProps {
 }
 
 const ClubListGridInner = styled.div`
-  width: 100%;
+  width: calc(100% - 48px);
   display: grid;
-  grid-template-columns: repeat(4, calc((100% - 48px) / 4));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
   padding-left: 24px;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xs}) {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
 `;
 
 const ClubListGrid: React.FC<ClubListGridItemProps> = ({ clubList }) => (

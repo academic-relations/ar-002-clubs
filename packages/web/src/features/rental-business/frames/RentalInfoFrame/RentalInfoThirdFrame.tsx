@@ -1,15 +1,20 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+
+import styled from "styled-components";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
+import {
+  ListContainer,
+  ListItem,
+} from "@sparcs-clubs/web/common/components/ListItem";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
-import { format } from "date-fns";
-import { ko } from "date-fns/locale";
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import {
-  ListItem,
-  ListContainer,
-} from "@sparcs-clubs/web/common/components/ListItem";
+import { formatDate } from "@sparcs-clubs/web/utils/Date/formateDate";
+
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
 const StyledTypography = styled(Typography)`
@@ -24,12 +29,6 @@ const CardInner = styled.div`
   align-self: stretch;
 `;
 
-const RentalPeriodWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-`;
-
 const RentalPeriodInner = styled.div`
   display: flex;
 `;
@@ -37,7 +36,7 @@ const RentalPeriodInner = styled.div`
 const RentalInfoThirdFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
 > = ({ rental, setRental, setNextEnabled }) => {
-  const [purpose, setPurpose] = useState("");
+  const [purpose, setPurpose] = useState(rental.purpose || "");
   const [noPurposeError, setNoPurposeError] = useState("");
   const [purposeTouched, setPurposeTouched] = useState(false);
 
@@ -73,18 +72,14 @@ const RentalInfoThirdFrame: React.FC<
           <ListItem>담당자: {rental.info?.applicant}</ListItem>
           <ListItem>연락처: {rental.info?.phone}</ListItem>
         </ListContainer>
-        <RentalPeriodWrapper>
+        <FlexWrapper direction="row" gap={16}>
           <StyledTypography type="p">대여 기간</StyledTypography>
           <RentalPeriodInner>
-            {format(rental.date?.start || "", "yyyy년 M월 d일 (EEE)", {
-              locale: ko,
-            })}{" "}
-            ~{" "}
-            {format(rental.date?.end || "", "yyyy년 M월 d일 (EEE)", {
-              locale: ko,
-            })}
+            {formatDate(rental.date?.start || new Date())} ~
+            {formatDate(rental.date?.end || new Date())}
+            {/* new Date() 넣어도 되는 이유: thirdFrame에서는 rental date가 둘 다 not null인 상태로 넘어옴 */}
           </RentalPeriodInner>
-        </RentalPeriodWrapper>
+        </FlexWrapper>
         <StyledTypography type="p">대여 물품</StyledTypography>
         <RentalList rental={rental} />
       </CardInner>

@@ -1,33 +1,12 @@
 "use client";
 
 import React, { useMemo } from "react";
-import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
-
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
-
 import useGetMyClub from "@sparcs-clubs/web/features/my/clubs/service/useGetMyClub";
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
-
-const ClubsPageMainFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
-
-const ClubListWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
-
-const PageHeadWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
 
 const MyClubsMainFrame: React.FC = () => {
   const { data, isLoading, isError } = useGetMyClub();
@@ -36,19 +15,17 @@ const MyClubsMainFrame: React.FC = () => {
     [data],
   );
   return (
-    <ClubsPageMainFrameInner>
-      <PageHeadWrapper>
-        <BreadCrumb
-          items={[
-            { name: "마이페이지", path: "/my" },
-            { name: "나의 동아리", path: "/my/clubs" },
-          ]}
-        />
-        <PageTitle>나의 동아리</PageTitle>
-      </PageHeadWrapper>
+    <FlexWrapper direction="column" gap={60}>
+      <PageHead
+        items={[
+          { name: "마이페이지", path: "/my" },
+          { name: "나의 동아리", path: "/my/clubs" },
+        ]}
+        title="나의 동아리"
+      />
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         {isMyClubsExist && (
-          <ClubListWrapper>
+          <FlexWrapper direction="column" gap={60}>
             {(data?.semesters ?? []).map(
               myClub =>
                 myClub.clubs.length > 0 && (
@@ -60,10 +37,10 @@ const MyClubsMainFrame: React.FC = () => {
                   />
                 ),
             )}
-          </ClubListWrapper>
+          </FlexWrapper>
         )}
       </AsyncBoundary>
-    </ClubsPageMainFrameInner>
+    </FlexWrapper>
   );
 };
 

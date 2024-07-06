@@ -1,8 +1,9 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
+import { eq } from "drizzle-orm";
+import { MySql2Database } from "drizzle-orm/mysql2";
+
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
-import { MySql2Database } from "drizzle-orm/mysql2";
-import { eq } from "drizzle-orm";
 
 @Injectable()
 export class StudentRepository {

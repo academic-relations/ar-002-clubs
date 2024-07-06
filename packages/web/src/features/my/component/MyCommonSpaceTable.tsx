@@ -1,40 +1,24 @@
 import React from "react";
+
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
   TableRow,
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
-import Tag, { TagColor } from "@sparcs-clubs/web/common/components/Tag";
-
+import Tag from "@sparcs-clubs/web/common/components/Tag";
+import { CmsTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import {
   formatDate,
   formatDateTime,
   formatTime,
 } from "@sparcs-clubs/web/utils/Date/formateDate";
-import { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
-import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
+import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
+import type { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
 
 interface CommonSpaceTableProps {
   spaceList: ApiCms006ResponseOk;
 }
-
-const getStatusDetails = (
-  status: number,
-): {
-  text: string;
-  color: TagColor;
-} => {
-  switch (status) {
-    case CommonSpaceUsageOrderStatusEnum.Applied:
-      return { text: "신청", color: "BLUE" };
-    case CommonSpaceUsageOrderStatusEnum.Canceled:
-      return { text: "취소", color: "GRAY" };
-    case CommonSpaceUsageOrderStatusEnum.Used:
-      return { text: "사용", color: "GREEN" };
-    default:
-      return { text: "None", color: "GRAY" };
-  }
-};
 
 const MyCommonSpaceTable: React.FC<CommonSpaceTableProps> = ({ spaceList }) => (
   <TableWrapper>
@@ -59,7 +43,7 @@ const MyCommonSpaceTable: React.FC<CommonSpaceTableProps> = ({ spaceList }) => (
       </TableCell>
     </TableRow>
     {spaceList.items.map((space, index) => {
-      const { color, text } = getStatusDetails(space.statusEnum);
+      const { color, text } = getTagDetail(space.statusEnum, CmsTagList);
       return (
         <TableRow isBorder key={space.chargeStudentName + String(index)}>
           <TableCell type="Tag" width="10%" minWidth={90}>

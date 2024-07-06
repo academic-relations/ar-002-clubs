@@ -1,28 +1,31 @@
 "use client";
 
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import React, { useState } from "react";
+
 import styled from "styled-components";
-import NoticePagination from "@sparcs-clubs/web/features/notices/components/NoticePagination";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
+
+import Pagination from "@sparcs-clubs/web/common/components/Pagination";
+import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+
 import {
-  activityCertificateMockData,
-  commonSpaceMockData,
-  printingBusinessMockData,
-  rentalBusinessMockData,
-} from "../types/mock";
+  activityCertificateColumnSort,
+  commonSpaceColumnSort,
+  printingBusinessColumnSort,
+  rentalBusinessColumnSort,
+} from "../services/columnSort";
 import {
+  ManageClubActivityCertificateStatus,
+  ManageClubCommonSpaceStatus,
+  ManageClubPrintingBusinessStatus,
   ManageClubRentalBusinessStatus,
   ManageClubTagColorsInterface,
   ServiceType,
-  ManageClubPrintingBusinessStatus,
-  ManageClubActivityCertificateStatus,
-  ManageClubCommonSpaceStatus,
 } from "../types/ManageClubTable";
 import {
-  ManageClubTagColors,
   formattedString,
+  ManageClubTagColors,
 } from "../types/ManageClubTableConst";
 import {
   activityCertificateHeaders,
@@ -31,11 +34,11 @@ import {
   rentalBusinessHeaders,
 } from "../types/ManageClubTableHeader";
 import {
-  activityCertificateColumnSort,
-  commonSpaceColumnSort,
-  printingBusinessColumnSort,
-  rentalBusinessColumnSort,
-} from "../services/columnSort";
+  activityCertificateMockData,
+  commonSpaceMockData,
+  printingBusinessMockData,
+  rentalBusinessMockData,
+} from "../types/mock";
 
 interface ManageClubTableMainFrameProps {
   pageType: ServiceType;
@@ -217,7 +220,7 @@ const ManageClubTableMainFrame: React.FC<ManageClubTableMainFrameProps> = ({
         ))}
       </TableFrameInner>
       {unslicedData.length > 1 && (
-        <NoticePagination
+        <Pagination
           totalPage={Math.ceil(unslicedData.length / 10)}
           currentPage={page}
           limit={10}

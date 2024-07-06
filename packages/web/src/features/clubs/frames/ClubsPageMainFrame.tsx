@@ -1,31 +1,23 @@
 "use client";
 
 import React from "react";
-import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
-
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
 import { useGetClubsList } from "@sparcs-clubs/web/features/clubs/services/useGetClubsList";
-
-const ClubsPageMainFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 60px;
-`;
-
-const ClubListsByDepartmentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-`;
 
 const ClubsPageMainFrame: React.FC = () => {
   const { data, isLoading, isError } = useGetClubsList();
   return (
-    <ClubsPageMainFrameInner>
+    <FlexWrapper direction="column" gap={60}>
+      <PageHead
+        items={[{ name: "동아리 목록", path: "/clubs" }]}
+        title="동아리 목록"
+      />
       <AsyncBoundary isLoading={isLoading} isError={isError}>
-        <ClubListsByDepartmentWrapper>
+        <FlexWrapper direction="column" gap={40}>
           {(data?.divisions ?? []).map(division => (
             <ClubsSectionFrame
               title={division.name}
@@ -37,9 +29,9 @@ const ClubsPageMainFrame: React.FC = () => {
               key={division.name}
             />
           ))}
-        </ClubListsByDepartmentWrapper>
+        </FlexWrapper>
       </AsyncBoundary>
-    </ClubsPageMainFrameInner>
+    </FlexWrapper>
   );
 };
 

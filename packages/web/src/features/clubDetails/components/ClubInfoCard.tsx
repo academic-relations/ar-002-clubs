@@ -1,18 +1,20 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
 
+import Card from "@sparcs-clubs/web/common/components/Card";
+import Tag from "@sparcs-clubs/web/common/components/Tag";
 import {
   getTagColorFromClubType,
   getTagColorFromDivision,
   getTagContentFromClubType,
 } from "@sparcs-clubs/web/types/clubdetail.types";
 
-import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
-import Card from "@sparcs-clubs/web/common/components/Card";
-import Tag from "@sparcs-clubs/web/common/components/Tag";
 import ClubInfoItem from "./ClubInfoItem";
+
+import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
 interface ClubInfoCardProps {
   club: ApiClb002ResponseOK;

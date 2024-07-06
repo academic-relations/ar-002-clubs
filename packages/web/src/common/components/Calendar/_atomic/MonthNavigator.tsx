@@ -1,8 +1,10 @@
 import React from "react";
+
+import { addMonths, subMonths } from "date-fns";
 import styled from "styled-components";
-import { addMonths, format, subMonths } from "date-fns";
-import { ko } from "date-fns/locale";
+
 import Icon from "@sparcs-clubs/web/common/components/Icon";
+import { formatMonth } from "@sparcs-clubs/web/utils/Date/formateDate";
 
 interface MonthNavigatorProps {
   currentDate: Date;
@@ -52,7 +54,7 @@ const MonthNavigator: React.FC<MonthNavigatorProps> = ({
     <NavigatorWrapper>
       <Icon type="chevron_left" size={20} onClick={handlePrevious} />
       <MonthDisplay onClick={handleTodayClick}>
-        {format(currentDate, "yyyy년 M월", { locale: ko })}
+        {formatMonth(currentDate)}
       </MonthDisplay>
       <Icon type="chevron_right" size={20} onClick={handleNext} />
     </NavigatorWrapper>

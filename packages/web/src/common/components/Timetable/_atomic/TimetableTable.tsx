@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
+
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
+
 import TimetableCell, { type TimetableCellType } from "./TimetableCell";
 
 interface TimetableTableProps {
@@ -9,7 +12,9 @@ interface TimetableTableProps {
   availableHoursPerDay: number;
 }
 
-const TimetableTableInner = styled.div<{
+const TimetableTableInner = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   rows: number;
   columns: number;
 }>`

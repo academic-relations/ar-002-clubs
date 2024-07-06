@@ -1,10 +1,13 @@
-import { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
-import { Injectable, Inject } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { and, eq, gte, isNull, lte, or, sql } from "drizzle-orm";
+import { MySql2Database } from "drizzle-orm/mysql2";
+
+import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import {
   Club,
+  ClubRepresentativeD,
   ClubStudentT,
   ClubT,
-  ClubRepresentativeD,
 } from "@sparcs-clubs/api/drizzle/schema/club.schema";
 import {
   Division,
@@ -14,10 +17,9 @@ import {
   Professor,
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
-import { and, eq, sql, isNull, or, gte, lte } from "drizzle-orm";
-import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
+
+import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 
 interface IClubs {
   id: number;
@@ -37,6 +39,17 @@ interface IClubs {
 @Injectable()
 export class ClubRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
+
+  // clubId가 일치하는 club을 리스트로 가져옵니다.
+  async findByClubId(clubId: number) {
+    const clubList = await this.db
+      .select()
+      .from(Club)
+      .where(eq(Club.id, clubId))
+      .limit(1);
+
+    return clubList;
+  }
 
   async findClubDetail(clubId: number) {
     const crt = getKSTDate();

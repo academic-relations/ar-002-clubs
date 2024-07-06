@@ -1,16 +1,19 @@
 import React from "react";
-import { format } from "date-fns";
-import { ko } from "date-fns/locale";
-import Tag, { type TagColor } from "@sparcs-clubs/web/common/components/Tag";
-import Table from "@sparcs-clubs/web/common/components/Table";
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
+
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import styled from "styled-components";
+
+import Table from "@sparcs-clubs/web/common/components/Table";
+import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
+import Tag, { type TagColor } from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+
+import { formatDate } from "@sparcs-clubs/web/utils/Date/formateDate";
+
 import { type PastActivityReport } from "../types/activityReport";
 
 interface ActivityReportListProps {
@@ -64,8 +67,7 @@ const columns = [
     enableSorting: false,
   }),
   columnHelper.accessor(
-    row =>
-      `${format(row.startDate, "yyyy년 M월 d일 (E)", { locale: ko })} ~ ${format(row.endDate, "yyyy년 M월 d일 (E)", { locale: ko })}`,
+    row => `${formatDate(row.startDate)} ~ ${formatDate(row.endDate)}`,
     {
       id: "date-range",
       header: () => (

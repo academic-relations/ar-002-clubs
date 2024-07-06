@@ -1,40 +1,28 @@
 import React, { useState } from "react";
+
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import {
-  FrameWrapper,
-  SectionWrapper,
-} from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
-import Card from "@sparcs-clubs/web/common/components/Card";
 import Button from "@sparcs-clubs/web/common/components/Button";
-import {
-  ColumnTextWrapper,
-  ProgressCheckSectionWrapper,
-} from "@sparcs-clubs/web/common/components/ProgressCheckSection/ProgressCheckSectionWrapper";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
-import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
-import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
+import Card from "@sparcs-clubs/web/common/components/Card";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import {
   ListContainer,
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
-import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import { useRouter } from "next/navigation";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
+import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
+import ProgressCheckSectionWrapper from "@sparcs-clubs/web/common/components/ProgressCheckSection/ProgressCheckSectionWrapper";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 const ActivityWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 0 24px;
-`;
-
-const ActivityRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
 `;
 
 const ButtonWrapper = styled.div`
@@ -54,20 +42,18 @@ const ManageCertificateDetailFrame = () => {
     router.push("/manage-club/activity-certificate");
   };
   return (
-    <FrameWrapper>
-      <SectionWrapper>
-        <BreadCrumb
-          items={[
-            { name: "대표 동아리 관리", path: "/manage-club" },
-            {
-              name: "활동확인서 발급 내역",
-              path: "/manage-club/activity-certificate",
-            },
-          ]}
-          enableLast
-        />
-        <PageTitle>활동확인서 발급 내역</PageTitle>
-      </SectionWrapper>
+    <FlexWrapper direction="column" gap={60}>
+      <PageHead
+        items={[
+          { name: "대표 동아리 관리", path: "/manage-club" },
+          {
+            name: "활동확인서 발급 내역",
+            path: "/manage-club/activity-certificate",
+          },
+        ]}
+        title="활동확인서 발급 내역"
+        enableLast
+      />
       <Card outline gap={20}>
         {/* TODO: 너무 길다면.. 나중에 컴포넌트로 따로 빼기 */}
         <ProgressCheckSectionWrapper>
@@ -108,7 +94,7 @@ const ManageCertificateDetailFrame = () => {
           </ButtonWrapper>
         </ProgressCheckSectionWrapper>
         {/* TODO: 아래 정보들 백 연결하기 */}
-        <ColumnTextWrapper>
+        <FlexWrapper direction="column" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
             신청자 정보
           </Typography>
@@ -118,8 +104,8 @@ const ManageCertificateDetailFrame = () => {
             <ListItem>학번: 20200510</ListItem>
             <ListItem>연락처: 010-0000-0000</ListItem>
           </ListContainer>
-        </ColumnTextWrapper>
-        <ColumnTextWrapper>
+        </FlexWrapper>
+        <FlexWrapper direction="column" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
             활동확인서 발급 신청 정보{" "}
           </Typography>
@@ -133,7 +119,7 @@ const ManageCertificateDetailFrame = () => {
             <ListItem>발급 매수: 3매</ListItem>
             <ListItem>활동 내역</ListItem>
             <ActivityWrapper>
-              <ActivityRow>
+              <FlexWrapper direction="row" gap={12}>
                 <Typography
                   ff="PRETENDARD"
                   fw="REGULAR"
@@ -152,16 +138,16 @@ const ManageCertificateDetailFrame = () => {
                 >
                   신입생 세미나 이수
                 </Typography>
-              </ActivityRow>
+              </FlexWrapper>
               {/* TODO: 나중에 list로 활동 내역 추가 */}
             </ActivityWrapper>
           </ListContainer>
-        </ColumnTextWrapper>
+        </FlexWrapper>
       </Card>
       <Button style={{ width: "max-content" }} onClick={onClick}>
         목록으로 돌아가기
       </Button>
-    </FrameWrapper>
+    </FlexWrapper>
   );
 };
 export default ManageCertificateDetailFrame;

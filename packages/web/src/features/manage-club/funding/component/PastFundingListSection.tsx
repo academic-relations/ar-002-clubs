@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
+
 import styled from "styled-components";
 
+import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import { pastFundingListSectionTitle } from "@sparcs-clubs/web/constants/manageClubFunding";
 
-import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import PastSingleSemesterFundingListSection from "./_atomic/PastSingleSemesterFundingListSection";
 
 const PastFundingListSectionInner = styled.div`

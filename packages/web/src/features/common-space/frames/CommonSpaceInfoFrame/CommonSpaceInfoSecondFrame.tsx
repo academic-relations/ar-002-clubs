@@ -1,26 +1,36 @@
-import Card from "@sparcs-clubs/web/common/components/Card";
-import Select from "@sparcs-clubs/web/common/components/Forms/Select";
-import Info from "@sparcs-clubs/web/common/components/Info";
-import Timetable from "@sparcs-clubs/web/common/components/Timetable";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 import React, { useEffect, useMemo, useState } from "react";
-import styled from "styled-components";
-import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
-import { useGetCommonSpaces } from "@sparcs-clubs/web/features/common-space/service/getCommonSpaces";
+
 import apiCms001 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
-import { z } from "zod";
-// import { useGetCommonSpaceUsageOrders } from "@sparcs-clubs/web/features/common-space/service/getCommonSpaceUsageOrders";
 import apiCms002 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
-import { mockUsageOrders } from "@sparcs-clubs/web/features/common-space/service/_mock/mockupCommonSpaceUsageOrders";
+
+// import { useGetCommonSpaceUsageOrders } from "@sparcs-clubs/web/features/common-space/service/getCommonSpaceUsageOrders";
 
 import {
   addWeeks,
   differenceInHours,
   differenceInMinutes,
-  format,
   startOfWeek,
 } from "date-fns";
-import { ko } from "date-fns/locale";
+
+import styled from "styled-components";
+
+import { z } from "zod";
+
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+
+import Card from "@sparcs-clubs/web/common/components/Card";
+import Info from "@sparcs-clubs/web/common/components/Info";
+import Select from "@sparcs-clubs/web/common/components/Select";
+import Timetable from "@sparcs-clubs/web/common/components/Timetable";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+
+import { mockUsageOrders } from "@sparcs-clubs/web/features/common-space/service/_mock/mockupCommonSpaceUsageOrders";
+import { useGetCommonSpaces } from "@sparcs-clubs/web/features/common-space/service/getCommonSpaces";
+
+import {
+  formatSimpleSlashDate,
+  formatTime,
+} from "@sparcs-clubs/web/utils/Date/formateDate";
 
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 
@@ -178,10 +188,9 @@ const CommonSpaceInfoSecondFrame: React.FC<
                 <Card outline gap={20} style={{ marginTop: 64 }}>
                   <Typography type="p">선택 시간</Typography>
                   <Typography type="p">
-                    {format(dateTimeRange[0], "M/d(E) ", { locale: ko })}
-                    {format(dateTimeRange[0], "HH:mm", { locale: ko })} ~
-                    {format(dateTimeRange[1], "HH:mm", { locale: ko })} (
-                    {`${diffHours}시간`}
+                    {formatSimpleSlashDate(dateTimeRange[0])}
+                    {formatTime(dateTimeRange[0])}~
+                    {formatTime(dateTimeRange[1])} ({`${diffHours}시간`}
                     {diffMinutes! % 60 ? ` ${diffMinutes! % 60}분` : ""})
                   </Typography>
                 </Card>

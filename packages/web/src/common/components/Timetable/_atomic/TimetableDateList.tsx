@@ -1,14 +1,19 @@
-import { addDays, format } from "date-fns";
-import { ko } from "date-fns/locale";
 import React from "react";
+
+import isPropValid from "@emotion/is-prop-valid";
+import { addDays } from "date-fns";
 import styled from "styled-components";
+
+import { formatSlashDate } from "@sparcs-clubs/web/utils/Date/formateDate";
 
 interface TimetableDateListProps {
   startDate: Date;
   paddingLeft?: string;
 }
 
-const TimetableDateListInner = styled.div<{ paddingLeft: string }>`
+const TimetableDateListInner = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ paddingLeft: string }>`
   display: flex;
   width: 600px;
   justify-content: flex-end;
@@ -36,7 +41,7 @@ const TimetableDateList: React.FC<TimetableDateListProps> = ({
   <TimetableDateListInner paddingLeft={paddingLeft}>
     {[...Array(7)].map((_, i) => (
       <TimtableDate key={i}>
-        {format(addDays(startDate, i), "MM/dd (E)", { locale: ko })}
+        {formatSlashDate(addDays(startDate, i))}
       </TimtableDate>
     ))}
   </TimetableDateListInner>

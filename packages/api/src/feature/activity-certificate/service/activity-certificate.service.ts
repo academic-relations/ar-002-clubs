@@ -1,7 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { ApiAcf001RequestBody } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf001";
+
 import { ClubRepository } from "@sparcs-clubs/api/common/repository/club.repository";
+
 import { ActivityCertificateRepository } from "../repository/activity-certificate.repository";
+
+import type { ApiAcf001RequestBody } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf001";
 
 @Injectable()
 export class ActivityCertificateService {

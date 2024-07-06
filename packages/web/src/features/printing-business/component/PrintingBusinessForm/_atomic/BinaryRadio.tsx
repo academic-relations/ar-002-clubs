@@ -1,4 +1,5 @@
 import React from "react";
+
 import styled from "styled-components";
 
 import Radio from "@sparcs-clubs/web/common/components/Radio";
@@ -49,8 +50,12 @@ const BinaryRadio: React.FC<BinaryRadioProps> = ({
       }
     >
       {[
-        <RadioOption value="true">{firstOptionLabel}</RadioOption>,
-        <RadioOption value="false">{secondOptionLabel}</RadioOption>,
+        <RadioOption key={`${label}_true`} value="true">
+          {firstOptionLabel}
+        </RadioOption>,
+        <RadioOption key={`${label}_false`} value="false">
+          {secondOptionLabel}
+        </RadioOption>,
       ]}
     </Radio>
   </BinaryRadioInner>

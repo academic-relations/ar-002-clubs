@@ -1,9 +1,9 @@
 import {
-  mysqlTable,
-  int,
-  varchar,
   date,
+  int,
+  mysqlTable,
   timestamp,
+  varchar,
 } from "drizzle-orm/mysql-core";
 
 export const Notice = mysqlTable("notice", {

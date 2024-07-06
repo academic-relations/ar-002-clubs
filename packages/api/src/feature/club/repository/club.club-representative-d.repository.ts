@@ -1,10 +1,11 @@
-import { Injectable, Inject } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { and, eq, gte, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
+
+import { getKSTDate, takeUnique } from "src/common/util/util";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { ClubRepresentativeD } from "src/drizzle/schema/club.schema";
 import { Student } from "src/drizzle/schema/user.schema";
-import { eq, and, lte, gte, or, isNull } from "drizzle-orm";
-import { getKSTDate, takeUnique } from "src/common/util/util";
 
 @Injectable()
 export class ClubRepresentativeDRepository {
@@ -35,6 +36,30 @@ export class ClubRepresentativeDRepository {
       .orderBy(ClubRepresentativeD.endTerm)
       .limit(1)
       .then(takeUnique);
+
+    return representative;
+  }
+
+  // 현재 동아리 대표자 목록 가져오기
+  async findRepresentativeIdListByClubId(
+    clubId: number,
+  ): Promise<Array<{ studentId: number }>> {
+    const currentDate = getKSTDate();
+
+    const representative = await this.db
+      .select({ studentId: ClubRepresentativeD.studentId })
+      .from(ClubRepresentativeD)
+      .where(
+        and(
+          eq(ClubRepresentativeD.clubId, clubId),
+          lte(ClubRepresentativeD.startTerm, currentDate),
+          or(
+            gte(ClubRepresentativeD.endTerm, currentDate),
+            isNull(ClubRepresentativeD.endTerm),
+          ),
+        ),
+      )
+      .orderBy(ClubRepresentativeD.endTerm);
 
     return representative;
   }

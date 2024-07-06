@@ -1,8 +1,10 @@
 import React from "react";
+
 import styled from "styled-components";
+
+import Progress from "./_atomic/Progress";
 import { Status } from "./_atomic/ProgressDot";
 import ProgressLine from "./_atomic/ProgressLine";
-import Progress from "./_atomic/Progress";
 
 interface ProgressCheckSectionProps {
   labels: string[];
