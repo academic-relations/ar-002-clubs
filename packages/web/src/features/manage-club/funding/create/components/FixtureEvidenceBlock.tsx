@@ -75,29 +75,41 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
             value={name}
             handleChange={setName}
           />
-          <FlexWrapper direction="column" gap={4}>
-            <Typography
-              ff="PRETENDARD"
-              fw="MEDIUM"
-              fs={16}
-              lh={20}
-              color="BLACK"
-            >
-              {`${content} 증빙`}
-            </Typography>
-            <Typography
-              ff="PRETENDARD"
-              fw="REGULAR"
-              fs={14}
-              lh={20}
-              color="GRAY.600"
-              style={{ whiteSpace: "pre-wrap" }}
-            >
-              {`* ${content} 사용 목적 입력 필요`}
-            </Typography>
-            <TextInput placeholder={`${content} 증빙을 입력하세요.`} area />
-            <FileUpload placeholder="파일을 선택해주세요" />
-          </FlexWrapper>
+          {/* TODO: EvidenceUploadWithText 컴포넌트로 변경 */}
+          {classValue && (
+            <FlexWrapper direction="column" gap={4}>
+              <Typography
+                ff="PRETENDARD"
+                fw="MEDIUM"
+                fs={16}
+                lh={20}
+                color="BLACK"
+              >
+                {classValue === "4" ? "소프트웨어 증빙" : `${content} 증빙`}
+              </Typography>
+              <Typography
+                ff="PRETENDARD"
+                fw="REGULAR"
+                fs={14}
+                lh={20}
+                color="GRAY.600"
+                style={{ whiteSpace: "pre-wrap" }}
+              >
+                {classValue === "4"
+                  ? "* 동아리 성격에 합치하는 활동에 사용하는 소프트웨어라는 소명 필요"
+                  : `* ${content} 사용 목적 입력 필요`}
+              </Typography>
+              <TextInput
+                placeholder={
+                  classValue === "4"
+                    ? "소프트웨어 증빙을 입력하세요"
+                    : `${content} 증빙을 입력하세요`
+                }
+                area
+              />
+              <FileUpload placeholder="파일을 선택해주세요" />
+            </FlexWrapper>
+          )}
         </Card>
       </EvidenceBlockTitle>
     </FlexWrapper>
