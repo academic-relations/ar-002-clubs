@@ -62,7 +62,6 @@ export class ClubController {
   ): Promise<ApiClb004ResponseOK> {
     const studentId = 605;
     const result = await this.clubService.getStudentClubBrief(studentId, param);
-
     return result;
   }
 

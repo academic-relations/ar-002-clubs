@@ -10,14 +10,14 @@ const url = () => `/student/clubs/club/{club_id}/brief`;
 const method = "PUT";
 
 const requestParam = z.object({
-  clubId: z.number().int(), // clubId는 정수형 숫자
+  clubId: z.coerce.number().int(), // clubId는 정수형 숫자
 });
 
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  description: z.string(),
-  roomPassword: z.string().max(20),
+  description: z.coerce.string(),
+  roomPassword: z.coerce.string().max(20),
 });
 
 const responseBodyMap = {

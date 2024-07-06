@@ -32,24 +32,22 @@ export class ClubTRepository {
 
   async findClubById(clubId: number): Promise<boolean> {
     const crt = getKSTDate();
-    const result = await this.db
+    const result = !!(await this.db
       .select({
-        id: ClubT.id,
+        id: ClubT.clubId,
       })
       .from(ClubT)
       .where(
         and(
-          eq(ClubT.id, clubId),
+          eq(ClubT.clubId, clubId),
           or(
             and(isNull(ClubT.endTerm), lte(ClubT.endTerm, crt)),
             gte(ClubT.endTerm, crt),
           ),
         ),
       )
-      .then(takeUnique);
-    if (result.id !== null) {
-      return true;
-    }
-    return false;
+      .limit(1)
+      .then(takeUnique));
+    return result;
   }
 }

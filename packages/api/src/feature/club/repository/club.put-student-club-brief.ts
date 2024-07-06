@@ -23,15 +23,26 @@ export class ClubPutStudentClubBrief {
     roomPassword: string,
   ): Promise<boolean> {
     const crt = getKSTDate();
-    const result = !!(await this.db.execute(sql`UPDATE ${ClubT}
-      LEFT JOIN ${Club} ON (${ClubT.id} = ${Club.id} AND ${Club.deletedAt} IS NULL)
-      LEFT JOIN ${ClubRoomT} ON (${ClubT.id} = ${ClubRoomT.clubId} AND (${ClubRoomT.endTerm} IS NULL AND ${ClubRoomT.startTerm} <= ${crt})
-      OR (${ClubRoomT.endTerm} >= ${crt}))
+    await this.db.transaction(async tx => {
+      const [result] = await this.db.execute(sql`
+      UPDATE ${ClubT}
+      LEFT JOIN ${Club} ON (${ClubT.clubId} = ${Club.id} AND (${Club.deletedAt} IS NULL))
+      LEFT JOIN ${ClubRoomT} ON 
+        (${ClubT.clubId} = ${ClubRoomT.clubId} AND 
+          (
+            (${ClubRoomT.endTerm} IS NULL AND ${ClubRoomT.startTerm} <= ${crt})
+            OR (${ClubRoomT.endTerm} >= ${crt})
+          )
+        )
       SET ${Club.description} = ${description}, ${ClubRoomT.roomPassword} = ${roomPassword}
-      WHERE (${ClubT.id} = ${clubId}
-      AND (${ClubT.endTerm} IS NULL AND ${ClubT.startTerm} <= ${crt})
-      OR (${ClubT.endTerm} >= ${crt})); SELECT CASE WHEN ROW_COUNT() = 2 THEN TRUE ELSE FALSE END;`)); // 수정 필요. 트랜잭션 넣어야 할거 같음.
-    console.log(result);
-    return result;
+      WHERE (${ClubT.clubId} = ${clubId}
+      AND ((${ClubT.endTerm} IS NULL AND ${ClubT.startTerm} <= ${crt})
+      OR (${ClubT.endTerm} >= ${crt})));`); // 수정 필요. 트랜잭션 넣어야 할거 같음.
+      const { affectedRows } = result;
+      if (affectedRows > 2) {
+        await tx.rollback();
+      }
+    });
+    return true;
   }
 }

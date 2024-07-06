@@ -45,23 +45,22 @@ export class ClubRepresentativeDRepository {
     clubId: number,
   ): Promise<boolean> {
     const crt = getKSTDate();
-    const result = !!(
-      await this.db
-        .select({ id: ClubRepresentativeD.id })
-        .from(ClubRepresentativeD)
-        .where(
-          and(
-            eq(ClubRepresentativeD.clubId, clubId),
-            eq(ClubRepresentativeD.studentId, studentId),
-            lte(ClubRepresentativeD.startTerm, crt),
-            or(
-              gte(ClubRepresentativeD.endTerm, crt),
-              isNull(ClubRepresentativeD.endTerm),
-            ),
+    const result = !!(await this.db
+      .select({ id: ClubRepresentativeD.id })
+      .from(ClubRepresentativeD)
+      .where(
+        and(
+          eq(ClubRepresentativeD.clubId, clubId),
+          eq(ClubRepresentativeD.studentId, studentId),
+          lte(ClubRepresentativeD.startTerm, crt),
+          or(
+            gte(ClubRepresentativeD.endTerm, crt),
+            isNull(ClubRepresentativeD.endTerm),
           ),
-        )
-        .then(takeUnique)
-    )?.id;
+        ),
+      )
+      .limit(1)
+      .then(takeUnique));
     return result;
   }
 }

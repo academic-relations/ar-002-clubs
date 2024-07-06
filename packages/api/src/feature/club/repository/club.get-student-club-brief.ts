@@ -27,11 +27,11 @@ export class ClubGetStudentClubBrief {
         roomPassword: ClubRoomT.roomPassword,
       })
       .from(ClubT)
-      .leftJoin(Club, and(eq(ClubT.id, Club.id), isNull(Club.deletedAt)))
+      .leftJoin(Club, and(eq(ClubT.clubId, Club.id), isNull(Club.deletedAt)))
       .leftJoin(
         ClubRoomT,
         and(
-          eq(ClubT.id, ClubRoomT.clubId),
+          eq(ClubT.clubId, ClubRoomT.clubId),
           or(
             and(isNull(ClubRoomT.endTerm), lte(ClubRoomT.startTerm, crt)),
             and(gte(ClubRoomT.endTerm, crt), lte(ClubRoomT.startTerm, crt)),
@@ -40,13 +40,14 @@ export class ClubGetStudentClubBrief {
       )
       .where(
         and(
-          eq(ClubT.id, clubId),
+          eq(ClubT.clubId, clubId),
           or(
             and(isNull(ClubT.endTerm), lte(ClubT.startTerm, crt)),
             and(gte(ClubT.endTerm, crt), lte(ClubT.startTerm, crt)),
           ),
         ),
       )
+      .limit(1)
       .then(takeUnique);
     return result;
   }
