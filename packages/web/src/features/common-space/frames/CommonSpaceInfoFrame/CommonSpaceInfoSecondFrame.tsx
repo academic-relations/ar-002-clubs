@@ -136,7 +136,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
       });
 
     setSelectedSpace(space);
-  }, [selectedValue, setCommonSpace]);
+  }, [selectedValue, setCommonSpace, data?.commonSpaces]);
 
   const diffHours =
     dateTimeRange && differenceInHours(dateTimeRange[1], dateTimeRange[0]);

@@ -87,7 +87,7 @@ const CommonSpaceInfoFrame: React.FC<CommonSpaceFrameProps> = ({
     } else {
       handleSubmit();
     }
-  }, [nextEnabled, step, setStep]);
+  }, [nextEnabled, step, setStep, handleSubmit]);
 
   return (
     <FlexWrapper direction="column" gap={60}>

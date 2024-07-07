@@ -40,7 +40,7 @@ const CommonSpaceInfoFirstFrame: React.FC<
           clubName: club.name,
         },
       });
-  }, [selectedValue, setCommonSpace]);
+  }, [selectedValue, setCommonSpace, data]);
 
   return (
     <Card outline gap={40}>
