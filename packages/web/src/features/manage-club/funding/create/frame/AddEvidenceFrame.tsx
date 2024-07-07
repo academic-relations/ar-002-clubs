@@ -8,6 +8,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import FixtureEvidenceBlock from "../components/FixtureEvidenceBlock";
 import OtherEvidenceBlock from "../components/OtherEvidenceBlock";
+import TransportEvidenceBlock from "../components/TransportEvidenceBlock";
 
 const AddEvidenceFrame = () => {
   const [toggle, setToggle] = useState(true);
@@ -31,6 +32,11 @@ const AddEvidenceFrame = () => {
   const [fixtureEvidenceValue, setFixtureEvidenceValue] = useState("");
   const [fixtureClassValue, setFixtureClassValue] = useState("");
   const [fixtureName, setFixtureName] = useState("");
+
+  const [transportType, setTransportType] = useState("");
+  const [transportOrigin, setTransportOrigin] = useState("");
+  const [transportDestination, setTransportDestination] = useState("");
+  const [transportPurpose, setTransportPurpose] = useState("");
 
   const [foodValue, setFoodValue] = useState("");
   const [laborValue, setLaborValue] = useState("");
@@ -137,6 +143,18 @@ const AddEvidenceFrame = () => {
             setclassValue={setFixtureClassValue}
             name={fixtureName}
             setName={setFixtureName}
+          />
+        )}
+        {transportChecked && (
+          <TransportEvidenceBlock
+            type={transportType}
+            setType={setTransportType}
+            origin={transportOrigin}
+            setOrigin={setTransportOrigin}
+            destination={transportDestination}
+            setDestination={setTransportDestination}
+            purpose={transportPurpose}
+            setPurpose={setTransportPurpose}
           />
         )}
         {foodChecked && (
