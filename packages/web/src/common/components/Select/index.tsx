@@ -25,6 +25,7 @@ interface SelectProps {
   selectedValue?: string;
   onSelect?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
+  placeholder?: string;
 }
 
 const SelectInner = styled.div`
@@ -104,6 +105,7 @@ const Select: React.FC<SelectProps> = ({
   selectedValue = "",
   onSelect = () => {},
   setErrorStatus = () => {},
+  placeholder = "항목을 선택해주세요",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
@@ -147,8 +149,7 @@ const Select: React.FC<SelectProps> = ({
   };
 
   const selectedLabel =
-    items.find(item => item.value === selectedValue)?.label ||
-    "항목을 선택해주세요";
+    items.find(item => item.value === selectedValue)?.label || placeholder;
 
   return (
     <SelectWrapper>

@@ -95,7 +95,7 @@ const ActivityReportCreateFrame: React.FC = () => (
     <SectionTitle>활동 증빙</SectionTitle>
     <SectionInner>
       <Card outline padding="32px" gap={32}>
-        <FileUpload placeholder="파일을 선택해주세요" />
+        <FileUpload />
         <TextInput
           area
           placeholder="(선택) 활동 증빙에 대해서 작성하고 싶은 것이 있다면 입력해주세요"

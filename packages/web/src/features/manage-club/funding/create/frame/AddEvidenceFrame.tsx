@@ -6,6 +6,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import FixtureEvidenceBlock from "../components/FixtureEvidenceBlock";
 import OtherEvidenceBlock from "../components/OtherEvidenceBlock";
 
 const AddEvidenceFrame = () => {
@@ -13,7 +14,7 @@ const AddEvidenceFrame = () => {
 
   // TODO: 코드 좀 더 예쁘게 바꾸기
   const [productChecked, setProductChecked] = useState(false);
-  const [fixedChecked, setfixedChecked] = useState(false);
+  const [fixtureChecked, setfixtureChecked] = useState(false);
   const [transportChecked, settransportChecked] = useState(false);
   const [nonCorpChecked, setnonCorpChecked] = useState(false);
   const [foodChecked, setfoodChecked] = useState(false);
@@ -23,6 +24,13 @@ const AddEvidenceFrame = () => {
   const [profitChecked, setprofitChecked] = useState(false);
   const [jointChecked, setjointChecked] = useState(false);
   const [etcChecked, setetcChecked] = useState(false);
+
+  const [productEvidenceValue, setProductEvidenceValue] = useState("");
+  const [productClassValue, setProductClassValue] = useState("");
+  const [productName, setProductName] = useState("");
+  const [fixtureEvidenceValue, setFixtureEvidenceValue] = useState("");
+  const [fixtureClassValue, setFixtureClassValue] = useState("");
+  const [fixtureName, setFixtureName] = useState("");
 
   const [foodValue, setFoodValue] = useState("");
   const [laborValue, setLaborValue] = useState("");
@@ -58,8 +66,8 @@ const AddEvidenceFrame = () => {
               />
               <CheckboxOption
                 optionText="비품"
-                checked={fixedChecked}
-                onClick={() => setfixedChecked(!fixedChecked)}
+                checked={fixtureChecked}
+                onClick={() => setfixtureChecked(!fixtureChecked)}
               />
               <CheckboxOption
                 optionText="교통비"
@@ -109,6 +117,28 @@ const AddEvidenceFrame = () => {
             </FlexWrapper>
           </FlexWrapper>
         </Card>
+        {productChecked && (
+          <FixtureEvidenceBlock
+            isFixture={false}
+            evidenceValue={productEvidenceValue}
+            setEvidenceValue={setProductEvidenceValue}
+            classValue={productClassValue}
+            setclassValue={setProductClassValue}
+            name={productName}
+            setName={setProductName}
+          />
+        )}
+        {fixtureChecked && (
+          <FixtureEvidenceBlock
+            isFixture
+            evidenceValue={fixtureEvidenceValue}
+            setEvidenceValue={setFixtureEvidenceValue}
+            classValue={fixtureClassValue}
+            setclassValue={setFixtureClassValue}
+            name={fixtureName}
+            setName={setFixtureName}
+          />
+        )}
         {foodChecked && (
           <OtherEvidenceBlock
             content="식비"
