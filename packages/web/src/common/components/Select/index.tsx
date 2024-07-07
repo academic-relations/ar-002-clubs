@@ -149,9 +149,7 @@ const Select: React.FC<SelectProps> = ({
   };
 
   const selectedLabel =
-    items.find(item => item.value === selectedValue)?.label ||
-    placeholder ||
-    "항목을 선택해주세요";
+    items.find(item => item.value === selectedValue)?.label || placeholder;
 
   return (
     <SelectWrapper>

@@ -107,7 +107,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                 }
                 area
               />
-              <FileUpload placeholder="파일을 선택해주세요" />
+              <FileUpload />
             </FlexWrapper>
           )}
         </Card>

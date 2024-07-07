@@ -23,7 +23,7 @@ const BasicEvidenceFrame = () => {
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
             거래 사실 증빙
           </Typography>
-          <FileUpload placeholder="파일을 선택해주세요" />
+          <FileUpload />
         </FlexWrapper>
         <FlexWrapper direction="column" gap={4}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
@@ -35,7 +35,7 @@ const BasicEvidenceFrame = () => {
             value={tradeDetail}
             handleChange={setTradeDetail}
           />
-          <FileUpload placeholder="파일을 선택해주세요" />
+          <FileUpload />
         </FlexWrapper>
       </Card>
     </FoldableSectionTitle>

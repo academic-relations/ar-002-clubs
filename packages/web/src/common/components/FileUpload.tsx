@@ -72,7 +72,9 @@ const UploadIcon = styled.div`
   flex-grow: 0; */
 `;
 
-const FileUpload: React.FC<FileUploadProps> = ({ placeholder = "" }) => (
+const FileUpload: React.FC<FileUploadProps> = ({
+  placeholder = "파일을 선택해주세요",
+}) => (
   <FileUploadInner>
     <FileName>
       <Typography color="GRAY.200" fs={16} lh={20} fw="REGULAR">
