@@ -105,7 +105,7 @@ const Select: React.FC<SelectProps> = ({
   selectedValue = "",
   onSelect = () => {},
   setErrorStatus = () => {},
-  placeholder = "",
+  placeholder = "항목을 선택해주세요",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
