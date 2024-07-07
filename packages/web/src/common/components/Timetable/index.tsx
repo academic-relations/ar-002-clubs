@@ -23,7 +23,6 @@ interface TimetableProps {
 
 const TimetableInner = styled.div`
   display: flex;
-  width: 600px;
   flex-direction: column;
   align-items: center;
   gap: 20px;

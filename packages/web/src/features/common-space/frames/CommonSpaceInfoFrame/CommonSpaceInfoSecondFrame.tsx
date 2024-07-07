@@ -3,8 +3,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import apiCms001 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
 import apiCms002 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
 
-// import { useGetCommonSpaceUsageOrders } from "@sparcs-clubs/web/features/common-space/service/getCommonSpaceUsageOrders";
-
 import {
   addWeeks,
   differenceInHours,
@@ -24,8 +22,8 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 import Timetable from "@sparcs-clubs/web/common/components/Timetable";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { mockUsageOrders } from "@sparcs-clubs/web/features/common-space/service/_mock/mockupCommonSpaceUsageOrders";
 import { useGetCommonSpaces } from "@sparcs-clubs/web/features/common-space/service/getCommonSpaces";
+import { useGetCommonSpaceUsageOrders } from "@sparcs-clubs/web/features/common-space/service/getCommonSpaceUsageOrders";
 
 import {
   formatSimpleSlashDate,
@@ -41,6 +39,14 @@ const StyledCardOuter = styled.div`
   gap: 20px;
   flex: 1 0 0;
   align-self: stretch;
+`;
+
+const StyledCardLayout = styled(Card)`
+  display: flex;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    flex-wrap: wrap;
+  }
 `;
 
 type CommonSpaceItem = z.infer<
@@ -62,18 +68,18 @@ const CommonSpaceInfoSecondFrame: React.FC<
   const [dateTimeRange, setDateTimeRange] = useState<[Date, Date]>();
   const [selectedSpace, setSelectedSpace] = useState<CommonSpaceItem>();
 
-  // const {
-  //   data: usageOrdersData,
-  //   isLoading: isUsageOrdersLoading,
-  //   isError: isUsageOrdersError,
-  // } = useGetCommonSpaceUsageOrders(
-  //   {
-  //     spaceId: selectedSpace?.id || 1,
-  //   },
-  //   { startDate: date, endDate: addWeeks(date, 1) },
-  // );
+  const {
+    data: usageOrdersData,
+    isLoading: isUsageOrdersLoading,
+    isError: isUsageOrdersError,
+  } = useGetCommonSpaceUsageOrders(
+    {
+      spaceId: selectedSpace?.id || 1,
+    },
+    { startDate: date, endDate: addWeeks(date, 1) },
+  );
 
-  const usageOrdersData = mockUsageOrders;
+  // const usageOrdersData = mockUsageOrders;
 
   const disabledCells = useMemo(() => {
     if (!usageOrdersData) return [];
@@ -169,20 +175,19 @@ const CommonSpaceInfoSecondFrame: React.FC<
           <Info
             text={`${selectedSpace.name}는 하루에 최대 ${selectedSpace.availableHoursPerDay}시간, 일주일에 최대 ${selectedSpace.availableHoursPerWeek}시간 사용할 수 있습니다.`}
           />
-          <Card outline gap={20} style={{ flexDirection: "row" }}>
-            {/* <AsyncBoundary
+          <StyledCardLayout outline gap={20} style={{ flexDirection: "row" }}>
+            <AsyncBoundary
               isLoading={isUsageOrdersLoading}
               isError={isUsageOrdersError}
-            > */}
-            <Timetable
-              data={disabledCells}
-              setDateTimeRange={setDateTimeRange}
-              availableHoursPerDay={selectedSpace.availableHoursPerDay}
-              startDate={date}
-              setStartDate={setDate}
-            />
-            {/* </AsyncBoundary> */}
-
+            >
+              <Timetable
+                data={disabledCells}
+                setDateTimeRange={setDateTimeRange}
+                availableHoursPerDay={selectedSpace.availableHoursPerDay}
+                startDate={date}
+                setStartDate={setDate}
+              />
+            </AsyncBoundary>
             <StyledCardOuter>
               {dateTimeRange && (
                 <Card outline gap={20} style={{ marginTop: 64 }}>
@@ -196,7 +201,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
                 </Card>
               )}
             </StyledCardOuter>
-          </Card>
+          </StyledCardLayout>
         </>
       )}
     </>
