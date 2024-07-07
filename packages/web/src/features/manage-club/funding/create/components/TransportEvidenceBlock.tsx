@@ -1,5 +1,7 @@
 import React from "react";
 
+import styled from "styled-components";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
@@ -20,6 +22,10 @@ interface TransportEvidenceBlockProps {
   purpose: string;
   setPurpose: (value: string) => void;
 }
+
+const FixedWidthWrapper = styled.div`
+  min-width: 200px;
+`;
 
 // TODO: transportationEnumId랑 맞추기
 const TransportationList = [
@@ -49,13 +55,15 @@ const TransportEvidenceBlock: React.FC<TransportEvidenceBlockProps> = ({
     <EvidenceBlockTitle title="교통비 증빙">
       <Card outline gap={32}>
         <FlexWrapper direction="row" gap={32}>
-          <Select
-            items={TransportationList}
-            label="교통수단"
-            placeholder="교통수단을 선택해주세요"
-            selectedValue={type}
-            onSelect={setType}
-          />
+          <FixedWidthWrapper>
+            <Select
+              items={TransportationList}
+              label="교통수단"
+              placeholder="교통수단을 선택해주세요"
+              selectedValue={type}
+              onSelect={setType}
+            />
+          </FixedWidthWrapper>
           <TextInput
             placeholder="출발지를 입력해주세요"
             label="출발지"

@@ -1,5 +1,7 @@
 import React from "react";
 
+import styled from "styled-components";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
@@ -15,6 +17,10 @@ interface NonCorpEvidenceBlockProps {
   setWasteExplanation: (value: string) => void;
 }
 
+const FixedWidthWrapper = styled.div`
+  min-width: 200px;
+`;
+
 const NonCorpEvidenceBlock: React.FC<NonCorpEvidenceBlockProps> = ({
   traderName,
   setTraderName,
@@ -27,12 +33,14 @@ const NonCorpEvidenceBlock: React.FC<NonCorpEvidenceBlockProps> = ({
     <EvidenceBlockTitle title="비법인 거래 증빙">
       <Card outline gap={32}>
         <FlexWrapper direction="row" gap={32}>
-          <TextInput
-            placeholder="거래자명을 입력하세요"
-            label="거래자명"
-            value={traderName}
-            handleChange={setTraderName}
-          />
+          <FixedWidthWrapper>
+            <TextInput
+              placeholder="거래자명을 입력하세요"
+              label="거래자명"
+              value={traderName}
+              handleChange={setTraderName}
+            />
+          </FixedWidthWrapper>
           <TextInput
             placeholder="거래자 계좌번호를 입력하세요"
             label="거래자 계좌번호"
