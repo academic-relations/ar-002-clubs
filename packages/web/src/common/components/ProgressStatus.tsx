@@ -42,7 +42,7 @@ const ProgressStatus: React.FC<ProgressStatusProps> = ({
     </Typography>
     <ProgressCheckSection labels={labels} progress={progress} />
     {infoText && <Info text={infoText} />}
-    {optional && optional}
+    {optional}
     {/* TODO: onClick 달기 */}
   </ProgressCheckSectionWrapper>
 );
