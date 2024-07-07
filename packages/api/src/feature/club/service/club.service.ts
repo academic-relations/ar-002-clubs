@@ -163,7 +163,7 @@ export class ClubService {
     const { clubId } = param;
     const isAvailableClub = await this.clubTRepository.findClubById(clubId);
     if (!isAvailableClub) {
-      throw new HttpException("Club not available", HttpStatus.NOT_FOUND);
+      throw new HttpException("Club not available", HttpStatus.FORBIDDEN);
     }
     const isAvailableRepresentative =
       await this.clubRepresentativeDRepository.findRepresentativeByClubIdAndStudentId(
@@ -173,7 +173,7 @@ export class ClubService {
     if (!isAvailableRepresentative) {
       throw new HttpException(
         "Representative not available",
-        HttpStatus.NOT_FOUND,
+        HttpStatus.FORBIDDEN,
       );
     }
     const result =
@@ -190,7 +190,7 @@ export class ClubService {
     const { clubId } = param;
     const isAvailableClub = await this.clubTRepository.findClubById(clubId);
     if (!isAvailableClub) {
-      throw new HttpException("Club not available", HttpStatus.NOT_FOUND);
+      throw new HttpException("Club not available", HttpStatus.FORBIDDEN);
     }
     const isAvailableRepresentative =
       await this.clubRepresentativeDRepository.findRepresentativeByClubIdAndStudentId(
@@ -200,7 +200,7 @@ export class ClubService {
     if (!isAvailableRepresentative) {
       throw new HttpException(
         "Representative not available",
-        HttpStatus.NOT_FOUND,
+        HttpStatus.FORBIDDEN,
       );
     }
     const result = await this.clubPutStudentClubBrief.putStudentClubBrief(
