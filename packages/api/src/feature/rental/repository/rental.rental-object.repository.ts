@@ -47,27 +47,4 @@ export class RentalObjectRepository {
       .groupBy(RentalObject.rentalEnum);
     return availableObjects;
   }
-
-  async useGetAvailableRentalObjectIds(desiredStart: Date, desiredEnd: Date) {
-    const objectIds = this.db
-      .select({
-        id: RentalObject.id,
-        rentalEnum: RentalObject.rentalEnum,
-      })
-      .from(RentalObject)
-      .leftJoin(
-        RentalOrderItemD,
-        eq(RentalOrderItemD.objectId, RentalObject.id),
-      )
-      .leftJoin(RentalOrder, eq(RentalOrder.id, RentalOrderItemD.rentalOrderId))
-      .where(
-        or(
-          gt(RentalOrder.desiredStart, desiredEnd),
-          RentalOrderItemD.endTerm !== undefined
-            ? undefined
-            : lt(RentalOrder.desiredEnd, desiredEnd),
-        ),
-      );
-    return objectIds;
-  }
 }
