@@ -7,6 +7,7 @@ import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSe
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import FixtureEvidenceBlock from "../components/FixtureEvidenceBlock";
+import NonCorpEvidenceBlock from "../components/NonCorpEvidenceBlock";
 import OtherEvidenceBlock from "../components/OtherEvidenceBlock";
 import TransportEvidenceBlock from "../components/TransportEvidenceBlock";
 
@@ -37,6 +38,10 @@ const AddEvidenceFrame = () => {
   const [transportOrigin, setTransportOrigin] = useState("");
   const [transportDestination, setTransportDestination] = useState("");
   const [transportPurpose, setTransportPurpose] = useState("");
+
+  const [nonCorpTraderName, setNonCorpTraderName] = useState("");
+  const [nonCorpTraderAccount, setNonCorpTraderAccount] = useState("");
+  const [nonCorpWasteExplanation, setNonCorpWasteExplanation] = useState("");
 
   const [foodValue, setFoodValue] = useState("");
   const [laborValue, setLaborValue] = useState("");
@@ -155,6 +160,16 @@ const AddEvidenceFrame = () => {
             setDestination={setTransportDestination}
             purpose={transportPurpose}
             setPurpose={setTransportPurpose}
+          />
+        )}
+        {nonCorpChecked && (
+          <NonCorpEvidenceBlock
+            traderName={nonCorpTraderName}
+            setTraderName={setNonCorpTraderName}
+            traderAccount={nonCorpTraderAccount}
+            setTraderAccount={setNonCorpTraderAccount}
+            wasteExplanation={nonCorpWasteExplanation}
+            setWasteExplanation={setNonCorpWasteExplanation}
           />
         )}
         {foodChecked && (
