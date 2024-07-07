@@ -9,6 +9,8 @@ import { ClubRepresentativeDRepository } from "./repository/club.club-representa
 import { ClubRoomTRepository } from "./repository/club.club-room-t.repository";
 import ClubStudentTRepository from "./repository/club.club-student-t.repository";
 import { DivisionPermanentClubDRepository } from "./repository/club.division-permanent-club-d.repository";
+import { ClubGetStudentClubBrief } from "./repository/club.get-student-club-brief";
+import { ClubPutStudentClubBrief } from "./repository/club.put-student-club-brief";
 import SemesterDRepository from "./repository/club.semester-d.repository";
 
 import ClubPublicService from "./service/club.public.service";
@@ -18,6 +20,7 @@ import { ClubService } from "./service/club.service";
   imports: [DrizzleModule],
   controllers: [ClubController],
   providers: [
+    ClubService,
     ClubRoomTRepository,
     ClubRepresentativeDRepository,
     ClubRepository,
@@ -27,7 +30,8 @@ import { ClubService } from "./service/club.service";
     DivisionPermanentClubDRepository,
     SemesterDRepository,
     ClubPublicService,
-    ClubService,
+    ClubGetStudentClubBrief,
+    ClubPutStudentClubBrief,
   ],
   exports: [ClubPublicService],
 })
