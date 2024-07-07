@@ -27,9 +27,6 @@ export class RentalService {
         desiredStart,
         desiredEnd,
       );
-    if (!availableObjectIds) {
-      throw new NotFoundException(`There are no available objects`);
-    }
     return availableObjectIds;
   }
 
@@ -57,20 +54,18 @@ export class RentalService {
 
   async getRentals(query: ApiRnt003RequestQuery): Promise<ApiRnt003ResponseOK> {
     const { clubId, pageOffset, itemCount } = query;
-    const rentals = await this.rentalServiceRepository.getRentals(
-      clubId,
-      pageOffset,
-      itemCount,
-    );
-    if (rentals === undefined) {
-      throw new NotFoundException(`There are no rentals`);
-    }
-    const result = {
-      items: rentals,
-      total: rentals.length,
-      offset: query.pageOffset,
+    const { paginatedItems, total } =
+      await this.rentalServiceRepository.getRentals(
+        clubId,
+        pageOffset,
+        itemCount,
+      );
+
+    return {
+      items: paginatedItems,
+      total,
+      offset: pageOffset,
     };
-    return result;
   }
 
   async getRental(rentalId) {
@@ -85,11 +80,16 @@ export class RentalService {
     query: ApiRnt006RequestQuery,
   ): Promise<ApiRnt006ResponseOK> {
     // TODO: 원래는 token student Id 에서 가져와야 하는데 일단은 고정 값(1)로 할게요.
-    const { pageOffset, itemCount } = query;
-    const { paginatedOrders, total } =
-      await this.rentalOrderRepository.getRentalsMy(pageOffset, itemCount); // , startDate, endDate);
+    const { pageOffset, itemCount, startDate, endDate } = query;
+    const { paginatedItems, total } =
+      await this.rentalServiceRepository.getRentalsMy(
+        pageOffset,
+        itemCount,
+        startDate,
+        endDate,
+      );
     return {
-      items: paginatedOrders,
+      items: paginatedItems,
       total,
       offset: pageOffset,
     };

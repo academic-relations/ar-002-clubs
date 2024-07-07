@@ -1,5 +1,5 @@
 import { Injectable, Inject } from "@nestjs/common";
-import { eq, or, gt, lt, count } from "drizzle-orm";
+import { eq, or, gt, lt, count, isNull, and } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
@@ -13,13 +13,13 @@ import {
 export class RentalObjectRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  // RNT-001 에서 사용됨.
+  // desiredStart, desiredEnd 사이에 사용 가능한 물품들을  (objectEnum id, enum name, maximum)[] 형태로 변환
   async getAvailableRentals(desiredStart: Date, desiredEnd: Date) {
     const availableObjects = await this.db
       .select({
         id: RentalObject.rentalEnum,
         name: RentalEnum.typeName,
-        maximum: count(RentalObject.rentalEnum),
+        maximum: count(RentalObject.id),
       })
       .from(RentalObject)
       .leftJoin(
@@ -29,14 +29,22 @@ export class RentalObjectRepository {
       .leftJoin(RentalOrder, eq(RentalOrder.id, RentalOrderItemD.rentalOrderId))
       .leftJoin(RentalEnum, eq(RentalObject.rentalEnum, RentalEnum.id))
       .where(
-        or(
-          gt(RentalOrder.desiredStart, desiredEnd),
-          RentalOrderItemD.endTerm !== undefined
-            ? undefined
-            : lt(RentalOrder.desiredEnd, desiredEnd),
+        and(
+          or(
+            or(
+              isNull(RentalOrder.desiredStart),
+              gt(RentalOrder.desiredStart, desiredEnd),
+            ),
+            RentalOrderItemD.endTerm
+              ? lt(RentalOrderItemD.endTerm, desiredStart)
+              : RentalOrder.desiredEnd &&
+                  lt(RentalOrder.desiredEnd, desiredStart),
+          ),
+          isNull(RentalOrder.deletedAt),
+          isNull(RentalObject.deletedAt),
         ),
       )
-      .groupBy(RentalObject.id);
+      .groupBy(RentalObject.rentalEnum);
     return availableObjects;
   }
 
