@@ -4,6 +4,9 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { mockParticipantData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
+import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
 
 import EvidenceBlockTitle from "./EvidenceBlockTitle";
 
@@ -66,6 +69,20 @@ const TransportEvidenceBlock: React.FC<TransportEvidenceBlockProps> = ({
             handleChange={setDestination}
           />
         </FlexWrapper>
+        {(type === "4" || type === "8" || type === "10") && (
+          <FlexWrapper direction="column" gap={4}>
+            <Typography
+              ff="PRETENDARD"
+              fs={16}
+              fw="MEDIUM"
+              lh={20}
+              color="BLACK"
+            >
+              탑승자 명단
+            </Typography>
+            <SelectParticipant data={mockParticipantData} />
+          </FlexWrapper>
+        )}
         <TextInput
           area
           placeholder="이용 목적을 입력하세요"
