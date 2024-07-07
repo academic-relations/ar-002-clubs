@@ -18,6 +18,8 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Timetable from "@sparcs-clubs/web/common/components/Timetable";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
@@ -64,9 +66,12 @@ const CommonSpaceInfoSecondFrame: React.FC<
   const [date, setDate] = useState(startOfWeek(new Date()));
 
   const [selectedValue, setSelectedValue] = useState("");
+  const [intermediateSelectedValue, setIntermediateSelectedValue] =
+    useState("");
   const [hasSelectError, setHasSelectError] = useState(false);
   const [dateTimeRange, setDateTimeRange] = useState<[Date, Date]>();
   const [selectedSpace, setSelectedSpace] = useState<CommonSpaceItem>();
+  const [showModal, setShowModal] = useState(false);
 
   const {
     data: usageOrdersData,
@@ -78,8 +83,6 @@ const CommonSpaceInfoSecondFrame: React.FC<
     },
     { startDate: date, endDate: addWeeks(date, 1) },
   );
-
-  // const usageOrdersData = mockUsageOrders;
 
   const disabledCells = useMemo(() => {
     if (!usageOrdersData) return [];
@@ -165,10 +168,36 @@ const CommonSpaceInfoSecondFrame: React.FC<
             })) || []
           }
           selectedValue={selectedValue}
-          onSelect={setSelectedValue}
+          onSelect={value => {
+            if (dateTimeRange) {
+              setShowModal(true);
+              setIntermediateSelectedValue(value);
+            } else {
+              setSelectedValue(value);
+            }
+          }}
           label="공용공간"
           setErrorStatus={setHasSelectError}
         />
+        {showModal ? (
+          <Modal>
+            <CancellableModalContent
+              onClose={() => {
+                setShowModal(false);
+                setIntermediateSelectedValue("");
+              }}
+              onConfirm={() => {
+                setShowModal(false);
+                setSelectedValue(intermediateSelectedValue);
+                setIntermediateSelectedValue("");
+              }}
+            >
+              공용공간을 변경하면 선택한 시간이 모두 초기화됩니다.
+              <br />
+              ㄱㅊ?
+            </CancellableModalContent>
+          </Modal>
+        ) : null}
       </AsyncBoundary>
       {selectedSpace && (
         <>

@@ -24,6 +24,10 @@ const TimetableDateListInner = styled.div.withConfig({
   padding-left: ${({ paddingLeft }) => paddingLeft};
   width: 680px;
 
+  .mobile {
+    display: none;
+  }
+
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
     width: 500px;
   }
@@ -33,6 +37,12 @@ const TimetableDateListInner = styled.div.withConfig({
   }
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    .mobile {
+      display: block;
+    }
+    .desktop {
+      display: none;
+    }
     width: 440px;
   }
 
