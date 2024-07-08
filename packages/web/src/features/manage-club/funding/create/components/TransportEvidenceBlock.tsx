@@ -77,6 +77,7 @@ const TransportEvidenceBlock: React.FC<TransportEvidenceBlockProps> = ({
             handleChange={setDestination}
           />
         </FlexWrapper>
+        {/* TODO: readable하게 고치기 (Enum 사용) */}
         {(type === "4" || type === "8" || type === "10") && (
           <FlexWrapper direction="column" gap={4}>
             <Typography
