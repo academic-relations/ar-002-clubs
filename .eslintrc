@@ -60,7 +60,8 @@
           "./packages/api/",
           "./packages/interface/",
           "./"
-        ]
+        ],
+        "devDependencies": true
       }
     ],
     "import/prefer-default-export": "off",
