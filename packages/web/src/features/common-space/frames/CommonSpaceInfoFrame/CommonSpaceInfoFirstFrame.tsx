@@ -19,6 +19,13 @@ const CommonSpaceInfoFirstFrame: React.FC<
 
   const [selectedValue, setSelectedValue] = useState("");
   const [hasSelectError, setHasSelectError] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  useEffect(() => {
+    if (data?.phoneNumber) {
+      setPhoneNumber(data.phoneNumber);
+    }
+  }, [data]);
 
   useEffect(() => {
     const allConditionsMet = Boolean(selectedValue) && !hasSelectError;
@@ -36,11 +43,11 @@ const CommonSpaceInfoFirstFrame: React.FC<
         },
         userInfo: {
           name: data?.name || "",
-          phoneNumber: data?.phoneNumber || "",
+          phoneNumber,
           clubName: club.name,
         },
       });
-  }, [selectedValue, setCommonSpace, data]);
+  }, [selectedValue, setCommonSpace, data, phoneNumber]);
 
   return (
     <Card outline gap={40}>
@@ -65,10 +72,9 @@ const CommonSpaceInfoFirstFrame: React.FC<
         />
         <PhoneInput
           label="신청자 전화번호"
-          value={data?.phoneNumber || ""}
+          value={phoneNumber}
           placeholder={data?.phoneNumber || ""}
-          disabled
-          onChange={() => {}}
+          onChange={setPhoneNumber}
         />
       </AsyncBoundary>
     </Card>
