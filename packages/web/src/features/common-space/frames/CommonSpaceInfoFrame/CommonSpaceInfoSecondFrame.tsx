@@ -220,7 +220,9 @@ const CommonSpaceInfoSecondFrame: React.FC<
             <StyledCardOuter>
               {dateTimeRange && (
                 <Card outline gap={20} style={{ marginTop: 64 }}>
-                  <Typography type="p">선택 시간</Typography>
+                  <Typography fs={16} lh={20} fw="BOLD">
+                    선택 시간
+                  </Typography>
                   <Typography type="p">
                     {formatSimpleSlashDate(dateTimeRange[0])}
                     {formatTime(dateTimeRange[0])}~
