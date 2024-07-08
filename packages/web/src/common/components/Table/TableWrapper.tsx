@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const TableWrapper = styled.div`
+export const TableWrapper = styled.table`
   display: flex;
   flex-direction: column;
   gap: 0px;
@@ -10,7 +10,19 @@ export const TableWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
 `;
 
-export const TableRow = styled.div<{ isBorder?: boolean }>`
+export const TableHeadWrapper = styled.thead`
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+`;
+
+export const TableBodyWrapper = styled.tbody`
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+`;
+
+export const TableRow = styled.tr<{ isBorder?: boolean }>`
   display: flex;
   flex-direction: row;
   gap: 0px;

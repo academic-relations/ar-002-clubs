@@ -6,6 +6,8 @@ import TableCell, {
   TableCellType,
 } from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
+  TableBodyWrapper,
+  TableHeadWrapper,
   TableRow,
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
@@ -55,32 +57,36 @@ const MyServiceTable: React.FC<MyServiceTableProps> = ({
           </Typography>
         )}
         <TableWrapper>
-          <TableRow>
-            {headers.map((header, index) => (
-              <TableCell
-                key={String(index) + header.text}
-                type={header.type}
-                width={`${widths[index]}%`}
-                minWidth={minWidths[index]}
-              >
-                {header.text}
-              </TableCell>
-            ))}
-          </TableRow>
-          {data.map((content, rowIndex) => (
-            <TableRow key={String(rowIndex) + content[0]}>
-              {content.map((cell, cellIndex) => (
+          <TableHeadWrapper>
+            <TableRow>
+              {headers.map((header, index) => (
                 <TableCell
-                  key={String(cellIndex) + cell}
-                  type={contentsTypes[cellIndex]}
-                  width={`${widths[cellIndex]}%`}
-                  minWidth={minWidths[cellIndex]}
+                  key={String(index) + header.text}
+                  type={header.type}
+                  width={`${widths[index]}%`}
+                  minWidth={minWidths[index]}
                 >
-                  {cell}
+                  {header.text}
                 </TableCell>
               ))}
             </TableRow>
-          ))}
+          </TableHeadWrapper>
+          <TableBodyWrapper>
+            {data.map((content, rowIndex) => (
+              <TableRow key={String(rowIndex) + content[0]}>
+                {content.map((cell, cellIndex) => (
+                  <TableCell
+                    key={String(cellIndex) + cell}
+                    type={contentsTypes[cellIndex]}
+                    width={`${widths[cellIndex]}%`}
+                    minWidth={minWidths[cellIndex]}
+                  >
+                    {cell}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBodyWrapper>
         </TableWrapper>
       </FlexWrapper>
       {contents.length > pageLimit && (

@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
