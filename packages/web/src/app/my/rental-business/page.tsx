@@ -20,7 +20,9 @@ const MyRentalBusiness = () => {
       mockupMyRental.items.map(item => {
         const { color, text } = getTagDetail(item.statusEnum, RntTagList);
         return [
-          <Tag color={color}>{text}</Tag>,
+          <Tag color={color} key={item.id}>
+            {text}
+          </Tag>,
           formatDateTime(item.createdAt),
           item.studentName, // TODO: mock data 재사용하면서 student name으로 되어있는데 동아리 이름으로 바꾸기
           formatDate(item.desiredStart),

@@ -18,7 +18,9 @@ const MyActivityCertificate = () => {
       mockupMyAcf.items.map(item => {
         const { color, text } = getTagDetail(item.statusEnum, AcfTagList);
         return [
-          <Tag color={color}>{text}</Tag>,
+          <Tag color={color} key={item.orderId}>
+            {text}
+          </Tag>,
           formatDateTime(item.createdAt),
           item.studentName, // TODO: mock data 재사용하면서 student name으로 되어있는데 동아리 이름으로 바꾸기
           `${item.issuedNumber}매`,

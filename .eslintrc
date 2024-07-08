@@ -8,7 +8,9 @@
     "plugin:@typescript-eslint/recommended",
     "airbnb",
     "airbnb-typescript",
-    "prettier"
+    "prettier",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
   ],
   "overrides": [
     {
@@ -58,7 +60,8 @@
           "./packages/api/",
           "./packages/interface/",
           "./"
-        ]
+        ],
+        "devDependencies": true
       }
     ],
     "import/prefer-default-export": "off",

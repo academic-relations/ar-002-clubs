@@ -14,7 +14,7 @@ type ISuccessResponseType =
   | z.infer<(typeof apiTmp000.responseBodyMap)[201]>;
 type IRequestQueryType = z.infer<typeof apiTmp000.requestQuery>;
 
-export const getTemporaryClubSubfeature = (
+export const useGetTemporaryClubSubfeature = (
   id: string,
   page: string,
   limit: string,
