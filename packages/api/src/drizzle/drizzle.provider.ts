@@ -5,6 +5,7 @@ import mysql from "mysql2/promise";
 
 import { env } from "../env";
 
+import * as activitySchema from "./schema/activity.schema";
 import * as commonSpaceSchema from "./schema/common-space.schema";
 import * as divisionSchema from "./schema/division.schema";
 import * as noticeSchema from "./schema/notice.schema";
@@ -53,6 +54,7 @@ export const getDbInstance = async () => {
     const connection = await getConnection();
     dbInstance = drizzle(connection, {
       schema: {
+        activitySchema,
         commonSpaceSchema,
         divisionSchema,
         noticeSchema,

@@ -5,15 +5,13 @@ import { useRouter } from "next/navigation";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import Info from "@sparcs-clubs/web/common/components/Info";
 import {
   ListContainer,
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
 import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
-import ProgressCheckSectionWrapper from "@sparcs-clubs/web/common/components/ProgressCheckSection/ProgressCheckSectionWrapper";
+import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 const MyRentalDetailFrame = () => {
@@ -35,32 +33,17 @@ const MyRentalDetailFrame = () => {
         enableLast
       />
       <Card outline gap={20}>
-        {/* TODO: 너무 길다면.. 나중에 컴포넌트로 따로 빼기 */}
-        <ProgressCheckSectionWrapper>
-          <Typography
-            ff="PRETENDARD"
-            fw="MEDIUM"
-            fs={16}
-            lh={20}
-            color="BLACK"
-            style={{ width: "100%" }}
-          >
-            신청 상태
-          </Typography>
-          <ProgressCheckSection
-            labels={[
-              "신청 완료",
-              "동아리 연합회 승인 대기",
-              "대여 대기",
-              "반납 대기",
-            ]}
-            status={[Status.Approved]}
-            dates={[new Date()]}
-          />
-          <Info text="승인이 완료되기 전까지 신청을 취소할 수 있습니다" />
-          <Button style={{ width: "max-content" }}>신청 취소</Button>
-          {/* TODO: onClick 달기 */}
-        </ProgressCheckSectionWrapper>
+        <ProgressStatus
+          labels={[
+            "신청 완료",
+            "동아리 연합회 승인 대기",
+            "대여 대기",
+            "반납 대기",
+          ]}
+          progress={[{ status: Status.Approved, date: new Date() }]}
+          infoText="승인이 완료되기 전까지 신청을 취소할 수 있습니다"
+          optional={<Button style={{ width: "max-content" }}>신청 취소</Button>}
+        />
         {/* TODO: 아래 정보들 백 연결하기 */}
         <FlexWrapper direction="column" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">

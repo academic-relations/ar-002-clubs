@@ -3,6 +3,7 @@ import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { DrizzleModule } from "./drizzle/drizzle.module";
+import ActivityModule from "./feature/activity/activity.module";
 import { ActivityCertificateModule } from "./feature/activity-certificate/activity-certificate.module";
 import { AuthModule } from "./feature/auth/auth.module";
 import { ClubModule } from "./feature/club/club.module";
@@ -14,6 +15,7 @@ import { UserModule } from "./feature/user/user.module";
 
 @Module({
   imports: [
+    ActivityModule,
     ClubModule,
     CommonSpaceModule,
     DrizzleModule,

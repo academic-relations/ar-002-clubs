@@ -14,7 +14,7 @@ import SelectOption from "./SelectOption";
 export interface SelectItem {
   label: string;
   value: string;
-  selectable: boolean;
+  selectable?: boolean;
 }
 
 interface SelectProps {
@@ -25,6 +25,7 @@ interface SelectProps {
   selectedValue?: string;
   onSelect?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
+  placeholder?: string;
 }
 
 const SelectInner = styled.div`
@@ -104,6 +105,7 @@ const Select: React.FC<SelectProps> = ({
   selectedValue = "",
   onSelect = () => {},
   setErrorStatus = () => {},
+  placeholder = "항목을 선택해주세요",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
@@ -140,15 +142,14 @@ const Select: React.FC<SelectProps> = ({
   };
 
   const handleOptionClick = (item: SelectItem) => {
-    if (item.selectable) {
+    if (item.selectable || item.selectable === undefined) {
       onSelect(item.value);
       setIsOpen(false);
     }
   };
 
   const selectedLabel =
-    items.find(item => item.value === selectedValue)?.label ||
-    "항목을 선택해주세요";
+    items.find(item => item.value === selectedValue)?.label || placeholder;
 
   return (
     <SelectWrapper>
@@ -180,7 +181,9 @@ const Select: React.FC<SelectProps> = ({
                 items.map(item => (
                   <SelectOption
                     key={item.value}
-                    selectable={item.selectable}
+                    selectable={
+                      item.selectable || item.selectable === undefined
+                    }
                     onClick={() => handleOptionClick(item)}
                   >
                     {item.label}

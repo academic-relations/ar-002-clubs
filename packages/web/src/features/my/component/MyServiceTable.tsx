@@ -21,6 +21,8 @@ interface MyServiceTableProps {
   minWidths: number[];
   contentsTypes: TableCellType[];
   contents: ReactNode[][];
+  pageLimit?: number;
+  topComment?: string;
 }
 
 const MyServiceTable: React.FC<MyServiceTableProps> = ({
@@ -29,26 +31,29 @@ const MyServiceTable: React.FC<MyServiceTableProps> = ({
   minWidths,
   contentsTypes,
   contents,
+  pageLimit = 10,
+  topComment = "",
 }) => {
   const [page, setPage] = useState<number>(1);
-  const pageLimit = 10;
   const data = contents.slice((page - 1) * pageLimit, page * pageLimit);
 
   return (
     <FlexWrapper direction="column" gap={20} style={{ alignItems: "center" }}>
       <FlexWrapper direction="column" gap={8} style={{ width: "100%" }}>
-        <Typography
-          ff="PRETENDARD"
-          fw="REGULAR"
-          fs={16}
-          lh={20}
-          color="GRAY.600"
-          style={{
-            textAlign: "right",
-          }}
-        >
-          {`총 ${contents.length}개`}
-        </Typography>
+        {topComment && (
+          <Typography
+            ff="PRETENDARD"
+            fw="REGULAR"
+            fs={16}
+            lh={20}
+            color="GRAY.600"
+            style={{
+              textAlign: "right",
+            }}
+          >
+            {topComment}
+          </Typography>
+        )}
         <TableWrapper>
           <TableRow>
             {headers.map((header, index) => (
@@ -78,12 +83,14 @@ const MyServiceTable: React.FC<MyServiceTableProps> = ({
           ))}
         </TableWrapper>
       </FlexWrapper>
-      <Pagination // 페이지 한 개일 때도 Pagination 보이는지?
-        totalPage={Math.ceil(contents.length / pageLimit)}
-        currentPage={page}
-        limit={pageLimit}
-        setPage={setPage}
-      />
+      {contents.length > pageLimit && (
+        <Pagination
+          totalPage={Math.ceil(contents.length / pageLimit)}
+          currentPage={page}
+          limit={pageLimit}
+          setPage={setPage}
+        />
+      )}
     </FlexWrapper>
   );
 };
