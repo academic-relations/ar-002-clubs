@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
+import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -90,19 +91,15 @@ const RentalInfoSecondFrame: React.FC<
   );
   const [pendingDate, setPendingDate] = useState<Date | undefined>();
 
-  const [showPeriodModal, setShowPeriodModal] = useState<
-    "none" | "reset" | "change"
-  >("none");
-
-  const handleConfirm = () => {
-    if (showPeriodModal === "reset") {
+  const handleConfirm = (state: "change" | "reset") => {
+    if (state === "reset") {
       setRentalDate(undefined);
       setReturnDate(undefined);
       setRental({
         ...rental,
         date: { start: undefined, end: undefined },
       });
-    } else if (showPeriodModal === "change") {
+    } else if (state === "change") {
       setRentalDate(pendingDate);
       setReturnDate(undefined);
       setPendingDate(undefined);
@@ -111,7 +108,24 @@ const RentalInfoSecondFrame: React.FC<
         date: { start: rentalDate, end: undefined },
       });
     }
-    setShowPeriodModal("none");
+  };
+
+  const openPeriodModal = (state: "change" | "reset") => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <CancellableModalContent
+          onConfirm={() => {
+            handleConfirm(state);
+            close();
+          }}
+          onClose={close}
+        >
+          대여 기간을 변경하면 입력한 대여 물품 정보가 모두 초기화됩니다.
+          <br />
+          ㄱㅊ?
+        </CancellableModalContent>
+      </Modal>
+    ));
   };
 
   useEffect(() => {
@@ -205,7 +219,7 @@ const RentalInfoSecondFrame: React.FC<
           setReturnDate={setReturnDate}
           workDates={mockExistDates}
           // TODO: 상근일자 받아오기
-          setShowPeriodModal={setShowPeriodModal}
+          openPeriodModal={openPeriodModal}
           pendingDate={pendingDate}
           setPendingDate={setPendingDate}
           isRentalListEmpty={isRentalListEmpty()}
@@ -250,18 +264,6 @@ const RentalInfoSecondFrame: React.FC<
           <RentalList rental={rental} />
         </StyledCardInner>
       </Card>
-      {showPeriodModal !== "none" && (
-        <Modal>
-          <CancellableModalContent
-            onConfirm={handleConfirm}
-            onClose={() => setShowPeriodModal("none")}
-          >
-            대여 기간을 변경하면 입력한 대여 물품 정보가 모두 초기화됩니다.
-            <br />
-            ㄱㅊ?
-          </CancellableModalContent>
-        </Modal>
-      )}
     </>
   );
 };

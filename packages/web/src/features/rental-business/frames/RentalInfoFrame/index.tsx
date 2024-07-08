@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 
 import { useRouter } from "next/navigation";
+import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -55,13 +56,11 @@ const steps = [
 ];
 
 const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
+  const router = useRouter();
   const props = { rental, setRental };
   const [step, setStep] = useState(0);
   const [nextEnabled, setNextEnabled] = useState(true);
   const CurrentFrame = frames[step];
-
-  const [showReturnModal, setShowReturnModal] = useState(false);
-  const [showAssignModal, setShowAssignModal] = useState(false);
 
   const isRentalListEmpty = () =>
     !rental.easel &&
@@ -70,13 +69,41 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
     !rental.mat &&
     (!rental.tool || Object.values(rental.tool).every(val => !val));
 
-  const onConfirmReturn = useCallback(() => {
-    setShowReturnModal(false);
-    setRental({ agreement: true, info: rental.info });
-    setStep(step - 1);
-  }, [step, setStep, rental, setRental]);
+  const openReturnModal = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <CancellableModalContent
+          onConfirm={() => {
+            close();
+            setRental({ agreement: true, info: rental.info });
+            setStep(step - 1);
+          }}
+          onClose={close}
+        >
+          이전 단계로 이동할 경우
+          <br />
+          현재 단계에서 입력한 내용은 저장되지 않고 초기화됩니다.
+        </CancellableModalContent>
+      </Modal>
+    ));
+  };
 
-  const onCloseReturn = () => setShowReturnModal(false);
+  const openAssignModal = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <ConfirmModalContent
+          onConfirm={() => {
+            close();
+            router.push("/my");
+          }}
+        >
+          신청이 완료되었습니다.
+          <br />
+          확인을 누르면 신청 내역 화면으로 이동합니다.
+        </ConfirmModalContent>
+      </Modal>
+    ));
+  };
 
   const onPrev = useCallback(() => {
     // TODO: step 0으로 돌아갈 때 agreement true로 두기
@@ -85,11 +112,11 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
     }
     if (step === 1) {
       if (!isRentalListEmpty()) {
-        setShowReturnModal(true);
+        openReturnModal();
         return;
       }
       if (rental.date?.start !== undefined) {
-        setShowReturnModal(true);
+        openReturnModal();
         return;
       }
     }
@@ -145,17 +172,9 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
           desiredStart: rental.date?.start ?? new Date(),
           desiredEnd: rental.date?.end ?? new Date(),
         },
-      ).then(() => {
-        setShowAssignModal(true);
-      });
+      ).then(() => openAssignModal());
     }
   }, [nextEnabled, step, setStep]);
-  const router = useRouter();
-
-  const onConfirm = () => {
-    setShowAssignModal(false);
-    router.push("/my");
-  };
 
   return (
     <FlexWrapper direction="column" gap={60}>
@@ -169,27 +188,6 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
           {step === frames.length - 1 ? "신청" : "다음"}
         </Button>
       </StyledBottom>
-      {showReturnModal ? (
-        <Modal>
-          <CancellableModalContent
-            onConfirm={onConfirmReturn}
-            onClose={onCloseReturn}
-          >
-            이전 단계로 이동할 경우
-            <br />
-            현재 단계에서 입력한 내용은 저장되지 않고 초기화됩니다.
-          </CancellableModalContent>
-        </Modal>
-      ) : null}
-      {showAssignModal ? (
-        <Modal>
-          <ConfirmModalContent onConfirm={onConfirm}>
-            신청이 완료되었습니다.
-            <br />
-            확인을 누르면 신청 내역 화면으로 이동합니다.
-          </ConfirmModalContent>
-        </Modal>
-      ) : null}
     </FlexWrapper>
   );
 };
