@@ -77,8 +77,7 @@ const InfoManageFrame: React.FC = () => {
         title="동아리 정보"
         toggle={toggle}
         toggleHandler={() => setToggle(!toggle)}
-      />
-      {toggle && (
+      >
         <InfoManageMainWrapper>
           <Card outline gap={32} style={{ flex: 1, height: "fit-content" }}>
             <Typography ff="PRETENDARD" fw="MEDIUM" fs={20} lh={24}>
@@ -107,6 +106,7 @@ const InfoManageFrame: React.FC = () => {
             </Button>
           </Card>
           <ChangeRepresentativeCard
+            type="Default"
             selectItems={selectItems}
             president={president}
             setPresident={setPresident}
@@ -116,7 +116,7 @@ const InfoManageFrame: React.FC = () => {
             setRepresentative2={setRepresentative2}
           />
         </InfoManageMainWrapper>
-      )}
+      </FoldableSectionTitle>
     </FlexWrapper>
   );
 };
