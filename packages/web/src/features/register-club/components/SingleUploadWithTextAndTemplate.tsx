@@ -18,7 +18,7 @@ const SingleUploadWithTextAndTemplateInner = styled.div`
   align-items: flex-start;
   gap: 4px;
   align-self: stretch;
-  color: ${({ theme }) => theme.colors.BLACK};
+  white-space: pre-line;
 `;
 
 const SingleUploadWithTextAndTemplate: React.FC<
