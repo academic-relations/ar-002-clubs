@@ -88,6 +88,7 @@ const credits: Credits[] = [
         name: "권진현",
         role: "FE",
         roleType: RoleType.member,
+        comment: "여름에 코딩하면 덜 더워요!",
       },
     ],
   },
