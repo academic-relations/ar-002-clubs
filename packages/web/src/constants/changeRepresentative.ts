@@ -25,10 +25,18 @@ const myChangeRepresentativeRequestText = (
 const myChangeRepresentativeFinishText = (clubName: string) =>
   `'${clubName}'의 동아리 대표자 변경이 완료되었습니다`;
 
+const ChangeRepresentativeModalText = (
+  clubName: string,
+  prevRepresentative: string,
+  newRepresentative: string,
+) =>
+  `'${clubName}'의 동아리 대표자 변경이 다음과 같이 요청되었습니다 \n${prevRepresentative} -> ${newRepresentative}`;
+
 export {
   changeRepresentativeRequestText,
   changeRepresentativeRefuseText,
   changeRepresentativeCancelText,
   myChangeRepresentativeRequestText,
   myChangeRepresentativeFinishText,
+  ChangeRepresentativeModalText,
 };
