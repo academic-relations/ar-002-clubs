@@ -83,6 +83,12 @@ const credits: Credits[] = [
         role: "??",
         roleType: RoleType.member,
       },
+      {
+        nickname: "daystar",
+        name: "권진현",
+        role: "FE",
+        roleType: RoleType.member,
+      },
     ],
   },
   {
