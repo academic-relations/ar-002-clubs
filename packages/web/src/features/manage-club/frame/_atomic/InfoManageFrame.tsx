@@ -7,8 +7,8 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import ChangeRepresentativeCard from "@sparcs-clubs/web/features/manage-club/component/ChangeRepresentativeCard";
 import {
   mockClubDescription,
   mockClubMembers,
@@ -80,7 +80,7 @@ const InfoManageFrame: React.FC = () => {
       />
       {toggle && (
         <InfoManageMainWrapper>
-          <Card outline gap={32} style={{ flex: 1 }}>
+          <Card outline gap={32} style={{ flex: 1, height: "fit-content" }}>
             <Typography ff="PRETENDARD" fw="MEDIUM" fs={20} lh={24}>
               기본 정보
             </Typography>
@@ -106,29 +106,15 @@ const InfoManageFrame: React.FC = () => {
               저장
             </Button>
           </Card>
-          <Card outline gap={32} style={{ flex: 1 }}>
-            <Typography ff="PRETENDARD" fw="MEDIUM" fs={20} lh={24}>
-              대표자 및 대의원
-            </Typography>
-            <Select
-              label="대표자"
-              items={selectItems}
-              selectedValue={president}
-              onSelect={setPresident}
-            />
-            <Select
-              label="대의원 1"
-              items={selectItems}
-              selectedValue={representative1}
-              onSelect={setRepresentative1}
-            />
-            <Select
-              label="대의원 2"
-              items={selectItems}
-              selectedValue={representative2}
-              onSelect={setRepresentative2}
-            />
-          </Card>
+          <ChangeRepresentativeCard
+            selectItems={selectItems}
+            president={president}
+            setPresident={setPresident}
+            representative1={representative1}
+            setRepresentative1={setRepresentative1}
+            representative2={representative2}
+            setRepresentative2={setRepresentative2}
+          />
         </InfoManageMainWrapper>
       )}
     </FlexWrapper>
