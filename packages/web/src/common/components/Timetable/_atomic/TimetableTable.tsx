@@ -9,6 +9,7 @@ interface TimetableTableProps {
   data: TimetableCellType[];
   setIndexRange: React.Dispatch<React.SetStateAction<number[]>>;
   update?: string;
+  availableHoursPerDay: number;
 }
 
 const TimetableTableInner = styled.div.withConfig({
@@ -29,6 +30,7 @@ const TimetableTable: React.FC<TimetableTableProps> = ({
   data,
   setIndexRange,
   update = "",
+  availableHoursPerDay,
 }) => {
   const [start, setStart] = useState<number>();
   const [end, setEnd] = useState<number>();
@@ -78,7 +80,7 @@ const TimetableTable: React.FC<TimetableTableProps> = ({
       if (
         checkValidCell(parseInt(id)) &&
         checkSameColumn(start, parseInt(id)) &&
-        Math.abs(start - parseInt(id)) < 8
+        Math.abs(start - parseInt(id)) < availableHoursPerDay * 2
       ) {
         setEnd(parseInt(id));
       } else {

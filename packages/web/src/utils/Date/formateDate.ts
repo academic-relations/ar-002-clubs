@@ -9,6 +9,9 @@ const formatMonth = (date: Date) => format(date, "yyyy년 M월", { locale: ko })
 const formatSimpleSlashDate = (date: Date) =>
   format(date, "M/d(E)", { locale: ko });
 
+const formatSimplerSlashDate = (date: Date) =>
+  format(date, "M/d", { locale: ko });
+
 const formatSlashDate = (date: Date) =>
   format(date, "MM/dd (E)", { locale: ko });
 
@@ -26,10 +29,11 @@ const formatDotDate = (date: Date) =>
 export {
   formatDate,
   formatDateTime,
-  formatTime,
-  formatSlashDateTime,
-  formatSimpleSlashDate,
-  formatMonth,
-  formatSlashDate,
   formatDotDate,
+  formatMonth,
+  formatSimpleSlashDate,
+  formatSimplerSlashDate,
+  formatSlashDate,
+  formatSlashDateTime,
+  formatTime,
 };
