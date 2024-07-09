@@ -10,8 +10,7 @@ const changeRepresentativeRefuseText = (
   prevRepresentative: string,
   newRepresentative: string,
 ) =>
-  `'${clubName}'의 동아리 대표자 변경 요청이 거절되었습니다
-    ${prevRepresentative} -> ${newRepresentative} (거절)`;
+  `'${clubName}'의 동아리 대표자 변경 요청이 거절되었습니다 \n${prevRepresentative} -> ${newRepresentative} (거절)`;
 
 const changeRepresentativeCancelText = (clubName: string) =>
   `'${clubName}'의 동아리 대표자 변경이 취소되었습니다`;
