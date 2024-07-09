@@ -66,9 +66,39 @@ const credits: Credits[] = [
         roleType: RoleType.member,
       },
       {
+        nickname: "dudu",
+        name: "이연희",
+        role: "Designer",
+        roleType: RoleType.member,
+      },
+      {
         nickname: "eel",
         name: "최우정",
         role: "FE / BE",
+        roleType: RoleType.member,
+      },
+      {
+        nickname: "ellen",
+        name: "박성빈",
+        role: "BE",
+        roleType: RoleType.member,
+      },
+      {
+        nickname: "malloc",
+        name: "최지윤",
+        role: "BE",
+        roleType: RoleType.member,
+      },
+      {
+        nickname: "mingle",
+        name: "민지연",
+        role: "BE",
+        roleType: RoleType.member,
+      },
+      {
+        nickname: "oreo",
+        name: "최용혁",
+        role: "BE",
         roleType: RoleType.member,
       },
       {
