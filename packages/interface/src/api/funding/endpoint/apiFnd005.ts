@@ -1,6 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { FundingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+
 /**
  * @version v0.1
  * @description 현재 학기의 지원금 신청을 조회합니다.
@@ -20,7 +22,7 @@ const responseBodyMap = {
     fundings: z.array(
       z.object({
         id: z.coerce.number().int().min(1),
-        fundingOrderStatusEnumId: z.coerce.number().int().min(1),
+        fundingOrderStatusEnumId: z.nativeEnum(FundingOrderStatusEnum),
         activityName: z.coerce.string().max(255),
         expenditureAmount: z.coerce.number().int().min(0),
         approvedAmount: z.coerce.number().int().min(0).optional(),
