@@ -90,6 +90,13 @@ const credits: Credits[] = [
         roleType: RoleType.member,
         comment: "여름에 코딩하면 덜 더워요!",
       },
+      {
+        nickname: "ryan",
+        name: "이민욱",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "클럽스는 클리셰 럽 스토리",
+      },
     ],
   },
   {
