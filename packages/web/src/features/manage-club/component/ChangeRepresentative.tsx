@@ -43,28 +43,28 @@ const ChangeRepresentative: React.FC<ChangeRepresentativeProps> = ({
   prevRepresentative,
   newRepresentative,
 }) => {
-  let Title;
-  let Text;
+  let title;
+  let text;
   switch (type) {
     case "Requested":
-      Title = "동아리 대표자 변경 요청 완료";
-      Text = changeRepresentativeRequestText(
+      title = "동아리 대표자 변경 요청 완료";
+      text = changeRepresentativeRequestText(
         clubName,
         prevRepresentative,
         newRepresentative,
       );
       break;
     case "Refused":
-      Title = "동아리 대표자 변경 요청 거절";
-      Text = changeRepresentativeRefuseText(
+      title = "동아리 대표자 변경 요청 거절";
+      text = changeRepresentativeRefuseText(
         clubName,
         prevRepresentative,
         newRepresentative,
       );
       break;
     default:
-      Title = "동아리 대표자 변경 요청 취소";
-      Text = changeRepresentativeCancelText(clubName);
+      title = "동아리 대표자 변경 요청 취소";
+      text = changeRepresentativeCancelText(clubName);
       break;
   }
   return (
@@ -76,7 +76,7 @@ const ChangeRepresentative: React.FC<ChangeRepresentativeProps> = ({
       )}
       <FlexWrapper direction="column" gap={8}>
         <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
-          {Title}
+          {title}
         </Typography>
         <Typography
           ff="PRETENDARD"
@@ -86,7 +86,7 @@ const ChangeRepresentative: React.FC<ChangeRepresentativeProps> = ({
           color="BLACK"
           style={{ whiteSpace: "pre-wrap" }}
         >
-          {Text}
+          {text}
         </Typography>
         {type === "Requested" && (
           <Typography

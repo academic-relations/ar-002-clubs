@@ -9,7 +9,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { ChangeRepresentativeModalText } from "@sparcs-clubs/web/constants/changeRepresentative";
 
 interface ChangeRepresentativeModalContentProps {
-  type: "Default" | "PhoneNumber";
+  needPhoneNumber: boolean;
   clubName: string;
   prevRepresentative: string;
   newRepresentative: string;
@@ -27,7 +27,7 @@ const ButtonWrapper = styled.div`
 const ChangeRepresentativeModalContent: React.FC<
   ChangeRepresentativeModalContentProps
 > = ({
-  type,
+  needPhoneNumber,
   clubName,
   prevRepresentative,
   newRepresentative,
@@ -52,7 +52,7 @@ const ChangeRepresentativeModalContent: React.FC<
           newRepresentative,
         )}
       </Typography>
-      {type === "PhoneNumber" && (
+      {needPhoneNumber && (
         <>
           <Typography
             ff="PRETENDARD"

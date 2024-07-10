@@ -13,12 +13,12 @@ import ChangeRepresentative from "./ChangeRepresentative";
 interface ChangeRepresentativeCardProps {
   type: "Default" | "Requested" | "Refused" | "Canceled";
   selectItems: SelectItem[];
-  president: string;
-  setPresident: (value: string) => void;
-  representative1: string;
-  setRepresentative1: (value: string) => void;
-  representative2: string;
-  setRepresentative2: (value: string) => void;
+  representative: string;
+  setRepresentative: (value: string) => void;
+  delegate1: string;
+  setDelegate1: (value: string) => void;
+  delegate2: string;
+  setDelegate2: (value: string) => void;
 }
 
 const LabelWrapper = styled.div`
@@ -32,12 +32,12 @@ const LabelWrapper = styled.div`
 const ChangeRepresentativeCard: React.FC<ChangeRepresentativeCardProps> = ({
   type,
   selectItems,
-  president,
-  setPresident,
-  representative1,
-  setRepresentative1,
-  representative2,
-  setRepresentative2,
+  representative,
+  setRepresentative,
+  delegate1,
+  setDelegate1,
+  delegate2,
+  setDelegate2,
 }) => (
   <Card outline gap={32} style={{ flex: 1 }}>
     <Typography ff="PRETENDARD" fw="MEDIUM" fs={20} lh={24}>
@@ -60,8 +60,8 @@ const ChangeRepresentativeCard: React.FC<ChangeRepresentativeCardProps> = ({
       </LabelWrapper>
       <Select
         items={selectItems}
-        selectedValue={president}
-        onSelect={setPresident}
+        selectedValue={representative}
+        onSelect={setRepresentative}
         disabled={type === "Requested"}
       />
     </FlexWrapper>
@@ -74,8 +74,8 @@ const ChangeRepresentativeCard: React.FC<ChangeRepresentativeCardProps> = ({
       </LabelWrapper>
       <Select
         items={selectItems}
-        selectedValue={representative1}
-        onSelect={setRepresentative1}
+        selectedValue={delegate1}
+        onSelect={setDelegate1}
         disabled={type === "Requested"}
       />
     </FlexWrapper>
@@ -88,8 +88,8 @@ const ChangeRepresentativeCard: React.FC<ChangeRepresentativeCardProps> = ({
       </LabelWrapper>
       <Select
         items={selectItems}
-        selectedValue={representative2}
-        onSelect={setRepresentative2}
+        selectedValue={delegate2}
+        onSelect={setDelegate2}
         disabled={type === "Requested"}
       />
     </FlexWrapper>
