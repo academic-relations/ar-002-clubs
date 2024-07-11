@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
@@ -158,12 +158,15 @@ const RentalInfoSecondFrame: React.FC<
     }
   };
 
-  const isRentalListEmpty = () =>
-    !rental.easel &&
-    !rental.vacuum &&
-    (!rental.handCart || Object.values(rental.handCart).every(val => !val)) &&
-    !rental.mat &&
-    (!rental.tool || Object.values(rental.tool).every(val => !val));
+  const isRentalListEmpty = useCallback(
+    () =>
+      !rental.easel &&
+      !rental.vacuum &&
+      (!rental.handCart || Object.values(rental.handCart).every(val => !val)) &&
+      !rental.mat &&
+      (!rental.tool || Object.values(rental.tool).every(val => !val)),
+    [rental],
+  );
 
   const isCurrentItemEmpty = () => {
     switch (value) {
@@ -189,7 +192,6 @@ const RentalInfoSecondFrame: React.FC<
       !hasError &&
       !isRentalListEmpty() &&
       !(!rental.date?.start || !rental.date?.end);
-    // console.log("hasError", hasError);
     setNextEnabled(enableNext);
   }, [rental, hasError, setNextEnabled, isRentalListEmpty]);
 
