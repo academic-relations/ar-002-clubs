@@ -26,8 +26,8 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    clubID: z.coerce.number().int().min(1),
-    purposeId: z.coerce.number().int().min(0),
+    clubId: z.coerce.number().int().min(1),
+    purposeId: z.coerce.number().int().min(1).optional(),
     name: z.coerce.string().max(255),
     expenditureDate: z.coerce.date(),
     expenditureAmount: z.coerce.number().int().min(1),
@@ -167,6 +167,179 @@ const responseBodyMap = {
     ),
   }),
 };
+
+responseBodyMap[200].superRefine((data, ctx) => {
+  if (data.purposeId === undefined) {
+    if (
+      !data.clubSuppliesName ||
+      !data.clubSuppliesEvidenceEnumId ||
+      !data.clubSuppliesClassEnumId ||
+      !data.numberOfClubSupplies ||
+      !data.priceOfClubSupplies
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "clubSupplies is required",
+      });
+    }
+
+    if (data.clubSuppliesClassEnumId === 4) {
+      if (!data.clubSuppliesSoftwareEvidence) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "clubSuppliesSoftwareEvidence is required",
+        });
+      }
+    } else if (!data.clubSuppliesPurpose) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "clubSuppliesPurpose is required",
+      });
+    }
+  }
+
+  if (data.isFixture) {
+    if (
+      !data.fixtureName ||
+      !data.fixtureEvidenceEnumId ||
+      !data.fixtureClassEnumId ||
+      !data.numberOfFixture ||
+      !data.priceOfFixture
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "fixture is required",
+      });
+    }
+    if (data.fixtureClassEnumId === 4) {
+      if (!data.fixtureSoftwareEvidence) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "fixtureSoftwareEvidence is required",
+        });
+      }
+    } else if (!data.fixturePurpose) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "fixturePurpose is required",
+      });
+    }
+  }
+
+  if (data.isTransportation) {
+    if (
+      !data.transportationEnumId ||
+      !data.origin ||
+      !data.destination ||
+      !data.purposeOfTransportation
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "transportation is required",
+      });
+    }
+    if (
+      data.transportationEnumId === 6 ||
+      data.transportationEnumId === 7 ||
+      data.transportationEnumId === 10
+    ) {
+      if (!data.cargoList) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "cargoList is required",
+        });
+      }
+    }
+    if (
+      data.transportationEnumId === 8 ||
+      data.transportationEnumId === 9 ||
+      data.transportationEnumId === 10
+    ) {
+      if (!data.placeValidity) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "placeValidity is required",
+        });
+      }
+    }
+  }
+
+  if (data.isNonCorporateTransaction) {
+    if (
+      !data.traderName ||
+      !data.traderAccountNumber ||
+      !data.wasteExplanation
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "nonCorporateTransaction is required",
+      });
+    }
+  }
+
+  if (data.isFoodExpense) {
+    if (!data.foodExpenseExplanation) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "foodExpenseExplanation is required",
+      });
+    }
+  }
+
+  if (data.isLaborContract) {
+    if (!data.laborContractExplanation) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "laborContractExplanation is required",
+      });
+    }
+  }
+
+  if (data.isExternalEventParticipationFee) {
+    if (!data.externalEventParticipationFeeExplanation) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "externalEventParticipationFeeExplanation is required",
+      });
+    }
+  }
+
+  if (data.isPublication) {
+    if (!data.publicationExplanation) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "publicationExplanation is required",
+      });
+    }
+  }
+
+  if (data.isProfitMakingActivity) {
+    if (!data.profitMakingActivityExplanation) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "profitMakingActivityExplanation is required",
+      });
+    }
+  }
+
+  if (data.isJointExpense) {
+    if (!data.jointExpenseExplanation) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "jointExpenseExplanation is required",
+      });
+    }
+  }
+
+  if (data.isEtcExpense) {
+    if (!data.etcExpenseExplanation) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "etcExpenseExplanation is required",
+      });
+    }
+  }
+});
 
 const responseErrorMap = {};
 
