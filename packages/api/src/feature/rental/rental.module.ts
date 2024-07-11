@@ -17,11 +17,5 @@ import { RentalOrderRepository } from "./repository/rental.rental-order.reposito
     RentalServiceRepository,
     RentalOrderRepository,
   ],
-  exports: [
-    RentalService,
-    RentalObjectRepository,
-    RentalServiceRepository,
-    RentalOrderRepository,
-  ],
 })
 export class RentalModule {}

@@ -1,6 +1,6 @@
 import { Injectable, Inject } from "@nestjs/common";
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
-import { eq, gte, lte, and, count, gt, lt, isNull, or } from "drizzle-orm";
+import { eq, gte, lte, and, count, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
@@ -12,6 +12,12 @@ import {
 import { Club } from "src/drizzle/schema/club.schema";
 import { Student } from "src/drizzle/schema/user.schema";
 
+interface Period {
+  desiredStart?: Date;
+  desiredEnd?: Date;
+  startTerm?: Date;
+  endTerm?: Date;
+}
 @Injectable()
 export class RentalServiceRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
@@ -77,6 +83,9 @@ export class RentalServiceRepository {
             objectId: RentalObject.id,
             desiredStart: RentalOrder.desiredStart,
             desiredEnd: RentalOrder.desiredEnd,
+            endTerm: RentalOrderItemD.endTerm,
+            orderId: RentalOrderItemD.rentalOrderId,
+            startTerm: RentalOrderItemD.startTerm,
           })
           .from(RentalObject)
           .leftJoin(
@@ -90,27 +99,57 @@ export class RentalServiceRepository {
           .where(
             and(
               eq(RentalObject.rentalEnum, obj.id), // rentalEnum이 obj.rentalEnumId와 같은 조건
-              or(
-                or(
-                  isNull(RentalOrder.desiredStart),
-                  gt(RentalOrder.desiredStart, desiredEnd),
-                ),
-                RentalOrderItemD.endTerm
-                  ? lt(RentalOrderItemD.endTerm, desiredStart)
-                  : RentalOrder.desiredEnd &&
-                      lt(RentalOrder.desiredEnd, desiredStart),
-              ),
               isNull(RentalOrder.deletedAt),
               isNull(RentalObject.deletedAt),
             ),
-          )
-          .limit(obj.number); // 최대 obj.number 만큼의 레코드를 제한
+          );
+
+        const groupedByObjectId = results.reduce<Record<number, Period[]>>(
+          (acc, curr) => {
+            if (!acc[curr.objectId]) {
+              // eslint-disable-next-line no-param-reassign
+              acc[curr.objectId] = [];
+            }
+            acc[curr.objectId].push({
+              desiredStart: curr.desiredStart,
+              desiredEnd: curr.desiredEnd,
+              startTerm: curr.startTerm,
+              endTerm: curr.endTerm,
+            });
+            return acc;
+          },
+          {},
+        );
+
+        const availableObjectIds = Object.entries(groupedByObjectId).reduce(
+          (acc, [objectId, periods]) => {
+            const isAvailable = periods.every(
+              result =>
+                result.desiredStart > desiredEnd ||
+                (result.endTerm
+                  ? result.endTerm < desiredStart
+                  : result.desiredEnd < desiredStart),
+            );
+
+            if (isAvailable) {
+              acc.push(Number(objectId));
+            }
+            return acc;
+          },
+          [],
+        );
 
         // 결과의 개수가 obj.number보다 적은 경우 false 반환
-        if (results.length < obj.number) {
+        if (availableObjectIds.length < obj.number) {
           return false;
         }
-        return results;
+
+        const availableIds = {
+          rentalEnumId: obj.id,
+          objectId: availableObjectIds.slice(0, obj.number),
+        };
+
+        return availableIds;
       }),
     );
 
@@ -127,7 +166,6 @@ export class RentalServiceRepository {
     desiredEnd,
     studentPhoneNumber,
   ) {
-    // 필요한 수만큼 object가  있는지 확인   availableObjects : {rentalEnumId: int, objectId: int}[]
     const availableObjects = await this.getAvailableObjects(
       objects,
       desiredStart,
@@ -138,10 +176,9 @@ export class RentalServiceRepository {
     if (availableObjects.includes(false)) {
       return false;
     }
-
-    await this.db.transaction(async tx => {
+    const result = await this.db.transaction(async tx => {
       // RentalOrder에 삽입
-      const [result] = await tx.insert(RentalOrder).values({
+      const [orderInsertResult] = await tx.insert(RentalOrder).values({
         studentId,
         clubId,
         studentPhoneNumber,
@@ -150,7 +187,7 @@ export class RentalServiceRepository {
         desiredEnd,
       });
 
-      const rentalOrderId = result.insertId;
+      const rentalOrderId = orderInsertResult.insertId;
 
       // RentalOrderItemD에 매칭되는 객체 삽입
       await Promise.all(
@@ -161,11 +198,11 @@ export class RentalServiceRepository {
           });
         }),
       );
+      return true;
     });
-    return true;
+    return result;
   }
 
-  // 동아리의 특정 기간 내의 모든 주문 건을 찾습니다.
   async getRentals(clubId, page, pageSize, startDate?: Date, endDate?: Date) {
     const orders = await this.db
       .select({

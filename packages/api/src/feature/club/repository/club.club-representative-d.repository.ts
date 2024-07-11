@@ -4,7 +4,7 @@ import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { ClubRepresentativeD } from "src/drizzle/schema/club.schema";
 import { User } from "src/drizzle/schema/user.schema";
 import { eq, and, lte, gte, or, isNull } from "drizzle-orm";
-import { takeUnique } from "src/common/util/util";
+import { getKSTDate, takeUnique } from "src/common/util/util";
 
 @Injectable()
 export class ClubRepresentativeDRepository {
@@ -12,7 +12,7 @@ export class ClubRepresentativeDRepository {
 
   // 가장 최근 대표자의 이름을 가져오기
   async findRepresentativeName(clubId: number): Promise<{ name: string }> {
-    const currentDate = new Date();
+    const currentDate = getKSTDate();
 
     const representative = await this.db
       .select({ name: User.name })
@@ -34,5 +34,30 @@ export class ClubRepresentativeDRepository {
       .then(takeUnique);
 
     return representative;
+  }
+
+  async findSemesterRepresentativeName(
+    clubId: number,
+    startTerm: Date,
+    endTerm: Date,
+  ): Promise<string> {
+    return this.db
+      .select({ name: User.name })
+      .from(ClubRepresentativeD)
+      .leftJoin(User, eq(User.id, ClubRepresentativeD.studentId))
+      .where(
+        and(
+          eq(ClubRepresentativeD.clubId, clubId),
+          eq(ClubRepresentativeD.clubRepresentativeEnum, 1),
+          lte(ClubRepresentativeD.startTerm, startTerm),
+          or(
+            gte(ClubRepresentativeD.endTerm, endTerm),
+            isNull(ClubRepresentativeD.endTerm),
+          ),
+        ),
+      )
+      .orderBy(ClubRepresentativeD.endTerm)
+      .limit(1)
+      .then(result => result[0]?.name);
   }
 }

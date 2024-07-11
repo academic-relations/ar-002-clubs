@@ -50,6 +50,7 @@ export class RentalService {
     if (!result) {
       throw new HttpException("Failed to post rental", 423);
     }
+    return result;
   }
 
   async getRentals(query: ApiRnt003RequestQuery): Promise<ApiRnt003ResponseOK> {

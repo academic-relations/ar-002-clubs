@@ -5,12 +5,15 @@ import styled from "styled-components";
 
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 
+const FoldableSectionOuter = styled.div`
+  width: 100%;
+`;
+
 const FoldableSectionTitleInner = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-
   width: 100%;
 `;
 
@@ -24,15 +27,40 @@ export const MoreInfo = styled.div`
   cursor: pointer;
 `;
 
+const ChildrenOuter = styled.div<{ margin?: string }>`
+  margin-top: ${({ margin }) => margin};
+  margin-left: 24px;
+`;
+
 const FoldableSectionTitle: React.FC<{
   title: string;
-  toggle: boolean;
-  toggleHandler: () => void;
-}> = ({ title, toggle, toggleHandler }) => (
-  <FoldableSectionTitleInner>
-    <SectionTitle size="lg">{title}</SectionTitle>
-    <MoreInfo onClick={toggleHandler}>{toggle ? `접기` : `펼치기`}</MoreInfo>
-  </FoldableSectionTitleInner>
-);
+  toggle?: boolean;
+  toggleHandler?: () => void;
+  children?: React.ReactNode;
+  childrenMargin?: string;
+}> = ({
+  title,
+  toggle = null,
+  toggleHandler = null,
+  children = null,
+  childrenMargin = "40px",
+}) => {
+  const [open, setOpen] = React.useState<boolean>(true);
+  const openHandler = () => setOpen(!open);
+
+  return (
+    <FoldableSectionOuter>
+      <FoldableSectionTitleInner>
+        <SectionTitle size="lg">{title}</SectionTitle>
+        <MoreInfo onClick={toggleHandler ?? openHandler}>
+          {toggle ?? open ? `접기` : `펼치기`}
+        </MoreInfo>
+      </FoldableSectionTitleInner>
+      {(toggle ?? open) && children && (
+        <ChildrenOuter margin={childrenMargin}>{children}</ChildrenOuter>
+      )}
+    </FoldableSectionOuter>
+  );
+};
 
 export default FoldableSectionTitle;

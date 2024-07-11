@@ -8,7 +8,7 @@ import { z } from "zod";
  */
 
 const url = (spaceId: number) =>
-  `/student/common-spaces/common-space/${spaceId}/usage-order`;
+  `/student/common-spaces/common-space/${spaceId}/orders/order`;
 const method = "POST";
 
 const requestParam = z.object({
@@ -18,7 +18,7 @@ const requestParam = z.object({
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  clubdId: z.number().int().min(1),
+  clubId: z.number().int().min(1),
   email: z.string().max(50), // email은 최대 50자의 문자열이어야 합니다.
   startTerm: z.date(), // startTerm은 날짜 및 시간이어야 합니다.
   endTerm: z.date(), // endTerm은 날짜 및 시간이어야 합니다.

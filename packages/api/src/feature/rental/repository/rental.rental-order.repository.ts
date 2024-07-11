@@ -4,7 +4,6 @@ import { count, eq } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { Club } from "@sparcs-clubs/api/drizzle/schema/club.schema";
-// eslint-disable-next-line import/no-duplicates
 import {
   RentalEnum,
   RentalObject,
@@ -12,8 +11,6 @@ import {
   RentalOrderItemD,
 } from "@sparcs-clubs/api/drizzle/schema/rental.schema";
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
-
-// eslint-disable-next-line import/no-duplicates
 
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 

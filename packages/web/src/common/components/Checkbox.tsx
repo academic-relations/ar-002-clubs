@@ -1,11 +1,11 @@
-import React from "react";
+import React, { MouseEvent } from "react";
 import styled from "styled-components";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 import Icon from "./Icon";
 
 type CheckboxProps = {
   checked: boolean;
-  onClick?: () => void;
+  onClick?: (event?: MouseEvent) => void;
   disabled?: boolean;
 };
 

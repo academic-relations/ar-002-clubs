@@ -10,11 +10,14 @@ import {
   Division,
   DivisionPermanentClubD,
 } from "@sparcs-clubs/api/drizzle/schema/division.schema";
-import { Student, User } from "@sparcs-clubs/api/drizzle/schema/user.schema";
-import { and, count, eq, sql, isNull, or, gte } from "drizzle-orm";
+import {
+  Professor,
+  Student,
+} from "@sparcs-clubs/api/drizzle/schema/user.schema";
+import { and, eq, sql, isNull, or, gte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-import { takeUnique } from "@sparcs-clubs/api/common/util/util";
+import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 
 interface IClubs {
   id: number;
@@ -62,7 +65,7 @@ export class ClubRepository {
   }
 
   async getClubs(): Promise<ApiClb001ResponseOK> {
-    const crt = new Date();
+    const crt = getKSTDate();
     const rows = await this.db
       .select({
         id: Division.id,
@@ -71,17 +74,17 @@ export class ClubRepository {
           type: ClubT.clubStatusEnumId,
           id: Club.id,
           name: Club.name,
-          isPermanent: sql<boolean>`COALESCE(MAX(CASE WHEN DivisionPermanentClubD.id IS NOT NULL THEN 'true' ELSE 'false' END),'false')`,
+          isPermanent: sql`COALESCE(MAX(CASE WHEN ${DivisionPermanentClubD.id} IS NOT NULL THEN TRUE ELSE FALSE END), FALSE)`,
           characteristic: ClubT.characteristicKr,
-          representative: User.name,
-          // TODO: professor table에서 join하도록 변경
-          // advisor: ClubT.advisor,
-          totalMemberCnt: count(ClubStudentT),
+          representative: Student.name,
+          advisor: Professor.name,
+          totalMemberCnt: sql<number>`count(${ClubStudentT.id})`,
         },
       })
       .from(Division)
       .leftJoin(Club, eq(Club.divisionId, Division.id))
       .leftJoin(ClubT, eq(Club.id, ClubT.id))
+      .leftJoin(Professor, eq(ClubT.professorId, Professor.id))
       .leftJoin(
         ClubStudentT,
         and(
@@ -101,20 +104,19 @@ export class ClubRepository {
         ),
       )
       .leftJoin(Student, eq(ClubRepresentativeD.studentId, Student.id))
-      .leftJoin(User, eq(Student.userId, User.id))
       .leftJoin(
         DivisionPermanentClubD,
         eq(Club.id, DivisionPermanentClubD.clubId),
       )
       .groupBy(
         Division.id,
+        Division.name,
         Club.id,
         Club.name,
         ClubT.clubStatusEnumId,
         ClubT.characteristicKr,
-        User.name,
-        // TODO: professor table에서 join하도록 변경
-        // ClubT.advisor,
+        Student.name,
+        Professor.name,
       );
     const record = rows.reduce<Record<number, IClubs>>((acc, row) => {
       const divId = row.id;
@@ -127,8 +129,7 @@ export class ClubRepository {
       }
 
       if (club) {
-        // acc[divId].clubs.push(club);
-        acc[divId].clubs.push({ ...club, advisor: "" });
+        acc[divId].clubs.push({ ...club, isPermanent: club.isPermanent === 1 });
       }
       return acc;
     }, {});
@@ -136,5 +137,32 @@ export class ClubRepository {
       divisions: Object.values(record),
     };
     return result;
+  }
+
+  async findClubActivities(studentId: number): Promise<{
+    clubs: { id: number; name: string; startMonth: Date; endMonth: Date }[];
+  }> {
+    const clubActivities = await this.db
+      .select()
+      .from(ClubStudentT)
+      .leftJoin(Club, eq(Club.id, ClubStudentT.clubId))
+      .where(eq(ClubStudentT.studentId, studentId))
+      .then(rows =>
+        rows.map(row => ({
+          id: row.club_student_t.clubId,
+          name: row.club.name,
+          startMonth: row.club_student_t.startTerm,
+          endMonth: row.club_student_t.endTerm,
+        })),
+      );
+    return { clubs: clubActivities };
+  }
+
+  async findClubName(clubId: number): Promise<string> {
+    return this.db
+      .select({ name: Club.name })
+      .from(Club)
+      .where(eq(Club.id, clubId))
+      .then(result => result[0]?.name);
   }
 }

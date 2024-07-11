@@ -13,25 +13,12 @@ const method = "GET";
 
 const requestParam = z.object({});
 
-const requestQuery = z
-  .object({
-    startDate: z.coerce.date().optional(),
-    endDate: z.coerce.date().optional(),
-    pageOffset: z.coerce.number().min(1),
-    itemCount: z.coerce.number().min(1),
-  })
-  .refine(
-    data => {
-      if (data.startDate && data.endDate) {
-        return data.startDate <= data.endDate;
-      }
-      return true;
-    },
-    {
-      message: "startDate must be same or earlier than endDate",
-      path: ["startDate", "endDate"],
-    },
-  );
+const requestQuery = z.object({
+  startDate: z.date().optional(),
+  endDate: z.date().optional(),
+  pageOffset: z.number().min(1),
+  itemCount: z.number().min(1),
+});
 
 const requestBody = z.object({});
 
@@ -43,9 +30,9 @@ const responseBodyMap = {
         statusEnum: z.nativeEnum(CommonSpaceUsageOrderStatusEnum),
         spaceName: z.string(),
         chargeStudentName: z.string().max(255),
-        startTerm: z.coerce.date(), // Assuming startTerm is a datetime
-        endTerm: z.coerce.date(), // Assuming endTerm is a datetime
-        createdAt: z.coerce.date(), // Assuming createdAt is a datetime
+        startTerm: z.date(), // Assuming startTerm is a datetime
+        endTerm: z.date(), // Assuming endTerm is a datetime
+        createdAt: z.date(), // Assuming createdAt is a datetime
       }),
     ),
     total: z.number().int().min(0),
