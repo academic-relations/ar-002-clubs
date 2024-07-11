@@ -1,12 +1,12 @@
 export enum FundingOrderStatusEnum {
-  Applied, // 제출
+  Applied = 1, // 제출
   Approved, // 승인
   Rejected, // 반려
   Commitee, // 운위
 }
 
 export enum FundingDeadlineEnum {
-  Activity, // 활동
+  Activity = 1, // 활동
   Writing, // 작성
   Revision, // 수정
   Review, // 검토
@@ -14,12 +14,12 @@ export enum FundingDeadlineEnum {
 }
 
 export enum FixtureEvidenceEnum {
-  Purchase, // 구매
+  Purchase = 1, // 구매
   Management, // 관리
 }
 
 export enum FixtureClassEnum {
-  Electronics, // 전자기기
+  Electronics = 1, // 전자기기
   Furniture, // 가구
   MusicalInstruments, // 악기
   Software, // 소프트웨어
@@ -27,7 +27,7 @@ export enum FixtureClassEnum {
 }
 
 export enum TransportationEnum {
-  CityBus, // 시내/마을버스
+  CityBus = 1, // 시내/마을버스
   IntercityBus, // 고속/시외버스
   Rail, // 철도
   Taxi, // 택시
