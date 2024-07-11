@@ -11,13 +11,13 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import TextButton from "@sparcs-clubs/web/common/components/TextButton";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import Easel from "@sparcs-clubs/web/features/rental-business//components/Rentals/Easel";
-import HandCart from "@sparcs-clubs/web/features/rental-business//components/Rentals/HandCart";
-import Mat from "@sparcs-clubs/web/features/rental-business//components/Rentals/Mat";
-import Tool from "@sparcs-clubs/web/features/rental-business//components/Rentals/Tool";
-import Vacuum from "@sparcs-clubs/web/features/rental-business//components/Rentals/Vacuum";
 import ItemButtonList from "@sparcs-clubs/web/features/rental-business/components/ItemButtonList";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
+import Easel from "@sparcs-clubs/web/features/rental-business/components/Rentals/Easel";
+import HandCart from "@sparcs-clubs/web/features/rental-business/components/Rentals/HandCart";
+import Mat from "@sparcs-clubs/web/features/rental-business/components/Rentals/Mat";
+import Tool from "@sparcs-clubs/web/features/rental-business/components/Rentals/Tool";
+import Vacuum from "@sparcs-clubs/web/features/rental-business/components/Rentals/Vacuum";
 import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
