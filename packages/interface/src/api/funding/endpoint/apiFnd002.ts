@@ -4,16 +4,17 @@ import { z } from "zod";
 import {
   FixtureClassEnum,
   FixtureEvidenceEnum,
+  FundingOrderStatusEnum,
   TransportationEnum,
 } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
 /**
  * @version v0.1
- * @description 지원금 신청의 항목을 수정합니다.
+ * @description 지원금 신청의 항목을 조회합니다.
  */
 
 const url = (id: number) => `/student/fundings/funding/${id}`;
-const method = "PUT";
+const method = "GET";
 
 const requestParam = z.object({
   id: z.coerce.number().int().min(1),
@@ -30,15 +31,18 @@ const responseBodyMap = {
     name: z.coerce.string().max(255),
     expenditureDate: z.coerce.date(),
     expenditureAmount: z.coerce.number().int().min(1),
-
+    FundingOrderStatusEnumId: z.nativeEnum(FundingOrderStatusEnum),
+    feedback: z.coerce.string(),
     tradeEvidenceFiles: z.array(
       z.object({
         uid: z.coerce.string().max(255),
+        link: z.coerce.string(),
       }),
     ),
     tradeDetailFiles: z.array(
       z.object({
         uid: z.coerce.string().max(255),
+        link: z.coerce.string(),
       }),
     ),
     tradeDetailExplanation: z.coerce.string(),
@@ -50,12 +54,14 @@ const responseBodyMap = {
     clubSuppliesImageFiles: z.array(
       z.object({
         uid: z.coerce.string().max(255),
+        link: z.coerce.string(),
       }),
     ),
     clubSuppliesSoftwareEvidence: z.coerce.string().optional(),
     clubSuppliesSoftwareEvidenceFiles: z.array(
       z.object({
         uid: z.coerce.string().max(255),
+        link: z.coerce.string(),
       }),
     ),
     numberOfClubSupplies: z.coerce.number().int().min(1).optional(),
@@ -69,12 +75,14 @@ const responseBodyMap = {
     fixtureImageFiles: z.array(
       z.object({
         uid: z.coerce.string().max(255),
+        link: z.coerce.string(),
       }),
     ),
     fixtureSoftwareEvidence: z.coerce.string().optional(),
     fixtureSoftwareEvidenceFiles: z.array(
       z.object({
         uid: z.coerce.string().max(255),
+        link: z.coerce.string(),
       }),
     ),
     numberOfFixture: z.coerce.number().int().min(1).optional(),
@@ -90,13 +98,14 @@ const responseBodyMap = {
     transportationPassengers: z.array(
       z.object({
         studentNumber: z.coerce.string(),
+        name: z.coerce.string(),
       }),
     ),
 
     isNonCorporateTransaction: z.coerce.boolean(),
-    traderName: z.coerce.string().max(255).optional(),
-    traderAccountNumber: z.coerce.string().max(255).optional(),
-    wasteExplanation: z.coerce.string().optional(),
+    traderName: z.coerce.string().max(255),
+    traderAccountNumber: z.coerce.string().max(255),
+    wasteExplanation: z.coerce.string(),
 
     isFoodExpense: z.coerce.boolean(),
     isLaborContract: z.coerce.boolean(),
@@ -117,36 +126,43 @@ const responseBodyMap = {
     foodExpenseFiles: z.array(
       z.object({
         uid: z.coerce.string().max(255),
+        link: z.coerce.string(),
       }),
     ),
     laborContractFiles: z.array(
       z.object({
         uid: z.coerce.string().max(255),
+        link: z.coerce.string(),
       }),
     ),
     externalEventParticipationFeeFiles: z.array(
       z.object({
         uid: z.coerce.string().max(255),
+        link: z.coerce.string(),
       }),
     ),
     publicationFiles: z.array(
       z.object({
         uid: z.coerce.string().max(255),
+        link: z.coerce.string(),
       }),
     ),
     profitMakingActivityFiles: z.array(
       z.object({
         uid: z.coerce.string().max(255),
+        link: z.coerce.string(),
       }),
     ),
     jointExpenseFiles: z.array(
       z.object({
         uid: z.coerce.string().max(255),
+        link: z.coerce.string(),
       }),
     ),
     etcExpenseFiles: z.array(
       z.object({
         uid: z.coerce.string().max(255),
+        link: z.coerce.string(),
       }),
     ),
   }),
@@ -154,7 +170,7 @@ const responseBodyMap = {
 
 const responseErrorMap = {};
 
-const apiFnd003 = {
+const apiFnd002 = {
   url,
   method,
   requestParam,
@@ -164,18 +180,18 @@ const apiFnd003 = {
   responseErrorMap,
 };
 
-type ApiFnd003RequestParam = z.infer<typeof apiFnd003.requestParam>;
-type ApiFnd003RequestQuery = z.infer<typeof apiFnd003.requestQuery>;
-type ApiFnd003RequestBody = z.infer<typeof apiFnd003.requestBody>;
-type ApiFnd003ResponseCreated = z.infer<
-  (typeof apiFnd003.responseBodyMap)[200]
+type ApiFnd002RequestParam = z.infer<typeof apiFnd002.requestParam>;
+type ApiFnd002RequestQuery = z.infer<typeof apiFnd002.requestQuery>;
+type ApiFnd002RequestBody = z.infer<typeof apiFnd002.requestBody>;
+type ApiFnd002ResponseCreated = z.infer<
+  (typeof apiFnd002.responseBodyMap)[200]
 >;
 
-export default apiFnd003;
+export default apiFnd002;
 
 export type {
-  ApiFnd003RequestParam,
-  ApiFnd003RequestQuery,
-  ApiFnd003RequestBody,
-  ApiFnd003ResponseCreated,
+  ApiFnd002RequestParam,
+  ApiFnd002RequestQuery,
+  ApiFnd002RequestBody,
+  ApiFnd002ResponseCreated,
 };
