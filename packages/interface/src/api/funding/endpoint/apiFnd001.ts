@@ -19,7 +19,7 @@ const requestParam = z.object({});
 
 const requestQuery = z.object({});
 
-const requestBody = z.object({
+const requestPreBody = z.object({
   clubId: z.coerce.number().int().min(1),
   purposeId: z.coerce.number().int().min(1).optional(),
   name: z.coerce.string().max(255),
@@ -146,7 +146,7 @@ const requestBody = z.object({
   ),
 });
 
-requestBody.superRefine((data, ctx) => {
+const requestBody = requestPreBody.superRefine((data, ctx) => {
   if (data.purposeId === undefined) {
     if (
       !data.clubSuppliesName ||
@@ -350,3 +350,72 @@ export type {
   ApiFnd001RequestBody,
   ApiFnd001ResponseCreated,
 };
+
+// funding superRefine test
+const fndTest = () => {
+  console.log(
+    requestBody.parse({
+      clubId: 10,
+      purposeId: 1,
+      name: "New Funding Application",
+      expenditureDate: "2024-09-01",
+      expenditureAmount: 5000,
+      tradeEvidenceFiles: [
+        {
+          uid: "file-123",
+        },
+      ],
+      tradeDetailFiles: [
+        {
+          uid: "file-124",
+        },
+      ],
+      tradeDetailExplanation: "Details about the transaction.",
+
+      clubSuppliesImageFiles: [
+        {
+          uid: "file-125",
+        },
+      ],
+      clubSuppliesSoftwareEvidenceFiles: [],
+
+      isFixture: true,
+      fixtureImageFiles: [
+        {
+          uid: "file-126",
+        },
+      ],
+      fixtureSoftwareEvidenceFiles: [],
+
+      isTransportation: true,
+      transportationEnumId: 6,
+
+      transportationPassengers: [
+        {
+          studentNumber: "S100023",
+        },
+      ],
+      isNonCorporateTransaction: false,
+      isFoodExpense: true,
+      foodExpenseFiles: [
+        {
+          uid: "file-127",
+        },
+      ],
+      isLaborContract: false,
+      isExternalEventParticipationFee: false,
+      isPublication: false,
+      isProfitMakingActivity: false,
+      isJointExpense: false,
+      isEtcExpense: false,
+      laborContractFiles: [],
+      externalEventParticipationFeeFiles: [],
+      publicationFiles: [],
+      profitMakingActivityFiles: [],
+      jointExpenseFiles: [],
+      etcExpenseFiles: [],
+    }),
+  );
+};
+
+export { fndTest };

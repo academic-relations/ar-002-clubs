@@ -21,7 +21,7 @@ const requestParam = z.object({
 
 const requestQuery = z.object({});
 
-const requestBody = z.object({
+const requestPreBody = z.object({
   clubId: z.coerce.number().int().min(1),
   purposeId: z.coerce.number().int().min(1).optional(),
   name: z.coerce.string().max(255),
@@ -148,7 +148,7 @@ const requestBody = z.object({
   ),
 });
 
-requestBody.superRefine((data, ctx) => {
+const requestBody = requestPreBody.superRefine((data, ctx) => {
   if (data.purposeId === undefined) {
     if (
       !data.clubSuppliesName ||
