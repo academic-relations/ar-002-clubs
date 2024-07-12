@@ -5,8 +5,14 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
+import { FundingInterface } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
 
-const FundingInfoFrame = () => {
+export interface FundingFrameProps {
+  funding: FundingInterface;
+  setFunding: React.Dispatch<React.SetStateAction<FundingInterface>>;
+}
+
+const FundingInfoFrame: React.FC<FundingFrameProps> = () => {
   const [toggle, setToggle] = useState<boolean>(true);
 
   const [name, setName] = useState<string>("");

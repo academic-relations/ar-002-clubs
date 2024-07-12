@@ -7,7 +7,9 @@ import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSe
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-const BasicEvidenceFrame = () => {
+import { FundingFrameProps } from "./FundingInfoFrame";
+
+const BasicEvidenceFrame: React.FC<FundingFrameProps> = () => {
   const [toggle, setToggle] = useState(true);
 
   const [tradeDetail, setTradeDetail] = useState<string>("");

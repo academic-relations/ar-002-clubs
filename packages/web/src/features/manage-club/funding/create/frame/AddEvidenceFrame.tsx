@@ -11,7 +11,9 @@ import NonCorpEvidenceBlock from "../components/NonCorpEvidenceBlock";
 import OtherEvidenceBlock from "../components/OtherEvidenceBlock";
 import TransportEvidenceBlock from "../components/TransportEvidenceBlock";
 
-const AddEvidenceFrame = () => {
+import { FundingFrameProps } from "./FundingInfoFrame";
+
+const AddEvidenceFrame: React.FC<FundingFrameProps> = () => {
   const [toggle, setToggle] = useState(true);
 
   // TODO: 코드 좀 더 예쁘게 바꾸기
