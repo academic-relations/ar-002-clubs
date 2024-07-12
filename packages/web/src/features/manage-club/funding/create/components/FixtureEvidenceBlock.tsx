@@ -1,5 +1,10 @@
 import React from "react";
 
+import {
+  FixtureClassEnum,
+  FixtureEvidenceEnum,
+} from "@sparcs-clubs/interface/common/enum/funding.enum";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -28,25 +33,19 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
   name,
   setName,
 }) => {
-  const content = isFixture ? "비품" : "물품";
+  const content = isFixture ? "비품" : "동아리 용품";
 
-  const fixtureEvidenceList = isFixture
-    ? [
-        { label: `${content} 구매`, value: "1" },
-        { label: `${content} 관리`, value: "2" },
-      ]
-    : [
-        { label: `동아리 ${content} 구매`, value: "1" },
-        { label: `동아리 ${content} 관리`, value: "2" },
-      ];
+  const fixtureEvidenceList = [
+    { label: `${content} 구매`, value: String(FixtureEvidenceEnum.Purchase) },
+    { label: `${content} 관리`, value: String(FixtureEvidenceEnum.Management) },
+  ];
 
-  // TODO: 관련 enum 생기면 수정
   const fixtureClassList = [
-    { label: "전자기기", value: "1" },
-    { label: "가구", value: "2" },
-    { label: "악기", value: "3" },
-    { label: "소프트웨어", value: "4" },
-    { label: "기타", value: "5" },
+    { label: "전자기기", value: String(FixtureClassEnum.Electronics) },
+    { label: "가구", value: String(FixtureClassEnum.Furniture) },
+    { label: "악기", value: String(FixtureClassEnum.MusicalInstruments) },
+    { label: "소프트웨어", value: String(FixtureClassEnum.Software) },
+    { label: "기타", value: String(FixtureClassEnum.Others) },
   ];
 
   return (
@@ -85,7 +84,9 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                 lh={20}
                 color="BLACK"
               >
-                {classValue === "4" ? "소프트웨어 증빙" : `${content} 증빙`}
+                {classValue === String(FixtureClassEnum.Software)
+                  ? "소프트웨어 증빙"
+                  : `${content} 증빙`}
               </Typography>
               <Typography
                 ff="PRETENDARD"
@@ -95,13 +96,13 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                 color="GRAY.600"
                 style={{ whiteSpace: "pre-wrap" }}
               >
-                {classValue === "4"
+                {classValue === String(FixtureClassEnum.Software)
                   ? "* 동아리 성격에 합치하는 활동에 사용하는 소프트웨어라는 소명 필요"
                   : `* ${content} 사용 목적 입력 필요`}
               </Typography>
               <TextInput
                 placeholder={
-                  classValue === "4"
+                  classValue === String(FixtureClassEnum.Software)
                     ? "소프트웨어 증빙을 입력하세요"
                     : `${content} 증빙을 입력하세요`
                 }
