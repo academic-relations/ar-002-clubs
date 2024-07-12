@@ -5,16 +5,16 @@ TODO - 유저 데이터를 가져오는 api가 나오면 그걸 기반으로 아
 
 */
 
+import apiAcf001 from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf001";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
+import mockUpUserInfo from "@sparcs-clubs/web/features/activity-certificate/services/_mock/mockupUserInfo";
 import {
   axiosClient,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
-import apiAcf001 from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf001";
-import mockUpUserInfo from "@sparcs-clubs/web/features/activity-certificate/services/_mock/mockupUserInfo";
 
 type ISuccessResponseType = z.infer<(typeof apiAcf001.responseBodyMap)[201]>;
 

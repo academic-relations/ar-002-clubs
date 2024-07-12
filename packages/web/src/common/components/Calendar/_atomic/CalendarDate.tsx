@@ -1,4 +1,6 @@
 import React from "react";
+
+import isPropValid from "@emotion/is-prop-valid";
 import styled, { css } from "styled-components";
 import { DefaultTheme } from "styled-components/dist/types";
 
@@ -19,7 +21,9 @@ const getBackgroundColor = (
   return theme.colors.WHITE;
 };
 
-const ExistWrapper = styled.div<{
+const ExistWrapper = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   exist: boolean;
   type?: CalendarDateProps["type"];
 }>`
@@ -46,7 +50,9 @@ const ExistWrapper = styled.div<{
     `}
 `;
 
-const DateContainer = styled.div<CalendarDateProps>`
+const DateContainer = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<CalendarDateProps>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,6 +95,7 @@ const DateContainer = styled.div<CalendarDateProps>`
 `;
 
 const DateWrapper = styled.div<{
+  exist: boolean;
   type?: CalendarDateProps["type"];
   size?: CalendarDateProps["size"];
 }>`
@@ -96,7 +103,7 @@ const DateWrapper = styled.div<{
   align-items: center;
   justify-content: center;
   flex: 1;
-  cursor: ${({ onClick }) => (onClick ? "pointer" : "default")};
+  cursor: ${({ onClick, exist }) => (onClick && exist ? "pointer" : "default")};
   width: 100%;
   ${({ size }) => {
     switch (size) {
@@ -142,7 +149,7 @@ const CalendarDate: React.FC<CalendarDateProps> = ({
     }
   };
   return (
-    <DateWrapper type={type} onClick={handleClick} size={size}>
+    <DateWrapper exist={exist} type={type} onClick={handleClick} size={size}>
       <DateContainer date={date} exist={exist} type={type} size={size}>
         <ExistWrapper exist={exist} type={type}>
           {date.getDate()}

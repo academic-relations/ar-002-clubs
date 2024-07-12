@@ -1,15 +1,16 @@
-import { Injectable, Inject } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
-import { eq, gte, lte, and, count, isNull } from "drizzle-orm";
+import { and, count, eq, gte, isNull, lte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
+
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
+import { Club } from "src/drizzle/schema/club.schema";
 import {
   RentalEnum,
   RentalObject,
   RentalOrder,
   RentalOrderItemD,
 } from "src/drizzle/schema/rental.schema";
-import { Club } from "src/drizzle/schema/club.schema";
 import { Student } from "src/drizzle/schema/user.schema";
 
 interface Period {

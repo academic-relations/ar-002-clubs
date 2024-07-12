@@ -8,7 +8,9 @@
     "plugin:@typescript-eslint/recommended",
     "airbnb",
     "airbnb-typescript",
-    "prettier"
+    "prettier",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
   ],
   "overrides": [
     {
@@ -30,7 +32,13 @@
     },
     "project": ["./packages/*/tsconfig.json", "./tsconfig.json"]
   },
-  "plugins": ["import", "@typescript-eslint", "react", "@next/eslint-plugin-next"],
+  "plugins": [
+    "import",
+    "@typescript-eslint",
+    "react",
+    "@next/eslint-plugin-next",
+    "eslint-plugin-import"
+  ],
   "ignorePatterns": ["node_modules/", "dist/"],
   "rules": {
     "react/no-array-index-key": "warn",
@@ -52,8 +60,9 @@
           "./packages/api/",
           "./packages/interface/",
           "./"
-        ]
-      },
+        ],
+        "devDependencies": true
+      }
     ],
     "import/prefer-default-export": "off",
     "class-methods-use-this": "off",
@@ -113,6 +122,37 @@
         "argsIgnorePattern": "^_",
         "varsIgnorePattern": "^_",
         "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "object",
+          "type"
+        ],
+        "pathGroups": [
+          { "pattern": "react", "group": "builtin", "position": "after" }
+        ],
+        "pathGroupsExcludedImportTypes": ["react"],
+        "newlines-between": "always-and-inside-groups",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "sort-imports": [
+      "error",
+      {
+        "ignoreCase": true,
+        "ignoreDeclarationSort": true
       }
     ]
   },

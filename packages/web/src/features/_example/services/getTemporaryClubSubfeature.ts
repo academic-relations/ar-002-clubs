@@ -1,11 +1,12 @@
+import { apiTmp000 } from "@sparcs-clubs/interface/api/_example/endpoints/apiTmp000";
+import { useQuery } from "@tanstack/react-query";
+import { z } from "zod";
+
 import {
   axiosClient,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
-import { apiTmp000 } from "@sparcs-clubs/interface/api/_example/endpoints/apiTmp000";
-import { useQuery } from "@tanstack/react-query";
-import { z } from "zod";
 
 // TODO: This might better work using z.discriminatedUnion
 type ISuccessResponseType =
@@ -13,7 +14,7 @@ type ISuccessResponseType =
   | z.infer<(typeof apiTmp000.responseBodyMap)[201]>;
 type IRequestQueryType = z.infer<typeof apiTmp000.requestQuery>;
 
-export const getTemporaryClubSubfeature = (
+export const useGetTemporaryClubSubfeature = (
   id: string,
   page: string,
   limit: string,

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+
 import StepDot, { Step } from "./_atomic/StepDot";
 import StepLabel from "./_atomic/StepLabel";
 

@@ -1,13 +1,12 @@
-import Card from "@sparcs-clubs/web/common/components/Card";
 import React, { useEffect, useState } from "react";
 
+import Card from "@sparcs-clubs/web/common/components/Card";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
-import Select from "@sparcs-clubs/web/common/components/Forms/Select";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-
-import type { SelectItem } from "@sparcs-clubs/web/common/components/Forms/Select";
+import Select from "@sparcs-clubs/web/common/components/Select";
 
 import type { PrintingBusinessFormProps } from ".";
+import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 type PrintingBusinessFormFirstProps = Pick<
   PrintingBusinessFormProps,

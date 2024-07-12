@@ -1,6 +1,7 @@
-import { env } from "@sparcs-clubs/web/env";
 import { AxiosError, InternalAxiosRequestConfig } from "axios";
 import log from "loglevel";
+
+import { env } from "@sparcs-clubs/web/env";
 
 export const BASE_URL = env.NEXT_PUBLIC_API_URL ?? "";
 

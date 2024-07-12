@@ -28,7 +28,7 @@ import apiRnt006, {
   ApiRnt006ResponseOK,
 } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt006";
 
-import { ZodPipe } from "@sparcs-clubs/api/common/pipes/zod-pipe";
+import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
 import { RentalService } from "../service/rental.service";
 
@@ -46,7 +46,7 @@ export class RentalController {
         query.startDate,
         query.endDate,
       );
-    return availableObjects;
+    return { objects: availableObjects };
   }
 
   @Post("/student/rentals/rental")

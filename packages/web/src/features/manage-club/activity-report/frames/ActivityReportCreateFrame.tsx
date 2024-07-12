@@ -1,30 +1,24 @@
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
-import Card from "@sparcs-clubs/web/common/components/Card";
+import React from "react";
+
+import styled from "styled-components";
+
 import Button from "@sparcs-clubs/web/common/components/Button";
+import Card from "@sparcs-clubs/web/common/components/Card";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 // import DateRangeInput from "@sparcs-clubs/web/common/components/Forms/DateRangeInput";
-import Select from "@sparcs-clubs/web/common/components/Forms/Select";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
-import React from "react";
-import styled from "styled-components";
-import SelectParticipant from "../components/SelectParticipant";
+import Select from "@sparcs-clubs/web/common/components/Select";
+
 import { mockParticipantData } from "../_mock/mock";
+import SelectParticipant from "../components/SelectParticipant";
 
 const ActivityReportMainFrameInner = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 60px;
-`;
-
-const PageTitleOuter = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-  align-self: stretch;
 `;
 
 const SectionInner = styled.div`
@@ -50,16 +44,14 @@ const ButtonPlaceRight = styled.div`
 
 const ActivityReportCreateFrame: React.FC = () => (
   <ActivityReportMainFrameInner>
-    <PageTitleOuter>
-      <BreadCrumb
-        items={[
-          { name: "대표 동아리 관리", path: "/manage-club" },
-          { name: "활동 보고서", path: "/manage-club/activity-report" },
-        ]}
-      />
-      <PageTitle>활동 보고서 작성</PageTitle>
-    </PageTitleOuter>
-
+    <PageHead
+      items={[
+        { name: "대표 동아리 관리", path: "/manage-club" },
+        { name: "활동 보고서", path: "/manage-club/activity-report" },
+      ]}
+      title="활동 보고서 작성"
+      enableLast
+    />
     <SectionTitle>활동 정보</SectionTitle>
     <SectionInner>
       <Card outline padding="32px" gap={32}>
@@ -103,7 +95,7 @@ const ActivityReportCreateFrame: React.FC = () => (
     <SectionTitle>활동 증빙</SectionTitle>
     <SectionInner>
       <Card outline padding="32px" gap={32}>
-        <FileUpload placeholder="파일을 선택해주세요" />
+        <FileUpload />
         <TextInput
           area
           placeholder="(선택) 활동 증빙에 대해서 작성하고 싶은 것이 있다면 입력해주세요"

@@ -1,10 +1,13 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
+
+import styled from "styled-components";
+
 import TextInput, {
   TextInputProps,
 } from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import styled from "styled-components";
+
+import FormError from "../FormError";
 import Typography from "../Typography";
-import ErrorMessage from "./_atomic/ErrorMessage";
 
 interface DateRangeInputProps extends Omit<TextInputProps, "onChange"> {
   startValue: string;
@@ -156,7 +159,7 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
           {...props}
         />
       </DateRangeInputFrameInner>
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+      {error && <FormError>{error}</FormError>}
     </DateRangeInputErrorFrameInner>
   );
 };

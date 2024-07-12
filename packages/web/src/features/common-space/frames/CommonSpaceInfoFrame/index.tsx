@@ -1,17 +1,20 @@
 import React, { useCallback, useState } from "react";
+
+import { subSeconds } from "date-fns";
+
 import styled from "styled-components";
+
 import Button from "@sparcs-clubs/web/common/components/Button";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
-import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
+
+import postCommonSpaceUsageOrder from "@sparcs-clubs/web/features/common-space/service/postCommonSpaceUsageOrder";
+
 import CommonSpaceInfoFirstFrame from "./CommonSpaceInfoFirstFrame";
 import CommonSpaceInfoSecondFrame from "./CommonSpaceInfoSecondFrame";
 import CommonSpaceInfoThirdFrame from "./CommonSpaceInfoThirdFrame";
 
-const CommonSpaceFrame = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
+import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 
 const CommonSpaceNoticeFrameInner = styled.div`
   display: flex;
@@ -66,14 +69,28 @@ const CommonSpaceInfoFrame: React.FC<CommonSpaceFrameProps> = ({
     setStep(step - 1);
   }, [step, setStep, commonSpace, setCommonSpace]);
 
+  const handleSubmit = useCallback(() => {
+    const { email, clubId, startTerm, endTerm } = commonSpace.body;
+    const { spaceId } = commonSpace.param;
+    const correct = email && clubId && startTerm && endTerm && spaceId;
+    if (correct) {
+      postCommonSpaceUsageOrder(
+        { spaceId },
+        { email, clubId, startTerm, endTerm: subSeconds(endTerm, 1) },
+      );
+    }
+  }, [commonSpace]);
+
   const onNext = useCallback(() => {
     if (nextEnabled && step < frames.length - 1) {
       setStep(step + 1);
+    } else {
+      handleSubmit();
     }
-  }, [nextEnabled, step, setStep]);
+  }, [nextEnabled, step, setStep, handleSubmit]);
 
   return (
-    <CommonSpaceFrame>
+    <FlexWrapper direction="column" gap={60}>
       <StepProcess steps={steps} activeStepIndex={step + 1} />
       <CommonSpaceNoticeFrameInner>
         <CurrentFrame {...props} setNextEnabled={setNextEnabled} />
@@ -84,7 +101,7 @@ const CommonSpaceInfoFrame: React.FC<CommonSpaceFrameProps> = ({
           {step === frames.length - 1 ? "신청" : "다음"}
         </Button>
       </StyledBottom>
-    </CommonSpaceFrame>
+    </FlexWrapper>
   );
 };
 

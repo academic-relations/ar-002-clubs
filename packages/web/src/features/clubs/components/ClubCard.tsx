@@ -1,12 +1,14 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   getClubType,
   getTagColorFromClubType,
@@ -44,22 +46,16 @@ const ClubName = styled.div`
   text-overflow: ellipsis;
 `;
 
-const ClubMemberCount = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-  font-size: 14px;
-  line-height: 16px;
-`;
-
 const ClubCard: React.FC<ClubCardProps> = ({ club }) => (
   <Card gap={16} padding="16px 20px">
     <ClubCardNameRow>
       <ClubName>{club.name}</ClubName>
-      <ClubMemberCount>
+      <FlexWrapper direction="row" gap={4}>
         <Icon type="person" size={16} />
-        <div>{club.totalMemberCnt}</div>
-      </ClubMemberCount>
+        <Typography fs={14} lh={16}>
+          {club.totalMemberCnt}
+        </Typography>
+      </FlexWrapper>
     </ClubCardNameRow>
 
     <ClubCardRow>

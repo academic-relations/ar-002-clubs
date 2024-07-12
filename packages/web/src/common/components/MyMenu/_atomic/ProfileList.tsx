@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+
 import styled from "styled-components";
+
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+
 import Profile from "./Profile";
 
 interface ProfileListProps {
@@ -9,6 +12,7 @@ interface ProfileListProps {
     profileNumber: number;
     email: string;
   }[];
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ProfileListWrapper = styled.div`
@@ -18,13 +22,17 @@ const ProfileListWrapper = styled.div`
   width: 100%;
 `;
 
-const ProfileList: React.FC<ProfileListProps> = ({ profiles }) => {
+const ProfileList: React.FC<ProfileListProps> = ({
+  profiles,
+  setIsMenuOpen,
+}) => {
   const [selectedProfileName, setSelectedProfileName] = useState<string>(
     "학부생", // TODO: 나중에는 기본값 제대로 설정하기
   );
 
   const handleProfileClick = (profileName: string) => {
     setSelectedProfileName(profileName);
+    setIsMenuOpen(false);
   };
 
   return (

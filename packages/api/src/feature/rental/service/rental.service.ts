@@ -9,9 +9,10 @@ import {
   ApiRnt006RequestQuery,
   ApiRnt006ResponseOK,
 } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt006";
+
 import { RentalObjectRepository } from "../repository/rental.rental-object.repository";
-import { RentalServiceRepository } from "../repository/rental.rental-service.repository";
 import { RentalOrderRepository } from "../repository/rental.rental-order.repository";
+import { RentalServiceRepository } from "../repository/rental.rental-service.repository";
 
 @Injectable()
 export class RentalService {

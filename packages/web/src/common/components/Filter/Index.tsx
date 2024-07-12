@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+
 import styled from "styled-components";
+
 import { SemesterListProps } from "@sparcs-clubs/web/features/manage-club/members/types/semesterList";
+
 import FilterButton from "./_atomic/FilterButton";
 import FilterDropdown from "./_atomic/FilterDropdown";
 

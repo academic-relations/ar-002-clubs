@@ -1,14 +1,27 @@
+"use client";
+
+import React, { useState } from "react";
+
+import styled from "styled-components";
+
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import React, { useState } from "react";
-import styled from "styled-components";
+
 import type { RentalInterface } from "../types/rental";
 
 export interface RentalFrameProps {
   rental: RentalInterface;
   setRental: React.Dispatch<React.SetStateAction<RentalInterface>>;
+}
+
+export interface RentalLimitProps {
+  rentalDate: Date;
+  returnDate: Date;
+  rental: RentalInterface;
+  setRental: React.Dispatch<React.SetStateAction<RentalInterface>>;
+  setHasError: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const RentalNoticeFrameInner = styled.div`
@@ -42,7 +55,7 @@ const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
   setRental,
 }) => {
   const [checked, setChecked] = useState(false);
-
+  // TODO: 동의하고 돌아왔을 때 체크된 상태로 두기
   const handleNextClick = () => {
     if (checked) {
       setRental({ ...rental, agreement: true });

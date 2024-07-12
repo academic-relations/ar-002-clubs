@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
 
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";

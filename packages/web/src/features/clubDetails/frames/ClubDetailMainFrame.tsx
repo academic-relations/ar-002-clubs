@@ -1,30 +1,21 @@
 "use client";
 
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
-import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import React from "react";
+
 import styled from "styled-components";
 
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
+import ClubDetailCard from "@sparcs-clubs/web/features/clubDetails/components/ClubDetailCard";
 import ClubInfoCard from "@sparcs-clubs/web/features/clubDetails/components/ClubInfoCard";
 import PersonInfoCard from "@sparcs-clubs/web/features/clubDetails/components/PersonInfoCard";
-import ClubDetailCard from "@sparcs-clubs/web/features/clubDetails/components/ClubDetailCard";
+
 import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
 
 interface ClubDetailMainFrameProps {
   club: ApiClb002ResponseOK;
 }
-const ClubDetailMainFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
-
-const ClubInfoWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
 
 const CardWrapper = styled.div`
   padding-left: 20px;
@@ -35,15 +26,9 @@ const MoreInfoWrapper = styled.div`
   flex-direction: row;
   gap: 60px;
 
-  @media (max-width: 1200px) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
     flex-direction: column;
   }
-`;
-
-const PersonInfoWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 `;
 
 const ClubDetailWrapper = styled.div`
@@ -53,38 +38,29 @@ const ClubDetailWrapper = styled.div`
   flex: 1 0 0;
 `;
 
-const PageHeadWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
 const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({ club }) => (
-  <ClubDetailMainFrameInner>
-    <PageHeadWrapper>
-      <BreadCrumb
-        items={[
-          { name: "동아리 목록", path: "/clubs" },
-          { name: club.name, path: `/clubs/${club.id}` },
-        ]}
-      />
-      <PageTitle>{club.name}</PageTitle>
-    </PageHeadWrapper>
-
-    <ClubInfoWrapper>
+  <FlexWrapper direction="column" gap={60}>
+    <PageHead
+      items={[
+        { name: "동아리 목록", path: "/clubs" },
+        { name: club.name, path: `/clubs/${club.id}` },
+      ]}
+      title={club.name}
+    />
+    <FlexWrapper direction="column" gap={20}>
       <SectionTitle size="lg">동아리 정보</SectionTitle>
       <CardWrapper>
         <ClubInfoCard club={club} />
       </CardWrapper>
-    </ClubInfoWrapper>
+    </FlexWrapper>
 
     <MoreInfoWrapper>
-      <PersonInfoWrapper>
+      <FlexWrapper direction="column" gap={20}>
         <SectionTitle size="lg">인적 사항 </SectionTitle>
         <CardWrapper>
           <PersonInfoCard club={club} />
         </CardWrapper>
-      </PersonInfoWrapper>
+      </FlexWrapper>
 
       <ClubDetailWrapper>
         <SectionTitle size="lg">동아리 설명</SectionTitle>
@@ -93,7 +69,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({ club }) => (
         </CardWrapper>
       </ClubDetailWrapper>
     </MoreInfoWrapper>
-  </ClubDetailMainFrameInner>
+  </FlexWrapper>
 );
 
 export default ClubDetailMainFrame;

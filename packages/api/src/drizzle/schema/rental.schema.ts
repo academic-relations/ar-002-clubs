@@ -1,11 +1,12 @@
 import {
-  mysqlTable,
-  int,
-  varchar,
   datetime,
-  timestamp,
+  int,
+  mysqlTable,
   text,
+  timestamp,
+  varchar,
 } from "drizzle-orm/mysql-core";
+
 import { Club } from "./club.schema";
 import { Student } from "./user.schema";
 // RentalOrder table

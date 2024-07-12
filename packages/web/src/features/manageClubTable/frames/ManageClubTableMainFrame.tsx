@@ -1,28 +1,35 @@
 "use client";
 
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import React, { useState } from "react";
+
 import styled from "styled-components";
-import NoticePagination from "@sparcs-clubs/web/features/notices/components/NoticePagination";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
+
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import Pagination from "@sparcs-clubs/web/common/components/Pagination";
+import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+
+import paths from "@sparcs-clubs/web/constants/paths";
+
 import {
-  activityCertificateMockData,
-  commonSpaceMockData,
-  printingBusinessMockData,
-  rentalBusinessMockData,
-} from "../types/mock";
+  activityCertificateColumnSort,
+  commonSpaceColumnSort,
+  printingBusinessColumnSort,
+  rentalBusinessColumnSort,
+} from "../services/columnSort";
 import {
+  ManageClubActivityCertificateStatus,
+  ManageClubCommonSpaceStatus,
+  ManageClubPrintingBusinessStatus,
   ManageClubRentalBusinessStatus,
   ManageClubTagColorsInterface,
   ServiceType,
-  ManageClubPrintingBusinessStatus,
-  ManageClubActivityCertificateStatus,
-  ManageClubCommonSpaceStatus,
 } from "../types/ManageClubTable";
 import {
-  ManageClubTagColors,
   formattedString,
+  ManageClubTagColors,
 } from "../types/ManageClubTableConst";
 import {
   activityCertificateHeaders,
@@ -31,11 +38,11 @@ import {
   rentalBusinessHeaders,
 } from "../types/ManageClubTableHeader";
 import {
-  activityCertificateColumnSort,
-  commonSpaceColumnSort,
-  printingBusinessColumnSort,
-  rentalBusinessColumnSort,
-} from "../services/columnSort";
+  activityCertificateMockData,
+  commonSpaceMockData,
+  printingBusinessMockData,
+  rentalBusinessMockData,
+} from "../types/mock";
 
 interface ManageClubTableMainFrameProps {
   pageType: ServiceType;
@@ -132,99 +139,117 @@ const ManageClubTableMainFrame: React.FC<ManageClubTableMainFrameProps> = ({
   );
 
   const headers = headerTypes(pageType);
+  const title =
+    pageType === "rental-business"
+      ? "대여 사업 신청"
+      : paths.SERVICE.sub.find(value => value.path.includes(pageType))?.name;
 
   return (
-    <ManageClubTablePageMainFrameInner>
-      <Typography
-        color="GRAY.600"
-        style={{
-          width: "100%",
-          marginBottom: "8px",
-          textAlign: "right",
-        }}
-      >
-        {`총 ${unslicedData.length}개`}
-      </Typography>
-      <TableFrameInner>
-        <TableRowFrameInner
+    <FlexWrapper direction="column" gap={60}>
+      <PageHead
+        items={[
+          { name: "대표 동아리 관리", path: "/manage-club" },
+          {
+            name: `${title} 내역`,
+            path: `/manage-club/${pageType}`,
+          },
+        ]}
+        title={`${title} 내역`}
+      />
+      <ManageClubTablePageMainFrameInner>
+        <Typography
+          color="GRAY.600"
           style={{
-            gridTemplateColumns: headers
-              .map(headerInfo => headerInfo.headerWidth)
-              .join(" "),
+            width: "100%",
+            marginBottom: "8px",
+            textAlign: "right",
           }}
         >
-          {headers.map((headerInfo, index) => (
-            <TableCellInner
-              style={
-                headerInfo.headerType === "HeaderSort"
-                  ? {
-                      gridColumn: `${index + 1} / ${index + 2}`,
-                      cursor: "pointer",
-                    }
-                  : { gridColumn: `${index + 1} / ${index + 2}` }
-              }
-              key={headerInfo.headerName}
-              onClick={
-                headerInfo.headerType === "HeaderSort"
-                  ? () => setSortColumnName(headerInfo.headerName)
-                  : () => {}
-              }
-            >
-              <TableCell type={headerInfo.headerType} width="100%">
-                {headerInfo.headerName}
-              </TableCell>
-            </TableCellInner>
-          ))}
-        </TableRowFrameInner>
-
-        {data.map((rowInfo, rowIndex) => (
+          {`총 ${unslicedData.length}개`}
+        </Typography>
+        <TableFrameInner>
           <TableRowFrameInner
             style={{
               gridTemplateColumns: headers
                 .map(headerInfo => headerInfo.headerWidth)
                 .join(" "),
-              borderBottom: "1px #EEEEEE solid",
             }}
-            key={`row${rowIndex.toString()}`}
           >
-            {Object.entries(rowInfo).map(([key, value], index) => (
+            {headers.map((headerInfo, index) => (
               <TableCellInner
-                style={{
-                  gridColumn: `${index + 1} / ${index + 2}`,
-                }}
-                key={key}
-              >
-                <TableCell type="Default" width="100%">
-                  {key === "status" ? (
-                    <Tag
-                      color={
-                        ManageClubTagColors[
-                          Object.keys(statusTypes(pageType))[
-                            Object.values(statusTypes(pageType)).indexOf(value)
-                          ] as keyof ManageClubTagColorsInterface
-                        ]
+                style={
+                  headerInfo.headerType === "HeaderSort"
+                    ? {
+                        gridColumn: `${index + 1} / ${index + 2}`,
+                        cursor: "pointer",
                       }
-                    >
-                      {value}
-                    </Tag>
-                  ) : (
-                    formattedString(key, value)
-                  )}
+                    : { gridColumn: `${index + 1} / ${index + 2}` }
+                }
+                key={headerInfo.headerName}
+                onClick={
+                  headerInfo.headerType === "HeaderSort"
+                    ? () => setSortColumnName(headerInfo.headerName)
+                    : () => {}
+                }
+              >
+                <TableCell type={headerInfo.headerType} width="100%">
+                  {headerInfo.headerName}
                 </TableCell>
               </TableCellInner>
             ))}
           </TableRowFrameInner>
-        ))}
-      </TableFrameInner>
-      {unslicedData.length > 1 && (
-        <NoticePagination
-          totalPage={Math.ceil(unslicedData.length / 10)}
-          currentPage={page}
-          limit={10}
-          setPage={setPage}
-        />
-      )}
-    </ManageClubTablePageMainFrameInner>
+
+          {data.map((rowInfo, rowIndex) => (
+            <TableRowFrameInner
+              style={{
+                gridTemplateColumns: headers
+                  .map(headerInfo => headerInfo.headerWidth)
+                  .join(" "),
+                borderBottom: "1px #EEEEEE solid",
+              }}
+              key={`row${rowIndex.toString()}`}
+            >
+              {Object.entries(rowInfo).map(([key, value], index) => (
+                <TableCellInner
+                  style={{
+                    gridColumn: `${index + 1} / ${index + 2}`,
+                  }}
+                  key={key}
+                >
+                  <TableCell type="Default" width="100%">
+                    {key === "status" ? (
+                      <Tag
+                        color={
+                          ManageClubTagColors[
+                            Object.keys(statusTypes(pageType))[
+                              Object.values(statusTypes(pageType)).indexOf(
+                                value,
+                              )
+                            ] as keyof ManageClubTagColorsInterface
+                          ]
+                        }
+                      >
+                        {value}
+                      </Tag>
+                    ) : (
+                      formattedString(key, value)
+                    )}
+                  </TableCell>
+                </TableCellInner>
+              ))}
+            </TableRowFrameInner>
+          ))}
+        </TableFrameInner>
+        {unslicedData.length > 1 && (
+          <Pagination
+            totalPage={Math.ceil(unslicedData.length / 10)}
+            currentPage={page}
+            limit={10}
+            setPage={setPage}
+          />
+        )}
+      </ManageClubTablePageMainFrameInner>
+    </FlexWrapper>
   );
 };
 

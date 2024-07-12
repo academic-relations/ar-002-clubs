@@ -4,10 +4,11 @@ import React from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import useExampleStore from "@sparcs-clubs/web/common/providers/store/useExampleStore";
-import { getTemporaryClubSubfeature } from "../services/getTemporaryClubSubfeature";
+
+import { useGetTemporaryClubSubfeature } from "../services/getTemporaryClubSubfeature";
 
 const DemoComponent: React.FC = () => {
-  const { data, isLoading, isError, refetch } = getTemporaryClubSubfeature(
+  const { data, isLoading, isError, refetch } = useGetTemporaryClubSubfeature(
     "1",
     "2",
     "3",

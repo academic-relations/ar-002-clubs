@@ -1,16 +1,16 @@
 import {
-  mysqlTable,
-  int,
-  varchar,
   boolean,
   datetime,
   index,
+  int,
+  mysqlTable,
   text,
   timestamp,
+  varchar,
 } from "drizzle-orm/mysql-core";
 
 import { Club } from "./club.schema";
-import { StudentT } from "./user.schema";
+import { Student } from "./user.schema";
 
 export const PromotionalPrintingOrderStatusEnum = mysqlTable(
   "promotional_printing_order_status_enum",
@@ -44,7 +44,7 @@ export const PromotionalPrintingOrder = mysqlTable(
       .references(() => Club.id),
     studentId: int("student_id")
       .notNull()
-      .references(() => StudentT.id),
+      .references(() => Student.id),
     studentPhoneNumber: varchar("student_phone_number", { length: 30 }),
     promotionalPrintingOrderStatusEnum: int(
       "promotional_printing_order_status_enum",
@@ -58,7 +58,6 @@ export const PromotionalPrintingOrder = mysqlTable(
     requireMarginChopping: boolean("require_margin_chopping")
       .default(false)
       .notNull(),
-    numberOfPrints: int("number_of_prints").notNull(),
     desiredPickUpTime: datetime("desired_pick_up_time").notNull(),
     pickUpAt: datetime("pick_up_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
