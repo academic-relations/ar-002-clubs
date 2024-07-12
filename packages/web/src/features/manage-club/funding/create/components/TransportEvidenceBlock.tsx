@@ -1,5 +1,7 @@
 import React from "react";
 
+import { TransportationEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -29,17 +31,30 @@ const FixedWidthWrapper = styled.div`
 
 // TODO: transportationEnumId랑 맞추기
 const TransportationList = [
-  { label: "시내/마을버스", value: "1" },
-  { label: "고속/시외버스", value: "2" },
-  { label: "철도", value: "3" },
-  { label: "택시", value: "4" },
-  { label: "전세버스", value: "5" },
-  { label: "화물 운반", value: "6" },
-  { label: "콜밴", value: "7" },
-  { label: "비행기", value: "8" },
-  { label: "선박", value: "9" },
-  { label: "기타", value: "10" },
+  { label: "시내/마을버스", value: String(TransportationEnum.CityBus) },
+  { label: "고속/시외버스", value: String(TransportationEnum.IntercityBus) },
+  { label: "철도", value: String(TransportationEnum.Rail) },
+  { label: "택시", value: String(TransportationEnum.Taxi) },
+  { label: "전세버스", value: String(TransportationEnum.CharterBus) },
+  { label: "화물 운반", value: String(TransportationEnum.Cargo) },
+  { label: "콜밴", value: String(TransportationEnum.CallVan) },
+  { label: "비행기", value: String(TransportationEnum.Airplane) },
+  { label: "선박", value: String(TransportationEnum.Ship) },
+  { label: "기타", value: String(TransportationEnum.Others) },
 ];
+
+const purposeInfo = (type: TransportationEnum) => {
+  switch (type) {
+    case TransportationEnum.Cargo || TransportationEnum.CallVan:
+      return "* 운반한 화물 목록을 함께 작성해주세요";
+    case TransportationEnum.Airplane || TransportationEnum.Ship:
+      return "* 행사 장소의 타당성을 함께 작성해주세요";
+    case TransportationEnum.Others:
+      return "* 운반한 화물 목록과 행사 장소의 타당성을 함께 작성해주세요";
+    default:
+      return "";
+  }
+};
 
 const TransportEvidenceBlock: React.FC<TransportEvidenceBlockProps> = ({
   type,
@@ -77,8 +92,12 @@ const TransportEvidenceBlock: React.FC<TransportEvidenceBlockProps> = ({
             handleChange={setDestination}
           />
         </FlexWrapper>
-        {/* TODO: readable하게 고치기 (Enum 사용) */}
-        {(type === "4" || type === "8" || type === "10") && (
+        {(type === String(TransportationEnum.Taxi) ||
+          type === String(TransportationEnum.CharterBus) ||
+          type === String(TransportationEnum.CallVan) ||
+          type === String(TransportationEnum.Airplane) ||
+          type === String(TransportationEnum.Ship) ||
+          type === String(TransportationEnum.Others)) && (
           <FlexWrapper direction="column" gap={4}>
             <Typography
               ff="PRETENDARD"
@@ -92,13 +111,40 @@ const TransportEvidenceBlock: React.FC<TransportEvidenceBlockProps> = ({
             <SelectParticipant data={mockParticipantData} />
           </FlexWrapper>
         )}
-        <TextInput
-          area
-          placeholder="이용 목적을 입력하세요"
-          label="이용 목적"
-          value={purpose}
-          handleChange={setPurpose}
-        />
+        <FlexWrapper direction="column" gap={4}>
+          <Typography
+            ff="PRETENDARD"
+            fw="MEDIUM"
+            fs={16}
+            lh={20}
+            color="BLACK"
+            style={{ paddingLeft: 2, paddingRight: 2 }}
+          >
+            이용 목적
+          </Typography>
+          {(type === String(TransportationEnum.Cargo) ||
+            type === String(TransportationEnum.CallVan) ||
+            type === String(TransportationEnum.Airplane) ||
+            type === String(TransportationEnum.Ship) ||
+            type === String(TransportationEnum.Others)) && (
+            <Typography
+              ff="PRETENDARD"
+              fw="REGULAR"
+              fs={14}
+              lh={20}
+              color="GRAY.600"
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              {purposeInfo(Number(type))}
+            </Typography>
+          )}
+          <TextInput
+            area
+            placeholder="이용 목적을 입력하세요"
+            value={purpose}
+            handleChange={setPurpose}
+          />
+        </FlexWrapper>
       </Card>
     </EvidenceBlockTitle>
   </FlexWrapper>
