@@ -182,7 +182,7 @@ const responseBodyMap = {
         });
       }
 
-      if (data.clubSuppliesClassEnumId === 4) {
+      if (data.clubSuppliesClassEnumId === FixtureClassEnum.Software) {
         if (!data.clubSuppliesSoftwareEvidence) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
@@ -210,7 +210,7 @@ const responseBodyMap = {
           message: "fixture is required",
         });
       }
-      if (data.fixtureClassEnumId === 4) {
+      if (data.fixtureClassEnumId === FixtureClassEnum.Software) {
         if (!data.fixtureSoftwareEvidence) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
@@ -238,9 +238,9 @@ const responseBodyMap = {
         });
       }
       if (
-        data.transportationEnumId === 6 ||
-        data.transportationEnumId === 7 ||
-        data.transportationEnumId === 10
+        data.transportationEnumId === TransportationEnum.CallVan ||
+        data.transportationEnumId === TransportationEnum.Cargo ||
+        data.transportationEnumId === TransportationEnum.Others
       ) {
         if (!data.cargoList) {
           ctx.addIssue({
@@ -250,9 +250,9 @@ const responseBodyMap = {
         }
       }
       if (
-        data.transportationEnumId === 8 ||
-        data.transportationEnumId === 9 ||
-        data.transportationEnumId === 10
+        data.transportationEnumId === TransportationEnum.Airplane ||
+        data.transportationEnumId === TransportationEnum.Ship ||
+        data.transportationEnumId === TransportationEnum.Others
       ) {
         if (!data.placeValidity) {
           ctx.addIssue({
