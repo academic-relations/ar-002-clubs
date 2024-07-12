@@ -64,7 +64,7 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
             <FlexWrapper direction="column" gap={12}>
               <CheckboxOption
                 optionText="동아리 용품"
-                checked={funding.purposeId === 0}
+                checked={funding.purposeId === "0"}
                 onClick={() => {}}
               />
               <CheckboxOption
@@ -172,7 +172,7 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
             </FlexWrapper>
           </FlexWrapper>
         </Card>
-        {funding.purposeId === 0 && (
+        {funding.purposeId === "0" && (
           <FixtureEvidenceBlock
             isFixture={false}
             evidenceValue={productEvidenceValue}

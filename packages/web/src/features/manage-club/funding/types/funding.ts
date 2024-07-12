@@ -5,10 +5,11 @@ import {
 
 export interface FundingInterface {
   // TODO: files 관련 추가
-  purposeId?: number;
+  purposeId?: string;
   name?: string;
-  expenditureDate?: Date;
-  expenditureAmount?: number;
+  // TODO: date, amount 컴포넌트 추가되면 date, number로 변경
+  expenditureDate?: string;
+  expenditureAmount?: string;
   tradeDetailExplanation?: string;
 
   clubSupplies?: {

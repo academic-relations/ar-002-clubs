@@ -12,14 +12,11 @@ export interface FundingFrameProps {
   setFunding: React.Dispatch<React.SetStateAction<FundingInterface>>;
 }
 
-const FundingInfoFrame: React.FC<FundingFrameProps> = () => {
+const FundingInfoFrame: React.FC<FundingFrameProps> = ({
+  funding,
+  setFunding,
+}) => {
   const [toggle, setToggle] = useState<boolean>(true);
-
-  const [name, setName] = useState<string>("");
-  const [date, setDate] = useState<string>("");
-  const [amount, setAmount] = useState<string>("");
-
-  const [selectedPurpose, setSelectedPurpose] = useState<string>("");
 
   const purposeItems = [
     { value: "1", label: "활동보고서 1" },
@@ -38,29 +35,33 @@ const FundingInfoFrame: React.FC<FundingFrameProps> = () => {
         <TextInput
           label="항목명"
           placeholder="항목명을 입력하세요"
-          value={name}
-          handleChange={setName}
+          value={funding.name}
+          handleChange={value => setFunding({ ...funding, name: value })}
         />
         <FlexWrapper direction="row" gap={32}>
           <Select
             items={purposeItems}
             label="지출 목적"
-            selectedValue={selectedPurpose}
-            onSelect={setSelectedPurpose}
+            selectedValue={funding.purposeId}
+            onSelect={value => setFunding({ ...funding, purposeId: value })}
             placeholder="지출 목적을 선택해주세요"
           />
           {/* TODO: 지출 일자, 지출 금액 해당 컴포넌트로 구현 */}
           <TextInput
             label="지출 일자"
             placeholder="20XX.XX.XX"
-            value={date}
-            handleChange={setDate}
+            value={funding.expenditureDate}
+            handleChange={value =>
+              setFunding({ ...funding, expenditureDate: value })
+            }
           />
           <TextInput
             label="지출 금액"
             placeholder="금액을 입력해주세요"
-            value={amount}
-            handleChange={setAmount}
+            value={funding.expenditureAmount}
+            handleChange={value =>
+              setFunding({ ...funding, expenditureAmount: value })
+            }
           />
         </FlexWrapper>
       </Card>
