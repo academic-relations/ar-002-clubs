@@ -19,30 +19,6 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
 }) => {
   const [toggle, setToggle] = useState(true);
 
-  const [productEvidenceValue, setProductEvidenceValue] = useState("");
-  const [productClassValue, setProductClassValue] = useState("");
-  const [productName, setProductName] = useState("");
-  const [fixtureEvidenceValue, setFixtureEvidenceValue] = useState("");
-  const [fixtureClassValue, setFixtureClassValue] = useState("");
-  const [fixtureName, setFixtureName] = useState("");
-
-  const [transportType, setTransportType] = useState("");
-  const [transportOrigin, setTransportOrigin] = useState("");
-  const [transportDestination, setTransportDestination] = useState("");
-  const [transportPurpose, setTransportPurpose] = useState("");
-
-  const [nonCorpTraderName, setNonCorpTraderName] = useState("");
-  const [nonCorpTraderAccount, setNonCorpTraderAccount] = useState("");
-  const [nonCorpWasteExplanation, setNonCorpWasteExplanation] = useState("");
-
-  const [foodValue, setFoodValue] = useState("");
-  const [laborValue, setLaborValue] = useState("");
-  const [externalValue, setExternalValue] = useState("");
-  const [publValue, setPublValue] = useState("");
-  const [profitValue, setProfitValue] = useState("");
-  const [jointValue, setJointValue] = useState("");
-  const [etcValue, setEtcValue] = useState("");
-
   return (
     <FoldableSectionTitle
       title="추가 증빙"
@@ -175,94 +151,105 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
         {funding.purposeId === "0" && (
           <FixtureEvidenceBlock
             isFixture={false}
-            evidenceValue={productEvidenceValue}
-            setEvidenceValue={setProductEvidenceValue}
-            classValue={productClassValue}
-            setclassValue={setProductClassValue}
-            name={productName}
-            setName={setProductName}
+            funding={funding}
+            setFunding={setFunding}
           />
         )}
         {funding.isFixture && (
           <FixtureEvidenceBlock
             isFixture
-            evidenceValue={fixtureEvidenceValue}
-            setEvidenceValue={setFixtureEvidenceValue}
-            classValue={fixtureClassValue}
-            setclassValue={setFixtureClassValue}
-            name={fixtureName}
-            setName={setFixtureName}
+            funding={funding}
+            setFunding={setFunding}
           />
         )}
         {funding.isTransportation && (
-          <TransportEvidenceBlock
-            type={transportType}
-            setType={setTransportType}
-            origin={transportOrigin}
-            setOrigin={setTransportOrigin}
-            destination={transportDestination}
-            setDestination={setTransportDestination}
-            purpose={transportPurpose}
-            setPurpose={setTransportPurpose}
-          />
+          <TransportEvidenceBlock funding={funding} setFunding={setFunding} />
         )}
         {funding.isNonCorporateTransaction && (
-          <NonCorpEvidenceBlock
-            traderName={nonCorpTraderName}
-            setTraderName={setNonCorpTraderName}
-            traderAccount={nonCorpTraderAccount}
-            setTraderAccount={setNonCorpTraderAccount}
-            wasteExplanation={nonCorpWasteExplanation}
-            setWasteExplanation={setNonCorpWasteExplanation}
-          />
+          <NonCorpEvidenceBlock funding={funding} setFunding={setFunding} />
         )}
         {funding.isFoodExpense && (
           <OtherEvidenceBlock
             content="식비"
-            value={foodValue}
-            onChange={setFoodValue}
+            value={funding.foodExpenseExplanation}
+            onChange={value =>
+              setFunding({
+                ...funding,
+                foodExpenseExplanation: value,
+              })
+            }
           />
         )}
         {funding.isLaborContract && (
           <OtherEvidenceBlock
             content="근로 계약"
-            value={laborValue}
-            onChange={setLaborValue}
+            value={funding.laborContractExplanation}
+            onChange={value =>
+              setFunding({
+                ...funding,
+                laborContractExplanation: value,
+              })
+            }
           />
         )}
         {funding.isExternalEventParticipationFee && (
           <OtherEvidenceBlock
             content="외부 행사 참가비"
-            value={externalValue}
-            onChange={setExternalValue}
+            value={funding.externalEventParticipationFeeExplanation}
+            onChange={value =>
+              setFunding({
+                ...funding,
+                externalEventParticipationFeeExplanation: value,
+              })
+            }
           />
         )}
         {funding.isPublication && (
           <OtherEvidenceBlock
             content="발간물"
-            value={publValue}
-            onChange={setPublValue}
+            value={funding.publicationExplanation}
+            onChange={value =>
+              setFunding({
+                ...funding,
+                publicationExplanation: value,
+              })
+            }
           />
         )}
         {funding.isProfitMakingActivity && (
           <OtherEvidenceBlock
             content="수익 사업"
-            value={profitValue}
-            onChange={setProfitValue}
+            value={funding.profitMakingActivityExplanation}
+            onChange={value =>
+              setFunding({
+                ...funding,
+                profitMakingActivityExplanation: value,
+              })
+            }
           />
         )}
         {funding.isJointExpense && (
           <OtherEvidenceBlock
             content="공동 경비"
-            value={jointValue}
-            onChange={setJointValue}
+            value={funding.jointExpenseExplanation}
+            onChange={value =>
+              setFunding({
+                ...funding,
+                jointExpenseExplanation: value,
+              })
+            }
           />
         )}
         {funding.isEtcExpense && (
           <OtherEvidenceBlock
             content="기타"
-            value={etcValue}
-            onChange={setEtcValue}
+            value={funding.etcExpenseExplanation}
+            onChange={value =>
+              setFunding({
+                ...funding,
+                etcExpenseExplanation: value,
+              })
+            }
           />
         )}
       </FlexWrapper>

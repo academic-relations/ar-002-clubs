@@ -1,8 +1,3 @@
-import {
-  FixtureClassEnum,
-  FixtureEvidenceEnum,
-} from "@sparcs-clubs/interface/common/enum/funding.enum";
-
 export interface FundingInterface {
   // TODO: files 관련 추가
   purposeId?: string;
@@ -14,8 +9,8 @@ export interface FundingInterface {
 
   clubSupplies?: {
     clubSuppliesName?: string;
-    clubSuppliesEvidenceEnumId?: FixtureEvidenceEnum;
-    clubSuppliesClassEnumId?: FixtureClassEnum;
+    clubSuppliesEvidenceEnumId?: string;
+    clubSuppliesClassEnumId?: string;
     clubSuppliesPurpose?: string;
     clubSuppliesSoftwareEvidence?: string;
     numberOfClubSupplies?: number;
@@ -25,8 +20,8 @@ export interface FundingInterface {
   isFixture: boolean;
   fixture?: {
     fixtureName?: string;
-    fixtureEvidenceEnumId?: FixtureEvidenceEnum;
-    fixtureClassEnumId?: FixtureClassEnum;
+    fixtureEvidenceEnumId?: string;
+    fixtureClassEnumId?: string;
     fixturePurpose?: string;
     fixtureSoftwareEvidence?: string;
     numberOfFixture?: number;
@@ -35,7 +30,7 @@ export interface FundingInterface {
 
   isTransportation: boolean;
   transportation?: {
-    transportationEnumId?: number;
+    transportationEnumId?: string;
     origin?: string;
     destination?: string;
     purposeOfTransportation?: string;

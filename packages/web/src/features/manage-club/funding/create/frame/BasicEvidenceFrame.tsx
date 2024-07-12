@@ -9,10 +9,11 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { FundingFrameProps } from "./FundingInfoFrame";
 
-const BasicEvidenceFrame: React.FC<FundingFrameProps> = () => {
+const BasicEvidenceFrame: React.FC<FundingFrameProps> = ({
+  funding,
+  setFunding,
+}) => {
   const [toggle, setToggle] = useState(true);
-
-  const [tradeDetail, setTradeDetail] = useState<string>("");
 
   return (
     <FoldableSectionTitle
@@ -34,8 +35,10 @@ const BasicEvidenceFrame: React.FC<FundingFrameProps> = () => {
           <TextInput
             placeholder="거래 세부항목 증빙을 입력하세요"
             area
-            value={tradeDetail}
-            handleChange={setTradeDetail}
+            value={funding.tradeDetailExplanation}
+            handleChange={value =>
+              setFunding({ ...funding, tradeDetailExplanation: value })
+            }
           />
           <FileUpload />
         </FlexWrapper>

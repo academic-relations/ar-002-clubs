@@ -6,28 +6,17 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
-import EvidenceBlockTitle from "./EvidenceBlockTitle";
+import { FundingFrameProps } from "../frame/FundingInfoFrame";
 
-interface NonCorpEvidenceBlockProps {
-  traderName: string;
-  setTraderName: (value: string) => void;
-  traderAccount: string;
-  setTraderAccount: (value: string) => void;
-  wasteExplanation: string;
-  setWasteExplanation: (value: string) => void;
-}
+import EvidenceBlockTitle from "./EvidenceBlockTitle";
 
 const FixedWidthWrapper = styled.div`
   min-width: 200px;
 `;
 
-const NonCorpEvidenceBlock: React.FC<NonCorpEvidenceBlockProps> = ({
-  traderName,
-  setTraderName,
-  traderAccount,
-  setTraderAccount,
-  wasteExplanation,
-  setWasteExplanation,
+const NonCorpEvidenceBlock: React.FC<FundingFrameProps> = ({
+  funding,
+  setFunding,
 }) => (
   <FlexWrapper direction="column" gap={4}>
     <EvidenceBlockTitle title="비법인 거래 증빙">
@@ -37,23 +26,47 @@ const NonCorpEvidenceBlock: React.FC<NonCorpEvidenceBlockProps> = ({
             <TextInput
               placeholder="거래자명을 입력하세요"
               label="거래자명"
-              value={traderName}
-              handleChange={setTraderName}
+              value={funding.nonCorporateTransaction?.traderName}
+              handleChange={value =>
+                setFunding({
+                  ...funding,
+                  nonCorporateTransaction: {
+                    ...funding.nonCorporateTransaction,
+                    traderName: value,
+                  },
+                })
+              }
             />
           </FixedWidthWrapper>
           <TextInput
             placeholder="거래자 계좌번호를 입력하세요"
             label="거래자 계좌번호"
-            value={traderAccount}
-            handleChange={setTraderAccount}
+            value={funding.nonCorporateTransaction?.traderAccountNumber}
+            handleChange={value =>
+              setFunding({
+                ...funding,
+                nonCorporateTransaction: {
+                  ...funding.nonCorporateTransaction,
+                  traderAccountNumber: value,
+                },
+              })
+            }
           />
         </FlexWrapper>
         <TextInput
           area
           placeholder="낭비가 아니라는 소명을 입력하세요"
           label="낭비가 아니라는 소명"
-          value={wasteExplanation}
-          handleChange={setWasteExplanation}
+          value={funding.nonCorporateTransaction?.wasteExplanation}
+          handleChange={value =>
+            setFunding({
+              ...funding,
+              nonCorporateTransaction: {
+                ...funding.nonCorporateTransaction,
+                wasteExplanation: value,
+              },
+            })
+          }
         />
       </Card>
     </EvidenceBlockTitle>

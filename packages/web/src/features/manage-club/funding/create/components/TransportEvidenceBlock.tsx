@@ -12,18 +12,9 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { mockParticipantData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
 import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
 
-import EvidenceBlockTitle from "./EvidenceBlockTitle";
+import { FundingFrameProps } from "../frame/FundingInfoFrame";
 
-interface TransportEvidenceBlockProps {
-  type: string;
-  setType: (value: string) => void;
-  origin: string;
-  setOrigin: (value: string) => void;
-  destination: string;
-  setDestination: (value: string) => void;
-  purpose: string;
-  setPurpose: (value: string) => void;
-}
+import EvidenceBlockTitle from "./EvidenceBlockTitle";
 
 const FixedWidthWrapper = styled.div`
   min-width: 200px;
@@ -56,15 +47,9 @@ const purposeInfo = (type: TransportationEnum) => {
   }
 };
 
-const TransportEvidenceBlock: React.FC<TransportEvidenceBlockProps> = ({
-  type,
-  setType,
-  origin,
-  setOrigin,
-  destination,
-  setDestination,
-  purpose,
-  setPurpose,
+const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
+  funding,
+  setFunding,
 }) => (
   <FlexWrapper direction="column" gap={8}>
     <EvidenceBlockTitle title="교통비 증빙">
@@ -75,29 +60,59 @@ const TransportEvidenceBlock: React.FC<TransportEvidenceBlockProps> = ({
               items={TransportationList}
               label="교통수단"
               placeholder="교통수단을 선택해주세요"
-              selectedValue={type}
-              onSelect={setType}
+              selectedValue={funding.transportation?.transportationEnumId}
+              onSelect={value =>
+                setFunding({
+                  ...funding,
+                  transportation: {
+                    ...funding.transportation,
+                    transportationEnumId: value,
+                  },
+                })
+              }
             />
           </FixedWidthWrapper>
           <TextInput
             placeholder="출발지를 입력해주세요"
             label="출발지"
-            value={origin}
-            handleChange={setOrigin}
+            value={funding.transportation?.origin}
+            handleChange={value =>
+              setFunding({
+                ...funding,
+                transportation: {
+                  ...funding.transportation,
+                  origin: value,
+                },
+              })
+            }
           />
           <TextInput
             placeholder="도착지를 입력해주세요"
             label="도착지"
-            value={destination}
-            handleChange={setDestination}
+            value={funding.transportation?.destination}
+            handleChange={value =>
+              setFunding({
+                ...funding,
+                transportation: {
+                  ...funding.transportation,
+                  destination: value,
+                },
+              })
+            }
           />
         </FlexWrapper>
-        {(type === String(TransportationEnum.Taxi) ||
-          type === String(TransportationEnum.CharterBus) ||
-          type === String(TransportationEnum.CallVan) ||
-          type === String(TransportationEnum.Airplane) ||
-          type === String(TransportationEnum.Ship) ||
-          type === String(TransportationEnum.Others)) && (
+        {(funding.transportation?.transportationEnumId ===
+          String(TransportationEnum.Taxi) ||
+          funding.transportation?.transportationEnumId ===
+            String(TransportationEnum.CharterBus) ||
+          funding.transportation?.transportationEnumId ===
+            String(TransportationEnum.CallVan) ||
+          funding.transportation?.transportationEnumId ===
+            String(TransportationEnum.Airplane) ||
+          funding.transportation?.transportationEnumId ===
+            String(TransportationEnum.Ship) ||
+          funding.transportation?.transportationEnumId ===
+            String(TransportationEnum.Others)) && (
           <FlexWrapper direction="column" gap={4}>
             <Typography
               ff="PRETENDARD"
@@ -122,11 +137,16 @@ const TransportEvidenceBlock: React.FC<TransportEvidenceBlockProps> = ({
           >
             이용 목적
           </Typography>
-          {(type === String(TransportationEnum.Cargo) ||
-            type === String(TransportationEnum.CallVan) ||
-            type === String(TransportationEnum.Airplane) ||
-            type === String(TransportationEnum.Ship) ||
-            type === String(TransportationEnum.Others)) && (
+          {(funding.transportation?.transportationEnumId ===
+            String(TransportationEnum.Cargo) ||
+            funding.transportation?.transportationEnumId ===
+              String(TransportationEnum.CallVan) ||
+            funding.transportation?.transportationEnumId ===
+              String(TransportationEnum.Airplane) ||
+            funding.transportation?.transportationEnumId ===
+              String(TransportationEnum.Ship) ||
+            funding.transportation?.transportationEnumId ===
+              String(TransportationEnum.Others)) && (
             <Typography
               ff="PRETENDARD"
               fw="REGULAR"
@@ -135,14 +155,24 @@ const TransportEvidenceBlock: React.FC<TransportEvidenceBlockProps> = ({
               color="GRAY.600"
               style={{ whiteSpace: "pre-wrap" }}
             >
-              {purposeInfo(Number(type))}
+              {purposeInfo(
+                Number(funding.transportation?.transportationEnumId),
+              )}
             </Typography>
           )}
           <TextInput
             area
             placeholder="이용 목적을 입력하세요"
-            value={purpose}
-            handleChange={setPurpose}
+            value={funding.transportation?.purposeOfTransportation}
+            handleChange={value =>
+              setFunding({
+                ...funding,
+                transportation: {
+                  ...funding.transportation,
+                  purposeOfTransportation: value,
+                },
+              })
+            }
           />
         </FlexWrapper>
       </Card>

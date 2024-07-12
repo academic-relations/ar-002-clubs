@@ -12,26 +12,20 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import { FundingInterface } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
+
 import EvidenceBlockTitle from "./EvidenceBlockTitle";
 
 interface FixtureEvidenceBlockProps {
   isFixture: boolean;
-  evidenceValue: string;
-  setEvidenceValue: (value: string) => void;
-  classValue: string;
-  setclassValue: (value: string) => void;
-  name: string;
-  setName: (value: string) => void;
+  funding: FundingInterface;
+  setFunding: React.Dispatch<React.SetStateAction<FundingInterface>>;
 }
 
 const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
   isFixture,
-  evidenceValue,
-  setEvidenceValue,
-  classValue,
-  setclassValue,
-  name,
-  setName,
+  funding,
+  setFunding,
 }) => {
   const content = isFixture ? "비품" : "동아리 용품";
 
@@ -57,25 +51,93 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               items={fixtureEvidenceList}
               label="증빙 분류"
               placeholder="증빙 분류를 선택해주세요"
-              selectedValue={evidenceValue}
-              onSelect={setEvidenceValue}
+              selectedValue={
+                isFixture
+                  ? funding.fixture?.fixtureEvidenceEnumId
+                  : funding.clubSupplies?.clubSuppliesEvidenceEnumId
+              }
+              onSelect={
+                isFixture
+                  ? value =>
+                      setFunding({
+                        ...funding,
+                        fixture: {
+                          ...funding.fixture,
+                          fixtureEvidenceEnumId: value,
+                        },
+                      })
+                  : value =>
+                      setFunding({
+                        ...funding,
+                        clubSupplies: {
+                          ...funding.clubSupplies,
+                          clubSuppliesEvidenceEnumId: value,
+                        },
+                      })
+              }
             />
             <Select
               items={fixtureClassList}
               label={`${content} 분류`}
               placeholder={`${content} 분류를 선택해주세요`}
-              selectedValue={classValue}
-              onSelect={setclassValue}
+              selectedValue={
+                isFixture
+                  ? funding.fixture?.fixtureClassEnumId
+                  : funding.clubSupplies?.clubSuppliesClassEnumId
+              }
+              onSelect={
+                isFixture
+                  ? value =>
+                      setFunding({
+                        ...funding,
+                        fixture: {
+                          ...funding.fixture,
+                          fixtureClassEnumId: value,
+                        },
+                      })
+                  : value =>
+                      setFunding({
+                        ...funding,
+                        clubSupplies: {
+                          ...funding.clubSupplies,
+                          clubSuppliesClassEnumId: value,
+                        },
+                      })
+              }
             />
           </FlexWrapper>
           <TextInput
             placeholder={`${content}명을 입력해주세요`}
             label={`${content}명`}
-            value={name}
-            handleChange={setName}
+            value={
+              isFixture
+                ? funding.fixture?.fixtureName
+                : funding.clubSupplies?.clubSuppliesName
+            }
+            handleChange={
+              isFixture
+                ? value =>
+                    setFunding({
+                      ...funding,
+                      fixture: {
+                        ...funding.fixture,
+                        fixtureName: value,
+                      },
+                    })
+                : value =>
+                    setFunding({
+                      ...funding,
+                      clubSupplies: {
+                        ...funding.clubSupplies,
+                        clubSuppliesName: value,
+                      },
+                    })
+            }
           />
           {/* TODO: EvidenceUploadWithText 컴포넌트로 변경 */}
-          {classValue && (
+          {(isFixture
+            ? funding.fixture?.fixtureClassEnumId
+            : funding.clubSupplies?.clubSuppliesClassEnumId) && (
             <FlexWrapper direction="column" gap={4}>
               <Typography
                 ff="PRETENDARD"
@@ -84,7 +146,10 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                 lh={20}
                 color="BLACK"
               >
-                {classValue === String(FixtureClassEnum.Software)
+                {(isFixture
+                  ? funding.fixture?.fixtureClassEnumId
+                  : funding.clubSupplies?.clubSuppliesClassEnumId) ===
+                String(FixtureClassEnum.Software)
                   ? "소프트웨어 증빙"
                   : `${content} 증빙`}
               </Typography>
@@ -96,13 +161,19 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                 color="GRAY.600"
                 style={{ whiteSpace: "pre-wrap" }}
               >
-                {classValue === String(FixtureClassEnum.Software)
+                {(isFixture
+                  ? funding.fixture?.fixtureClassEnumId
+                  : funding.clubSupplies?.clubSuppliesClassEnumId) ===
+                String(FixtureClassEnum.Software)
                   ? "* 동아리 성격에 합치하는 활동에 사용하는 소프트웨어라는 소명 필요"
                   : `* ${content} 사용 목적 입력 필요`}
               </Typography>
               <TextInput
                 placeholder={
-                  classValue === String(FixtureClassEnum.Software)
+                  (isFixture
+                    ? funding.fixture?.fixtureClassEnumId
+                    : funding.clubSupplies?.clubSuppliesClassEnumId) ===
+                  String(FixtureClassEnum.Software)
                     ? "소프트웨어 증빙을 입력하세요"
                     : `${content} 증빙을 입력하세요`
                 }
