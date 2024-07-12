@@ -71,7 +71,7 @@ const AddEvidenceFrame = () => {
             </Typography>
             <FlexWrapper direction="column" gap={12}>
               <CheckboxOption
-                optionText="물품"
+                optionText="동아리 용품"
                 checked={productChecked}
                 onClick={() => setProductChecked(!productChecked)}
               />
