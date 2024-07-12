@@ -13,21 +13,11 @@ import TransportEvidenceBlock from "../components/TransportEvidenceBlock";
 
 import { FundingFrameProps } from "./FundingInfoFrame";
 
-const AddEvidenceFrame: React.FC<FundingFrameProps> = () => {
+const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
+  funding,
+  setFunding,
+}) => {
   const [toggle, setToggle] = useState(true);
-
-  // TODO: 코드 좀 더 예쁘게 바꾸기
-  const [productChecked, setProductChecked] = useState(false);
-  const [fixtureChecked, setfixtureChecked] = useState(false);
-  const [transportChecked, settransportChecked] = useState(false);
-  const [nonCorpChecked, setnonCorpChecked] = useState(false);
-  const [foodChecked, setfoodChecked] = useState(false);
-  const [laborChecked, setlaborChecked] = useState(false);
-  const [externalChecked, setexternalChecked] = useState(false);
-  const [publChecked, setpublChecked] = useState(false);
-  const [profitChecked, setprofitChecked] = useState(false);
-  const [jointChecked, setjointChecked] = useState(false);
-  const [etcChecked, setetcChecked] = useState(false);
 
   const [productEvidenceValue, setProductEvidenceValue] = useState("");
   const [productClassValue, setProductClassValue] = useState("");
@@ -74,63 +64,115 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = () => {
             <FlexWrapper direction="column" gap={12}>
               <CheckboxOption
                 optionText="동아리 용품"
-                checked={productChecked}
-                onClick={() => setProductChecked(!productChecked)}
+                checked={funding.purposeId === 0}
+                onClick={() => {}}
               />
               <CheckboxOption
                 optionText="비품"
-                checked={fixtureChecked}
-                onClick={() => setfixtureChecked(!fixtureChecked)}
+                checked={funding.isFixture}
+                onClick={() =>
+                  setFunding({
+                    ...funding,
+                    isFixture: !funding.isFixture,
+                  })
+                }
               />
               <CheckboxOption
                 optionText="교통비"
-                checked={transportChecked}
-                onClick={() => settransportChecked(!transportChecked)}
+                checked={funding.isTransportation}
+                onClick={() =>
+                  setFunding({
+                    ...funding,
+                    isTransportation: !funding.isTransportation,
+                  })
+                }
               />
               <CheckboxOption
                 optionText="비법인 거래"
-                checked={nonCorpChecked}
-                onClick={() => setnonCorpChecked(!nonCorpChecked)}
+                checked={funding.isNonCorporateTransaction}
+                onClick={() =>
+                  setFunding({
+                    ...funding,
+                    isNonCorporateTransaction:
+                      !funding.isNonCorporateTransaction,
+                  })
+                }
               />
               <CheckboxOption
                 optionText="식비"
-                checked={foodChecked}
-                onClick={() => setfoodChecked(!foodChecked)}
+                checked={funding.isFoodExpense}
+                onClick={() =>
+                  setFunding({
+                    ...funding,
+                    isFoodExpense: !funding.isFoodExpense,
+                  })
+                }
               />
               <CheckboxOption
                 optionText="근로 계약"
-                checked={laborChecked}
-                onClick={() => setlaborChecked(!laborChecked)}
+                checked={funding.isLaborContract}
+                onClick={() =>
+                  setFunding({
+                    ...funding,
+                    isLaborContract: !funding.isLaborContract,
+                  })
+                }
               />
               <CheckboxOption
                 optionText="외부 행사 참가비"
-                checked={externalChecked}
-                onClick={() => setexternalChecked(!externalChecked)}
+                checked={funding.isExternalEventParticipationFee}
+                onClick={() =>
+                  setFunding({
+                    ...funding,
+                    isExternalEventParticipationFee:
+                      !funding.isExternalEventParticipationFee,
+                  })
+                }
               />
               <CheckboxOption
                 optionText="발간물"
-                checked={publChecked}
-                onClick={() => setpublChecked(!publChecked)}
+                checked={funding.isPublication}
+                onClick={() =>
+                  setFunding({
+                    ...funding,
+                    isPublication: !funding.isPublication,
+                  })
+                }
               />
               <CheckboxOption
                 optionText="수익 사업"
-                checked={profitChecked}
-                onClick={() => setprofitChecked(!profitChecked)}
+                checked={funding.isProfitMakingActivity}
+                onClick={() =>
+                  setFunding({
+                    ...funding,
+                    isProfitMakingActivity: !funding.isProfitMakingActivity,
+                  })
+                }
               />
               <CheckboxOption
                 optionText="공동 경비"
-                checked={jointChecked}
-                onClick={() => setjointChecked(!jointChecked)}
+                checked={funding.isJointExpense}
+                onClick={() =>
+                  setFunding({
+                    ...funding,
+                    isJointExpense: !funding.isJointExpense,
+                  })
+                }
               />
               <CheckboxOption
                 optionText="기타"
-                checked={etcChecked}
-                onClick={() => setetcChecked(!etcChecked)}
+                checked={funding.isEtcExpense}
+                onClick={() =>
+                  setFunding({
+                    ...funding,
+                    isEtcExpense: !funding.isEtcExpense,
+                  })
+                }
               />
             </FlexWrapper>
           </FlexWrapper>
         </Card>
-        {productChecked && (
+        {funding.purposeId === 0 && (
           <FixtureEvidenceBlock
             isFixture={false}
             evidenceValue={productEvidenceValue}
@@ -141,7 +183,7 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = () => {
             setName={setProductName}
           />
         )}
-        {fixtureChecked && (
+        {funding.isFixture && (
           <FixtureEvidenceBlock
             isFixture
             evidenceValue={fixtureEvidenceValue}
@@ -152,7 +194,7 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = () => {
             setName={setFixtureName}
           />
         )}
-        {transportChecked && (
+        {funding.isTransportation && (
           <TransportEvidenceBlock
             type={transportType}
             setType={setTransportType}
@@ -164,7 +206,7 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = () => {
             setPurpose={setTransportPurpose}
           />
         )}
-        {nonCorpChecked && (
+        {funding.isNonCorporateTransaction && (
           <NonCorpEvidenceBlock
             traderName={nonCorpTraderName}
             setTraderName={setNonCorpTraderName}
@@ -174,49 +216,49 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = () => {
             setWasteExplanation={setNonCorpWasteExplanation}
           />
         )}
-        {foodChecked && (
+        {funding.isFoodExpense && (
           <OtherEvidenceBlock
             content="식비"
             value={foodValue}
             onChange={setFoodValue}
           />
         )}
-        {laborChecked && (
+        {funding.isLaborContract && (
           <OtherEvidenceBlock
             content="근로 계약"
             value={laborValue}
             onChange={setLaborValue}
           />
         )}
-        {externalChecked && (
+        {funding.isExternalEventParticipationFee && (
           <OtherEvidenceBlock
             content="외부 행사 참가비"
             value={externalValue}
             onChange={setExternalValue}
           />
         )}
-        {publChecked && (
+        {funding.isPublication && (
           <OtherEvidenceBlock
             content="발간물"
             value={publValue}
             onChange={setPublValue}
           />
         )}
-        {profitChecked && (
+        {funding.isProfitMakingActivity && (
           <OtherEvidenceBlock
             content="수익 사업"
             value={profitValue}
             onChange={setProfitValue}
           />
         )}
-        {jointChecked && (
+        {funding.isJointExpense && (
           <OtherEvidenceBlock
             content="공동 경비"
             value={jointValue}
             onChange={setJointValue}
           />
         )}
-        {etcChecked && (
+        {funding.isEtcExpense && (
           <OtherEvidenceBlock
             content="기타"
             value={etcValue}
