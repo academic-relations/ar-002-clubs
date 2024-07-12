@@ -134,6 +134,59 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                     })
             }
           />
+          <FlexWrapper direction="row" gap={32}>
+            <TextInput
+              label="물품 개수"
+              placeholder="물품 개수를 입력해주세요"
+              value={
+                isFixture
+                  ? funding.fixture?.numberOfFixture
+                  : funding.clubSupplies?.numberOfClubSupplies
+              }
+              handleChange={
+                isFixture
+                  ? value =>
+                      setFunding({
+                        ...funding,
+                        fixture: {
+                          ...funding.fixture,
+                          numberOfFixture: value,
+                        },
+                      })
+                  : value =>
+                      setFunding({
+                        ...funding,
+                        clubSupplies: {
+                          ...funding.clubSupplies,
+                          numberOfClubSupplies: value,
+                        },
+                      })
+              }
+            />
+            <TextInput
+              label="물품 개별 단가"
+              placeholder="물품 개별 단가를 입력해주세요"
+              value={
+                isFixture
+                  ? funding.fixture?.priceOfFixture
+                  : funding.clubSupplies?.priceOfClubSupplies
+              }
+              handleChange={value =>
+                isFixture
+                  ? setFunding({
+                      ...funding,
+                      fixture: { ...funding.fixture, priceOfFixture: value },
+                    })
+                  : setFunding({
+                      ...funding,
+                      clubSupplies: {
+                        ...funding.clubSupplies,
+                        priceOfClubSupplies: value,
+                      },
+                    })
+              }
+            />
+          </FlexWrapper>
           {/* TODO: EvidenceUploadWithText 컴포넌트로 변경 */}
           {(isFixture
             ? funding.fixture?.fixtureClassEnumId

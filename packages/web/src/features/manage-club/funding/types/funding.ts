@@ -13,8 +13,9 @@ export interface FundingInterface {
     clubSuppliesClassEnumId?: string;
     clubSuppliesPurpose?: string;
     clubSuppliesSoftwareEvidence?: string;
-    numberOfClubSupplies?: number;
-    priceOfClubSupplies?: number;
+    // unitInput 추가되면 number로 변경
+    numberOfClubSupplies?: string;
+    priceOfClubSupplies?: string;
   };
 
   isFixture: boolean;
@@ -24,8 +25,9 @@ export interface FundingInterface {
     fixtureClassEnumId?: string;
     fixturePurpose?: string;
     fixtureSoftwareEvidence?: string;
-    numberOfFixture?: number;
-    priceOfFixture?: number;
+    // unitInput 추가되면 number로 변경
+    numberOfFixture?: string;
+    priceOfFixture?: string;
   };
 
   isTransportation: boolean;
