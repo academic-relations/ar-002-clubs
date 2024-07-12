@@ -161,7 +161,7 @@ const requestBody = requestPreBody.superRefine((data, ctx) => {
       });
     }
 
-    if (data.clubSuppliesClassEnumId === 4) {
+    if (data.clubSuppliesClassEnumId === number(clubSuppliesClassEnumId.Software)) {
       if (!data.clubSuppliesSoftwareEvidence) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
