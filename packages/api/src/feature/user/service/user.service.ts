@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { ClubStudentTRepository } from "@sparcs-clubs/api/common/repository/club.club-student-t.repository";
 import { UserRepository } from "@sparcs-clubs/api/common/repository/user.repository";
+import ClubStudentTRepository from "@sparcs-clubs/api/feature/club/repository/club.club-student-t.repository";
 
 @Injectable()
 export class UserService {

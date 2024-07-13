@@ -6,14 +6,14 @@ import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 
-interface NoticePaginationProps {
+interface PaginationProps {
   totalPage: number;
   currentPage: number;
   limit: number;
   setPage: React.Dispatch<number>;
 }
 
-const NoticePaginationInner = styled.div`
+const PaginationInner = styled.div`
   flex-basis: auto;
   flex-grow: 0;
   flex-shrink: 0;
@@ -97,7 +97,7 @@ const moveToRightRange = (
   setPage(destPage);
 };
 
-const NoticePagination: React.FC<NoticePaginationProps> = ({
+const Pagination: React.FC<PaginationProps> = ({
   totalPage,
   currentPage,
   limit,
@@ -105,10 +105,11 @@ const NoticePagination: React.FC<NoticePaginationProps> = ({
 }) => {
   // 현재 페이지 구간. 0: 1 ~ 10, 1: 11 ~ 20, ...
   // 페이지는 1부터 시작하기 때문에, 1 뺴고 나누어야 구간이 맞더라구요
+  // TODO: totalPage % limit 이 0일 경우 마지막에 빈 페이지가 생기는 문제 해결
   const currentRange = Math.floor((currentPage - 1) / limit);
   const lastRange = Math.floor(totalPage / limit);
   return (
-    <NoticePaginationInner>
+    <PaginationInner>
       {currentRange > 0 ? (
         <ButtonWrapper
           onClick={() => moveToLeftRange(currentRange, limit, setPage)}
@@ -130,9 +131,8 @@ const NoticePagination: React.FC<NoticePaginationProps> = ({
       ) : (
         <div />
       )}
-    </NoticePaginationInner>
+    </PaginationInner>
   );
 };
 
-export default NoticePagination;
-// TODO: common component로 이동
+export default Pagination;

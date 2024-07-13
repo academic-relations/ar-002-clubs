@@ -1,13 +1,12 @@
 import React from "react";
 
-import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
-
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
   TableRow,
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import { CmsTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import {
   formatDate,
   formatDateTime,
@@ -16,19 +15,10 @@ import {
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import type { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
-import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface CommonSpaceTableProps {
   spaceList: ApiCms006ResponseOk;
 }
-
-const TagList: {
-  [key in CommonSpaceUsageOrderStatusEnum]: StatusDetail;
-} = {
-  [CommonSpaceUsageOrderStatusEnum.Applied]: { text: "신청", color: "BLUE" },
-  [CommonSpaceUsageOrderStatusEnum.Canceled]: { text: "취소", color: "GRAY" },
-  [CommonSpaceUsageOrderStatusEnum.Used]: { text: "사용", color: "GREEN" },
-};
 
 const MyCommonSpaceTable: React.FC<CommonSpaceTableProps> = ({ spaceList }) => (
   <TableWrapper>
@@ -53,7 +43,7 @@ const MyCommonSpaceTable: React.FC<CommonSpaceTableProps> = ({ spaceList }) => (
       </TableCell>
     </TableRow>
     {spaceList.items.map((space, index) => {
-      const { color, text } = getTagDetail(space.statusEnum, TagList);
+      const { color, text } = getTagDetail(space.statusEnum, CmsTagList);
       return (
         <TableRow isBorder key={space.chargeStudentName + String(index)}>
           <TableCell type="Tag" width="10%" minWidth={90}>

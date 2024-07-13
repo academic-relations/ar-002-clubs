@@ -63,4 +63,28 @@ export class ClubRepresentativeDRepository {
 
     return representative;
   }
+
+  async findRepresentativeByClubIdAndStudentId(
+    studentId: number,
+    clubId: number,
+  ): Promise<boolean> {
+    const crt = getKSTDate();
+    const result = !!(await this.db
+      .select({ id: ClubRepresentativeD.id })
+      .from(ClubRepresentativeD)
+      .where(
+        and(
+          eq(ClubRepresentativeD.clubId, clubId),
+          eq(ClubRepresentativeD.studentId, studentId),
+          lte(ClubRepresentativeD.startTerm, crt),
+          or(
+            gte(ClubRepresentativeD.endTerm, crt),
+            isNull(ClubRepresentativeD.endTerm),
+          ),
+        ),
+      )
+      .limit(1)
+      .then(takeUnique));
+    return result;
+  }
 }

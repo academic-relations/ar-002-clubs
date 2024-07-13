@@ -7,15 +7,13 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import Info from "@sparcs-clubs/web/common/components/Info";
 import {
   ListContainer,
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
 import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
-import ProgressCheckSectionWrapper from "@sparcs-clubs/web/common/components/ProgressCheckSection/ProgressCheckSectionWrapper";
+import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 const ActivityWrapper = styled.div`
@@ -55,44 +53,37 @@ const ManageCertificateDetailFrame = () => {
         enableLast
       />
       <Card outline gap={20}>
-        {/* TODO: 너무 길다면.. 나중에 컴포넌트로 따로 빼기 */}
-        <ProgressCheckSectionWrapper>
-          <Typography
-            ff="PRETENDARD"
-            fw="MEDIUM"
-            fs={16}
-            lh={20}
-            color="BLACK"
-            style={{ width: "100%" }}
-          >
-            신청 상태
-          </Typography>
-          <ProgressCheckSection
-            labels={[
-              "신청 완료",
-              "동아리 대표자 승인 대기",
-              "동아리 연합회 승인 대기",
-              "발급 대기",
-            ]}
-            status={[Status.Approved]}
-            dates={[new Date()]}
-          />
-          <Info text="동아리 대표자의 승인이 있어야 다음 단계로 넘어갈 수 있습니다. 반려 시 사유를 입력해야함" />
-          <TextInput
-            placeholder="반려 사유를 입력해주세요"
-            label="반려 사유 (반려 시에만 입력)"
-            area
-            value={rejectReason}
-            handleChange={setRejectReason}
-          />
-          <ButtonWrapper>
-            <Button style={{ width: "max-content" }}>신청 승인</Button>
-            <Button style={{ width: "max-content" }} type={rejectButtonType}>
-              신청 반려
-            </Button>
-            {/* TODO: onClick 달기 */}
-          </ButtonWrapper>
-        </ProgressCheckSectionWrapper>
+        <ProgressStatus
+          labels={[
+            "신청 완료",
+            "동아리 대표자 승인 대기",
+            "동아리 연합회 승인 대기",
+            "발급 대기",
+          ]}
+          progress={[{ status: Status.Approved, date: new Date() }]}
+          infoText="동아리 대표자의 승인이 있어야 다음 단계로 넘어갈 수 있습니다. 반려 시 사유를 입력해야함"
+          optional={
+            <>
+              <TextInput
+                placeholder="반려 사유를 입력해주세요"
+                label="반려 사유 (반려 시에만 입력)"
+                area
+                value={rejectReason}
+                handleChange={setRejectReason}
+              />
+              <ButtonWrapper>
+                <Button style={{ width: "max-content" }}>신청 승인</Button>
+                <Button
+                  style={{ width: "max-content" }}
+                  type={rejectButtonType}
+                >
+                  신청 반려
+                </Button>
+                {/* TODO: onClick 달기 */}
+              </ButtonWrapper>
+            </>
+          }
+        />
         {/* TODO: 아래 정보들 백 연결하기 */}
         <FlexWrapper direction="column" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">

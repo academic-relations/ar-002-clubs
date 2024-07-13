@@ -83,6 +83,20 @@ const credits: Credits[] = [
         role: "??",
         roleType: RoleType.member,
       },
+      {
+        nickname: "daystar",
+        name: "권진현",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "여름에 코딩하면 덜 더워요!",
+      },
+      {
+        nickname: "chacha",
+        name: "안채연",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "앗차차 clubs 신입 차차예요",
+      },
     ],
   },
   {

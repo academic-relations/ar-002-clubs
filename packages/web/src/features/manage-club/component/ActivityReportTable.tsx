@@ -1,55 +1,23 @@
 import React from "react";
 
-import { format } from "date-fns";
-import { ko } from "date-fns/locale";
-
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
   TableRow,
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import {
+  ActTypeTagList,
+  ApplyTagList,
+} from "@sparcs-clubs/web/constants/tableTagList";
+import { formatDate } from "@sparcs-clubs/web/utils/Date/formateDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-import {
-  type Activity,
-  ActivityStatusEnum,
-  ActivityTypeEnum,
-} from "../service/_mock/mockManageClub";
-
-import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+import { type Activity } from "../service/_mock/mockManageClub";
 
 interface ActivityTableProps {
   activityList: Activity[];
 }
-const ActivityTagList: {
-  [key in ActivityStatusEnum]: StatusDetail;
-} = {
-  [ActivityStatusEnum.Writing]: { text: "작성 중", color: "BLUE" },
-  [ActivityStatusEnum.Applied]: { text: "신청 완료", color: "PURPLE" },
-  [ActivityStatusEnum.Approved]: { text: "승인 완료", color: "GREEN" },
-  [ActivityStatusEnum.Rejected]: { text: "신청 반려", color: "RED" },
-};
-
-const TypeTagList: {
-  [key in ActivityTypeEnum]: StatusDetail;
-} = {
-  [ActivityTypeEnum.FitInside]: {
-    text: "동아리 성격에 합치하는 내부 활동",
-    color: "YELLOW",
-  },
-  [ActivityTypeEnum.FitOutside]: {
-    text: "동아리 성격에 합치하는 외부 활동",
-    color: "BLUE",
-  },
-  [ActivityTypeEnum.NotFit]: {
-    text: "동아리 성격에 합치하지 않는 활동",
-    color: "PURPLE",
-  },
-};
-
-const formatDate = (date: Date) =>
-  format(date, "yyyy년 M월 d일 (iii)", { locale: ko });
 
 const ActivityReportTable: React.FC<ActivityTableProps> = ({
   activityList,
@@ -72,11 +40,11 @@ const ActivityReportTable: React.FC<ActivityTableProps> = ({
     {activityList.map((activity, index) => {
       const { color: actColor, text: actText } = getTagDetail(
         activity.status,
-        ActivityTagList,
+        ApplyTagList,
       );
       const { color: typeColor, text: typeText } = getTagDetail(
         activity.type,
-        TypeTagList,
+        ActTypeTagList,
       );
       return (
         <TableRow key={activity.name + String(index)} isBorder>

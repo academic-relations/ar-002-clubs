@@ -3,8 +3,10 @@
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 
+import logger from "../common/util/logger";
 import { env } from "../env";
 
+import * as activitySchema from "./schema/activity.schema";
 import * as commonSpaceSchema from "./schema/common-space.schema";
 import * as divisionSchema from "./schema/division.schema";
 import * as noticeSchema from "./schema/notice.schema";
@@ -24,7 +26,7 @@ const createConnection = async () => {
 
   connection.on("error", async err => {
     if (err.code === "PROTOCOL_CONNECTION_LOST") {
-      console.error("Database connection was closed. Reconnecting...");
+      logger.error("Database connection was closed. Reconnecting...");
       connectionInstance = await createConnection();
     } else {
       throw err;
@@ -41,7 +43,7 @@ export const getConnection = async () => {
     try {
       await connectionInstance.ping();
     } catch (error) {
-      console.error("Connection ping failed, reconnecting...", error);
+      logger.error("Connection ping failed, reconnecting...", error);
       connectionInstance = await createConnection();
     }
   }
@@ -53,6 +55,7 @@ export const getDbInstance = async () => {
     const connection = await getConnection();
     dbInstance = drizzle(connection, {
       schema: {
+        activitySchema,
         commonSpaceSchema,
         divisionSchema,
         noticeSchema,

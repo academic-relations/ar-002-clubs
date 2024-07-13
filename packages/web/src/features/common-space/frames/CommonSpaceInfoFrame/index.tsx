@@ -1,10 +1,14 @@
 import React, { useCallback, useState } from "react";
 
+import { subSeconds } from "date-fns";
+
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
+
+import postCommonSpaceUsageOrder from "@sparcs-clubs/web/features/common-space/service/postCommonSpaceUsageOrder";
 
 import CommonSpaceInfoFirstFrame from "./CommonSpaceInfoFirstFrame";
 import CommonSpaceInfoSecondFrame from "./CommonSpaceInfoSecondFrame";
@@ -65,11 +69,25 @@ const CommonSpaceInfoFrame: React.FC<CommonSpaceFrameProps> = ({
     setStep(step - 1);
   }, [step, setStep, commonSpace, setCommonSpace]);
 
+  const handleSubmit = useCallback(() => {
+    const { email, clubId, startTerm, endTerm } = commonSpace.body;
+    const { spaceId } = commonSpace.param;
+    const correct = email && clubId && startTerm && endTerm && spaceId;
+    if (correct) {
+      postCommonSpaceUsageOrder(
+        { spaceId },
+        { email, clubId, startTerm, endTerm: subSeconds(endTerm, 1) },
+      );
+    }
+  }, [commonSpace]);
+
   const onNext = useCallback(() => {
     if (nextEnabled && step < frames.length - 1) {
       setStep(step + 1);
+    } else {
+      handleSubmit();
     }
-  }, [nextEnabled, step, setStep]);
+  }, [nextEnabled, step, setStep, handleSubmit]);
 
   return (
     <FlexWrapper direction="column" gap={60}>

@@ -11,9 +11,7 @@ interface RangeCalendarProps {
   setRentalDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   setReturnDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   workDates: Date[];
-  setShowPeriodModal: React.Dispatch<
-    React.SetStateAction<"none" | "reset" | "change">
-  >;
+  openPeriodModal: (state: "change" | "reset") => void;
   setPendingDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   isRentalListEmpty: boolean;
 }
@@ -24,7 +22,7 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
   setRentalDate,
   setReturnDate,
   workDates,
-  setShowPeriodModal,
+  openPeriodModal,
   setPendingDate,
   isRentalListEmpty,
 }) => {
@@ -63,7 +61,7 @@ const RangeCalendar: React.FC<RangeCalendarProps> = ({
         setRentalDate(date);
       } else {
         setPendingDate(date);
-        setShowPeriodModal("change");
+        openPeriodModal("change");
       }
     }
   };

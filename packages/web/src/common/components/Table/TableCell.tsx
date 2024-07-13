@@ -6,8 +6,15 @@ import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 import Icon from "../Icon";
 
+export type TableCellType =
+  | "Default"
+  | "None"
+  | "Tag"
+  | "Header"
+  | "HeaderSort";
+
 interface TableCellProps {
-  type: "Default" | "None" | "Tag" | "Header" | "HeaderSort";
+  type: TableCellType;
   children: ReactNode;
   width?: string | number;
   minWidth?: number;

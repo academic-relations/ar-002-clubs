@@ -1,8 +1,5 @@
 import React from "react";
 
-import { format } from "date-fns";
-import { ko } from "date-fns/locale";
-
 import TableButtonCell from "@sparcs-clubs/web/common/components/Table/TableButtonCell";
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
@@ -10,6 +7,8 @@ import {
   TableWrapper,
 } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import { MemTagList } from "@sparcs-clubs/web/constants/tableTagList";
+import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formateDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import {
@@ -17,22 +16,9 @@ import {
   MemberStatusEnum,
 } from "../service/_mock/mockManageClub";
 
-import type { StatusDetail } from "@sparcs-clubs/web/utils/getTagDetail";
-
 interface MembersTableProps {
   memberList: Members[];
 }
-
-const TagList: {
-  [key in MemberStatusEnum]: StatusDetail;
-} = {
-  [MemberStatusEnum.Applied]: { text: "신청", color: "BLUE" },
-  [MemberStatusEnum.Approved]: { text: "승인", color: "YELLOW" },
-  [MemberStatusEnum.Rejected]: { text: "반려", color: "RED" },
-};
-
-const formatDate = (date: Date) =>
-  format(date, "yyyy년 M월 d일 (iii) HH:mm", { locale: ko });
 
 const MembersTable: React.FC<MembersTableProps> = ({ memberList }) => (
   <TableWrapper>
@@ -60,14 +46,14 @@ const MembersTable: React.FC<MembersTableProps> = ({ memberList }) => (
       </TableCell>
     </TableRow>
     {memberList.map(member => {
-      const { color, text } = getTagDetail(member.status, TagList);
+      const { color, text } = getTagDetail(member.status, MemTagList);
       return (
         <TableRow isBorder key={member.studentId}>
           <TableCell type="Tag" width="10%" minWidth={90}>
             <Tag color={color}>{text}</Tag>
           </TableCell>
           <TableCell type="Default" width="20%" minWidth={220}>
-            {formatDate(member.applicationDate)}
+            {formatDateTime(member.applicationDate)}
           </TableCell>
           <TableCell type="Default" width="10%" minWidth={120}>
             {member.studentId}
