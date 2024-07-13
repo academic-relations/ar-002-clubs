@@ -29,8 +29,17 @@ const MemberCard = ({ member }: { member: Member }) => {
     setDisplayText(member.role);
   };
 
+  const handleJihoClick = () => {
+    window.location.href =
+      "https://www.notion.so/sparcs/28c78fceb8554400ba3d90d0a25d4559?pvs=4";
+  };
+
   return (
-    <Card padding="16px 20px" gap={8}>
+    <Card
+      padding="16px 20px"
+      gap={8}
+      onClick={member.nickname === "night" ? handleJihoClick : () => {}}
+    >
       <MemberWrapper>
         <Image src={SparcsLogo} alt="SPARCS Logo" height={24} />
         <Typography
