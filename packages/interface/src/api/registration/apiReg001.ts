@@ -26,13 +26,16 @@ const requestBody = z.object({
   enName: zClubName,
   studentId: z.coerce.number().int().min(1), // 동아리 대표자 학생 id
   phoneNumber: zKrPhoneNumber, // 대표자 전화번호
-  foundedAt: z.coerce.date(), // 입력받은 날짜에 상관없에 연도값만이 저장됩니다.
+  /**
+   * 가동아리 신청의 경우 설립연월이 신청에 포함됩니다.
+   * 신규등록 | 재등록의 경우 설립연도가 신청에 포함됩니다.
+   */
+  foundedAt: z.coerce.date(),
   divisionId: z.coerce.number().int().min(1),
   kr활동분야: z.string(),
   en활동분야: z.string(),
   /**
-   * 지도교수 매개변수는 가동아리 신청의 경우 undefined여야 합니다.
-   * 신규등록 | 재등록의 경우 지도교수란이 기입되어 있으면 지도교수를 포함한 신청이고,
+   * 지도교수란이 기입되어 있으면 지도교수를 포함한 신청이고,
    * 없다면 지도교수 없는 동아리 신청으로 처리됩니다.
    */
   professor: z.union([
