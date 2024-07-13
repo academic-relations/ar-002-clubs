@@ -12,6 +12,10 @@ import type {
   ApiAcf003RequestQuery,
   ApiAcf003ResponseOk,
 } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf003";
+import type {
+  ApiAcf007RequestQuery,
+  ApiAcf007ResponseOk,
+} from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf007";
 
 @Injectable()
 export class ActivityCertificateService {
@@ -63,6 +67,42 @@ export class ActivityCertificateService {
     const items = await Promise.all(
       (
         await this.activityCertificateRepository.findActivityCertificatesPageByClubIdAndCreatedAtIn(
+          query,
+        )
+      ).map(async row => ({
+        orderId: row.id,
+        studentName: (
+          await this.studentRepository.findStudentById(row.studentId)
+        ).name,
+        issuedNumber: row.issueNumber,
+        statusEnum: row.activityCertificateStatusEnum,
+        createdAt: row.createdAt,
+      })),
+    );
+
+    return {
+      total,
+      items,
+      offset: query.pageOffset,
+    };
+  }
+
+  async getStudentActivityCertificatesMy(
+    query: ApiAcf007RequestQuery,
+  ): Promise<ApiAcf007ResponseOk> {
+    const tempStudentId = 605; // 하승종 id를 임시로 씁시다
+
+    const total =
+      await this.activityCertificateRepository.countActivityCertificatesByStudentIdAndCreatedAtIn(
+        tempStudentId,
+        query.startDate,
+        query.endDate,
+      );
+
+    const items = await Promise.all(
+      (
+        await this.activityCertificateRepository.paginateByStudentIdAndCreatedAtIn(
+          tempStudentId,
           query,
         )
       ).map(async row => ({

@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import { and, count, desc, eq, gte, lte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -9,6 +10,7 @@ import {
 } from "src/drizzle/schema/activity-certificate.schema";
 
 import type { ApiAcf003RequestQuery } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf003";
+import type { ApiAcf007RequestQuery } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf007";
 
 @Injectable()
 export class ActivityCertificateRepository {
@@ -26,6 +28,31 @@ export class ActivityCertificateRepository {
         .where(
           and(
             eq(ActivityCertificate.clubId, clubId),
+            startDate !== undefined
+              ? gte(ActivityCertificate.createdAt, startDate)
+              : undefined,
+            endDate !== undefined
+              ? lte(ActivityCertificate.createdAt, endDate)
+              : undefined,
+          ),
+        )
+    ).at(0).count;
+
+    return numberOfOrders;
+  }
+
+  async countActivityCertificatesByStudentIdAndCreatedAtIn(
+    StudentId: number,
+    startDate?: Date,
+    endDate?: Date,
+  ): Promise<number> {
+    const numberOfOrders = (
+      await this.db
+        .select({ count: count() })
+        .from(ActivityCertificate)
+        .where(
+          and(
+            eq(ActivityCertificate.studentId, StudentId),
             startDate !== undefined
               ? gte(ActivityCertificate.createdAt, startDate)
               : undefined,
@@ -65,6 +92,33 @@ export class ActivityCertificateRepository {
     return orders;
   }
 
+  async paginateByStudentIdAndCreatedAtIn(
+    studentId: number,
+    query: ApiAcf007RequestQuery,
+  ) {
+    const offset = (query.pageOffset - 1) * query.itemCount;
+
+    const orders = await this.db
+      .select()
+      .from(ActivityCertificate)
+      .where(
+        and(
+          eq(ActivityCertificate.studentId, studentId),
+          query.startDate !== undefined
+            ? gte(ActivityCertificate.createdAt, query.startDate)
+            : undefined,
+          query.endDate !== undefined
+            ? lte(ActivityCertificate.createdAt, query.endDate)
+            : undefined,
+        ),
+      )
+      .orderBy(desc(ActivityCertificate.createdAt))
+      .limit(query.itemCount)
+      .offset(offset);
+
+    return orders;
+  }
+
   async postActivityCertificate({
     clubId,
     studentId,
@@ -85,7 +139,8 @@ export class ActivityCertificateRepository {
         studentId,
         studentPhoneNumber,
         issueNumber: issuedNumber,
-        activityCertificateStatusEnum: 1,
+        activityCertificateStatusEnum:
+          ActivityCertificateOrderStatusEnum.Applied,
       });
 
       items.forEach(async item => {

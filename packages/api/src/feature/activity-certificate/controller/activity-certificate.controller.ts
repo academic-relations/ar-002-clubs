@@ -7,6 +7,7 @@ import apiAcf002, {
   ApiAcf002ResponseOk,
 } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf002";
 import apiAcf003 from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf003";
+import apiAcf007 from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf007";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -16,6 +17,10 @@ import type {
   ApiAcf003RequestQuery,
   ApiAcf003ResponseOk,
 } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf003";
+import type {
+  ApiAcf007RequestQuery,
+  ApiAcf007ResponseOk,
+} from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf007";
 
 @Controller()
 export class ActivityCertificateController {
@@ -48,6 +53,19 @@ export class ActivityCertificateController {
   ): Promise<ApiAcf003ResponseOk> {
     const orders =
       await this.activityCertificateService.getStudentActivityCertificates(
+        query,
+      );
+
+    return orders;
+  }
+
+  @Get("/student/activity-certificates/my")
+  @UsePipes(new ZodPipe(apiAcf007))
+  async getStudentActivityCertificatesMy(
+    @Query() query: ApiAcf007RequestQuery,
+  ): Promise<ApiAcf007ResponseOk> {
+    const orders =
+      await this.activityCertificateService.getStudentActivityCertificatesMy(
         query,
       );
 

@@ -8,7 +8,7 @@ import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/comm
  * @description 자신이 신청한 활동확인서 발급 신청 목록을 가져옵니다
  */
 
-const url = () => `/student/activity-certificates`;
+const url = () => `/student/activity-certificates/my`;
 const method = "GET";
 
 const requestParam = z.object({});
