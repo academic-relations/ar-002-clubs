@@ -38,6 +38,13 @@ const credits: Credits[] = [
         comment: "(งᐛ)ว (งᐖ )ว",
       },
       {
+        nickname: "eel",
+        name: "최우정",
+        role: "APM(FE)",
+        roleType: RoleType.APM_FE,
+        comment: "일은 eel해요",
+      },
+      {
         nickname: "hama",
         name: "하승종",
         role: "APM(BE)",
@@ -78,18 +85,13 @@ const credits: Credits[] = [
         roleType: RoleType.member,
         comment: "열심히 해서 많은 도움되고 싶어요😊",
       },
-      {
-        nickname: "eel",
-        name: "최우정",
-        role: "FE / BE",
-        roleType: RoleType.member,
-        comment: "일은 eel해요",
-      },
+
       {
         nickname: "ellen",
         name: "박성빈",
         role: "BE",
         roleType: RoleType.member,
+        comment: "Clubs 신입입니다!!",
       },
       {
         nickname: "mingle",
@@ -113,7 +115,7 @@ const credits: Credits[] = [
       {
         nickname: "night",
         name: "박지호",
-        role: "??",
+        role: "BDFL",
         roleType: RoleType.member,
         comment: "범인은... clubs...",
       },
