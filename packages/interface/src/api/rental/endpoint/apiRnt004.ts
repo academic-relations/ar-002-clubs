@@ -12,7 +12,7 @@ const url = (rentalId: number) => `/student/rentals/rental/${rentalId}`;
 const method = "GET";
 
 const requestParam = z.object({
-  rentalId: z.number().int().min(1),
+  rentalId: z.coerce.number().int().min(1),
 });
 
 const requestQuery = z.object({});
