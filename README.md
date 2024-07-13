@@ -28,4 +28,4 @@ pnpm generate
 pnpm dev
 ```
 
-학술협력팀 최고!
+학술협력팀 최고! :)
