@@ -46,7 +46,7 @@ export class FileService {
 
     // Presigned URL을 생성해서 반환한다.
     const uploadUrl = await getSignedUrl(this.s3Client, command, {
-      expiresIn: 60,
+      expiresIn: 600,
     });
     return { uploadUrl, fileId };
   }
@@ -65,7 +65,7 @@ export class FileService {
     });
 
     const fileUrl = await getSignedUrl(this.s3Client, command, {
-      expiresIn: 60,
+      expiresIn: 600,
     });
 
     return fileUrl;
