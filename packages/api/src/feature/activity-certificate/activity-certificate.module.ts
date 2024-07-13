@@ -1,6 +1,8 @@
 import { Module } from "@nestjs/common";
 
 import { ClubRepository } from "@sparcs-clubs/api/common/repository/club.repository";
+import { StudentRepository } from "@sparcs-clubs/api/common/repository/student.repository";
+import { ClubRepresentativeDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-representative-d.repository";
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 
 import { ActivityCertificateController } from "./controller/activity-certificate.controller";
@@ -14,6 +16,8 @@ import { ActivityCertificateService } from "./service/activity-certificate.servi
     ActivityCertificateService,
     ActivityCertificateRepository,
     ClubRepository,
+    ClubRepresentativeDRepository,
+    StudentRepository,
   ],
 })
 export class ActivityCertificateModule {}
