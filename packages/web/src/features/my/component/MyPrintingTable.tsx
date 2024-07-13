@@ -1,12 +1,12 @@
 import React from "react";
 
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
-  TableBodyWrapper,
-  TableHeadWrapper,
-  TableRow,
-  TableWrapper,
-} from "@sparcs-clubs/web/common/components/Table/TableWrapper";
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { PrtTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formateDate";
@@ -19,62 +19,66 @@ interface PrintingTableProps {
   printingList: ApiPrt001ResponseOk;
 }
 
-const MyPrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
-  <TableWrapper>
-    <TableHeadWrapper>
-      <TableRow>
-        <TableCell type="Header" width="10%" minWidth={90}>
-          상태
-        </TableCell>
-        <TableCell type="Header" width="24%">
-          신청 일시
-        </TableCell>
-        <TableCell type="Header" width="18%" minWidth={120}>
-          동아리
-        </TableCell>
-        <TableCell type="Header" width="24%">
-          수령 일시
-        </TableCell>
-        <TableCell type="Header" width="24%">
-          인쇄 매수
-        </TableCell>
-      </TableRow>
-    </TableHeadWrapper>
-    <TableBodyWrapper>
-      {printingList.items.map((printing, index) => {
-        const { color, text } = getTagDetail(printing.status, PrtTagList);
-        return (
-          <TableRow isBorder key={printing.studentName + String(index)}>
-            <TableCell type="Tag" width="10%" minWidth={90}>
-              <Tag color={color}>{text}</Tag>
-            </TableCell>
-            <TableCell type="Default" width="24%">
-              {formatDateTime(printing.createdAt)}
-            </TableCell>
-            <TableCell type="Default" width="18%" minWidth={120}>
-              {printing.studentName}
-            </TableCell>
-            <TableCell type="Default" width="24%">
-              {formatDateTime(printing.desiredPickUpDate)}
-            </TableCell>
-            <TableCell type="Default" width="24%">
-              {printing.orders
-                .sort(
-                  (a, b) =>
-                    b.promotionalPrintingSizeEnum -
-                    a.promotionalPrintingSizeEnum,
-                ) // TODO: 이렇게 하는 대신 그냥 보여주고 싶은 순서랑 enum을 맞추는게 나을 수도 있음
-                .map(
-                  order =>
-                    `${getPrintSize(order.promotionalPrintingSizeEnum)} ${order.numberOfPrints}매`,
-                )
-                .join(", ")}
-            </TableCell>
-          </TableRow>
-        );
-      })}
-    </TableBodyWrapper>
-  </TableWrapper>
-);
+const columnHelper = createColumnHelper<ApiPrt001ResponseOk["items"][number]>();
+
+const columns = [
+  columnHelper.accessor("status", {
+    id: "status",
+    header: "상태",
+    cell: info => {
+      const { color, text } = getTagDetail(info.getValue(), PrtTagList);
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 10,
+  }),
+  columnHelper.accessor("createdAt", {
+    id: "createdAt",
+    header: "신청 일시",
+    cell: info => formatDateTime(info.getValue()),
+    size: 24,
+  }),
+  columnHelper.accessor("studentName", {
+    id: "studentName",
+    header: "동아리",
+    cell: info => info.getValue(),
+    size: 18,
+  }),
+  columnHelper.accessor("desiredPickUpDate", {
+    id: "desiredPickUpDate",
+    header: "수령 일시",
+    cell: info => formatDateTime(info.getValue()),
+    size: 24,
+  }),
+  columnHelper.accessor("orders", {
+    id: "orders",
+    header: "인쇄 매수",
+    cell: info =>
+      info
+        .getValue()
+        .sort(
+          (a, b) =>
+            b.promotionalPrintingSizeEnum - a.promotionalPrintingSizeEnum,
+        )
+        .map(
+          order =>
+            `${getPrintSize(order.promotionalPrintingSizeEnum)} ${
+              order.numberOfPrints
+            }매`,
+        )
+        .join(", "),
+    size: 24,
+  }),
+];
+
+const MyPrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => {
+  const table = useReactTable({
+    columns,
+    data: printingList.items,
+    getCoreRowModel: getCoreRowModel(),
+    enableSorting: false,
+  });
+
+  return <Table table={table} />;
+};
 
 export default MyPrintingTable;

@@ -25,7 +25,7 @@ const CommonCellHeaderWrapper = styled.th<{
   width: string | number;
   minWidth: number;
 }>`
-  width: ${({ width }) => (typeof width === "number" ? `${width}px` : width)};
+  width: ${({ width }) => (typeof width === "number" ? `${width}%` : width)};
   min-width: ${({ minWidth }) => `${minWidth}px`};
   display: flex;
   justify-content: center;
@@ -42,7 +42,7 @@ const CommonCellBodyWrapper = styled.td<{
   width: string | number;
   minWidth: number;
 }>`
-  width: ${({ width }) => (typeof width === "number" ? `${width}px` : width)};
+  width: ${({ width }) => (typeof width === "number" ? `${width}%` : width)};
   min-width: ${({ minWidth }) => `${minWidth}px`};
   display: flex;
   justify-content: center;

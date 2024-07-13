@@ -1,12 +1,12 @@
 import React from "react";
 
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
-  TableBodyWrapper,
-  TableHeadWrapper,
-  TableRow,
-  TableWrapper,
-} from "@sparcs-clubs/web/common/components/Table/TableWrapper";
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { RntTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import {
@@ -20,59 +20,64 @@ import type { ApiRnt003ResponseOK } from "@sparcs-clubs/interface/api/rental/end
 interface RentalTableProps {
   rentalList: ApiRnt003ResponseOK;
 }
-const MyRentalTable: React.FC<RentalTableProps> = ({ rentalList }) => (
-  <TableWrapper>
-    <TableHeadWrapper>
-      <TableRow>
-        <TableCell type="Header" width="10%" minWidth={90}>
-          상태
-        </TableCell>
-        <TableCell type="Header" width="20%">
-          신청 일시
-        </TableCell>
-        <TableCell type="Header" width="14%" minWidth={120}>
-          동아리
-        </TableCell>
-        <TableCell type="Header" width="18%">
-          대여 일자
-        </TableCell>
-        <TableCell type="Header" width="18%">
-          반납 일자
-        </TableCell>
-        <TableCell type="Header" width="20%">
-          대여 물품
-        </TableCell>
-      </TableRow>
-    </TableHeadWrapper>
-    <TableBodyWrapper>
-      {rentalList.items.map(rental => {
-        const { color, text } = getTagDetail(rental.statusEnum, RntTagList);
-        return (
-          <TableRow key={rental.id} isBorder>
-            <TableCell type="Tag" width="10%" minWidth={90}>
-              <Tag color={color}>{text}</Tag>
-            </TableCell>
-            <TableCell type="Default" width="20%">
-              {formatDateTime(rental.createdAt)}
-            </TableCell>
-            <TableCell type="Default" width="14%" minWidth={120}>
-              {rental.studentName}
-            </TableCell>
-            <TableCell type="Default" width="18%">
-              {formatDate(rental.desiredStart)}
-            </TableCell>
-            <TableCell type="Default" width="18%">
-              {formatDate(rental.desiredEnd)}
-            </TableCell>
-            <TableCell type="Default" width="20%">
-              {rental.objects[0].name} {rental.objects[0].number}개 외{" "}
-              {rental.objects.length - 1}항목
-            </TableCell>
-          </TableRow>
-        );
-      })}
-    </TableBodyWrapper>
-  </TableWrapper>
-);
+
+const columnHelper = createColumnHelper<ApiRnt003ResponseOK["items"][number]>();
+
+const columns = [
+  columnHelper.accessor("statusEnum", {
+    id: "status",
+    header: "상태",
+    cell: info => {
+      const { color, text } = getTagDetail(info.getValue(), RntTagList);
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 10,
+  }),
+  columnHelper.accessor("createdAt", {
+    id: "createdAt",
+    header: "신청 일시",
+    cell: info => formatDateTime(info.getValue()),
+    size: 20,
+  }),
+  columnHelper.accessor("studentName", {
+    id: "studentName",
+    header: "동아리",
+    cell: info => info.getValue(),
+    size: 14,
+  }),
+  columnHelper.accessor("desiredStart", {
+    id: "desiredStart",
+    header: "대여 일자",
+    cell: info => formatDate(info.getValue()),
+    size: 18,
+  }),
+  columnHelper.accessor("desiredEnd", {
+    id: "desiredEnd",
+    header: "반납 일자",
+    cell: info => formatDate(info.getValue()),
+    size: 18,
+  }),
+  columnHelper.accessor(
+    row =>
+      `${row.objects[0].name} ${row.objects[0].number}개 외 ${row.objects.length - 1}항목`,
+    {
+      id: "rentalObjects",
+      header: "대여 물품",
+      cell: info => info.getValue(),
+      size: 20,
+    },
+  ),
+];
+
+const MyRentalTable: React.FC<RentalTableProps> = ({ rentalList }) => {
+  const table = useReactTable({
+    columns,
+    data: rentalList.items,
+    getCoreRowModel: getCoreRowModel(),
+    enableSorting: false,
+  });
+
+  return <Table table={table} />;
+};
 
 export default MyRentalTable;
