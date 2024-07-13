@@ -68,6 +68,8 @@ const RntTagList: {
   [RentalOrderStatusEnum.Approved]: { text: "승인", color: "YELLOW" },
   [RentalOrderStatusEnum.Rented]: { text: "대여", color: "PURPLE" },
   [RentalOrderStatusEnum.Returned]: { text: "반납", color: "GREEN" },
+  [RentalOrderStatusEnum.Overdue]: { text: "연체", color: "PINK" },
+  [RentalOrderStatusEnum.Rejected]: { text: "반려", color: "RED" },
 };
 
 const MemTagList: {
