@@ -43,7 +43,7 @@ export class RentalServiceRepository {
     if (!endTerm) {
       return RentalOrderStatusEnum.Returned; // 반납
     }
-    return RentalOrderStatusEnum.Invalid; // 무효
+    return RentalOrderStatusEnum.Overdue; //
   }
 
   // 내부 util 함수, 어떤 order에 대해, 그에 해당하는 object들의 종류와 개수를 가져옵니다.

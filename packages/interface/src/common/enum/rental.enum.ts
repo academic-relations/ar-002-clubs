@@ -15,7 +15,7 @@
  *    - 대여된 물품이 반납된 상태
  *    - endDate
  *
- *  거절된 상황, 연체 상황은 정의되어 있지 않음.
+ *  거절된 상황, 연체 상황은 Invalid 로 정의되어 있음.
  */
 
 // 물품대여신청에 대하 처리 상태를 표현하기 위한 열거형입니다.
@@ -24,7 +24,8 @@ enum RentalOrderStatusEnum {
   Approved, // 승인
   Rented, // 대여
   Returned, // 반납
-  Invalid,
+  Rejected,
+  Overdue,
 }
 
 export { RentalOrderStatusEnum };

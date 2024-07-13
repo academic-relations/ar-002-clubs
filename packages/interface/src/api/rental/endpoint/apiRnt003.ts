@@ -37,6 +37,8 @@ const responseBodyMap = {
           }),
         ),
         statusEnum: z.nativeEnum(RentalOrderStatusEnum),
+        desiredStart: z.date(),
+        desiredEnd: z.date(),
         startDate: z.date().optional(),
         endDate: z.date().optional(),
         createdAt: z.date(),
