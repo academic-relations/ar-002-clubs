@@ -38,11 +38,10 @@ export const Activity = mysqlTable(
   {
     id: int("id").autoincrement().primaryKey().notNull(),
     clubId: int("club_id").notNull(),
+    originalName: varchar("original_name", { length: 255 }).notNull(),
     name: varchar("name", { length: 255 }).notNull(),
     activityTypeEnumId: int("activity_type_enum_id").notNull(),
     semesterId: int("semester_id").notNull(),
-    startTerm: datetime("start_term").notNull(),
-    endTerm: datetime("end_term").notNull(),
     location: varchar("location", { length: 255 }).notNull(),
     purpose: text("purpose").notNull(),
     detail: text("detail").notNull(),
@@ -83,6 +82,46 @@ export const ActivityParticipant = mysqlTable(
       name: "activity_participant_student_id_fk",
       columns: [table.studentId],
       foreignColumns: [Student.id],
+    }),
+  }),
+);
+
+export const ActivityT = mysqlTable(
+  "activity_t",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    activityId: int("activity_id").notNull(),
+    startTerm: datetime("start_term").notNull(),
+    endTerm: datetime("end_term").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    activityForeignKey: foreignKey({
+      columns: [table.activityId],
+      foreignColumns: [Activity.id],
+    }),
+  }),
+);
+
+export const ActivityFeedback = mysqlTable(
+  "activity_feedback",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    activityId: int("activity_id").notNull(),
+    executiveId: int("executive_id").notNull(),
+    comment: text("comment").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    activityForeignKey: foreignKey({
+      columns: [table.activityId],
+      foreignColumns: [Activity.id],
+    }),
+    executiveForeignKey: foreignKey({
+      columns: [table.executiveId],
+      foreignColumns: [Executive.id],
     }),
   }),
 );
@@ -149,5 +188,3 @@ export const ActivityDeadlineD = mysqlTable(
     }),
   }),
 );
-
-// TODO: 피드백 테이블 추가하기
