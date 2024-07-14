@@ -14,7 +14,7 @@ import type {
   ApiAcf007ResponseOk,
 } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf007";
 
-export const useGetMyCommonSpace = (
+export const useGetMyActivityCertificate = (
   startDate: Date,
   endDate: Date,
   pageOffset: number,

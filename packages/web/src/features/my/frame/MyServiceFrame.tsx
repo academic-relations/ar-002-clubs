@@ -1,38 +1,73 @@
+"use client";
+
 import React from "react";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
-import { ManageTablesWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
 import MyActivityCertificateTable from "@sparcs-clubs/web/features/my/component/MyActivityCertificateTable";
 import MyCommonSpaceTable from "@sparcs-clubs/web/features/my/component/MyCommonSpaceTable";
 import MyPrintingTable from "@sparcs-clubs/web/features/my/component/MyPrintingTable";
 import MyRentalTable from "@sparcs-clubs/web/features/my/component/MyRentalTable";
-import {
-  mockupMyAcf,
-  mockupMyCms,
-  mockupMyPrint,
-  mockupMyRental,
-} from "@sparcs-clubs/web/features/my/service/_mock/mockMyClub";
+
+import { useGetMyActivityCertificate } from "../service/getMyActivityCertificate";
+import { useGetMyCommonSpace } from "../service/getMyCommonSpace";
+import { useGetMyPrinting } from "../service/getMyPrinting";
+import { useGetMyRentals } from "../service/getMyRentals";
 
 const MyServiceFrame: React.FC = () => {
   const [toggle, setToggle] = React.useState<boolean>(true);
+
+  // TODO: 실제 필요한 값으로 바꾸기
+  const startDate = new Date("2024-01-01");
+  const endDate = new Date("2024-12-31");
+  const pageOffset = 1;
+  const itemCount = 10;
+
+  const {
+    data: myRental,
+    isLoading: rentalLoading,
+    isError: rentalError,
+  } = useGetMyRentals(startDate, endDate, pageOffset, itemCount);
+
+  const {
+    data: myPrinting,
+    isLoading: printingLoading,
+    isError: printingError,
+  } = useGetMyPrinting(startDate, endDate, pageOffset, itemCount);
+
+  const {
+    data: myActivityCertificate,
+    isLoading: acfLoading,
+    isError: acfError,
+  } = useGetMyActivityCertificate(startDate, endDate, pageOffset, itemCount);
+
+  const {
+    data: myCommonSpace,
+    isLoading: cmsLoading,
+    isError: cmsError,
+  } = useGetMyCommonSpace(startDate, endDate, pageOffset, itemCount);
+
   return (
     <FlexWrapper direction="column" gap={40}>
       <FoldableSectionTitle
         title="서비스 신청 내역"
         toggle={toggle}
         toggleHandler={() => setToggle(!toggle)}
-      />
-      {toggle && (
-        <ManageTablesWrapper>
+      >
+        <FlexWrapper direction="column" gap={40}>
           <FlexWrapper direction="column" gap={20}>
             <MoreDetailTitle
               title="대여 사업"
               moreDetail="내역 더보기"
               moreDetailPath="/my/rental-business"
             />
-            <MyRentalTable rentalList={mockupMyRental} />
+            <AsyncBoundary isLoading={rentalLoading} isError={rentalError}>
+              <MyRentalTable
+                rentalList={myRental ?? { total: 0, items: [], offset: 0 }}
+              />
+            </AsyncBoundary>
           </FlexWrapper>
           <FlexWrapper direction="column" gap={20}>
             <MoreDetailTitle
@@ -40,7 +75,11 @@ const MyServiceFrame: React.FC = () => {
               moreDetail="내역 더보기"
               moreDetailPath="/my/printing-business"
             />
-            <MyPrintingTable printingList={mockupMyPrint} />
+            <AsyncBoundary isLoading={printingLoading} isError={printingError}>
+              <MyPrintingTable
+                printingList={myPrinting ?? { total: 0, items: [], offset: 0 }}
+              />
+            </AsyncBoundary>
           </FlexWrapper>
           <FlexWrapper direction="column" gap={20}>
             <MoreDetailTitle
@@ -48,7 +87,13 @@ const MyServiceFrame: React.FC = () => {
               moreDetail="내역 더보기"
               moreDetailPath="/my/activity-certificate"
             />
-            <MyActivityCertificateTable certificateList={mockupMyAcf} />
+            <AsyncBoundary isLoading={acfLoading} isError={acfError}>
+              <MyActivityCertificateTable
+                certificateList={
+                  myActivityCertificate ?? { total: 0, items: [], offset: 0 }
+                }
+              />
+            </AsyncBoundary>
           </FlexWrapper>
           <FlexWrapper direction="column" gap={20}>
             <MoreDetailTitle
@@ -56,10 +101,14 @@ const MyServiceFrame: React.FC = () => {
               moreDetail="내역 더보기"
               moreDetailPath="/my/common-space"
             />
-            <MyCommonSpaceTable spaceList={mockupMyCms} />
+            <AsyncBoundary isLoading={cmsLoading} isError={cmsError}>
+              <MyCommonSpaceTable
+                spaceList={myCommonSpace ?? { total: 0, items: [], offset: 0 }}
+              />
+            </AsyncBoundary>
           </FlexWrapper>
-        </ManageTablesWrapper>
-      )}
+        </FlexWrapper>
+      </FoldableSectionTitle>
     </FlexWrapper>
   );
 };
