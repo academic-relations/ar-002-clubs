@@ -50,66 +50,64 @@ const MyServiceFrame: React.FC = () => {
   } = useGetMyCommonSpace(startDate, endDate, pageOffset, itemCount);
 
   return (
-    <FlexWrapper direction="column" gap={40}>
-      <FoldableSectionTitle
-        title="서비스 신청 내역"
-        toggle={toggle}
-        toggleHandler={() => setToggle(!toggle)}
-      >
-        <FlexWrapper direction="column" gap={40}>
-          <FlexWrapper direction="column" gap={20}>
-            <MoreDetailTitle
-              title="대여 사업"
-              moreDetail="내역 더보기"
-              moreDetailPath="/my/rental-business"
+    <FoldableSectionTitle
+      title="서비스 신청 내역"
+      toggle={toggle}
+      toggleHandler={() => setToggle(!toggle)}
+    >
+      <FlexWrapper direction="column" gap={40}>
+        <FlexWrapper direction="column" gap={20}>
+          <MoreDetailTitle
+            title="대여 사업"
+            moreDetail="내역 더보기"
+            moreDetailPath="/my/rental-business"
+          />
+          <AsyncBoundary isLoading={rentalLoading} isError={rentalError}>
+            <MyRentalTable
+              rentalList={myRental ?? { total: 0, items: [], offset: 0 }}
             />
-            <AsyncBoundary isLoading={rentalLoading} isError={rentalError}>
-              <MyRentalTable
-                rentalList={myRental ?? { total: 0, items: [], offset: 0 }}
-              />
-            </AsyncBoundary>
-          </FlexWrapper>
-          <FlexWrapper direction="column" gap={20}>
-            <MoreDetailTitle
-              title="홍보물 인쇄"
-              moreDetail="내역 더보기"
-              moreDetailPath="/my/printing-business"
-            />
-            <AsyncBoundary isLoading={printingLoading} isError={printingError}>
-              <MyPrintingTable
-                printingList={myPrinting ?? { total: 0, items: [], offset: 0 }}
-              />
-            </AsyncBoundary>
-          </FlexWrapper>
-          <FlexWrapper direction="column" gap={20}>
-            <MoreDetailTitle
-              title="활동확인서 발급"
-              moreDetail="내역 더보기"
-              moreDetailPath="/my/activity-certificate"
-            />
-            <AsyncBoundary isLoading={acfLoading} isError={acfError}>
-              <MyActivityCertificateTable
-                certificateList={
-                  myActivityCertificate ?? { total: 0, items: [], offset: 0 }
-                }
-              />
-            </AsyncBoundary>
-          </FlexWrapper>
-          <FlexWrapper direction="column" gap={20}>
-            <MoreDetailTitle
-              title="공용공간 비정기사용"
-              moreDetail="내역 더보기"
-              moreDetailPath="/my/common-space"
-            />
-            <AsyncBoundary isLoading={cmsLoading} isError={cmsError}>
-              <MyCommonSpaceTable
-                spaceList={myCommonSpace ?? { total: 0, items: [], offset: 0 }}
-              />
-            </AsyncBoundary>
-          </FlexWrapper>
+          </AsyncBoundary>
         </FlexWrapper>
-      </FoldableSectionTitle>
-    </FlexWrapper>
+        <FlexWrapper direction="column" gap={20}>
+          <MoreDetailTitle
+            title="홍보물 인쇄"
+            moreDetail="내역 더보기"
+            moreDetailPath="/my/printing-business"
+          />
+          <AsyncBoundary isLoading={printingLoading} isError={printingError}>
+            <MyPrintingTable
+              printingList={myPrinting ?? { total: 0, items: [], offset: 0 }}
+            />
+          </AsyncBoundary>
+        </FlexWrapper>
+        <FlexWrapper direction="column" gap={20}>
+          <MoreDetailTitle
+            title="활동확인서 발급"
+            moreDetail="내역 더보기"
+            moreDetailPath="/my/activity-certificate"
+          />
+          <AsyncBoundary isLoading={acfLoading} isError={acfError}>
+            <MyActivityCertificateTable
+              certificateList={
+                myActivityCertificate ?? { total: 0, items: [], offset: 0 }
+              }
+            />
+          </AsyncBoundary>
+        </FlexWrapper>
+        <FlexWrapper direction="column" gap={20}>
+          <MoreDetailTitle
+            title="공용공간 비정기사용"
+            moreDetail="내역 더보기"
+            moreDetailPath="/my/common-space"
+          />
+          <AsyncBoundary isLoading={cmsLoading} isError={cmsError}>
+            <MyCommonSpaceTable
+              spaceList={myCommonSpace ?? { total: 0, items: [], offset: 0 }}
+            />
+          </AsyncBoundary>
+        </FlexWrapper>
+      </FlexWrapper>
+    </FoldableSectionTitle>
   );
 };
 
