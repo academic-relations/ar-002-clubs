@@ -97,6 +97,13 @@ const credits: Credits[] = [
         roleType: RoleType.member,
         comment: "앗차차 clubs 신입 차차예요",
       },
+      {
+        nickname: "casio",
+        name: "임가은",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "카시오는 계산기가 아니에요",
+      },
     ],
   },
   {
