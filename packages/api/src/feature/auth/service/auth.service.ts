@@ -2,6 +2,9 @@ import { Injectable } from "@nestjs/common";
 
 import { JwtService } from "@nestjs/jwt";
 
+import { ApiAut002ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut002";
+import { ApiAut003ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut003";
+
 import { AuthRepository } from "../repository/auth.repository";
 
 @Injectable()
@@ -29,8 +32,8 @@ export class AuthService {
       department,
     );
 
-    const accessToken = this.getAccessToken({ user });
-    const refreshToken = this.getRefreshToken({ user });
+    const accessToken = this.getAccessToken(user);
+    const refreshToken = this.getRefreshToken(user);
 
     return {
       accessToken,
@@ -38,8 +41,66 @@ export class AuthService {
     };
   }
 
-  getAccessToken({ user }): { [key: string]: string } {
-    const accessToken: { [key: string]: string } = {};
+  async postAuthRefresh(_user: {
+    id: number;
+    sid: string;
+    name: string;
+    email: string;
+  }): Promise<ApiAut002ResponseOk> {
+    const user = await this.authRepository.findUserById(_user.id);
+    const accessToken = this.getAccessToken(user);
+
+    return {
+      accessToken,
+    };
+  }
+
+  // TODO: 로직 수정 필요
+  async postAuthSignout(_user: {
+    id: number;
+    sid: string;
+    name: string;
+    email: string;
+  }): Promise<ApiAut003ResponseOk> {
+    return null;
+  }
+
+  getAccessToken(user: {
+    id: number;
+    sid: string;
+    name: string;
+    email: string;
+    undergraduate?: {
+      id: number;
+      number: number;
+    };
+    master?: {
+      id: number;
+      number: number;
+    };
+    doctor?: {
+      id: number;
+      number: number;
+    };
+    executive?: {
+      id: number;
+      studentId: number;
+    };
+    professor?: {
+      id: number;
+    };
+    employee?: {
+      id: number;
+    };
+  }) {
+    const accessToken: {
+      undergraduate?: string;
+      master?: string;
+      doctor?: string;
+      executive?: string;
+      professor?: string;
+      employee?: string;
+    } = {};
 
     if (user.undergraduate) {
       accessToken.undergraduate = this.jwtService.sign(
@@ -150,7 +211,12 @@ export class AuthService {
     return accessToken;
   }
 
-  getRefreshToken({ user }) {
+  getRefreshToken(user: {
+    id: number;
+    sid: string;
+    name: string;
+    email: string;
+  }) {
     const refreshToken = this.jwtService.sign(
       {
         email: user.email,
