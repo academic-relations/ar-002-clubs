@@ -1,6 +1,15 @@
-import { Body, Controller, Get, Post, UsePipes } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UsePipes,
+} from "@nestjs/common";
 
 import apiAct001 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct001";
+import apiAct004 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct004";
 import apiAct005 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
@@ -12,6 +21,10 @@ import type {
   ApiAct001ResponseCreated,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct001";
 import type {
+  ApiAct004RequestParam,
+  ApiAct004ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct004";
+import type {
   ApiAct005RequestBody,
   ApiAct005ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
@@ -19,6 +32,21 @@ import type {
 @Controller()
 export default class ActivityController {
   constructor(private activityService: ActivityService) {}
+
+  // TODO: Authentication 필요
+  @Delete("/student/activities/activity/:activityId")
+  @UsePipes(new ZodPipe(apiAct004))
+  async deleteStudentActivity(
+    @Param() param: ApiAct004RequestParam,
+  ): Promise<ApiAct004ResponseOk> {
+    const mockUpStudentId = 605;
+    await this.activityService.deleteStudentActivity(
+      param.activityId,
+      mockUpStudentId,
+    );
+
+    return {};
+  }
 
   // TODO: Authentication 필요
   @Get("/student/activities")

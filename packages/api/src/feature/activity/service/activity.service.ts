@@ -17,6 +17,55 @@ export default class ActivityService {
     private clubPublicService: ClubPublicService,
   ) {}
 
+  async deleteStudentActivity(activityId: number, studentId: number) {
+    const result =
+      await this.activityRepository.selectActivityByActivityId(activityId);
+    if (result.length !== 1) {
+      throw new HttpException("Not found", HttpStatus.NOT_FOUND);
+    }
+    const activity = result[0];
+
+    if (
+      !(await this.clubPublicService.isStudentRepresentative(
+        studentId,
+        activity.clubId,
+      ))
+    )
+      throw new HttpException(
+        "It seems that you are not representative.",
+        HttpStatus.FORBIDDEN,
+      );
+
+    // 오늘이 활동보고서 작성기간 | 수정기간 | 예외적 작성기간인지 확인합니다.
+    const today = getKSTDate();
+    const todayDeadline = await this.activityRepository
+      .selectDeadlineByDate(today)
+      .then(arr => {
+        if (arr.length === 0)
+          throw new HttpException(
+            "Today is not in the range of deadline",
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        return arr[0];
+      });
+    if (
+      todayDeadline.deadlineEnumId !== ActivityDeadlineEnum.Upload &&
+      todayDeadline.deadlineEnumId !== ActivityDeadlineEnum.Modification &&
+      todayDeadline.deadlineEnumId !== ActivityDeadlineEnum.Exceptional
+    )
+      throw new HttpException(
+        "Today is not a day for activity deletion",
+        HttpStatus.BAD_REQUEST,
+      );
+
+    if (!(await this.activityRepository.deleteActivity({ activityId }))) {
+      throw new HttpException(
+        "Something got wrong...",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   async getStudentActivity(
     clubId: number,
     studentId: number,
@@ -36,11 +85,29 @@ export default class ActivityService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
 
-    const result =
+    const activities =
       await this.activityRepository.selectActivityByClubIdAndSemesterId(
         clubId,
         semesterId,
       );
+
+    const result = await Promise.all(
+      activities.map(async row => {
+        const duration =
+          await this.activityRepository.selectDurationByActivityId(row.id);
+        return {
+          ...row,
+          startTerm: duration.reduce(
+            (prev, curr) => (prev < curr.startTerm ? prev : curr.startTerm),
+            duration[0].startTerm,
+          ),
+          endTerm: duration.reduce(
+            (prev, curr) => (prev > curr.endTerm ? prev : curr.endTerm),
+            duration[0].endTerm,
+          ),
+        };
+      }),
+    );
 
     return result.map(row => ({
       id: row.id,
@@ -86,10 +153,15 @@ export default class ActivityService {
         "Today is not a day for activity upload",
         HttpStatus.BAD_REQUEST,
       );
-    // TODO: 신청내용중 startTerm과 endTerm이 이번 학기의 활동기간에 맞는지 검사해야 할까요?.
+    // QUESTION: 신청내용중 startTerm과 endTerm이 이번 학기의 활동기간에 맞는지 검사해야 할까요?.
     // 활동 시작일 기준으로 semesterId를 가져옵니다.
     const semesterId = await this.clubPublicService
-      .dateToSemesterId(body.startTerm)
+      .dateToSemesterId(
+        body.duration.reduce(
+          (prev, curr) => (prev < curr.startTerm ? prev : curr.startTerm),
+          body.duration[0].startTerm,
+        ),
+      )
       .then(id => {
         if (id === undefined)
           throw new HttpException(
