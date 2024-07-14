@@ -97,6 +97,13 @@ const credits: Credits[] = [
         roleType: RoleType.member,
         comment: "앗차차 clubs 신입 차차예요",
       },
+      {
+        nickname: "malloc",
+        name: "최지윤",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "(≧▽≦)/",
+      },
     ],
   },
   {
