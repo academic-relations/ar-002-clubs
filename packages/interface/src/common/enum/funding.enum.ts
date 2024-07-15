@@ -2,7 +2,7 @@ export enum FundingOrderStatusEnum {
   Applied = 1, // 제출
   Approved, // 승인
   Rejected, // 반려
-  Commitee, // 운위
+  Committee, // 운위
 }
 
 export enum FundingDeadlineEnum {
