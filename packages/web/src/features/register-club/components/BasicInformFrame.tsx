@@ -10,11 +10,12 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
 
-import ProfessorInformSection from "./ProfessorInformSection";
+import { RegisterClubType } from "../types/registerClub";
+
+import ProfessorInformFrame from "./ProfessorInformFrame";
 
 interface BasicInformSectionProps {
-  isFirstApply?: boolean;
-  isReapply?: boolean;
+  type: RegisterClubType;
 }
 
 const RowWrapper = styled.div`
@@ -24,14 +25,14 @@ const RowWrapper = styled.div`
   gap: 32px;
 `;
 
-const BasicInformSection: React.FC<BasicInformSectionProps> = ({
-  isFirstApply = false,
-  isReapply = false,
-}) => {
+const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
   const [isCheckedClubName, setIsCheckedClubName] = useState(false);
   const [isCheckedProfessor, setIsCheckedProfessor] = useState(false);
   // TODO. 디비에 전화번호 있으면 기본값 넣기
   const [phoneNumber, setPhoneNumber] = useState("");
+
+  const isFirstApply = type === RegisterClubType.provisional;
+  const isReapply = type === RegisterClubType.renewal;
 
   return (
     <FlexWrapper direction="column" gap={40}>
@@ -132,9 +133,9 @@ const BasicInformSection: React.FC<BasicInformSectionProps> = ({
           onClick={() => setIsCheckedProfessor(!isCheckedProfessor)}
         />
       </Card>
-      {isCheckedProfessor && <ProfessorInformSection />}
+      {isCheckedProfessor && <ProfessorInformFrame />}
     </FlexWrapper>
   );
 };
 
-export default BasicInformSection;
+export default BasicInformFrame;

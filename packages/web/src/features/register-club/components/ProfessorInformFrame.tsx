@@ -15,7 +15,7 @@ const RowWrapper = styled.div`
   gap: 32px;
 `;
 
-const ProfessorInformSection: React.FC = () => (
+const ProfessorInformFrame: React.FC = () => (
   <FlexWrapper direction="column" gap={40}>
     <SectionTitle>지도교수 정보</SectionTitle>
     <Card outline gap={32} style={{ marginLeft: 20 }}>
@@ -39,4 +39,4 @@ const ProfessorInformSection: React.FC = () => (
   </FlexWrapper>
 );
 
-export default ProfessorInformSection;
+export default ProfessorInformFrame;
