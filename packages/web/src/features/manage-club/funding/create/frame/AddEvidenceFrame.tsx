@@ -39,7 +39,7 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
             </Typography>
             <FlexWrapper direction="column" gap={12}>
               <CheckboxOption
-                optionText="동아리 용품"
+                optionText="(활동보고서로 증빙이 불가능한) 동아리 용품"
                 checked={funding.purposeId === "0"}
                 onClick={() => {}}
               />
