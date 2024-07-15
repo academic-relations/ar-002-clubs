@@ -1,5 +1,8 @@
 import React from "react";
 
+import styled from "styled-components";
+
+import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 import Info from "@sparcs-clubs/web/common/components/Info";
@@ -13,6 +16,11 @@ import { RegisterClubType } from "../types/registerClub";
 interface RegisterClubMainFrameProps {
   type: RegisterClubType;
 }
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 
 const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   type,
@@ -33,6 +41,23 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
     <BasicInformFrame type={type} />
     <AdvancedInformFrame type={type} />
     <ClubRulesFrame isProvisional={type === RegisterClubType.provisional} />
+    <ButtonWrapper>
+      <Button
+        type="outlined"
+        onClick={() => {
+          // TODO. 취소 로직 추가
+        }}
+      >
+        취소
+      </Button>
+      <Button
+        onClick={() => {
+          // TODO. 신청 로직 추가
+        }}
+      >
+        신청
+      </Button>
+    </ButtonWrapper>
   </FlexWrapper>
 );
 
