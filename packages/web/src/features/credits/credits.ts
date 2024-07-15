@@ -84,6 +84,13 @@ const credits: Credits[] = [
         roleType: RoleType.member,
       },
       {
+        nickname: "ryan",
+        name: "이민욱",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "클럽스는 클리셰 럽 스토리",
+      },
+      {
         nickname: "daystar",
         name: "권진현",
         role: "FE",
