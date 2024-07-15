@@ -18,12 +18,12 @@ const requestBody = z.object({});
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     accessToken: z.object({
-      undergraduate: z.string().optional(),
-      master: z.string().optional(),
-      doctor: z.string().optional(),
-      executive: z.string().optional(),
-      professor: z.string().optional(),
-      employee: z.string().optional(),
+      undergraduate: z.coerce.string().optional(),
+      master: z.coerce.string().optional(),
+      doctor: z.coerce.string().optional(),
+      executive: z.coerce.string().optional(),
+      professor: z.coerce.string().optional(),
+      employee: z.coerce.string().optional(),
     }),
   }),
 };

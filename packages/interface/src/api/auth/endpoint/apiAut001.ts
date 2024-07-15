@@ -16,14 +16,14 @@ const requestQuery = z.object({});
 const requestBody = z.object({});
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({
+  [HttpStatusCode.Created]: z.object({
     accessToken: z.object({
-      undergraduate: z.string().optional(),
-      master: z.string().optional(),
-      doctor: z.string().optional(),
-      executive: z.string().optional(),
-      professor: z.string().optional(),
-      employee: z.string().optional(),
+      undergraduate: z.coerce.string().optional(),
+      master: z.coerce.string().optional(),
+      doctor: z.coerce.string().optional(),
+      executive: z.coerce.string().optional(),
+      professor: z.coerce.string().optional(),
+      employee: z.coerce.string().optional(),
     }),
   }),
 };
@@ -43,7 +43,7 @@ const apiAut001 = {
 type ApiAut001RequestParam = z.infer<typeof apiAut001.requestParam>;
 type ApiAut001RequestQuery = z.infer<typeof apiAut001.requestQuery>;
 type ApiAut001RequestBody = z.infer<typeof apiAut001.requestBody>;
-type ApiAut001ResponseOk = z.infer<(typeof apiAut001.responseBodyMap)[200]>;
+type ApiAut001ResponseOk = z.infer<(typeof apiAut001.responseBodyMap)[201]>;
 
 export default apiAut001;
 

@@ -61,14 +61,12 @@ export class AuthRepository {
       .where(eq(User.email, email))
       .then(takeUnique);
     if (user) {
-      // eslint-disable-next-line prefer-destructuring
       await this.db
         .update(User)
         .set({ name })
         .where(eq(User.id, user.id))
         .execute();
     } else {
-      // eslint-disable-next-line prefer-destructuring
       await this.db.insert(User).values({ sid, name, email }).execute();
     }
     user = await this.db
@@ -114,21 +112,18 @@ export class AuthRepository {
     // type이 "Student"인 경우 student table에서 해당 studentNumber이 있는지 확인 후 upsert
     // student_t에서 이번 학기의 해당 student_id이 있는지 확인 후 upsert
     if (type === "Student") {
-      // eslint-disable-next-line prefer-destructuring
       let student = await this.db
         .select()
         .from(Student)
         .where(eq(Student.number, parseInt(studentNumber)))
         .then(takeUnique);
       if (student) {
-        // eslint-disable-next-line prefer-destructuring
         await this.db
           .update(Student)
           .set({ userId: user.id, name })
           .where(eq(Student.id, student.id))
           .execute();
       } else {
-        // eslint-disable-next-line prefer-destructuring
         await this.db
           .insert(Student)
           .values({
@@ -213,7 +208,6 @@ export class AuthRepository {
         .then(takeUnique);
 
       if (studentT) {
-        // eslint-disable-next-line prefer-destructuring
         await this.db
           .update(StudentT)
           .set({ department: parseInt(department) })
@@ -224,7 +218,6 @@ export class AuthRepository {
             ),
           );
       } else {
-        // eslint-disable-next-line prefer-destructuring
         await this.db
           .insert(StudentT)
           .values({
@@ -353,7 +346,6 @@ export class AuthRepository {
 
     // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-shadow
     for (const student of await students) {
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       let studentEnum = 3;
       if (student.number % 10000 < 2000) studentEnum = 1;
       else if (student.number % 10000 < 6000) studentEnum = 2;
