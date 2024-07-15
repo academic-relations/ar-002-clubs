@@ -20,7 +20,7 @@ const CreditsMainFrame: React.FC = () => (
         {index === 0 ? (
           <>
             <SectionTitle size="lg">{credit.semester}</SectionTitle>
-            <MemberCardSection credit={credit} />
+            <MemberCardSection credit={credit} leftMargin={24} />
           </>
         ) : (
           <FoldableSectionTitle title={credit.semester}>
