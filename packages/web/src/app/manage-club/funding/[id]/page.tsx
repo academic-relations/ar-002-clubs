@@ -4,7 +4,7 @@ import React from "react";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import FundingDetailFrame from "@sparcs-clubs/web/features/manage-club/funding/frame/FundingDetailFrame";
+import FundingDetailFrame from "@sparcs-clubs/web/features/manage-club/funding/detail/frame/FundingDetailFrame";
 
 const FundingDetail = () => (
   <FlexWrapper direction="column" gap={60}>
