@@ -35,7 +35,7 @@ export class JwtAccessGuard extends AuthGuard("access") {
       context.getHandler(),
       context.getClass(),
     ]);
-    if (roles.includes(user.type)) return user;
+    if (roles.includes(user.type) || roles.length === 0) return user;
     throw new UnauthorizedException("Not allowed type");
   }
 }
