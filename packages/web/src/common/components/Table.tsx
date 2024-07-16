@@ -1,7 +1,7 @@
-import React from "react";
-
 import { flexRender, type Table as TableType } from "@tanstack/react-table";
 import styled from "styled-components";
+
+import TableCell from "./Table/TableCell";
 
 import Typography from "./Typography";
 
@@ -9,6 +9,8 @@ interface TableProps<T> {
   table: TableType<T>;
   height?: number | undefined;
   emptyMessage?: string;
+  count?: number;
+  footer?: React.ReactNode;
 }
 
 const TableInner = styled.table<{ height?: number }>`
@@ -58,59 +60,106 @@ const EmptyCenterPlacer = styled.div`
   align-items: center;
 `;
 
+const TableWithCount = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  width: 100%;
+`;
+
 const Table = <T,>({
   table,
   height = undefined,
   emptyMessage = "",
-}: TableProps<T>) => (
-  <TableInner height={height}>
-    <Header>
-      {table.getHeaderGroups().map(headerGroup => (
-        <HeaderRow key={headerGroup.id}>
-          {headerGroup.headers.map(header => {
-            if (header.isPlaceholder) {
-              return null;
-            }
-            if (header.column.getCanSort()) {
-              return flexRender(
-                header.column.columnDef.header,
-                header.getContext(),
-              );
-            }
-            return flexRender(
-              header.column.columnDef.header,
-              header.getContext(),
-            );
-          })}
-        </HeaderRow>
-      ))}
-    </Header>
-    <Content>
-      {table.getRowModel().rows.length ? (
-        table.getRowModel().rows.map(row => (
-          <ContentRow key={row.id} selected={row.getIsSelected()}>
-            {row
-              .getVisibleCells()
-              .map(cell =>
-                flexRender(cell.column.columnDef.cell, cell.getContext()),
-              )}
-          </ContentRow>
-        ))
-      ) : (
-        <EmptyCenterPlacer>
-          <Typography
-            fs={16}
-            lh={24}
-            color="GRAY.300"
-            ff="PRETENDARD"
-            fw="REGULAR"
-          >
-            {emptyMessage}
-          </Typography>
-        </EmptyCenterPlacer>
+  footer = null,
+  count = undefined,
+}: TableProps<T>) => {
+  // 야매로 min-width 바꿔치기 (고치지 마세요)
+  // eslint-disable-next-line no-underscore-dangle
+  table._getColumnDefs().forEach(column => {
+    // eslint-disable-next-line no-param-reassign
+    column.minSize = 0;
+  });
+
+  return (
+    <TableWithCount>
+      {count && (
+        <Typography fs={16} lh={20}>
+          총 {count}개
+        </Typography>
       )}
-    </Content>
-  </TableInner>
-);
+      <TableInner height={height}>
+        <Header>
+          {table.getHeaderGroups().map(headerGroup => (
+            <HeaderRow key={headerGroup.id}>
+              {headerGroup.headers.map(header => {
+                if (header.isPlaceholder) {
+                  return null;
+                }
+                if (header.column.getCanSort()) {
+                  return (
+                    <TableCell
+                      key={header.id}
+                      width={header.getSize()}
+                      type="HeaderSort"
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                    </TableCell>
+                  );
+                }
+                return (
+                  <TableCell
+                    key={header.id}
+                    width={header.getSize()}
+                    type="Header"
+                  >
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                  </TableCell>
+                );
+              })}
+            </HeaderRow>
+          ))}
+        </Header>
+        <Content>
+          {table.getRowModel().rows.length ? (
+            table.getRowModel().rows.map(row => (
+              <ContentRow key={row.id} selected={row.getIsSelected()}>
+                {row.getVisibleCells().map(cell => (
+                  <TableCell
+                    key={cell.id}
+                    width={cell.column.getSize()}
+                    type="Default"
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </ContentRow>
+            ))
+          ) : (
+            <EmptyCenterPlacer>
+              <Typography
+                fs={16}
+                lh={24}
+                color="GRAY.300"
+                ff="PRETENDARD"
+                fw="REGULAR"
+              >
+                {emptyMessage}
+              </Typography>
+            </EmptyCenterPlacer>
+          )}
+          {footer}
+        </Content>
+      </TableInner>
+    </TableWithCount>
+  );
+};
 
 export default Table;
