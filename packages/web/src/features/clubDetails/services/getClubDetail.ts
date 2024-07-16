@@ -11,7 +11,7 @@ import {
 
 import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
-export const getClubDetail = (club_id: string) =>
+export const useGetClubDetail = (club_id: string) =>
   useQuery<ApiClb002ResponseOK, Error>({
     queryKey: [apiClb002.url(club_id)],
     queryFn: async (): Promise<ApiClb002ResponseOK> => {

@@ -11,9 +11,7 @@ interface SelectRangeProps {
   returnDate?: Date;
   setRentalDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   setReturnDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
-  setShowPeriodModal: React.Dispatch<
-    React.SetStateAction<"none" | "reset" | "change">
-  >;
+  openPeriodModal: (state: "change" | "reset") => void;
   isRentalListEmpty: boolean;
 }
 
@@ -30,7 +28,7 @@ const SelectRange: React.FC<SelectRangeProps> = ({
   returnDate = undefined,
   setRentalDate,
   setReturnDate,
-  setShowPeriodModal,
+  openPeriodModal,
   isRentalListEmpty,
 }) => {
   const isButtonDisabled = !rentalDate && !returnDate;
@@ -40,7 +38,7 @@ const SelectRange: React.FC<SelectRangeProps> = ({
       setRentalDate(undefined);
       setReturnDate(undefined);
     } else {
-      setShowPeriodModal("reset");
+      openPeriodModal("reset");
     }
   };
 

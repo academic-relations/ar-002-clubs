@@ -79,6 +79,7 @@ const FundingTable: React.FC<FundingTableProps> = ({ fundingList }) => {
   return (
     <Table
       table={table}
+      count={fundingList.length}
       footer={
         <TableRow>
           <TableCell type="Default" width="70%">

@@ -1,3 +1,4 @@
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 
 export const TableWrapper = styled.table`
@@ -10,19 +11,9 @@ export const TableWrapper = styled.table`
   border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
 `;
 
-export const TableHeadWrapper = styled.thead`
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
-`;
-
-export const TableBodyWrapper = styled.tbody`
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
-`;
-
-export const TableRow = styled.tr<{ isBorder?: boolean }>`
+export const TableRow = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isBorder?: boolean }>`
   display: flex;
   flex-direction: row;
   gap: 0px;

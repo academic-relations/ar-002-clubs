@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-import { addMinutes, startOfWeek } from "date-fns";
-import { ko } from "date-fns/locale";
+import { addMinutes } from "date-fns";
+
 import styled from "styled-components";
 
 import TimetableDateList from "./_atomic/TimetableDateList";
@@ -16,11 +16,13 @@ interface TimetableProps {
   setDateTimeRange: React.Dispatch<
     React.SetStateAction<[Date, Date] | undefined>
   >;
+  availableHoursPerDay: number;
+  startDate: Date;
+  setStartDate: React.Dispatch<React.SetStateAction<Date>>;
 }
 
 const TimetableInner = styled.div`
   display: flex;
-  width: 600px;
   flex-direction: column;
   align-items: center;
   gap: 20px;
@@ -33,13 +35,18 @@ const TimetableGridInner = styled.div`
   align-self: stretch;
 `;
 
-const Timetable: React.FC<TimetableProps> = ({ data, setDateTimeRange }) => {
+const Timetable: React.FC<TimetableProps> = ({
+  data,
+  setDateTimeRange,
+  availableHoursPerDay,
+  startDate,
+  setStartDate,
+}) => {
   const [indexRange, setIndexRange] = useState<number[]>([]);
-  const [date, setDate] = useState(startOfWeek(new Date(), { locale: ko }));
   const convertDataToTimetableCell = useCallback((): TimetableCellType[] => {
     const currentDateTime = new Date();
     return data.map((isReserved, index) => {
-      const time = addMinutes(date, index * 30);
+      const time = addMinutes(startDate, index * 30);
       if (time < currentDateTime) {
         if (isReserved) {
           return "past";
@@ -51,29 +58,30 @@ const Timetable: React.FC<TimetableProps> = ({ data, setDateTimeRange }) => {
       }
       return "default";
     });
-  }, [data, date]);
+  }, [data, startDate]);
 
   useEffect(() => {
     if (indexRange.length === 2) {
       setDateTimeRange([
-        addMinutes(date, indexRange[0] * 30),
-        addMinutes(date, (indexRange[1] + 1) * 30),
+        addMinutes(startDate, indexRange[0] * 30),
+        addMinutes(startDate, (indexRange[1] + 1) * 30),
       ]);
     } else {
       setDateTimeRange(undefined);
     }
-  }, [indexRange, date, setDateTimeRange]);
+  }, [indexRange, startDate, setDateTimeRange]);
 
   return (
     <TimetableInner>
-      <WeekNavigator initialDate={date} onChange={setDate} />
-      <TimetableDateList startDate={date} paddingLeft="56px" />
+      <WeekNavigator initialDate={startDate} onChange={setStartDate} />
+      <TimetableDateList startDate={startDate} paddingLeft="56px" />
       <TimetableGridInner>
         <TimetableTimeList />
         <TimetableTable
           setIndexRange={setIndexRange}
           data={convertDataToTimetableCell()}
-          update={date.toString()}
+          update={startDate.toString()}
+          availableHoursPerDay={availableHoursPerDay}
         />
       </TimetableGridInner>
     </TimetableInner>

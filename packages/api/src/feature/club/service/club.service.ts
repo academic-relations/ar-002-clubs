@@ -95,6 +95,7 @@ export class ClubService {
   async getStudentClubsMy(studentId: number): Promise<ApiClb003ResponseOK> {
     const studentSemesters =
       await this.clubStudentTRepository.findStudentSemester(studentId);
+
     const result = await Promise.all(
       studentSemesters.map(async semester => {
         const clubs = await Promise.all(

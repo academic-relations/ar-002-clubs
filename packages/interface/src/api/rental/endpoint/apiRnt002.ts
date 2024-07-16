@@ -14,20 +14,20 @@ const method = "POST";
 const requestParam = z.object({});
 
 const requestQuery = z.object({
-  clubId: z.number().int().min(1),
+  clubId: z.coerce.number().int().min(1),
 });
 
 const requestBody = z.object({
   studentPhoneNumber: zKrPhoneNumber,
   objects: z
     .object({
-      id: z.number().int().min(1),
-      number: z.number().int().min(0),
+      id: z.coerce.number().int().min(1),
+      number: z.coerce.number().int().min(0),
     })
     .array(),
-  purpose: z.string().max(512),
-  desiredStart: z.date(),
-  desiredEnd: z.date(),
+  purpose: z.coerce.string().max(512),
+  desiredStart: z.coerce.date(),
+  desiredEnd: z.coerce.date(),
 });
 
 const responseBodyMap = {

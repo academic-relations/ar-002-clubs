@@ -10,6 +10,7 @@ import React from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { OverlayProvider } from "overlay-kit";
 import { ThemeProvider as StyledProvider } from "styled-components";
 
 import theme from "@sparcs-clubs/web/styles/themes";
@@ -37,7 +38,7 @@ export const UseClientProvider: React.FC<React.PropsWithChildren> = ({
       {/* @ts-expect-error-next-line */}
       <StyledProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
-          {children}
+          <OverlayProvider>{children}</OverlayProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </StyledProvider>

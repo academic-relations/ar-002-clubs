@@ -11,8 +11,11 @@ import type { CommonSpaceInterface } from "../types/commonSpace";
 const CommonSpaceMainFrame: React.FC = () => {
   const [commonSpace, setCommonSpace] = React.useState<CommonSpaceInterface>({
     agreement: false,
+    body: {},
+    param: {},
   });
   const props = { commonSpace, setCommonSpace };
+
   return (
     <FlexWrapper direction="column" gap={60}>
       <PageHead
