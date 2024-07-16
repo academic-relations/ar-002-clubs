@@ -42,6 +42,26 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
     { label: "기타", value: String(FixtureClassEnum.Others) },
   ];
 
+  const handleFixtureChange = (key: string, value: string) => {
+    if (isFixture) {
+      setFunding(prevFunding => ({
+        ...prevFunding,
+        fixture: {
+          ...prevFunding.fixture,
+          [key]: value,
+        },
+      }));
+    } else {
+      setFunding(prevFunding => ({
+        ...prevFunding,
+        clubSupplies: {
+          ...prevFunding.clubSupplies,
+          [key]: value,
+        },
+      }));
+    }
+  };
+
   return (
     <FlexWrapper direction="column" gap={8}>
       <EvidenceBlockTitle title={`${content} 증빙`}>
@@ -56,24 +76,13 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                   ? funding.fixture?.fixtureEvidenceEnumId
                   : funding.clubSupplies?.clubSuppliesEvidenceEnumId
               }
-              onSelect={
-                isFixture
-                  ? value =>
-                      setFunding({
-                        ...funding,
-                        fixture: {
-                          ...funding.fixture,
-                          fixtureEvidenceEnumId: value,
-                        },
-                      })
-                  : value =>
-                      setFunding({
-                        ...funding,
-                        clubSupplies: {
-                          ...funding.clubSupplies,
-                          clubSuppliesEvidenceEnumId: value,
-                        },
-                      })
+              onSelect={value =>
+                handleFixtureChange(
+                  isFixture
+                    ? "fixtureEvidenceEnumId"
+                    : "clubSuppliesEvidenceEnumId",
+                  value,
+                )
               }
             />
             <Select
@@ -85,24 +94,11 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                   ? funding.fixture?.fixtureClassEnumId
                   : funding.clubSupplies?.clubSuppliesClassEnumId
               }
-              onSelect={
-                isFixture
-                  ? value =>
-                      setFunding({
-                        ...funding,
-                        fixture: {
-                          ...funding.fixture,
-                          fixtureClassEnumId: value,
-                        },
-                      })
-                  : value =>
-                      setFunding({
-                        ...funding,
-                        clubSupplies: {
-                          ...funding.clubSupplies,
-                          clubSuppliesClassEnumId: value,
-                        },
-                      })
+              onSelect={value =>
+                handleFixtureChange(
+                  isFixture ? "fixtureClassEnumId" : "clubSuppliesClassEnumId",
+                  value,
+                )
               }
             />
           </FlexWrapper>
@@ -114,24 +110,11 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                 ? funding.fixture?.fixtureName
                 : funding.clubSupplies?.clubSuppliesName
             }
-            handleChange={
-              isFixture
-                ? value =>
-                    setFunding({
-                      ...funding,
-                      fixture: {
-                        ...funding.fixture,
-                        fixtureName: value,
-                      },
-                    })
-                : value =>
-                    setFunding({
-                      ...funding,
-                      clubSupplies: {
-                        ...funding.clubSupplies,
-                        clubSuppliesName: value,
-                      },
-                    })
+            handleChange={value =>
+              handleFixtureChange(
+                isFixture ? "fixtureName" : "clubSuppliesName",
+                value,
+              )
             }
           />
           <FlexWrapper direction="row" gap={32}>
@@ -143,24 +126,11 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                   ? funding.fixture?.numberOfFixture
                   : funding.clubSupplies?.numberOfClubSupplies
               }
-              handleChange={
-                isFixture
-                  ? value =>
-                      setFunding({
-                        ...funding,
-                        fixture: {
-                          ...funding.fixture,
-                          numberOfFixture: value,
-                        },
-                      })
-                  : value =>
-                      setFunding({
-                        ...funding,
-                        clubSupplies: {
-                          ...funding.clubSupplies,
-                          numberOfClubSupplies: value,
-                        },
-                      })
+              handleChange={value =>
+                handleFixtureChange(
+                  isFixture ? "numberOfFixture" : "numberOfClubSupplies",
+                  value,
+                )
               }
             />
             <TextInput
@@ -172,18 +142,10 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                   : funding.clubSupplies?.priceOfClubSupplies
               }
               handleChange={value =>
-                isFixture
-                  ? setFunding({
-                      ...funding,
-                      fixture: { ...funding.fixture, priceOfFixture: value },
-                    })
-                  : setFunding({
-                      ...funding,
-                      clubSupplies: {
-                        ...funding.clubSupplies,
-                        priceOfClubSupplies: value,
-                      },
-                    })
+                handleFixtureChange(
+                  isFixture ? "priceOfFixture" : "priceOfClubSupplies",
+                  value,
+                )
               }
             />
           </FlexWrapper>

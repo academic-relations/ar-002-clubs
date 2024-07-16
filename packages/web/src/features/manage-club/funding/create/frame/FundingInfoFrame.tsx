@@ -24,6 +24,9 @@ const FundingInfoFrame: React.FC<FundingFrameProps> = ({
     { value: "3", label: "활동보고서 3" },
     { value: "0", label: "활동보고서로 증빙 불가" },
   ];
+  const setFundingHandler = (key: string, value: string) => {
+    setFunding({ ...funding, [key]: value });
+  };
 
   return (
     <FoldableSectionTitle
@@ -36,14 +39,14 @@ const FundingInfoFrame: React.FC<FundingFrameProps> = ({
           label="항목명"
           placeholder="항목명을 입력하세요"
           value={funding.name}
-          handleChange={value => setFunding({ ...funding, name: value })}
+          handleChange={value => setFundingHandler("name", value)}
         />
         <FlexWrapper direction="row" gap={32}>
           <Select
             items={purposeItems}
             label="지출 목적"
             selectedValue={funding.purposeId}
-            onSelect={value => setFunding({ ...funding, purposeId: value })}
+            onSelect={value => setFundingHandler("purposeId", value)}
             placeholder="지출 목적을 선택해주세요"
           />
           {/* TODO: 지출 일자, 지출 금액 해당 컴포넌트로 구현 */}
@@ -51,16 +54,14 @@ const FundingInfoFrame: React.FC<FundingFrameProps> = ({
             label="지출 일자"
             placeholder="20XX.XX.XX"
             value={funding.expenditureDate}
-            handleChange={value =>
-              setFunding({ ...funding, expenditureDate: value })
-            }
+            handleChange={value => setFundingHandler("expenditureDate", value)}
           />
           <TextInput
             label="지출 금액"
             placeholder="금액을 입력해주세요"
             value={funding.expenditureAmount}
             handleChange={value =>
-              setFunding({ ...funding, expenditureAmount: value })
+              setFundingHandler("expenditureAmount", value)
             }
           />
         </FlexWrapper>

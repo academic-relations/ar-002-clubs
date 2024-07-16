@@ -19,6 +19,10 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
 }) => {
   const [toggle, setToggle] = useState(true);
 
+  const setFundingHandler = (key: string, value: boolean | string) => {
+    setFunding({ ...funding, [key]: value });
+  };
+
   return (
     <FoldableSectionTitle
       title="추가 증빙"
@@ -47,102 +51,82 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
                 optionText="비품"
                 checked={funding.isFixture}
                 onClick={() =>
-                  setFunding({
-                    ...funding,
-                    isFixture: !funding.isFixture,
-                  })
+                  setFundingHandler("isFixture", !funding.isFixture)
                 }
               />
               <CheckboxOption
                 optionText="교통비"
                 checked={funding.isTransportation}
                 onClick={() =>
-                  setFunding({
-                    ...funding,
-                    isTransportation: !funding.isTransportation,
-                  })
+                  setFundingHandler(
+                    "isTransportation",
+                    !funding.isTransportation,
+                  )
                 }
               />
               <CheckboxOption
                 optionText="비법인 거래"
                 checked={funding.isNonCorporateTransaction}
                 onClick={() =>
-                  setFunding({
-                    ...funding,
-                    isNonCorporateTransaction:
-                      !funding.isNonCorporateTransaction,
-                  })
+                  setFundingHandler(
+                    "isNonCorporateTransaction",
+                    !funding.isNonCorporateTransaction,
+                  )
                 }
               />
               <CheckboxOption
                 optionText="식비"
                 checked={funding.isFoodExpense}
                 onClick={() =>
-                  setFunding({
-                    ...funding,
-                    isFoodExpense: !funding.isFoodExpense,
-                  })
+                  setFundingHandler("isFoodExpense", !funding.isFoodExpense)
                 }
               />
               <CheckboxOption
                 optionText="근로 계약"
                 checked={funding.isLaborContract}
                 onClick={() =>
-                  setFunding({
-                    ...funding,
-                    isLaborContract: !funding.isLaborContract,
-                  })
+                  setFundingHandler("isLaborContract", !funding.isLaborContract)
                 }
               />
               <CheckboxOption
                 optionText="외부 행사 참가비"
                 checked={funding.isExternalEventParticipationFee}
                 onClick={() =>
-                  setFunding({
-                    ...funding,
-                    isExternalEventParticipationFee:
-                      !funding.isExternalEventParticipationFee,
-                  })
+                  setFundingHandler(
+                    "isExternalEventParticipationFee",
+                    !funding.isExternalEventParticipationFee,
+                  )
                 }
               />
               <CheckboxOption
                 optionText="발간물"
                 checked={funding.isPublication}
                 onClick={() =>
-                  setFunding({
-                    ...funding,
-                    isPublication: !funding.isPublication,
-                  })
+                  setFundingHandler("isPublication", !funding.isPublication)
                 }
               />
               <CheckboxOption
                 optionText="수익 사업"
                 checked={funding.isProfitMakingActivity}
                 onClick={() =>
-                  setFunding({
-                    ...funding,
-                    isProfitMakingActivity: !funding.isProfitMakingActivity,
-                  })
+                  setFundingHandler(
+                    "isProfitMakingActivity",
+                    !funding.isProfitMakingActivity,
+                  )
                 }
               />
               <CheckboxOption
                 optionText="공동 경비"
                 checked={funding.isJointExpense}
                 onClick={() =>
-                  setFunding({
-                    ...funding,
-                    isJointExpense: !funding.isJointExpense,
-                  })
+                  setFundingHandler("isJointExpense", !funding.isJointExpense)
                 }
               />
               <CheckboxOption
                 optionText="기타"
                 checked={funding.isEtcExpense}
                 onClick={() =>
-                  setFunding({
-                    ...funding,
-                    isEtcExpense: !funding.isEtcExpense,
-                  })
+                  setFundingHandler("isEtcExpense", !funding.isEtcExpense)
                 }
               />
             </FlexWrapper>
@@ -174,10 +158,7 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
             content="식비"
             value={funding.foodExpenseExplanation}
             onChange={value =>
-              setFunding({
-                ...funding,
-                foodExpenseExplanation: value,
-              })
+              setFundingHandler("foodExpenseExplanation", value)
             }
           />
         )}
@@ -186,10 +167,7 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
             content="근로 계약"
             value={funding.laborContractExplanation}
             onChange={value =>
-              setFunding({
-                ...funding,
-                laborContractExplanation: value,
-              })
+              setFundingHandler("laborContractExplanation", value)
             }
           />
         )}
@@ -198,10 +176,10 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
             content="외부 행사 참가비"
             value={funding.externalEventParticipationFeeExplanation}
             onChange={value =>
-              setFunding({
-                ...funding,
-                externalEventParticipationFeeExplanation: value,
-              })
+              setFundingHandler(
+                "externalEventParticipationFeeExplanation",
+                value,
+              )
             }
           />
         )}
@@ -210,10 +188,7 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
             content="발간물"
             value={funding.publicationExplanation}
             onChange={value =>
-              setFunding({
-                ...funding,
-                publicationExplanation: value,
-              })
+              setFundingHandler("publicationExplanation", value)
             }
           />
         )}
@@ -222,10 +197,7 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
             content="수익 사업"
             value={funding.profitMakingActivityExplanation}
             onChange={value =>
-              setFunding({
-                ...funding,
-                profitMakingActivityExplanation: value,
-              })
+              setFundingHandler("profitMakingActivityExplanation", value)
             }
           />
         )}
@@ -234,10 +206,7 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
             content="공동 경비"
             value={funding.jointExpenseExplanation}
             onChange={value =>
-              setFunding({
-                ...funding,
-                jointExpenseExplanation: value,
-              })
+              setFundingHandler("jointExpenseExplanation", value)
             }
           />
         )}
@@ -246,10 +215,7 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
             content="기타"
             value={funding.etcExpenseExplanation}
             onChange={value =>
-              setFunding({
-                ...funding,
-                etcExpenseExplanation: value,
-              })
+              setFundingHandler("etcExpenseExplanation", value)
             }
           />
         )}
