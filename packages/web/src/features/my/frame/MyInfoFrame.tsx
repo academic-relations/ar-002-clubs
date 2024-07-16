@@ -6,7 +6,7 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
-import useGetUserProfile from "@sparcs-clubs/web/features/common-space/service/getUserProfile";
+import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 
 const MyInfoFrame: React.FC = () => {
   const [toggle, setToggle] = useState<boolean>(true);
