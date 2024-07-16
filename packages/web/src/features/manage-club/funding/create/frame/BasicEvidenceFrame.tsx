@@ -7,10 +7,13 @@ import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSe
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-const BasicEvidenceFrame = () => {
-  const [toggle, setToggle] = useState(true);
+import { FundingFrameProps } from "./FundingInfoFrame";
 
-  const [tradeDetail, setTradeDetail] = useState<string>("");
+const BasicEvidenceFrame: React.FC<FundingFrameProps> = ({
+  funding,
+  setFunding,
+}) => {
+  const [toggle, setToggle] = useState(true);
 
   return (
     <FoldableSectionTitle
@@ -32,8 +35,10 @@ const BasicEvidenceFrame = () => {
           <TextInput
             placeholder="거래 세부항목 증빙을 입력하세요"
             area
-            value={tradeDetail}
-            handleChange={setTradeDetail}
+            value={funding.tradeDetailExplanation}
+            handleChange={value =>
+              setFunding({ ...funding, tradeDetailExplanation: value })
+            }
           />
           <FileUpload />
         </FlexWrapper>
