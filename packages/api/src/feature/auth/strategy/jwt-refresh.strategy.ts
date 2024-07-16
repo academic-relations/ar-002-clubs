@@ -40,7 +40,7 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, "refresh") {
           email: payload.email,
         }
       : (() => {
-          throw new UnauthorizedException();
+          throw new UnauthorizedException("Refresh token not match");
         })();
   }
 }

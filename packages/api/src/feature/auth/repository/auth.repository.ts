@@ -272,9 +272,10 @@ export class AuthRepository {
     // professor_t에서 해당 professor_id이 있는지 확인 후 upsert
     // type이 "Employee"를 포함하는 경우 Employee table에서 해당 email이 있는지 확인 후 upsert
     // employee_t에서 해당 employee_id이 있는지 확인 후 upsert
-    if (type === "Professor") {
-      // type을 teacher대신 professor 로 변경하면 좋을듯 합니다.
-    }
+    // if (type === "Professor") {
+    // type을 teacher대신 professor 로 변경하면 좋을듯 합니다.
+
+    // }
 
     return result;
   }

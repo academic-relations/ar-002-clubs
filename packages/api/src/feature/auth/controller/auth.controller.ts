@@ -19,13 +19,16 @@ import apiAut003, {
 import { Request, Response } from "express";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
+import {
+  Public,
+  Student,
+} from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 import logger from "@sparcs-clubs/api/common/util/logger";
 
 import {
   UserAccessTokenPayload,
   UserRefreshTokenPayload,
 } from "../dto/auth.dto";
-import { JwtAccessGuard } from "../guard/jwt-access.guard";
 import { JwtRefreshGuard } from "../guard/jwt-refresh.guard";
 import { AuthService } from "../service/auth.service";
 
@@ -33,6 +36,7 @@ import { AuthService } from "../service/auth.service";
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post("/auth/sign-in")
   @UsePipes(new ZodPipe(apiAut001))
   async postAuthSignin(
@@ -52,6 +56,7 @@ export class AuthController {
     return res.json({ accessToken: token.accessToken });
   }
 
+  @Public()
   @UseGuards(JwtRefreshGuard)
   @Post("/auth/refresh")
   @UsePipes(new ZodPipe(apiAut002))
@@ -61,7 +66,7 @@ export class AuthController {
     return this.authService.postAuthRefresh(req.user);
   }
 
-  @UseGuards(JwtAccessGuard)
+  @Student()
   @Post("/auth/sign-out")
   @UsePipes(new ZodPipe(apiAut003))
   postAuthSignout(
@@ -72,7 +77,7 @@ export class AuthController {
   }
 
   // test용 API, 실제 사용하지 않음
-  @UseGuards(JwtAccessGuard)
+  @Student()
   @Get("/auth/test")
   test(@Req() req: Request & UserAccessTokenPayload) {
     logger.debug(req.user);

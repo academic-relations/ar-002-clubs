@@ -17,7 +17,8 @@ export class JwtAccessGuard extends AuthGuard("access") {
     super();
   }
 
-  canActivate(context: ExecutionContext) {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  canActivate(context: ExecutionContext): any {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
