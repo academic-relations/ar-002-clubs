@@ -8,10 +8,7 @@ import {
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
-import {
-  TableRow,
-  TableWrapper,
-} from "@sparcs-clubs/web/common/components/Table/TableWrapper";
+import { TableRow } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { ApplyTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
@@ -80,20 +77,24 @@ const FundingTable: React.FC<FundingTableProps> = ({ fundingList }) => {
   });
 
   return (
-    <TableWrapper>
-      <Table noBorder table={table} />
-      <TableRow>
-        <TableCell type="Default" width="70%">
-          {" "}
-        </TableCell>
-        <TableCell type="Default" width="15%">
-          {totalRequested.toLocaleString()}원
-        </TableCell>
-        <TableCell type="Default" width="15%">
-          {totalApproved === null ? "-" : `${totalApproved.toLocaleString()}원`}
-        </TableCell>
-      </TableRow>
-    </TableWrapper>
+    <Table
+      table={table}
+      footer={
+        <TableRow>
+          <TableCell type="Default" width="70%">
+            {" "}
+          </TableCell>
+          <TableCell type="Default" width="15%">
+            {totalRequested.toLocaleString()}원
+          </TableCell>
+          <TableCell type="Default" width="15%">
+            {totalApproved === null
+              ? "-"
+              : `${totalApproved.toLocaleString()}원`}
+          </TableCell>
+        </TableRow>
+      }
+    />
   );
 };
 

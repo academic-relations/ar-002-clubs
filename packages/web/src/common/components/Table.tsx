@@ -1,5 +1,3 @@
-import { Fragment, useMemo } from "react";
-
 import { flexRender, type Table as TableType } from "@tanstack/react-table";
 import styled from "styled-components";
 
@@ -11,7 +9,8 @@ interface TableProps<T> {
   table: TableType<T>;
   height?: number | undefined;
   emptyMessage?: string;
-  noBorder?: boolean;
+  count?: number;
+  footer?: React.ReactNode;
 }
 
 const TableInner = styled.table<{ height?: number }>`
@@ -61,17 +60,22 @@ const EmptyCenterPlacer = styled.div`
   align-items: center;
 `;
 
-// const a: Updater<ColumnSizingState>
+const TableWithCount = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  width: 100%;
+`;
 
 const Table = <T,>({
   table,
   height = undefined,
   emptyMessage = "",
-  noBorder = false,
+  footer = null,
+  count = undefined,
 }: TableProps<T>) => {
-  const Wrapper = useMemo(() => (noBorder ? Fragment : TableInner), [noBorder]);
-
-  // 야매로 min-width 바꿔치기
+  // 야매로 min-width 바꿔치기 (고치지 마세요)
   // eslint-disable-next-line no-underscore-dangle
   table._getColumnDefs().forEach(column => {
     // eslint-disable-next-line no-param-reassign
@@ -79,20 +83,39 @@ const Table = <T,>({
   });
 
   return (
-    <Wrapper height={height}>
-      <Header>
-        {table.getHeaderGroups().map(headerGroup => (
-          <HeaderRow key={headerGroup.id}>
-            {headerGroup.headers.map(header => {
-              if (header.isPlaceholder) {
-                return null;
-              }
-              if (header.column.getCanSort()) {
+    <TableWithCount>
+      {count && (
+        <Typography fs={16} lh={20}>
+          총 {count}개
+        </Typography>
+      )}
+      <TableInner height={height}>
+        <Header>
+          {table.getHeaderGroups().map(headerGroup => (
+            <HeaderRow key={headerGroup.id}>
+              {headerGroup.headers.map(header => {
+                if (header.isPlaceholder) {
+                  return null;
+                }
+                if (header.column.getCanSort()) {
+                  return (
+                    <TableCell
+                      key={header.id}
+                      width={header.getSize()}
+                      type="HeaderSort"
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                    </TableCell>
+                  );
+                }
                 return (
                   <TableCell
                     key={header.id}
                     width={header.getSize()}
-                    type="HeaderSort"
+                    type="Header"
                   >
                     {flexRender(
                       header.column.columnDef.header,
@@ -100,53 +123,42 @@ const Table = <T,>({
                     )}
                   </TableCell>
                 );
-              }
-              return (
-                <TableCell
-                  key={header.id}
-                  width={header.getSize()}
-                  type="Header"
-                >
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
-                </TableCell>
-              );
-            })}
-          </HeaderRow>
-        ))}
-      </Header>
-      <Content>
-        {table.getRowModel().rows.length ? (
-          table.getRowModel().rows.map(row => (
-            <ContentRow key={row.id} selected={row.getIsSelected()}>
-              {row.getVisibleCells().map(cell => (
-                <TableCell
-                  key={cell.id}
-                  width={cell.column.getSize()}
-                  type="Default"
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
-              ))}
-            </ContentRow>
-          ))
-        ) : (
-          <EmptyCenterPlacer>
-            <Typography
-              fs={16}
-              lh={24}
-              color="GRAY.300"
-              ff="PRETENDARD"
-              fw="REGULAR"
-            >
-              {emptyMessage}
-            </Typography>
-          </EmptyCenterPlacer>
-        )}
-      </Content>
-    </Wrapper>
+              })}
+            </HeaderRow>
+          ))}
+        </Header>
+        <Content>
+          {table.getRowModel().rows.length ? (
+            table.getRowModel().rows.map(row => (
+              <ContentRow key={row.id} selected={row.getIsSelected()}>
+                {row.getVisibleCells().map(cell => (
+                  <TableCell
+                    key={cell.id}
+                    width={cell.column.getSize()}
+                    type="Default"
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </ContentRow>
+            ))
+          ) : (
+            <EmptyCenterPlacer>
+              <Typography
+                fs={16}
+                lh={24}
+                color="GRAY.300"
+                ff="PRETENDARD"
+                fw="REGULAR"
+              >
+                {emptyMessage}
+              </Typography>
+            </EmptyCenterPlacer>
+          )}
+          {footer}
+        </Content>
+      </TableInner>
+    </TableWithCount>
   );
 };
 
