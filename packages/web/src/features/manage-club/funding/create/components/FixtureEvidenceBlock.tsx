@@ -136,8 +136,8 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
           />
           <FlexWrapper direction="row" gap={32}>
             <TextInput
-              label="물품 개수"
-              placeholder="물품 개수를 입력해주세요"
+              label={`${content} 개수`}
+              placeholder={`${content} 개수를 입력해주세요`}
               value={
                 isFixture
                   ? funding.fixture?.numberOfFixture
@@ -164,8 +164,8 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               }
             />
             <TextInput
-              label="물품 개별 단가"
-              placeholder="물품 개별 단가를 입력해주세요"
+              label={`${content} 개별 단가`}
+              placeholder={`${content} 개별 단가를 입력해주세요`}
               value={
                 isFixture
                   ? funding.fixture?.priceOfFixture

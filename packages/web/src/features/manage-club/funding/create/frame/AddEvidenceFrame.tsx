@@ -148,6 +148,7 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
             </FlexWrapper>
           </FlexWrapper>
         </Card>
+        {/* 활보로 증빙 불가능한 동아리 용품 */}
         {funding.purposeId === "0" && (
           <FixtureEvidenceBlock
             isFixture={false}

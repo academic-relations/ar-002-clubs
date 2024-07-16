@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TransportationEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+import { TransportationEnum as E } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
 import styled from "styled-components";
 
@@ -22,25 +22,26 @@ const FixedWidthWrapper = styled.div`
 
 // TODO: transportationEnumId랑 맞추기
 const TransportationList = [
-  { label: "시내/마을버스", value: String(TransportationEnum.CityBus) },
-  { label: "고속/시외버스", value: String(TransportationEnum.IntercityBus) },
-  { label: "철도", value: String(TransportationEnum.Rail) },
-  { label: "택시", value: String(TransportationEnum.Taxi) },
-  { label: "전세버스", value: String(TransportationEnum.CharterBus) },
-  { label: "화물 운반", value: String(TransportationEnum.Cargo) },
-  { label: "콜밴", value: String(TransportationEnum.CallVan) },
-  { label: "비행기", value: String(TransportationEnum.Airplane) },
-  { label: "선박", value: String(TransportationEnum.Ship) },
-  { label: "기타", value: String(TransportationEnum.Others) },
+  { label: "시내/마을버스", value: String(E.CityBus) },
+  { label: "고속/시외버스", value: String(E.IntercityBus) },
+  { label: "철도", value: String(E.Rail) },
+  { label: "택시", value: String(E.Taxi) },
+  { label: "전세버스", value: String(E.CharterBus) },
+  { label: "화물 운반", value: String(E.Cargo) },
+  { label: "콜밴", value: String(E.CallVan) },
+  { label: "비행기", value: String(E.Airplane) },
+  { label: "선박", value: String(E.Ship) },
+  { label: "기타", value: String(E.Others) },
 ];
 
-const purposeInfo = (type: TransportationEnum) => {
+const purposeInfo = (enumString: string) => {
+  const type = Number(enumString);
   switch (type) {
-    case TransportationEnum.Cargo || TransportationEnum.CallVan:
+    case E.Cargo || E.CallVan:
       return "* 운반한 화물 목록을 함께 작성해주세요";
-    case TransportationEnum.Airplane || TransportationEnum.Ship:
+    case E.Airplane || E.Ship:
       return "* 행사 장소의 타당성을 함께 작성해주세요";
-    case TransportationEnum.Others:
+    case E.Others:
       return "* 운반한 화물 목록과 행사 장소의 타당성을 함께 작성해주세요";
     default:
       return "";
@@ -101,18 +102,14 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
             }
           />
         </FlexWrapper>
-        {(funding.transportation?.transportationEnumId ===
-          String(TransportationEnum.Taxi) ||
+        {(funding.transportation?.transportationEnumId === String(E.Taxi) ||
           funding.transportation?.transportationEnumId ===
-            String(TransportationEnum.CharterBus) ||
+            String(E.CharterBus) ||
+          funding.transportation?.transportationEnumId === String(E.CallVan) ||
+          funding.transportation?.transportationEnumId === String(E.Airplane) ||
+          funding.transportation?.transportationEnumId === String(E.Ship) ||
           funding.transportation?.transportationEnumId ===
-            String(TransportationEnum.CallVan) ||
-          funding.transportation?.transportationEnumId ===
-            String(TransportationEnum.Airplane) ||
-          funding.transportation?.transportationEnumId ===
-            String(TransportationEnum.Ship) ||
-          funding.transportation?.transportationEnumId ===
-            String(TransportationEnum.Others)) && (
+            String(E.Others)) && (
           <FlexWrapper direction="column" gap={4}>
             <Typography
               ff="PRETENDARD"
@@ -137,16 +134,14 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
           >
             이용 목적
           </Typography>
-          {(funding.transportation?.transportationEnumId ===
-            String(TransportationEnum.Cargo) ||
+          {(funding.transportation?.transportationEnumId === String(E.Cargo) ||
             funding.transportation?.transportationEnumId ===
-              String(TransportationEnum.CallVan) ||
+              String(E.CallVan) ||
             funding.transportation?.transportationEnumId ===
-              String(TransportationEnum.Airplane) ||
+              String(E.Airplane) ||
+            funding.transportation?.transportationEnumId === String(E.Ship) ||
             funding.transportation?.transportationEnumId ===
-              String(TransportationEnum.Ship) ||
-            funding.transportation?.transportationEnumId ===
-              String(TransportationEnum.Others)) && (
+              String(E.Others)) && (
             <Typography
               ff="PRETENDARD"
               fw="REGULAR"
@@ -155,9 +150,7 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
               color="GRAY.600"
               style={{ whiteSpace: "pre-wrap" }}
             >
-              {purposeInfo(
-                Number(funding.transportation?.transportationEnumId),
-              )}
+              {purposeInfo(funding.transportation?.transportationEnumId)}
             </Typography>
           )}
           <TextInput
