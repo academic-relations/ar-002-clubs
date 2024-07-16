@@ -102,9 +102,9 @@ const responsePreBodyMap = z.object({
   ),
 
   isNonCorporateTransaction: z.coerce.boolean(),
-  traderName: z.coerce.string().max(255),
-  traderAccountNumber: z.coerce.string().max(255),
-  wasteExplanation: z.coerce.string(),
+  traderName: z.coerce.string().max(255).optional(),
+  traderAccountNumber: z.coerce.string().max(255).optional(),
+  wasteExplanation: z.coerce.string().optional(),
 
   isFoodExpense: z.coerce.boolean(),
   isLaborContract: z.coerce.boolean(),
