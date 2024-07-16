@@ -21,6 +21,7 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
+  clubId: z.number().int().min(1).optional(),
   registrationTypeEnumId: z.nativeEnum(RegistrationTypeEnum),
   krName: zClubName,
   enName: zClubName,
@@ -67,10 +68,11 @@ const requestBody = z.object({
   /**
    * 외부강사 초빙 계획 회칙 파일은 항상 optional 합니다.
    */
-  externelInstructionFileId: z.union([
+  externalInstructionFileId: z.union([
     z.undefined(),
     z.number().int().positive(),
   ]),
+  activityId: z.number().int().min(1).optional(),
 });
 
 const responseBodyMap = {
