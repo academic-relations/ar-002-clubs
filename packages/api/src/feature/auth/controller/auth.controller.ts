@@ -7,7 +7,6 @@ import {
   UseGuards,
   UsePipes,
 } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
 import apiAut001, {
   ApiAut001ResponseOk,
 } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut001";
@@ -17,7 +16,7 @@ import apiAut002, {
 import apiAut003, {
   ApiAut003ResponseOk,
 } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut003";
-import { Response } from "express";
+import { Request, Response } from "express";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -26,6 +25,8 @@ import {
   UserAccessTokenPayload,
   UserRefreshTokenPayload,
 } from "../dto/auth.dto";
+import { JwtAccessGuard } from "../guard/jwt-access.guard";
+import { JwtRefreshGuard } from "../guard/jwt-refresh.guard";
 import { AuthService } from "../service/auth.service";
 
 @Controller()
@@ -38,11 +39,20 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<Response<ApiAut001ResponseOk>> {
     const token = await this.authService.postAuthSignin();
-    res.setHeader("Set-Cookie", `refreshToken=${token.refreshToken}`);
+    res.cookie("refreshToken", token.refreshToken, {
+      expires: token.expiresAt,
+      httpOnly: true,
+      path: "/auth/refresh",
+    });
+    res.cookie("refreshToken", token.refreshToken, {
+      expires: token.expiresAt,
+      httpOnly: true,
+      path: "/auth/sign-out",
+    });
     return res.json({ accessToken: token.accessToken });
   }
 
-  @UseGuards(AuthGuard("refresh"))
+  @UseGuards(JwtRefreshGuard)
   @Post("/auth/refresh")
   @UsePipes(new ZodPipe(apiAut002))
   async postAuthRefresh(
@@ -51,17 +61,18 @@ export class AuthController {
     return this.authService.postAuthRefresh(req.user);
   }
 
-  @UseGuards(AuthGuard("access"))
+  @UseGuards(JwtAccessGuard)
   @Post("/auth/sign-out")
   @UsePipes(new ZodPipe(apiAut003))
   postAuthSignout(
     @Req() req: Request & UserRefreshTokenPayload,
   ): Promise<ApiAut003ResponseOk> {
-    return this.authService.postAuthSignout(req.user);
+    const { refreshToken } = req?.cookies || {};
+    return this.authService.postAuthSignout(req.user, refreshToken);
   }
 
   // test용 API, 실제 사용하지 않음
-  @UseGuards(AuthGuard("access"))
+  @UseGuards(JwtAccessGuard)
   @Get("/auth/test")
   test(@Req() req: Request & UserAccessTokenPayload) {
     logger.debug(req.user);

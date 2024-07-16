@@ -4,9 +4,11 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { SemesterD } from "@sparcs-clubs/api/drizzle/schema/club.schema";
+import { RefreshToken } from "@sparcs-clubs/api/drizzle/schema/refresh-token.schema";
 import {
   Employee,
   Executive,
+  ExecutiveT,
   Professor,
   Student,
   StudentT,
@@ -243,6 +245,14 @@ export class AuthRepository {
       const executive = await this.db
         .select()
         .from(Executive)
+        .innerJoin(
+          ExecutiveT,
+          and(
+            eq(ExecutiveT.executiveId, Executive.id),
+            gte(ExecutiveT.endTerm, currentDate),
+            lte(ExecutiveT.startTerm, currentDate),
+          ),
+        )
         .where(eq(Executive.studentId, student.id))
         .then(takeUnique);
       // 만약 executive가 존재하는 경우 result에 executive를 추가
@@ -251,18 +261,20 @@ export class AuthRepository {
         result = {
           ...result,
           executive: {
-            id: executive.id,
-            studentId: executive.studentId,
+            id: executive.executive.id,
+            studentId: executive.executive.studentId,
           },
         };
       }
     }
-
     // TODO
     // type이 "Teacher"를 포함하는 경우 professor table에서 해당 email이 있는지 확인 후 upsert
     // professor_t에서 해당 professor_id이 있는지 확인 후 upsert
     // type이 "Employee"를 포함하는 경우 Employee table에서 해당 email이 있는지 확인 후 upsert
     // employee_t에서 해당 employee_id이 있는지 확인 후 upsert
+    if (type === "Professor") {
+      // type을 teacher대신 professor 로 변경하면 좋을듯 합니다.
+    }
 
     return result;
   }
@@ -400,5 +412,63 @@ export class AuthRepository {
     }
 
     return result;
+  }
+
+  async findUserAndRefreshToken(
+    userId: number,
+    refreshToken: string,
+  ): Promise<boolean> {
+    const result = await this.db
+      .select()
+      .from(User)
+      .innerJoin(
+        RefreshToken,
+        and(
+          eq(User.id, RefreshToken.userId),
+          eq(RefreshToken.refreshToken, refreshToken),
+        ),
+      )
+      .where(eq(User.id, userId));
+    return result.length > 0;
+  }
+
+  async createRefreshTokenRecord(
+    userId: number,
+    refreshToken: string,
+    expiresAt: Date,
+  ): Promise<boolean> {
+    return this.db.transaction(async tx => {
+      const [result] = await this.db
+        .insert(RefreshToken)
+        .values({ userId, expiresAt, refreshToken });
+      const { affectedRows } = result;
+      if (affectedRows > 1) {
+        await tx.rollback();
+        return false;
+      }
+      return true;
+    });
+  }
+
+  async deleteRefreshTokenRecord(
+    userId: number,
+    refreshToken: string,
+  ): Promise<boolean> {
+    return this.db.transaction(async tx => {
+      const [result] = await this.db
+        .delete(RefreshToken)
+        .where(
+          and(
+            eq(RefreshToken.userId, userId),
+            eq(RefreshToken.refreshToken, refreshToken),
+          ),
+        );
+      const { affectedRows } = result;
+      if (affectedRows > 1) {
+        await tx.rollback();
+        return false;
+      }
+      return true;
+    });
   }
 }
