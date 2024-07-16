@@ -1,3 +1,4 @@
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 
 export const TableWrapper = styled.div`
@@ -10,7 +11,9 @@ export const TableWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
 `;
 
-export const TableRow = styled.div<{ isBorder?: boolean }>`
+export const TableRow = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isBorder?: boolean }>`
   display: flex;
   flex-direction: row;
   gap: 0px;

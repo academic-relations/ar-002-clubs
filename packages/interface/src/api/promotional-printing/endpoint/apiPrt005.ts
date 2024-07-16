@@ -29,24 +29,24 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     items: z.array(
       z.object({
-        id: z.number().int().min(1),
-        studentName: z.string(),
+        id: z.coerce.number().int().min(1),
+        studentName: z.coerce.string(),
         status: z.nativeEnum(PromotionalPrintingOrderStatusEnum),
         orders: z.array(
           z.object({
             promotionalPrintingSizeEnum: z.nativeEnum(
               PromotionalPrintingSizeEnum,
             ),
-            numberOfPrints: z.number().int().min(0),
+            numberOfPrints: z.coerce.number().int().min(0),
           }),
         ),
-        desiredPickUpDate: z.date(),
-        pickUpTime: z.date().optional(),
-        createdAt: z.date(), // timestamp를 datetime 문자열로 처리, claude가 요렇게 제안해줬는데 잘 되는지 확인해보고 싶어졌어요
+        desiredPickUpDate: z.coerce.date(),
+        pickUpTime: z.coerce.date().optional(),
+        createdAt: z.coerce.date(), // timestamp를 datetime 문자열로 처리, claude가 요렇게 제안해줬는데 잘 되는지 확인해보고 싶어졌어요
       }),
     ),
-    total: z.number().int().min(0),
-    offset: z.number().int().min(1),
+    total: z.coerce.number().int().min(0),
+    offset: z.coerce.number().int().min(1),
   }),
 };
 
