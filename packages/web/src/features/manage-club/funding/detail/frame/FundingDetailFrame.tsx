@@ -18,6 +18,7 @@ import FixtureEvidenceList from "../components/FixtureEvidenceList";
 import FundingInfoList from "../components/FundingInfoList";
 import NonCorpEvidenceList from "../components/NonCorpEvidenceList";
 import OtherEvidenceList from "../components/OtherEvidenceList";
+import TransportationEvidenceList from "../components/TransportationEvidenceList";
 
 interface FundingDetailFrameProps {
   isNow: boolean;
@@ -85,6 +86,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
         <BasicEvidenceList />
         {mockFundingDetail.purposeId === 0 && <FixtureEvidenceList />}
         {mockFundingDetail.isFixture && <FixtureEvidenceList isFixture />}
+        {mockFundingDetail.isTransportation && <TransportationEvidenceList />}
         {mockFundingDetail.isNonCorporateTransaction && <NonCorpEvidenceList />}
         {mockFundingDetail.isFoodExpense && (
           <OtherEvidenceList
