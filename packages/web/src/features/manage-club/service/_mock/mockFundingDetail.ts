@@ -13,14 +13,14 @@ const mockFundingDetail: ApiFnd002ResponseOk = {
   expenditureDate: new Date(),
   expenditureAmount: 2500000,
   FundingOrderStatusEnumId: FundingOrderStatusEnum.Applied,
-  feedback: "Please review the attached receipts and documents.",
+  feedback: "피드백",
   tradeEvidenceFiles: [
     { uid: "trade1", link: "https://example.com/trade1.pdf" },
   ],
   tradeDetailFiles: [
     { uid: "detail1", link: "https://example.com/detail1.pdf" },
   ],
-  tradeDetailExplanation: "Details regarding the trades done for event.",
+  tradeDetailExplanation: "이벤트를 위한 거래에 대한 세부 정보입니다.",
 
   clubSuppliesName: "맥북",
   clubSuppliesEvidenceEnumId: FixtureEvidenceEnum.Purchase,
@@ -49,20 +49,20 @@ const mockFundingDetail: ApiFnd002ResponseOk = {
 
   isTransportation: true,
   transportationEnumId: TransportationEnum.Airplane,
-  origin: "Campus",
-  destination: "Conference Center",
-  purposeOfTransportation: "Attend conference",
-  cargoList: "Equipment, Supplies",
-  placeValidity: "Confirmed reservation",
+  origin: "서울역",
+  destination: "대전역",
+  purposeOfTransportation: "회의 참석",
+  cargoList: "장비, 물품",
+  placeValidity: "확인된 예약",
   transportationPassengers: [
     { studentNumber: "1001", name: "John Doe" },
     { studentNumber: "1002", name: "Jane Doe" },
   ],
 
   isNonCorporateTransaction: true,
-  traderName: "Independent Trader Joe",
+  traderName: "독립 트레이더 조",
   traderAccountNumber: "123456789",
-  wasteExplanation: "Miscellaneous expenses not categorized elsewhere",
+  wasteExplanation: "기타 분류되지 않은 잡비용",
 
   isFoodExpense: true,
   isLaborContract: true,
@@ -72,16 +72,13 @@ const mockFundingDetail: ApiFnd002ResponseOk = {
   isJointExpense: true,
   isEtcExpense: true,
 
-  foodExpenseExplanation: "Catering for the event",
-  laborContractExplanation: "Temporary staff for the event setup",
-  externalEventParticipationFeeExplanation:
-    "Fee for participating in the external tech fest",
-  publicationExplanation:
-    "Printing materials for the club's promotional activities",
-  profitMakingActivityExplanation: "Sales from club merchandise",
-  jointExpenseExplanation:
-    "Joint funding with another club for a combined event",
-  etcExpenseExplanation: "Other minor expenses",
+  foodExpenseExplanation: "어떠한 설명",
+  laborContractExplanation: "어떠한 설명",
+  externalEventParticipationFeeExplanation: "어떠한 설명",
+  publicationExplanation: "어떠한 설명",
+  profitMakingActivityExplanation: "어떠한 설명",
+  jointExpenseExplanation: "어떠한 설명",
+  etcExpenseExplanation: "어떠한 설명",
 
   foodExpenseFiles: [{ uid: "food1", link: "https://example.com/food1.pdf" }],
   laborContractFiles: [

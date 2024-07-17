@@ -17,6 +17,7 @@ import BasicEvidenceList from "../components/BasicEvidenceList";
 import FixtureEvidenceList from "../components/FixtureEvidenceList";
 import FundingInfoList from "../components/FundingInfoList";
 import NonCorpEvidenceList from "../components/NonCorpEvidenceList";
+import OtherEvidenceList from "../components/OtherEvidenceList";
 
 interface FundingDetailFrameProps {
   isNow: boolean;
@@ -85,6 +86,52 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
         {mockFundingDetail.purposeId === 0 && <FixtureEvidenceList />}
         {mockFundingDetail.isFixture && <FixtureEvidenceList isFixture />}
         {mockFundingDetail.isNonCorporateTransaction && <NonCorpEvidenceList />}
+        {mockFundingDetail.isFoodExpense && (
+          <OtherEvidenceList
+            content="식비"
+            explanation={mockFundingDetail.foodExpenseExplanation ?? ""}
+          />
+        )}
+        {mockFundingDetail.isLaborContract && (
+          <OtherEvidenceList
+            content="근로 계약"
+            explanation={mockFundingDetail.laborContractExplanation ?? ""}
+          />
+        )}
+        {mockFundingDetail.isExternalEventParticipationFee && (
+          <OtherEvidenceList
+            content="외부 행사 참가비"
+            explanation={
+              mockFundingDetail.externalEventParticipationFeeExplanation ?? ""
+            }
+          />
+        )}
+        {mockFundingDetail.isPublication && (
+          <OtherEvidenceList
+            content="발간물"
+            explanation={mockFundingDetail.publicationExplanation ?? ""}
+          />
+        )}
+        {mockFundingDetail.isProfitMakingActivity && (
+          <OtherEvidenceList
+            content="수익 사업"
+            explanation={
+              mockFundingDetail.profitMakingActivityExplanation ?? ""
+            }
+          />
+        )}
+        {mockFundingDetail.isJointExpense && (
+          <OtherEvidenceList
+            content="공동 경비"
+            explanation={mockFundingDetail.jointExpenseExplanation ?? ""}
+          />
+        )}
+        {mockFundingDetail.isEtcExpense && (
+          <OtherEvidenceList
+            content="기타"
+            explanation={mockFundingDetail.etcExpenseExplanation ?? ""}
+          />
+        )}
       </Card>
       <ButtonWrapper>
         <Button type="default" onClick={onClick}>
