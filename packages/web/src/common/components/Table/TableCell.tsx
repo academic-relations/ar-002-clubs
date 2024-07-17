@@ -28,7 +28,7 @@ const CommonCellHeaderWrapper = styled.th.withConfig({
   width: string | number;
   minWidth: number;
 }>`
-  width: ${({ width }) => (typeof width === "number" ? `${width}px` : width)};
+  width: ${({ width }) => (typeof width === "number" ? `${width}%` : width)};
   min-width: ${({ minWidth }) => `${minWidth}px`};
   display: flex;
   justify-content: center;
@@ -47,7 +47,7 @@ const CommonCellBodyWrapper = styled.td.withConfig({
   width: string | number;
   minWidth: number;
 }>`
-  width: ${({ width }) => (typeof width === "number" ? `${width}px` : width)};
+  width: ${({ width }) => (typeof width === "number" ? `${width}%` : width)};
   min-width: ${({ minWidth }) => `${minWidth}px`};
   display: flex;
   justify-content: center;

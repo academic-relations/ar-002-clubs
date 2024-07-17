@@ -1,10 +1,12 @@
 import React from "react";
 
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
-  TableRow,
-  TableWrapper,
-} from "@sparcs-clubs/web/common/components/Table/TableWrapper";
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import {
   ActTypeTagList,
@@ -19,51 +21,52 @@ interface ActivityTableProps {
   activityList: Activity[];
 }
 
+const columnHelper = createColumnHelper<Activity>();
+
+const columns = [
+  columnHelper.accessor("status", {
+    header: "상태",
+    cell: info => {
+      const { color, text } = getTagDetail(info.getValue(), ApplyTagList);
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 10,
+  }),
+  columnHelper.accessor("name", {
+    header: "활동명",
+    cell: info => info.getValue(),
+    size: 30,
+  }),
+  columnHelper.accessor("type", {
+    header: "활동 분류",
+    cell: info => {
+      const { color, text } = getTagDetail(info.getValue(), ActTypeTagList);
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 25,
+  }),
+  columnHelper.accessor(
+    row => `${formatDate(row.startDate)} ~ ${formatDate(row.endDate)}`,
+    {
+      id: "date-range",
+      header: "활동 기간",
+      cell: info => info.getValue(),
+      size: 35,
+    },
+  ),
+];
+
 const ActivityReportTable: React.FC<ActivityTableProps> = ({
   activityList,
-}) => (
-  <TableWrapper>
-    <TableRow>
-      <TableCell type="Header" width="10%" minWidth={116}>
-        상태
-      </TableCell>
-      <TableCell type="Header" width="30%">
-        활동명
-      </TableCell>
-      <TableCell type="Header" width="25%" minWidth={248}>
-        활동 분류
-      </TableCell>
-      <TableCell type="Header" width="35%">
-        활동 기간
-      </TableCell>
-    </TableRow>
-    {activityList.map((activity, index) => {
-      const { color: actColor, text: actText } = getTagDetail(
-        activity.status,
-        ApplyTagList,
-      );
-      const { color: typeColor, text: typeText } = getTagDetail(
-        activity.type,
-        ActTypeTagList,
-      );
-      return (
-        <TableRow key={activity.name + String(index)} isBorder>
-          <TableCell type="Tag" width="10%" minWidth={116}>
-            <Tag color={actColor}>{actText}</Tag>
-          </TableCell>
-          <TableCell type="Default" width="30%">
-            {activity.name}
-          </TableCell>
-          <TableCell type="Tag" width="25%" minWidth={248}>
-            <Tag color={typeColor}>{typeText}</Tag>
-          </TableCell>
-          <TableCell type="Default" width="35%">
-            {formatDate(activity.startDate)} ~ {formatDate(activity.endDate)}
-          </TableCell>
-        </TableRow>
-      );
-    })}
-  </TableWrapper>
-);
+}) => {
+  const table = useReactTable({
+    columns,
+    data: activityList,
+    getCoreRowModel: getCoreRowModel(),
+    enableSorting: false,
+  });
+
+  return <Table table={table} />;
+};
 
 export default ActivityReportTable;
