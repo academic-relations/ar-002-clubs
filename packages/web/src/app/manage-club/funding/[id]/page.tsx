@@ -18,7 +18,6 @@ const FundingDetail = () => (
     />
     {/* TODO: 기간 맞춰서 isNow 설정 */}
     <FundingDetailFrame isNow />
-    <FundingDetailFrame isNow={false} />
   </FlexWrapper>
 );
 

@@ -14,6 +14,7 @@ import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/service/_mock/mockFundingDetail";
 
 import BasicEvidenceList from "../components/BasicEvidenceList";
+import FixtureEvidenceList from "../components/FixtureEvidenceList";
 import FundingInfoList from "../components/FundingInfoList";
 import NonCorpEvidenceList from "../components/NonCorpEvidenceList";
 
@@ -81,6 +82,8 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
         )}
         <FundingInfoList />
         <BasicEvidenceList />
+        {mockFundingDetail.purposeId === 0 && <FixtureEvidenceList />}
+        {mockFundingDetail.isFixture && <FixtureEvidenceList isFixture />}
         {mockFundingDetail.isNonCorporateTransaction && <NonCorpEvidenceList />}
       </Card>
       <ButtonWrapper>

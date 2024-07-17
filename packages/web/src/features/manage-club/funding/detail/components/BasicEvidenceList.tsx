@@ -9,6 +9,9 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { ListItem } from "./FundingInfoList";
 
 export const FileWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   padding-left: 24px;
 `;
 

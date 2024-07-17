@@ -16,7 +16,8 @@ export const ListItem = styled.div`
 
   &:before {
     content: "•";
-    padding-right: 12px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 `;
 
