@@ -8,7 +8,7 @@ import Typography from "./Typography";
 
 interface FilePreviewProps {
   fileName: string;
-  edit: boolean;
+  edit?: boolean;
 }
 
 const FilePreviewWrapper = styled.div`
@@ -19,7 +19,10 @@ const FilePreviewWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const FilePreview: React.FC<FilePreviewProps> = ({ fileName, edit }) => (
+const FilePreview: React.FC<FilePreviewProps> = ({
+  fileName,
+  edit = false,
+}) => (
   <FilePreviewWrapper>
     <InsertDriveFileOutlined fontSize="inherit" />
     <Typography
@@ -32,7 +35,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({ fileName, edit }) => (
     >
       {fileName}
     </Typography>
-    {/* edit 기능 넣기 */}
+    {/* TODO: edit 기능 넣기 */}
     {edit && <Icon type="close" size={16} />}
   </FilePreviewWrapper>
 );
