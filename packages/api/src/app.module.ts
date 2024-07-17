@@ -12,7 +12,7 @@ import { FileModule } from "./feature/file/file.module";
 import { NoticeModule } from "./feature/notice/notice.module";
 import { PromotionalPrintingModule } from "./feature/promotional-printing/promotional-printing.module";
 import { RentalModule } from "./feature/rental/rental.module";
-import { UserModule } from "./feature/user/user.module";
+import UserModule from "./feature/user/user.module";
 
 @Module({
   imports: [

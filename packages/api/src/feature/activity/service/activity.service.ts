@@ -26,7 +26,7 @@ export default class ActivityService {
     const activity = result[0];
 
     if (
-      !(await this.clubPublicService.isStudentRepresentative(
+      !(await this.clubPublicService.isStudentDelegate(
         studentId,
         activity.clubId,
       ))
@@ -70,9 +70,7 @@ export default class ActivityService {
     clubId: number,
     studentId: number,
   ): Promise<ApiAct005ResponseOk> {
-    if (
-      !(await this.clubPublicService.isStudentRepresentative(studentId, clubId))
-    )
+    if (!(await this.clubPublicService.isStudentDelegate(studentId, clubId)))
       throw new HttpException(
         "It seems that student is not representative.",
         HttpStatus.FORBIDDEN,
@@ -124,7 +122,7 @@ export default class ActivityService {
 
     // 작성자가 해당 동아리의 대표자가 맞는지 검사합니다.
     if (
-      !(await this.clubPublicService.isStudentRepresentative(
+      !(await this.clubPublicService.isStudentDelegate(
         mockUpStudentId,
         body.clubId,
       ))

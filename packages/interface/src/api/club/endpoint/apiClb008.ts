@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { ClubRepresentativeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 
 /**
@@ -15,7 +15,7 @@ const method = "GET";
 
 const requestParam = z.object({
   clubId: z.number().int(),
-  representativeEnumId: z.nativeEnum(ClubRepresentativeEnum),
+  representativeEnumId: z.nativeEnum(ClubDelegateEnum),
 });
 
 const requestQuery = z.object({});
