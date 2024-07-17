@@ -20,7 +20,11 @@ const mockFundingDetail: ApiFnd002ResponseOk = {
   fixtureSoftwareEvidenceFiles: [],
   isTransportation: false,
   transportationPassengers: [],
-  isNonCorporateTransaction: false,
+
+  isNonCorporateTransaction: true,
+  traderName: "거래자명",
+  traderAccountNumber: "000000000",
+  wasteExplanation: "낭비 아니라는 소명",
 
   isFoodExpense: false,
   isLaborContract: false,

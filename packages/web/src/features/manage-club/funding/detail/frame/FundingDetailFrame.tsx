@@ -11,9 +11,11 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
+import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/service/_mock/mockFundingDetail";
 
 import BasicEvidenceList from "../components/BasicEvidenceList";
 import FundingInfoList from "../components/FundingInfoList";
+import NonCorpEvidenceList from "../components/NonCorpEvidenceList";
 
 interface FundingDetailFrameProps {
   isNow: boolean;
@@ -79,6 +81,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
         )}
         <FundingInfoList />
         <BasicEvidenceList />
+        {mockFundingDetail.isNonCorporateTransaction && <NonCorpEvidenceList />}
       </Card>
       <ButtonWrapper>
         <Button type="default" onClick={onClick}>
