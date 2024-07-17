@@ -11,8 +11,8 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import BasicEvidenceList from "../components/BasicEvidenceList";
 import FundingInfoList from "../components/FundingInfoList";
 
 interface FundingDetailFrameProps {
@@ -78,18 +78,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
           />
         )}
         <FundingInfoList />
-        <FlexWrapper direction="column" gap={16}>
-          <Typography
-            ff="PRETENDARD"
-            fw="MEDIUM"
-            fs={16}
-            lh={20}
-            color="BLACK"
-            style={{ paddingLeft: 2, paddingRight: 2 }}
-          >
-            필수 증빙
-          </Typography>
-        </FlexWrapper>
+        <BasicEvidenceList />
       </Card>
       <ButtonWrapper>
         <Button type="default" onClick={onClick}>
