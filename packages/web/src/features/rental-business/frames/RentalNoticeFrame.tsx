@@ -65,8 +65,10 @@ const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
   return (
     <RentalNoticeFrameInner>
       <Card outline gap={16}>
-        <Typography type="h3">안내사항</Typography>
-        <StyledTypography type="p">
+        <Typography fs={20} lh={24} fw="MEDIUM">
+          안내사항
+        </Typography>
+        <StyledTypography fs={16} lh={20} fw="REGULAR">
           모든 대여 사업은 동연 소속 동아리를 대상으로 하며, 신청은 각 동아리의
           대표자 또는 대의원만 가능합니다
           <br />
@@ -79,7 +81,7 @@ const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
             checked={checked}
             onClick={() => setChecked(prev => !prev)}
           />
-          <Typography type="p">
+          <Typography fs={16} lh={20} fw="REGULAR">
             위의 안내사항을 모두 숙지하였으며, 이에 동의합니다
           </Typography>
         </StyledCheckboxOuter>

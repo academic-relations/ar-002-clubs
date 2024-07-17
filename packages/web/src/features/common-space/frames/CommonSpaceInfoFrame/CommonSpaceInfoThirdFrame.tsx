@@ -54,7 +54,9 @@ const CommonSpaceInfoThirdFrame: React.FC<
     <>
       <Card outline gap={20}>
         <CardInner>
-          <StyledTypography type="p">신청자 정보</StyledTypography>
+          <StyledTypography fs={16} lh={20} fw="REGULAR">
+            신청자 정보
+          </StyledTypography>
           <StyledList>
             <li>동아리: {commonSpace.userInfo?.clubName}</li>
             <li>담당자: {commonSpace.userInfo?.name}</li>
@@ -62,8 +64,10 @@ const CommonSpaceInfoThirdFrame: React.FC<
           </StyledList>
         </CardInner>
         <ReservationInfo>
-          <Typography type="p_b">예약 공간</Typography>
-          <Typography type="p">
+          <Typography fs={16} lh={20} fw="MEDIUM">
+            예약 공간
+          </Typography>
+          <Typography fs={16} lh={20} fw="REGULAR">
             {commonSpace.spaceName},{" "}
             {format(startTerm, "M/d(E) ", { locale: ko })}
             {format(startTerm, "HH:mm", { locale: ko })} ~

@@ -53,49 +53,63 @@ const ActivityCertificateInfoThirdFrame: React.FC<
       <BasicInfoSummaryFrameInner>
         <Typography
           key="orderUserInfo"
-          type="p"
+          fs={16}
+          lh={20}
+          fw="REGULAR"
           style={{ whiteSpace: "pre-wrap", fontWeight: 500 }}
         >
           신청자 정보
         </Typography>
         <Typography
           key="orderUserName"
-          type="p"
+          fs={16}
+          lh={20}
+          fw="REGULAR"
           style={{ whiteSpace: "pre-wrap" }}
         >
           {`  •  이름: ${activityCertificate.applicant}`}
         </Typography>
         <Typography
           key="orderUserDepartment"
-          type="p"
+          fs={16}
+          lh={20}
+          fw="REGULAR"
           style={{ whiteSpace: "pre-wrap" }}
         >
           {`  •  학과: ${activityCertificate.department}`}
         </Typography>
         <Typography
           key="orderUserStudentNumber"
-          type="p"
+          fs={16}
+          lh={20}
+          fw="REGULAR"
           style={{ whiteSpace: "pre-wrap" }}
         >
           {`  •  학번: ${activityCertificate.studentNumber}`}
         </Typography>
         <Typography
           key="orderUserPhoneNumber"
-          type="p"
+          fs={16}
+          lh={20}
+          fw="REGULAR"
           style={{ whiteSpace: "pre-wrap" }}
         >
           {`  •  연락처: ${activityCertificate.krPhoneNumber}`}
         </Typography>
         <Typography
           key="orderInfo"
-          type="p"
+          fs={16}
+          lh={20}
+          fw="REGULAR"
           style={{ whiteSpace: "pre-wrap", fontWeight: 500 }}
         >
           활동확인서 발급 신청 정보
         </Typography>
         <Typography
           key="orderInfoClub"
-          type="p"
+          fs={16}
+          lh={20}
+          fw="REGULAR"
           style={{ whiteSpace: "pre-wrap" }}
         >
           {`  •  동아리: ${activityCertificate.clubId!}`}{" "}
@@ -103,7 +117,9 @@ const ActivityCertificateInfoThirdFrame: React.FC<
         </Typography>
         <Typography
           key="orderInfoDuration"
-          type="p"
+          fs={16}
+          lh={20}
+          fw="REGULAR"
           style={{ whiteSpace: "pre-wrap" }}
         >
           {`  •  활동 기간: ${activityCertificate.startMonth} ~ ${activityCertificate.endMonth}`}
@@ -111,14 +127,18 @@ const ActivityCertificateInfoThirdFrame: React.FC<
         </Typography>
         <Typography
           key="orderInfoIssueCount"
-          type="p"
+          fs={16}
+          lh={20}
+          fw="REGULAR"
           style={{ whiteSpace: "pre-wrap" }}
         >
           {`  •  발급 매수: ${activityCertificate.issuedNumber!}매`}
         </Typography>
         <Typography
           key="orderInfoText"
-          type="p"
+          fs={16}
+          lh={20}
+          fw="REGULAR"
           style={{ whiteSpace: "pre-wrap" }}
         >
           {`  •  활동 내역`}
@@ -132,7 +152,9 @@ const ActivityCertificateInfoThirdFrame: React.FC<
                 parseInt(activityDescription.endMonth.split(".")[1]) ? (
                 <Typography
                   key={`${activityDescription.key}_start`}
-                  type="p"
+                  fs={16}
+                  lh={20}
+                  fw="REGULAR"
                   style={{
                     whiteSpace: "pre-wrap",
                     width: "200px",
@@ -144,7 +166,9 @@ const ActivityCertificateInfoThirdFrame: React.FC<
               ) : (
                 <Typography
                   key={`${activityDescription.key}_end`}
-                  type="p"
+                  fs={16}
+                  lh={20}
+                  fw="REGULAR"
                   style={{
                     whiteSpace: "pre-wrap",
                     width: "200px",
@@ -157,7 +181,9 @@ const ActivityCertificateInfoThirdFrame: React.FC<
 
               <Typography
                 key={`${activityDescription.key}_description`}
-                type="p"
+                fs={16}
+                lh={20}
+                fw="REGULAR"
                 style={{
                   whiteSpace: "pre-wrap",
                   flex: "1 1 0",

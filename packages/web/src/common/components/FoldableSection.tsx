@@ -54,7 +54,9 @@ const FoldableSection: React.FC<{
   return (
     <FoldableSectionOuter>
       <FoldableSectionInner>
-        <Typography type="h3">{title}</Typography>
+        <Typography fs={20} lh={24} fw="MEDIUM">
+          {title}
+        </Typography>
         <MoreInfo onClick={toggleHandler ?? openHandler}>
           {toggle ?? open ? `접기` : `펼치기`}
         </MoreInfo>

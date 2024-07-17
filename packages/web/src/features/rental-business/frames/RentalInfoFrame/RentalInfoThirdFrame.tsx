@@ -66,21 +66,27 @@ const RentalInfoThirdFrame: React.FC<
   return (
     <Card outline gap={20}>
       <CardInner>
-        <StyledTypography type="p">신청자 정보</StyledTypography>
+        <StyledTypography fs={16} lh={20} fw="REGULAR">
+          신청자 정보
+        </StyledTypography>
         <ListContainer>
           <ListItem>동아리: {rental.info?.clubName}</ListItem>
           <ListItem>담당자: {rental.info?.applicant}</ListItem>
           <ListItem>연락처: {rental.info?.phone}</ListItem>
         </ListContainer>
         <FlexWrapper direction="row" gap={16}>
-          <StyledTypography type="p">대여 기간</StyledTypography>
+          <StyledTypography fs={16} lh={20} fw="REGULAR">
+            대여 기간
+          </StyledTypography>
           <RentalPeriodInner>
             {formatDate(rental.date?.start || new Date())} ~
             {formatDate(rental.date?.end || new Date())}
             {/* new Date() 넣어도 되는 이유: thirdFrame에서는 rental date가 둘 다 not null인 상태로 넘어옴 */}
           </RentalPeriodInner>
         </FlexWrapper>
-        <StyledTypography type="p">대여 물품</StyledTypography>
+        <StyledTypography fs={16} lh={20} fw="REGULAR">
+          대여 물품
+        </StyledTypography>
         <RentalList rental={rental} />
       </CardInner>
       <TextInput
