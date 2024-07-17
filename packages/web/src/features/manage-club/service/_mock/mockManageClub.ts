@@ -66,22 +66,22 @@ const mockClubDescription: ApiClb004ResponseOK = {
   roomPassword: "password",
 };
 
-const mockClubRepresentatives: ApiClb006ResponseOK = {
-  representatives: [
+const mockClubDelegates: ApiClb006ResponseOK = {
+  delegates: [
     {
-      representitiveEnum: 1,
+      delegateEnumId: 1,
       studentId: 20200510,
       name: "이지윤",
       phoneNumber: "010-1234-5678",
     },
     {
-      representitiveEnum: 2,
+      delegateEnumId: 2,
       studentId: 20200511,
       name: "박지호",
       phoneNumber: "010-1234-5678",
     },
     {
-      representitiveEnum: 2,
+      delegateEnumId: 2,
       studentId: 20200512,
       name: "박병찬",
       phoneNumber: "010-1234-5678",
@@ -570,6 +570,6 @@ export {
   mockupManagePrint,
   mockupManageCms,
   mockClubDescription,
-  mockClubRepresentatives,
+  mockClubDelegates,
   mockClubMembers,
 };

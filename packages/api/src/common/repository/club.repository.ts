@@ -5,7 +5,7 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import {
   Club,
-  ClubRepresentativeD,
+  ClubDelegateD,
   ClubStudentT,
   ClubT,
 } from "@sparcs-clubs/api/drizzle/schema/club.schema";
@@ -127,17 +127,14 @@ export class ClubRepository {
         ),
       )
       .leftJoin(
-        ClubRepresentativeD,
+        ClubDelegateD,
         and(
-          eq(Club.id, ClubRepresentativeD.clubId),
-          eq(ClubRepresentativeD.clubRepresentativeEnum, 1),
-          or(
-            isNull(ClubRepresentativeD.endTerm),
-            gte(ClubRepresentativeD.endTerm, crt),
-          ),
+          eq(Club.id, ClubDelegateD.clubId),
+          eq(ClubDelegateD.ClubDelegateEnumId, 1),
+          or(isNull(ClubDelegateD.endTerm), gte(ClubDelegateD.endTerm, crt)),
         ),
       )
-      .leftJoin(Student, eq(ClubRepresentativeD.studentId, Student.id))
+      .leftJoin(Student, eq(ClubDelegateD.studentId, Student.id))
       .leftJoin(
         DivisionPermanentClubD,
         eq(Club.id, DivisionPermanentClubD.clubId),
