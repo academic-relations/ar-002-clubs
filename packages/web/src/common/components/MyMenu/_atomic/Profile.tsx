@@ -1,5 +1,6 @@
 import React from "react";
 
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
@@ -13,7 +14,9 @@ interface ProfileProps {
   onClick: () => void;
 }
 
-const ProfileWrapper = styled.div<{ isSelected: boolean }>`
+const ProfileWrapper = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isSelected: boolean }>`
   display: flex;
   flex-direction: row;
   gap: 8px;
