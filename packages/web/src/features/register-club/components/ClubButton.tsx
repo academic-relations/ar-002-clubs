@@ -8,7 +8,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 interface ClubButtonProps {
   title: string;
   buttonText: string;
-  selected: bool;
+  selected: boolean;
   onClick?: VoidFunction;
 }
 
