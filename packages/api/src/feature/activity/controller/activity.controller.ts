@@ -9,6 +9,7 @@ import {
 } from "@nestjs/common";
 
 import apiAct001 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct001";
+import apiAct002 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
 import apiAct004 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct004";
 import apiAct005 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
 
@@ -20,6 +21,10 @@ import type {
   ApiAct001RequestBody,
   ApiAct001ResponseCreated,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct001";
+import type {
+  ApiAct002RequestParam,
+  ApiAct002ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
 import type {
   ApiAct004RequestParam,
   ApiAct004ResponseOk,
@@ -51,14 +56,28 @@ export default class ActivityController {
   // TODO: Authentication 필요
   @Get("/student/activities")
   @UsePipes(new ZodPipe(apiAct005))
-  async getStudentActivity(
+  async getStudentActivities(
     @Body() body: ApiAct005RequestBody,
   ): Promise<ApiAct005ResponseOk> {
     const mockUpStudentId = 605;
-    const result = await this.activityService.getStudentActivity(
+    const result = await this.activityService.getStudentActivities(
       body.clubId,
       mockUpStudentId,
     );
+    return result;
+  }
+
+  @Get("/student/activities/activity/:activityId")
+  @UsePipes(new ZodPipe(apiAct002))
+  async getStudentActivity(
+    @Param() param: ApiAct002RequestParam,
+  ): Promise<ApiAct002ResponseOk> {
+    const mockUpStudentId = 605;
+    const result = await this.activityService.getStudentActivity(
+      param.activityId,
+      mockUpStudentId,
+    );
+
     return result;
   }
 

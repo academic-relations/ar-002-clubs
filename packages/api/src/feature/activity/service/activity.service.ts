@@ -5,9 +5,10 @@ import { ActivityDeadlineEnum } from "@sparcs-clubs/interface/common/enum/activi
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 
-import ActivityRepository from "../repository/activity.repositroy";
+import ActivityRepository from "../repository/activity.repository";
 
 import type { ApiAct001RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct001";
+import type { ApiAct002ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
 import type { ApiAct005ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
 
 @Injectable()
@@ -66,7 +67,7 @@ export default class ActivityService {
     }
   }
 
-  async getStudentActivity(
+  async getStudentActivities(
     clubId: number,
     studentId: number,
   ): Promise<ApiAct005ResponseOk> {
@@ -115,6 +116,60 @@ export default class ActivityService {
       startTerm: row.startTerm,
       endTerm: row.endTerm,
     }));
+  }
+
+  async getStudentActivity(
+    activityId: number,
+    studentId: number,
+  ): Promise<ApiAct002ResponseOk> {
+    const activities =
+      await this.activityRepository.selectActivityByActivityId(activityId);
+    if (activities.length > 1)
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+    if (activities.length === 0)
+      throw new HttpException("No such activity", HttpStatus.NOT_FOUND);
+    const activity = activities[0];
+
+    if (
+      !(await this.clubPublicService.isStudentDelegate(
+        studentId,
+        activity.clubId,
+      ))
+    )
+      throw new HttpException(
+        "It seems that you are not a delegate of the club",
+        HttpStatus.FORBIDDEN,
+      );
+
+    const evidence = await this.activityRepository.selectFileByActivityId(
+      activity.id,
+    );
+    const participants =
+      await this.activityRepository.selectParticipantByActivityId(activity.id);
+    const duration = await this.activityRepository.selectDurationByActivityId(
+      activity.id,
+    );
+
+    return {
+      clubId: activity.clubId,
+      name: activity.name,
+      originalName: activity.originalName,
+      activityTypeEnumId: activity.activityTypeEnumId,
+      location: activity.location,
+      purpose: activity.purpose,
+      detail: activity.detail,
+      evidence: activity.evidence,
+      evidenceFiles: evidence.map(e => ({
+        uuid: e.fileId,
+      })),
+      participants: participants.map(e => ({
+        studentId: e.studentId,
+      })),
+      durations: duration.map(e => ({
+        startTerm: e.startTerm,
+        endTerm: e.endTerm,
+      })),
+    };
   }
 
   async postStudentActivity(body: ApiAct001RequestBody): Promise<void> {

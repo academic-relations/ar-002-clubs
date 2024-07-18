@@ -272,12 +272,39 @@ export default class ActivityRepository {
     return result;
   }
 
+  async selectFileByActivityId(activityId: number) {
+    const result = await this.db
+      .select()
+      .from(ActivityEvidenceFile)
+      .where(
+        and(
+          eq(ActivityEvidenceFile.activityId, activityId),
+          isNull(ActivityEvidenceFile.deletedAt),
+        ),
+      );
+    return result;
+  }
+
   async selectDurationByActivityId(activityId: number) {
     const result = await this.db
       .select()
       .from(ActivityT)
       .where(
         and(eq(ActivityT.activityId, activityId), isNull(ActivityT.deletedAt)),
+      );
+
+    return result;
+  }
+
+  async selectParticipantByActivityId(activityId: number) {
+    const result = await this.db
+      .select()
+      .from(ActivityParticipant)
+      .where(
+        and(
+          eq(ActivityParticipant.activityId, activityId),
+          isNull(ActivityParticipant.deletedAt),
+        ),
       );
 
     return result;
