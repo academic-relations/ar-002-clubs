@@ -45,12 +45,7 @@ interface TypographyPropsWithCustomStyles extends TypographyPropsBase {
   color?: ThemeColors;
 }
 
-type TypographyProps = {
-  fs?: number;
-  lh?: number;
-  fw?: keyof Theme["fonts"]["WEIGHT"];
-  color?: ThemeColors;
-} & TypographyPropsBase;
+type TypographyProps = TypographyPropsWithCustomStyles;
 
 const TypographyInner = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
