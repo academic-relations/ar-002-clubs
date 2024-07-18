@@ -46,10 +46,10 @@ interface TypographyPropsWithCustomStyles extends TypographyPropsBase {
 }
 
 type TypographyProps = {
-  fs?: number;
-  lh?: number;
-  fw?: keyof Theme["fonts"]["WEIGHT"];
-  color?: number;
+  fs?: never;
+  lh?: never;
+  fw?: never;
+  color?: never;
 } & TypographyPropsBase;
 
 const TypographyInner = styled.div.withConfig({
