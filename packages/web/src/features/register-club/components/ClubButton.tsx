@@ -12,7 +12,7 @@ interface ClubButtonTextProps {
 
 interface ClubButtonProps {
   title: string;
-  buttonText: ClubButtonTextProps;
+  buttonText: ClubButtonTextProps[];
   onClick?: VoidFunction;
 }
 
