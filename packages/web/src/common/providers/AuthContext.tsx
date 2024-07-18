@@ -9,9 +9,11 @@ import React, {
   useState,
 } from "react";
 
+import postLogin from "../services/postLogin";
+
 interface AuthContextType {
   isLoggedIn: boolean;
-  login: () => void;
+  login: () => Promise<void>;
   logout: () => void;
 }
 
@@ -23,20 +25,31 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
-    const storedIsLoggedIn = localStorage.getItem("isLoggedIn");
-    if (storedIsLoggedIn === "true") {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
       setIsLoggedIn(true);
     }
   }, []);
 
-  const login = () => {
-    setIsLoggedIn(true);
-    localStorage.setItem("isLoggedIn", "true");
+  const login = async () => {
+    try {
+      const response = await postLogin();
+      if (response && response.accessToken) {
+        localStorage.setItem(
+          "accessToken",
+          response.accessToken.undergraduate ?? "",
+        );
+        setIsLoggedIn(true);
+        console.log("Logged in successfully.");
+      }
+    } catch (error) {
+      console.error("Login failed", error);
+    }
   };
 
   const logout = () => {
     setIsLoggedIn(false);
-    localStorage.setItem("isLoggedIn", "false");
+    localStorage.removeItem("accessToken");
   };
 
   const value = useMemo(() => ({ isLoggedIn, login, logout }), [isLoggedIn]);
