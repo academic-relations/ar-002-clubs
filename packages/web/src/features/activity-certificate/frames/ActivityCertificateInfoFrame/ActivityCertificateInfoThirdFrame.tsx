@@ -55,8 +55,8 @@ const ActivityCertificateInfoThirdFrame: React.FC<
           key="orderUserInfo"
           fs={16}
           lh={20}
-          fw="REGULAR"
-          style={{ whiteSpace: "pre-wrap", fontWeight: 500 }}
+          fw="MEDIUM"
+          style={{ whiteSpace: "pre-wrap" }}
         >
           신청자 정보
         </Typography>
@@ -100,8 +100,8 @@ const ActivityCertificateInfoThirdFrame: React.FC<
           key="orderInfo"
           fs={16}
           lh={20}
-          fw="REGULAR"
-          style={{ whiteSpace: "pre-wrap", fontWeight: 500 }}
+          fw="MEDIUM"
+          style={{ whiteSpace: "pre-wrap" }}
         >
           활동확인서 발급 신청 정보
         </Typography>

@@ -223,7 +223,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
                   <Typography fs={16} lh={20} fw="BOLD">
                     선택 시간
                   </Typography>
-                  <Typography fs={16} lh={20} fw="REGULAR">
+                  <Typography fs={14} lh={20} fw="REGULAR">
                     {formatSimpleSlashDate(dateTimeRange[0])}
                     {formatTime(dateTimeRange[0])}~
                     {formatTime(dateTimeRange[1])} ({`${diffHours}시간`}

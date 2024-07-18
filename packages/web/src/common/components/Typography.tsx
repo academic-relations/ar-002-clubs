@@ -9,10 +9,6 @@ interface TypographyPropsBase extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-interface TypographyPropsWithType extends TypographyPropsBase {
-  type: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "p_b" | "span" | "h3_b";
-}
-
 type ColorKeys = keyof Theme["colors"];
 type NestedColorKeys<C extends ColorKeys> = C extends keyof Theme["colors"]
   ? Theme["colors"][C] extends string | number
@@ -49,14 +45,12 @@ interface TypographyPropsWithCustomStyles extends TypographyPropsBase {
   color?: ThemeColors;
 }
 
-type TypographyProps =
-  | (TypographyPropsWithType & {
-      fs?: never;
-      lh?: never;
-      fw?: never;
-      color?: never;
-    })
-  | (TypographyPropsWithCustomStyles & { type?: never });
+type TypographyProps = {
+  fs?: never;
+  lh?: never;
+  fw?: never;
+  color?: never;
+} & TypographyPropsBase;
 
 const TypographyInner = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),

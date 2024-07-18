@@ -11,10 +11,6 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 
-const StyledTypography = styled(Typography)`
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
-`;
-
 const CardInner = styled.div`
   display: flex;
   flex-direction: column;
@@ -54,9 +50,9 @@ const CommonSpaceInfoThirdFrame: React.FC<
     <>
       <Card outline gap={20}>
         <CardInner>
-          <StyledTypography fs={16} lh={20} fw="REGULAR">
+          <Typography fs={16} lh={20} fw="MEDIUM">
             신청자 정보
-          </StyledTypography>
+          </Typography>
           <StyledList>
             <li>동아리: {commonSpace.userInfo?.clubName}</li>
             <li>담당자: {commonSpace.userInfo?.name}</li>

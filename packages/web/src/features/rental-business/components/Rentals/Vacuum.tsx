@@ -26,7 +26,7 @@ const Vacuum: React.FC<RentalLimitProps> = ({
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <Typography fs={16} lh={20} fw="REGULAR">
+      <Typography fs={16} lh={20} fw="MEDIUM">
         청소기 종류
       </Typography>
       <Radio

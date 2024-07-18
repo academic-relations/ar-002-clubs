@@ -24,7 +24,7 @@ const InfoInner = styled.div`
 const Info: React.FC<InfoProps> = ({ text }) => (
   <InfoInner>
     <Icon type="info_outlined" size={20} />
-    <Typography fs={16} lh={20} fw="REGULAR">
+    <Typography fs={16} lh={24} fw="REGULAR">
       {text}
     </Typography>
   </InfoInner>

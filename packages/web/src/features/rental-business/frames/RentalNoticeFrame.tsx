@@ -32,10 +32,6 @@ const RentalNoticeFrameInner = styled.div`
   align-self: stretch;
 `;
 
-const StyledTypography = styled(Typography)`
-  line-height: 32px;
-`;
-
 const StyledBottom = styled.div`
   display: flex;
   justify-content: space-between;
@@ -68,12 +64,12 @@ const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
         <Typography fs={20} lh={24} fw="MEDIUM">
           안내사항
         </Typography>
-        <StyledTypography fs={16} lh={20} fw="REGULAR">
+        <Typography fs={16} lh={32} fw="REGULAR">
           모든 대여 사업은 동연 소속 동아리를 대상으로 하며, 신청은 각 동아리의
           대표자 또는 대의원만 가능합니다
           <br />
           기타 등등 안내 내용 -{">"} 이건 동연 측에서 준비해주겠죠?
-        </StyledTypography>
+        </Typography>
       </Card>
       <StyledBottom>
         <StyledCheckboxOuter>
