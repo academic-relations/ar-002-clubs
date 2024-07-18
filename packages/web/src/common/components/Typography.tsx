@@ -56,12 +56,13 @@ const TypographyInner = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<TypographyPropsWithCustomStyles>`
   color: ${({ color, theme }) =>
-    color ? getColorFromTheme(theme, color) : "inherit"};
-  font-family: ${({ theme, ff }) =>
+    color ? getColorFromTheme(theme, color) : theme.colors.BLACK};
+  font-family: ${({ ff, theme }) =>
     ff ? theme.fonts.FAMILY[ff] : theme.fonts.FAMILY.PRETENDARD};
   font-size: ${({ fs }) => (fs ? `${fs}px` : "inherit")};
   line-height: ${({ lh }) => (lh ? `${lh}px` : "inherit")};
-  font-weight: ${({ fw, theme }) => (fw ? theme.fonts.WEIGHT[fw] : "inherit")};
+  font-weight: ${({ fw, theme }) =>
+    fw ? theme.fonts.WEIGHT[fw] : theme.fonts.WEIGHT.REGULAR};
 `;
 
 /**
