@@ -11,14 +11,10 @@ import {
 import mockAccessToken from "./_mock/mockAccessToken";
 
 const postLogin = async (): Promise<ApiAut001ResponseOk> => {
-  const { data, status } = await axiosClient.post(
-    `${process.env.NEXT_PUBLIC_API_URL}${apiAut001.url()}`,
-    {},
-  );
+  const { data, status } = await axiosClient.post(apiAut001.url(), {});
 
   switch (status) {
     case 201:
-      console.log("login");
       return apiAut001.responseBodyMap[201].parse(data);
     default:
       throw new UnexpectedAPIResponseError();

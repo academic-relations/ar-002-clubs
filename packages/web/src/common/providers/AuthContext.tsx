@@ -10,10 +10,11 @@ import React, {
 } from "react";
 
 import postLogin from "../services/postLogin";
+import postLogout from "../services/postLogout";
 
 interface AuthContextType {
   isLoggedIn: boolean;
-  login: () => Promise<void>;
+  login: () => void;
   logout: () => void;
 }
 
@@ -47,9 +48,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  const logout = () => {
-    setIsLoggedIn(false);
-    localStorage.removeItem("accessToken");
+  const logout = async () => {
+    try {
+      await postLogout();
+      setIsLoggedIn(false);
+      localStorage.removeItem("accessToken");
+      console.log("Logged out successfully.");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
   };
 
   const value = useMemo(() => ({ isLoggedIn, login, logout }), [isLoggedIn]);
