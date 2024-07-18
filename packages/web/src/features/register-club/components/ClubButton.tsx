@@ -6,7 +6,7 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 interface ClubButtonTextProps {
-  id: int;
+  id: number;
   text: string;
 }
 
