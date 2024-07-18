@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { ClubRepository } from "@sparcs-clubs/api/common/repository/club.repository";
 import logger from "@sparcs-clubs/api/common/util/logger";
-import { ClubRepresentativeDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-representative-d.repository";
+import { ClubDelegateDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-delegate-d.repository";
 
 import { PromotionalPrintingOrderSizeRepository } from "../repository/promotional-printing-order-size.repository";
 import { PromotionalPrintingOrderRepository } from "../repository/promotional-printing-order.repository";
@@ -30,7 +30,7 @@ import type {
 export class PromotionalPrintingService {
   constructor(
     private readonly clubRepository: ClubRepository,
-    private readonly clubRepresentativeDRepository: ClubRepresentativeDRepository,
+    private readonly clubDelegateDRepository: ClubDelegateDRepository,
     private readonly promotionalPrintingOrderRepository: PromotionalPrintingOrderRepository,
     private readonly promotionalPrintingOrderSizeRepository: PromotionalPrintingOrderSizeRepository,
   ) {}
@@ -124,7 +124,7 @@ export class PromotionalPrintingService {
 
     // TODO: order.clubsId와 order.studentId 를 통해 조회 권한 확인 필요
     const representatives =
-      await this.clubRepresentativeDRepository.findRepresentativeIdListByClubId(
+      await this.clubDelegateDRepository.findRepresentativeIdListByClubId(
         order.clubId,
       );
     logger.debug(

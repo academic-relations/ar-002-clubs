@@ -1,10 +1,12 @@
 import React from "react";
 
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
-  TableRow,
-  TableWrapper,
-} from "@sparcs-clubs/web/common/components/Table/TableWrapper";
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { AcfTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formateDate";
@@ -16,44 +18,45 @@ interface AcfTableProps {
   certificateList: ApiAcf003ResponseOk;
 }
 
+const columnHelper = createColumnHelper<ApiAcf003ResponseOk["items"][number]>();
+
+const columns = [
+  columnHelper.accessor("statusEnum", {
+    header: "상태",
+    cell: info => {
+      const { color, text } = getTagDetail(info.getValue(), AcfTagList);
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 10,
+  }),
+  columnHelper.accessor("createdAt", {
+    header: "신청 일시",
+    cell: info => formatDateTime(new Date(info.getValue())),
+    size: 50,
+  }),
+  columnHelper.accessor("studentName", {
+    header: "신청자",
+    cell: info => info.getValue(),
+    size: 20,
+  }),
+  columnHelper.accessor("issuedNumber", {
+    header: "발급 매수",
+    cell: info => `${info.getValue()}매`,
+    size: 20,
+  }),
+];
+
 const ActivityCertificateTable: React.FC<AcfTableProps> = ({
   certificateList,
-}) => (
-  <TableWrapper>
-    <TableRow>
-      <TableCell type="Header" width="10%" minWidth={90}>
-        상태
-      </TableCell>
-      <TableCell type="Header" width="50%">
-        신청 일시
-      </TableCell>
-      <TableCell type="Header" width="20%" minWidth={180}>
-        신청자
-      </TableCell>
-      <TableCell type="Header" width="20%" minWidth={180}>
-        발급 매수
-      </TableCell>
-    </TableRow>
-    {certificateList.items.map((certificate, index) => {
-      const { color, text } = getTagDetail(certificate.statusEnum, AcfTagList);
-      return (
-        <TableRow isBorder key={certificate.studentName + String(index)}>
-          <TableCell type="Tag" width="10%" minWidth={90}>
-            <Tag color={color}>{text}</Tag>
-          </TableCell>
-          <TableCell type="Default" width="50%">
-            {formatDateTime(new Date(certificate.createdAt))}
-          </TableCell>
-          <TableCell type="Default" width="20%" minWidth={180}>
-            {certificate.studentName}
-          </TableCell>
-          <TableCell type="Default" width="20%" minWidth={180}>
-            {certificate.issuedNumber}매
-          </TableCell>
-        </TableRow>
-      );
-    })}
-  </TableWrapper>
-);
+}) => {
+  const table = useReactTable({
+    columns,
+    data: certificateList.items,
+    getCoreRowModel: getCoreRowModel(),
+    enableSorting: false,
+  });
+
+  return <Table table={table} />;
+};
 
 export default ActivityCertificateTable;

@@ -1,5 +1,6 @@
 import React, { ReactNode, useMemo } from "react";
 
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 
 import colors from "@sparcs-clubs/web/styles/themes/colors";
@@ -20,12 +21,14 @@ interface TableCellProps {
   minWidth?: number;
 }
 
-const CommonCellHeaderWrapper = styled.th<{
+const CommonCellHeaderWrapper = styled.th.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   isHeader: boolean;
   width: string | number;
   minWidth: number;
 }>`
-  width: ${({ width }) => (typeof width === "number" ? `${width}px` : width)};
+  width: ${({ width }) => (typeof width === "number" ? `${width}%` : width)};
   min-width: ${({ minWidth }) => `${minWidth}px`};
   display: flex;
   justify-content: center;
@@ -37,12 +40,14 @@ const CommonCellHeaderWrapper = styled.th<{
     isHeader ? theme.colors.PRIMARY : "transparent"};
 `;
 
-const CommonCellBodyWrapper = styled.td<{
+const CommonCellBodyWrapper = styled.td.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   isHeader: boolean;
   width: string | number;
   minWidth: number;
 }>`
-  width: ${({ width }) => (typeof width === "number" ? `${width}px` : width)};
+  width: ${({ width }) => (typeof width === "number" ? `${width}%` : width)};
   min-width: ${({ minWidth }) => `${minWidth}px`};
   display: flex;
   justify-content: center;
@@ -54,7 +59,9 @@ const CommonCellBodyWrapper = styled.td<{
     isHeader ? theme.colors.PRIMARY : "transparent"};
 `;
 
-const CellText = styled.div<{ isGray: boolean }>`
+const CellText = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isGray: boolean }>`
   font-size: 16px;
   line-height: 24px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};

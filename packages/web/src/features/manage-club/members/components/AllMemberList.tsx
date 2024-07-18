@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 
+import {
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import { MoreInfo } from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
+import Table from "@sparcs-clubs/web/common/components/Table";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 interface AllMemberListProps {
@@ -30,15 +35,44 @@ const TableWithCount = styled.div`
   gap: 8px;
 `;
 
-const TableWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
-  border-radius: 8px;
-  width: 100%;
-  overflow: hidden;
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
-`;
+const columnHelper =
+  createColumnHelper<AllMemberListProps["members"][number]>();
+
+const columns = [
+  columnHelper.accessor("studentNumber", {
+    id: "studentNumber",
+    header: "학번",
+    cell: info => info.getValue(),
+    size: 20,
+  }),
+  columnHelper.accessor("name", {
+    id: "name",
+    header: "신청자",
+    cell: info => info.getValue(),
+    size: 20,
+  }),
+  columnHelper.accessor("phoneNumber", {
+    id: "phoneNumber",
+    header: "전화번호",
+    cell: info => info.getValue(),
+    size: 20,
+    enableSorting: false,
+  }),
+  columnHelper.accessor("email", {
+    id: "email",
+    header: "이메일",
+    cell: info => info.getValue(),
+    size: 20,
+    enableSorting: false,
+  }),
+  columnHelper.display({
+    id: "remarks",
+    header: "비고",
+    cell: () => " ",
+    size: 20,
+    enableSorting: false,
+  }),
+];
 
 const AllMemberList: React.FC<AllMemberListProps> = ({
   semester,
@@ -52,6 +86,13 @@ const AllMemberList: React.FC<AllMemberListProps> = ({
   );
 
   const memberCount = searchedMembers.length;
+
+  const table = useReactTable({
+    columns,
+    data: searchedMembers,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
   return (
     <FlexWrapper direction="column" gap={20}>
       <AllMemberListTitle>
@@ -80,46 +121,7 @@ const AllMemberList: React.FC<AllMemberListProps> = ({
           >
             총 {memberCount}명
           </Typography>
-          <TableWrapper>
-            <FlexWrapper direction="row" gap={0}>
-              <TableCell type="HeaderSort" width="20%">
-                학번
-              </TableCell>
-              <TableCell type="HeaderSort" width="20%">
-                신청자
-              </TableCell>
-              <TableCell type="Header" width="20%">
-                전화번호
-              </TableCell>
-              <TableCell type="Header" width="20%">
-                이메일
-              </TableCell>
-              <TableCell type="Header" width="20%">
-                비고
-              </TableCell>
-            </FlexWrapper>
-            {searchedMembers
-              .sort((a, b) => a.studentNumber - b.studentNumber)
-              .map(member => (
-                <FlexWrapper direction="row" gap={0} key={member.studentNumber}>
-                  <TableCell type="Default" width="20%">
-                    {member.studentNumber}
-                  </TableCell>
-                  <TableCell type="Default" width="20%">
-                    {member.name}
-                  </TableCell>
-                  <TableCell type="Default" width="20%">
-                    {member.phoneNumber}
-                  </TableCell>
-                  <TableCell type="Default" width="20%">
-                    {member.email}
-                  </TableCell>
-                  <TableCell type="Default" width="20%">
-                    {" "}
-                  </TableCell>
-                </FlexWrapper>
-              ))}
-          </TableWrapper>
+          <Table table={table} />
         </TableWithCount>
       )}
     </FlexWrapper>

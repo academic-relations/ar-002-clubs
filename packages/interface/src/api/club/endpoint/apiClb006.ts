@@ -1,7 +1,9 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { ClubRepresentativeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+import { zUserName } from "@sparcs-clubs/interface/common/commonString";
+
+import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 
 /**
@@ -9,11 +11,11 @@ import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.
  * @description 동아리의 대표자 및 대의원 정보를 가져옵니다
  */
 
-const url = () => `/student/clubs/club/{club_id}/representatives`;
+const url = (clubId: number) => `/student/clubs/club/${clubId}/delegates`;
 const method = "GET";
 
 const requestParam = z.object({
-  clubId: z.number().int(),
+  clubId: z.coerce.number().int().min(1),
 });
 
 const requestQuery = z.object({});
@@ -22,11 +24,11 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    representatives: z.array(
+    delegates: z.array(
       z.object({
-        representitiveEnum: z.nativeEnum(ClubRepresentativeEnum),
-        studentId: z.number().int(),
-        name: z.string().max(20),
+        delegateEnumId: z.nativeEnum(ClubDelegateEnum),
+        studentId: z.coerce.number().int().min(1),
+        name: zUserName,
         phoneNumber: zKrPhoneNumber,
       }),
     ),
