@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, gte, lte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
-import { takeUnique } from "@sparcs-clubs/api/common/util/util";
+import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { SemesterD } from "@sparcs-clubs/api/drizzle/schema/club.schema";
 import { RefreshToken } from "@sparcs-clubs/api/drizzle/schema/refresh-token.schema";
 import {
@@ -17,6 +17,35 @@ import {
 
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
+interface FindOrCreateUserReturn {
+  id: number;
+  sid: string;
+  name: string;
+  email: string;
+  undergraduate?: {
+    id: number;
+    number: number;
+  };
+  master?: {
+    id: number;
+    number: number;
+  };
+  doctor?: {
+    id: number;
+    number: number;
+  };
+  executive?: {
+    id: number;
+    studentId: number;
+  };
+  professor?: {
+    id: number;
+  };
+  employee?: {
+    id: number;
+  };
+}
+
 @Injectable()
 export class AuthRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
@@ -28,83 +57,22 @@ export class AuthRepository {
     name: string,
     type: string,
     department: string,
-  ): Promise<{
-    id: number;
-    sid: string;
-    name: string;
-    email: string;
-    undergraduate?: {
-      id: number;
-      number: number;
-    };
-    master?: {
-      id: number;
-      number: number;
-    };
-    doctor?: {
-      id: number;
-      number: number;
-    };
-    executive?: {
-      id: number;
-      studentId: number;
-    };
-    professor?: {
-      id: number;
-    };
-    employee?: {
-      id: number;
-    };
-  }> {
+  ): Promise<FindOrCreateUserReturn> {
     // User table에 해당 email이 있는지 확인 후 upsert
-    let user = await this.db
-      .select()
-      .from(User)
-      .where(eq(User.email, email))
-      .then(takeUnique);
-    if (user) {
-      await this.db
-        .update(User)
-        .set({ name })
-        .where(eq(User.id, user.id))
-        .execute();
-    } else {
-      await this.db.insert(User).values({ sid, name, email }).execute();
-    }
-    user = await this.db
+    await this.db
+      .insert(User)
+      .values({ sid, name, email })
+      .onDuplicateKeyUpdate({
+        set: { name },
+      });
+
+    const user = await this.db
       .select()
       .from(User)
       .where(eq(User.email, email))
       .then(takeUnique);
 
-    let result: {
-      id: number;
-      sid: string;
-      name: string;
-      email: string;
-      undergraduate?: {
-        id: number;
-        number: number;
-      };
-      master?: {
-        id: number;
-        number: number;
-      };
-      doctor?: {
-        id: number;
-        number: number;
-      };
-      executive?: {
-        id: number;
-        studentId: number;
-      };
-      professor?: {
-        id: number;
-      };
-      employee?: {
-        id: number;
-      };
-    } = {
+    let result: FindOrCreateUserReturn = {
       id: user.id,
       sid: user.sid,
       name: user.name,
@@ -114,29 +82,16 @@ export class AuthRepository {
     // type이 "Student"인 경우 student table에서 해당 studentNumber이 있는지 확인 후 upsert
     // student_t에서 이번 학기의 해당 student_id이 있는지 확인 후 upsert
     if (type === "Student") {
-      let student = await this.db
-        .select()
-        .from(Student)
-        .where(eq(Student.number, parseInt(studentNumber)))
-        .then(takeUnique);
-      if (student) {
-        await this.db
-          .update(Student)
-          .set({ userId: user.id, name })
-          .where(eq(Student.id, student.id))
-          .execute();
-      } else {
-        await this.db
-          .insert(Student)
-          .values({
-            name,
-            number: parseInt(studentNumber),
-            userId: user.id,
-            email,
-          })
-          .execute();
-      }
-      student = await this.db
+      await this.db
+        .insert(Student)
+        .values({
+          name,
+          number: parseInt(studentNumber),
+          userId: user.id,
+          email,
+        })
+        .onDuplicateKeyUpdate({ set: { userId: user.id, name } });
+      const student = await this.db
         .select()
         .from(Student)
         .where(eq(Student.number, parseInt(studentNumber)))
@@ -198,41 +153,18 @@ export class AuthRepository {
         .then(takeUnique);
 
       // eslint-disable-next-line prefer-destructuring
-      const studentT = await this.db
-        .select()
-        .from(StudentT)
-        .where(
-          and(
-            eq(StudentT.studentId, student.id),
-            eq(StudentT.semesterId, semester.id),
-          ),
-        )
-        .then(takeUnique);
-
-      if (studentT) {
-        await this.db
-          .update(StudentT)
-          .set({ department: parseInt(department) })
-          .where(
-            and(
-              eq(StudentT.studentId, student.id),
-              eq(StudentT.semesterId, semester.id),
-            ),
-          );
-      } else {
-        await this.db
-          .insert(StudentT)
-          .values({
-            studentId: student.id,
-            studentEnum,
-            studentStatusEnum,
-            department: parseInt(department),
-            semesterId: semester.id,
-            startTerm: semester.startTerm,
-            endTerm: semester.endTerm,
-          })
-          .execute();
-      }
+      await this.db
+        .insert(StudentT)
+        .values({
+          studentId: student.id,
+          studentEnum,
+          studentStatusEnum,
+          department: parseInt(department),
+          semesterId: semester.id,
+          startTerm: semester.startTerm,
+          endTerm: semester.endTerm,
+        })
+        .onDuplicateKeyUpdate({ set: { department: parseInt(department) } });
 
       // type이 "Student"인 경우 executive table에서 해당 studentNumber이 있는지 확인
       // 있으면 해당 칼럼의 user_id를 업데이트
@@ -255,15 +187,10 @@ export class AuthRepository {
         )
         .where(eq(Executive.studentId, student.id))
         .then(takeUnique);
-      // 만약 executive가 존재하는 경우 result에 executive를 추가
-      // TODO: executive table에서 해당 executiveId이 있는지 확인 후 기간 내에 존재할 경우에만 쿠키에 추가
       if (executive) {
-        result = {
-          ...result,
-          executive: {
-            id: executive.executive.id,
-            studentId: executive.executive.studentId,
-          },
+        result.executive = {
+          id: executive.executive.id,
+          studentId: executive.executive.studentId,
         };
       }
     }
@@ -272,10 +199,64 @@ export class AuthRepository {
     // professor_t에서 해당 professor_id이 있는지 확인 후 upsert
     // type이 "Employee"를 포함하는 경우 Employee table에서 해당 email이 있는지 확인 후 upsert
     // employee_t에서 해당 employee_id이 있는지 확인 후 upsert
-    // if (type === "Professor") {
-    // type을 teacher대신 professor 로 변경하면 좋을듯 합니다.
+    if (type === "Teacher") {
+      await this.db
+        .insert(Professor)
+        .values({ userId: user.id, name, email })
+        .onDuplicateKeyUpdate({ set: { userId: user.id, name } });
+      const professor = await this.db
+        .select()
+        .from(Professor)
+        .where(eq(Professor.email, email))
+        .then(takeUnique);
+      // const currentDate = new Date();
+      // await this.db
+      //   .insert(ProfessorT)
+      //   .values({
+      //     department,
+      //     professorId: professor.id,
+      //     professor_enum:
+      //     startTerm: ,
+      //     endTerm:
+      //   })
+      //   .onDuplicateKeyUpdate({set:{}})
+      // todo : professor과 관련된 정보 업데이트 자료 부족.
+      result.professor = {
+        id: professor.id,
+      };
+    }
 
-    // }
+    if (type === "Employee") {
+      await this.db
+        .insert(Employee)
+        .values({
+          userId: user.id,
+          name,
+          email,
+        })
+        .onDuplicateKeyUpdate({
+          set: {
+            userId: user.id,
+            name,
+            email,
+          },
+        });
+      const employee = await this.db
+        .select()
+        .from(Employee)
+        .where(
+          and(
+            eq(Employee.userId, user.id),
+            eq(Employee.name, name),
+            eq(Employee.email, email),
+          ),
+        )
+        .then(takeUnique);
+
+      result.employee = {
+        id: employee.id,
+      };
+    }
 
     return result;
   }
@@ -419,6 +400,7 @@ export class AuthRepository {
     userId: number,
     refreshToken: string,
   ): Promise<boolean> {
+    const cur = getKSTDate();
     const result = await this.db
       .select()
       .from(User)
@@ -427,6 +409,7 @@ export class AuthRepository {
         and(
           eq(User.id, RefreshToken.userId),
           eq(RefreshToken.refreshToken, refreshToken),
+          gte(RefreshToken.expiresAt, cur),
         ),
       )
       .where(eq(User.id, userId));
@@ -455,6 +438,7 @@ export class AuthRepository {
     userId: number,
     refreshToken: string,
   ): Promise<boolean> {
+    const cur = getKSTDate();
     return this.db.transaction(async tx => {
       const [result] = await this.db
         .delete(RefreshToken)
@@ -462,6 +446,7 @@ export class AuthRepository {
           and(
             eq(RefreshToken.userId, userId),
             eq(RefreshToken.refreshToken, refreshToken),
+            gte(RefreshToken.expiresAt, cur),
           ),
         );
       const { affectedRows } = result;

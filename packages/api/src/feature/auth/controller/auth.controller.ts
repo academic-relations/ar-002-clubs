@@ -66,7 +66,8 @@ export class AuthController {
     return this.authService.postAuthRefresh(req.user);
   }
 
-  @Student()
+  @Public()
+  @UseGuards(JwtRefreshGuard)
   @Post("/auth/sign-out")
   @UsePipes(new ZodPipe(apiAut003))
   postAuthSignout(
