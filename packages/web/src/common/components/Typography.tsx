@@ -46,10 +46,10 @@ interface TypographyPropsWithCustomStyles extends TypographyPropsBase {
 }
 
 type TypographyProps = {
-  fs?: never;
-  lh?: never;
-  fw?: never;
-  color?: never;
+  fs?: number;
+  lh?: number;
+  fw?: keyof Theme["fonts"]["WEIGHT"];
+  color?: number;
 } & TypographyPropsBase;
 
 const TypographyInner = styled.div.withConfig({
@@ -57,31 +57,11 @@ const TypographyInner = styled.div.withConfig({
 })<TypographyPropsWithCustomStyles>`
   color: ${({ color, theme }) =>
     color ? getColorFromTheme(theme, color) : "inherit"};
-  font-family: ${({ theme, ff }) => (ff ? theme.fonts.FAMILY[ff] : "inherit")};
+  font-family: ${({ theme, ff }) =>
+    ff ? theme.fonts.FAMILY[ff] : theme.fonts.FAMILY.PRETENDARD};
   font-size: ${({ fs }) => (fs ? `${fs}px` : "inherit")};
   line-height: ${({ lh }) => (lh ? `${lh}px` : "inherit")};
   font-weight: ${({ fw, theme }) => (fw ? theme.fonts.WEIGHT[fw] : "inherit")};
-`;
-
-const H3 = styled(TypographyInner)`
-  font-size: 20px;
-  line-height: 24px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
-`;
-
-const H3_B = styled(H3)`
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.SEMIBOLD};
-`;
-
-const P = styled(TypographyInner)`
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-`;
-const P_B = styled(TypographyInner)`
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
 `;
 
 /**
@@ -113,24 +93,5 @@ const P_B = styled(TypographyInner)`
 const Typography: React.FC<TypographyProps> = ({
   children = null,
   ...rest
-}) => {
-  if ("type" in rest) {
-    const { type, ...divProps } = rest;
-    switch (type) {
-      case "h3":
-        return <H3 {...divProps}>{children}</H3>;
-      case "h3_b":
-        return <H3_B {...divProps}>{children}</H3_B>;
-      case "p":
-        return <P {...divProps}>{children}</P>;
-      case "p_b":
-        return <P_B {...divProps}>{children}</P_B>;
-      default:
-        return <TypographyInner {...divProps}>{children}</TypographyInner>;
-    }
-  } else {
-    return <TypographyInner {...rest}>{children}</TypographyInner>;
-  }
-};
-
+}) => <TypographyInner {...rest}>{children}</TypographyInner>;
 export default Typography;
