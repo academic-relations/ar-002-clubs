@@ -5,14 +5,9 @@ import styled from "styled-components";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-interface ClubButtonTextProps {
-  id: number;
-  text: string;
-}
-
 interface ClubButtonProps {
   title: string;
-  buttonText: ClubButtonTextProps[];
+  buttonText: string;
   onClick?: VoidFunction;
 }
 
@@ -34,12 +29,14 @@ const ClubButton: React.FC<ClubButtonProps> = ({
       {title}
     </Typography>
     <ClubButtonInner>
-      {buttonText &&
-        buttonText.map(e => (
-          <Typography fw="REGULAR" fs={12} lh={24} key={e.id}>
-            {e.text}
-          </Typography>
-        ))}
+      <Typography
+        fw="REGULAR"
+        fs={12}
+        lh={24}
+        style={{ whiteSpace: "pre-wrap" }}
+      >
+        {buttonText}
+      </Typography>
     </ClubButtonInner>
   </Card>
 );
