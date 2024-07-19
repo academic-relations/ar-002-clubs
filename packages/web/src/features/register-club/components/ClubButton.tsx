@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 interface ClubButtonProps {
   title: string;
@@ -30,7 +31,9 @@ const ClubButton: React.FC<ClubButtonProps> = ({
     padding="20px 24px"
     gap={16}
     onClick={onClick}
-    style={{ border: selected ? "1px solid #0099AD" : "inherit" }}
+    style={{
+      border: selected ? `1px solid ${colors.PRIMARY}` : "inherit",
+    }}
   >
     <Typography fw="MEDIUM" fs={20} lh={24}>
       {title}
