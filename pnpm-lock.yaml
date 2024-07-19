@@ -256,6 +256,9 @@ importers:
       immer:
         specifier: ^10.0.4
         version: 10.0.4
+      jwt-decode:
+        specifier: ^4.0.0
+        version: 4.0.0
       loglevel:
         specifier: ^1.9.1
         version: 1.9.1

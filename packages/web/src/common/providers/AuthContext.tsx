@@ -38,7 +38,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       if (response && response.accessToken) {
         localStorage.setItem(
           "accessToken",
-          response.accessToken.undergraduate ?? "",
+          response.accessToken.undergraduate ??
+            response.accessToken.master ??
+            response.accessToken.doctor ??
+            response.accessToken.professor ??
+            response.accessToken.employee ??
+            response.accessToken.executive ??
+            "",
         );
         setIsLoggedIn(true);
         console.log("Logged in successfully.");

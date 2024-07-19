@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 
+import { jwtDecode } from "jwt-decode";
+
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
@@ -28,19 +30,29 @@ const LoginInner = styled.div`
 const Login = () => {
   const { isLoggedIn, login } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [type, setType] = useState("");
 
   useEffect(() => {
     if (!isLoggedIn) {
       setIsMenuOpen(false);
+    } else {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        const decoded: { name?: string; type?: string } = jwtDecode(token);
+        setUserName(decoded.name || "Unknown User");
+        setType(decoded.type || "Unknown Type");
+      }
     }
   }, [isLoggedIn]);
+
   return (
     <>
       {isLoggedIn ? (
         // TODO: 나중에 이름/신분 실제로 받아오기
         <LoginInner onClick={() => setIsMenuOpen(!isMenuOpen)}>
           <Icon type="person" size={16} />
-          하승종 (학부생)
+          {userName} ({type})
         </LoginInner>
       ) : (
         <LoginInner onClick={login}>
