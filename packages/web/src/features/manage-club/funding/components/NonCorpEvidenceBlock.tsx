@@ -6,7 +6,7 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
-import { FundingFrameProps } from "../frame/FundingInfoFrame";
+import { FundingFrameProps } from "../frames/FundingInfoFrame";
 
 import EvidenceBlockTitle from "./EvidenceBlockTitle";
 

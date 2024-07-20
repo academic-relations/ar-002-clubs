@@ -6,10 +6,10 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import FixtureEvidenceBlock from "../component/FixtureEvidenceBlock";
-import NonCorpEvidenceBlock from "../component/NonCorpEvidenceBlock";
-import OtherEvidenceBlock from "../component/OtherEvidenceBlock";
-import TransportEvidenceBlock from "../component/TransportEvidenceBlock";
+import FixtureEvidenceBlock from "../components/FixtureEvidenceBlock";
+import NonCorpEvidenceBlock from "../components/NonCorpEvidenceBlock";
+import OtherEvidenceBlock from "../components/OtherEvidenceBlock";
+import TransportEvidenceBlock from "../components/TransportEvidenceBlock";
 
 import { FundingFrameProps } from "./FundingInfoFrame";
 

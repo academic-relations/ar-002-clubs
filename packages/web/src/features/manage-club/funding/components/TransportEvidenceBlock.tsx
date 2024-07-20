@@ -17,7 +17,7 @@ import {
   isPurposeInfoRequired,
 } from "@sparcs-clubs/web/utils/isTransportation";
 
-import { FundingFrameProps } from "../frame/FundingInfoFrame";
+import { FundingFrameProps } from "../frames/FundingInfoFrame";
 
 import EvidenceBlockTitle from "./EvidenceBlockTitle";
 

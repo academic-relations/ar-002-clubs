@@ -10,8 +10,8 @@ import {
   manageClubFundingPageName,
   manageClubFundingPagePath,
 } from "@sparcs-clubs/web/constants/manageClubFunding";
-import NewFundingListSection from "@sparcs-clubs/web/features/manage-club/funding/component/NewFundingListSection";
-import PastFundingListSection from "@sparcs-clubs/web/features/manage-club/funding/component/PastFundingListSection";
+import NewFundingListSection from "@sparcs-clubs/web/features/manage-club/funding/components/NewFundingListSection";
+import PastFundingListSection from "@sparcs-clubs/web/features/manage-club/funding/components/PastFundingListSection";
 
 const ManageClubFundingMainFrameInner = styled.div`
   /* Auto layout */
