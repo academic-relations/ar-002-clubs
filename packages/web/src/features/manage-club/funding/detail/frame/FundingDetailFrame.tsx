@@ -1,14 +1,11 @@
 import React from "react";
 
 import { useRouter } from "next/navigation";
-import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import Modal from "@sparcs-clubs/web/common/components/Modal";
-import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/service/_mock/mockFundingDetail";
@@ -19,6 +16,8 @@ import FundingInfoList from "../components/FundingInfoList";
 import NonCorpEvidenceList from "../components/NonCorpEvidenceList";
 import OtherEvidenceList from "../components/OtherEvidenceList";
 import TransportationEvidenceList from "../components/TransportationEvidenceList";
+
+import { openDeleteModal, openEditModal } from "./_atomic/fundingDetailModal";
 
 interface FundingDetailFrameProps {
   isNow: boolean;
@@ -34,42 +33,6 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
 
   const onClick = () => {
     router.push("/manage-club/funding");
-  };
-
-  const openEditModal = () => {
-    overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen}>
-        <CancellableModalContent
-          onConfirm={() => {
-            close();
-            // TODO: 수정 로직 넣기
-          }}
-          onClose={close}
-        >
-          지원금 신청 내역을 수정하면 신청 상태가 모두 초기화 됩니다.
-          <br />
-          ㄱㅊ?
-        </CancellableModalContent>
-      </Modal>
-    ));
-  };
-
-  const openDeleteModal = () => {
-    overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen}>
-        <CancellableModalContent
-          onConfirm={() => {
-            close();
-            // TODO: 삭제 로직 넣기
-          }}
-          onClose={close}
-        >
-          지원금 신청 내역을 삭제하면 복구할 수 없습니다.
-          <br />
-          ㄱㅊ?
-        </CancellableModalContent>
-      </Modal>
-    ));
   };
 
   return (
