@@ -340,9 +340,7 @@ const apiFnd003 = {
 type ApiFnd003RequestParam = z.infer<typeof apiFnd003.requestParam>;
 type ApiFnd003RequestQuery = z.infer<typeof apiFnd003.requestQuery>;
 type ApiFnd003RequestBody = z.infer<typeof apiFnd003.requestBody>;
-type ApiFnd003ResponseCreated = z.infer<
-  (typeof apiFnd003.responseBodyMap)[200]
->;
+type ApiFnd003ResponseOk = z.infer<(typeof apiFnd003.responseBodyMap)[200]>;
 
 export default apiFnd003;
 
@@ -350,5 +348,5 @@ export type {
   ApiFnd003RequestParam,
   ApiFnd003RequestQuery,
   ApiFnd003RequestBody,
-  ApiFnd003ResponseCreated,
+  ApiFnd003ResponseOk,
 };
