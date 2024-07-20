@@ -22,6 +22,6 @@ const postLogin = async (): Promise<ApiAut001ResponseOk> => {
 };
 
 defineAxiosMock(mock => {
-  mock.onGet(apiAut001.url()).reply(() => [201, mockAccessToken]);
+  mock.onPost(apiAut001.url()).reply(() => [201, mockAccessToken]);
 });
 export default postLogin;

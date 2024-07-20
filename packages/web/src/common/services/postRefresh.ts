@@ -22,6 +22,6 @@ const postRefresh = async (): Promise<ApiAut002ResponseOk> => {
 };
 
 defineAxiosMock(mock => {
-  mock.onGet(apiAut002.url()).reply(() => [200, mockAccessToken]);
+  mock.onPost(apiAut002.url()).reply(() => [200, mockAccessToken]);
 });
 export default postRefresh;
