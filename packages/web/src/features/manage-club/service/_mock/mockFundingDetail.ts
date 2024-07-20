@@ -1,4 +1,4 @@
-import { ApiFnd002ResponseCreated } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
+import { ApiFnd002ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
 import {
   FixtureClassEnum,
   FixtureEvidenceEnum,
@@ -6,7 +6,8 @@ import {
   TransportationEnum,
 } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
-const mockFundingDetail: ApiFnd002ResponseCreated = {
+
+const mockFundingDetail: ApiFnd002ResponseOk = {
   clubId: 1,
   purposeId: 0,
   name: "M1 맥북 Pro 16 inch",
