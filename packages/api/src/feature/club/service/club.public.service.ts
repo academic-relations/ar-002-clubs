@@ -44,6 +44,15 @@ export default class ClubPublicService {
     return false;
   }
 
+  async getMemberFromSemester(param: { semesterId: number; clubId: number }) {
+    const result = await this.clubStudentTRepository.findByClubIdAndSemesterId(
+      param.clubId,
+      param.semesterId,
+    );
+
+    return result;
+  }
+
   // 학생(studentId)이 현재 학기 동아리(clubId)의 대표자 중 1명인지 확인합니다.
   // studentId와 clubId가 유효한지 검사하지 않습니다.
   async isStudentDelegate(studentId: number, clubId: number) {

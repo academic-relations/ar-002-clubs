@@ -5,7 +5,7 @@ import { DrizzleModule } from "src/drizzle/drizzle.module";
 import { ClubModule } from "../club/club.module";
 
 import ActivityController from "./controller/activity.controller";
-import ActivityRepository from "./repository/activity.repositroy";
+import ActivityRepository from "./repository/activity.repository";
 import ActivityService from "./service/activity.service";
 
 @Module({
