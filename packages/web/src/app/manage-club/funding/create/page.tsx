@@ -7,9 +7,9 @@ import styled from "styled-components";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import AddEvidenceFrame from "@sparcs-clubs/web/features/manage-club/funding/create/frame/AddEvidenceFrame";
-import BasicEvidenceFrame from "@sparcs-clubs/web/features/manage-club/funding/create/frame/BasicEvidenceFrame";
-import FundingInfoFrame from "@sparcs-clubs/web/features/manage-club/funding/create/frame/FundingInfoFrame";
+import AddEvidenceFrame from "@sparcs-clubs/web/features/manage-club/funding/frame/AddEvidenceFrame";
+import BasicEvidenceFrame from "@sparcs-clubs/web/features/manage-club/funding/frame/BasicEvidenceFrame";
+import FundingInfoFrame from "@sparcs-clubs/web/features/manage-club/funding/frame/FundingInfoFrame";
 import { FundingInterface } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
 
 const ButtonWrapper = styled.div`
