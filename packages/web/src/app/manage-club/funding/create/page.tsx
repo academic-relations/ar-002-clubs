@@ -4,7 +4,7 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
+import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import AddEvidenceFrame from "@sparcs-clubs/web/features/manage-club/funding/create/frame/AddEvidenceFrame";

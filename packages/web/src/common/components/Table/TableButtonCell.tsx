@@ -3,8 +3,8 @@ import React from "react";
 import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 
+import TextButton from "../Buttons/TextButton";
 import FlexWrapper from "../FlexWrapper";
-import TextButton from "../TextButton";
 
 interface TableButtonCellProps {
   text: string[];

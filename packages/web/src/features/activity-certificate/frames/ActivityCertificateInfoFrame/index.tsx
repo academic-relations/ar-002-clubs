@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
+import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
 import StepProcess, {
   StepInputType,
 } from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
