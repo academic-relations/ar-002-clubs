@@ -57,13 +57,14 @@ const EditFunding = () => {
     router.push(`/manage-club/funding/${id}`);
   };
 
-  const openPeriodModal = () => {
+  const openEditModal = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <ConfirmModalContent
           onConfirm={() => {
             // TODO: 저장 로직 넣기
             close();
+            router.push("/manage-club/funding");
           }}
         >
           수정이 완료되었습니다. <br />
@@ -91,7 +92,7 @@ const EditFunding = () => {
         <Button type="outlined" onClick={cancelClick}>
           취소
         </Button>
-        <Button type="default" onClick={openPeriodModal}>
+        <Button type="default" onClick={openEditModal}>
           저장
         </Button>
       </ButtonWrapper>
