@@ -5,11 +5,13 @@ import {
   Get,
   Param,
   Post,
+  Put,
   UsePipes,
 } from "@nestjs/common";
 
 import apiAct001 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct001";
 import apiAct002 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
+import apiAct003 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
 import apiAct004 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct004";
 import apiAct005 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
 
@@ -25,6 +27,11 @@ import type {
   ApiAct002RequestParam,
   ApiAct002ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
+import type {
+  ApiAct003RequestBody,
+  ApiAct003RequestParam,
+  ApiAct003ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
 import type {
   ApiAct004RequestParam,
   ApiAct004ResponseOk,
@@ -67,6 +74,7 @@ export default class ActivityController {
     return result;
   }
 
+  // TODO: Authentication 필요
   @Get("/student/activities/activity/:activityId")
   @UsePipes(new ZodPipe(apiAct002))
   async getStudentActivity(
@@ -87,7 +95,20 @@ export default class ActivityController {
   async postStudentActivity(
     @Body() body: ApiAct001RequestBody,
   ): Promise<ApiAct001ResponseCreated> {
-    await this.activityService.postStudentActivity(body);
+    const mockUpStudentId = 605;
+    await this.activityService.postStudentActivity(body, mockUpStudentId);
+    return {};
+  }
+
+  // TODO: Authentication 필요
+  @Put("/student/activities/activity/:activityId")
+  @UsePipes(new ZodPipe(apiAct003))
+  async putStudentActivity(
+    @Param() param: ApiAct003RequestParam,
+    @Body() body: ApiAct003RequestBody,
+  ): Promise<ApiAct003ResponseOk> {
+    const mockUpStudentId = 605;
+    await this.activityService.putStudentActivity(param, body, mockUpStudentId);
     return {};
   }
 }
