@@ -24,6 +24,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const EditFunding = () => {
+  // TODO: 나중에 관련 input들 다 생기면 짧아질 예정 (select의 value 값을 number | string으로 바꾸는 것도 고려해봐야 할 것 같음)
   const [funding, setFunding] = useState<FundingInterface>({
     ...mockFundingDetail,
     purposeId: mockFundingDetail.purposeId?.toString() || "",
@@ -47,6 +48,7 @@ const EditFunding = () => {
     transportationPassengers:
       mockFundingDetail.transportationPassengers?.map(p => p.name) || [],
   });
+
   const props = { funding, setFunding };
 
   const router = useRouter();
