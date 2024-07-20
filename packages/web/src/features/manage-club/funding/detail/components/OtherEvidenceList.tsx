@@ -4,7 +4,6 @@ import FilePreview from "@sparcs-clubs/web/common/components/FilePreview";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { FileWrapper } from "./BasicEvidenceList";
 import { ListItem } from "./FundingInfoList";
 
 interface OtherEvidenceListProps {
@@ -33,10 +32,10 @@ const OtherEvidenceList: React.FC<OtherEvidenceListProps> = ({
       {content} 증빙: {explanation}
     </ListItem>
     {/* TODO: file 연결 */}
-    <FileWrapper>
+    <FlexWrapper direction="column" gap={12} style={{ paddingLeft: 24 }}>
       <FilePreview fileName="something.pdf" />
       <FilePreview fileName="something.pdf" />
-    </FileWrapper>
+    </FlexWrapper>
   </FlexWrapper>
 );
 

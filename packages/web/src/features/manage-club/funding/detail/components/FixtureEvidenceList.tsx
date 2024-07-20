@@ -1,17 +1,16 @@
 import React from "react";
 
-import {
-  FixtureClassEnum,
-  FixtureEvidenceEnum,
-} from "@sparcs-clubs/interface/common/enum/funding.enum";
-
 import FilePreview from "@sparcs-clubs/web/common/components/FilePreview";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/service/_mock/mockFundingDetail";
 
-import { FileWrapper } from "./BasicEvidenceList";
+import {
+  classEnumMap,
+  evidenceEnumMap,
+} from "@sparcs-clubs/web/utils/fundingEnumMap";
+
 import { ListItem } from "./FundingInfoList";
 
 interface FixtureEvidenceListProps {
@@ -22,35 +21,6 @@ const FixtureEvidenceList: React.FC<FixtureEvidenceListProps> = ({
   isFixture = false,
 }) => {
   const content = isFixture ? "비품" : "동아리 용품";
-
-  const evidenceEnumMap = (enumValue?: FixtureEvidenceEnum): string => {
-    if (enumValue === FixtureEvidenceEnum.Management) {
-      return "관리";
-    }
-    if (enumValue === FixtureEvidenceEnum.Purchase) {
-      return "구매";
-    }
-    return "";
-  };
-
-  const classEnumMap = (enumValue?: FixtureClassEnum): string => {
-    if (enumValue === FixtureClassEnum.Furniture) {
-      return "가구";
-    }
-    if (enumValue === FixtureClassEnum.Software) {
-      return "소프트웨어";
-    }
-    if (enumValue === FixtureClassEnum.Electronics) {
-      return "전자기기";
-    }
-    if (enumValue === FixtureClassEnum.MusicalInstruments) {
-      return "악기";
-    }
-    if (enumValue === FixtureClassEnum.Others) {
-      return "기타";
-    }
-    return "";
-  };
 
   return (
     <FlexWrapper direction="column" gap={16}>
@@ -88,7 +58,7 @@ const FixtureEvidenceList: React.FC<FixtureEvidenceListProps> = ({
       </ListItem>
       <ListItem>{content} 증빙</ListItem>
       {/* TODO: file이랑 연결 */}
-      <FileWrapper>
+      <FlexWrapper direction="column" gap={12} style={{ paddingLeft: 24 }}>
         <Typography ff="PRETENDARD" fw="REGULAR" fs={14} lh={16} color="BLACK">
           {isFixture
             ? mockFundingDetail.fixturePurpose
@@ -96,7 +66,7 @@ const FixtureEvidenceList: React.FC<FixtureEvidenceListProps> = ({
         </Typography>
         <FilePreview fileName="something.pdf" />
         <FilePreview fileName="something.pdf" />
-      </FileWrapper>
+      </FlexWrapper>
     </FlexWrapper>
   );
 };

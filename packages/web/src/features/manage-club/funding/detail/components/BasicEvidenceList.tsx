@@ -1,19 +1,10 @@
 import React from "react";
 
-import styled from "styled-components";
-
 import FilePreview from "@sparcs-clubs/web/common/components/FilePreview";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { ListItem } from "./FundingInfoList";
-
-export const FileWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding-left: 24px;
-`;
 
 const BasicEvidenceList = () => (
   <FlexWrapper direction="column" gap={16}>
@@ -29,13 +20,13 @@ const BasicEvidenceList = () => (
     </Typography>
     {/* TODO: file이랑 연결 */}
     <ListItem>거래 사실 증빙</ListItem>
-    <FileWrapper>
+    <FlexWrapper direction="column" gap={12} style={{ paddingLeft: 24 }}>
       <FilePreview fileName="거래 사실 증빙 파일명" />
-    </FileWrapper>
+    </FlexWrapper>
     <ListItem>거래 세부항목 증빙</ListItem>
-    <FileWrapper>
+    <FlexWrapper direction="column" gap={12} style={{ paddingLeft: 24 }}>
       <FilePreview fileName="거래 세부항목 증빙 파일명" />
-    </FileWrapper>
+    </FlexWrapper>
   </FlexWrapper>
 );
 
