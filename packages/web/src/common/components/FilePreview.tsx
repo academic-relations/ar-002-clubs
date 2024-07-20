@@ -16,6 +16,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({
   removable = false,
 }) => (
   <FlexWrapper direction="row" gap={8}>
+    {/* TODO: Icon 컴포넌트 사용 */}
     <InsertDriveFileOutlined fontSize="inherit" />
     <Typography fs={14} lh={16} fw="REGULAR" style={{ flex: 1 }}>
       {fileName}
