@@ -26,9 +26,26 @@ const ButtonWrapper = styled.div`
 const EditFunding = () => {
   const [funding, setFunding] = useState<FundingInterface>({
     ...mockFundingDetail,
-    purposeId: mockFundingDetail.purposeId?.toString() ?? "",
+    purposeId: mockFundingDetail.purposeId?.toString() || "",
     expenditureDate: formatDotDate(mockFundingDetail.expenditureDate),
     expenditureAmount: mockFundingDetail.expenditureAmount.toString(),
+    clubSuppliesEvidenceEnumId:
+      mockFundingDetail.clubSuppliesEvidenceEnumId?.toString() || "",
+    clubSuppliesClassEnumId:
+      mockFundingDetail.clubSuppliesClassEnumId?.toString() || "",
+    fixtureEvidenceEnumId:
+      mockFundingDetail.fixtureEvidenceEnumId?.toString() || "",
+    fixtureClassEnumId: mockFundingDetail.fixtureClassEnumId?.toString() || "",
+    transportationEnumId:
+      mockFundingDetail.transportationEnumId?.toString() || "",
+    numberOfClubSupplies:
+      mockFundingDetail.numberOfClubSupplies?.toString() || "",
+    numberOfFixture: mockFundingDetail.numberOfFixture?.toString() || "",
+    priceOfClubSupplies:
+      mockFundingDetail.priceOfClubSupplies?.toString() || "",
+    priceOfFixture: mockFundingDetail.priceOfFixture?.toString() || "",
+    transportationPassengers:
+      mockFundingDetail.transportationPassengers?.map(p => p.name) || [],
   });
   const props = { funding, setFunding };
 

@@ -42,24 +42,8 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
     { label: "기타", value: String(FixtureClassEnum.Others) },
   ];
 
-  const handleFixtureChange = (key: string, value: string) => {
-    if (isFixture) {
-      setFunding(prevFunding => ({
-        ...prevFunding,
-        fixture: {
-          ...prevFunding.fixture,
-          [key]: value,
-        },
-      }));
-    } else {
-      setFunding(prevFunding => ({
-        ...prevFunding,
-        clubSupplies: {
-          ...prevFunding.clubSupplies,
-          [key]: value,
-        },
-      }));
-    }
+  const setFundingHandler = (key: string, value: boolean | string) => {
+    setFunding({ ...funding, [key]: value });
   };
 
   return (
@@ -73,11 +57,11 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               placeholder="증빙 분류를 선택해주세요"
               selectedValue={
                 isFixture
-                  ? funding.fixture?.fixtureEvidenceEnumId
-                  : funding.clubSupplies?.clubSuppliesEvidenceEnumId
+                  ? funding.fixtureEvidenceEnumId
+                  : funding.clubSuppliesEvidenceEnumId
               }
               onSelect={value =>
-                handleFixtureChange(
+                setFundingHandler(
                   isFixture
                     ? "fixtureEvidenceEnumId"
                     : "clubSuppliesEvidenceEnumId",
@@ -91,11 +75,11 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               placeholder={`${content} 분류를 선택해주세요`}
               selectedValue={
                 isFixture
-                  ? funding.fixture?.fixtureClassEnumId
-                  : funding.clubSupplies?.clubSuppliesClassEnumId
+                  ? funding.fixtureClassEnumId
+                  : funding.clubSuppliesClassEnumId
               }
               onSelect={value =>
-                handleFixtureChange(
+                setFundingHandler(
                   isFixture ? "fixtureClassEnumId" : "clubSuppliesClassEnumId",
                   value,
                 )
@@ -105,13 +89,9 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
           <TextInput
             placeholder={`${content}명을 입력해주세요`}
             label={`${content}명`}
-            value={
-              isFixture
-                ? funding.fixture?.fixtureName
-                : funding.clubSupplies?.clubSuppliesName
-            }
+            value={isFixture ? funding.fixtureName : funding.clubSuppliesName}
             handleChange={value =>
-              handleFixtureChange(
+              setFundingHandler(
                 isFixture ? "fixtureName" : "clubSuppliesName",
                 value,
               )
@@ -123,11 +103,11 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               placeholder={`${content} 개수를 입력해주세요`}
               value={
                 isFixture
-                  ? funding.fixture?.numberOfFixture
-                  : funding.clubSupplies?.numberOfClubSupplies
+                  ? funding.numberOfFixture
+                  : funding.numberOfClubSupplies
               }
               handleChange={value =>
-                handleFixtureChange(
+                setFundingHandler(
                   isFixture ? "numberOfFixture" : "numberOfClubSupplies",
                   value,
                 )
@@ -137,12 +117,10 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               label={`${content} 개별 단가`}
               placeholder={`${content} 개별 단가를 입력해주세요`}
               value={
-                isFixture
-                  ? funding.fixture?.priceOfFixture
-                  : funding.clubSupplies?.priceOfClubSupplies
+                isFixture ? funding.priceOfFixture : funding.priceOfClubSupplies
               }
               handleChange={value =>
-                handleFixtureChange(
+                setFundingHandler(
                   isFixture ? "priceOfFixture" : "priceOfClubSupplies",
                   value,
                 )
@@ -151,8 +129,8 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
           </FlexWrapper>
           {/* TODO: EvidenceUploadWithText 컴포넌트로 변경 */}
           {(isFixture
-            ? funding.fixture?.fixtureClassEnumId
-            : funding.clubSupplies?.clubSuppliesClassEnumId) && (
+            ? funding.fixtureClassEnumId
+            : funding.clubSuppliesClassEnumId) && (
             <FlexWrapper direction="column" gap={4}>
               <Typography
                 ff="PRETENDARD"
@@ -162,8 +140,8 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                 color="BLACK"
               >
                 {(isFixture
-                  ? funding.fixture?.fixtureClassEnumId
-                  : funding.clubSupplies?.clubSuppliesClassEnumId) ===
+                  ? funding.fixtureClassEnumId
+                  : funding.clubSuppliesClassEnumId) ===
                 String(FixtureClassEnum.Software)
                   ? "소프트웨어 증빙"
                   : `${content} 증빙`}
@@ -177,8 +155,8 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                 style={{ whiteSpace: "pre-wrap" }}
               >
                 {(isFixture
-                  ? funding.fixture?.fixtureClassEnumId
-                  : funding.clubSupplies?.clubSuppliesClassEnumId) ===
+                  ? funding.fixtureClassEnumId
+                  : funding.clubSuppliesClassEnumId) ===
                 String(FixtureClassEnum.Software)
                   ? "* 동아리 성격에 합치하는 활동에 사용하는 소프트웨어라는 소명 필요"
                   : `* ${content} 사용 목적 입력 필요`}
@@ -186,11 +164,16 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               <TextInput
                 placeholder={
                   (isFixture
-                    ? funding.fixture?.fixtureClassEnumId
-                    : funding.clubSupplies?.clubSuppliesClassEnumId) ===
+                    ? funding.fixtureClassEnumId
+                    : funding.clubSuppliesClassEnumId) ===
                   String(FixtureClassEnum.Software)
                     ? "소프트웨어 증빙을 입력하세요"
                     : `${content} 증빙을 입력하세요`
+                }
+                value={
+                  isFixture
+                    ? funding.fixturePurpose
+                    : funding.clubSuppliesPurpose
                 }
                 area
               />

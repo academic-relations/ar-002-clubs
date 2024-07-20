@@ -18,14 +18,8 @@ const NonCorpEvidenceBlock: React.FC<FundingFrameProps> = ({
   funding,
   setFunding,
 }) => {
-  const handleNonCorpChange = (key: string, value: string) => {
-    setFunding(prevFunding => ({
-      ...prevFunding,
-      nonCorporateTransaction: {
-        ...prevFunding.nonCorporateTransaction,
-        [key]: value,
-      },
-    }));
+  const setFundingHandler = (key: string, value: boolean | string) => {
+    setFunding({ ...funding, [key]: value });
   };
 
   return (
@@ -37,16 +31,16 @@ const NonCorpEvidenceBlock: React.FC<FundingFrameProps> = ({
               <TextInput
                 placeholder="거래자명을 입력하세요"
                 label="거래자명"
-                value={funding.nonCorporateTransaction?.traderName}
-                handleChange={value => handleNonCorpChange("traderName", value)}
+                value={funding.traderName}
+                handleChange={value => setFundingHandler("traderName", value)}
               />
             </FixedWidthWrapper>
             <TextInput
               placeholder="거래자 계좌번호를 입력하세요"
               label="거래자 계좌번호"
-              value={funding.nonCorporateTransaction?.traderAccountNumber}
+              value={funding.traderAccountNumber}
               handleChange={value =>
-                handleNonCorpChange("traderAccountNumber", value)
+                setFundingHandler("traderAccountNumber", value)
               }
             />
           </FlexWrapper>
@@ -54,10 +48,8 @@ const NonCorpEvidenceBlock: React.FC<FundingFrameProps> = ({
             area
             placeholder="낭비가 아니라는 소명을 입력하세요"
             label="낭비가 아니라는 소명"
-            value={funding.nonCorporateTransaction?.wasteExplanation}
-            handleChange={value =>
-              handleNonCorpChange("wasteExplanation", value)
-            }
+            value={funding.wasteExplanation}
+            handleChange={value => setFundingHandler("wasteExplanation", value)}
           />
         </Card>
       </EvidenceBlockTitle>
