@@ -8,7 +8,7 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import ClubButton from "@sparcs-clubs/web/features/register-club/components/ClubButton";
 
 const RegisterClub = () => (
-  <FlexWrapper direction="column" gap={60} style={{ alignItems: "flex-start" }}>
+  <FlexWrapper direction="column" gap={60}>
     <PageHead
       items={[{ name: "동아리 등록", path: "/register-club" }]}
       title="동아리 등록"
