@@ -2,12 +2,12 @@ import React from "react";
 
 import styled from "styled-components";
 
-import { Credits, Member } from "../credits";
+import { Member, SemesterCredit } from "../credits";
 
 import MemberCard from "./MemberCard";
 
 interface MemberCardSectionProps {
-  credit: Credits;
+  semesterCredit: SemesterCredit;
   leftMargin?: number;
 }
 
@@ -35,7 +35,7 @@ const MemberCardWrapper = styled.div<{ leftMargin: number }>`
 `;
 
 const MemberCardSection: React.FC<MemberCardSectionProps> = ({
-  credit,
+  semesterCredit,
   leftMargin = 0,
 }) => {
   const compareMembers = (a: Member, b: Member) => {
@@ -47,7 +47,7 @@ const MemberCardSection: React.FC<MemberCardSectionProps> = ({
 
   return (
     <MemberCardWrapper leftMargin={leftMargin}>
-      {credit.members
+      {semesterCredit.members
         .sort((a, b) => compareMembers(a, b))
         .map(member => (
           <MemberCard key={member.nickname} member={member} />

@@ -14,12 +14,12 @@ export interface Member {
   comment?: string;
 }
 
-export interface Credits {
+export interface SemesterCredit {
   semester: string;
   members: Member[];
 }
 
-const credits: Credits[] = [
+const credits: SemesterCredit[] = [
   {
     semester: "2024년 여름",
     members: [
