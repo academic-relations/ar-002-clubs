@@ -9,6 +9,7 @@ import styled from "styled-components";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import MyMenu from "@sparcs-clubs/web/common/components/MyMenu";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import { getUserType } from "@sparcs-clubs/web/utils/getUserType";
 
 const LoginInner = styled.div`
   display: flex;
@@ -49,10 +50,9 @@ const Login = () => {
   return (
     <>
       {isLoggedIn ? (
-        // TODO: 나중에 이름/신분 실제로 받아오기
         <LoginInner onClick={() => setIsMenuOpen(!isMenuOpen)}>
           <Icon type="person" size={16} />
-          {userName} ({type})
+          {userName} ({getUserType(type)})
         </LoginInner>
       ) : (
         <LoginInner onClick={login}>

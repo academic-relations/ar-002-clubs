@@ -35,6 +35,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const login = async () => {
     try {
       const response = await postLogin();
+      // TODO: 로그인시 기본 프로필 선택
+      localStorage.setItem(
+        "responseToken",
+        JSON.stringify(response.accessToken),
+      );
       if (response && response.accessToken) {
         localStorage.setItem(
           "accessToken",
@@ -59,6 +64,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       await postLogout();
       setIsLoggedIn(false);
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("responseToken");
       console.log("Logged out successfully.");
     } catch (error) {
       console.error("Logout failed", error);

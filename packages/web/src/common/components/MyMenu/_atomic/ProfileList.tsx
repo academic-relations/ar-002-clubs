@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { jwtDecode } from "jwt-decode";
 import styled from "styled-components";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";
@@ -8,9 +9,8 @@ import Profile from "./Profile";
 
 interface ProfileListProps {
   profiles: {
-    profileName: string;
-    profileNumber: number;
-    email: string;
+    profileType: string;
+    token: string;
   }[];
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -27,11 +27,18 @@ const ProfileList: React.FC<ProfileListProps> = ({
   setIsMenuOpen,
 }) => {
   const [selectedProfileName, setSelectedProfileName] = useState<string>(
-    "학부생", // TODO: 나중에는 기본값 제대로 설정하기
+    profiles[0].profileType,
   );
 
-  const handleProfileClick = (profileName: string) => {
-    setSelectedProfileName(profileName);
+  const [selectedToken, setSelectedToken] = useState<string>(profiles[0].token);
+
+  const handleProfileClick = (profile: {
+    profileType: string;
+    token: string;
+  }) => {
+    setSelectedProfileName(profile.profileType);
+    setSelectedToken(profile.token);
+    localStorage.setItem("accessToken", selectedToken);
     setIsMenuOpen(false);
   };
 
@@ -42,12 +49,12 @@ const ProfileList: React.FC<ProfileListProps> = ({
       </Typography>
       {profiles.map(profile => (
         <Profile
-          key={profile.profileName}
-          profileName={profile.profileName}
-          profileNumber={profile.profileNumber}
-          email={profile.email}
-          isSelected={selectedProfileName === profile.profileName}
-          onClick={() => handleProfileClick(profile.profileName)}
+          key={profile.profileType}
+          profileName={profile.profileType}
+          profileNumber={jwtDecode(profile.token).studentNumber}
+          email={jwtDecode(profile.token).email}
+          isSelected={selectedProfileName === profile.profileType}
+          onClick={() => handleProfileClick(profile)}
         />
       ))}
     </ProfileListWrapper>
