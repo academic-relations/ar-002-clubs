@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
 
@@ -29,16 +29,25 @@ const RowWrapper = styled.div`
 
 // TODO. react-hook-form 사용하도록 수정
 const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
-  const [isCheckedClubName, setIsCheckedClubName] = useState(false);
-  const [isCheckedProfessor, setIsCheckedProfessor] = useState(false);
+  const isProvisional = type === RegisterClubType.provisional;
+  const isPromotional = type === RegisterClubType.promotional;
+  const isRenewal = type === RegisterClubType.renewal;
+
   // TODO. 디비에 전화번호 있으면 기본값 넣기
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [clubName, setClubName] = useState("");
   const [division, setDivision] = useState("");
   const [year, setYear] = useState("");
   const [month, setMonth] = useState("");
 
-  const isFirstApply = type === RegisterClubType.provisional;
-  const isReapply = type === RegisterClubType.renewal;
+  const [isCheckedClubName, setIsCheckedClubName] = useState(false);
+  const [isCheckedProfessor, setIsCheckedProfessor] = useState(isPromotional);
+
+  useEffect(() => {
+    if (isRenewal && clubName.length > 0) {
+      setIsCheckedProfessor(true);
+    }
+  }, [clubName.length, isRenewal]);
 
   const divisionItems: SelectItem[] = Object.values(DivisionType).map(data => ({
     value: data.toString(),
@@ -63,12 +72,14 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
     label: data.toString(),
   }));
 
+  const hasProfessorInfo = false;
+
   return (
     <FlexWrapper direction="column" gap={40}>
       <SectionTitle>기본 정보</SectionTitle>
       <Card outline gap={32} style={{ marginLeft: 20 }}>
         <RowWrapper>
-          {isFirstApply ? (
+          {isProvisional ? (
             <TextInput
               label="동아리명 (국문)"
               placeholder="국문 동아리명을 입력해주세요"
@@ -78,26 +89,33 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
               placeholder="동아리명을 선택해주세요"
               label="동아리명 (국문)"
               // TODO. 신규등록, 재등록 가능한 동아리명 옵션 데이터 추가
-              items={[]}
+              items={[
+                { value: "1", label: "동아리1" },
+                { value: "2", label: "동아리2" },
+              ]}
+              selectedValue={clubName}
+              onSelect={setClubName}
             />
           )}
-          {isFirstApply && (
+          {isProvisional && (
             <TextInput
               label="동아리명 (영문)"
               placeholder="영문 동아리명을 입력해주세요"
             />
           )}
         </RowWrapper>
-        <CheckboxOption
-          optionText={
-            isFirstApply
-              ? "이전에 가동아리로 활동한 적이 있어요"
-              : "동아리명을 변경하고 싶어요 "
-          }
-          checked={isCheckedClubName}
-          onClick={() => setIsCheckedClubName(!isCheckedClubName)}
-        />
-        {!isFirstApply && isCheckedClubName && (
+        {(isProvisional || (!isProvisional && clubName.length > 0)) && (
+          <CheckboxOption
+            optionText={
+              isProvisional
+                ? "이전에 가동아리로 활동한 적이 있어요"
+                : "동아리명을 변경하고 싶어요 "
+            }
+            checked={isCheckedClubName}
+            onClick={() => setIsCheckedClubName(!isCheckedClubName)}
+          />
+        )}
+        {!isProvisional && isCheckedClubName && (
           <RowWrapper>
             <TextInput
               label="신규 동아리명 (국문)"
@@ -130,7 +148,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
             selectedValue={year}
             onSelect={setYear}
           />
-          {isFirstApply && (
+          {isProvisional && (
             <Select
               label="설립 월"
               placeholder="설립 월을 선택해주세요"
@@ -140,9 +158,9 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
             />
           )}
           <Select
-            label={isReapply ? "소속 분과" : "희망 분과"}
+            label={isRenewal ? "소속 분과" : "희망 분과"}
             placeholder={
-              isReapply
+              isRenewal
                 ? "소속 분과를 선택해주세요"
                 : "희망 분과를 선택해주세요"
             }
@@ -159,12 +177,16 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
           label="활동 분야 (영문)"
           placeholder="활동 분야를 입력해주세요"
         />
-        <CheckboxOption
-          optionText="지도교수를 신청하겠습니다"
-          checked={isCheckedProfessor}
-          onClick={() => setIsCheckedProfessor(!isCheckedProfessor)}
-        />
+        {(isProvisional ||
+          (isRenewal && clubName.length > 0 && !hasProfessorInfo)) && (
+          <CheckboxOption
+            optionText="지도교수를 신청하겠습니다"
+            checked={isCheckedProfessor}
+            onClick={() => setIsCheckedProfessor(!isCheckedProfessor)}
+          />
+        )}
       </Card>
+      {/* // TODO. 지도교수 정보 있는 경우 정보 보여주기 */}
       {isCheckedProfessor && <ProfessorInformFrame />}
     </FlexWrapper>
   );
