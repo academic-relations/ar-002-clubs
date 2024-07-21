@@ -8,7 +8,9 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
-import Select from "@sparcs-clubs/web/common/components/Select";
+import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
+
+import { DivisionType } from "@sparcs-clubs/web/types/divisions.types";
 
 import { RegisterClubType } from "../types/registerClub";
 
@@ -25,14 +27,41 @@ const RowWrapper = styled.div`
   gap: 32px;
 `;
 
+// TODO. react-hook-form 사용하도록 수정
 const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
   const [isCheckedClubName, setIsCheckedClubName] = useState(false);
   const [isCheckedProfessor, setIsCheckedProfessor] = useState(false);
   // TODO. 디비에 전화번호 있으면 기본값 넣기
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [division, setDivision] = useState("");
+  const [year, setYear] = useState("");
+  const [month, setMonth] = useState("");
 
   const isFirstApply = type === RegisterClubType.provisional;
   const isReapply = type === RegisterClubType.renewal;
+
+  const divisionItems: SelectItem[] = Object.values(DivisionType).map(data => ({
+    value: data.toString(),
+    label: data.toString(),
+  }));
+
+  const startYear = 1980;
+  const years = Array.from(
+    { length: new Date().getFullYear() - startYear + 1 },
+    (_, i) => startYear + i,
+  );
+  const yearSelectItems: SelectItem[] = years.map(data => ({
+    value: data.toString(),
+    label: data.toString(),
+  }));
+
+  const monthSelectItems: SelectItem[] = Array.from(
+    { length: 12 },
+    (_, i) => i + 1,
+  ).map(data => ({
+    value: data.toString(),
+    label: data.toString(),
+  }));
 
   return (
     <FlexWrapper direction="column" gap={40}>
@@ -97,15 +126,17 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
           <Select
             label="설립 연도"
             placeholder="설립 연도를 선택해주세요"
-            // TODO. 설립연도 데이터 추가
-            items={[]}
+            items={yearSelectItems}
+            selectedValue={year}
+            onSelect={setYear}
           />
           {isFirstApply && (
             <Select
               label="설립 월"
               placeholder="설립 월을 선택해주세요"
-              // TODO. 설립월 데이터 추가
-              items={[]}
+              items={monthSelectItems}
+              selectedValue={month}
+              onSelect={setMonth}
             />
           )}
           <Select
@@ -115,8 +146,9 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
                 ? "소속 분과를 선택해주세요"
                 : "희망 분과를 선택해주세요"
             }
-            // TODO. 분과 데이터 추가
-            items={[]}
+            items={divisionItems}
+            selectedValue={division}
+            onSelect={setDivision}
           />
         </RowWrapper>
         <TextInput

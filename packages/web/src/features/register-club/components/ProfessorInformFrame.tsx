@@ -15,28 +15,55 @@ const RowWrapper = styled.div`
   gap: 32px;
 `;
 
-const ProfessorInformFrame: React.FC = () => (
-  <FlexWrapper direction="column" gap={40}>
-    <SectionTitle>지도교수 정보</SectionTitle>
-    <Card outline gap={32} style={{ marginLeft: 20 }}>
-      <RowWrapper>
+const ProfessorInformFrame: React.FC = () => {
+  const [professorType, setProfessorType] = React.useState<string>("");
+  const [name, setName] = React.useState<string>("");
+  const [email, setEmail] = React.useState<string>("");
+
+  return (
+    <FlexWrapper direction="column" gap={40}>
+      <SectionTitle>지도교수 정보</SectionTitle>
+      <Card outline gap={32} style={{ marginLeft: 20 }}>
+        <RowWrapper>
+          <TextInput
+            label="지도교수 성함"
+            placeholder="지도교수 성함을 입력해주세요"
+            value={name}
+            handleChange={setName}
+          />
+          <Select
+            label="지도교수 직급"
+            placeholder="직급을 선택해주세요"
+            selectedValue={professorType}
+            onSelect={setProfessorType}
+            items={[
+              {
+                value: "professor",
+                label: "정교수",
+                selectable: true,
+              },
+              {
+                value: "associateProfessor",
+                label: "부교수",
+                selectable: true,
+              },
+              {
+                value: "assistantProfessor",
+                label: "조교수",
+                selectable: true,
+              },
+            ]}
+          />
+        </RowWrapper>
         <TextInput
-          label="지도교수 성함"
-          placeholder="지도교수 성함을 입력해주세요"
+          label="지도교수 카이스트 이메일"
+          placeholder="xxxxx@kaist.ac.kr"
+          value={email}
+          handleChange={setEmail}
         />
-        <Select
-          label="지도교수 직급"
-          placeholder="직급을 선택해주세요"
-          // TODO. 직급 데이터 추가
-          items={[]}
-        />
-      </RowWrapper>
-      <TextInput
-        label="지도교수 카이스트 이메일"
-        placeholder="xxxxx@kaist.ac.kr"
-      />
-    </Card>
-  </FlexWrapper>
-);
+      </Card>
+    </FlexWrapper>
+  );
+};
 
 export default ProfessorInformFrame;
