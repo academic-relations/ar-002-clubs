@@ -4,6 +4,7 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
+import UnitInput from "@sparcs-clubs/web/common/components/Forms/UnitInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import { FundingInterface } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
 
@@ -56,13 +57,13 @@ const FundingInfoFrame: React.FC<FundingFrameProps> = ({
             value={funding.expenditureDate}
             handleChange={value => setFundingHandler("expenditureDate", value)}
           />
-          <TextInput
+          <UnitInput
             label="지출 금액"
             placeholder="금액을 입력해주세요"
-            value={funding.expenditureAmount}
-            handleChange={value =>
-              setFundingHandler("expenditureAmount", value)
-            }
+            unit="원"
+            value={funding.expenditureAmount ? funding.expenditureAmount : ""}
+            onChange={value => setFundingHandler("expenditureAmount", value)}
+            setErrorStatus={() => {}}
           />
         </FlexWrapper>
       </Card>
