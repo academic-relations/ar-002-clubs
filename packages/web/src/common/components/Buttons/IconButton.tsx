@@ -1,6 +1,10 @@
 import React from "react";
 
+import isPropValid from "@emotion/is-prop-valid";
+
 import styled from "styled-components";
+
+import Icon from "../Icon";
 
 interface IconButtonProps {
   type?: keyof typeof IconButtonTypeInner;
@@ -10,7 +14,9 @@ interface IconButtonProps {
   style?: React.CSSProperties;
 }
 
-const IconButtonInner = styled.div<{ hasChildren: boolean }>`
+const IconButtonInner = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop) && prop !== "hasChildren",
+})<{ hasChildren: boolean }>`
   display: inline-flex;
   padding: ${({ hasChildren }) => (hasChildren ? "8px 16px" : "8px")};
   justify-content: center;
@@ -63,14 +69,16 @@ const IconButton = ({
   ...props
 }: IconButtonProps) => {
   const IconButtonChosenInner = IconButtonTypeInner[type];
+  const handleClick = type !== "disabled" ? onClick : undefined;
+
   return (
     <IconButtonChosenInner
-      onClick={onClick}
+      onClick={handleClick}
       hasChildren={!!children}
       style={style}
       {...props}
     >
-      <i className="material-icons">{icon}</i>
+      <Icon type={icon} size={16} color="inherit" />
       {children}
     </IconButtonChosenInner>
   );
