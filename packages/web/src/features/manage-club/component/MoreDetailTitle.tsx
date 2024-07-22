@@ -3,7 +3,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import TextButton from "@sparcs-clubs/web/common/components/TextButton";
+import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 interface MoreDetailTitleProps {

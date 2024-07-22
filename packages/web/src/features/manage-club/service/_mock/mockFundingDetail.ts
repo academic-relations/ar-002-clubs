@@ -6,7 +6,6 @@ import {
   TransportationEnum,
 } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
-
 const mockFundingDetail: ApiFnd002ResponseOk = {
   clubId: 1,
   purposeId: 0,

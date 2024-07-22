@@ -147,7 +147,8 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.member,
         comment: "카시오는 계산기가 아니에요",
       },
-      { nickname: "malloc",
+      {
+        nickname: "malloc",
         name: "최지윤",
         role: "FE",
         roleType: RoleType.member,

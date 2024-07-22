@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
+import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import Typography from "@sparcs-clubs/web/common/components/Typography";

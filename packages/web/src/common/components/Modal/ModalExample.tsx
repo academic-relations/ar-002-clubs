@@ -2,7 +2,7 @@ import { overlay } from "overlay-kit";
 
 import styled from "styled-components";
 
-import Button from "../Button";
+import Button from "../Buttons/Button";
 
 import Modal from ".";
 

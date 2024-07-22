@@ -2,7 +2,7 @@ import React from "react";
 
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
+import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
 
 import FlexWrapper from "../FlexWrapper";
 import Typography from "../Typography";
