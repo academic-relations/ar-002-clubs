@@ -35,6 +35,15 @@ const getStatusTagColor = (status: string): TagColor => {
   }
 };
 
+const getProfessorApprovalTagColor = (professorApproval: string): TagColor => {
+  switch (professorApproval) {
+    case "대기":
+      return "GRAY";
+    default:
+      return "GRAY";
+  }
+};
+
 const getCategoryTagColor = (category: string): TagColor => {
   switch (category) {
     case "동아리 성격에 합치하는 내부 활동":
@@ -55,7 +64,17 @@ const columns = [
     cell: info => (
       <Tag color={getStatusTagColor(info.getValue())}>{info.getValue()}</Tag>
     ),
-    size: 15,
+    size: 8,
+  }),
+  columnHelper.accessor("professorApproval", {
+    id: "professorApproval",
+    header: "지도교수",
+    cell: info => (
+      <Tag color={getProfessorApprovalTagColor(info.getValue())}>
+        {info.getValue()}
+      </Tag>
+    ),
+    size: 8,
   }),
   columnHelper.accessor("activity", {
     id: "activity",
