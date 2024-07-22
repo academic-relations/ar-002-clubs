@@ -17,7 +17,7 @@ import {
   isPurposeInfoRequired,
 } from "@sparcs-clubs/web/utils/isTransportation";
 
-import { FundingFrameProps } from "../frame/FundingInfoFrame";
+import { FundingFrameProps } from "../frames/FundingInfoFrame";
 
 import EvidenceBlockTitle from "./EvidenceBlockTitle";
 
@@ -60,14 +60,8 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
   funding,
   setFunding,
 }) => {
-  const handleTransportationChange = (key: string, value: string) => {
-    setFunding(prevFunding => ({
-      ...prevFunding,
-      transportation: {
-        ...prevFunding.transportation,
-        [key]: value,
-      },
-    }));
+  const setFundingHandler = (key: string, value: boolean | string) => {
+    setFunding({ ...funding, [key]: value });
   };
 
   return (
@@ -80,38 +74,26 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
                 items={TransportationList}
                 label="교통수단"
                 placeholder="교통수단을 선택해주세요"
-                selectedValue={funding.transportation?.transportationEnumId}
+                selectedValue={funding.transportationEnumId}
                 onSelect={value =>
-                  setFunding({
-                    ...funding,
-                    transportation: {
-                      ...funding.transportation,
-                      transportationEnumId: value,
-                    },
-                  })
+                  setFundingHandler("transportationEnumId", value)
                 }
               />
             </FixedWidthWrapper>
             <TextInput
               placeholder="출발지를 입력해주세요"
               label="출발지"
-              value={funding.transportation?.origin}
-              handleChange={value =>
-                handleTransportationChange("origin", value)
-              }
+              value={funding.origin}
+              handleChange={value => setFundingHandler("origin", value)}
             />
             <TextInput
               placeholder="도착지를 입력해주세요"
               label="도착지"
-              value={funding.transportation?.destination}
-              handleChange={value =>
-                handleTransportationChange("destination", value)
-              }
+              value={funding.destination}
+              handleChange={value => setFundingHandler("destination", value)}
             />
           </FlexWrapper>
-          {isParticipantsRequired(
-            funding.transportation?.transportationEnumId,
-          ) && (
+          {isParticipantsRequired(funding.transportationEnumId) && (
             <FlexWrapper direction="column" gap={4}>
               <Typography
                 ff="PRETENDARD"
@@ -124,7 +106,7 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
               </Typography>
               <SelectParticipant
                 data={mockParticipantData}
-                // onChange 추가
+                // TODO: onChange 추가
               />
             </FlexWrapper>
           )}
@@ -139,9 +121,7 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
             >
               이용 목적
             </Typography>
-            {isPurposeInfoRequired(
-              funding.transportation?.transportationEnumId,
-            ) && (
+            {isPurposeInfoRequired(funding.transportationEnumId) && (
               <Typography
                 ff="PRETENDARD"
                 fw="REGULAR"
@@ -150,15 +130,15 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
                 color="GRAY.600"
                 style={{ whiteSpace: "pre-wrap" }}
               >
-                {purposeInfo(funding.transportation?.transportationEnumId)}
+                {purposeInfo(funding.transportationEnumId)}
               </Typography>
             )}
             <TextInput
               area
               placeholder="이용 목적을 입력하세요"
-              value={funding.transportation?.purposeOfTransportation}
+              value={funding.purposeOfTransportation}
               handleChange={value =>
-                handleTransportationChange("purposeOfTransportation", value)
+                setFundingHandler("purposeOfTransportation", value)
               }
             />
           </FlexWrapper>
