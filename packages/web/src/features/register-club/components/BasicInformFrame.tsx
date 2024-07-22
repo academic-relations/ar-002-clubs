@@ -1,31 +1,23 @@
 import React, { useEffect, useState } from "react";
 
-import styled from "styled-components";
-
 import Card from "@sparcs-clubs/web/common/components/Card";
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
-import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
-
-import { DivisionType } from "@sparcs-clubs/web/types/divisions.types";
+import Select from "@sparcs-clubs/web/common/components/Select";
 
 import { RegisterClubType } from "../types/registerClub";
 
+import DivisionSelect from "./_atomic/DivisionSelect";
+import MonthSelect from "./_atomic/MonthSelect";
+import YearSelect from "./_atomic/YearSelect";
 import ProfessorInformFrame from "./ProfessorInformFrame";
 
 interface BasicInformSectionProps {
   type: RegisterClubType;
 }
-
-const RowWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  gap: 32px;
-`;
 
 // TODO. react-hook-form 사용하도록 수정
 const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
@@ -36,9 +28,6 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
   // TODO. 디비에 전화번호 있으면 기본값 넣기
   const [phoneNumber, setPhoneNumber] = useState("");
   const [clubName, setClubName] = useState("");
-  const [division, setDivision] = useState("");
-  const [year, setYear] = useState("");
-  const [month, setMonth] = useState("");
 
   const [isCheckedClubName, setIsCheckedClubName] = useState(false);
   const [isCheckedProfessor, setIsCheckedProfessor] = useState(isPromotional);
@@ -49,36 +38,14 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
     }
   }, [clubName.length, isRenewal]);
 
-  const divisionItems: SelectItem[] = Object.values(DivisionType).map(data => ({
-    value: data.toString(),
-    label: data.toString(),
-  }));
-
-  const startYear = 1980;
-  const years = Array.from(
-    { length: new Date().getFullYear() - startYear + 1 },
-    (_, i) => startYear + i,
-  );
-  const yearSelectItems: SelectItem[] = years.map(data => ({
-    value: data.toString(),
-    label: data.toString(),
-  }));
-
-  const monthSelectItems: SelectItem[] = Array.from(
-    { length: 12 },
-    (_, i) => i + 1,
-  ).map(data => ({
-    value: data.toString(),
-    label: data.toString(),
-  }));
-
+  // TODO. 지도교수 정보 가져오기
   const hasProfessorInfo = false;
 
   return (
     <FlexWrapper direction="column" gap={40}>
       <SectionTitle>기본 정보</SectionTitle>
       <Card outline gap={32} style={{ marginLeft: 20 }}>
-        <RowWrapper>
+        <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
           {isProvisional ? (
             <TextInput
               label="동아리명 (국문)"
@@ -103,7 +70,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
               placeholder="영문 동아리명을 입력해주세요"
             />
           )}
-        </RowWrapper>
+        </FlexWrapper>
         {(isProvisional || (!isProvisional && clubName.length > 0)) && (
           <CheckboxOption
             optionText={
@@ -116,7 +83,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
           />
         )}
         {!isProvisional && isCheckedClubName && (
-          <RowWrapper>
+          <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
             <TextInput
               label="신규 동아리명 (국문)"
               placeholder="국문 동아리명을 입력해주세요"
@@ -125,9 +92,9 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
               label="신규 동아리명 (영문)"
               placeholder="영문 동아리명을 입력해주세요"
             />
-          </RowWrapper>
+          </FlexWrapper>
         )}
-        <RowWrapper>
+        <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
           <TextInput
             label="대표자 이름"
             // TODO. 대표자 이름 현재 로그인한 사람으로 변경
@@ -139,36 +106,12 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
             value={phoneNumber}
             onChange={setPhoneNumber}
           />
-        </RowWrapper>
-        <RowWrapper>
-          <Select
-            label="설립 연도"
-            placeholder="설립 연도를 선택해주세요"
-            items={yearSelectItems}
-            selectedValue={year}
-            onSelect={setYear}
-          />
-          {isProvisional && (
-            <Select
-              label="설립 월"
-              placeholder="설립 월을 선택해주세요"
-              items={monthSelectItems}
-              selectedValue={month}
-              onSelect={setMonth}
-            />
-          )}
-          <Select
-            label={isRenewal ? "소속 분과" : "희망 분과"}
-            placeholder={
-              isRenewal
-                ? "소속 분과를 선택해주세요"
-                : "희망 분과를 선택해주세요"
-            }
-            items={divisionItems}
-            selectedValue={division}
-            onSelect={setDivision}
-          />
-        </RowWrapper>
+        </FlexWrapper>
+        <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
+          <YearSelect />
+          {isProvisional && <MonthSelect />}
+          <DivisionSelect isRenewal={isRenewal} />
+        </FlexWrapper>
         <TextInput
           label="활동 분야 (국문)"
           placeholder="활동 분야를 입력해주세요"
