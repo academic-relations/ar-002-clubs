@@ -99,6 +99,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
             label="대표자 이름"
             // TODO. 대표자 이름 현재 로그인한 사람으로 변경
             placeholder="이지윤"
+            disabled
           />
           <PhoneInput
             label="대표자 전화번호"
