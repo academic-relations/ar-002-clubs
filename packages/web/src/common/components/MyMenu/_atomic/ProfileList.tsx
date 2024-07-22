@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { jwtDecode, JwtPayload } from "jwt-decode"; // Import JwtPayload type
+import { jwtDecode, JwtPayload } from "jwt-decode";
 import styled from "styled-components";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";
@@ -31,17 +31,12 @@ const ProfileList: React.FC<ProfileListProps> = ({
   profiles,
   setIsMenuOpen,
 }) => {
-  const [selectedProfileName, setSelectedProfileName] = useState<string>(
-    profiles[0].profileType,
-  );
-
   const [selectedToken, setSelectedToken] = useState<string>(profiles[0].token);
 
   const handleProfileClick = (profile: {
     profileType: string;
     token: string;
   }) => {
-    setSelectedProfileName(profile.profileType);
     setSelectedToken(profile.token);
     localStorage.setItem("accessToken", selectedToken);
     setIsMenuOpen(false);
@@ -49,7 +44,7 @@ const ProfileList: React.FC<ProfileListProps> = ({
 
   return (
     <ProfileListWrapper>
-      <Typography ff="PRETENDARD" fw="MEDIUM" fs={14} lh={16} color="BLACK">
+      <Typography fw="MEDIUM" fs={14} lh={16}>
         계정 선택
       </Typography>
       {profiles.map(profile => {
@@ -60,7 +55,7 @@ const ProfileList: React.FC<ProfileListProps> = ({
             profileName={profile.profileType}
             profileNumber={decodedToken.studentNumber}
             email={decodedToken.email}
-            isSelected={selectedProfileName === profile.profileType}
+            isSelected={selectedToken === profile.token}
             onClick={() => handleProfileClick(profile)}
           />
         );
