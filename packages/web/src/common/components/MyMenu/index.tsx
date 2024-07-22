@@ -52,7 +52,7 @@ const MyMenu: React.FC<{
     setIsMenuOpen(false);
   };
 
-  const parsedToken = JSON.parse(localStorage.getItem("responseToken") || "");
+  const parsedToken = JSON.parse(localStorage.getItem("responseToken") || "{}");
 
   const profiles = Object.keys(parsedToken).map(type => ({
     profileType: getUserType(type),

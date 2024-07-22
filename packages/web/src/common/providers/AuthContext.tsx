@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         "responseToken",
         JSON.stringify(response.accessToken),
       );
-      if (response && response.accessToken) {
+      if (response.accessToken) {
         localStorage.setItem(
           "accessToken",
           response.accessToken.undergraduate ??
