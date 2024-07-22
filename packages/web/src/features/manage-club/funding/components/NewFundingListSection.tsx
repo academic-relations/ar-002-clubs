@@ -55,12 +55,9 @@ const NewFundingListSection: React.FC = () => {
         {/* TODO: 지원금 신청 기간 받아오는 API 생기면 대체해야함! */}
         <Info text={newFundingListSectionInfoText("2024 봄", new Date())} />
         <NewFundingOrderButtonRow>
-          <IconButton
-            iconType="add"
-            type="default"
-            buttonText={newFundingOrderButtonText}
-            onClick={createFundingClick}
-          />
+          <IconButton icon="add" type="default" onClick={createFundingClick}>
+            {newFundingOrderButtonText}
+          </IconButton>
         </NewFundingOrderButtonRow>
         {/* TODO: ManageClubFundingMainFrame으로부터 주입받은 테이블 데이터 전달하기 */}
         <NewFundingListTable />
