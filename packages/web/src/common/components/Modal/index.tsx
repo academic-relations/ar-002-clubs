@@ -30,9 +30,7 @@ const ModalContainer = styled.div`
   justify-content: center;
   align-items: center;
 
-  height: max-content;
-  max-width: 600px;
-  max-height: 300px;
+  max-height: 90%;
 
   background-color: ${({ theme }) => theme.colors.WHITE};
   border-radius: ${({ theme }) => theme.round.md};
