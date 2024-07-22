@@ -38,14 +38,14 @@ const RejectReasonToastInner = styled.div`
   width: 100%;
   max-height: 300px;
   overflow-y: auto;
-  .content {
+  .RejectReasonToast-content {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
     flex: 1 0 0;
     align-self: stretch;
-    .reasons {
+    .RejectReasonToast-reasons {
       display: flex;
       width: 540px;
       flex-direction: column;
@@ -64,11 +64,11 @@ const RejectReasonToast: React.FC<RejectReasonToastProps> = ({
   <ForceBorderRadius>
     <RejectReasonToastInner>
       <Icon type="info" size={20} color={colors.RED[600]} />
-      <div className="content">
+      <div className="RejectReasonToast-content">
         <Typography fs={16} lh={24} fw="SEMIBOLD">
           {title}
         </Typography>
-        <div className="reasons">
+        <div className="RejectReasonToast-reasons">
           {reasons.map(reason => (
             <div key={reason.datetime}>
               <Typography fs={14} lh={16} fw="REGULAR" color="GRAY.600">
