@@ -17,6 +17,7 @@ import type { ApiRnt003ResponseOK } from "@sparcs-clubs/interface/api/rental/end
 export interface Activity {
   id: number;
   status: number;
+  professorApproval: string;
   name: string;
   type: number;
   startDate: Date;
@@ -250,6 +251,7 @@ const mockupManageReport: Activity[] = [
     type: 1,
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
+    professorApproval: "대기",
   },
   {
     id: 2,
@@ -258,6 +260,7 @@ const mockupManageReport: Activity[] = [
     type: 1,
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
+    professorApproval: "대기",
   },
   {
     id: 3,
@@ -266,6 +269,7 @@ const mockupManageReport: Activity[] = [
     type: 2,
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
+    professorApproval: "대기",
   },
   {
     id: 4,
@@ -274,6 +278,7 @@ const mockupManageReport: Activity[] = [
     type: 2,
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
+    professorApproval: "대기",
   },
   {
     id: 5,
@@ -282,6 +287,7 @@ const mockupManageReport: Activity[] = [
     type: 1,
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
+    professorApproval: "대기",
   },
   {
     id: 6,
@@ -290,6 +296,7 @@ const mockupManageReport: Activity[] = [
     type: 3,
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
+    professorApproval: "대기",
   },
 ];
 
