@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode, JwtPayload } from "jwt-decode"; // Import JwtPayload type
 import styled from "styled-components";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";
@@ -13,6 +13,11 @@ interface ProfileListProps {
     token: string;
   }[];
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface DecodedToken extends JwtPayload {
+  studentNumber: number;
+  email: string;
 }
 
 const ProfileListWrapper = styled.div`
@@ -47,16 +52,19 @@ const ProfileList: React.FC<ProfileListProps> = ({
       <Typography ff="PRETENDARD" fw="MEDIUM" fs={14} lh={16} color="BLACK">
         계정 선택
       </Typography>
-      {profiles.map(profile => (
-        <Profile
-          key={profile.profileType}
-          profileName={profile.profileType}
-          profileNumber={jwtDecode(profile.token).studentNumber}
-          email={jwtDecode(profile.token).email}
-          isSelected={selectedProfileName === profile.profileType}
-          onClick={() => handleProfileClick(profile)}
-        />
-      ))}
+      {profiles.map(profile => {
+        const decodedToken: DecodedToken = jwtDecode(profile.token);
+        return (
+          <Profile
+            key={profile.profileType}
+            profileName={profile.profileType}
+            profileNumber={decodedToken.studentNumber}
+            email={decodedToken.email}
+            isSelected={selectedProfileName === profile.profileType}
+            onClick={() => handleProfileClick(profile)}
+          />
+        );
+      })}
     </ProfileListWrapper>
   );
 };
