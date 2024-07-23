@@ -1,101 +1,79 @@
 import React from "react";
 
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
-  TableRow,
-  TableWrapper,
-} from "@sparcs-clubs/web/common/components/Table/TableWrapper";
-import Tag, { TagColor } from "@sparcs-clubs/web/common/components/Tag";
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 
-import { ApiPrt001ResponseOk } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
-import { PromotionalPrintingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
+import Table from "@sparcs-clubs/web/common/components/Table";
+import Tag from "@sparcs-clubs/web/common/components/Tag";
+import { PrtTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formateDate";
+import getPrintSize from "@sparcs-clubs/web/utils/getPrintSize";
+import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
+import type { ApiPrt001ResponseOk } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
 
 interface PrintingTableProps {
   printingList: ApiPrt001ResponseOk;
 }
 
-interface TagDetail {
-  text: string;
-  color: TagColor;
-}
+const columnHelper = createColumnHelper<ApiPrt001ResponseOk["items"][number]>();
 
-const getStatusDetails = (status: number): TagDetail => {
-  switch (status) {
-    case PromotionalPrintingOrderStatusEnum.Applied:
-      return { text: "신청", color: "BLUE" };
-    case PromotionalPrintingOrderStatusEnum.Approved:
-      return { text: "승인", color: "YELLOW" };
-    case PromotionalPrintingOrderStatusEnum.Printed:
-      return { text: "출력", color: "PURPLE" };
-    case PromotionalPrintingOrderStatusEnum.Received:
-      return { text: "수령", color: "GREEN" };
-    default:
-      return { text: "None", color: "GRAY" };
-  }
+const columns = [
+  columnHelper.accessor("status", {
+    header: "상태",
+    cell: info => {
+      const { color, text } = getTagDetail(info.getValue(), PrtTagList);
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 10,
+  }),
+  columnHelper.accessor("createdAt", {
+    header: "신청 일시",
+    cell: info => formatDateTime(info.getValue()),
+    size: 24,
+  }),
+  columnHelper.accessor("studentName", {
+    header: "신청자",
+    cell: info => info.getValue(),
+    size: 18,
+  }),
+  columnHelper.accessor("desiredPickUpDate", {
+    header: "수령 일시",
+    cell: info => formatDateTime(info.getValue()),
+    size: 24,
+  }),
+  columnHelper.accessor("orders", {
+    header: "인쇄 매수",
+    cell: info =>
+      info
+        .getValue()
+        .sort(
+          (a, b) =>
+            b.promotionalPrintingSizeEnum - a.promotionalPrintingSizeEnum,
+        )
+        .map(
+          order =>
+            `${getPrintSize(order.promotionalPrintingSizeEnum)} ${
+              order.numberOfPrints
+            }매`,
+        )
+        .join(", "),
+    size: 24,
+  }),
+];
+
+const PrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => {
+  const table = useReactTable({
+    columns,
+    data: printingList.items,
+    getCoreRowModel: getCoreRowModel(),
+    enableSorting: false,
+  });
+
+  return <Table table={table} />;
 };
-
-const getPrintSize = (type: number): string => {
-  switch (type) {
-    case 0:
-      return "A4";
-    case 1:
-      return "A3";
-    default:
-      return "None";
-  }
-};
-
-const PrintingTable: React.FC<PrintingTableProps> = ({ printingList }) => (
-  <TableWrapper>
-    <TableRow>
-      <TableCell type="Header" width="10%" minWidth={90}>
-        상태
-      </TableCell>
-      <TableCell type="Header" width="24%">
-        신청 일시
-      </TableCell>
-      <TableCell type="Header" width="18%" minWidth={120}>
-        신청자
-      </TableCell>
-      <TableCell type="Header" width="24%">
-        수령 일시
-      </TableCell>
-      <TableCell type="Header" width="24%">
-        인쇄 매수
-      </TableCell>
-    </TableRow>
-    {printingList.items.map((printing, index) => (
-      <TableRow isBorder key={printing.studentName + String(index)}>
-        <TableCell type="Tag" width="10%" minWidth={90}>
-          <Tag color={getStatusDetails(printing.status).color}>
-            {getStatusDetails(printing.status).text}
-          </Tag>
-        </TableCell>
-        <TableCell type="Default" width="24%">
-          {formatDateTime(printing.createdAt)}
-        </TableCell>
-        <TableCell type="Default" width="18%" minWidth={120}>
-          {printing.studentName}
-        </TableCell>
-        <TableCell type="Default" width="24%">
-          {formatDateTime(printing.desiredPickUpDate)}
-        </TableCell>
-        <TableCell type="Default" width="24%">
-          {printing.orders
-            .sort(
-              (a, b) =>
-                b.promotionalPrintingSizeEnum - a.promotionalPrintingSizeEnum,
-            ) // TODO: 이렇게 하는 대신 그냥 보여주고 싶은 순서랑 enum을 맞추는게 나을 수도 있음
-            .map(
-              order =>
-                `${getPrintSize(order.promotionalPrintingSizeEnum)} ${order.numberOfPrints}매`,
-            )
-            .join(", ")}
-        </TableCell>
-      </TableRow>
-    ))}
-  </TableWrapper>
-);
 
 export default PrintingTable;

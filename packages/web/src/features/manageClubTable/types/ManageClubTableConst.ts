@@ -11,6 +11,7 @@ export const ManageClubTagColors: ManageClubTagColorsInterface = {
   issue: "GREEN",
   reject: "RED",
   use: "GREEN",
+  overdue: "PINK",
 };
 
 export const dateAndTimeFormatKeys = ["submitTime", "receiveTime"];
@@ -18,7 +19,14 @@ export const dateFormatKeys = ["rentTime", "returnTime", "reserveTime"];
 export const startEndTimeFormatKeys = ["reserveStartEndHour"];
 export const numberFormatKeys = ["issueNumber"];
 
-export const rentalBusinessStepOrder = ["신청", "취소", "승인", "대여", "반납"];
+export const rentalBusinessStepOrder = [
+  "신청",
+  "취소",
+  "승인",
+  "대여",
+  "반납",
+  "연체",
+];
 export const printingBusinessStepOrder = [
   "신청",
   "취소",

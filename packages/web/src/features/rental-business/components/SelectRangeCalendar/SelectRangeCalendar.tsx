@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
+
 import styled from "styled-components";
-import SelectRange from "./_atomic/SelectRange";
+
 import RangeCalendar from "./_atomic/RangeCalendar";
+import SelectRange from "./_atomic/SelectRange";
 
 interface SelectRangeCalendarProps {
   rentalDate: Date | undefined;
@@ -9,11 +11,10 @@ interface SelectRangeCalendarProps {
   setRentalDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   setReturnDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   workDates?: Date[];
-  setShowPeriodModal: React.Dispatch<
-    React.SetStateAction<"none" | "reset" | "change">
-  >;
+  openPeriodModal: (state: "change" | "reset") => void;
   pendingDate: Date | undefined;
   setPendingDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  isRentalListEmpty: boolean;
 }
 
 const SelectRangeCalendarWrapper = styled.div`
@@ -32,9 +33,10 @@ const SelectRangeCalendar: React.FC<SelectRangeCalendarProps> = ({
   setRentalDate,
   setReturnDate,
   workDates = [],
-  setShowPeriodModal,
+  openPeriodModal,
   pendingDate,
   setPendingDate,
+  isRentalListEmpty,
 }) => {
   useEffect(() => {
     setRentalDate(rentalDate);
@@ -57,13 +59,17 @@ const SelectRangeCalendar: React.FC<SelectRangeCalendarProps> = ({
         setRentalDate={setRentalDate}
         setReturnDate={setReturnDate}
         workDates={workDates}
-        setShowPeriodModal={setShowPeriodModal}
+        openPeriodModal={openPeriodModal}
         setPendingDate={setPendingDate}
+        isRentalListEmpty={isRentalListEmpty}
       />
       <SelectRange
         rentalDate={rentalDate}
         returnDate={returnDate}
-        setShowPeriodModal={setShowPeriodModal}
+        setRentalDate={setRentalDate}
+        setReturnDate={setReturnDate}
+        openPeriodModal={openPeriodModal}
+        isRentalListEmpty={isRentalListEmpty}
       />
     </SelectRangeCalendarWrapper>
   );

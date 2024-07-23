@@ -8,17 +8,22 @@ import { z } from "zod";
  */
 
 const url = (spaceId: number) =>
-  `/common-spaces/common-space/${spaceId}/usage-order`;
+  `/common-spaces/common-space/${spaceId}/orders`;
 const method = "GET";
 
 const requestParam = z.object({
-  spaceId: z.number().int().min(1), // spaceId는 양의 정수여야 합니다.
+  spaceId: z.coerce.number().int().min(1), // spaceId는 양의 정수여야 합니다.
 });
 
-const requestQuery = z.object({
-  startDate: z.date(), // startDate는 날짜여야 합니다.
-  endDate: z.date(), // endDate는 날짜여야 합니다.
-});
+const requestQuery = z
+  .object({
+    startDate: z.coerce.date(), // startDate는 날짜여야 합니다.
+    endDate: z.coerce.date(), // endDate는 날짜여야 합니다.
+  })
+  .refine(data => data.startDate <= data.endDate, {
+    message: "startDate must be same or earlier than endDate",
+    path: ["startDate", "endDate"],
+  });
 
 const requestBody = z.object({});
 
@@ -29,8 +34,8 @@ const responseBodyMap = {
         orderId: z.number().int().min(1), // orderId는 정수여야 합니다.
         clubId: z.number().int().min(1), // clubId는 Club.id와 같은 정수여야 합니다.
         chargeStudentName: z.string().max(255), // chargeStudentName은 문자열로 최대 255자여야 합니다.
-        startTerm: z.date(), // startTerm은 날짜 및 시간이어야 합니다.
-        endTerm: z.date(), // endTerm은 날짜 및 시간이어야 합니다.
+        startTerm: z.coerce.date(), // startTerm은 날짜 및 시간이어야 합니다.
+        endTerm: z.coerce.date(), // endTerm은 날짜 및 시간이어야 합니다.
       })
       .array(),
   }),

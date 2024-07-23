@@ -1,7 +1,9 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
+
 import RadioButton from "./RadioButton";
 
 export interface RadioOptionProps<T extends string> {
@@ -9,14 +11,16 @@ export interface RadioOptionProps<T extends string> {
   checked?: boolean;
   children: React.ReactNode;
   onClick?: (value: T) => void;
+  disabled?: boolean;
 }
 
-const RadioOptionInner = styled.div`
+const RadioOptionInner = styled.div<{ disabled: boolean }>`
   display: flex;
   padding-left: 2px;
   align-items: center;
   gap: 12px;
-  color: ${({ theme }) => theme.colors.BLACK};
+  color: ${({ disabled, theme }) =>
+    disabled ? theme.colors.GRAY[300] : theme.colors.BLACK};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 16px;
   line-height: 20px;
@@ -29,8 +33,12 @@ const RadioOption = <T extends string>({
   checked = false,
   children,
   onClick = () => {},
+  disabled = false,
 }: RadioOptionProps<T>) => (
-  <RadioOptionInner onClick={() => onClick(value)}>
+  <RadioOptionInner
+    onClick={() => !disabled && onClick(value)}
+    disabled={disabled}
+  >
     <RadioButton checked={checked} />
     {children}
   </RadioOptionInner>

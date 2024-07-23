@@ -1,30 +1,24 @@
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
-import Button from "@sparcs-clubs/web/common/components/Button";
+import React from "react";
+
+import Link from "next/link";
+import styled from "styled-components";
+
+import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
+import FoldableSection from "@sparcs-clubs/web/common/components/FoldableSection";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Info from "@sparcs-clubs/web/common/components/Info";
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import React from "react";
-import styled from "styled-components";
-import Link from "next/link";
-import FoldableSection from "@sparcs-clubs/web/common/components/FoldableSection";
+
+import { mockNewActivityData, mockPastActivityData } from "../_mock/mock";
 import NewActivityReportList from "../components/NewActivityReportList";
 import PastActivityReportList from "../components/PastActivityReportList";
-import { mockNewActivityData, mockPastActivityData } from "../_mock/mock";
 
 const ActivityReportMainFrameInner = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 60px;
-`;
-
-const PageTitleOuter = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-  align-self: stretch;
 `;
 
 const OptionOuter = styled.div`
@@ -52,16 +46,13 @@ const PastSectionInner = styled.div`
 
 const ActivityReportMainFrame: React.FC = () => (
   <ActivityReportMainFrameInner>
-    <PageTitleOuter>
-      <BreadCrumb
-        items={[
-          { name: "대표 동아리 관리", path: "/manage-club" },
-          { name: "활동 보고서", path: "/manage-club/activity-report" },
-        ]}
-      />
-      <PageTitle>활동 보고서</PageTitle>
-    </PageTitleOuter>
-
+    <PageHead
+      items={[
+        { name: "대표 동아리 관리", path: "/manage-club" },
+        { name: "활동 보고서", path: "/manage-club/activity-report" },
+      ]}
+      title="활동 보고서"
+    />
     <FoldableSectionTitle childrenMargin="20px" title="신규 활동 보고서">
       <SectionInner>
         <Info text="현재는 2024년 봄학기 활동 보고서 작성 기간입니다 (작성 마감 : 2024년 3월 10일 23:59)" />

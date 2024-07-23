@@ -1,7 +1,10 @@
 import React, { ChangeEvent, InputHTMLAttributes, useEffect } from "react";
+
+import isPropValid from "@emotion/is-prop-valid";
 import styled, { css } from "styled-components";
-import Label from "./_atomic/Label";
-import ErrorMessage from "./_atomic/ErrorMessage";
+
+import FormError from "../FormError";
+import Label from "../FormLabel";
 
 // PhoneInput, RentalInput에서 사용하기 위해 export
 export interface TextInputProps
@@ -31,9 +34,14 @@ const areaInputStyle = css`
   overflow: auto;
 `;
 
-const Input = styled.input.attrs<TextInputProps>(({ area }) => ({
-  as: area ? "textarea" : "input",
-}))<TextInputProps & { hasError: boolean }>`
+const Input = styled.input
+  .withConfig({
+    shouldForwardProp: prop =>
+      isPropValid(prop) && prop !== "hasError" && prop !== "area",
+  })
+  .attrs<TextInputProps>(({ area }) => ({
+    as: area ? "textarea" : "input",
+  }))<TextInputProps & { hasError: boolean }>`
   display: block;
   width: 100%;
   padding: 8px 12px 8px 12px;
@@ -107,7 +115,7 @@ const TextInput: React.FC<TextInputProps> = ({
           onChange={handleValueChange}
           {...props}
         />
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+        {errorMessage && <FormError>{errorMessage}</FormError>}
       </InputWrapper>
     </InputWrapper>
   );

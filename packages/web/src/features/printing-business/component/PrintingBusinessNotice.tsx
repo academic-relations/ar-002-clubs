@@ -1,9 +1,11 @@
-import Button from "@sparcs-clubs/web/common/components/Button";
+import React, { useState } from "react";
+
+import styled from "styled-components";
+
+import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import React, { useState } from "react";
-import styled from "styled-components";
 
 // 공지사항을 단순이 디스플레이하는 덤 컴포넌트라고 생각되어 컴포넌트단에서 구현했습니다.
 // 후에 공지 수정 기능이 추가되면 frame으로 옮기거나 속성을 추가해야 할 것 같아요.

@@ -14,11 +14,11 @@ const method = "GET";
 const requestParam = z.object({});
 
 const requestQuery = z.object({
-  clubId: z.number().int().min(1),
-  startDate: z.optional(z.date()),
-  endDate: z.optional(z.date()),
-  pageOffset: z.number().int().min(1),
-  itemCount: z.number().int().min(1),
+  clubId: z.coerce.number().int().min(1),
+  startDate: z.optional(z.coerce.date()),
+  endDate: z.optional(z.coerce.date()),
+  pageOffset: z.coerce.number().int().min(1),
+  itemCount: z.coerce.number().int().min(1),
 });
 
 const requestBody = z.object({});
@@ -27,15 +27,15 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     items: z.array(
       z.object({
-        orderId: z.number().int().min(1),
+        orderId: z.coerce.number().int().min(1),
         studentName: z.string(),
-        issuedNumber: z.number().int().min(1),
+        issuedNumber: z.coerce.number().int().min(1),
         statusEnum: z.nativeEnum(ActivityCertificateOrderStatusEnum),
-        createdAt: z.date(),
+        createdAt: z.coerce.date(),
       }),
     ),
-    total: z.number().int().min(0),
-    offset: z.number().int().min(1),
+    total: z.coerce.number().int().min(0),
+    offset: z.coerce.number().int().min(1),
   }),
 };
 

@@ -1,6 +1,10 @@
 import React from "react";
+
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
-import TextButton from "../TextButton";
+
+import TextButton from "../Buttons/TextButton";
+import FlexWrapper from "../FlexWrapper";
 
 interface TableButtonCellProps {
   text: string[];
@@ -9,7 +13,9 @@ interface TableButtonCellProps {
   minWidth?: number;
 }
 
-const CommonCellWrapper = styled.div<{
+const CommonCellWrapper = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   width: string | number;
   minWidth: number;
 }>`
@@ -22,13 +28,9 @@ const CommonCellWrapper = styled.div<{
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
 `;
 
-const ButtonsWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-`;
-
-const CellText = styled.div<{ isGray: boolean }>`
+const CellText = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ isGray: boolean }>`
   font-size: 16px;
   line-height: 24px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
@@ -43,14 +45,14 @@ const TableButtonCell: React.FC<TableButtonCellProps> = ({
   minWidth = 100,
 }) => (
   <CommonCellWrapper width={width} minWidth={minWidth}>
-    <ButtonsWrapper>
+    <FlexWrapper direction="row" gap={12}>
       {text.map((item, index) => (
         <React.Fragment key={item}>
           <TextButton text={item} onClick={onClick[index]} />
           {index < text.length - 1 && <CellText isGray>/</CellText>}
         </React.Fragment>
       ))}
-    </ButtonsWrapper>
+    </FlexWrapper>
   </CommonCellWrapper>
 );
 

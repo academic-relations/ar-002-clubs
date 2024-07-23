@@ -13,20 +13,26 @@ import { zWeekTime } from "@sparcs-clubs/interface/common/type/time.type";
  */
 
 const url = (spaceId: number) =>
-  `/executive/common-spaces/common-space/${spaceId}/usage-order`;
+  `/executive/common-spaces/common-space/${spaceId}/orders`;
 const method = "POST";
 
 const requestParam = z.object({
-  spaceId: z.number().int().min(1),
+  spaceId: z.coerce.number().int().min(1),
 });
 
 const requestQuery = z.object({});
 
-const requestBody = z.object({
-  clubId: z.number().int().min(1),
-  startTime: zWeekTime,
-  endTime: zWeekTime,
-});
+const requestBody = z
+  .object({
+    chargeStudentId: z.coerce.number().int().min(1),
+    clubId: z.coerce.number().int().min(1),
+    startTime: zWeekTime,
+    endTime: zWeekTime,
+  })
+  .refine(data => data.startTime < data.endTime, {
+    message: "startTime must be earlier than endTime",
+    path: ["startTime", "endTime"],
+  });
 
 const responseBodyMap = {
   [HttpStatusCode.Created]: z.object({}),

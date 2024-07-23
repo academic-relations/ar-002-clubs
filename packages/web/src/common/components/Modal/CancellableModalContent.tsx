@@ -1,6 +1,10 @@
-import Button from "@sparcs-clubs/web/common/components/Button";
 import React from "react";
+
 import styled from "styled-components";
+
+import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
+
+import FlexWrapper from "../FlexWrapper";
 import Typography from "../Typography";
 
 interface CancellableModalContentProps {
@@ -10,12 +14,6 @@ interface CancellableModalContentProps {
   confirmButtonText?: string;
   children: React.ReactNode;
 }
-
-const ModalContentInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -29,7 +27,7 @@ const CancellableModalContent: React.FC<CancellableModalContentProps> = ({
   closeButtonText = "취소",
   confirmButtonText = "확인",
 }) => (
-  <ModalContentInner>
+  <FlexWrapper direction="column" gap={12}>
     <Typography fs={16} lh={28} fw="MEDIUM" style={{ textAlign: "center" }}>
       {children}
     </Typography>
@@ -39,7 +37,7 @@ const CancellableModalContent: React.FC<CancellableModalContentProps> = ({
       </Button>
       <Button onClick={onConfirm}>{confirmButtonText}</Button>
     </ButtonWrapper>
-  </ModalContentInner>
+  </FlexWrapper>
 );
 
 export default CancellableModalContent;

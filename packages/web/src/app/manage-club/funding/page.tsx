@@ -1,40 +1,33 @@
 "use client";
 
-import styled from "styled-components";
+import React from "react";
 
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
-
-import ManageClubFundingMainFrame from "@sparcs-clubs/web/features/manage-club/funding/frame/ManageClubFundingMainFrame";
-
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import {
   manageClubFundingPageBreadCrumbName,
   manageClubFundingPageName,
   manageClubFundingPagePath,
 } from "@sparcs-clubs/web/constants/manageClubFunding";
+import NewFundingListSection from "@sparcs-clubs/web/features/manage-club/funding/components/NewFundingListSection";
+import PastFundingListSection from "@sparcs-clubs/web/features/manage-club/funding/components/PastFundingListSection";
 
-const PageHeadWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const Funding = () => (
-  <>
-    <PageHeadWrapper>
-      <BreadCrumb
-        items={[
-          { name: "대표 동아리 관리", path: "/manage-club" },
-          {
-            name: manageClubFundingPageBreadCrumbName,
-            path: manageClubFundingPagePath,
-          },
-        ]}
-      />
-      <PageTitle>{manageClubFundingPageName}</PageTitle>
-    </PageHeadWrapper>
-    <ManageClubFundingMainFrame />
-  </>
+const Funding: React.FC = () => (
+  <FlexWrapper direction="column" gap={60}>
+    <PageHead
+      items={[
+        { name: "대표 동아리 관리", path: "/manage-club" },
+        {
+          name: manageClubFundingPageBreadCrumbName,
+          path: manageClubFundingPagePath,
+        },
+      ]}
+      title={manageClubFundingPageName}
+    />
+    {/* TODO: API 구현 이후엔 테이블 데이터 전부 프레임에서 주입해줄 것! */}
+    <NewFundingListSection />
+    <PastFundingListSection />
+  </FlexWrapper>
 );
 
 export default Funding;

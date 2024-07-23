@@ -1,13 +1,18 @@
 import React from "react";
+
 import styled from "styled-components";
+
+import Progress from "./_atomic/Progress";
 import { Status } from "./_atomic/ProgressDot";
 import ProgressLine from "./_atomic/ProgressLine";
-import Progress from "./_atomic/Progress";
 
+export interface StatusAndDate {
+  status: Status;
+  date: Date | undefined;
+}
 interface ProgressCheckSectionProps {
   labels: string[];
-  status: Status[];
-  dates: (Date | undefined)[];
+  progress: StatusAndDate[];
 }
 
 const ProgressCheckSectionWrapper = styled.div`
@@ -28,16 +33,25 @@ const ProgressLineWrapper = styled.div`
 
 const ProgressCheckSection: React.FC<ProgressCheckSectionProps> = ({
   labels,
-  status,
-  dates,
+  progress,
 }) => (
   <ProgressCheckSectionWrapper>
     {labels.map((label, index) => (
       <React.Fragment key={String(index) + label}>
-        <Progress status={status[index]} label={label} date={dates[index]} />
+        <Progress
+          status={progress[index] ? progress[index].status : Status.Pending}
+          label={label}
+          date={progress[index] ? progress[index].date : undefined}
+        />
         {index < labels.length - 1 && (
           <ProgressLineWrapper>
-            <ProgressLine status={status[index + 1]} />
+            <ProgressLine
+              status={
+                progress[index + 1]
+                  ? progress[index + 1].status
+                  : Status.Pending
+              }
+            />
           </ProgressLineWrapper>
         )}
       </React.Fragment>

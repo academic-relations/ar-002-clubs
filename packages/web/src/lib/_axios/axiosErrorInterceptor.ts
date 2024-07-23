@@ -1,4 +1,4 @@
-import { AxiosError, InternalAxiosRequestConfig, HttpStatusCode } from "axios";
+import { AxiosError, HttpStatusCode, InternalAxiosRequestConfig } from "axios";
 
 const errorInterceptor = {
   onFulfilled(config: InternalAxiosRequestConfig) {

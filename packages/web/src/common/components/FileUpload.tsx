@@ -1,7 +1,9 @@
 import React from "react";
+
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
+
 import Typography from "./Typography";
 
 interface FileUploadProps {
@@ -70,7 +72,9 @@ const UploadIcon = styled.div`
   flex-grow: 0; */
 `;
 
-const FileUpload: React.FC<FileUploadProps> = ({ placeholder = "" }) => (
+const FileUpload: React.FC<FileUploadProps> = ({
+  placeholder = "파일을 선택해주세요",
+}) => (
   <FileUploadInner>
     <FileName>
       <Typography color="GRAY.200" fs={16} lh={20} fw="REGULAR">

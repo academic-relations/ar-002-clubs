@@ -1,18 +1,20 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
 
+import Card from "@sparcs-clubs/web/common/components/Card";
+import Tag from "@sparcs-clubs/web/common/components/Tag";
 import {
   getTagColorFromClubType,
   getTagColorFromDivision,
   getTagContentFromClubType,
 } from "@sparcs-clubs/web/types/clubdetail.types";
 
-import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
-import Card from "@sparcs-clubs/web/common/components/Card";
-import Tag from "@sparcs-clubs/web/common/components/Tag";
 import ClubInfoItem from "./ClubInfoItem";
+
+import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
 interface ClubInfoCardProps {
   club: ApiClb002ResponseOK;
@@ -51,7 +53,7 @@ const ClubInfoCard: React.FC<ClubInfoCardProps> = ({ club }) => (
       <ClubInfoItem title="성격" content={club.characteristic} />
       <ClubInfoItem title="설립 연도" content={`${club.foundingYear}년`} />
     </ClubInfoRow>
-    <ClubInfoItem title="동아리방" content={club.room} />
+    <ClubInfoItem title="동아리방" content={club.room ? club.room : "-"} />
   </Card>
 );
 

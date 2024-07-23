@@ -1,16 +1,18 @@
 import {
-  mysqlTable,
-  int,
-  varchar,
-  text,
   date,
   datetime,
-  timestamp,
+  foreignKey,
   index,
+  int,
+  mysqlTable,
+  text,
+  timestamp,
+  varchar,
 } from "drizzle-orm/mysql-core";
-import { Professor, Student } from "./user.schema";
+
 // eslint-disable-next-line import/no-cycle
 import { Division } from "./division.schema";
+import { Professor, Student } from "./user.schema";
 
 export const Club = mysqlTable("club", {
   id: int("id").autoincrement().primaryKey(),
@@ -43,6 +45,9 @@ export const SemesterD = mysqlTable("semester_d", {
 
 export const ClubT = mysqlTable("club_t", {
   id: int("id").autoincrement().primaryKey(),
+  clubId: int("club_id")
+    .notNull()
+    .references(() => Club.id),
   clubStatusEnumId: int("club_status_enum_id")
     .notNull()
     .references(() => ClubStatusEnum.id),
@@ -101,15 +106,15 @@ export const ClubRoomT = mysqlTable("club_room_t", {
   deletedAt: timestamp("deleted_at"),
 });
 
-export const ClubRepresentativeEnum = mysqlTable("club_representative_enum", {
+export const ClubDelegateEnum = mysqlTable("club_delegate_enum", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("enum_name", { length: 255 }),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
 
-export const ClubRepresentativeD = mysqlTable(
-  "club_representative_d",
+export const ClubDelegateD = mysqlTable(
+  "club_delegate_d",
   {
     id: int("id").autoincrement().primaryKey(),
     clubId: int("club_id")
@@ -118,17 +123,59 @@ export const ClubRepresentativeD = mysqlTable(
     studentId: int("student_id")
       .notNull()
       .references(() => Student.id),
-    clubRepresentativeEnum: int("club_representative_enum").notNull(),
-    // .references(() => ClubRepresentativeEnum.id),
+    ClubDelegateEnumId: int("club_delegate_enum_id").notNull(),
     startTerm: datetime("start_term").notNull(),
     endTerm: datetime("end_term"),
     createdAt: timestamp("created_at").defaultNow(),
     deletedAt: timestamp("deleted_at"),
   },
-  // references로 설정했을 때 MySQL의 바이트수 초과로 인해 생성이 불가능하여 명시적으로 FK 이름을 지정해야함
   table => ({
-    clubRepresentativeEnumIdFk: index(
-      "club_representative_d_club_representative_enum_id_fk",
-    ).on(table.clubRepresentativeEnum),
+    ClubDelegateEnumIdFk: index("club_delegate_d_club_delegate_enum_id_fk").on(
+      table.ClubDelegateEnumId,
+    ),
+  }),
+);
+
+export const ClubDelegateChangeRequestStatusEnum = mysqlTable(
+  "club_delegate_change_request_status_enum",
+  {
+    id: int("enum_id").autoincrement().primaryKey().notNull(),
+    enumName: varchar("enum_name", { length: 255 }).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+);
+
+export const ClubDelegateChangeRequest = mysqlTable(
+  "club_delegate_change_request",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    clubId: int("club_id").notNull(),
+    prevStudentId: int("prev_student_id").notNull(),
+    studentId: int("student_id").notNull(),
+    clubDelegateChangeRequestStatusEnumId: int(
+      "club_delegate_change_request_status_enum_id",
+    ).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    clubForeignKey: foreignKey({
+      columns: [table.clubId],
+      foreignColumns: [Club.id],
+    }),
+    prevStudentForeignKey: foreignKey({
+      columns: [table.prevStudentId],
+      foreignColumns: [Student.id],
+    }),
+    studentForeignKey: foreignKey({
+      columns: [table.studentId],
+      foreignColumns: [Student.id],
+    }),
+    statusEnumForeignKey: foreignKey({
+      name: "club_delegate_change_request_fk",
+      columns: [table.clubDelegateChangeRequestStatusEnumId],
+      foreignColumns: [ClubDelegateChangeRequestStatusEnum.id],
+    }),
   }),
 );

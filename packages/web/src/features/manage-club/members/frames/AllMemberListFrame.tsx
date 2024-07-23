@@ -1,19 +1,20 @@
-import Button from "@sparcs-clubs/web/common/components/Button";
-import Icon from "@sparcs-clubs/web/common/components/Icon";
-import colors from "@sparcs-clubs/web/styles/themes/colors";
 import React, { useState } from "react";
-import styled from "styled-components";
-import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
-import MemberSearchAndFilter from "../components/MemberSearchAndFilter";
-import AllMemberList from "../components/AllMemberList";
-import { mockAllSemesters, mockSemesterMembers } from "./_mock/mockMembers";
 
-const AllMemberWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
+import styled from "styled-components";
+
+import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
+
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+
+import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
+
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+
+import AllMemberList from "../components/AllMemberList";
+
+import MemberSearchAndFilter from "../components/MemberSearchAndFilter";
+
+import { mockAllSemesters, mockSemesterMembers } from "./_mock/mockMembers";
 
 const AllMemberListWrapper = styled.div`
   display: flex;
@@ -22,12 +23,7 @@ const AllMemberListWrapper = styled.div`
   padding-left: 24px;
 `;
 
-const ExcelButton = styled(Button)`
-  width: max-content;
-  gap: 4px;
-`;
-
-const ExcelButtonWrapper = styled.div`
+const IconButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -43,7 +39,7 @@ const AllMemberListFrame = () => {
   >(mockAllSemesters.semesters);
 
   return (
-    <AllMemberWrapper>
+    <FlexWrapper direction="column" gap={20}>
       <FoldableSectionTitle
         title="전체 회원 명단"
         toggle={toggle}
@@ -53,14 +49,17 @@ const AllMemberListFrame = () => {
         <AllMemberListWrapper>
           {mockAllSemesters.semesters.length > 0 && (
             <>
-              <ExcelButtonWrapper>
-                {/* TODO: IconButton 리팩토링 되면 수정하기 */}
-                <ExcelButton onClick={() => {}}>
-                  {/* TODO: 엑셀 다운로드 기능 구현 */}
-                  <Icon type="save_alt" size={16} color={colors.WHITE} />
+              <IconButtonWrapper>
+                <IconButton
+                  type="default"
+                  icon="save_alt"
+                  onClick={() => {
+                    /* TODO: 엑셀 다운로드 기능 구현 */
+                  }}
+                >
                   엑셀로 다운로드
-                </ExcelButton>
-              </ExcelButtonWrapper>
+                </IconButton>
+              </IconButtonWrapper>
               <MemberSearchAndFilter
                 semesters={mockAllSemesters.semesters}
                 selectedSemesters={selectedSemesters}
@@ -98,7 +97,7 @@ const AllMemberListFrame = () => {
           )}
         </AllMemberListWrapper>
       )}
-    </AllMemberWrapper>
+    </FlexWrapper>
   );
 };
 

@@ -1,13 +1,16 @@
+import {
+  ApiCms003RequestBody,
+  ApiCms003RequestParam,
+} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms003";
+
 export interface CommonSpaceInterface {
   agreement: boolean;
-  info?: {
+  userInfo?: {
     clubName: string;
-    applicant: string;
-    phone: string;
+    name: string;
+    phoneNumber: string;
   };
-  space?: string;
-  reservation?: {
-    start: Date;
-    end: Date;
-  };
+  spaceName?: string;
+  body: Partial<ApiCms003RequestBody>;
+  param: Partial<ApiCms003RequestParam>;
 }

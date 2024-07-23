@@ -1,7 +1,9 @@
 import React, { FC, useRef } from "react";
+
 import styled from "styled-components";
 
 export interface ModalProps {
+  isOpen?: boolean;
   onClose?: () => void;
 }
 
@@ -47,25 +49,28 @@ const ModalScrollContainer = styled.div`
 `;
 
 const Modal: FC<React.PropsWithChildren<ModalProps>> = ({
+  isOpen = false,
   onClose = () => {},
   children = <div />,
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
 
   return (
-    <ModalBackground
-      ref={ref}
-      onClick={e => {
-        if (e.target !== ref.current) {
-          return;
-        }
-        onClose();
-      }}
-    >
-      <ModalContainer>
-        <ModalScrollContainer>{children}</ModalScrollContainer>
-      </ModalContainer>
-    </ModalBackground>
+    isOpen && (
+      <ModalBackground
+        ref={ref}
+        onClick={e => {
+          if (e.target !== ref.current) {
+            return;
+          }
+          onClose();
+        }}
+      >
+        <ModalContainer>
+          <ModalScrollContainer>{children}</ModalScrollContainer>
+        </ModalContainer>
+      </ModalBackground>
+    )
   );
 };
 

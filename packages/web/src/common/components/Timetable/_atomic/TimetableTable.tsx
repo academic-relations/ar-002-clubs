@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
+
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
+
 import TimetableCell, { type TimetableCellType } from "./TimetableCell";
 
 interface TimetableTableProps {
   data: TimetableCellType[];
   setIndexRange: React.Dispatch<React.SetStateAction<number[]>>;
   update?: string;
+  availableHoursPerDay: number;
 }
 
-const TimetableTableInner = styled.div<{
+const TimetableTableInner = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   rows: number;
   columns: number;
 }>`
@@ -24,6 +30,7 @@ const TimetableTable: React.FC<TimetableTableProps> = ({
   data,
   setIndexRange,
   update = "",
+  availableHoursPerDay,
 }) => {
   const [start, setStart] = useState<number>();
   const [end, setEnd] = useState<number>();
@@ -73,7 +80,7 @@ const TimetableTable: React.FC<TimetableTableProps> = ({
       if (
         checkValidCell(parseInt(id)) &&
         checkSameColumn(start, parseInt(id)) &&
-        Math.abs(start - parseInt(id)) < 8
+        Math.abs(start - parseInt(id)) < availableHoursPerDay * 2
       ) {
         setEnd(parseInt(id));
       } else {

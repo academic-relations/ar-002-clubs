@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
-import { NoticeInfo } from "@sparcs-clubs/web/features/notice/types/notice.type";
+
+import type { ApiNtc001ResponseOK } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 
 const NoticeCardInner = styled.div`
   display: flex;
@@ -31,10 +33,18 @@ const NoticeDate = styled.div`
   white-space: nowrap;
 `;
 
-const NoticeCard: React.FC<{ noticeList: NoticeInfo }> = ({ noticeList }) => (
+const NoticeCard: React.FC<{
+  noticeList: ApiNtc001ResponseOK["notices"][number];
+}> = ({ noticeList }) => (
   <NoticeCardInner>
     <NoticeTitle>{noticeList.title}</NoticeTitle>
-    <NoticeDate>{noticeList.date}</NoticeDate>
+    <NoticeDate>
+      {noticeList.date.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })}
+    </NoticeDate>
   </NoticeCardInner>
 );
 

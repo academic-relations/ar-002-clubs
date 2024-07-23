@@ -1,4 +1,5 @@
 import styled from "styled-components";
+
 import { Step } from "./StepDot";
 
 const StepLabel = styled.div<{ step: Step }>`

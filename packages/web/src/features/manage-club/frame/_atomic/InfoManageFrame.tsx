@@ -1,18 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+
 import styled from "styled-components";
-import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import { ManageWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
+
+import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import Select, {
-  SelectItem,
-} from "@sparcs-clubs/web/common/components/Forms/Select";
-import Button from "@sparcs-clubs/web/common/components/Button";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+import ChangeRepresentativeCard from "@sparcs-clubs/web/features/manage-club/component/ChangeRepresentativeCard";
 import {
   mockClubDescription,
   mockClubMembers,
 } from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+
+import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 const InfoManageMainWrapper = styled.div`
   display: flex;
@@ -22,19 +24,19 @@ const InfoManageMainWrapper = styled.div`
 `;
 
 const InfoManageFrame: React.FC = () => {
-  const [toggle, setToggle] = React.useState<boolean>(true);
-  const [description, setDescription] = React.useState<string>(
+  const [toggle, setToggle] = useState<boolean>(true);
+  const [description, setDescription] = useState<string>(
     mockClubDescription.description,
   );
-  const [password, setPassword] = React.useState<string>(
+  const [password, setPassword] = useState<string>(
     mockClubDescription.roomPassword,
   );
-  const [errorDescription, setErrorDescription] = React.useState<string>("");
-  const [errorPassword, setErrorPassword] = React.useState<string>("");
+  const [errorDescription, setErrorDescription] = useState<string>("");
+  const [errorPassword, setErrorPassword] = useState<string>("");
 
-  const [president, setPresident] = React.useState<string>("");
-  const [representative1, setRepresentative1] = React.useState<string>("");
-  const [representative2, setRepresentative2] = React.useState<string>("");
+  const [representative, setRepresentative] = useState<string>("");
+  const [delegate1, setDelegate1] = useState<string>("");
+  const [delegate2, setDelegate2] = useState<string>("");
   // TODO: 현재 대표자, 대의원으로 기본값 설정
   // TODO: 중복 선택 막는 로직 추가
 
@@ -70,15 +72,14 @@ const InfoManageFrame: React.FC = () => {
   }));
 
   return (
-    <ManageWrapper>
+    <FlexWrapper direction="column" gap={40}>
       <FoldableSectionTitle
         title="동아리 정보"
         toggle={toggle}
         toggleHandler={() => setToggle(!toggle)}
-      />
-      {toggle && (
+      >
         <InfoManageMainWrapper>
-          <Card outline gap={32} style={{ flex: 1 }}>
+          <Card outline gap={32} style={{ flex: 1, height: "fit-content" }}>
             <Typography ff="PRETENDARD" fw="MEDIUM" fs={20} lh={24}>
               기본 정보
             </Typography>
@@ -104,32 +105,19 @@ const InfoManageFrame: React.FC = () => {
               저장
             </Button>
           </Card>
-          <Card outline gap={32} style={{ flex: 1 }}>
-            <Typography ff="PRETENDARD" fw="MEDIUM" fs={20} lh={24}>
-              대표자 및 대의원
-            </Typography>
-            <Select
-              label="대표자"
-              items={selectItems}
-              selectedValue={president}
-              onSelect={setPresident}
-            />
-            <Select
-              label="대의원 1"
-              items={selectItems}
-              selectedValue={representative1}
-              onSelect={setRepresentative1}
-            />
-            <Select
-              label="대의원 2"
-              items={selectItems}
-              selectedValue={representative2}
-              onSelect={setRepresentative2}
-            />
-          </Card>
+          <ChangeRepresentativeCard
+            type="Default"
+            selectItems={selectItems}
+            representative={representative}
+            setRepresentative={setRepresentative}
+            delegate1={delegate1}
+            setDelegate1={setDelegate1}
+            delegate2={delegate2}
+            setDelegate2={setDelegate2}
+          />
         </InfoManageMainWrapper>
-      )}
-    </ManageWrapper>
+      </FoldableSectionTitle>
+    </FlexWrapper>
   );
 };
 

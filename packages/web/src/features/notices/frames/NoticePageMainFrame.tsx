@@ -1,10 +1,8 @@
 "use client";
 
-import React from "react";
 import styled from "styled-components";
 
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
-
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import NoticeListAndPaginationFrame from "@sparcs-clubs/web/features/notices/frames/NoticeListAndPaginationFrame";
 
 const NoticePageMainFrameInner = styled.div`
@@ -18,7 +16,10 @@ const NoticePageMainFrameInner = styled.div`
 
 const NoticePageMainFrame = () => (
   <NoticePageMainFrameInner>
-    <PageTitle>공지사항</PageTitle>
+    <PageHead
+      items={[{ name: "공지사항", path: "/notice" }]}
+      title="공지사항"
+    />
     <NoticeListAndPaginationFrame />
   </NoticePageMainFrameInner>
 );

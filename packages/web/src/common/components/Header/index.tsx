@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
+
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import NavList from "@sparcs-clubs/web/common/components/NavTools/NavList";
-
 import navPaths from "@sparcs-clubs/web/constants/nav";
 
 import MobileNavMenu from "../NavTools/MobileNavMenu";
+
 import Login from "./_atomic/Login";
 import Logo from "./_atomic/Logo";
 
@@ -51,6 +52,9 @@ const HeaderInner = styled.div`
   position: sticky;
   top: 0;
   z-index: 10;
+  -webkit-backdrop-filter: blur(
+    10px
+  ); /* Add this line first, it fixes blur for Safari*/
   backdrop-filter: blur(10px);
 `;
 
