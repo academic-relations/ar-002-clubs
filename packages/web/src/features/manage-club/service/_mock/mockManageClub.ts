@@ -56,6 +56,13 @@ export enum ActivityTypeEnum {
   NotFit, // 동아리 성격에 합치하지 않는 활동
 }
 
+export enum FundingStatusEnum {
+  Applied = 1, // 신청
+  Committe, // 운위
+  Approved, // 승인
+  Rejected, // 반려
+}
+
 export enum MemberStatusEnum {
   Applied = 1, // 신청
   Approved, // 승인

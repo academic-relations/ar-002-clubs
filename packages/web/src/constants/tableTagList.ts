@@ -6,6 +6,7 @@ import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/renta
 import {
   ActivityStatusEnum,
   ActivityTypeEnum,
+  FundingStatusEnum,
   MemberStatusEnum,
 } from "../features/manage-club/service/_mock/mockManageClub";
 import { StatusDetail } from "../utils/getTagDetail";
@@ -89,6 +90,15 @@ const ApplyTagList: {
   [ActivityStatusEnum.Rejected]: { text: "신청 반려", color: "RED" },
 };
 
+const FundingTagList: {
+  [key in FundingStatusEnum]: StatusDetail;
+} = {
+  [FundingStatusEnum.Applied]: { text: "신청", color: "BLUE" },
+  [FundingStatusEnum.Committe]: { text: "운위", color: "YELLOW" },
+  [FundingStatusEnum.Approved]: { text: "승인", color: "GREEN" },
+  [FundingStatusEnum.Rejected]: { text: "반려", color: "RED" },
+};
+
 const ActTypeTagList: {
   [key in ActivityTypeEnum]: StatusDetail;
 } = {
@@ -113,4 +123,5 @@ export {
   MemTagList,
   ApplyTagList,
   ActTypeTagList,
+  FundingTagList,
 };
