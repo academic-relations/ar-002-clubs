@@ -6,7 +6,7 @@ import { PassportModule } from "@nestjs/passport";
 
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 
-import { UserModule } from "../user/user.module";
+import UserModule from "../user/user.module";
 
 import { AuthController } from "./controller/auth.controller";
 import { AuthRepository } from "./repository/auth.repository";
