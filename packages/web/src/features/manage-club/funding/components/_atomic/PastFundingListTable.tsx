@@ -39,14 +39,14 @@ const CountRow = styled.div`
 
 const getTagDetail = (status: string): { color: TagColor; text: string } => {
   switch (status) {
-    case "작성중":
-      return { color: "BLUE", text: "작성중" };
-    case "신청 완료":
-      return { color: "PURPLE", text: "신청 완료" };
-    case "신청 반려":
-      return { color: "RED", text: "신청 반려" };
-    case "승인 완료":
-      return { color: "GREEN", text: "승인 완료" };
+    case "신청":
+      return { color: "BLUE", text: "신청" };
+    case "운위":
+      return { color: "YELLOW", text: "운위" };
+    case "반려":
+      return { color: "RED", text: "반려" };
+    case "승인":
+      return { color: "GREEN", text: "승인" };
     default:
       return { color: "RED", text: "알 수 없음" };
   }
@@ -98,35 +98,35 @@ const columns = [
 const mockData = [
   {
     id: 1,
-    status: "작성중",
+    status: "신청",
     activityName: "개발개발한 어떠한 활동",
     contentName: "모니터",
     expenditureAmount: 300000,
   },
   {
     id: 2,
-    status: "작성중",
+    status: "신청",
     activityName: "개발개발한 어떠한 활동",
     contentName: "모니터",
     expenditureAmount: 300000,
   },
   {
     id: 3,
-    status: "신청 완료",
+    status: "운위",
     activityName: "개발개발한 어떠한 활동",
     contentName: "모니터",
     expenditureAmount: 300000,
   },
   {
     id: 4,
-    status: "신청 반려",
+    status: "반려",
     activityName: "개발개발한 어떠한 활동",
     contentName: "모니터",
     expenditureAmount: 300000,
   },
   {
     id: 5,
-    status: "승인 완료",
+    status: "승인",
     activityName: "개발개발한 어떠한 활동",
     contentName: "모니터",
     expenditureAmount: 300000,
@@ -134,7 +134,7 @@ const mockData = [
   },
   {
     id: 6,
-    status: "승인 완료",
+    status: "승인",
     activityName: "개발개발한 어떠한 활동",
     contentName: "모니터",
     expenditureAmount: 300000,
