@@ -6,7 +6,6 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import IconButton from "@sparcs-clubs/web/common/components/Forms/IconButton";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-
 import ClubButton from "@sparcs-clubs/web/features/register-club/components/ClubButton";
 
 const RegisterClub = () => {
