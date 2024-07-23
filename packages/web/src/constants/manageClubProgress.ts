@@ -1,15 +1,18 @@
+import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
 
 import { StatusAndDate } from "../common/components/ProgressCheckSection";
 import { Status } from "../common/components/ProgressCheckSection/_atomic/ProgressDot";
 
-export const manageRentalProgress = (
-  status: RentalOrderStatusEnum,
-): {
+interface ManageProgress {
   labels: string[];
   progress: StatusAndDate[];
   infoText?: string;
-} => {
+}
+
+export const manageRentalProgress = (
+  status: RentalOrderStatusEnum,
+): ManageProgress => {
   switch (status) {
     case RentalOrderStatusEnum.Applied:
       return {
@@ -94,6 +97,32 @@ export const manageRentalProgress = (
         ],
         progress: [{ status: Status.Approved, date: new Date() }],
         infoText: "승인이 완료되기 전까지 신청을 취소할 수 있습니다",
+      };
+  }
+};
+
+export const manageCommonSpaceProgress = (
+  status: CommonSpaceUsageOrderStatusEnum,
+): ManageProgress => {
+  switch (status) {
+    case CommonSpaceUsageOrderStatusEnum.Applied:
+      return {
+        labels: ["신청 완료", "사용 대기"],
+        progress: [{ status: Status.Approved, date: new Date() }],
+        infoText: "승인이 완료되기 전까지 신청을 취소할 수 있습니다",
+      };
+    case CommonSpaceUsageOrderStatusEnum.Used:
+      return {
+        labels: ["신청 완료", "사용 완료"],
+        progress: [
+          { status: Status.Approved, date: new Date() },
+          { status: Status.Approved, date: new Date() },
+        ],
+      };
+    default: // Canceled
+      return {
+        labels: ["신청 취소", "사용 대기"],
+        progress: [{ status: Status.Canceled, date: new Date() }],
       };
   }
 };
