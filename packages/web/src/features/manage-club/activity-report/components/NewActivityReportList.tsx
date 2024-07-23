@@ -39,6 +39,10 @@ const getProfessorApprovalTagColor = (professorApproval: string): TagColor => {
   switch (professorApproval) {
     case "대기":
       return "GRAY";
+    case "완료":
+      return "GREEN";
+    case "반려":
+      return "RED";
     default:
       return "GRAY";
   }

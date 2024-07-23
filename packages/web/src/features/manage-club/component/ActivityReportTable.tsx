@@ -7,10 +7,11 @@ import {
 } from "@tanstack/react-table";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
-import Tag, { type TagColor } from "@sparcs-clubs/web/common/components/Tag";
+import Tag from "@sparcs-clubs/web/common/components/Tag";
 import {
   ActTypeTagList,
   ApplyTagList,
+  ProfessorApprovalTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formateDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
@@ -20,15 +21,6 @@ import { type Activity } from "../service/_mock/mockManageClub";
 interface ActivityTableProps {
   activityList: Activity[];
 }
-
-const getProfessorApprovalTagColor = (professorApproval: string): TagColor => {
-  switch (professorApproval) {
-    case "대기":
-      return "GRAY";
-    default:
-      return "GRAY";
-  }
-};
 
 const columnHelper = createColumnHelper<Activity>();
 
@@ -43,12 +35,14 @@ const columns = [
   }),
   columnHelper.accessor("professorApproval", {
     header: "지도교수",
-    cell: info => (
-      <Tag color={getProfessorApprovalTagColor(info.getValue())}>
-        {info.getValue()}
-      </Tag>
-    ),
-    size: 8,
+    cell: info => {
+      const { color, text } = getTagDetail(
+        info.getValue(),
+        ProfessorApprovalTagList,
+      );
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 10,
   }),
   columnHelper.accessor("name", {
     header: "활동명",

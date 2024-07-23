@@ -17,7 +17,7 @@ import type { ApiRnt003ResponseOK } from "@sparcs-clubs/interface/api/rental/end
 export interface Activity {
   id: number;
   status: number;
-  professorApproval: string;
+  professorApproval: number;
   name: string;
   type: number;
   startDate: Date;
@@ -49,6 +49,12 @@ export enum ActivityStatusEnum {
   Applied, // 신청
   Approved, // 승인
   Rejected, // 반려
+}
+
+export enum ActivityProfessorApprovalEnum {
+  Requested = 1, // 대기
+  Approved, // 완료
+  Denied, // 반려
 }
 
 export enum ActivityTypeEnum {
@@ -247,56 +253,56 @@ const mockupManageReport: Activity[] = [
   {
     id: 1,
     status: 1,
+    professorApproval: 1,
     name: "개발개발한 어떠한 활동",
     type: 1,
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
-    professorApproval: "대기",
   },
   {
     id: 2,
     status: 2,
+    professorApproval: 1,
     name: "개발개발한 어떠한 활동",
     type: 1,
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
-    professorApproval: "대기",
   },
   {
     id: 3,
     status: 2,
+    professorApproval: 2,
     name: "개발개발한 어떠한 활동",
     type: 2,
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
-    professorApproval: "대기",
   },
   {
     id: 4,
     status: 4,
+    professorApproval: 3,
     name: "개발개발한 어떠한 활동",
     type: 2,
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
-    professorApproval: "대기",
   },
   {
     id: 5,
     status: 3,
+    professorApproval: 2,
     name: "개발개발한 어떠한 활동",
     type: 1,
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
-    professorApproval: "대기",
   },
   {
     id: 6,
     status: 3,
+    professorApproval: 2,
     name: "2024년도 봄학기 MT",
     type: 3,
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
-    professorApproval: "대기",
   },
 ];
 
