@@ -46,7 +46,7 @@ const UnitInput: React.FC<UnitInputProps> = ({
     if (touched && !value) {
       setError("필수로 채워야 하는 항목입니다");
       setErrorStatus(true);
-    } else if (!isValidFormat) {
+    } else if (touched && !isValidFormat) {
       setError("숫자만 입력 가능합니다.");
       setErrorStatus(true);
     } else {
