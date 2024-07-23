@@ -7,6 +7,7 @@ import {
   ActivityProfessorApprovalEnum,
   ActivityStatusEnum,
   ActivityTypeEnum,
+  FundingStatusEnum,
   MemberStatusEnum,
 } from "../features/manage-club/service/_mock/mockManageClub";
 import { StatusDetail } from "../utils/getTagDetail";
@@ -81,6 +82,15 @@ const MemTagList: {
   [MemberStatusEnum.Rejected]: { text: "반려", color: "RED" },
 };
 
+const FundingTagList: {
+  [key in FundingStatusEnum]: StatusDetail;
+} = {
+  [FundingStatusEnum.Applied]: { text: "신청", color: "BLUE" },
+  [FundingStatusEnum.Committe]: { text: "운위", color: "YELLOW" },
+  [FundingStatusEnum.Approved]: { text: "승인", color: "GREEN" },
+  [FundingStatusEnum.Rejected]: { text: "반려", color: "RED" },
+};
+
 const ApplyTagList: {
   [key in ActivityStatusEnum]: StatusDetail;
 } = {
@@ -123,4 +133,5 @@ export {
   ApplyTagList,
   ProfessorApprovalTagList,
   ActTypeTagList,
+  FundingTagList,
 };

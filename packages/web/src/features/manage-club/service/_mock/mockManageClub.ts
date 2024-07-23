@@ -63,6 +63,13 @@ export enum ActivityTypeEnum {
   NotFit, // 동아리 성격에 합치하지 않는 활동
 }
 
+export enum FundingStatusEnum {
+  Applied = 1, // 신청
+  Committe, // 운위
+  Approved, // 승인
+  Rejected, // 반려
+}
+
 export enum MemberStatusEnum {
   Applied = 1, // 신청
   Approved, // 승인
@@ -243,6 +250,57 @@ const mockupManageFunding: Funding[] = [
     id: 6,
     status: 3,
     name: "2024년도 봄학기 MT",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: 0,
+  },
+];
+
+const mockupPastManageFunding: Funding[] = [
+  {
+    id: 1,
+    status: 1,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: null,
+  },
+  {
+    id: 2,
+    status: 1,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: null,
+  },
+  {
+    id: 3,
+    status: 2,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: null,
+  },
+  {
+    id: 4,
+    status: 4,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: null,
+  },
+  {
+    id: 5,
+    status: 3,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: 300000,
+  },
+  {
+    id: 6,
+    status: 3,
+    name: "개발개발한 어떠한 활동",
     itemName: "모니터",
     requestedAmount: 300000,
     approvedAmount: 0,
@@ -577,6 +635,7 @@ const mockupManageCms: ApiCms006ResponseOk = {
 export {
   mockupManageReport,
   mockupManageFunding,
+  mockupPastManageFunding,
   mockupManageMems,
   mockupManageAcf,
   mockupManageRental,
