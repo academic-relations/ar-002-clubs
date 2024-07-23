@@ -8,6 +8,10 @@ import ActivityActivityTermRepository from "../repository/activity.activity-term
 import ActivityRepository from "../repository/activity.repository";
 
 import type {
+  ApiAct006RequestParam,
+  ApiAct006ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct006";
+import type {
   ApiAct009RequestBody,
   ApiAct009ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct009";
@@ -64,6 +68,42 @@ export default class ActivityActivityTermService {
     }
 
     return activityDs[0];
+  }
+
+  async getStudentActivitiesActivityTerm(
+    param: ApiAct006RequestParam,
+    body: ApiAct009RequestBody,
+    studentId: number,
+  ): Promise<ApiAct006ResponseOk> {
+    // 요청한 학생이 동아리의 대표자인지 확인합니다.
+    await this.checkIsStudentDelegate({ studentId, clubId: body.clubId });
+    const activities =
+      await this.activityRepository.selectActivityByClubIdAndActivityDId(
+        body.clubId,
+        param.activityTermId,
+      );
+    const result = await Promise.all(
+      activities.map(async row => {
+        const duration =
+          await this.activityRepository.selectDurationByActivityId(row.id);
+        return {
+          id: row.id,
+          name: row.name,
+          activityTypeEnumId: row.activityTypeEnumId,
+          startTerm: duration.reduce(
+            (prev, curr) => (prev < curr.startTerm ? prev : curr.startTerm),
+            duration[0].startTerm,
+          ),
+          endTerm: duration.reduce(
+            (prev, curr) => (prev > curr.endTerm ? prev : curr.endTerm),
+            duration[0].endTerm,
+          ),
+        };
+      }),
+    );
+    return {
+      activities: result,
+    };
   }
 
   async getStudentActivitiesActivityTerms(
