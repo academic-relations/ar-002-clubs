@@ -75,27 +75,19 @@ const ChangeRepresentative: React.FC<ChangeRepresentativeProps> = ({
         <Icon type="check_circle" size={20} color={colors.GREEN[600]} />
       )}
       <FlexWrapper direction="column" gap={8}>
-        <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
+        <Typography fw="MEDIUM" fs={16} lh={20}>
           {title}
         </Typography>
         <Typography
-          ff="PRETENDARD"
           fw="REGULAR"
           fs={16}
           lh={20}
-          color="BLACK"
           style={{ whiteSpace: "pre-wrap" }}
         >
           {text}
         </Typography>
         {type === "Requested" && (
-          <Typography
-            ff="PRETENDARD"
-            fw="REGULAR"
-            fs={16}
-            lh={20}
-            color="BLACK"
-          >
+          <Typography fw="REGULAR" fs={16} lh={20}>
             대표자 변경 요청을 취소할 수 있으며, 요청이 3일 내로 승인 또는
             거절되지 않을 경우 자동으로 취소됩니다
           </Typography>
