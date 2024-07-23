@@ -32,9 +32,7 @@ export const RegistrationActivityPlanFile = mysqlTable(
 // Registration 테이블 정의
 export const Registration = mysqlTable("registration", {
   id: int("id").autoincrement().primaryKey(),
-  clubId: int("club_id")
-    .notNull()
-    .references(() => Club.id),
+  clubId: int("club_id").references(() => Club.id),
   registrationApplicationTypeEnumId: int(
     "registration_application_type_enum_id",
   )
@@ -50,6 +48,7 @@ export const Registration = mysqlTable("registration", {
   studentId: int("student_id")
     .notNull()
     .references(() => Student.id),
+  studentPhoneNumber: varchar("student_phone_number", { length: 30 }),
   foundedAt: timestamp("created_at").notNull(),
   divisionId: int("division_id")
     .notNull()
@@ -61,7 +60,7 @@ export const Registration = mysqlTable("registration", {
     .references(() => Professor.id),
   divisionConsistency: varchar("division_consistency", { length: 255 }),
   foundationPurpose: varchar("foundation_purpose", { length: 500 }),
-  activityPlan: int("professor_id")
+  activityPlan: int("activity_plan")
     .notNull()
     .references(() => RegistrationActivityPlanFile.id),
   professorApprovedAt: timestamp("professor_approved_at"),
