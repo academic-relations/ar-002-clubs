@@ -12,6 +12,7 @@ export enum ManageClubRentalBusinessStatus {
   approve = "승인",
   rent = "대여",
   return = "반납",
+  overdue = "연체",
 }
 
 export interface ManageClubRentalBusinessData {
@@ -85,4 +86,5 @@ export interface ManageClubTagColorsInterface {
   issue: TagColor;
   reject: TagColor;
   use: TagColor;
+  overdue: TagColor;
 }

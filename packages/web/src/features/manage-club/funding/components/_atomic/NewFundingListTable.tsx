@@ -10,20 +10,20 @@ import Table from "@sparcs-clubs/web/common/components/Table";
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import { TableRow } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+
+import { numberToKrWon } from "@sparcs-clubs/web/constants/manageClubFunding";
+
 import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
+import {
+  Funding,
+  mockupManageFunding,
+} from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
-
-import { type Funding } from "../service/_mock/mockManageClub";
-
-interface FundingTableProps {
-  fundingList: Funding[];
-}
 
 const columnHelper = createColumnHelper<Funding>();
 
 const columns = [
   columnHelper.accessor("status", {
-    id: "status",
     header: "상태",
     cell: info => {
       const { color, text } = getTagDetail(info.getValue(), FundingTagList);
@@ -32,46 +32,34 @@ const columns = [
     size: 10,
   }),
   columnHelper.accessor("name", {
-    id: "name",
     header: "활동명",
     cell: info => info.getValue(),
-    size: 40,
+    size: 45,
   }),
   columnHelper.accessor("itemName", {
-    id: "itemName",
     header: "항목명",
     cell: info => info.getValue(),
-    size: 20,
+    size: 15,
   }),
   columnHelper.accessor("requestedAmount", {
-    id: "requestedAmount",
     header: "신청 금액",
-    cell: info => `${info.getValue().toLocaleString()}원`,
+    cell: info => `${info.getValue().toLocaleString("ko-KR")}원`,
     size: 15,
   }),
   columnHelper.accessor("approvedAmount", {
-    id: "approvedAmount",
     header: "승인 금액",
     cell: info =>
-      info.getValue() === null ? "-" : `${info.getValue()?.toLocaleString()}원`,
+      info.getValue() === undefined
+        ? "-"
+        : `${(info.getValue() ?? 0).toLocaleString("ko-KR")}원`,
     size: 15,
   }),
 ];
 
-const FundingTable: React.FC<FundingTableProps> = ({ fundingList }) => {
-  const totalRequested = fundingList.reduce(
-    (sum, funding) => sum + funding.requestedAmount,
-    0,
-  );
-  const totalApproved = fundingList.reduce(
-    (sum, funding) =>
-      sum + (funding.approvedAmount === null ? 0 : funding.approvedAmount),
-    0,
-  );
-
+const NewFundingListTable: React.FC = () => {
   const table = useReactTable({
     columns,
-    data: fundingList,
+    data: mockupManageFunding,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
@@ -79,19 +67,27 @@ const FundingTable: React.FC<FundingTableProps> = ({ fundingList }) => {
   return (
     <Table
       table={table}
-      count={fundingList.length}
+      count={mockupManageFunding.length}
       footer={
         <TableRow>
           <TableCell type="Default" width="70%">
-            {" "}
+            {"\t"}
           </TableCell>
           <TableCell type="Default" width="15%">
-            {totalRequested.toLocaleString()}원
+            {numberToKrWon(
+              mockupManageFunding.reduce(
+                (acc, data) => acc + data.requestedAmount,
+                0,
+              ),
+            )}
           </TableCell>
           <TableCell type="Default" width="15%">
-            {totalApproved === null
-              ? "-"
-              : `${totalApproved.toLocaleString()}원`}
+            {numberToKrWon(
+              mockupManageFunding.reduce(
+                (acc, data) => acc + (data.approvedAmount ?? 0),
+                0,
+              ),
+            )}
           </TableCell>
         </TableRow>
       }
@@ -99,4 +95,4 @@ const FundingTable: React.FC<FundingTableProps> = ({ fundingList }) => {
   );
 };
 
-export default FundingTable;
+export default NewFundingListTable;
