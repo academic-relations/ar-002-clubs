@@ -249,6 +249,57 @@ const mockupManageFunding: Funding[] = [
   },
 ];
 
+const mockupPastManageFunding: Funding[] = [
+  {
+    id: 1,
+    status: 1,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: null,
+  },
+  {
+    id: 2,
+    status: 1,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: null,
+  },
+  {
+    id: 3,
+    status: 2,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: null,
+  },
+  {
+    id: 4,
+    status: 4,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: null,
+  },
+  {
+    id: 5,
+    status: 3,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: 300000,
+  },
+  {
+    id: 6,
+    status: 3,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: 0,
+  },
+];
+
 const mockupManageReport: Activity[] = [
   {
     id: 1,
@@ -571,6 +622,7 @@ const mockupManageCms: ApiCms006ResponseOk = {
 export {
   mockupManageReport,
   mockupManageFunding,
+  mockupPastManageFunding,
   mockupManageMems,
   mockupManageAcf,
   mockupManageRental,
