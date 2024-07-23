@@ -45,19 +45,15 @@ interface TypographyPropsWithCustomStyles extends TypographyPropsBase {
   color?: ThemeColors;
 }
 
-type TypographyProps = TypographyPropsWithCustomStyles;
-
 const TypographyInner = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<TypographyPropsWithCustomStyles>`
   color: ${({ color, theme }) =>
-    color ? getColorFromTheme(theme, color) : theme.colors.BLACK};
-  font-family: ${({ ff, theme }) =>
-    ff ? theme.fonts.FAMILY[ff] : theme.fonts.FAMILY.PRETENDARD};
+    color ? getColorFromTheme(theme, color) : "inherit"};
+  font-family: ${({ ff, theme }) => (ff ? theme.fonts.FAMILY[ff] : "inherit")};
   font-size: ${({ fs }) => (fs ? `${fs}px` : "inherit")};
   line-height: ${({ lh }) => (lh ? `${lh}px` : "inherit")};
-  font-weight: ${({ fw, theme }) =>
-    fw ? theme.fonts.WEIGHT[fw] : theme.fonts.WEIGHT.REGULAR};
+  font-weight: ${({ fw, theme }) => (fw ? theme.fonts.WEIGHT[fw] : "inherit")};
 `;
 
 /**
@@ -86,7 +82,7 @@ const TypographyInner = styled.div.withConfig({
  * If no `type` prop is provided, the component will render a generic `TypographyInner` element with the specified style props.
  */
 
-const Typography: React.FC<TypographyProps> = ({
+const Typography: React.FC<TypographyPropsWithCustomStyles> = ({
   children = null,
   ...rest
 }) => <TypographyInner {...rest}>{children}</TypographyInner>;
