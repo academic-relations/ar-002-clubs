@@ -1,3 +1,4 @@
+import apiAcf002 from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf002";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
@@ -6,7 +7,7 @@ import {
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
-import apiAcf002 from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf002";
+
 import mockupUserClubs from "./_mock/mockupUserClubs";
 
 type ISuccessResponseType = z.infer<(typeof apiAcf002.responseBodyMap)[200]>;
