@@ -2,8 +2,8 @@ import React from "react";
 
 import styled from "styled-components";
 
+import TextButton from "../Buttons/TextButton";
 import FlexWrapper from "../FlexWrapper";
-import TextButton from "../TextButton";
 
 interface TableButtonProps {
   text: string[];

@@ -2,10 +2,10 @@ import React from "react";
 
 import styled from "styled-components";
 
+import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
-import TextButton from "@sparcs-clubs/web/common/components/TextButton";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import ChangeRepresentative from "./ChangeRepresentative";

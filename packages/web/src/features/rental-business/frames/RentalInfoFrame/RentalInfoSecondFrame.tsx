@@ -5,11 +5,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
+import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
-import TextButton from "@sparcs-clubs/web/common/components/TextButton";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import ItemButtonList from "@sparcs-clubs/web/features/rental-business/components/ItemButtonList";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";

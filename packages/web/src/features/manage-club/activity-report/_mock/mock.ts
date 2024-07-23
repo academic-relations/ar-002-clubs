@@ -7,6 +7,7 @@ export const mockNewActivityData = [
     category: "동아리 성격에 합치하는 내부 활동",
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
+    professorApproval: "대기",
   },
   {
     status: "신청 완료",
@@ -14,6 +15,7 @@ export const mockNewActivityData = [
     category: "동아리 성격에 합치하는 내부 활동",
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
+    professorApproval: "대기",
   },
   {
     status: "신청 완료",
@@ -21,6 +23,7 @@ export const mockNewActivityData = [
     category: "동아리 성격에 합치하는 외부 활동",
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
+    professorApproval: "완료",
   },
   {
     status: "신청 반려",
@@ -28,6 +31,7 @@ export const mockNewActivityData = [
     category: "동아리 성격에 합치하는 외부 활동",
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
+    professorApproval: "반려",
   },
   {
     status: "승인 완료",
@@ -35,6 +39,7 @@ export const mockNewActivityData = [
     category: "동아리 성격에 합치하는 내부 활동",
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
+    professorApproval: "완료",
   },
   {
     status: "승인 완료",
@@ -42,6 +47,7 @@ export const mockNewActivityData = [
     category: "동아리 성격에 합치하지 않는 활동",
     startDate: new Date("2024-03-11"),
     endDate: new Date("2024-03-18"),
+    professorApproval: "완료",
   },
 ];
 
