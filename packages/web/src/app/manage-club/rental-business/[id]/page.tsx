@@ -2,15 +2,15 @@
 
 import React from "react";
 
+import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
 import { useRouter } from "next/navigation";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
-import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
-import ManageRentalDetailFrame from "@sparcs-clubs/web/features/manage-club/rental/frame/ManageRentalDetailFrame";
+import ManageRentalProgress from "@sparcs-clubs/web/features/manage-club/rental/components/ManageRentalProgress";
+import ManageRentalDetailFrame from "@sparcs-clubs/web/features/manage-club/rental/frames/ManageRentalDetailFrame";
 
 const ManageRentalDetail = () => {
   const router = useRouter();
@@ -31,16 +31,9 @@ const ManageRentalDetail = () => {
         enableLast
       />
       <Card outline gap={20}>
-        <ProgressStatus
-          labels={[
-            "신청 완료",
-            "동아리 연합회 승인 대기",
-            "대여 대기",
-            "반납 대기",
-          ]}
-          progress={[{ status: Status.Approved, date: new Date() }]}
-          infoText="승인이 완료되기 전까지 신청을 취소할 수 있습니다"
-          optional={<Button style={{ width: "max-content" }}>신청 취소</Button>}
+        <ManageRentalProgress
+          status={RentalOrderStatusEnum.Rejected}
+          onClickCancel={() => {}}
         />
         <ManageRentalDetailFrame />
       </Card>
