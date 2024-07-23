@@ -24,15 +24,14 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 import Timetable from "@sparcs-clubs/web/common/components/Timetable";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { useGetCommonSpaces } from "@sparcs-clubs/web/features/common-space/service/getCommonSpaces";
-import { useGetCommonSpaceUsageOrders } from "@sparcs-clubs/web/features/common-space/service/getCommonSpaceUsageOrders";
+import useGetCommonSpaces from "@sparcs-clubs/web/features/common-space/service/getCommonSpaces";
+import useGetCommonSpaceUsageOrders from "@sparcs-clubs/web/features/common-space/service/getCommonSpaceUsageOrders";
 
+import { CommonSpaceInfoProps } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
 import {
   formatSimpleSlashDate,
   formatTime,
 } from "@sparcs-clubs/web/utils/Date/formateDate";
-
-import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 
 const StyledCardOuter = styled.div`
   display: flex;
@@ -60,8 +59,8 @@ type UsageOrder = z.infer<
 >;
 
 const CommonSpaceInfoSecondFrame: React.FC<
-  CommonSpaceFrameProps & { setNextEnabled: (enabled: boolean) => void }
-> = ({ setNextEnabled, commonSpace, setCommonSpace }) => {
+  CommonSpaceInfoProps & { setNextEnabled: (enabled: boolean) => void }
+> = ({ setNextEnabled, setBody, param, setParam }) => {
   const { data, isLoading, isError } = useGetCommonSpaces();
   const [date, setDate] = useState(startOfWeek(new Date()));
 
@@ -126,17 +125,10 @@ const CommonSpaceInfoSecondFrame: React.FC<
       item => item.id.toString() === selectedValue,
     );
 
-    if (space)
-      setCommonSpace({
-        ...commonSpace,
-        param: {
-          spaceId: space?.id,
-        },
-        spaceName: space?.name,
-      });
+    if (space) setParam({ ...param, spaceId: space?.id });
 
     setSelectedSpace(space);
-  }, [selectedValue, setCommonSpace, data?.commonSpaces]);
+  }, [selectedValue, setParam, data?.commonSpaces]);
 
   const diffHours =
     dateTimeRange && differenceInHours(dateTimeRange[1], dateTimeRange[0]);
@@ -145,16 +137,13 @@ const CommonSpaceInfoSecondFrame: React.FC<
 
   useEffect(() => {
     if (dateTimeRange) {
-      setCommonSpace(prev => ({
+      setBody(prev => ({
         ...prev,
-        body: {
-          ...prev.body,
-          startTerm: dateTimeRange[0],
-          endTerm: dateTimeRange[1],
-        },
+        startTerm: dateTimeRange[0],
+        endTerm: dateTimeRange[1],
       }));
     }
-  }, [dateTimeRange, setCommonSpace]);
+  }, [dateTimeRange, setBody]);
 
   return (
     <>

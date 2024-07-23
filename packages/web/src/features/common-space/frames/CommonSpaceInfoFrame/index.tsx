@@ -10,11 +10,11 @@ import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepPro
 
 import postCommonSpaceUsageOrder from "@sparcs-clubs/web/features/common-space/service/postCommonSpaceUsageOrder";
 
+import { CommonSpaceInfoProps } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
+
 import CommonSpaceInfoFirstFrame from "./CommonSpaceInfoFirstFrame";
 import CommonSpaceInfoSecondFrame from "./CommonSpaceInfoSecondFrame";
 import CommonSpaceInfoThirdFrame from "./CommonSpaceInfoThirdFrame";
-
-import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 
 const CommonSpaceNoticeFrameInner = styled.div`
   display: flex;
@@ -52,26 +52,29 @@ const steps = [
   },
 ];
 
-const CommonSpaceInfoFrame: React.FC<CommonSpaceFrameProps> = ({
-  commonSpace,
-  setCommonSpace,
+const CommonSpaceInfoFrame: React.FC<CommonSpaceInfoProps> = ({
+  setAgreement,
+  body,
+  setBody,
+  param,
+  setParam,
 }) => {
-  const props = { commonSpace, setCommonSpace };
+  const props = { setAgreement, body, setBody, param, setParam };
   const [step, setStep] = useState(0);
   const [nextEnabled, setNextEnabled] = useState(true);
   const CurrentFrame = frames[step];
 
   const onPrev = useCallback(() => {
     if (step === 0) {
-      setCommonSpace({ ...commonSpace, agreement: false });
+      setAgreement(false);
       return;
     }
     setStep(step - 1);
-  }, [step, setStep, commonSpace, setCommonSpace]);
+  }, [step, setStep]);
 
   const handleSubmit = useCallback(() => {
-    const { email, clubId, startTerm, endTerm } = commonSpace.body;
-    const { spaceId } = commonSpace.param;
+    const { email, clubId, startTerm, endTerm } = body;
+    const { spaceId } = param;
     const correct = email && clubId && startTerm && endTerm && spaceId;
     if (correct) {
       postCommonSpaceUsageOrder(
@@ -79,7 +82,7 @@ const CommonSpaceInfoFrame: React.FC<CommonSpaceFrameProps> = ({
         { email, clubId, startTerm, endTerm: subSeconds(endTerm, 1) },
       );
     }
-  }, [commonSpace]);
+  }, [body, param]);
 
   const onNext = useCallback(() => {
     if (nextEnabled && step < frames.length - 1) {
