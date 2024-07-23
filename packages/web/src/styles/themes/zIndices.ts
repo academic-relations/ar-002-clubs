@@ -4,6 +4,8 @@
  * @author night@sparcs.org (Jiho Park)
  */
 
-const zIndices = {};
+const zIndices = {
+  toast: 1000,
+};
 
 export default zIndices;

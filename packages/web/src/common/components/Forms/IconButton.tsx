@@ -31,7 +31,9 @@ const IconButton: React.FC<IconButtonProps> = ({
   <Button type={type} {...props}>
     <ButtonInner>
       <Icon type={iconType} size={16} color="white" />
-      <Typography type="span">{buttonText}</Typography>
+      <Typography fs={14} lh={20} fw="REGULAR">
+        {buttonText}
+      </Typography>
     </ButtonInner>
   </Button>
 );

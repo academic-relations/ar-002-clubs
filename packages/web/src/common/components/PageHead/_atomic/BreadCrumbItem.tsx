@@ -22,7 +22,12 @@ const BreadCrumbItem: React.FC<BreadCrumbItemProps> = ({
   disabled = false,
 }) => (
   <BreadCrumbInner disabled={disabled}>
-    <Typography type="p_b" onClick={!disabled ? onClick : undefined}>
+    <Typography
+      fs={16}
+      lh={20}
+      fw="MEDIUM"
+      onClick={!disabled ? onClick : undefined}
+    >
       {text}
     </Typography>
   </BreadCrumbInner>
