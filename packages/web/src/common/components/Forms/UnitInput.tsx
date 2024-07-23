@@ -15,27 +15,16 @@ interface UnitInputProps extends Omit<TextInputProps, "onChange"> {
 
 const FrameWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   width: 100%;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const BoxWrapper = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const InputWrapper = styled.div`
-  flex-grow: 1;
 `;
 
 const UnitDiv = styled.div`
-  height: 100%;
-  display: flex;
-  margin-left: auto;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
   white-space: nowrap;
-  align-items: center;
-  padding-left: 10px;
 `;
 
 const UnitInput: React.FC<UnitInputProps> = ({
@@ -79,21 +68,17 @@ const UnitInput: React.FC<UnitInputProps> = ({
 
   return (
     <FrameWrapper>
-      <BoxWrapper>
-        <InputWrapper>
-          <TextInput
-            label={label}
-            placeholder={placeholder}
-            value={value}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            errorMessage={error}
-            {...props}
-          />
-        </InputWrapper>
-
+      <TextInput
+        label={label}
+        placeholder={placeholder}
+        value={value}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        errorMessage={error}
+        {...props}
+      >
         <UnitDiv>{unit}</UnitDiv>
-      </BoxWrapper>
+      </TextInput>
     </FrameWrapper>
   );
 };

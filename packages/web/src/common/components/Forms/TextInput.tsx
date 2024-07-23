@@ -15,6 +15,7 @@ export interface TextInputProps
   area?: boolean;
   disabled?: boolean;
   value?: string;
+  children?: React.ReactNode;
   handleChange?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
 }
@@ -86,6 +87,7 @@ const TextInput: React.FC<TextInputProps> = ({
   area = false,
   disabled = false,
   value = "",
+  children = undefined,
   handleChange = () => {},
   setErrorStatus = () => {},
   ...props
@@ -106,15 +108,18 @@ const TextInput: React.FC<TextInputProps> = ({
     <InputWrapper>
       {label && <Label>{label}</Label>}
       <InputWrapper>
-        <Input
-          placeholder={placeholder}
-          hasError={!!errorMessage}
-          area={area}
-          disabled={disabled}
-          value={value}
-          onChange={handleValueChange}
-          {...props}
-        />
+        <div style={{ position: "relative" }}>
+          <Input
+            placeholder={placeholder}
+            hasError={!!errorMessage}
+            area={area}
+            disabled={disabled}
+            value={value}
+            onChange={handleValueChange}
+            {...props}
+          />
+          {children}
+        </div>
         {errorMessage && <FormError>{errorMessage}</FormError>}
       </InputWrapper>
     </InputWrapper>
