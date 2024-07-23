@@ -5,7 +5,6 @@ import React from "react";
 import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
@@ -52,22 +51,6 @@ const MainPageMainFrame: React.FC = () => (
         <span style={{ color: colors.PRIMARY }}>Clubs</span>입니다
       </Typography>
     </PageTitleWrapper>
-    <RejectReasonToast
-      title="활동확인서 발급 내역"
-      reasons={[
-        { datetime: "2024-05-01", reason: "활동확인서 발급 신청" },
-        { datetime: "2024-05-01", reason: "활동확인서 발급 신청" },
-        { datetime: "2024-05-01", reason: "활동확인서 발급 신청" },
-        { datetime: "2024-05-01", reason: "활동확인서 발급 신청" },
-        { datetime: "2024-05-01", reason: "활동확인서 발급 신청" },
-        { datetime: "2024-05-01", reason: "활동확인서 발급 신청" },
-        { datetime: "2024-05-01", reason: "활동확인서 발급 신청" },
-        { datetime: "2024-05-01", reason: "활동확인서 발급 신청" },
-        { datetime: "2024-05-01", reason: "활동확인서 발급 신청" },
-        { datetime: "2024-05-01", reason: "활동확인서 발급 신청" },
-      ]}
-    />
-
     <NoticeAndServiceWrapper>
       <NoticeSectionFrame />
       <ServiceSectionFrame />
