@@ -55,6 +55,7 @@ const RegisterClub = () => {
         type={
           selectedType === RegistrationType.unselected ? "disabled" : "default"
         }
+        onClick={() => {}}
         style={{
           width: "92px",
           height: "36px",
