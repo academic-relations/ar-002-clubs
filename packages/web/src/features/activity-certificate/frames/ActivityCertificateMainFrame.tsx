@@ -4,9 +4,9 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 
-
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
+// import { useGetUserClubs } from "../services/getUserClubs";
 
 import {
   ActivityCertificateInterface,
@@ -15,11 +15,9 @@ import {
   SecondErrorStatus,
 } from "../types/activityCertificate";
 
+import ActivityCertificateInfoFrame from "./ActivityCertificateInfoFrame";
 
 import ActivityCertificateNoticeFrame from "./ActivityCertificateNoticeFrame";
-import ActivityCertificateInfoFrame from "./ActivityCertificateInfoFrame";
-import { useGetUserClubs } from "../services/getUserClubs";
-
 
 const ActivityCertificatePageMainFrameInner = styled.div`
   width: 100%;
@@ -32,8 +30,8 @@ const ActivityCertificatePageMainFrameInner = styled.div`
 `;
 
 const ActivityCertificateMainFrame: React.FC = () => {
-  const { data, isLoading, isError } = useGetUserClubs();
-  console.log(data);
+  // const { data, isLoading, isError } = useGetUserClubs();
+  // console.log(data);
 
   const [activityCertificateProgress, setActivityCertificateProgress] =
     useState<ActivityCertificateProgress>({
@@ -90,7 +88,6 @@ const ActivityCertificateMainFrame: React.FC = () => {
 
   return (
     <ActivityCertificatePageMainFrameInner>
-
       <PageHead
         items={[{ name: "활동확인서 발급", path: "/activity-certificate" }]}
         title="활동확인서 발급"
@@ -100,7 +97,6 @@ const ActivityCertificateMainFrame: React.FC = () => {
       ) : (
         <ActivityCertificateNoticeFrame {...props} />
       )}
-
     </ActivityCertificatePageMainFrameInner>
   );
 };
