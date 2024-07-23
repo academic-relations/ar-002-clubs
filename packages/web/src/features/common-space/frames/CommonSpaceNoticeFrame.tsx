@@ -22,10 +22,6 @@ const CommonSpaceNoticeFrameInner = styled.div`
   align-self: stretch;
 `;
 
-const StyledTypography = styled(Typography)`
-  line-height: 32px;
-`;
-
 const StyledBottom = styled.div`
   display: flex;
   justify-content: space-between;
@@ -55,12 +51,14 @@ const CommonSpaceNoticeFrame: React.FC<CommonSpaceFrameProps> = ({
   return (
     <CommonSpaceNoticeFrameInner>
       <Card outline gap={16}>
-        <Typography type="h3">안내사항</Typography>
-        <StyledTypography type="p">
+        <Typography fs={20} lh={24} fw="MEDIUM">
+          안내사항
+        </Typography>
+        <Typography fs={16} lh={32} fw="REGULAR">
           대충 공용공간 비정기사용에 대한 안내사항
           <br />
           기타 등등 안내 내용 -{">"} 이건 동연 측에서 준비해주겠죠?
-        </StyledTypography>
+        </Typography>
       </Card>
       <StyledBottom>
         <StyledCheckboxOuter>
@@ -68,7 +66,7 @@ const CommonSpaceNoticeFrame: React.FC<CommonSpaceFrameProps> = ({
             checked={checked}
             onClick={() => setChecked(prev => !prev)}
           />
-          <Typography type="p">
+          <Typography fs={16} lh={20} fw="REGULAR">
             위의 안내사항을 모두 숙지하였으며, 이에 동의합니다
           </Typography>
         </StyledCheckboxOuter>
