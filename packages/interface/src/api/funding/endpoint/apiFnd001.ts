@@ -338,9 +338,7 @@ const apiFnd001 = {
 type ApiFnd001RequestParam = z.infer<typeof apiFnd001.requestParam>;
 type ApiFnd001RequestQuery = z.infer<typeof apiFnd001.requestQuery>;
 type ApiFnd001RequestBody = z.infer<typeof apiFnd001.requestBody>;
-type ApiFnd001ResponseCreated = z.infer<
-  (typeof apiFnd001.responseBodyMap)[201]
->;
+type ApiFnd001ResponseOk = z.infer<(typeof apiFnd001.responseBodyMap)[201]>;
 
 export default apiFnd001;
 
@@ -348,7 +346,7 @@ export type {
   ApiFnd001RequestParam,
   ApiFnd001RequestQuery,
   ApiFnd001RequestBody,
-  ApiFnd001ResponseCreated,
+  ApiFnd001ResponseOk,
 };
 
 // funding superRefine test

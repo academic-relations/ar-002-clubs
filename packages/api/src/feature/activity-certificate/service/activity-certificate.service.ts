@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { ClubRepository } from "@sparcs-clubs/api/common/repository/club.repository";
 import { StudentRepository } from "@sparcs-clubs/api/common/repository/student.repository";
-import { ClubRepresentativeDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-representative-d.repository";
+import { ClubDelegateDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-delegate-d.repository";
 
 import { ActivityCertificateRepository } from "../repository/activity-certificate.repository";
 
@@ -22,7 +22,7 @@ export class ActivityCertificateService {
   constructor(
     private readonly activityCertificateRepository: ActivityCertificateRepository,
     private readonly club: ClubRepository,
-    private readonly clubRepresentativeDRepository: ClubRepresentativeDRepository,
+    private readonly clubDelegateDRepository: ClubDelegateDRepository,
     private readonly studentRepository: StudentRepository,
   ) {}
 
@@ -48,7 +48,7 @@ export class ActivityCertificateService {
 
     // 조회하는 club의 현재학기 대표가 student가 맞는지 검사합니다.
     const representatives =
-      await this.clubRepresentativeDRepository.findRepresentativeIdListByClubId(
+      await this.clubDelegateDRepository.findRepresentativeIdListByClubId(
         query.clubId,
       );
     if (

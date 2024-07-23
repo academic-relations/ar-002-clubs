@@ -10,6 +10,15 @@ import {
 } from "./ManageClubTable";
 
 export const rentalBusinessMockData: ManageClubRentalBusinessData[] = [
+  {
+    status: ManageClubRentalBusinessStatus.overdue,
+    submitTime: new Date("8888-11-11 11:11"),
+    name: "Long English Name",
+    phoneNumber: "010-2030-4050",
+    rentTime: new Date("8888-11-11"),
+    returnTime: new Date("8888-11-11"),
+    rentProducts: "돗자리 3개 외 2항목",
+  },
   ...Array(5).fill({
     status: ManageClubRentalBusinessStatus.rent,
     submitTime: new Date("2024-03-02 21:00"),

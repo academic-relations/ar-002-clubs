@@ -38,7 +38,7 @@ export default class ActivityRepository {
 
       if (activitySetResult.affectedRows !== 1) {
         logger.debug(
-          "[deleteActivity] student deletion failed. Rollback occurs",
+          "[deleteActivity] activity deletion failed. Rollback occurs",
         );
         tx.rollback();
         return false;
@@ -124,7 +124,6 @@ export default class ActivityRepository {
     clubId: number;
     name: string;
     activityTypeEnumId: ActivityTypeEnum;
-    semesterId: number;
     duration: Array<{
       startTerm: Date;
       endTerm: Date;
@@ -135,6 +134,7 @@ export default class ActivityRepository {
     evidence: string;
     evidenceFileIds: Array<string>;
     participantIds: Array<number>;
+    activityDId: number;
   }): Promise<boolean> {
     const isInsertionSucceed = await this.db.transaction(async tx => {
       const [activityInsertResult] = await tx.insert(Activity).values({
@@ -142,11 +142,11 @@ export default class ActivityRepository {
         originalName: contents.name,
         name: contents.name,
         activityStatusEnumId: Number(contents.activityTypeEnumId),
-        semesterId: contents.semesterId,
         location: contents.location,
         purpose: contents.location,
         detail: contents.detail,
         evidence: contents.evidence,
+        activityDId: contents.activityDId,
         activityTypeEnumId: Number(ActivityStatusEnum.Applied),
       });
       if (activityInsertResult.affectedRows !== 1) {
@@ -220,7 +220,8 @@ export default class ActivityRepository {
 
       const [signInsertResult] = await tx
         .insert(ProfessorSignStatus)
-        .values({ clubId: contents.clubId, semesterId: contents.semesterId });
+        // TODO: 교수님 사인도 activityD로 맞추기
+        .values({ clubId: contents.clubId, semesterId: contents.activityDId });
       if (signInsertResult.affectedRows !== 1) {
         logger.debug("[insertActivity] FileId insert failed. Rollback occurs");
         tx.rollback();
@@ -241,9 +242,9 @@ export default class ActivityRepository {
     return result;
   }
 
-  async selectActivityByClubIdAndSemesterId(
+  async selectActivityByClubIdAndActivityDId(
     clubId: number,
-    semesterId: number,
+    activityDId: number,
   ) {
     const result = await this.db
       .select()
@@ -251,7 +252,7 @@ export default class ActivityRepository {
       .where(
         and(
           eq(Activity.clubId, clubId),
-          eq(Activity.semesterId, semesterId),
+          eq(Activity.activityDId, activityDId),
           isNull(Activity.deletedAt),
         ),
       );
@@ -272,6 +273,19 @@ export default class ActivityRepository {
     return result;
   }
 
+  async selectFileByActivityId(activityId: number) {
+    const result = await this.db
+      .select()
+      .from(ActivityEvidenceFile)
+      .where(
+        and(
+          eq(ActivityEvidenceFile.activityId, activityId),
+          isNull(ActivityEvidenceFile.deletedAt),
+        ),
+      );
+    return result;
+  }
+
   async selectDurationByActivityId(activityId: number) {
     const result = await this.db
       .select()
@@ -281,5 +295,176 @@ export default class ActivityRepository {
       );
 
     return result;
+  }
+
+  async selectParticipantByActivityId(activityId: number) {
+    const result = await this.db
+      .select()
+      .from(ActivityParticipant)
+      .where(
+        and(
+          eq(ActivityParticipant.activityId, activityId),
+          isNull(ActivityParticipant.deletedAt),
+        ),
+      );
+
+    return result;
+  }
+
+  async updateActivity(param: {
+    activityId: number;
+    name: string;
+    activityTypeEnumId: ActivityTypeEnum;
+    duration: Array<{
+      startTerm: Date;
+      endTerm: Date;
+    }>;
+    location: string;
+    purpose: string;
+    detail: string;
+    evidence: string;
+    evidenceFileIds: Array<string>;
+    participantIds: Array<number>;
+    activityDId: number;
+  }) {
+    const isUpdateSucceed = await this.db.transaction(async tx => {
+      const deletedAt = new Date();
+
+      const [activitySetResult] = await tx
+        .update(Activity)
+        .set({
+          name: param.name,
+          activityStatusEnumId: Number(param.activityTypeEnumId),
+          location: param.location,
+          purpose: param.purpose,
+          detail: param.detail,
+          evidence: param.evidence,
+          activityDId: param.activityDId,
+        })
+        .where(eq(Activity.id, param.activityId));
+      if (activitySetResult.affectedRows !== 1) {
+        logger.debug("[updateActivity] rollback occurs");
+        tx.rollback();
+        return false;
+      }
+
+      // 참가자 전체 삭제 및 재생성
+      const [participantDeletionResult] = await tx
+        .update(ActivityParticipant)
+        .set({
+          deletedAt,
+        })
+        .where(
+          and(
+            eq(ActivityParticipant.activityId, param.activityId),
+            isNull(ActivityParticipant.deletedAt),
+          ),
+        );
+      if (participantDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteActivity] student deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+      await Promise.all(
+        param.participantIds.map(async studentId => {
+          const [studentSetResult] = await tx
+            .insert(ActivityParticipant)
+            .values({
+              activityId: param.activityId,
+              studentId,
+            });
+
+          if (studentSetResult.affectedRows !== 1) {
+            logger.debug(
+              "[updateActivity] student insert failed. Rollback occurs",
+            );
+            tx.rollback();
+            return false;
+          }
+          return {};
+        }),
+      );
+
+      // 기간 전체 삭제 및 재생성
+      const [durationDeletionResult] = await tx
+        .update(ActivityT)
+        .set({
+          deletedAt,
+        })
+        .where(
+          and(
+            eq(ActivityT.activityId, param.activityId),
+            isNull(ActivityT.deletedAt),
+          ),
+        );
+      if (durationDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteActivity] duration deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+      await Promise.all(
+        param.duration.map(async ({ startTerm, endTerm }) => {
+          const [durationInsertResult] = await tx.insert(ActivityT).values({
+            activityId: param.activityId,
+            startTerm,
+            endTerm,
+          });
+
+          if (durationInsertResult.affectedRows < 1) {
+            logger.debug(
+              "[updateActivity] duration insert failed. Rollback occurs",
+            );
+            tx.rollback();
+            return false;
+          }
+          return {};
+        }),
+      );
+
+      // 근거 자료 전체 삭제 및 재생성
+      const [fileDeletionResult] = await tx
+        .update(ActivityEvidenceFile)
+        .set({
+          deletedAt,
+        })
+        .where(
+          and(
+            eq(ActivityEvidenceFile.activityId, param.activityId),
+            isNull(ActivityEvidenceFile.deletedAt),
+          ),
+        );
+      if (fileDeletionResult.affectedRows < 1) {
+        logger.debug("[deleteActivity] file deletion failed. Rollback occurs");
+        tx.rollback();
+        return false;
+      }
+      await Promise.all(
+        param.evidenceFileIds.map(async fileId => {
+          const [fileInsertResult] = await tx
+            .insert(ActivityEvidenceFile)
+            .values({
+              activityId: param.activityId,
+              fileId,
+            });
+
+          if (fileInsertResult.affectedRows < 1) {
+            logger.debug(
+              "[updateActivity] FileId insert failed. Rollback occurs",
+            );
+            tx.rollback();
+            return false;
+          }
+          return {};
+        }),
+      );
+
+      return true;
+    });
+
+    return isUpdateSucceed;
   }
 }

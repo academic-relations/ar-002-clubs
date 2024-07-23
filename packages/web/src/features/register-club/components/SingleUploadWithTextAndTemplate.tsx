@@ -2,8 +2,8 @@ import React from "react";
 
 import styled from "styled-components";
 
+import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
-import IconButton from "@sparcs-clubs/web/common/components/Forms/IconButton";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 interface SingleUploadWithTextAndTemplateProps {
@@ -37,10 +37,11 @@ const SingleUploadWithTextAndTemplate: React.FC<
     <IconButton
       style={{ marginTop: 4 }}
       type="default"
-      iconType="save_alt"
-      buttonText="양식 다운로드"
+      icon="save_alt"
       onClick={onFormatDownload}
-    />
+    >
+      양식 다운로드
+    </IconButton>
   </SingleUploadWithTextAndTemplateInner>
 );
 

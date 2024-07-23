@@ -4,14 +4,22 @@ import { DrizzleModule } from "src/drizzle/drizzle.module";
 
 import { ClubModule } from "../club/club.module";
 
+import ActivityActivityTermController from "./controller/activity.activity-term.controller";
 import ActivityController from "./controller/activity.controller";
-import ActivityRepository from "./repository/activity.repositroy";
+import ActivityActivityTermRepository from "./repository/activity.activity-term.repository";
+import ActivityRepository from "./repository/activity.repository";
+import ActivityActivityTermService from "./service/activity.activity-term.service";
 import ActivityService from "./service/activity.service";
 
 @Module({
   imports: [ClubModule, DrizzleModule],
-  controllers: [ActivityController],
-  providers: [ActivityRepository, ActivityService],
+  controllers: [ActivityController, ActivityActivityTermController],
+  providers: [
+    ActivityRepository,
+    ActivityActivityTermRepository,
+    ActivityService,
+    ActivityActivityTermService,
+  ],
   exports: [],
 })
 export default class ActivityModule {}

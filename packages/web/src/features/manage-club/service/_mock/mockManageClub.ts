@@ -17,6 +17,7 @@ import type { ApiRnt003ResponseOK } from "@sparcs-clubs/interface/api/rental/end
 export interface Activity {
   id: number;
   status: number;
+  professorApproval: number;
   name: string;
   type: number;
   startDate: Date;
@@ -50,10 +51,23 @@ export enum ActivityStatusEnum {
   Rejected, // 반려
 }
 
+export enum ActivityProfessorApprovalEnum {
+  Requested = 1, // 대기
+  Approved, // 완료
+  Denied, // 반려
+}
+
 export enum ActivityTypeEnum {
   FitInside = 1, // 동아리 성격에 합치하는 내부활동
   FitOutside, // 동아리 성격에 합치하는 외부활동
   NotFit, // 동아리 성격에 합치하지 않는 활동
+}
+
+export enum FundingStatusEnum {
+  Applied = 1, // 신청
+  Committe, // 운위
+  Approved, // 승인
+  Rejected, // 반려
 }
 
 export enum MemberStatusEnum {
@@ -66,22 +80,22 @@ const mockClubDescription: ApiClb004ResponseOK = {
   roomPassword: "password",
 };
 
-const mockClubRepresentatives: ApiClb006ResponseOK = {
-  representatives: [
+const mockClubDelegates: ApiClb006ResponseOK = {
+  delegates: [
     {
-      representitiveEnum: 1,
+      delegateEnumId: 1,
       studentId: 20200510,
       name: "이지윤",
       phoneNumber: "010-1234-5678",
     },
     {
-      representitiveEnum: 2,
+      delegateEnumId: 2,
       studentId: 20200511,
       name: "박지호",
       phoneNumber: "010-1234-5678",
     },
     {
-      representitiveEnum: 2,
+      delegateEnumId: 2,
       studentId: 20200512,
       name: "박병찬",
       phoneNumber: "010-1234-5678",
@@ -242,10 +256,62 @@ const mockupManageFunding: Funding[] = [
   },
 ];
 
+const mockupPastManageFunding: Funding[] = [
+  {
+    id: 1,
+    status: 1,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: null,
+  },
+  {
+    id: 2,
+    status: 1,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: null,
+  },
+  {
+    id: 3,
+    status: 2,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: null,
+  },
+  {
+    id: 4,
+    status: 4,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: null,
+  },
+  {
+    id: 5,
+    status: 3,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: 300000,
+  },
+  {
+    id: 6,
+    status: 3,
+    name: "개발개발한 어떠한 활동",
+    itemName: "모니터",
+    requestedAmount: 300000,
+    approvedAmount: 0,
+  },
+];
+
 const mockupManageReport: Activity[] = [
   {
     id: 1,
     status: 1,
+    professorApproval: ActivityProfessorApprovalEnum.Requested,
     name: "개발개발한 어떠한 활동",
     type: 1,
     startDate: new Date("2024-03-11"),
@@ -254,6 +320,7 @@ const mockupManageReport: Activity[] = [
   {
     id: 2,
     status: 2,
+    professorApproval: ActivityProfessorApprovalEnum.Requested,
     name: "개발개발한 어떠한 활동",
     type: 1,
     startDate: new Date("2024-03-11"),
@@ -262,6 +329,7 @@ const mockupManageReport: Activity[] = [
   {
     id: 3,
     status: 2,
+    professorApproval: ActivityProfessorApprovalEnum.Approved,
     name: "개발개발한 어떠한 활동",
     type: 2,
     startDate: new Date("2024-03-11"),
@@ -270,6 +338,7 @@ const mockupManageReport: Activity[] = [
   {
     id: 4,
     status: 4,
+    professorApproval: ActivityProfessorApprovalEnum.Denied,
     name: "개발개발한 어떠한 활동",
     type: 2,
     startDate: new Date("2024-03-11"),
@@ -278,6 +347,7 @@ const mockupManageReport: Activity[] = [
   {
     id: 5,
     status: 3,
+    professorApproval: ActivityProfessorApprovalEnum.Approved,
     name: "개발개발한 어떠한 활동",
     type: 1,
     startDate: new Date("2024-03-11"),
@@ -286,6 +356,7 @@ const mockupManageReport: Activity[] = [
   {
     id: 6,
     status: 3,
+    professorApproval: ActivityProfessorApprovalEnum.Approved,
     name: "2024년도 봄학기 MT",
     type: 3,
     startDate: new Date("2024-03-11"),
@@ -564,12 +635,13 @@ const mockupManageCms: ApiCms006ResponseOk = {
 export {
   mockupManageReport,
   mockupManageFunding,
+  mockupPastManageFunding,
   mockupManageMems,
   mockupManageAcf,
   mockupManageRental,
   mockupManagePrint,
   mockupManageCms,
   mockClubDescription,
-  mockClubRepresentatives,
+  mockClubDelegates,
   mockClubMembers,
 };
