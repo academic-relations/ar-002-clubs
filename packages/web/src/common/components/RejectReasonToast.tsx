@@ -63,7 +63,7 @@ const RejectReasonToast: React.FC<RejectReasonToastProps> = ({
 }) => (
   <ForceBorderRadius>
     <RejectReasonToastInner>
-      <Icon type="info" size={20} color={colors.RED[600]} />
+      <Icon type="error" size={20} color={colors.RED[600]} />
       <div className="RejectReasonToast-content">
         <Typography fs={16} lh={24} fw="MEDIUM">
           {title}
