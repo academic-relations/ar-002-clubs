@@ -253,7 +253,7 @@ const mockupManageReport: Activity[] = [
   {
     id: 1,
     status: 1,
-    professorApproval: 1,
+    professorApproval: ActivityProfessorApprovalEnum.Requested,
     name: "개발개발한 어떠한 활동",
     type: 1,
     startDate: new Date("2024-03-11"),
@@ -262,7 +262,7 @@ const mockupManageReport: Activity[] = [
   {
     id: 2,
     status: 2,
-    professorApproval: 1,
+    professorApproval: ActivityProfessorApprovalEnum.Requested,
     name: "개발개발한 어떠한 활동",
     type: 1,
     startDate: new Date("2024-03-11"),
@@ -271,7 +271,7 @@ const mockupManageReport: Activity[] = [
   {
     id: 3,
     status: 2,
-    professorApproval: 2,
+    professorApproval: ActivityProfessorApprovalEnum.Approved,
     name: "개발개발한 어떠한 활동",
     type: 2,
     startDate: new Date("2024-03-11"),
@@ -280,7 +280,7 @@ const mockupManageReport: Activity[] = [
   {
     id: 4,
     status: 4,
-    professorApproval: 3,
+    professorApproval: ActivityProfessorApprovalEnum.Denied,
     name: "개발개발한 어떠한 활동",
     type: 2,
     startDate: new Date("2024-03-11"),
@@ -289,7 +289,7 @@ const mockupManageReport: Activity[] = [
   {
     id: 5,
     status: 3,
-    professorApproval: 2,
+    professorApproval: ActivityProfessorApprovalEnum.Approved,
     name: "개발개발한 어떠한 활동",
     type: 1,
     startDate: new Date("2024-03-11"),
@@ -298,7 +298,7 @@ const mockupManageReport: Activity[] = [
   {
     id: 6,
     status: 3,
-    professorApproval: 2,
+    professorApproval: ActivityProfessorApprovalEnum.Approved,
     name: "2024년도 봄학기 MT",
     type: 3,
     startDate: new Date("2024-03-11"),
