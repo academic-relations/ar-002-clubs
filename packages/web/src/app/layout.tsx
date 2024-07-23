@@ -22,7 +22,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "SPARCS Clubs for ClubsUA",
   description:
-    "Created by SPARCS Academic Relations AR-002 TF Team, Copyright 2024",
+    "Created by SPARCS Academic Relations AR-002 TF Team, Copyright 2024. 학술협력팀 최고!",
 };
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => (

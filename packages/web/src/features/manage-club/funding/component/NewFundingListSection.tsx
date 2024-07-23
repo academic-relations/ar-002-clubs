@@ -4,7 +4,7 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
+import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Info from "@sparcs-clubs/web/common/components/Info";
@@ -15,7 +15,7 @@ import {
 } from "@sparcs-clubs/web/constants/manageClubFunding";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
-import NewFundingListTable from "./_atomic/NewFundingListTable";
+import NewFundingListTable from "../components/_atomic/NewFundingListTable";
 
 const NewFundingListSectionInner = styled.div`
   /* Auto layout */

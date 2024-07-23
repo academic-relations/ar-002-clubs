@@ -14,11 +14,6 @@ import {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalFilters(
-    new UnexpectedExceptionFilter(),
-    new ZodErrorFilter<ZodError>(),
-    new HttpExceptionFilter<HttpException>(),
-  ); // 만약 global추가하는 경우 AllExceptionFilter 뒤에 추가하면 됨.
   app.use(cookieParser());
   // localhost에서의 cors 해결
   if (process.env.NODE_ENV === "development") {
@@ -26,6 +21,16 @@ async function bootstrap() {
       origin: `http://localhost:${process.env.CLIENT_PORT}`,
       credentials: true,
     });
+    app.useGlobalFilters(
+      new ZodErrorFilter<ZodError>(),
+      new HttpExceptionFilter<HttpException>(),
+    );
+  } else {
+    app.useGlobalFilters(
+      new UnexpectedExceptionFilter(),
+      new ZodErrorFilter<ZodError>(),
+      new HttpExceptionFilter<HttpException>(),
+    ); // 만약 global추가하는 경우 AllExceptionFilter 뒤에 추가하면 됨.
   }
   await app.listen(env.SERVER_PORT);
 }

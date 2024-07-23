@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
+import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";

@@ -5,7 +5,9 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 import { takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { SemesterD } from "@sparcs-clubs/api/drizzle/schema/club.schema";
 import {
+  Employee,
   Executive,
+  Professor,
   Student,
   StudentT,
   User,
@@ -24,7 +26,34 @@ export class AuthRepository {
     name: string,
     type: string,
     department: string,
-  ) {
+  ): Promise<{
+    id: number;
+    sid: string;
+    name: string;
+    email: string;
+    undergraduate?: {
+      id: number;
+      number: number;
+    };
+    master?: {
+      id: number;
+      number: number;
+    };
+    doctor?: {
+      id: number;
+      number: number;
+    };
+    executive?: {
+      id: number;
+      studentId: number;
+    };
+    professor?: {
+      id: number;
+    };
+    employee?: {
+      id: number;
+    };
+  }> {
     // User table에 해당 email이 있는지 확인 후 upsert
     let user = await this.db
       .select()
@@ -32,14 +61,12 @@ export class AuthRepository {
       .where(eq(User.email, email))
       .then(takeUnique);
     if (user) {
-      // eslint-disable-next-line prefer-destructuring
       await this.db
         .update(User)
         .set({ name })
         .where(eq(User.id, user.id))
         .execute();
     } else {
-      // eslint-disable-next-line prefer-destructuring
       await this.db.insert(User).values({ sid, name, email }).execute();
     }
     user = await this.db
@@ -71,11 +98,9 @@ export class AuthRepository {
       };
       professor?: {
         id: number;
-        email: string;
       };
       employee?: {
         id: number;
-        email: string;
       };
     } = {
       id: user.id,
@@ -87,21 +112,18 @@ export class AuthRepository {
     // type이 "Student"인 경우 student table에서 해당 studentNumber이 있는지 확인 후 upsert
     // student_t에서 이번 학기의 해당 student_id이 있는지 확인 후 upsert
     if (type === "Student") {
-      // eslint-disable-next-line prefer-destructuring
       let student = await this.db
         .select()
         .from(Student)
         .where(eq(Student.number, parseInt(studentNumber)))
         .then(takeUnique);
       if (student) {
-        // eslint-disable-next-line prefer-destructuring
         await this.db
           .update(Student)
           .set({ userId: user.id, name })
           .where(eq(Student.id, student.id))
           .execute();
       } else {
-        // eslint-disable-next-line prefer-destructuring
         await this.db
           .insert(Student)
           .values({
@@ -186,7 +208,6 @@ export class AuthRepository {
         .then(takeUnique);
 
       if (studentT) {
-        // eslint-disable-next-line prefer-destructuring
         await this.db
           .update(StudentT)
           .set({ department: parseInt(department) })
@@ -197,7 +218,6 @@ export class AuthRepository {
             ),
           );
       } else {
-        // eslint-disable-next-line prefer-destructuring
         await this.db
           .insert(StudentT)
           .values({
@@ -243,6 +263,141 @@ export class AuthRepository {
     // professor_t에서 해당 professor_id이 있는지 확인 후 upsert
     // type이 "Employee"를 포함하는 경우 Employee table에서 해당 email이 있는지 확인 후 upsert
     // employee_t에서 해당 employee_id이 있는지 확인 후 upsert
+
+    return result;
+  }
+
+  async findUserById(id: number): Promise<{
+    id: number;
+    sid: string;
+    name: string;
+    email: string;
+    undergraduate?: {
+      id: number;
+      number: number;
+    };
+    master?: {
+      id: number;
+      number: number;
+    };
+    doctor?: {
+      id: number;
+      number: number;
+    };
+    executive?: {
+      id: number;
+      studentId: number;
+    };
+    professor?: {
+      id: number;
+      email: string;
+    };
+    employee?: {
+      id: number;
+      email: string;
+    };
+  }> {
+    const user = await this.db
+      .select()
+      .from(User)
+      .where(eq(User.id, id))
+      .then(takeUnique);
+
+    const result: {
+      id: number;
+      sid: string;
+      name: string;
+      email: string;
+      undergraduate?: {
+        id: number;
+        number: number;
+      };
+      master?: {
+        id: number;
+        number: number;
+      };
+      doctor?: {
+        id: number;
+        number: number;
+      };
+      executive?: {
+        id: number;
+        studentId: number;
+      };
+      professor?: {
+        id: number;
+        email: string;
+      };
+      employee?: {
+        id: number;
+        email: string;
+      };
+    } = {
+      id: user.id,
+      sid: user.sid,
+      name: user.name,
+      email: user.email,
+    };
+
+    const students = this.db
+      .select()
+      .from(Student)
+      .where(eq(Student.userId, id));
+
+    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-shadow
+    for (const student of await students) {
+      let studentEnum = 3;
+      if (student.number % 10000 < 2000) studentEnum = 1;
+      else if (student.number % 10000 < 6000) studentEnum = 2;
+      else if (student.number % 10000 < 7000) studentEnum = 1;
+
+      if (studentEnum === 1) {
+        result.undergraduate = { id: student.id, number: student.number };
+      } else if (studentEnum === 2) {
+        result.master = { id: student.id, number: student.number };
+      } else if (studentEnum === 3) {
+        result.doctor = { id: student.id, number: student.number };
+      }
+    }
+
+    const executive = await this.db
+      .select()
+      .from(Executive)
+      .where(eq(Executive.userId, id))
+      .then(takeUnique);
+
+    if (executive) {
+      result.executive = {
+        id: executive.id,
+        studentId: executive.studentId,
+      };
+    }
+
+    const professor = await this.db
+      .select()
+      .from(Professor)
+      .where(eq(Professor.userId, id))
+      .then(takeUnique);
+
+    if (professor) {
+      result.professor = {
+        id: professor.id,
+        email: professor.email,
+      };
+    }
+
+    const employee = await this.db
+      .select()
+      .from(Employee)
+      .where(eq(Employee.userId, id))
+      .then(takeUnique);
+
+    if (employee) {
+      result.employee = {
+        id: employee.id,
+        email: employee.email,
+      };
+    }
 
     return result;
   }

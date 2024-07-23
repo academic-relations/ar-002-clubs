@@ -1,10 +1,12 @@
 import React from "react";
 
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import {
-  TableRow,
-  TableWrapper,
-} from "@sparcs-clubs/web/common/components/Table/TableWrapper";
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { CmsTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import {
@@ -20,54 +22,62 @@ interface CommonSpaceTableProps {
   spaceList: ApiCms006ResponseOk;
 }
 
-const CommonSpaceTable: React.FC<CommonSpaceTableProps> = ({ spaceList }) => (
-  <TableWrapper>
-    <TableRow>
-      <TableCell type="Header" width="10%" minWidth={90}>
-        상태
-      </TableCell>
-      <TableCell type="Header" width="20%" minWidth={220}>
-        신청 일시
-      </TableCell>
-      <TableCell type="Header" width="10%" minWidth={120}>
-        신청자
-      </TableCell>
-      <TableCell type="Header" width="16%" minWidth={180}>
-        예약 일자
-      </TableCell>
-      <TableCell type="Header" width="16%" minWidth={160}>
-        예약 시간
-      </TableCell>
-      <TableCell type="Header" width="28%">
-        예약 호실
-      </TableCell>
-    </TableRow>
-    {spaceList.items.map((space, index) => {
-      const { color, text } = getTagDetail(space.statusEnum, CmsTagList);
-      return (
-        <TableRow isBorder key={space.chargeStudentName + String(index)}>
-          <TableCell type="Tag" width="10%" minWidth={90}>
-            <Tag color={color}>{text}</Tag>
-          </TableCell>
-          <TableCell type="Default" width="20%" minWidth={220}>
-            {formatDateTime(space.createdAt)}
-          </TableCell>
-          <TableCell type="Default" width="10%" minWidth={120}>
-            {space.chargeStudentName}
-          </TableCell>
-          <TableCell type="Default" width="16%" minWidth={180}>
-            {formatDate(space.startTerm)}
-          </TableCell>
-          <TableCell type="Default" width="16%" minWidth={160}>
-            {formatTime(space.startTerm)} ~ {formatTime(space.endTerm)}
-          </TableCell>
-          <TableCell type="Default" width="28%">
-            {space.spaceName}
-          </TableCell>
-        </TableRow>
-      );
-    })}
-  </TableWrapper>
-);
+const columnHelper = createColumnHelper<ApiCms006ResponseOk["items"][number]>();
+
+const columns = [
+  columnHelper.accessor("statusEnum", {
+    id: "status",
+    header: "상태",
+    cell: info => {
+      const { color, text } = getTagDetail(info.getValue(), CmsTagList);
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 10,
+  }),
+  columnHelper.accessor("createdAt", {
+    id: "createdAt",
+    header: "신청 일시",
+    cell: info => formatDateTime(info.getValue()),
+    size: 20,
+  }),
+  columnHelper.accessor("chargeStudentName", {
+    id: "chargeStudentName",
+    header: "신청자",
+    cell: info => info.getValue(),
+    size: 10,
+  }),
+  columnHelper.accessor("startTerm", {
+    id: "startTerm",
+    header: "예약 일자",
+    cell: info => formatDate(info.getValue()),
+    size: 16,
+  }),
+  columnHelper.accessor(
+    row => `${formatTime(row.startTerm)} ~ ${formatTime(row.endTerm)}`,
+    {
+      id: "time-range",
+      header: "예약 시간",
+      cell: info => info.getValue(),
+      size: 16,
+    },
+  ),
+  columnHelper.accessor("spaceName", {
+    id: "spaceName",
+    header: "예약 호실",
+    cell: info => info.getValue(),
+    size: 28,
+  }),
+];
+
+const CommonSpaceTable: React.FC<CommonSpaceTableProps> = ({ spaceList }) => {
+  const table = useReactTable({
+    columns,
+    data: spaceList.items,
+    getCoreRowModel: getCoreRowModel(),
+    enableSorting: false,
+  });
+
+  return <Table table={table} />;
+};
 
 export default CommonSpaceTable;

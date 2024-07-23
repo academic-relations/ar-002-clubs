@@ -2,7 +2,7 @@ import React from "react";
 
 import { useRouter } from "next/navigation";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
+import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import {

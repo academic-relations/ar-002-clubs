@@ -7,7 +7,7 @@ import {
 
 import { ClubTRepository } from "@sparcs-clubs/api/common/repository/club.club-t.respository";
 import { ClubRepository } from "@sparcs-clubs/api/common/repository/club.repository";
-import { ClubRepresentativeDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-representative-d.repository";
+import { ClubDelegateDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-delegate-d.repository";
 import { ClubRoomTRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-room-t.repository";
 
 import ClubStudentTRepository from "../repository/club.club-student-t.repository";
@@ -35,7 +35,7 @@ import type {
 export class ClubService {
   constructor(
     private clubRepository: ClubRepository,
-    private clubRepresentativeDRepository: ClubRepresentativeDRepository,
+    private clubDelegateDRepository: ClubDelegateDRepository,
     private clubRoomTRepository: ClubRoomTRepository,
     private clubStudentTRepository: ClubStudentTRepository,
     private clubTRepository: ClubTRepository,
@@ -60,7 +60,7 @@ export class ClubService {
     ] = await Promise.all([
       this.clubRepository.findClubDetail(clubId),
       this.clubStudentTRepository.findTotalMemberCnt(clubId),
-      this.clubRepresentativeDRepository.findRepresentativeName(clubId),
+      this.clubDelegateDRepository.findRepresentativeName(clubId),
       this.clubRoomTRepository.findClubLocationById(clubId),
       this.divisionPermanentClubDRepository.findPermenantClub(clubId),
     ]);
@@ -95,6 +95,7 @@ export class ClubService {
   async getStudentClubsMy(studentId: number): Promise<ApiClb003ResponseOK> {
     const studentSemesters =
       await this.clubStudentTRepository.findStudentSemester(studentId);
+
     const result = await Promise.all(
       studentSemesters.map(async semester => {
         const clubs = await Promise.all(
@@ -110,7 +111,7 @@ export class ClubService {
                 semester.id,
               );
             const representative =
-              await this.clubRepresentativeDRepository.findRepresentativeName(
+              await this.clubDelegateDRepository.findRepresentativeName(
                 club.id,
                 semester.startTerm,
               );
@@ -166,7 +167,7 @@ export class ClubService {
       throw new HttpException("Club not available", HttpStatus.FORBIDDEN);
     }
     const isAvailableRepresentative =
-      await this.clubRepresentativeDRepository.findRepresentativeByClubIdAndStudentId(
+      await this.clubDelegateDRepository.findRepresentativeByClubIdAndStudentId(
         studentId,
         clubId,
       );
@@ -193,7 +194,7 @@ export class ClubService {
       throw new HttpException("Club not available", HttpStatus.FORBIDDEN);
     }
     const isAvailableRepresentative =
-      await this.clubRepresentativeDRepository.findRepresentativeByClubIdAndStudentId(
+      await this.clubDelegateDRepository.findRepresentativeByClubIdAndStudentId(
         studentId,
         clubId,
       );

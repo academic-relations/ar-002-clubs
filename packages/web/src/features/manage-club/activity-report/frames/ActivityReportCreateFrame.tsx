@@ -2,7 +2,7 @@ import React from "react";
 
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
+import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 // import DateRangeInput from "@sparcs-clubs/web/common/components/Forms/DateRangeInput";

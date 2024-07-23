@@ -2,14 +2,14 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 
-import { ClubRepresentativeDRepository } from "../repository/club.club-representative-d.repository";
+import { ClubDelegateDRepository } from "../repository/club.club-delegate-d.repository";
 import ClubStudentTRepository from "../repository/club.club-student-t.repository";
 import SemesterDRepository from "../repository/club.semester-d.repository";
 
 @Injectable()
 export default class ClubPublicService {
   constructor(
-    private clubRepresentativeDRepository: ClubRepresentativeDRepository,
+    private clubDelegateDRepository: ClubDelegateDRepository,
     private clubStudentTRepository: ClubStudentTRepository,
     private semesterDRepository: SemesterDRepository,
   ) {}
@@ -44,11 +44,20 @@ export default class ClubPublicService {
     return false;
   }
 
+  async getMemberFromSemester(param: { semesterId: number; clubId: number }) {
+    const result = await this.clubStudentTRepository.findByClubIdAndSemesterId(
+      param.clubId,
+      param.semesterId,
+    );
+
+    return result;
+  }
+
   // 학생(studentId)이 현재 학기 동아리(clubId)의 대표자 중 1명인지 확인합니다.
   // studentId와 clubId가 유효한지 검사하지 않습니다.
-  async isStudentRepresentative(studentId: number, clubId: number) {
+  async isStudentDelegate(studentId: number, clubId: number) {
     const representatives =
-      await this.clubRepresentativeDRepository.findRepresentativeIdListByClubId(
+      await this.clubDelegateDRepository.findRepresentativeIdListByClubId(
         clubId,
       );
 
