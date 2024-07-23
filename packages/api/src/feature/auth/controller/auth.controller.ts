@@ -71,9 +71,20 @@ export class AuthController {
   @Post("/auth/sign-out")
   @UsePipes(new ZodPipe(apiAut003))
   postAuthSignout(
+    @Res({ passthrough: true }) res: Response,
     @Req() req: Request & UserRefreshTokenPayload,
   ): Promise<ApiAut003ResponseOk> {
     const { refreshToken } = req?.cookies || {};
+    res.cookie("refreshToken", null, {
+      maxAge: -1,
+      httpOnly: true,
+      path: "/auth/refresh",
+    });
+    res.cookie("refreshToken", null, {
+      maxAge: -1,
+      httpOnly: true,
+      path: "/auth/sign-out",
+    });
     return this.authService.postAuthSignout(req.user, refreshToken);
   }
 

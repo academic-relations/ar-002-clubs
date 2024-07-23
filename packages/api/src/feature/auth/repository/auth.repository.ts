@@ -7,9 +7,11 @@ import { SemesterD } from "@sparcs-clubs/api/drizzle/schema/club.schema";
 import { RefreshToken } from "@sparcs-clubs/api/drizzle/schema/refresh-token.schema";
 import {
   Employee,
+  EmployeeT,
   Executive,
   ExecutiveT,
   Professor,
+  ProfessorT,
   Student,
   StudentT,
   User,
@@ -79,6 +81,19 @@ export class AuthRepository {
       email: user.email,
     };
 
+    // 오늘 날짜를 기준으로 semester_d 테이블에서 해당 학기를 찾아서 semester_id, startTerm, endTerm을 가져옴
+    const currentDate = new Date();
+    const semester = await this.db
+      .select()
+      .from(SemesterD)
+      .where(
+        and(
+          lte(SemesterD.startTerm, currentDate),
+          gte(SemesterD.endTerm, currentDate),
+        ),
+      )
+      .then(takeUnique);
+
     // type이 "Student"인 경우 student table에서 해당 studentNumber이 있는지 확인 후 upsert
     // student_t에서 이번 학기의 해당 student_id이 있는지 확인 후 upsert
     if (type === "Student") {
@@ -139,19 +154,6 @@ export class AuthRepository {
         }
       }
 
-      // 오늘 날짜를 기준으로 semester_d 테이블에서 해당 학기를 찾아서 semester_id, startTerm, endTerm을 가져옴
-      const currentDate = new Date();
-      const semester = await this.db
-        .select()
-        .from(SemesterD)
-        .where(
-          and(
-            lte(SemesterD.startTerm, currentDate),
-            gte(SemesterD.endTerm, currentDate),
-          ),
-        )
-        .then(takeUnique);
-
       // eslint-disable-next-line prefer-destructuring
       await this.db
         .insert(StudentT)
@@ -209,18 +211,24 @@ export class AuthRepository {
         .from(Professor)
         .where(eq(Professor.email, email))
         .then(takeUnique);
-      // const currentDate = new Date();
-      // await this.db
-      //   .insert(ProfessorT)
-      //   .values({
-      //     department,
-      //     professorId: professor.id,
-      //     professor_enum:
-      //     startTerm: ,
-      //     endTerm:
-      //   })
-      //   .onDuplicateKeyUpdate({set:{}})
-      // todo : professor과 관련된 정보 업데이트 자료 부족.
+      await this.db
+        .insert(ProfessorT)
+        .values({
+          department: parseInt(department),
+          professorId: professor.id,
+          professorEnum: 1,
+          startTerm: semester.startTerm,
+          endTerm: semester.endTerm,
+        })
+        .onDuplicateKeyUpdate({
+          set: {
+            department: parseInt(department),
+            professorId: professor.id,
+            professorEnum: 1,
+            startTerm: semester.startTerm,
+            endTerm: semester.endTerm,
+          },
+        });
       result.professor = {
         id: professor.id,
       };
@@ -234,13 +242,7 @@ export class AuthRepository {
           name,
           email,
         })
-        .onDuplicateKeyUpdate({
-          set: {
-            userId: user.id,
-            name,
-            email,
-          },
-        });
+        .onDuplicateKeyUpdate({ set: { userId: user.id, name, email } });
       const employee = await this.db
         .select()
         .from(Employee)
@@ -252,7 +254,20 @@ export class AuthRepository {
           ),
         )
         .then(takeUnique);
-
+      await this.db
+        .insert(EmployeeT)
+        .values({
+          employeeId: employee.id,
+          startTerm: semester.startTerm,
+          endTerm: semester.endTerm,
+        })
+        .onDuplicateKeyUpdate({
+          set: {
+            employeeId: employee.id,
+            startTerm: semester.startTerm,
+            endTerm: semester.endTerm,
+          },
+        });
       result.employee = {
         id: employee.id,
       };
