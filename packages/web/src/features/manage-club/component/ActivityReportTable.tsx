@@ -11,6 +11,7 @@ import Tag from "@sparcs-clubs/web/common/components/Tag";
 import {
   ActTypeTagList,
   ApplyTagList,
+  ProfessorApprovalTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formateDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
@@ -28,6 +29,17 @@ const columns = [
     header: "상태",
     cell: info => {
       const { color, text } = getTagDetail(info.getValue(), ApplyTagList);
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 8,
+  }),
+  columnHelper.accessor("professorApproval", {
+    header: "지도교수",
+    cell: info => {
+      const { color, text } = getTagDetail(
+        info.getValue(),
+        ProfessorApprovalTagList,
+      );
       return <Tag color={color}>{text}</Tag>;
     },
     size: 10,

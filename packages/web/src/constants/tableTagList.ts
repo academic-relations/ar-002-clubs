@@ -4,6 +4,7 @@ import { PromotionalPrintingOrderStatusEnum } from "@sparcs-clubs/interface/comm
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
 
 import {
+  ActivityProfessorApprovalEnum,
   ActivityStatusEnum,
   ActivityTypeEnum,
   MemberStatusEnum,
@@ -89,6 +90,14 @@ const ApplyTagList: {
   [ActivityStatusEnum.Rejected]: { text: "신청 반려", color: "RED" },
 };
 
+const ProfessorApprovalTagList: {
+  [key in ActivityProfessorApprovalEnum]: StatusDetail;
+} = {
+  [ActivityProfessorApprovalEnum.Requested]: { text: "대기", color: "GRAY" },
+  [ActivityProfessorApprovalEnum.Approved]: { text: "승인", color: "GREEN" },
+  [ActivityProfessorApprovalEnum.Denied]: { text: "반려", color: "RED" },
+};
+
 const ActTypeTagList: {
   [key in ActivityTypeEnum]: StatusDetail;
 } = {
@@ -112,5 +121,6 @@ export {
   RntTagList,
   MemTagList,
   ApplyTagList,
+  ProfessorApprovalTagList,
   ActTypeTagList,
 };
