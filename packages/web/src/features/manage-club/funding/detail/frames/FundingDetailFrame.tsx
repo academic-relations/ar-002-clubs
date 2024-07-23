@@ -13,7 +13,6 @@ import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/service/_mock/mockFundingDetail";
-import { formatDotDetailDate } from "@sparcs-clubs/web/utils/Date/formateDate";
 
 import BasicEvidenceList from "../components/BasicEvidenceList";
 import FixtureEvidenceList from "../components/FixtureEvidenceList";
@@ -93,7 +92,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
                 reasons={[
                   {
                     reason: "대충 어떤 반려 사유 어쩌고",
-                    datetime: formatDotDetailDate(new Date()),
+                    datetime: new Date(),
                   },
                 ]}
               />

@@ -3,6 +3,7 @@ import React from "react";
 import styled from "styled-components";
 
 import colors from "@sparcs-clubs/web/styles/themes/colors";
+import { formatDotDetailDate } from "@sparcs-clubs/web/utils/Date/formateDate";
 
 import FlexWrapper from "./FlexWrapper";
 import Icon from "./Icon";
@@ -10,7 +11,7 @@ import Icon from "./Icon";
 import Typography from "./Typography";
 
 interface Reason {
-  datetime: string;
+  datetime: Date;
   reason: React.ReactNode;
 }
 
@@ -83,9 +84,13 @@ const RejectReasonToast: React.FC<RejectReasonToastProps> = ({
       </div>
       <div className="RejectReasonToast-reasons">
         {reasons.map(reason => (
-          <FlexWrapper direction="column" gap={4} key={reason.datetime}>
+          <FlexWrapper
+            direction="column"
+            gap={4}
+            key={formatDotDetailDate(reason.datetime)}
+          >
             <Typography fs={14} lh={16} fw="REGULAR" color="GRAY.600">
-              {reason.datetime}
+              {formatDotDetailDate(reason.datetime)}
             </Typography>
             <Typography fs={16} lh={24} fw="REGULAR">
               {reason.reason}
