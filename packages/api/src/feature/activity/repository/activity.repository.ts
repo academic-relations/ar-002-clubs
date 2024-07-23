@@ -3,14 +3,13 @@ import {
   ActivityStatusEnum,
   ActivityTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { and, desc, eq, gt, gte, isNull, lt, lte } from "drizzle-orm";
+import { and, eq, gt, isNull, lte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   Activity,
-  ActivityD,
   ActivityDeadlineD,
   ActivityEvidenceFile,
   ActivityFeedback,
@@ -257,41 +256,6 @@ export default class ActivityRepository {
           isNull(Activity.deletedAt),
         ),
       );
-    return result;
-  }
-
-  /**
-   * @param date 날짜를 받습니다.
-   * @returns 해당 날짜가 포함된 활동기간의 __직전__ 활동기간 정보를 리턴합니다.
-   * 배열 내부 객체로 리턴하며, 배열의 길이는 항상 1 이여야 합니다.
-   */
-  async selectLastActivityDByDate(date: Date) {
-    const result = await this.db
-      .select()
-      .from(ActivityD)
-      .where(and(lt(ActivityD.endTerm, date), isNull(ActivityD.deletedAt)))
-      .orderBy(desc(ActivityD.endTerm))
-      .limit(1);
-    return result;
-  }
-
-  /**
-   * @param date 날짜를 받습니다.
-   * @returns 해당 날짜가 포함된 활동기간의 정보를 리턴합니다.
-   * 배열 내부 객체로 리턴하며, 배열의 길이는 항상 1 이하여야 합니다.
-   */
-  async selectActivityDByDate(date: Date) {
-    const result = await this.db
-      .select()
-      .from(ActivityD)
-      .where(
-        and(
-          gte(ActivityD.startTerm, date),
-          lte(ActivityD.endTerm, date),
-          isNull(ActivityD.deletedAt),
-        ),
-      )
-      .orderBy(desc(ActivityD.endTerm));
     return result;
   }
 
