@@ -3,8 +3,8 @@ import React from "react";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
-import { ManageSingleWrapper } from "@sparcs-clubs/web/features/manage-club/component/ManageFrameWrapper";
-import MembersTable from "@sparcs-clubs/web/features/manage-club/component/MembersTable";
+import MembersTable from "@sparcs-clubs/web/features/manage-club/components/MembersTable";
+
 import {
   MemberStatusEnum,
   mockupManageMems,
@@ -32,17 +32,14 @@ const MembersManageFrame: React.FC = () => {
         title="회원 명단"
         toggle={toggle}
         toggleHandler={() => setToggle(!toggle)}
-      />
-      {toggle && (
-        <ManageSingleWrapper>
-          <MoreDetailTitle
-            title={title}
-            moreDetail="전체 보기"
-            moreDetailPath="/manage-club/members"
-          />
-          <MembersTable memberList={mockupManageMems} />
-        </ManageSingleWrapper>
-      )}
+      >
+        <MoreDetailTitle
+          title={title}
+          moreDetail="전체 보기"
+          moreDetailPath="/manage-club/members"
+        />
+        <MembersTable memberList={mockupManageMems} />
+      </FoldableSectionTitle>
     </FlexWrapper>
   );
 };

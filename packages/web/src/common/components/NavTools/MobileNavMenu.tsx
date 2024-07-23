@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import paths, { Paths } from "@sparcs-clubs/web/constants/paths";
 
-import Button from "../Buttons/Button";
+import Button from "../Button";
 import Icon from "../Icon";
 
 import MobileNavItem from "./MobileNavItem";

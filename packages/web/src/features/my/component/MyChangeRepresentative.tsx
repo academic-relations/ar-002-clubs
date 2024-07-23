@@ -63,22 +63,19 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
         <Icon type="check_circle" size={20} color={colors.GREEN[600]} />
       )}
       <FlexWrapper direction="column" gap={8}>
-        <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
+        <Typography fw="MEDIUM" fs={16} lh={20}>
           {Title}
         </Typography>
         <Typography
-          ff="PRETENDARD"
           fw="REGULAR"
           fs={16}
           lh={20}
-          color="BLACK"
           style={{ whiteSpace: "pre-wrap" }}
         >
           {Text}
         </Typography>
         {type === "Requested" && (
           <Typography
-            ff="PRETENDARD"
             fw="REGULAR"
             fs={16}
             lh={20}

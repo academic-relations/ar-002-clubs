@@ -157,14 +157,14 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
       </SelectParticipantInner>
       <Toggle
         label={
-          <Typography type="p_b">
+          <Typography fs={16} lh={20} fw="MEDIUM">
             선택된 회원 목록 ({selected.length}명)
           </Typography>
         }
       >
         {selected.length ? (
           selected.map((participant, i) => (
-            <Typography key={i} type="p">
+            <Typography key={i} fs={16} lh={20} fw="REGULAR">
               {participant.studentId} {participant.name}
             </Typography>
           ))
