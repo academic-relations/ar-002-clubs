@@ -16,7 +16,6 @@ import {
 } from "../types/activityCertificate";
 
 import ActivityCertificateInfoFrame from "./ActivityCertificateInfoFrame";
-
 import ActivityCertificateNoticeFrame from "./ActivityCertificateNoticeFrame";
 
 const ActivityCertificatePageMainFrameInner = styled.div`
