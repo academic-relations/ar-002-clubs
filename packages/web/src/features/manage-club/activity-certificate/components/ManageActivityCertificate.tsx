@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/ActivityCertificate.enum";
+import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
