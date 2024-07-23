@@ -11,7 +11,6 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 interface ProgressStatusProps {
   labels: string[];
   progress: StatusAndDate[];
-  // TODO: /my까지 수정하면 infoText, optional 지우기
   infoText?: string;
   optional?: React.ReactNode;
 }

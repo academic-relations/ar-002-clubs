@@ -1,3 +1,4 @@
+import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
 import { PromotionalPrintingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
@@ -192,6 +193,98 @@ export const managePrintingProgress = (
       return {
         labels: ["신청 취소", "사용 대기"],
         progress: [{ status: Status.Canceled, date: new Date() }],
+      };
+  }
+};
+
+export const manageActivityCertificateProgress = (
+  status: ActivityCertificateOrderStatusEnum,
+): ManageProgress => {
+  switch (status) {
+    case ActivityCertificateOrderStatusEnum.Applied:
+      return {
+        labels: [
+          "신청 완료",
+          "동아리 대표자 승인 대기",
+          "동아리 연합회 승인 대기",
+          "발급 대기",
+        ],
+        progress: [{ status: Status.Approved, date: new Date() }],
+        infoText:
+          "동아리 대표자의 승인이 있어야 다음 단계로 넘어갈 수 있습니다. 반려 시 사유를 입력해야함",
+      };
+    case ActivityCertificateOrderStatusEnum.Approved:
+      return {
+        labels: [
+          "신청 완료",
+          "동아리 대표자 승인 완료",
+          "동아리 연합회 승인 대기",
+          "발급 대기",
+        ],
+        progress: [
+          { status: Status.Approved, date: new Date() },
+          { status: Status.Approved, date: new Date() },
+        ],
+      };
+    case ActivityCertificateOrderStatusEnum.Issued:
+      return {
+        labels: [
+          "신청 완료",
+          "동아리 대표자 승인 완료",
+          "동아리 연합회 승인 완료",
+          "발급 대기",
+        ],
+        progress: [
+          { status: Status.Approved, date: new Date() },
+          { status: Status.Approved, date: new Date() },
+          { status: Status.Approved, date: new Date() },
+        ],
+        infoText: "발급이 완료되면 이메일이 갈거에요~",
+      };
+    case ActivityCertificateOrderStatusEnum.Received:
+      return {
+        labels: [
+          "신청 완료",
+          "동아리 대표자 승인 완료",
+          "동아리 연합회 승인 완료",
+          "발급 완료",
+        ],
+        progress: [
+          { status: Status.Approved, date: new Date() },
+          { status: Status.Approved, date: new Date() },
+          { status: Status.Approved, date: new Date() },
+          { status: Status.Approved, date: new Date() },
+        ],
+      };
+    // TODO: 동아리 대표자 / 동아리 연합회 반려 분리 필요
+    case ActivityCertificateOrderStatusEnum.Rejected:
+      return {
+        labels: [
+          "신청 완료",
+          "동아리 대표자 승인 반려",
+          "동아리 연합회 승인 대기",
+          "발급 대기",
+        ],
+        progress: [
+          { status: Status.Approved, date: new Date() },
+          { status: Status.Canceled, date: new Date() },
+        ],
+        infoText: "동아리 대표자 반려 사유: 어쩌고 저쩌고",
+      };
+    default: // 동연 반려F
+      return {
+        labels: [
+          "신청 완료",
+          "동아리 대표자 승인 완료",
+          "동아리 연합회 승인 반려",
+          "발급 대기",
+        ],
+        progress: [
+          { status: Status.Approved, date: new Date() },
+          { status: Status.Approved, date: new Date() },
+          { status: Status.Canceled, date: new Date() },
+        ],
+        infoText: "동아리 연합회 반려 사유: 어쩌고 저쩌고",
       };
   }
 };
