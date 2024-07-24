@@ -34,6 +34,7 @@ const MyClubsMainFrame: React.FC = () => {
                     title={myClub.name}
                     clubList={myClub.clubs}
                     key={myClub.name}
+                    isRegistrationPeriod={false}
                   />
                 ),
             )}
