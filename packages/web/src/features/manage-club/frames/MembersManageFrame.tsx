@@ -27,20 +27,20 @@ const MembersManageFrame: React.FC = () => {
   const title = `2024년 봄학기 (신청 ${appliedCount}명, 승인 ${approvedCount}명, 반려 ${rejectedCount}명 / 총 ${totalCount}명)`;
   // TODO: 학기 받아올 수 있도록 수정
   return (
-    <FlexWrapper direction="column" gap={40}>
-      <FoldableSectionTitle
-        title="회원 명단"
-        toggle={toggle}
-        toggleHandler={() => setToggle(!toggle)}
-      >
+    <FoldableSectionTitle
+      title="회원 명단"
+      toggle={toggle}
+      toggleHandler={() => setToggle(!toggle)}
+    >
+      <FlexWrapper direction="column" gap={20}>
         <MoreDetailTitle
           title={title}
           moreDetail="전체 보기"
           moreDetailPath="/manage-club/members"
         />
         <MembersTable memberList={mockupManageMems} />
-      </FoldableSectionTitle>
-    </FlexWrapper>
+      </FlexWrapper>
+    </FoldableSectionTitle>
   );
 };
 
