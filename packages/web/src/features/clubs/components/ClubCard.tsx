@@ -4,6 +4,8 @@ import React from "react";
 
 import styled from "styled-components";
 
+import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
@@ -35,6 +37,14 @@ const ClubCardNameRow = styled(ClubCardRow)`
   align-items: center;
 `;
 
+const ClubCardTagRow = styled(ClubCardRow)`
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const ClubName = styled.div`
   width: 100%;
   height: 24px;
@@ -46,32 +56,50 @@ const ClubName = styled.div`
   text-overflow: ellipsis;
 `;
 
-const ClubCard: React.FC<ClubCardProps> = ({ club }) => (
-  <Card gap={16} padding="16px 20px">
-    <ClubCardNameRow>
-      <ClubName>{club.name}</ClubName>
-      <FlexWrapper direction="row" gap={4}>
-        <Icon type="person" size={16} />
-        <Typography fs={14} lh={16}>
-          {club.totalMemberCnt}
-        </Typography>
-      </FlexWrapper>
-    </ClubCardNameRow>
+const ClubCard: React.FC<ClubCardProps & { isRegistrationPeriod: boolean }> = ({
+  club,
+  isRegistrationPeriod,
+}) => {
+  const [isRegistered, setIsRegistered] = React.useState<boolean>(false);
 
-    <ClubCardRow>
-      {club.advisor === null
-        ? `회장 ${club.representative}`
-        : `회장 ${club.representative} | 지도교수 ${club.advisor}`}
-    </ClubCardRow>
-    <ClubCardRow>{club.characteristic}</ClubCardRow>
+  return (
+    <Card gap={16} padding="16px 20px">
+      <ClubCardNameRow>
+        <ClubName>{club.name}</ClubName>
+        <FlexWrapper direction="row" gap={4}>
+          <Icon type="person" size={16} />
+          <Typography fs={14} lh={16}>
+            {club.totalMemberCnt}
+          </Typography>
+        </FlexWrapper>
+      </ClubCardNameRow>
 
-    <ClubCardRow>
-      <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
-        {getClubType(club)}
-      </Tag>
-    </ClubCardRow>
-  </Card>
-);
+      <ClubCardRow>
+        {club.advisor === null
+          ? `회장 ${club.representative}`
+          : `회장 ${club.representative} | 지도교수 ${club.advisor}`}
+      </ClubCardRow>
+      <ClubCardRow>{club.characteristic}</ClubCardRow>
+
+      <ClubCardTagRow>
+        <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
+          {getClubType(club)}
+        </Tag>
+        {isRegistrationPeriod && (
+          <TextButton
+            text={isRegistered ? "신청 취소" : "등록 신청"}
+            onClick={() => {
+              setIsRegistered(!isRegistered);
+            }}
+          />
+        )}
+        {!isRegistrationPeriod && isRegistered && (
+          <TextButton text="승인 대기" disabled />
+        )}
+      </ClubCardTagRow>
+    </Card>
+  );
+};
 
 export default ClubCard;
 

@@ -12,12 +12,14 @@ type ClubsSectionFrameProps = {
   showLength?: boolean; // section title에 길이 보여줄지 여부
   title: string; // 분과
   clubList: Array<ClubCardProps["club"]>;
+  isRegistrationPeriod: boolean;
 };
 
 const ClubsSectionFrame: React.FC<ClubsSectionFrameProps> = ({
   showLength = true,
   title,
   clubList,
+  isRegistrationPeriod,
 }) => {
   const [toggle, setToggle] = useState(true);
   const toggleHandler = useCallback(
@@ -32,7 +34,12 @@ const ClubsSectionFrame: React.FC<ClubsSectionFrameProps> = ({
         toggle={toggle}
         toggleHandler={toggleHandler}
       />
-      {toggle && <ClubListGrid clubList={clubList} />}
+      {toggle && (
+        <ClubListGrid
+          clubList={clubList}
+          isRegistrationPeriod={isRegistrationPeriod}
+        />
+      )}
     </FlexWrapper>
   );
 };
