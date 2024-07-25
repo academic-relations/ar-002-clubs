@@ -8,14 +8,13 @@ import { managePrintingProgress } from "@sparcs-clubs/web/constants/manageClubPr
 
 interface ManagePrintingProgressProps {
   status: PromotionalPrintingOrderStatusEnum;
-  onClickCancel: () => void;
 }
 
 const ManagePrintingProgress: React.FC<ManagePrintingProgressProps> = ({
   status,
-  onClickCancel,
 }) => {
   const managePrinting = managePrintingProgress(status);
+  const onClickCancel = () => {};
   return (
     <ProgressStatus
       labels={managePrinting.labels}

@@ -8,14 +8,15 @@ import { manageCommonSpaceProgress } from "@sparcs-clubs/web/constants/manageClu
 
 interface ManageCommonSpaceProgressProps {
   status: CommonSpaceUsageOrderStatusEnum;
-  onClickCancel: () => void;
 }
 
 const ManageCommonSpaceProgress: React.FC<ManageCommonSpaceProgressProps> = ({
   status,
-  onClickCancel,
 }) => {
   const manageCommonSpace = manageCommonSpaceProgress(status);
+
+  // TODO: Implement onClickCancel
+  const onClickCancel = () => {};
   return (
     <ProgressStatus
       labels={manageCommonSpace.labels}

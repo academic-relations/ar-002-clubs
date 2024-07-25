@@ -8,14 +8,13 @@ import { manageRentalProgress } from "@sparcs-clubs/web/constants/manageClubProg
 
 interface ManageRentalProgressProps {
   status: RentalOrderStatusEnum;
-  onClickCancel: () => void;
 }
 
 const ManageRentalProgress: React.FC<ManageRentalProgressProps> = ({
   status,
-  onClickCancel,
 }) => {
   const manageRental = manageRentalProgress(status);
+  const onClickCancel = () => {};
   return (
     <ProgressStatus
       labels={manageRental.labels}

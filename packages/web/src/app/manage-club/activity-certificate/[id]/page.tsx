@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import { useRouter } from "next/navigation";
@@ -13,8 +13,6 @@ import ManageActivityCertificateProgress from "@sparcs-clubs/web/features/manage
 import ManageCertificateDetailFrame from "@sparcs-clubs/web/features/manage-club/activity-certificate/frames/ManageCertificateDetailFrame";
 
 const ManageAcfDetail = () => {
-  const [rejectReason, setRejectReason] = useState("");
-
   const router = useRouter();
   const onClick = () => {
     router.push("/manage-club/activity-certificate");
@@ -35,10 +33,6 @@ const ManageAcfDetail = () => {
       <Card outline gap={20}>
         <ManageActivityCertificateProgress
           status={ActivityCertificateOrderStatusEnum.Rejected}
-          onClickConfirm={() => {}}
-          onClickReject={() => {}}
-          rejectReason={rejectReason}
-          setRejectReason={setRejectReason}
         />
         <ManageCertificateDetailFrame />
       </Card>

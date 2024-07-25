@@ -33,7 +33,6 @@ const ManagePrintingDetail = () => {
       <Card outline gap={20}>
         <ManagePrintingProgress
           status={PromotionalPrintingOrderStatusEnum.Received}
-          onClickCancel={() => {}}
         />
         <ManagePrintingDetailFrame />
       </Card>

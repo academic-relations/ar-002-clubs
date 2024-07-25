@@ -31,10 +31,7 @@ const ManageRentalDetail = () => {
         enableLast
       />
       <Card outline gap={20}>
-        <ManageRentalProgress
-          status={RentalOrderStatusEnum.Rejected}
-          onClickCancel={() => {}}
-        />
+        <ManageRentalProgress status={RentalOrderStatusEnum.Rejected} />
         <ManageRentalDetailFrame />
       </Card>
       <Button style={{ width: "max-content" }} onClick={onClick}>

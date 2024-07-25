@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import styled from "styled-components";
@@ -10,10 +10,6 @@ import { manageActivityCertificateProgress } from "@sparcs-clubs/web/constants/m
 
 interface ManageActivityCertificateProgressProps {
   status: ActivityCertificateOrderStatusEnum;
-  rejectReason: string;
-  setRejectReason: (reason: string) => void;
-  onClickConfirm: () => void;
-  onClickReject: () => void;
 }
 
 const ButtonWrapper = styled.div`
@@ -26,15 +22,14 @@ const ButtonWrapper = styled.div`
 
 const ManageActivityCertificateProgress: React.FC<
   ManageActivityCertificateProgressProps
-> = ({
-  status,
-  rejectReason,
-  setRejectReason,
-  onClickConfirm,
-  onClickReject,
-}) => {
+> = ({ status }) => {
+  const [rejectReason, setRejectReason] = useState("");
+
   const manageActivityCertificate = manageActivityCertificateProgress(status);
   const rejectButtonType = rejectReason !== "" ? "default" : "disabled";
+
+  const onClickConfirm = () => {};
+  const onClickReject = () => {};
 
   return (
     <ProgressStatus

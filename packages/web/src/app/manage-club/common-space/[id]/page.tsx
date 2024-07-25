@@ -32,8 +32,7 @@ const ManageCommonSpaceDetail = () => {
       />
       <Card outline gap={20}>
         <ManageCommonSpaceProgress
-          status={CommonSpaceUsageOrderStatusEnum.Canceled}
-          onClickCancel={() => {}}
+          status={CommonSpaceUsageOrderStatusEnum.Applied}
         />
         <ManageCommonSpaceDetailFrame />
       </Card>
