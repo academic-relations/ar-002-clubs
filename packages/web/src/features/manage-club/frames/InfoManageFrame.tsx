@@ -12,7 +12,7 @@ import ChangeRepresentativeCard from "@sparcs-clubs/web/features/manage-club/com
 import {
   mockClubDescription,
   mockClubMembers,
-} from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+} from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 

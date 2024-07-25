@@ -2,7 +2,7 @@ import React from "react";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/service/_mock/mockFundingDetail";
+import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/services/_mock/mockFundingDetail";
 import { transportationEnumMap } from "@sparcs-clubs/web/utils/fundingEnumMap";
 
 import { ListItem } from "./FundingInfoList";
