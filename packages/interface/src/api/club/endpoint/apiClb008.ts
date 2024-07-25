@@ -10,7 +10,7 @@ import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.
  */
 
 const url = (clubId: number, delegateId: number) =>
-  `/student/clubs/club/${clubId}/representatives/representative/${delegateId}/candidates`;
+  `/student/clubs/club/${clubId}/delegates/delegate/${delegateId}/candidates`;
 const method = "GET";
 
 const requestParam = z.object({
