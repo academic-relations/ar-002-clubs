@@ -51,23 +51,11 @@ const Progress = ({ status = Status.Pending, label, date }: ProgressProps) => {
     <ProgressWrapper>
       <ProgressDot status={status} />
       <TextWrapper>
-        <Typography
-          ff="PRETENDARD"
-          fw="MEDIUM"
-          fs={16}
-          lh={20}
-          color={labelColor}
-        >
+        <Typography fw="MEDIUM" fs={16} lh={20} color={labelColor}>
           {label}
         </Typography>
         {date !== undefined && (
-          <Typography
-            ff="PRETENDARD"
-            fw="REGULAR"
-            fs={14}
-            lh={16}
-            color={labelColor}
-          >
+          <Typography fw="REGULAR" fs={14} lh={16} color={labelColor}>
             {formatSlashDateTime(date)}
           </Typography>
         )}
