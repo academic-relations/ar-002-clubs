@@ -18,12 +18,12 @@ import {
 const ServiceManageFrame: React.FC = () => {
   const [toggle, setToggle] = React.useState<boolean>(true);
   return (
-    <FlexWrapper direction="column" gap={40}>
-      <FoldableSectionTitle
-        title="서비스 신청"
-        toggle={toggle}
-        toggleHandler={() => setToggle(!toggle)}
-      >
+    <FoldableSectionTitle
+      title="서비스 신청"
+      toggle={toggle}
+      toggleHandler={() => setToggle(!toggle)}
+    >
+      <FlexWrapper direction="column" gap={40}>
         <FlexWrapper direction="column" gap={20}>
           <MoreDetailTitle
             title="대여 사업"
@@ -56,8 +56,8 @@ const ServiceManageFrame: React.FC = () => {
           />
           <CommonSpaceTable spaceList={mockupManageCms} />
         </FlexWrapper>
-      </FoldableSectionTitle>
-    </FlexWrapper>
+      </FlexWrapper>
+    </FoldableSectionTitle>
   );
 };
 

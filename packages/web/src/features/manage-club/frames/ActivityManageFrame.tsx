@@ -13,12 +13,12 @@ import {
 const ActivityManageFrame: React.FC = () => {
   const [toggle, setToggle] = React.useState<boolean>(true);
   return (
-    <FlexWrapper direction="column" gap={40}>
-      <FoldableSectionTitle
-        title="동아리 활동"
-        toggle={toggle}
-        toggleHandler={() => setToggle(!toggle)}
-      >
+    <FoldableSectionTitle
+      title="동아리 활동"
+      toggle={toggle}
+      toggleHandler={() => setToggle(!toggle)}
+    >
+      <FlexWrapper direction="column" gap={40}>
         <FlexWrapper direction="column" gap={20}>
           <MoreDetailTitle
             title="활동 보고서"
@@ -35,8 +35,8 @@ const ActivityManageFrame: React.FC = () => {
           />
           <FundingTable fundingList={mockupManageFunding} />
         </FlexWrapper>
-      </FoldableSectionTitle>
-    </FlexWrapper>
+      </FlexWrapper>
+    </FoldableSectionTitle>
   );
 };
 
