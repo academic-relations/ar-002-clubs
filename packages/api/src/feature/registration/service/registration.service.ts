@@ -33,10 +33,6 @@ export class RegistrationService {
       logger.debug("[postRegistration] club existence checked");
     }
 
-    // 기타 필요한 유효성 검사 수행
-    // ...
-
-    // 등록 신청 저장
     await this.registrationRepository.createRegistration(body);
 
     return {};

@@ -11,6 +11,7 @@ import { CommonSpaceModule } from "./feature/common-space/common-space.module";
 import { FileModule } from "./feature/file/file.module";
 import { NoticeModule } from "./feature/notice/notice.module";
 import { PromotionalPrintingModule } from "./feature/promotional-printing/promotional-printing.module";
+import { RegistrationModule } from "./feature/registration/registration.module";
 import { RentalModule } from "./feature/rental/rental.module";
 import { SocketModule } from "./feature/socket/socket.module";
 import UserModule from "./feature/user/user.module";
@@ -24,6 +25,7 @@ import UserModule from "./feature/user/user.module";
     FileModule,
     NoticeModule,
     PromotionalPrintingModule,
+    RegistrationModule,
     RentalModule,
     UserModule,
     ActivityCertificateModule,
