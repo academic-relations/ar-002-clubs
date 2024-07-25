@@ -14,12 +14,12 @@ export interface Member {
   comment?: string;
 }
 
-export interface Credits {
+export interface SemesterCredit {
   semester: string;
   members: Member[];
 }
 
-const credits: Credits[] = [
+const credits: SemesterCredit[] = [
   {
     semester: "2024년 여름",
     members: [
@@ -28,36 +28,49 @@ const credits: Credits[] = [
         name: "박병찬",
         role: "PM",
         roleType: RoleType.PM,
+        comment: "ipm은 바빠요",
       },
       {
         nickname: "dora",
         name: "이지윤",
         role: "APM(FE) / Designer",
         roleType: RoleType.APM_FE,
+        comment: "(งᐛ)ว (งᐖ )ว",
+      },
+      {
+        nickname: "eel",
+        name: "최우정",
+        role: "APM(FE)",
+        roleType: RoleType.APM_FE,
+        comment: "일은 eel해요",
       },
       {
         nickname: "hama",
         name: "하승종",
         role: "APM(BE)",
         roleType: RoleType.APM_BE,
+        comment: "BE APM 열심히 해볼게요",
       },
       {
         nickname: "andy",
         name: "예상우",
         role: "FE",
         roleType: RoleType.member,
+        comment: "그 클럽이 아니었군요 🥲",
       },
       {
         nickname: "ava",
         name: "주영미",
         role: "FE",
         roleType: RoleType.member,
+        comment: "여름이다~",
       },
       {
         nickname: "april",
         name: "남지현",
         role: "BE",
         roleType: RoleType.member,
+        comment: "clubs 는 여전히 늦게 끝나요",
       },
       {
         nickname: "david",
@@ -66,10 +79,32 @@ const credits: Credits[] = [
         roleType: RoleType.member,
       },
       {
-        nickname: "eel",
-        name: "최우정",
-        role: "FE / BE",
+        nickname: "dudu",
+        name: "이연희",
+        role: "Designer",
         roleType: RoleType.member,
+        comment: "열심히 해서 많은 도움되고 싶어요😊",
+      },
+
+      {
+        nickname: "ellen",
+        name: "박성빈",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "Clubs 신입입니다!!",
+      },
+      {
+        nickname: "mingle",
+        name: "민지연",
+        role: "BE",
+        roleType: RoleType.member,
+      },
+      {
+        nickname: "oreo",
+        name: "최용혁",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "열심히 공부하고 개발하겠습니다!",
       },
       {
         nickname: "tom",
@@ -80,8 +115,9 @@ const credits: Credits[] = [
       {
         nickname: "night",
         name: "박지호",
-        role: "??",
+        role: "BDFL",
         roleType: RoleType.member,
+        comment: "범인은... clubs...",
       },
       {
         nickname: "ryan",
@@ -111,7 +147,8 @@ const credits: Credits[] = [
         roleType: RoleType.member,
         comment: "카시오는 계산기가 아니에요",
       },
-      { nickname: "malloc",
+      {
+        nickname: "malloc",
         name: "최지윤",
         role: "FE",
         roleType: RoleType.member,
@@ -127,36 +164,42 @@ const credits: Credits[] = [
         name: "박지호",
         role: "PM",
         roleType: RoleType.PM,
+        comment: "내가 이거 왜 시작했지?",
       },
       {
         nickname: "dora",
         name: "이지윤",
         role: "APM(FE) / Designer",
         roleType: RoleType.APM_FE,
+        comment: "강아지 dora는 귀여워요🐶",
       },
       {
         nickname: "chan",
         name: "박병찬",
         role: "APM(BE)",
         roleType: RoleType.APM_BE,
+        comment: "apm은 바빠요",
       },
       {
         nickname: "andy",
         name: "예상우",
         role: "FE",
         roleType: RoleType.member,
+        comment: "club을 좋아해요",
       },
       {
         nickname: "april",
         name: "남지현",
         role: "BE",
         roleType: RoleType.member,
+        comment: "clubs 는 맨날 늦게 끝나요",
       },
       {
         nickname: "ava",
         name: "주영미",
         role: "FE",
         roleType: RoleType.member,
+        comment: "봄이다~ ",
       },
       {
         nickname: "david",
@@ -175,12 +218,14 @@ const credits: Credits[] = [
         name: "최우정",
         role: "인턴",
         roleType: RoleType.intern,
+        comment: "eel은 일해요",
       },
       {
         nickname: "hama",
         name: "하승종",
         role: "인턴",
         roleType: RoleType.intern,
+        comment: "풀스택 인턴 나가신다",
       },
     ],
   },

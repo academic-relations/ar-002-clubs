@@ -7,6 +7,7 @@ export interface PastActivityReport {
 
 export interface NewActivityReport extends PastActivityReport {
   status: string;
+  professorApproval: string;
 }
 
 export interface Participant {

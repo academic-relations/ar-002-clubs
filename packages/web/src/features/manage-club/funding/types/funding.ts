@@ -7,46 +7,38 @@ export interface FundingInterface {
   expenditureAmount?: string;
   tradeDetailExplanation?: string;
 
-  clubSupplies?: {
-    clubSuppliesName?: string;
-    clubSuppliesEvidenceEnumId?: string;
-    clubSuppliesClassEnumId?: string;
-    clubSuppliesPurpose?: string;
-    clubSuppliesSoftwareEvidence?: string;
-    // unitInput 추가되면 number로 변경
-    numberOfClubSupplies?: string;
-    priceOfClubSupplies?: string;
-  };
+  clubSuppliesName?: string;
+  clubSuppliesEvidenceEnumId?: string;
+  clubSuppliesClassEnumId?: string;
+  clubSuppliesPurpose?: string;
+  clubSuppliesSoftwareEvidence?: string;
+  // unitInput 추가되면 number로 변경
+  numberOfClubSupplies?: string;
+  priceOfClubSupplies?: string;
 
   isFixture: boolean;
-  fixture?: {
-    fixtureName?: string;
-    fixtureEvidenceEnumId?: string;
-    fixtureClassEnumId?: string;
-    fixturePurpose?: string;
-    fixtureSoftwareEvidence?: string;
-    // unitInput 추가되면 number로 변경
-    numberOfFixture?: string;
-    priceOfFixture?: string;
-  };
+  fixtureName?: string;
+  fixtureEvidenceEnumId?: string;
+  fixtureClassEnumId?: string;
+  fixturePurpose?: string;
+  fixtureSoftwareEvidence?: string;
+  // unitInput 추가되면 number로 변경
+  numberOfFixture?: string;
+  priceOfFixture?: string;
 
   isTransportation: boolean;
-  transportation?: {
-    transportationEnumId?: string;
-    origin?: string;
-    destination?: string;
-    purposeOfTransportation?: string;
-    cargoList?: string;
-    placeValidity?: string;
-    transportationPassengers?: string[];
-  };
+  transportationEnumId?: string;
+  origin?: string;
+  destination?: string;
+  purposeOfTransportation?: string;
+  cargoList?: string;
+  placeValidity?: string;
+  transportationPassengers?: string[];
 
   isNonCorporateTransaction: boolean;
-  nonCorporateTransaction?: {
-    traderName?: string;
-    traderAccountNumber?: string;
-    wasteExplanation?: string;
-  };
+  traderName?: string;
+  traderAccountNumber?: string;
+  wasteExplanation?: string;
 
   isFoodExpense: boolean;
   foodExpenseExplanation?: string;

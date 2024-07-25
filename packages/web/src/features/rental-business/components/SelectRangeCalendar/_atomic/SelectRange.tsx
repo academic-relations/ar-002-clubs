@@ -2,7 +2,7 @@ import React from "react";
 
 import styled from "styled-components";
 
-import TextButton from "@sparcs-clubs/web/common/components/TextButton";
+import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 
 import SelectRangeInfo from "./SelectRangeInfo";
 

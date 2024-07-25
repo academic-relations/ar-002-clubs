@@ -51,7 +51,6 @@ const MainPageMainFrame: React.FC = () => (
         <span style={{ color: colors.PRIMARY }}>Clubs</span>입니다
       </Typography>
     </PageTitleWrapper>
-
     <NoticeAndServiceWrapper>
       <NoticeSectionFrame />
       <ServiceSectionFrame />
