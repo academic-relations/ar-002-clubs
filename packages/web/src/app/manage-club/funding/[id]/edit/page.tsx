@@ -45,8 +45,6 @@ const EditFunding = () => {
     priceOfClubSupplies:
       mockFundingDetail.priceOfClubSupplies?.toString() || "",
     priceOfFixture: mockFundingDetail.priceOfFixture?.toString() || "",
-    transportationPassengers:
-      mockFundingDetail.transportationPassengers?.map(p => p.name) || [],
   });
 
   const props = { funding, setFunding };

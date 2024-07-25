@@ -12,6 +12,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { mockParticipantData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
 import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
 
+import { Participant } from "@sparcs-clubs/web/features/manage-club/activity-report/types/activityReport";
 import {
   isParticipantsRequired,
   isPurposeInfoRequired,
@@ -64,6 +65,27 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
     setFunding({ ...funding, [key]: value });
   };
 
+  const setParticipants = (participants: Participant[]) => {
+    setFunding({
+      ...funding,
+      transportationPassengers: participants.map(participant => ({
+        studentNumber: participant.studentId,
+        name: participant.name,
+      })),
+    });
+  };
+
+  const selectedParticipants = funding.transportationPassengers
+    ? funding.transportationPassengers
+        .map(participant =>
+          mockParticipantData.find(
+            data => data.studentId === participant.studentNumber,
+          ),
+        )
+        .filter(participant => participant !== undefined)
+        .map(participant => participant as Participant)
+    : [];
+
   return (
     <FlexWrapper direction="column" gap={8}>
       <EvidenceBlockTitle title="교통비 증빙">
@@ -95,35 +117,27 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
           </FlexWrapper>
           {isParticipantsRequired(funding.transportationEnumId) && (
             <FlexWrapper direction="column" gap={4}>
-              <Typography
-                ff="PRETENDARD"
-                fs={16}
-                fw="MEDIUM"
-                lh={20}
-                color="BLACK"
-              >
+              <Typography fs={16} fw="MEDIUM" lh={20}>
                 탑승자 명단
               </Typography>
               <SelectParticipant
                 data={mockParticipantData}
-                // TODO: onChange 추가
+                onChange={setParticipants}
+                selectedData={selectedParticipants}
               />
             </FlexWrapper>
           )}
           <FlexWrapper direction="column" gap={4}>
             <Typography
-              ff="PRETENDARD"
               fw="MEDIUM"
               fs={16}
               lh={20}
-              color="BLACK"
               style={{ paddingLeft: 2, paddingRight: 2 }}
             >
               이용 목적
             </Typography>
             {isPurposeInfoRequired(funding.transportationEnumId) && (
               <Typography
-                ff="PRETENDARD"
                 fw="REGULAR"
                 fs={14}
                 lh={20}

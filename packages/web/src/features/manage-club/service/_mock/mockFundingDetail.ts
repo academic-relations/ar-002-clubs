@@ -55,10 +55,8 @@ const mockFundingDetail: ApiFnd002ResponseOk = {
   cargoList: "",
   placeValidity: "",
   transportationPassengers: [
-    { studentNumber: "20200000", name: "이도라" },
-    { studentNumber: "20200000", name: "이도라" },
-    { studentNumber: "20200000", name: "이도라" },
-    { studentNumber: "20200000", name: "이도라" },
+    { studentNumber: "20240510", name: "스팍스" },
+    { studentNumber: "20200515", name: "이도라" },
   ],
 
   isNonCorporateTransaction: true,

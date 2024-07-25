@@ -33,7 +33,7 @@ export interface FundingInterface {
   purposeOfTransportation?: string;
   cargoList?: string;
   placeValidity?: string;
-  transportationPassengers?: string[];
+  transportationPassengers: { studentNumber: string; name: string }[];
 
   isNonCorporateTransaction: boolean;
   traderName?: string;

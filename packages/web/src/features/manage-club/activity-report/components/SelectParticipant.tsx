@@ -25,6 +25,7 @@ import { type Participant } from "../types/activityReport";
 interface SelectParticipantProps {
   data: Participant[];
   onChange?: (selected: Participant[]) => void;
+  selectedData?: Participant[];
 }
 
 const SelectParticipantInner = styled.div`
@@ -97,10 +98,23 @@ const containsTextFilter: FilterFn<Participant> = (
 const SelectParticipant: React.FC<SelectParticipantProps> = ({
   data,
   onChange = () => {},
+  selectedData = [],
 }) => {
-  const [selectedRowIds, setSelectedRowIds] = useState<RowSelectionState>({});
+  const initialSelectedRowIds: Record<number, boolean> = {};
+  data.forEach((item, index) => {
+    if (
+      selectedData.some(
+        selectedItem => selectedItem.studentId === item.studentId,
+      )
+    ) {
+      initialSelectedRowIds[index] = true;
+    }
+  });
+  const [selectedRowIds, setSelectedRowIds] = useState<RowSelectionState>(
+    initialSelectedRowIds,
+  );
   const [searchText, setSearchText] = useState<string>("");
-  const [selected, setSelected] = useState<Participant[]>([]);
+  const [selected, setSelected] = useState<Participant[]>(selectedData);
 
   useEffect(() => {
     const res = data.filter((_, i) => selectedRowIds[i]);
@@ -139,13 +153,7 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
         placeholder="학번 또는 이름을 검색해주세요"
       />
       <SelectParticipantInner>
-        <Typography
-          fs={16}
-          fw="REGULAR"
-          ff="PRETENDARD"
-          lh={20}
-          color="GRAY.600"
-        >
+        <Typography fs={16} fw="REGULAR" lh={20} color="GRAY.600">
           {searchText && `검색 결과 ${table.getRowModel().rows.length}명 / `}
           {`총 ${data.length}명`}
         </Typography>
@@ -169,7 +177,7 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
             </Typography>
           ))
         ) : (
-          <Typography ff="PRETENDARD" fs={16} fw="REGULAR" color="GRAY.300">
+          <Typography fs={16} fw="REGULAR" color="GRAY.300">
             선택된 회원이 없습니다.
           </Typography>
         )}
