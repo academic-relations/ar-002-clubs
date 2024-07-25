@@ -1,7 +1,9 @@
+import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 
 // PassportStrategy(인증 방식, 이름)
+@Injectable()
 export class JwtAccessStrategy extends PassportStrategy(Strategy, "access") {
   // NestJS Docs
   constructor() {
@@ -12,6 +14,7 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, "access") {
 
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Request Header에서 Bearer auth 뽑아내기
       secretOrKey: process.env.ACCESS_TOKEN_SECRET_KEY,
+      ignoreExpiration: false, // 만료된 토큰은 거부
     });
   }
 

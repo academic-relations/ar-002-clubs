@@ -213,7 +213,9 @@ const RentalInfoSecondFrame: React.FC<
   return (
     <>
       <Card outline gap={40}>
-        <Typography type="h3">대여 기간 선택</Typography>
+        <Typography fs={20} lh={24} fw="MEDIUM">
+          대여 기간 선택
+        </Typography>
         <SelectRangeCalendar
           rentalDate={rentalDate}
           returnDate={returnDate}
@@ -234,7 +236,9 @@ const RentalInfoSecondFrame: React.FC<
           <StyledCardInner>
             <ResetTitleWrapper>
               <FlexGrowTypography>
-                <Typography type="h3">세부 물품 정보</Typography>
+                <Typography fs={20} lh={24} fw="MEDIUM">
+                  세부 물품 정보
+                </Typography>
               </FlexGrowTypography>
               <TextButton
                 text="초기화"
@@ -255,7 +259,9 @@ const RentalInfoSecondFrame: React.FC<
         <StyledCardInner>
           <ResetTitleWrapper>
             <FlexGrowTypography>
-              <Typography type="h3">대여 물품 목록</Typography>
+              <Typography fs={20} lh={24} fw="MEDIUM">
+                대여 물품 목록
+              </Typography>
             </FlexGrowTypography>
             <TextButton
               text="초기화"

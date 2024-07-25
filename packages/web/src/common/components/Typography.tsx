@@ -9,10 +9,6 @@ interface TypographyPropsBase extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-interface TypographyPropsWithType extends TypographyPropsBase {
-  type: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "p_b" | "span" | "h3_b";
-}
-
 type ColorKeys = keyof Theme["colors"];
 type NestedColorKeys<C extends ColorKeys> = C extends keyof Theme["colors"]
   ? Theme["colors"][C] extends string | number
@@ -49,45 +45,15 @@ interface TypographyPropsWithCustomStyles extends TypographyPropsBase {
   color?: ThemeColors;
 }
 
-type TypographyProps =
-  | (TypographyPropsWithType & {
-      fs?: never;
-      lh?: never;
-      fw?: never;
-      color?: never;
-    })
-  | (TypographyPropsWithCustomStyles & { type?: never });
-
 const TypographyInner = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<TypographyPropsWithCustomStyles>`
   color: ${({ color, theme }) =>
     color ? getColorFromTheme(theme, color) : "inherit"};
-  font-family: ${({ theme, ff }) => (ff ? theme.fonts.FAMILY[ff] : "inherit")};
+  font-family: ${({ ff, theme }) => (ff ? theme.fonts.FAMILY[ff] : "inherit")};
   font-size: ${({ fs }) => (fs ? `${fs}px` : "inherit")};
   line-height: ${({ lh }) => (lh ? `${lh}px` : "inherit")};
   font-weight: ${({ fw, theme }) => (fw ? theme.fonts.WEIGHT[fw] : "inherit")};
-`;
-
-const H3 = styled(TypographyInner)`
-  font-size: 20px;
-  line-height: 24px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
-`;
-
-const H3_B = styled(H3)`
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.SEMIBOLD};
-`;
-
-const P = styled(TypographyInner)`
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-`;
-const P_B = styled(TypographyInner)`
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
 `;
 
 /**
@@ -116,27 +82,8 @@ const P_B = styled(TypographyInner)`
  * If no `type` prop is provided, the component will render a generic `TypographyInner` element with the specified style props.
  */
 
-const Typography: React.FC<TypographyProps> = ({
+const Typography: React.FC<TypographyPropsWithCustomStyles> = ({
   children = null,
   ...rest
-}) => {
-  if ("type" in rest) {
-    const { type, ...divProps } = rest;
-    switch (type) {
-      case "h3":
-        return <H3 {...divProps}>{children}</H3>;
-      case "h3_b":
-        return <H3_B {...divProps}>{children}</H3_B>;
-      case "p":
-        return <P {...divProps}>{children}</P>;
-      case "p_b":
-        return <P_B {...divProps}>{children}</P_B>;
-      default:
-        return <TypographyInner {...divProps}>{children}</TypographyInner>;
-    }
-  } else {
-    return <TypographyInner {...rest}>{children}</TypographyInner>;
-  }
-};
-
+}) => <TypographyInner {...rest}>{children}</TypographyInner>;
 export default Typography;

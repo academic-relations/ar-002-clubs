@@ -53,6 +53,15 @@ export default class ClubPublicService {
     return result;
   }
 
+  /**
+   * @param clubId 동아리 id
+   * @returns 동아리가 등록되었던 학기 정보들을 리턴합니다.
+   */
+  async getClubsExistedSemesters(param: { clubId: number }) {
+    const semesters = await this.semesterDRepository.selectByClubId(param);
+    return semesters;
+  }
+
   // 학생(studentId)이 현재 학기 동아리(clubId)의 대표자 중 1명인지 확인합니다.
   // studentId와 clubId가 유효한지 검사하지 않습니다.
   async isStudentDelegate(studentId: number, clubId: number) {

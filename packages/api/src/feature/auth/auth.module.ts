@@ -6,9 +6,12 @@ import { PassportModule } from "@nestjs/passport";
 
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 
+import UserModule from "../user/user.module";
+
 import { AuthController } from "./controller/auth.controller";
 import { AuthRepository } from "./repository/auth.repository";
 import { AuthService } from "./service/auth.service";
+
 import { JwtAccessStrategy } from "./strategy/jwt-access.strategy";
 import { JwtRefreshStrategy } from "./strategy/jwt-refresh.strategy";
 
@@ -22,6 +25,7 @@ import { JwtRefreshStrategy } from "./strategy/jwt-refresh.strategy";
       },
     }),
     PassportModule,
+    UserModule,
   ],
   controllers: [AuthController],
   providers: [

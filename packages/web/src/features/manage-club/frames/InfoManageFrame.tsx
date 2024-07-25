@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
+import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import ChangeRepresentativeCard from "@sparcs-clubs/web/features/manage-club/component/ChangeRepresentativeCard";
+import ChangeRepresentativeCard from "@sparcs-clubs/web/features/manage-club/components/ChangeRepresentativeCard";
 import {
   mockClubDescription,
   mockClubMembers,

@@ -10,7 +10,7 @@ import Table from "@sparcs-clubs/web/common/components/Table";
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import { TableRow } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import { ApplyTagList } from "@sparcs-clubs/web/constants/tableTagList";
+import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import { type Funding } from "../service/_mock/mockManageClub";
@@ -26,7 +26,7 @@ const columns = [
     id: "status",
     header: "상태",
     cell: info => {
-      const { color, text } = getTagDetail(info.getValue(), ApplyTagList);
+      const { color, text } = getTagDetail(info.getValue(), FundingTagList);
       return <Tag color={color}>{text}</Tag>;
     },
     size: 10,
