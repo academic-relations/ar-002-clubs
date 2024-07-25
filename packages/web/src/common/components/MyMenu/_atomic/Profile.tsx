@@ -16,7 +16,7 @@ interface ProfileProps {
 
 const ProfileWrapper = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
-})<{ isSelected: boolean }>`
+})<{ selected: boolean }>`
   display: flex;
   flex-direction: row;
   gap: 8px;
@@ -25,10 +25,8 @@ const ProfileWrapper = styled.div.withConfig({
   padding: 8px 12px;
   align-items: center;
   cursor: pointer;
-  border: ${({ theme, isSelected }) =>
-    isSelected
-      ? `1px solid ${theme.colors.GRAY[200]}`
-      : `1px solid transparent`};
+  border: ${({ theme, selected }) =>
+    selected ? `1px solid ${theme.colors.GRAY[200]}` : `1px solid transparent`};
   &:hover {
     background-color: ${({ theme }) => theme.colors.GRAY[200]};
   }
@@ -48,7 +46,7 @@ const Profile: React.FC<ProfileProps> = ({
   isSelected = false,
   onClick,
 }) => (
-  <ProfileWrapper isSelected={isSelected} onClick={onClick}>
+  <ProfileWrapper selected={isSelected} onClick={onClick}>
     <ProfileText>
       <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
         {profileName}
