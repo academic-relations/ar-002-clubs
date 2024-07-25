@@ -7,7 +7,7 @@ const mockupData: ApiClb002ResponseOK = {
   isPermanent: false,
   characteristic: "요리",
   representative: "장주원",
-  advisor: null,
+  advisor: undefined,
   totalMemberCnt: 1,
   divisionName: "생활문화",
   foundingYear: 2015,
