@@ -56,10 +56,9 @@ const ClubName = styled.div`
   text-overflow: ellipsis;
 `;
 
-const ClubCard: React.FC<ClubCardProps & { isRegistrationPeriod: boolean }> = ({
-  club,
-  isRegistrationPeriod,
-}) => {
+const ClubCard: React.FC<
+  ClubCardProps & { isRegistrationPeriod?: boolean }
+> = ({ club, isRegistrationPeriod = false }) => {
   const [isRegistered, setIsRegistered] = React.useState<boolean>(false);
 
   return (

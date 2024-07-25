@@ -34,10 +34,7 @@ const MyClubFrame: React.FC = () => {
                 moreDetailPath="/my/clubs"
               />
             </DetailTitleWrapper>
-            <ClubListGrid
-              clubList={data?.semesters[0].clubs ?? []}
-              isRegistrationPeriod={false}
-            />
+            <ClubListGrid clubList={data?.semesters[0].clubs ?? []} />
           </FlexWrapper>
         </AsyncBoundary>
       )}
