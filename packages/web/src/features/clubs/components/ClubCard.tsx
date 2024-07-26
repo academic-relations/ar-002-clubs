@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import styled from "styled-components";
 
@@ -11,6 +11,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import {
   getClubType,
   getTagColorFromClubType,
@@ -60,6 +61,9 @@ const ClubCard: React.FC<
   ClubCardProps & { isRegistrationPeriod?: boolean }
 > = ({ club, isRegistrationPeriod = false }) => {
   const [isRegistered, setIsRegistered] = React.useState<boolean>(false);
+  const { isLoggedIn } = useAuth();
+
+  useEffect(() => {}, [isLoggedIn]);
 
   return (
     <Card gap={16} padding="16px 20px">
@@ -84,7 +88,7 @@ const ClubCard: React.FC<
         <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
           {getClubType(club)}
         </Tag>
-        {isRegistrationPeriod && (
+        {isRegistrationPeriod && isLoggedIn && (
           <TextButton
             text={isRegistered ? "신청 취소" : "등록 신청"}
             onClick={() => {
@@ -92,7 +96,7 @@ const ClubCard: React.FC<
             }}
           />
         )}
-        {!isRegistrationPeriod && isRegistered && (
+        {!isRegistrationPeriod && isRegistered && isLoggedIn && (
           <TextButton text="승인 대기" disabled />
         )}
       </ClubCardTagRow>
