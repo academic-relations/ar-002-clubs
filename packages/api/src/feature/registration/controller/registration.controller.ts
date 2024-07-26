@@ -6,6 +6,8 @@ import apiReg001 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg0
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
+import { Public } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+
 import { RegistrationService } from "../service/registration.service";
 
 import type {
@@ -17,6 +19,7 @@ import type {
 export class RegistrationController {
   constructor(private registrationService: RegistrationService) {}
 
+  @Public()
   @Post("/registration")
   @UsePipes(new ZodPipe(apiReg001))
   async postRegistration(

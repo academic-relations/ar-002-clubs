@@ -29,7 +29,7 @@ export const RegistrationActivityPlanFile = mysqlTable(
   "registration_activity_plan_file",
   {
     id: int("id").autoincrement().primaryKey(),
-    fileUid: int("id").autoincrement().primaryKey(),
+    fileUid: int("file_uid"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },

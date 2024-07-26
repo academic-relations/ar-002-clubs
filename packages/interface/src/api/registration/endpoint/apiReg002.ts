@@ -9,7 +9,9 @@ import { z } from "zod";
 const url = () => `/student/registration/qualification/renewal`;
 const method = "GET";
 
-const requestParam = z.object({});
+const requestParam = z.object({
+  clubId: z.number().int().min(1),
+});
 
 const requestQuery = z.object({});
 
@@ -36,9 +38,7 @@ const apiReg002 = {
 type ApiReg002RequestParam = z.infer<typeof apiReg002.requestParam>;
 type ApiReg002RequestQuery = z.infer<typeof apiReg002.requestQuery>;
 type ApiReg002RequestBody = z.infer<typeof apiReg002.requestBody>;
-type ApiReg002ResponseCreated = z.infer<
-  (typeof apiReg002.responseBodyMap)[200]
->;
+type ApiReg002ResponseOk = z.infer<(typeof apiReg002.responseBodyMap)[200]>;
 
 export default apiReg002;
 
@@ -46,5 +46,5 @@ export type {
   ApiReg002RequestParam,
   ApiReg002RequestQuery,
   ApiReg002RequestBody,
-  ApiReg002ResponseCreated,
+  ApiReg002ResponseOk,
 };
