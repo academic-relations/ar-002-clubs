@@ -23,18 +23,14 @@ const ClubListGridInner = styled.div`
   padding-left: 24px;
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xs}) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 `;
