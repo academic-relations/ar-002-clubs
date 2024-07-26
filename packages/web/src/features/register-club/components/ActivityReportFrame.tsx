@@ -3,9 +3,9 @@ import React from "react";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import IconButton from "@sparcs-clubs/web/common/components/Forms/IconButton";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { mockPastActivityData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
@@ -42,9 +42,14 @@ const ActivityReportFrame: React.FC = () => {
           >
             활동 보고서는 최대 20개까지 작성 가능합니다
           </Typography>
-          <Button type="default" onClick={openCreateActivityReportModal}>
-            + 활동 보고서 작성
-          </Button>
+          <IconButton
+            type="default"
+            buttonText="활동 보고서 작성"
+            iconType="add"
+            onClick={openCreateActivityReportModal}
+          >
+            활동 보고서 작성
+          </IconButton>
         </OptionOuter>
         <PastActivityReportList data={mockPastActivityData} />
       </Card>

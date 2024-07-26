@@ -29,7 +29,6 @@ const ModalContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   max-height: 90%;
 
   background-color: ${({ theme }) => theme.colors.WHITE};
@@ -44,6 +43,18 @@ const ModalScrollContainer = styled.div`
   overflow-x: hidden;
 
   padding: 32px;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
+    max-width: 1120px;
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    max-width: 960px;
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    max-width: 640px;
+  }
 `;
 
 const Modal: FC<React.PropsWithChildren<ModalProps>> = ({

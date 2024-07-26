@@ -11,6 +11,7 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { mockParticipantData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
 import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
+import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
 
 interface CreateActivityReportModalProps {
   isOpen: boolean;
@@ -39,17 +40,17 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
           label="활동 분류"
           items={[
             {
-              value: "internal",
+              value: ActivityTypeEnum[1],
               label: "동아리 성격에 합치하는 내부 활동",
               selectable: true,
             },
             {
-              value: "external",
+              value: ActivityTypeEnum[2],
               label: "동아리 성격에 합치하는 외부 활동",
               selectable: true,
             },
             {
-              value: "none",
+              value: ActivityTypeEnum[3],
               label: "동아리 성격에 합치하지 않는 활동",
               selectable: true,
             },
