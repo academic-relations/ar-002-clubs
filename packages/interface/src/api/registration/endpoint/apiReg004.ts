@@ -21,10 +21,10 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     events: z.array(
       z.object({
-        id: z.number().int().min(1),
+        id: z.coerce.number().int().min(1),
         registrationEventEnumId: z.nativeEnum(RegistrationEventEnum),
-        startTerm: z.date(),
-        endTerm: z.date(),
+        startTerm: z.coerce.date(),
+        endTerm: z.coerce.date(),
       }),
     ),
   }),

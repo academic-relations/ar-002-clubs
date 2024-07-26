@@ -14,8 +14,8 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  clubId: z.number().int().min(1),
-  studentId: z.number().int().min(1),
+  clubId: z.coerce.number().int().min(1),
+  studentId: z.coerce.number().int().min(1),
 });
 
 const responseBodyMap = {
