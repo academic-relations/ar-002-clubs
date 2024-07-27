@@ -5,15 +5,15 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 
-import { ClubTRepository } from "@sparcs-clubs/api/common/repository/club.club-t.respository";
-import { ClubRepository } from "@sparcs-clubs/api/common/repository/club.repository";
 import { ClubDelegateDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-delegate-d.repository";
 import { ClubRoomTRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-room-t.repository";
 
 import ClubStudentTRepository from "../repository/club.club-student-t.repository";
+import ClubTRepository from "../repository/club.club-t.repository";
 import { DivisionPermanentClubDRepository } from "../repository/club.division-permanent-club-d.repository";
 import { ClubGetStudentClubBrief } from "../repository/club.get-student-club-brief";
 import { ClubPutStudentClubBrief } from "../repository/club.put-student-club-brief";
+import ClubRepository from "../repository/club.repository";
 
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 import type {
