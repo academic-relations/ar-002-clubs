@@ -34,18 +34,18 @@ const apiClb012 = {
   responseErrorMap,
 };
 
-type ApiClb010RequestParam = z.infer<typeof apiClb012.requestParam>;
-type ApiClb010RequestQuery = z.infer<typeof apiClb012.requestQuery>;
-type ApiClb010RequestBody = z.infer<typeof apiClb012.requestBody>;
-type ApiClb010ResponseCreated = z.infer<
+type ApiClb012RequestParam = z.infer<typeof apiClb012.requestParam>;
+type ApiClb012RequestQuery = z.infer<typeof apiClb012.requestQuery>;
+type ApiClb012RequestBody = z.infer<typeof apiClb012.requestBody>;
+type ApiClb012ResponseCreated = z.infer<
   (typeof apiClb012.responseBodyMap)[201]
 >;
 
 export default apiClb012;
 
 export type {
-  ApiClb010RequestParam,
-  ApiClb010RequestQuery,
-  ApiClb010RequestBody,
-  ApiClb010ResponseCreated,
+  ApiClb012RequestParam,
+  ApiClb012RequestQuery,
+  ApiClb012RequestBody,
+  ApiClb012ResponseCreated,
 };

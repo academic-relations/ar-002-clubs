@@ -46,16 +46,16 @@ const apiClb011 = {
   responseErrorMap,
 };
 
-type ApiClb010RequestParam = z.infer<typeof apiClb011.requestParam>;
-type ApiClb010RequestQuery = z.infer<typeof apiClb011.requestQuery>;
-type ApiClb010RequestBody = z.infer<typeof apiClb011.requestBody>;
-type ApiClb010ResponseOk = z.infer<(typeof apiClb011.responseBodyMap)[200]>;
+type ApiClb011RequestParam = z.infer<typeof apiClb011.requestParam>;
+type ApiClb011RequestQuery = z.infer<typeof apiClb011.requestQuery>;
+type ApiClb011RequestBody = z.infer<typeof apiClb011.requestBody>;
+type ApiClb011ResponseOk = z.infer<(typeof apiClb011.responseBodyMap)[200]>;
 
 export default apiClb011;
 
 export type {
-  ApiClb010RequestParam,
-  ApiClb010RequestQuery,
-  ApiClb010RequestBody,
-  ApiClb010ResponseOk,
+  ApiClb011RequestParam,
+  ApiClb011RequestQuery,
+  ApiClb011RequestBody,
+  ApiClb011ResponseOk,
 };
