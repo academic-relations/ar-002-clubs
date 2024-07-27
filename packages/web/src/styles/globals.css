@@ -9,6 +9,13 @@
   box-sizing: border-box;
 }
 
+/* Default Font Styles */
+* {
+  color: #333333;
+  font-weight: 400;
+  font-family: "Pretendard", sans-serif;
+}
+
 p,
 body {
   margin: 0;

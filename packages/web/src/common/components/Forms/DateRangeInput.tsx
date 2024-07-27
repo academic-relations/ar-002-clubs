@@ -146,7 +146,12 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
           {...props}
         />
 
-        <Typography style={error ? { marginBottom: "4px" } : {}} type="p">
+        <Typography
+          style={error ? { marginBottom: "4px" } : {}}
+          fs={16}
+          lh={20}
+          fw="REGULAR"
+        >
           ~
         </Typography>
 

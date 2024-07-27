@@ -7,7 +7,6 @@ import {
   UseGuards,
   UsePipes,
 } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
 import apiAut001, {
   ApiAut001ResponseOk,
 } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut001";
@@ -17,32 +16,48 @@ import apiAut002, {
 import apiAut003, {
   ApiAut003ResponseOk,
 } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut003";
-import { Response } from "express";
+import { Request, Response } from "express";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
+import {
+  Public,
+  Student,
+} from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 import logger from "@sparcs-clubs/api/common/util/logger";
 
 import {
   UserAccessTokenPayload,
   UserRefreshTokenPayload,
 } from "../dto/auth.dto";
+import { JwtRefreshGuard } from "../guard/jwt-refresh.guard";
 import { AuthService } from "../service/auth.service";
 
 @Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post("/auth/sign-in")
   @UsePipes(new ZodPipe(apiAut001))
   async postAuthSignin(
     @Res() res: Response,
   ): Promise<Response<ApiAut001ResponseOk>> {
     const token = await this.authService.postAuthSignin();
-    res.setHeader("Set-Cookie", `refreshToken=${token.refreshToken}`);
+    res.cookie("refreshToken", token.refreshToken, {
+      expires: token.expiresAt,
+      httpOnly: true,
+      path: "/auth/refresh",
+    });
+    res.cookie("refreshToken", token.refreshToken, {
+      expires: token.expiresAt,
+      httpOnly: true,
+      path: "/auth/sign-out",
+    });
     return res.json({ accessToken: token.accessToken });
   }
 
-  @UseGuards(AuthGuard("refresh"))
+  @Public()
+  @UseGuards(JwtRefreshGuard)
   @Post("/auth/refresh")
   @UsePipes(new ZodPipe(apiAut002))
   async postAuthRefresh(
@@ -51,17 +66,30 @@ export class AuthController {
     return this.authService.postAuthRefresh(req.user);
   }
 
-  @UseGuards(AuthGuard("access"))
+  @Public()
+  @UseGuards(JwtRefreshGuard)
   @Post("/auth/sign-out")
   @UsePipes(new ZodPipe(apiAut003))
   postAuthSignout(
+    @Res({ passthrough: true }) res: Response,
     @Req() req: Request & UserRefreshTokenPayload,
   ): Promise<ApiAut003ResponseOk> {
-    return this.authService.postAuthSignout(req.user);
+    const { refreshToken } = req?.cookies || {};
+    res.cookie("refreshToken", null, {
+      maxAge: -1,
+      httpOnly: true,
+      path: "/auth/refresh",
+    });
+    res.cookie("refreshToken", null, {
+      maxAge: -1,
+      httpOnly: true,
+      path: "/auth/sign-out",
+    });
+    return this.authService.postAuthSignout(req.user, refreshToken);
   }
 
   // test용 API, 실제 사용하지 않음
-  @UseGuards(AuthGuard("access"))
+  @Student()
   @Get("/auth/test")
   test(@Req() req: Request & UserAccessTokenPayload) {
     logger.debug(req.user);

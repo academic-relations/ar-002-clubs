@@ -29,10 +29,17 @@ const TextButton: React.FC<TextButtonProps> = ({
   text,
   disabled = false,
   onClick = () => {},
-}) => (
-  <StyledTextButton disabled={disabled} onClick={onClick}>
-    {text}
-  </StyledTextButton>
-);
+}) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    onClick();
+  };
+
+  return (
+    <StyledTextButton disabled={disabled} onClick={handleClick}>
+      {text}
+    </StyledTextButton>
+  );
+};
 
 export default TextButton;

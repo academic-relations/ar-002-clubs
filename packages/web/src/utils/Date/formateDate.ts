@@ -26,6 +26,9 @@ const formatSlashDateTime = (date: Date) =>
 const formatDotDate = (date: Date) =>
   format(date, "yyyy.MM.dd", { locale: ko });
 
+const formatDotDetailDate = (date: Date) =>
+  format(date, "yyyy.MM.dd HH:mm", { locale: ko });
+
 export {
   formatDate,
   formatDateTime,
@@ -36,4 +39,5 @@ export {
   formatSlashDate,
   formatSlashDateTime,
   formatTime,
+  formatDotDetailDate,
 };

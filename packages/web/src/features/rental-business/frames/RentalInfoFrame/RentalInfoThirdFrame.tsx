@@ -17,10 +17,6 @@ import { formatDate } from "@sparcs-clubs/web/utils/Date/formateDate";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
-const StyledTypography = styled(Typography)`
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
-`;
-
 const CardInner = styled.div`
   display: flex;
   flex-direction: column;
@@ -66,21 +62,27 @@ const RentalInfoThirdFrame: React.FC<
   return (
     <Card outline gap={20}>
       <CardInner>
-        <StyledTypography type="p">신청자 정보</StyledTypography>
+        <Typography fs={16} lh={20} fw="MEDIUM">
+          신청자 정보
+        </Typography>
         <ListContainer>
           <ListItem>동아리: {rental.info?.clubName}</ListItem>
           <ListItem>담당자: {rental.info?.applicant}</ListItem>
           <ListItem>연락처: {rental.info?.phone}</ListItem>
         </ListContainer>
         <FlexWrapper direction="row" gap={16}>
-          <StyledTypography type="p">대여 기간</StyledTypography>
+          <Typography fs={16} lh={20} fw="MEDIUM">
+            대여 기간
+          </Typography>
           <RentalPeriodInner>
             {formatDate(rental.date?.start || new Date())} ~
             {formatDate(rental.date?.end || new Date())}
             {/* new Date() 넣어도 되는 이유: thirdFrame에서는 rental date가 둘 다 not null인 상태로 넘어옴 */}
           </RentalPeriodInner>
         </FlexWrapper>
-        <StyledTypography type="p">대여 물품</StyledTypography>
+        <Typography fs={16} lh={20} fw="MEDIUM">
+          대여 물품
+        </Typography>
         <RentalList rental={rental} />
       </CardInner>
       <TextInput
