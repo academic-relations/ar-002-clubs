@@ -106,7 +106,14 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
                 회원 등록 신청
               </Button>
             </ResisterInfoWrapper>
-          ) : null
+          ) : (
+            <Button
+              type="disabled"
+              style={{ fontWeight: 500, lineHeight: 1.25 }}
+            >
+              회원 승인 대기
+            </Button>
+          )
         }
       />
 
