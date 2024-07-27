@@ -2,7 +2,7 @@
 
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 import { overlay } from "overlay-kit";
 
@@ -73,19 +73,47 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   club,
   isRegistrationPeriod,
 }) => {
+  // 임의로 등록 여부를 확인하는 변수를 만들었어요.
+  const [isRegistered, setIsRegistered] = useState(false);
+
+  const toggleRegistered = (close: () => void) => {
+    // 여기에 회원 등록을 취소 or 승인 하는 코드를 짜야해요.
+    setIsRegistered(prev => !prev);
+    close();
+  };
+
   const submitHandler = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen} onClose={close}>
         <ModalBody>
-          <CancellableModalContent onClose={close} onConfirm={close}>
-            2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-            {club.name}의<br />
-            회원 등록을 진행합니다.
-          </CancellableModalContent>
+          {isRegistered ? (
+            <CancellableModalContent
+              onClose={close}
+              onConfirm={() => {
+                toggleRegistered(close);
+              }}
+            >
+              2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
+              {club.name}의<br />
+              회원 등록을 취소합니다.
+            </CancellableModalContent>
+          ) : (
+            <CancellableModalContent
+              onClose={close}
+              onConfirm={() => {
+                toggleRegistered(close);
+              }}
+            >
+              2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
+              {club.name}의<br />
+              회원 등록 신청을 진행합니다.
+            </CancellableModalContent>
+          )}
         </ModalBody>
       </Modal>
     ));
   };
+
   return (
     <FlexWrapper direction="column" gap={60}>
       <PageHead
@@ -103,7 +131,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
                 onClick={submitHandler}
                 style={{ fontWeight: 500, lineHeight: 1.25 }}
               >
-                회원 등록 신청
+                {isRegistered ? "회원 등록 취소" : "회원 등록 신청"}
               </Button>
             </ResisterInfoWrapper>
           ) : (
