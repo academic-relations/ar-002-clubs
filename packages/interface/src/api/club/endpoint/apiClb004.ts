@@ -19,8 +19,8 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    description: z.string(),
-    roomPassword: z.string().max(20),
+    description: z.coerce.string(),
+    roomPassword: z.coerce.string().max(20),
   }),
 };
 
