@@ -48,10 +48,7 @@ const RegisterClub = () => {
         items={[{ name: "동아리 등록", path: "/register-club" }]}
         title="동아리 등록"
       />
-      <Info
-        text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)"
-        style={{ textAlign: "center" }}
-      />
+      <Info text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
       <ClubButtonWrapper>
         <ClubButton
           title="재등록"
