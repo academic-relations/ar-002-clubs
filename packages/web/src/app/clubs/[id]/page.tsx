@@ -10,11 +10,17 @@ import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/service
 const ClubDetail = () => {
   const { id } = useParams();
   const { data, isLoading, isError } = useGetClubDetail(id as string);
+  const isRegistrationPeriod = true;
 
   return (
     <UseClientProvider>
       <AsyncBoundary isLoading={isLoading} isError={isError}>
-        {data && <ClubDetailMainFrame club={data} />}
+        {data && (
+          <ClubDetailMainFrame
+            club={data}
+            isRegistrationPeriod={isRegistrationPeriod}
+          />
+        )}
       </AsyncBoundary>
     </UseClientProvider>
   );

@@ -1,10 +1,17 @@
+/* eslint-disable react/jsx-no-useless-fragment */
+
 "use client";
 
 import React from "react";
 
+import { overlay } from "overlay-kit";
+
 import styled from "styled-components";
 
+import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import ClubDetailCard from "@sparcs-clubs/web/features/clubDetails/components/ClubDetailCard";
@@ -15,6 +22,7 @@ import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpo
 
 interface ClubDetailMainFrameProps {
   club: ApiClb002ResponseOK;
+  isRegistrationPeriod: boolean;
 }
 
 const CardWrapper = styled.div`
@@ -38,38 +46,94 @@ const ClubDetailWrapper = styled.div`
   flex: 1 0 0;
 `;
 
-const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({ club }) => (
-  <FlexWrapper direction="column" gap={60}>
-    <PageHead
-      items={[
-        { name: "동아리 목록", path: "/clubs" },
-        { name: club.name, path: `/clubs/${club.id}` },
-      ]}
-      title={club.name}
-    />
-    <FlexWrapper direction="column" gap={20}>
-      <SectionTitle size="lg">동아리 정보</SectionTitle>
-      <CardWrapper>
-        <ClubInfoCard club={club} />
-      </CardWrapper>
-    </FlexWrapper>
+const StyledText = styled.span`
+  color: ${({ theme }) => theme.colors.GRAY[600]};
+  font-size: 16px;
+  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+  font-weight: 400;
+`;
 
-    <MoreInfoWrapper>
+const ResisterInfoWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  flex: 1 0 0;
+  align-items: center;
+`;
+
+const ModalBody = styled.div`
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+`;
+
+const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
+  club,
+  isRegistrationPeriod,
+}) => {
+  const submitHandler = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen} onClose={close}>
+        <ModalBody>
+          <CancellableModalContent onClose={close} onConfirm={close}>
+            2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
+            {club.name}의<br />
+            회원 등록을 진행합니다.
+          </CancellableModalContent>
+        </ModalBody>
+      </Modal>
+    ));
+  };
+  return (
+    <FlexWrapper direction="column" gap={60}>
+      <PageHead
+        items={[
+          { name: "동아리 목록", path: "/clubs" },
+          { name: club.name, path: `/clubs/${club.id}` },
+        ]}
+        title={club.name}
+        action={
+          isRegistrationPeriod ? (
+            <ResisterInfoWrapper>
+              <StyledText>등록 신청 {club.totalMemberCnt}명</StyledText>
+              <Button
+                type="default"
+                onClick={submitHandler}
+                style={{ fontWeight: 500, lineHeight: 1.25 }}
+              >
+                회원 등록 신청
+              </Button>
+            </ResisterInfoWrapper>
+          ) : null
+        }
+      />
+
       <FlexWrapper direction="column" gap={20}>
-        <SectionTitle size="lg">인적 사항 </SectionTitle>
+        <SectionTitle size="lg">동아리 정보</SectionTitle>
         <CardWrapper>
-          <PersonInfoCard club={club} />
+          <ClubInfoCard club={club} />
         </CardWrapper>
       </FlexWrapper>
 
-      <ClubDetailWrapper>
-        <SectionTitle size="lg">동아리 설명</SectionTitle>
-        <CardWrapper>
-          <ClubDetailCard club={club} />
-        </CardWrapper>
-      </ClubDetailWrapper>
-    </MoreInfoWrapper>
-  </FlexWrapper>
-);
+      <MoreInfoWrapper>
+        <FlexWrapper direction="column" gap={20}>
+          <SectionTitle size="lg">인적 사항 </SectionTitle>
+          <CardWrapper>
+            <PersonInfoCard club={club} />
+          </CardWrapper>
+        </FlexWrapper>
+
+        <ClubDetailWrapper>
+          <SectionTitle size="lg">동아리 설명</SectionTitle>
+          <CardWrapper>
+            <ClubDetailCard club={club} />
+          </CardWrapper>
+        </ClubDetailWrapper>
+      </MoreInfoWrapper>
+    </FlexWrapper>
+  );
+};
 
 export default ClubDetailMainFrame;
