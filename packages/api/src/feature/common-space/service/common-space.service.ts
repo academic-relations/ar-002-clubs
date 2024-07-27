@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { SemesterRepository } from "@sparcs-clubs/api/common/repository/semester.repository";
-import { StudentRepository } from "@sparcs-clubs/api/common/repository/student.repository";
 import { getKSTDate, isEmptyObject } from "@sparcs-clubs/api/common/util/util";
 import ClubStudentTRepository from "@sparcs-clubs/api/feature/club/repository/club.club-student-t.repository";
+
+import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
+import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import { Reservation, TermList } from "../dto/common-space.dto";
 import { CommonSpaceUsageOrderDRepository } from "../repository/common-space-usage-order-d.repository";
@@ -32,9 +33,9 @@ export class CommonSpaceService {
     private readonly getCommonSpaceUsageOrderRepository: GetCommonSpaceUsageOrderRepository,
     private readonly commonSpaceUsageOrderDRepository: CommonSpaceUsageOrderDRepository,
     private readonly clubStudentTRepository: ClubStudentTRepository,
-    private readonly studentRepository: StudentRepository,
+    private readonly userPublicService: UserPublicService,
     private readonly getCommonSpacesUsageOrderRepository: GetCommonSpacesUsageOrderRepository,
-    private readonly semesterRepository: SemesterRepository,
+    private readonly clubPublicService: ClubPublicService,
     private readonly getCommonSpacesUsageOrderMyRepository: GetCommonSpacesUsageOrderMyRepository,
   ) {}
 
@@ -166,10 +167,11 @@ export class CommonSpaceService {
     startTime: number,
     endTime: number,
   ): Promise<ApiCms005ResponseCreated> {
-    const chargeStudent =
-      await this.studentRepository.findStudentById(studentId);
+    const chargeStudent = await this.userPublicService.getStudentById({
+      id: studentId,
+    });
     const semester =
-      await this.semesterRepository.findSemesterBetweenstartTermAndendTerm();
+      await this.clubPublicService.findSemesterBetweenstartTermAndendTerm();
     const current = getKSTDate();
     const schedule: TermList[] = periodicScheduleMake(
       spaceId,
