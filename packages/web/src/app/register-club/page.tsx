@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -30,13 +32,26 @@ const RegisterClub = () => {
     null,
   );
 
+  const router = useRouter();
+  const onClick = () => {
+    if (selectedType === RegistrationType.renewalRegistration)
+      router.push(`register-club/renewal`);
+    else if (selectedType === RegistrationType.promotionalRegistration)
+      router.push(`register-club/promotional`);
+    else if (selectedType === RegistrationType.provisionalRegistration)
+      router.push(`register-club/provisional`);
+  };
+
   return (
     <FlexWrapper direction="column" gap={60}>
       <PageHead
         items={[{ name: "동아리 등록", path: "/register-club" }]}
         title="동아리 등록"
       />
-      <Info text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
+      <Info
+        text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)"
+        style={{ textAlign: "center" }}
+      />
       <ClubButtonWrapper>
         <ClubButton
           title="재등록"
@@ -65,7 +80,7 @@ const RegisterClub = () => {
       </ClubButtonWrapper>
       <Button
         type={selectedType === null ? "disabled" : "default"}
-        onClick={() => {}}
+        onClick={() => onClick()}
       >
         등록 신청
       </Button>
