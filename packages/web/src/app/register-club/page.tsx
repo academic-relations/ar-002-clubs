@@ -16,8 +16,7 @@ const ClubButtonWrapper = styled.div`
   display: flex;
   align-items: center;
   align-self: stretch;
-  border: 1px solid black;
-
+  flex: 1 0 0;
   gap: 20px;
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
     flex-direction: column;
