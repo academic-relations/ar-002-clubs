@@ -5,6 +5,10 @@ import apiAct009 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct009";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
+import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+
+import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
+
 import ActivityActivityTermService from "../service/activity.activity-term.service";
 
 import type {
@@ -22,32 +26,34 @@ export default class ActivityActivityTermController {
     private activityActivityTermService: ActivityActivityTermService,
   ) {}
 
+  @Student()
   @Get("/student/activities/activity-terms")
   @UsePipes(new ZodPipe(apiAct009))
   async getStudentActivitiesActivityTerms(
+    @GetStudent() user: GetStudent,
     @Body() body: ApiAct009RequestBody,
   ): Promise<ApiAct009ResponseOk> {
-    const mockUpStudentId = 605;
     const result =
       await this.activityActivityTermService.getStudentActivitiesActivityTerms(
         body,
-        mockUpStudentId,
+        user.studentId,
       );
     return result;
   }
 
+  @Student()
   @Get("/student/activities/activity-terms/activity-term/:activityTermId")
   @UsePipes(new ZodPipe(apiAct006))
   async getStudentActivitiesActivityTerm(
+    @GetStudent() user: GetStudent,
     @Param() param: ApiAct006RequestParam,
     @Body() body: ApiAct009RequestBody,
   ): Promise<ApiAct006ResponseOk> {
-    const mockUpStudentId = 605;
     const result =
       await this.activityActivityTermService.getStudentActivitiesActivityTerm(
         param,
         body,
-        mockUpStudentId,
+        user.studentId,
       );
     return result;
   }

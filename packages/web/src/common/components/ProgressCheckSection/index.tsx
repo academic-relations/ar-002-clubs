@@ -47,9 +47,7 @@ const ProgressCheckSection: React.FC<ProgressCheckSectionProps> = ({
           <ProgressLineWrapper>
             <ProgressLine
               status={
-                progress[index + 1]
-                  ? progress[index + 1].status
-                  : Status.Pending
+                progress[index + 1] ? progress[index].status : Status.Pending
               }
             />
           </ProgressLineWrapper>

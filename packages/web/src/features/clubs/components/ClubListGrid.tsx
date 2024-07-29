@@ -12,6 +12,7 @@ import type { ClubCardProps } from "@sparcs-clubs/web/features/clubs/components/
 
 interface ClubListGridItemProps {
   clubList: Array<ClubCardProps["club"]>;
+  isRegistrationPeriod?: boolean;
 }
 
 const ClubListGridInner = styled.div`
@@ -22,23 +23,22 @@ const ClubListGridInner = styled.div`
   padding-left: 24px;
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xs}) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 `;
 
-const ClubListGrid: React.FC<ClubListGridItemProps> = ({ clubList }) => (
+const ClubListGrid: React.FC<ClubListGridItemProps> = ({
+  clubList,
+  isRegistrationPeriod = false,
+}) => (
   <ClubListGridInner>
     {clubList.map((club: ClubCardProps["club"]) => (
       <Link
@@ -46,7 +46,11 @@ const ClubListGrid: React.FC<ClubListGridItemProps> = ({ clubList }) => (
         href={`${paths.CLUBS.sub[0].path}/${club.id.toString()}`}
         style={{ display: "flex", flexDirection: "column" }}
       >
-        <ClubCard key={club.name} club={club} />
+        <ClubCard
+          key={club.name}
+          club={club}
+          isRegistrationPeriod={isRegistrationPeriod}
+        />
       </Link>
     ))}
   </ClubListGridInner>
