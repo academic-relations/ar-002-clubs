@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
-import { Club } from "@sparcs-clubs/api/drizzle/schema/club.schema";
+// import { Club } from "@sparcs-clubs/api/drizzle/schema/club.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { Registration } from "src/drizzle/schema/registration.schema";
 
@@ -13,8 +13,10 @@ export class RegistrationRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
   async findByClubId(clubId: number) {
-    const clubs = await this.db.select().from(Club).where(eq(Club.id, clubId));
-
+    const clubs = await this.db
+      .select()
+      .from(Registration)
+      .where(eq(Registration.clubId, clubId));
     return clubs;
   }
 
