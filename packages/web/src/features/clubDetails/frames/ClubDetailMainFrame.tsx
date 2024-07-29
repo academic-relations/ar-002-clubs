@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-no-useless-fragment */
-
 "use client";
 
 import React, { useState } from "react";
@@ -14,6 +12,7 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import ClubDetailCard from "@sparcs-clubs/web/features/clubDetails/components/ClubDetailCard";
 import ClubInfoCard from "@sparcs-clubs/web/features/clubDetails/components/ClubInfoCard";
 import PersonInfoCard from "@sparcs-clubs/web/features/clubDetails/components/PersonInfoCard";
@@ -39,34 +38,12 @@ const MoreInfoWrapper = styled.div`
   }
 `;
 
-const ClubDetailWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  flex: 1 0 0;
-`;
-
-const StyledText = styled.span`
-  color: ${({ theme }) => theme.colors.GRAY[600]};
-  font-size: 16px;
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-weight: 400;
-`;
-
 const ResisterInfoWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 12px;
   flex: 1 0 0;
   align-items: center;
-`;
-
-const ModalBody = styled.div`
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
 `;
 
 const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
@@ -85,31 +62,29 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   const submitHandler = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen} onClose={close}>
-        <ModalBody>
-          {isRegistered ? (
-            <CancellableModalContent
-              onClose={close}
-              onConfirm={() => {
-                toggleRegistered(close);
-              }}
-            >
-              2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-              {club.name}의<br />
-              회원 등록을 취소합니다.
-            </CancellableModalContent>
-          ) : (
-            <CancellableModalContent
-              onClose={close}
-              onConfirm={() => {
-                toggleRegistered(close);
-              }}
-            >
-              2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-              {club.name}의<br />
-              회원 등록 신청을 진행합니다.
-            </CancellableModalContent>
-          )}
-        </ModalBody>
+        {isRegistered ? (
+          <CancellableModalContent
+            onClose={close}
+            onConfirm={() => {
+              toggleRegistered(close);
+            }}
+          >
+            2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
+            {club.name}의<br />
+            회원 등록을 취소합니다.
+          </CancellableModalContent>
+        ) : (
+          <CancellableModalContent
+            onClose={close}
+            onConfirm={() => {
+              toggleRegistered(close);
+            }}
+          >
+            2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
+            {club.name}의<br />
+            회원 등록 신청을 진행합니다.
+          </CancellableModalContent>
+        )}
       </Modal>
     ));
   };
@@ -125,22 +100,15 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
         action={
           isRegistrationPeriod ? (
             <ResisterInfoWrapper>
-              <StyledText>등록 신청 {club.totalMemberCnt}명</StyledText>
-              <Button
-                type="default"
-                onClick={submitHandler}
-                style={{ fontWeight: 500, lineHeight: 1.25 }}
-              >
+              <Typography fs={16} color="GRAY.600" fw="REGULAR">
+                등록 신청 {club.totalMemberCnt}명
+              </Typography>
+              <Button type="default" onClick={submitHandler}>
                 {isRegistered ? "회원 등록 취소" : "회원 등록 신청"}
               </Button>
             </ResisterInfoWrapper>
           ) : (
-            <Button
-              type="disabled"
-              style={{ fontWeight: 500, lineHeight: 1.25 }}
-            >
-              회원 승인 대기
-            </Button>
+            isRegistered && <Button type="disabled">회원 승인 대기</Button>
           )
         }
       />
@@ -160,12 +128,12 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
           </CardWrapper>
         </FlexWrapper>
 
-        <ClubDetailWrapper>
+        <FlexWrapper direction="column" gap={20}>
           <SectionTitle size="lg">동아리 설명</SectionTitle>
           <CardWrapper>
             <ClubDetailCard club={club} />
           </CardWrapper>
-        </ClubDetailWrapper>
+        </FlexWrapper>
       </MoreInfoWrapper>
     </FlexWrapper>
   );
