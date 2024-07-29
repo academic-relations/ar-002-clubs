@@ -80,7 +80,6 @@ const requestPreBody = z.object({
   origin: z.coerce.string().max(255).optional(),
   destination: z.coerce.string().max(255).optional(),
   purposeOfTransportation: z.coerce.string().optional(),
-  cargoList: z.coerce.string().optional(),
   placeValidity: z.coerce.string().optional(),
   transportationPassengers: z.array(
     z.object({
@@ -219,16 +218,6 @@ const requestBody = requestPreBody.superRefine((data, ctx) => {
     if (
       data.transportationEnumId === TransportationEnum.CallVan ||
       data.transportationEnumId === TransportationEnum.Cargo ||
-      data.transportationEnumId === TransportationEnum.Others
-    ) {
-      if (!data.cargoList) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "cargoList is required",
-        });
-      }
-    }
-    if (
       data.transportationEnumId === TransportationEnum.Airplane ||
       data.transportationEnumId === TransportationEnum.Ship ||
       data.transportationEnumId === TransportationEnum.Others

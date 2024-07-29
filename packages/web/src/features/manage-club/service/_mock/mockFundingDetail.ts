@@ -52,7 +52,6 @@ const mockFundingDetail: ApiFnd002ResponseOk = {
   origin: "서울역",
   destination: "대전역",
   purposeOfTransportation: "해커톤 장소 사전답사",
-  cargoList: "",
   placeValidity: "",
   transportationPassengers: [
     { studentNumber: "20200000", name: "이도라" },
