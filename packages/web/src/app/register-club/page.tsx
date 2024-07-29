@@ -14,11 +14,12 @@ import ClubButton from "@sparcs-clubs/web/features/register-club/components/Club
 
 const ClubButtonWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   gap: 20px;
   align-self: stretch;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    flex-direction: column;
+  }
 `;
 
 const RegisterClub = () => {
