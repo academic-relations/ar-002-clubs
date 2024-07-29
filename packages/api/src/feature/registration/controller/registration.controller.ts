@@ -20,7 +20,7 @@ export class RegistrationController {
   constructor(private registrationService: RegistrationService) {}
 
   @Public()
-  @Post("/registration")
+  @Post("/student/registrations/club-registrations/club-registration")
   @UsePipes(new ZodPipe(apiReg001))
   async postRegistration(
     @Body() body: ApiReg001RequestBody,
