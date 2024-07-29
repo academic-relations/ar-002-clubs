@@ -50,11 +50,11 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   club,
   isRegistrationPeriod,
 }) => {
-  // 임의로 등록 여부를 확인하는 변수를 만들었어요.
+  // TODO : 해당 동아리 등록 신청 여부 받아오기
   const [isRegistered, setIsRegistered] = useState(false);
 
   const toggleRegistered = (close: () => void) => {
-    // 여기에 회원 등록을 취소 or 승인 하는 코드를 짜야해요.
+    // TODO : 회원가입 승인 or 취소 로직 추가
     setIsRegistered(prev => !prev);
     close();
   };
