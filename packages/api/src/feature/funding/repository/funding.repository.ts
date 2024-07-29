@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { FundingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+import { and, eq, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -434,5 +435,15 @@ export default class FundingRepository {
       return true;
     });
     return isInsertionSucceed;
+  }
+
+  async selectFundingByFundingId(fundingId: number) {
+    const result = await this.db
+      .select()
+      .from(FundingOrder)
+      .where(
+        and(eq(FundingOrder.id, fundingId), isNull(FundingOrder.deletedAt)),
+      );
+    return result;
   }
 }
