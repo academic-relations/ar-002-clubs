@@ -39,7 +39,7 @@ const responseErrorMap = {};
 type ApiClb008RequestParam = z.infer<typeof apiClb008.requestParam>;
 type ApiClb008RequestQuery = z.infer<typeof apiClb008.requestQuery>;
 type ApiClb008RequestBody = z.infer<typeof apiClb008.requestBody>;
-type ApiClb008ResponseOK = z.infer<(typeof apiClb008.responseBodyMap)[200]>;
+type ApiClb008ResponseOk = z.infer<(typeof apiClb008.responseBodyMap)[200]>;
 
 const apiClb008 = {
   url,
@@ -57,5 +57,5 @@ export type {
   ApiClb008RequestParam,
   ApiClb008RequestQuery,
   ApiClb008RequestBody,
-  ApiClb008ResponseOK,
+  ApiClb008ResponseOk,
 };

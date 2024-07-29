@@ -1,0 +1,27 @@
+import apiClb007 from "@sparcs-clubs/interface/api/club/endpoint/apiClb007";
+
+import {
+  axiosClient,
+  UnexpectedAPIResponseError,
+} from "@sparcs-clubs/web/lib/axios";
+
+import type {
+  ApiClb007RequestBody,
+  ApiClb007RequestParam,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb007";
+
+export const updateClubDelegates = async (
+  requestParam: ApiClb007RequestParam,
+  requestBody: ApiClb007RequestBody,
+) => {
+  const { data, status } = await axiosClient.put(
+    apiClb007.url(requestParam.clubId),
+    requestBody,
+  );
+  switch (status) {
+    case 201:
+      return apiClb007.responseBodyMap[201].parse(data);
+    default:
+      throw new UnexpectedAPIResponseError();
+  }
+};
