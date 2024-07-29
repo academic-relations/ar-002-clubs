@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-import styled from "styled-components";
-
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -15,13 +13,6 @@ import {
 } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
-
-const InfoManageMainWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  padding-left: 24px;
-`;
 
 const InfoManageFrame: React.FC = () => {
   const [toggle, setToggle] = useState<boolean>(true);
@@ -78,7 +69,7 @@ const InfoManageFrame: React.FC = () => {
         toggle={toggle}
         toggleHandler={() => setToggle(!toggle)}
       >
-        <InfoManageMainWrapper>
+        <FlexWrapper direction="row" gap={20}>
           <Card outline gap={32} style={{ flex: 1, height: "fit-content" }}>
             <Typography ff="PRETENDARD" fw="MEDIUM" fs={20} lh={24}>
               기본 정보
@@ -115,7 +106,7 @@ const InfoManageFrame: React.FC = () => {
             delegate2={delegate2}
             setDelegate2={setDelegate2}
           />
-        </InfoManageMainWrapper>
+        </FlexWrapper>
       </FoldableSectionTitle>
     </FlexWrapper>
   );
