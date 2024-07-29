@@ -19,12 +19,15 @@ export class ZodPipe implements PipeTransform {
   3. controller에서 @Param(), @Query(), @Body()로 pipe 적용
   */
   transform(value: unknown, metadata: ArgumentMetadata) {
-    const schemaMap: Record<string, ZodSchema> = {
-      param: this.schema.requestParam,
-      query: this.schema.requestQuery,
-      body: this.schema.requestBody,
-    }; // custom type이 없다고 가정.
-    const schema = schemaMap[metadata.type];
-    return schema.parse(value);
+    if (metadata.type !== "custom") {
+      const schemaMap: Record<string, ZodSchema> = {
+        param: this.schema.requestParam,
+        query: this.schema.requestQuery,
+        body: this.schema.requestBody,
+      }; // custom type이 없다고 가정.
+      const schema = schemaMap[metadata.type];
+      return schema.parse(value);
+    }
+    return value;
   }
 }

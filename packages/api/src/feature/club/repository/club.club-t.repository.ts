@@ -2,14 +2,14 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, gte, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
+import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
+
 import { Professor } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { ClubT } from "src/drizzle/schema/club.schema";
 
-import { getKSTDate, takeUnique } from "../util/util";
-
 @Injectable()
-export class ClubTRepository {
+export default class ClubTRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
   async findClubDetail(semesterId: number, clubId: number) {

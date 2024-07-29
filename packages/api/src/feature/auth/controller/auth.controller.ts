@@ -23,12 +23,10 @@ import {
   Public,
   Student,
 } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 import logger from "@sparcs-clubs/api/common/util/logger";
 
-import {
-  UserAccessTokenPayload,
-  UserRefreshTokenPayload,
-} from "../dto/auth.dto";
+import { UserRefreshTokenPayload } from "../dto/auth.dto";
 import { JwtRefreshGuard } from "../guard/jwt-refresh.guard";
 import { AuthService } from "../service/auth.service";
 
@@ -91,7 +89,14 @@ export class AuthController {
   // test용 API, 실제 사용하지 않음
   @Student()
   @Get("/auth/test")
-  test(@Req() req: Request & UserAccessTokenPayload) {
-    logger.debug(req.user);
+  test(@GetStudent() user: GetStudent) {
+    function printObjectPropertyTypes<T>(obj: T): void {
+      // eslint-disable-next-line no-restricted-syntax, guard-for-in
+      for (const key in obj) {
+        logger.debug(`Property ${key} is of type ${typeof obj[key]}`);
+      }
+    }
+    printObjectPropertyTypes(user);
+    logger.debug(user.studentId + user.studentNumber);
   }
 }

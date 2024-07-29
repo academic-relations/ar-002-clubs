@@ -1,6 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, eq, gt, isNull, lte } from "drizzle-orm";
+import { and, between, eq, gt, isNull, lte, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
+
+import { takeUnique } from "@sparcs-clubs/api/common/util/util";
 
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import { ClubT, SemesterD } from "@sparcs-clubs/api/drizzle/schema/club.schema";
@@ -21,6 +23,28 @@ export default class SemesterDRepository {
         ),
       );
 
+    return result;
+  }
+
+  async findSemesterBetweenstartTermAndendTerm(): Promise<{
+    id: number;
+    name: string;
+    createdAt: Date;
+    deletedAt: Date;
+    year: number;
+    startTerm: Date;
+    endTerm: Date;
+  }> {
+    const result = await this.db
+      .select()
+      .from(SemesterD)
+      .where(
+        and(
+          between(sql`NOW()`, SemesterD.startTerm, SemesterD.endTerm),
+          isNull(SemesterD.deletedAt),
+        ),
+      )
+      .then(takeUnique);
     return result;
   }
 

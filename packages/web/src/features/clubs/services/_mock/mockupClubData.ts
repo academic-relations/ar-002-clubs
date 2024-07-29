@@ -14,7 +14,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "요리",
           representative: "장주원",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 1,
         },
         {
@@ -24,7 +24,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: true,
           characteristic: "애니메이션 감상 및 서브컬쳐",
           representative: "김경민",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 58,
         },
         {
@@ -74,7 +74,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "트레이딩 카드 게임",
           representative: "양진혁",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 23,
         },
         {
@@ -94,7 +94,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "칵테일",
           representative: "구도훈",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 22,
         },
         {
@@ -104,7 +104,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "패션",
           representative: "탁한진",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 12,
         },
         {
@@ -124,7 +124,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "양조",
           representative: "임채민",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 13,
         },
         {
@@ -134,7 +134,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "체스",
           representative: "Jaden Jorradol",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 1,
         },
         {
@@ -145,7 +145,7 @@ const mockupData: ApiClb001ResponseOK = {
           characteristic:
             "제과제빵 활동을 통해 학우들의 다양한 문화활동을 장려함.",
           representative: "김나연",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 36,
         },
         {
@@ -155,7 +155,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "코스프레",
           representative: "김강민",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 1,
         },
         {
@@ -165,7 +165,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "캠핑",
           representative: "김지하",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 1,
         },
         {
@@ -175,7 +175,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "맛집탐방",
           representative: "이정민",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 1,
         },
         {
@@ -185,7 +185,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "고기굽기에 대한 연구",
           representative: "이서윤",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 1,
         },
       ],
@@ -201,7 +201,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "연극",
           representative: "허수영",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 18,
         },
         {
@@ -231,7 +231,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "마술 및 타로",
           representative: "이창섭",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 19,
         },
         {
@@ -308,7 +308,7 @@ const mockupData: ApiClb001ResponseOK = {
           characteristic:
             "만화창작 및 디지털 일러스트레이션 및 애니메이션 제작",
           representative: "서해린",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 11,
         },
         {
@@ -328,7 +328,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "영문",
           representative: "김동은",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 1,
         },
         {
@@ -338,7 +338,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "새활용",
           representative: "방민솔",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 1,
         },
         {
@@ -348,7 +348,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "일반 레고 및 나노블럭 조립 후 전시활동",
           representative: "김진현",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 9,
         },
       ],
@@ -424,7 +424,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "EMO/CORE/PUNK 장르의 밴드음악 합주 및 공연",
           representative: "김예린",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 14,
         },
         {
@@ -444,7 +444,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "International Rock Band",
           representative: "Nurlybay Akmerey",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 8,
         },
       ],
@@ -470,7 +470,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "어쿠스틱 보컬",
           representative: "이유섭",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 5,
         },
         {
@@ -516,7 +516,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "사물놀이 및 풍물",
           representative: "김수진",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 1,
         },
         {
@@ -536,7 +536,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "작곡",
           representative: "윤남석",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 26,
         },
         {
@@ -632,7 +632,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "지역사회 봉사 및 환경 보호",
           representative: "권효진",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 1,
         },
       ],
@@ -764,7 +764,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "배드민턴",
           representative: "박시우",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 18,
         },
         {
@@ -794,7 +794,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "족구",
           representative: "안제휘",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 3,
         },
         {
@@ -804,7 +804,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "미식축구",
           representative: "장준영",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 1,
         },
         {
@@ -814,7 +814,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "구(4구, 8볼)",
           representative: "장원혁",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 1,
         },
         {
@@ -824,7 +824,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "캐주얼 배드민턴",
           representative: "Calvin Samuel",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 12,
         },
       ],
@@ -880,7 +880,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "자전거 라이딩",
           representative: "김문수",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 26,
         },
         {
@@ -890,7 +890,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "주짓수, MMA, 킥복싱",
           representative: "노영래",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 15,
         },
         {
@@ -900,7 +900,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "레슬링",
           representative: "김영진",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 1,
         },
         {
@@ -910,7 +910,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "국제 종합운동 동아리",
           representative: "김근형",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 1,
         },
         {
@@ -920,7 +920,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "복싱",
           representative: "임수연",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 7,
         },
         {
@@ -930,7 +930,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "유도",
           representative: "김창헌",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 14,
         },
       ],
@@ -1036,7 +1036,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "AI 학술",
           representative: "김중현",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 22,
         },
         {
@@ -1046,7 +1046,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "KAIST 개발자 네트워킹 및 개발 관련 행사 주최",
           representative: "윤지훈",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 2,
         },
         {
@@ -1056,7 +1056,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "우주생물학 탐구 및 외계지적생명체 탐사",
           representative: "이진우",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 1,
         },
         {
@@ -1133,7 +1133,7 @@ const mockupData: ApiClb001ResponseOK = {
           isPermanent: false,
           characteristic: "사회 문제 소셜 임팩트 창출, 소셜 벤처 창업 동아리",
           representative: "양준원",
-          advisor: null,
+          advisor: undefined,
           totalMemberCnt: 9,
         },
       ],
