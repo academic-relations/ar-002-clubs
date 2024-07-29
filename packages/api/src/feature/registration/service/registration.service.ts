@@ -11,8 +11,8 @@ import type {
   ApiReg001ResponseCreated,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 
-// import type {
-//   ApiReg002RequestParam,
+// import {
+//   ApiReg002RequestQuery,
 //   ApiReg002ResponseOk
 // } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
 
@@ -90,8 +90,8 @@ export class RegistrationService {
     return transformFoundedAt;
   }
 
-  // async getRegistrationAbleList(
-  //   parameter: ApiReg002RequestParam,
+  // async getReRegistrationAbleList(
+  //   parameter: ApiReg002RequestQuery,
   // ): Promise<ApiReg002ResponseOk> {
   //   const mockUpStudentId = 605; // 하승종 Id
 
@@ -132,17 +132,9 @@ export class RegistrationService {
   //   }
 
   //   return {
-  //     // order: {
-  //     //   clubId: order.clubId,
-  //     //   studentId: order.studentId,
-  //     //   status: order.promotionalPrintingOrderStatusEnum,
-  //     //   orders,
-  //     //   isColorPrint: order.isColorPrint,
-  //     //   fitPrintSizeToPaper: order.fitPrintSizeToPaper,
-  //     //   requireMarginChopping: order.requireMarginChopping,
-  //     //   desiredPickUpDate: order.desiredPickUpTime,
-  //     //   createdAt: order.createdAt,
-  //     // },
+  //     clubs: {
+  //       clubId: clubs.clubId,
+  //     },
   //   };
   // }
 }
