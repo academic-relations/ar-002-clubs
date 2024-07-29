@@ -36,7 +36,7 @@ export default class FundingController {
     @Body() body: ApiFnd001RequestBody,
   ): Promise<ApiFnd001ResponseCreated> {
     const mockUpStudentId = 605;
-    const result = await this.fundingService.createStudentFunding(
+    const result = await this.fundingService.postStudentFunding(
       body,
       mockUpStudentId,
     );
