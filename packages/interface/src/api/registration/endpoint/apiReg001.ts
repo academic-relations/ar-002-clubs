@@ -49,7 +49,7 @@ const requestBody = z.object({
         .refine(email => email.endsWith("@kaist.ac.kr"), {
           message: "Must be a valid KAIST email address",
         }),
-      ProfessorEnumId: z.nativeEnum(ProfessorEnum),
+      ProfessorEnumId: z.nativeEnum(ProfessorEnum).optional(),
     }),
   ]),
   divisionIntegrity: z.string(), // 길이제한이 추가될 수 있습니다.

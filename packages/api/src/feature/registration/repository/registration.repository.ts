@@ -33,7 +33,7 @@ export class RegistrationRepository {
         divisionId: body.divisionId,
         activityFieldKr: body.kr활동분야,
         activityFieldEn: body.en활동분야,
-        professorId: body.professor.ProfessorEnumId,
+        professorId: body.professor?.ProfessorEnumId,
         divisionConsistency: body.divisionIntegrity,
         foundationPurpose: body.foundationPurpose,
         activityPlan: body.activityPlanFileId,

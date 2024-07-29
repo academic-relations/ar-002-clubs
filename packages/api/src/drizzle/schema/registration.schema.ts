@@ -61,9 +61,7 @@ export const Registration = mysqlTable(
       .references(() => Division.id),
     activityFieldKr: varchar("activity_field_kr", { length: 255 }),
     activityFieldEn: varchar("activity_field_en", { length: 255 }),
-    professorId: int("professor_id")
-      .notNull()
-      .references(() => Professor.id),
+    professorId: int("professor_id").references(() => Professor.id),
     divisionConsistency: varchar("division_consistency", { length: 255 }),
     foundationPurpose: varchar("foundation_purpose", { length: 500 }),
     activityPlan: int("activity_plan")
