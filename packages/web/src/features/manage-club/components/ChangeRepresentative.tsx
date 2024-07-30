@@ -14,7 +14,7 @@ import {
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 interface ChangeRepresentativeProps {
-  type: "Requested" | "Refused" | "Canceled";
+  type: "Applied" | "Refused" | "Canceled";
   clubName: string;
   prevRepresentative: string;
   newRepresentative: string;
@@ -46,7 +46,7 @@ const ChangeRepresentative: React.FC<ChangeRepresentativeProps> = ({
   let title;
   let text;
   switch (type) {
-    case "Requested":
+    case "Applied":
       title = "동아리 대표자 변경 요청 완료";
       text = changeRepresentativeRequestText(
         clubName,
@@ -86,7 +86,7 @@ const ChangeRepresentative: React.FC<ChangeRepresentativeProps> = ({
         >
           {text}
         </Typography>
-        {type === "Requested" && (
+        {type === "Applied" && (
           <Typography fw="REGULAR" fs={16} lh={20}>
             대표자 변경 요청을 취소할 수 있으며, 요청이 3일 내로 승인 또는
             거절되지 않을 경우 자동으로 취소됩니다
