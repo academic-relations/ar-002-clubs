@@ -1,8 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import { ApiReg002ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
+
 import logger from "@sparcs-clubs/api/common/util/logger";
 
-import ClubRepository from "@sparcs-clubs/api/feature/club/repository/club.repository";
+// import ClubRepository from "@sparcs-clubs/api/feature/club/repository/club.repository";
+
+import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 
 import { RegistrationRepository } from "../repository/registration.repository";
 
@@ -11,16 +15,14 @@ import type {
   ApiReg001ResponseCreated,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 
-// import {
-//   ApiReg002RequestQuery,
-//   ApiReg002ResponseOk
-// } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
+import type { ApiReg003ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg003";
 
 @Injectable()
 export class RegistrationService {
   constructor(
     private readonly registrationRepository: RegistrationRepository,
-    private readonly clubRepository: ClubRepository,
+    // private readonly clubRepository: ClubRepository,
+    private clubPublicService: ClubPublicService,
   ) {}
 
   async postRegistration(
@@ -47,7 +49,7 @@ export class RegistrationService {
   ) {
     if (registrationTypeEnumId !== 3) {
       // club Id가 유효한지 확인
-      const clubList = await this.clubRepository.findByClubId(clubId);
+      const clubList = await this.clubPublicService.getClubByClubId({ clubId });
       if (clubList.length !== 1) {
         throw new HttpException(
           "[postRegistration] club doesn't exist",
@@ -90,51 +92,27 @@ export class RegistrationService {
     return transformFoundedAt;
   }
 
-  // async getReRegistrationAbleList(
-  //   parameter: ApiReg002RequestQuery,
-  // ): Promise<ApiReg002ResponseOk> {
-  //   const mockUpStudentId = 605; // 하승종 Id
+  async getReRegistrationAbleList(): Promise<ApiReg002ResponseOk> {
+    const semesterId = await this.clubPublicService.dateToSemesterId(
+      new Date(),
+    );
+    const reRegAbleList =
+      await this.clubPublicService.getClubIdByClubStatusEnumId(1, semesterId);
+    logger.debug(`[getReRegistrationAbleList] semester Id is ${semesterId}`);
 
-  //   const search = await this.registrationRepository.findByClubId(
-  //     parameter.,
-  //   );
+    return {
+      clubs: reRegAbleList,
+    };
+  }
 
-  //   if (search.length !== 1) {
-  //     throw new HttpException("invalid order id", HttpStatus.BAD_REQUEST);
-  //   }
-  //   const order = search[0];
-
-  //   // TODO: order.clubsId와 order.studentId 를 통해 조회 권한 확인 필요
-  //   const representatives =
-  //     await this.clubDelegateDRepository.findRepresentativeIdListByClubId(
-  //       order.clubId,
-  //     );
-  //   logger.debug(
-  //     `[getStudentPromotionalPrintingsOrder] ${order.clubId}'s current representatives are ${representatives}`,
-  //   );
-  //   if (
-  //     order.studentId !== mockUpStudentId &&
-  //     representatives.find(row => row.studentId === order.studentId) ===
-  //       undefined
-  //   ) {
-  //     throw new HttpException("permission denied", HttpStatus.FORBIDDEN);
-  //   }
-
-  //   const orders =
-  //     await this.promotionalPrintingOrderSizeRepository.findPromotionalPrintingOrderSizeByPromotionalPrintingOrderId(
-  //       order.id,
-  //     );
-  //   if (orders.length === 0) {
-  //     throw new HttpException(
-  //       "[getStudentPromotionalPrintingsOrder] order exists, but order size not exists",
-  //       HttpStatus.INTERNAL_SERVER_ERROR,
-  //     );
-  //   }
-
-  //   return {
-  //     clubs: {
-  //       clubId: clubs.clubId,
-  //     },
-  //   };
-  // }
+  async getPromotionalRegistrationAbleList(): Promise<ApiReg003ResponseOk> {
+    const semesterId = await this.clubPublicService.dateToSemesterId(
+      new Date(),
+    );
+    const promAbleList =
+      await this.clubPublicService.getEligibleClubsForRegistration(semesterId);
+    return {
+      clubs: promAbleList,
+    };
+  }
 }

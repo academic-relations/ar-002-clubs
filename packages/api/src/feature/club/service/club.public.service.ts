@@ -101,4 +101,21 @@ export default class ClubPublicService {
     }
     return true;
   }
+
+  async getClubIdByClubStatusEnumId(
+    clubStatusEnumId: number,
+    semesterId: number,
+  ) {
+    const clubList = await this.clubRepository.findClubIdByClubStatusEnumId(
+      clubStatusEnumId,
+      semesterId,
+    );
+    return clubList;
+  }
+
+  async getEligibleClubsForRegistration(semesterId: number) {
+    const clubList =
+      await this.clubRepository.findEligibleClubsForRegistration(semesterId);
+    return clubList;
+  }
 }
