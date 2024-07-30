@@ -31,11 +31,15 @@ export class RegistrationService {
     await this.validateDupelicateRegistration(body.clubId);
     await this.validateClubId(body.clubId, body.registrationTypeEnumId);
 
-    // FIXME: 설립연도/연월은 지원 타입에 따라 변환될 필요가 있지만 no-param-reassign 문제가 있음. front에서 변환하나?
-    // body.foundedAt = this.transformFoundedAt(body.foundedAt, body.registrationTypeEnumId);
-
+    const transformedBody = {
+      ...body,
+      foundedAt: await this.transformFoundedAt(
+        body.foundedAt,
+        body.registrationTypeEnumId,
+      ),
+    };
     // FIXME: 활동 id 검증 로직 필요
-    await this.registrationRepository.createRegistration(body);
+    await this.registrationRepository.createRegistration(transformedBody);
     return {};
   }
 
@@ -83,13 +87,12 @@ export class RegistrationService {
   }
 
   async transformFoundedAt(foundedAt: Date, registrationTypeEnumId: number) {
-    let transformFoundedAt;
-    if (registrationTypeEnumId === 3) {
-      transformFoundedAt = `${foundedAt.getFullYear()}-${String(foundedAt.getMonth() + 1).padStart(2, "0")}`;
-    } else {
-      transformFoundedAt = new Date(foundedAt).getFullYear();
-    }
-    return transformFoundedAt;
+    const year = foundedAt.getUTCFullYear();
+    const month = registrationTypeEnumId === 3 ? foundedAt.getUTCMonth() : 0;
+    const day = registrationTypeEnumId === 3 ? 1 : 1;
+
+    // 시간 부분을 00:00:00으로 설정
+    return new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
   }
 
   async getReRegistrationAbleList(): Promise<ApiReg002ResponseOk> {
