@@ -79,7 +79,7 @@ const InfoManageFrame: React.FC = () => {
               저장
             </Button>
           </Card>
-          <ChangeRepresentativeCard type="Default" />
+          <ChangeRepresentativeCard />
         </FlexWrapper>
       </FoldableSectionTitle>
     </FlexWrapper>

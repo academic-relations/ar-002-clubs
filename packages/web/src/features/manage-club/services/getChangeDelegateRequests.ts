@@ -1,5 +1,4 @@
 import apiClb011 from "@sparcs-clubs/interface/api/club/endpoint/apiClb011";
-import { ClubDelegateChangeRequestStatusEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -7,6 +6,8 @@ import {
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
+
+import { mockClubDelegateRequest } from "./_mock/mockDelegate";
 
 import type {
   ApiClb011RequestParam,
@@ -33,17 +34,7 @@ export const useGetChangeDelegateRequests = (
 
 defineAxiosMock(mock => {
   const baseUrl = apiClb011.url(1);
-  mock.onGet(new RegExp(`^${baseUrl}(/|$)`)).reply(() => [
-    200,
-    {
-      requests: [
-        {
-          studentId: 1,
-          studentName: "이도라",
-          clubDelegateChangeRequestStatusEnumId:
-            ClubDelegateChangeRequestStatusEnum.Applied,
-        },
-      ],
-    },
-  ]);
+  mock
+    .onGet(new RegExp(`^${baseUrl}(/|$)`))
+    .reply(() => [200, mockClubDelegateRequest]);
 });

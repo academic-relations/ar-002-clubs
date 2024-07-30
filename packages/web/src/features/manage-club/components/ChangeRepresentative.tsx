@@ -14,7 +14,7 @@ import {
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 interface ChangeRepresentativeProps {
-  type: "Applied" | "Refused" | "Canceled";
+  type: "Applied" | "Rejected" | "Canceled";
   clubName: string;
   prevRepresentative: string;
   newRepresentative: string;
@@ -32,9 +32,9 @@ const ChangeRepresentativeWrapper = styled.div.withConfig({
   border-radius: 8px;
   border: 1px solid
     ${({ type, theme }) =>
-      type === "Refused" ? theme.colors.RED[600] : theme.colors.GREEN[600]};
+      type === "Rejected" ? theme.colors.RED[600] : theme.colors.GREEN[600]};
   background-color: ${({ type, theme }) =>
-    type === "Refused" ? theme.colors.RED[100] : theme.colors.GREEN[100]};
+    type === "Rejected" ? theme.colors.RED[100] : theme.colors.GREEN[100]};
 `;
 
 const ChangeRepresentative: React.FC<ChangeRepresentativeProps> = ({
@@ -54,7 +54,7 @@ const ChangeRepresentative: React.FC<ChangeRepresentativeProps> = ({
         newRepresentative,
       );
       break;
-    case "Refused":
+    case "Rejected":
       title = "동아리 대표자 변경 요청 거절";
       text = changeRepresentativeRefuseText(
         clubName,
@@ -69,7 +69,7 @@ const ChangeRepresentative: React.FC<ChangeRepresentativeProps> = ({
   }
   return (
     <ChangeRepresentativeWrapper type={type}>
-      {type === "Refused" ? (
+      {type === "Rejected" ? (
         <Icon type="cancel" size={20} color={colors.RED[600]} />
       ) : (
         <Icon type="check_circle" size={20} color={colors.GREEN[600]} />

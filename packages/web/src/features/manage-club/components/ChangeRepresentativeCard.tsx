@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { ClubDelegateChangeRequestStatusEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -9,13 +10,10 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { mockClubMembers } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
+import { useGetChangeDelegateRequests } from "@sparcs-clubs/web/features/manage-club/services/getChangeDelegateRequests";
 import { useGetClubDelegate } from "@sparcs-clubs/web/features/manage-club/services/getClubDelegate";
 
 import ChangeRepresentative from "./ChangeRepresentative";
-
-interface ChangeRepresentativeCardProps {
-  type: "Default" | "Applied" | "Refused" | "Canceled";
-}
 
 const LabelWrapper = styled.div`
   display: flex;
@@ -25,9 +23,7 @@ const LabelWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const ChangeRepresentativeCard: React.FC<ChangeRepresentativeCardProps> = ({
-  type,
-}) => {
+const ChangeRepresentativeCard: React.FC = () => {
   const clubId = 1; // TODO: 동아리 id 받아오기
 
   const {
@@ -52,6 +48,27 @@ const ChangeRepresentativeCard: React.FC<ChangeRepresentativeCardProps> = ({
     value: member.studentNumber.toString(), // TODO: studentNumber 말고 studentId?
     selectable: true,
   }));
+
+  const { data: requestStatus } = useGetChangeDelegateRequests({ clubId });
+
+  useEffect(() => {
+    console.log(requestStatus);
+  }, [requestStatus]);
+  const type = (() => {
+    console.log(
+      requestStatus?.requests[0].clubDelegateChangeRequestStatusEnumId,
+    );
+    switch (requestStatus?.requests[0].clubDelegateChangeRequestStatusEnumId) {
+      case ClubDelegateChangeRequestStatusEnum.Applied:
+        return "Applied";
+      case ClubDelegateChangeRequestStatusEnum.Approved:
+        return "Default";
+      case ClubDelegateChangeRequestStatusEnum.Rejected:
+        return "Rejected";
+      default:
+        return "Default";
+    }
+  })();
 
   return (
     <Card outline gap={32} style={{ flex: 1 }}>
