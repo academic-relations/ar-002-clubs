@@ -10,6 +10,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { mockClubMembers } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
+import { deleteChangeDelegateRequest } from "@sparcs-clubs/web/features/manage-club/services/deleteChangeDelegateRequest";
 import { useGetChangeDelegateRequests } from "@sparcs-clubs/web/features/manage-club/services/getChangeDelegateRequests";
 import { useGetClubDelegate } from "@sparcs-clubs/web/features/manage-club/services/getClubDelegate";
 
@@ -37,6 +38,10 @@ const ChangeRepresentativeCard: React.FC = () => {
   const [delegate2, setDelegate2] = useState<string>("");
   // TODO: 중복 선택 막는 로직 추가
 
+  const [type, setType] = useState<
+    "Default" | "Applied" | "Rejected" | "Canceled"
+  >("Default");
+
   useEffect(() => {
     setRepresentative(delegatesNow?.delegates[0].studentId?.toString() ?? "");
     setDelegate1(delegatesNow?.delegates[1].studentId?.toString() ?? "");
@@ -52,23 +57,25 @@ const ChangeRepresentativeCard: React.FC = () => {
   const { data: requestStatus } = useGetChangeDelegateRequests({ clubId });
 
   useEffect(() => {
-    console.log(requestStatus);
-  }, [requestStatus]);
-  const type = (() => {
-    console.log(
-      requestStatus?.requests[0].clubDelegateChangeRequestStatusEnumId,
-    );
     switch (requestStatus?.requests[0].clubDelegateChangeRequestStatusEnumId) {
       case ClubDelegateChangeRequestStatusEnum.Applied:
-        return "Applied";
+        setType("Applied");
+        break;
       case ClubDelegateChangeRequestStatusEnum.Approved:
-        return "Default";
+        setType("Default");
+        break;
       case ClubDelegateChangeRequestStatusEnum.Rejected:
-        return "Rejected";
+        setType("Rejected");
+        break;
       default:
-        return "Default";
+        setType("Default");
     }
-  })();
+  }, [requestStatus]);
+
+  const cancelRequest = () => {
+    setType("Canceled");
+    deleteChangeDelegateRequest({ clubId });
+  };
 
   return (
     <Card outline gap={32} style={{ flex: 1 }}>
@@ -89,7 +96,12 @@ const ChangeRepresentativeCard: React.FC = () => {
             <Typography fw="MEDIUM" fs={16} lh={20}>
               대표자
             </Typography>
-            {type === "Applied" && <TextButton text="대표자 변경 요청 취소" />}
+            {type === "Applied" && (
+              <TextButton
+                text="대표자 변경 요청 취소"
+                onClick={cancelRequest}
+              />
+            )}
           </LabelWrapper>
           <Select
             items={selectItems}

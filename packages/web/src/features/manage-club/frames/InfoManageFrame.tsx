@@ -23,8 +23,8 @@ const InfoManageFrame: React.FC = () => {
   const buttonType =
     (description === mockClubDescription.description &&
       password === mockClubDescription.roomPassword) ||
-    errorDescription === "" ||
-    errorPassword === ""
+    errorDescription !== "" ||
+    errorPassword !== ""
       ? "disabled"
       : "default";
 
@@ -54,7 +54,7 @@ const InfoManageFrame: React.FC = () => {
       >
         <FlexWrapper direction="row" gap={20}>
           <Card outline gap={32} style={{ flex: 1, height: "fit-content" }}>
-            <Typography ff="PRETENDARD" fw="MEDIUM" fs={20} lh={24}>
+            <Typography fw="MEDIUM" fs={20} lh={24}>
               기본 정보
             </Typography>
             <TextInput
