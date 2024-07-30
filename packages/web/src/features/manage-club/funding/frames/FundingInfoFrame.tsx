@@ -62,7 +62,9 @@ const FundingInfoFrame: React.FC<FundingFrameProps> = ({
             placeholder="금액을 입력해주세요"
             unit="원"
             value={funding.expenditureAmount ? funding.expenditureAmount : ""}
-            onChange={value => setFundingHandler("expenditureAmount", value)}
+            handleChange={value =>
+              setFundingHandler("expenditureAmount", value)
+            }
             setErrorStatus={() => {}}
           />
         </FlexWrapper>

@@ -1,39 +1,97 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  InputHTMLAttributes,
+  useEffect,
+  useState,
+} from "react";
 
-import styled from "styled-components";
+import isPropValid from "@emotion/is-prop-valid";
+import styled, { css } from "styled-components";
 
-import TextInput, {
-  TextInputProps,
-} from "@sparcs-clubs/web/common/components/Forms/TextInput";
+import FormError from "../FormError";
+import Label from "../FormLabel";
 
-interface UnitInputProps extends Omit<TextInputProps, "onChange"> {
-  unit: string;
-  value: string;
-  onChange: (value: string) => void;
-  setErrorStatus: (hasError: boolean) => void;
+interface UnitInputProps
+  extends InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
+  label?: string;
+  placeholder: string;
+  errorMessage?: string;
+  unit?: string;
+  disabled?: boolean;
+  value?: string;
+  handleChange?: (value: string) => void;
+  setErrorStatus?: (hasError: boolean) => void;
 }
 
-const FrameWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+const errorBorderStyle = css`
+  border-color: ${({ theme }) => theme.colors.RED[600]};
 `;
 
-const UnitDiv = styled.div`
+const disabledStyle = css`
+  background-color: ${({ theme }) => theme.colors.GRAY[100]};
+  border-color: ${({ theme }) => theme.colors.GRAY[200]};
+`;
+
+const Input = styled.input
+  .withConfig({
+    shouldForwardProp: prop => isPropValid(prop) && prop !== "hasError",
+  })
+  .attrs<UnitInputProps>({})<UnitInputProps & { hasError: boolean }>`
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  outline: none;
+  border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+  border-radius: 4px;
+  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+  font-size: 16px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.colors.BLACK};
+  background-color: ${({ theme }) => theme.colors.WHITE};
+  &:focus {
+    border-color: ${({ theme, hasError, disabled }) =>
+      !hasError && !disabled && theme.colors.PRIMARY};
+  }
+  &:hover:not(:focus) {
+    border-color: ${({ theme, hasError, disabled }) =>
+      !hasError && !disabled && theme.colors.GRAY[300]};
+  }
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.GRAY[200]};
+  }
+    ${({ disabled }) => disabled && disabledStyle}
+  ${({ hasError }) => hasError && errorBorderStyle}
+`;
+
+const InputWrapper = styled.div`
+  width: 100%;
+  flex-direction: column;
+  display: flex;
+  gap: 4px;
+`;
+
+const UnitWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+const UnitLabel = styled.span`
   position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  white-space: nowrap;
+  right: 12px;
+  color: ${({ theme }) => theme.colors.BLACK};
+  font-size: 16px;
+  line-height: 20px;
 `;
 
 const UnitInput: React.FC<UnitInputProps> = ({
-  label,
+  label = "",
   placeholder,
-  unit,
-  value = "",
-  onChange = () => {},
   errorMessage = "",
+  disabled = false,
+  unit = "",
+  value = "",
+  handleChange = () => {},
   setErrorStatus = () => {},
   ...props
 }) => {
@@ -59,27 +117,35 @@ const UnitInput: React.FC<UnitInputProps> = ({
     setTouched(true);
   };
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
-    onChange(inputValue);
+    handleChange(inputValue);
   };
 
+  useEffect(() => {
+    const hasError = !!errorMessage;
+    if (setErrorStatus) {
+      setErrorStatus(hasError);
+    }
+  }, [errorMessage, setErrorStatus]);
+
   return (
-    <FrameWrapper>
-      <TextInput
-        label={label}
-        placeholder={placeholder}
-        value={value}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        errorMessage={error}
-        {...props}
-      >
-        <UnitDiv>{unit}</UnitDiv>
-      </TextInput>
-    </FrameWrapper>
+    <InputWrapper>
+      {label && <Label>{label}</Label>}
+      <UnitWrapper>
+        <Input
+          placeholder={placeholder}
+          hasError={!!errorMessage}
+          disabled={disabled}
+          value={value}
+          onBlur={handleBlur}
+          onChange={handleValueChange}
+          {...props}
+        />
+        {unit && <UnitLabel>{unit}</UnitLabel>}
+      </UnitWrapper>
+      {error && <FormError>{error}</FormError>}
+    </InputWrapper>
   );
 };
 
