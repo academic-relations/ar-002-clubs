@@ -17,6 +17,7 @@ import { deleteChangeDelegateRequest } from "@sparcs-clubs/web/features/manage-c
 import { useGetChangeDelegateRequests } from "@sparcs-clubs/web/features/manage-club/services/getChangeDelegateRequests";
 import { useGetClubDelegate } from "@sparcs-clubs/web/features/manage-club/services/getClubDelegate";
 import { useGetDelegateCandidates } from "@sparcs-clubs/web/features/manage-club/services/getDelegateCandidates";
+import { updateClubDelegates } from "@sparcs-clubs/web/features/manage-club/services/updateClubDelegate";
 
 import ChangeRepresentative from "./ChangeRepresentative";
 
@@ -52,6 +53,29 @@ const ChangeRepresentativeCard: React.FC = () => {
     setDelegate2(delegatesNow?.delegates[2].studentId?.toString() ?? "");
   }, [delegatesNow]);
 
+  const { data: requestStatus } = useGetChangeDelegateRequests({ clubId });
+
+  useEffect(() => {
+    switch (requestStatus?.requests[0].clubDelegateChangeRequestStatusEnumId) {
+      case ClubDelegateChangeRequestStatusEnum.Applied:
+        setType("Applied");
+        break;
+      case ClubDelegateChangeRequestStatusEnum.Approved:
+        setType("Default");
+        break;
+      case ClubDelegateChangeRequestStatusEnum.Rejected:
+        setType("Rejected");
+        break;
+      default:
+        setType("Default");
+    }
+  }, [requestStatus]);
+
+  const cancelRequest = () => {
+    setType("Canceled");
+    deleteChangeDelegateRequest({ clubId });
+  };
+
   const getSelectItems = (
     members: ApiClb008ResponseOk | undefined,
   ): SelectItem[] =>
@@ -76,27 +100,11 @@ const ChangeRepresentativeCard: React.FC = () => {
     delegateEnumId: ClubDelegateEnum.Representative2,
   });
 
-  const { data: requestStatus } = useGetChangeDelegateRequests({ clubId });
-
-  useEffect(() => {
-    switch (requestStatus?.requests[0].clubDelegateChangeRequestStatusEnumId) {
-      case ClubDelegateChangeRequestStatusEnum.Applied:
-        setType("Applied");
-        break;
-      case ClubDelegateChangeRequestStatusEnum.Approved:
-        setType("Default");
-        break;
-      case ClubDelegateChangeRequestStatusEnum.Rejected:
-        setType("Rejected");
-        break;
-      default:
-        setType("Default");
-    }
-  }, [requestStatus]);
-
-  const cancelRequest = () => {
-    setType("Canceled");
-    deleteChangeDelegateRequest({ clubId });
+  const changeRepresentative = (studentId: number) => {
+    updateClubDelegates(
+      { clubId },
+      { delegateEnumId: ClubDelegateEnum.President, studentId },
+    );
   };
 
   return (
@@ -137,7 +145,11 @@ const ChangeRepresentativeCard: React.FC = () => {
             <Typography fw="MEDIUM" fs={16} lh={20}>
               대의원 1
             </Typography>
-            <TextButton text="대표자로 지정" disabled={type === "Applied"} />
+            <TextButton
+              text="대표자로 지정"
+              disabled={type === "Applied"}
+              onClick={() => changeRepresentative(Number(delegate1))}
+            />
           </LabelWrapper>
           <Select
             items={getSelectItems(delegate1Candidates)}
@@ -151,7 +163,11 @@ const ChangeRepresentativeCard: React.FC = () => {
             <Typography fw="MEDIUM" fs={16} lh={20}>
               대의원 2
             </Typography>
-            <TextButton text="대표자로 지정" disabled={type === "Applied"} />
+            <TextButton
+              text="대표자로 지정"
+              disabled={type === "Applied"}
+              onClick={() => changeRepresentative(Number(delegate2))}
+            />
           </LabelWrapper>
           <Select
             items={getSelectItems(delegate2Candidates)}
