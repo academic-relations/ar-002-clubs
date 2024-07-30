@@ -119,15 +119,19 @@ const UnitInput: React.FC<UnitInputProps> = ({
 
   const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
-    handleChange(inputValue);
+    const isValidFormat = /^\d*$/.test(inputValue);
+
+    if (isValidFormat) {
+      handleChange(inputValue);
+    }
   };
 
   useEffect(() => {
-    const hasError = !!errorMessage;
+    const hasError = !!error;
     if (setErrorStatus) {
       setErrorStatus(hasError);
     }
-  }, [errorMessage, setErrorStatus]);
+  }, [error, setErrorStatus]);
 
   return (
     <InputWrapper>
@@ -135,7 +139,7 @@ const UnitInput: React.FC<UnitInputProps> = ({
       <UnitWrapper>
         <Input
           placeholder={placeholder}
-          hasError={!!errorMessage}
+          hasError={!!error}
           disabled={disabled}
           value={value}
           onBlur={handleBlur}
