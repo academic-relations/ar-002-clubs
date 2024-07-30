@@ -20,18 +20,18 @@ const requestParam = z.object({
 
 const requestQuery = z.object({});
 
-const requestBody = z.object({
-  students: z.array(
-    z.object({
-      id: z.coerce.number().int(),
-      name: z.coerce.string().max(20),
-      phoneNumber: zKrPhoneNumber,
-    }),
-  ),
-});
+const requestBody = z.object({});
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({}),
+  [HttpStatusCode.Ok]: z.object({
+    students: z.array(
+      z.object({
+        id: z.coerce.number().int(),
+        name: z.coerce.string().max(20),
+        phoneNumber: zKrPhoneNumber,
+      }),
+    ),
+  }),
 };
 
 const responseErrorMap = {};

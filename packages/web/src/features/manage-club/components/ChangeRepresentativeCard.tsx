@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import { ClubDelegateChangeRequestStatusEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+import { ApiClb008ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb008";
+import {
+  ClubDelegateChangeRequestStatusEnum,
+  ClubDelegateEnum,
+} from "@sparcs-clubs/interface/common/enum/club.enum";
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -9,10 +13,10 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { mockClubMembers } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 import { deleteChangeDelegateRequest } from "@sparcs-clubs/web/features/manage-club/services/deleteChangeDelegateRequest";
 import { useGetChangeDelegateRequests } from "@sparcs-clubs/web/features/manage-club/services/getChangeDelegateRequests";
 import { useGetClubDelegate } from "@sparcs-clubs/web/features/manage-club/services/getClubDelegate";
+import { useGetDelegateCandidates } from "@sparcs-clubs/web/features/manage-club/services/getDelegateCandidates";
 
 import ChangeRepresentative from "./ChangeRepresentative";
 
@@ -48,11 +52,29 @@ const ChangeRepresentativeCard: React.FC = () => {
     setDelegate2(delegatesNow?.delegates[2].studentId?.toString() ?? "");
   }, [delegatesNow]);
 
-  const selectItems: SelectItem[] = mockClubMembers.members.map(member => ({
-    label: `${member.studentNumber} ${member.name} (${member.krPhoneNumber})`,
-    value: member.studentNumber.toString(), // TODO: studentNumber 말고 studentId?
-    selectable: true,
-  }));
+  const getSelectItems = (
+    members: ApiClb008ResponseOk | undefined,
+  ): SelectItem[] =>
+    members?.students.map(member => ({
+      label: `${member.id} ${member.name} (${member.phoneNumber})`,
+      value: member.id.toString(),
+      selectable: true,
+    })) ?? [];
+
+  const { data: representativeCandidates } = useGetDelegateCandidates({
+    clubId,
+    delegateEnumId: ClubDelegateEnum.President,
+  });
+
+  const { data: delegate1Candidates } = useGetDelegateCandidates({
+    clubId,
+    delegateEnumId: ClubDelegateEnum.Representative1,
+  });
+
+  const { data: delegate2Candidates } = useGetDelegateCandidates({
+    clubId,
+    delegateEnumId: ClubDelegateEnum.Representative2,
+  });
 
   const { data: requestStatus } = useGetChangeDelegateRequests({ clubId });
 
@@ -104,7 +126,7 @@ const ChangeRepresentativeCard: React.FC = () => {
             )}
           </LabelWrapper>
           <Select
-            items={selectItems}
+            items={getSelectItems(representativeCandidates)}
             selectedValue={representative}
             onSelect={setRepresentative}
             disabled={type === "Applied"}
@@ -118,7 +140,7 @@ const ChangeRepresentativeCard: React.FC = () => {
             <TextButton text="대표자로 지정" disabled={type === "Applied"} />
           </LabelWrapper>
           <Select
-            items={selectItems}
+            items={getSelectItems(delegate1Candidates)}
             selectedValue={delegate1}
             onSelect={setDelegate1}
             disabled={type === "Applied"}
@@ -132,7 +154,7 @@ const ChangeRepresentativeCard: React.FC = () => {
             <TextButton text="대표자로 지정" disabled={type === "Applied"} />
           </LabelWrapper>
           <Select
-            items={selectItems}
+            items={getSelectItems(delegate2Candidates)}
             selectedValue={delegate2}
             onSelect={setDelegate2}
             disabled={type === "Applied"}
