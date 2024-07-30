@@ -15,10 +15,6 @@ import useGetCommonSpaces from "@sparcs-clubs/web/features/common-space/service/
 
 import { CommonSpaceInfoProps } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
 
-const StyledTypography = styled(Typography)`
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
-`;
-
 const CardInner = styled.div`
   display: flex;
   flex-direction: column;
@@ -69,7 +65,9 @@ const CommonSpaceInfoThirdFrame: React.FC<
     <>
       <Card outline gap={20}>
         <CardInner>
-          <StyledTypography type="p">신청자 정보</StyledTypography>
+          <Typography fs={16} lh={20} fw="MEDIUM">
+            신청자 정보
+          </Typography>
           <AsyncBoundary
             isLoading={userProfileLoading}
             isError={userProfileError}
@@ -82,12 +80,14 @@ const CommonSpaceInfoThirdFrame: React.FC<
           </AsyncBoundary>
         </CardInner>
         <ReservationInfo>
-          <Typography type="p_b">예약 공간</Typography>
+          <Typography fs={16} lh={20} fw="MEDIUM">
+            예약 공간
+          </Typography>
           <AsyncBoundary
             isLoading={commonSpacesLoading}
             isError={commonSpacesError}
           >
-            <Typography type="p">
+            <Typography fs={16} lh={20} fw="REGULAR">
               {commonSpacesData?.commonSpaces[spaceId]?.name},{" "}
               {format(startTerm, "M/d(E) ", { locale: ko })}
               {format(startTerm, "HH:mm", { locale: ko })} ~

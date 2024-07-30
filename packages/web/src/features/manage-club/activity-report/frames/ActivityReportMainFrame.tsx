@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
+import Button from "@sparcs-clubs/web/common/components/Button";
 import FoldableSection from "@sparcs-clubs/web/common/components/FoldableSection";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Info from "@sparcs-clubs/web/common/components/Info";

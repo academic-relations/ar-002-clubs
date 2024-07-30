@@ -5,6 +5,7 @@ import { ActivityDeadlineEnum } from "@sparcs-clubs/interface/common/enum/activi
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 
+import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
 import ActivityRepository from "../repository/activity.repository";
 
 import type { ApiAct001RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct001";
@@ -19,6 +20,7 @@ import type { ApiAct005ResponseOk } from "@sparcs-clubs/interface/api/activity/e
 export default class ActivityService {
   constructor(
     private activityRepository: ActivityRepository,
+    private activityActivityTermRepository: ActivityActivityTermRepository,
     private clubPublicService: ClubPublicService,
   ) {}
 
@@ -44,9 +46,10 @@ export default class ActivityService {
    * @returns 해당 날짜를 포함하는 활동 기간 정보를 리턴합니다.
    */
   private async getActivityD(param: { date: Date }) {
-    const activityDs = await this.activityRepository.selectActivityDByDate(
-      param.date,
-    );
+    const activityDs =
+      await this.activityActivityTermRepository.selectActivityDByDate(
+        param.date,
+      );
     if (activityDs.length > 1)
       throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
     if (activityDs.length === 0)
@@ -65,7 +68,9 @@ export default class ActivityService {
   private async getLastActivityD() {
     const today = getKSTDate();
     const [activityD] =
-      await this.activityRepository.selectLastActivityDByDate(today);
+      await this.activityActivityTermRepository.selectLastActivityDByDate(
+        today,
+      );
     return activityD;
   }
 

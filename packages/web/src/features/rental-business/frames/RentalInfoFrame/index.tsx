@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
+import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";

@@ -10,7 +10,7 @@ const url = (clubId: number) =>
 const method = "GET";
 
 const requestParam = z.object({
-  cludId: z.number().int().min(1),
+  cludId: z.coerce.number().int().min(1),
 });
 
 const requestQuery = z.object({});
@@ -21,9 +21,9 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     semesters: z
       .object({
-        id: z.number().int().min(1),
-        year: z.number().int(),
-        name: z.string().max(10),
+        id: z.coerce.number().int().min(1),
+        year: z.coerce.number().int(),
+        name: z.coerce.string().max(10),
       })
       .array(),
   }),

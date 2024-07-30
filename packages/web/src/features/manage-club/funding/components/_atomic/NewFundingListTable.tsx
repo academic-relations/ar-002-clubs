@@ -13,52 +13,35 @@ import Tag from "@sparcs-clubs/web/common/components/Tag";
 
 import { numberToKrWon } from "@sparcs-clubs/web/constants/manageClubFunding";
 
-import type { TagColor } from "@sparcs-clubs/web/common/components/Tag";
+import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
+import {
+  Funding,
+  mockupManageFunding,
+} from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-const getTagDetail = (status: string): { color: TagColor; text: string } => {
-  switch (status) {
-    case "작성중":
-      return { color: "BLUE", text: "작성중" };
-    case "신청 완료":
-      return { color: "PURPLE", text: "신청 완료" };
-    case "신청 반려":
-      return { color: "RED", text: "신청 반려" };
-    case "승인 완료":
-      return { color: "GREEN", text: "승인 완료" };
-    default:
-      return { color: "RED", text: "알 수 없음" };
-  }
-};
-
-const columnHelper = createColumnHelper<{
-  id: number;
-  status: string;
-  activityName: string;
-  contentName: string;
-  expenditureAmount: number;
-  approvedAmount?: number;
-}>();
+const columnHelper = createColumnHelper<Funding>();
 
 const columns = [
   columnHelper.accessor("status", {
     header: "상태",
     cell: info => {
-      const { color, text } = getTagDetail(info.getValue());
+      const { color, text } = getTagDetail(info.getValue(), FundingTagList);
       return <Tag color={color}>{text}</Tag>;
     },
     size: 10,
   }),
-  columnHelper.accessor("activityName", {
+  columnHelper.accessor("name", {
     header: "활동명",
     cell: info => info.getValue(),
     size: 45,
   }),
-  columnHelper.accessor("contentName", {
+  columnHelper.accessor("itemName", {
     header: "항목명",
     cell: info => info.getValue(),
     size: 15,
   }),
-  columnHelper.accessor("expenditureAmount", {
+  columnHelper.accessor("requestedAmount", {
     header: "신청 금액",
     cell: info => `${info.getValue().toLocaleString("ko-KR")}원`,
     size: 15,
@@ -73,57 +56,10 @@ const columns = [
   }),
 ];
 
-const mockData = [
-  {
-    id: 1,
-    status: "작성중",
-    activityName: "개발개발한 어떠한 활동",
-    contentName: "모니터",
-    expenditureAmount: 300000,
-  },
-  {
-    id: 2,
-    status: "작성중",
-    activityName: "개발개발한 어떠한 활동",
-    contentName: "모니터",
-    expenditureAmount: 300000,
-  },
-  {
-    id: 3,
-    status: "신청 완료",
-    activityName: "개발개발한 어떠한 활동",
-    contentName: "모니터",
-    expenditureAmount: 300000,
-  },
-  {
-    id: 4,
-    status: "신청 반려",
-    activityName: "개발개발한 어떠한 활동",
-    contentName: "모니터",
-    expenditureAmount: 300000,
-  },
-  {
-    id: 5,
-    status: "승인 완료",
-    activityName: "개발개발한 어떠한 활동",
-    contentName: "모니터",
-    expenditureAmount: 300000,
-    approvedAmount: 300000,
-  },
-  {
-    id: 6,
-    status: "승인 완료",
-    activityName: "개발개발한 어떠한 활동",
-    contentName: "모니터",
-    expenditureAmount: 300000,
-    approvedAmount: 0,
-  },
-];
-
 const NewFundingListTable: React.FC = () => {
   const table = useReactTable({
     columns,
-    data: mockData,
+    data: mockupManageFunding,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
@@ -131,7 +67,7 @@ const NewFundingListTable: React.FC = () => {
   return (
     <Table
       table={table}
-      count={mockData.length}
+      count={mockupManageFunding.length}
       footer={
         <TableRow>
           <TableCell type="Default" width="70%">
@@ -139,12 +75,15 @@ const NewFundingListTable: React.FC = () => {
           </TableCell>
           <TableCell type="Default" width="15%">
             {numberToKrWon(
-              mockData.reduce((acc, data) => acc + data.expenditureAmount, 0),
+              mockupManageFunding.reduce(
+                (acc, data) => acc + data.requestedAmount,
+                0,
+              ),
             )}
           </TableCell>
           <TableCell type="Default" width="15%">
             {numberToKrWon(
-              mockData.reduce(
+              mockupManageFunding.reduce(
                 (acc, data) => acc + (data.approvedAmount ?? 0),
                 0,
               ),

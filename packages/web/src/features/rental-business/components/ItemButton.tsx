@@ -69,14 +69,20 @@ const ItemButton: React.FC<ItemButtonProps> = ({
   selected,
   onClick,
   have = false,
-}) => (
-  <StyledButton selected={selected} onClick={onClick}>
-    <StyledImage>
-      <ImageContent src={image} alt="item image" />
-      {have && <HaveIndicator have={have} selected={selected} />}
-    </StyledImage>
-    <Typography type={selected ? "h3_b" : "h3"}>{name}</Typography>
-  </StyledButton>
-);
+}) => {
+  const fw = selected ? "SEMIBOLD" : "MEDIUM";
+  const color = selected ? "WHITE" : "BLACK";
+  return (
+    <StyledButton selected={selected} onClick={onClick}>
+      <StyledImage>
+        <ImageContent src={image} alt="item image" />
+        {have && <HaveIndicator have={have} selected={selected} />}
+      </StyledImage>
+      <Typography fs={20} lh={24} fw={fw} color={color}>
+        {name}
+      </Typography>
+    </StyledButton>
+  );
+};
 
 export default ItemButton;

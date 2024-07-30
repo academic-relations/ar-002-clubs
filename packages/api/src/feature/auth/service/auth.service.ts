@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 
 import { JwtService } from "@nestjs/jwt";
 
@@ -31,14 +31,29 @@ export class AuthService {
       type,
       department,
     );
-
+    // executiverepository가 common에서 제거됨에 따라 집행부원 토큰 추가 로직은 후에 재구성이 필요합니다.
+    // if(user.executive){
+    //   if(!(await this.executiveRepository.findExecutiveById(user.executive.id))) throw new HttpException("Cannot find Executive", 403);
+    // }
     const accessToken = this.getAccessToken(user);
     const refreshToken = this.getRefreshToken(user);
-
-    return {
-      accessToken,
+    const current = new Date(); // todo 시간 변경 필요.
+    const expiresAt = new Date(
+      current.getTime() + parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN),
+    );
+    return (await this.authRepository.createRefreshTokenRecord(
+      user.id,
       refreshToken,
-    };
+      expiresAt,
+    ))
+      ? {
+          accessToken,
+          refreshToken,
+          expiresAt,
+        }
+      : (() => {
+          throw new HttpException("Cannot store refreshtoken", 500);
+        })();
   }
 
   async postAuthRefresh(_user: {
@@ -56,13 +71,23 @@ export class AuthService {
   }
 
   // TODO: 로직 수정 필요
-  async postAuthSignout(_user: {
-    id: number;
-    sid: string;
-    name: string;
-    email: string;
-  }): Promise<ApiAut003ResponseOk> {
-    return null;
+  async postAuthSignout(
+    _user: {
+      id: number;
+      sid: string;
+      name: string;
+      email: string;
+    },
+    refreshToken: string,
+  ): Promise<ApiAut003ResponseOk> {
+    return (await this.authRepository.deleteRefreshTokenRecord(
+      _user.id,
+      refreshToken,
+    ))
+      ? {}
+      : (() => {
+          throw new HttpException("Cannot delete refreshtoken", 500);
+        })();
   }
 
   getAccessToken(user: {

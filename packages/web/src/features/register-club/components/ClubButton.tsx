@@ -32,7 +32,9 @@ const ClubButton: React.FC<ClubButtonProps> = ({
     gap={16}
     onClick={onClick}
     style={{
-      border: selected ? `1px solid ${colors.PRIMARY}` : "inherit",
+      border: selected
+        ? `1px solid ${colors.PRIMARY}`
+        : `1px solid ${colors.GRAY[200]}`,
     }}
   >
     <Typography fw="MEDIUM" fs={20} lh={24}>

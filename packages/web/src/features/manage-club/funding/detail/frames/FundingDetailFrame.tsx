@@ -4,13 +4,14 @@ import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
+import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
+import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/service/_mock/mockFundingDetail";
 
 import BasicEvidenceList from "../components/BasicEvidenceList";
@@ -80,9 +81,22 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
       <Card outline>
         {isNow && (
           <ProgressStatus
-            labels={["신청 완료", "동아리 연합회 승인 대기"]}
-            progress={[{ status: Status.Approved, date: new Date() }]}
-            // TODO: 반려일 경우 optional에 RejectReasonToast 추가
+            labels={["신청 완료", "동아리 연합회 신청 반려"]}
+            progress={[
+              { status: Status.Approved, date: new Date() },
+              { status: Status.Canceled, date: new Date() },
+            ]}
+            optional={
+              <RejectReasonToast
+                title="반려 사유"
+                reasons={[
+                  {
+                    reason: "대충 어떤 반려 사유 어쩌고",
+                    datetime: new Date(),
+                  },
+                ]}
+              />
+            }
           />
         )}
         <FundingInfoList />
