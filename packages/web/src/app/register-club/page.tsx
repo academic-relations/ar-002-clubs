@@ -14,11 +14,13 @@ import ClubButton from "@sparcs-clubs/web/features/register-club/components/Club
 
 const ClubButtonWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 20px;
+  align-items: center;
   align-self: stretch;
+  flex: 1 0 0;
+  gap: 20px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    flex-direction: column;
+  }
 `;
 
 const RegisterClub = () => {
@@ -43,7 +45,11 @@ const RegisterClub = () => {
   };
 
   return (
-    <FlexWrapper direction="column" gap={60}>
+    <FlexWrapper
+      direction="column"
+      gap={60}
+      style={{ alignItems: "flex-end", alignSelf: "stretch" }}
+    >
       <PageHead
         items={[{ name: "동아리 등록", path: "/register-club" }]}
         title="동아리 등록"
