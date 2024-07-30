@@ -3,8 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 
 import {
   axiosClient,
+  defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
+
+import { mockMyDelegateChange } from "./_mock/mockMyDelegateChange";
 
 import type { ApiClb013ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb013";
 
@@ -23,3 +26,10 @@ export const useGetMyDelegateRequest = () => {
     },
   });
 };
+
+defineAxiosMock(mock => {
+  const baseUrl = apiClb013.url();
+  mock
+    .onGet(new RegExp(`^${baseUrl}(/|$)`))
+    .reply(() => [200, mockMyDelegateChange]);
+});

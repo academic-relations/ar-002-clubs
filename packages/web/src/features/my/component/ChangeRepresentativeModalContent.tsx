@@ -39,11 +39,9 @@ const ChangeRepresentativeModalContent: React.FC<
   return (
     <FlexWrapper direction="column" gap={12}>
       <Typography
-        ff="PRETENDARD"
         fw="MEDIUM"
         fs={16}
         lh={28}
-        color="BLACK"
         style={{ whiteSpace: "pre-wrap", textAlign: "center" }}
       >
         {ChangeRepresentativeModalText(
@@ -55,11 +53,9 @@ const ChangeRepresentativeModalContent: React.FC<
       {needPhoneNumber && (
         <>
           <Typography
-            ff="PRETENDARD"
             fw="MEDIUM"
             fs={16}
             lh={28}
-            color="BLACK"
             style={{ whiteSpace: "pre-wrap", textAlign: "center" }}
           >
             전화번호를 입력해야 동아리 대표자 변경을 승인할 수 있습니다

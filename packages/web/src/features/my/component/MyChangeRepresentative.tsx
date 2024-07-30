@@ -66,17 +66,11 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
         <Typography fw="MEDIUM" fs={16} lh={20}>
           {Title}
         </Typography>
-        <Typography
-          fw="REGULAR"
-          fs={16}
-          lh={20}
-          style={{ whiteSpace: "pre-wrap" }}
-        >
+        <Typography fs={16} lh={20} style={{ whiteSpace: "pre-wrap" }}>
           {Text}
         </Typography>
         {type === "Requested" && (
           <Typography
-            fw="REGULAR"
             fs={16}
             lh={20}
             color="GRAY.600"
