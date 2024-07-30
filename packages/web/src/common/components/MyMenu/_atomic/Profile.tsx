@@ -1,5 +1,6 @@
 import React from "react";
 
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
@@ -13,7 +14,9 @@ interface ProfileProps {
   onClick: () => void;
 }
 
-const ProfileWrapper = styled.div<{ isSelected: boolean }>`
+const ProfileWrapper = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ selected: boolean }>`
   display: flex;
   flex-direction: row;
   gap: 8px;
@@ -22,10 +25,8 @@ const ProfileWrapper = styled.div<{ isSelected: boolean }>`
   padding: 8px 12px;
   align-items: center;
   cursor: pointer;
-  border: ${({ theme, isSelected }) =>
-    isSelected
-      ? `1px solid ${theme.colors.GRAY[200]}`
-      : `1px solid transparent`};
+  border: ${({ theme, selected }) =>
+    selected ? `1px solid ${theme.colors.GRAY[200]}` : `1px solid transparent`};
   &:hover {
     background-color: ${({ theme }) => theme.colors.GRAY[200]};
   }
@@ -45,7 +46,7 @@ const Profile: React.FC<ProfileProps> = ({
   isSelected = false,
   onClick,
 }) => (
-  <ProfileWrapper isSelected={isSelected} onClick={onClick}>
+  <ProfileWrapper selected={isSelected} onClick={onClick}>
     <ProfileText>
       <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
         {profileName}
