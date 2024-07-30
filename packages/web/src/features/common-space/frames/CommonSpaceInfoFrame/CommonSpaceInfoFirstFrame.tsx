@@ -56,6 +56,7 @@ const CommonSpaceInfoFirstFrame: React.FC<
           value={phoneNumber}
           placeholder={data?.phoneNumber || ""}
           onChange={setPhoneNumber}
+          disabled
         />
       </AsyncBoundary>
     </Card>

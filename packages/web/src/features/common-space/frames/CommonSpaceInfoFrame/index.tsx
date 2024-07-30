@@ -2,10 +2,13 @@ import React, { useCallback, useState } from "react";
 
 import { subSeconds } from "date-fns";
 
+import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Buttons/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
 
 import postCommonSpaceUsageOrder from "@sparcs-clubs/web/features/common-space/service/postCommonSpaceUsageOrder";
@@ -64,13 +67,35 @@ const CommonSpaceInfoFrame: React.FC<CommonSpaceInfoProps> = ({
   const [nextEnabled, setNextEnabled] = useState(true);
   const CurrentFrame = frames[step];
 
+  const openEditModal = useCallback(() => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <CancellableModalContent
+          onConfirm={() => {
+            close();
+            setStep(step - 1);
+          }}
+          onClose={close}
+        >
+          공용공간 신청 내역을 수정하면 신청 상태가 모두 초기화 됩니다.
+          <br />
+          ㄱㅊ?
+        </CancellableModalContent>
+      </Modal>
+    ));
+  }, [step, setStep]);
+
   const onPrev = useCallback(() => {
     if (step === 0) {
       setAgreement(false);
       return;
     }
+    if (step === 1) {
+      openEditModal();
+      return;
+    }
     setStep(step - 1);
-  }, [step, setStep]);
+  }, [step, setStep, openEditModal, setAgreement]);
 
   const handleSubmit = useCallback(() => {
     const { email, clubId, startTerm, endTerm } = body;

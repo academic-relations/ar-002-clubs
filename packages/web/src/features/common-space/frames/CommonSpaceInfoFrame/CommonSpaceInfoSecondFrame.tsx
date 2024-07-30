@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import apiCms001 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
 import apiCms002 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
 
 import {
@@ -50,26 +49,26 @@ const StyledCardLayout = styled(Card)`
   }
 `;
 
-type CommonSpaceItem = z.infer<
-  (typeof apiCms001.responseBodyMap)[200]["shape"]["commonSpaces"]["element"]
->;
-
 type UsageOrder = z.infer<
   (typeof apiCms002.responseBodyMap)[200]["shape"]["usageOrders"]["element"]
 >;
 
 const CommonSpaceInfoSecondFrame: React.FC<
-  CommonSpaceInfoProps & { setNextEnabled: (enabled: boolean) => void }
-> = ({ setNextEnabled, setBody, param, setParam }) => {
+  CommonSpaceInfoProps & {
+    setNextEnabled: (enabled: boolean) => void;
+  }
+> = ({ setNextEnabled, body, setBody, param, setParam }) => {
   const { data, isLoading, isError } = useGetCommonSpaces();
   const [date, setDate] = useState(startOfWeek(new Date()));
 
-  const [selectedValue, setSelectedValue] = useState("");
   const [intermediateSelectedValue, setIntermediateSelectedValue] =
     useState("");
   const [hasSelectError, setHasSelectError] = useState(false);
-  const [dateTimeRange, setDateTimeRange] = useState<[Date, Date]>();
-  const [selectedSpace, setSelectedSpace] = useState<CommonSpaceItem>();
+  const [dateTimeRange, setDateTimeRange] = useState<[Date, Date] | undefined>(
+    body?.startTerm && body?.endTerm
+      ? [body.startTerm, body.endTerm]
+      : undefined,
+  );
   const [showModal, setShowModal] = useState(false);
 
   const {
@@ -78,9 +77,17 @@ const CommonSpaceInfoSecondFrame: React.FC<
     isError: isUsageOrdersError,
   } = useGetCommonSpaceUsageOrders(
     {
-      spaceId: selectedSpace?.id || 1,
+      spaceId: param.spaceId || 1,
     },
     { startDate: date, endDate: addWeeks(date, 1) },
+  );
+
+  const getSpace = useCallback(
+    () =>
+      data?.commonSpaces.find(
+        item => item.id.toString() === param.spaceId?.toString(),
+      ),
+    [data?.commonSpaces, param.spaceId],
   );
 
   const disabledCells = useMemo(() => {
@@ -116,19 +123,9 @@ const CommonSpaceInfoSecondFrame: React.FC<
 
   useEffect(() => {
     const allConditionsMet =
-      Boolean(selectedValue) && !hasSelectError && !!dateTimeRange;
+      Boolean(param.spaceId) && !hasSelectError && !!dateTimeRange;
     setNextEnabled(allConditionsMet);
-  }, [selectedValue, hasSelectError, setNextEnabled, dateTimeRange]);
-
-  useEffect(() => {
-    const space = data?.commonSpaces.find(
-      item => item.id.toString() === selectedValue,
-    );
-
-    if (space) setParam({ ...param, spaceId: space?.id });
-
-    setSelectedSpace(space);
-  }, [selectedValue, setParam, data?.commonSpaces]);
+  }, [param, hasSelectError, setNextEnabled, dateTimeRange]);
 
   const diffHours =
     dateTimeRange && differenceInHours(dateTimeRange[1], dateTimeRange[0]);
@@ -156,13 +153,13 @@ const CommonSpaceInfoSecondFrame: React.FC<
               selectable: true,
             })) || []
           }
-          selectedValue={selectedValue}
+          selectedValue={param.spaceId?.toString() || ""}
           onSelect={value => {
             if (dateTimeRange) {
               setShowModal(true);
               setIntermediateSelectedValue(value);
             } else {
-              setSelectedValue(value);
+              setParam({ ...param, spaceId: Number(value) });
             }
           }}
           label="공용공간"
@@ -177,7 +174,10 @@ const CommonSpaceInfoSecondFrame: React.FC<
               }}
               onConfirm={() => {
                 setShowModal(false);
-                setSelectedValue(intermediateSelectedValue);
+                setParam({
+                  ...param,
+                  spaceId: Number(intermediateSelectedValue),
+                });
                 setIntermediateSelectedValue("");
               }}
             >
@@ -188,10 +188,10 @@ const CommonSpaceInfoSecondFrame: React.FC<
           </Modal>
         ) : null}
       </AsyncBoundary>
-      {selectedSpace && (
+      {getSpace() && (
         <>
           <Info
-            text={`${selectedSpace.name}는 하루에 최대 ${selectedSpace.availableHoursPerDay}시간, 일주일에 최대 ${selectedSpace.availableHoursPerWeek}시간 사용할 수 있습니다.`}
+            text={`${getSpace()?.name}는 하루에 최대 ${getSpace()?.availableHoursPerDay}시간, 일주일에 최대 ${getSpace()?.availableHoursPerWeek}시간 사용할 수 있습니다.`}
           />
           <StyledCardLayout outline gap={20} style={{ flexDirection: "row" }}>
             <AsyncBoundary
@@ -201,7 +201,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
               <Timetable
                 data={disabledCells}
                 setDateTimeRange={setDateTimeRange}
-                availableHoursPerDay={selectedSpace.availableHoursPerDay}
+                availableHoursPerDay={getSpace()?.availableHoursPerDay || 0}
                 startDate={date}
                 setStartDate={setDate}
               />
