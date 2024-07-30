@@ -37,7 +37,6 @@ export class RegistrationController {
   )
   @UsePipes(new ZodPipe(apiReg002))
   async getRenewalAbleClubList(): Promise<ApiReg002ResponseOk> {
-    // TODO: studentId 넘겨주기
     const orders = await this.registrationService.getReRegistrationAbleList();
     return orders;
   }
@@ -48,7 +47,6 @@ export class RegistrationController {
   )
   @UsePipes(new ZodPipe(apiReg003))
   async getPromotionalAbleClubList(): Promise<ApiReg002ResponseOk> {
-    // TODO: studentId 넘겨주기
     const orders =
       await this.registrationService.getPromotionalRegistrationAbleList();
     return orders;

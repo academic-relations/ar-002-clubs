@@ -214,49 +214,41 @@ export default class ClubRepository {
   }
 
   async findEligibleClubsForRegistration(semesterId: number) {
-    // 주어진 semesterId를 기준으로 최근 2학기와 3학기를 계산합니다.
+    // 주어진 semesterId를 기준으로 최근 2학기와 3학기를 계산
     const recentTwoSemesters = [semesterId - 1, semesterId];
     const recentThreeSemesters = [semesterId - 2, semesterId - 1, semesterId];
 
-    // 최근 2학기 동안 가동아리 상태를 유지한 클럽을 조회합니다.
+    // 최근 2학기 동안 가동아리 상태를 유지한 클럽을 조회
     const provisionalClubs = await this.db
-      .select({ id: Club.id }) // 클럽 ID를 선택합니다.
-      .from(Club) // Club 테이블로부터 데이터를 가져옵니다.
-      .leftJoin(ClubT, eq(Club.id, ClubT.clubId)) // Club과 ClubT 테이블을 clubId로 조인합니다.
+      .select({ id: Club.id })
+      .from(Club)
+      .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
       .where(
         and(
           eq(ClubT.clubStatusEnumId, 2), // club_status_enum_id가 2인 (가동아리)
           inArray(ClubT.semesterId, recentTwoSemesters), // recentTwoSemesters에 포함된 학기 동안
         ),
       )
-      .groupBy(Club.id); // 클럽 ID로 그룹화합니다.
+      .groupBy(Club.id);
 
-    // 최근 3학기 중 하나라도 정동아리 상태인 클럽을 조회합니다.
+    // 최근 3학기 중 하나라도 정동아리 상태인 클럽을 조회
     const regularClubs = await this.db
-      .select({ id: Club.id }) // 클럽 ID를 선택합니다.
-      .from(Club) // Club 테이블로부터 데이터를 가져옵니다.
-      .leftJoin(ClubT, eq(Club.id, ClubT.clubId)) // Club과 ClubT 테이블을 clubId로 조인합니다.
+      .select({ id: Club.id })
+      .from(Club)
+      .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
       .where(
         and(
           eq(ClubT.clubStatusEnumId, 1), // club_status_enum_id가 1인 (정동아리)
           inArray(ClubT.semesterId, recentThreeSemesters), // recentThreeSemesters에 포함된 학기 동안
         ),
       )
-      .groupBy(Club.id); // 클럽 ID로 그룹화합니다.
+      .groupBy(Club.id);
 
-    // 가동아리 클럽 ID를 Set으로 변환하여 중복을 제거합니다.
-    const provisionalClubIds = new Set(
-      provisionalClubs.map(club => club.id), // 각 클럽의 ID를 추출합니다.
-    );
+    const provisionalClubIds = new Set(provisionalClubs.map(club => club.id));
+    const regularClubIds = new Set(regularClubs.map(club => club.id));
 
-    // 정동아리 클럽 ID를 Set으로 변환하여 중복을 제거합니다.
-    const regularClubIds = new Set(
-      regularClubs.map(club => club.id), // 각 클럽의 ID를 추출합니다.
-    );
-
-    // 필터링된 가동아리 클럽 ID와 정동아리 클럽 ID를 합칩니다.
+    // 필터링된 가동아리 클럽 ID와 정동아리 클럽 ID를 합치기
     const eligibleClubIds = new Set([
-      // 최근 2학기 동안 가동아리 조건을 만족하는 클럽 필터링
       ...Array.from(provisionalClubIds).filter(id => {
         const count = provisionalClubs.filter(club => club.id === id).length;
         return count === 2; // 가동아리 상태가 최근 2학기 모두에 존재하는 클럽
@@ -265,7 +257,7 @@ export default class ClubRepository {
       ...Array.from(regularClubIds),
     ]);
 
-    // 중복 제거된 클럽 ID 리스트를 반환합니다.
+    // 중복 제거된 클럽 ID 리스트를 반환
     return Array.from(eligibleClubIds).map(id => ({ id }));
   }
 }
