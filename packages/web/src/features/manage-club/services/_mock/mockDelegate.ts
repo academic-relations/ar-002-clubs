@@ -1,5 +1,9 @@
 import { ApiClb006ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb006";
-import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+import { ApiClb011ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb011";
+import {
+  ClubDelegateChangeRequestStatusEnum,
+  ClubDelegateEnum,
+} from "@sparcs-clubs/interface/common/enum/club.enum";
 
 export const mockClubDelegates: ApiClb006ResponseOK = {
   delegates: [
@@ -20,6 +24,17 @@ export const mockClubDelegates: ApiClb006ResponseOK = {
       studentId: 20200512,
       name: "박병찬",
       phoneNumber: "010-1234-5678",
+    },
+  ],
+};
+
+export const mockClubDelegateRequest: ApiClb011ResponseOk = {
+  requests: [
+    {
+      studentId: 1,
+      studentName: "이도라",
+      clubDelegateChangeRequestStatusEnumId:
+        ClubDelegateChangeRequestStatusEnum.Applied,
     },
   ],
 };

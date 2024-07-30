@@ -25,7 +25,7 @@ const responseBodyMap = {
     requests: z
       .object({
         studentId: z.coerce.number().int().min(1),
-        studentName: z.coerce.number().int().min(1),
+        studentName: z.coerce.string(),
         clubDelegateChangeRequestStatusEnumId: z.nativeEnum(
           ClubDelegateChangeRequestStatusEnum,
         ),
