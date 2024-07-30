@@ -13,10 +13,10 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { mockClubDelegateCandidates } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockDelegate";
 import { deleteChangeDelegateRequest } from "@sparcs-clubs/web/features/manage-club/services/deleteChangeDelegateRequest";
 import { useGetChangeDelegateRequests } from "@sparcs-clubs/web/features/manage-club/services/getChangeDelegateRequests";
 import { useGetClubDelegate } from "@sparcs-clubs/web/features/manage-club/services/getClubDelegate";
-import { useGetDelegateCandidates } from "@sparcs-clubs/web/features/manage-club/services/getDelegateCandidates";
 import { updateClubDelegates } from "@sparcs-clubs/web/features/manage-club/services/updateClubDelegate";
 
 import ChangeRepresentative from "./ChangeRepresentative";
@@ -39,6 +39,7 @@ const ChangeRepresentativeCard: React.FC = () => {
   } = useGetClubDelegate({ clubId });
 
   const [representative, setRepresentative] = useState<string>("");
+  const [representativeName, setRepresentativeName] = useState<string>("");
   const [delegate1, setDelegate1] = useState<string>("");
   const [delegate2, setDelegate2] = useState<string>("");
   // TODO: 중복 선택 막는 로직 추가
@@ -46,12 +47,6 @@ const ChangeRepresentativeCard: React.FC = () => {
   const [type, setType] = useState<
     "Default" | "Applied" | "Rejected" | "Canceled"
   >("Default");
-
-  useEffect(() => {
-    setRepresentative(delegatesNow?.delegates[0].studentId?.toString() ?? "");
-    setDelegate1(delegatesNow?.delegates[1].studentId?.toString() ?? "");
-    setDelegate2(delegatesNow?.delegates[2].studentId?.toString() ?? "");
-  }, [delegatesNow]);
 
   const { data: requestStatus } = useGetChangeDelegateRequests({ clubId });
 
@@ -85,20 +80,20 @@ const ChangeRepresentativeCard: React.FC = () => {
       selectable: true,
     })) ?? [];
 
-  const { data: representativeCandidates } = useGetDelegateCandidates({
-    clubId,
-    delegateEnumId: ClubDelegateEnum.President,
-  });
+  // TODO: 실제 API로 대표자 및 대의원 후보 목록 가져오기
+  const representativeCandidates = mockClubDelegateCandidates;
+  const delegate1Candidates = mockClubDelegateCandidates;
+  const delegate2Candidates = mockClubDelegateCandidates;
 
-  const { data: delegate1Candidates } = useGetDelegateCandidates({
-    clubId,
-    delegateEnumId: ClubDelegateEnum.Representative1,
-  });
-
-  const { data: delegate2Candidates } = useGetDelegateCandidates({
-    clubId,
-    delegateEnumId: ClubDelegateEnum.Representative2,
-  });
+  useEffect(() => {
+    setRepresentative(delegatesNow?.delegates[0].studentId?.toString() ?? "");
+    const representativeCandidate = representativeCandidates?.students.find(
+      member => member.id.toString() === representative,
+    );
+    setRepresentativeName(representativeCandidate?.name ?? "");
+    setDelegate1(delegatesNow?.delegates[1].studentId?.toString() ?? "");
+    setDelegate2(delegatesNow?.delegates[2].studentId?.toString() ?? "");
+  }, [delegatesNow, representative, representativeCandidates]);
 
   const changeRepresentative = (studentId: number) => {
     updateClubDelegates(
@@ -106,6 +101,27 @@ const ChangeRepresentativeCard: React.FC = () => {
       { delegateEnumId: ClubDelegateEnum.President, studentId },
     );
   };
+
+  // TODO: 이 코드의 문제: 처음에 api 호출해서 대의원이 "" -> 실제 값으로 변경될 때도 호출됨
+  useEffect(() => {
+    updateClubDelegates(
+      { clubId },
+      {
+        delegateEnumId: ClubDelegateEnum.Representative1,
+        studentId: Number(delegate1),
+      },
+    );
+  }, [delegate1]);
+
+  useEffect(() => {
+    updateClubDelegates(
+      { clubId },
+      {
+        delegateEnumId: ClubDelegateEnum.Representative1,
+        studentId: Number(delegate2),
+      },
+    );
+  }, [delegate2]);
 
   return (
     <Card outline gap={32} style={{ flex: 1 }}>
@@ -117,8 +133,8 @@ const ChangeRepresentativeCard: React.FC = () => {
           <ChangeRepresentative
             type={type}
             clubName="술박스"
-            prevRepresentative="20210000 박병찬"
-            newRepresentative="20200000 이지윤"
+            prevRepresentative={`${representative} ${representativeName}`}
+            newRepresentative={`${requestStatus?.requests[0].studentId} ${requestStatus?.requests[0].studentName}`}
           />
         )}
         <FlexWrapper direction="column" gap={4}>
