@@ -14,6 +14,7 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import {
   getClubType,
   getTagColorFromClubType,
@@ -63,6 +64,8 @@ const ClubCard: React.FC<
   ClubCardProps & { isRegistrationPeriod?: boolean }
 > = ({ club, isRegistrationPeriod = false }) => {
   const [isRegistered, setIsRegistered] = React.useState<boolean>(false);
+  const { isLoggedIn } = useAuth();
+  React.useEffect(() => {}, [isLoggedIn]);
 
   const handleRegister = () => {
     overlay.open(({ isOpen, close }) => (
