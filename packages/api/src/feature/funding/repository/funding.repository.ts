@@ -14,10 +14,12 @@ import {
   FixtureSoftwareEvidenceFile,
   FoodExpenseFile,
   FundingOrder,
+  FundingOrderFeedback,
   JointExpenseFile,
   LaborContractFile,
   ProfitMakingActivityFile,
   PublicationFile,
+  TradeDetailFile,
   TradeEvidenceFile,
   TransportationPassenger,
 } from "@sparcs-clubs/api/drizzle/schema/funding.schema";
@@ -439,8 +441,129 @@ export default class FundingRepository {
 
   async selectFundingByFundingId(fundingId: number) {
     const result = await this.db
-      .select()
+      .select({
+        clubId: FundingOrder.clubId,
+        purposeId: FundingOrder.purposeId,
+        name: FundingOrder.name,
+        expenditureDate: FundingOrder.expenditureDate,
+        expenditureAmount: FundingOrder.expenditureAmount,
+        fundingOrderStatusEnumId: FundingOrder.fundingOrderStatusEnumId,
+        feedback: FundingOrderFeedback.feedback,
+        tradeEvidenceFiles: { uid: TradeEvidenceFile.fileUid },
+        tradeDetailFiles: { uid: TradeDetailFile.fileUid },
+        tradeDetailExplanation: FundingOrder.tradeDetailExplanation,
+        clubSuppliesName: FundingOrder.clubSuppliesName,
+        clubSuppliesEvidenceEnumId: FundingOrder.clubSuppliesEvidenceEnumId,
+        clubSuppliesClassEnumId: FundingOrder.clubSuppliesClassEnumId,
+        clubSuppliesPurpose: FundingOrder.clubSuppliesPurpose,
+        clubSuppliesImageFiles: { uid: ClubSuppliesImageFile.fileUid },
+        clubSuppliesSoftwareEvidenceFiles: {
+          uid: ClubSuppliesSoftwareEvidenceFile.fileUid,
+        },
+        clubSuppliesSoftwareEvidence: FundingOrder.clubSuppliesSoftwareEvidence,
+        numberOfClubSupplies: FundingOrder.numberOfClubSupplies,
+        priceOfClubSupplies: FundingOrder.priceOfClubSupplies,
+        isFixture: FundingOrder.isFixture,
+        fixtureName: FundingOrder.fixtureName,
+        fixtureEvidenceEnumId: FundingOrder.fixtureEvidenceEnumId,
+        fixtureClassEnumId: FundingOrder.fixtureClassEnumId,
+        fixturePurpose: FundingOrder.fixturePurpose,
+        fixtureImageFiles: { uid: FixtureImageFile.fileUid },
+        fixtureSoftwareEvidenceFiles: {
+          uid: FixtureSoftwareEvidenceFile.fileUid,
+        },
+        fixtureSoftwareEvidence: FundingOrder.fixtureSoftwareEvidence,
+        numberOfFixture: FundingOrder.numberOfFixture,
+        priceOfFixture: FundingOrder.priceOfFixture,
+        isTransportation: FundingOrder.isTransportation,
+        transportationEnumId: FundingOrder.transportationEnumId,
+        transportationPassengers: {
+          studentNumber: TransportationPassenger.studentId,
+        },
+        origin: FundingOrder.origin,
+        destination: FundingOrder.destination,
+        purposeOfTransportation: FundingOrder.purposeOfTransportation,
+        placeValidity: FundingOrder.placeValidity,
+        isNonCorporateTransaction: FundingOrder.isNonCorporateTransaction,
+        traderName: FundingOrder.traderName,
+        traderAccountNumber: FundingOrder.traderAccountNumber,
+        wasteExplanation: FundingOrder.wasteExplanation,
+        isFoodExpense: FundingOrder.isFoodExpense,
+        foodExpenseExplanation: FundingOrder.foodExpenseExplanation,
+        foodExpenseFiles: { uid: FoodExpenseFile.fileUid },
+        isLaborContract: FundingOrder.isLaborContract,
+        laborContractExplanation: FundingOrder.laborContractExplanation,
+        laborContractFiles: { uid: LaborContractFile.fileUid },
+        isExternalEventParticipationFee:
+          FundingOrder.isExternalEventParticipationFee,
+        externalEventParticipationFeeExplanation:
+          FundingOrder.externalEventParticipationFeeExplanation,
+        externalEventParticipationFeeFiles: {
+          uid: ExternalEventParticipationFeeFile.fileUid,
+        },
+        isPublication: FundingOrder.isPublication,
+        publicationExplanation: FundingOrder.publicationExplanation,
+        publicationFiles: { uid: PublicationFile.fileUid },
+        isProfitMakingActivity: FundingOrder.isProfitMakingActivity,
+        profitMakingActivityExplanation:
+          FundingOrder.profitMakingActivityExplanation,
+        profitMakingActivityFiles: { uid: ProfitMakingActivityFile.fileUid },
+        isJointExpense: FundingOrder.isJointExpense,
+        jointExpenseExplanation: FundingOrder.jointExpenseExplanation,
+        jointExpenseFiles: { uid: JointExpenseFile.fileUid },
+        isEtcExpense: FundingOrder.isEtcExpense,
+        etcExpenseExplanation: FundingOrder.etcExpenseExplanation,
+        etcExpenseFiles: { uid: EtcExpenseFile.fileUid },
+      })
       .from(FundingOrder)
+      .leftJoin(
+        TradeEvidenceFile,
+        eq(TradeEvidenceFile.fundingOrderId, fundingId),
+      )
+      .leftJoin(TradeDetailFile, eq(TradeDetailFile.fundingOrderId, fundingId))
+      .leftJoin(
+        FundingOrderFeedback,
+        eq(FundingOrderFeedback.fundingOrderId, fundingId),
+      )
+      .leftJoin(
+        TransportationPassenger,
+        eq(TransportationPassenger.fundingOrderId, fundingId),
+      )
+      .leftJoin(
+        ClubSuppliesImageFile,
+        eq(ClubSuppliesImageFile.fundingOrderId, fundingId),
+      )
+      .leftJoin(
+        ClubSuppliesSoftwareEvidenceFile,
+        eq(ClubSuppliesSoftwareEvidenceFile.fundingOrderId, fundingId),
+      )
+      .leftJoin(
+        FixtureImageFile,
+        eq(FixtureImageFile.fundingOrderId, fundingId),
+      )
+      .leftJoin(
+        FixtureSoftwareEvidenceFile,
+        eq(FixtureSoftwareEvidenceFile.fundingOrderId, fundingId),
+      )
+      .leftJoin(FoodExpenseFile, eq(FoodExpenseFile.fundingOrderId, fundingId))
+      .leftJoin(
+        LaborContractFile,
+        eq(LaborContractFile.fundingOrderId, fundingId),
+      )
+      .leftJoin(
+        ExternalEventParticipationFeeFile,
+        eq(ExternalEventParticipationFeeFile.fundingOrderId, fundingId),
+      )
+      .leftJoin(PublicationFile, eq(PublicationFile.fundingOrderId, fundingId))
+      .leftJoin(
+        ProfitMakingActivityFile,
+        eq(ProfitMakingActivityFile.fundingOrderId, fundingId),
+      )
+      .leftJoin(
+        JointExpenseFile,
+        eq(JointExpenseFile.fundingOrderId, fundingId),
+      )
+      .leftJoin(EtcExpenseFile, eq(EtcExpenseFile.fundingOrderId, fundingId))
       .where(
         and(eq(FundingOrder.id, fundingId), isNull(FundingOrder.deletedAt)),
       );
