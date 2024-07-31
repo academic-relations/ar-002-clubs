@@ -11,7 +11,7 @@ import { mockMyDelegateChange } from "./_mock/mockMyDelegateChange";
 
 import type { ApiClb013ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb013";
 
-export const useGetMyDelegateRequest = () => {
+export const useGetMyDelegateRequest = () =>
   useQuery<ApiClb013ResponseOk, Error>({
     queryKey: [apiClb013.url()],
     queryFn: async (): Promise<ApiClb013ResponseOk> => {
@@ -25,11 +25,7 @@ export const useGetMyDelegateRequest = () => {
       }
     },
   });
-};
 
 defineAxiosMock(mock => {
-  const baseUrl = apiClb013.url();
-  mock
-    .onGet(new RegExp(`^${baseUrl}(/|$)`))
-    .reply(() => [200, mockMyDelegateChange]);
+  mock.onGet(apiClb013.url()).reply(() => [200, mockMyDelegateChange]);
 });
