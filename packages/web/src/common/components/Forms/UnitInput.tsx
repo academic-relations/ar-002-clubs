@@ -123,6 +123,8 @@ const UnitInput: React.FC<UnitInputProps> = ({
 
     if (isValidFormat) {
       handleChange(inputValue);
+    } else {
+      setError("숫자만 입력 가능합니다.");
     }
   };
 
