@@ -22,4 +22,14 @@ export default class UserPublicService {
 
     return students[0];
   }
+
+  async isNotgraduateStudent(
+    studentId: number,
+    semesterId: number,
+  ): Promise<boolean> {
+    const isNotgraduateStudent =
+      await this.studentRepository.isNotgraduateStudent(studentId, semesterId);
+    if (!isNotgraduateStudent) return false;
+    return true;
+  }
 }

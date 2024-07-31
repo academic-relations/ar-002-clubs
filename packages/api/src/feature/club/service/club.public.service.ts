@@ -101,4 +101,17 @@ export default class ClubPublicService {
     }
     return true;
   }
+
+  async isStudentPresident(studentId: number, clubId: number) {
+    const president =
+      await this.clubDelegateDRepository.isPresidentByStudentIdAndClubId(
+        studentId,
+        clubId,
+      );
+
+    if (president) {
+      return true;
+    }
+    return false;
+  }
 }

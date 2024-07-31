@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { ApiReg004ResponseOK } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg004";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 
@@ -36,5 +37,11 @@ export class RegistrationService {
     await this.registrationRepository.createRegistration(body);
 
     return {};
+  }
+
+  async getStudentRegistrationEvents(): Promise<ApiReg004ResponseOK> {
+    const result =
+      await this.registrationRepository.getStudentRegistrationEvents();
+    return result;
   }
 }

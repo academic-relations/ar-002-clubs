@@ -8,7 +8,7 @@ import { RegistrationStatusEnum } from "@sparcs-clubs/interface/common/enum/regi
  * @description 자신의 동아리 신청 내역과 그 상태를 전부 조회합니다.
  */
 
-const url = () => `/student/registration/member/applies/my`;
+const url = () => `/student/registrations/member-registrations/my`;
 const method = "GET";
 
 const requestParam = z.object({});

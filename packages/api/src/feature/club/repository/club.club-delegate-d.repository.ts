@@ -1,7 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ClubDelegateChangeRequestStatusEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+import {
+  ClubDelegateChangeRequestStatusEnum,
+  ClubDelegateEnum,
+} from "@sparcs-clubs/interface/common/enum/club.enum";
 
-import { and, eq, gte, isNull, lte, or } from "drizzle-orm";
+import { and, count, eq, gte, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -272,5 +275,26 @@ export class ClubDelegateDRepository {
     });
 
     return result;
+  }
+
+  async isPresidentByStudentIdAndClubId(studentId: number, clubId: number) {
+    const cur = getKSTDate();
+    const presidentEnumId = ClubDelegateEnum.President;
+    const { president } = await this.db
+      .select({ president: count(ClubDelegateD.id) })
+      .from(ClubDelegateD)
+      .where(
+        and(
+          eq(ClubDelegateD.studentId, studentId),
+          eq(ClubDelegateD.clubId, clubId),
+          eq(ClubDelegateD.ClubDelegateEnumId, presidentEnumId),
+          lte(ClubDelegateD.startTerm, cur),
+          or(gte(ClubDelegateD.endTerm, cur), isNull(ClubDelegateD.endTerm)),
+          isNull(ClubDelegateD.deletedAt),
+        ),
+      )
+      .then(takeUnique);
+    if (president !== 0) return true;
+    return false;
   }
 }

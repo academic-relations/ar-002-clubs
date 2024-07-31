@@ -1,12 +1,18 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
-import { eq } from "drizzle-orm";
+import { ApiReg004ResponseOK } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg004";
+import { count, desc, eq, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
+import { takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { Club } from "@sparcs-clubs/api/drizzle/schema/club.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-import { Registration } from "src/drizzle/schema/registration.schema";
+import {
+  Registration,
+  RegistrationEvent,
+  RegistrationEventEnum,
+} from "src/drizzle/schema/registration.schema";
 
 @Injectable()
 export class RegistrationRepository {
@@ -52,5 +58,24 @@ export class RegistrationRepository {
     });
 
     logger.debug("[createRegistration] insertion ends successfully");
+  }
+
+  async getStudentRegistrationEvents(): Promise<ApiReg004ResponseOK> {
+    const { eventEnumCount } = await this.db
+      .select({ eventEnumCount: count(RegistrationEventEnum.enumId) })
+      .from(RegistrationEventEnum)
+      .where(isNull(RegistrationEventEnum.deletedAt))
+      .then(takeUnique);
+    const result = await this.db
+      .select({
+        id: RegistrationEvent.id,
+        registrationEventEnumId: RegistrationEvent.registrationEventEnumId,
+        startTerm: RegistrationEvent.startTerm,
+        endTerm: RegistrationEvent.endTerm,
+      })
+      .from(RegistrationEvent)
+      .orderBy(desc(RegistrationEvent.startTerm))
+      .limit(eventEnumCount);
+    return { events: result };
   }
 }
