@@ -7,6 +7,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { ChangeRepresentativeModalText } from "@sparcs-clubs/web/constants/changeRepresentative";
+import { patchMyDelegateRequest } from "@sparcs-clubs/web/features/my/services/patchMyDelegateRequest";
 
 interface ChangeRepresentativeModalContentProps {
   needPhoneNumber: boolean;
@@ -14,8 +15,7 @@ interface ChangeRepresentativeModalContentProps {
   prevRepresentative: string;
   newRepresentative: string;
   phonePlaceholder?: string;
-  phoneValue: string;
-  onPhoneChange: (value: string) => void;
+  onClose: () => void;
 }
 
 const ButtonWrapper = styled.div`
@@ -32,10 +32,22 @@ const ChangeRepresentativeModalContent: React.FC<
   prevRepresentative,
   newRepresentative,
   phonePlaceholder = "010-XXXX-XXXX",
-  phoneValue,
-  onPhoneChange,
+  onClose,
 }) => {
   const [errorPhone, setErrorPhone] = useState<boolean>(false);
+  const [phone, setPhone] = useState<string>("");
+
+  // TODO: clb013 014 수정되면 반영
+  const onConfirm = () => {
+    patchMyDelegateRequest({ requestId: 1 }, { phoneNumber: phone });
+    onClose();
+  };
+
+  const onReject = () => {
+    patchMyDelegateRequest({ requestId: 1 }, { phoneNumber: phone });
+    onClose();
+  };
+
   return (
     <FlexWrapper direction="column" gap={12}>
       <Typography
@@ -62,18 +74,27 @@ const ChangeRepresentativeModalContent: React.FC<
           </Typography>
           <PhoneInput
             placeholder={phonePlaceholder}
-            value={phoneValue}
-            onChange={onPhoneChange}
+            value={phone}
+            onChange={setPhone}
             setErrorStatus={setErrorPhone}
           />
         </>
       )}
       <ButtonWrapper>
-        <Button type="outlined">취소</Button>
+        <Button type="outlined" onClick={onClose}>
+          취소
+        </Button>
         <FlexWrapper direction="row" gap={12}>
-          <Button type="outlined">거절</Button>
+          <Button type="outlined" onClick={onReject}>
+            거절
+          </Button>
           <Button
-            type={errorPhone || phoneValue === "" ? "disabled" : "default"}
+            type={
+              needPhoneNumber && (errorPhone || phone === "")
+                ? "disabled"
+                : "default"
+            }
+            onClick={onConfirm}
           >
             승인
           </Button>
