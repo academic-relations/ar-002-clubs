@@ -18,6 +18,8 @@ interface FormControllerProps<
   rules?: Omit<RegisterOptions<TFieldValues, TName>, "required" | "disabled">;
   renderItem: (args: {
     required?: boolean;
+    maxLength?: number;
+    minLength?: number;
     onChange: (
       e:
         | ChangeEvent<HTMLInputElement>
@@ -34,6 +36,9 @@ interface FormControllerProps<
   }) => ReactNode;
   defaultValue?: FieldPathValue<TFieldValues, TName>;
   required?: boolean;
+  maxLength?: number;
+  minLength?: number;
+  pattern?: RegExp;
 }
 
 // TODO. maxLength rule 추가,
@@ -49,6 +54,12 @@ function FormController<
   ...props
 }: FormControllerProps<TFieldValues, TName>) {
   const requiredMessage = "필수값입니다.";
+  const maxLengthMessage = `최대 ${props.maxLength}자까지 가능합니다.`;
+  const minLengthMessage = `최소 ${props.minLength}자 이상이어야 합니다.`;
+  const patternMessage = "정해진 형식에 맞지 않습니다.";
+
+  const isValidLength = (length: number | undefined) =>
+    length != null && length > 0;
 
   const {
     field: { onChange, onBlur, value },
@@ -62,6 +73,22 @@ function FormController<
         value: props.required ?? false,
         message: requiredMessage,
       },
+      maxLength: isValidLength(props.maxLength)
+        ? {
+            value: props.maxLength as number,
+            message: maxLengthMessage,
+          }
+        : undefined,
+      minLength: isValidLength(props.minLength)
+        ? {
+            value: props.minLength as number,
+            message: minLengthMessage,
+          }
+        : undefined,
+      pattern:
+        props.pattern != null
+          ? { value: props.pattern, message: patternMessage }
+          : undefined,
     },
     defaultValue,
   });

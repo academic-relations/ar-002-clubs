@@ -9,6 +9,7 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
+import { EmailValidator } from "@sparcs-clubs/web/utils/validator";
 
 const RowWrapper = styled.div`
   display: flex;
@@ -62,6 +63,21 @@ const ProfessorInformFrame: React.FC = () => (
       <FormController
         name="professor.mail"
         required
+        rules={{
+          validate: value => {
+            const emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@kaist\.ac\.kr$/;
+
+            if (typeof value !== "string") {
+              return true;
+            }
+
+            if (value.length === 0) {
+              return true;
+            }
+
+            return EmailValidator.validate(value, true, emailRegex) || true;
+          },
+        }}
         renderItem={props => (
           <TextInput
             {...props}
