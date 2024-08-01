@@ -10,10 +10,6 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
 
-// interface ProfessorInformProps {
-//   control: Control<RegisterClubInterface>;
-// }
-
 const RowWrapper = styled.div`
   display: flex;
   flex-direction: row;

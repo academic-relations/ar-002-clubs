@@ -51,14 +51,14 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
     }
   }, [type]);
 
-  const submitHandler = async (submitData: ApiReg001RequestBody) => {
+  const submitHandler = async (data: ApiReg001RequestBody) => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <CancellableModalContent
           onConfirm={() => {
             // TODO. studentId, clubId,  추가
             registerClub({
-              ...submitData,
+              ...data,
               registrationTypeEnumId: type,
               foundedAt:
                 getValues().foundedMonthAt != null
@@ -66,7 +66,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
                       +getValues().foundedYearAt,
                       +getValues().foundedMonthAt! - 1,
                     )
-                  : new Date(+getValues().foundedYearAt),
+                  : new Date(getValues().foundedYearAt),
             });
 
             close();

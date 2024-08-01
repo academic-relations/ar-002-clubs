@@ -60,7 +60,6 @@ const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({ type }) => (
         <FormController
           name="activityPlanFileId"
           // required
-
           renderItem={props => (
             <SingleUploadWithTextAndTemplate
               {...props}
@@ -75,7 +74,6 @@ const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({ type }) => (
         <FormController
           name="clubRuleFileId"
           // required
-
           renderItem={props => (
             <SingleUploadWithTextAndTemplate {...props} title="동아리 회칙" />
           )}
