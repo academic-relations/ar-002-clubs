@@ -23,6 +23,7 @@ import {
   TradeEvidenceFile,
   TransportationPassenger,
 } from "@sparcs-clubs/api/drizzle/schema/funding.schema";
+import { Student } from "dist/drizzle/schema/user.schema";
 
 @Injectable()
 export default class FundingRepository {
@@ -35,17 +36,17 @@ export default class FundingRepository {
     expenditureDate: Date;
     expenditureAmount: number;
 
-    tradeEvidenceFiles: Array<{ uid: string }>;
-    tradeDetailFiles: Array<{ uid: string }>;
+    tradeEvidenceFiles: Array<{ fileId: string }>;
+    tradeDetailFiles: Array<{ fileId: string }>;
     tradeDetailExplanation: string;
 
     clubSuppliesName?: string;
     clubSuppliesEvidenceEnumId?: number;
     clubSuppliesClassEnumId?: number;
     clubSuppliesPurpose?: string;
-    clubSuppliesImageFiles?: Array<{ uid: string }>;
+    clubSuppliesImageFiles?: Array<{ fileId: string }>;
     clubSuppliesSoftwareEvidence?: string;
-    clubSuppliesSoftwareEvidenceFiles?: Array<{ uid: string }>;
+    clubSuppliesSoftwareEvidenceFiles?: Array<{ fileId: string }>;
     numberOfClubSupplies?: number;
     priceOfClubSupplies?: number;
 
@@ -54,9 +55,9 @@ export default class FundingRepository {
     fixtureEvidenceEnumId?: number;
     fixtureClassEnumId?: number;
     fixturePurpose?: string;
-    fixtureImageFiles: Array<{ uid: string }>;
+    fixtureImageFiles: Array<{ fileId: string }>;
     fixtureSoftwareEvidence?: string;
-    fixtureSoftwareEvidenceFiles: Array<{ uid: string }>;
+    fixtureSoftwareEvidenceFiles: Array<{ fileId: string }>;
     numberOfFixture?: number;
     priceOfFixture?: number;
 
@@ -75,31 +76,31 @@ export default class FundingRepository {
 
     isFoodExpense: boolean;
     foodExpenseExplanation?: string;
-    foodExpenseFiles: Array<{ uid: string }>;
+    foodExpenseFiles: Array<{ fileId: string }>;
 
     isLaborContract: boolean;
     laborContractExplanation?: string;
-    laborContractFiles: Array<{ uid: string }>;
+    laborContractFiles: Array<{ fileId: string }>;
 
     isExternalEventParticipationFee: boolean;
     externalEventParticipationFeeExplanation?: string;
-    externalEventParticipationFeeFiles: Array<{ uid: string }>;
+    externalEventParticipationFeeFiles: Array<{ fileId: string }>;
 
     isPublication: boolean;
     publicationExplanation?: string;
-    publicationFiles: Array<{ uid: string }>;
+    publicationFiles: Array<{ fileId: string }>;
 
     isProfitMakingActivity: boolean;
     profitMakingActivityExplanation?: string;
-    profitMakingActivityFiles: Array<{ uid: string }>;
+    profitMakingActivityFiles: Array<{ fileId: string }>;
 
     isJointExpense: boolean;
     jointExpenseExplanation?: string;
-    jointExpenseFiles: Array<{ uid: string }>;
+    jointExpenseFiles: Array<{ fileId: string }>;
 
     isEtcExpense: boolean;
     etcExpenseExplanation?: string;
-    etcExpenseFiles: Array<{ uid: string }>;
+    etcExpenseFiles: Array<{ fileId: string }>;
   }): Promise<boolean> {
     const isInsertionSucceed = await this.db.transaction(async tx => {
       const [fundingInsertResult] = await tx.insert(FundingOrder).values({
@@ -191,7 +192,7 @@ export default class FundingRepository {
             .insert(TradeEvidenceFile)
             .values({
               fundingOrderId: fundingInsertResult.insertId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (tradeEvidenceFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -210,7 +211,7 @@ export default class FundingRepository {
             .insert(TradeEvidenceFile)
             .values({
               fundingOrderId: fundingInsertResult.insertId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (tradeDetailFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -229,7 +230,7 @@ export default class FundingRepository {
             .insert(ClubSuppliesImageFile)
             .values({
               fundingOrderId: fundingInsertResult.insertId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (clubSuppliesImageFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -248,7 +249,7 @@ export default class FundingRepository {
             .insert(ClubSuppliesSoftwareEvidenceFile)
             .values({
               fundingOrderId: fundingInsertResult.insertId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (clubSuppliesSoftwareEvidenceFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -267,7 +268,7 @@ export default class FundingRepository {
             .insert(FixtureImageFile)
             .values({
               fundingOrderId: fundingInsertResult.insertId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (fixtureImageFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -286,7 +287,7 @@ export default class FundingRepository {
             .insert(FixtureSoftwareEvidenceFile)
             .values({
               fundingOrderId: fundingInsertResult.insertId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (fixtureSoftwareEvidenceFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -305,7 +306,7 @@ export default class FundingRepository {
             .insert(FoodExpenseFile)
             .values({
               fundingOrderId: fundingInsertResult.insertId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (foodExpenseFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -324,7 +325,7 @@ export default class FundingRepository {
             .insert(LaborContractFile)
             .values({
               fundingOrderId: fundingInsertResult.insertId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (laborContractFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -343,7 +344,7 @@ export default class FundingRepository {
             .insert(ExternalEventParticipationFeeFile)
             .values({
               fundingOrderId: fundingInsertResult.insertId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (
             externalEventParticipationFeeFileInsertResult.affectedRows !== 1
@@ -364,7 +365,7 @@ export default class FundingRepository {
             .insert(PublicationFile)
             .values({
               fundingOrderId: fundingInsertResult.insertId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (publicationFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -383,7 +384,7 @@ export default class FundingRepository {
             .insert(ProfitMakingActivityFile)
             .values({
               fundingOrderId: fundingInsertResult.insertId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (profitMakingActivityFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -402,7 +403,7 @@ export default class FundingRepository {
             .insert(JointExpenseFile)
             .values({
               fundingOrderId: fundingInsertResult.insertId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (jointExpenseFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -421,7 +422,7 @@ export default class FundingRepository {
             .insert(EtcExpenseFile)
             .values({
               fundingOrderId: fundingInsertResult.insertId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (etcExpenseFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -449,16 +450,31 @@ export default class FundingRepository {
         expenditureAmount: FundingOrder.expenditureAmount,
         fundingOrderStatusEnumId: FundingOrder.fundingOrderStatusEnumId,
         feedback: FundingOrderFeedback.feedback,
-        tradeEvidenceFiles: { uid: TradeEvidenceFile.fileUid },
-        tradeDetailFiles: { uid: TradeDetailFile.fileUid },
+        // TODO: file link, name 받아오기
+        tradeEvidenceFiles: {
+          uid: TradeEvidenceFile.fileId,
+          link: TradeEvidenceFile.fileId,
+          name: TradeEvidenceFile.fileId,
+        },
+        tradeDetailFiles: {
+          uid: TradeDetailFile.fileId,
+          link: TradeDetailFile.fileId,
+          name: TradeDetailFile.fileId,
+        },
         tradeDetailExplanation: FundingOrder.tradeDetailExplanation,
         clubSuppliesName: FundingOrder.clubSuppliesName,
         clubSuppliesEvidenceEnumId: FundingOrder.clubSuppliesEvidenceEnumId,
         clubSuppliesClassEnumId: FundingOrder.clubSuppliesClassEnumId,
         clubSuppliesPurpose: FundingOrder.clubSuppliesPurpose,
-        clubSuppliesImageFiles: { uid: ClubSuppliesImageFile.fileUid },
+        clubSuppliesImageFiles: {
+          uid: ClubSuppliesImageFile.fileId,
+          link: ClubSuppliesImageFile.fileId,
+          name: ClubSuppliesImageFile.fileId,
+        },
         clubSuppliesSoftwareEvidenceFiles: {
-          uid: ClubSuppliesSoftwareEvidenceFile.fileUid,
+          uid: ClubSuppliesSoftwareEvidenceFile.fileId,
+          link: ClubSuppliesSoftwareEvidenceFile.fileId,
+          name: ClubSuppliesSoftwareEvidenceFile.fileId,
         },
         clubSuppliesSoftwareEvidence: FundingOrder.clubSuppliesSoftwareEvidence,
         numberOfClubSupplies: FundingOrder.numberOfClubSupplies,
@@ -468,9 +484,15 @@ export default class FundingRepository {
         fixtureEvidenceEnumId: FundingOrder.fixtureEvidenceEnumId,
         fixtureClassEnumId: FundingOrder.fixtureClassEnumId,
         fixturePurpose: FundingOrder.fixturePurpose,
-        fixtureImageFiles: { uid: FixtureImageFile.fileUid },
+        fixtureImageFiles: {
+          uid: FixtureImageFile.fileId,
+          link: FixtureImageFile.fileId,
+          name: FixtureImageFile.fileId,
+        },
         fixtureSoftwareEvidenceFiles: {
-          uid: FixtureSoftwareEvidenceFile.fileUid,
+          uid: FixtureSoftwareEvidenceFile.fileId,
+          link: FixtureSoftwareEvidenceFile.fileId,
+          name: FixtureSoftwareEvidenceFile.fileId,
         },
         fixtureSoftwareEvidence: FundingOrder.fixtureSoftwareEvidence,
         numberOfFixture: FundingOrder.numberOfFixture,
@@ -479,6 +501,7 @@ export default class FundingRepository {
         transportationEnumId: FundingOrder.transportationEnumId,
         transportationPassengers: {
           studentNumber: TransportationPassenger.studentId,
+          name: Student.name,
         },
         origin: FundingOrder.origin,
         destination: FundingOrder.destination,
@@ -490,30 +513,56 @@ export default class FundingRepository {
         wasteExplanation: FundingOrder.wasteExplanation,
         isFoodExpense: FundingOrder.isFoodExpense,
         foodExpenseExplanation: FundingOrder.foodExpenseExplanation,
-        foodExpenseFiles: { uid: FoodExpenseFile.fileUid },
+        foodExpenseFiles: {
+          uid: FoodExpenseFile.fileId,
+          link: FoodExpenseFile.fileId,
+          name: FoodExpenseFile.fileId,
+        },
         isLaborContract: FundingOrder.isLaborContract,
         laborContractExplanation: FundingOrder.laborContractExplanation,
-        laborContractFiles: { uid: LaborContractFile.fileUid },
+        laborContractFiles: {
+          uid: LaborContractFile.fileId,
+          link: LaborContractFile.fileId,
+          name: LaborContractFile.fileId,
+        },
         isExternalEventParticipationFee:
           FundingOrder.isExternalEventParticipationFee,
         externalEventParticipationFeeExplanation:
           FundingOrder.externalEventParticipationFeeExplanation,
         externalEventParticipationFeeFiles: {
-          uid: ExternalEventParticipationFeeFile.fileUid,
+          uid: ExternalEventParticipationFeeFile.fileId,
+          link: ExternalEventParticipationFeeFile.fileId,
+          name: ExternalEventParticipationFeeFile.fileId,
         },
         isPublication: FundingOrder.isPublication,
         publicationExplanation: FundingOrder.publicationExplanation,
-        publicationFiles: { uid: PublicationFile.fileUid },
+        publicationFiles: {
+          uid: PublicationFile.fileId,
+          link: PublicationFile.fileId,
+          name: PublicationFile.fileId,
+        },
         isProfitMakingActivity: FundingOrder.isProfitMakingActivity,
         profitMakingActivityExplanation:
           FundingOrder.profitMakingActivityExplanation,
-        profitMakingActivityFiles: { uid: ProfitMakingActivityFile.fileUid },
+        profitMakingActivityFiles: {
+          uid: ProfitMakingActivityFile.fileId,
+          link: ProfitMakingActivityFile.fileId,
+          name: ProfitMakingActivityFile.fileId,
+        },
         isJointExpense: FundingOrder.isJointExpense,
         jointExpenseExplanation: FundingOrder.jointExpenseExplanation,
-        jointExpenseFiles: { uid: JointExpenseFile.fileUid },
+        jointExpenseFiles: {
+          uid: JointExpenseFile.fileId,
+          link: JointExpenseFile.fileId,
+          name: JointExpenseFile.fileId,
+        },
         isEtcExpense: FundingOrder.isEtcExpense,
         etcExpenseExplanation: FundingOrder.etcExpenseExplanation,
-        etcExpenseFiles: { uid: EtcExpenseFile.fileUid },
+        etcExpenseFiles: {
+          uid: EtcExpenseFile.fileId,
+          link: EtcExpenseFile.fileId,
+          name: EtcExpenseFile.fileId,
+        },
       })
       .from(FundingOrder)
       .leftJoin(
@@ -564,6 +613,7 @@ export default class FundingRepository {
         eq(JointExpenseFile.fundingOrderId, fundingId),
       )
       .leftJoin(EtcExpenseFile, eq(EtcExpenseFile.fundingOrderId, fundingId))
+      .leftJoin(Student, eq(Student.id, TransportationPassenger.studentId))
       .where(
         and(eq(FundingOrder.id, fundingId), isNull(FundingOrder.deletedAt)),
       );
@@ -578,17 +628,17 @@ export default class FundingRepository {
       expenditureDate: Date;
       expenditureAmount: number;
 
-      tradeEvidenceFiles: Array<{ uid: string }>;
-      tradeDetailFiles: Array<{ uid: string }>;
+      tradeEvidenceFiles: Array<{ fileId: string }>;
+      tradeDetailFiles: Array<{ fileId: string }>;
       tradeDetailExplanation: string;
 
       clubSuppliesName?: string;
       clubSuppliesEvidenceEnumId?: number;
       clubSuppliesClassEnumId?: number;
       clubSuppliesPurpose?: string;
-      clubSuppliesImageFiles?: Array<{ uid: string }>;
+      clubSuppliesImageFiles?: Array<{ fileId: string }>;
       clubSuppliesSoftwareEvidence?: string;
-      clubSuppliesSoftwareEvidenceFiles?: Array<{ uid: string }>;
+      clubSuppliesSoftwareEvidenceFiles?: Array<{ fileId: string }>;
       numberOfClubSupplies?: number;
       priceOfClubSupplies?: number;
 
@@ -597,9 +647,9 @@ export default class FundingRepository {
       fixtureEvidenceEnumId?: number;
       fixtureClassEnumId?: number;
       fixturePurpose?: string;
-      fixtureImageFiles: Array<{ uid: string }>;
+      fixtureImageFiles: Array<{ fileId: string }>;
       fixtureSoftwareEvidence?: string;
-      fixtureSoftwareEvidenceFiles: Array<{ uid: string }>;
+      fixtureSoftwareEvidenceFiles: Array<{ fileId: string }>;
       numberOfFixture?: number;
       priceOfFixture?: number;
 
@@ -618,31 +668,31 @@ export default class FundingRepository {
 
       isFoodExpense: boolean;
       foodExpenseExplanation?: string;
-      foodExpenseFiles: Array<{ uid: string }>;
+      foodExpenseFiles: Array<{ fileId: string }>;
 
       isLaborContract: boolean;
       laborContractExplanation?: string;
-      laborContractFiles: Array<{ uid: string }>;
+      laborContractFiles: Array<{ fileId: string }>;
 
       isExternalEventParticipationFee: boolean;
       externalEventParticipationFeeExplanation?: string;
-      externalEventParticipationFeeFiles: Array<{ uid: string }>;
+      externalEventParticipationFeeFiles: Array<{ fileId: string }>;
 
       isPublication: boolean;
       publicationExplanation?: string;
-      publicationFiles: Array<{ uid: string }>;
+      publicationFiles: Array<{ fileId: string }>;
 
       isProfitMakingActivity: boolean;
       profitMakingActivityExplanation?: string;
-      profitMakingActivityFiles: Array<{ uid: string }>;
+      profitMakingActivityFiles: Array<{ fileId: string }>;
 
       isJointExpense: boolean;
       jointExpenseExplanation?: string;
-      jointExpenseFiles: Array<{ uid: string }>;
+      jointExpenseFiles: Array<{ fileId: string }>;
 
       isEtcExpense: boolean;
       etcExpenseExplanation?: string;
-      etcExpenseFiles: Array<{ uid: string }>;
+      etcExpenseFiles: Array<{ fileId: string }>;
     },
     fundingId: number,
   ): Promise<boolean> {
@@ -773,7 +823,7 @@ export default class FundingRepository {
             .insert(TradeEvidenceFile)
             .values({
               fundingOrderId: fundingId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (tradeEvidenceFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -808,7 +858,7 @@ export default class FundingRepository {
             .insert(TradeEvidenceFile)
             .values({
               fundingOrderId: fundingId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (tradeDetailFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -843,7 +893,7 @@ export default class FundingRepository {
             .insert(ClubSuppliesImageFile)
             .values({
               fundingOrderId: fundingId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (clubSuppliesImageFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -878,7 +928,7 @@ export default class FundingRepository {
             .insert(ClubSuppliesSoftwareEvidenceFile)
             .values({
               fundingOrderId: fundingId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (clubSuppliesSoftwareEvidenceFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -913,7 +963,7 @@ export default class FundingRepository {
             .insert(FixtureImageFile)
             .values({
               fundingOrderId: fundingId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (fixtureImageFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -948,7 +998,7 @@ export default class FundingRepository {
             .insert(FixtureSoftwareEvidenceFile)
             .values({
               fundingOrderId: fundingId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (fixtureSoftwareEvidenceFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -983,7 +1033,7 @@ export default class FundingRepository {
             .insert(FoodExpenseFile)
             .values({
               fundingOrderId: fundingId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (foodExpenseFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -1018,7 +1068,7 @@ export default class FundingRepository {
             .insert(LaborContractFile)
             .values({
               fundingOrderId: fundingId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (laborContractFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -1053,7 +1103,7 @@ export default class FundingRepository {
             .insert(ExternalEventParticipationFeeFile)
             .values({
               fundingOrderId: fundingId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (
             externalEventParticipationFeeFileInsertResult.affectedRows !== 1
@@ -1090,7 +1140,7 @@ export default class FundingRepository {
             .insert(PublicationFile)
             .values({
               fundingOrderId: fundingId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (publicationFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -1125,7 +1175,7 @@ export default class FundingRepository {
             .insert(ProfitMakingActivityFile)
             .values({
               fundingOrderId: fundingId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (profitMakingActivityFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -1161,7 +1211,7 @@ export default class FundingRepository {
             .insert(JointExpenseFile)
             .values({
               fundingOrderId: fundingId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (jointExpenseFileInsertResult.affectedRows !== 1) {
             logger.debug(
@@ -1196,7 +1246,7 @@ export default class FundingRepository {
             .insert(EtcExpenseFile)
             .values({
               fundingOrderId: fundingId,
-              fileUid: file.uid,
+              fileId: file.fileId,
             });
           if (etcExpenseFileInsertResult.affectedRows !== 1) {
             logger.debug(
