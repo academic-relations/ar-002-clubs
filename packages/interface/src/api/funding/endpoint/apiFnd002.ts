@@ -36,12 +36,14 @@ const responsePreBodyMap = z.object({
     z.object({
       uid: z.coerce.string().max(255),
       link: z.coerce.string(),
+      name: z.coerce.string().max(255),
     }),
   ),
   tradeDetailFiles: z.array(
     z.object({
       uid: z.coerce.string().max(255),
       link: z.coerce.string(),
+      name: z.coerce.string().max(255),
     }),
   ),
   tradeDetailExplanation: z.coerce.string(),
@@ -54,6 +56,7 @@ const responsePreBodyMap = z.object({
     z.object({
       uid: z.coerce.string().max(255),
       link: z.coerce.string(),
+      name: z.coerce.string().max(255),
     }),
   ),
   clubSuppliesSoftwareEvidence: z.coerce.string().optional(),
@@ -61,6 +64,7 @@ const responsePreBodyMap = z.object({
     z.object({
       uid: z.coerce.string().max(255),
       link: z.coerce.string(),
+      name: z.coerce.string().max(255),
     }),
   ),
   numberOfClubSupplies: z.coerce.number().int().min(1).optional(),
@@ -75,6 +79,7 @@ const responsePreBodyMap = z.object({
     z.object({
       uid: z.coerce.string().max(255),
       link: z.coerce.string(),
+      name: z.coerce.string().max(255),
     }),
   ),
   fixtureSoftwareEvidence: z.coerce.string().optional(),
@@ -82,6 +87,7 @@ const responsePreBodyMap = z.object({
     z.object({
       uid: z.coerce.string().max(255),
       link: z.coerce.string(),
+      name: z.coerce.string().max(255),
     }),
   ),
   numberOfFixture: z.coerce.number().int().min(1).optional(),
@@ -125,42 +131,49 @@ const responsePreBodyMap = z.object({
     z.object({
       uid: z.coerce.string().max(255),
       link: z.coerce.string(),
+      name: z.coerce.string().max(255),
     }),
   ),
   laborContractFiles: z.array(
     z.object({
       uid: z.coerce.string().max(255),
       link: z.coerce.string(),
+      name: z.coerce.string().max(255),
     }),
   ),
   externalEventParticipationFeeFiles: z.array(
     z.object({
       uid: z.coerce.string().max(255),
       link: z.coerce.string(),
+      name: z.coerce.string().max(255),
     }),
   ),
   publicationFiles: z.array(
     z.object({
       uid: z.coerce.string().max(255),
       link: z.coerce.string(),
+      name: z.coerce.string().max(255),
     }),
   ),
   profitMakingActivityFiles: z.array(
     z.object({
       uid: z.coerce.string().max(255),
       link: z.coerce.string(),
+      name: z.coerce.string().max(255),
     }),
   ),
   jointExpenseFiles: z.array(
     z.object({
       uid: z.coerce.string().max(255),
       link: z.coerce.string(),
+      name: z.coerce.string().max(255),
     }),
   ),
   etcExpenseFiles: z.array(
     z.object({
       uid: z.coerce.string().max(255),
       link: z.coerce.string(),
+      name: z.coerce.string().max(255),
     }),
   ),
 });
