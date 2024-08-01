@@ -2,6 +2,7 @@ import apiClb012 from "@sparcs-clubs/interface/api/club/endpoint/apiClb012";
 
 import {
   axiosClient,
+  defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
@@ -20,3 +21,7 @@ export const deleteChangeDelegateRequest = async (
       throw new UnexpectedAPIResponseError();
   }
 };
+
+defineAxiosMock(mock => {
+  mock.onDelete(apiClb012.url(1)).reply(() => [201, {}]);
+});

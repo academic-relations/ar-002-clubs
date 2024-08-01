@@ -48,7 +48,9 @@ const ChangeRepresentativeCard: React.FC = () => {
     "Default" | "Applied" | "Rejected" | "Canceled"
   >("Default");
 
-  const { data: requestStatus } = useGetChangeDelegateRequests({ clubId });
+  const { data: requestStatus, refetch } = useGetChangeDelegateRequests({
+    clubId,
+  });
 
   useEffect(() => {
     switch (requestStatus?.requests[0].clubDelegateChangeRequestStatusEnumId) {
@@ -69,6 +71,7 @@ const ChangeRepresentativeCard: React.FC = () => {
   const cancelRequest = () => {
     setType("Canceled");
     deleteChangeDelegateRequest({ clubId });
+    refetch();
   };
 
   const getSelectItems = (
@@ -93,34 +96,44 @@ const ChangeRepresentativeCard: React.FC = () => {
     setRepresentativeName(representativeCandidate?.name ?? "");
     setDelegate1(delegatesNow?.delegates[1].studentId?.toString() ?? "");
     setDelegate2(delegatesNow?.delegates[2].studentId?.toString() ?? "");
-  }, [delegatesNow, representative, representativeCandidates]);
+  }, [delegatesNow]);
 
   const changeRepresentative = (studentId: number) => {
     updateClubDelegates(
       { clubId },
       { delegateEnumId: ClubDelegateEnum.President, studentId },
     );
+    refetch();
   };
 
-  // TODO: 이 코드의 문제: 처음에 api 호출해서 대의원이 "" -> 실제 값으로 변경될 때도 호출됨
   useEffect(() => {
-    updateClubDelegates(
-      { clubId },
-      {
-        delegateEnumId: ClubDelegateEnum.Representative1,
-        studentId: Number(delegate1),
-      },
-    );
+    if (
+      delegate1 !== delegatesNow?.delegates[1].studentId?.toString() &&
+      delegate1 !== ""
+    ) {
+      updateClubDelegates(
+        { clubId },
+        {
+          delegateEnumId: ClubDelegateEnum.Representative1,
+          studentId: Number(delegate1),
+        },
+      );
+    }
   }, [delegate1]);
 
   useEffect(() => {
-    updateClubDelegates(
-      { clubId },
-      {
-        delegateEnumId: ClubDelegateEnum.Representative1,
-        studentId: Number(delegate2),
-      },
-    );
+    if (
+      delegate2 !== delegatesNow?.delegates[2].studentId?.toString() &&
+      delegate2 !== ""
+    ) {
+      updateClubDelegates(
+        { clubId },
+        {
+          delegateEnumId: ClubDelegateEnum.Representative1,
+          studentId: Number(delegate2),
+        },
+      );
+    }
   }, [delegate2]);
 
   return (

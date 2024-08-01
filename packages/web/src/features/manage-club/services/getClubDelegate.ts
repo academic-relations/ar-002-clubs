@@ -31,8 +31,5 @@ export const useGetClubDelegate = (requestParam: ApiClb006RequestParam) =>
   });
 
 defineAxiosMock(mock => {
-  const baseUrl = apiClb006.url(1);
-  mock
-    .onGet(new RegExp(`^${baseUrl}(/|$)`))
-    .reply(() => [200, mockClubDelegates]);
+  mock.onGet(apiClb006.url(1)).reply(() => [200, mockClubDelegates]);
 });

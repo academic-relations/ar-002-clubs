@@ -2,6 +2,7 @@ import apiClb007 from "@sparcs-clubs/interface/api/club/endpoint/apiClb007";
 
 import {
   axiosClient,
+  defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
@@ -25,3 +26,10 @@ export const updateClubDelegates = async (
       throw new UnexpectedAPIResponseError();
   }
 };
+
+defineAxiosMock(mock => {
+  mock.onPut(apiClb007.url(1)).reply(201, {
+    clubId: 1,
+    delegates: [1, 2, 3],
+  });
+});
