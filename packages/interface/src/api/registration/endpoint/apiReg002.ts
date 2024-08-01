@@ -9,9 +9,7 @@ import { z } from "zod";
 const url = () => `/student/registration/qualification/renewal`;
 const method = "GET";
 
-const requestParam = z.object({
-  clubId: z.number().int().min(1),
-});
+const requestParam = z.object({});
 
 const requestQuery = z.object({});
 

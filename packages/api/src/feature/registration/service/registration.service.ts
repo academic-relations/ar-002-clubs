@@ -2,6 +2,8 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { ApiReg002ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
 
+import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
 import logger from "@sparcs-clubs/api/common/util/logger";
 
 // import ClubRepository from "@sparcs-clubs/api/feature/club/repository/club.repository";
@@ -75,7 +77,7 @@ export class RegistrationService {
     clubId: number | undefined,
     registrationTypeEnumId: number,
   ) {
-    if (registrationTypeEnumId !== 3) {
+    if (registrationTypeEnumId !== RegistrationTypeEnum.Provisional) {
       // club Id가 유효한지 확인
       const clubList = await this.clubPublicService.getClubByClubId({ clubId });
       if (clubList.length !== 1) {

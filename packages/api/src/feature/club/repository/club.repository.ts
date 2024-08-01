@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { and, eq, gte, inArray, isNull, lte, or, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -225,7 +226,7 @@ export default class ClubRepository {
       .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
       .where(
         and(
-          eq(ClubT.clubStatusEnumId, 2), // club_status_enum_id가 2인 (가동아리)
+          eq(ClubT.clubStatusEnumId, ClubTypeEnum.Provisional), // 가동아리
           inArray(ClubT.semesterId, recentTwoSemesters), // recentTwoSemesters에 포함된 학기 동안
         ),
       )
@@ -238,7 +239,7 @@ export default class ClubRepository {
       .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
       .where(
         and(
-          eq(ClubT.clubStatusEnumId, 1), // club_status_enum_id가 1인 (정동아리)
+          eq(ClubT.clubStatusEnumId, ClubTypeEnum.Regular), // 정동아리
           inArray(ClubT.semesterId, recentThreeSemesters), // recentThreeSemesters에 포함된 학기 동안
         ),
       )
