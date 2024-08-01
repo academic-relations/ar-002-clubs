@@ -15,7 +15,8 @@ import MyServiceFrame from "@sparcs-clubs/web/features/my/frame/MyServiceFrame";
 import { useGetMyDelegateRequest } from "@sparcs-clubs/web/features/my/services/getMyDelegateRequest";
 
 const My: React.FC = () => {
-  const { data, isLoading, isError } = useGetMyDelegateRequest();
+  // TODO: clb014 api 구현되면 refetch 테스트
+  const { data, isLoading, isError, refetch } = useGetMyDelegateRequest();
   const { data: myProfile } = useGetUserProfile();
 
   const [type, setType] = useState<"Requested" | "Finished">("Finished");
@@ -46,6 +47,7 @@ const My: React.FC = () => {
             clubName={data?.requests[0].clubName}
             prevRepresentative={`${data?.requests[0].prevStudentId} ${data?.requests[0].prevStudentName}`}
             newRepresentative={`${myProfile?.studentNumber} ${myProfile?.name}`}
+            refetch={refetch}
           />
         )}
         <MyInfoFrame />

@@ -2,6 +2,7 @@ import apiClb014 from "@sparcs-clubs/interface/api/club/endpoint/apiClb014";
 
 import {
   axiosClient,
+  defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
@@ -26,3 +27,7 @@ export const patchMyDelegateRequest = async (
       throw new UnexpectedAPIResponseError();
   }
 };
+
+defineAxiosMock(mock => {
+  mock.onPatch(apiClb014.url(1)).reply(() => [201, {}]);
+});

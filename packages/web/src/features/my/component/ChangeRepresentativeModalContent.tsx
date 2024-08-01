@@ -16,6 +16,7 @@ interface ChangeRepresentativeModalContentProps {
   newRepresentative: string;
   phonePlaceholder?: string;
   onClose: () => void;
+  refetch: () => void;
 }
 
 const ButtonWrapper = styled.div`
@@ -33,6 +34,7 @@ const ChangeRepresentativeModalContent: React.FC<
   newRepresentative,
   phonePlaceholder = "010-XXXX-XXXX",
   onClose,
+  refetch,
 }) => {
   const [errorPhone, setErrorPhone] = useState<boolean>(false);
   const [phone, setPhone] = useState<string>("");
@@ -41,6 +43,7 @@ const ChangeRepresentativeModalContent: React.FC<
   const onConfirm = () => {
     patchMyDelegateRequest({ requestId: 1 }, { phoneNumber: phone });
     onClose();
+    refetch();
   };
 
   const onReject = () => {

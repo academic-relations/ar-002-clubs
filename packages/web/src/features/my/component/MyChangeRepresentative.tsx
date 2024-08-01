@@ -21,6 +21,7 @@ interface MyChangeRepresentativeProps {
   clubName: string;
   prevRepresentative: string;
   newRepresentative: string;
+  refetch: () => void;
 }
 
 const MyChangeRepresentativeWrapper = styled.div.withConfig({
@@ -45,6 +46,7 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
   clubName,
   prevRepresentative,
   newRepresentative,
+  refetch,
 }) => {
   const Title =
     type === "Requested"
@@ -68,6 +70,7 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
           prevRepresentative={prevRepresentative}
           newRepresentative={newRepresentative}
           onClose={close}
+          refetch={refetch}
         />
       </Modal>
     ));
