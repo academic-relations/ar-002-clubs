@@ -20,7 +20,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
   firstErrorStatus,
   setFirstErrorStatus,
 }) => {
-  const mockClubList: SelectItem[] = [
+  const mockClubList: SelectItem<string>[] = [
     { label: "동아리", value: "1", selectable: true },
     { label: "또다른동아리", value: "2", selectable: true },
     { label: "안되는동아리", value: "3", selectable: false },
