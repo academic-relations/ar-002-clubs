@@ -25,10 +25,10 @@ export class RegistrationService {
     private clubPublicService: ClubPublicService,
   ) {}
 
-  async postRegistration(
+  async postStudentRegistrationClubRegistration(
     body: ApiReg001RequestBody,
   ): Promise<ApiReg001ResponseCreated> {
-    await this.validateDupelicateRegistration(body.clubId);
+    await this.validateDuplicateRegistration(body.clubId);
     await this.validateClubId(body.clubId, body.registrationTypeEnumId);
 
     const transformedBody = {
@@ -43,8 +43,32 @@ export class RegistrationService {
     return {};
   }
 
+  async getStudentRegistrationClubRegistrationQualificationRenewal(): Promise<ApiReg002ResponseOk> {
+    const semesterId = await this.clubPublicService.dateToSemesterId(
+      new Date(),
+    );
+    const reRegAbleList =
+      await this.clubPublicService.getClubIdByClubStatusEnumId(1, semesterId);
+    logger.debug(`[getReRegistrationAbleList] semester Id is ${semesterId}`);
+
+    return {
+      clubs: reRegAbleList,
+    };
+  }
+
+  async getStudentRegistrationClubRegistrationQualificationPromotional(): Promise<ApiReg003ResponseOk> {
+    const semesterId = await this.clubPublicService.dateToSemesterId(
+      new Date(),
+    );
+    const promAbleList =
+      await this.clubPublicService.getEligibleClubsForRegistration(semesterId);
+    return {
+      clubs: promAbleList,
+    };
+  }
+
   async validateReRegistration(body: ApiReg001RequestBody) {
-    this.validateDupelicateRegistration(body.clubId);
+    this.validateDuplicateRegistration(body.clubId);
   }
 
   async validateClubId(
@@ -70,7 +94,7 @@ export class RegistrationService {
     }
   }
 
-  async validateDupelicateRegistration(clubId: number | undefined) {
+  async validateDuplicateRegistration(clubId: number | undefined) {
     if (clubId !== undefined) {
       // 신청 Id가 유효한지 확인
       const registrationList =
@@ -93,29 +117,5 @@ export class RegistrationService {
 
     // 시간 부분을 00:00:00으로 설정
     return new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
-  }
-
-  async getReRegistrationAbleList(): Promise<ApiReg002ResponseOk> {
-    const semesterId = await this.clubPublicService.dateToSemesterId(
-      new Date(),
-    );
-    const reRegAbleList =
-      await this.clubPublicService.getClubIdByClubStatusEnumId(1, semesterId);
-    logger.debug(`[getReRegistrationAbleList] semester Id is ${semesterId}`);
-
-    return {
-      clubs: reRegAbleList,
-    };
-  }
-
-  async getPromotionalRegistrationAbleList(): Promise<ApiReg003ResponseOk> {
-    const semesterId = await this.clubPublicService.dateToSemesterId(
-      new Date(),
-    );
-    const promAbleList =
-      await this.clubPublicService.getEligibleClubsForRegistration(semesterId);
-    return {
-      clubs: promAbleList,
-    };
   }
 }

@@ -89,7 +89,7 @@ export const RegistrationClubRuleFile = mysqlTable(
     id: int("id").autoincrement().primaryKey(),
     registrationId: int("registration_id").notNull(),
     // .references(() => Registration.id),
-    fileUid: int("id").autoincrement().primaryKey(),
+    fileUid: varchar("file_uid", { length: 255 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
-import { eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -16,7 +16,10 @@ export class RegistrationRepository {
     const clubs = await this.db
       .select()
       .from(Registration)
-      .where(eq(Registration.clubId, clubId));
+      .where(
+        and(eq(Registration.clubId, clubId), isNull(Registration.deletedAt)),
+      );
+
     return clubs;
   }
 
@@ -36,7 +39,7 @@ export class RegistrationRepository {
         professorId: body.professor?.ProfessorEnumId,
         divisionConsistency: body.divisionIntegrity,
         foundationPurpose: body.foundationPurpose,
-        activityPlan: body.activityPlanFileId,
+        activityPlan: body.activityPlan,
         // clubRuleFileId: body.clubRuleFileId,
         // externalInstructionFileId: body.externalInstructionFileId,
         // activityId: body.activityId,

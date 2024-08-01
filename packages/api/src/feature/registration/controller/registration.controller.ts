@@ -24,10 +24,13 @@ export class RegistrationController {
   @Public()
   @Post("/student/registrations/club-registrations/club-registration")
   @UsePipes(new ZodPipe(apiReg001))
-  async postRegistration(
+  async postStudentRegistrationClubRegistration(
     @Body() body: ApiReg001RequestBody,
   ): Promise<ApiReg001ResponseCreated> {
-    const response = await this.registrationService.postRegistration(body);
+    const response =
+      await this.registrationService.postStudentRegistrationClubRegistration(
+        body,
+      );
     return response;
   }
 
@@ -36,8 +39,9 @@ export class RegistrationController {
     "/student/registrations/club-registrations/club-registration/qualifications/renewal",
   )
   @UsePipes(new ZodPipe(apiReg002))
-  async getRenewalAbleClubList(): Promise<ApiReg002ResponseOk> {
-    const orders = await this.registrationService.getReRegistrationAbleList();
+  async getStudentRegistrationClubRegistrationQualificationRenewal(): Promise<ApiReg002ResponseOk> {
+    const orders =
+      await this.registrationService.getStudentRegistrationClubRegistrationQualificationRenewal();
     return orders;
   }
 
@@ -46,9 +50,9 @@ export class RegistrationController {
     "/student/registrations/club-registrations/club-registration/qualifications/promotional",
   )
   @UsePipes(new ZodPipe(apiReg003))
-  async getPromotionalAbleClubList(): Promise<ApiReg002ResponseOk> {
+  async getStudentRegistrationClubRegistrationQualificationPromotional(): Promise<ApiReg002ResponseOk> {
     const orders =
-      await this.registrationService.getPromotionalRegistrationAbleList();
+      await this.registrationService.getStudentRegistrationClubRegistrationQualificationPromotional();
     return orders;
   }
 }
