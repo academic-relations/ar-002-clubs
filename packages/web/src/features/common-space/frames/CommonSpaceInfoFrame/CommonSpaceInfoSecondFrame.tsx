@@ -136,7 +136,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
       });
 
     setSelectedSpace(space);
-  }, [selectedValue, setCommonSpace, data?.commonSpaces]);
+  }, [selectedValue, setCommonSpace, data?.commonSpaces, commonSpace]);
 
   const diffHours =
     dateTimeRange && differenceInHours(dateTimeRange[1], dateTimeRange[0]);
@@ -167,8 +167,8 @@ const CommonSpaceInfoSecondFrame: React.FC<
               selectable: true,
             })) || []
           }
-          selectedValue={selectedValue}
-          onSelect={value => {
+          value={selectedValue}
+          onChange={value => {
             if (dateTimeRange) {
               setShowModal(true);
               setIntermediateSelectedValue(value);

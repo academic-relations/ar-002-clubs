@@ -65,11 +65,13 @@ const InfoManageFrame: React.FC = () => {
   }, [password, setErrorPassword]);
   // TODO: 동방 없는 곳은 비밀번호 입력 안 해도 에러 안 뜨게 수정
 
-  const selectItems: SelectItem[] = mockClubMembers.members.map(member => ({
-    label: `${member.studentNumber} ${member.name} (${member.krPhoneNumber})`,
-    value: member.studentNumber.toString(), // TODO: studentNumber 말고 studentId로 바꿔야하나?
-    selectable: true,
-  }));
+  const selectItems: SelectItem<string>[] = mockClubMembers.members.map(
+    member => ({
+      label: `${member.studentNumber} ${member.name} (${member.krPhoneNumber})`,
+      value: member.studentNumber.toString(), // TODO: studentNumber 말고 studentId로 바꿔야하나?
+      selectable: true,
+    }),
+  );
 
   return (
     <FlexWrapper direction="column" gap={40}>

@@ -34,7 +34,11 @@ const ActivityCertificateInfoFirstFrame: React.FC<
         firstFilled: true,
       });
     }
-  }, [activityCertificate]);
+  }, [
+    activityCertificate,
+    activityCertificateProgress,
+    setActivityCertificateProgress,
+  ]);
 
   useEffect(() => {
     if (
@@ -52,7 +56,11 @@ const ActivityCertificateInfoFirstFrame: React.FC<
         firstNoError: true,
       });
     }
-  }, [firstErrorStatus]);
+  }, [
+    activityCertificateProgress,
+    firstErrorStatus,
+    setActivityCertificateProgress,
+  ]);
 
   return (
     <Card outline gap={40}>
@@ -73,13 +81,13 @@ const ActivityCertificateInfoFirstFrame: React.FC<
                 hasClubIdError: value,
               })
         }
-        onSelect={value => {
+        onChange={value => {
           setActivityCertificate({
             ...activityCertificate,
-            clubId: parseInt(value),
+            clubId: parseInt(value ?? ""),
           });
         }}
-        selectedValue={
+        value={
           activityCertificate.clubId
             ? activityCertificate.clubId.toString()
             : undefined

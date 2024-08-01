@@ -45,8 +45,8 @@ const FundingInfoFrame: React.FC<FundingFrameProps> = ({
           <Select
             items={purposeItems}
             label="지출 목적"
-            selectedValue={funding.purposeId}
-            onSelect={value => setFundingHandler("purposeId", value)}
+            value={funding.purposeId}
+            onChange={value => setFundingHandler("purposeId", value ?? "")}
             placeholder="지출 목적을 선택해주세요"
           />
           {/* TODO: 지출 일자, 지출 금액 해당 컴포넌트로 구현 */}

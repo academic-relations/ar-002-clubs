@@ -12,7 +12,7 @@ import ChangeRepresentative from "./ChangeRepresentative";
 
 interface ChangeRepresentativeCardProps {
   type: "Default" | "Requested" | "Refused" | "Canceled";
-  selectItems: SelectItem[];
+  selectItems: SelectItem<string>[];
   representative: string;
   setRepresentative: (value: string) => void;
   delegate1: string;
@@ -60,8 +60,8 @@ const ChangeRepresentativeCard: React.FC<ChangeRepresentativeCardProps> = ({
       </LabelWrapper>
       <Select
         items={selectItems}
-        selectedValue={representative}
-        onSelect={setRepresentative}
+        value={representative}
+        onChange={setRepresentative}
         disabled={type === "Requested"}
       />
     </FlexWrapper>
@@ -74,8 +74,8 @@ const ChangeRepresentativeCard: React.FC<ChangeRepresentativeCardProps> = ({
       </LabelWrapper>
       <Select
         items={selectItems}
-        selectedValue={delegate1}
-        onSelect={setDelegate1}
+        value={delegate1}
+        onChange={setDelegate1}
         disabled={type === "Requested"}
       />
     </FlexWrapper>
@@ -88,8 +88,8 @@ const ChangeRepresentativeCard: React.FC<ChangeRepresentativeCardProps> = ({
       </LabelWrapper>
       <Select
         items={selectItems}
-        selectedValue={delegate2}
-        onSelect={setDelegate2}
+        value={delegate2}
+        onChange={setDelegate2}
         disabled={type === "Requested"}
       />
     </FlexWrapper>
