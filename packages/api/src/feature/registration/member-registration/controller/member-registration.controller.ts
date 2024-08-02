@@ -44,7 +44,6 @@ export class MemberRegistrationController {
   ): Promise<ApiReg005ResponseCreated> {
     const result =
       await this.memberRegistrationService.postStudentMemberRegistration(
-        user.id,
         user.studentId,
         body.clubId,
       );

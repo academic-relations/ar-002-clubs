@@ -158,8 +158,8 @@ export const RegistrationEventEnum = mysqlTable("registration_event_enum", {
   deletedAt: timestamp("deleted_at"),
 });
 
-export const RegistrationEvent = mysqlTable(
-  "registration_event",
+export const RegistrationEventD = mysqlTable(
+  "registration_event_d",
   {
     id: int("id").autoincrement().primaryKey(),
     registrationEventEnumId: int("registration_event_enum_id").notNull(),
@@ -172,7 +172,7 @@ export const RegistrationEvent = mysqlTable(
     registrationEventEnumIdFk: foreignKey({
       columns: [table.registrationEventEnumId],
       foreignColumns: [RegistrationEventEnum.enumId],
-      name: "registration_event_event_enum_id_fk",
+      name: "registration_event_enum_id_fk",
     }),
   }),
 );

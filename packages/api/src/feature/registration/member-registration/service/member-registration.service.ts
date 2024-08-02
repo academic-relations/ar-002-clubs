@@ -22,7 +22,6 @@ export class MemberRegistrationService {
   ) {}
 
   async postStudentMemberRegistration(
-    userId: number,
     studentId: number,
     clubId: number,
   ): Promise<ApiReg005ResponseCreated> {
@@ -43,7 +42,7 @@ export class MemberRegistrationService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     const ismemberRegistrationAvailable =
-      await this.userPublicService.isNotgraduateStudent(studentId, semesterId);
+      await this.userPublicService.isNotGraduateStudent(studentId, semesterId);
     if (!ismemberRegistrationAvailable)
       throw new HttpException(
         "Not a member registration available",

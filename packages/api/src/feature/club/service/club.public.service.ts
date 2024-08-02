@@ -102,16 +102,15 @@ export default class ClubPublicService {
     return true;
   }
 
-  async isStudentPresident(studentId: number, clubId: number) {
-    const president =
+  async isStudentPresident(
+    studentId: number,
+    clubId: number,
+  ): Promise<boolean> {
+    const isPresident =
       await this.clubDelegateDRepository.isPresidentByStudentIdAndClubId(
         studentId,
         clubId,
       );
-
-    if (president) {
-      return true;
-    }
-    return false;
+    return isPresident;
   }
 }

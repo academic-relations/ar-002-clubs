@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { StudentStatusEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { and, count, eq, isNull, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -26,8 +27,8 @@ export class StudentRepository {
     studentId: number,
     semesterId: number,
   ): Promise<boolean> {
-    const leaveOfAbsence = 2;
-    const attending = 1;
+    const leaveOfAbsence = StudentStatusEnum.LeaveOfAbsence;
+    const attending = StudentStatusEnum.Attending;
     const { isAvailable } = await this.db
       .select({ isAvailable: count(StudentT.id) })
       .from(StudentT)

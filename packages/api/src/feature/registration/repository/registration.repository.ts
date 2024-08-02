@@ -10,7 +10,7 @@ import { Club } from "@sparcs-clubs/api/drizzle/schema/club.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
   Registration,
-  RegistrationEvent,
+  RegistrationEventD,
   RegistrationEventEnum,
 } from "src/drizzle/schema/registration.schema";
 
@@ -68,13 +68,13 @@ export class RegistrationRepository {
       .then(takeUnique);
     const result = await this.db
       .select({
-        id: RegistrationEvent.id,
-        registrationEventEnumId: RegistrationEvent.registrationEventEnumId,
-        startTerm: RegistrationEvent.startTerm,
-        endTerm: RegistrationEvent.endTerm,
+        id: RegistrationEventD.id,
+        registrationEventEnumId: RegistrationEventD.registrationEventEnumId,
+        startTerm: RegistrationEventD.startTerm,
+        endTerm: RegistrationEventD.endTerm,
       })
-      .from(RegistrationEvent)
-      .orderBy(desc(RegistrationEvent.startTerm))
+      .from(RegistrationEventD)
+      .orderBy(desc(RegistrationEventD.startTerm))
       .limit(eventEnumCount);
     return { events: result };
   }

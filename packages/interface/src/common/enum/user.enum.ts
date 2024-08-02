@@ -3,3 +3,8 @@ export enum ProfessorEnum {
   Associate, // 부교수
   Full, // 정교수
 }
+
+export enum StudentStatusEnum {
+  Attending = 1, // 재학
+  LeaveOfAbsence, // 휴학
+}

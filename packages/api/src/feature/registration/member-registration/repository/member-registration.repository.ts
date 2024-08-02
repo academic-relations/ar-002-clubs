@@ -4,7 +4,10 @@ import { ApiReg005ResponseCreated } from "@sparcs-clubs/interface/api/registrati
 import { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 import { ApiReg007ResponseNoContent } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg007";
 import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
-import { RegistrationStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import {
+  RegistrationEventEnum,
+  RegistrationStatusEnum,
+} from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { and, count, eq, gt, isNotNull, isNull, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -12,7 +15,7 @@ import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   RegistrationApplicationStudent,
-  RegistrationEvent,
+  RegistrationEventD,
 } from "@sparcs-clubs/api/drizzle/schema/registration.schema";
 
 @Injectable()
@@ -21,16 +24,17 @@ export class MemberRegistrationRepository {
 
   async isMemberRegistrationEvent(): Promise<boolean> {
     const cur = getKSTDate();
-    const memberRegistrationEventEnum = 3;
+    const memberRegistrationEventEnum =
+      RegistrationEventEnum.StudentRegistrationApplication;
     const { isAvailable } = await this.db
-      .select({ isAvailable: count(RegistrationEvent.id) })
-      .from(RegistrationEvent)
+      .select({ isAvailable: count(RegistrationEventD.id) })
+      .from(RegistrationEventD)
       .where(
         and(
-          isNotNull(RegistrationEvent.endTerm),
-          gt(RegistrationEvent.endTerm, cur),
+          isNotNull(RegistrationEventD.endTerm),
+          gt(RegistrationEventD.endTerm, cur),
           eq(
-            RegistrationEvent.registrationEventEnumId,
+            RegistrationEventD.registrationEventEnumId,
             memberRegistrationEventEnum,
           ),
         ),

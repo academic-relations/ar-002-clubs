@@ -23,7 +23,7 @@ export default class UserPublicService {
     return students[0];
   }
 
-  async isNotgraduateStudent(
+  async isNotGraduateStudent(
     studentId: number,
     semesterId: number,
   ): Promise<boolean> {
