@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
@@ -70,9 +69,6 @@ const DivisionInformationCard: React.FC = () => {
             ) : null}
           </FlexWrapper>
         </FlexWrapper>
-        <Button type="disabled" style={{ marginLeft: "auto" }}>
-          저장
-        </Button>
       </FlexWrapper>
     </Card>
   );
