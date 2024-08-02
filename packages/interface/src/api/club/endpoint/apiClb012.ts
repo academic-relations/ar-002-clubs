@@ -11,7 +11,7 @@ const url = (clubId: number) =>
 const method = "DELETE";
 
 const requestParam = z.object({
-  cludId: z.coerce.number().int().min(1),
+  clubId: z.coerce.number().int().min(1),
 });
 
 const requestQuery = z.object({});

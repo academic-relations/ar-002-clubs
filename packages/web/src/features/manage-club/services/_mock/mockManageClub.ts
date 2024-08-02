@@ -8,7 +8,6 @@ import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/renta
 
 import type { ApiAcf003ResponseOk } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf003";
 import type { ApiClb004ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb004";
-import type { ApiClb006ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb006";
 import type { ApiClb010ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
 import type { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
 import type { ApiPrt001ResponseOk } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
@@ -78,29 +77,6 @@ export enum MemberStatusEnum {
 const mockClubDescription: ApiClb004ResponseOK = {
   description: "동아리 설명입니다",
   roomPassword: "password",
-};
-
-const mockClubDelegates: ApiClb006ResponseOK = {
-  delegates: [
-    {
-      delegateEnumId: 1,
-      studentId: 20200510,
-      name: "이지윤",
-      phoneNumber: "010-1234-5678",
-    },
-    {
-      delegateEnumId: 2,
-      studentId: 20200511,
-      name: "박지호",
-      phoneNumber: "010-1234-5678",
-    },
-    {
-      delegateEnumId: 2,
-      studentId: 20200512,
-      name: "박병찬",
-      phoneNumber: "010-1234-5678",
-    },
-  ],
 };
 
 const mockClubMembers: ApiClb010ResponseOk = {
@@ -642,6 +618,5 @@ export {
   mockupManagePrint,
   mockupManageCms,
   mockClubDescription,
-  mockClubDelegates,
   mockClubMembers,
 };
