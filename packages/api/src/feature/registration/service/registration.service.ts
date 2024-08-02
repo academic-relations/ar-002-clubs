@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { ApiReg002ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
 
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -23,15 +24,13 @@ import type { ApiReg003ResponseOk } from "@sparcs-clubs/interface/api/registrati
 export class RegistrationService {
   constructor(
     private readonly registrationRepository: RegistrationRepository,
-    // private readonly clubRepository: ClubRepository,
     private clubPublicService: ClubPublicService,
   ) {}
 
   async postStudentRegistrationClubRegistration(
     body: ApiReg001RequestBody,
   ): Promise<ApiReg001ResponseCreated> {
-    await this.validateDuplicateRegistration(body.clubId);
-    await this.validateClubId(body.clubId, body.registrationTypeEnumId);
+    await this.validateRegistration(body.clubId, body.registrationTypeEnumId);
 
     const transformedBody = {
       ...body,
@@ -40,82 +39,93 @@ export class RegistrationService {
         body.registrationTypeEnumId,
       ),
     };
+
     // FIXME: 활동 id 검증 로직 필요
     await this.registrationRepository.createRegistration(transformedBody);
     return {};
   }
 
+  // 정동아리 재등록 신청
   async getStudentRegistrationClubRegistrationQualificationRenewal(): Promise<ApiReg002ResponseOk> {
     const semesterId = await this.clubPublicService.dateToSemesterId(
       new Date(),
     );
     const reRegAbleList =
-      await this.clubPublicService.getClubIdByClubStatusEnumId(1, semesterId);
+      await this.clubPublicService.getClubIdByClubStatusEnumId(
+        ClubTypeEnum.Regular,
+        semesterId,
+      ); // 현재 학기 기준 정동아리 list
     logger.debug(`[getReRegistrationAbleList] semester Id is ${semesterId}`);
-
     return {
       clubs: reRegAbleList,
     };
   }
 
+  // 정동아리 신규 등록 신청
   async getStudentRegistrationClubRegistrationQualificationPromotional(): Promise<ApiReg003ResponseOk> {
     const semesterId = await this.clubPublicService.dateToSemesterId(
       new Date(),
     );
     const promAbleList =
-      await this.clubPublicService.getEligibleClubsForRegistration(semesterId);
+      await this.clubPublicService.getEligibleClubsForRegistration(semesterId); // 2학기 연속 가동아리, 3학기 이내 정동아리 list
     return {
       clubs: promAbleList,
     };
   }
 
-  async validateReRegistration(body: ApiReg001RequestBody) {
-    this.validateDuplicateRegistration(body.clubId);
-  }
-
-  async validateClubId(
+  async validateRegistration(
     clubId: number | undefined,
     registrationTypeEnumId: number,
   ) {
-    if (registrationTypeEnumId !== RegistrationTypeEnum.Provisional) {
-      // club Id가 유효한지 확인
-      const clubList = await this.clubPublicService.getClubByClubId({ clubId });
-      if (clubList.length !== 1) {
+    if (registrationTypeEnumId === RegistrationTypeEnum.NewProvisional) {
+      // 가동아리 신규 신청
+      if (clubId !== undefined) {
+        // 가동아리 신규 신청 시 clubId는 undefined
         throw new HttpException(
-          "[postRegistration] club doesn't exist",
+          "[postRegistration] invalid club id. club id should be undefined",
           HttpStatus.BAD_REQUEST,
         );
       }
+    } else {
+      // 정동아리 재등록/신규 등록, 가동아리 재등록 신청
+      await this.validateExistClub(clubId); // 기존에 존재하는지 club 확인
       logger.debug("[postRegistration] club existence checked");
-    } else if (clubId !== undefined) {
-      // 가동아리 신청시 club id undefined check
+      await this.validateDuplicateRegistration(clubId); // 중복 신청인지 확인
+      logger.debug("[postRegistration] registration existence checked");
+    }
+  }
+
+  async validateDuplicateRegistration(clubId: number) {
+    // 신청 ClubId가 중복인지 확인
+    const registrationList =
+      await this.registrationRepository.findByClubId(clubId);
+    if (registrationList.length === 1) {
       throw new HttpException(
-        "[postRegistration] invalid club id. club id should be undefined",
+        "[postRegistration] request already exists",
         HttpStatus.BAD_REQUEST,
       );
     }
   }
 
-  async validateDuplicateRegistration(clubId: number | undefined) {
-    if (clubId !== undefined) {
-      // 신청 Id가 유효한지 확인
-      const registrationList =
-        await this.registrationRepository.findByClubId(clubId);
-
-      if (registrationList.length === 1) {
-        throw new HttpException(
-          "[postRegistration] request already exists",
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-      logger.debug("[postRegistration] registration existence checked");
+  async validateExistClub(clubId: number) {
+    // 신청 ClubId가 기존에 있는지 확인
+    const clubList = await this.clubPublicService.getClubByClubId({ clubId });
+    if (clubList.length !== 1) {
+      throw new HttpException(
+        "[postRegistration] club doesn't exist",
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
   async transformFoundedAt(foundedAt: Date, registrationTypeEnumId: number) {
     const year = foundedAt.getUTCFullYear();
-    const month = registrationTypeEnumId === 3 ? foundedAt.getUTCMonth() : 0;
-    const day = registrationTypeEnumId === 3 ? 1 : 1;
+    const month =
+      registrationTypeEnumId === RegistrationTypeEnum.NewProvisional
+        ? foundedAt.getUTCMonth()
+        : 0;
+    const day =
+      registrationTypeEnumId === RegistrationTypeEnum.NewProvisional ? 1 : 1;
 
     // 시간 부분을 00:00:00으로 설정
     return new Date(Date.UTC(year, month, day, 0, 0, 0, 0));

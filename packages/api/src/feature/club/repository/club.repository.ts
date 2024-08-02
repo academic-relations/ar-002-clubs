@@ -241,6 +241,7 @@ export default class ClubRepository {
         and(
           eq(ClubT.clubStatusEnumId, ClubTypeEnum.Regular), // 정동아리
           inArray(ClubT.semesterId, recentThreeSemesters), // recentThreeSemesters에 포함된 학기 동안
+          isNull(ClubT.deletedAt),
         ),
       )
       .groupBy(Club.id);
