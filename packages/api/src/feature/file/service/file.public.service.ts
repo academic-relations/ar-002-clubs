@@ -8,7 +8,6 @@ import { FileRepository } from "../repository/file.repository";
 export default class FilePublicService {
   constructor(
     private s3Client: S3Client,
-
     private fileRepository: FileRepository,
   ) {}
 
@@ -30,5 +29,23 @@ export default class FilePublicService {
     });
 
     return fileUrl;
+  }
+
+  async getFileInfosById(
+    fileId: string,
+  ): Promise<{ fileId: string; fileUrl: string; fileName: string }> {
+    const file = await this.fileRepository.findById(fileId);
+
+    if (!file) {
+      throw new NotFoundException(`File not found: ${fileId}`);
+    }
+
+    const fileUrl = await this.getFileUrl(fileId);
+
+    if (!fileUrl) {
+      throw new NotFoundException(`File Url not found: ${fileId}`);
+    }
+
+    return { fileId, fileUrl, fileName: file.name };
   }
 }
