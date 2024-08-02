@@ -23,7 +23,7 @@ import {
   TradeEvidenceFile,
   TransportationPassenger,
 } from "@sparcs-clubs/api/drizzle/schema/funding.schema";
-import { Student } from "dist/drizzle/schema/user.schema";
+import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 @Injectable()
 export default class FundingRepository {
