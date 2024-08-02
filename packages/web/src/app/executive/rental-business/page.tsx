@@ -6,7 +6,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 const executiveRental = () => (
-  <FlexWrapper>
+  <FlexWrapper direction="column" gap={20}>
     <PageHead
       items={[
         { name: "집행부원 대시보드", path: "/executive" },
