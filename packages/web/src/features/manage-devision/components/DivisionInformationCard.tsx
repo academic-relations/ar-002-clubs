@@ -21,53 +21,51 @@ const DivisionInformationCard: React.FC = () => {
   }));
 
   return (
-    <Card outline padding="32px" style={{ flex: 1 }}>
-      <FlexWrapper gap={32} direction="column">
-        <Typography ff="PRETENDARD" fw="MEDIUM" fs={20} lh={24}>
-          기본 정보
-        </Typography>
-        <FlexWrapper gap={20} direction="row">
-          <Typography
-            ff="PRETENDARD"
-            fw="MEDIUM"
-            fs={16}
-            lh={20}
-            style={{ flex: 1 }}
-          >
-            분과명
-          </Typography>
-          <Tag color="PURPLE">생활 체육</Tag>
-        </FlexWrapper>
-        <FlexWrapper
-          gap={8}
-          direction="row"
-          onClick={() => setShowClubList(!showClubList)}
+    <Card outline padding="32px" gap={32} style={{ flex: 1 }}>
+      <Typography ff="PRETENDARD" fw="MEDIUM" fs={20} lh={24}>
+        기본 정보
+      </Typography>
+      <FlexWrapper gap={20} direction="row">
+        <Typography
+          ff="PRETENDARD"
+          fw="MEDIUM"
+          fs={16}
+          lh={20}
+          style={{ flex: 1 }}
         >
+          분과명
+        </Typography>
+        <Tag color="PURPLE">생활 체육</Tag>
+      </FlexWrapper>
+      <FlexWrapper
+        gap={8}
+        direction="row"
+        onClick={() => setShowClubList(!showClubList)}
+      >
+        {showClubList ? (
+          <Icon type="keyboard_arrow_down" size={20} />
+        ) : (
+          <Icon type="keyboard_arrow_right" size={20} />
+        )}
+        <FlexWrapper gap={16} direction="column" style={{ flex: 1 }}>
+          <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20}>
+            {`동아리 목록 (${mockClubList.length}개)`}
+          </Typography>
           {showClubList ? (
-            <Icon type="keyboard_arrow_down" size={20} />
-          ) : (
-            <Icon type="keyboard_arrow_right" size={20} />
-          )}
-          <FlexWrapper gap={16} direction="column" style={{ flex: 1 }}>
-            <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20}>
-              {`동아리 목록 (${mockClubList.length}개)`}
-            </Typography>
-            {showClubList ? (
-              <ClubListWrapper direction="column" gap={12}>
-                {mockClubList.map((club, _) => (
-                  <Typography
-                    ff="PRETENDARD"
-                    fw="REGULAR"
-                    fs={16}
-                    lh={20}
-                    key={club.id}
-                  >
-                    {club.name}
-                  </Typography>
-                ))}
-              </ClubListWrapper>
-            ) : null}
-          </FlexWrapper>
+            <ClubListWrapper direction="column" gap={12}>
+              {mockClubList.map((club, _) => (
+                <Typography
+                  ff="PRETENDARD"
+                  fw="REGULAR"
+                  fs={16}
+                  lh={20}
+                  key={club.id}
+                >
+                  {club.name}
+                </Typography>
+              ))}
+            </ClubListWrapper>
+          ) : null}
         </FlexWrapper>
       </FlexWrapper>
     </Card>
