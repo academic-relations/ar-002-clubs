@@ -14,7 +14,7 @@ const ClubListWrapper = styled(FlexWrapper)`
   overflow-y: scroll;
 `;
 
-const BasicInfoFrame: React.FC = () => {
+const DivisionInformationCard: React.FC = () => {
   const [showClubList, setShowClubList] = useState<boolean>(false);
   const mockClubList = Array.from({ length: 20 }).map((_, i) => ({
     name: "술박스",
@@ -78,4 +78,4 @@ const BasicInfoFrame: React.FC = () => {
   );
 };
 
-export default BasicInfoFrame;
+export default DivisionInformationCard;
