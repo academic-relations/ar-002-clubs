@@ -31,9 +31,9 @@ export default class FilePublicService {
     return fileUrl;
   }
 
-  async getFileInfosById(
+  async getFileInfoById(
     fileId: string,
-  ): Promise<{ fileId: string; fileUrl: string; fileName: string }> {
+  ): Promise<{ id: string; link: string; name: string }> {
     const file = await this.fileRepository.findById(fileId);
 
     if (!file) {
@@ -46,6 +46,6 @@ export default class FilePublicService {
       throw new NotFoundException(`File Url not found: ${fileId}`);
     }
 
-    return { fileId, fileUrl, fileName: file.name };
+    return { id: fileId, link: fileUrl, name: file.name };
   }
 }

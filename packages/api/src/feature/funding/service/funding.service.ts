@@ -1,12 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { ApiFnd001RequestBody } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd001";
-import { ApiFnd002RequestParam } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
+import {
+  ApiFnd002RequestParam,
+  ApiFnd002ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
 import {
   ApiFnd003RequestBody,
   ApiFnd003RequestParam,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd003";
 
+import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
+import { StudentRepository } from "@sparcs-clubs/api/feature/user/repository/student.repository";
 import UserRepository from "@sparcs-clubs/api/feature/user/repository/user.repository";
 
 import FundingRepository from "../repository/funding.repository";
@@ -16,6 +21,8 @@ export default class FundingService {
   constructor(
     private fundingRepository: FundingRepository,
     private readonly userRepository: UserRepository,
+    private readonly filePublicService: FilePublicService,
+    private readonly studentRepository: StudentRepository,
   ) {}
 
   async postStudentFunding(body: ApiFnd001RequestBody, studentId: number) {
@@ -26,12 +33,201 @@ export default class FundingService {
     return this.fundingRepository.insertFunding(body);
   }
 
-  async getStudentFunding(param: ApiFnd002RequestParam, studentId: number) {
+  async getStudentFunding(
+    param: ApiFnd002RequestParam,
+    studentId: number,
+  ): Promise<ApiFnd002ResponseOk> {
     const user = await this.userRepository.findStudentById(studentId);
     if (!user) {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
-    return this.fundingRepository.selectFundingByFundingId(param.id);
+    const funding = await this.fundingRepository.selectFundingByFundingId(
+      param.id,
+    );
+
+    const tradeEvidenceFileIds =
+      await this.fundingRepository.selectTradeEvidenceFileIdsByFundingId(
+        param.id,
+      );
+
+    const tradeEvidenceFiles = await Promise.all(
+      tradeEvidenceFileIds.map(async id =>
+        this.filePublicService.getFileInfoById(id.toString()),
+      ),
+    );
+
+    const tradeDetailFileIds =
+      await this.fundingRepository.selectTradeDetailFileIdsByFundingId(
+        param.id,
+      );
+
+    const tradeDetailFiles = await Promise.all(
+      tradeDetailFileIds.map(async id =>
+        this.filePublicService.getFileInfoById(id.toString()),
+      ),
+    );
+
+    const foodExpenseFileIds =
+      await this.fundingRepository.selectFoodExpenseFileIdsByFundingId(
+        param.id,
+      );
+
+    const foodExpenseFiles = await Promise.all(
+      foodExpenseFileIds.map(async id =>
+        this.filePublicService.getFileInfoById(id.toString()),
+      ),
+    );
+
+    const laborContractFileIds =
+      await this.fundingRepository.selectLaborContractFileIdsByFundingId(
+        param.id,
+      );
+
+    const laborContractFiles = await Promise.all(
+      laborContractFileIds.map(async id =>
+        this.filePublicService.getFileInfoById(id.toString()),
+      ),
+    );
+
+    const externalEventParticipationFeeFileIds =
+      await this.fundingRepository.selectExternalEventParticipationFeeFileIdsByFundingId(
+        param.id,
+      );
+
+    const externalEventParticipationFeeFiles = await Promise.all(
+      externalEventParticipationFeeFileIds.map(async id =>
+        this.filePublicService.getFileInfoById(id.toString()),
+      ),
+    );
+
+    const publicationFileIds =
+      await this.fundingRepository.selectPublicationFileIdsByFundingId(
+        param.id,
+      );
+
+    const publicationFiles = await Promise.all(
+      publicationFileIds.map(async id =>
+        this.filePublicService.getFileInfoById(id.toString()),
+      ),
+    );
+
+    const profitMakingActivityFileIds =
+      await this.fundingRepository.selectProfitMakingActivityFileIdsByFundingId(
+        param.id,
+      );
+
+    const profitMakingActivityFiles = await Promise.all(
+      profitMakingActivityFileIds.map(async id =>
+        this.filePublicService.getFileInfoById(id.toString()),
+      ),
+    );
+
+    const jointExpenseFileIds =
+      await this.fundingRepository.selectJointExpenseFileIdsByFundingId(
+        param.id,
+      );
+
+    const jointExpenseFiles = await Promise.all(
+      jointExpenseFileIds.map(async id =>
+        this.filePublicService.getFileInfoById(id.toString()),
+      ),
+    );
+
+    const etcExpenseFileIds =
+      await this.fundingRepository.selectEtcExpenseFileIdsByFundingId(param.id);
+
+    const etcExpenseFiles = await Promise.all(
+      etcExpenseFileIds.map(async id =>
+        this.filePublicService.getFileInfoById(id.toString()),
+      ),
+    );
+
+    const clubSuppliesImageFileIds =
+      await this.fundingRepository.selectClubSuppliesImageFileIdsByFundingId(
+        param.id,
+      );
+
+    const clubSuppliesImageFiles = await Promise.all(
+      clubSuppliesImageFileIds.map(async id =>
+        this.filePublicService.getFileInfoById(id.toString()),
+      ),
+    );
+
+    const fixtureImageFileIds =
+      await this.fundingRepository.selectFixtureImageFileIdsByFundingId(
+        param.id,
+      );
+
+    const fixtureImageFiles = await Promise.all(
+      fixtureImageFileIds.map(async id =>
+        this.filePublicService.getFileInfoById(id.toString()),
+      ),
+    );
+
+    const clubSuppliesSoftwareEvidenceFileIds =
+      await this.fundingRepository.selectClubSuppliesSoftwareEvidenceFileIdsByFundingId(
+        param.id,
+      );
+
+    const clubSuppliesSoftwareEvidenceFiles = await Promise.all(
+      clubSuppliesSoftwareEvidenceFileIds.map(async id =>
+        this.filePublicService.getFileInfoById(id.toString()),
+      ),
+    );
+
+    const fixtureSoftwareEvidenceFileIds =
+      await this.fundingRepository.selectFixtureSoftwareEvidenceFileIdsByFundingId(
+        param.id,
+      );
+
+    const fixtureSoftwareEvidenceFiles = await Promise.all(
+      fixtureSoftwareEvidenceFileIds.map(async id =>
+        this.filePublicService.getFileInfoById(id.toString()),
+      ),
+    );
+
+    const transportationPassengerTIds =
+      await this.fundingRepository.selectPassengerStudentIdsByFundingId(
+        param.id,
+      );
+
+    const transportationPassengerIds = await Promise.all(
+      transportationPassengerTIds.map(async id =>
+        this.studentRepository.selectStudentIdByStudentTId(id),
+      ),
+    );
+
+    const transportationPassengers = await Promise.all(
+      transportationPassengerIds.map(async id => {
+        const student = await this.userRepository.findStudentById(id.id)[0];
+        return {
+          name: student.name,
+          studentNumber: student.studentNumber,
+        };
+      }),
+    );
+
+    return {
+      ...funding,
+
+      transportationPassengers,
+
+      tradeEvidenceFiles,
+      tradeDetailFiles,
+
+      foodExpenseFiles,
+      laborContractFiles,
+      externalEventParticipationFeeFiles,
+      publicationFiles,
+      profitMakingActivityFiles,
+      jointExpenseFiles,
+      etcExpenseFiles,
+
+      clubSuppliesImageFiles,
+      fixtureImageFiles,
+      clubSuppliesSoftwareEvidenceFiles,
+      fixtureSoftwareEvidenceFiles,
+    };
   }
 
   async putStudentFunding(

@@ -30,18 +30,18 @@ const responsePreBodyMap = z.object({
   name: z.coerce.string().max(255),
   expenditureDate: z.coerce.date(),
   expenditureAmount: z.coerce.number().int().min(1),
-  FundingOrderStatusEnumId: z.nativeEnum(FundingOrderStatusEnum),
+  fundingOrderStatusEnumId: z.nativeEnum(FundingOrderStatusEnum),
   feedback: z.coerce.string(),
   tradeEvidenceFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      id: z.coerce.string().max(255),
       link: z.coerce.string(),
       name: z.coerce.string().max(255),
     }),
   ),
   tradeDetailFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      id: z.coerce.string().max(255),
       link: z.coerce.string(),
       name: z.coerce.string().max(255),
     }),
@@ -54,7 +54,7 @@ const responsePreBodyMap = z.object({
   clubSuppliesPurpose: z.coerce.string().optional(),
   clubSuppliesImageFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      id: z.coerce.string().max(255),
       link: z.coerce.string(),
       name: z.coerce.string().max(255),
     }),
@@ -62,7 +62,7 @@ const responsePreBodyMap = z.object({
   clubSuppliesSoftwareEvidence: z.coerce.string().optional(),
   clubSuppliesSoftwareEvidenceFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      id: z.coerce.string().max(255),
       link: z.coerce.string(),
       name: z.coerce.string().max(255),
     }),
@@ -77,7 +77,7 @@ const responsePreBodyMap = z.object({
   fixturePurpose: z.coerce.string().optional(),
   fixtureImageFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      id: z.coerce.string().max(255),
       link: z.coerce.string(),
       name: z.coerce.string().max(255),
     }),
@@ -85,7 +85,7 @@ const responsePreBodyMap = z.object({
   fixtureSoftwareEvidence: z.coerce.string().optional(),
   fixtureSoftwareEvidenceFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      id: z.coerce.string().max(255),
       link: z.coerce.string(),
       name: z.coerce.string().max(255),
     }),
@@ -129,49 +129,49 @@ const responsePreBodyMap = z.object({
 
   foodExpenseFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      id: z.coerce.string().max(255),
       link: z.coerce.string(),
       name: z.coerce.string().max(255),
     }),
   ),
   laborContractFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      id: z.coerce.string().max(255),
       link: z.coerce.string(),
       name: z.coerce.string().max(255),
     }),
   ),
   externalEventParticipationFeeFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      id: z.coerce.string().max(255),
       link: z.coerce.string(),
       name: z.coerce.string().max(255),
     }),
   ),
   publicationFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      id: z.coerce.string().max(255),
       link: z.coerce.string(),
       name: z.coerce.string().max(255),
     }),
   ),
   profitMakingActivityFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      id: z.coerce.string().max(255),
       link: z.coerce.string(),
       name: z.coerce.string().max(255),
     }),
   ),
   jointExpenseFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      id: z.coerce.string().max(255),
       link: z.coerce.string(),
       name: z.coerce.string().max(255),
     }),
   ),
   etcExpenseFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      id: z.coerce.string().max(255),
       link: z.coerce.string(),
       name: z.coerce.string().max(255),
     }),

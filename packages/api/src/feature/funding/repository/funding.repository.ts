@@ -450,32 +450,11 @@ export default class FundingRepository {
         expenditureAmount: FundingOrder.expenditureAmount,
         fundingOrderStatusEnumId: FundingOrder.fundingOrderStatusEnumId,
         feedback: FundingOrderFeedback.feedback,
-        // TODO: file link, name 받아오기
-        tradeEvidenceFiles: {
-          uid: TradeEvidenceFile.fileId,
-          link: TradeEvidenceFile.fileId,
-          name: TradeEvidenceFile.fileId,
-        },
-        tradeDetailFiles: {
-          uid: TradeDetailFile.fileId,
-          link: TradeDetailFile.fileId,
-          name: TradeDetailFile.fileId,
-        },
         tradeDetailExplanation: FundingOrder.tradeDetailExplanation,
         clubSuppliesName: FundingOrder.clubSuppliesName,
         clubSuppliesEvidenceEnumId: FundingOrder.clubSuppliesEvidenceEnumId,
         clubSuppliesClassEnumId: FundingOrder.clubSuppliesClassEnumId,
         clubSuppliesPurpose: FundingOrder.clubSuppliesPurpose,
-        clubSuppliesImageFiles: {
-          uid: ClubSuppliesImageFile.fileId,
-          link: ClubSuppliesImageFile.fileId,
-          name: ClubSuppliesImageFile.fileId,
-        },
-        clubSuppliesSoftwareEvidenceFiles: {
-          uid: ClubSuppliesSoftwareEvidenceFile.fileId,
-          link: ClubSuppliesSoftwareEvidenceFile.fileId,
-          name: ClubSuppliesSoftwareEvidenceFile.fileId,
-        },
         clubSuppliesSoftwareEvidence: FundingOrder.clubSuppliesSoftwareEvidence,
         numberOfClubSupplies: FundingOrder.numberOfClubSupplies,
         priceOfClubSupplies: FundingOrder.priceOfClubSupplies,
@@ -484,25 +463,11 @@ export default class FundingRepository {
         fixtureEvidenceEnumId: FundingOrder.fixtureEvidenceEnumId,
         fixtureClassEnumId: FundingOrder.fixtureClassEnumId,
         fixturePurpose: FundingOrder.fixturePurpose,
-        fixtureImageFiles: {
-          uid: FixtureImageFile.fileId,
-          link: FixtureImageFile.fileId,
-          name: FixtureImageFile.fileId,
-        },
-        fixtureSoftwareEvidenceFiles: {
-          uid: FixtureSoftwareEvidenceFile.fileId,
-          link: FixtureSoftwareEvidenceFile.fileId,
-          name: FixtureSoftwareEvidenceFile.fileId,
-        },
         fixtureSoftwareEvidence: FundingOrder.fixtureSoftwareEvidence,
         numberOfFixture: FundingOrder.numberOfFixture,
         priceOfFixture: FundingOrder.priceOfFixture,
         isTransportation: FundingOrder.isTransportation,
         transportationEnumId: FundingOrder.transportationEnumId,
-        transportationPassengers: {
-          studentNumber: TransportationPassenger.studentId,
-          name: Student.name,
-        },
         origin: FundingOrder.origin,
         destination: FundingOrder.destination,
         purposeOfTransportation: FundingOrder.purposeOfTransportation,
@@ -513,63 +478,23 @@ export default class FundingRepository {
         wasteExplanation: FundingOrder.wasteExplanation,
         isFoodExpense: FundingOrder.isFoodExpense,
         foodExpenseExplanation: FundingOrder.foodExpenseExplanation,
-        foodExpenseFiles: {
-          uid: FoodExpenseFile.fileId,
-          link: FoodExpenseFile.fileId,
-          name: FoodExpenseFile.fileId,
-        },
         isLaborContract: FundingOrder.isLaborContract,
         laborContractExplanation: FundingOrder.laborContractExplanation,
-        laborContractFiles: {
-          uid: LaborContractFile.fileId,
-          link: LaborContractFile.fileId,
-          name: LaborContractFile.fileId,
-        },
         isExternalEventParticipationFee:
           FundingOrder.isExternalEventParticipationFee,
         externalEventParticipationFeeExplanation:
           FundingOrder.externalEventParticipationFeeExplanation,
-        externalEventParticipationFeeFiles: {
-          uid: ExternalEventParticipationFeeFile.fileId,
-          link: ExternalEventParticipationFeeFile.fileId,
-          name: ExternalEventParticipationFeeFile.fileId,
-        },
         isPublication: FundingOrder.isPublication,
         publicationExplanation: FundingOrder.publicationExplanation,
-        publicationFiles: {
-          uid: PublicationFile.fileId,
-          link: PublicationFile.fileId,
-          name: PublicationFile.fileId,
-        },
         isProfitMakingActivity: FundingOrder.isProfitMakingActivity,
         profitMakingActivityExplanation:
           FundingOrder.profitMakingActivityExplanation,
-        profitMakingActivityFiles: {
-          uid: ProfitMakingActivityFile.fileId,
-          link: ProfitMakingActivityFile.fileId,
-          name: ProfitMakingActivityFile.fileId,
-        },
         isJointExpense: FundingOrder.isJointExpense,
         jointExpenseExplanation: FundingOrder.jointExpenseExplanation,
-        jointExpenseFiles: {
-          uid: JointExpenseFile.fileId,
-          link: JointExpenseFile.fileId,
-          name: JointExpenseFile.fileId,
-        },
         isEtcExpense: FundingOrder.isEtcExpense,
         etcExpenseExplanation: FundingOrder.etcExpenseExplanation,
-        etcExpenseFiles: {
-          uid: EtcExpenseFile.fileId,
-          link: EtcExpenseFile.fileId,
-          name: EtcExpenseFile.fileId,
-        },
       })
       .from(FundingOrder)
-      .leftJoin(
-        TradeEvidenceFile,
-        eq(TradeEvidenceFile.fundingOrderId, fundingId),
-      )
-      .leftJoin(TradeDetailFile, eq(TradeDetailFile.fundingOrderId, fundingId))
       .leftJoin(
         FundingOrderFeedback,
         eq(FundingOrderFeedback.fundingOrderId, fundingId),
@@ -578,46 +503,229 @@ export default class FundingRepository {
         TransportationPassenger,
         eq(TransportationPassenger.fundingOrderId, fundingId),
       )
-      .leftJoin(
-        ClubSuppliesImageFile,
-        eq(ClubSuppliesImageFile.fundingOrderId, fundingId),
-      )
-      .leftJoin(
-        ClubSuppliesSoftwareEvidenceFile,
-        eq(ClubSuppliesSoftwareEvidenceFile.fundingOrderId, fundingId),
-      )
-      .leftJoin(
-        FixtureImageFile,
-        eq(FixtureImageFile.fundingOrderId, fundingId),
-      )
-      .leftJoin(
-        FixtureSoftwareEvidenceFile,
-        eq(FixtureSoftwareEvidenceFile.fundingOrderId, fundingId),
-      )
-      .leftJoin(FoodExpenseFile, eq(FoodExpenseFile.fundingOrderId, fundingId))
-      .leftJoin(
-        LaborContractFile,
-        eq(LaborContractFile.fundingOrderId, fundingId),
-      )
-      .leftJoin(
-        ExternalEventParticipationFeeFile,
-        eq(ExternalEventParticipationFeeFile.fundingOrderId, fundingId),
-      )
-      .leftJoin(PublicationFile, eq(PublicationFile.fundingOrderId, fundingId))
-      .leftJoin(
-        ProfitMakingActivityFile,
-        eq(ProfitMakingActivityFile.fundingOrderId, fundingId),
-      )
-      .leftJoin(
-        JointExpenseFile,
-        eq(JointExpenseFile.fundingOrderId, fundingId),
-      )
-      .leftJoin(EtcExpenseFile, eq(EtcExpenseFile.fundingOrderId, fundingId))
       .leftJoin(Student, eq(Student.id, TransportationPassenger.studentId))
       .where(
         and(eq(FundingOrder.id, fundingId), isNull(FundingOrder.deletedAt)),
       );
-    return result;
+    return result[0];
+  }
+
+  async selectPassengerStudentIdsByFundingId(
+    fundingId: number,
+  ): Promise<number[]> {
+    const result = await this.db
+      .select({ studentId: TransportationPassenger.studentId })
+      .from(TransportationPassenger)
+      .where(
+        and(
+          eq(TransportationPassenger.fundingOrderId, fundingId),
+          isNull(TransportationPassenger.deletedAt),
+        ),
+      );
+    return result.map(row => row.studentId);
+  }
+
+  async selectTradeEvidenceFileIdsByFundingId(
+    fundingId: number,
+  ): Promise<string[]> {
+    const result = await this.db
+      .select({ tradeEvidenceFileId: TradeEvidenceFile.fileId })
+      .from(TradeEvidenceFile)
+      .where(
+        and(
+          eq(TradeEvidenceFile.fundingOrderId, fundingId),
+          isNull(TradeEvidenceFile.deletedAt),
+        ),
+      );
+    return result.map(row => row.tradeEvidenceFileId);
+  }
+
+  async selectTradeDetailFileIdsByFundingId(
+    fundingId: number,
+  ): Promise<string[]> {
+    const result = await this.db
+      .select({ tradeDetailFileId: TradeDetailFile.fileId })
+      .from(TradeDetailFile)
+      .where(
+        and(
+          eq(TradeDetailFile.fundingOrderId, fundingId),
+          isNull(TradeDetailFile.deletedAt),
+        ),
+      );
+    return result.map(row => row.tradeDetailFileId);
+  }
+
+  async selectFoodExpenseFileIdsByFundingId(
+    fundingId: number,
+  ): Promise<string[]> {
+    const result = await this.db
+      .select({ foodExpenseFileId: FoodExpenseFile.fileId })
+      .from(FoodExpenseFile)
+      .where(
+        and(
+          eq(FoodExpenseFile.fundingOrderId, fundingId),
+          isNull(FoodExpenseFile.deletedAt),
+        ),
+      );
+    return result.map(row => row.foodExpenseFileId);
+  }
+
+  async selectLaborContractFileIdsByFundingId(
+    fundingId: number,
+  ): Promise<string[]> {
+    const result = await this.db
+      .select({ laborContractFileId: LaborContractFile.fileId })
+      .from(LaborContractFile)
+      .where(
+        and(
+          eq(LaborContractFile.fundingOrderId, fundingId),
+          isNull(LaborContractFile.deletedAt),
+        ),
+      );
+    return result.map(row => row.laborContractFileId);
+  }
+
+  async selectExternalEventParticipationFeeFileIdsByFundingId(
+    fundingId: number,
+  ): Promise<string[]> {
+    const result = await this.db
+      .select({
+        externalEventParticipationFeeFileId:
+          ExternalEventParticipationFeeFile.fileId,
+      })
+      .from(ExternalEventParticipationFeeFile)
+      .where(
+        and(
+          eq(ExternalEventParticipationFeeFile.fundingOrderId, fundingId),
+          isNull(ExternalEventParticipationFeeFile.deletedAt),
+        ),
+      );
+    return result.map(row => row.externalEventParticipationFeeFileId);
+  }
+
+  async selectPublicationFileIdsByFundingId(
+    fundingId: number,
+  ): Promise<string[]> {
+    const result = await this.db
+      .select({ publicationFileId: PublicationFile.fileId })
+      .from(PublicationFile)
+      .where(
+        and(
+          eq(PublicationFile.fundingOrderId, fundingId),
+          isNull(PublicationFile.deletedAt),
+        ),
+      );
+    return result.map(row => row.publicationFileId);
+  }
+
+  async selectProfitMakingActivityFileIdsByFundingId(
+    fundingId: number,
+  ): Promise<string[]> {
+    const result = await this.db
+      .select({ profitMakingActivityFileId: ProfitMakingActivityFile.fileId })
+      .from(ProfitMakingActivityFile)
+      .where(
+        and(
+          eq(ProfitMakingActivityFile.fundingOrderId, fundingId),
+          isNull(ProfitMakingActivityFile.deletedAt),
+        ),
+      );
+    return result.map(row => row.profitMakingActivityFileId);
+  }
+
+  async selectJointExpenseFileIdsByFundingId(
+    fundingId: number,
+  ): Promise<string[]> {
+    const result = await this.db
+      .select({ jointExpenseFileId: JointExpenseFile.fileId })
+      .from(JointExpenseFile)
+      .where(
+        and(
+          eq(JointExpenseFile.fundingOrderId, fundingId),
+          isNull(JointExpenseFile.deletedAt),
+        ),
+      );
+    return result.map(row => row.jointExpenseFileId);
+  }
+
+  async selectEtcExpenseFileIdsByFundingId(
+    fundingId: number,
+  ): Promise<string[]> {
+    const result = await this.db
+      .select({ etcExpenseFileId: EtcExpenseFile.fileId })
+      .from(EtcExpenseFile)
+      .where(
+        and(
+          eq(EtcExpenseFile.fundingOrderId, fundingId),
+          isNull(EtcExpenseFile.deletedAt),
+        ),
+      );
+    return result.map(row => row.etcExpenseFileId);
+  }
+
+  async selectClubSuppliesImageFileIdsByFundingId(
+    fundingId: number,
+  ): Promise<string[]> {
+    const result = await this.db
+      .select({ clubSuppliesImageFileId: ClubSuppliesImageFile.fileId })
+      .from(ClubSuppliesImageFile)
+      .where(
+        and(
+          eq(ClubSuppliesImageFile.fundingOrderId, fundingId),
+          isNull(ClubSuppliesImageFile.deletedAt),
+        ),
+      );
+    return result.map(row => row.clubSuppliesImageFileId);
+  }
+
+  async selectClubSuppliesSoftwareEvidenceFileIdsByFundingId(
+    fundingId: number,
+  ): Promise<string[]> {
+    const result = await this.db
+      .select({
+        clubSuppliesSoftwareEvidenceFileId:
+          ClubSuppliesSoftwareEvidenceFile.fileId,
+      })
+      .from(ClubSuppliesSoftwareEvidenceFile)
+      .where(
+        and(
+          eq(ClubSuppliesSoftwareEvidenceFile.fundingOrderId, fundingId),
+          isNull(ClubSuppliesSoftwareEvidenceFile.deletedAt),
+        ),
+      );
+    return result.map(row => row.clubSuppliesSoftwareEvidenceFileId);
+  }
+
+  async selectFixtureImageFileIdsByFundingId(
+    fundingId: number,
+  ): Promise<string[]> {
+    const result = await this.db
+      .select({ fixtureImageFileId: FixtureImageFile.fileId })
+      .from(FixtureImageFile)
+      .where(
+        and(
+          eq(FixtureImageFile.fundingOrderId, fundingId),
+          isNull(FixtureImageFile.deletedAt),
+        ),
+      );
+    return result.map(row => row.fixtureImageFileId);
+  }
+
+  async selectFixtureSoftwareEvidenceFileIdsByFundingId(
+    fundingId: number,
+  ): Promise<string[]> {
+    const result = await this.db
+      .select({
+        fixtureSoftwareEvidenceFileId: FixtureSoftwareEvidenceFile.fileId,
+      })
+      .from(FixtureSoftwareEvidenceFile)
+      .where(
+        and(
+          eq(FixtureSoftwareEvidenceFile.fundingOrderId, fundingId),
+          isNull(FixtureSoftwareEvidenceFile.deletedAt),
+        ),
+      );
+    return result.map(row => row.fixtureSoftwareEvidenceFileId);
   }
 
   async putStudentFunding(
