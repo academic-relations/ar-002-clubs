@@ -11,7 +11,7 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { mockParticipantData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
 import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
-import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 interface CreateActivityReportModalProps {
   isOpen: boolean;
