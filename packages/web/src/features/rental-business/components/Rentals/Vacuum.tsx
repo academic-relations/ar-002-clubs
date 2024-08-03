@@ -26,7 +26,9 @@ const Vacuum: React.FC<RentalLimitProps> = ({
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <Typography type="p">청소기 종류</Typography>
+      <Typography fs={16} lh={20} fw="MEDIUM">
+        청소기 종류
+      </Typography>
       <Radio
         value={rental?.vacuum as string}
         onChange={value =>

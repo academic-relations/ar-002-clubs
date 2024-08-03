@@ -11,6 +11,7 @@ import * as commonSpaceSchema from "./schema/common-space.schema";
 import * as divisionSchema from "./schema/division.schema";
 import * as noticeSchema from "./schema/notice.schema";
 import * as promotionalPrintingSchema from "./schema/promotional-printing.schema";
+import * as registrationSchema from "./schema/registration.schema";
 import * as rentalSchema from "./schema/rental.schema";
 import * as userSchema from "./schema/user.schema";
 
@@ -62,6 +63,7 @@ export const getDbInstance = async () => {
         promotionalPrintingSchema,
         rentalSchema,
         userSchema,
+        registrationSchema,
       },
       mode: "default",
     });

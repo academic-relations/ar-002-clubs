@@ -1,6 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 
 import { JwtService } from "@nestjs/jwt";
+
+import { ApiAut002ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut002";
+import { ApiAut003ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut003";
 
 import { AuthRepository } from "../repository/auth.repository";
 
@@ -28,18 +31,101 @@ export class AuthService {
       type,
       department,
     );
+    // executiverepository가 common에서 제거됨에 따라 집행부원 토큰 추가 로직은 후에 재구성이 필요합니다.
+    // if(user.executive){
+    //   if(!(await this.executiveRepository.findExecutiveById(user.executive.id))) throw new HttpException("Cannot find Executive", 403);
+    // }
+    const accessToken = this.getAccessToken(user);
+    const refreshToken = this.getRefreshToken(user);
+    const current = new Date(); // todo 시간 변경 필요.
+    const expiresAt = new Date(
+      current.getTime() + parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN),
+    );
+    return (await this.authRepository.createRefreshTokenRecord(
+      user.id,
+      refreshToken,
+      expiresAt,
+    ))
+      ? {
+          accessToken,
+          refreshToken,
+          expiresAt,
+        }
+      : (() => {
+          throw new HttpException("Cannot store refreshtoken", 500);
+        })();
+  }
 
-    const accessToken = this.getAccessToken({ user });
-    const refreshToken = this.getRefreshToken({ user });
+  async postAuthRefresh(_user: {
+    id: number;
+    sid: string;
+    name: string;
+    email: string;
+  }): Promise<ApiAut002ResponseOk> {
+    const user = await this.authRepository.findUserById(_user.id);
+    const accessToken = this.getAccessToken(user);
 
     return {
       accessToken,
-      refreshToken,
     };
   }
 
-  getAccessToken({ user }): { [key: string]: string } {
-    const accessToken: { [key: string]: string } = {};
+  // TODO: 로직 수정 필요
+  async postAuthSignout(
+    _user: {
+      id: number;
+      sid: string;
+      name: string;
+      email: string;
+    },
+    refreshToken: string,
+  ): Promise<ApiAut003ResponseOk> {
+    return (await this.authRepository.deleteRefreshTokenRecord(
+      _user.id,
+      refreshToken,
+    ))
+      ? {}
+      : (() => {
+          throw new HttpException("Cannot delete refreshtoken", 500);
+        })();
+  }
+
+  getAccessToken(user: {
+    id: number;
+    sid: string;
+    name: string;
+    email: string;
+    undergraduate?: {
+      id: number;
+      number: number;
+    };
+    master?: {
+      id: number;
+      number: number;
+    };
+    doctor?: {
+      id: number;
+      number: number;
+    };
+    executive?: {
+      id: number;
+      studentId: number;
+    };
+    professor?: {
+      id: number;
+    };
+    employee?: {
+      id: number;
+    };
+  }) {
+    const accessToken: {
+      undergraduate?: string;
+      master?: string;
+      doctor?: string;
+      executive?: string;
+      professor?: string;
+      employee?: string;
+    } = {};
 
     if (user.undergraduate) {
       accessToken.undergraduate = this.jwtService.sign(
@@ -150,7 +236,12 @@ export class AuthService {
     return accessToken;
   }
 
-  getRefreshToken({ user }) {
+  getRefreshToken(user: {
+    id: number;
+    sid: string;
+    name: string;
+    email: string;
+  }) {
     const refreshToken = this.jwtService.sign(
       {
         email: user.email,

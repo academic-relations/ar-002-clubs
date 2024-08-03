@@ -89,24 +89,30 @@ export const Professor = mysqlTable("professor", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("user_id").references(() => User.id),
   name: varchar("name", { length: 255 }).notNull(),
-  email: varchar("email", { length: 255 }),
+  email: varchar("email", { length: 255 }).unique(),
   phoneNumber: varchar("phone_number", { length: 30 }),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
 
-export const ProfessorT = mysqlTable("professor_t", {
-  id: int("id").autoincrement().primaryKey(),
-  professorId: int("professor_id")
-    .notNull()
-    .references(() => Professor.id),
-  professorEnum: int("professor_enum"),
-  department: int("department"),
-  startTerm: date("start_term").notNull(),
-  endTerm: date("end_term"),
-  createdAt: timestamp("created_at").defaultNow(),
-  deletedAt: timestamp("deleted_at"),
-});
+export const ProfessorT = mysqlTable(
+  "professor_t",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    professorId: int("professor_id")
+      .notNull()
+      .references(() => Professor.id),
+    professorEnum: int("professor_enum"),
+    department: int("department"),
+    startTerm: date("start_term").notNull(),
+    endTerm: date("end_term"),
+    createdAt: timestamp("created_at").defaultNow(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  // t => ({
+  //   unq1: unique().on(t.professorId, t.professorEnum, t.department, t.startTerm),
+  // }),
+);
 
 export const Employee = mysqlTable("employee", {
   id: int("id").autoincrement().primaryKey(),
@@ -119,16 +125,22 @@ export const Employee = mysqlTable("employee", {
   deletedAt: timestamp("deleted_at"),
 });
 
-export const EmployeeT = mysqlTable("employee_t", {
-  id: int("id").autoincrement().primaryKey(),
-  employeeId: int("employee_id")
-    .notNull()
-    .references(() => Employee.id),
-  startTerm: date("start_term").notNull(),
-  endTerm: date("end_term"),
-  createdAt: timestamp("created_at").defaultNow(),
-  deletedAt: timestamp("deleted_at"),
-});
+export const EmployeeT = mysqlTable(
+  "employee_t",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    employeeId: int("employee_id")
+      .notNull()
+      .references(() => Employee.id),
+    startTerm: date("start_term").notNull(),
+    endTerm: date("end_term"),
+    createdAt: timestamp("created_at").defaultNow(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  // t=>({
+  //   unq1: unique('fk_start_term_unique').on(t.employeeId, t.startTerm)
+  // })
+);
 
 // Enums are directly linked to their respective tables
 export const StudentStatusEnum = mysqlTable("student_status_enum", {

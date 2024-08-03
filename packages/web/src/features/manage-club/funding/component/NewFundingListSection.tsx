@@ -15,7 +15,7 @@ import {
 } from "@sparcs-clubs/web/constants/manageClubFunding";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
-import NewFundingListTable from "./_atomic/NewFundingListTable";
+import NewFundingListTable from "../components/_atomic/NewFundingListTable";
 
 const NewFundingListSectionInner = styled.div`
   /* Auto layout */

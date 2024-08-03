@@ -13,7 +13,7 @@ interface InfoProps {
 const InfoInner = styled.div`
   display: flex;
   padding: 12px 16px;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
   align-self: stretch;
   border-radius: 8px;
@@ -24,7 +24,9 @@ const InfoInner = styled.div`
 const Info: React.FC<InfoProps> = ({ text }) => (
   <InfoInner>
     <Icon type="info_outlined" size={20} />
-    <Typography type="p">{text}</Typography>
+    <Typography fs={16} lh={24} fw="REGULAR">
+      {text}
+    </Typography>
   </InfoInner>
 );
 

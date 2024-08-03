@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { ClubRepository } from "@sparcs-clubs/api/common/repository/club.repository";
 import logger from "@sparcs-clubs/api/common/util/logger";
-import { ClubRepresentativeDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-representative-d.repository";
+import { ClubDelegateDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-delegate-d.repository";
+import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 
 import { PromotionalPrintingOrderSizeRepository } from "../repository/promotional-printing-order-size.repository";
 import { PromotionalPrintingOrderRepository } from "../repository/promotional-printing-order.repository";
@@ -29,8 +29,8 @@ import type {
 @Injectable()
 export class PromotionalPrintingService {
   constructor(
-    private readonly clubRepository: ClubRepository,
-    private readonly clubRepresentativeDRepository: ClubRepresentativeDRepository,
+    private readonly clubPublicService: ClubPublicService,
+    private readonly clubDelegateDRepository: ClubDelegateDRepository,
     private readonly promotionalPrintingOrderRepository: PromotionalPrintingOrderRepository,
     private readonly promotionalPrintingOrderSizeRepository: PromotionalPrintingOrderSizeRepository,
   ) {}
@@ -86,7 +86,9 @@ export class PromotionalPrintingService {
   ): Promise<ApiPrt002ResponseCreated> {
     // invalid한 clubdid를 검사하고싶은데, select했을때 해당 clubId가 없으면 무슨일이 일어나는지 잘 모르겠습니다..
     // 일단 clubId가 unique하기에 길이가 1 아니면 0이기는 합니다
-    const clubList = await this.clubRepository.findByClubId(parameter.clubId);
+    const clubList = await this.clubPublicService.getClubByClubId({
+      clubId: parameter.clubId,
+    });
 
     if (clubList.length !== 1) {
       throw new HttpException(
@@ -124,7 +126,7 @@ export class PromotionalPrintingService {
 
     // TODO: order.clubsId와 order.studentId 를 통해 조회 권한 확인 필요
     const representatives =
-      await this.clubRepresentativeDRepository.findRepresentativeIdListByClubId(
+      await this.clubDelegateDRepository.findRepresentativeIdListByClubId(
         order.clubId,
       );
     logger.debug(

@@ -1,23 +1,23 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
+import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
-import TextButton from "@sparcs-clubs/web/common/components/TextButton";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import Easel from "@sparcs-clubs/web/features/rental-business//components/Rentals/Easel";
-import HandCart from "@sparcs-clubs/web/features/rental-business//components/Rentals/HandCart";
-import Mat from "@sparcs-clubs/web/features/rental-business//components/Rentals/Mat";
-import Tool from "@sparcs-clubs/web/features/rental-business//components/Rentals/Tool";
-import Vacuum from "@sparcs-clubs/web/features/rental-business//components/Rentals/Vacuum";
 import ItemButtonList from "@sparcs-clubs/web/features/rental-business/components/ItemButtonList";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
+import Easel from "@sparcs-clubs/web/features/rental-business/components/Rentals/Easel";
+import HandCart from "@sparcs-clubs/web/features/rental-business/components/Rentals/HandCart";
+import Mat from "@sparcs-clubs/web/features/rental-business/components/Rentals/Mat";
+import Tool from "@sparcs-clubs/web/features/rental-business/components/Rentals/Tool";
+import Vacuum from "@sparcs-clubs/web/features/rental-business/components/Rentals/Vacuum";
 import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
@@ -158,12 +158,15 @@ const RentalInfoSecondFrame: React.FC<
     }
   };
 
-  const isRentalListEmpty = () =>
-    !rental.easel &&
-    !rental.vacuum &&
-    (!rental.handCart || Object.values(rental.handCart).every(val => !val)) &&
-    !rental.mat &&
-    (!rental.tool || Object.values(rental.tool).every(val => !val));
+  const isRentalListEmpty = useCallback(
+    () =>
+      !rental.easel &&
+      !rental.vacuum &&
+      (!rental.handCart || Object.values(rental.handCart).every(val => !val)) &&
+      !rental.mat &&
+      (!rental.tool || Object.values(rental.tool).every(val => !val)),
+    [rental],
+  );
 
   const isCurrentItemEmpty = () => {
     switch (value) {
@@ -189,7 +192,6 @@ const RentalInfoSecondFrame: React.FC<
       !hasError &&
       !isRentalListEmpty() &&
       !(!rental.date?.start || !rental.date?.end);
-    // console.log("hasError", hasError);
     setNextEnabled(enableNext);
   }, [rental, hasError, setNextEnabled, isRentalListEmpty]);
 
@@ -211,7 +213,9 @@ const RentalInfoSecondFrame: React.FC<
   return (
     <>
       <Card outline gap={40}>
-        <Typography type="h3">대여 기간 선택</Typography>
+        <Typography fs={20} lh={24} fw="MEDIUM">
+          대여 기간 선택
+        </Typography>
         <SelectRangeCalendar
           rentalDate={rentalDate}
           returnDate={returnDate}
@@ -232,7 +236,9 @@ const RentalInfoSecondFrame: React.FC<
           <StyledCardInner>
             <ResetTitleWrapper>
               <FlexGrowTypography>
-                <Typography type="h3">세부 물품 정보</Typography>
+                <Typography fs={20} lh={24} fw="MEDIUM">
+                  세부 물품 정보
+                </Typography>
               </FlexGrowTypography>
               <TextButton
                 text="초기화"
@@ -253,7 +259,9 @@ const RentalInfoSecondFrame: React.FC<
         <StyledCardInner>
           <ResetTitleWrapper>
             <FlexGrowTypography>
-              <Typography type="h3">대여 물품 목록</Typography>
+              <Typography fs={20} lh={24} fw="MEDIUM">
+                대여 물품 목록
+              </Typography>
             </FlexGrowTypography>
             <TextButton
               text="초기화"

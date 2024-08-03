@@ -16,15 +16,12 @@ interface IconProps {
   className?: string;
 }
 
-const IconInner = styled.div.withConfig({
+const IconInner = styled(MUIIcon).withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<{
-  size: number;
   clickable: boolean;
 }>`
   display: flex;
-  font-size: ${({ size }) => size}px;
-  color: ${({ color, theme }) => color || theme.colors.BLACK};
   ${({ clickable }) =>
     clickable &&
     css`
@@ -41,12 +38,11 @@ const Icon: React.FC<IconProps> = ({
 }) => (
   <IconInner
     className={className}
-    size={size}
     clickable={!!onClick}
-    color={color}
     onClick={onClick}
+    style={{ color, fontSize: size }}
   >
-    <MUIIcon fontSize="inherit">{type}</MUIIcon>
+    {type}
   </IconInner>
 );
 

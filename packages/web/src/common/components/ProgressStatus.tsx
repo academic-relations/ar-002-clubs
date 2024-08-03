@@ -30,14 +30,7 @@ const ProgressStatus: React.FC<ProgressStatusProps> = ({
   optional = undefined,
 }) => (
   <ProgressCheckSectionWrapper>
-    <Typography
-      ff="PRETENDARD"
-      fw="MEDIUM"
-      fs={16}
-      lh={20}
-      color="BLACK"
-      style={{ width: "100%" }}
-    >
+    <Typography fw="MEDIUM" fs={16} lh={20} style={{ width: "100%" }}>
       신청 상태
     </Typography>
     <ProgressCheckSection labels={labels} progress={progress} />

@@ -8,7 +8,6 @@ import {
 import styled from "styled-components";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import Tag, { type TagColor } from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formateDate";
@@ -36,6 +35,19 @@ const getStatusTagColor = (status: string): TagColor => {
   }
 };
 
+const getProfessorApprovalTagColor = (professorApproval: string): TagColor => {
+  switch (professorApproval) {
+    case "대기":
+      return "GRAY";
+    case "완료":
+      return "GREEN";
+    case "반려":
+      return "RED";
+    default:
+      return "GRAY";
+  }
+};
+
 const getCategoryTagColor = (category: string): TagColor => {
   switch (category) {
     case "동아리 성격에 합치하는 내부 활동":
@@ -52,63 +64,43 @@ const getCategoryTagColor = (category: string): TagColor => {
 const columns = [
   columnHelper.accessor(row => row.status, {
     id: "status",
-    header: () => (
-      <TableCell minWidth={116} width="15%" type="Header">
-        상태
-      </TableCell>
-    ),
+    header: "상태",
     cell: info => (
-      <TableCell minWidth={116} width="15%" type="Default">
-        <Tag color={getStatusTagColor(info.getValue())}>{info.getValue()}</Tag>
-      </TableCell>
+      <Tag color={getStatusTagColor(info.getValue())}>{info.getValue()}</Tag>
     ),
-    enableSorting: false,
+    size: 8,
+  }),
+  columnHelper.accessor("professorApproval", {
+    id: "professorApproval",
+    header: "지도교수",
+    cell: info => (
+      <Tag color={getProfessorApprovalTagColor(info.getValue())}>
+        {info.getValue()}
+      </Tag>
+    ),
+    size: 8,
   }),
   columnHelper.accessor("activity", {
     id: "activity",
-    header: () => (
-      <TableCell width="30%" type="Header">
-        활동명
-      </TableCell>
-    ),
-    cell: info => (
-      <TableCell width="30%" type="Default">
-        {info.getValue()}
-      </TableCell>
-    ),
-    enableSorting: false,
+    header: "활동명",
+    cell: info => info.getValue(),
+    size: 30,
   }),
   columnHelper.accessor("category", {
     id: "category",
-    header: () => (
-      <TableCell minWidth={248} width="25%" type="Header">
-        활동 분류
-      </TableCell>
-    ),
+    header: "활동 분류",
     cell: info => (
-      <TableCell minWidth={248} width="25%" type="Default">
-        <Tag color={getCategoryTagColor(info.getValue())}>
-          {info.getValue()}
-        </Tag>
-      </TableCell>
+      <Tag color={getCategoryTagColor(info.getValue())}>{info.getValue()}</Tag>
     ),
-    enableSorting: false,
+    size: 25,
   }),
   columnHelper.accessor(
     row => `${formatDate(row.startDate)} ~ ${formatDate(row.endDate)}`,
     {
       id: "date-range",
-      header: () => (
-        <TableCell minWidth={304} width="35%" type="Header">
-          활동 기간
-        </TableCell>
-      ),
-      cell: info => (
-        <TableCell minWidth={304} width="35%" type="Default">
-          {info.getValue()}
-        </TableCell>
-      ),
-      enableSorting: false,
+      header: "활동 기간",
+      cell: info => info.getValue(),
+      size: 35,
     },
   ),
 ];
@@ -127,6 +119,7 @@ const NewActivityReportList: React.FC<ActivityReportListProps> = ({ data }) => {
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
+    enableSorting: false,
   });
   return (
     <TableOuter>

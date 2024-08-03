@@ -4,10 +4,12 @@ import { PromotionalPrintingOrderStatusEnum } from "@sparcs-clubs/interface/comm
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
 
 import {
+  ActivityProfessorApprovalEnum,
   ActivityStatusEnum,
   ActivityTypeEnum,
+  FundingStatusEnum,
   MemberStatusEnum,
-} from "../features/manage-club/service/_mock/mockManageClub";
+} from "../features/manage-club/services/_mock/mockManageClub";
 import { StatusDetail } from "../utils/getTagDetail";
 
 const AcfTagList: {
@@ -68,6 +70,8 @@ const RntTagList: {
   [RentalOrderStatusEnum.Approved]: { text: "승인", color: "YELLOW" },
   [RentalOrderStatusEnum.Rented]: { text: "대여", color: "PURPLE" },
   [RentalOrderStatusEnum.Returned]: { text: "반납", color: "GREEN" },
+  [RentalOrderStatusEnum.Overdue]: { text: "연체", color: "PINK" },
+  [RentalOrderStatusEnum.Rejected]: { text: "반려", color: "RED" },
 };
 
 const MemTagList: {
@@ -78,6 +82,15 @@ const MemTagList: {
   [MemberStatusEnum.Rejected]: { text: "반려", color: "RED" },
 };
 
+const FundingTagList: {
+  [key in FundingStatusEnum]: StatusDetail;
+} = {
+  [FundingStatusEnum.Applied]: { text: "신청", color: "BLUE" },
+  [FundingStatusEnum.Committe]: { text: "운위", color: "YELLOW" },
+  [FundingStatusEnum.Approved]: { text: "승인", color: "GREEN" },
+  [FundingStatusEnum.Rejected]: { text: "반려", color: "RED" },
+};
+
 const ApplyTagList: {
   [key in ActivityStatusEnum]: StatusDetail;
 } = {
@@ -85,6 +98,14 @@ const ApplyTagList: {
   [ActivityStatusEnum.Applied]: { text: "신청 완료", color: "PURPLE" },
   [ActivityStatusEnum.Approved]: { text: "승인 완료", color: "GREEN" },
   [ActivityStatusEnum.Rejected]: { text: "신청 반려", color: "RED" },
+};
+
+const ProfessorApprovalTagList: {
+  [key in ActivityProfessorApprovalEnum]: StatusDetail;
+} = {
+  [ActivityProfessorApprovalEnum.Requested]: { text: "대기", color: "GRAY" },
+  [ActivityProfessorApprovalEnum.Approved]: { text: "승인", color: "GREEN" },
+  [ActivityProfessorApprovalEnum.Denied]: { text: "반려", color: "RED" },
 };
 
 const ActTypeTagList: {
@@ -110,5 +131,7 @@ export {
   RntTagList,
   MemTagList,
   ApplyTagList,
+  ProfessorApprovalTagList,
   ActTypeTagList,
+  FundingTagList,
 };

@@ -8,7 +8,6 @@ import {
 import styled from "styled-components";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import Tag, { type TagColor } from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -37,50 +36,23 @@ const getCategoryTagColor = (category: string): TagColor => {
 
 const columns = [
   columnHelper.accessor("activity", {
-    id: "activity",
-    header: () => (
-      <TableCell width="35%" type="Header">
-        활동명
-      </TableCell>
-    ),
-    cell: info => (
-      <TableCell width="35%" type="Default">
-        {info.getValue()}
-      </TableCell>
-    ),
-    enableSorting: false,
+    header: "활동명",
+    cell: info => info.getValue(),
+    size: 35,
   }),
   columnHelper.accessor("category", {
-    id: "category",
-    header: () => (
-      <TableCell minWidth={248} width="30%" type="Header">
-        활동 분류
-      </TableCell>
-    ),
+    header: "활동 분류",
     cell: info => (
-      <TableCell minWidth={248} width="30%" type="Default">
-        <Tag color={getCategoryTagColor(info.getValue())}>
-          {info.getValue()}
-        </Tag>
-      </TableCell>
+      <Tag color={getCategoryTagColor(info.getValue())}>{info.getValue()}</Tag>
     ),
-    enableSorting: false,
+    size: 30,
   }),
   columnHelper.accessor(
     row => `${formatDate(row.startDate)} ~ ${formatDate(row.endDate)}`,
     {
-      id: "date-range",
-      header: () => (
-        <TableCell minWidth={304} width="40%" type="Header">
-          활동 기간
-        </TableCell>
-      ),
-      cell: info => (
-        <TableCell minWidth={304} width="40%" type="Default">
-          {info.getValue()}
-        </TableCell>
-      ),
-      enableSorting: false,
+      header: "활동 기간",
+      cell: info => info.getValue(),
+      size: 40,
     },
   ),
 ];
@@ -101,6 +73,7 @@ const PastActivityReportList: React.FC<ActivityReportListProps> = ({
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
+    enableSorting: false,
   });
   return (
     <TableOuter>

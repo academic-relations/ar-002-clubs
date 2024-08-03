@@ -17,7 +17,6 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 import Table from "@sparcs-clubs/web/common/components/Table";
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import Toggle from "@sparcs-clubs/web/common/components/Toggle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -48,79 +47,39 @@ const columns = [
   columnHelper.display({
     id: "multiSelect",
     header: ({ table }) => (
-      <TableCell minWidth={40} width="5%" type="Header">
-        <CheckboxCenterPlacer>
-          <Checkbox
-            checked={table.getIsAllRowsSelected()}
-            onClick={table.getToggleAllRowsSelectedHandler()}
-          />
-        </CheckboxCenterPlacer>
-      </TableCell>
+      <CheckboxCenterPlacer>
+        <Checkbox
+          checked={table.getIsAllRowsSelected()}
+          onClick={table.getToggleAllRowsSelectedHandler()}
+        />
+      </CheckboxCenterPlacer>
     ),
     cell: ({ row }) => (
-      <TableCell minWidth={40} width="5%" type="Default">
-        <CheckboxCenterPlacer>
-          <Checkbox
-            checked={row.getIsSelected()}
-            onClick={row.getToggleSelectedHandler()}
-          />
-        </CheckboxCenterPlacer>
-      </TableCell>
+      <CheckboxCenterPlacer>
+        <Checkbox
+          checked={row.getIsSelected()}
+          onClick={row.getToggleSelectedHandler()}
+        />
+      </CheckboxCenterPlacer>
     ),
   }),
   columnHelper.accessor("studentId", {
-    id: "studentId",
-    header: () => (
-      <TableCell width="35%" minWidth={100} type="Header">
-        학번
-      </TableCell>
-    ),
-    cell: info => (
-      <TableCell width="35%" minWidth={100} type="Default">
-        {info.getValue()}
-      </TableCell>
-    ),
+    header: "학번",
+    cell: info => info.getValue(),
     enableGlobalFilter: true,
   }),
   columnHelper.accessor("name", {
-    id: "name",
-    header: () => (
-      <TableCell minWidth={90} width="30%" type="Header">
-        신청자
-      </TableCell>
-    ),
-    cell: info => (
-      <TableCell minWidth={90} width="30%" type="Default">
-        {info.getValue()}
-      </TableCell>
-    ),
+    header: "신청자",
+    cell: info => info.getValue(),
     enableGlobalFilter: true,
   }),
   columnHelper.accessor("phoneNumber", {
-    id: "phoneNumber",
-    header: () => (
-      <TableCell minWidth={130} width="30%" type="Header">
-        전화번호
-      </TableCell>
-    ),
-    cell: info => (
-      <TableCell minWidth={130} width="30%" type="Default">
-        {info.getValue()}
-      </TableCell>
-    ),
+    header: "전화번호",
+    cell: info => info.getValue(),
   }),
   columnHelper.accessor("email", {
-    id: "email",
-    header: () => (
-      <TableCell width="40%" type="Header">
-        이메일
-      </TableCell>
-    ),
-    cell: info => (
-      <TableCell width="40%" type="Default">
-        {info.getValue()}
-      </TableCell>
-    ),
+    header: "이메일",
+    cell: info => info.getValue(),
   }),
 ];
 
@@ -169,6 +128,7 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
         },
       ],
     },
+    enableSorting: false,
   });
 
   return (
@@ -197,14 +157,14 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
       </SelectParticipantInner>
       <Toggle
         label={
-          <Typography type="p_b">
+          <Typography fs={16} lh={20} fw="MEDIUM">
             선택된 회원 목록 ({selected.length}명)
           </Typography>
         }
       >
         {selected.length ? (
           selected.map((participant, i) => (
-            <Typography key={i} type="p">
+            <Typography key={i} fs={16} lh={20} fw="REGULAR">
               {participant.studentId} {participant.name}
             </Typography>
           ))
