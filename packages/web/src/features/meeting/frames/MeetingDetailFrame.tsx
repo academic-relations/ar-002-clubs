@@ -69,7 +69,9 @@ const MeetingDetailFrame: React.FC = () => {
           <Button type="default" onClick={deleteHandler}>
             삭제
           </Button>
-          <Button type="default">수정</Button>
+          <Link href={`/meeting/announcement/${data.id}/edit`}>
+            <Button type="default">수정</Button>
+          </Link>
         </FlexWrapper>
       </RowStretchWrapper>
     </FlexWrapper>
