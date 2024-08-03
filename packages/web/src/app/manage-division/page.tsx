@@ -2,7 +2,7 @@
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import DivisionInfoFrame from "@sparcs-clubs/web/features/manage-devision/frames/DivisionInfoFrame";
+import DivisionInfoFrame from "@sparcs-clubs/web/features/manage-division/frames/DivisionInfoFrame";
 
 const ManageDivision: React.FC = () => (
   <FlexWrapper gap={60} direction="column">

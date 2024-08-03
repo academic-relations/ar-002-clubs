@@ -4,7 +4,7 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import ChangeDivisionPresident from "@sparcs-clubs/web/features/manage-devision/components/ChangeDivisionPresident";
+import ChangeDivisionPresident from "@sparcs-clubs/web/features/manage-division/components/ChangeDivisionPresident";
 
 const ChangeDivisionPresidentCard = () => {
   const hasChangeNotice = true;
