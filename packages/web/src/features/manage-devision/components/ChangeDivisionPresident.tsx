@@ -74,14 +74,14 @@ const ChangeDivisionPresident: React.FC<ChangeDivisionPresidentProps> = ({
           />
         </CheckBoxWrapper>
         <FlexWrapper gap={8} direction="column">
-          <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={24}>
+          <Typography fw="MEDIUM" fs={16} lh={24}>
             {headerString}
           </Typography>
-          <Typography ff="PRETENDARD" fw="REGULAR" fs={16} lh={24}>
+          <Typography fs={16} lh={24}>
             {getBodyString()}
           </Typography>
           {status === "Requested" && (
-            <Typography ff="PRETENDARD" fw="REGULAR" fs={16} lh={24}>
+            <Typography fs={16} lh={24}>
               {requestNotice}
             </Typography>
           )}

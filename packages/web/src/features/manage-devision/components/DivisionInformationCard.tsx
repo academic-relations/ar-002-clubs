@@ -22,17 +22,11 @@ const DivisionInformationCard: React.FC = () => {
 
   return (
     <Card outline padding="32px" gap={32} style={{ flex: 1 }}>
-      <Typography ff="PRETENDARD" fw="MEDIUM" fs={20} lh={24}>
+      <Typography fw="MEDIUM" fs={20} lh={24}>
         기본 정보
       </Typography>
       <FlexWrapper gap={20} direction="row">
-        <Typography
-          ff="PRETENDARD"
-          fw="MEDIUM"
-          fs={16}
-          lh={20}
-          style={{ flex: 1 }}
-        >
+        <Typography fw="MEDIUM" fs={16} lh={20} style={{ flex: 1 }}>
           분과명
         </Typography>
         <Tag color="PURPLE">생활체육</Tag>
@@ -48,19 +42,13 @@ const DivisionInformationCard: React.FC = () => {
           <Icon type="keyboard_arrow_right" size={20} />
         )}
         <FlexWrapper gap={16} direction="column" style={{ flex: 1 }}>
-          <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20}>
+          <Typography fw="MEDIUM" fs={16} lh={20}>
             {`동아리 목록 (${mockClubList.length}개)`}
           </Typography>
           {showClubList && (
             <ClubListWrapper direction="column" gap={12}>
               {mockClubList.map((club, _) => (
-                <Typography
-                  ff="PRETENDARD"
-                  fw="REGULAR"
-                  fs={16}
-                  lh={20}
-                  key={club.id}
-                >
+                <Typography fs={16} lh={20} key={club.id}>
                   {club.name}
                 </Typography>
               ))}

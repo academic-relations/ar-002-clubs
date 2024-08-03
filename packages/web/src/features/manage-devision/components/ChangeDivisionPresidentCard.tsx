@@ -22,7 +22,7 @@ const ChangeDivisionPresidentCard = () => {
 
   return (
     <Card outline padding="32px" gap={32} style={{ flex: 1 }}>
-      <Typography ff="PRETENDARD" fw="MEDIUM" fs={20} lh={24}>
+      <Typography fw="MEDIUM" fs={20} lh={24}>
         분과 학생회장
       </Typography>
       {hasChangeNotice && (
@@ -33,7 +33,7 @@ const ChangeDivisionPresidentCard = () => {
         />
       )}
       <FlexWrapper gap={4} direction="column">
-        <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={24}>
+        <Typography fw="MEDIUM" fs={16} lh={24}>
           학생회장
         </Typography>
         <Select
