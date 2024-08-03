@@ -45,15 +45,15 @@ const ModalScrollContainer = styled.div`
   padding: 32px;
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
-    max-width: 1120px;
+    max-width: ${({ theme }) => theme.responsive.CONTENT.xxl};
   }
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
-    max-width: 960px;
+    max-width: ${({ theme }) => theme.responsive.CONTENT.xl};
   }
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
-    max-width: 640px;
+    max-width: ${({ theme }) => theme.responsive.CONTENT.lg};
   }
 `;
 
