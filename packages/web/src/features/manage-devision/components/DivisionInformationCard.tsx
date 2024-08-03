@@ -35,7 +35,7 @@ const DivisionInformationCard: React.FC = () => {
         >
           분과명
         </Typography>
-        <Tag color="PURPLE">생활 체육</Tag>
+        <Tag color="PURPLE">생활체육</Tag>
       </FlexWrapper>
       <FlexWrapper
         gap={8}
@@ -51,7 +51,7 @@ const DivisionInformationCard: React.FC = () => {
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20}>
             {`동아리 목록 (${mockClubList.length}개)`}
           </Typography>
-          {showClubList ? (
+          {showClubList && (
             <ClubListWrapper direction="column" gap={12}>
               {mockClubList.map((club, _) => (
                 <Typography
@@ -65,7 +65,7 @@ const DivisionInformationCard: React.FC = () => {
                 </Typography>
               ))}
             </ClubListWrapper>
-          ) : null}
+          )}
         </FlexWrapper>
       </FlexWrapper>
     </Card>

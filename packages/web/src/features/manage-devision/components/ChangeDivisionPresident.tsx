@@ -80,11 +80,11 @@ const ChangeDivisionPresident: React.FC<ChangeDivisionPresidentProps> = ({
           <Typography ff="PRETENDARD" fw="REGULAR" fs={16} lh={24}>
             {getBodyString()}
           </Typography>
-          {status === "Requested" ? (
+          {status === "Requested" && (
             <Typography ff="PRETENDARD" fw="REGULAR" fs={16} lh={24}>
               {requestNotice}
             </Typography>
-          ) : null}
+          )}
         </FlexWrapper>
       </FlexWrapper>
     </MessageBox>

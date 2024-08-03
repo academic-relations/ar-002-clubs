@@ -25,13 +25,13 @@ const ChangeDivisionPresidentCard = () => {
       <Typography ff="PRETENDARD" fw="MEDIUM" fs={20} lh={24}>
         분과 학생회장
       </Typography>
-      {hasChangeNotice ? (
+      {hasChangeNotice && (
         <ChangeDivisionPresident
           status="Requested"
           actingPresident
           change={["20210227 박병찬", "20200510 이지윤"]}
         />
-      ) : null}
+      )}
       <FlexWrapper gap={4} direction="column">
         <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={24}>
           학생회장
