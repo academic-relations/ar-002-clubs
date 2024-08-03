@@ -9,7 +9,7 @@ import {
   ActivityTypeEnum,
   FundingStatusEnum,
   MemberStatusEnum,
-} from "../features/manage-club/service/_mock/mockManageClub";
+} from "../features/manage-club/services/_mock/mockManageClub";
 import { StatusDetail } from "../utils/getTagDetail";
 
 const AcfTagList: {

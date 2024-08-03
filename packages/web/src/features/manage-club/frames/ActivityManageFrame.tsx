@@ -8,7 +8,7 @@ import FundingTable from "@sparcs-clubs/web/features/manage-club/components/Fund
 import {
   mockupManageFunding,
   mockupManageReport,
-} from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+} from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 const ActivityManageFrame: React.FC = () => {
   const [toggle, setToggle] = React.useState<boolean>(true);
