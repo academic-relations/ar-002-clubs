@@ -11,6 +11,7 @@ interface ChangeDivisionPresidentMessageContextProps {
   status: ChangeDivisionStatusType;
   page: Pages;
   change?: [string, string];
+  isModal: boolean;
 }
 
 export class ChangeDivisionPresidentMessageContext {
@@ -24,18 +25,22 @@ export class ChangeDivisionPresidentMessageContext {
 
   change?: [string, string];
 
+  isModal: boolean;
+
   constructor({
     actingPresident,
     division,
     status,
     page,
     change,
+    isModal,
   }: ChangeDivisionPresidentMessageContextProps) {
     this.actingPresident = actingPresident;
     this.division = division;
     this.status = status;
     this.page = page;
     this.change = change;
+    this.isModal = isModal;
   }
 
   public getHeader(): string {
@@ -46,21 +51,25 @@ export class ChangeDivisionPresidentMessageContext {
 
   public getBody(): string {
     const manageDivisionPageInner = {
-      Requested: ` 변경이 다음과 같이 요청되었습니다: `,
+      Requested: ` 변경이 다음과 같이 요청되었습니다 `,
       Canceled: ` 변경이 취소되었습니다`,
-      Rejected: ` 변경 요청이 거절되었습니다: `,
+      Rejected: ` 변경 요청이 거절되었습니다 `,
       Completed: "error",
     };
 
     const innerMessage =
       this.page === "/my"
-        ? ` 변경이 다음과 같이 ${this.getStatus()}되었습니다: `
+        ? ` 변경이 다음과 같이 ${this.getStatus()}되었습니다 `
         : manageDivisionPageInner[this.status];
 
     return `${this.getFullPronoun()}${innerMessage}${
       this.status === "Canceled" && this.page === "/manage-division"
         ? ""
         : this.getChange()
+    }${
+      this.status === "Requested" && this.page === "/my" && !this.isModal
+        ? " (승인 전)"
+        : ""
     }`;
   }
 
@@ -103,6 +112,6 @@ export class ChangeDivisionPresidentMessageContext {
   private getChange() {
     return this.change === undefined
       ? "error"
-      : `${this.change[0]} -> ${this.change[1]}`;
+      : `\n${this.change[0]} -> ${this.change[1]}`;
   }
 }

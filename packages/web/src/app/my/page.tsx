@@ -56,6 +56,7 @@ const My: React.FC = () => {
           <MyChangeDivisionPresident
             status="Requested"
             change={["20210227 박병찬", "20200510 이지윤"]}
+            refetch={refetch}
           />
         )}
         <MyInfoFrame />

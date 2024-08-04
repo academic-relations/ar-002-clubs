@@ -22,6 +22,7 @@ const ChangeDivisionPresident: React.FC<ChangeDivisionPresidentProps> = ({
     status,
     page: "/manage-division",
     change,
+    isModal: false,
   });
 
   return (
@@ -30,7 +31,7 @@ const ChangeDivisionPresident: React.FC<ChangeDivisionPresidentProps> = ({
       header={messageContext.getHeader()}
     >
       <FlexWrapper gap={8} direction="column">
-        <Typography fs={16} lh={24}>
+        <Typography fs={16} lh={24} style={{ whiteSpace: "pre-wrap" }}>
           {messageContext.getBody()}
         </Typography>
         {status === "Requested" && (
