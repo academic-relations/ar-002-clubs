@@ -8,6 +8,7 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
+import MyChangeDivisionPresident from "@sparcs-clubs/web/features/my/component/MyChangeDivisionPresident";
 import MyChangeRepresentative from "@sparcs-clubs/web/features/my/component/MyChangeRepresentative";
 import MyClubFrame from "@sparcs-clubs/web/features/my/frame/MyClubFrame";
 import MyInfoFrame from "@sparcs-clubs/web/features/my/frame/MyInfoFrame";
@@ -20,6 +21,7 @@ const My: React.FC = () => {
   const { data: myProfile } = useGetUserProfile();
 
   const [type, setType] = useState<"Requested" | "Finished">("Finished");
+  const mockHasDivisionPresidentChangeNotice = true;
 
   useEffect(() => {
     switch (data?.requests[0].clubDelegateChangeRequestStatusEnumId) {
@@ -47,6 +49,13 @@ const My: React.FC = () => {
             clubName={data?.requests[0].clubName}
             prevRepresentative={`${data?.requests[0].prevStudentId} ${data?.requests[0].prevStudentName}`}
             newRepresentative={`${myProfile?.studentNumber} ${myProfile?.name}`}
+            refetch={refetch}
+          />
+        )}
+        {mockHasDivisionPresidentChangeNotice && (
+          <MyChangeDivisionPresident
+            status="Requested"
+            change={["20210227 박병찬", "20200510 이지윤"]}
             refetch={refetch}
           />
         )}
