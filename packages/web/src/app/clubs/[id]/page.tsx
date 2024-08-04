@@ -11,8 +11,8 @@ const ClubDetail = () => {
   const { id } = useParams();
   const { data, isLoading, isError } = useGetClubDetail(id as string);
 
-  // 임의로 등록 기간인지 여부를 확인하는 변수를 만들었어요.
-  const isRegistrationPeriod = false;
+  // TODO : 등록 기간인지 받아오기
+  const isRegistrationPeriod = true;
 
   return (
     <UseClientProvider>

@@ -13,6 +13,7 @@ import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/C
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import ClubDetailCard from "@sparcs-clubs/web/features/clubDetails/components/ClubDetailCard";
 import ClubInfoCard from "@sparcs-clubs/web/features/clubDetails/components/ClubInfoCard";
 import PersonInfoCard from "@sparcs-clubs/web/features/clubDetails/components/PersonInfoCard";
@@ -52,6 +53,8 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
 }) => {
   // TODO : 해당 동아리 등록 신청 여부 받아오기
   const [isRegistered, setIsRegistered] = useState(false);
+
+  const { isLoggedIn } = useAuth();
 
   const toggleRegistered = (close: () => void) => {
     // TODO : 회원가입 승인 or 취소 로직 추가
@@ -98,18 +101,19 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
         ]}
         title={club.name}
         action={
-          isRegistrationPeriod ? (
-            <ResisterInfoWrapper>
-              <Typography fs={16} color="GRAY.600" fw="REGULAR">
-                등록 신청 {club.totalMemberCnt}명
-              </Typography>
-              <Button type="default" onClick={submitHandler}>
-                {isRegistered ? "회원 등록 취소" : "회원 등록 신청"}
-              </Button>
-            </ResisterInfoWrapper>
-          ) : (
-            isRegistered && <Button type="disabled">회원 승인 대기</Button>
-          )
+          isRegistrationPeriod
+            ? isLoggedIn && (
+                <ResisterInfoWrapper>
+                  <Typography fs={16} color="GRAY.600" fw="REGULAR">
+                    등록 신청 {club.totalMemberCnt}명
+                  </Typography>
+                  <Button type="default" onClick={submitHandler}>
+                    {isRegistered ? "회원 등록 취소" : "회원 등록 신청"}
+                  </Button>
+                </ResisterInfoWrapper>
+              )
+            : isLoggedIn &&
+              isRegistered && <Button type="disabled">회원 승인 대기</Button>
         }
       />
 
