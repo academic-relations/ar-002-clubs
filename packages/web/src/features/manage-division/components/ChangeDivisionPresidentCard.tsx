@@ -21,7 +21,12 @@ const ChangeDivisionPresidentCard = () => {
   );
 
   return (
-    <Card outline padding="32px" gap={32} style={{ flex: 1 }}>
+    <Card
+      outline
+      padding="32px"
+      gap={32}
+      style={{ flex: 1, alignSelf: "start" }}
+    >
       <Typography fw="MEDIUM" fs={20} lh={24}>
         분과 학생회장
       </Typography>
