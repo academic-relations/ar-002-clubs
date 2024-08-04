@@ -123,7 +123,7 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
               <SelectParticipant
                 data={mockParticipantData}
                 onChange={setParticipants}
-                selectedData={selectedParticipants}
+                value={selectedParticipants}
               />
             </FlexWrapper>
           )}

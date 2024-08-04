@@ -25,7 +25,7 @@ import { type Participant } from "../types/activityReport";
 interface SelectParticipantProps {
   data: Participant[];
   onChange?: (selected: Participant[]) => void;
-  selectedData?: Participant[];
+  value?: Participant[];
 }
 
 const SelectParticipantInner = styled.div`
@@ -98,15 +98,11 @@ const containsTextFilter: FilterFn<Participant> = (
 const SelectParticipant: React.FC<SelectParticipantProps> = ({
   data,
   onChange = () => {},
-  selectedData = [],
+  value = [],
 }) => {
   const initialSelectedRowIds: Record<number, boolean> = {};
   data.forEach((item, index) => {
-    if (
-      selectedData.some(
-        selectedItem => selectedItem.studentId === item.studentId,
-      )
-    ) {
+    if (value.some(selectedItem => selectedItem.studentId === item.studentId)) {
       initialSelectedRowIds[index] = true;
     }
   });
@@ -114,7 +110,7 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
     initialSelectedRowIds,
   );
   const [searchText, setSearchText] = useState<string>("");
-  const [selected, setSelected] = useState<Participant[]>(selectedData);
+  const [selected, setSelected] = useState<Participant[]>(value);
 
   useEffect(() => {
     const res = data.filter((_, i) => selectedRowIds[i]);
