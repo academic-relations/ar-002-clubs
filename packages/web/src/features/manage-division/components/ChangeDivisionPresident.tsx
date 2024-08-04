@@ -33,7 +33,7 @@ const ChangeDivisionPresident: React.FC<ChangeDivisionPresidentProps> = ({
   const divisionString = "'생활체육' 분과";
   const fullPronounString = `${divisionString}의 ${pronounString}`;
   const changeString =
-    change === undefined ? "error" : `${change[0]} ⭢ ${change[1]}`;
+    change === undefined ? "error" : `${change[0]} -> ${change[1]}`;
   const requestNotice = `${pronounString} 변경 요청을 취소할 수 있으며, 요청이 3일 내로 승인 또는 거절되지 않을 경우 자동으로 취소됩니다`;
 
   const headerString = `분과 ${pronounString} 변경 요청 ${getStatusString()}`;
