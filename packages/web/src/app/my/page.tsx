@@ -8,8 +8,8 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
+import MyChangeDivisionPresident from "@sparcs-clubs/web/features/my/component/MyChangeDivisionPresident";
 import MyChangeRepresentative from "@sparcs-clubs/web/features/my/component/MyChangeRepresentative";
-import MyChangeDivisionPresidentFrame from "@sparcs-clubs/web/features/my/frame/MyChangeDivisionPresidentFrame";
 import MyClubFrame from "@sparcs-clubs/web/features/my/frame/MyClubFrame";
 import MyInfoFrame from "@sparcs-clubs/web/features/my/frame/MyInfoFrame";
 import MyServiceFrame from "@sparcs-clubs/web/features/my/frame/MyServiceFrame";
@@ -53,7 +53,7 @@ const My: React.FC = () => {
           />
         )}
         {mockHasDivisionPresidentChangeNotice && (
-          <MyChangeDivisionPresidentFrame
+          <MyChangeDivisionPresident
             status="Requested"
             change={["20210227 박병찬", "20200510 이지윤"]}
           />

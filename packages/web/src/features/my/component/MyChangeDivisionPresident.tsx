@@ -1,7 +1,11 @@
+import { useRouter } from "next/navigation";
+
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
+
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import NotificationCard from "@sparcs-clubs/web/common/components/NotificationCard";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { ChangeDivisionPresidentMessageContext } from "@sparcs-clubs/web/constants/changeDivisionPresident";
 
 type StatusType = "Requested" | "Completed";
 
@@ -11,45 +15,55 @@ interface MyChangeDivisionPresidentProps {
   change?: [string, string];
 }
 
-const statusString = {
-  Requested: "요청",
-  Completed: "완료",
-};
-
 const notificationStatus: Record<StatusType, "Alert" | "Success"> = {
   Requested: "Alert",
   Completed: "Success",
 };
 
-const MyChangeDivisionPresidentFrame: React.FC<
-  MyChangeDivisionPresidentProps
-> = ({
+const MyChangeDivisionPresident: React.FC<MyChangeDivisionPresidentProps> = ({
   status = "Requested",
   actingPresident = false,
   change = undefined,
 }: MyChangeDivisionPresidentProps) => {
-  const pronounString = actingPresident ? "학생회장 권한대행" : "학생회장";
-  const divisionString = "'생활체육' 분과";
-  const fullPronounString = `${divisionString}의 ${pronounString}`;
-  const changeString =
-    change === undefined ? "error" : `${change[0]} ⭢ ${change[1]}`;
-
-  const headerString = `${pronounString} 변경 ${statusString[status]}`;
-  const bodyString = `${fullPronounString} 변경이 다음과 같이 요청되었습니다: \n${changeString}`;
+  const router = useRouter();
+  const messageContext = new ChangeDivisionPresidentMessageContext({
+    actingPresident,
+    division: "'생활체육' 분과",
+    status,
+    page: "/my",
+    change,
+  });
 
   const buttonString =
     status === "Requested" ? "클릭하여 더보기" : "분과 관리 페이지 바로가기";
 
+  const openConfirmModal = () => {};
+
+  const onClick =
+    status === "Requested"
+      ? openConfirmModal
+      : () => {
+          router.push("/manage-division");
+        };
+
   return (
-    <NotificationCard status={notificationStatus[status]} header={headerString}>
+    <NotificationCard
+      status={notificationStatus[status]}
+      header={messageContext.getHeader()}
+    >
       <FlexWrapper gap={8} direction="column">
         <Typography fs={16} lh={24}>
-          {bodyString}
+          {messageContext.getBody()}
         </Typography>
-        <TextButton text={buttonString} color="gray" fw="REGULAR" />
+        <TextButton
+          text={buttonString}
+          color="gray"
+          fw="REGULAR"
+          onClick={onClick}
+        />
       </FlexWrapper>
     </NotificationCard>
   );
 };
 
-export default MyChangeDivisionPresidentFrame;
+export default MyChangeDivisionPresident;
