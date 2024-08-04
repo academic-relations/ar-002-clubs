@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { TransportationEnum as E } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
@@ -12,7 +12,6 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { mockParticipantData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
 import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
 
-import { Participant } from "@sparcs-clubs/web/features/manage-club/activity-report/types/activityReport";
 import {
   isParticipantsRequired,
   isPurposeInfoRequired,
@@ -65,26 +64,30 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
     setFunding({ ...funding, [key]: value });
   };
 
-  const setParticipants = (participants: Participant[]) => {
+  const [participants, setParticipants] = useState<Record<number, boolean>>({});
+
+  useEffect(() => {
+    setParticipants(
+      funding.transportationPassengers.reduce((acc, participant) => {
+        const index = mockParticipantData.findIndex(
+          data => data.studentId === participant.studentNumber,
+        );
+        return { ...acc, [index]: true };
+      }, {}),
+    );
+  }, []);
+
+  useEffect(() => {
     setFunding({
       ...funding,
-      transportationPassengers: participants.map(participant => ({
-        studentNumber: participant.studentId,
-        name: participant.name,
-      })),
+      transportationPassengers: mockParticipantData
+        .filter((_, i) => participants[i])
+        .map(participant => ({
+          studentNumber: participant.studentId,
+          name: participant.name,
+        })),
     });
-  };
-
-  const selectedParticipants = funding.transportationPassengers
-    ? funding.transportationPassengers
-        .map(participant =>
-          mockParticipantData.find(
-            data => data.studentId === participant.studentNumber,
-          ),
-        )
-        .filter(participant => participant !== undefined)
-        .map(participant => participant as Participant)
-    : [];
+  }, [participants, setFunding]);
 
   return (
     <FlexWrapper direction="column" gap={8}>
@@ -123,7 +126,7 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
               <SelectParticipant
                 data={mockParticipantData}
                 onChange={setParticipants}
-                value={selectedParticipants}
+                value={participants}
               />
             </FlexWrapper>
           )}

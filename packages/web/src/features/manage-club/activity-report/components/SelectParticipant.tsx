@@ -24,8 +24,8 @@ import { type Participant } from "../types/activityReport";
 
 interface SelectParticipantProps {
   data: Participant[];
-  onChange?: (selected: Participant[]) => void;
-  value?: Participant[];
+  onChange?: React.Dispatch<React.SetStateAction<RowSelectionState>>;
+  value?: RowSelectionState;
 }
 
 const SelectParticipantInner = styled.div`
@@ -97,26 +97,20 @@ const containsTextFilter: FilterFn<Participant> = (
 
 const SelectParticipant: React.FC<SelectParticipantProps> = ({
   data,
-  onChange = () => {},
-  value = [],
+  onChange = null,
+  value = null,
 }) => {
-  const initialSelectedRowIds: Record<number, boolean> = {};
-  data.forEach((item, index) => {
-    if (value.some(selectedItem => selectedItem.studentId === item.studentId)) {
-      initialSelectedRowIds[index] = true;
-    }
-  });
-  const [selectedRowIds, setSelectedRowIds] = useState<RowSelectionState>(
-    initialSelectedRowIds,
-  );
+  const [rowValues, setRowValues] = useState<RowSelectionState>(value ?? {});
   const [searchText, setSearchText] = useState<string>("");
-  const [selected, setSelected] = useState<Participant[]>(value);
+
+  const [selected, setSelected] = useState<Participant[]>([]);
 
   useEffect(() => {
-    const res = data.filter((_, i) => selectedRowIds[i]);
+    const res = value
+      ? data.filter((_, i) => value?.[i])
+      : data.filter((_, i) => rowValues?.[i]);
     setSelected(res);
-    onChange(res);
-  }, [selectedRowIds]);
+  }, [rowValues, value, data]);
 
   const table = useReactTable({
     columns,
@@ -125,10 +119,16 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     state: {
-      rowSelection: selectedRowIds,
+      rowSelection: value ?? rowValues,
       globalFilter: searchText,
     },
-    onRowSelectionChange: setSelectedRowIds,
+    onRowSelectionChange: v => {
+      if (onChange) {
+        onChange(v);
+      } else {
+        setRowValues(v);
+      }
+    },
     globalFilterFn: containsTextFilter,
     initialState: {
       sorting: [
