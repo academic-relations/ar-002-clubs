@@ -1,9 +1,7 @@
-import styled from "styled-components";
-
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import Icon from "@sparcs-clubs/web/common/components/Icon";
+import NotificationCard from "@sparcs-clubs/web/common/components/NotificationCard";
+
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 interface ChangeDivisionPresidentProps {
   status: "Requested" | "Canceled" | "Rejected";
@@ -11,24 +9,13 @@ interface ChangeDivisionPresidentProps {
   change?: [string, string];
 }
 
-type MessageBoxColor = "RED" | "GREEN";
-
-const MessageBox = styled.div<{ color: MessageBoxColor }>`
-  border: 1px solid ${({ theme, color }) => theme.colors[color][600]};
-  border-radius: 8px;
-
-  background-color: ${({ theme, color }) => theme.colors[color][100]};
-  padding: 12px 16px;
-`;
-const CheckBoxWrapper = styled.div`
-  margin-top: 2px;
-`;
-
 const ChangeDivisionPresident: React.FC<ChangeDivisionPresidentProps> = ({
   status = "Requested",
   actingPresident = true,
   change = undefined,
 }: ChangeDivisionPresidentProps) => {
+  const notificationStatus = status === "Rejected" ? "Error" : "Success";
+
   const getStatusString = () => {
     switch (status) {
       case "Requested":
@@ -64,30 +51,18 @@ const ChangeDivisionPresident: React.FC<ChangeDivisionPresidentProps> = ({
   };
 
   return (
-    <MessageBox color={status === "Rejected" ? "RED" : "GREEN"}>
-      <FlexWrapper gap={8} direction="row">
-        <CheckBoxWrapper>
-          <Icon
-            type={status === "Rejected" ? "cancel" : "check_circle"}
-            size={20}
-            color={colors[status === "Rejected" ? "RED" : "GREEN"][600]}
-          />
-        </CheckBoxWrapper>
-        <FlexWrapper gap={8} direction="column">
-          <Typography fw="MEDIUM" fs={16} lh={24}>
-            {headerString}
-          </Typography>
+    <NotificationCard status={notificationStatus} header={headerString}>
+      <FlexWrapper gap={8} direction="column">
+        <Typography fs={16} lh={24}>
+          {getBodyString()}
+        </Typography>
+        {status === "Requested" && (
           <Typography fs={16} lh={24}>
-            {getBodyString()}
+            {requestNotice}
           </Typography>
-          {status === "Requested" && (
-            <Typography fs={16} lh={24}>
-              {requestNotice}
-            </Typography>
-          )}
-        </FlexWrapper>
+        )}
       </FlexWrapper>
-    </MessageBox>
+    </NotificationCard>
   );
 };
 
