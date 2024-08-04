@@ -11,7 +11,7 @@ import {
 } from "src/drizzle/schema/user.schema";
 
 @Injectable()
-export class UserRepository {
+export default class UserRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
   async findStudentById(studentId: number) {

@@ -1,5 +1,7 @@
 import { AxiosError, HttpStatusCode, InternalAxiosRequestConfig } from "axios";
 
+import postRefresh from "./postRefresh";
+
 const errorInterceptor = {
   onFulfilled(config: InternalAxiosRequestConfig) {
     return config;
@@ -7,7 +9,29 @@ const errorInterceptor = {
   async onRejected(error: AxiosError) {
     switch (error.response?.status) {
       case HttpStatusCode.Unauthorized: {
-        // TODO: handle unauthorized error
+        try {
+          const response = await postRefresh();
+          // TODO: 로그인시 기본 프로필 선택
+          localStorage.setItem(
+            "responseToken",
+            JSON.stringify(response.accessToken),
+          );
+          if (response.accessToken) {
+            localStorage.setItem(
+              "accessToken",
+              response.accessToken.undergraduate ??
+                response.accessToken.master ??
+                response.accessToken.doctor ??
+                response.accessToken.professor ??
+                response.accessToken.employee ??
+                response.accessToken.executive ??
+                "",
+            );
+            console.log("Logged in successfully.");
+          }
+        } catch (refreshError) {
+          console.error("Login failed", refreshError);
+        }
         return Promise.reject(error);
       }
       case HttpStatusCode.Forbidden: {

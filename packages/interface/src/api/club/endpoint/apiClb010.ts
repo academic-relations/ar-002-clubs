@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 /**
  * @version v0.1
- * @description semesterId에 해당하는 학기에 cludId의 동아리에서 활동한 모든 회원 정보를 가져옵니다.
+ * @description semesterId에 해당하는 학기에 clubId의 동아리에서 활동한 모든 회원 정보를 가져옵니다.
  */
 
 const url = (clubId: number, semesterId: number) =>
@@ -12,8 +12,8 @@ const url = (clubId: number, semesterId: number) =>
 const method = "GET";
 
 const requestParam = z.object({
-  cludId: z.number().int().min(1),
-  semesterId: z.number().int().min(1),
+  clubId: z.coerce.number().int().min(1),
+  semesterId: z.coerce.number().int().min(1),
 });
 
 const requestQuery = z.object({});
@@ -24,9 +24,9 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     members: z
       .object({
-        studentNumber: z.number().int().min(20000000).max(30000000),
-        name: z.string().max(30),
-        email: z.string().max(50),
+        studentNumber: z.coerce.number().int().min(20000000).max(30000000),
+        name: z.coerce.string().max(30),
+        email: z.coerce.string().max(50),
         krPhoneNumber: zKrPhoneNumber.optional(),
       })
       .array(),

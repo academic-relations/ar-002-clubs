@@ -36,6 +36,7 @@ const SelectInner = styled.div`
 const disabledStyle = css`
   background-color: ${({ theme }) => theme.colors.GRAY[100]};
   border-color: ${({ theme }) => theme.colors.GRAY[200]};
+  color: ${({ theme }) => theme.colors.GRAY[300]};
   pointer-events: none;
 `;
 
@@ -92,9 +93,16 @@ const SelectWrapper = styled.div`
 
 const SelectValue = styled.span.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
-})<{ isSelected: boolean }>`
-  color: ${({ theme, isSelected }) =>
-    isSelected ? theme.colors.BLACK : theme.colors.GRAY[200]};
+})<{ isSelected: boolean; disabled: boolean }>`
+  color: ${({ theme, isSelected, disabled }) => {
+    if (disabled) {
+      return theme.colors.GRAY[300];
+    }
+    if (isSelected) {
+      return theme.colors.BLACK;
+    }
+    return theme.colors.GRAY[200];
+  }};
 `;
 
 const Select: React.FC<SelectProps> = ({
@@ -164,7 +172,7 @@ const Select: React.FC<SelectProps> = ({
             onClick={handleSelectClick}
             isOpen={isOpen}
           >
-            <SelectValue isSelected={!!selectedValue}>
+            <SelectValue isSelected={!!selectedValue} disabled={disabled}>
               {selectedLabel}
             </SelectValue>
             <IconWrapper>

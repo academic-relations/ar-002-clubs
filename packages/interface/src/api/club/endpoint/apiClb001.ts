@@ -21,18 +21,18 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     divisions: z // 분과
       .object({
-        id: z.number().int().min(1),
-        name: z.string().max(20),
+        id: z.coerce.number().int().min(1),
+        name: z.coerce.string().max(20),
         clubs: z // 동아리
           .object({
-            id: z.number().int().min(1),
-            name: z.string().max(128),
+            id: z.coerce.number().int().min(1),
+            name: z.coerce.string().max(128),
             type: z.nativeEnum(ClubTypeEnum), // 동아리 유형(정동아리 | 가동아리)
-            isPermanent: z.boolean(), // 상임동아리 여부
-            characteristic: z.string().max(50), // 동아리 소개
-            representative: z.string().max(20), // 동아리 대표
-            advisor: z.string().max(20).nullable(), // 동아리 지도교수
-            totalMemberCnt: z.number().int().min(1),
+            isPermanent: z.coerce.boolean(), // 상임동아리 여부
+            characteristic: z.coerce.string().max(50), // 동아리 소개
+            representative: z.coerce.string().max(20), // 동아리 대표
+            advisor: z.coerce.string().max(20).optional(), // 동아리 지도교수
+            totalMemberCnt: z.coerce.number().int().min(1),
           })
           .array(),
       })

@@ -20,7 +20,7 @@ import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import {
   Funding,
   mockupPastManageFunding,
-} from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+} from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 const TableWithCount = styled.div`

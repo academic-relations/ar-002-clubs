@@ -5,15 +5,12 @@ import { JwtService } from "@nestjs/jwt";
 import { ApiAut002ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut002";
 import { ApiAut003ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut003";
 
-import { ExecutiveRepository } from "@sparcs-clubs/api/common/repository/executive.repository";
-
 import { AuthRepository } from "../repository/auth.repository";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly authRepository: AuthRepository,
-    private readonly executiveRepository: ExecutiveRepository,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -34,6 +31,7 @@ export class AuthService {
       type,
       department,
     );
+    // executiverepository가 common에서 제거됨에 따라 집행부원 토큰 추가 로직은 후에 재구성이 필요합니다.
     // if(user.executive){
     //   if(!(await this.executiveRepository.findExecutiveById(user.executive.id))) throw new HttpException("Cannot find Executive", 403);
     // }

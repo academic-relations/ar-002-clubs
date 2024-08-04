@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { ClubRepository } from "@sparcs-clubs/api/common/repository/club.repository";
-import { StudentRepository } from "@sparcs-clubs/api/common/repository/student.repository";
 import { ClubDelegateDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-delegate-d.repository";
+import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
+import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import { ActivityCertificateRepository } from "../repository/activity-certificate.repository";
 
@@ -21,9 +21,9 @@ import type {
 export class ActivityCertificateService {
   constructor(
     private readonly activityCertificateRepository: ActivityCertificateRepository,
-    private readonly club: ClubRepository,
+    private readonly clubPublicService: ClubPublicService,
     private readonly clubDelegateDRepository: ClubDelegateDRepository,
-    private readonly studentRepository: StudentRepository,
+    private readonly userPublicService: UserPublicService,
   ) {}
 
   async postActivityCertificate(body: ApiAcf001RequestBody) {
@@ -37,7 +37,10 @@ export class ActivityCertificateService {
   }
 
   async getStudentActivityCertificatesClubHistory() {
-    const clubHistory = await this.club.findClubActivities(1); // TODO: 실제 studentId 적용
+    const clubHistory =
+      await this.clubPublicService.getClubBelongDurationOfStudent({
+        studentId: 1,
+      }); // TODO: 실제 studentId 적용
     return clubHistory;
   }
 
@@ -72,7 +75,7 @@ export class ActivityCertificateService {
       ).map(async row => ({
         orderId: row.id,
         studentName: (
-          await this.studentRepository.findStudentById(row.studentId)
+          await this.userPublicService.getStudentById({ id: row.studentId })
         ).name,
         issuedNumber: row.issueNumber,
         statusEnum: row.activityCertificateStatusEnum,
@@ -108,7 +111,7 @@ export class ActivityCertificateService {
       ).map(async row => ({
         orderId: row.id,
         studentName: (
-          await this.studentRepository.findStudentById(row.studentId)
+          await this.userPublicService.getStudentById({ id: row.studentId })
         ).name,
         issuedNumber: row.issueNumber,
         statusEnum: row.activityCertificateStatusEnum,
