@@ -2,6 +2,8 @@
 
 import React, { useMemo } from "react";
 
+import { mockupMyRental } from "@sparcs-clubs/web/features/my/services/_mock/mockMyClub";
+
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -15,7 +17,7 @@ import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { RntTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import { mockupMyRental } from "@sparcs-clubs/web/features/my/service/_mock/mockMyClub";
+
 import {
   formatDate,
   formatDateTime,
