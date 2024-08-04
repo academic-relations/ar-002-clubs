@@ -6,12 +6,18 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 interface NotificationCardProps {
-  status: "Success" | "Error";
+  status: "Success" | "Error" | "Alert";
   header: string;
   children?: React.ReactNode;
 }
 
 type NotificationColor = "RED" | "GREEN";
+
+const icons = {
+  Success: "check_circle",
+  Error: "cancel",
+  Alert: "error",
+};
 
 const NotificationBox = styled.div<{ color: NotificationColor }>`
   border: 1px solid ${({ theme, color }) => theme.colors[color][600]};
@@ -31,7 +37,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
   children = null,
 }: NotificationCardProps) => {
   const color: NotificationColor = status === "Success" ? "GREEN" : "RED";
-  const iconType = status === "Success" ? "check_circle" : "cancel";
+  const iconType = icons[status];
 
   return (
     <NotificationBox color={color}>
