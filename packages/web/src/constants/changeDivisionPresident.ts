@@ -59,7 +59,7 @@ export class ChangeDivisionPresidentMessageContext {
 
     return `${this.getFullPronoun()}${innerMessage}${
       this.status === "Canceled" && this.page === "/manage-division"
-        ? null
+        ? ""
         : this.getChange()
     }`;
   }
