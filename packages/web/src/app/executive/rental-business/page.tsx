@@ -98,7 +98,7 @@ const TableWithCount = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: flex-end;
   gap: 8px;
   align-self: stretch;
 `;
