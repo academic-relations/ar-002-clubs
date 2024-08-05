@@ -40,7 +40,7 @@ export class RegistrationService {
       ),
     };
 
-    // FIXME: 활동 id 검증 로직 필요
+    // TODO: 활동 id 검증 로직 필요
     await this.registrationRepository.createRegistration(transformedBody);
     return {};
   }
@@ -78,16 +78,51 @@ export class RegistrationService {
     registrationTypeEnumId: number,
   ) {
     if (registrationTypeEnumId === RegistrationTypeEnum.NewProvisional) {
-      // 가동아리 신규 신청
+      // 가동아리 신규 신청 시 clubId는 undefined여야 함
       if (clubId !== undefined) {
-        // 가동아리 신규 신청 시 clubId는 undefined
         throw new HttpException(
           "[postRegistration] invalid club id. club id should be undefined",
           HttpStatus.BAD_REQUEST,
         );
       }
     } else {
-      // 정동아리 재등록/신규 등록, 가동아리 재등록 신청
+      // 정동아리 재등록/신규 등록, 가동아리 재등록 신청 시 clubId가 정의되어 있어야 함
+      if (clubId === undefined) {
+        throw new HttpException(
+          "[postRegistration] invalid club id. club id should NOT be undefined",
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      switch (registrationTypeEnumId) {
+        case RegistrationTypeEnum.Renewal: // 정동아리 재등록 신청
+          if (
+            !(
+              await this.getStudentRegistrationClubRegistrationQualificationRenewal()
+            ).clubs.find(club => club.id === clubId)
+          ) {
+            // clubId가 목록에 포함되지 않았을 때의 처리
+            throw new HttpException(
+              "The clubId is not eligible for promotional registration",
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+          break;
+        case RegistrationTypeEnum.Promotional: // 정동아리 신규 등록 신청
+          if (
+            !(
+              await this.getStudentRegistrationClubRegistrationQualificationPromotional()
+            ).clubs.find(club => club.id === clubId)
+          ) {
+            // clubId가 목록에 포함되지 않았을 때의 처리
+            throw new HttpException(
+              "The clubId is not eligible for promotional registration",
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+          break;
+        default:
+          break;
+      }
       await this.validateExistClub(clubId); // 기존에 존재하는지 club 확인
       logger.debug("[postRegistration] club existence checked");
       await this.validateDuplicateRegistration(clubId); // 중복 신청인지 확인
