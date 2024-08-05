@@ -84,8 +84,8 @@ export default class ClubDelegateService {
     );
     if (
       studentStatus === undefined ||
-      (param.clubDelegateEnumId === ClubDelegateEnum.President &&
-        studentStatus.ClubDelegateEnumId !== ClubDelegateEnum.President)
+      (param.clubDelegateEnumId === ClubDelegateEnum.Representative &&
+        studentStatus.ClubDelegateEnumId !== ClubDelegateEnum.Representative)
     )
       throw new HttpException(
         "This api is allowed for delegates",
