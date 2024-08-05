@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import {
   FixtureClassEnum,
   FundingOrderStatusEnum,
+  TransportationEnum,
 } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import { and, eq, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
@@ -168,9 +169,16 @@ export default class FundingRepository {
         purposeOfTransportation: contents.isTransportation
           ? contents.purposeOfTransportation
           : null,
-        placeValidity: contents.isTransportation
-          ? contents.placeValidity
-          : null,
+        placeValidity:
+          contents.isTransportation &&
+          contents.transportationEnumId ===
+            (TransportationEnum.Cargo ||
+              TransportationEnum.CallVan ||
+              TransportationEnum.Airplane ||
+              TransportationEnum.Ship ||
+              TransportationEnum.Others)
+            ? contents.placeValidity
+            : null,
         isNonCorporateTransaction: contents.isNonCorporateTransaction,
         traderName: contents.isNonCorporateTransaction
           ? contents.traderName
@@ -222,25 +230,36 @@ export default class FundingRepository {
         `[insertFunding] funding inserted: ${fundingInsertResult.insertId}`,
       );
 
-      await Promise.all(
-        contents.transportationPassengers.map(async passenger => {
-          const [passengerInsertResult] = await tx
-            .insert(TransportationPassenger)
-            .values({
-              fundingOrderId: fundingInsertResult.insertId,
-              studentId: Number(passenger.studentNumber),
-            });
+      if (
+        contents.isTransportation &&
+        contents.transportationEnumId ===
+          (TransportationEnum.Taxi ||
+            TransportationEnum.CallVan ||
+            TransportationEnum.CharterBus ||
+            TransportationEnum.Airplane ||
+            TransportationEnum.Ship ||
+            TransportationEnum.Others)
+      ) {
+        await Promise.all(
+          contents.transportationPassengers.map(async passenger => {
+            const [passengerInsertResult] = await tx
+              .insert(TransportationPassenger)
+              .values({
+                fundingOrderId: fundingInsertResult.insertId,
+                studentId: Number(passenger.studentNumber),
+              });
 
-          if (passengerInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[insertFunding] passenger insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+            if (passengerInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[insertFunding] passenger insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
       await Promise.all(
         contents.tradeEvidenceFiles.map(async file => {
@@ -280,216 +299,246 @@ export default class FundingRepository {
         }),
       );
 
-      await Promise.all(
-        contents.clubSuppliesImageFiles.map(async file => {
-          const [clubSuppliesImageFileInsertResult] = await tx
-            .insert(ClubSuppliesImageFile)
-            .values({
-              fundingOrderId: fundingInsertResult.insertId,
-              fileId: file.fileId,
-            });
-          if (clubSuppliesImageFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[insertFunding] clubSuppliesImageFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.purposeId !== undefined) {
+        await Promise.all(
+          contents.clubSuppliesImageFiles.map(async file => {
+            const [clubSuppliesImageFileInsertResult] = await tx
+              .insert(ClubSuppliesImageFile)
+              .values({
+                fundingOrderId: fundingInsertResult.insertId,
+                fileId: file.fileId,
+              });
+            if (clubSuppliesImageFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[insertFunding] clubSuppliesImageFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
-      await Promise.all(
-        contents.clubSuppliesSoftwareEvidenceFiles.map(async file => {
-          const [clubSuppliesSoftwareEvidenceFileInsertResult] = await tx
-            .insert(ClubSuppliesSoftwareEvidenceFile)
-            .values({
-              fundingOrderId: fundingInsertResult.insertId,
-              fileId: file.fileId,
-            });
-          if (clubSuppliesSoftwareEvidenceFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[insertFunding] clubSuppliesSoftwareEvidenceFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (
+        contents.purposeId !== undefined &&
+        contents.clubSuppliesClassEnumId === FixtureClassEnum.Software
+      ) {
+        await Promise.all(
+          contents.clubSuppliesSoftwareEvidenceFiles.map(async file => {
+            const [clubSuppliesSoftwareEvidenceFileInsertResult] = await tx
+              .insert(ClubSuppliesSoftwareEvidenceFile)
+              .values({
+                fundingOrderId: fundingInsertResult.insertId,
+                fileId: file.fileId,
+              });
+            if (
+              clubSuppliesSoftwareEvidenceFileInsertResult.affectedRows !== 1
+            ) {
+              logger.debug(
+                "[insertFunding] clubSuppliesSoftwareEvidenceFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
-      await Promise.all(
-        contents.fixtureImageFiles.map(async file => {
-          const [fixtureImageFileInsertResult] = await tx
-            .insert(FixtureImageFile)
-            .values({
-              fundingOrderId: fundingInsertResult.insertId,
-              fileId: file.fileId,
-            });
-          if (fixtureImageFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[insertFunding] fixtureImageFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isFixture) {
+        await Promise.all(
+          contents.fixtureImageFiles.map(async file => {
+            const [fixtureImageFileInsertResult] = await tx
+              .insert(FixtureImageFile)
+              .values({
+                fundingOrderId: fundingInsertResult.insertId,
+                fileId: file.fileId,
+              });
+            if (fixtureImageFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[insertFunding] fixtureImageFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
-      await Promise.all(
-        contents.fixtureSoftwareEvidenceFiles.map(async file => {
-          const [fixtureSoftwareEvidenceFileInsertResult] = await tx
-            .insert(FixtureSoftwareEvidenceFile)
-            .values({
-              fundingOrderId: fundingInsertResult.insertId,
-              fileId: file.fileId,
-            });
-          if (fixtureSoftwareEvidenceFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[insertFunding] fixtureSoftwareEvidenceFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (
+        contents.isFixture &&
+        contents.fixtureClassEnumId === FixtureClassEnum.Software
+      ) {
+        await Promise.all(
+          contents.fixtureSoftwareEvidenceFiles.map(async file => {
+            const [fixtureSoftwareEvidenceFileInsertResult] = await tx
+              .insert(FixtureSoftwareEvidenceFile)
+              .values({
+                fundingOrderId: fundingInsertResult.insertId,
+                fileId: file.fileId,
+              });
+            if (fixtureSoftwareEvidenceFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[insertFunding] fixtureSoftwareEvidenceFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
-      await Promise.all(
-        contents.foodExpenseFiles.map(async file => {
-          const [foodExpenseFileInsertResult] = await tx
-            .insert(FoodExpenseFile)
-            .values({
-              fundingOrderId: fundingInsertResult.insertId,
-              fileId: file.fileId,
-            });
-          if (foodExpenseFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[insertFunding] foodExpenseFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isFoodExpense) {
+        await Promise.all(
+          contents.foodExpenseFiles.map(async file => {
+            const [foodExpenseFileInsertResult] = await tx
+              .insert(FoodExpenseFile)
+              .values({
+                fundingOrderId: fundingInsertResult.insertId,
+                fileId: file.fileId,
+              });
+            if (foodExpenseFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[insertFunding] foodExpenseFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
-      await Promise.all(
-        contents.laborContractFiles.map(async file => {
-          const [laborContractFileInsertResult] = await tx
-            .insert(LaborContractFile)
-            .values({
-              fundingOrderId: fundingInsertResult.insertId,
-              fileId: file.fileId,
-            });
-          if (laborContractFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[insertFunding] laborContractFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isLaborContract) {
+        await Promise.all(
+          contents.laborContractFiles.map(async file => {
+            const [laborContractFileInsertResult] = await tx
+              .insert(LaborContractFile)
+              .values({
+                fundingOrderId: fundingInsertResult.insertId,
+                fileId: file.fileId,
+              });
+            if (laborContractFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[insertFunding] laborContractFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
-      await Promise.all(
-        contents.externalEventParticipationFeeFiles.map(async file => {
-          const [externalEventParticipationFeeFileInsertResult] = await tx
-            .insert(ExternalEventParticipationFeeFile)
-            .values({
-              fundingOrderId: fundingInsertResult.insertId,
-              fileId: file.fileId,
-            });
-          if (
-            externalEventParticipationFeeFileInsertResult.affectedRows !== 1
-          ) {
-            logger.debug(
-              "[insertFunding] externalEventParticipationFeeFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isExternalEventParticipationFee) {
+        await Promise.all(
+          contents.externalEventParticipationFeeFiles.map(async file => {
+            const [externalEventParticipationFeeFileInsertResult] = await tx
+              .insert(ExternalEventParticipationFeeFile)
+              .values({
+                fundingOrderId: fundingInsertResult.insertId,
+                fileId: file.fileId,
+              });
+            if (
+              externalEventParticipationFeeFileInsertResult.affectedRows !== 1
+            ) {
+              logger.debug(
+                "[insertFunding] externalEventParticipationFeeFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
-      await Promise.all(
-        contents.publicationFiles.map(async file => {
-          const [publicationFileInsertResult] = await tx
-            .insert(PublicationFile)
-            .values({
-              fundingOrderId: fundingInsertResult.insertId,
-              fileId: file.fileId,
-            });
-          if (publicationFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[insertFunding] publicationFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isPublication) {
+        await Promise.all(
+          contents.publicationFiles.map(async file => {
+            const [publicationFileInsertResult] = await tx
+              .insert(PublicationFile)
+              .values({
+                fundingOrderId: fundingInsertResult.insertId,
+                fileId: file.fileId,
+              });
+            if (publicationFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[insertFunding] publicationFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
-      await Promise.all(
-        contents.profitMakingActivityFiles.map(async file => {
-          const [profitMakingActivityFileInsertResult] = await tx
-            .insert(ProfitMakingActivityFile)
-            .values({
-              fundingOrderId: fundingInsertResult.insertId,
-              fileId: file.fileId,
-            });
-          if (profitMakingActivityFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[insertFunding] profitMakingActivityFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isProfitMakingActivity) {
+        await Promise.all(
+          contents.profitMakingActivityFiles.map(async file => {
+            const [profitMakingActivityFileInsertResult] = await tx
+              .insert(ProfitMakingActivityFile)
+              .values({
+                fundingOrderId: fundingInsertResult.insertId,
+                fileId: file.fileId,
+              });
+            if (profitMakingActivityFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[insertFunding] profitMakingActivityFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
-      await Promise.all(
-        contents.jointExpenseFiles.map(async file => {
-          const [jointExpenseFileInsertResult] = await tx
-            .insert(JointExpenseFile)
-            .values({
-              fundingOrderId: fundingInsertResult.insertId,
-              fileId: file.fileId,
-            });
-          if (jointExpenseFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[insertFunding] jointExpenseFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isJointExpense) {
+        await Promise.all(
+          contents.jointExpenseFiles.map(async file => {
+            const [jointExpenseFileInsertResult] = await tx
+              .insert(JointExpenseFile)
+              .values({
+                fundingOrderId: fundingInsertResult.insertId,
+                fileId: file.fileId,
+              });
+            if (jointExpenseFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[insertFunding] jointExpenseFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
-      await Promise.all(
-        contents.etcExpenseFiles.map(async file => {
-          const [etcExpenseFileInsertResult] = await tx
-            .insert(EtcExpenseFile)
-            .values({
-              fundingOrderId: fundingInsertResult.insertId,
-              fileId: file.fileId,
-            });
-          if (etcExpenseFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[insertFunding] etcExpenseFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isEtcExpense) {
+        await Promise.all(
+          contents.etcExpenseFiles.map(async file => {
+            const [etcExpenseFileInsertResult] = await tx
+              .insert(EtcExpenseFile)
+              .values({
+                fundingOrderId: fundingInsertResult.insertId,
+                fileId: file.fileId,
+              });
+            if (etcExpenseFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[insertFunding] etcExpenseFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
       return true;
     });
@@ -926,9 +975,16 @@ export default class FundingRepository {
           purposeOfTransportation: contents.isTransportation
             ? contents.purposeOfTransportation
             : null,
-          placeValidity: contents.isTransportation
-            ? contents.placeValidity
-            : null,
+          placeValidity:
+            contents.isTransportation &&
+            contents.transportationEnumId ===
+              (TransportationEnum.Cargo ||
+                TransportationEnum.CallVan ||
+                TransportationEnum.Airplane ||
+                TransportationEnum.Ship ||
+                TransportationEnum.Others)
+              ? contents.placeValidity
+              : null,
           isNonCorporateTransaction: contents.isNonCorporateTransaction,
           traderName: contents.isNonCorporateTransaction
             ? contents.traderName
@@ -997,25 +1053,36 @@ export default class FundingRepository {
         tx.rollback();
         return false;
       }
-      await Promise.all(
-        contents.transportationPassengers.map(async passenger => {
-          const [passengerInsertResult] = await tx
-            .insert(TransportationPassenger)
-            .values({
-              fundingOrderId: fundingId,
-              studentId: Number(passenger.studentNumber),
-            });
+      if (
+        contents.isTransportation &&
+        contents.transportationEnumId ===
+          (TransportationEnum.Taxi ||
+            TransportationEnum.CallVan ||
+            TransportationEnum.CharterBus ||
+            TransportationEnum.Airplane ||
+            TransportationEnum.Ship ||
+            TransportationEnum.Others)
+      ) {
+        await Promise.all(
+          contents.transportationPassengers.map(async passenger => {
+            const [passengerInsertResult] = await tx
+              .insert(TransportationPassenger)
+              .values({
+                fundingOrderId: fundingId,
+                studentId: Number(passenger.studentNumber),
+              });
 
-          if (passengerInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[putStudentFunding] passenger insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+            if (passengerInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[putStudentFunding] passenger insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
       // 파일 전체 삭제 및 재생성
       const [tradeEvidenceFileDeletionResult] = await tx
@@ -1104,24 +1171,26 @@ export default class FundingRepository {
         tx.rollback();
         return false;
       }
-      await Promise.all(
-        contents.clubSuppliesImageFiles.map(async file => {
-          const [clubSuppliesImageFileInsertResult] = await tx
-            .insert(ClubSuppliesImageFile)
-            .values({
-              fundingOrderId: fundingId,
-              fileId: file.fileId,
-            });
-          if (clubSuppliesImageFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[putStudentFunding] clubSuppliesImageFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.purposeId !== undefined) {
+        await Promise.all(
+          contents.clubSuppliesImageFiles.map(async file => {
+            const [clubSuppliesImageFileInsertResult] = await tx
+              .insert(ClubSuppliesImageFile)
+              .values({
+                fundingOrderId: fundingId,
+                fileId: file.fileId,
+              });
+            if (clubSuppliesImageFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[putStudentFunding] clubSuppliesImageFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
       const [clubSuppliesSoftwareEvidenceFileDeletionResult] = await tx
         .update(ClubSuppliesSoftwareEvidenceFile)
@@ -1139,24 +1208,31 @@ export default class FundingRepository {
         tx.rollback();
         return false;
       }
-      await Promise.all(
-        contents.clubSuppliesSoftwareEvidenceFiles.map(async file => {
-          const [clubSuppliesSoftwareEvidenceFileInsertResult] = await tx
-            .insert(ClubSuppliesSoftwareEvidenceFile)
-            .values({
-              fundingOrderId: fundingId,
-              fileId: file.fileId,
-            });
-          if (clubSuppliesSoftwareEvidenceFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[putStudentFunding] clubSuppliesSoftwareEvidenceFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (
+        contents.purposeId !== undefined &&
+        contents.clubSuppliesClassEnumId === FixtureClassEnum.Software
+      ) {
+        await Promise.all(
+          contents.clubSuppliesSoftwareEvidenceFiles.map(async file => {
+            const [clubSuppliesSoftwareEvidenceFileInsertResult] = await tx
+              .insert(ClubSuppliesSoftwareEvidenceFile)
+              .values({
+                fundingOrderId: fundingId,
+                fileId: file.fileId,
+              });
+            if (
+              clubSuppliesSoftwareEvidenceFileInsertResult.affectedRows !== 1
+            ) {
+              logger.debug(
+                "[putStudentFunding] clubSuppliesSoftwareEvidenceFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
       const [fixtureImageFileDeletionResult] = await tx
         .update(FixtureImageFile)
@@ -1174,24 +1250,26 @@ export default class FundingRepository {
         tx.rollback();
         return false;
       }
-      await Promise.all(
-        contents.fixtureImageFiles.map(async file => {
-          const [fixtureImageFileInsertResult] = await tx
-            .insert(FixtureImageFile)
-            .values({
-              fundingOrderId: fundingId,
-              fileId: file.fileId,
-            });
-          if (fixtureImageFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[putStudentFunding] fixtureImageFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isFixture) {
+        await Promise.all(
+          contents.fixtureImageFiles.map(async file => {
+            const [fixtureImageFileInsertResult] = await tx
+              .insert(FixtureImageFile)
+              .values({
+                fundingOrderId: fundingId,
+                fileId: file.fileId,
+              });
+            if (fixtureImageFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[putStudentFunding] fixtureImageFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
       const [fixtureSoftwareEvidenceFileDeletionResult] = await tx
         .update(FixtureSoftwareEvidenceFile)
@@ -1209,24 +1287,29 @@ export default class FundingRepository {
         tx.rollback();
         return false;
       }
-      await Promise.all(
-        contents.fixtureSoftwareEvidenceFiles.map(async file => {
-          const [fixtureSoftwareEvidenceFileInsertResult] = await tx
-            .insert(FixtureSoftwareEvidenceFile)
-            .values({
-              fundingOrderId: fundingId,
-              fileId: file.fileId,
-            });
-          if (fixtureSoftwareEvidenceFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[putStudentFunding] fixtureSoftwareEvidenceFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (
+        contents.isFixture &&
+        contents.fixtureClassEnumId === FixtureClassEnum.Software
+      ) {
+        await Promise.all(
+          contents.fixtureSoftwareEvidenceFiles.map(async file => {
+            const [fixtureSoftwareEvidenceFileInsertResult] = await tx
+              .insert(FixtureSoftwareEvidenceFile)
+              .values({
+                fundingOrderId: fundingId,
+                fileId: file.fileId,
+              });
+            if (fixtureSoftwareEvidenceFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[putStudentFunding] fixtureSoftwareEvidenceFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
       const [foodExpenseFileDeletionResult] = await tx
         .update(FoodExpenseFile)
@@ -1244,24 +1327,26 @@ export default class FundingRepository {
         tx.rollback();
         return false;
       }
-      await Promise.all(
-        contents.foodExpenseFiles.map(async file => {
-          const [foodExpenseFileInsertResult] = await tx
-            .insert(FoodExpenseFile)
-            .values({
-              fundingOrderId: fundingId,
-              fileId: file.fileId,
-            });
-          if (foodExpenseFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[putStudentFunding] foodExpenseFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isFoodExpense) {
+        await Promise.all(
+          contents.foodExpenseFiles.map(async file => {
+            const [foodExpenseFileInsertResult] = await tx
+              .insert(FoodExpenseFile)
+              .values({
+                fundingOrderId: fundingId,
+                fileId: file.fileId,
+              });
+            if (foodExpenseFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[putStudentFunding] foodExpenseFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
       const [laborContractFileDeletionResult] = await tx
         .update(LaborContractFile)
@@ -1279,24 +1364,26 @@ export default class FundingRepository {
         tx.rollback();
         return false;
       }
-      await Promise.all(
-        contents.laborContractFiles.map(async file => {
-          const [laborContractFileInsertResult] = await tx
-            .insert(LaborContractFile)
-            .values({
-              fundingOrderId: fundingId,
-              fileId: file.fileId,
-            });
-          if (laborContractFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[putStudentFunding] laborContractFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isLaborContract) {
+        await Promise.all(
+          contents.laborContractFiles.map(async file => {
+            const [laborContractFileInsertResult] = await tx
+              .insert(LaborContractFile)
+              .values({
+                fundingOrderId: fundingId,
+                fileId: file.fileId,
+              });
+            if (laborContractFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[putStudentFunding] laborContractFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
       const [externalEventParticipationFeeFileDeletionResult] = await tx
         .update(ExternalEventParticipationFeeFile)
@@ -1314,26 +1401,28 @@ export default class FundingRepository {
         tx.rollback();
         return false;
       }
-      await Promise.all(
-        contents.externalEventParticipationFeeFiles.map(async file => {
-          const [externalEventParticipationFeeFileInsertResult] = await tx
-            .insert(ExternalEventParticipationFeeFile)
-            .values({
-              fundingOrderId: fundingId,
-              fileId: file.fileId,
-            });
-          if (
-            externalEventParticipationFeeFileInsertResult.affectedRows !== 1
-          ) {
-            logger.debug(
-              "[putStudentFunding] externalEventParticipationFeeFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isExternalEventParticipationFee) {
+        await Promise.all(
+          contents.externalEventParticipationFeeFiles.map(async file => {
+            const [externalEventParticipationFeeFileInsertResult] = await tx
+              .insert(ExternalEventParticipationFeeFile)
+              .values({
+                fundingOrderId: fundingId,
+                fileId: file.fileId,
+              });
+            if (
+              externalEventParticipationFeeFileInsertResult.affectedRows !== 1
+            ) {
+              logger.debug(
+                "[putStudentFunding] externalEventParticipationFeeFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
       const [publicationFileDeletionResult] = await tx
         .update(PublicationFile)
@@ -1351,24 +1440,26 @@ export default class FundingRepository {
         tx.rollback();
         return false;
       }
-      await Promise.all(
-        contents.publicationFiles.map(async file => {
-          const [publicationFileInsertResult] = await tx
-            .insert(PublicationFile)
-            .values({
-              fundingOrderId: fundingId,
-              fileId: file.fileId,
-            });
-          if (publicationFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[putStudentFunding] publicationFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isPublication) {
+        await Promise.all(
+          contents.publicationFiles.map(async file => {
+            const [publicationFileInsertResult] = await tx
+              .insert(PublicationFile)
+              .values({
+                fundingOrderId: fundingId,
+                fileId: file.fileId,
+              });
+            if (publicationFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[putStudentFunding] publicationFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
       const [profitMakingActivityFileDeletionResult] = await tx
         .update(ProfitMakingActivityFile)
@@ -1386,24 +1477,26 @@ export default class FundingRepository {
         tx.rollback();
         return false;
       }
-      await Promise.all(
-        contents.profitMakingActivityFiles.map(async file => {
-          const [profitMakingActivityFileInsertResult] = await tx
-            .insert(ProfitMakingActivityFile)
-            .values({
-              fundingOrderId: fundingId,
-              fileId: file.fileId,
-            });
-          if (profitMakingActivityFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[putStudentFunding] profitMakingActivityFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isProfitMakingActivity) {
+        await Promise.all(
+          contents.profitMakingActivityFiles.map(async file => {
+            const [profitMakingActivityFileInsertResult] = await tx
+              .insert(ProfitMakingActivityFile)
+              .values({
+                fundingOrderId: fundingId,
+                fileId: file.fileId,
+              });
+            if (profitMakingActivityFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[putStudentFunding] profitMakingActivityFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
       const [jointExpenseFileDeletionResult] = await tx
         .update(JointExpenseFile)
@@ -1422,24 +1515,26 @@ export default class FundingRepository {
         tx.rollback();
         return false;
       }
-      await Promise.all(
-        contents.jointExpenseFiles.map(async file => {
-          const [jointExpenseFileInsertResult] = await tx
-            .insert(JointExpenseFile)
-            .values({
-              fundingOrderId: fundingId,
-              fileId: file.fileId,
-            });
-          if (jointExpenseFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[putStudentFunding] jointExpenseFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isJointExpense) {
+        await Promise.all(
+          contents.jointExpenseFiles.map(async file => {
+            const [jointExpenseFileInsertResult] = await tx
+              .insert(JointExpenseFile)
+              .values({
+                fundingOrderId: fundingId,
+                fileId: file.fileId,
+              });
+            if (jointExpenseFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[putStudentFunding] jointExpenseFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
       const [etcExpenseFileDeletionResult] = await tx
         .update(EtcExpenseFile)
@@ -1457,24 +1552,26 @@ export default class FundingRepository {
         tx.rollback();
         return false;
       }
-      await Promise.all(
-        contents.etcExpenseFiles.map(async file => {
-          const [etcExpenseFileInsertResult] = await tx
-            .insert(EtcExpenseFile)
-            .values({
-              fundingOrderId: fundingId,
-              fileId: file.fileId,
-            });
-          if (etcExpenseFileInsertResult.affectedRows !== 1) {
-            logger.debug(
-              "[putStudentFunding] etcExpenseFile insert failed. Rollback occurs",
-            );
-            tx.rollback();
-            return false;
-          }
-          return {};
-        }),
-      );
+      if (contents.isEtcExpense) {
+        await Promise.all(
+          contents.etcExpenseFiles.map(async file => {
+            const [etcExpenseFileInsertResult] = await tx
+              .insert(EtcExpenseFile)
+              .values({
+                fundingOrderId: fundingId,
+                fileId: file.fileId,
+              });
+            if (etcExpenseFileInsertResult.affectedRows !== 1) {
+              logger.debug(
+                "[putStudentFunding] etcExpenseFile insert failed. Rollback occurs",
+              );
+              tx.rollback();
+              return false;
+            }
+            return {};
+          }),
+        );
+      }
 
       return true;
     });
