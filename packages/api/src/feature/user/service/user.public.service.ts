@@ -23,6 +23,10 @@ export default class UserPublicService {
     return students[0];
   }
 
+  /**
+   * StudentTId를 통해 학생의 Id를 가져옵니다.
+   * 만약 매치되는 id가 존재하지 않을 경우 undefined를 리턴합니다.
+   * */
   async getStudentByTId(studentT: { id: number }) {
     const studentIds = await this.studentRepository.selectStudentIdByStudentTId(
       studentT.id,
