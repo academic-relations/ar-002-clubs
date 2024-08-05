@@ -55,17 +55,17 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               items={fixtureEvidenceList}
               label="증빙 분류"
               placeholder="증빙 분류를 선택해주세요"
-              selectedValue={
+              value={
                 isFixture
                   ? funding.fixtureEvidenceEnumId
                   : funding.clubSuppliesEvidenceEnumId
               }
-              onSelect={value =>
+              onChange={value =>
                 setFundingHandler(
                   isFixture
                     ? "fixtureEvidenceEnumId"
                     : "clubSuppliesEvidenceEnumId",
-                  value,
+                  value ?? "",
                 )
               }
             />
@@ -73,15 +73,15 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               items={fixtureClassList}
               label={`${content} 분류`}
               placeholder={`${content} 분류를 선택해주세요`}
-              selectedValue={
+              value={
                 isFixture
                   ? funding.fixtureClassEnumId
                   : funding.clubSuppliesClassEnumId
               }
-              onSelect={value =>
+              onChange={value =>
                 setFundingHandler(
                   isFixture ? "fixtureClassEnumId" : "clubSuppliesClassEnumId",
-                  value,
+                  value ?? "",
                 )
               }
             />

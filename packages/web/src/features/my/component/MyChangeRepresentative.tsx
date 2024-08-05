@@ -1,10 +1,12 @@
 import React from "react";
 
 import isPropValid from "@emotion/is-prop-valid";
+import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   myChangeRepresentativeFinishText,
@@ -12,11 +14,14 @@ import {
 } from "@sparcs-clubs/web/constants/changeRepresentative";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
+import ChangeRepresentativeModalContent from "./ChangeRepresentativeModalContent";
+
 interface MyChangeRepresentativeProps {
   type: "Requested" | "Finished";
   clubName: string;
   prevRepresentative: string;
   newRepresentative: string;
+  refetch: () => void;
 }
 
 const MyChangeRepresentativeWrapper = styled.div.withConfig({
@@ -41,6 +46,7 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
   clubName,
   prevRepresentative,
   newRepresentative,
+  refetch,
 }) => {
   const Title =
     type === "Requested"
@@ -55,6 +61,21 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
         )
       : myChangeRepresentativeFinishText(clubName);
 
+  const openConfirmModal = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <ChangeRepresentativeModalContent
+          needPhoneNumber
+          clubName={clubName}
+          prevRepresentative={prevRepresentative}
+          newRepresentative={newRepresentative}
+          onClose={close}
+          refetch={refetch}
+        />
+      </Modal>
+    ));
+  };
+
   return (
     <MyChangeRepresentativeWrapper type={type}>
       {type === "Requested" ? (
@@ -66,21 +87,16 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
         <Typography fw="MEDIUM" fs={16} lh={20}>
           {Title}
         </Typography>
-        <Typography
-          fw="REGULAR"
-          fs={16}
-          lh={20}
-          style={{ whiteSpace: "pre-wrap" }}
-        >
+        <Typography fs={16} lh={20} style={{ whiteSpace: "pre-wrap" }}>
           {Text}
         </Typography>
         {type === "Requested" && (
           <Typography
-            fw="REGULAR"
             fs={16}
             lh={20}
             color="GRAY.600"
             style={{ cursor: "pointer", textDecoration: "underline" }}
+            onClick={openConfirmModal}
           >
             클릭하여 더보기
           </Typography>

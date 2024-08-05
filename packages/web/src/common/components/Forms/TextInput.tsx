@@ -1,4 +1,10 @@
-import React, { ChangeEvent, InputHTMLAttributes, useEffect } from "react";
+import React, {
+  ChangeEvent,
+  ChangeEventHandler,
+  FocusEventHandler,
+  InputHTMLAttributes,
+  useEffect,
+} from "react";
 
 import isPropValid from "@emotion/is-prop-valid";
 import styled, { css } from "styled-components";
@@ -17,6 +23,8 @@ export interface TextInputProps
   value?: string;
   handleChange?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
 }
 
 const errorBorderStyle = css`
@@ -88,6 +96,8 @@ const TextInput: React.FC<TextInputProps> = ({
   value = "",
   handleChange = () => {},
   setErrorStatus = () => {},
+  onChange = () => {},
+  onBlur = () => {},
   ...props
 }) => {
   const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -112,7 +122,8 @@ const TextInput: React.FC<TextInputProps> = ({
           area={area}
           disabled={disabled}
           value={value}
-          onChange={handleValueChange}
+          onChange={onChange ?? handleValueChange}
+          onBlur={onBlur}
           {...props}
         />
         {errorMessage && <FormError>{errorMessage}</FormError>}
