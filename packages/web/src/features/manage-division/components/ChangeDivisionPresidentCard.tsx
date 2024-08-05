@@ -41,8 +41,8 @@ const ChangeDivisionPresidentCard = () => {
             value: item,
             label: item,
           }))}
-          selectedValue={mockPresident}
-          onSelect={setMockPresident}
+          value={mockPresident}
+          onChange={setMockPresident}
           disabled={isSelectDisabled}
         />
       </FlexWrapper>
