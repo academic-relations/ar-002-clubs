@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
@@ -63,9 +63,9 @@ const ClubName = styled.div`
 const ClubCard: React.FC<
   ClubCardProps & { isRegistrationPeriod?: boolean }
 > = ({ club, isRegistrationPeriod = false }) => {
-  const [isRegistered, setIsRegistered] = React.useState<boolean>(false);
+  const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const { isLoggedIn } = useAuth();
-  React.useEffect(() => {}, [isLoggedIn]);
+  useEffect(() => {}, [isLoggedIn]);
 
   const handleRegister = () => {
     overlay.open(({ isOpen, close }) => (
@@ -123,13 +123,13 @@ const ClubCard: React.FC<
         <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
           {getClubType(club)}
         </Tag>
-        {isRegistrationPeriod && (
+        {isRegistrationPeriod && isLoggedIn && (
           <TextButton
             text={isRegistered ? "신청 취소" : "등록 신청"}
             onClick={handleRegister}
           />
         )}
-        {!isRegistrationPeriod && isRegistered && (
+        {!isRegistrationPeriod && isRegistered && isLoggedIn && (
           <TextButton text="승인 대기" disabled />
         )}
       </ClubCardTagRow>
