@@ -2,21 +2,22 @@
 
 import React, { useMemo } from "react";
 
-import { mockupMyRental } from "@sparcs-clubs/web/features/my/services/_mock/mockMyClub";
-
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
+import styled from "styled-components";
+
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-// import Pagination from "@sparcs-clubs/web/common/components/Pagination";
+import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { RntTagList } from "@sparcs-clubs/web/constants/tableTagList";
+import mockupMyExeRnt from "@sparcs-clubs/web/features/executive/rental-business/_mock/mockMyExeRnt";
 
 import {
   formatDate,
@@ -25,7 +26,7 @@ import {
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 const columnHelper =
-  createColumnHelper<(typeof mockupMyRental.items)[number]>();
+  createColumnHelper<(typeof mockupMyExeRnt.items)[number]>();
 
 const columns = [
   columnHelper.accessor("statusEnum", {
@@ -49,15 +50,15 @@ const columns = [
     cell: info => info.getValue(),
     size: 10,
   }),
-  columnHelper.accessor("studentName", {
-    id: "studentName",
-    header: "동아리",
+  columnHelper.accessor("applicantName", {
+    id: "applicantName",
+    header: "신청자",
     cell: info => info.getValue(),
     size: 10,
   }),
-  columnHelper.accessor("studentName", {
-    id: "studentName",
-    header: "동아리",
+  columnHelper.accessor("phoneNumber", {
+    id: "phoneNumber",
+    header: "연락처",
     cell: info => info.getValue(),
     size: 10,
   }),
@@ -85,8 +86,25 @@ const columns = [
   ),
 ];
 
+const TableWithPagination = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  align-self: stretch;
+`;
+
+const TableWithCount = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+`;
+
 const ExecutiveRental = () => {
-  const data = useMemo(() => mockupMyRental.items, []);
+  const data = useMemo(() => mockupMyExeRnt.items, []);
 
   const table = useReactTable({
     columns,
@@ -96,26 +114,31 @@ const ExecutiveRental = () => {
   });
 
   return (
-    <FlexWrapper direction="column" gap={20}>
-      <PageHead
-        items={[
-          { name: "집행부원 대시보드", path: "/executive" },
-          { name: "대여 사업 신청 내역", path: "/executive/rental-business" },
-        ]}
-        title="대여 사업 신청 내역"
-      />
-      <FlexWrapper direction="row" gap={0} justify="flex-end">
-        <Typography
-          fw="REGULAR"
-          fs={16}
-          lh={20}
-          ff="PRETENDARD"
-          color="GRAY.600"
-        >
-          총 {data.length}개
-        </Typography>
+    <FlexWrapper direction="column" gap={20} justify="center">
+      <FlexWrapper direction="column" gap={20}>
+        <PageHead
+          items={[
+            { name: "집행부원 대시보드", path: "/executive" },
+            { name: "대여 사업 신청 내역", path: "/executive/rental-business" },
+          ]}
+          title="대여 사업 신청 내역"
+        />
       </FlexWrapper>
-      <Table table={table} />
+      <TableWithPagination>
+        <TableWithCount>
+          <Typography
+            fw="REGULAR"
+            fs={16}
+            lh={20}
+            ff="PRETENDARD"
+            color="GRAY.600"
+          >
+            총 {data.length}개
+          </Typography>
+          <Table table={table} />
+        </TableWithCount>
+        <Pagination totalPage={10} currentPage={1} limit={10} />
+      </TableWithPagination>
     </FlexWrapper>
   );
 };
