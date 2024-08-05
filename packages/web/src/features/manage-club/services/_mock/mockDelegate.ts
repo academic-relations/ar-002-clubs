@@ -9,19 +9,19 @@ import {
 export const mockClubDelegates: ApiClb006ResponseOK = {
   delegates: [
     {
-      delegateEnumId: ClubDelegateEnum.President,
+      delegateEnumId: ClubDelegateEnum.Representative,
       studentId: 20200510,
       name: "이지윤",
       phoneNumber: "010-1234-5678",
     },
     {
-      delegateEnumId: ClubDelegateEnum.Representative1,
+      delegateEnumId: ClubDelegateEnum.Delegate1,
       studentId: 20200511,
       name: "박지호",
       phoneNumber: "010-1234-5678",
     },
     {
-      delegateEnumId: ClubDelegateEnum.Representative2,
+      delegateEnumId: ClubDelegateEnum.Delegate2,
       studentId: 20200512,
       name: "박병찬",
       phoneNumber: "010-1234-5678",

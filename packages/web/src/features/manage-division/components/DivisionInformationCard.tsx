@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Toggle from "@sparcs-clubs/web/common/components/Toggle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import DivisionCard from "@sparcs-clubs/web/features/manage-division/components/_atomic/DivisionCard";
 
 const ClubListWrapper = styled(FlexWrapper)`
   max-height: 300px;
@@ -19,7 +19,7 @@ const DivisionInformationCard: React.FC = () => {
   }));
 
   return (
-    <Card outline padding="32px" gap={32} style={{ flex: 1 }}>
+    <DivisionCard outline padding="32px" gap={32}>
       <Typography fw="MEDIUM" fs={20} lh={24}>
         기본 정보
       </Typography>
@@ -38,7 +38,7 @@ const DivisionInformationCard: React.FC = () => {
           ))}
         </ClubListWrapper>
       </Toggle>
-    </Card>
+    </DivisionCard>
   );
 };
 

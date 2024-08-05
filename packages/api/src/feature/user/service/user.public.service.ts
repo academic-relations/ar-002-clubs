@@ -22,4 +22,36 @@ export default class UserPublicService {
 
     return students[0];
   }
+
+  /**
+   * StudentTId를 통해 학생의 Id를 가져옵니다.
+   * 만약 매치되는 id가 존재하지 않을 경우 undefined를 리턴합니다.
+   * */
+  async getStudentByTId(studentT: { id: number }) {
+    const studentIds = await this.studentRepository.selectStudentIdByStudentTId(
+      studentT.id,
+    );
+
+    if (studentIds.length === 0) {
+      return undefined;
+    }
+
+    if (studentIds.length > 1)
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+
+    const students = await Promise.all(
+      studentIds.map(async student =>
+        this.studentRepository.selectStudentById(student.studentId),
+      ),
+    );
+
+    if (students.length > 1)
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+
+    if (students.length === 0) {
+      return undefined;
+    }
+
+    return students[0][0];
+  }
 }

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
+
+import { Controller } from "react-hook-form";
 
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 const YearSelect: React.FC = () => {
-  const [year, setYear] = useState("");
-
   const startYear = 1980;
 
   const years = Array.from(
@@ -12,18 +12,24 @@ const YearSelect: React.FC = () => {
     (_, i) => startYear + i,
   );
 
-  const yearSelectItems: SelectItem[] = years.map(data => ({
+  const yearSelectItems: SelectItem<string>[] = years.map(data => ({
     value: data.toString(),
     label: data.toString(),
   }));
 
   return (
-    <Select
-      label="설립 연도"
-      placeholder="설립 연도를 선택해주세요"
-      items={yearSelectItems}
-      selectedValue={year}
-      onSelect={setYear}
+    <Controller
+      name="foundedYearAt"
+      rules={{ required: true }}
+      render={({ field: { onChange, value } }) => (
+        <Select
+          label="설립 연도"
+          placeholder="설립 연도를 선택해주세요"
+          items={yearSelectItems}
+          value={value}
+          onChange={onChange}
+        />
+      )}
     />
   );
 };

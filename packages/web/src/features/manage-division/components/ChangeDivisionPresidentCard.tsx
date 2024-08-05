@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import DivisionCard from "@sparcs-clubs/web/features/manage-division/components/_atomic/DivisionCard";
 import ChangeDivisionPresident from "@sparcs-clubs/web/features/manage-division/components/ChangeDivisionPresident";
 
 const ChangeDivisionPresidentCard = () => {
@@ -21,7 +21,7 @@ const ChangeDivisionPresidentCard = () => {
   );
 
   return (
-    <Card outline padding="32px" gap={32} style={{ flex: 1 }}>
+    <DivisionCard outline padding="32px" gap={32}>
       <Typography fw="MEDIUM" fs={20} lh={24}>
         분과 학생회장
       </Typography>
@@ -41,12 +41,12 @@ const ChangeDivisionPresidentCard = () => {
             value: item,
             label: item,
           }))}
-          selectedValue={mockPresident}
-          onSelect={setMockPresident}
+          value={mockPresident}
+          onChange={setMockPresident}
           disabled={isSelectDisabled}
         />
       </FlexWrapper>
-    </Card>
+    </DivisionCard>
   );
 };
 
