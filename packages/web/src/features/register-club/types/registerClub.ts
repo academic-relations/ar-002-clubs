@@ -1,5 +1,7 @@
-export enum RegisterClubType {
-  provisional = "가등록",
-  promotional = "신규 등록",
-  renewal = "재등록",
+import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
+
+export interface RegisterClubInterface extends ApiReg001RequestBody {
+  foundedMonthAt?: string;
+  foundedYearAt: string;
+  isAgreed: boolean;
 }

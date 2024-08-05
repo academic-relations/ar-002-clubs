@@ -13,11 +13,13 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { mockClubDelegateCandidates } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockDelegate";
-import { deleteChangeDelegateRequest } from "@sparcs-clubs/web/features/manage-club/services/deleteChangeDelegateRequest";
-import { useGetChangeDelegateRequests } from "@sparcs-clubs/web/features/manage-club/services/getChangeDelegateRequests";
-import { useGetClubDelegate } from "@sparcs-clubs/web/features/manage-club/services/getClubDelegate";
-import { updateClubDelegates } from "@sparcs-clubs/web/features/manage-club/services/updateClubDelegate";
+
+import { mockClubDelegateCandidates } from "../services/_mock/mockDelegate";
+import { deleteChangeDelegateRequest } from "../services/deleteChangeDelegateRequest";
+import { useGetChangeDelegateRequests } from "../services/getChangeDelegateRequests";
+import { useGetClubDelegate } from "../services/getClubDelegate";
+
+import { updateClubDelegates } from "../services/updateClubDelegate";
 
 import ChangeRepresentative from "./ChangeRepresentative";
 
@@ -76,7 +78,7 @@ const ChangeRepresentativeCard: React.FC = () => {
 
   const getSelectItems = (
     members: ApiClb008ResponseOk | undefined,
-  ): SelectItem[] =>
+  ): SelectItem<string>[] =>
     members?.students.map(member => ({
       label: `${member.id} ${member.name} (${member.phoneNumber})`,
       value: member.id.toString(),
@@ -164,8 +166,8 @@ const ChangeRepresentativeCard: React.FC = () => {
           </LabelWrapper>
           <Select
             items={getSelectItems(representativeCandidates)}
-            selectedValue={representative}
-            onSelect={setRepresentative}
+            value={representative}
+            onChange={setRepresentative}
             disabled={type === "Applied"}
           />
         </FlexWrapper>
@@ -182,8 +184,8 @@ const ChangeRepresentativeCard: React.FC = () => {
           </LabelWrapper>
           <Select
             items={getSelectItems(delegate1Candidates)}
-            selectedValue={delegate1}
-            onSelect={setDelegate1}
+            value={delegate1}
+            onChange={setDelegate1}
             disabled={type === "Applied"}
           />
         </FlexWrapper>
@@ -200,8 +202,8 @@ const ChangeRepresentativeCard: React.FC = () => {
           </LabelWrapper>
           <Select
             items={getSelectItems(delegate2Candidates)}
-            selectedValue={delegate2}
-            onSelect={setDelegate2}
+            value={delegate2}
+            onChange={setDelegate2}
             disabled={type === "Applied"}
           />
         </FlexWrapper>
