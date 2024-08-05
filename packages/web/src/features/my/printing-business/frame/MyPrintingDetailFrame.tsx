@@ -1,5 +1,6 @@
 import React from "react";
 
+import { PromotionalPrintingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
 import { useRouter } from "next/navigation";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -10,9 +11,8 @@ import {
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
-import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import ManagePrintingProgress from "@sparcs-clubs/web/features/my/printing-business/component/ManagePrintingProgress";
 
 const MyPrintingDetailFrame = () => {
   const router = useRouter();
@@ -33,16 +33,8 @@ const MyPrintingDetailFrame = () => {
         enableLast
       />
       <Card outline gap={20}>
-        <ProgressStatus
-          labels={[
-            "신청 완료",
-            "동아리 연합회 승인 대기",
-            "출력 대기",
-            "수령 대기",
-          ]}
-          progress={[{ status: Status.Approved, date: new Date() }]}
-          infoText="승인이 완료되기 전까지 신청을 취소할 수 있습니다"
-          optional={<Button style={{ width: "max-content" }}>신청 취소</Button>}
+        <ManagePrintingProgress
+          status={PromotionalPrintingOrderStatusEnum.Applied}
         />
         {/* TODO: 아래 정보들 백 연결하기 */}
         <FlexWrapper direction="column" gap={16}>

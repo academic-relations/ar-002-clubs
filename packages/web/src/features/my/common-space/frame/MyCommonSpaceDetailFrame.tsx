@@ -1,5 +1,6 @@
 import React from "react";
 
+import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
 import { useRouter } from "next/navigation";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -10,9 +11,8 @@ import {
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
-import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import ManageCommonSpaceProgress from "@sparcs-clubs/web/features/my/common-space/component/ManageCommonSpaceProgress";
 
 const MyCommonSpaceDetailFrame = () => {
   const router = useRouter();
@@ -33,11 +33,8 @@ const MyCommonSpaceDetailFrame = () => {
         enableLast
       />
       <Card outline gap={20}>
-        <ProgressStatus
-          labels={["신청 완료", "사용 대기"]}
-          progress={[{ status: Status.Approved, date: new Date() }]}
-          infoText="사용 일시가 지나기 전까지 신청을 취소할 수 있습니다"
-          optional={<Button style={{ width: "max-content" }}>신청 취소</Button>}
+        <ManageCommonSpaceProgress
+          status={CommonSpaceUsageOrderStatusEnum.Applied}
         />
         {/* TODO: 아래 정보들 백 연결하기 */}
         <FlexWrapper direction="column" gap={16}>
