@@ -116,7 +116,7 @@ const ChangeRepresentativeCard: React.FC = () => {
       updateClubDelegates(
         { clubId },
         {
-          delegateEnumId: ClubDelegateEnum.Delegated1,
+          delegateEnumId: ClubDelegateEnum.Delegate1,
           studentId: Number(delegate1),
         },
       );
@@ -131,7 +131,7 @@ const ChangeRepresentativeCard: React.FC = () => {
       updateClubDelegates(
         { clubId },
         {
-          delegateEnumId: ClubDelegateEnum.Delegated2,
+          delegateEnumId: ClubDelegateEnum.Delegate2,
           studentId: Number(delegate2),
         },
       );

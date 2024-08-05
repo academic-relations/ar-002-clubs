@@ -15,13 +15,13 @@ export const mockClubDelegates: ApiClb006ResponseOK = {
       phoneNumber: "010-1234-5678",
     },
     {
-      delegateEnumId: ClubDelegateEnum.Delegated1,
+      delegateEnumId: ClubDelegateEnum.Delegate1,
       studentId: 20200511,
       name: "박지호",
       phoneNumber: "010-1234-5678",
     },
     {
-      delegateEnumId: ClubDelegateEnum.Delegated2,
+      delegateEnumId: ClubDelegateEnum.Delegate2,
       studentId: 20200512,
       name: "박병찬",
       phoneNumber: "010-1234-5678",

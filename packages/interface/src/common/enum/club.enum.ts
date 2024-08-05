@@ -5,8 +5,8 @@ enum ClubTypeEnum {
 
 export enum ClubDelegateEnum {
   Representative = 1, // 대표자
-  Delegated1, // 대의원 1
-  Delegated2, // 대의원 2
+  Delegate1, // 대의원 1
+  Delegate2, // 대의원 2
 }
 
 export enum ClubDelegateChangeRequestStatusEnum {
