@@ -16,7 +16,7 @@ import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 import {
   type Members,
   MemberStatusEnum,
-} from "../service/_mock/mockManageClub";
+} from "../services/_mock/mockManageClub";
 
 interface MembersTableProps {
   memberList: Members[];
