@@ -1,5 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { FundingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+import {
+  FixtureClassEnum,
+  FundingOrderStatusEnum,
+} from "@sparcs-clubs/interface/common/enum/funding.enum";
 import { and, eq, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -113,48 +116,101 @@ export default class FundingRepository {
         expenditureDate: contents.expenditureDate,
         expenditureAmount: contents.expenditureAmount,
         tradeDetailExplanation: contents.tradeDetailExplanation,
-        clubSuppliesName: contents.clubSuppliesName,
-        clubSuppliesEvidenceEnumId: contents.clubSuppliesEvidenceEnumId,
-        clubSuppliesClassEnumId: contents.clubSuppliesClassEnumId,
-        clubSuppliesPurpose: contents.clubSuppliesPurpose,
-        clubSuppliesSoftwareEvidence: contents.clubSuppliesSoftwareEvidence,
-        numberOfClubSupplies: contents.numberOfClubSupplies,
-        priceOfClubSupplies: contents.priceOfClubSupplies,
+        clubSuppliesName:
+          contents.purposeId !== undefined ? contents.clubSuppliesName : null,
+        clubSuppliesEvidenceEnumId:
+          contents.purposeId !== undefined
+            ? contents.clubSuppliesEvidenceEnumId
+            : null,
+        clubSuppliesClassEnumId:
+          contents.purposeId !== undefined
+            ? contents.clubSuppliesClassEnumId
+            : null,
+        clubSuppliesPurpose:
+          contents.purposeId !== undefined
+            ? contents.clubSuppliesPurpose
+            : null,
+        clubSuppliesSoftwareEvidence:
+          contents.purposeId !== undefined &&
+          contents.clubSuppliesClassEnumId === FixtureClassEnum.Software
+            ? contents.clubSuppliesSoftwareEvidence
+            : null,
+        numberOfClubSupplies:
+          contents.purposeId !== undefined
+            ? contents.numberOfClubSupplies
+            : null,
+        priceOfClubSupplies:
+          contents.purposeId !== undefined
+            ? contents.priceOfClubSupplies
+            : null,
         isFixture: contents.isFixture,
-        fixtureName: contents.fixtureName,
-        fixtureEvidenceEnumId: contents.fixtureEvidenceEnumId,
-        fixtureClassEnumId: contents.fixtureClassEnumId,
-        fixturePurpose: contents.fixturePurpose,
-        fixtureSoftwareEvidence: contents.fixtureSoftwareEvidence,
-        numberOfFixture: contents.numberOfFixture,
-        priceOfFixture: contents.priceOfFixture,
+        fixtureName: contents.isFixture ? contents.fixtureName : null,
+        fixtureEvidenceEnumId: contents.isFixture
+          ? contents.fixtureEvidenceEnumId
+          : null,
+        fixtureClassEnumId: contents.isFixture
+          ? contents.fixtureClassEnumId
+          : null,
+        fixturePurpose: contents.isFixture ? contents.fixturePurpose : null,
+        fixtureSoftwareEvidence:
+          contents.isFixture &&
+          contents.fixtureClassEnumId === FixtureClassEnum.Software
+            ? contents.fixtureSoftwareEvidence
+            : null,
+        numberOfFixture: contents.isFixture ? contents.numberOfFixture : null,
+        priceOfFixture: contents.isFixture ? contents.priceOfFixture : null,
         isTransportation: contents.isTransportation,
-        transportationEnumId: contents.transportationEnumId,
-        origin: contents.origin,
-        destination: contents.destination,
-        purposeOfTransportation: contents.purposeOfTransportation,
-        placeValidity: contents.placeValidity,
+        transportationEnumId: contents.isTransportation
+          ? contents.transportationEnumId
+          : null,
+        origin: contents.isTransportation ? contents.origin : null,
+        destination: contents.isTransportation ? contents.destination : null,
+        purposeOfTransportation: contents.isTransportation
+          ? contents.purposeOfTransportation
+          : null,
+        placeValidity: contents.isTransportation
+          ? contents.placeValidity
+          : null,
         isNonCorporateTransaction: contents.isNonCorporateTransaction,
-        traderName: contents.traderName,
-        traderAccountNumber: contents.traderAccountNumber,
-        wasteExplanation: contents.wasteExplanation,
+        traderName: contents.isNonCorporateTransaction
+          ? contents.traderName
+          : null,
+        traderAccountNumber: contents.isNonCorporateTransaction
+          ? contents.traderAccountNumber
+          : null,
+        wasteExplanation: contents.isNonCorporateTransaction
+          ? contents.wasteExplanation
+          : null,
         isFoodExpense: contents.isFoodExpense,
-        foodExpenseExplanation: contents.foodExpenseExplanation,
+        foodExpenseExplanation: contents.isFoodExpense
+          ? contents.foodExpenseExplanation
+          : null,
         isLaborContract: contents.isLaborContract,
-        laborContractExplanation: contents.laborContractExplanation,
+        laborContractExplanation: contents.isLaborContract
+          ? contents.laborContractExplanation
+          : null,
         isExternalEventParticipationFee:
           contents.isExternalEventParticipationFee,
         externalEventParticipationFeeExplanation:
-          contents.externalEventParticipationFeeExplanation,
+          contents.isExternalEventParticipationFee
+            ? contents.externalEventParticipationFeeExplanation
+            : null,
         isPublication: contents.isPublication,
-        publicationExplanation: contents.publicationExplanation,
+        publicationExplanation: contents.isPublication
+          ? contents.publicationExplanation
+          : null,
         isProfitMakingActivity: contents.isProfitMakingActivity,
-        profitMakingActivityExplanation:
-          contents.profitMakingActivityExplanation,
+        profitMakingActivityExplanation: contents.isProfitMakingActivity
+          ? contents.profitMakingActivityExplanation
+          : null,
         isJointExpense: contents.isJointExpense,
-        jointExpenseExplanation: contents.jointExpenseExplanation,
+        jointExpenseExplanation: contents.isJointExpense
+          ? contents.jointExpenseExplanation
+          : null,
         isEtcExpense: contents.isEtcExpense,
-        etcExpenseExplanation: contents.etcExpenseExplanation,
+        etcExpenseExplanation: contents.isEtcExpense
+          ? contents.etcExpenseExplanation
+          : null,
         createdAt: new Date(),
       });
       if (fundingInsertResult.affectedRows !== 1) {
@@ -818,48 +874,101 @@ export default class FundingRepository {
           expenditureDate: contents.expenditureDate,
           expenditureAmount: contents.expenditureAmount,
           tradeDetailExplanation: contents.tradeDetailExplanation,
-          clubSuppliesName: contents.clubSuppliesName,
-          clubSuppliesEvidenceEnumId: contents.clubSuppliesEvidenceEnumId,
-          clubSuppliesClassEnumId: contents.clubSuppliesClassEnumId,
-          clubSuppliesPurpose: contents.clubSuppliesPurpose,
-          clubSuppliesSoftwareEvidence: contents.clubSuppliesSoftwareEvidence,
-          numberOfClubSupplies: contents.numberOfClubSupplies,
-          priceOfClubSupplies: contents.priceOfClubSupplies,
+          clubSuppliesName:
+            contents.purposeId !== undefined ? contents.clubSuppliesName : null,
+          clubSuppliesEvidenceEnumId:
+            contents.purposeId !== undefined
+              ? contents.clubSuppliesEvidenceEnumId
+              : null,
+          clubSuppliesClassEnumId:
+            contents.purposeId !== undefined
+              ? contents.clubSuppliesClassEnumId
+              : null,
+          clubSuppliesPurpose:
+            contents.purposeId !== undefined
+              ? contents.clubSuppliesPurpose
+              : null,
+          clubSuppliesSoftwareEvidence:
+            contents.purposeId !== undefined &&
+            contents.clubSuppliesClassEnumId === FixtureClassEnum.Software
+              ? contents.clubSuppliesSoftwareEvidence
+              : null,
+          numberOfClubSupplies:
+            contents.purposeId !== undefined
+              ? contents.numberOfClubSupplies
+              : null,
+          priceOfClubSupplies:
+            contents.purposeId !== undefined
+              ? contents.priceOfClubSupplies
+              : null,
           isFixture: contents.isFixture,
-          fixtureName: contents.fixtureName,
-          fixtureEvidenceEnumId: contents.fixtureEvidenceEnumId,
-          fixtureClassEnumId: contents.fixtureClassEnumId,
-          fixturePurpose: contents.fixturePurpose,
-          fixtureSoftwareEvidence: contents.fixtureSoftwareEvidence,
-          numberOfFixture: contents.numberOfFixture,
-          priceOfFixture: contents.priceOfFixture,
+          fixtureName: contents.isFixture ? contents.fixtureName : null,
+          fixtureEvidenceEnumId: contents.isFixture
+            ? contents.fixtureEvidenceEnumId
+            : null,
+          fixtureClassEnumId: contents.isFixture
+            ? contents.fixtureClassEnumId
+            : null,
+          fixturePurpose: contents.isFixture ? contents.fixturePurpose : null,
+          fixtureSoftwareEvidence:
+            contents.isFixture &&
+            contents.fixtureClassEnumId === FixtureClassEnum.Software
+              ? contents.fixtureSoftwareEvidence
+              : null,
+          numberOfFixture: contents.isFixture ? contents.numberOfFixture : null,
+          priceOfFixture: contents.isFixture ? contents.priceOfFixture : null,
           isTransportation: contents.isTransportation,
-          transportationEnumId: contents.transportationEnumId,
-          origin: contents.origin,
-          destination: contents.destination,
-          purposeOfTransportation: contents.purposeOfTransportation,
-          placeValidity: contents.placeValidity,
+          transportationEnumId: contents.isTransportation
+            ? contents.transportationEnumId
+            : null,
+          origin: contents.isTransportation ? contents.origin : null,
+          destination: contents.isTransportation ? contents.destination : null,
+          purposeOfTransportation: contents.isTransportation
+            ? contents.purposeOfTransportation
+            : null,
+          placeValidity: contents.isTransportation
+            ? contents.placeValidity
+            : null,
           isNonCorporateTransaction: contents.isNonCorporateTransaction,
-          traderName: contents.traderName,
-          traderAccountNumber: contents.traderAccountNumber,
-          wasteExplanation: contents.wasteExplanation,
+          traderName: contents.isNonCorporateTransaction
+            ? contents.traderName
+            : null,
+          traderAccountNumber: contents.isNonCorporateTransaction
+            ? contents.traderAccountNumber
+            : null,
+          wasteExplanation: contents.isNonCorporateTransaction
+            ? contents.wasteExplanation
+            : null,
           isFoodExpense: contents.isFoodExpense,
-          foodExpenseExplanation: contents.foodExpenseExplanation,
+          foodExpenseExplanation: contents.isFoodExpense
+            ? contents.foodExpenseExplanation
+            : null,
           isLaborContract: contents.isLaborContract,
-          laborContractExplanation: contents.laborContractExplanation,
+          laborContractExplanation: contents.isLaborContract
+            ? contents.laborContractExplanation
+            : null,
           isExternalEventParticipationFee:
             contents.isExternalEventParticipationFee,
           externalEventParticipationFeeExplanation:
-            contents.externalEventParticipationFeeExplanation,
+            contents.isExternalEventParticipationFee
+              ? contents.externalEventParticipationFeeExplanation
+              : null,
           isPublication: contents.isPublication,
-          publicationExplanation: contents.publicationExplanation,
+          publicationExplanation: contents.isPublication
+            ? contents.publicationExplanation
+            : null,
           isProfitMakingActivity: contents.isProfitMakingActivity,
-          profitMakingActivityExplanation:
-            contents.profitMakingActivityExplanation,
+          profitMakingActivityExplanation: contents.isProfitMakingActivity
+            ? contents.profitMakingActivityExplanation
+            : null,
           isJointExpense: contents.isJointExpense,
-          jointExpenseExplanation: contents.jointExpenseExplanation,
+          jointExpenseExplanation: contents.isJointExpense
+            ? contents.jointExpenseExplanation
+            : null,
           isEtcExpense: contents.isEtcExpense,
-          etcExpenseExplanation: contents.etcExpenseExplanation,
+          etcExpenseExplanation: contents.isEtcExpense
+            ? contents.etcExpenseExplanation
+            : null,
         })
         .where(
           and(eq(FundingOrder.id, fundingId), isNull(FundingOrder.deletedAt)),
