@@ -28,6 +28,13 @@ export default class UserPublicService {
       studentT.id,
     );
 
+    if (studentIds.length === 0) {
+      return undefined;
+    }
+
+    if (studentIds.length > 1)
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+
     const students = await Promise.all(
       studentIds.map(async student =>
         this.studentRepository.selectStudentById(student.studentId),
