@@ -5,6 +5,7 @@ import { overlay } from "overlay-kit";
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
@@ -12,10 +13,11 @@ import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { MeetingDetail } from "../types/meeting";
+import { MeetingTemplate } from "../constants/meetingTemplate";
+import { MeetingTemplateInfo } from "../types/meeting";
 
 interface MeetingAnnouncementFrameProps {
-  data?: MeetingDetail;
+  data?: MeetingTemplateInfo;
 }
 
 const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
@@ -39,10 +41,19 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
     ));
   };
 
+  const getTemplate = () => {
+    if (data == null) return null;
+
+    if (data?.meetingType === "분과회의") {
+      return MeetingTemplate.SubcommitteeMeetingTemplate(data);
+    }
+    return MeetingTemplate.defaultTemplate(data);
+  };
+
   return (
     <FlexWrapper direction="column" gap={40}>
       <SectionTitle>최종 공고</SectionTitle>
-      <Card outline gap={32} style={{ marginLeft: 24, alignItems: "end" }}>
+      <Card outline gap={32} style={{ marginLeft: 24 }}>
         {data == null ? (
           <Typography
             fs={16}
@@ -55,16 +66,36 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
           </Typography>
         ) : (
           <>
-            <TextInput label="제목" placeholder="" value={data.title} />
-            <TextInput
-              label="본문"
-              placeholder=""
-              value={data.content}
-              area
-              style={{
-                height: 596,
-                whiteSpace: "pre-line",
-              }}
+            <FormController
+              name="announcementTitle"
+              required
+              defaultValue={getTemplate()?.title}
+              renderItem={props => (
+                <TextInput
+                  {...props}
+                  label="제목"
+                  placeholder=""
+                  defaultValue={getTemplate()?.title}
+                />
+              )}
+            />
+            <FormController
+              name="announcementContent"
+              required
+              defaultValue={getTemplate()?.content}
+              renderItem={props => (
+                <TextInput
+                  {...props}
+                  label="본문"
+                  placeholder=""
+                  defaultValue={getTemplate()?.content}
+                  area
+                  style={{
+                    height: 596,
+                    whiteSpace: "pre-line",
+                  }}
+                />
+              )}
             />
             <TextButton text="초기화" onClick={openResetModal} />
           </>
