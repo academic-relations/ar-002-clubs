@@ -11,10 +11,10 @@ import MyCommonSpaceTable from "@sparcs-clubs/web/features/my/component/MyCommon
 import MyPrintingTable from "@sparcs-clubs/web/features/my/component/MyPrintingTable";
 import MyRentalTable from "@sparcs-clubs/web/features/my/component/MyRentalTable";
 
-import { useGetMyActivityCertificate } from "../service/getMyActivityCertificate";
-import { useGetMyCommonSpace } from "../service/getMyCommonSpace";
-import { useGetMyPrinting } from "../service/getMyPrinting";
-import { useGetMyRentals } from "../service/getMyRentals";
+import { useGetMyActivityCertificate } from "../services/getMyActivityCertificate";
+import { useGetMyCommonSpace } from "../services/getMyCommonSpace";
+import { useGetMyPrinting } from "../services/getMyPrinting";
+import { useGetMyRentals } from "../services/getMyRentals";
 
 const MyServiceFrame: React.FC = () => {
   const [toggle, setToggle] = React.useState<boolean>(true);

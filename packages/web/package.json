@@ -34,10 +34,11 @@
     "overlay-kit": "^1.2.1",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.52.1",
+    "socket.io": "^4.7.5",
     "styled-components": "^6.1.8",
     "zod": "^3.21.4",
-    "zustand": "^4.5.2",
-    "socket.io": "^4.7.5"
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@sparcs-clubs/interface": "workspace:*",

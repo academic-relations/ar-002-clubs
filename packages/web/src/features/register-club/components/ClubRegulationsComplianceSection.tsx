@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
+import { Controller } from "react-hook-form";
 import styled from "styled-components";
 
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
@@ -28,38 +29,35 @@ const clubsComplianceList = [
 
 const ClubRegulationsComplianceSection: React.FC<
   ClubRegulationsComplianceSectionProps
-> = ({ isProvisional = false }) => {
-  const [checked, setChecked] = useState(false);
-  return (
-    <ClubRegulationsComplianceSectionInner>
-      <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20}>
-        동아리연합회칙 준수 서약서
-      </Typography>
-      <div>
-        {...clubsComplianceList.map((value, index) => {
-          if (isProvisional && index === clubsComplianceList.length - 1) {
-            return null;
-          }
-          return (
-            <Typography
-              key={value}
-              ff="PRETENDARD"
-              fw="REGULAR"
-              fs={16}
-              lh={28}
-            >
-              {value}
-            </Typography>
-          );
-        })}
-      </div>
-      <CheckboxOption
-        optionText="본 동아리는 다음을 따르고, 그러지 못할 경우 발생하는 불이익에 대해 책임을 질 것을 선서합니다."
-        checked={checked}
-        onClick={() => setChecked(!checked)}
-      />
-    </ClubRegulationsComplianceSectionInner>
-  );
-};
+> = ({ isProvisional = false }) => (
+  <ClubRegulationsComplianceSectionInner>
+    <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20}>
+      동아리연합회칙 준수 서약서
+    </Typography>
+    <div>
+      {...clubsComplianceList.map((value, index) => {
+        if (isProvisional && index === clubsComplianceList.length - 1) {
+          return null;
+        }
+        return (
+          <Typography key={value} ff="PRETENDARD" fw="REGULAR" fs={16} lh={28}>
+            {value}
+          </Typography>
+        );
+      })}
+    </div>
+    <Controller
+      name="isAgreed"
+      rules={{ required: true }}
+      render={({ field: { onChange, value } }) => (
+        <CheckboxOption
+          optionText="본 동아리는 다음을 따르고, 그러지 못할 경우 발생하는 불이익에 대해 책임을 질 것을 선서합니다."
+          checked={value}
+          onClick={() => onChange(!value)}
+        />
+      )}
+    />
+  </ClubRegulationsComplianceSectionInner>
+);
 
 export default ClubRegulationsComplianceSection;

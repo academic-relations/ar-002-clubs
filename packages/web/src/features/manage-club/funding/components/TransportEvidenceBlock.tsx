@@ -74,9 +74,9 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
                 items={TransportationList}
                 label="교통수단"
                 placeholder="교통수단을 선택해주세요"
-                selectedValue={funding.transportationEnumId}
-                onSelect={value =>
-                  setFundingHandler("transportationEnumId", value)
+                value={funding.transportationEnumId}
+                onChange={value =>
+                  setFundingHandler("transportationEnumId", value ?? "")
                 }
               />
             </FixedWidthWrapper>
