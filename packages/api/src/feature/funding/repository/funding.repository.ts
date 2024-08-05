@@ -1578,4 +1578,265 @@ export default class FundingRepository {
 
     return isUpdateSucceed;
   }
+
+  async deleteStudentFunding(fundingId: number): Promise<boolean> {
+    const isDeletionSucceed = await this.db.transaction(async tx => {
+      const deletedAt = new Date();
+
+      const [fundingDeletionResult] = await tx
+        .update(FundingOrder)
+        .set({ deletedAt })
+        .where(
+          and(eq(FundingOrder.id, fundingId), isNull(FundingOrder.deletedAt)),
+        );
+      if (fundingDeletionResult.affectedRows !== 1) {
+        logger.debug(
+          "[deleteFunding] funding deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+
+      const [foodExpenseFileDeletionResult] = await tx
+        .update(FoodExpenseFile)
+        .set({ deletedAt })
+        .where(
+          and(
+            eq(FoodExpenseFile.fundingOrderId, fundingId),
+            isNull(FoodExpenseFile.deletedAt),
+          ),
+        );
+      if (foodExpenseFileDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteFunding] foodExpenseFile deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+
+      const [laborContractFileDeletionResult] = await tx
+        .update(LaborContractFile)
+        .set({ deletedAt })
+        .where(
+          and(
+            eq(LaborContractFile.fundingOrderId, fundingId),
+            isNull(LaborContractFile.deletedAt),
+          ),
+        );
+      if (laborContractFileDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteFunding] laborContractFile deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+
+      const [externalEventParticipationFeeFileDeletionResult] = await tx
+        .update(ExternalEventParticipationFeeFile)
+        .set({ deletedAt })
+        .where(
+          and(
+            eq(ExternalEventParticipationFeeFile.fundingOrderId, fundingId),
+            isNull(ExternalEventParticipationFeeFile.deletedAt),
+          ),
+        );
+      if (externalEventParticipationFeeFileDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteFunding] externalEventParticipationFeeFile deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+
+      const [publicationFileDeletionResult] = await tx
+        .update(PublicationFile)
+        .set({ deletedAt })
+        .where(
+          and(
+            eq(PublicationFile.fundingOrderId, fundingId),
+            isNull(PublicationFile.deletedAt),
+          ),
+        );
+      if (publicationFileDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteFunding] publicationFile deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+
+      const [profitMakingActivityFileDeletionResult] = await tx
+        .update(ProfitMakingActivityFile)
+        .set({ deletedAt })
+        .where(
+          and(
+            eq(ProfitMakingActivityFile.fundingOrderId, fundingId),
+            isNull(ProfitMakingActivityFile.deletedAt),
+          ),
+        );
+      if (profitMakingActivityFileDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteFunding] profitMakingActivityFile deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+
+      const [jointExpenseFileDeletionResult] = await tx
+        .update(JointExpenseFile)
+        .set({ deletedAt })
+        .where(
+          and(
+            eq(JointExpenseFile.fundingOrderId, fundingId),
+            isNull(JointExpenseFile.deletedAt),
+          ),
+        );
+      if (jointExpenseFileDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteFunding] jointExpenseFile deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+
+      const [etcExpenseFileDeletionResult] = await tx
+        .update(EtcExpenseFile)
+        .set({ deletedAt })
+        .where(
+          and(
+            eq(EtcExpenseFile.fundingOrderId, fundingId),
+            isNull(EtcExpenseFile.deletedAt),
+          ),
+        );
+      if (etcExpenseFileDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteFunding] etcExpenseFile deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+
+      const [tradeEvidenceFileDeletionResult] = await tx
+        .update(TradeEvidenceFile)
+        .set({ deletedAt })
+        .where(
+          and(
+            eq(TradeEvidenceFile.fundingOrderId, fundingId),
+            isNull(TradeEvidenceFile.deletedAt),
+          ),
+        );
+      if (tradeEvidenceFileDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteFunding] tradeEvidenceFile deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+
+      const [tradeDetailFileDeletionResult] = await tx
+        .update(TradeDetailFile)
+        .set({ deletedAt })
+        .where(
+          and(
+            eq(TradeDetailFile.fundingOrderId, fundingId),
+            isNull(TradeDetailFile.deletedAt),
+          ),
+        );
+      if (tradeDetailFileDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteFunding] tradeDetailFile deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+
+      const [clubSuppliesImageFileDeletionResult] = await tx
+        .update(ClubSuppliesImageFile)
+        .set({ deletedAt })
+        .where(
+          and(
+            eq(ClubSuppliesImageFile.fundingOrderId, fundingId),
+            isNull(ClubSuppliesImageFile.deletedAt),
+          ),
+        );
+      if (clubSuppliesImageFileDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteFunding] clubSuppliesImageFile deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+
+      const [clubSuppliesSoftwareEvidenceFileDeletionResult] = await tx
+        .update(ClubSuppliesSoftwareEvidenceFile)
+        .set({ deletedAt })
+        .where(
+          and(
+            eq(ClubSuppliesSoftwareEvidenceFile.fundingOrderId, fundingId),
+            isNull(ClubSuppliesSoftwareEvidenceFile.deletedAt),
+          ),
+        );
+      if (clubSuppliesSoftwareEvidenceFileDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteFunding] clubSuppliesSoftwareEvidenceFile deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+
+      const [fixtureImageFileDeletionResult] = await tx
+        .update(FixtureImageFile)
+        .set({ deletedAt })
+        .where(
+          and(
+            eq(FixtureImageFile.fundingOrderId, fundingId),
+            isNull(FixtureImageFile.deletedAt),
+          ),
+        );
+      if (fixtureImageFileDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteFunding] fixtureImageFile deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+
+      const [fixtureSoftwareEvidenceFileDeletionResult] = await tx
+        .update(FixtureSoftwareEvidenceFile)
+        .set({ deletedAt })
+        .where(
+          and(
+            eq(FixtureSoftwareEvidenceFile.fundingOrderId, fundingId),
+            isNull(FixtureSoftwareEvidenceFile.deletedAt),
+          ),
+        );
+      if (fixtureSoftwareEvidenceFileDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteFunding] fixtureSoftwareEvidenceFile deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+
+      const [passengerDeletionResult] = await tx
+        .update(TransportationPassenger)
+        .set({ deletedAt })
+        .where(
+          and(
+            eq(TransportationPassenger.fundingOrderId, fundingId),
+            isNull(TransportationPassenger.deletedAt),
+          ),
+        );
+      if (passengerDeletionResult.affectedRows < 1) {
+        logger.debug(
+          "[deleteFunding] passenger deletion failed. Rollback occurs",
+        );
+        tx.rollback();
+        return false;
+      }
+
+      return true;
+    });
+    return isDeletionSucceed;
+  }
 }
