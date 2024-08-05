@@ -11,8 +11,7 @@ import {
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd003";
 
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
-import { StudentRepository } from "@sparcs-clubs/api/feature/user/repository/student.repository";
-import UserRepository from "@sparcs-clubs/api/feature/user/repository/user.repository";
+import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import FundingRepository from "../repository/funding.repository";
 
@@ -20,24 +19,24 @@ import FundingRepository from "../repository/funding.repository";
 export default class FundingService {
   constructor(
     private fundingRepository: FundingRepository,
-    private readonly userRepository: UserRepository,
     private readonly filePublicService: FilePublicService,
-    private readonly studentRepository: StudentRepository,
+    private readonly userPublicService: UserPublicService,
   ) {}
 
   async postStudentFunding(body: ApiFnd001RequestBody, studentId: number) {
-    const user = await this.userRepository.findStudentById(studentId);
+    const user = await this.userPublicService.getStudentById({ id: studentId });
     if (!user) {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
     return this.fundingRepository.insertFunding(body);
   }
 
+  // TODO: 최적화
   async getStudentFunding(
     param: ApiFnd002RequestParam,
     studentId: number,
   ): Promise<ApiFnd002ResponseOk> {
-    const user = await this.userRepository.findStudentById(studentId);
+    const user = await this.userPublicService.getStudentById({ id: studentId });
     if (!user) {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
@@ -191,18 +190,12 @@ export default class FundingService {
         param.id,
       );
 
-    const transportationPassengerIds = await Promise.all(
-      transportationPassengerTIds.map(async id =>
-        this.studentRepository.selectStudentIdByStudentTId(id),
-      ),
-    );
-
     const transportationPassengers = await Promise.all(
-      transportationPassengerIds.map(async id => {
-        const student = await this.userRepository.findStudentById(id.id)[0];
+      transportationPassengerTIds.map(async id => {
+        const student = await this.userPublicService.getStudentByTId({ id });
         return {
           name: student.name,
-          studentNumber: student.studentNumber,
+          studentNumber: student.number.toString(),
         };
       }),
     );
@@ -235,7 +228,7 @@ export default class FundingService {
     param: ApiFnd003RequestParam,
     studentId: number,
   ) {
-    const user = await this.userRepository.findStudentById(studentId);
+    const user = await this.userPublicService.getStudentById({ id: studentId });
     if (!user) {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }

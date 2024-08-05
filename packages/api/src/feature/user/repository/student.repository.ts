@@ -21,12 +21,12 @@ export class StudentRepository {
     return result;
   }
 
-  async selectStudentIdByStudentTId(studentId: number) {
+  async selectStudentIdByStudentTId(studentTId: number) {
     const result = await this.db
-      .select()
-      .from(Student)
-      .where(and(eq(Student.id, studentId), isNull(StudentT.deletedAt)));
+      .select({ studentId: StudentT.studentId })
+      .from(StudentT)
+      .where(and(eq(StudentT.id, studentTId), isNull(StudentT.deletedAt)));
 
-    return result[0];
+    return result;
   }
 }

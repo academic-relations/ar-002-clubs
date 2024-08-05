@@ -22,4 +22,25 @@ export default class UserPublicService {
 
     return students[0];
   }
+
+  async getStudentByTId(studentT: { id: number }) {
+    const studentIds = await this.studentRepository.selectStudentIdByStudentTId(
+      studentT.id,
+    );
+
+    const students = await Promise.all(
+      studentIds.map(async student =>
+        this.studentRepository.selectStudentById(student.studentId),
+      ),
+    );
+
+    if (students.length > 1)
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+
+    if (students.length === 0) {
+      return undefined;
+    }
+
+    return students[0][0];
+  }
 }
