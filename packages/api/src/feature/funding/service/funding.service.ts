@@ -10,6 +10,7 @@ import {
   ApiFnd003RequestParam,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd003";
 
+import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
@@ -21,12 +22,18 @@ export default class FundingService {
     private fundingRepository: FundingRepository,
     private readonly filePublicService: FilePublicService,
     private readonly userPublicService: UserPublicService,
+    private readonly clubPublicSevice: ClubPublicService,
   ) {}
 
   async postStudentFunding(body: ApiFnd001RequestBody, studentId: number) {
     const user = await this.userPublicService.getStudentById({ id: studentId });
     if (!user) {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
+    }
+    if (
+      !(await this.clubPublicSevice.isStudentDelegate(studentId, body.clubId))
+    ) {
+      throw new HttpException("Student is not delegate", HttpStatus.FORBIDDEN);
     }
     return this.fundingRepository.insertFunding(body);
   }
@@ -231,6 +238,11 @@ export default class FundingService {
     const user = await this.userPublicService.getStudentById({ id: studentId });
     if (!user) {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
+    }
+    if (
+      !(await this.clubPublicSevice.isStudentDelegate(studentId, body.clubId))
+    ) {
+      throw new HttpException("Student is not delegate", HttpStatus.FORBIDDEN);
     }
     return this.fundingRepository.putStudentFunding(body, param.id);
   }
