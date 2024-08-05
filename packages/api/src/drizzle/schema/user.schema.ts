@@ -89,7 +89,7 @@ export const Professor = mysqlTable("professor", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("user_id").references(() => User.id),
   name: varchar("name", { length: 255 }).notNull(),
-  email: varchar("email", { length: 255 }),
+  email: varchar("email", { length: 255 }).unique(),
   phoneNumber: varchar("phone_number", { length: 30 }),
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),

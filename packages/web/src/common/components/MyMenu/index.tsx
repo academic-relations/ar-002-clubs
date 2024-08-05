@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import { getUserType } from "@sparcs-clubs/web/utils/getUserType";
 
 import Button from "../Button";
 import Icon from "../Icon";
@@ -50,15 +51,17 @@ const MyMenu: React.FC<{
     logout();
     setIsMenuOpen(false);
   };
+
+  const parsedToken = JSON.parse(localStorage.getItem("responseToken") || "{}");
+
+  const profiles = Object.keys(parsedToken).map(type => ({
+    profileType: getUserType(type),
+    token: parsedToken[type],
+  }));
+
   return (
     <MyMenuWrapper>
-      <ProfileList
-        profiles={[
-          { profileName: "학부생", profileNumber: 20202222, email: "test" },
-          { profileName: "집행부원", profileNumber: 20202222, email: "test" },
-        ]} // TODO: 나중에는 실제로 받아오기
-        setIsMenuOpen={setIsMenuOpen}
-      />
+      <ProfileList profiles={profiles} setIsMenuOpen={setIsMenuOpen} />
       <Divider />
       {/* TODO: #333333으로 써놓은거 수정하기 */}
       <Button

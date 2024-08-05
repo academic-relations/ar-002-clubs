@@ -13,7 +13,7 @@ import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-import { type Funding } from "../service/_mock/mockManageClub";
+import { type Funding } from "../services/_mock/mockManageClub";
 
 interface FundingTableProps {
   fundingList: Funding[];

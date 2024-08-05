@@ -9,6 +9,7 @@ interface PageHeadProps {
   items: { name: string; path: string }[];
   title: string;
   enableLast?: boolean;
+  action?: React.ReactNode;
 }
 
 const PageHeadWrapper = styled.div`
@@ -19,14 +20,25 @@ const PageHeadWrapper = styled.div`
   align-self: stretch;
 `;
 
+const TitleWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const PageHead: React.FC<PageHeadProps> = ({
   items,
   title,
   enableLast = false,
+  action = null,
 }) => (
   <PageHeadWrapper>
     <BreadCrumb items={items} enableLast={enableLast} />
-    <PageTitle>{title}</PageTitle>
+    <TitleWrapper>
+      <PageTitle>{title}</PageTitle>
+      {action && <div>{action}</div>}
+    </TitleWrapper>
   </PageHeadWrapper>
 );
 

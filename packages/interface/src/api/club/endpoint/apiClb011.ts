@@ -13,7 +13,7 @@ const url = (clubId: number) =>
 const method = "GET";
 
 const requestParam = z.object({
-  cludId: z.coerce.number().int().min(1),
+  clubId: z.coerce.number().int().min(1),
 });
 
 const requestQuery = z.object({});
@@ -25,7 +25,7 @@ const responseBodyMap = {
     requests: z
       .object({
         studentId: z.coerce.number().int().min(1),
-        studentName: z.coerce.number().int().min(1),
+        studentName: z.coerce.string(),
         clubDelegateChangeRequestStatusEnumId: z.nativeEnum(
           ClubDelegateChangeRequestStatusEnum,
         ),
