@@ -6,22 +6,22 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import { manageCommonSpaceProgress } from "@sparcs-clubs/web/constants/manageClubProgress";
 
-interface ManageCommonSpaceProgressProps {
+interface MyCommonSpaceProgressProps {
   status: CommonSpaceUsageOrderStatusEnum;
 }
 
-const MyCommonSpaceProgress: React.FC<ManageCommonSpaceProgressProps> = ({
+const MyCommonSpaceProgress: React.FC<MyCommonSpaceProgressProps> = ({
   status,
 }) => {
-  const manageCommonSpace = manageCommonSpaceProgress(status);
+  const myCommonSpace = manageCommonSpaceProgress(status);
 
   // TODO: Implement onClickCancel
   const onClickCancel = () => {};
   return (
     <ProgressStatus
-      labels={manageCommonSpace.labels}
-      progress={manageCommonSpace.progress}
-      infoText={manageCommonSpace.infoText}
+      labels={myCommonSpace.labels}
+      progress={myCommonSpace.progress}
+      infoText={myCommonSpace.infoText}
       optional={
         status === CommonSpaceUsageOrderStatusEnum.Applied && (
           <Button onClick={onClickCancel} style={{ width: "max-content" }}>

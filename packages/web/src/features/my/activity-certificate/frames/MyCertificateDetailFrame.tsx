@@ -13,7 +13,7 @@ import {
 } from "@sparcs-clubs/web/common/components/ListItem";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import ManageActivityCertificate from "@sparcs-clubs/web/features/my/activity-certificate/components/MyActivityCertificate";
+import MyActivityCertificate from "@sparcs-clubs/web/features/my/activity-certificate/components/MyActivityCertificate";
 
 const ActivityWrapper = styled.div`
   display: flex;
@@ -41,7 +41,7 @@ const MyCertificateDetailFrame = () => {
         enableLast
       />
       <Card outline gap={20}>
-        <ManageActivityCertificate
+        <MyActivityCertificate
           status={ActivityCertificateOrderStatusEnum.Applied}
         />
         {/* TODO: 아래 정보들 백 연결하기 */}

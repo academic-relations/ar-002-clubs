@@ -6,25 +6,25 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import { manageActivityCertificateProgress } from "@sparcs-clubs/web/constants/manageClubProgress";
 
-interface ManageActivityCertificateProgressProps {
+interface MyActivityCertificateProgressProps {
   status: ActivityCertificateOrderStatusEnum;
 }
 
-const ManageActivityCertificateProgress: React.FC<
-  ManageActivityCertificateProgressProps
+const MyActivityCertificateProgress: React.FC<
+  MyActivityCertificateProgressProps
 > = ({ status }) => {
-  const manageActivityCertificate = manageActivityCertificateProgress(status);
+  const myActivityCertificate = manageActivityCertificateProgress(status);
 
   const onClickCancel = () => {};
 
   return (
     <ProgressStatus
-      labels={manageActivityCertificate.labels}
-      progress={manageActivityCertificate.progress}
+      labels={myActivityCertificate.labels}
+      progress={myActivityCertificate.progress}
       infoText={
         status === ActivityCertificateOrderStatusEnum.Applied
           ? "승인이 완료되기 전까지 신청을 취소할 수 있습니다"
-          : manageActivityCertificate.infoText
+          : myActivityCertificate.infoText
       }
       optional={
         status === ActivityCertificateOrderStatusEnum.Applied && (
@@ -37,4 +37,4 @@ const ManageActivityCertificateProgress: React.FC<
   );
 };
 
-export default ManageActivityCertificateProgress;
+export default MyActivityCertificateProgress;
