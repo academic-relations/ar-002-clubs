@@ -25,13 +25,15 @@ import apiFnd004, {
   ApiFnd004RequestParam,
   ApiFnd004ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd004";
-// import apiFnd005, {
-//   ApiFnd005ResponseOk,
-// } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
-// import apiFnd006, {
-//   ApiFnd006RequestParam,
-//   ApiFnd006ResponseOk,
-// } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
+import apiFnd005, {
+  ApiFnd005RequestBody,
+  ApiFnd005ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
+import apiFnd006, {
+  ApiFnd006RequestBody,
+  ApiFnd006RequestParam,
+  ApiFnd006ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -105,22 +107,28 @@ export default class FundingController {
     return result;
   }
 
-  // @Student()
-  // @Get("student/fundings")
-  // @UsePipes(new ZodPipe(apiFnd005))
-  // async getStudentFundings(
-  //   @GetStudent() user: GetStudent,
-  // ): Promise<ApiFnd005ResponseOk> {
-  //   return this.fundingService.getStudentFundings(user.studentId);
-  // }
+  @Student()
+  @Get("student/fundings")
+  @UsePipes(new ZodPipe(apiFnd005))
+  async getStudentFundings(
+    @GetStudent() user: GetStudent,
+    @Body() body: ApiFnd005RequestBody,
+  ): Promise<ApiFnd005ResponseOk> {
+    return this.fundingService.getStudentFundings(user.studentId, body);
+  }
 
-  // @Student()
-  // @Get("student/fundings/semesters/semester/:semesterId")
-  // @UsePipes(new ZodPipe(apiFnd006))
-  // async getStudentFundingSemester(
-  //   @GetStudent() user: GetStudent,
-  //   @Param() param: ApiFnd006RequestParam,
-  // ): Promise<ApiFnd006ResponseOk> {
-  //   return this.fundingService.getStudentFundingSemester(user.studentId, param);
-  // }
+  @Student()
+  @Get("student/fundings/semesters/semester/:semesterId")
+  @UsePipes(new ZodPipe(apiFnd006))
+  async getStudentFundingSemester(
+    @GetStudent() user: GetStudent,
+    @Param() param: ApiFnd006RequestParam,
+    @Body() body: ApiFnd006RequestBody,
+  ): Promise<ApiFnd006ResponseOk> {
+    return this.fundingService.getStudentFundingSemester(
+      user.studentId,
+      param,
+      body,
+    );
+  }
 }
