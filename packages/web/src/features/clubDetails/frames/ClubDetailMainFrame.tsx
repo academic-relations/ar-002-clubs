@@ -101,19 +101,19 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
         ]}
         title={club.name}
         action={
-          isRegistrationPeriod
-            ? isLoggedIn && (
-                <ResisterInfoWrapper>
-                  <Typography fs={16} color="GRAY.600" fw="REGULAR">
-                    등록 신청 {club.totalMemberCnt}명
-                  </Typography>
-                  <Button type="default" onClick={submitHandler}>
-                    {isRegistered ? "회원 등록 취소" : "회원 등록 신청"}
-                  </Button>
-                </ResisterInfoWrapper>
-              )
-            : isLoggedIn &&
-              isRegistered && <Button type="disabled">회원 승인 대기</Button>
+          isLoggedIn &&
+          (isRegistrationPeriod ? (
+            <ResisterInfoWrapper>
+              <Typography fs={16} color="GRAY.600" fw="REGULAR">
+                등록 신청 {club.totalMemberCnt}명
+              </Typography>
+              <Button type="default" onClick={submitHandler}>
+                {isRegistered ? "회원 등록 취소" : "회원 등록 신청"}
+              </Button>
+            </ResisterInfoWrapper>
+          ) : (
+            isRegistered && <Button type="disabled">회원 승인 대기</Button>
+          ))
         }
       />
 
