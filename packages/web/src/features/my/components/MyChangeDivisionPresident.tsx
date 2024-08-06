@@ -9,7 +9,7 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import NotificationCard from "@sparcs-clubs/web/common/components/NotificationCard";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { ChangeDivisionPresidentMessageContext } from "@sparcs-clubs/web/constants/changeDivisionPresident";
-import ChangeDivisionPresidentModalContent from "@sparcs-clubs/web/features/my/component/ChangeDivisionPresidentModalContent";
+import ChangeDivisionPresidentModalContent from "@sparcs-clubs/web/features/my/components/ChangeDivisionPresidentModalContent";
 
 type StatusType = "Requested" | "Completed";
 
