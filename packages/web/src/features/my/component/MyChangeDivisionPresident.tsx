@@ -76,7 +76,7 @@ const MyChangeDivisionPresident: React.FC<MyChangeDivisionPresidentProps> = ({
         </Typography>
         <TextButton
           text={buttonString}
-          color="gray"
+          color="GRAY"
           fw="REGULAR"
           onClick={onClick}
         />
