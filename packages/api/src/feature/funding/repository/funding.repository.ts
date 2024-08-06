@@ -8,6 +8,7 @@ import { and, eq, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   ClubSuppliesImageFile,
@@ -1581,7 +1582,7 @@ export default class FundingRepository {
 
   async deleteStudentFunding(fundingId: number): Promise<boolean> {
     const isDeletionSucceed = await this.db.transaction(async tx => {
-      const deletedAt = new Date();
+      const deletedAt = getKSTDate();
       const funding = await tx
         .select({
           isFoodExpense: FundingOrder.isFoodExpense,

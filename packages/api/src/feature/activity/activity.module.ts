@@ -9,6 +9,7 @@ import ActivityController from "./controller/activity.controller";
 import ActivityActivityTermRepository from "./repository/activity.activity-term.repository";
 import ActivityRepository from "./repository/activity.repository";
 import ActivityActivityTermService from "./service/activity.activity-term.service";
+import ActivityPublicService from "./service/activity.public.service";
 import ActivityService from "./service/activity.service";
 
 @Module({
@@ -19,6 +20,7 @@ import ActivityService from "./service/activity.service";
     ActivityActivityTermRepository,
     ActivityService,
     ActivityActivityTermService,
+    ActivityPublicService,
   ],
   exports: [],
 })
