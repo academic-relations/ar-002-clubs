@@ -279,7 +279,7 @@ export class ClubDelegateDRepository {
 
   async isPresidentByStudentIdAndClubId(studentId: number, clubId: number) {
     const cur = getKSTDate();
-    const presidentEnumId = ClubDelegateEnum.President;
+    const presidentEnumId = ClubDelegateEnum.Representative;
     const { president } = await this.db
       .select({ president: count(ClubDelegateD.id) })
       .from(ClubDelegateD)
