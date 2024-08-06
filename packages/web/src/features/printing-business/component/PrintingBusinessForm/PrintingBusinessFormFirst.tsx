@@ -6,6 +6,7 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 
 import type { PrintingBusinessFormProps } from ".";
+
 import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 type PrintingBusinessFormFirstProps = Pick<
@@ -27,7 +28,7 @@ const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
   setRequestForm,
   setFormError,
 }) => {
-  const clubSelection: Array<SelectItem> = clubs.map(club => ({
+  const clubSelection: Array<SelectItem<string>> = clubs.map(club => ({
     label: club.name,
     value: club.id.toString(),
     selectable: true,
@@ -49,19 +50,19 @@ const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
     // console.log("[PrintingBusinessFormFirst] state changed to", clubId, phoneNumber);
     setRequestParam({ clubId: Number(clubId) });
     setRequestForm({ ...requestForm, krPhoneNumber: phoneNumber });
-  }, [clubId, phoneNumber]);
+  }, [clubId, phoneNumber, requestForm, setRequestForm, setRequestParam]);
 
   useEffect(() => {
     setFormError(clubIdSelectionError || usernameError || phoneNumberError);
-  }, [clubIdSelectionError, usernameError, phoneNumberError]);
+  }, [clubIdSelectionError, usernameError, phoneNumberError, setFormError]);
 
   return (
     <Card outline gap={20}>
       <Select
         items={clubSelection}
         label="동아리 이름"
-        selectedValue={clubId}
-        onSelect={setClubId}
+        value={clubId}
+        onChange={setClubId}
         setErrorStatus={setClubIdSelectionError}
       />
       <TextInput

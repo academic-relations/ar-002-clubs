@@ -6,6 +6,7 @@ const ResponsiveContent = styled.div`
   width: 1120px;
   min-height: calc(100vh - 105px - 160px);
   margin: 80px auto;
+  font-family: var(--next-font-family-pretendard);
 
   @media (max-width: 1440px) {
     width: 880px;

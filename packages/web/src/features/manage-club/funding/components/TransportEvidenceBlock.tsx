@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { TransportationEnum as E } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
@@ -64,6 +64,31 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
     setFunding({ ...funding, [key]: value });
   };
 
+  const [participants, setParticipants] = useState<Record<number, boolean>>({});
+
+  useEffect(() => {
+    setParticipants(
+      funding.transportationPassengers.reduce((acc, participant) => {
+        const index = mockParticipantData.findIndex(
+          data => data.studentId === participant.studentNumber,
+        );
+        return { ...acc, [index]: true };
+      }, {}),
+    );
+  }, []);
+
+  useEffect(() => {
+    setFunding({
+      ...funding,
+      transportationPassengers: mockParticipantData
+        .filter((_, i) => participants[i])
+        .map(participant => ({
+          studentNumber: participant.studentId,
+          name: participant.name,
+        })),
+    });
+  }, [participants, setFunding]);
+
   return (
     <FlexWrapper direction="column" gap={8}>
       <EvidenceBlockTitle title="교통비 증빙">
@@ -74,9 +99,9 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
                 items={TransportationList}
                 label="교통수단"
                 placeholder="교통수단을 선택해주세요"
-                selectedValue={funding.transportationEnumId}
-                onSelect={value =>
-                  setFundingHandler("transportationEnumId", value)
+                value={funding.transportationEnumId}
+                onChange={value =>
+                  setFundingHandler("transportationEnumId", value ?? "")
                 }
               />
             </FixedWidthWrapper>
@@ -95,35 +120,27 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
           </FlexWrapper>
           {isParticipantsRequired(funding.transportationEnumId) && (
             <FlexWrapper direction="column" gap={4}>
-              <Typography
-                ff="PRETENDARD"
-                fs={16}
-                fw="MEDIUM"
-                lh={20}
-                color="BLACK"
-              >
+              <Typography fs={16} fw="MEDIUM" lh={20}>
                 탑승자 명단
               </Typography>
               <SelectParticipant
                 data={mockParticipantData}
-                // TODO: onChange 추가
+                onChange={setParticipants}
+                value={participants}
               />
             </FlexWrapper>
           )}
           <FlexWrapper direction="column" gap={4}>
             <Typography
-              ff="PRETENDARD"
               fw="MEDIUM"
               fs={16}
               lh={20}
-              color="BLACK"
               style={{ paddingLeft: 2, paddingRight: 2 }}
             >
               이용 목적
             </Typography>
             {isPurposeInfoRequired(funding.transportationEnumId) && (
               <Typography
-                ff="PRETENDARD"
                 fw="REGULAR"
                 fs={14}
                 lh={20}

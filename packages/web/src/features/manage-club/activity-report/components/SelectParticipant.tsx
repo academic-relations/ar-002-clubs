@@ -24,7 +24,8 @@ import { type Participant } from "../types/activityReport";
 
 interface SelectParticipantProps {
   data: Participant[];
-  onChange?: (selected: Participant[]) => void;
+  onChange?: React.Dispatch<React.SetStateAction<RowSelectionState>>;
+  value?: RowSelectionState;
 }
 
 const SelectParticipantInner = styled.div`
@@ -96,17 +97,20 @@ const containsTextFilter: FilterFn<Participant> = (
 
 const SelectParticipant: React.FC<SelectParticipantProps> = ({
   data,
-  onChange = () => {},
+  onChange = null,
+  value = null,
 }) => {
-  const [selectedRowIds, setSelectedRowIds] = useState<RowSelectionState>({});
+  const [rowValues, setRowValues] = useState<RowSelectionState>(value ?? {});
   const [searchText, setSearchText] = useState<string>("");
+
   const [selected, setSelected] = useState<Participant[]>([]);
 
   useEffect(() => {
-    const res = data.filter((_, i) => selectedRowIds[i]);
+    const res = value
+      ? data.filter((_, i) => value?.[i])
+      : data.filter((_, i) => rowValues?.[i]);
     setSelected(res);
-    onChange(res);
-  }, [selectedRowIds]);
+  }, [rowValues, value, data]);
 
   const table = useReactTable({
     columns,
@@ -115,10 +119,16 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     state: {
-      rowSelection: selectedRowIds,
+      rowSelection: value ?? rowValues,
       globalFilter: searchText,
     },
-    onRowSelectionChange: setSelectedRowIds,
+    onRowSelectionChange: v => {
+      if (onChange) {
+        onChange(v);
+      } else {
+        setRowValues(v);
+      }
+    },
     globalFilterFn: containsTextFilter,
     initialState: {
       sorting: [
@@ -139,13 +149,7 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
         placeholder="학번 또는 이름을 검색해주세요"
       />
       <SelectParticipantInner>
-        <Typography
-          fs={16}
-          fw="REGULAR"
-          ff="PRETENDARD"
-          lh={20}
-          color="GRAY.600"
-        >
+        <Typography fs={16} fw="REGULAR" lh={20} color="GRAY.600">
           {searchText && `검색 결과 ${table.getRowModel().rows.length}명 / `}
           {`총 ${data.length}명`}
         </Typography>
@@ -169,7 +173,7 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
             </Typography>
           ))
         ) : (
-          <Typography ff="PRETENDARD" fs={16} fw="REGULAR" color="GRAY.300">
+          <Typography fs={16} fw="REGULAR" color="GRAY.300">
             선택된 회원이 없습니다.
           </Typography>
         )}

@@ -36,9 +36,7 @@ const apiReg003 = {
 type ApiReg003RequestParam = z.infer<typeof apiReg003.requestParam>;
 type ApiReg003RequestQuery = z.infer<typeof apiReg003.requestQuery>;
 type ApiReg003RequestBody = z.infer<typeof apiReg003.requestBody>;
-type ApiReg003ResponseCreated = z.infer<
-  (typeof apiReg003.responseBodyMap)[200]
->;
+type ApiReg003ResponseOk = z.infer<(typeof apiReg003.responseBodyMap)[200]>;
 
 export default apiReg003;
 
@@ -46,5 +44,5 @@ export type {
   ApiReg003RequestParam,
   ApiReg003RequestQuery,
   ApiReg003RequestBody,
-  ApiReg003ResponseCreated,
+  ApiReg003ResponseOk,
 };
