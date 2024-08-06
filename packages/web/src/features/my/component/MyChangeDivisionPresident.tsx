@@ -17,7 +17,7 @@ interface MyChangeDivisionPresidentProps {
   status: StatusType;
   actingPresident?: boolean;
   change?: [string, string];
-  refetch: () => void;
+  fetch: () => void;
 }
 
 const notificationStatus: Record<StatusType, "Alert" | "Success"> = {
@@ -29,7 +29,7 @@ const MyChangeDivisionPresident: React.FC<MyChangeDivisionPresidentProps> = ({
   status = "Requested",
   actingPresident = false,
   change = undefined,
-  refetch,
+  fetch,
 }: MyChangeDivisionPresidentProps) => {
   const router = useRouter();
   const messageContext = new ChangeDivisionPresidentMessageContext({
@@ -52,7 +52,7 @@ const MyChangeDivisionPresident: React.FC<MyChangeDivisionPresidentProps> = ({
           actingPresident
           change={["20210227 박병찬", "20200510 이지윤"]}
           onClose={close}
-          refetch={refetch}
+          fetch={fetch}
         />
       </Modal>
     ));
