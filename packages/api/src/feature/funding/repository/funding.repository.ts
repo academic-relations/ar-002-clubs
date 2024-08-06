@@ -1905,4 +1905,42 @@ export default class FundingRepository {
     });
     return isDeletionSucceed;
   }
+
+  async selectFundingsByClubId(clubId: number) {
+    const result = await this.db
+      .select({
+        id: FundingOrder.id,
+        purposeId: FundingOrder.purposeId,
+        fundingOrderStatusEnumId: FundingOrder.fundingOrderStatusEnumId,
+        name: FundingOrder.name,
+        expenditureAmount: FundingOrder.expenditureAmount,
+        approvedAmount: FundingOrder.approvedAmount,
+      })
+      .from(FundingOrder)
+      .where(
+        and(eq(FundingOrder.clubId, clubId), isNull(FundingOrder.deletedAt)),
+      );
+    return result;
+  }
+
+  async selectFundingsSemesterByClubId(clubId: number, semesterId: number) {
+    const result = await this.db
+      .select({
+        id: FundingOrder.id,
+        purposeId: FundingOrder.purposeId,
+        fundingOrderStatusEnumId: FundingOrder.fundingOrderStatusEnumId,
+        name: FundingOrder.name,
+        expenditureAmount: FundingOrder.expenditureAmount,
+        approvedAmount: FundingOrder.approvedAmount,
+      })
+      .from(FundingOrder)
+      .where(
+        and(
+          eq(FundingOrder.clubId, clubId),
+          eq(FundingOrder.semesterId, semesterId),
+          isNull(FundingOrder.deletedAt),
+        ),
+      );
+    return result;
+  }
 }

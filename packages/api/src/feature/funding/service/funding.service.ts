@@ -10,8 +10,13 @@ import {
   ApiFnd003RequestParam,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd003";
 import { ApiFnd004RequestParam } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd004";
-// import { ApiFnd006RequestParam } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
+import { ApiFnd005RequestBody } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
+import {
+  ApiFnd006RequestBody,
+  ApiFnd006RequestParam,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
 
+import ActivityPublicService from "@sparcs-clubs/api/feature/activity/service/activity.public.service";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
@@ -25,6 +30,7 @@ export default class FundingService {
     private readonly filePublicService: FilePublicService,
     private readonly userPublicService: UserPublicService,
     private readonly clubPublicSevice: ClubPublicService,
+    private readonly activityPublicService: ActivityPublicService,
   ) {}
 
   async postStudentFunding(body: ApiFnd001RequestBody, studentId: number) {
@@ -257,22 +263,60 @@ export default class FundingService {
     return this.fundingRepository.deleteStudentFunding(param.id);
   }
 
-  // async getStudentFundings(studentId: number) {
-  //   const user = await this.userPublicService.getStudentById({ id: studentId });
-  //   if (!user) {
-  //     throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
-  //   }
-  //   return this.fundingRepository.selectFundingsByStudentId();
-  // }
+  async getStudentFundings(studentId: number, body: ApiFnd005RequestBody) {
+    const user = await this.userPublicService.getStudentById({ id: studentId });
+    if (!user) {
+      throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
+    }
 
-  // async getStudentFundingSemester(
-  //   studentId: number,
-  //   param: ApiFnd006RequestParam,
-  // ) {
-  //   const user = await this.userPublicService.getStudentById({ id: studentId });
-  //   if (!user) {
-  //     throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
-  //   }
-  //   return this.fundingRepository.selectFundingsBySemesterId(param.semesterId);
-  // }
+    const fundings = await this.fundingRepository.selectFundingsByClubId(
+      body.clubId,
+    );
+
+    if (fundings.length !== 1) {
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    return {
+      fundings: fundings.map(funding => ({
+        id: funding.id,
+        fundingOrderStatusEnumId: funding.fundingOrderStatusEnumId,
+        activityName: this.activityPublicService.getActivityNameById(
+          funding.purposeId,
+        )[0],
+        name: funding.name,
+        expenditureAmount: funding.expenditureAmount,
+        approvedAmount: funding.approvedAmount,
+      })),
+    };
+  }
+
+  async getStudentFundingSemester(
+    studentId: number,
+    param: ApiFnd006RequestParam,
+    body: ApiFnd006RequestBody,
+  ) {
+    const user = await this.userPublicService.getStudentById({ id: studentId });
+    if (!user) {
+      throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
+    }
+
+    const fundings =
+      await this.fundingRepository.selectFundingsSemesterByClubId(
+        param.semesterId,
+        body.clubId,
+      );
+
+    return {
+      fundings: fundings.map(funding => ({
+        id: funding.id,
+        activityName: this.activityPublicService.getActivityNameById(
+          funding.purposeId,
+        )[0],
+        name: funding.name,
+        expenditureAmount: funding.expenditureAmount,
+        approvedAmount: funding.approvedAmount,
+      })),
+    };
+  }
 }
