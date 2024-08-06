@@ -2,9 +2,10 @@ import React from "react";
 
 import styled from "styled-components";
 
+import { Theme } from "@sparcs-clubs/web/styles/themes";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
-type FontWeight = "MEDIUM" | "REGULAR";
+type FontWeight = keyof Theme["fonts"]["WEIGHT"];
 
 interface ButtonProps {
   disabled: boolean;
