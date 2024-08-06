@@ -19,7 +19,7 @@ const RentalInfoFirstFrame: React.FC<
 > = ({ setNextEnabled, rental, setRental }) => {
   const { data, isLoading, isError } = useGetUserProfile();
 
-  const [clubList, setClubList] = useState<SelectItem[]>([]);
+  const [clubList, setClubList] = useState<SelectItem<string>[]>([]);
   const [userName, setUserName] = useState("");
   const [userPhone, setUserPhone] = useState<string | undefined>();
 
@@ -50,7 +50,7 @@ const RentalInfoFirstFrame: React.FC<
         phone,
       },
     });
-  }, [phone, setRental]);
+  }, [phone, rental, setRental]);
 
   useEffect(() => {
     const allConditionsMet =
@@ -77,15 +77,15 @@ const RentalInfoFirstFrame: React.FC<
         },
       });
     }
-  }, [selectedValue, phone, setRental]);
+  }, [selectedValue, phone, setRental, clubList, rental, userName]);
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <Card outline gap={40}>
         <Select
           items={clubList}
-          selectedValue={String(selectedValue)}
-          onSelect={setSelectedValue}
+          value={String(selectedValue)}
+          onChange={setSelectedValue}
           label="동아리 이름"
           setErrorStatus={setHasSelectError}
         />

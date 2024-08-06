@@ -21,7 +21,7 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  clubId: z.number().int().min(1).optional(),
+  clubId: z.coerce.number().int().min(1).optional(),
   registrationTypeEnumId: z.nativeEnum(RegistrationTypeEnum),
   krName: zClubName,
   enName: zClubName,
@@ -39,9 +39,8 @@ const requestBody = z.object({
    * 지도교수란이 기입되어 있으면 지도교수를 포함한 신청이고,
    * 없다면 지도교수 없는 동아리 신청으로 처리됩니다.
    */
-  professor: z.union([
-    z.undefined(),
-    z.object({
+  professor: z
+    .object({
       name: z.string(),
       mail: z
         .string()
@@ -50,16 +49,16 @@ const requestBody = z.object({
           message: "Must be a valid KAIST email address",
         }),
       ProfessorEnumId: z.nativeEnum(ProfessorEnum),
-    }),
-  ]),
+    })
+    .optional(),
   divisionIntegrity: z.string(), // 길이제한이 추가될 수 있습니다.
   foundationPurpose: z.string(), // 길이제한이 추가될 수 있습니다.
-  activityPlan: z.string(), // 길이제한이 추가될 수 있습니다.
+  activityPlan: z.coerce.number().int().min(1), // 길이제한이 추가될 수 있습니다.
   /**
    * 활동계획서 파일은 가등록인 경우 undefined,
    * 신규등록 | 재등록의 경우 업로드한 파일 id가 존재해야 합니다.,
    */
-  activityPlanFileId: z.union([z.undefined(), z.number().int().positive()]),
+  activityPlanFileId: z.union([z.undefined(), z.string()]),
   /**
    * 동아리 회칙 파일은 가등록 | 재등록인 경우 undefined,
    * 신규등록의 경우 업로드한 파일 id가 존재해야 합니다.,

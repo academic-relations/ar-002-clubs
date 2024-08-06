@@ -8,8 +8,8 @@ import { RegistrationStatusEnum } from "@sparcs-clubs/interface/common/enum/regi
  * @description 동아리 가입 신청 목록을 조회합니다.
  */
 
-const url = (clubId: number) =>
-  `/student/registration/member/applies/club/${clubId}`;
+const url = (clubId: string) =>
+  `/student/registrations/member-registrations/club/${clubId}`;
 const method = "GET";
 
 const requestParam = z.object({

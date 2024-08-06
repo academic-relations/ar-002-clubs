@@ -8,7 +8,7 @@ import { RegistrationEventEnum } from "@sparcs-clubs/interface/common/enum/regis
  * @description 동아리 등록, 동아리 신청과 관련된 일정을 확인합니다
  */
 
-const url = () => `/student/registration/events`;
+const url = () => `/student/registrations/events`;
 const method = "GET";
 
 const requestParam = z.object({});

@@ -12,7 +12,7 @@ import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/C
 import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
-import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/service/_mock/mockFundingDetail";
+import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/services/_mock/mockFundingDetail";
 
 import BasicEvidenceList from "../components/BasicEvidenceList";
 import FixtureEvidenceList from "../components/FixtureEvidenceList";

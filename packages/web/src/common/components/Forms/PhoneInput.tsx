@@ -5,7 +5,7 @@ import TextInput, {
 } from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
 interface PhoneInputProps extends Omit<TextInputProps, "onChange"> {
-  value: string;
+  value?: string;
   onChange: (value: string) => void;
 }
 

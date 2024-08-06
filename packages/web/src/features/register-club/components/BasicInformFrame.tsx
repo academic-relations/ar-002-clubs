@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 
+import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
-import Select from "@sparcs-clubs/web/common/components/Select";
 
-import { RegisterClubType } from "../types/registerClub";
+import Select from "@sparcs-clubs/web/common/components/Select";
 
 import DivisionSelect from "./_atomic/DivisionSelect";
 import MonthSelect from "./_atomic/MonthSelect";
@@ -16,17 +18,14 @@ import YearSelect from "./_atomic/YearSelect";
 import ProfessorInformFrame from "./ProfessorInformFrame";
 
 interface BasicInformSectionProps {
-  type: RegisterClubType;
+  type: RegistrationTypeEnum;
 }
 
-// TODO. react-hook-form 사용하도록 수정
 const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
-  const isProvisional = type === RegisterClubType.provisional;
-  const isPromotional = type === RegisterClubType.promotional;
-  const isRenewal = type === RegisterClubType.renewal;
+  const isProvisional = type === RegistrationTypeEnum.NewProvisional;
+  const isPromotional = type === RegistrationTypeEnum.Promotional;
+  const isRenewal = type === RegistrationTypeEnum.Renewal;
 
-  // TODO. 디비에 전화번호 있으면 기본값 넣기
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [clubName, setClubName] = useState("");
 
   const [isCheckedClubName, setIsCheckedClubName] = useState(false);
@@ -47,27 +46,41 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
       <Card outline gap={32} style={{ marginLeft: 20 }}>
         <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
           {isProvisional ? (
-            <TextInput
-              label="동아리명 (국문)"
-              placeholder="국문 동아리명을 입력해주세요"
+            <FormController
+              name="krName"
+              required
+              renderItem={props => (
+                <TextInput
+                  {...props}
+                  label="동아리명 (국문)"
+                  placeholder="국문 동아리명을 입력해주세요"
+                />
+              )}
             />
           ) : (
             <Select
-              placeholder="동아리명을 선택해주세요"
               label="동아리명 (국문)"
+              placeholder="동아리명을 선택해주세요"
               // TODO. 신규등록, 재등록 가능한 동아리명 옵션 데이터 추가
               items={[
                 { value: "1", label: "동아리1" },
                 { value: "2", label: "동아리2" },
               ]}
-              selectedValue={clubName}
-              onSelect={setClubName}
+              value={clubName}
+              onChange={setClubName}
             />
           )}
           {isProvisional && (
-            <TextInput
-              label="동아리명 (영문)"
-              placeholder="영문 동아리명을 입력해주세요"
+            <FormController
+              name="enName"
+              required
+              renderItem={props => (
+                <TextInput
+                  {...props}
+                  label="동아리명 (영문)"
+                  placeholder="영문 동아리명을 입력해주세요"
+                />
+              )}
             />
           )}
         </FlexWrapper>
@@ -84,13 +97,27 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
         )}
         {!isProvisional && isCheckedClubName && (
           <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
-            <TextInput
-              label="신규 동아리명 (국문)"
-              placeholder="국문 동아리명을 입력해주세요"
+            <FormController
+              name="krName"
+              required
+              renderItem={props => (
+                <TextInput
+                  {...props}
+                  label="신규 동아리명 (국문)"
+                  placeholder="국문 동아리명을 입력해주세요"
+                />
+              )}
             />
-            <TextInput
-              label="신규 동아리명 (영문)"
-              placeholder="영문 동아리명을 입력해주세요"
+            <FormController
+              name="enName"
+              required
+              renderItem={props => (
+                <TextInput
+                  {...props}
+                  label="신규 동아리명 (영문)"
+                  placeholder="영문 동아리명을 입력해주세요"
+                />
+              )}
             />
           </FlexWrapper>
         )}
@@ -101,11 +128,17 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
             placeholder="이지윤"
             disabled
           />
-          <PhoneInput
-            label="대표자 전화번호"
-            placeholder="XXX-XXXX-XXXX"
-            value={phoneNumber}
-            onChange={setPhoneNumber}
+          {/* // TODO. 디비에 전화번호 있으면 기본값 넣기 */}
+          <FormController
+            name="phoneNumber"
+            required
+            renderItem={props => (
+              <PhoneInput
+                {...props}
+                label="대표자 전화번호"
+                placeholder="XXX-XXXX-XXXX"
+              />
+            )}
           />
         </FlexWrapper>
         <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
@@ -113,14 +146,29 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
           {isProvisional && <MonthSelect />}
           <DivisionSelect isRenewal={isRenewal} />
         </FlexWrapper>
-        <TextInput
-          label="활동 분야 (국문)"
-          placeholder="활동 분야를 입력해주세요"
+        <FormController
+          name="kr활동분야"
+          required
+          renderItem={props => (
+            <TextInput
+              {...props}
+              label="활동 분야 (국문)"
+              placeholder="활동 분야를 입력해주세요"
+            />
+          )}
         />
-        <TextInput
-          label="활동 분야 (영문)"
-          placeholder="활동 분야를 입력해주세요"
+        <FormController
+          name="en활동분야"
+          required
+          renderItem={props => (
+            <TextInput
+              {...props}
+              label="활동 분야 (영문)"
+              placeholder="활동 분야를 입력해주세요"
+            />
+          )}
         />
+
         {(isProvisional ||
           (isRenewal && clubName.length > 0 && !hasProfessorInfo)) && (
           <CheckboxOption
