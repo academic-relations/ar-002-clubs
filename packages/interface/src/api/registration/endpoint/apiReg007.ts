@@ -8,16 +8,18 @@ import { RegistrationStatusEnum } from "@sparcs-clubs/interface/common/enum/regi
  * @description 동아리 가입 신청의 상태를 변경합니다.
  */
 
-const url = () => `/student/registration/member/approval`;
+const url = (applyId: string) =>
+  `/student/registrations/member-registrations/member-registration/${applyId}`;
 const method = "PATCH";
 
-const requestParam = z.object({});
+const requestParam = z.object({
+  applyId: z.coerce.number().int().min(1),
+});
 
 const requestQuery = z.object({});
 
 const requestBody = z.object({
   clubId: z.coerce.number().int().min(1),
-  studentId: z.coerce.number().int().min(1),
   applyStatusEnumId: z.nativeEnum(RegistrationStatusEnum),
 });
 
