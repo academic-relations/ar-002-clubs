@@ -13,23 +13,34 @@ import { Club } from "./club.schema";
 import { Division } from "./division.schema";
 import { User } from "./user.schema";
 
-export const MeetingAgendaEnum = mysqlTable("meeting_agenda_enum", {
-  id: int("id").primaryKey(),
-  name: varchar("name", { length: 30 }).notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at"),
-  deletedAt: timestamp("deleted_at"),
-});
+export const Meeting = mysqlTable(
+  "meeting",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    announcementId: int("announcement_id")
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      .references(() => MeetingAnnouncement.id)
+      .notNull(),
+    meetingEnum: int("meeting_enum"),
+    isRegular: boolean("is_regular").notNull(),
+    location: varchar("location", { length: 255 }),
+    startDate: datetime("start_date").notNull(),
+    endDate: datetime("end_date"),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at"),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    meetingEnumForeignKey: foreignKey({
+      name: "meeting_enum_foreign_key",
+      columns: [table.meetingEnum],
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      foreignColumns: [MeetingEnum.id],
+    }),
+  }),
+);
 
 export const MeetingEnum = mysqlTable("meeting_enum", {
-  id: int("id").primaryKey(),
-  name: varchar("name", { length: 30 }).notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at"),
-  deletedAt: timestamp("deleted_at"),
-});
-
-export const MeetingRoleEnum = mysqlTable("meeting_role_enum", {
   id: int("id").primaryKey(),
   name: varchar("name", { length: 30 }).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
@@ -45,32 +56,6 @@ export const MeetingAnnouncement = mysqlTable("meeting_announcement", {
   updatedAt: timestamp("updated_at"),
   deletedAt: timestamp("deleted_at"),
 });
-
-export const Meeting = mysqlTable(
-  "meeting",
-  {
-    id: int("id").autoincrement().primaryKey(),
-    announcementId: int("announcement_id")
-      .references(() => MeetingAnnouncement.id)
-      .notNull(),
-    meetingEnum: int("meeting_enum"),
-    memo: text("memo"),
-    isRegular: boolean("is_regular").notNull(),
-    location: varchar("location", { length: 255 }),
-    startDate: datetime("start_date").notNull(),
-    endDate: datetime("end_date"),
-    createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at"),
-    deletedAt: timestamp("deleted_at"),
-  },
-  table => ({
-    meetingEnumForeignKey: foreignKey({
-      name: "meeting_enum_foreign_key",
-      columns: [table.meetingEnum],
-      foreignColumns: [MeetingEnum.id],
-    }),
-  }),
-);
 
 export const MeetingAgenda = mysqlTable(
   "meeting_agenda",
@@ -90,10 +75,27 @@ export const MeetingAgenda = mysqlTable(
     meetingAgendaEnumForeignKey: foreignKey({
       name: "meeting_agenda_enum_foreign_key",
       columns: [table.MeetingAgendaEnum],
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       foreignColumns: [MeetingAgendaEnum.id],
     }),
   }),
 );
+
+export const MeetingAgendaEnum = mysqlTable("meeting_agenda_enum", {
+  id: int("id").primaryKey(),
+  name: varchar("name", { length: 30 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at"),
+  deletedAt: timestamp("deleted_at"),
+});
+
+export const MeetingRoleEnum = mysqlTable("meeting_role_enum", {
+  id: int("id").primaryKey(),
+  name: varchar("name", { length: 30 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at"),
+  deletedAt: timestamp("deleted_at"),
+});
 
 export const MeetingAgendaContent = mysqlTable("meeting_agenda_content", {
   id: int("id").autoincrement().primaryKey(),
