@@ -5,7 +5,7 @@ import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/regist
 import RegisterClubMainFrame from "@sparcs-clubs/web/features/register-club/frame/RegisterClubMainFrame";
 
 const ProvisionalRegisterClub = () => (
-  <RegisterClubMainFrame type={RegistrationTypeEnum.Provisional} />
+  <RegisterClubMainFrame type={RegistrationTypeEnum.NewProvisional} />
 );
 
 export default ProvisionalRegisterClub;

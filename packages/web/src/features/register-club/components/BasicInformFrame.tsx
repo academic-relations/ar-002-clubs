@@ -22,7 +22,7 @@ interface BasicInformSectionProps {
 }
 
 const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
-  const isProvisional = type === RegistrationTypeEnum.Provisional;
+  const isProvisional = type === RegistrationTypeEnum.NewProvisional;
   const isPromotional = type === RegistrationTypeEnum.Promotional;
   const isRenewal = type === RegistrationTypeEnum.Renewal;
 

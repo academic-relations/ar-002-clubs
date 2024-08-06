@@ -79,7 +79,7 @@ const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({ type }) => (
           )}
         />
       )}
-      {type !== RegistrationTypeEnum.Provisional && (
+      {type !== RegistrationTypeEnum.NewProvisional && (
         <FormController
           name="externalInstructionFileId"
           renderItem={props => (
