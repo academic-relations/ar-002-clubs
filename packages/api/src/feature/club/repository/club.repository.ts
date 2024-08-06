@@ -1,6 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
-import { and, eq, gte, inArray, isNull, lte, or, sql } from "drizzle-orm";
+import { and, eq, gte, isNull, lte, or, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
@@ -196,70 +195,5 @@ export default class ClubRepository {
       .from(Club)
       .where(eq(Club.id, clubId))
       .then(result => result[0]?.name);
-  }
-
-  async findClubIdByClubStatusEnumId(
-    clubStatusEnumId: number,
-    semesterId: number,
-  ) {
-    return this.db
-      .select({ id: Club.id })
-      .from(Club)
-      .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
-      .where(
-        and(
-          eq(ClubT.clubStatusEnumId, clubStatusEnumId),
-          eq(ClubT.semesterId, semesterId),
-        ),
-      );
-  }
-
-  async findEligibleClubsForRegistration(semesterId: number) {
-    // 주어진 semesterId를 기준으로 최근 2학기와 3학기를 계산
-    const recentTwoSemesters = [semesterId - 1, semesterId];
-    const recentThreeSemesters = [semesterId - 2, semesterId - 1, semesterId];
-
-    // 최근 2학기 동안 가동아리 상태를 유지한 클럽을 조회
-    const provisionalClubs = await this.db
-      .select({ id: Club.id })
-      .from(Club)
-      .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
-      .where(
-        and(
-          eq(ClubT.clubStatusEnumId, ClubTypeEnum.Provisional), // 가동아리
-          inArray(ClubT.semesterId, recentTwoSemesters), // recentTwoSemesters에 포함된 학기 동안
-        ),
-      )
-      .groupBy(Club.id);
-
-    // 최근 3학기 중 하나라도 정동아리 상태인 클럽을 조회
-    const regularClubs = await this.db
-      .select({ id: Club.id })
-      .from(Club)
-      .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
-      .where(
-        and(
-          eq(ClubT.clubStatusEnumId, ClubTypeEnum.Regular), // 정동아리
-          inArray(ClubT.semesterId, recentThreeSemesters), // recentThreeSemesters에 포함된 학기 동안
-          isNull(ClubT.deletedAt),
-        ),
-      )
-      .groupBy(Club.id);
-
-    const provisionalClubIds = new Set(provisionalClubs.map(club => club.id));
-    const regularClubIds = new Set(regularClubs.map(club => club.id));
-
-    // 필터링된 가동아리 클럽 ID와 정동아리 클럽 ID를 합치기
-    const eligibleClubIds = new Set([
-      ...Array.from(provisionalClubIds).filter(id => {
-        const count = provisionalClubs.filter(club => club.id === id).length;
-        return count === 2; // 가동아리 상태가 최근 2학기 모두에 존재하는 클럽
-      }),
-      // 정동아리 상태 클럽을 추가
-      ...Array.from(regularClubIds),
-    ]);
-
-    // 중복 제거된 클럽 ID 리스트를 반환
-    return Array.from(eligibleClubIds).map(id => ({ id }));
   }
 }
