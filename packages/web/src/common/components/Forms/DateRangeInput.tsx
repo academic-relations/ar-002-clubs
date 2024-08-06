@@ -57,6 +57,8 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
   useDays = false, // Default to false
   ...props
 }) => {
+  const maxLength = useDays ? 10 : 7;
+
   const [error, setError] = useState("");
   const [touched, setTouched] = useState(false);
   const [startEndMonth, setStartEndMonth] = useState("|");
@@ -76,8 +78,8 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
       } else if (!isValidFormat) {
         setError("입력 기간이 올바르지 않습니다");
       } else if (
-        !(startValue.length === (useDays ? 10 : 7)) ||
-        !(endValue.length === (useDays ? 10 : 7))
+        !(startValue.length === maxLength) ||
+        !(endValue.length === maxLength)
       ) {
         setError("입력 기간이 올바르지 않습니다");
       } else if (
@@ -111,7 +113,6 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
     isStartOrEnd: "start" | "end",
   ) => {
     const inputValue = e.target.value;
-    const maxLength = useDays ? 10 : 7;
     if (inputValue.length <= maxLength) {
       if (isStartOrEnd === "start") {
         setStartEndMonth(

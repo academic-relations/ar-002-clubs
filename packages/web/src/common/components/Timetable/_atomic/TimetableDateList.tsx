@@ -7,7 +7,7 @@ import styled from "styled-components";
 import {
   formatSimplerSlashDate,
   formatSlashDate,
-} from "@sparcs-clubs/web/utils/Date/formateDate";
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 
 interface TimetableDateListProps {
   startDate: Date;

@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Typography, {
   ThemeColors,
 } from "@sparcs-clubs/web/common/components/Typography";
-import { formatSlashDateTime } from "@sparcs-clubs/web/utils/Date/formateDate";
+import { formatSlashDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import ProgressDot, { Status } from "./ProgressDot";
 

@@ -16,7 +16,7 @@ import BasicEvidenceFrame from "@sparcs-clubs/web/features/manage-club/funding/f
 import FundingInfoFrame from "@sparcs-clubs/web/features/manage-club/funding/frames/FundingInfoFrame";
 import { FundingInterface } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
 import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/service/_mock/mockFundingDetail";
-import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formateDate";
+import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 const ButtonWrapper = styled.div`
   display: flex;

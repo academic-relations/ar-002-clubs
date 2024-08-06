@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import apiAct003 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
-import { format, isValid, parse } from "date-fns";
+import { isValid, parse } from "date-fns";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
@@ -11,12 +11,15 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import DateRangeInput from "@sparcs-clubs/web/common/components/Forms/DateRangeInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+
+import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import { mockParticipantData } from "../_mock/mock";
 import SelectParticipant from "../components/SelectParticipant";
@@ -37,11 +40,6 @@ const SectionInner = styled.div`
   align-items: flex-start;
   gap: 20px;
   align-self: stretch;
-`;
-
-const HorizontalPlacer = styled.div`
-  display: flex;
-  gap: 32px;
 `;
 
 const ButtonPlaceRight = styled.div`
@@ -86,8 +84,8 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
       setFormData(data);
       if (data.durations.length) {
         const { startTerm, endTerm } = data.durations[0];
-        const formattedStart = format(startTerm, "yyyy.MM.dd");
-        const formattedEnd = format(endTerm, "yyyy.MM.dd");
+        const formattedStart = formatDotDate(startTerm);
+        const formattedEnd = formatDotDate(endTerm);
         setDuration([formattedStart, formattedEnd]);
       }
     }
@@ -126,7 +124,7 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
               value={formData?.name}
               handleChange={value => handleFormChange("name", value)}
             />
-            <HorizontalPlacer>
+            <FlexWrapper gap={32} direction="row">
               <Select
                 label="활동 분류"
                 items={[
@@ -164,7 +162,7 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
                 }}
                 useDays
               />
-            </HorizontalPlacer>
+            </FlexWrapper>
             <TextInput
               label="활동 장소"
               placeholder="활동 장소를 입력해주세요"

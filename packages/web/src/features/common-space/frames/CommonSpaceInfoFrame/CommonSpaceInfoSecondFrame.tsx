@@ -30,7 +30,7 @@ import { useGetCommonSpaceUsageOrders } from "@sparcs-clubs/web/features/common-
 import {
   formatSimpleSlashDate,
   formatTime,
-} from "@sparcs-clubs/web/utils/Date/formateDate";
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
 

@@ -2,7 +2,7 @@ import React from "react";
 
 import styled from "styled-components";
 
-import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formateDate";
+import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import Icon from "../Icon";
 import Typography from "../Typography";
