@@ -1,12 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import { ApiReg004ResponseOK } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg004";
-import { count, desc, eq, isNull } from "drizzle-orm";
+import { and, count, desc, eq, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { takeUnique } from "@sparcs-clubs/api/common/util/util";
-import { Club } from "@sparcs-clubs/api/drizzle/schema/club.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
   Registration,
@@ -19,7 +18,12 @@ export class RegistrationRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
   async findByClubId(clubId: number) {
-    const clubs = await this.db.select().from(Club).where(eq(Club.id, clubId));
+    const clubs = await this.db
+      .select()
+      .from(Registration)
+      .where(
+        and(eq(Registration.clubId, clubId), isNull(Registration.deletedAt)),
+      );
 
     return clubs;
   }
@@ -37,10 +41,10 @@ export class RegistrationRepository {
         divisionId: body.divisionId,
         activityFieldKr: body.kr활동분야,
         activityFieldEn: body.en활동분야,
-        professorId: body.professor.ProfessorEnumId,
+        professorId: body.professor?.ProfessorEnumId,
         divisionConsistency: body.divisionIntegrity,
         foundationPurpose: body.foundationPurpose,
-        activityPlan: body.activityPlanFileId,
+        activityPlan: body.activityPlan,
         // clubRuleFileId: body.clubRuleFileId,
         // externalInstructionFileId: body.externalInstructionFileId,
         // activityId: body.activityId,

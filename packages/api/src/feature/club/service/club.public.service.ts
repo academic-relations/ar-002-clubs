@@ -102,6 +102,38 @@ export default class ClubPublicService {
     return true;
   }
 
+  /**
+   * @param clubStatusEnumId 동아리 상태 enum id
+   * @param semesterId 신청 학기 id
+   * @returns 특정 학기의 특정 상태(정동아리/가동아리)의 동아리(clubId) list
+   * 예를 들어, getClubIdByClubStatusEnumId(ClubTypeEnum.Regular, semesterId) 의 경우,
+   * semsterId 학기 당시 정동아리였던 동아리의 clubId list를 반환합니다.
+   */
+  async getClubIdByClubStatusEnumId(
+    clubStatusEnumId: number,
+    semesterId: number,
+  ) {
+    const clubList = await this.clubRepository.findClubIdByClubStatusEnumId(
+      clubStatusEnumId,
+      semesterId,
+    );
+    return clubList;
+  }
+
+  /**
+   *
+   * @param semesterId
+   * @returns 신규 등록 신청이 가능한 동아리 list
+   * 신청 학기를 기준으로 아래에 포함되는 clubId list를 반환합니다.
+   * 1. 최근 2학기 동안 가동아리 상태를 유지한 동아리
+   * 2. 최근 3학기 이내 한 번이라도 정동아리였던 동아리
+   */
+  async getEligibleClubsForRegistration(semesterId: number) {
+    const clubList =
+      await this.clubRepository.findEligibleClubsForRegistration(semesterId);
+    return clubList;
+  }
+
   async isStudentPresident(
     studentId: number,
     clubId: number,
