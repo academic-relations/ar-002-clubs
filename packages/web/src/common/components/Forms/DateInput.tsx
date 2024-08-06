@@ -4,11 +4,13 @@ import styled from "styled-components";
 
 import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formateDate";
 
+import FlexWrapper from "../FlexWrapper";
 import Icon from "../Icon";
 import Typography from "../Typography";
 
 interface DateInputProps {
   date: Date;
+  label?: string;
   //   disabled?: boolean;
   //   onChange: (value: Date) => void;
 }
@@ -25,22 +27,30 @@ const DateInputWrapper = styled.div`
 
 const DateInput: React.FC<DateInputProps> = ({
   date,
+  label = "",
   //   disabled = false,
   //   onChange,
 }) => (
-  <DateInputWrapper>
-    <Typography
-      ff="PRETENDARD"
-      fw="REGULAR"
-      fs={16}
-      lh={20}
-      color="BLACK"
-      style={{ width: "100%", textAlign: "center" }}
-    >
-      {formatDotDate(date)}
-    </Typography>
-    <Icon type="event" size={20} color="BLACK" />
-  </DateInputWrapper>
+  <FlexWrapper direction="column" gap={4}>
+    {label.length > 0 && (
+      <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
+        {label}
+      </Typography>
+    )}
+    <DateInputWrapper>
+      <Typography
+        ff="PRETENDARD"
+        fw="REGULAR"
+        fs={16}
+        lh={20}
+        color="BLACK"
+        style={{ width: "100%", textAlign: "center" }}
+      >
+        {formatDotDate(date)}
+      </Typography>
+      <Icon type="event" size={20} color="BLACK" />
+    </DateInputWrapper>
+  </FlexWrapper>
 );
 
 export default DateInput;
