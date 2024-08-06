@@ -68,6 +68,13 @@ export class MemberRegistrationService {
   async getStudentRegistrationsMemberRegistrationsMy(
     studentId: number,
   ): Promise<ApiReg006ResponseOk> {
+    const ismemberRegistrationEvent =
+      await this.memberRegistrationRepository.isMemberRegistrationEvent();
+    if (!ismemberRegistrationEvent)
+      throw new HttpException(
+        "Not a member registration event duration",
+        HttpStatus.BAD_REQUEST,
+      );
     const result =
       await this.memberRegistrationRepository.getStudentRegistrationsMemberRegistrationsMy(
         studentId,

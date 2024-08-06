@@ -8,7 +8,7 @@ import {
   RegistrationEventEnum,
   RegistrationStatusEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
-import { and, count, eq, gt, isNotNull, isNull, or } from "drizzle-orm";
+import { and, count, eq, gt, isNotNull, isNull, lt, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
@@ -33,6 +33,7 @@ export class MemberRegistrationRepository {
         and(
           isNotNull(RegistrationEventD.endTerm),
           gt(RegistrationEventD.endTerm, cur),
+          lt(RegistrationEventD.startTerm, cur),
           eq(
             RegistrationEventD.registrationEventEnumId,
             memberRegistrationEventEnum,
@@ -52,8 +53,6 @@ export class MemberRegistrationRepository {
   ) {
     const pending = RegistrationStatusEnum.Pending;
     const approved = RegistrationStatusEnum.Approved;
-    console.log(`typeof pending${typeof pending}`);
-    console.log(`valueof pending${pending}`);
     const { getMemberRegistration } = await this.db
       .select({
         getMemberRegistration: count(RegistrationApplicationStudent.id),
@@ -77,7 +76,6 @@ export class MemberRegistrationRepository {
         ),
       )
       .then(takeUnique);
-    console.log(`count return value: ${getMemberRegistration}`);
     if (getMemberRegistration !== 0) return false;
     return true;
   }

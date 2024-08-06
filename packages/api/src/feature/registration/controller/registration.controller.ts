@@ -31,7 +31,7 @@ export class RegistrationController {
   }
 
   @Student()
-  @Get("student/registration/events")
+  @Get("student/registrations/events")
   async getStudentRegistrationEvents(): Promise<ApiReg004ResponseOK> {
     const result =
       await this.registrationService.getStudentRegistrationEvents();

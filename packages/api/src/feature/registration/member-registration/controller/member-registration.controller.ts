@@ -64,7 +64,7 @@ export class MemberRegistrationController {
 
   @Student()
   @Patch(
-    "/student/registrations/member-registrations/member-registration/:clubId",
+    "/student/registrations/member-registrations/member-registration/:applyId",
   )
   @UsePipes(new ZodPipe(apiReg007))
   async patchStudentRegistrationsMemberRegistration(
