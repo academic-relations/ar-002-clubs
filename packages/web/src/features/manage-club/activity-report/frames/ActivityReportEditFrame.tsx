@@ -17,7 +17,7 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
-import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
@@ -144,8 +144,8 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
                     selectable: true,
                   },
                 ]}
-                selectedValue={formData?.activityTypeEnumId.toString()}
-                onSelect={value =>
+                value={formData?.activityTypeEnumId.toString()}
+                onChange={value =>
                   handleFormChange("activityTypeEnumId", Number(value))
                 }
               />
