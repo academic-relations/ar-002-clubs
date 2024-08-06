@@ -1,5 +1,6 @@
 import React from "react";
 
+import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
@@ -11,9 +12,8 @@ import {
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
-import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import MyActivityCertificate from "@sparcs-clubs/web/features/my/activity-certificate/components/MyActivityCertificate";
 
 const ActivityWrapper = styled.div`
   display: flex;
@@ -41,16 +41,8 @@ const MyCertificateDetailFrame = () => {
         enableLast
       />
       <Card outline gap={20}>
-        <ProgressStatus
-          labels={[
-            "신청 완료",
-            "동아리 대표자 승인 대기",
-            "동아리 연합회 승인 대기",
-            "발급 대기",
-          ]}
-          progress={[{ status: Status.Approved, date: new Date() }]}
-          infoText="승인이 완료되기 전까지 신청을 취소할 수 있습니다"
-          optional={<Button style={{ width: "max-content" }}>신청 취소</Button>}
+        <MyActivityCertificate
+          status={ActivityCertificateOrderStatusEnum.Applied}
         />
         {/* TODO: 아래 정보들 백 연결하기 */}
         <FlexWrapper direction="column" gap={16}>

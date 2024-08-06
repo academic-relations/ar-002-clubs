@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import MyCommonSpaceDetailFrame from "@sparcs-clubs/web/features/my/common-space/frame/MyCommonSpaceDetailFrame";
+import MyCommonSpaceDetailFrame from "@sparcs-clubs/web/features/my/common-space/frames/MyCommonSpaceDetailFrame";
 
 const MyCommonSpaceDetail = () => <MyCommonSpaceDetailFrame />;
 
