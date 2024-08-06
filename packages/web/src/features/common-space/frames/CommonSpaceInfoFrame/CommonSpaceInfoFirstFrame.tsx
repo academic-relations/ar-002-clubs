@@ -9,45 +9,26 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
-
-import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
+import { CommonSpaceInfoProps } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
 
 const CommonSpaceInfoFirstFrame: React.FC<
-  CommonSpaceFrameProps & { setNextEnabled: (enabled: boolean) => void }
-> = ({ setNextEnabled, commonSpace, setCommonSpace }) => {
+  CommonSpaceInfoProps & { setNextEnabled: (enabled: boolean) => void }
+> = ({ setNextEnabled, body, setBody }) => {
   const { data, isLoading, isError } = useGetUserProfile();
 
-  const [selectedValue, setSelectedValue] = useState("");
   const [hasSelectError, setHasSelectError] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("");
 
   useEffect(() => {
-    if (data?.phoneNumber) {
-      setPhoneNumber(data.phoneNumber);
-    }
+    setBody({ ...body, email: data?.email });
   }, [data]);
 
   useEffect(() => {
-    const allConditionsMet = Boolean(selectedValue) && !hasSelectError;
+    const allConditionsMet =
+      Boolean(body.clubId) && Boolean(body.email) && !hasSelectError;
     setNextEnabled(allConditionsMet);
-  }, [selectedValue, hasSelectError, setNextEnabled]);
+  }, [body, hasSelectError]);
 
-  useEffect(() => {
-    const club = data?.clubs.find(item => item.id.toString() === selectedValue);
-    if (club)
-      setCommonSpace({
-        ...commonSpace,
-        body: {
-          clubId: club.id,
-          email: data?.email || "",
-        },
-        userInfo: {
-          name: data?.name || "",
-          phoneNumber,
-          clubName: club.name,
-        },
-      });
-  }, [selectedValue, setCommonSpace, data, phoneNumber, commonSpace]);
+  const [phoneNumber, setPhoneNumber] = useState(data?.phoneNumber || "");
 
   return (
     <Card outline gap={40}>
@@ -60,8 +41,8 @@ const CommonSpaceInfoFirstFrame: React.FC<
               selectable: true,
             })) || []
           }
-          value={selectedValue}
-          onChange={setSelectedValue}
+          value={body.clubId?.toString()}
+          onChange={value => setBody({ ...body, clubId: Number(value) })}
           label="동아리 이름"
           setErrorStatus={setHasSelectError}
         />
@@ -75,6 +56,7 @@ const CommonSpaceInfoFirstFrame: React.FC<
           value={phoneNumber}
           placeholder={data?.phoneNumber || ""}
           onChange={setPhoneNumber}
+          disabled
         />
       </AsyncBoundary>
     </Card>
