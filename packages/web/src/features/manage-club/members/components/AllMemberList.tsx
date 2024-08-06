@@ -7,8 +7,8 @@ import {
 } from "@tanstack/react-table";
 import styled from "styled-components";
 
+import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import { MoreInfo } from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -106,9 +106,13 @@ const AllMemberList: React.FC<AllMemberListProps> = ({
         >
           {semester} (총 {memberCount}명)
         </Typography>
-        <MoreInfo onClick={toggleHandler}>
-          {toggle ? `접기` : `펼치기`}
-        </MoreInfo>
+        <TextButton
+          fs={14}
+          fw="REGULAR"
+          color="BLACK"
+          text={toggle ? `접기` : `펼치기`}
+          onClick={toggleHandler}
+        />
       </AllMemberListTitle>
       {toggle && (
         <TableWithCount>

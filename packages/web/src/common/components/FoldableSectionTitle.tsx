@@ -5,6 +5,7 @@ import React from "react";
 import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 
+import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 
 const FoldableSectionOuter = styled.div`
@@ -17,16 +18,6 @@ const FoldableSectionTitleInner = styled.div`
   justify-content: space-between;
   gap: 20px;
   width: 100%;
-`;
-
-export const MoreInfo = styled.div`
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  color: ${({ theme }) => theme.colors.BLACK};
-  text-decoration-line: underline;
-  cursor: pointer;
 `;
 
 const ChildrenOuter = styled.div.withConfig({
@@ -56,9 +47,13 @@ const FoldableSectionTitle: React.FC<{
     <FoldableSectionOuter>
       <FoldableSectionTitleInner>
         <SectionTitle size="lg">{title}</SectionTitle>
-        <MoreInfo onClick={toggleHandler ?? openHandler}>
-          {toggle ?? open ? `접기` : `펼치기`}
-        </MoreInfo>
+        <TextButton
+          fs={14}
+          fw="REGULAR"
+          color="BLACK"
+          text={toggle ?? open ? `접기` : `펼치기`}
+          onClick={toggleHandler ?? openHandler}
+        />
       </FoldableSectionTitleInner>
       {(toggle ?? open) && children && (
         <ChildrenOuter margin={childrenMargin}>{children}</ChildrenOuter>
