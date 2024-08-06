@@ -102,7 +102,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
           <AdvancedInformFrame type={type} />
           {type !== RegistrationTypeEnum.Renewal && <ActivityReportFrame />}
           <ClubRulesFrame
-            isProvisional={type === RegistrationTypeEnum.Provisional}
+            isProvisional={type === RegistrationTypeEnum.NewProvisional}
           />
           <ButtonWrapper>
             <Button
