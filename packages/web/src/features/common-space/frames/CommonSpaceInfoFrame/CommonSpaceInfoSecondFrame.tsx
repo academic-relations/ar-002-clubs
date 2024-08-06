@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import apiCms002 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
 
@@ -82,7 +82,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
     { startDate: date, endDate: addWeeks(date, 1) },
   );
 
-  const getSpace = useCallback(
+  const space = useMemo(
     () =>
       data?.commonSpaces.find(
         item => item.id.toString() === param.spaceId?.toString(),
@@ -147,9 +147,9 @@ const CommonSpaceInfoSecondFrame: React.FC<
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         <Select
           items={
-            data?.commonSpaces.map(space => ({
-              value: space.id.toString(),
-              label: space.name,
+            data?.commonSpaces.map(s => ({
+              value: s.id.toString(),
+              label: s.name,
               selectable: true,
             })) || []
           }
@@ -188,10 +188,10 @@ const CommonSpaceInfoSecondFrame: React.FC<
           </Modal>
         ) : null}
       </AsyncBoundary>
-      {getSpace() && (
+      {space && (
         <>
           <Info
-            text={`${getSpace()?.name}는 하루에 최대 ${getSpace()?.availableHoursPerDay}시간, 일주일에 최대 ${getSpace()?.availableHoursPerWeek}시간 사용할 수 있습니다.`}
+            text={`${space?.name}는 하루에 최대 ${space?.availableHoursPerDay}시간, 일주일에 최대 ${space?.availableHoursPerWeek}시간 사용할 수 있습니다.`}
           />
           <StyledCardLayout outline gap={20} style={{ flexDirection: "row" }}>
             <AsyncBoundary
@@ -201,7 +201,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
               <Timetable
                 data={disabledCells}
                 setDateTimeRange={setDateTimeRange}
-                availableHoursPerDay={getSpace()?.availableHoursPerDay || 0}
+                availableHoursPerDay={space?.availableHoursPerDay || 0}
                 startDate={date}
                 setStartDate={setDate}
               />

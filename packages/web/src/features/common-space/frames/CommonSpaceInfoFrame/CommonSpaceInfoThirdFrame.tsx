@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 
-import { differenceInHours, differenceInMinutes, format } from "date-fns";
-import { ko } from "date-fns/locale";
+import { differenceInHours, differenceInMinutes } from "date-fns";
 
 import styled from "styled-components";
 
@@ -14,6 +13,10 @@ import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile"
 import useGetCommonSpaces from "@sparcs-clubs/web/features/common-space/service/getCommonSpaces";
 
 import { CommonSpaceInfoProps } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
+import {
+  formatSimpleSlashDate,
+  formatTime,
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 
 const CardInner = styled.div`
   display: flex;
@@ -89,9 +92,8 @@ const CommonSpaceInfoThirdFrame: React.FC<
           >
             <Typography fs={16} lh={20} fw="REGULAR">
               {commonSpacesData?.commonSpaces[spaceId]?.name},{" "}
-              {format(startTerm, "M/d(E) ", { locale: ko })}
-              {format(startTerm, "HH:mm", { locale: ko })} ~
-              {format(endTerm, "HH:mm", { locale: ko })} (
+              {`${formatSimpleSlashDate(startTerm)} `}
+              {formatTime(startTerm)} ~ {formatTime(endTerm)} (
               {`${differenceInHours(endTerm, startTerm)}시간`}
               {differenceInMinutes(endTerm, startTerm) % 60
                 ? ` ${differenceInMinutes(endTerm, startTerm) % 60}분`
