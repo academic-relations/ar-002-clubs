@@ -10,7 +10,7 @@ interface ManageCommonSpaceProgressProps {
   status: CommonSpaceUsageOrderStatusEnum;
 }
 
-const ManageCommonSpaceProgress: React.FC<ManageCommonSpaceProgressProps> = ({
+const MyCommonSpaceProgress: React.FC<ManageCommonSpaceProgressProps> = ({
   status,
 }) => {
   const manageCommonSpace = manageCommonSpaceProgress(status);
@@ -33,4 +33,4 @@ const ManageCommonSpaceProgress: React.FC<ManageCommonSpaceProgressProps> = ({
   );
 };
 
-export default ManageCommonSpaceProgress;
+export default MyCommonSpaceProgress;

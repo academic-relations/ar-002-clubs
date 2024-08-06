@@ -10,7 +10,7 @@ interface ManagePrintingProgressProps {
   status: PromotionalPrintingOrderStatusEnum;
 }
 
-const ManagePrintingProgress: React.FC<ManagePrintingProgressProps> = ({
+const MyPrintingProgress: React.FC<ManagePrintingProgressProps> = ({
   status,
 }) => {
   const managePrinting = managePrintingProgress(status);
@@ -31,4 +31,4 @@ const ManagePrintingProgress: React.FC<ManagePrintingProgressProps> = ({
   );
 };
 
-export default ManagePrintingProgress;
+export default MyPrintingProgress;

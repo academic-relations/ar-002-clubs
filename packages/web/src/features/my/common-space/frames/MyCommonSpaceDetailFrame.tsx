@@ -1,6 +1,6 @@
 import React from "react";
 
-import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
+import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
 import { useRouter } from "next/navigation";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -12,12 +12,12 @@ import {
 } from "@sparcs-clubs/web/common/components/ListItem";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import ManageRentalProgress from "@sparcs-clubs/web/features/my/rental-business/component/ManageRentalProgress";
+import MyCommonSpaceProgress from "@sparcs-clubs/web/features/my/common-space/components/MyCommonSpaceProgress";
 
-const MyRentalDetailFrame = () => {
+const MyCommonSpaceDetailFrame = () => {
   const router = useRouter();
   const onClick = () => {
-    router.push("/my/rental-business");
+    router.push("/my/common-space");
   };
   return (
     <FlexWrapper direction="column" gap={60}>
@@ -25,15 +25,17 @@ const MyRentalDetailFrame = () => {
         items={[
           { name: "마이페이지", path: "/my" },
           {
-            name: "대여 사업 신청 내역",
-            path: "/my/rental-business",
+            name: "공용공간 비정기사용 내역",
+            path: "/my/common-space",
           },
         ]}
-        title="대여 사업 신청 내역"
+        title="공용공간 비정기사용 내역"
         enableLast
       />
       <Card outline gap={20}>
-        <ManageRentalProgress status={RentalOrderStatusEnum.Applied} />
+        <MyCommonSpaceProgress
+          status={CommonSpaceUsageOrderStatusEnum.Applied}
+        />
         {/* TODO: 아래 정보들 백 연결하기 */}
         <FlexWrapper direction="column" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
@@ -47,33 +49,11 @@ const MyRentalDetailFrame = () => {
         </FlexWrapper>
         <FlexWrapper direction="row" gap={16}>
           <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
-            대여 기간
+            예약 공간
           </Typography>
           <Typography ff="PRETENDARD" fs={16} lh={20} color="BLACK">
-            2024년 3월 11일 (월) ~ 2024년 3월 18일 (월)
+            제1공용동아리방 (태울관 2101호), 3/27(수) 17:00 ~ 20:00 (3시간)
           </Typography>
-        </FlexWrapper>
-        <FlexWrapper direction="column" gap={16}>
-          <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
-            대여 물품
-          </Typography>
-          <ListContainer>
-            <ListItem>이젤 3개</ListItem>
-            <ListItem>돗자리 3개</ListItem>
-            <ListItem>공구 {">"} 드라이버 세트 3개</ListItem>
-            <ListItem>공구 {">"} 롱노우즈 3개</ListItem>
-          </ListContainer>
-        </FlexWrapper>
-        <FlexWrapper direction="column" gap={16}>
-          <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
-            대여 목적
-          </Typography>
-          <ListContainer>
-            <ListItem>
-              대충 어떤 목적을 적었겠죠? 이게 아주아주 길어질 수도 있으려나 일단
-              이 정도의 길이는 될 수 있을 것 같아요
-            </ListItem>
-          </ListContainer>
         </FlexWrapper>
       </Card>
       <Button style={{ width: "max-content" }} onClick={onClick}>
@@ -82,4 +62,4 @@ const MyRentalDetailFrame = () => {
     </FlexWrapper>
   );
 };
-export default MyRentalDetailFrame;
+export default MyCommonSpaceDetailFrame;

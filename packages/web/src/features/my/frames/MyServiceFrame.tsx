@@ -6,10 +6,10 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
-import MyActivityCertificateTable from "@sparcs-clubs/web/features/my/component/MyActivityCertificateTable";
-import MyCommonSpaceTable from "@sparcs-clubs/web/features/my/component/MyCommonSpaceTable";
-import MyPrintingTable from "@sparcs-clubs/web/features/my/component/MyPrintingTable";
-import MyRentalTable from "@sparcs-clubs/web/features/my/component/MyRentalTable";
+import MyActivityCertificateTable from "@sparcs-clubs/web/features/my/components/MyActivityCertificateTable";
+import MyCommonSpaceTable from "@sparcs-clubs/web/features/my/components/MyCommonSpaceTable";
+import MyPrintingTable from "@sparcs-clubs/web/features/my/components/MyPrintingTable";
+import MyRentalTable from "@sparcs-clubs/web/features/my/components/MyRentalTable";
 
 import { useGetMyActivityCertificate } from "../services/getMyActivityCertificate";
 import { useGetMyCommonSpace } from "../services/getMyCommonSpace";

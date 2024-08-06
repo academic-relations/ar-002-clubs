@@ -10,9 +10,7 @@ interface ManageRentalProgressProps {
   status: RentalOrderStatusEnum;
 }
 
-const ManageRentalProgress: React.FC<ManageRentalProgressProps> = ({
-  status,
-}) => {
+const MyRentalProgress: React.FC<ManageRentalProgressProps> = ({ status }) => {
   const manageRental = manageRentalProgress(status);
   const onClickCancel = () => {};
   return (
@@ -31,4 +29,4 @@ const ManageRentalProgress: React.FC<ManageRentalProgressProps> = ({
   );
 };
 
-export default ManageRentalProgress;
+export default MyRentalProgress;

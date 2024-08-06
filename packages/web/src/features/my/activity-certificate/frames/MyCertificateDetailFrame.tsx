@@ -13,7 +13,7 @@ import {
 } from "@sparcs-clubs/web/common/components/ListItem";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import ManageActivityCertificate from "@sparcs-clubs/web/features/my/activity-certificate/component/ManageActivityCertificate";
+import ManageActivityCertificate from "@sparcs-clubs/web/features/my/activity-certificate/components/MyActivityCertificate";
 
 const ActivityWrapper = styled.div`
   display: flex;

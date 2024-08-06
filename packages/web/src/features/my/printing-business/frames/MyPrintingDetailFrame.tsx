@@ -12,7 +12,7 @@ import {
 } from "@sparcs-clubs/web/common/components/ListItem";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import ManagePrintingProgress from "@sparcs-clubs/web/features/my/printing-business/component/ManagePrintingProgress";
+import MyPrintingProgress from "@sparcs-clubs/web/features/my/printing-business/components/MyPrintingProgress";
 
 const MyPrintingDetailFrame = () => {
   const router = useRouter();
@@ -33,7 +33,7 @@ const MyPrintingDetailFrame = () => {
         enableLast
       />
       <Card outline gap={20}>
-        <ManagePrintingProgress
+        <MyPrintingProgress
           status={PromotionalPrintingOrderStatusEnum.Applied}
         />
         {/* TODO: 아래 정보들 백 연결하기 */}
