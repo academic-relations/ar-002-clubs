@@ -14,7 +14,7 @@ const url = (clubId: number, delegateEnumId: number) =>
 const method = "GET";
 
 const requestParam = z.object({
-  clubId: z.number().int(),
+  clubId: z.coerce.number().int(),
   delegateEnumId: z.nativeEnum(ClubDelegateEnum),
 });
 

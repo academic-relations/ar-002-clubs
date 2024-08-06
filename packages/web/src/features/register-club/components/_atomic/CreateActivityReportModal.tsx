@@ -55,6 +55,7 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
               selectable: true,
             },
           ]}
+          value=""
         />
         {/* <DateRangeInput label="활동 기간" /> */}
       </HorizontalPlacer>
