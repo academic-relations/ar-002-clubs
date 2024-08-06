@@ -2,7 +2,7 @@ import React from "react";
 
 import styled from "styled-components";
 
-import { formatDate } from "@sparcs-clubs/web/utils/Date/formateDate";
+import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 interface SelectRangeInfoProps {
   isRental: boolean;

@@ -18,7 +18,7 @@ import { mockupMyRental } from "@sparcs-clubs/web/features/my/services/_mock/moc
 import {
   formatDate,
   formatDateTime,
-} from "@sparcs-clubs/web/utils/Date/formateDate";
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 const columnHelper =

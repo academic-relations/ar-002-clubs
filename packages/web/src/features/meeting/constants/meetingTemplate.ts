@@ -2,7 +2,7 @@ import { formatDate } from "date-fns";
 
 import { ko } from "date-fns/locale";
 
-import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formateDate";
+import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import { getFullSemester } from "@sparcs-clubs/web/utils/getSemester";
 
