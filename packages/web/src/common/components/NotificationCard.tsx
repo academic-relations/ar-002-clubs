@@ -1,3 +1,4 @@
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -19,7 +20,9 @@ const icons = {
   Alert: "error",
 };
 
-const NotificationBox = styled.div<{ color: NotificationColor }>`
+const NotificationBox = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ color: NotificationColor }>`
   border: 1px solid ${({ theme, color }) => theme.colors[color][600]};
   border-radius: 8px;
 
