@@ -133,4 +133,16 @@ export default class ClubPublicService {
       await this.clubRepository.findEligibleClubsForRegistration(semesterId);
     return clubList;
   }
+
+  async isStudentPresident(
+    studentId: number,
+    clubId: number,
+  ): Promise<boolean> {
+    const isPresident =
+      await this.clubDelegateDRepository.isPresidentByStudentIdAndClubId(
+        studentId,
+        clubId,
+      );
+    return isPresident;
+  }
 }

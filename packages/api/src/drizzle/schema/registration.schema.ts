@@ -1,4 +1,6 @@
 import {
+  date,
+  foreignKey,
   index,
   int,
   mysqlTable,
@@ -110,5 +112,65 @@ export const RegistrationExternalInstructionFile = mysqlTable(
   },
   table => ({
     registrationIdFk: index("registration_id_fk").on(table.registrationId),
+  }),
+);
+export const RegistrationApplicationStudentStatusEnum = mysqlTable(
+  "registration_application_student_status_enum",
+  {
+    enumId: int("enum_id").autoincrement().primaryKey(),
+    enumName: varchar("enum_name", { length: 255 }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+);
+
+export const RegistrationApplicationStudent = mysqlTable(
+  "registration_application_student",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    studentId: int("student_id")
+      .notNull()
+      .references(() => Student.id),
+    clubId: int("club_id")
+      .notNull()
+      .references(() => Club.id),
+    registrationApplicationStudentEnumId: int(
+      "registration_application_student_student_status_enum",
+    ).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    registrationStudentStatusEnumFk: foreignKey({
+      columns: [table.registrationApplicationStudentEnumId],
+      foreignColumns: [RegistrationApplicationStudentStatusEnum.enumId],
+      name: "registration_application_student_enum_id_fk",
+    }),
+  }),
+);
+
+export const RegistrationEventEnum = mysqlTable("registration_event_enum", {
+  enumId: int("enum_id").autoincrement().primaryKey(),
+  enumName: varchar("enum_name", { length: 255 }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  deletedAt: timestamp("deleted_at"),
+});
+
+export const RegistrationEventD = mysqlTable(
+  "registration_event_d",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    registrationEventEnumId: int("registration_event_enum_id").notNull(),
+    startTerm: date("start_term"),
+    endTerm: date("end_term"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    registrationEventEnumIdFk: foreignKey({
+      columns: [table.registrationEventEnumId],
+      foreignColumns: [RegistrationEventEnum.enumId],
+      name: "registration_event_enum_id_fk",
+    }),
   }),
 );

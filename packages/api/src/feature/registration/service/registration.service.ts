@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-
 import { ApiReg002ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
+import { ApiReg004ResponseOK } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg004";
 
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
@@ -164,5 +164,11 @@ export class RegistrationService {
 
     // 시간 부분을 00:00:00으로 설정
     return new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
+  }
+
+  async getStudentRegistrationEvents(): Promise<ApiReg004ResponseOK> {
+    const result =
+      await this.registrationRepository.getStudentRegistrationEvents();
+    return result;
   }
 }

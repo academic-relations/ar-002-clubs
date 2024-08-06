@@ -4,9 +4,14 @@ import apiReg001 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg0
 import apiReg002 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
 import apiReg003 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg003";
 
+import { ApiReg004ResponseOK } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg004";
+
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
-import { Public } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import {
+  Public,
+  Student,
+} from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 
 import { RegistrationService } from "../service/registration.service";
 
@@ -54,5 +59,13 @@ export class RegistrationController {
     const orders =
       await this.registrationService.getStudentRegistrationClubRegistrationQualificationPromotional();
     return orders;
+  }
+
+  @Student()
+  @Get("student/registrations/events")
+  async getStudentRegistrationEvents(): Promise<ApiReg004ResponseOK> {
+    const result =
+      await this.registrationService.getStudentRegistrationEvents();
+    return result;
   }
 }
