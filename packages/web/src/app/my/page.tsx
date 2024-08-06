@@ -18,6 +18,8 @@ import { useGetMyDelegateRequest } from "@sparcs-clubs/web/features/my/services/
 const My: React.FC = () => {
   // TODO: clb014 api 구현되면 refetch 테스트
   const { data, isLoading, isError, refetch } = useGetMyDelegateRequest();
+  const fetchDivisionPresident = () => {}; // TODO
+
   const { data: myProfile } = useGetUserProfile();
 
   const [type, setType] = useState<"Requested" | "Finished">("Finished");
@@ -56,7 +58,7 @@ const My: React.FC = () => {
           <MyChangeDivisionPresident
             status="Requested"
             change={["20210227 박병찬", "20200510 이지윤"]}
-            refetch={refetch}
+            fetch={fetchDivisionPresident}
           />
         )}
         <MyInfoFrame />
