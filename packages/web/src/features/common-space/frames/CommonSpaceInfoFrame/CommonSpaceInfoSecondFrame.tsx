@@ -77,7 +77,7 @@ const CommonSpaceInfoSecondFrame: React.FC<
     isError: isUsageOrdersError,
   } = useGetCommonSpaceUsageOrders(
     {
-      spaceId: param.spaceId || 1,
+      spaceId: param.spaceId!,
     },
     { startDate: date, endDate: addWeeks(date, 1) },
   );
