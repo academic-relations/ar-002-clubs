@@ -35,6 +35,7 @@ const ClubButton: React.FC<ClubButtonProps> = ({
       border: selected
         ? `1px solid ${colors.PRIMARY}`
         : `1px solid ${colors.GRAY[200]}`,
+      flex: "1 0 0",
     }}
   >
     <Typography fw="MEDIUM" fs={20} lh={24}>

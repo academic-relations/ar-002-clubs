@@ -13,13 +13,12 @@
 * {
   color: #333333;
   font-weight: 400;
-  font-family: "Pretendard", sans-serif;
+  font-family: var(--next-font-family-pretendard);
 }
 
 p,
 body {
   margin: 0;
-  min-width: 320px;
 }
 ul,
 li {

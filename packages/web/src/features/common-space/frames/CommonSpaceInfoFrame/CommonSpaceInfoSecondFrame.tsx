@@ -30,7 +30,7 @@ import { CommonSpaceInfoProps } from "@sparcs-clubs/web/features/common-space/ty
 import {
   formatSimpleSlashDate,
   formatTime,
-} from "@sparcs-clubs/web/utils/Date/formateDate";
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 
 const StyledCardOuter = styled.div`
   display: flex;
@@ -153,8 +153,8 @@ const CommonSpaceInfoSecondFrame: React.FC<
               selectable: true,
             })) || []
           }
-          selectedValue={param.spaceId?.toString() || ""}
-          onSelect={value => {
+          value={param.spaceId?.toString() || ""}
+          onChange={value => {
             if (dateTimeRange) {
               setShowModal(true);
               setIntermediateSelectedValue(value);

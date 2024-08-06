@@ -12,7 +12,7 @@ import { RntTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import {
   formatDate,
   formatDateTime,
-} from "@sparcs-clubs/web/utils/Date/formateDate";
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import type { ApiRnt003ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt003";

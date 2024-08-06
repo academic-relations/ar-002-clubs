@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import isPropValid from "@emotion/is-prop-valid";
 import styled, { css } from "styled-components";
@@ -11,19 +11,19 @@ import NoOption from "./_atomic/NoOption";
 import Dropdown from "./Dropdown";
 import SelectOption from "./SelectOption";
 
-export interface SelectItem {
+export interface SelectItem<T> {
   label: string;
-  value: string;
+  value: T;
   selectable?: boolean;
 }
 
-interface SelectProps {
-  items: SelectItem[];
+interface SelectProps<T> {
+  items: SelectItem<T>[];
   label?: string;
   errorMessage?: string;
   disabled?: boolean;
-  selectedValue?: string;
-  onSelect?: (value: string) => void;
+  value: T;
+  onChange?: (value: T) => void;
   setErrorStatus?: (hasError: boolean) => void;
   placeholder?: string;
 }
@@ -36,6 +36,7 @@ const SelectInner = styled.div`
 const disabledStyle = css`
   background-color: ${({ theme }) => theme.colors.GRAY[100]};
   border-color: ${({ theme }) => theme.colors.GRAY[200]};
+  color: ${({ theme }) => theme.colors.GRAY[300]};
   pointer-events: none;
 `;
 
@@ -92,28 +93,35 @@ const SelectWrapper = styled.div`
 
 const SelectValue = styled.span.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
-})<{ isSelected: boolean }>`
-  color: ${({ theme, isSelected }) =>
-    isSelected ? theme.colors.BLACK : theme.colors.GRAY[200]};
+})<{ isSelected: boolean; disabled: boolean }>`
+  color: ${({ theme, isSelected, disabled }) => {
+    if (disabled) {
+      return theme.colors.GRAY[300];
+    }
+    if (isSelected) {
+      return theme.colors.BLACK;
+    }
+    return theme.colors.GRAY[200];
+  }};
 `;
 
-const Select: React.FC<SelectProps> = ({
+const Select = <T,>({
   items,
   errorMessage = "",
   label = "",
   disabled = false,
-  selectedValue = "",
-  onSelect = () => {},
+  value,
+  onChange = () => {},
   setErrorStatus = () => {},
   placeholder = "항목을 선택해주세요",
-}) => {
+}: SelectProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setErrorStatus(!!errorMessage || (!selectedValue && items.length > 0));
-  }, [errorMessage, selectedValue, items.length, setErrorStatus]);
+    setErrorStatus(!!errorMessage || (!value && items.length > 0));
+  }, [errorMessage, value, items.length, setErrorStatus]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -123,7 +131,7 @@ const Select: React.FC<SelectProps> = ({
       ) {
         if (isOpen) {
           setIsOpen(false);
-          if (items.length > 0 && !selectedValue) {
+          if (items.length > 0 && !value) {
             setHasOpenedOnce(true);
           }
         }
@@ -132,7 +140,7 @@ const Select: React.FC<SelectProps> = ({
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [containerRef, isOpen, items.length, selectedValue]);
+  }, [containerRef, isOpen, items.length, value]);
 
   const handleSelectClick = () => {
     if (!disabled) {
@@ -141,15 +149,15 @@ const Select: React.FC<SelectProps> = ({
     }
   };
 
-  const handleOptionClick = (item: SelectItem) => {
+  const handleOptionClick = (item: SelectItem<T>) => {
     if (item.selectable || item.selectable === undefined) {
-      onSelect(item.value);
+      onChange(item.value);
       setIsOpen(false);
     }
   };
 
   const selectedLabel =
-    items.find(item => item.value === selectedValue)?.label || placeholder;
+    items.find(item => item.value === value)?.label || placeholder;
 
   return (
     <SelectWrapper>
@@ -157,14 +165,12 @@ const Select: React.FC<SelectProps> = ({
       <SelectWrapper>
         <SelectInner ref={containerRef}>
           <StyledSelect
-            hasError={
-              hasOpenedOnce && !selectedValue && items.length > 0 && !isOpen
-            }
+            hasError={hasOpenedOnce && !value && items.length > 0 && !isOpen}
             disabled={disabled}
             onClick={handleSelectClick}
             isOpen={isOpen}
           >
-            <SelectValue isSelected={!!selectedValue}>
+            <SelectValue isSelected={!!value} disabled={disabled}>
               {selectedLabel}
             </SelectValue>
             <IconWrapper>
@@ -180,7 +186,7 @@ const Select: React.FC<SelectProps> = ({
               {items.length > 0 ? (
                 items.map(item => (
                   <SelectOption
-                    key={item.value}
+                    key={item.value as string}
                     selectable={
                       item.selectable || item.selectable === undefined
                     }
@@ -195,7 +201,7 @@ const Select: React.FC<SelectProps> = ({
             </Dropdown>
           )}
         </SelectInner>
-        {hasOpenedOnce && !selectedValue && items.length > 0 && (
+        {hasOpenedOnce && !value && items.length > 0 && (
           <FormError>
             {errorMessage || "필수로 선택해야 하는 항목입니다"}
           </FormError>

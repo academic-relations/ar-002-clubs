@@ -33,6 +33,7 @@ const CreateFunding = () => {
     isProfitMakingActivity: false,
     isJointExpense: false,
     isEtcExpense: false,
+    transportationPassengers: [],
   });
   const props = { funding, setFunding };
 

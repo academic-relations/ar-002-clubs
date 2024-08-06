@@ -13,10 +13,10 @@ import {
   ApplyTagList,
   ProfessorApprovalTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
-import { formatDate } from "@sparcs-clubs/web/utils/Date/formateDate";
+import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-import { type Activity } from "../service/_mock/mockManageClub";
+import { type Activity } from "../services/_mock/mockManageClub";
 
 interface ActivityTableProps {
   activityList: Activity[];

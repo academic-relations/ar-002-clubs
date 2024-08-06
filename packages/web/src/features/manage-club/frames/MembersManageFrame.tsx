@@ -8,7 +8,7 @@ import MembersTable from "@sparcs-clubs/web/features/manage-club/components/Memb
 import {
   MemberStatusEnum,
   mockupManageMems,
-} from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+} from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 const MembersManageFrame: React.FC = () => {
   const [toggle, setToggle] = React.useState<boolean>(true);

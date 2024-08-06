@@ -6,6 +6,8 @@ import styled from "styled-components";
 
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
+// import { useGetUserClubs } from "../services/getUserClubs";
+
 import {
   ActivityCertificateInterface,
   ActivityCertificateProgress,
@@ -27,6 +29,9 @@ const ActivityCertificatePageMainFrameInner = styled.div`
 `;
 
 const ActivityCertificateMainFrame: React.FC = () => {
+  // const { data, isLoading, isError } = useGetUserClubs();
+  // console.log(data);
+
   const [activityCertificateProgress, setActivityCertificateProgress] =
     useState<ActivityCertificateProgress>({
       agreement: false,
@@ -38,12 +43,12 @@ const ActivityCertificateMainFrame: React.FC = () => {
   const [activityCertificate, setActivityCertificate] =
     useState<ActivityCertificateInterface>({
       clubId: null,
-      applicant: null,
-      department: null,
-      studentNumber: null,
-      krPhoneNumber: "",
+      applicant: "스팍스",
+      department: "전산학부",
+      studentNumber: "20240000",
+      krPhoneNumber: "000-0000-0000",
       issuedNumber: null,
-      startMonth: "2024.02",
+      startMonth: "2023.02",
       endMonth: "2024.04",
       detail: [
         {

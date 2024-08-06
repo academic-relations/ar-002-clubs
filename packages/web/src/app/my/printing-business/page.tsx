@@ -14,8 +14,8 @@ import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { PrtTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import { mockupMyPrint } from "@sparcs-clubs/web/features/my/service/_mock/mockMyClub";
-import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formateDate";
+import { mockupMyPrint } from "@sparcs-clubs/web/features/my/services/_mock/mockMyClub";
+import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 import getPrintSize from "@sparcs-clubs/web/utils/getPrintSize";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 

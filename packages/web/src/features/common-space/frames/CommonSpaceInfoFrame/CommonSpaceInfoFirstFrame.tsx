@@ -41,8 +41,8 @@ const CommonSpaceInfoFirstFrame: React.FC<
               selectable: true,
             })) || []
           }
-          selectedValue={body.clubId?.toString()}
-          onSelect={value => setBody({ ...body, clubId: Number(value) })}
+          value={body.clubId?.toString()}
+          onChange={value => setBody({ ...body, clubId: Number(value) })}
           label="동아리 이름"
           setErrorStatus={setHasSelectError}
         />

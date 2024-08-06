@@ -76,6 +76,7 @@ const ActivityReportCreateFrame: React.FC = () => (
                 selectable: true,
               },
             ]}
+            value=""
           />
           {/* <DateRangeInput label="활동 기간" /> */}
         </HorizontalPlacer>
