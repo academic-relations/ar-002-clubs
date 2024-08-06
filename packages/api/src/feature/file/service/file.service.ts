@@ -1,10 +1,6 @@
-import {
-  GetObjectCommand,
-  PutObjectCommand,
-  S3Client,
-} from "@aws-sdk/client-s3";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 import {
   ApiFil001RequestQuery,
@@ -49,25 +45,5 @@ export class FileService {
       expiresIn: 600,
     });
     return { uploadUrl, fileId };
-  }
-
-  async getFileUrl(fileId: string): Promise<string> {
-    const file = await this.fileRepository.findById(fileId);
-
-    if (!file) {
-      throw new NotFoundException(`File not found: ${fileId}`);
-    }
-
-    // 내가 S3에 하려는 작업을 명시한다.
-    const command = new GetObjectCommand({
-      Bucket: process.env.S3_BUCKET_NAME,
-      Key: `file/${file.userId}.${file.signedAt.valueOf()}.${file.name}`,
-    });
-
-    const fileUrl = await getSignedUrl(this.s3Client, command, {
-      expiresIn: 600,
-    });
-
-    return fileUrl;
   }
 }

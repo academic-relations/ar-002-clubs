@@ -1,10 +1,11 @@
 "use client";
 
+import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
 import RegisterClubMainFrame from "@sparcs-clubs/web/features/register-club/frame/RegisterClubMainFrame";
-import { RegisterClubType } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 
 const PromotionalRegisterClub = () => (
-  <RegisterClubMainFrame type={RegisterClubType.promotional} />
+  <RegisterClubMainFrame type={RegistrationTypeEnum.Promotional} />
 );
 
 export default PromotionalRegisterClub;

@@ -13,7 +13,7 @@ import {
   mockupManageCms,
   mockupManagePrint,
   mockupManageRental,
-} from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+} from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 const ServiceManageFrame: React.FC = () => {
   const [toggle, setToggle] = React.useState<boolean>(true);

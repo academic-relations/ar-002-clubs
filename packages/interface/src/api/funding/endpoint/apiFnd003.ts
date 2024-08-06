@@ -30,12 +30,12 @@ const requestPreBody = z.object({
 
   tradeEvidenceFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(128),
     }),
   ),
   tradeDetailFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(128),
     }),
   ),
   tradeDetailExplanation: z.coerce.string(),
@@ -46,13 +46,13 @@ const requestPreBody = z.object({
   clubSuppliesPurpose: z.coerce.string().optional(),
   clubSuppliesImageFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(128),
     }),
   ),
   clubSuppliesSoftwareEvidence: z.coerce.string().optional(),
   clubSuppliesSoftwareEvidenceFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(128),
     }),
   ),
   numberOfClubSupplies: z.coerce.number().int().min(1).optional(),
@@ -65,13 +65,13 @@ const requestPreBody = z.object({
   fixturePurpose: z.coerce.string().optional(),
   fixtureImageFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(128),
     }),
   ),
   fixtureSoftwareEvidence: z.coerce.string().optional(),
   fixtureSoftwareEvidenceFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(128),
     }),
   ),
   numberOfFixture: z.coerce.number().int().min(1).optional(),
@@ -82,7 +82,6 @@ const requestPreBody = z.object({
   origin: z.coerce.string().max(255).optional(),
   destination: z.coerce.string().max(255).optional(),
   purposeOfTransportation: z.coerce.string().optional(),
-  cargoList: z.coerce.string().optional(),
   placeValidity: z.coerce.string().optional(),
   transportationPassengers: z.array(
     z.object({
@@ -113,37 +112,37 @@ const requestPreBody = z.object({
 
   foodExpenseFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(128),
     }),
   ),
   laborContractFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(128),
     }),
   ),
   externalEventParticipationFeeFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(128),
     }),
   ),
   publicationFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(128),
     }),
   ),
   profitMakingActivityFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(128),
     }),
   ),
   jointExpenseFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(128),
     }),
   ),
   etcExpenseFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(128),
     }),
   ),
 });
@@ -221,16 +220,6 @@ const requestBody = requestPreBody.superRefine((data, ctx) => {
     if (
       data.transportationEnumId === TransportationEnum.CallVan ||
       data.transportationEnumId === TransportationEnum.Cargo ||
-      data.transportationEnumId === TransportationEnum.Others
-    ) {
-      if (!data.cargoList) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "cargoList is required",
-        });
-      }
-    }
-    if (
       data.transportationEnumId === TransportationEnum.Airplane ||
       data.transportationEnumId === TransportationEnum.Ship ||
       data.transportationEnumId === TransportationEnum.Others

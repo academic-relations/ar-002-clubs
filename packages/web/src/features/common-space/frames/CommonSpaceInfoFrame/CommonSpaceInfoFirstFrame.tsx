@@ -47,7 +47,7 @@ const CommonSpaceInfoFirstFrame: React.FC<
           clubName: club.name,
         },
       });
-  }, [selectedValue, setCommonSpace, data, phoneNumber]);
+  }, [selectedValue, setCommonSpace, data, phoneNumber, commonSpace]);
 
   return (
     <Card outline gap={40}>
@@ -60,8 +60,8 @@ const CommonSpaceInfoFirstFrame: React.FC<
               selectable: true,
             })) || []
           }
-          selectedValue={selectedValue}
-          onSelect={setSelectedValue}
+          value={selectedValue}
+          onChange={setSelectedValue}
           label="동아리 이름"
           setErrorStatus={setHasSelectError}
         />

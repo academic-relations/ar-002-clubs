@@ -16,7 +16,7 @@ const requestQuery = z.object({});
 const requestBody = z.object({});
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({}),
+  [HttpStatusCode.Created]: z.object({}),
 };
 
 const responseErrorMap = {};
@@ -34,7 +34,7 @@ const apiAut003 = {
 type ApiAut003RequestParam = z.infer<typeof apiAut003.requestParam>;
 type ApiAut003RequestQuery = z.infer<typeof apiAut003.requestQuery>;
 type ApiAut003RequestBody = z.infer<typeof apiAut003.requestBody>;
-type ApiAut003ResponseOk = z.infer<(typeof apiAut003.responseBodyMap)[200]>;
+type ApiAut003ResponseOk = z.infer<(typeof apiAut003.responseBodyMap)[201]>;
 
 export default apiAut003;
 

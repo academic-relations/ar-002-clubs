@@ -48,4 +48,13 @@ export class StudentRepository {
     }
     return false;
   }
+
+  async selectStudentIdByStudentTId(studentTId: number) {
+    const result = await this.db
+      .select({ studentId: StudentT.studentId })
+      .from(StudentT)
+      .where(and(eq(StudentT.id, studentTId), isNull(StudentT.deletedAt)));
+
+    return result;
+  }
 }

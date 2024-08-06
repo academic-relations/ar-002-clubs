@@ -14,7 +14,7 @@ import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { AcfTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import { mockupMyAcf } from "@sparcs-clubs/web/features/my/service/_mock/mockMyClub";
+import { mockupMyAcf } from "@sparcs-clubs/web/features/my/services/_mock/mockMyClub";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formateDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
