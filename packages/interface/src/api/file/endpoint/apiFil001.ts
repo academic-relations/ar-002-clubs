@@ -26,7 +26,7 @@ const requestBody = z.object({
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({
+  [HttpStatusCode.Created]: z.object({
     urls: z.array(
       z.object({
         uploadUrl: z.string(),
@@ -51,7 +51,9 @@ const apiFil001 = {
 type ApiFil001RequestParam = z.infer<typeof apiFil001.requestParam>;
 type ApiFil001RequestQuery = z.infer<typeof apiFil001.requestQuery>;
 type ApiFil001RequestBody = z.infer<typeof apiFil001.requestBody>;
-type ApiFil001ResponseOk = z.infer<(typeof apiFil001.responseBodyMap)[200]>;
+type ApiFil001ResponseCreated = z.infer<
+  (typeof apiFil001.responseBodyMap)[201]
+>;
 
 export default apiFil001;
 
@@ -59,5 +61,5 @@ export type {
   ApiFil001RequestParam,
   ApiFil001RequestQuery,
   ApiFil001RequestBody,
-  ApiFil001ResponseOk,
+  ApiFil001ResponseCreated,
 };

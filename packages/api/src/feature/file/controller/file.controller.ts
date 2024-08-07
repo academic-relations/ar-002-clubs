@@ -9,6 +9,7 @@ import {
 } from "@nestjs/common";
 
 import apiFil001 from "@sparcs-clubs/interface/api/file/endpoint/apiFil001";
+import apiFil002 from "@sparcs-clubs/interface/api/file/endpoint/apiFil002";
 
 import { Request } from "express";
 
@@ -21,8 +22,12 @@ import { FileService } from "../service/file.service";
 import type { UserAccessTokenPayload } from "@sparcs-clubs/api/feature/auth/dto/auth.dto";
 import type {
   ApiFil001RequestBody,
-  ApiFil001ResponseOk,
+  ApiFil001ResponseCreated,
 } from "@sparcs-clubs/interface/api/file/endpoint/apiFil001";
+import type {
+  ApiFil002RequestBody,
+  ApiFil002ResponseOk,
+} from "@sparcs-clubs/interface/api/file/endpoint/apiFil002";
 
 @Controller()
 export class FileController {
@@ -33,10 +38,10 @@ export class FileController {
 
   @Post("files/upload")
   @UsePipes(new ZodPipe(apiFil001))
-  async getUploadUrl(
+  async postUploadUrl(
     @Req() req: Request & UserAccessTokenPayload,
     @Body() body: ApiFil001RequestBody,
-  ): Promise<ApiFil001ResponseOk> {
+  ): Promise<ApiFil001ResponseCreated> {
     const userId = req.user.id;
     logger.debug(`[getUploadUrl] user id is ${userId}`);
 
@@ -50,6 +55,19 @@ export class FileController {
     return {
       urls,
     };
+  }
+
+  @Get("files/metadata")
+  @UsePipes(new ZodPipe(apiFil002))
+  async getFilesMetadata(
+    @Req() req: Request & UserAccessTokenPayload,
+    @Body() body: ApiFil002RequestBody,
+  ): Promise<ApiFil002ResponseOk> {
+    const userId = req.user.id;
+    logger.debug(`[getUploadUrl] user id is ${userId}`);
+
+    const result = await this.fileService.getFilesMetadata({ body, userId });
+    return result;
   }
 
   // Test 용 API. 추후 삭제 필요
