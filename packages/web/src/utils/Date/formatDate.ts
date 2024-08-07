@@ -33,11 +33,11 @@ export {
   formatDate,
   formatDateTime,
   formatDotDate,
+  formatDotDetailDate,
   formatMonth,
   formatSimpleSlashDate,
   formatSimplerSlashDate,
   formatSlashDate,
   formatSlashDateTime,
   formatTime,
-  formatDotDetailDate,
 };

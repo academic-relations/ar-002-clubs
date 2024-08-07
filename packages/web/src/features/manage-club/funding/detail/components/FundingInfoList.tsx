@@ -1,11 +1,9 @@
-import React from "react";
-
 import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/services/_mock/mockFundingDetail";
-import { formatDate } from "@sparcs-clubs/web/utils/Date/formateDate";
+import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 export const ListItem = styled.div`
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};

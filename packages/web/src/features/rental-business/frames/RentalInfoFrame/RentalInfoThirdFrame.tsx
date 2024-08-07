@@ -13,7 +13,7 @@ import {
 } from "@sparcs-clubs/web/common/components/ListItem";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
-import { formatDate } from "@sparcs-clubs/web/utils/Date/formateDate";
+import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
@@ -47,7 +47,7 @@ const RentalInfoThirdFrame: React.FC<
       ...rental,
       purpose,
     });
-  }, [purpose, setRental]);
+  }, [purpose, rental, setRental]);
 
   useEffect(() => {
     const enableNext = !!rental.purpose;

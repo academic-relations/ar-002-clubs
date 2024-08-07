@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
@@ -16,7 +16,7 @@ import BasicEvidenceFrame from "@sparcs-clubs/web/features/manage-club/funding/f
 import FundingInfoFrame from "@sparcs-clubs/web/features/manage-club/funding/frames/FundingInfoFrame";
 import { FundingInterface } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
 import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/services/_mock/mockFundingDetail";
-import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formateDate";
+import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 const ButtonWrapper = styled.div`
   display: flex;
