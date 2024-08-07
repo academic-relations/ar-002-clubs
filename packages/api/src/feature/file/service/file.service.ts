@@ -3,7 +3,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Injectable } from "@nestjs/common";
 
 import {
-  ApiFil001RequestQuery,
+  ApiFil001RequestBody,
   ApiFil001ResponseOk,
 } from "@sparcs-clubs/interface/api/file/endpoint/apiFil001";
 
@@ -16,11 +16,11 @@ export class FileService {
     private fileRepository: FileRepository,
   ) {}
 
-  async getUploadUrl(
-    query: ApiFil001RequestQuery,
-    userId: number,
-  ): Promise<ApiFil001ResponseOk> {
-    const { name, type, size } = query;
+  async getUploadUrl(param: {
+    metadata: ApiFil001RequestBody["metadata"][number];
+    userId: number;
+  }): Promise<ApiFil001ResponseOk["urls"][number]> {
+    const { name, type, size } = param.metadata;
     const extension = name.split(".").pop().toLowerCase();
     const signedAt = new Date();
     signedAt.setMilliseconds(0);
@@ -28,7 +28,7 @@ export class FileService {
     // 내가 S3에 하려는 작업을 명시한다.
     const command = new PutObjectCommand({
       Bucket: process.env.S3_BUCKET_NAME,
-      Key: `file/${userId}.${signedAt.valueOf()}.${name}`,
+      Key: `file/${param.userId}.${signedAt.valueOf()}.${name}`,
       ContentType: type,
     });
 
@@ -37,7 +37,7 @@ export class FileService {
       extension,
       size,
       signedAt,
-      userId,
+      param.userId,
     );
 
     // Presigned URL을 생성해서 반환한다.

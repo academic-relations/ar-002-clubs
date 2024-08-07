@@ -3,26 +3,36 @@ import { z } from "zod";
 
 /**
  * @version v0.1
- * @description 파일 업로드를 위한 URL을 가져옵니다.
+ * @description 파일 업로드를 위한 url과 flieId를 받아옵니다.
+ * - 로그인되어 있어야 사용 가능합니다.
+ * - 제출한 metadata 개수만큼의 URL과 filedId pair를 제공합니다.
  */
 
-const url = () => `/files/file/upload-url`;
-const method = "GET";
+const url = () => `/files/upload`;
+const method = "POST";
 
 const requestParam = z.object({});
 
-const requestQuery = z.object({
-  name: z.coerce.string().max(256),
-  type: z.coerce.string().max(30),
-  size: z.coerce.number().int().min(1),
-});
+const requestQuery = z.object({});
 
-const requestBody = z.object({});
+const requestBody = z.object({
+  metadata: z.array(
+    z.object({
+      name: z.coerce.string().max(256),
+      type: z.coerce.string().max(30),
+      size: z.coerce.number().int().min(1),
+    }),
+  ),
+});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    uploadUrl: z.string(),
-    fileId: z.string().max(128),
+    urls: z.array(
+      z.object({
+        uploadUrl: z.string(),
+        fileId: z.string().max(128),
+      }),
+    ),
   }),
 };
 

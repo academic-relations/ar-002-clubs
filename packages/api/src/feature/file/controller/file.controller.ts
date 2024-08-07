@@ -1,13 +1,28 @@
-import { Controller, Get, Query, UsePipes } from "@nestjs/common";
-import apiFil001, {
-  ApiFil001RequestQuery,
-  ApiFil001ResponseOk,
-} from "@sparcs-clubs/interface/api/file/endpoint/apiFil001";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Req,
+  UsePipes,
+} from "@nestjs/common";
+
+import apiFil001 from "@sparcs-clubs/interface/api/file/endpoint/apiFil001";
+
+import { Request } from "express";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
+import logger from "@sparcs-clubs/api/common/util/logger";
 
 import FilePublicService from "../service/file.public.service";
 import { FileService } from "../service/file.service";
+
+import type { UserAccessTokenPayload } from "@sparcs-clubs/api/feature/auth/dto/auth.dto";
+import type {
+  ApiFil001RequestBody,
+  ApiFil001ResponseOk,
+} from "@sparcs-clubs/interface/api/file/endpoint/apiFil001";
 
 @Controller()
 export class FileController {
@@ -16,13 +31,25 @@ export class FileController {
     private readonly filePublicService: FilePublicService,
   ) {}
 
-  @Get("files/file/upload-url")
+  @Post("files/upload")
   @UsePipes(new ZodPipe(apiFil001))
   async getUploadUrl(
-    @Query() query: ApiFil001RequestQuery,
+    @Req() req: Request & UserAccessTokenPayload,
+    @Body() body: ApiFil001RequestBody,
   ): Promise<ApiFil001ResponseOk> {
-    const userId = 1;
-    return this.fileService.getUploadUrl(query, userId);
+    const userId = req.user.id;
+    logger.debug(`[getUploadUrl] user id is ${userId}`);
+
+    const urls = await Promise.all(
+      body.metadata.map(async e =>
+        this.fileService.getUploadUrl({ metadata: e, userId }),
+      ),
+    );
+
+    // return this.fileService.getUploadUrl(query, userId);
+    return {
+      urls,
+    };
   }
 
   // Test 용 API. 추후 삭제 필요
