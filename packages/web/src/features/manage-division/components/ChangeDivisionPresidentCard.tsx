@@ -17,7 +17,7 @@ const ChangeDivisionPresidentCard = () => {
     "20240503 이민욱",
   ];
 
-  const mockPresident = "20210227 박병찬"; // "Requested"로 바꾸고 테스트해주세요!
+  const mockPresident = "20210227 박병찬";
 
   const [hasChangeNotice, setHasChangeNotice] = useState<boolean>(false);
   const [isSelectDisabled, setIsSelectDisabled] = useState<boolean>(false);
