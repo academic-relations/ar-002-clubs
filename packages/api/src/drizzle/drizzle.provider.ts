@@ -12,6 +12,7 @@ import * as divisionSchema from "./schema/division.schema";
 import * as meetingSchema from "./schema/meeting.schema";
 import * as noticeSchema from "./schema/notice.schema";
 import * as promotionalPrintingSchema from "./schema/promotional-printing.schema";
+import * as refreshTokenSchema from "./schema/refresh-token.schema";
 import * as registrationSchema from "./schema/registration.schema";
 import * as rentalSchema from "./schema/rental.schema";
 import * as userSchema from "./schema/user.schema";
@@ -62,6 +63,7 @@ export const getDbInstance = async () => {
         divisionSchema,
         noticeSchema,
         promotionalPrintingSchema,
+        refreshTokenSchema,
         rentalSchema,
         userSchema,
         registrationSchema,
