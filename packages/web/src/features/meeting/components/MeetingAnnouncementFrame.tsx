@@ -2,6 +2,8 @@ import React from "react";
 
 import { overlay } from "overlay-kit";
 
+import styled from "styled-components";
+
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -14,21 +16,39 @@ import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { MeetingTemplate } from "../constants/meetingTemplate";
-import { MeetingTemplateInfo } from "../types/meeting";
+import { MeetingDetail } from "../types/meeting";
 
 interface MeetingAnnouncementFrameProps {
-  data?: MeetingTemplateInfo;
+  data?: MeetingDetail;
+  onReset?: (defaultValue: string) => void;
 }
+
+const AlignEnd = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
 
 const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
   data = undefined,
+  onReset = _ => {},
 }) => {
+  const getTemplate = () => {
+    if (data == null) return null;
+
+    if (data?.meetingType === "분과회의") {
+      return MeetingTemplate.SubcommitteeMeetingTemplate(data);
+    }
+    return MeetingTemplate.defaultTemplate(data);
+  };
+
+  const contentLength = getTemplate()?.content.split(/\r\n|\r|\n/).length;
+
   const openResetModal = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <CancellableModalContent
           onConfirm={() => {
-            // TODO. 초기화 로직 추가
+            onReset(getTemplate()?.content ?? "");
             close();
           }}
           onClose={close}
@@ -39,15 +59,6 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
         </CancellableModalContent>
       </Modal>
     ));
-  };
-
-  const getTemplate = () => {
-    if (data == null) return null;
-
-    if (data?.meetingType === "분과회의") {
-      return MeetingTemplate.SubcommitteeMeetingTemplate(data);
-    }
-    return MeetingTemplate.defaultTemplate(data);
   };
 
   return (
@@ -67,7 +78,7 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
         ) : (
           <>
             <FormController
-              name="announcementTitle"
+              name="title"
               required
               defaultValue={getTemplate()?.title}
               renderItem={props => (
@@ -80,7 +91,7 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
               )}
             />
             <FormController
-              name="announcementContent"
+              name="content"
               required
               defaultValue={getTemplate()?.content}
               renderItem={props => (
@@ -91,13 +102,15 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
                   defaultValue={getTemplate()?.content}
                   area
                   style={{
-                    height: 596,
+                    height: contentLength ? contentLength * 25 : 100,
                     whiteSpace: "pre-line",
                   }}
                 />
               )}
             />
-            <TextButton text="초기화" onClick={openResetModal} />
+            <AlignEnd>
+              <TextButton text="초기화" onClick={openResetModal} />
+            </AlignEnd>
           </>
         )}
       </Card>

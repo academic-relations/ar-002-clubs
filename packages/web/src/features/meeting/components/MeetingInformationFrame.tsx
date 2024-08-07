@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
@@ -11,7 +12,10 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
 
+import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+
 interface MeetingInformationFrameProps {
+  readOnly?: boolean;
   onCreateTemplate?: VoidFunction;
 }
 
@@ -30,12 +34,20 @@ const AlignEnd = styled.div`
 `;
 
 const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
-  onCreateTemplate = undefined,
+  readOnly = false,
+  onCreateTemplate = () => {},
 }) => {
-  // TODO. react-hook form 사용
-  const hasValue = true;
-  const isValid = true;
-  const isSubcommitteeMeeting = false;
+  const {
+    watch,
+    control,
+    formState: { isValid },
+  } = useFormContext();
+
+  const isRegular = watch("isRegular");
+  const meetingType = watch("meetingType");
+
+  const hasValue = meetingType != null && isRegular != null;
+  const isSubcommitteeMeeting = meetingType === "분과회의";
 
   return (
     <FlexWrapper direction="column" gap={40}>
@@ -46,6 +58,7 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
           <FormController
             name="meetingType"
             required
+            control={control}
             renderItem={props => (
               <Select
                 {...props}
@@ -54,29 +67,31 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
                 items={[
                   {
                     label: "전체동아리대표자회의",
-                    value: "1",
+                    value: "전체동아리대표자회의",
                   },
-                  { label: "확대운영위원회", value: "2" },
-                  { label: "운영위원회", value: "3" },
-                  { label: "분과회의", value: "4" },
+                  { label: "확대운영위원회", value: "확대운영위원회" },
+                  { label: "운영위원회", value: "운영위원회" },
+                  { label: "분과회의", value: "분과회의" },
                 ]}
+                disabled={readOnly}
               />
             )}
           />
 
           {/* // TODO. interface 나오면 enum으로 변경 */}
           <FormController
-            name="isRegularMeeting"
-            required
+            name="isRegular"
+            control={control}
             renderItem={props => (
               <Select
                 {...props}
                 label="정기회의 여부"
                 placeholder="정기회의 여부를 선택해주세요"
                 items={[
-                  { label: "정기회의", value: "1" },
-                  { label: "비정기회의", value: "2" },
+                  { label: "정기회의", value: true },
+                  { label: "비정기회의", value: false },
                 ]}
+                disabled={readOnly}
               />
             )}
           />
@@ -86,27 +101,43 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
             <RowFlexWrapper>
               <FormController
                 name="date"
+                control={control}
                 required={!isSubcommitteeMeeting}
+                defaultValue={formatDotDate(new Date())}
                 renderItem={props => (
-                  <DateInput {...props} date={new Date()} label="일자" />
+                  <DateInput
+                    {...props}
+                    date={new Date()}
+                    label="일자"
+                    // disabled={readOnly}
+                  />
                 )}
               />
               <FormController
                 name="time"
+                control={control}
                 required={!isSubcommitteeMeeting}
-                pattern={/^([01]\d|2[0-3]):[0-5]\d$/}
+                pattern={/^(0?[0-9]|1[0-9]|2[0-3]):([0-5]?[0-9])$/}
+                maxLength={5}
                 renderItem={props => (
-                  <TextInput {...props} label="시간" placeholder="XX:XX" />
+                  <TextInput
+                    {...props}
+                    label="시간"
+                    placeholder="XX:XX"
+                    disabled={readOnly}
+                  />
                 )}
               />
               <FormController
                 name="location"
                 required={!isSubcommitteeMeeting}
+                control={control}
                 renderItem={props => (
                   <TextInput
                     {...props}
                     label="장소"
                     placeholder="장소를 입력해주세요"
+                    disabled={readOnly}
                   />
                 )}
               />
@@ -116,15 +147,29 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
               <FormController
                 name="startDate"
                 required={isSubcommitteeMeeting}
+                control={control}
+                defaultValue={formatDotDate(new Date())}
                 renderItem={props => (
-                  <DateInput {...props} date={new Date()} label="시작일" />
+                  <DateInput
+                    {...props}
+                    date={new Date()}
+                    label="시작일"
+                    // disabled={readOnly}
+                  />
                 )}
               />
               <FormController
                 name="endDate"
                 required={isSubcommitteeMeeting}
+                control={control}
+                defaultValue={formatDotDate(new Date())}
                 renderItem={props => (
-                  <DateInput {...props} date={new Date()} label="종료일" />
+                  <DateInput
+                    {...props}
+                    date={new Date()}
+                    label="종료일"
+                    // disabled={readOnly}
+                  />
                 )}
               />
             </RowFlexWrapper>
@@ -132,7 +177,7 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
         <AlignEnd>
           <TextButton
             text="공고 템플릿 생성"
-            disabled={onCreateTemplate === undefined || !isValid}
+            disabled={!isValid || readOnly}
             onClick={onCreateTemplate}
           />
         </AlignEnd>
