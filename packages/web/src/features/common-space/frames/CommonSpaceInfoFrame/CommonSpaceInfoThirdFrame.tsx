@@ -1,15 +1,22 @@
 import React, { useEffect } from "react";
 
-import { differenceInHours, differenceInMinutes, format } from "date-fns";
-import { ko } from "date-fns/locale";
+import { differenceInHours, differenceInMinutes } from "date-fns";
 
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
+import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
+import useGetCommonSpaces from "@sparcs-clubs/web/features/common-space/service/getCommonSpaces";
+
+import { CommonSpaceInfoProps } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
+import {
+  formatSimpleSlashDate,
+  formatTime,
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 
 const CardInner = styled.div`
   display: flex;
@@ -36,11 +43,22 @@ const ReservationInfo = styled.div`
 `;
 
 const CommonSpaceInfoThirdFrame: React.FC<
-  CommonSpaceFrameProps & { setNextEnabled: (enabled: boolean) => void }
-> = ({ commonSpace, setNextEnabled }) => {
-  const { email, clubId, startTerm, endTerm } = commonSpace.body;
-  const { spaceId } = commonSpace.param;
+  CommonSpaceInfoProps & { setNextEnabled: (enabled: boolean) => void }
+> = ({ setNextEnabled, body, param }) => {
+  const { email, clubId, startTerm, endTerm } = body;
+  const { spaceId } = param;
   const correct = email && clubId && startTerm && endTerm && spaceId;
+  const {
+    data: commonSpacesData,
+    isLoading: commonSpacesLoading,
+    isError: commonSpacesError,
+  } = useGetCommonSpaces();
+
+  const {
+    data: userProfileData,
+    isLoading: userProfileLoading,
+    isError: userProfileError,
+  } = useGetUserProfile();
 
   useEffect(() => {
     setNextEnabled(!!correct);
@@ -53,27 +71,36 @@ const CommonSpaceInfoThirdFrame: React.FC<
           <Typography fs={16} lh={20} fw="MEDIUM">
             신청자 정보
           </Typography>
-          <StyledList>
-            <li>동아리: {commonSpace.userInfo?.clubName}</li>
-            <li>담당자: {commonSpace.userInfo?.name}</li>
-            <li>연락처: {commonSpace.userInfo?.phoneNumber}</li>
-          </StyledList>
+          <AsyncBoundary
+            isLoading={userProfileLoading}
+            isError={userProfileError}
+          >
+            <StyledList>
+              <li>동아리: {userProfileData?.clubs[clubId]?.name}</li>
+              <li>담당자: {userProfileData?.name}</li>
+              <li>연락처: {userProfileData?.phoneNumber}</li>
+            </StyledList>
+          </AsyncBoundary>
         </CardInner>
         <ReservationInfo>
           <Typography fs={16} lh={20} fw="MEDIUM">
             예약 공간
           </Typography>
-          <Typography fs={16} lh={20} fw="REGULAR">
-            {commonSpace.spaceName},{" "}
-            {format(startTerm, "M/d(E) ", { locale: ko })}
-            {format(startTerm, "HH:mm", { locale: ko })} ~
-            {format(endTerm, "HH:mm", { locale: ko })} (
-            {`${differenceInHours(endTerm, startTerm)}시간`}
-            {differenceInMinutes(endTerm, startTerm) % 60
-              ? ` ${differenceInMinutes(endTerm, startTerm) % 60}분`
-              : ""}
-            )
-          </Typography>
+          <AsyncBoundary
+            isLoading={commonSpacesLoading}
+            isError={commonSpacesError}
+          >
+            <Typography fs={16} lh={20} fw="REGULAR">
+              {commonSpacesData?.commonSpaces[spaceId]?.name},{" "}
+              {`${formatSimpleSlashDate(startTerm)} `}
+              {formatTime(startTerm)} ~ {formatTime(endTerm)} (
+              {`${differenceInHours(endTerm, startTerm)}시간`}
+              {differenceInMinutes(endTerm, startTerm) % 60
+                ? ` ${differenceInMinutes(endTerm, startTerm) % 60}분`
+                : ""}
+              )
+            </Typography>
+          </AsyncBoundary>
         </ReservationInfo>
       </Card>
       <Info text="먼가 넣을 것이 없을까나" />

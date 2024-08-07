@@ -43,6 +43,7 @@ const Timetable: React.FC<TimetableProps> = ({
   setStartDate,
 }) => {
   const [indexRange, setIndexRange] = useState<number[]>([]);
+
   const convertDataToTimetableCell = useCallback((): TimetableCellType[] => {
     const currentDateTime = new Date();
     return data.map((isReserved, index) => {
