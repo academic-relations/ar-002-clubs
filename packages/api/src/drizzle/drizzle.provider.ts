@@ -9,6 +9,7 @@ import { env } from "../env";
 import * as activitySchema from "./schema/activity.schema";
 import * as commonSpaceSchema from "./schema/common-space.schema";
 import * as divisionSchema from "./schema/division.schema";
+import * as meetingSchema from "./schema/meeting.schema";
 import * as noticeSchema from "./schema/notice.schema";
 import * as promotionalPrintingSchema from "./schema/promotional-printing.schema";
 import * as registrationSchema from "./schema/registration.schema";
@@ -64,6 +65,7 @@ export const getDbInstance = async () => {
         rentalSchema,
         userSchema,
         registrationSchema,
+        meetingSchema,
       },
       mode: "default",
     });
