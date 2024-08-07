@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import ActivityReportDetailedFrame from "@sparcs-clubs/web/features/manage-club/activity-report/frames/ActivityReportDetailedFrame";
+import ActivityReportDetailFrame from "@sparcs-clubs/web/features/manage-club/activity-report/frames/ActivityReportDetailFrame";
 
-const ActivityReportDetailed = () => <ActivityReportDetailedFrame />;
+const ActivityReportDetailed = () => <ActivityReportDetailFrame />;
 export default ActivityReportDetailed;

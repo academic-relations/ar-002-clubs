@@ -1,69 +1,87 @@
 "use client";
 
-import React from "react";
+import React, { ReactNode } from "react";
 
 import { useParams, useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import FilePreview from "@sparcs-clubs/web/common/components/FilePreview";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
-
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-interface ActivitySectionProps {
+import AdvisorProfessorApprovalTag, {
+  ProfessorApproval,
+} from "../components/AdvisorProfessorApprovalTag";
+
+interface ActivitySectionProps extends React.PropsWithChildren {
   label: string;
-  children?: React.ReactNode;
 }
-
-const ActivityReportDetailedFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 60px;
-`;
-
-const ActivitySectionWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
-  align-self: stretch;
-`;
-
-const CardAndButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 40px;
-  align-self: stretch;
-`;
 
 const ActivitySection: React.FC<ActivitySectionProps> = ({
   label,
   children = null,
 }) => (
-  <ActivitySectionWrapper>
-    <Typography fw="MEDIUM" fs={16} lh={20}>
+  <FlexWrapper
+    direction="column"
+    gap={16}
+    style={{ alignItems: "flex-start", alignSelf: "stretch" }}
+  >
+    <Typography
+      fw="MEDIUM"
+      fs={16}
+      lh={20}
+      style={{ paddingLeft: "2px", paddingRight: "2px" }}
+    >
       {label}
     </Typography>
     {children}
-  </ActivitySectionWrapper>
+  </FlexWrapper>
 );
 // ActivitySection은 활동 보고서에서 구분된 각 영역을 나타냅니다.
 // label prop으로 이름을 넣고, children으로 ActivityDetail들을 넣어 주세요.
 
-const ActivityDetail: React.FC<{ children: string }> = ({ children = "" }) => (
-  <Typography fw="REGULAR" fs={16} lh={20}>
-    {`• ${children}`}
-  </Typography>
-);
-// ActivityDetail은 세부 활동 내역을 나타냅니다.
-// bullet point가 자동으로 포함됩니다.
+const FlexTypography = styled(Typography)`
+display: flex;
+fiex-direction: column;
+gap: 12px;
+align-items: flex-start;
+align-self; stretch;
+`;
 
-const ActivityReportDetailedFrame: React.FC = () => {
+const ActivityDetail: React.FC<{ children: string | ReactNode }> = ({
+  children = "",
+}) => {
+  const isString: boolean = typeof children === "string";
+  return (
+    <FlexTypography fw="REGULAR" fs={16} lh={20}>
+      {isString ? `• ${children}` : children}
+    </FlexTypography>
+  );
+};
+// ActivityDetail은 세부 활동 내역을 나타냅니다.
+// string이면 bullet point가 자동으로 포함됩니다.
+// string이 아닌 경우는 FilePreview가 들어가는 경우입니다. padding이 포함됩니다.
+
+const FilePreviewContainerWrapper = styled(FlexWrapper)`
+  padding-left: 24px;
+  align-items: flex-start;
+  align-self: stretch;
+`;
+
+const FilePreviewContainer: React.FC<React.PropsWithChildren> = ({
+  children = null,
+}) => (
+  <FilePreviewContainerWrapper direction="column" gap={12}>
+    {children}
+  </FilePreviewContainerWrapper>
+);
+
+const ActivityReportDetailFrame: React.FC = () => {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
 
@@ -72,7 +90,11 @@ const ActivityReportDetailedFrame: React.FC = () => {
   };
 
   return (
-    <ActivityReportDetailedFrameInner>
+    <FlexWrapper
+      direction="column"
+      gap={60}
+      style={{ alignItems: "flex-start" }}
+    >
       <PageHead
         items={[
           { name: "대표 동아리 관리", path: "/manage-club" },
@@ -81,7 +103,11 @@ const ActivityReportDetailedFrame: React.FC = () => {
         title={`활동 보고서 : ${id}(id 가져오기 테스트용)`}
         enableLast
       />
-      <CardAndButtonWrapper>
+      <FlexWrapper
+        direction="column"
+        gap={40}
+        style={{ alignItems: "flex-start", alignSelf: "stretch" }}
+      >
         <Card outline={false} padding="32px" gap={20}>
           <ProgressStatus
             labels={["신청 완료", "동아리 연합회 신청 반려"]}
@@ -114,20 +140,38 @@ const ActivityReportDetailedFrame: React.FC = () => {
             <ActivityDetail>활동명: 스팍스 봄학기 해커톤</ActivityDetail>
             <ActivityDetail>첨부 파일</ActivityDetail>
             <ActivityDetail>
-              (ActivityDetail 대신 File Thumbnail이 보여야 할 자리)
+              <FilePreviewContainer>
+                <FilePreview fileName="bamsaem.pdf" />
+                <FilePreview fileName="coffee.pdf" />
+                <FilePreview fileName="gaebal.pdf" />
+              </FilePreviewContainer>
             </ActivityDetail>
             <ActivityDetail>
               부가 설명: 커피를 마시며 개발을 했고 밤을 샜어요
             </ActivityDetail>
           </ActivitySection>
-          <ActivitySection label="지도교수 승인" />
+          <FlexWrapper
+            direction="row"
+            gap={16}
+            justify="space-between"
+            style={{
+              alignItems: "center",
+              alignSelf: "stretch",
+              width: "100%",
+            }}
+          >
+            <ActivitySection label="지도교수 승인" />
+            <AdvisorProfessorApprovalTag
+              professorApproval={ProfessorApproval.PENDING}
+            />
+          </FlexWrapper>
         </Card>
         <Button type="default" onClick={onClick}>
           목록으로 돌아가기
         </Button>
-      </CardAndButtonWrapper>
-    </ActivityReportDetailedFrameInner>
+      </FlexWrapper>
+    </FlexWrapper>
   );
 };
 
-export default ActivityReportDetailedFrame;
+export default ActivityReportDetailFrame;
