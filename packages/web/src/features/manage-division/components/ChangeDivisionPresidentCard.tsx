@@ -19,6 +19,8 @@ const ChangeDivisionPresidentCard = () => {
 
   const mockPresident = "20210227 박병찬";
 
+  const mockSendDivisionPresidentChangeRequest = () => {};
+
   const [hasChangeNotice, setHasChangeNotice] = useState<boolean>(false);
   const [isSelectDisabled, setIsSelectDisabled] = useState<boolean>(false);
 
@@ -38,6 +40,7 @@ const ChangeDivisionPresidentCard = () => {
     setIsSelectDisabled(true);
     setChangeNoticeStatus("Requested");
     setChangeFromTo([mockPresident, to]);
+    mockSendDivisionPresidentChangeRequest();
   };
 
   const onDivisionPresidentChangeCanceled = () => {
