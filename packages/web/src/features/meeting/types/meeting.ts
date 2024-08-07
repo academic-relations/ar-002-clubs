@@ -1,4 +1,4 @@
-export interface MeetingDetail {
+export interface CreateMeetingModel {
   title: string;
   content: string;
   count: number;
@@ -7,6 +7,10 @@ export interface MeetingDetail {
   endDate?: Date;
   location?: string;
   isRegular: boolean;
+}
+
+export interface MeetingDetail extends CreateMeetingModel {
+  id: number;
 }
 
 export interface MeetingInform {

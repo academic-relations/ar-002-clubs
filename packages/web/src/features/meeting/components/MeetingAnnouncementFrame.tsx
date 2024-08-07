@@ -16,10 +16,10 @@ import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { MeetingTemplate } from "../constants/meetingTemplate";
-import { MeetingDetail } from "../types/meeting";
+import { CreateMeetingModel } from "../types/meeting";
 
 interface MeetingAnnouncementFrameProps {
-  data?: MeetingDetail;
+  data?: CreateMeetingModel;
   onReset?: (defaultValue: string) => void;
 }
 

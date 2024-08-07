@@ -33,4 +33,8 @@ export const mockupData: MeetingDetail = {
   If the club representative is unable to attend, another delegate (with voting right) or deputy (without voting right) can also be admitted.
   
   Thank you.`,
+  count: 1,
+  isRegular: false,
+  meetingType: "분과회의",
+  startDate: new Date(),
 };

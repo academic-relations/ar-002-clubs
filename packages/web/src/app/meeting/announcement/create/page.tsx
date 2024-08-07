@@ -15,7 +15,7 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import MeetingAnnouncementFrame from "@sparcs-clubs/web/features/meeting/components/MeetingAnnouncementFrame";
 import MeetingInformationFrame from "@sparcs-clubs/web/features/meeting/components/MeetingInformationFrame";
 import {
-  MeetingDetail,
+  CreateMeetingModel,
   MeetingInform,
 } from "@sparcs-clubs/web/features/meeting/types/meeting";
 import { parseDotDate } from "@sparcs-clubs/web/utils/Date/parseDate";
@@ -43,7 +43,7 @@ const CreateMeetingPage: React.FC = () => {
 
   const [isTemplateVisible, setIsTemplateVisible] = useState(false);
 
-  const meetingDetail: MeetingDetail | undefined = useMemo(() => {
+  const meetingDetail: CreateMeetingModel | undefined = useMemo(() => {
     if (!isValid || !isTemplateVisible) return undefined;
 
     const values = getValues();

@@ -6,7 +6,7 @@ import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import { getFullSemester } from "@sparcs-clubs/web/utils/getSemester";
 
-import { MeetingDetail } from "../types/meeting";
+import { CreateMeetingModel } from "../types/meeting";
 
 export type TemplateType = {
   title: string;
@@ -14,7 +14,7 @@ export type TemplateType = {
 };
 
 export class MeetingTemplate {
-  static getContent(data: MeetingDetail) {
+  static getContent(data: CreateMeetingModel) {
     const now = new Date();
 
     const isRegularMeetingText = data.isRegular ? "정기회" : "임시회";
@@ -76,7 +76,7 @@ Thank you.`;
     return "";
   }
 
-  static defaultTemplate(data: MeetingDetail): TemplateType {
+  static defaultTemplate(data: CreateMeetingModel): TemplateType {
     const now = new Date();
 
     return {
@@ -85,7 +85,7 @@ Thank you.`;
     };
   }
 
-  static SubcommitteeMeetingTemplate(data: MeetingDetail): TemplateType {
+  static SubcommitteeMeetingTemplate(data: CreateMeetingModel): TemplateType {
     const now = new Date();
 
     return {
