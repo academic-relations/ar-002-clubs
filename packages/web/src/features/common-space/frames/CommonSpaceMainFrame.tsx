@@ -9,12 +9,11 @@ import CommonSpaceNoticeFrame from "./CommonSpaceNoticeFrame";
 import type { CommonSpaceInterface } from "../types/commonSpace";
 
 const CommonSpaceMainFrame: React.FC = () => {
-  const [commonSpace, setCommonSpace] = React.useState<CommonSpaceInterface>({
-    agreement: false,
-    body: {},
-    param: {},
-  });
-  const props = { commonSpace, setCommonSpace };
+  const [agreement, setAgreement] = React.useState(false);
+  const [body, setBody] = React.useState<CommonSpaceInterface["body"]>({});
+  const [param, setParam] = React.useState<CommonSpaceInterface["param"]>({});
+
+  const props = { agreement, setAgreement, body, setBody, param, setParam };
 
   return (
     <FlexWrapper direction="column" gap={60}>
@@ -22,10 +21,13 @@ const CommonSpaceMainFrame: React.FC = () => {
         items={[{ name: "공용공간 비정기사용", path: "/common-space" }]}
         title="공용공간 비정기사용"
       />
-      {commonSpace.agreement ? (
+      {agreement ? (
         <CommonSpaceInfoFrame {...props} />
       ) : (
-        <CommonSpaceNoticeFrame {...props} />
+        <CommonSpaceNoticeFrame
+          agreement={agreement}
+          setAgreement={setAgreement}
+        />
       )}
     </FlexWrapper>
   );

@@ -130,7 +130,7 @@ export const MeetingAttendanceTimeT = mysqlTable("meeting_attendance_time_t", {
     .references(() => User.id)
     .notNull(),
   startTerm: datetime("start_term").notNull(),
-  endTerm: int("end_term"),
+  endTerm: datetime("end_term"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
   deletedAt: timestamp("deleted_at"),
@@ -151,7 +151,7 @@ export const MeetingVoteChoice = mysqlTable("meeting_vote_choice", {
   voteId: int("vote_id")
     .references(() => MeetingAgendaVote.id)
     .notNull(),
-  choice: varchar("choice", { length: 255 }).notNull(),
+  choice: text("choice").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
   deletedAt: timestamp("deleted_at"),
@@ -159,9 +159,6 @@ export const MeetingVoteChoice = mysqlTable("meeting_vote_choice", {
 
 export const MeetingVoteResult = mysqlTable("meeting_vote_result", {
   id: int("id").autoincrement().primaryKey(),
-  voteId: int("vote_id")
-    .references(() => MeetingAgendaVote.id)
-    .notNull(),
   userId: int("user_id")
     .references(() => User.id)
     .notNull(),

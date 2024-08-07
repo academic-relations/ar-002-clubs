@@ -4,7 +4,7 @@ import { addWeeks, getWeekOfMonth, subWeeks } from "date-fns";
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
-import { formatMonth } from "@sparcs-clubs/web/utils/Date/formateDate";
+import { formatMonth } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 interface WeekNavigatorProps {
   initialDate?: Date;

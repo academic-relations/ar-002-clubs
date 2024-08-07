@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import styled from "styled-components";
 
@@ -7,11 +7,9 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { CommonSpaceInterface } from "../types/commonSpace";
-
 export interface CommonSpaceFrameProps {
-  commonSpace: CommonSpaceInterface;
-  setCommonSpace: React.Dispatch<React.SetStateAction<CommonSpaceInterface>>;
+  agreement: boolean;
+  setAgreement: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const CommonSpaceNoticeFrameInner = styled.div`
@@ -37,48 +35,33 @@ const StyledCheckboxOuter = styled.div`
 `;
 
 const CommonSpaceNoticeFrame: React.FC<CommonSpaceFrameProps> = ({
-  commonSpace,
-  setCommonSpace,
-}) => {
-  const [checked, setChecked] = useState(false);
-
-  const handleNextClick = () => {
-    if (checked) {
-      setCommonSpace({ ...commonSpace, agreement: true });
-    }
-  };
-
-  return (
-    <CommonSpaceNoticeFrameInner>
-      <Card outline gap={16}>
-        <Typography fs={20} lh={24} fw="MEDIUM">
+  agreement,
+  setAgreement,
+}) => (
+  <CommonSpaceNoticeFrameInner>
+    <Card outline gap={16}>
+      <Typography fs={20} lh={24} fw="MEDIUM">
           안내사항
-        </Typography>
-        <Typography fs={16} lh={32} fw="REGULAR">
+      </Typography>
+      <Typography fs={16} lh={32} fw="REGULAR">
           대충 공용공간 비정기사용에 대한 안내사항
           <br />
           기타 등등 안내 내용 -{">"} 이건 동연 측에서 준비해주겠죠?
-        </Typography>
-      </Card>
-      <StyledBottom>
-        <StyledCheckboxOuter>
-          <Checkbox
-            checked={checked}
-            onClick={() => setChecked(prev => !prev)}
-          />
-          <Typography fs={16} lh={20} fw="REGULAR">
+      </Typography>
+    </Card>
+    <StyledBottom>
+      <StyledCheckboxOuter>
+        <Checkbox
+          checked={agreement}
+          onClick={() => setAgreement(prev => !prev)}
+        />
+        <Typography fs={16} lh={20} fw="REGULAR">
             위의 안내사항을 모두 숙지하였으며, 이에 동의합니다
-          </Typography>
-        </StyledCheckboxOuter>
-        <Button
-          type={checked ? "default" : "disabled"}
-          onClick={handleNextClick}
-        >
-          다음
-        </Button>
-      </StyledBottom>
-    </CommonSpaceNoticeFrameInner>
-  );
-};
+        </Typography>
+      </StyledCheckboxOuter>
+      <Button type={agreement ? "default" : "disabled"}>다음</Button>
+    </StyledBottom>
+  </CommonSpaceNoticeFrameInner>
+);
 
 export default CommonSpaceNoticeFrame;
