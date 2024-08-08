@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import colors from "@sparcs-clubs/web/styles/themes/colors";
 import { getUserType } from "@sparcs-clubs/web/utils/getUserType";
 
 import Button from "../Button";
@@ -63,21 +64,20 @@ const MyMenu: React.FC<{
     <MyMenuWrapper>
       <ProfileList profiles={profiles} setIsMenuOpen={setIsMenuOpen} />
       <Divider />
-      {/* TODO: #333333으로 써놓은거 수정하기 */}
       <Button
         type="outlined"
         onClick={handleMyPageClick}
-        style={{ gap: "4px", color: "#333333", width: "100%" }}
+        style={{ gap: "4px", color: colors.BLACK, width: "100%" }}
       >
-        <Icon type="person" size={16} color="#333333" />
+        <Icon type="person" size={16} />
         마이페이지
       </Button>
       <Button
         type="outlined"
         onClick={handleLogout}
-        style={{ gap: "4px", color: "#333333", width: "100%" }}
+        style={{ gap: "4px", color: colors.BLACK, width: "100%" }}
       >
-        <Icon type="logout" size={16} color="#333333" />
+        <Icon type="logout" size={16} />
         로그아웃
       </Button>
     </MyMenuWrapper>
