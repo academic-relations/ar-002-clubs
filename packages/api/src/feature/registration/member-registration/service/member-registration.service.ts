@@ -5,6 +5,7 @@ import { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/en
 
 import { ApiReg007ResponseNoContent } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg007";
 import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
+import { ApiReg013ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg013";
 import { RegistrationStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
@@ -78,6 +79,25 @@ export class MemberRegistrationService {
     const result =
       await this.memberRegistrationRepository.getStudentRegistrationsMemberRegistrationsMy(
         studentId,
+      );
+    return result;
+  }
+
+  async deleteStudentRegistrationsMemberRegistration(
+    studentId: number,
+    applyId: number,
+  ): Promise<ApiReg013ResponseOk> {
+    const ismemberRegistrationEvent =
+      await this.memberRegistrationRepository.isMemberRegistrationEvent();
+    if (!ismemberRegistrationEvent)
+      throw new HttpException(
+        "Not a member registration event duration",
+        HttpStatus.BAD_REQUEST,
+      );
+    const result =
+      await this.memberRegistrationRepository.deleteMemberRegistration(
+        studentId,
+        applyId,
       );
     return result;
   }

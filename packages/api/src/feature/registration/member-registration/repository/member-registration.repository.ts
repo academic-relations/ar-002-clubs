@@ -4,6 +4,7 @@ import { ApiReg005ResponseCreated } from "@sparcs-clubs/interface/api/registrati
 import { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 import { ApiReg007ResponseNoContent } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg007";
 import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
+import { ApiReg013ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg013";
 import {
   RegistrationEventEnum,
   RegistrationStatusEnum,
@@ -91,7 +92,7 @@ export class MemberRegistrationRepository {
         registrationApplicationStudentEnumId: RegistrationStatusEnum.Pending,
       });
       const { affectedRows } = result;
-      if (affectedRows > 2) {
+      if (affectedRows !== 1) {
         await tx.rollback();
         throw new HttpException("Registration failed", 500);
       }
@@ -131,6 +132,38 @@ export class MemberRegistrationRepository {
     return { applies: result };
   }
 
+  async deleteMemberRegistration(
+    studentId,
+    applyId,
+  ): Promise<ApiReg013ResponseOk> {
+    const cur = getKSTDate();
+    await this.db.transaction(async tx => {
+      const [result] = await tx
+        .update(RegistrationApplicationStudent)
+        .set({
+          deletedAt: cur,
+        })
+        .where(
+          and(
+            eq(RegistrationApplicationStudent.id, applyId),
+            eq(RegistrationApplicationStudent.studentId, studentId),
+            isNull(RegistrationApplicationStudent.deletedAt),
+          ),
+        );
+      if (result.affectedRows > 2) {
+        await tx.rollback();
+        throw new HttpException("Registration delete failed", 500);
+      } else if (result.affectedRows === 0) {
+        await tx.rollback();
+        throw new HttpException(
+          "Not available application",
+          HttpStatus.FORBIDDEN,
+        );
+      }
+    });
+    return {};
+  }
+
   async patchMemberRegistration(
     applyId,
     clubId,
@@ -157,6 +190,7 @@ export class MemberRegistrationRepository {
         await tx.rollback();
         throw new HttpException("Registration update failed", 500);
       } else if (result.affectedRows === 0) {
+        await tx.rollback();
         throw new HttpException(
           "Not available application",
           HttpStatus.FORBIDDEN,
