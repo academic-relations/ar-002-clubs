@@ -75,12 +75,12 @@ export const Registration = mysqlTable(
   },
   table => ({
     registrationApplicationTypeEnumIdFk: foreignKey({
-      name: "registration_type_enum_id_fk",
+      name: "registration_registration_type_enum_id_fk",
       columns: [table.registrationApplicationTypeEnumId],
       foreignColumns: [RegistrationTypeEnum.enumId],
     }),
     registrationApplicationStatusEnumIdFk: foreignKey({
-      name: "registration_status_enum_id_fk",
+      name: "registration_registration_status_enum_id_fk",
       columns: [table.registrationApplicationStatusEnumId],
       foreignColumns: [RegistrationStatusEnum.enumId],
     }),
@@ -99,7 +99,7 @@ export const RegistrationClubRuleFile = mysqlTable(
   },
   table => ({
     registrationIdFk: foreignKey({
-      name: "registration_id_fk",
+      name: "registration_club_rule_file_registration_id_fk",
       columns: [table.registrationId],
       foreignColumns: [Registration.id],
     }),
@@ -118,7 +118,7 @@ export const RegistrationExternalInstructionFile = mysqlTable(
   },
   table => ({
     registrationIdFk: foreignKey({
-      name: "registration_id_fk",
+      name: "registration_external_instruction_file_registration_id_fk",
       columns: [table.registrationId],
       foreignColumns: [Registration.id],
     }),
@@ -145,7 +145,7 @@ export const RegistrationApplicationStudent = mysqlTable(
       .notNull()
       .references(() => Club.id),
     registrationApplicationStudentEnumId: int(
-      "registration_application_student_student_status_enum",
+      "registration_application_student_status_enum",
     ).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -154,7 +154,7 @@ export const RegistrationApplicationStudent = mysqlTable(
     registrationStudentStatusEnumFk: foreignKey({
       columns: [table.registrationApplicationStudentEnumId],
       foreignColumns: [RegistrationApplicationStudentStatusEnum.enumId],
-      name: "registration_application_student_enum_id_fk",
+      name: "registration_application_student_status_enum_id_fk",
     }),
   }),
 );
