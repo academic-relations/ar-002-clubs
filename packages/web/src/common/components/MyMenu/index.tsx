@@ -8,6 +8,7 @@ import colors from "@sparcs-clubs/web/styles/themes/colors";
 import { getUserType } from "@sparcs-clubs/web/utils/getUserType";
 
 import Button from "../Button";
+import FlexWrapper from "../FlexWrapper";
 import Icon from "../Icon";
 
 import ProfileList from "./_atomic/ProfileList";
@@ -64,22 +65,24 @@ const MyMenu: React.FC<{
     <MyMenuWrapper>
       <ProfileList profiles={profiles} setIsMenuOpen={setIsMenuOpen} />
       <Divider />
-      <Button
-        type="outlined"
-        onClick={handleMyPageClick}
-        style={{ gap: "4px", color: colors.BLACK, width: "100%" }}
-      >
-        <Icon type="person" size={16} />
-        마이페이지
-      </Button>
-      <Button
-        type="outlined"
-        onClick={handleLogout}
-        style={{ gap: "4px", color: colors.BLACK, width: "100%" }}
-      >
-        <Icon type="logout" size={16} />
-        로그아웃
-      </Button>
+      <FlexWrapper direction="column" gap={8} style={{ width: "100%" }}>
+        <Button
+          type="outlined"
+          onClick={handleMyPageClick}
+          style={{ gap: "4px", color: colors.BLACK }}
+        >
+          <Icon type="person" size={16} />
+          마이페이지
+        </Button>
+        <Button
+          type="outlined"
+          onClick={handleLogout}
+          style={{ gap: "4px", color: colors.BLACK }}
+        >
+          <Icon type="logout" size={16} />
+          로그아웃
+        </Button>
+      </FlexWrapper>
     </MyMenuWrapper>
   );
 };
