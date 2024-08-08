@@ -6,11 +6,16 @@ import apiReg001, {
 import apiReg002, {
   ApiReg002ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
-
 import apiReg003 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg003";
+import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
-import { Public } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import {
+  Public,
+  Student,
+} from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+
+import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
 import { ClubRegistrationService } from "../service/club-registration.service";
 
@@ -53,5 +58,17 @@ export class ClubRegistrationController {
     const orders =
       await this.clubRegistrationService.getStudentRegistrationClubRegistrationQualificationPromotional();
     return orders;
+  }
+
+  @Student()
+  @Get("/student/registrations/club-registrations/my")
+  async getStudentRegistrationsClubRegistrationsMy(
+    @GetStudent() user: GetStudent,
+  ): Promise<ApiReg012ResponseOk> {
+    const response =
+      await this.clubRegistrationService.getStudentRegistrationsClubRegistrationsMy(
+        user.studentId,
+      );
+    return response;
   }
 }

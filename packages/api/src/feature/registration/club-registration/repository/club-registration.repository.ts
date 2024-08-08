@@ -1,11 +1,17 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
-import { and, eq, isNull } from "drizzle-orm";
+import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
+import { RegistrationEventEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { and, count, eq, gt, inArray, isNull, lte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
+import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
-import { Registration } from "@sparcs-clubs/api/drizzle/schema/registration.schema";
+import {
+  Registration,
+  RegistrationDeadlineD,
+} from "@sparcs-clubs/api/drizzle/schema/registration.schema";
 
 @Injectable()
 export class ClubRegistrationRepository {
@@ -56,5 +62,45 @@ export class ClubRegistrationRepository {
     });
 
     logger.debug("[createRegistration] insertion ends successfully");
+  }
+
+  async isClubRegistrationEvent(): Promise<boolean> {
+    const cur = getKSTDate();
+    const clubRegistrationEventEnum = [
+      RegistrationEventEnum.ClubRegistrationApplication,
+      RegistrationEventEnum.ClubRegistrationModification,
+    ];
+    const { isAvailable } = await this.db
+      .select({ isAvailable: count(RegistrationDeadlineD.id) })
+      .from(RegistrationDeadlineD)
+      .where(
+        and(
+          lte(RegistrationDeadlineD.startDate, cur),
+          gt(RegistrationDeadlineD.endDate, cur),
+          inArray(
+            RegistrationDeadlineD.registrationDeadlineEnumId,
+            clubRegistrationEventEnum,
+          ),
+        ),
+      )
+      .then(takeUnique);
+    return isAvailable === 1;
+  }
+
+  async getStudentRegistrationsClubRegistrationsMy(
+    studentId: number,
+  ): Promise<ApiReg012ResponseOk> {
+    const result = await this.db
+      .select({
+        id: Registration.id,
+        registrationTypeEnumId: Registration.registrationApplicationTypeEnumId,
+        registrationStatusEnumId:
+          Registration.registrationApplicationStatusEnumId,
+        krName: Registration.clubNameKr,
+        enName: Registration.clubNameEn,
+      })
+      .from(Registration)
+      .where(and(eq(Registration.studentId, studentId)));
+    return { registrations: result };
   }
 }
