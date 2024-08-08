@@ -15,7 +15,9 @@ interface ChangeDivisionPresidentModalContentProps {
   change: [string, string];
   phonePlaceholder?: string;
   onClose: () => void;
-  refetch: () => void;
+  fetch: () => void;
+  onConfirmed: () => void;
+  onRejected: () => void;
 }
 
 const ButtonWrapper = styled.div`
@@ -32,7 +34,9 @@ const ChangeDivisionPresidentModalContent: React.FC<
   change,
   phonePlaceholder = "010-XXXX-XXXX",
   onClose,
-  refetch,
+  fetch,
+  onConfirmed,
+  onRejected,
 }: ChangeDivisionPresidentModalContentProps) => {
   const messageContext = new ChangeDivisionPresidentMessageContext({
     actingPresident,
@@ -48,12 +52,14 @@ const ChangeDivisionPresidentModalContent: React.FC<
 
   const onConfirm = () => {
     patchMyDelegateRequest({ requestId: 1 }, { phoneNumber: phone });
+    onConfirmed();
     onClose();
-    refetch();
+    fetch();
   };
 
   const onReject = () => {
     patchMyDelegateRequest({ requestId: 1 }, { phoneNumber: phone });
+    onRejected();
     onClose();
   };
 

@@ -2,7 +2,7 @@ type ChangeDivisionStatusType =
   | "Requested"
   | "Canceled"
   | "Rejected"
-  | "Completed";
+  | "Confirmed";
 type Pages = "/my" | "/manage-division";
 
 interface ChangeDivisionPresidentMessageContextProps {
@@ -54,7 +54,7 @@ export class ChangeDivisionPresidentMessageContext {
       Requested: ` 변경이 다음과 같이 요청되었습니다 `,
       Canceled: ` 변경이 취소되었습니다`,
       Rejected: ` 변경 요청이 거절되었습니다 `,
-      Completed: "error",
+      Confirmed: "error",
     };
 
     const innerMessage =
@@ -84,7 +84,7 @@ export class ChangeDivisionPresidentMessageContext {
   private getStatus() {
     const myPageStatus = {
       Requested: "요청",
-      Completed: "완료",
+      Confirmed: "완료",
       Canceled: "error",
       Rejected: "error",
     };
@@ -93,7 +93,7 @@ export class ChangeDivisionPresidentMessageContext {
       Requested: "완료",
       Canceled: "취소",
       Rejected: "거절",
-      Completed: "error",
+      Confirmed: "error",
     };
 
     return (this.page === "/my" ? myPageStatus : manageDivisionPageStatus)[

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 
+import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { singleSemesterFundingListSectionTitleText } from "@sparcs-clubs/web/constants/manageClubFunding";
 
@@ -34,16 +35,6 @@ const SingleSemesterTitleRow = styled.div`
   gap: 20px;
 
   width: 100%;
-`;
-
-const MoreInfo = styled.div`
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  color: ${({ theme }) => theme.colors.BLACK};
-  text-decoration-line: underline;
-  cursor: pointer;
 `;
 
 const mockData: {
@@ -117,9 +108,13 @@ const PastSingleSemesterFundingListSection: React.FC = () => {
             mockData.fundings.length,
           )}
         </Typography>
-        <MoreInfo onClick={() => setToggle(!toggle)}>
-          {toggle ? `접기` : `펼치기`}
-        </MoreInfo>
+        <TextButton
+          fs={14}
+          fw="REGULAR"
+          color="BLACK"
+          text={toggle ? `접기` : `펼치기`}
+          onClick={() => setToggle(!toggle)}
+        />
       </SingleSemesterTitleRow>
       {toggle ? <PastFundingListTable /> : null}
     </PastSingleSemesterFundingListSectionInner>

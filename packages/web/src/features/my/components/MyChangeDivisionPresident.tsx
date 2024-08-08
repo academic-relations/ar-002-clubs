@@ -11,25 +11,31 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { ChangeDivisionPresidentMessageContext } from "@sparcs-clubs/web/constants/changeDivisionPresident";
 import ChangeDivisionPresidentModalContent from "@sparcs-clubs/web/features/my/components/ChangeDivisionPresidentModalContent";
 
-type StatusType = "Requested" | "Completed";
+type StatusType = "Requested" | "Confirmed";
 
 interface MyChangeDivisionPresidentProps {
   status: StatusType;
+  isDivisionPresident: boolean;
   actingPresident?: boolean;
   change?: [string, string];
-  refetch: () => void;
+  fetch: () => void;
+  onConfirmed: () => void;
+  onRejected: () => void;
 }
 
 const notificationStatus: Record<StatusType, "Alert" | "Success"> = {
   Requested: "Alert",
-  Completed: "Success",
+  Confirmed: "Success",
 };
 
 const MyChangeDivisionPresident: React.FC<MyChangeDivisionPresidentProps> = ({
   status = "Requested",
+  isDivisionPresident,
   actingPresident = false,
   change = undefined,
-  refetch,
+  fetch,
+  onConfirmed,
+  onRejected,
 }: MyChangeDivisionPresidentProps) => {
   const router = useRouter();
   const messageContext = new ChangeDivisionPresidentMessageContext({
@@ -52,7 +58,9 @@ const MyChangeDivisionPresident: React.FC<MyChangeDivisionPresidentProps> = ({
           actingPresident
           change={["20210227 박병찬", "20200510 이지윤"]}
           onClose={close}
-          refetch={refetch}
+          fetch={fetch}
+          onConfirmed={onConfirmed}
+          onRejected={onRejected}
         />
       </Modal>
     ));
@@ -74,12 +82,14 @@ const MyChangeDivisionPresident: React.FC<MyChangeDivisionPresidentProps> = ({
         <Typography fs={16} lh={24} style={{ whiteSpace: "pre-wrap" }}>
           {messageContext.getBody()}
         </Typography>
-        <TextButton
-          text={buttonString}
-          color="gray"
-          fw="REGULAR"
-          onClick={onClick}
-        />
+        {isDivisionPresident && (
+          <TextButton
+            text={buttonString}
+            color="GRAY"
+            fw="REGULAR"
+            onClick={onClick}
+          />
+        )}
       </FlexWrapper>
     </NotificationCard>
   );

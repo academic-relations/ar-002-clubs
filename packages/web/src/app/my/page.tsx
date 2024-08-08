@@ -18,10 +18,31 @@ import { useGetMyDelegateRequest } from "@sparcs-clubs/web/features/my/services/
 const My: React.FC = () => {
   // TODO: clb014 api 구현되면 refetch 테스트
   const { data, isLoading, isError, refetch } = useGetMyDelegateRequest();
+  const fetchDivisionPresident = () => {}; // TODO
+
   const { data: myProfile } = useGetUserProfile();
 
   const [type, setType] = useState<"Requested" | "Finished">("Finished");
-  const mockHasDivisionPresidentChangeNotice = true;
+  const [
+    mockHasDivisionPresidentChangeNotice,
+    setMockHasDivisionPresidentChangeNotice,
+  ] = useState(true);
+  const mockIsDivisionPresident = true; // TODO: divisionPresident == user
+  const mockChangeDivisionPresident = () => {}; // TODO: change divisionPresident
+  const mockRejectDivisionPresidentChange = () => {}; // TODO: set divisionPresidentChange status to "Rejected"
+
+  const [divisionChangeRequestStatus, setDivisionChangeRequestStatus] =
+    useState<"Requested" | "Confirmed">("Requested");
+
+  const onDivisionPresidentChangeRequestConfirmed = () => {
+    setDivisionChangeRequestStatus("Confirmed");
+    mockChangeDivisionPresident();
+  };
+
+  const onDivisionPresidentChangeRequestRejected = () => {
+    setMockHasDivisionPresidentChangeNotice(false);
+    mockRejectDivisionPresidentChange();
+  };
 
   useEffect(() => {
     switch (data?.requests[0].clubDelegateChangeRequestStatusEnumId) {
@@ -54,9 +75,12 @@ const My: React.FC = () => {
         )}
         {mockHasDivisionPresidentChangeNotice && (
           <MyChangeDivisionPresident
-            status="Requested"
+            status={divisionChangeRequestStatus}
             change={["20210227 박병찬", "20200510 이지윤"]}
-            refetch={refetch}
+            fetch={fetchDivisionPresident}
+            isDivisionPresident={mockIsDivisionPresident}
+            onConfirmed={onDivisionPresidentChangeRequestConfirmed}
+            onRejected={onDivisionPresidentChangeRequestRejected}
           />
         )}
         <MyInfoFrame />

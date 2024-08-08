@@ -5,6 +5,8 @@ import React from "react";
 import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 
+import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
+
 import Typography from "./Typography";
 
 const FoldableSectionOuter = styled.div`
@@ -17,16 +19,6 @@ const FoldableSectionInner = styled.div`
   justify-content: space-between;
   gap: 20px;
   width: 100%;
-`;
-
-const MoreInfo = styled.div`
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  color: ${({ theme }) => theme.colors.BLACK};
-  text-decoration-line: underline;
-  cursor: pointer;
 `;
 
 const ChildrenOuter = styled.div.withConfig({
@@ -57,9 +49,13 @@ const FoldableSection: React.FC<{
         <Typography fs={20} lh={24} fw="MEDIUM">
           {title}
         </Typography>
-        <MoreInfo onClick={toggleHandler ?? openHandler}>
-          {toggle ?? open ? `접기` : `펼치기`}
-        </MoreInfo>
+        <TextButton
+          fs={14}
+          fw="REGULAR"
+          color="BLACK"
+          text={toggle ?? open ? `접기` : `펼치기`}
+          onClick={toggleHandler ?? openHandler}
+        />
       </FoldableSectionInner>
       {(toggle ?? open) && children && (
         <ChildrenOuter margin={childrenMargin}>{children}</ChildrenOuter>
