@@ -35,12 +35,12 @@ const My: React.FC = () => {
     useState<"Requested" | "Confirmed">("Requested");
 
   const onDivisionPresidentChangeRequestConfirmed = () => {
-    setDivisionChangeRequestStatus("Confirmed");
+    setDivisionChangeRequestStatus("Confirmed"); // TODO: 변경 요청 보내고 다시 받아오는 방식 (api 구현 이후)
     mockChangeDivisionPresident();
   };
 
   const onDivisionPresidentChangeRequestRejected = () => {
-    setMockHasDivisionPresidentChangeNotice(false);
+    setMockHasDivisionPresidentChangeNotice(false); // TODO: 변경 요청 보내고 다시 받아오는 방식 (api 구현 이후)
     mockRejectDivisionPresidentChange();
   };
 
