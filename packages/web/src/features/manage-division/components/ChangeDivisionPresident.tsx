@@ -2,20 +2,29 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import NotificationCard from "@sparcs-clubs/web/common/components/NotificationCard";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { ChangeDivisionPresidentMessageContext } from "@sparcs-clubs/web/constants/changeDivisionPresident";
+import {
+  ChangeDivisionPresidentMessageContext,
+  ChangeDivisionPresidentStatusEnum,
+} from "@sparcs-clubs/web/constants/changeDivisionPresident";
+
+type ManageDivisionPresidentStatusEnum =
+  | ChangeDivisionPresidentStatusEnum.Requested
+  | ChangeDivisionPresidentStatusEnum.Canceled
+  | ChangeDivisionPresidentStatusEnum.Rejected;
 
 interface ChangeDivisionPresidentProps {
-  status: "Requested" | "Canceled" | "Rejected";
+  status: ManageDivisionPresidentStatusEnum;
   actingPresident: boolean;
   change?: [string, string];
 }
 
 const ChangeDivisionPresident: React.FC<ChangeDivisionPresidentProps> = ({
-  status = "Requested",
+  status = ChangeDivisionPresidentStatusEnum.Requested,
   actingPresident = true,
   change = undefined,
 }: ChangeDivisionPresidentProps) => {
-  const notificationStatus = status === "Rejected" ? "Error" : "Success";
+  const notificationStatus =
+    status === ChangeDivisionPresidentStatusEnum.Rejected ? "Error" : "Success";
   const messageContext = new ChangeDivisionPresidentMessageContext({
     actingPresident,
     division: "'생활체육' 분과",
@@ -34,7 +43,7 @@ const ChangeDivisionPresident: React.FC<ChangeDivisionPresidentProps> = ({
         <Typography fs={16} lh={24} style={{ whiteSpace: "pre-wrap" }}>
           {messageContext.getBody()}
         </Typography>
-        {status === "Requested" && (
+        {status === ChangeDivisionPresidentStatusEnum.Requested && (
           <Typography fs={16} lh={24}>
             {messageContext.getRequestNotice()}
           </Typography>
