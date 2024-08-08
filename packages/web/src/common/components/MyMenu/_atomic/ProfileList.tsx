@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import styled from "styled-components";
@@ -13,6 +13,8 @@ interface ProfileListProps {
     token: string;
   }[];
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedToken: string;
+  setSelectedToken: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface DecodedToken extends JwtPayload {
@@ -30,15 +32,15 @@ const ProfileListWrapper = styled.div`
 const ProfileList: React.FC<ProfileListProps> = ({
   profiles,
   setIsMenuOpen,
+  selectedToken,
+  setSelectedToken,
 }) => {
-  const [selectedToken, setSelectedToken] = useState<string>(profiles[0].token);
-
   const handleProfileClick = (profile: {
     profileType: string;
     token: string;
   }) => {
     setSelectedToken(profile.token);
-    localStorage.setItem("accessToken", selectedToken);
+    localStorage.setItem("accessToken", profile.token);
     setIsMenuOpen(false);
   };
 

@@ -13,6 +13,12 @@ import Icon from "../Icon";
 
 import ProfileList from "./_atomic/ProfileList";
 
+interface MyMenuProps {
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedToken: string;
+  setSelectedToken: React.Dispatch<React.SetStateAction<string>>;
+}
+
 const MyMenuWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -39,9 +45,11 @@ const Divider = styled.div`
   border-radius: 4px;
 `;
 
-const MyMenu: React.FC<{
-  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ setIsMenuOpen }) => {
+const MyMenu: React.FC<MyMenuProps> = ({
+  setIsMenuOpen,
+  selectedToken,
+  setSelectedToken,
+}) => {
   const router = useRouter();
 
   const handleMyPageClick = () => {
@@ -63,7 +71,12 @@ const MyMenu: React.FC<{
 
   return (
     <MyMenuWrapper>
-      <ProfileList profiles={profiles} setIsMenuOpen={setIsMenuOpen} />
+      <ProfileList
+        profiles={profiles}
+        setIsMenuOpen={setIsMenuOpen}
+        selectedToken={selectedToken}
+        setSelectedToken={setSelectedToken}
+      />
       <Divider />
       <FlexWrapper direction="column" gap={8} style={{ width: "100%" }}>
         <Button
