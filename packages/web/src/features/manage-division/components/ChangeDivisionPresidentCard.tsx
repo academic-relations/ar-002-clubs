@@ -31,6 +31,7 @@ const ChangeDivisionPresidentCard = () => {
     [string, string] | undefined
   >(undefined);
 
+  // TODO: Request, Cancel, Rejected 관련해서 api와 연결
   const onDivisionPresidentChangeRequested = (to: string) => {
     if (mockPresident === to) {
       return;
@@ -91,7 +92,8 @@ const ChangeDivisionPresidentCard = () => {
           onChange={onDivisionPresidentChangeRequested}
           disabled={isSelectDisabled}
         />
-        {changeNoticeStatus === "Requested" && (
+        {changeNoticeStatus ===
+          "Requested" /* TODO: 거절되었는지 승인되었는지 api에서 불러오기  */ && (
           <TextButton
             text={`TODO: ${changeFromTo?.[1]}이 거절함`}
             onClick={onDivisionPresidentChangeRejected}

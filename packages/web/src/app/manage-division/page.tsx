@@ -9,7 +9,7 @@ const ManageDivision: React.FC = () => {
   const mockIsDivisionPresident = true; // TODO: divisionPresident == user
 
   if (!mockIsDivisionPresident) {
-    return <Custom404 />;
+    return <Custom404 />; // TODO: "접근 권한이 없음" 페이지
   }
 
   return (
