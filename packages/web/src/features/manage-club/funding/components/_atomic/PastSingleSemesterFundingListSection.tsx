@@ -4,7 +4,7 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 
-import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
+import FoldUnfoldButton from "@sparcs-clubs/web/common/components/Buttons/FoldUnfoldButton";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { singleSemesterFundingListSectionTitleText } from "@sparcs-clubs/web/constants/manageClubFunding";
 
@@ -98,7 +98,7 @@ const mockData: {
 };
 
 const PastSingleSemesterFundingListSection: React.FC = () => {
-  const [toggle, setToggle] = useState<boolean>(true);
+  const [folded, setFolded] = useState<boolean>(false);
   return (
     <PastSingleSemesterFundingListSectionInner>
       <SingleSemesterTitleRow>
@@ -108,15 +108,9 @@ const PastSingleSemesterFundingListSection: React.FC = () => {
             mockData.fundings.length,
           )}
         </Typography>
-        <TextButton
-          fs={14}
-          fw="REGULAR"
-          color="BLACK"
-          text={toggle ? `접기` : `펼치기`}
-          onClick={() => setToggle(!toggle)}
-        />
+        <FoldUnfoldButton folded={folded} setFolded={setFolded} />
       </SingleSemesterTitleRow>
-      {toggle ? <PastFundingListTable /> : null}
+      {folded ? null : <PastFundingListTable />}
     </PastSingleSemesterFundingListSectionInner>
   );
 };

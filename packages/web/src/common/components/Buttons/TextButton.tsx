@@ -6,6 +6,7 @@ import { Theme } from "@sparcs-clubs/web/styles/themes";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 type FontWeight = keyof Theme["fonts"]["WEIGHT"];
+export type TextButtonColor = "PRIMARY" | "GRAY" | "BLACK";
 
 interface ButtonProps {
   disabled: boolean;
@@ -29,7 +30,7 @@ const StyledTextButton = styled.button<ButtonProps>`
 interface TextButtonProps {
   text: string;
   disabled?: boolean;
-  color?: "PRIMARY" | "GRAY" | "BLACK";
+  color?: TextButtonColor;
   fs?: number;
   fw?: FontWeight;
   onClick?: () => void;
