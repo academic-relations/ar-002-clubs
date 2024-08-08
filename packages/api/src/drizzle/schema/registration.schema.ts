@@ -149,28 +149,31 @@ export const RegistrationApplicationStudent = mysqlTable(
   }),
 );
 
-export const RegistrationEventEnum = mysqlTable("registration_event_enum", {
-  enumId: int("enum_id").autoincrement().primaryKey(),
-  enumName: varchar("enum_name", { length: 255 }),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  deletedAt: timestamp("deleted_at"),
-});
+export const RegistrationDeadlineEnum = mysqlTable(
+  "registration_deadline_enum",
+  {
+    enumId: int("enum_id").autoincrement().primaryKey(),
+    enumName: varchar("enum_name", { length: 255 }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+);
 
-export const RegistrationEventD = mysqlTable(
-  "registration_event_d",
+export const RegistrationDeadlineD = mysqlTable(
+  "registration_deadline_d",
   {
     id: int("id").autoincrement().primaryKey(),
-    registrationEventEnumId: int("registration_event_enum_id").notNull(),
-    startTerm: date("start_term"),
-    endTerm: date("end_term"),
+    registrationDeadlineEnumId: int("registration_deadline_enum_id").notNull(),
+    startDate: date("start_date"),
+    endDate: date("end_date"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
     registrationEventEnumIdFk: foreignKey({
-      columns: [table.registrationEventEnumId],
-      foreignColumns: [RegistrationEventEnum.enumId],
-      name: "registration_event_enum_id_fk",
+      columns: [table.registrationDeadlineEnumId],
+      foreignColumns: [RegistrationDeadlineEnum.enumId],
+      name: "registration_deadline_d_registration_deadline_enum_id_fk",
     }),
   }),
 );
