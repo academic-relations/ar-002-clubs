@@ -1,7 +1,6 @@
 import {
   date,
   foreignKey,
-  index,
   int,
   mysqlTable,
   timestamp,
@@ -11,7 +10,6 @@ import {
 import { Club } from "./club.schema";
 import { Division } from "./division.schema";
 import { Professor, Student } from "./user.schema";
-// import { identity } from "rxjs";
 
 export const RegistrationTypeEnum = mysqlTable("registration_type_enum", {
   enumId: int("enum_id").autoincrement().primaryKey(),
@@ -76,12 +74,16 @@ export const Registration = mysqlTable(
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    registrationApplicationTypeEnumIdFk: index(
-      "registration_type_enum_id_fk",
-    ).on(table.registrationApplicationTypeEnumId),
-    registrationApplicationStatusEnumIdFk: index(
-      "registration_status_enum_id_fk",
-    ).on(table.registrationApplicationStatusEnumId),
+    registrationApplicationTypeEnumIdFk: foreignKey({
+      name: "registration_type_enum_id_fk",
+      columns: [table.registrationApplicationTypeEnumId],
+      foreignColumns: [RegistrationTypeEnum.enumId],
+    }),
+    registrationApplicationStatusEnumIdFk: foreignKey({
+      name: "registration_status_enum_id_fk",
+      columns: [table.registrationApplicationStatusEnumId],
+      foreignColumns: [RegistrationStatusEnum.enumId],
+    }),
   }),
 );
 
@@ -96,7 +98,11 @@ export const RegistrationClubRuleFile = mysqlTable(
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    registrationIdFk: index("registration_id_fk").on(table.registrationId),
+    registrationIdFk: foreignKey({
+      name: "registration_id_fk",
+      columns: [table.registrationId],
+      foreignColumns: [Registration.id],
+    }),
   }),
 );
 
@@ -111,7 +117,11 @@ export const RegistrationExternalInstructionFile = mysqlTable(
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    registrationIdFk: index("registration_id_fk").on(table.registrationId),
+    registrationIdFk: foreignKey({
+      name: "registration_id_fk",
+      columns: [table.registrationId],
+      foreignColumns: [Registration.id],
+    }),
   }),
 );
 export const RegistrationApplicationStudentStatusEnum = mysqlTable(
