@@ -8,7 +8,7 @@ import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 interface NotificationCardProps {
   status: "Success" | "Error" | "Alert";
-  header: string;
+  header?: string;
   children?: React.ReactNode;
 }
 
@@ -28,6 +28,7 @@ const NotificationBox = styled.div.withConfig({
 
   background-color: ${({ theme, color }) => theme.colors[color][100]};
   padding: 12px 16px;
+  width: 100%;
 `;
 
 const IconWrapper = styled.div`
@@ -49,9 +50,11 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           <Icon type={iconType} size={20} color={colors[color][600]} />
         </IconWrapper>
         <FlexWrapper gap={8} direction="column">
-          <Typography fw="MEDIUM" fs={16} lh={24}>
-            {header}
-          </Typography>
+          {header ?? (
+            <Typography fw="MEDIUM" fs={16} lh={24}>
+              {header}
+            </Typography>
+          )}
           {children}
         </FlexWrapper>
       </FlexWrapper>

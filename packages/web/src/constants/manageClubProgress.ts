@@ -88,17 +88,30 @@ export const manageRentalProgress = (
         // TODO: 반려사유 넣기
         infoText: "동아리 연합회 반려 사유: 어쩌고 저쩌고",
       };
-    // TODO: 연체, 취소 만들기
-    default:
+    case RentalOrderStatusEnum.Overdue:
       return {
         labels: [
           "신청 완료",
+          "동아리 연합회 승인 완료",
+          "대여 완료",
+          "반납 연체",
+        ],
+        progress: [
+          { status: Status.Approved, date: new Date() },
+          { status: Status.Approved, date: new Date() },
+          { status: Status.Approved, date: new Date() },
+          { status: Status.Canceled, date: new Date() },
+        ],
+      };
+    default: // Canceled
+      return {
+        labels: [
+          "신청 취소",
           "동아리 연합회 승인 대기",
           "대여 대기",
           "반납 대기",
         ],
-        progress: [{ status: Status.Approved, date: new Date() }],
-        infoText: "승인이 완료되기 전까지 신청을 취소할 수 있습니다",
+        progress: [{ status: Status.Canceled, date: new Date() }],
       };
   }
 };
