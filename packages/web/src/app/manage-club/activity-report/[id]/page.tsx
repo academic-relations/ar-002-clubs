@@ -77,8 +77,17 @@ const FilePreviewContainer: React.FC<React.PropsWithChildren> = ({
   </FilePreviewContainerWrapper>
 );
 
-const BackButton = styled(Button)`
-  padding: 8px 16px;
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+`;
+
+const DeleteAndEditButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
 
 const ActivityReportDetail: React.FC = () => {
@@ -161,9 +170,15 @@ const ActivityReportDetail: React.FC = () => {
             <Tag color={approvalTagColor}>{approvalTagText}</Tag>
           </FlexWrapper>
         </Card>
-        <BackButton type="default" onClick={onClick}>
-          목록으로 돌아가기
-        </BackButton>
+        <ButtonContainer>
+          <Button type="default" onClick={onClick}>
+            목록으로 돌아가기
+          </Button>
+          <DeleteAndEditButtonContainer>
+            <Button type="default">삭제</Button>
+            <Button type="default">수정</Button>
+          </DeleteAndEditButtonContainer>
+        </ButtonContainer>
       </FlexWrapper>
     </FlexWrapper>
   );
