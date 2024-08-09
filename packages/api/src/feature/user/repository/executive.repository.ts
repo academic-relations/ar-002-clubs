@@ -26,4 +26,19 @@ export default class ExecutiveRepository {
       );
     return result.length > 0;
   }
+
+  async getExecutiveById(id: number) {
+    const crt = getKSTDate();
+    const result = await this.db
+      .select()
+      .from(ExecutiveT)
+      .where(
+        and(
+          eq(ExecutiveT.executiveId, id),
+          gte(ExecutiveT.endTerm, crt),
+          lte(ExecutiveT.startTerm, crt),
+        ),
+      );
+    return result;
+  }
 }

@@ -1,10 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import ExecutiveRepository from "../repository/executive.repository";
 import { StudentRepository } from "../repository/student.repository";
 
 @Injectable()
 export default class UserPublicService {
-  constructor(private studentRepository: StudentRepository) {}
+  constructor(
+    private studentRepository: StudentRepository,
+    private executiveRepository: ExecutiveRepository,
+  ) {}
 
   /**
    * 학생의 id를 통해 학생 정보를 가져옵니다.
@@ -21,6 +25,21 @@ export default class UserPublicService {
     }
 
     return students[0];
+  }
+
+  async getExecutiveById(executive: { id: number }) {
+    const executives = await this.executiveRepository.getExecutiveById(
+      executive.id,
+    );
+
+    if (executives.length > 1)
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+
+    if (executives.length === 0) {
+      return undefined;
+    }
+
+    return executives[0];
   }
 
   async isNotGraduateStudent(
