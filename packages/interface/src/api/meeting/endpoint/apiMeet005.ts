@@ -18,7 +18,9 @@ const requestQuery = z.object({
 const requestBody = z.object({});
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({}),
+  [HttpStatusCode.Ok]: z.object({
+    degree: z.coerce.number(),
+  }),
 };
 
 const responseErrorMap = {};
