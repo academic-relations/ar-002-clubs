@@ -1,8 +1,18 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { HttpException, Inject, Injectable } from "@nestjs/common";
 import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
+import { ApiReg010ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg010";
 import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
 import { RegistrationEventEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-import { and, count, eq, gt, inArray, isNull, lte } from "drizzle-orm";
+import {
+  and,
+  count,
+  eq,
+  gt,
+  inArray,
+  isNotNull,
+  isNull,
+  lte,
+} from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -85,6 +95,32 @@ export class ClubRegistrationRepository {
       )
       .then(takeUnique);
     return isAvailable === 1;
+  }
+
+  async deleteStudentRegistrationsClubRegistration(
+    studentId: number,
+    applyId: number,
+  ): Promise<ApiReg010ResponseOk> {
+    const cur = getKSTDate();
+    await this.db.transaction(async tx => {
+      const [result] = await tx
+        .update(Registration)
+        .set({
+          deletedAt: cur,
+        })
+        .where(
+          and(
+            eq(Registration.id, applyId),
+            eq(Registration.studentId, studentId),
+            isNotNull(Registration.deletedAt),
+          ),
+        );
+      if (result.affectedRows !== 1) {
+        await tx.rollback();
+        throw new HttpException("Registration delete failed", 500);
+      }
+    });
+    return {};
   }
 
   async getStudentRegistrationsClubRegistrationsMy(

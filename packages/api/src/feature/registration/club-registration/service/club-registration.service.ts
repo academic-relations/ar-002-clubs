@@ -5,6 +5,7 @@ import {
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import { ApiReg002ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
 import { ApiReg003ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg003";
+import { ApiReg010ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg010";
 import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
@@ -158,6 +159,25 @@ export class ClubRegistrationService {
 
     // 시간 부분을 00:00:00으로 설정
     return new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
+  }
+
+  async deleteStudentRegistrationsClubRegistration(
+    studentId: number,
+    applyId: number,
+  ): Promise<ApiReg010ResponseOk> {
+    const isClubRegistrationEvent =
+      await this.clubRegistrationRepository.isClubRegistrationEvent();
+    if (!isClubRegistrationEvent) {
+      throw new HttpException(
+        "Not a club registration event duration",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    await this.clubRegistrationRepository.deleteStudentRegistrationsClubRegistration(
+      studentId,
+      applyId,
+    );
+    return {};
   }
 
   async getStudentRegistrationsClubRegistrationsMy(
