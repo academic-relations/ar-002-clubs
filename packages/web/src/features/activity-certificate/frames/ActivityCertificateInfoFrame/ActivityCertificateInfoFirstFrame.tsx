@@ -43,11 +43,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
         firstFilled: true,
       });
     }
-  }, [
-    activityCertificate,
-    activityCertificateProgress,
-    setActivityCertificateProgress,
-  ]);
+  }, [activityCertificate]);
 
   useEffect(() => {
     if (
@@ -65,11 +61,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
         firstNoError: true,
       });
     }
-  }, [
-    activityCertificateProgress,
-    firstErrorStatus,
-    setActivityCertificateProgress,
-  ]);
+  }, [firstErrorStatus]);
 
   return (
     <Card outline gap={40}>
