@@ -5,8 +5,15 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { ChangeDivisionPresidentStatusEnum } from "@sparcs-clubs/web/constants/changeDivisionPresident";
 import DivisionCard from "@sparcs-clubs/web/features/manage-division/components/_atomic/DivisionCard";
 import ChangeDivisionPresident from "@sparcs-clubs/web/features/manage-division/components/ChangeDivisionPresident";
+
+type ChangeNoticeStatusEnum =
+  | ChangeDivisionPresidentStatusEnum.Requested
+  | ChangeDivisionPresidentStatusEnum.Canceled
+  | ChangeDivisionPresidentStatusEnum.Rejected
+  | ChangeDivisionPresidentStatusEnum.None;
 
 const ChangeDivisionPresidentCard = () => {
   const mockIsActingPresident = true;
@@ -24,9 +31,8 @@ const ChangeDivisionPresidentCard = () => {
   const [hasChangeNotice, setHasChangeNotice] = useState<boolean>(false);
   const [isSelectDisabled, setIsSelectDisabled] = useState<boolean>(false);
 
-  const [changeNoticeStatus, setChangeNoticeStatus] = useState<
-    "Requested" | "Canceled" | "Rejected" | "None"
-  >("None");
+  const [changeNoticeStatus, setChangeNoticeStatus] =
+    useState<ChangeNoticeStatusEnum>(ChangeDivisionPresidentStatusEnum.None);
   const [changeFromTo, setChangeFromTo] = useState<
     [string, string] | undefined
   >(undefined);
@@ -39,7 +45,7 @@ const ChangeDivisionPresidentCard = () => {
 
     setHasChangeNotice(true);
     setIsSelectDisabled(true);
-    setChangeNoticeStatus("Requested");
+    setChangeNoticeStatus(ChangeDivisionPresidentStatusEnum.Requested);
     setChangeFromTo([mockPresident, to]);
     mockSendDivisionPresidentChangeRequest();
   };
@@ -47,13 +53,13 @@ const ChangeDivisionPresidentCard = () => {
   const onDivisionPresidentChangeCanceled = () => {
     setHasChangeNotice(true);
     setIsSelectDisabled(false);
-    setChangeNoticeStatus("Canceled");
+    setChangeNoticeStatus(ChangeDivisionPresidentStatusEnum.Canceled);
   };
 
   const onDivisionPresidentChangeRejected = () => {
     setHasChangeNotice(true);
     setIsSelectDisabled(false);
-    setChangeNoticeStatus("Rejected");
+    setChangeNoticeStatus(ChangeDivisionPresidentStatusEnum.Rejected);
   };
 
   return (
@@ -66,7 +72,12 @@ const ChangeDivisionPresidentCard = () => {
       </FlexWrapper>
       {hasChangeNotice && (
         <ChangeDivisionPresident
-          status={changeNoticeStatus as "Requested" | "Canceled" | "Rejected"}
+          status={
+            changeNoticeStatus as Exclude<
+              ChangeNoticeStatusEnum,
+              ChangeDivisionPresidentStatusEnum.None
+            >
+          }
           actingPresident={mockIsActingPresident}
           change={changeFromTo}
         />
@@ -76,7 +87,8 @@ const ChangeDivisionPresidentCard = () => {
           <Typography fw="MEDIUM" fs={16} lh={24} style={{ flex: 1 }}>
             학생회장
           </Typography>
-          {changeNoticeStatus === "Requested" && (
+          {changeNoticeStatus ===
+            ChangeDivisionPresidentStatusEnum.Requested && (
             <TextButton
               text={`학생회장 ${mockIsActingPresident ? "권한대행 " : ""}변경 요청 취소`}
               onClick={onDivisionPresidentChangeCanceled}
@@ -93,7 +105,7 @@ const ChangeDivisionPresidentCard = () => {
           disabled={isSelectDisabled}
         />
         {changeNoticeStatus ===
-          "Requested" /* TODO: 거절되었는지 승인되었는지 api에서 불러오기  */ && (
+          ChangeDivisionPresidentStatusEnum.Requested /* TODO: 거절되었는지 승인되었는지 api에서 불러오기  */ && (
           <TextButton
             text={`TODO: ${changeFromTo?.[1]}이 거절함`}
             onClick={onDivisionPresidentChangeRejected}

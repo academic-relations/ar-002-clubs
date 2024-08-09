@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 import styled from "styled-components";
 
@@ -43,27 +43,17 @@ const PastFundingListSectionContents = styled.div`
   flex-grow: 0; */
 `;
 
-const PastFundingListSection: React.FC = () => {
-  const [toggle, setToggle] = useState<boolean>(true);
-  return (
-    <PastFundingListSectionInner>
-      <FoldableSectionTitle
-        title={pastFundingListSectionTitle}
-        toggle={toggle}
-        toggleHandler={() => {
-          setToggle(!toggle);
-        }}
-      />
-      {toggle ? (
-        <PastFundingListSectionContents>
-          {/* TODO: ManageClubFundingMainFrame으로부터 주입받은 테이블 데이터 매핑하기 */}
-          <PastSingleSemesterFundingListSection />
-          <PastSingleSemesterFundingListSection />
-          <PastSingleSemesterFundingListSection />
-        </PastFundingListSectionContents>
-      ) : null}
-    </PastFundingListSectionInner>
-  );
-};
+const PastFundingListSection: React.FC = () => (
+  <PastFundingListSectionInner>
+    <FoldableSectionTitle title={pastFundingListSectionTitle}>
+      <PastFundingListSectionContents>
+        {/* TODO: ManageClubFundingMainFrame으로부터 주입받은 테이블 데이터 매핑하기 */}
+        <PastSingleSemesterFundingListSection />
+        <PastSingleSemesterFundingListSection />
+        <PastSingleSemesterFundingListSection />
+      </PastFundingListSectionContents>
+    </FoldableSectionTitle>
+  </PastFundingListSectionInner>
+);
 
 export default PastFundingListSection;

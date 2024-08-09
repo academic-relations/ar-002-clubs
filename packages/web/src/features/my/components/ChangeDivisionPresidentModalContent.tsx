@@ -6,7 +6,10 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { ChangeDivisionPresidentMessageContext } from "@sparcs-clubs/web/constants/changeDivisionPresident";
+import {
+  ChangeDivisionPresidentMessageContext,
+  ChangeDivisionPresidentStatusEnum,
+} from "@sparcs-clubs/web/constants/changeDivisionPresident";
 import { patchMyDelegateRequest } from "@sparcs-clubs/web/features/my/services/patchMyDelegateRequest";
 
 interface ChangeDivisionPresidentModalContentProps {
@@ -41,7 +44,7 @@ const ChangeDivisionPresidentModalContent: React.FC<
   const messageContext = new ChangeDivisionPresidentMessageContext({
     actingPresident,
     division: "'생활체육' 분과",
-    status: "Requested",
+    status: ChangeDivisionPresidentStatusEnum.Requested,
     page: "/my",
     change,
     isModal: true,
