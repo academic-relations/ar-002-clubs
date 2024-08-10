@@ -103,12 +103,18 @@ const TableWithCount = styled.div`
   align-self: stretch;
 `;
 
+interface RentalItems {
+  id: number;
+  name: string;
+  number: number;
+}
+
 interface MockUpDataType {
   id: number;
   studentName: string;
   applicantName: string;
   phoneNumber: string;
-  objects: Array;
+  objects: Array<RentalItems>;
   statusEnum: enum;
   desiredStart: date;
   desiredEnd: date;
