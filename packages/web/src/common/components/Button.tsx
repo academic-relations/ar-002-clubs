@@ -5,11 +5,12 @@ import React, { HTMLAttributes } from "react";
 import styled from "styled-components";
 
 type ButtonProps = {
+  buttonType?: "button" | "reset" | "submit";
   type?: keyof typeof ButtonTypeInner;
   children: React.ReactNode;
-} & HTMLAttributes<HTMLDivElement>;
+} & HTMLAttributes<HTMLButtonElement>;
 
-const ButtonInner = styled.div`
+const ButtonInner = styled.button`
   display: inline-flex;
   padding: 8px 16px;
   justify-content: center;
@@ -52,11 +53,17 @@ const ButtonTypeInner = {
   disabled: ButtonDisabledInner,
 };
 
-const Button = ({ type = "default", children, ...divProps }: ButtonProps) => {
+const Button = ({
+  type = "default",
+  buttonType = "button",
+  children,
+  ...divProps
+}: ButtonProps) => {
   const ButtonChosenInner = ButtonTypeInner[type];
   return (
     <ButtonChosenInner
       {...divProps}
+      type={buttonType}
       onClick={type === "disabled" ? undefined : divProps.onClick}
     >
       {children}

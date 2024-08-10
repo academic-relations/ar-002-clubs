@@ -11,7 +11,7 @@ import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag, { type TagColor } from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { formatDate } from "@sparcs-clubs/web/utils/Date/formateDate";
+import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import { type PastActivityReport } from "../types/activityReport";
 

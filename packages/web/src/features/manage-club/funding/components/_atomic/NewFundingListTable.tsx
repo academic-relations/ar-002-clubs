@@ -17,7 +17,7 @@ import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import {
   Funding,
   mockupManageFunding,
-} from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+} from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 const columnHelper = createColumnHelper<Funding>();

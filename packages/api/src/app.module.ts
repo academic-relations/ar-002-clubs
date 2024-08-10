@@ -10,12 +10,13 @@ import { AuthModule } from "./feature/auth/auth.module";
 import { JwtAccessGuard } from "./feature/auth/guard/jwt-access.guard";
 import { ClubModule } from "./feature/club/club.module";
 import { CommonSpaceModule } from "./feature/common-space/common-space.module";
+import DivisionModule from "./feature/division/division.module";
 import { FileModule } from "./feature/file/file.module";
+import { MeetingModule } from "./feature/meeting/meeting.module";
 import { NoticeModule } from "./feature/notice/notice.module";
 import { PromotionalPrintingModule } from "./feature/promotional-printing/promotional-printing.module";
 import { RegistrationModule } from "./feature/registration/registration.module";
 import { RentalModule } from "./feature/rental/rental.module";
-import { SocketModule } from "./feature/socket/socket.module";
 import UserModule from "./feature/user/user.module";
 
 @Module({
@@ -23,6 +24,7 @@ import UserModule from "./feature/user/user.module";
     ActivityModule,
     ClubModule,
     CommonSpaceModule,
+    DivisionModule,
     DrizzleModule,
     FileModule,
     NoticeModule,
@@ -32,7 +34,7 @@ import UserModule from "./feature/user/user.module";
     UserModule,
     ActivityCertificateModule,
     AuthModule,
-    SocketModule,
+    MeetingModule,
   ],
   controllers: [AppController],
   providers: [

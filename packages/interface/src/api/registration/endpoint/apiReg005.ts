@@ -6,7 +6,8 @@ import { z } from "zod";
  * @description 동아리 가입을 신청합니다.
  */
 
-const url = () => `/student/registration/member/applies/apply`;
+const url = () =>
+  `/student/registrations/member-registrations/member-registration`;
 const method = "POST";
 
 const requestParam = z.object({});
@@ -15,7 +16,6 @@ const requestQuery = z.object({});
 
 const requestBody = z.object({
   clubId: z.coerce.number().int().min(1),
-  studentId: z.coerce.number().int().min(1),
 });
 
 const responseBodyMap = {

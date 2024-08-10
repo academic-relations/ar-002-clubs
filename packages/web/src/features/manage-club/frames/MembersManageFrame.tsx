@@ -8,11 +8,9 @@ import MembersTable from "@sparcs-clubs/web/features/manage-club/components/Memb
 import {
   MemberStatusEnum,
   mockupManageMems,
-} from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+} from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 const MembersManageFrame: React.FC = () => {
-  const [toggle, setToggle] = React.useState<boolean>(true);
-
   const appliedCount = mockupManageMems.filter(
     member => member.status === MemberStatusEnum.Applied,
   ).length;
@@ -27,11 +25,7 @@ const MembersManageFrame: React.FC = () => {
   const title = `2024년 봄학기 (신청 ${appliedCount}명, 승인 ${approvedCount}명, 반려 ${rejectedCount}명 / 총 ${totalCount}명)`;
   // TODO: 학기 받아올 수 있도록 수정
   return (
-    <FoldableSectionTitle
-      title="회원 명단"
-      toggle={toggle}
-      toggleHandler={() => setToggle(!toggle)}
-    >
+    <FoldableSectionTitle title="회원 명단">
       <FlexWrapper direction="column" gap={20}>
         <MoreDetailTitle
           title={title}

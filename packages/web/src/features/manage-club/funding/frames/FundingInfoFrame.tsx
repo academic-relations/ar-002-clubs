@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -17,8 +17,6 @@ const FundingInfoFrame: React.FC<FundingFrameProps> = ({
   funding,
   setFunding,
 }) => {
-  const [toggle, setToggle] = useState<boolean>(true);
-
   const purposeItems = [
     { value: "1", label: "활동보고서 1" },
     { value: "2", label: "활동보고서 2" },
@@ -30,11 +28,7 @@ const FundingInfoFrame: React.FC<FundingFrameProps> = ({
   };
 
   return (
-    <FoldableSectionTitle
-      title="지원금 정보"
-      toggle={toggle}
-      toggleHandler={() => setToggle(!toggle)}
-    >
+    <FoldableSectionTitle title="지원금 정보">
       <Card outline gap={32}>
         <TextInput
           label="항목명"
@@ -46,8 +40,8 @@ const FundingInfoFrame: React.FC<FundingFrameProps> = ({
           <Select
             items={purposeItems}
             label="지출 목적"
-            selectedValue={funding.purposeId}
-            onSelect={value => setFundingHandler("purposeId", value)}
+            value={funding.purposeId}
+            onChange={value => setFundingHandler("purposeId", value ?? "")}
             placeholder="지출 목적을 선택해주세요"
           />
           {/* TODO: 지출 일자, 지출 금액 해당 컴포넌트로 구현 */}

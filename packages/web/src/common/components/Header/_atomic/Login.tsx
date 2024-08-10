@@ -33,6 +33,7 @@ const Login = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userName, setUserName] = useState("");
   const [type, setType] = useState("");
+  const [selectedToken, setSelectedToken] = useState<string>("");
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -40,12 +41,13 @@ const Login = () => {
     } else {
       const token = localStorage.getItem("accessToken");
       if (token) {
+        setSelectedToken(token);
         const decoded: { name?: string; type?: string } = jwtDecode(token);
         setUserName(decoded.name || "Unknown User");
         setType(decoded.type || "Unknown Type");
       }
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, selectedToken]);
 
   return (
     <>
@@ -60,7 +62,13 @@ const Login = () => {
           로그인
         </LoginInner>
       )}
-      {isMenuOpen && <MyMenu setIsMenuOpen={setIsMenuOpen} />}
+      {isMenuOpen && (
+        <MyMenu
+          setIsMenuOpen={setIsMenuOpen}
+          selectedToken={selectedToken}
+          setSelectedToken={setSelectedToken}
+        />
+      )}
     </>
   );
 };

@@ -16,7 +16,7 @@ import type {
   ApiCms002ResponseOK,
 } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
 
-export const useGetCommonSpaceUsageOrders = (
+const useGetCommonSpaceUsageOrders = (
   requestParam: ApiCms002RequestParam,
   requestQuery: ApiCms002RequestQuery,
 ) =>

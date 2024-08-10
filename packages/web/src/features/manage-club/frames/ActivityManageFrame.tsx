@@ -8,36 +8,29 @@ import FundingTable from "@sparcs-clubs/web/features/manage-club/components/Fund
 import {
   mockupManageFunding,
   mockupManageReport,
-} from "@sparcs-clubs/web/features/manage-club/service/_mock/mockManageClub";
+} from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
-const ActivityManageFrame: React.FC = () => {
-  const [toggle, setToggle] = React.useState<boolean>(true);
-  return (
-    <FoldableSectionTitle
-      title="동아리 활동"
-      toggle={toggle}
-      toggleHandler={() => setToggle(!toggle)}
-    >
-      <FlexWrapper direction="column" gap={40}>
-        <FlexWrapper direction="column" gap={20}>
-          <MoreDetailTitle
-            title="활동 보고서"
-            moreDetail="내역 더보기"
-            moreDetailPath="/manage-club/activity-report"
-          />
-          <ActivityReportTable activityList={mockupManageReport} />
-        </FlexWrapper>
-        <FlexWrapper direction="column" gap={20}>
-          <MoreDetailTitle
-            title="지원금"
-            moreDetail="내역 더보기"
-            moreDetailPath="/manage-club/funding"
-          />
-          <FundingTable fundingList={mockupManageFunding} />
-        </FlexWrapper>
+const ActivityManageFrame: React.FC = () => (
+  <FoldableSectionTitle title="동아리 활동">
+    <FlexWrapper direction="column" gap={40}>
+      <FlexWrapper direction="column" gap={20}>
+        <MoreDetailTitle
+          title="활동 보고서"
+          moreDetail="내역 더보기"
+          moreDetailPath="/manage-club/activity-report"
+        />
+        <ActivityReportTable activityList={mockupManageReport} />
       </FlexWrapper>
-    </FoldableSectionTitle>
-  );
-};
+      <FlexWrapper direction="column" gap={20}>
+        <MoreDetailTitle
+          title="지원금"
+          moreDetail="내역 더보기"
+          moreDetailPath="/manage-club/funding"
+        />
+        <FundingTable fundingList={mockupManageFunding} />
+      </FlexWrapper>
+    </FlexWrapper>
+  </FoldableSectionTitle>
+);
 
 export default ActivityManageFrame;
