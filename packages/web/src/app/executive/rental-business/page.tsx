@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import {
   createColumnHelper,
@@ -103,8 +103,30 @@ const TableWithCount = styled.div`
   align-self: stretch;
 `;
 
+interface MockUpDataType {
+  id: number;
+  studentName: string;
+  applicantName: string;
+  phoneNumber: string;
+  objects: array;
+  statusEnum: enum;
+  desiredStart: date;
+  desiredEnd: date;
+  startDate: date;
+  endDate: date;
+  createdAt: date;
+}
+
 const ExecutiveRental = () => {
-  const data = useMemo(() => mockupMyExeRnt.items, []);
+  const [page, setPage] = useState<number>(1);
+  const [mockUpData, setMockUpData] = useState<MockUpDataType[]>(
+    mockupMyExeRnt.items.slice(0, 10),
+  );
+  useEffect(() => {
+    setMockUpData(mockupMyExeRnt.items.slice((page - 1) * 10, page * 10));
+  }, [page]);
+
+  const data = useMemo(() => mockUpData, [mockUpData]);
 
   const table = useReactTable({
     columns,
@@ -135,9 +157,16 @@ const ExecutiveRental = () => {
           >
             총 {data.length}개
           </Typography>
-          <Table table={table} />
+          {mockupMyExeRnt.items.slice((page - 1) * 10, page * 10).length && (
+            <Table table={table} />
+          )}
         </TableWithCount>
-        <Pagination totalPage={10} currentPage={1} limit={10} />
+        <Pagination
+          totalPage={mockupMyExeRnt.items.length}
+          currentPage={page}
+          limit={mockupMyExeRnt.items.length / 10}
+          setPage={setPage}
+        />
       </TableWithPagination>
     </FlexWrapper>
   );
