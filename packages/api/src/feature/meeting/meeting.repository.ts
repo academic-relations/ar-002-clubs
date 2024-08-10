@@ -3,9 +3,10 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, eq } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
+import logger from "@sparcs-clubs/api/common/util/logger";
 import {
-  // Meeting,
-  // MeetingAnnouncement,
+  Meeting,
+  MeetingAnnouncement,
   MeetingAttendanceTimeT,
   MeetingVoteResult,
 } from "@sparcs-clubs/api/drizzle/schema/meeting.schema";
@@ -52,38 +53,52 @@ export class MeetingRepository {
     return result;
   }
 
-  async postExecutiveMeetingAnnouncement() //   contents: {
-  //   meetingTypeId: number;
-  //   announcementTitle: string;
-  //   announcementContent: string;
-  //   startDate: Date;
-  //   endDate?: Date;
-  //   isRegular: boolean;
-  //   location: string;
-  // }
-  : Promise<boolean> {
-    // const isInsertionSucceed = await this.db.transaction(async tx => {
-    //   const [announcementInsertResult] = await tx.insert(MeetingAnnouncement).values({
-    //     announcementTitle: contents.announcementTitle,
-    //     announcementContent: contents.announcementContent,
-    //   });
+  async postExecutiveMeetingAnnouncement(contents: {
+    meetingEnumId: number;
+    announcementTitle: string;
+    announcementContent: string;
+    startDate: Date;
+    endDate?: Date;
+    isRegular: boolean;
+    location: string;
+    locationEn: string;
+  }): Promise<boolean> {
+    const isInsertionSucceed = await this.db.transaction(async tx => {
+      const [announcementInsertResult] = await tx
+        .insert(MeetingAnnouncement)
+        .values({
+          announcementTitle: contents.announcementTitle,
+          announcementContent: contents.announcementContent,
+        });
 
-    //   if (announcementInsertResult.affectedRows !== 1) {
-    //     return false;
-    //   }
+      if (announcementInsertResult.affectedRows !== 1) {
+        logger.debug("[MeetingRepository] Failed to insert announcement");
+        tx.rollback();
+        return false;
+      }
+      logger.debug(
+        `[MeetingRepository] Inserted announcement: ${announcementInsertResult.insertId}`,
+      );
 
-    //   const [meetingInsertResult] = await tx.insert(Meeting).values({
-    //     announcementId: 1,  // 이거 실제로 받아오기
-    //     meetingEnum: contents.meetingTypeId,
-    //     startDate: contents.startDate,
-    //     endDate: contents.endDate,
-    //     isRegular: contents.isRegular,
-    //     location: contents.location,
-    //   });
-    // }
-
-    // return isInsertionSucceed;
-    return true;
+      const [meetingInsertResult] = await tx.insert(Meeting).values({
+        announcementId: announcementInsertResult.insertId,
+        meetingEnumId: contents.meetingEnumId,
+        startDate: contents.startDate,
+        endDate: contents.endDate,
+        isRegular: contents.isRegular,
+        location: contents.location,
+      });
+      if (meetingInsertResult.affectedRows !== 1) {
+        logger.debug("[MeetingRepository] Failed to insert meeting");
+        tx.rollback();
+        return false;
+      }
+      logger.debug(
+        `[MeetingRepository] Inserted meeting: ${meetingInsertResult.insertId}`,
+      );
+      return true;
+    });
+    return isInsertionSucceed;
   }
 
   async getExecutiveMeetingAnnouncement() {

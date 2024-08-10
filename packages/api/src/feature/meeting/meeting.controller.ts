@@ -37,22 +37,21 @@ import { MeetingService } from "./meeting.service";
 export default class MeetingController {
   constructor(private meetingService: MeetingService) {}
 
-  @Executive()
+  // @Executive()
   @Post("/executive/meetings/announcements/announcement")
   @UsePipes(new ZodPipe(apiMeet001))
   async createExecutiveMeetingAnnouncement(
     @GetExecutive() user: GetExecutive,
     @Body() body: ApiMeet001RequestBody,
   ): Promise<ApiMeet001ResponseCreated> {
-    const result = await this.meetingService.postExecutiveMeetingAnnouncement(
+    await this.meetingService.postExecutiveMeetingAnnouncement(
       body,
       user.executiveId,
     );
-    return result;
+    return {};
   }
 
-  @Executive()
-  @Get("/executive/meetings/announcements/announcement/:announcementId")
+  @Get("/meetings/announcements/announcement/:announcementId")
   @UsePipes(new ZodPipe(apiMeet002))
   async getExecutiveMeetingAnnouncement(
     @GetExecutive() user: GetExecutive,

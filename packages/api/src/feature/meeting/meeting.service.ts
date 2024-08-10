@@ -68,7 +68,7 @@ export class MeetingService {
     }
 
     const result =
-      await this.meetingRepository.postExecutiveMeetingAnnouncement();
+      await this.meetingRepository.postExecutiveMeetingAnnouncement(body);
 
     return result;
   }
@@ -86,7 +86,6 @@ export class MeetingService {
     }
     const result =
       await this.meetingRepository.getExecutiveMeetingAnnouncement();
-
     return result;
   }
 
