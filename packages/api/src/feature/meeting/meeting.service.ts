@@ -73,20 +73,25 @@ export class MeetingService {
     return result;
   }
 
-  async getExecutiveMeetingAnnouncement(
-    param: ApiMeet002RequestParam,
-    executiveId: number,
-  ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: executiveId,
-    });
+  async getMeetingAnnouncement(param: ApiMeet002RequestParam) {
+    const meeting = await this.meetingRepository.selectMeetingById(
+      param.announcementId,
+    );
+    const meetingAnnouncement =
+      await this.meetingRepository.selectMeetingAnnouncementById(
+        param.announcementId,
+      );
 
-    if (!user) {
-      throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
-    }
-    const result =
-      await this.meetingRepository.getExecutiveMeetingAnnouncement();
-    return result;
+    return {
+      meetingEnumId: meeting.meetingEnumId,
+      announcementTitle: meetingAnnouncement.announcementTitle,
+      announcementContent: meetingAnnouncement.announcementContent,
+      startDate: meeting.startDate,
+      endDate: meeting.endDate,
+      isRegular: meeting.isRegular,
+      location: meeting.location,
+      locationEn: meeting.locationEn,
+    };
   }
 
   async updateExecutiveMeetingAnnouncement(

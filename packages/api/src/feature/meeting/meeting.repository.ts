@@ -63,6 +63,7 @@ export class MeetingRepository {
     location: string;
     locationEn: string;
   }): Promise<boolean> {
+    // TODO: string인 필수 field validation
     const isInsertionSucceed = await this.db.transaction(async tx => {
       const [announcementInsertResult] = await tx
         .insert(MeetingAnnouncement)
@@ -87,6 +88,7 @@ export class MeetingRepository {
         endDate: contents.endDate,
         isRegular: contents.isRegular,
         location: contents.location,
+        locationEn: contents.locationEn,
       });
       if (meetingInsertResult.affectedRows !== 1) {
         logger.debug("[MeetingRepository] Failed to insert meeting");
@@ -101,8 +103,46 @@ export class MeetingRepository {
     return isInsertionSucceed;
   }
 
-  async getExecutiveMeetingAnnouncement() {
-    return true;
+  async selectMeetingAnnouncementById(announcementId: number) {
+    const result = await this.db
+      .select({
+        announcementTitle: MeetingAnnouncement.announcementTitle,
+        announcementContent: MeetingAnnouncement.announcementContent,
+      })
+      .from(MeetingAnnouncement)
+      .where(eq(MeetingAnnouncement.id, announcementId))
+      .execute();
+
+    if (result.length !== 1) {
+      logger.debug(
+        `[MeetingRepository] Failed to select announcement: ${announcementId}`,
+      );
+      return null;
+    }
+    return result[0];
+  }
+
+  async selectMeetingById(announcementId: number) {
+    const result = await this.db
+      .select({
+        meetingEnumId: Meeting.meetingEnumId,
+        startDate: Meeting.startDate,
+        endDate: Meeting.endDate,
+        isRegular: Meeting.isRegular,
+        location: Meeting.location,
+        locationEn: Meeting.locationEn,
+      })
+      .from(Meeting)
+      .where(eq(Meeting.announcementId, announcementId))
+      .execute();
+
+    if (result.length !== 1) {
+      logger.debug(
+        `[MeetingRepository] Failed to select meeting: ${announcementId}`,
+      );
+      return null;
+    }
+    return result[0];
   }
 
   async updateExecutiveMeetingAnnouncement() {
