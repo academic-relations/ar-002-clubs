@@ -118,11 +118,11 @@ interface MockUpDataType {
   phoneNumber: string;
   objects: Array<RentalItems>;
   statusEnum: RentalOrderStatusEnum;
-  desiredStart: date;
-  desiredEnd: date;
-  startDate: date;
-  endDate: date;
-  createdAt: date;
+  desiredStart: Date;
+  desiredEnd: Date;
+  startDate: Date;
+  endDate: Date;
+  createdAt: Date;
 }
 
 const ExecutiveRental = () => {
