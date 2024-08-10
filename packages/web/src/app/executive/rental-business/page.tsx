@@ -108,7 +108,7 @@ interface MockUpDataType {
   studentName: string;
   applicantName: string;
   phoneNumber: string;
-  objects: array;
+  objects: Array;
   statusEnum: enum;
   desiredStart: date;
   desiredEnd: date;
