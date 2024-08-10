@@ -3,6 +3,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import {
+  formatDate,
+  formatDateTime,
+} from "@sparcs-clubs/web/utils/Date/formatDate";
+
+import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
@@ -18,11 +23,6 @@ import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { RntTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import mockupMyExeRnt from "@sparcs-clubs/web/features/executive/rental-business/_mock/mockMyExeRnt";
-
-import {
-  formatDate,
-  formatDateTime,
-} from "@sparcs-clubs/web/utils/Date/formateDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 const columnHelper =
