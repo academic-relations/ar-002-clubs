@@ -162,9 +162,13 @@ const ExecutiveRental = () => {
           )}
         </TableWithCount>
         <Pagination
-          totalPage={mockupMyExeRnt.items.length}
+          totalPage={Math.floor(mockupMyExeRnt.items.length / 10) + 1}
           currentPage={page}
-          limit={mockupMyExeRnt.items.length / 10}
+          limit={
+            Math.floor(mockupMyExeRnt.items.length / 10) + 1 > 10
+              ? 10
+              : Math.floor(mockupMyExeRnt.items.length / 10) + 1
+          }
           setPage={setPage}
         />
       </TableWithPagination>
