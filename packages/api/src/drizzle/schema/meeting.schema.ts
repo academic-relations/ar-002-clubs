@@ -54,7 +54,6 @@ export const Meeting = mysqlTable(
       .references(() => MeetingAnnouncement.id)
       .notNull(),
     meetingEnumId: int("meeting_enum_id"),
-    memo: text("memo"),
     isRegular: boolean("is_regular").notNull(),
     location: varchar("location", { length: 255 }),
     startDate: datetime("start_date").notNull(),
