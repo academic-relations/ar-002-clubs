@@ -126,8 +126,9 @@ export class MeetingService {
     if (!user) {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
+
     const result =
-      await this.meetingRepository.deleteExecutiveMeetingAnnouncement();
+      await this.meetingRepository.deleteExecutiveMeetingAnnouncement(param);
     return result;
   }
 }

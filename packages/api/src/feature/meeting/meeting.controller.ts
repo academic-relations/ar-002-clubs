@@ -81,10 +81,10 @@ export default class MeetingController {
     @GetExecutive() user: GetExecutive,
     @Param() param: ApiMeet004RequestParam,
   ): Promise<ApiMeet004ResponseOk> {
-    const result = await this.meetingService.deleteExecutiveMeetingAnnouncement(
+    await this.meetingService.deleteExecutiveMeetingAnnouncement(
       param,
       user.executiveId,
     );
-    return result;
+    return {};
   }
 }

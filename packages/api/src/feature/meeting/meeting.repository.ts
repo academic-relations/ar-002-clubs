@@ -4,6 +4,7 @@ import { and, eq } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import {
   Meeting,
   MeetingAnnouncement,
@@ -234,7 +235,42 @@ export class MeetingRepository {
     return isUpdateSucceed;
   }
 
-  async deleteExecutiveMeetingAnnouncement() {
-    return true;
+  async deleteExecutiveMeetingAnnouncement(content: {
+    announcementId: number;
+  }) {
+    const deletedAt = getKSTDate();
+    const isDeleteSucceed = await this.db.transaction(async tx => {
+      const [meetingDeleteResult] = await tx
+        .update(Meeting)
+        .set({ deletedAt })
+        .where(eq(Meeting.announcementId, content.announcementId));
+
+      if (meetingDeleteResult.affectedRows !== 1) {
+        logger.debug("[MeetingRepository] Failed to delete meeting");
+        tx.rollback();
+        return false;
+      }
+      logger.debug(
+        `[MeetingRepository] Deleted meeting: ${content.announcementId}`,
+      );
+
+      const [announcementDeleteResult] = await tx
+        .update(MeetingAnnouncement)
+        .set({ deletedAt })
+        .where(eq(MeetingAnnouncement.id, content.announcementId));
+
+      if (announcementDeleteResult.affectedRows !== 1) {
+        logger.debug("[MeetingRepository] Failed to delete announcement");
+        tx.rollback();
+        return false;
+      }
+      logger.debug(
+        `[MeetingRepository] Deleted announcement: ${content.announcementId}`,
+      );
+
+      return true;
+    });
+
+    return isDeleteSucceed;
   }
 }
