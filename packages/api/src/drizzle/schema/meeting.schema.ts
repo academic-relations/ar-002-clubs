@@ -56,6 +56,7 @@ export const Meeting = mysqlTable(
     meetingEnumId: int("meeting_enum_id"),
     isRegular: boolean("is_regular").notNull(),
     location: varchar("location", { length: 255 }),
+    locationEn: varchar("location_en", { length: 255 }),
     startDate: datetime("start_date").notNull(),
     endDate: datetime("end_date"),
     createdAt: timestamp("created_at").defaultNow(),
