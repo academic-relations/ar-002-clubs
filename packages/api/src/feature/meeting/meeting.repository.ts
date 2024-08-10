@@ -145,8 +145,93 @@ export class MeetingRepository {
     return result[0];
   }
 
-  async updateExecutiveMeetingAnnouncement() {
-    return true;
+  async updateExecutiveMeetingAnnouncement(
+    param: { announcementId: number },
+    body: {
+      meetingEnumId?: number;
+      announcementTitle?: string;
+      announcementContent?: string;
+      startDate?: Date;
+      endDate?: Date;
+      isRegular?: boolean;
+      location?: string;
+      locationEn?: string;
+    },
+  ) {
+    const isUpdateSucceed = await this.db.transaction(async tx => {
+      const announcementUpdates: {
+        announcementTitle?: string;
+        announcementContent?: string;
+      } = {};
+      if (body.announcementTitle !== undefined) {
+        announcementUpdates.announcementTitle = body.announcementTitle;
+      }
+      if (body.announcementContent !== undefined) {
+        announcementUpdates.announcementContent = body.announcementContent;
+      }
+
+      if (Object.keys(announcementUpdates).length > 0) {
+        const [announcementUpdateResult] = await tx
+          .update(MeetingAnnouncement)
+          .set(announcementUpdates)
+          .where(eq(MeetingAnnouncement.id, param.announcementId));
+
+        if (announcementUpdateResult.affectedRows !== 1) {
+          logger.debug("[MeetingRepository] Failed to update announcement");
+          tx.rollback();
+          return false;
+        }
+        logger.debug(
+          `[MeetingRepository] Updated announcement: ${param.announcementId}`,
+        );
+      }
+
+      const meetingUpdates: {
+        meetingEnumId?: number;
+        startDate?: Date;
+        endDate?: Date;
+        isRegular?: boolean;
+        location?: string;
+        locationEn?: string;
+      } = {};
+      if (body.meetingEnumId !== undefined) {
+        meetingUpdates.meetingEnumId = body.meetingEnumId;
+      }
+      if (body.startDate !== undefined) {
+        meetingUpdates.startDate = body.startDate;
+      }
+      if (body.endDate !== undefined) {
+        meetingUpdates.endDate = body.endDate;
+      }
+      if (body.isRegular !== undefined) {
+        meetingUpdates.isRegular = body.isRegular;
+      }
+      if (body.location !== undefined) {
+        meetingUpdates.location = body.location;
+      }
+      if (body.locationEn !== undefined) {
+        meetingUpdates.locationEn = body.locationEn;
+      }
+
+      if (Object.keys(meetingUpdates).length > 0) {
+        const [meetingUpdateResult] = await tx
+          .update(Meeting)
+          .set(meetingUpdates)
+          .where(eq(Meeting.announcementId, param.announcementId));
+        if (meetingUpdateResult.affectedRows !== 1) {
+          logger.debug("[MeetingRepository] Failed to update meeting");
+          tx.rollback();
+          return false;
+        }
+        logger.debug(
+          `[MeetingRepository] Updated meeting: ${param.announcementId}`,
+        );
+      }
+
+      return true;
+    });
+
+    return isUpdateSucceed;
   }
 
   async deleteExecutiveMeetingAnnouncement() {

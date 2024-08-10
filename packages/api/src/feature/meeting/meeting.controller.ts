@@ -66,12 +66,12 @@ export default class MeetingController {
     @Param() param: ApiMeet003RequestParam,
     @Body() body: ApiMeet003RequestBody,
   ): Promise<ApiMeet003ResponseCreated> {
-    const result = await this.meetingService.updateExecutiveMeetingAnnouncement(
+    await this.meetingService.updateExecutiveMeetingAnnouncement(
       param,
       body,
       user.executiveId,
     );
-    return result;
+    return {};
   }
 
   @Executive()

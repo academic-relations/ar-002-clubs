@@ -107,7 +107,10 @@ export class MeetingService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
     const result =
-      await this.meetingRepository.updateExecutiveMeetingAnnouncement();
+      await this.meetingRepository.updateExecutiveMeetingAnnouncement(
+        param,
+        body,
+      );
 
     return result;
   }
