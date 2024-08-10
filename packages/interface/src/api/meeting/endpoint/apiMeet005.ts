@@ -3,10 +3,10 @@ import { z } from "zod";
 
 /**
  * @version v0.1
- * @description 회의공고에서 다음 회의 차수를 불러옵니다.
+ * @description 회의공고에서 다음 회의 차수를 불러옵니다. 회의 종류에 대해서 올해 그 회의가 몇번 열렸는지 계산합니다.
  */
 
-const url = () => `/executive/meetings/meeting/next`;
+const url = () => `/executive/meetings/meeting/degree`;
 const method = "GET";
 
 const requestParam = z.object({});

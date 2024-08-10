@@ -5,7 +5,7 @@ import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
 
 /**
  * @version v0.1
- * @description 회의공고 (=회의를 수정합니다)
+ * @description 회의와 회의 공고를 수정합니다.
  */
 
 const url = (announcementId: number) =>

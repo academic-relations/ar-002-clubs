@@ -3,7 +3,7 @@ import { z } from "zod";
 
 /**
  * @version v0.1
- * @description 회의공고 (=회의를 삭제합니다)
+ * @description 회의와 회의 공고를 삭제합니다
  */
 
 const url = (announcementId: number) =>
