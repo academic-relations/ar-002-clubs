@@ -19,13 +19,14 @@ const requestParam = z.object({
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  meetingTypeId: z.nativeEnum(MeetingEnum),
+  meetingEnumId: z.nativeEnum(MeetingEnum),
   announcementTitle: z.coerce.string().optional(),
   announcementContent: z.coerce.string().optional(),
   startDate: z.coerce.date().optional(),
   endDate: z.coerce.date().optional(),
   isRegular: z.coerce.boolean().optional(),
   location: z.coerce.string().optional(),
+  locationEn: z.coerce.string().optional(),
 });
 
 const responseBodyMap = {
