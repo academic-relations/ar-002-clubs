@@ -9,8 +9,8 @@ import { takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
   Registration,
-  RegistrationEventD,
-  RegistrationEventEnum,
+  RegistrationDeadlineD,
+  RegistrationDeadlineEnum,
 } from "src/drizzle/schema/registration.schema";
 
 @Injectable()
@@ -66,19 +66,20 @@ export class RegistrationRepository {
 
   async getStudentRegistrationEvents(): Promise<ApiReg004ResponseOK> {
     const { eventEnumCount } = await this.db
-      .select({ eventEnumCount: count(RegistrationEventEnum.enumId) })
-      .from(RegistrationEventEnum)
-      .where(isNull(RegistrationEventEnum.deletedAt))
+      .select({ eventEnumCount: count(RegistrationDeadlineEnum.enumId) })
+      .from(RegistrationDeadlineEnum)
+      .where(isNull(RegistrationDeadlineEnum.deletedAt))
       .then(takeUnique);
     const result = await this.db
       .select({
-        id: RegistrationEventD.id,
-        registrationEventEnumId: RegistrationEventD.registrationEventEnumId,
-        startTerm: RegistrationEventD.startTerm,
-        endTerm: RegistrationEventD.endTerm,
+        id: RegistrationDeadlineD.id,
+        registrationEventEnumId:
+          RegistrationDeadlineD.registrationDeadlineEnumId,
+        startTerm: RegistrationDeadlineD.startDate,
+        endTerm: RegistrationDeadlineD.endDate,
       })
-      .from(RegistrationEventD)
-      .orderBy(desc(RegistrationEventD.startTerm))
+      .from(RegistrationDeadlineD)
+      .orderBy(desc(RegistrationDeadlineD.startDate))
       .limit(eventEnumCount);
     return { events: result };
   }
