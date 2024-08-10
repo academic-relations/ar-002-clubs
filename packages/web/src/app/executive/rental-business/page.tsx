@@ -2,6 +2,8 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 
+import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
+
 import {
   formatDate,
   formatDateTime,
@@ -115,7 +117,7 @@ interface MockUpDataType {
   applicantName: string;
   phoneNumber: string;
   objects: Array<RentalItems>;
-  statusEnum: enum;
+  statusEnum: RentalOrderStatusEnum;
   desiredStart: date;
   desiredEnd: date;
   startDate: date;
