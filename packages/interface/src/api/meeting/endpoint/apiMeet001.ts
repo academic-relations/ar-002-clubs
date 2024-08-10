@@ -1,6 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
+
 /**
  * @version v0.1
  * @description 회의공고 (=회의를 생성합니다)
@@ -14,7 +16,7 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  meetingTypeId: z.coerce.number(),
+  meetingTypeId: z.nativeEnum(MeetingEnum),
   announcementTitle: z.coerce.string(),
   announcementContent: z.coerce.string(),
   startDate: z.coerce.date(),
