@@ -14,37 +14,39 @@ interface PaginationProps {
 }
 
 const PaginationInner = styled.div`
-  flex-basis: auto;
-  flex-grow: 0;
-  flex-shrink: 0;
   display: flex;
   flex-direction: row;
   column-gap: 16px;
+  align-items: center;
 `;
 
-// 버튼 스타일 지우기 위해 구성했는데, 올바른 방법인지 잘 모르겠습니다.
 const ButtonWrapper = styled.button`
+  display: flex;
   border: none;
   padding: 0;
   background-color: ${({ theme }) => theme.colors.WHITE};
+  cursor: pointer;
+  flex-direction: row;
+  align-items: center;
 `;
 
-const WalkableIndex = styled.div`
+const IndexBase = styled.div`
   width: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   font-size: 16px;
   line-height: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const WalkableIndex = styled(IndexBase)`
   color: ${({ theme }) => theme.colors.BLACK};
-  text-align: center;
 `;
 
-const CurrentIndex = styled.div`
-  width: 20px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
-  font-size: 16px;
-  line-height: 20px;
+const CurrentIndex = styled(IndexBase)`
   color: ${({ theme }) => theme.colors.PRIMARY};
-  text-align: center;
 `;
 
 const getSliceIndice = (
@@ -54,7 +56,6 @@ const getSliceIndice = (
   limit: number,
   setPage: React.Dispatch<number>,
 ) => {
-  // 구간 시작 페이지
   const currentRangeStart = currentRange * limit + 1;
   const range = [];
 
@@ -67,10 +68,8 @@ const getSliceIndice = (
       range.push(<CurrentIndex key={i}>{i.toString()}</CurrentIndex>);
     } else {
       range.push(
-        <ButtonWrapper key={i}>
-          <WalkableIndex onClick={() => setPage(i)}>
-            {i.toString()}
-          </WalkableIndex>
+        <ButtonWrapper key={i} onClick={() => setPage(i)}>
+          <WalkableIndex>{i.toString()}</WalkableIndex>
         </ButtonWrapper>,
       );
     }
@@ -103,33 +102,27 @@ const Pagination: React.FC<PaginationProps> = ({
   limit,
   setPage,
 }) => {
-  // 현재 페이지 구간. 0: 1 ~ 10, 1: 11 ~ 20, ...
-  // 페이지는 1부터 시작하기 때문에, 1 뺴고 나누어야 구간이 맞더라구요
-  // TODO: totalPage % limit 이 0일 경우 마지막에 빈 페이지가 생기는 문제 해결
   const currentRange = Math.floor((currentPage - 1) / limit);
   const lastRange = Math.floor(totalPage / limit);
+
   return (
     <PaginationInner>
-      {currentRange > 0 ? (
+      {currentRange > 0 && (
         <ButtonWrapper
           onClick={() => moveToLeftRange(currentRange, limit, setPage)}
           key="leftRange"
         >
           <Icon type="chevron_left" size={20} />
         </ButtonWrapper>
-      ) : (
-        <div />
       )}
       {getSliceIndice(totalPage, currentPage, currentRange, limit, setPage)}
-      {currentRange < lastRange ? (
+      {currentRange < lastRange && (
         <ButtonWrapper
           onClick={() => moveToRightRange(currentRange, limit, setPage)}
           key="rightRange"
         >
           <Icon type="chevron_right" size={20} />
         </ButtonWrapper>
-      ) : (
-        <div />
       )}
     </PaginationInner>
   );

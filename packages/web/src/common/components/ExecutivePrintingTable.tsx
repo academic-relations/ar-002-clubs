@@ -92,7 +92,7 @@ const ExecutivePrintingTable: React.FC<ExecutivePrintingTableProps> = ({
     enableSorting: false,
   });
 
-  return <Table table={table} />;
+  return <Table table={table} count={printingList.total} />;
 };
 
 export default ExecutivePrintingTable;

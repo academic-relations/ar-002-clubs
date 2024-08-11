@@ -3,11 +3,10 @@
 import React, { useState } from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
-import ExecutivePrintingTable from "@sparcs-clubs/web/common/components/executive-printing-table";
+import ExecutivePrintingTable from "@sparcs-clubs/web/common/components/ExecutivePrintingTable";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 import mockupPrint from "@sparcs-clubs/web/features/printing-business/service/_mock/mockPrinting";
 
 const PrintingBusiness = () => {
@@ -38,23 +37,14 @@ const PrintingBusiness = () => {
         title="홍보물 인쇄 내역"
       />
       <AsyncBoundary isLoading={false} isError={false}>
-        <FlexWrapper direction="column" gap={8} justify="flex-end">
-          <FlexWrapper direction="row" gap={10} justify="flex-end">
-            <Typography fs={16} color="GRAY.600" fw="REGULAR">
-              총 {mockupPrint.total}개
-            </Typography>
-          </FlexWrapper>
-          <FlexWrapper direction="column" gap={20}>
-            <ExecutivePrintingTable printingList={paginatedData} />
-            <FlexWrapper direction="row" gap={16} justify="center">
-              <Pagination
-                totalPage={Math.ceil(mockupPrint.total / limit)}
-                currentPage={currentPage}
-                limit={limit}
-                setPage={handlePageChange}
-              />
-            </FlexWrapper>
-          </FlexWrapper>
+        <ExecutivePrintingTable printingList={paginatedData} />
+        <FlexWrapper direction="row" gap={16} justify="center">
+          <Pagination
+            totalPage={Math.ceil(mockupPrint.total / limit)}
+            currentPage={currentPage}
+            limit={limit}
+            setPage={handlePageChange}
+          />
         </FlexWrapper>
       </AsyncBoundary>
     </FlexWrapper>
