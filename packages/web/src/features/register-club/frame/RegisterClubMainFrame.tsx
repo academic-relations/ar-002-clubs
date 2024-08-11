@@ -1,7 +1,7 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
@@ -11,14 +11,14 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
-import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
+import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 import ActivityReportFrame from "../components/ActivityReportFrame";
 import AdvancedInformFrame from "../components/AdvancedInformFrame";
 import BasicInformFrame from "../components/BasicInformFrame";
 import ClubRulesFrame from "../components/ClubRulesFrame";
-import registerClub from "../service/registerClub";
+import useRegisterClub from "../service/useRegisterClub";
 import { RegisterClubInterface } from "../types/registerClub";
 
 interface RegisterClubMainFrameProps {
@@ -33,7 +33,15 @@ const ButtonWrapper = styled.div`
 const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   type,
 }) => {
+  const router = useRouter();
   const formCtx = useForm<RegisterClubInterface>({ mode: "all" });
+
+  const { mutate: registerClubApi, isSuccess } = useRegisterClub();
+
+  const [isCheckedClubName, setIsCheckedClubName] = useState(false);
+  const [isCheckedProfessor, setIsCheckedProfessor] = useState(
+    type === RegistrationTypeEnum.Promotional,
+  );
 
   const {
     getValues,
@@ -52,35 +60,71 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
     }
   }, [type]);
 
-  const submitHandler = async (data: ApiReg001RequestBody) => {
-    overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen}>
-        <CancellableModalContent
-          onConfirm={() => {
-            // TODO. studentId, clubId,  추가
-            registerClub({
-              ...data,
-              registrationTypeEnumId: type,
-              foundedAt:
-                getValues().foundedMonthAt != null
-                  ? new Date(
-                      +getValues().foundedYearAt,
-                      +getValues().foundedMonthAt! - 1,
-                    )
-                  : new Date(getValues().foundedYearAt),
-            });
+  const submitHandler = useCallback(
+    (data: RegisterClubInterface) => {
+      const isNewClubName = !(
+        (type === RegistrationTypeEnum.Promotional ||
+          type === RegistrationTypeEnum.Renewal) &&
+        !isCheckedClubName
+      );
 
-            close();
-          }}
-          onClose={close}
-        >
-          신청이 완료되었습니다.
-          <br />
-          확인을 누르면 신청 내역 화면으로 이동합니다.
-        </CancellableModalContent>
-      </Modal>
-    ));
-  };
+      registerClubApi({
+        body: {
+          clubId: data.clubId,
+          registrationTypeEnumId:
+            type === RegistrationTypeEnum.NewProvisional && isCheckedClubName
+              ? RegistrationTypeEnum.ReProvisional
+              : type,
+          krName: isNewClubName ? data.krName : "",
+          enName: isNewClubName ? data.enName : "",
+          // TODO. studentId 현재 로그인한 사용자로 변경
+          studentId: 1,
+          phoneNumber: data.phoneNumber,
+          foundedAt:
+            data.foundedMonthAt != null
+              ? new Date(+data.foundedYearAt, +data.foundedMonthAt! - 1)
+              : new Date(data.foundedYearAt),
+          divisionId: data.divisionId,
+          kr활동분야: data.kr활동분야,
+          en활동분야: data.en활동분야,
+          professor:
+            isCheckedProfessor && data.professor
+              ? {
+                  name: data.professor.name,
+                  mail: data.professor.mail,
+                  ProfessorEnumId: data.professor.ProfessorEnumId,
+                }
+              : undefined,
+          divisionIntegrity: data.divisionIntegrity,
+          foundationPurpose: data.foundationPurpose,
+          activityPlan: data.activityPlan,
+          activityPlanFileId: data.activityPlanFileId,
+          clubRuleFileId: data.clubRuleFileId,
+          externalInstructionFileId: data.externalInstructionFileId,
+          activityId: data.activityId,
+        },
+      });
+    },
+    [isCheckedProfessor, isCheckedClubName, registerClubApi, type],
+  );
+  useEffect(() => {
+    if (isSuccess) {
+      overlay.open(({ isOpen, close }) => (
+        <Modal isOpen={isOpen}>
+          <ConfirmModalContent
+            onConfirm={() => {
+              close();
+              // TODO. 신청내역 페이지로 이동
+            }}
+          >
+            신청이 완료되었습니다.
+            <br />
+            확인을 누르면 신청 내역 화면으로 이동합니다.
+          </ConfirmModalContent>
+        </Modal>
+      ));
+    }
+  }, [isSuccess]);
 
   return (
     <FormProvider {...formCtx}>
@@ -98,7 +142,11 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
           />
           {/* TODO. 등록 기간, 신청마감 동적처리  */}
           <Info text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
-          <BasicInformFrame type={type} />
+          <BasicInformFrame
+            type={type}
+            onCheckedClubName={data => setIsCheckedClubName(data)}
+            onCheckProfessor={data => setIsCheckedProfessor(data)}
+          />
           <AdvancedInformFrame type={type} />
           {type !== RegistrationTypeEnum.Renewal && <ActivityReportFrame />}
           <ClubRulesFrame
@@ -107,9 +155,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
           <ButtonWrapper>
             <Button
               type="outlined"
-              onClick={() => {
-                // TODO. 취소 로직 추가
-              }}
+              onClick={() => router.replace("/register-club")}
             >
               취소
             </Button>
