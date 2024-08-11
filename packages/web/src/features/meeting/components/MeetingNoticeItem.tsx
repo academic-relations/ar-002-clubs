@@ -91,11 +91,11 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({ tag }) => {
       <LogoWithTagAndTitleWrapper>
         {tag === MeetingNoticeTypeEnum.Notice ? (
           <ClubsLogoWrapper>
-            <Image src={logoSvg} />
+            <Image src={logoSvg} alt="clubs-logo" />
           </ClubsLogoWrapper>
         ) : (
           <ArrowLogoWrapper>
-            <Image src={arrowSvg} />
+            <Image src={arrowSvg} alt="arrow-logo" />
           </ArrowLogoWrapper>
         )}
         <TagWithTitleWrapper>
