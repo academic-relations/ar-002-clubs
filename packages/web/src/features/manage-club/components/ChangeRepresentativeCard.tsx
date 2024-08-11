@@ -103,7 +103,7 @@ const ChangeRepresentativeCard: React.FC = () => {
   const changeRepresentative = (studentId: number) => {
     updateClubDelegates(
       { clubId },
-      { delegateEnumId: ClubDelegateEnum.President, studentId },
+      { delegateEnumId: ClubDelegateEnum.Representative, studentId },
     );
     refetch();
   };
@@ -116,7 +116,7 @@ const ChangeRepresentativeCard: React.FC = () => {
       updateClubDelegates(
         { clubId },
         {
-          delegateEnumId: ClubDelegateEnum.Representative1,
+          delegateEnumId: ClubDelegateEnum.Delegate1,
           studentId: Number(delegate1),
         },
       );
@@ -131,7 +131,7 @@ const ChangeRepresentativeCard: React.FC = () => {
       updateClubDelegates(
         { clubId },
         {
-          delegateEnumId: ClubDelegateEnum.Representative1,
+          delegateEnumId: ClubDelegateEnum.Delegate2,
           studentId: Number(delegate2),
         },
       );

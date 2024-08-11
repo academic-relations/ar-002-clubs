@@ -7,8 +7,8 @@ import {
 } from "@tanstack/react-table";
 import styled from "styled-components";
 
+import FoldUnfoldButton from "@sparcs-clubs/web/common/components/Buttons/FoldUnfoldButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import { MoreInfo } from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -79,8 +79,7 @@ const AllMemberList: React.FC<AllMemberListProps> = ({
   members,
   searchText = "",
 }) => {
-  const [toggle, setToggle] = useState<boolean>(false);
-  const toggleHandler = () => setToggle(!toggle);
+  const [folded, setFolded] = useState<boolean>(false);
   const searchedMembers = members.filter(member =>
     member.name.startsWith(searchText),
   );
@@ -106,11 +105,9 @@ const AllMemberList: React.FC<AllMemberListProps> = ({
         >
           {semester} (총 {memberCount}명)
         </Typography>
-        <MoreInfo onClick={toggleHandler}>
-          {toggle ? `접기` : `펼치기`}
-        </MoreInfo>
+        <FoldUnfoldButton folded={folded} setFolded={setFolded} />
       </AllMemberListTitle>
-      {toggle && (
+      {!folded && (
         <TableWithCount>
           <Typography
             fw="REGULAR"

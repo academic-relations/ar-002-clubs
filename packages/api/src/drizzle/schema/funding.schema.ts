@@ -51,9 +51,7 @@ export const FundingOrder = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     clubId: int("club_id").notNull(),
     semesterId: int("semester_id").notNull(),
-    fundingOrderStatusEnumId: int("funding_order_status_enum_id")
-      .notNull()
-      .references(() => FundingOrderStatusEnum.id),
+    fundingOrderStatusEnumId: int("funding_order_status_enum_id").notNull(),
     purposeId: int("purpose_id"),
     name: varchar("name", { length: 255 }).notNull(),
     expenditureDate: datetime("expenditure_date").notNull(),
@@ -61,24 +59,16 @@ export const FundingOrder = mysqlTable(
     approvedAmount: int("approved_amount"),
     tradeDetailExplanation: text("trade_detail_explanation"),
     clubSuppliesName: varchar("club_supplies_name", { length: 255 }),
-    clubSuppliesEvidenceEnumId: int(
-      "club_supplies_evidence_enum_id",
-    ).references(() => FixtureEvidenceEnum.id),
-    clubSuppliesClassEnumId: int("club_supplies_class_enum_id").references(
-      () => FixtureClassEnum.id,
-    ),
+    clubSuppliesEvidenceEnumId: int("club_supplies_evidence_enum_id"),
+    clubSuppliesClassEnumId: int("club_supplies_class_enum_id"),
     clubSuppliesPurpose: text("club_supplies_purpose"),
     clubSuppliesSoftwareEvidence: text("club_supplies_software_evidence"),
     numberOfClubSupplies: int("number_of_club_supplies"),
     priceOfClubSupplies: int("price_of_club_supplies"),
     isFixture: boolean("is_fixture"),
     fixtureName: varchar("fixture_name", { length: 255 }),
-    fixtureEvidenceEnumId: int("fixture_evidence_enum_id").references(
-      () => FixtureEvidenceEnum.id,
-    ),
-    fixtureClassEnumId: int("fixture_class_enum_id").references(
-      () => FixtureClassEnum.id,
-    ),
+    fixtureEvidenceEnumId: int("fixture_evidence_enum_id"),
+    fixtureClassEnumId: int("fixture_class_enum_id"),
     fixturePurpose: text("fixture_purpose"),
     fixtureSoftwareEvidence: text("fixture_software_evidence"),
     numberOfFixture: int("number_of_fixture"),
@@ -122,6 +112,11 @@ export const FundingOrder = mysqlTable(
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
+    statusForeignKey: foreignKey({
+      name: "funding_order_status_enum_id_fk",
+      columns: [table.fundingOrderStatusEnumId],
+      foreignColumns: [FundingOrderStatusEnum.id],
+    }),
     clubForeignKey: foreignKey({
       name: "funding_order_club_id_fk",
       columns: [table.clubId],
@@ -141,6 +136,31 @@ export const FundingOrder = mysqlTable(
       name: "funding_order_charged_executive_id_fk",
       columns: [table.chargedExecutiveId],
       foreignColumns: [ExecutiveT.id],
+    }),
+    clubSuppliesEvidenceEnumForeignKey: foreignKey({
+      name: "funding_order_club_supplies_evidence_enum_id_fk",
+      columns: [table.clubSuppliesEvidenceEnumId],
+      foreignColumns: [FixtureEvidenceEnum.id],
+    }),
+    clubSuppliesClassEnumForeignKey: foreignKey({
+      name: "funding_order_club_supplies_class_enum_id_fk",
+      columns: [table.clubSuppliesClassEnumId],
+      foreignColumns: [FixtureClassEnum.id],
+    }),
+    fixtureEvidenceEnumForeignKey: foreignKey({
+      name: "funding_order_fixture_evidence_enum_id_fk",
+      columns: [table.fixtureEvidenceEnumId],
+      foreignColumns: [FixtureEvidenceEnum.id],
+    }),
+    fixtureClassEnumForeignKey: foreignKey({
+      name: "funding_order_fixture_class_enum_id_fk",
+      columns: [table.fixtureClassEnumId],
+      foreignColumns: [FixtureClassEnum.id],
+    }),
+    FixtureTransportationEnumForeignKey: foreignKey({
+      name: "funding_order_transportation_enum_id_fk",
+      columns: [table.transportationEnumId],
+      foreignColumns: [TransportationEnum.id],
     }),
   }),
 );

@@ -4,6 +4,7 @@ import React from "react";
 
 import styled from "styled-components";
 
+import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -37,17 +38,13 @@ const EvidenceBlockTitle: React.FC<{
         >
           {title}
         </Typography>
-        <Typography
-          ff="PRETENDARD"
-          fw="REGULAR"
+        <TextButton
           fs={14}
-          lh={20}
+          fw="REGULAR"
           color="BLACK"
+          text={toggle ?? open ? `접기` : `펼치기`}
           onClick={toggleHandler ?? openHandler}
-          style={{ textDecorationLine: "underline", cursor: "pointer" }}
-        >
-          {toggle ?? open ? `접기` : `펼치기`}
-        </Typography>
+        />
       </EvidenceBlockTitleInner>
       {(toggle ?? open) && children && children}
     </FlexWrapper>

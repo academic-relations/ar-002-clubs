@@ -19,7 +19,7 @@ import {
   formatDate,
   formatDateTime,
   formatTime,
-} from "@sparcs-clubs/web/utils/Date/formateDate";
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 const columnHelper = createColumnHelper<(typeof mockupMyCms.items)[number]>();

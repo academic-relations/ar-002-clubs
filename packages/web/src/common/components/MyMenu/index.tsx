@@ -4,12 +4,20 @@ import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import colors from "@sparcs-clubs/web/styles/themes/colors";
 import { getUserType } from "@sparcs-clubs/web/utils/getUserType";
 
 import Button from "../Button";
+import FlexWrapper from "../FlexWrapper";
 import Icon from "../Icon";
 
 import ProfileList from "./_atomic/ProfileList";
+
+interface MyMenuProps {
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedToken: string;
+  setSelectedToken: React.Dispatch<React.SetStateAction<string>>;
+}
 
 const MyMenuWrapper = styled.div`
   display: flex;
@@ -37,9 +45,11 @@ const Divider = styled.div`
   border-radius: 4px;
 `;
 
-const MyMenu: React.FC<{
-  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ setIsMenuOpen }) => {
+const MyMenu: React.FC<MyMenuProps> = ({
+  setIsMenuOpen,
+  selectedToken,
+  setSelectedToken,
+}) => {
   const router = useRouter();
 
   const handleMyPageClick = () => {
@@ -61,25 +71,31 @@ const MyMenu: React.FC<{
 
   return (
     <MyMenuWrapper>
-      <ProfileList profiles={profiles} setIsMenuOpen={setIsMenuOpen} />
+      <ProfileList
+        profiles={profiles}
+        setIsMenuOpen={setIsMenuOpen}
+        selectedToken={selectedToken}
+        setSelectedToken={setSelectedToken}
+      />
       <Divider />
-      {/* TODO: #333333으로 써놓은거 수정하기 */}
-      <Button
-        type="outlined"
-        onClick={handleMyPageClick}
-        style={{ gap: "4px", color: "#333333", width: "100%" }}
-      >
-        <Icon type="person" size={16} color="#333333" />
-        마이페이지
-      </Button>
-      <Button
-        type="outlined"
-        onClick={handleLogout}
-        style={{ gap: "4px", color: "#333333", width: "100%" }}
-      >
-        <Icon type="logout" size={16} color="#333333" />
-        로그아웃
-      </Button>
+      <FlexWrapper direction="column" gap={8} style={{ width: "100%" }}>
+        <Button
+          type="outlined"
+          onClick={handleMyPageClick}
+          style={{ gap: "4px", color: colors.BLACK }}
+        >
+          <Icon type="person" size={16} />
+          마이페이지
+        </Button>
+        <Button
+          type="outlined"
+          onClick={handleLogout}
+          style={{ gap: "4px", color: colors.BLACK }}
+        >
+          <Icon type="logout" size={16} />
+          로그아웃
+        </Button>
+      </FlexWrapper>
     </MyMenuWrapper>
   );
 };

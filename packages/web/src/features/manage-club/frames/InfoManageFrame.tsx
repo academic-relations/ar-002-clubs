@@ -10,7 +10,6 @@ import ChangeRepresentativeCard from "@sparcs-clubs/web/features/manage-club/com
 import { mockClubDescription } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 const InfoManageFrame: React.FC = () => {
-  const [toggle, setToggle] = useState<boolean>(true);
   const [description, setDescription] = useState<string>(
     mockClubDescription.description,
   );
@@ -47,11 +46,7 @@ const InfoManageFrame: React.FC = () => {
 
   return (
     <FlexWrapper direction="column" gap={40}>
-      <FoldableSectionTitle
-        title="동아리 정보"
-        toggle={toggle}
-        toggleHandler={() => setToggle(!toggle)}
-      >
+      <FoldableSectionTitle title="동아리 정보">
         <FlexWrapper direction="row" gap={20}>
           <Card outline gap={32} style={{ flex: 1, height: "fit-content" }}>
             <Typography fw="MEDIUM" fs={20} lh={24}>

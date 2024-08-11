@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
@@ -17,18 +17,12 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
   funding,
   setFunding,
 }) => {
-  const [toggle, setToggle] = useState(true);
-
   const setFundingHandler = (key: string, value: boolean | string) => {
     setFunding({ ...funding, [key]: value });
   };
 
   return (
-    <FoldableSectionTitle
-      title="추가 증빙"
-      toggle={toggle}
-      toggleHandler={() => setToggle(!toggle)}
-    >
+    <FoldableSectionTitle title="추가 증빙">
       <FlexWrapper direction="column" gap={40}>
         <Card outline>
           <FlexWrapper direction="column" gap={16}>

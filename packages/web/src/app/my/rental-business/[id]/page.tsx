@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import MyRentalDetailFrame from "@sparcs-clubs/web/features/my/rental-business/frame/MyRentalDetailFrame";
+import MyRentalDetailFrame from "@sparcs-clubs/web/features/my/rental-business/frames/MyRentalDetailFrame";
 
 const MyRentalDetail = () => <MyRentalDetailFrame />;
 

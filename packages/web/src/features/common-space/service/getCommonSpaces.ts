@@ -11,7 +11,7 @@ import mockupCommonSpaces from "./_mock/mockupCommonSpaces";
 
 import type { ApiCms001ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
 
-export const useGetCommonSpaces = () =>
+const useGetCommonSpaces = () =>
   useQuery<ApiCms001ResponseOK, Error>({
     queryKey: [apiCms001.url()],
     queryFn: async (): Promise<ApiCms001ResponseOK> => {
