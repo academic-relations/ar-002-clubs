@@ -3,16 +3,14 @@
 import React from "react";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import {
-  MeetingNoticeItem,
-  MeetingNoticeTypeEnum,
-} from "@sparcs-clubs/web/features/meeting/components/MeetingNoticeItem";
+import { MeetingNoticeItem } from "@sparcs-clubs/web/features/meeting/components/MeetingNoticeItem";
+import mockUpMeetingNotice from "@sparcs-clubs/web/features/meeting/services/_mock/mockupMeetingNotice";
 
 const MeetingMainFrame: React.FC = () => (
   <FlexWrapper gap={0} direction="column">
-    <MeetingNoticeItem tag={MeetingNoticeTypeEnum.Notice} />
-    <MeetingNoticeItem tag={MeetingNoticeTypeEnum.Agenda} />
-    <MeetingNoticeItem tag={MeetingNoticeTypeEnum.Meeting} />
+    {mockUpMeetingNotice.items.map(e => (
+      <MeetingNoticeItem key={e.id} tag={e.tag} title={e.title} date={e.date} />
+    ))}
   </FlexWrapper>
 );
 

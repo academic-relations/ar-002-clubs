@@ -17,6 +17,8 @@ const enum MeetingNoticeTypeEnum {
 
 interface MeetingNoticeItemProps {
   tag: MeetingNoticeTypeEnum;
+  title: string;
+  date: Date;
 }
 
 const MeetingNoticeItemWrapper = styled.div`
@@ -63,7 +65,11 @@ const LogoWithTagAndTitleWrapper = styled.div`
   flex: 1 0 0;
 `;
 
-const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({ tag }) => {
+const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
+  tag,
+  title,
+  date,
+}) => {
   const tagColor = () => {
     switch (tag) {
       case MeetingNoticeTypeEnum.Agenda:
@@ -106,12 +112,12 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({ tag }) => {
             fw="MEDIUM"
             style={{ textOverflow: "ellipsis", overflow: "hidden" }}
           >
-            2024년 제11차 운영위원회 (8월, 임시회)
+            {title}
           </Typography>
         </TagWithTitleWrapper>
       </LogoWithTagAndTitleWrapper>
       <Typography fs={16} lh={24}>
-        2024.07.22
+        {date.toLocaleDateString().replace(/\s+/g, "").replace(/\.$/, "")}
       </Typography>
     </MeetingNoticeItemWrapper>
   );
