@@ -8,6 +8,7 @@ import logoSvg from "@sparcs-clubs/web/assets/logo-icon.svg";
 import arrowSvg from "@sparcs-clubs/web/assets/subdir-arrow-right.svg";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 const enum MeetingNoticeTypeEnum {
   Agenda = "Agenda",
@@ -92,19 +93,6 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
     }
   };
 
-  const dateArray = date
-    .toLocaleDateString()
-    .replace(/\s+/g, "")
-    .replace(/\.$/, "")
-    .split(".");
-  if (dateArray[1].length === 1) {
-    dateArray[1] = `0${dateArray[1]}`;
-  }
-  if (dateArray[2].length === 1) {
-    dateArray[2] = `0${dateArray[2]}`;
-  }
-  const formattedDate = dateArray.join(".");
-
   return (
     <MeetingNoticeItemWrapper>
       <LogoWithTagAndTitleWrapper>
@@ -130,7 +118,7 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
         </TagWithTitleWrapper>
       </LogoWithTagAndTitleWrapper>
       <Typography fs={16} lh={24}>
-        {formattedDate}
+        {formatDotDate(date)}
       </Typography>
     </MeetingNoticeItemWrapper>
   );
