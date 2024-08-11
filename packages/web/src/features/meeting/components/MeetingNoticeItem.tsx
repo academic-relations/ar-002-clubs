@@ -92,6 +92,19 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
     }
   };
 
+  const dateArray = date
+    .toLocaleDateString()
+    .replace(/\s+/g, "")
+    .replace(/\.$/, "")
+    .split(".");
+  if (dateArray[1].length === 1) {
+    dateArray[1] = `0${dateArray[1]}`;
+  }
+  if (dateArray[2].length === 1) {
+    dateArray[2] = `0${dateArray[2]}`;
+  }
+  const formattedDate = dateArray.join(".");
+
   return (
     <MeetingNoticeItemWrapper>
       <LogoWithTagAndTitleWrapper>
@@ -117,7 +130,7 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
         </TagWithTitleWrapper>
       </LogoWithTagAndTitleWrapper>
       <Typography fs={16} lh={24}>
-        {date.toLocaleDateString().replace(/\s+/g, "").replace(/\.$/, "")}
+        {formattedDate}
       </Typography>
     </MeetingNoticeItemWrapper>
   );
