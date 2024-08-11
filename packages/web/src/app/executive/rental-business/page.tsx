@@ -17,7 +17,6 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { RntTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import mockupMyExeRnt from "@sparcs-clubs/web/features/executive/rental-business/_mock/mockMyExeRnt";
 import {
@@ -155,21 +154,12 @@ const ExecutiveRental = () => {
       </FlexWrapper>
       <TableWithPagination>
         <TableWithCount>
-          <Typography
-            fw="REGULAR"
-            fs={16}
-            lh={20}
-            ff="PRETENDARD"
-            color="GRAY.600"
-          >
-            총 {data.length}개
-          </Typography>
           {mockupMyExeRnt.items.slice((page - 1) * 10, page * 10).length && (
-            <Table table={table} />
+            <Table table={table} count={data.length} />
           )}
         </TableWithCount>
         <Pagination
-          totalPage={Math.floor(mockupMyExeRnt.items.length / 10) + 1}
+          totalPage={Math.ceil(mockupMyExeRnt.items.length / 10)}
           currentPage={page}
           limit={10}
           setPage={setPage}
