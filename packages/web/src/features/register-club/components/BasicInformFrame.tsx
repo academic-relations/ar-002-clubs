@@ -59,9 +59,10 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
 
   useEffect(() => {
     if (isRenewal && clubName != null) {
+      onCheckProfessor(true);
       setIsCheckedProfessor(true);
     }
-  }, [clubName, isRenewal]);
+  }, [clubName, isRenewal, onCheckProfessor]);
 
   // TODO. 지도교수 정보 가져오기
   const hasProfessorInfo = false;
