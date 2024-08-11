@@ -5,7 +5,7 @@ import Image from "next/image";
 import styled from "styled-components";
 
 import logoSvg from "@sparcs-clubs/web/assets/logo-icon.svg";
-import arrowSvg from "@sparcs-clubs/web/assets/subdir-arrow-right.svg";
+import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
@@ -102,7 +102,7 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
           </ClubsLogoWrapper>
         ) : (
           <ArrowLogoWrapper>
-            <Image src={arrowSvg} alt="arrow-logo" />
+            <Icon type="subdirectory_arrow_right" />
           </ArrowLogoWrapper>
         )}
         <TagWithTitleWrapper>
