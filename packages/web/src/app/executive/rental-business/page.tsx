@@ -5,11 +5,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
 
 import {
-  formatDate,
-  formatDateTime,
-} from "@sparcs-clubs/web/utils/Date/formatDate";
-
-import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
@@ -25,6 +20,10 @@ import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { RntTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import mockupMyExeRnt from "@sparcs-clubs/web/features/executive/rental-business/_mock/mockMyExeRnt";
+import {
+  formatDate,
+  formatDateTime,
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 const columnHelper =
@@ -172,11 +171,7 @@ const ExecutiveRental = () => {
         <Pagination
           totalPage={Math.floor(mockupMyExeRnt.items.length / 10) + 1}
           currentPage={page}
-          limit={
-            Math.floor(mockupMyExeRnt.items.length / 10) + 1 > 10
-              ? 10
-              : Math.floor(mockupMyExeRnt.items.length / 10) + 1
-          }
+          limit={10}
           setPage={setPage}
         />
       </TableWithPagination>
