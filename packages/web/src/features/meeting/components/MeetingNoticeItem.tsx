@@ -5,7 +5,8 @@ import Image from "next/image";
 import styled from "styled-components";
 
 import logoSvg from "@sparcs-clubs/web/assets/logo-icon.svg";
-import Tag, { TagColor } from "@sparcs-clubs/web/common/components/Tag";
+import arrowSvg from "@sparcs-clubs/web/assets/subdir-arrow-right.svg";
+import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 const enum MeetingNoticeTypeEnum {
@@ -54,7 +55,7 @@ const LogoWithTagAndTitleWrapper = styled.div`
 `;
 
 const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({ tag }) => {
-  const tagColor: TagColor = () => {
+  const tagColor = () => {
     switch (tag) {
       case MeetingNoticeTypeEnum.Agenda:
         return "GREEN";
@@ -76,11 +77,20 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({ tag }) => {
     }
   };
 
+  const logoType = () => {
+    switch (tag) {
+      case MeetingNoticeTypeEnum.Notice:
+        return logoSvg;
+      default:
+        return arrowSvg;
+    }
+  };
+
   return (
     <MeetingNoticeItemWrapper>
       <LogoWithTagAndTitleWrapper>
         <LogoWrapper>
-          <Image src={logoSvg} />
+          <Image src={logoType()} />
         </LogoWrapper>
         <TagWithTitleWrapper>
           <Tag color={tagColor()}>{tagText()}</Tag>
