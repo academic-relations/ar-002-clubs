@@ -102,7 +102,7 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
           </ClubsLogoWrapper>
         ) : (
           <ArrowLogoWrapper>
-            <Icon type="subdirectory_arrow_right" />
+            <Icon type="subdirectory_arrow_right" size={20} />
           </ArrowLogoWrapper>
         )}
         <TagWithTitleWrapper>
