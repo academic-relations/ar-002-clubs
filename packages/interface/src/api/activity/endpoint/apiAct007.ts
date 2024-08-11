@@ -32,7 +32,7 @@ const requestBody = z.object({
   evidence: z.coerce.string(),
   evidenceFiles: z.array(
     z.object({
-      uid: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(255),
     }),
   ),
   participants: z.array(
