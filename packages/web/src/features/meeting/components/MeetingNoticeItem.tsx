@@ -37,13 +37,22 @@ const TagWithTitleWrapper = styled.div`
   flex: 1 0 0;
 `;
 
-const LogoWrapper = styled.div`
+const ClubsLogoWrapper = styled.div`
   display: flex;
   width: 32px;
   height: 32px;
   justify-content: center;
   align-items: center;
   gap: 10px;
+`;
+
+const ArrowLogoWrapper = styled.div`
+  display: flex;
+  width: 32px;
+  height: 32px;
+  padding-top: 4px;
+  justify-content: flex-end;
+  align-items: flex-start;
 `;
 
 const LogoWithTagAndTitleWrapper = styled.div`
@@ -77,21 +86,18 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({ tag }) => {
     }
   };
 
-  const logoType = () => {
-    switch (tag) {
-      case MeetingNoticeTypeEnum.Notice:
-        return logoSvg;
-      default:
-        return arrowSvg;
-    }
-  };
-
   return (
     <MeetingNoticeItemWrapper>
       <LogoWithTagAndTitleWrapper>
-        <LogoWrapper>
-          <Image src={logoType()} />
-        </LogoWrapper>
+        {tag === MeetingNoticeTypeEnum.Notice ? (
+          <ClubsLogoWrapper>
+            <Image src={logoSvg} />
+          </ClubsLogoWrapper>
+        ) : (
+          <ArrowLogoWrapper>
+            <Image src={arrowSvg} />
+          </ArrowLogoWrapper>
+        )}
         <TagWithTitleWrapper>
           <Tag color={tagColor()}>{tagText()}</Tag>
           <Typography

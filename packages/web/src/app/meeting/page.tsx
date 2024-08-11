@@ -9,10 +9,10 @@ import {
 } from "@sparcs-clubs/web/features/meeting/components/MeetingNoticeItem";
 
 const MeetingMainFrame: React.FC = () => (
-  <FlexWrapper direction="column">
+  <FlexWrapper gap={20} direction="column">
+    <MeetingNoticeItem tag={MeetingNoticeTypeEnum.Notice} />
     <MeetingNoticeItem tag={MeetingNoticeTypeEnum.Agenda} />
     <MeetingNoticeItem tag={MeetingNoticeTypeEnum.Meeting} />
-    <MeetingNoticeItem tag={MeetingNoticeTypeEnum.Notice} />
   </FlexWrapper>
 );
 
