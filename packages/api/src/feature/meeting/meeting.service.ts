@@ -131,4 +131,22 @@ export class MeetingService {
       await this.meetingRepository.deleteExecutiveMeetingAnnouncement(param);
     return result;
   }
+
+  async getExecutiveMeetingDegree(
+    query: { meetingEnumId: number },
+    executiveId: number,
+  ) {
+    const user = await this.userPublicService.getExecutiveById({
+      id: executiveId,
+    });
+
+    if (!user) {
+      throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
+    }
+
+    const result =
+      await this.meetingRepository.selectExecutiveMeetingDegree(query);
+
+    return result;
+  }
 }

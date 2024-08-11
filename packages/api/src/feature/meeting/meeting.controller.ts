@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UsePipes,
 } from "@nestjs/common";
 
@@ -15,7 +16,7 @@ import apiMeet001, {
 } from "@sparcs-clubs/interface/api/meeting/endpoint/apiMeet001";
 import apiMeet002, {
   ApiMeet002RequestParam,
-  // ApiMeet002ResponseOk,
+  ApiMeet002ResponseOk,
 } from "@sparcs-clubs/interface/api/meeting/endpoint/apiMeet002";
 import apiMeet003, {
   ApiMeet003RequestBody,
@@ -26,6 +27,11 @@ import apiMeet004, {
   ApiMeet004RequestParam,
   ApiMeet004ResponseOk,
 } from "@sparcs-clubs/interface/api/meeting/endpoint/apiMeet004";
+import apiMeet005, {
+  ApiMeet005RequestQuery,
+  ApiMeet005ResponseOk,
+} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMeet005";
+import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Executive } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
@@ -53,7 +59,9 @@ export default class MeetingController {
 
   @Get("/meetings/announcements/announcement/:announcementId")
   @UsePipes(new ZodPipe(apiMeet002))
-  async getMeetingAnnouncement(@Param() param: ApiMeet002RequestParam) {
+  async getMeetingAnnouncement(
+    @Param() param: ApiMeet002RequestParam,
+  ): Promise<ApiMeet002ResponseOk> {
     const result = await this.meetingService.getMeetingAnnouncement(param);
     return result;
   }
@@ -86,5 +94,23 @@ export default class MeetingController {
       user.executiveId,
     );
     return {};
+  }
+
+  @Executive()
+  @Get("executive/meetings/meeting/degree")
+  @UsePipes(new ZodPipe(apiMeet005))
+  async getMeetingDegree(
+    @GetExecutive() user: GetExecutive,
+    @Query() query: ApiMeet005RequestQuery,
+  ): Promise<ApiMeet005ResponseOk> {
+    const inputQuery = {
+      meetingEnumId: query.meetingEnumId as unknown as MeetingEnum,
+    };
+    const degree = await this.meetingService.getExecutiveMeetingDegree(
+      inputQuery,
+      user.executiveId,
+    );
+
+    return { degree };
   }
 }

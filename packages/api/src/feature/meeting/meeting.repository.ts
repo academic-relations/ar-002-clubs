@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 
-import { and, eq } from "drizzle-orm";
+import { and, eq, gte, lt } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -272,5 +272,24 @@ export class MeetingRepository {
     });
 
     return isDeleteSucceed;
+  }
+
+  async selectExecutiveMeetingDegree(query: { meetingEnumId: number }) {
+    const thisYear = getKSTDate().getFullYear();
+    const startDate = new Date(thisYear, 0, 1);
+    const endDate = new Date(thisYear + 1, 0, 1);
+
+    const result = await this.db
+      .select()
+      .from(Meeting)
+      .where(
+        and(
+          eq(Meeting.meetingEnumId, query.meetingEnumId),
+          gte(Meeting.startDate, startDate),
+          lt(Meeting.startDate, endDate),
+        ),
+      );
+
+    return result.length;
   }
 }

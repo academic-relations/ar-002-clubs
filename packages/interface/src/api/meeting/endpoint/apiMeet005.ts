@@ -12,7 +12,7 @@ const method = "GET";
 const requestParam = z.object({});
 
 const requestQuery = z.object({
-  meetingTypeId: z.coerce.number().int().min(1).optional(),
+  meetingEnumId: z.coerce.string(),
 });
 
 const requestBody = z.object({});
