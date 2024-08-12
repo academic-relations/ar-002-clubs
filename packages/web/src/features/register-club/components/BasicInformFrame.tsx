@@ -15,6 +15,8 @@ import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
+import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
+
 import useGetClubsForPromotional from "../service/useGetClubsForPromotional";
 
 import useGetClubsForRenewal from "../service/useGetClubsForRenewal";
@@ -52,6 +54,11 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
     isLoading: isLoadingForRenewalClub,
     isError: isErrorForRenewalClub,
   } = useGetClubsForRenewal();
+  const {
+    data: profile,
+    isLoading: isLoadingProfile,
+    isError: isErrorProfile,
+  } = useGetUserProfile();
 
   const { watch } = useFormContext();
 
@@ -91,13 +98,15 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
     isRenewal,
   ]);
 
+  const isLoading =
+    isLoadingForPromotionalClub || isLoadingForRenewalClub || isLoadingProfile;
+  const isError =
+    isErrorForPromotionalClub || isErrorForRenewalClub || isErrorProfile;
+
   return (
     <FlexWrapper direction="column" gap={40}>
       <SectionTitle>기본 정보</SectionTitle>
-      <AsyncBoundary
-        isLoading={isLoadingForPromotionalClub || isLoadingForRenewalClub}
-        isError={isErrorForPromotionalClub || isErrorForRenewalClub}
-      >
+      <AsyncBoundary isLoading={isLoading} isError={isError}>
         <Card outline gap={32} style={{ marginLeft: 20 }}>
           <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
             {isProvisional ? (
@@ -183,14 +192,13 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
           <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
             <TextInput
               label="대표자 이름"
-              // TODO. 대표자 이름 현재 로그인한 사람으로 변경
-              placeholder="이지윤"
+              placeholder={profile?.name ?? ""}
               disabled
             />
-            {/* // TODO. 디비에 전화번호 있으면 기본값 넣기 */}
             <FormController
               name="phoneNumber"
               required
+              defaultValue={profile?.phoneNumber}
               renderItem={props => (
                 <PhoneInput
                   {...props}
