@@ -12,6 +12,5 @@ import { MemberRegistrationService } from "./service/member-registration.service
   imports: [ClubModule, UserModule, DrizzleModule],
   controllers: [MemberRegistrationController],
   providers: [MemberRegistrationService, MemberRegistrationRepository],
-  exports: [MemberRegistrationRepository, MemberRegistrationService],
 })
 export class MemberRegistrationModule {}

@@ -2,8 +2,8 @@ import { datetime, index, int, mysqlTable, text } from "drizzle-orm/mysql-core";
 
 import { User } from "./user.schema";
 
-export const RefreshToken = mysqlTable(
-  "refresh-token",
+export const AuthActivatedRefreshTokens = mysqlTable(
+  "auth_activated_refresh_tokens",
   {
     id: int("id").autoincrement().primaryKey(),
     userId: int("user_id")
