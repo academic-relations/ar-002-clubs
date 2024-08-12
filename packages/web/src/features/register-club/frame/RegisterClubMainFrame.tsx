@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
+import { ApiUsr001ResponseOK } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
@@ -23,6 +24,8 @@ import { RegisterClubInterface } from "../types/registerClub";
 
 interface RegisterClubMainFrameProps {
   type: RegistrationTypeEnum;
+  profile?: ApiUsr001ResponseOK;
+  clubIds?: { id: number }[];
 }
 
 const ButtonWrapper = styled.div`
@@ -32,9 +35,10 @@ const ButtonWrapper = styled.div`
 
 const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   type,
+  profile = undefined,
+  clubIds = [],
 }) => {
   const router = useRouter();
-  const formCtx = useForm<RegisterClubInterface>({ mode: "all" });
 
   const { mutate: registerClubApi, isSuccess } = useRegisterClub();
 
@@ -42,6 +46,13 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   const [isCheckedProfessor, setIsCheckedProfessor] = useState(
     type === RegistrationTypeEnum.Promotional,
   );
+
+  const formCtx = useForm<RegisterClubInterface>({
+    mode: "all",
+    defaultValues: {
+      studentId: profile?.studentNumber,
+    },
+  });
 
   const {
     getValues,
@@ -77,8 +88,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
               : type,
           krName: isNewClubName ? data.krName : "",
           enName: isNewClubName ? data.enName : "",
-          // TODO. studentId 현재 로그인한 사용자로 변경
-          studentId: 1,
+          studentId: data.studentId,
           phoneNumber: data.phoneNumber,
           foundedAt:
             data.foundedMonthAt != null
@@ -107,6 +117,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
     },
     [isCheckedProfessor, isCheckedClubName, registerClubApi, type],
   );
+
   useEffect(() => {
     if (isSuccess) {
       overlay.open(({ isOpen, close }) => (
@@ -144,6 +155,11 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
           <Info text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
           <BasicInformFrame
             type={type}
+            clubIds={clubIds}
+            profile={{
+              name: profile?.name ?? "",
+              phoneNumber: profile?.phoneNumber,
+            }}
             onCheckedClubName={data => setIsCheckedClubName(data)}
             onCheckProfessor={data => setIsCheckedProfessor(data)}
           />
