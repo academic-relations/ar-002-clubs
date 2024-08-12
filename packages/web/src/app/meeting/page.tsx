@@ -16,8 +16,7 @@ import mockUpMeetingNotice from "@sparcs-clubs/web/features/meeting/services/_mo
 const MeetingNoticeListWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  flex: 1 0 0;
+  flex: 1;
   align-self: stretch;
   border-top: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
 `;
@@ -28,11 +27,11 @@ const ListWithPaginationWrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 20px;
-  flex: 1 0 0;
+  flex: 1;
   align-self: stretch;
 `;
 
-interface MockUpDataType {
+interface MeetingNoticeItemType {
   id: number;
   tag: MeetingNoticeTypeEnum;
   title: string;
@@ -41,7 +40,7 @@ interface MockUpDataType {
 
 const MeetingMainFrame: React.FC = () => {
   const [page, setPage] = useState<number>(1);
-  const [mockUpData, setMockUpData] = useState<MockUpDataType[]>(
+  const [mockUpData, setMockUpData] = useState<MeetingNoticeItemType[]>(
     mockUpMeetingNotice.items.slice(0, 12),
   );
 
