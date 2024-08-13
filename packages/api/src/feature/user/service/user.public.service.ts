@@ -27,6 +27,10 @@ export default class UserPublicService {
     return students[0];
   }
 
+  /**
+   * 집행부원의 id를 통해 집행부원 정보를 가져옵니다.
+   * 만약 매치되는 집행부원이 존재하지 않을 경우 undefined를 리턴합니다.
+   * */
   async getExecutiveById(executive: { id: number }) {
     const executives = await this.executiveRepository.getExecutiveById(
       executive.id,

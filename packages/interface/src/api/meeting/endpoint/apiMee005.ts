@@ -12,7 +12,7 @@ const method = "GET";
 const requestParam = z.object({});
 
 const requestQuery = z.object({
-  meetingEnumId: z.coerce.string(),
+  meetingEnumId: z.coerce.number().min(1),
 });
 
 const requestBody = z.object({});
@@ -25,7 +25,7 @@ const responseBodyMap = {
 
 const responseErrorMap = {};
 
-const apiMeet005 = {
+const apiMee005 = {
   url,
   method,
   requestParam,
@@ -35,16 +35,16 @@ const apiMeet005 = {
   responseErrorMap,
 };
 
-type ApiMeet005RequestParam = z.infer<typeof apiMeet005.requestParam>;
-type ApiMeet005RequestQuery = z.infer<typeof apiMeet005.requestQuery>;
-type ApiMeet005RequestBody = z.infer<typeof apiMeet005.requestBody>;
-type ApiMeet005ResponseOk = z.infer<(typeof apiMeet005.responseBodyMap)[200]>;
+type ApiMee005RequestParam = z.infer<typeof apiMee005.requestParam>;
+type ApiMee005RequestQuery = z.infer<typeof apiMee005.requestQuery>;
+type ApiMee005RequestBody = z.infer<typeof apiMee005.requestBody>;
+type ApiMee005ResponseOk = z.infer<(typeof apiMee005.responseBodyMap)[200]>;
 
-export default apiMeet005;
+export default apiMee005;
 
 export type {
-  ApiMeet005RequestParam,
-  ApiMeet005RequestQuery,
-  ApiMeet005RequestBody,
-  ApiMeet005ResponseOk,
+  ApiMee005RequestParam,
+  ApiMee005RequestQuery,
+  ApiMee005RequestBody,
+  ApiMee005ResponseOk,
 };

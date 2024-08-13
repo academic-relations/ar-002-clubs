@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 
-import { and, eq, gte, lte } from "drizzle-orm";
+import { and, eq, gte, isNull, lte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
@@ -37,6 +37,7 @@ export default class ExecutiveRepository {
           eq(ExecutiveT.executiveId, id),
           gte(ExecutiveT.endTerm, crt),
           lte(ExecutiveT.startTerm, crt),
+          isNull(ExecutiveT.deletedAt),
         ),
       );
     return result;

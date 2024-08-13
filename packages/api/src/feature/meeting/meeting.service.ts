@@ -3,22 +3,19 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { WsException } from "@nestjs/websockets";
 
 import {
-  ApiMeet001RequestBody,
-  ApiMeet001ResponseCreated,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMeet001";
+  ApiMee001RequestBody,
+  ApiMee001ResponseCreated,
+} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee001";
+import { ApiMee002RequestParam } from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee002";
 import {
-  ApiMeet002RequestParam,
-  // ApiMeet002ResponseOk,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMeet002";
+  ApiMee003RequestBody,
+  ApiMee003RequestParam,
+  ApiMee003ResponseCreated,
+} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee003";
 import {
-  ApiMeet003RequestBody,
-  ApiMeet003RequestParam,
-  ApiMeet003ResponseCreated,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMeet003";
-import {
-  ApiMeet004RequestParam,
-  ApiMeet004ResponseOk,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMeet004";
+  ApiMee004RequestParam,
+  ApiMee004ResponseOk,
+} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee004";
 
 import UserPublicService from "../user/service/user.public.service";
 
@@ -56,9 +53,10 @@ export class MeetingService {
   }
 
   async postExecutiveMeetingAnnouncement(
-    body: ApiMeet001RequestBody,
+    body: ApiMee001RequestBody,
     executiveId: number,
-  ): Promise<ApiMeet001ResponseCreated> {
+  ): Promise<ApiMee001ResponseCreated> {
+    // TODO: 국장단 여부 확인
     const user = await this.userPublicService.getExecutiveById({
       id: executiveId,
     });
@@ -73,7 +71,7 @@ export class MeetingService {
     return result;
   }
 
-  async getMeetingAnnouncement(param: ApiMeet002RequestParam) {
+  async getMeetingAnnouncement(param: ApiMee002RequestParam) {
     const meeting = await this.meetingRepository.selectMeetingById(
       param.announcementId,
     );
@@ -95,10 +93,11 @@ export class MeetingService {
   }
 
   async updateExecutiveMeetingAnnouncement(
-    param: ApiMeet003RequestParam,
-    body: ApiMeet003RequestBody,
+    param: ApiMee003RequestParam,
+    body: ApiMee003RequestBody,
     executiveId: number,
-  ): Promise<ApiMeet003ResponseCreated> {
+  ): Promise<ApiMee003ResponseCreated> {
+    // TODO: 국장단 여부 확인
     const user = await this.userPublicService.getExecutiveById({
       id: executiveId,
     });
@@ -116,9 +115,10 @@ export class MeetingService {
   }
 
   async deleteExecutiveMeetingAnnouncement(
-    param: ApiMeet004RequestParam,
+    param: ApiMee004RequestParam,
     executiveId: number,
-  ): Promise<ApiMeet004ResponseOk> {
+  ): Promise<ApiMee004ResponseOk> {
+    // TODO: 국장단 여부 확인
     const user = await this.userPublicService.getExecutiveById({
       id: executiveId,
     });
@@ -136,6 +136,7 @@ export class MeetingService {
     query: { meetingEnumId: number },
     executiveId: number,
   ) {
+    // TODO: 국장단 여부 확인
     const user = await this.userPublicService.getExecutiveById({
       id: executiveId,
     });

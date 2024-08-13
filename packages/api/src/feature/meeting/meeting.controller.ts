@@ -10,28 +10,27 @@ import {
   UsePipes,
 } from "@nestjs/common";
 
-import apiMeet001, {
-  ApiMeet001RequestBody,
-  ApiMeet001ResponseCreated,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMeet001";
-import apiMeet002, {
-  ApiMeet002RequestParam,
-  ApiMeet002ResponseOk,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMeet002";
-import apiMeet003, {
-  ApiMeet003RequestBody,
-  ApiMeet003RequestParam,
-  ApiMeet003ResponseCreated,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMeet003";
-import apiMeet004, {
-  ApiMeet004RequestParam,
-  ApiMeet004ResponseOk,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMeet004";
-import apiMeet005, {
-  ApiMeet005RequestQuery,
-  ApiMeet005ResponseOk,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMeet005";
-import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
+import apiMee001, {
+  ApiMee001RequestBody,
+  ApiMee001ResponseCreated,
+} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee001";
+import apiMee002, {
+  ApiMee002RequestParam,
+  ApiMee002ResponseOk,
+} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee002";
+import apiMee003, {
+  ApiMee003RequestBody,
+  ApiMee003RequestParam,
+  ApiMee003ResponseCreated,
+} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee003";
+import apiMee004, {
+  ApiMee004RequestParam,
+  ApiMee004ResponseOk,
+} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee004";
+import apiMee005, {
+  ApiMee005RequestQuery,
+  ApiMee005ResponseOk,
+} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee005";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Executive } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
@@ -45,11 +44,11 @@ export default class MeetingController {
 
   @Executive()
   @Post("/executive/meetings/announcements/announcement")
-  @UsePipes(new ZodPipe(apiMeet001))
+  @UsePipes(new ZodPipe(apiMee001))
   async createExecutiveMeetingAnnouncement(
     @GetExecutive() user: GetExecutive,
-    @Body() body: ApiMeet001RequestBody,
-  ): Promise<ApiMeet001ResponseCreated> {
+    @Body() body: ApiMee001RequestBody,
+  ): Promise<ApiMee001ResponseCreated> {
     await this.meetingService.postExecutiveMeetingAnnouncement(
       body,
       user.executiveId,
@@ -58,22 +57,22 @@ export default class MeetingController {
   }
 
   @Get("/meetings/announcements/announcement/:announcementId")
-  @UsePipes(new ZodPipe(apiMeet002))
+  @UsePipes(new ZodPipe(apiMee002))
   async getMeetingAnnouncement(
-    @Param() param: ApiMeet002RequestParam,
-  ): Promise<ApiMeet002ResponseOk> {
+    @Param() param: ApiMee002RequestParam,
+  ): Promise<ApiMee002ResponseOk> {
     const result = await this.meetingService.getMeetingAnnouncement(param);
     return result;
   }
 
   @Executive()
   @Patch("/executive/meetings/announcements/announcement/:announcementId")
-  @UsePipes(new ZodPipe(apiMeet003))
+  @UsePipes(new ZodPipe(apiMee003))
   async updateExecutiveMeetingAnnouncement(
     @GetExecutive() user: GetExecutive,
-    @Param() param: ApiMeet003RequestParam,
-    @Body() body: ApiMeet003RequestBody,
-  ): Promise<ApiMeet003ResponseCreated> {
+    @Param() param: ApiMee003RequestParam,
+    @Body() body: ApiMee003RequestBody,
+  ): Promise<ApiMee003ResponseCreated> {
     await this.meetingService.updateExecutiveMeetingAnnouncement(
       param,
       body,
@@ -84,11 +83,11 @@ export default class MeetingController {
 
   @Executive()
   @Delete("/executive/meetings/announcements/announcement/:announcementId")
-  @UsePipes(new ZodPipe(apiMeet004))
+  @UsePipes(new ZodPipe(apiMee004))
   async deleteExecutiveMeetingAnnouncement(
     @GetExecutive() user: GetExecutive,
-    @Param() param: ApiMeet004RequestParam,
-  ): Promise<ApiMeet004ResponseOk> {
+    @Param() param: ApiMee004RequestParam,
+  ): Promise<ApiMee004ResponseOk> {
     await this.meetingService.deleteExecutiveMeetingAnnouncement(
       param,
       user.executiveId,
@@ -98,16 +97,13 @@ export default class MeetingController {
 
   @Executive()
   @Get("executive/meetings/meeting/degree")
-  @UsePipes(new ZodPipe(apiMeet005))
+  @UsePipes(new ZodPipe(apiMee005))
   async getMeetingDegree(
     @GetExecutive() user: GetExecutive,
-    @Query() query: ApiMeet005RequestQuery,
-  ): Promise<ApiMeet005ResponseOk> {
-    const inputQuery = {
-      meetingEnumId: query.meetingEnumId as unknown as MeetingEnum,
-    };
+    @Query() query: ApiMee005RequestQuery,
+  ): Promise<ApiMee005ResponseOk> {
     const degree = await this.meetingService.getExecutiveMeetingDegree(
-      inputQuery,
+      query,
       user.executiveId,
     );
 
