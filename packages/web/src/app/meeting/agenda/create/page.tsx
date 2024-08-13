@@ -4,7 +4,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import NewAgendaFrame from "@sparcs-clubs/web/features/meeting/agenda/create/frames/NewAgendaFrame";
 
-const AgendaAddPage: React.FC = () => (
+const AgendaCreate: React.FC = () => (
   <FlexWrapper gap={60} direction="column">
     <PageHead
       items={[
@@ -18,4 +18,4 @@ const AgendaAddPage: React.FC = () => (
   </FlexWrapper>
 );
 
-export default AgendaAddPage;
+export default AgendaCreate;
