@@ -16,6 +16,7 @@ import {
   ApiFnd006RequestParam,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
 
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ActivityPublicService from "@sparcs-clubs/api/feature/activity/service/activity.public.service";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
@@ -269,21 +270,31 @@ export default class FundingService {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
 
-    const fundings = await this.fundingRepository.selectFundingsByClubId(
-      body.clubId,
-    );
+    const now = getKSTDate();
+    const thisSemester = await this.clubPublicSevice.dateToSemesterId(now);
 
-    if (fundings.length !== 1) {
-      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    const fundings =
+      await this.fundingRepository.selectFundingsSemesterByClubId(
+        body.clubId,
+        thisSemester,
+      );
+
+    const activityNames = await Promise.all(
+      fundings.map(async funding => {
+        const activityName =
+          await this.activityPublicService.getActivityNameById(
+            funding.purposeId,
+          );
+        return { activityName: activityName[0], id: funding.purposeId };
+      }),
+    );
 
     return {
       fundings: fundings.map(funding => ({
         id: funding.id,
         fundingOrderStatusEnumId: funding.fundingOrderStatusEnumId,
-        activityName: this.activityPublicService.getActivityNameById(
-          funding.purposeId,
-        )[0],
+        activityName: activityNames.find(name => name.id === funding.purposeId)
+          .activityName.name,
         name: funding.name,
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,
@@ -303,16 +314,26 @@ export default class FundingService {
 
     const fundings =
       await this.fundingRepository.selectFundingsSemesterByClubId(
-        param.semesterId,
         body.clubId,
+        param.semesterId,
       );
+
+    const activityNames = await Promise.all(
+      fundings.map(async funding => {
+        const activityName =
+          await this.activityPublicService.getActivityNameById(
+            funding.purposeId,
+          );
+        return { activityName: activityName[0], id: funding.purposeId };
+      }),
+    );
 
     return {
       fundings: fundings.map(funding => ({
         id: funding.id,
-        activityName: this.activityPublicService.getActivityNameById(
-          funding.purposeId,
-        )[0],
+        fundingOrderStatusEnumId: funding.fundingOrderStatusEnumId,
+        activityName: activityNames.find(name => name.id === funding.purposeId)
+          .activityName.name,
         name: funding.name,
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,

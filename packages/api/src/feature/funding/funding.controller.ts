@@ -54,11 +54,8 @@ export default class FundingController {
     @GetStudent() user: GetStudent,
     @Body() body: ApiFnd001RequestBody,
   ): Promise<ApiFnd001ResponseCreated> {
-    const result = await this.fundingService.postStudentFunding(
-      body,
-      user.studentId,
-    );
-    return result;
+    await this.fundingService.postStudentFunding(body, user.studentId);
+    return {};
   }
 
   // TODO: Authentication 필요
@@ -85,12 +82,8 @@ export default class FundingController {
     @Param() param: ApiFnd003RequestParam,
     @Body() body: ApiFnd003RequestBody,
   ): Promise<ApiFnd003ResponseOk> {
-    const result = await this.fundingService.putStudentFunding(
-      body,
-      param,
-      user.studentId,
-    );
-    return result;
+    await this.fundingService.putStudentFunding(body, param, user.studentId);
+    return {};
   }
 
   @Student()
@@ -100,11 +93,8 @@ export default class FundingController {
     @GetStudent() user: GetStudent,
     @Param() param: ApiFnd004RequestParam,
   ): Promise<ApiFnd004ResponseOk> {
-    const result = await this.fundingService.deleteStudentFunding(
-      user.studentId,
-      param,
-    );
-    return result;
+    await this.fundingService.deleteStudentFunding(user.studentId, param);
+    return {};
   }
 
   @Student()
