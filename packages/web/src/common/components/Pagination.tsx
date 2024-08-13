@@ -117,7 +117,8 @@ const Pagination: React.FC<PaginationProps> = ({
         </ButtonWrapper>
       )}
       {getSliceIndice(totalPage, currentPage, currentRange, limit, setPage)}
-      {(lastRange - currentRange > 1 || !rightArrowBool) && (
+      {(lastRange - currentRange > 1 ||
+        (lastRange - currentRange === 1 && !rightArrowBool)) && (
         <ButtonWrapper
           onClick={() => moveToRightRange(currentRange, limit, setPage)}
           key="rightRange"
