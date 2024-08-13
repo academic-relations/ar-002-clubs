@@ -14,6 +14,7 @@ import apiprt003 from "@sparcs-clubs/interface/api/promotional-printing/endpoint
 import apiPrt005 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt005";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
+import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 import logger from "@sparcs-clubs/api/common/util/logger";
 
 import { PromotionalPrintingService } from "../service/promotional-printing.service";
@@ -94,11 +95,13 @@ export class PromotionalPrintingController {
   @Get("/student/promotional-printings/orders/order/:orderId")
   @UsePipes(new ZodPipe(apiprt003))
   async getStudentPromotionalPrintingsOrder(
+    @GetStudent() user: GetStudent,
     @Param() parameter: ApiPrt003RequestParam,
   ): Promise<ApiPrt003ResponseOk> {
     const order =
       await this.promotionalPrintingService.getStudentPromotionalPrintingsOrder(
         parameter,
+        user.studentId,
       );
 
     return order;

@@ -112,6 +112,7 @@ export class PromotionalPrintingService {
 
   async getStudentPromotionalPrintingsOrder(
     parameter: ApiPrt003RequestParam,
+    reqStudentID: number,
   ): Promise<ApiPrt003ResponseOk> {
     const mockUpStudentId = 605; // 하승종 Id
 
@@ -123,8 +124,21 @@ export class PromotionalPrintingService {
       throw new HttpException("invalid order id", HttpStatus.BAD_REQUEST);
     }
     const order = search[0];
-
     // TODO: order.clubsId와 order.studentId 를 통해 조회 권한 확인 필요
+
+    if (
+      !(
+        (await this.clubPublicService.isStudentDelegate(
+          order.studentId,
+          order.clubId,
+        )) || order.studentId === reqStudentID
+      )
+    )
+      throw new HttpException(
+        "You are not the delegate of the club or the applicant oneself.",
+        HttpStatus.FORBIDDEN,
+      );
+
     const representatives =
       await this.clubDelegateDRepository.findRepresentativeIdListByClubId(
         order.clubId,
