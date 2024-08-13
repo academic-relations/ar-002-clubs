@@ -21,7 +21,7 @@ import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.publi
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
-import FundingRepository from "../repository/funding.repository";
+import FundingRepository from "./funding.repository";
 
 @Injectable()
 export default class FundingService {

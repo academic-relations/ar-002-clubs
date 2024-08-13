@@ -284,7 +284,7 @@ export default class FundingRepository {
       await Promise.all(
         contents.tradeDetailFiles.map(async file => {
           const [tradeDetailFileInsertResult] = await tx
-            .insert(TradeEvidenceFile)
+            .insert(TradeDetailFile)
             .values({
               fundingOrderId: fundingInsertResult.insertId,
               fileId: file.fileId,
@@ -1122,12 +1122,12 @@ export default class FundingRepository {
       );
 
       const [tradeDetailFileDeletionResult] = await tx
-        .update(TradeEvidenceFile)
+        .update(TradeDetailFile)
         .set({ deletedAt })
         .where(
           and(
-            eq(TradeEvidenceFile.fundingOrderId, fundingId),
-            isNull(TradeEvidenceFile.deletedAt),
+            eq(TradeDetailFile.fundingOrderId, fundingId),
+            isNull(TradeDetailFile.deletedAt),
           ),
         );
       if (tradeDetailFileDeletionResult.affectedRows < 1) {
@@ -1140,7 +1140,7 @@ export default class FundingRepository {
       await Promise.all(
         contents.tradeDetailFiles.map(async file => {
           const [tradeDetailFileInsertResult] = await tx
-            .insert(TradeEvidenceFile)
+            .insert(TradeDetailFile)
             .values({
               fundingOrderId: fundingId,
               fileId: file.fileId,
