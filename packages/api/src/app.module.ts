@@ -27,6 +27,7 @@ import UserModule from "./feature/user/user.module";
     DivisionModule,
     DrizzleModule,
     FileModule,
+    MeetingModule,
     NoticeModule,
     PromotionalPrintingModule,
     RegistrationModule,

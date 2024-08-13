@@ -17,13 +17,13 @@ const requestQuery = z.object({});
 
 const requestBody = z.object({
   meetingEnumId: z.nativeEnum(MeetingEnum),
-  announcementTitle: z.coerce.string(),
-  announcementContent: z.coerce.string(),
+  announcementTitle: z.coerce.string().min(1),
+  announcementContent: z.coerce.string().min(1),
   startDate: z.coerce.date(),
   endDate: z.coerce.date().optional(),
   isRegular: z.coerce.boolean(),
-  location: z.coerce.string(),
-  locationEn: z.coerce.string(),
+  location: z.coerce.string().min(1),
+  locationEn: z.coerce.string().min(1),
 });
 
 const responseBodyMap = {
@@ -32,7 +32,7 @@ const responseBodyMap = {
 
 const responseErrorMap = {};
 
-const apiMeet001 = {
+const apiMee001 = {
   url,
   method,
   requestParam,
@@ -42,18 +42,18 @@ const apiMeet001 = {
   responseErrorMap,
 };
 
-type ApiMeet001RequestParam = z.infer<typeof apiMeet001.requestParam>;
-type ApiMeet001RequestQuery = z.infer<typeof apiMeet001.requestQuery>;
-type ApiMeet001RequestBody = z.infer<typeof apiMeet001.requestBody>;
-type ApiMeet001ResponseCreated = z.infer<
-  (typeof apiMeet001.responseBodyMap)[201]
+type ApiMee001RequestParam = z.infer<typeof apiMee001.requestParam>;
+type ApiMee001RequestQuery = z.infer<typeof apiMee001.requestQuery>;
+type ApiMee001RequestBody = z.infer<typeof apiMee001.requestBody>;
+type ApiMee001ResponseCreated = z.infer<
+  (typeof apiMee001.responseBodyMap)[201]
 >;
 
-export default apiMeet001;
+export default apiMee001;
 
 export type {
-  ApiMeet001RequestParam,
-  ApiMeet001RequestQuery,
-  ApiMeet001RequestBody,
-  ApiMeet001ResponseCreated,
+  ApiMee001RequestParam,
+  ApiMee001RequestQuery,
+  ApiMee001RequestBody,
+  ApiMee001ResponseCreated,
 };
