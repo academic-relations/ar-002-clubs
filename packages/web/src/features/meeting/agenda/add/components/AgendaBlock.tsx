@@ -8,7 +8,10 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import AgendaEditor from "@sparcs-clubs/web/features/meeting/agenda/add/components/AgendaEditor";
 import AgendaViewer from "@sparcs-clubs/web/features/meeting/agenda/add/components/AgendaViewer";
 import AgendaContent from "@sparcs-clubs/web/features/meeting/agenda/constants/agendaContent";
-import { AgendaTypeEnum } from "@sparcs-clubs/web/features/meeting/agenda/constants/agendaType";
+import {
+  AgendaTypeEnum,
+  AgendaTypeName,
+} from "@sparcs-clubs/web/features/meeting/agenda/constants/agendaType";
 
 const AgendaBlock: React.FC = () => {
   const [folded, setFolded] = useState(false);
@@ -16,17 +19,20 @@ const AgendaBlock: React.FC = () => {
   const [index, setIndex] = useState(0);
 
   const [mockNewAgendaList, setMockNewAgendaList] = useState([
-    useState({
+    {
       type: AgendaTypeEnum.Report,
       title: "술박스 개수 점검",
       content: "술박스가 5조 5억개 있습니다.",
-    }),
-    useState({
+    },
+    {
       type: AgendaTypeEnum.Approval,
       title: "술박스 구입 허락",
       content: "술박스 구입이 허락되었습니다.",
-    }),
+    },
   ]);
+
+  const currentNewAgendaTypeName =
+    AgendaTypeName[mockNewAgendaList[index].type];
 
   const increaseIndex = () => {
     if (index === mockNewAgendaList.length - 1) setIndex(0);
@@ -66,7 +72,7 @@ const AgendaBlock: React.FC = () => {
           style={{ flex: 1, marginLeft: 4 }}
         >
           {mockNewAgendaList.length > 0
-            ? `${mockNewAgendaList[index][0].type}안건${index + 1}`
+            ? `${currentNewAgendaTypeName}${index + 1}`
             : "안건 없음"}
         </Typography>
         <FoldUnfoldButton folded={folded} setFolded={setFolded} />
@@ -75,16 +81,17 @@ const AgendaBlock: React.FC = () => {
         mockNewAgendaList.length > 0 &&
         (isEditMode ? (
           <AgendaEditor
-            agendaContent={mockNewAgendaList[index][0]}
+            agendaContent={mockNewAgendaList[index]}
             onDelete={deleteAgenda}
             onSave={() => setEditMode(false)}
             onChange={(agendaContent: AgendaContent) => {
-              mockNewAgendaList[index][1](agendaContent);
+              mockNewAgendaList[index] = agendaContent;
+              setMockNewAgendaList([...mockNewAgendaList]);
             }}
           />
         ) : (
           <AgendaViewer
-            agendaContent={mockNewAgendaList[index][0]}
+            agendaContent={mockNewAgendaList[index]}
             onDelete={deleteAgenda}
             onEdit={() => setEditMode(true)}
           />

@@ -9,7 +9,10 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import AgendaContent from "@sparcs-clubs/web/features/meeting/agenda/constants/agendaContent";
 
-import { AgendaTypeEnum } from "@sparcs-clubs/web/features/meeting/agenda/constants/agendaType";
+import {
+  AgendaTypeEnum,
+  AgendaTypeName,
+} from "@sparcs-clubs/web/features/meeting/agenda/constants/agendaType";
 
 interface AgendaEditorProps {
   agendaContent: AgendaContent;
@@ -38,8 +41,12 @@ const AgendaEditor: React.FC<AgendaEditorProps> = ({
         안건 종류
       </Typography>
       <Select
-        items={Object.values(AgendaTypeEnum).map((value: AgendaTypeEnum) => ({
-          label: `${value}안건`,
+        items={(
+          Object.values(AgendaTypeEnum).filter(
+            value => typeof value === "number",
+          ) as Array<AgendaTypeEnum>
+        ).map((value: AgendaTypeEnum) => ({
+          label: AgendaTypeName[value],
           value,
         }))}
         value={agendaContent.type}
