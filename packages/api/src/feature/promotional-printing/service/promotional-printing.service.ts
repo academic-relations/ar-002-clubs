@@ -124,7 +124,6 @@ export class PromotionalPrintingService {
       throw new HttpException("invalid order id", HttpStatus.BAD_REQUEST);
     }
     const order = search[0];
-    // TODO: order.clubsId와 order.studentId 를 통해 조회 권한 확인 필요
 
     if (
       !(
