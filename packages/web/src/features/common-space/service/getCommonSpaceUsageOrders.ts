@@ -39,7 +39,7 @@ const useGetCommonSpaceUsageOrders = (
 
 defineAxiosMock(mock => {
   // Base URL for your API
-  const baseUrl = apiCms002.url(1); // Assuming this returns something like '/api/resource/1'
+  const baseUrl = apiCms002.url(2); // Assuming this returns something like '/api/resource/1'
 
   // Use a regular expression to match the URL with any additional params
   mock

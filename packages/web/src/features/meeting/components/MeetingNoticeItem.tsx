@@ -28,7 +28,7 @@ const MeetingNoticeItemWrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 20px;
-  flex: 1 0 0;
+  flex: 1;
   align-self: stretch;
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
 `;
@@ -37,7 +37,7 @@ const TagWithTitleWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 1 0 0;
+  flex: 1;
 `;
 
 const ClubsLogoWrapper = styled.div`
@@ -55,7 +55,6 @@ const ArrowLogoWrapper = styled.div`
   height: 32px;
   padding-top: 4px;
   justify-content: flex-end;
-  align-items: flex-start;
 `;
 
 const LogoWithTagAndTitleWrapper = styled.div`
@@ -63,7 +62,7 @@ const LogoWithTagAndTitleWrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 12px;
-  flex: 1 0 0;
+  flex: 1;
 `;
 
 const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({

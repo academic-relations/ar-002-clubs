@@ -35,7 +35,7 @@ const responseBodyMap = {
 
 const responseErrorMap = {};
 
-const apiMeet003 = {
+const apiMee003 = {
   url,
   method,
   requestParam,
@@ -45,18 +45,18 @@ const apiMeet003 = {
   responseErrorMap,
 };
 
-type ApiMeet003RequestParam = z.infer<typeof apiMeet003.requestParam>;
-type ApiMeet003RequestQuery = z.infer<typeof apiMeet003.requestQuery>;
-type ApiMeet003RequestBody = z.infer<typeof apiMeet003.requestBody>;
-type ApiMeet003ResponseCreated = z.infer<
-  (typeof apiMeet003.responseBodyMap)[201]
+type ApiMee003RequestParam = z.infer<typeof apiMee003.requestParam>;
+type ApiMee003RequestQuery = z.infer<typeof apiMee003.requestQuery>;
+type ApiMee003RequestBody = z.infer<typeof apiMee003.requestBody>;
+type ApiMee003ResponseCreated = z.infer<
+  (typeof apiMee003.responseBodyMap)[201]
 >;
 
-export default apiMeet003;
+export default apiMee003;
 
 export type {
-  ApiMeet003RequestParam,
-  ApiMeet003RequestQuery,
-  ApiMeet003RequestBody,
-  ApiMeet003ResponseCreated,
+  ApiMee003RequestParam,
+  ApiMee003RequestQuery,
+  ApiMee003RequestBody,
+  ApiMee003ResponseCreated,
 };
