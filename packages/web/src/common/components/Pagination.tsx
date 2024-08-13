@@ -104,6 +104,7 @@ const Pagination: React.FC<PaginationProps> = ({
 }) => {
   const currentRange = Math.floor((currentPage - 1) / limit);
   const lastRange = Math.floor(totalPage / limit);
+  const rightArrowBool = totalPage % limit === 0;
 
   return (
     <PaginationInner>
@@ -116,7 +117,8 @@ const Pagination: React.FC<PaginationProps> = ({
         </ButtonWrapper>
       )}
       {getSliceIndice(totalPage, currentPage, currentRange, limit, setPage)}
-      {currentRange < lastRange && (
+      {(lastRange - currentRange > 1 ||
+        (lastRange - currentRange === 1 && !rightArrowBool)) && (
         <ButtonWrapper
           onClick={() => moveToRightRange(currentRange, limit, setPage)}
           key="rightRange"
