@@ -5,13 +5,13 @@ import FoldUnfoldButton from "@sparcs-clubs/web/common/components/Buttons/FoldUn
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import AgendaEditor from "@sparcs-clubs/web/features/meeting/agenda/add/components/AgendaEditor";
-import AgendaViewer from "@sparcs-clubs/web/features/meeting/agenda/add/components/AgendaViewer";
 import AgendaContent from "@sparcs-clubs/web/features/meeting/agenda/constants/agendaContent";
 import {
   AgendaTypeEnum,
   AgendaTypeName,
 } from "@sparcs-clubs/web/features/meeting/agenda/constants/agendaType";
+import AgendaEditor from "@sparcs-clubs/web/features/meeting/agenda/create/components/AgendaEditor";
+import AgendaViewer from "@sparcs-clubs/web/features/meeting/agenda/create/components/AgendaViewer";
 
 const AgendaBlock: React.FC = () => {
   const [folded, setFolded] = useState(false);
