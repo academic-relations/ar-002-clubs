@@ -5,14 +5,28 @@ import { JwtService } from "@nestjs/jwt";
 import { ApiAut002ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut002";
 import { ApiAut003ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut003";
 
+import { getSsoConfig } from "@sparcs-clubs/api/env";
+
 import { AuthRepository } from "../repository/auth.repository";
+
+import { Client } from "../util/sparcs-sso";
 
 @Injectable()
 export class AuthService {
+  private readonly ssoClient;
+
   constructor(
     private readonly authRepository: AuthRepository,
     private readonly jwtService: JwtService,
-  ) {}
+  ) {
+    const ssoConfig = getSsoConfig();
+    const ssoClient = new Client(
+      ssoConfig.ssoClientId,
+      ssoConfig.ssoSecretKey,
+      ssoConfig.ssoIsBeta,
+    );
+    this.ssoClient = ssoClient;
+  }
 
   async postAuthSignin() {
     // TODO: SPARCS SSO 로그인 구현
@@ -256,4 +270,53 @@ export class AuthService {
     );
     return refreshToken;
   }
+
+  // public async getAuthLogin(query, req: Request) {
+  //   if (req.user) {
+  //     return query.next ?? "/";
+  //   }
+  //   // eslint-disable-next-line no-param-reassign
+  //   req.session.next = query.next ?? "/";
+  //   const { url, state } = this.ssoClient.get_login_params();
+  //   // eslint-disable-next-line no-param-reassign
+  //   req.session.ssoState = state;
+  //   if (query.socialLogin === "0") {
+  //     return `${url}&social_enabled=0&show_disabled_button=0`;
+  //   }
+  //   return url;
+  // }
+
+  // public async getAuthLoginCallback(query, session: Request["session"]) {
+  //   const stateBefore = session.ssoState;
+  //   if (!stateBefore || stateBefore !== query.state) {
+  //     return {
+  //       nextUrl: "/error/invalid-login",
+  //       refreshToken: null,
+  //       refreshTokenOptions: null,
+  //     };
+  //   }
+  //   const ssoProfile: SSOUser = await this.ssoClient.get_user_info(query.code);
+  //   const {
+  //     // accessToken,
+  //     // accessTokenOptions,
+  //     refreshToken,
+  //     refreshTokenOptions,
+  //   } = await this.ssoLogin(ssoProfile);
+  //   const nextUrl = session.next ?? "/";
+  //   return { nextUrl, refreshToken, refreshTokenOptions };
+  // }
+
+  // public async getAuthLogout(query, req: Request, user: UserDto) {
+  //   if (user) {
+  //     const { sid } = user;
+  //     const { protocol } = req;
+  //     const host = req.get("host");
+  //     const { originalUrl } = req;
+  //     const absoluteUrl = `${protocol}://${host}${originalUrl}`;
+  //     const logoutUrl = this.ssoClient.get_logout_url(sid, absoluteUrl);
+  //     return logoutUrl;
+  //   }
+
+  //   return query.next ?? "/";
+  // }
 }

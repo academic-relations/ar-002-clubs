@@ -99,4 +99,50 @@ export class AuthController {
     printObjectPropertyTypes(user);
     logger.debug(user.studentId + user.studentNumber);
   }
+
+  // @Public()
+  // @Get("/auth/login")
+  // async getAuthLogin(
+  //   @Query("next") next: string,
+  //   @Query("social_login") socialLogin: string,
+  //   @Req() req: Request,
+  //   @Res() res: Response,
+  // ) {
+  //   const query = { next, socialLogin };
+  //   const url = await this.authService.getAuthLogin(query, req);
+  //   return res.redirect(url);
+  // }
+
+  // @Public()
+  // @Get("/auth/login/callback")
+  // async getAuthLoginCallback(
+  //   @Query("state") state: string,
+  //   @Query("code") code: string,
+  //   @Session() session: Request["session"],
+  //   @Res() res: Response,
+  // ) {
+  //   const query = { state, code };
+  //   const { nextUrl, refreshToken, refreshTokenOptions } =
+  //     await this.authService.getAuthLoginCallback(query, session);
+  //   if (refreshToken && refreshTokenOptions) {
+  //     res.cookie("refreshToken", refreshToken, refreshTokenOptions);
+  //   }
+  //   return res.redirect(nextUrl);
+  // }
+
+  // @Public()
+  // @Get("/auth/logout")
+  // async getAuthLogout(
+  //   @Query("next") next: string,
+  //   @Req() req: Request,
+  //   @Res() res: Response,
+  //   @GetUser() user: UserDto,
+  // ) {
+  //   const query = { next };
+  //   const url = await this.authService.getAuthLogout(query, req, user);
+  //   if (user) {
+  //     res.clearCookie("refreshToken", { path: "/", maxAge: 0, httpOnly: true });
+  //   }
+  //   return res.redirect(url);
+  // }
 }
