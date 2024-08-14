@@ -271,6 +271,7 @@ export default class FundingService {
     }
 
     const now = getKSTDate();
+    // TODO: 지원금 학기 기준으로 semeterId 설정
     const thisSemester = await this.clubPublicSevice.dateToSemesterId(now);
 
     const fundings =
@@ -312,6 +313,7 @@ export default class FundingService {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
 
+    // TODO: 지원금 학기 기준으로 semeterId 설정
     const fundings =
       await this.fundingRepository.selectFundingsSemesterByClubId(
         body.clubId,
