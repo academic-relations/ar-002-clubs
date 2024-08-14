@@ -22,6 +22,6 @@ import ActivityService from "./service/activity.service";
     ActivityActivityTermService,
     ActivityPublicService,
   ],
-  exports: [],
+  exports: [ActivityPublicService],
 })
 export default class ActivityModule {}
