@@ -927,30 +927,30 @@ export default class FundingRepository {
           expenditureAmount: contents.expenditureAmount,
           tradeDetailExplanation: contents.tradeDetailExplanation,
           clubSuppliesName:
-            contents.purposeId !== undefined ? contents.clubSuppliesName : null,
+            contents.purposeId === undefined ? contents.clubSuppliesName : null,
           clubSuppliesEvidenceEnumId:
-            contents.purposeId !== undefined
+            contents.purposeId === undefined
               ? contents.clubSuppliesEvidenceEnumId
               : null,
           clubSuppliesClassEnumId:
-            contents.purposeId !== undefined
+            contents.purposeId === undefined
               ? contents.clubSuppliesClassEnumId
               : null,
           clubSuppliesPurpose:
-            contents.purposeId !== undefined
+            contents.purposeId === undefined
               ? contents.clubSuppliesPurpose
               : null,
           clubSuppliesSoftwareEvidence:
-            contents.purposeId !== undefined &&
+            contents.purposeId === undefined &&
             contents.clubSuppliesClassEnumId === FixtureClassEnum.Software
               ? contents.clubSuppliesSoftwareEvidence
               : null,
           numberOfClubSupplies:
-            contents.purposeId !== undefined
+            contents.purposeId === undefined
               ? contents.numberOfClubSupplies
               : null,
           priceOfClubSupplies:
-            contents.purposeId !== undefined
+            contents.purposeId === undefined
               ? contents.priceOfClubSupplies
               : null,
           isFixture: contents.isFixture,
@@ -1040,7 +1040,8 @@ export default class FundingRepository {
       }
 
       // 탑승자 전체 삭제 및 재생성
-      const [passengerDeletionResult] = await tx
+      // const [passengerDeletionResult] =
+      await tx
         .update(TransportationPassenger)
         .set({ deletedAt })
         .where(
@@ -1049,13 +1050,13 @@ export default class FundingRepository {
             isNull(TransportationPassenger.deletedAt),
           ),
         );
-      if (passengerDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] passenger deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (passengerDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] passenger deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (
         contents.isTransportation &&
         contents.transportationEnumId ===
@@ -1088,7 +1089,8 @@ export default class FundingRepository {
       }
 
       // 파일 전체 삭제 및 재생성
-      const [tradeEvidenceFileDeletionResult] = await tx
+      // const [tradeEvidenceFileDeletionResult] =
+      await tx
         .update(TradeEvidenceFile)
         .set({ deletedAt })
         .where(
@@ -1097,13 +1099,13 @@ export default class FundingRepository {
             isNull(TradeEvidenceFile.deletedAt),
           ),
         );
-      if (tradeEvidenceFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] tradeEvidenceFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (tradeEvidenceFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] tradeEvidenceFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       await Promise.all(
         contents.tradeEvidenceFiles.map(async file => {
           const [tradeEvidenceFileInsertResult] = await tx
@@ -1123,7 +1125,8 @@ export default class FundingRepository {
         }),
       );
 
-      const [tradeDetailFileDeletionResult] = await tx
+      // const [tradeDetailFileDeletionResult] =
+      await tx
         .update(TradeDetailFile)
         .set({ deletedAt })
         .where(
@@ -1132,13 +1135,13 @@ export default class FundingRepository {
             isNull(TradeDetailFile.deletedAt),
           ),
         );
-      if (tradeDetailFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] tradeDetailFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (tradeDetailFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] tradeDetailFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       await Promise.all(
         contents.tradeDetailFiles.map(async file => {
           const [tradeDetailFileInsertResult] = await tx
@@ -1158,7 +1161,8 @@ export default class FundingRepository {
         }),
       );
 
-      const [clubSuppliesImageFileDeletionResult] = await tx
+      // const [clubSuppliesImageFileDeletionResult] =
+      await tx
         .update(ClubSuppliesImageFile)
         .set({ deletedAt })
         .where(
@@ -1167,14 +1171,14 @@ export default class FundingRepository {
             isNull(ClubSuppliesImageFile.deletedAt),
           ),
         );
-      if (clubSuppliesImageFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] clubSuppliesImageFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
-      if (contents.purposeId !== undefined) {
+      // if (clubSuppliesImageFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] clubSuppliesImageFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
+      if (contents.purposeId === undefined) {
         await Promise.all(
           contents.clubSuppliesImageFiles.map(async file => {
             const [clubSuppliesImageFileInsertResult] = await tx
@@ -1195,7 +1199,8 @@ export default class FundingRepository {
         );
       }
 
-      const [clubSuppliesSoftwareEvidenceFileDeletionResult] = await tx
+      // const [clubSuppliesSoftwareEvidenceFileDeletionResult] =
+      await tx
         .update(ClubSuppliesSoftwareEvidenceFile)
         .set({ deletedAt })
         .where(
@@ -1204,15 +1209,15 @@ export default class FundingRepository {
             isNull(ClubSuppliesSoftwareEvidenceFile.deletedAt),
           ),
         );
-      if (clubSuppliesSoftwareEvidenceFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] clubSuppliesSoftwareEvidenceFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (clubSuppliesSoftwareEvidenceFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] clubSuppliesSoftwareEvidenceFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (
-        contents.purposeId !== undefined &&
+        contents.purposeId === undefined &&
         contents.clubSuppliesClassEnumId === FixtureClassEnum.Software
       ) {
         await Promise.all(
@@ -1237,7 +1242,8 @@ export default class FundingRepository {
         );
       }
 
-      const [fixtureImageFileDeletionResult] = await tx
+      // const [fixtureImageFileDeletionResult] =
+      await tx
         .update(FixtureImageFile)
         .set({ deletedAt })
         .where(
@@ -1246,13 +1252,13 @@ export default class FundingRepository {
             isNull(FixtureImageFile.deletedAt),
           ),
         );
-      if (fixtureImageFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] fixtureImageFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (fixtureImageFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] fixtureImageFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isFixture) {
         await Promise.all(
           contents.fixtureImageFiles.map(async file => {
@@ -1274,7 +1280,8 @@ export default class FundingRepository {
         );
       }
 
-      const [fixtureSoftwareEvidenceFileDeletionResult] = await tx
+      // const [fixtureSoftwareEvidenceFileDeletionResult] =
+      await tx
         .update(FixtureSoftwareEvidenceFile)
         .set({ deletedAt })
         .where(
@@ -1283,13 +1290,13 @@ export default class FundingRepository {
             isNull(FixtureSoftwareEvidenceFile.deletedAt),
           ),
         );
-      if (fixtureSoftwareEvidenceFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] fixtureSoftwareEvidenceFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (fixtureSoftwareEvidenceFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] fixtureSoftwareEvidenceFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (
         contents.isFixture &&
         contents.fixtureClassEnumId === FixtureClassEnum.Software
@@ -1314,7 +1321,8 @@ export default class FundingRepository {
         );
       }
 
-      const [foodExpenseFileDeletionResult] = await tx
+      // const [foodExpenseFileDeletionResult] =
+      await tx
         .update(FoodExpenseFile)
         .set({ deletedAt })
         .where(
@@ -1323,13 +1331,13 @@ export default class FundingRepository {
             isNull(FoodExpenseFile.deletedAt),
           ),
         );
-      if (foodExpenseFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] foodExpenseFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (foodExpenseFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] foodExpenseFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isFoodExpense) {
         await Promise.all(
           contents.foodExpenseFiles.map(async file => {
@@ -1351,7 +1359,8 @@ export default class FundingRepository {
         );
       }
 
-      const [laborContractFileDeletionResult] = await tx
+      // const [laborContractFileDeletionResult] =
+      await tx
         .update(LaborContractFile)
         .set({ deletedAt })
         .where(
@@ -1360,13 +1369,13 @@ export default class FundingRepository {
             isNull(LaborContractFile.deletedAt),
           ),
         );
-      if (laborContractFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] laborContractFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (laborContractFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] laborContractFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isLaborContract) {
         await Promise.all(
           contents.laborContractFiles.map(async file => {
@@ -1388,7 +1397,8 @@ export default class FundingRepository {
         );
       }
 
-      const [externalEventParticipationFeeFileDeletionResult] = await tx
+      // const [externalEventParticipationFeeFileDeletionResult] =
+      await tx
         .update(ExternalEventParticipationFeeFile)
         .set({ deletedAt })
         .where(
@@ -1397,13 +1407,13 @@ export default class FundingRepository {
             isNull(ExternalEventParticipationFeeFile.deletedAt),
           ),
         );
-      if (externalEventParticipationFeeFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] externalEventParticipationFeeFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (externalEventParticipationFeeFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] externalEventParticipationFeeFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isExternalEventParticipationFee) {
         await Promise.all(
           contents.externalEventParticipationFeeFiles.map(async file => {
@@ -1427,7 +1437,8 @@ export default class FundingRepository {
         );
       }
 
-      const [publicationFileDeletionResult] = await tx
+      // const [publicationFileDeletionResult] =
+      await tx
         .update(PublicationFile)
         .set({ deletedAt })
         .where(
@@ -1436,13 +1447,13 @@ export default class FundingRepository {
             isNull(PublicationFile.deletedAt),
           ),
         );
-      if (publicationFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] publicationFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (publicationFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] publicationFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isPublication) {
         await Promise.all(
           contents.publicationFiles.map(async file => {
@@ -1464,7 +1475,8 @@ export default class FundingRepository {
         );
       }
 
-      const [profitMakingActivityFileDeletionResult] = await tx
+      // const [profitMakingActivityFileDeletionResult] =
+      await tx
         .update(ProfitMakingActivityFile)
         .set({ deletedAt })
         .where(
@@ -1473,13 +1485,13 @@ export default class FundingRepository {
             isNull(ProfitMakingActivityFile.deletedAt),
           ),
         );
-      if (profitMakingActivityFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] profitMakingActivityFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (profitMakingActivityFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] profitMakingActivityFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isProfitMakingActivity) {
         await Promise.all(
           contents.profitMakingActivityFiles.map(async file => {
@@ -1501,7 +1513,8 @@ export default class FundingRepository {
         );
       }
 
-      const [jointExpenseFileDeletionResult] = await tx
+      // const [jointExpenseFileDeletionResult] =
+      await tx
         .update(JointExpenseFile)
         .set({ deletedAt })
         .where(
@@ -1511,13 +1524,13 @@ export default class FundingRepository {
           ),
         );
 
-      if (jointExpenseFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] jointExpenseFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (jointExpenseFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] jointExpenseFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isJointExpense) {
         await Promise.all(
           contents.jointExpenseFiles.map(async file => {
@@ -1539,7 +1552,8 @@ export default class FundingRepository {
         );
       }
 
-      const [etcExpenseFileDeletionResult] = await tx
+      // const [etcExpenseFileDeletionResult] =
+      await tx
         .update(EtcExpenseFile)
         .set({ deletedAt })
         .where(
@@ -1548,13 +1562,13 @@ export default class FundingRepository {
             isNull(EtcExpenseFile.deletedAt),
           ),
         );
-      if (etcExpenseFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] etcExpenseFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (etcExpenseFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] etcExpenseFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isEtcExpense) {
         await Promise.all(
           contents.etcExpenseFiles.map(async file => {
