@@ -1,20 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { ApiFnd001RequestBody } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd001";
+import { ApiFnd001RequestBody } from "@sparcs-clubs/interface/api/funding/apiFnd001";
 import {
   ApiFnd002RequestParam,
   ApiFnd002ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
+} from "@sparcs-clubs/interface/api/funding/apiFnd002";
 import {
   ApiFnd003RequestBody,
   ApiFnd003RequestParam,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd003";
-import { ApiFnd004RequestParam } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd004";
-import { ApiFnd005RequestBody } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
+} from "@sparcs-clubs/interface/api/funding/apiFnd003";
+import { ApiFnd004RequestParam } from "@sparcs-clubs/interface/api/funding/apiFnd004";
+import { ApiFnd005RequestBody } from "@sparcs-clubs/interface/api/funding/apiFnd005";
 import {
   ApiFnd006RequestBody,
   ApiFnd006RequestParam,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
+} from "@sparcs-clubs/interface/api/funding/apiFnd006";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ActivityPublicService from "@sparcs-clubs/api/feature/activity/service/activity.public.service";
