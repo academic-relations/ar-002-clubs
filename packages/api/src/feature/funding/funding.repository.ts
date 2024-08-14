@@ -121,30 +121,30 @@ export default class FundingRepository {
         expenditureAmount: contents.expenditureAmount,
         tradeDetailExplanation: contents.tradeDetailExplanation,
         clubSuppliesName:
-          contents.purposeId !== undefined ? contents.clubSuppliesName : null,
+          contents.purposeId === undefined ? contents.clubSuppliesName : null,
         clubSuppliesEvidenceEnumId:
-          contents.purposeId !== undefined
+          contents.purposeId === undefined
             ? contents.clubSuppliesEvidenceEnumId
             : null,
         clubSuppliesClassEnumId:
-          contents.purposeId !== undefined
+          contents.purposeId === undefined
             ? contents.clubSuppliesClassEnumId
             : null,
         clubSuppliesPurpose:
-          contents.purposeId !== undefined
+          contents.purposeId === undefined
             ? contents.clubSuppliesPurpose
             : null,
         clubSuppliesSoftwareEvidence:
-          contents.purposeId !== undefined &&
+          contents.purposeId === undefined &&
           contents.clubSuppliesClassEnumId === FixtureClassEnum.Software
             ? contents.clubSuppliesSoftwareEvidence
             : null,
         numberOfClubSupplies:
-          contents.purposeId !== undefined
+          contents.purposeId === undefined
             ? contents.numberOfClubSupplies
             : null,
         priceOfClubSupplies:
-          contents.purposeId !== undefined
+          contents.purposeId === undefined
             ? contents.priceOfClubSupplies
             : null,
         isFixture: contents.isFixture,
@@ -302,7 +302,7 @@ export default class FundingRepository {
         }),
       );
 
-      if (contents.purposeId !== undefined) {
+      if (contents.purposeId === undefined) {
         await Promise.all(
           contents.clubSuppliesImageFiles.map(async file => {
             const [clubSuppliesImageFileInsertResult] = await tx
@@ -324,7 +324,7 @@ export default class FundingRepository {
       }
 
       if (
-        contents.purposeId !== undefined &&
+        contents.purposeId === undefined &&
         contents.clubSuppliesClassEnumId === FixtureClassEnum.Software
       ) {
         await Promise.all(

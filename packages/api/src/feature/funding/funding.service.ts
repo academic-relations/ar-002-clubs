@@ -65,6 +65,10 @@ export default class FundingService {
       param.id,
     );
 
+    if (!funding) {
+      throw new HttpException("Funding not found", HttpStatus.NOT_FOUND);
+    }
+
     const tradeEvidenceFileIds =
       await this.fundingRepository.selectTradeEvidenceFileIdsByFundingId(
         param.id,
