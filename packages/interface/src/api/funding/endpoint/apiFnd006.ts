@@ -16,7 +16,9 @@ const requestParam = z.object({
 
 const requestQuery = z.object({});
 
-const requestBody = z.object({});
+const requestBody = z.object({
+  clubId: z.coerce.number().int().min(1),
+});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
