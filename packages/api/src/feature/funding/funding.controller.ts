@@ -11,29 +11,29 @@ import {
 import apiFnd001, {
   ApiFnd001RequestBody,
   ApiFnd001ResponseCreated,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd001";
+} from "@sparcs-clubs/interface/api/funding/apiFnd001";
 import apiFnd002, {
   ApiFnd002RequestParam,
   ApiFnd002ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
+} from "@sparcs-clubs/interface/api/funding/apiFnd002";
 import apiFnd003, {
   ApiFnd003RequestBody,
   ApiFnd003RequestParam,
   ApiFnd003ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd003";
+} from "@sparcs-clubs/interface/api/funding/apiFnd003";
 import apiFnd004, {
   ApiFnd004RequestParam,
   ApiFnd004ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd004";
+} from "@sparcs-clubs/interface/api/funding/apiFnd004";
 import apiFnd005, {
   ApiFnd005RequestBody,
   ApiFnd005ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
+} from "@sparcs-clubs/interface/api/funding/apiFnd005";
 import apiFnd006, {
   ApiFnd006RequestBody,
   ApiFnd006RequestParam,
   ApiFnd006ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
+} from "@sparcs-clubs/interface/api/funding/apiFnd006";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
