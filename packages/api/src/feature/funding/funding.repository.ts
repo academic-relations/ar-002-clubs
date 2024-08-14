@@ -34,85 +34,87 @@ import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 export default class FundingRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  async insertFunding(contents: {
-    clubId: number;
-    purposeId?: number;
-    name: string;
-    expenditureDate: Date;
-    expenditureAmount: number;
+  async insertFunding(
+    contents: {
+      clubId: number;
+      purposeId?: number;
+      name: string;
+      expenditureDate: Date;
+      expenditureAmount: number;
 
-    tradeEvidenceFiles: Array<{ fileId: string }>;
-    tradeDetailFiles: Array<{ fileId: string }>;
-    tradeDetailExplanation: string;
+      tradeEvidenceFiles: Array<{ fileId: string }>;
+      tradeDetailFiles: Array<{ fileId: string }>;
+      tradeDetailExplanation: string;
 
-    clubSuppliesName?: string;
-    clubSuppliesEvidenceEnumId?: number;
-    clubSuppliesClassEnumId?: number;
-    clubSuppliesPurpose?: string;
-    clubSuppliesImageFiles?: Array<{ fileId: string }>;
-    clubSuppliesSoftwareEvidence?: string;
-    clubSuppliesSoftwareEvidenceFiles?: Array<{ fileId: string }>;
-    numberOfClubSupplies?: number;
-    priceOfClubSupplies?: number;
+      clubSuppliesName?: string;
+      clubSuppliesEvidenceEnumId?: number;
+      clubSuppliesClassEnumId?: number;
+      clubSuppliesPurpose?: string;
+      clubSuppliesImageFiles?: Array<{ fileId: string }>;
+      clubSuppliesSoftwareEvidence?: string;
+      clubSuppliesSoftwareEvidenceFiles?: Array<{ fileId: string }>;
+      numberOfClubSupplies?: number;
+      priceOfClubSupplies?: number;
 
-    isFixture: boolean;
-    fixtureName?: string;
-    fixtureEvidenceEnumId?: number;
-    fixtureClassEnumId?: number;
-    fixturePurpose?: string;
-    fixtureImageFiles: Array<{ fileId: string }>;
-    fixtureSoftwareEvidence?: string;
-    fixtureSoftwareEvidenceFiles: Array<{ fileId: string }>;
-    numberOfFixture?: number;
-    priceOfFixture?: number;
+      isFixture: boolean;
+      fixtureName?: string;
+      fixtureEvidenceEnumId?: number;
+      fixtureClassEnumId?: number;
+      fixturePurpose?: string;
+      fixtureImageFiles: Array<{ fileId: string }>;
+      fixtureSoftwareEvidence?: string;
+      fixtureSoftwareEvidenceFiles: Array<{ fileId: string }>;
+      numberOfFixture?: number;
+      priceOfFixture?: number;
 
-    isTransportation: boolean;
-    transportationEnumId?: number;
-    origin?: string;
-    destination?: string;
-    purposeOfTransportation?: string;
-    placeValidity?: string;
-    transportationPassengers: Array<{ studentNumber: string }>;
+      isTransportation: boolean;
+      transportationEnumId?: number;
+      origin?: string;
+      destination?: string;
+      purposeOfTransportation?: string;
+      placeValidity?: string;
+      transportationPassengers: Array<{ studentNumber: string }>;
 
-    isNonCorporateTransaction: boolean;
-    traderName?: string;
-    traderAccountNumber?: string;
-    wasteExplanation?: string;
+      isNonCorporateTransaction: boolean;
+      traderName?: string;
+      traderAccountNumber?: string;
+      wasteExplanation?: string;
 
-    isFoodExpense: boolean;
-    foodExpenseExplanation?: string;
-    foodExpenseFiles: Array<{ fileId: string }>;
+      isFoodExpense: boolean;
+      foodExpenseExplanation?: string;
+      foodExpenseFiles: Array<{ fileId: string }>;
 
-    isLaborContract: boolean;
-    laborContractExplanation?: string;
-    laborContractFiles: Array<{ fileId: string }>;
+      isLaborContract: boolean;
+      laborContractExplanation?: string;
+      laborContractFiles: Array<{ fileId: string }>;
 
-    isExternalEventParticipationFee: boolean;
-    externalEventParticipationFeeExplanation?: string;
-    externalEventParticipationFeeFiles: Array<{ fileId: string }>;
+      isExternalEventParticipationFee: boolean;
+      externalEventParticipationFeeExplanation?: string;
+      externalEventParticipationFeeFiles: Array<{ fileId: string }>;
 
-    isPublication: boolean;
-    publicationExplanation?: string;
-    publicationFiles: Array<{ fileId: string }>;
+      isPublication: boolean;
+      publicationExplanation?: string;
+      publicationFiles: Array<{ fileId: string }>;
 
-    isProfitMakingActivity: boolean;
-    profitMakingActivityExplanation?: string;
-    profitMakingActivityFiles: Array<{ fileId: string }>;
+      isProfitMakingActivity: boolean;
+      profitMakingActivityExplanation?: string;
+      profitMakingActivityFiles: Array<{ fileId: string }>;
 
-    isJointExpense: boolean;
-    jointExpenseExplanation?: string;
-    jointExpenseFiles: Array<{ fileId: string }>;
+      isJointExpense: boolean;
+      jointExpenseExplanation?: string;
+      jointExpenseFiles: Array<{ fileId: string }>;
 
-    isEtcExpense: boolean;
-    etcExpenseExplanation?: string;
-    etcExpenseFiles: Array<{ fileId: string }>;
-  }): Promise<boolean> {
+      isEtcExpense: boolean;
+      etcExpenseExplanation?: string;
+      etcExpenseFiles: Array<{ fileId: string }>;
+    },
+    semesterId: number,
+  ): Promise<boolean> {
     const isInsertionSucceed = await this.db.transaction(async tx => {
       const [fundingInsertResult] = await tx.insert(FundingOrder).values({
         clubId: contents.clubId,
         purposeId: contents.purposeId,
-        // TODO: semesterId 받아오기
-        semesterId: 1,
+        semesterId,
         fundingOrderStatusEnumId: Number(FundingOrderStatusEnum.Applied),
         name: contents.name,
         expenditureDate: contents.expenditureDate,
@@ -909,6 +911,7 @@ export default class FundingRepository {
       etcExpenseFiles: Array<{ fileId: string }>;
     },
     fundingId: number,
+    semesterId: number,
   ): Promise<boolean> {
     const isUpdateSucceed = await this.db.transaction(async tx => {
       const deletedAt = new Date();
@@ -917,8 +920,7 @@ export default class FundingRepository {
         .set({
           clubId: contents.clubId,
           purposeId: contents.purposeId,
-          // TODO: semesterId 받아오기
-          semesterId: 1,
+          semesterId,
           fundingOrderStatusEnumId: Number(FundingOrderStatusEnum.Applied),
           name: contents.name,
           expenditureDate: contents.expenditureDate,

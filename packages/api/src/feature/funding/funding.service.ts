@@ -44,7 +44,12 @@ export default class FundingService {
     ) {
       throw new HttpException("Student is not delegate", HttpStatus.FORBIDDEN);
     }
-    return this.fundingRepository.insertFunding(body);
+
+    // TODO: 지원금 학기 기준으로 semeterId 설정
+    const now = getKSTDate();
+    const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
+
+    return this.fundingRepository.insertFunding(body, semesterId);
   }
 
   // TODO: 최적화
@@ -253,7 +258,12 @@ export default class FundingService {
     ) {
       throw new HttpException("Student is not delegate", HttpStatus.FORBIDDEN);
     }
-    return this.fundingRepository.putStudentFunding(body, param.id);
+
+    // TODO: 지원금 학기 기준으로 semeterId 설정
+    const now = getKSTDate();
+    const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
+
+    return this.fundingRepository.putStudentFunding(body, param.id, semesterId);
   }
 
   async deleteStudentFunding(studentId: number, param: ApiFnd004RequestParam) {
