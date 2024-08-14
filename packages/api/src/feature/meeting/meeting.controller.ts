@@ -13,24 +13,24 @@ import {
 import apiMee001, {
   ApiMee001RequestBody,
   ApiMee001ResponseCreated,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee001";
+} from "@sparcs-clubs/interface/api/meeting/apiMee001";
 import apiMee002, {
   ApiMee002RequestParam,
   ApiMee002ResponseOk,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee002";
+} from "@sparcs-clubs/interface/api/meeting/apiMee002";
 import apiMee003, {
   ApiMee003RequestBody,
   ApiMee003RequestParam,
   ApiMee003ResponseCreated,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee003";
+} from "@sparcs-clubs/interface/api/meeting/apiMee003";
 import apiMee004, {
   ApiMee004RequestParam,
   ApiMee004ResponseOk,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee004";
+} from "@sparcs-clubs/interface/api/meeting/apiMee004";
 import apiMee005, {
   ApiMee005RequestQuery,
   ApiMee005ResponseOk,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee005";
+} from "@sparcs-clubs/interface/api/meeting/apiMee005";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Executive } from "@sparcs-clubs/api/common/util/decorators/method-decorator";

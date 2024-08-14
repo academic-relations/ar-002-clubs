@@ -5,17 +5,17 @@ import { WsException } from "@nestjs/websockets";
 import {
   ApiMee001RequestBody,
   ApiMee001ResponseCreated,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee001";
-import { ApiMee002RequestParam } from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee002";
+} from "@sparcs-clubs/interface/api/meeting/apiMee001";
+import { ApiMee002RequestParam } from "@sparcs-clubs/interface/api/meeting/apiMee002";
 import {
   ApiMee003RequestBody,
   ApiMee003RequestParam,
   ApiMee003ResponseCreated,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee003";
+} from "@sparcs-clubs/interface/api/meeting/apiMee003";
 import {
   ApiMee004RequestParam,
   ApiMee004ResponseOk,
-} from "@sparcs-clubs/interface/api/meeting/endpoint/apiMee004";
+} from "@sparcs-clubs/interface/api/meeting/apiMee004";
 
 import UserPublicService from "../user/service/user.public.service";
 
