@@ -2,6 +2,8 @@
 
 import React, { ReactNode } from "react";
 
+import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
+
 import { useParams, useRouter } from "next/navigation";
 import styled from "styled-components";
 
@@ -16,7 +18,9 @@ import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { ProfessorApprovalTagList } from "@sparcs-clubs/web/constants/tableTagList";
+import { mockActivityDetailData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
 import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
+import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface ActivitySectionProps extends React.PropsWithChildren {
@@ -103,6 +107,28 @@ const ActivityReportDetail: React.FC = () => {
     ProfessorApprovalTagList,
   );
 
+  const editButtonOnClick = () => {
+    router.push(`/manage-club/activity-report/${id}/edit`);
+  };
+
+  const data = mockActivityDetailData;
+
+  const activityType: (type: ActivityTypeEnum) => string = type => {
+    switch (type) {
+      case ActivityTypeEnum.matchedInternalActivity:
+        return "동아리 성격에 합치하는 내부 활동";
+        break;
+      case ActivityTypeEnum.matchedExternalActivity:
+        return "동아리 성격에 합치하는 외부 활동";
+        break;
+      case ActivityTypeEnum.notMatchedActivity:
+        return "동아리 성격에 합치하지 않는 활동";
+        break;
+      default:
+        return "";
+    }
+  };
+
   return (
     <FlexWrapper direction="column" gap={60}>
       <PageHead
@@ -123,38 +149,34 @@ const ActivityReportDetail: React.FC = () => {
             ]}
           />
           <ActivitySection label="활동 정보">
-            <ActivityDetail>활동명: 스팍스 봄학기 해커톤</ActivityDetail>
+            <ActivityDetail>{`활동명: ${data.name}`}</ActivityDetail>
             <ActivityDetail>
-              활동 분류: 동아리 성격에 합치하는 내부 활동
+              {`활동 분류: ${activityType(data.activityTypeEnumId)}`}
             </ActivityDetail>
             <ActivityDetail>
-              활동 기간: 2024년 5월 24일 (금) ~ 2024년 5월 25일 (토)
+              {`활동 기간: ${formatDate(
+                data.durations[0].startTerm,
+              )} ~ ${formatDate(data.durations[0].endTerm)}`}
             </ActivityDetail>
-            <ActivityDetail>활동 장소: 동아리방</ActivityDetail>
-            <ActivityDetail>
-              활동 목적: 동아리 회원 개발 실력 향상
-            </ActivityDetail>
-            <ActivityDetail>활동 내용: 밤을 새서 개발을 했다.</ActivityDetail>
+            <ActivityDetail>{`활동 장소: ${data.location}`}</ActivityDetail>
+            <ActivityDetail>{`활동 목적: ${data.purpose}`}</ActivityDetail>
+            <ActivityDetail>{`활동 내용: ${data.detail}`}</ActivityDetail>
           </ActivitySection>
-          <ActivitySection label="활동 인원(4명)">
-            <ActivityDetail>20200510 이지윤</ActivityDetail>
-            <ActivityDetail>20200511 박병찬</ActivityDetail>
-            <ActivityDetail>20230510 이도라</ActivityDetail>
-            <ActivityDetail>20240510 스팍스</ActivityDetail>
+          <ActivitySection label={`활동 인원(${data.participants.length}명)`}>
+            {data.participants.map((participant: { studentId: number }) => (
+              <ActivityDetail key="1">{`${participant.studentId}`}</ActivityDetail>
+            ))}
           </ActivitySection>
           <ActivitySection label="활동 증빙">
-            <ActivityDetail>활동명: 스팍스 봄학기 해커톤</ActivityDetail>
             <ActivityDetail>첨부 파일</ActivityDetail>
             <ActivityDetail>
               <FilePreviewContainer>
-                <FilePreview fileName="bamsaem.pdf" />
-                <FilePreview fileName="coffee.pdf" />
-                <FilePreview fileName="gaebal.pdf" />
+                {data.evidenceFiles.map((evidenceFile: { uuid: string }) => (
+                  <FilePreview key="1" fileName={evidenceFile.uuid} />
+                ))}
               </FilePreviewContainer>
             </ActivityDetail>
-            <ActivityDetail>
-              부가 설명: 커피를 마시며 개발을 했고 밤을 샜어요
-            </ActivityDetail>
+            <ActivityDetail>{`부가 설명: ${data.evidence}`}</ActivityDetail>
           </ActivitySection>
           <FlexWrapper
             direction="row"
@@ -176,7 +198,9 @@ const ActivityReportDetail: React.FC = () => {
           </Button>
           <DeleteAndEditButtonContainer>
             <Button type="default">삭제</Button>
-            <Button type="default">수정</Button>
+            <Button type="default" onClick={editButtonOnClick}>
+              수정
+            </Button>
           </DeleteAndEditButtonContainer>
         </ButtonContainer>
       </FlexWrapper>
