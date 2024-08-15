@@ -259,6 +259,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] passenger inserted: ${passenger.studentNumber}`,
+            );
             return {};
           }),
         );
@@ -279,6 +282,9 @@ export default class FundingRepository {
             tx.rollback();
             return false;
           }
+          logger.debug(
+            `[insertFunding] tradeEvidenceFile inserted: ${file.fileId}`,
+          );
           return {};
         }),
       );
@@ -298,6 +304,9 @@ export default class FundingRepository {
             tx.rollback();
             return false;
           }
+          logger.debug(
+            `[insertFunding] tradeDetailFile inserted: ${file.fileId}`,
+          );
           return {};
         }),
       );
@@ -318,6 +327,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] clubSuppliesImageFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -344,6 +356,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] clubSuppliesSoftwareEvidenceFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -365,6 +380,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] fixtureImageFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -389,6 +407,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] fixtureSoftwareEvidenceFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -410,6 +431,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] foodExpenseFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -431,6 +455,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] laborContractFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -454,6 +481,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] externalEventParticipationFeeFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -475,6 +505,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] publicationFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -496,6 +529,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] profitMakingActivityFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -517,6 +553,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] jointExpenseFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -538,11 +577,13 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] etcExpenseFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
       }
-
       return true;
     });
     return isInsertionSucceed;
@@ -1083,6 +1124,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] passenger inserted: ${passenger.studentNumber}`,
+            );
             return {};
           }),
         );
@@ -1121,6 +1165,9 @@ export default class FundingRepository {
             tx.rollback();
             return false;
           }
+          logger.debug(
+            `[putStudentFunding] tradeEvidenceFile inserted: ${file.fileId}`,
+          );
           return {};
         }),
       );
@@ -1157,6 +1204,9 @@ export default class FundingRepository {
             tx.rollback();
             return false;
           }
+          logger.debug(
+            `[putStudentFunding] tradeDetailFile inserted: ${file.fileId}`,
+          );
           return {};
         }),
       );
@@ -1194,6 +1244,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] clubSuppliesImageFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -1237,6 +1290,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] clubSuppliesSoftwareEvidenceFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -1275,6 +1331,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] fixtureImageFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -1316,6 +1375,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] fixtureSoftwareEvidenceFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -1354,6 +1416,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] foodExpenseFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -1392,6 +1457,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] laborContractFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -1432,6 +1500,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] externalEventParticipationFeeFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -1470,6 +1541,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] publicationFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -1508,6 +1582,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] profitMakingActivityFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -1547,6 +1624,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] jointExpenseFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -1585,6 +1665,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] etcExpenseFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
