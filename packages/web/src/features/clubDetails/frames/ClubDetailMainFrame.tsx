@@ -88,7 +88,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
           <CancellableModalContent
             onClose={close}
             onConfirm={async () => {
-              toggleRegistered(close);
+              ToggleRegistered(close);
             }}
           >
             2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
