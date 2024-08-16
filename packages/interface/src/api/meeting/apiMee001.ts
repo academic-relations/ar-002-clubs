@@ -17,13 +17,13 @@ const requestQuery = z.object({});
 
 const requestBody = z.object({
   meetingEnumId: z.nativeEnum(MeetingEnum),
-  announcementTitle: z.coerce.string().min(1),
-  announcementContent: z.coerce.string().min(1),
+  announcementTitle: z.string().min(1),
+  announcementContent: z.string().min(1),
   startDate: z.coerce.date(),
   endDate: z.coerce.date().optional(),
   isRegular: z.coerce.boolean(),
-  location: z.coerce.string().min(1),
-  locationEn: z.coerce.string().min(1),
+  location: z.string().min(1),
+  locationEn: z.string().min(1),
 });
 
 const responseBodyMap = {
