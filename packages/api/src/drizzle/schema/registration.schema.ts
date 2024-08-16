@@ -7,20 +7,21 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
+import { Activity } from "./activity.schema";
 import { Club } from "./club.schema";
 import { Division } from "./division.schema";
 import { Professor, Student } from "./user.schema";
 
 export const RegistrationTypeEnum = mysqlTable("registration_type_enum", {
   enumId: int("enum_id").autoincrement().primaryKey(),
-  enumName: varchar("enum_name", { length: 30 }),
+  enumName: varchar("enum_name", { length: 30 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   deletedAt: timestamp("deleted_at"),
 });
 
 export const RegistrationStatusEnum = mysqlTable("registration_status_enum", {
   enumId: int("enum_id").autoincrement().primaryKey(),
-  enumName: varchar("enum_name", { length: 30 }),
+  enumName: varchar("enum_name", { length: 30 }).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   deletedAt: timestamp("deleted_at"),
 });
@@ -29,7 +30,26 @@ export const RegistrationActivityPlanFile = mysqlTable(
   "registration_activity_plan_file",
   {
     id: int("id").autoincrement().primaryKey(),
-    fileUid: varchar("file_id", { length: 128 }),
+    fileUid: varchar("file_uid", { length: 128 }).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+);
+export const RegistrationClubRuleFile = mysqlTable(
+  "registration_club_rule_file",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    fileUid: varchar("file_id", { length: 255 }).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+);
+
+export const RegistrationExternalInstructionFile = mysqlTable(
+  "registration_external_instruction_file",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    fileUid: varchar("file_id", { length: 255 }).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
@@ -49,13 +69,13 @@ export const Registration = mysqlTable(
       "registration_application_status_enum_id",
     ).notNull(),
     // .references(() => RegistrationStatusEnum.enumId),
-    clubNameKr: varchar("club_name_kr", { length: 255 }),
-    clubNameEn: varchar("club_name_en", { length: 255 }),
+    clubNameKr: varchar("club_name_kr", { length: 30 }),
+    clubNameEn: varchar("club_name_en", { length: 30 }),
     studentId: int("student_id")
       .notNull()
       .references(() => Student.id),
-    studentPhoneNumber: varchar("student_phone_number", { length: 30 }),
-    foundedAt: timestamp("founded_at").notNull(),
+    phoneNumber: varchar("phone_number", { length: 30 }),
+    foundedAt: date("founded_at").notNull(),
     divisionId: int("division_id")
       .notNull()
       .references(() => Division.id),
@@ -64,9 +84,15 @@ export const Registration = mysqlTable(
     professorId: int("professor_id").references(() => Professor.id),
     divisionConsistency: varchar("division_consistency", { length: 255 }),
     foundationPurpose: varchar("foundation_purpose", { length: 500 }),
-    activityPlan: int("activity_plan")
-      .notNull()
-      .references(() => RegistrationActivityPlanFile.id),
+    activityPlan: varchar("activity_plan", { length: 500 }),
+    registrationActivityPlanFileId: int(
+      "registration_activity_plan_file_id",
+    ).notNull(),
+    registrationClubRuleFileId: int("registration_club_rule_file_id"),
+    registrationExternalInstructionFileId: int(
+      "registration_external_instruction_file_id",
+    ),
+    activityId: int("activity_id").references(() => Activity.id),
     professorApprovedAt: timestamp("professor_approved_at"),
     reviewedAt: timestamp("reviewed_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -84,46 +110,24 @@ export const Registration = mysqlTable(
       columns: [table.registrationApplicationStatusEnumId],
       foreignColumns: [RegistrationStatusEnum.enumId],
     }),
-  }),
-);
-
-export const RegistrationClubRuleFile = mysqlTable(
-  "registration_club_rule_file",
-  {
-    id: int("id").autoincrement().primaryKey(),
-    registrationId: int("registration_id").notNull(),
-    // .references(() => Registration.id),
-    fileUid: varchar("file_id", { length: 255 }),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    deletedAt: timestamp("deleted_at"),
-  },
-  table => ({
-    registrationIdFk: foreignKey({
-      name: "registration_club_rule_file_registration_id_fk",
-      columns: [table.registrationId],
-      foreignColumns: [Registration.id],
+    registrationActivityPlanFileIdFk: foreignKey({
+      name: "registration_registration_activity_plan_file_id_fk",
+      columns: [table.registrationActivityPlanFileId],
+      foreignColumns: [RegistrationActivityPlanFile.id],
+    }),
+    registrationClubRuleFileIdFk: foreignKey({
+      name: "registration_registration_club_rule_file_id",
+      columns: [table.registrationClubRuleFileId],
+      foreignColumns: [RegistrationClubRuleFile.id],
+    }),
+    registrationExternalInstructionFileIdFk: foreignKey({
+      name: "registration_registration_external_instruction_file_id_fk",
+      columns: [table.registrationExternalInstructionFileId],
+      foreignColumns: [RegistrationExternalInstructionFile.id],
     }),
   }),
 );
 
-export const RegistrationExternalInstructionFile = mysqlTable(
-  "registration_external_instruction_file",
-  {
-    id: int("id").autoincrement().primaryKey(),
-    registrationId: int("registration_id").notNull(),
-    // .references(() => Registration.id),
-    fileUid: varchar("file_id", { length: 255 }),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    deletedAt: timestamp("deleted_at"),
-  },
-  table => ({
-    registrationIdFk: foreignKey({
-      name: "registration_external_instruction_file_registration_id_fk",
-      columns: [table.registrationId],
-      foreignColumns: [Registration.id],
-    }),
-  }),
-);
 export const RegistrationApplicationStudentStatusEnum = mysqlTable(
   "registration_application_student_status_enum",
   {
