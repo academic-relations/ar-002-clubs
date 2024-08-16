@@ -23,7 +23,7 @@ const requestBody = z.object({
   clubId: z.coerce.number().int().min(1), // Club.id는 양의 정수로 가정
   name: z.coerce.string().max(255),
   activityTypeEnumId: z.nativeEnum(ActivityTypeEnum), // ActivityTypeEnum.id는 양의 정수로 가정
-  duration: z
+  durations: z
     .array(
       z.object({
         startTerm: z.coerce.date(),

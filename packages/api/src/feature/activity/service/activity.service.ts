@@ -15,6 +15,7 @@ import type {
   ApiAct003RequestParam,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
 import type { ApiAct005ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
+import type { ApiAct007RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
 
 @Injectable()
 export default class ActivityService {
@@ -256,6 +257,51 @@ export default class ActivityService {
     const isInsertionSucceed = await this.activityRepository.insertActivity({
       ...body,
       evidenceFileIds: body.evidenceFiles.map(row => row.uid),
+      participantIds,
+      activityDId: activityD.id,
+    });
+
+    if (!isInsertionSucceed)
+      throw new HttpException(
+        "Failed to insert",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+  }
+
+  async postProvisionalActivity(
+    body: ApiAct007RequestBody,
+    studentId: number,
+  ): Promise<void> {
+    // 학생이 동아리 대표자 또는 대의원이 맞는지 확인합니다.
+    await this.checkIsStudentDelegate({ studentId, clubId: body.clubId });
+
+    // 오늘이 활동보고서 작성기간이거나, 예외적 작성기간인지 확인합니다.
+    await this.checkDeadline({
+      enums: [ActivityDeadlineEnum.Upload, ActivityDeadlineEnum.Exceptional],
+    });
+    // QUESTION: 신청내용중 startTerm과 endTerm이 이번 학기의 활동기간에 맞는지 검사해야 할까요?.
+    const activityD = await this.getLastActivityD();
+    // 현재학기에 동아리원이 아니였던 참가자가 있는지 검사합니다.
+    const participantIds = await Promise.all(
+      body.participants.map(async e => {
+        if (
+          !(await this.clubPublicService.isStudentBelongsTo(
+            e.studentId,
+            body.clubId,
+          ))
+        )
+          throw new HttpException(
+            "Some student is not belonged to the club",
+            HttpStatus.BAD_REQUEST,
+          );
+        return e.studentId;
+      }),
+    );
+    // TODO: 파일 유효한지 검사하는 로직도 필요해요! 이건 파일 모듈 구성되면 public할듯
+
+    const isInsertionSucceed = await this.activityRepository.insertActivity({
+      ...body,
+      evidenceFileIds: body.evidenceFiles.map(row => row.fileId),
       participantIds,
       activityDId: activityD.id,
     });

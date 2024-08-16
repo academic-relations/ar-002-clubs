@@ -124,7 +124,7 @@ export default class ActivityRepository {
     clubId: number;
     name: string;
     activityTypeEnumId: ActivityTypeEnum;
-    duration: Array<{
+    durations: Array<{
       startTerm: Date;
       endTerm: Date;
     }>;
@@ -180,7 +180,7 @@ export default class ActivityRepository {
       );
 
       await Promise.all(
-        contents.duration.map(async ({ startTerm, endTerm }) => {
+        contents.durations.map(async ({ startTerm, endTerm }) => {
           const [durationInsertResult] = await tx.insert(ActivityT).values({
             activityId: activityInsertResult.insertId,
             startTerm,
