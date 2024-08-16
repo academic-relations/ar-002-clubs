@@ -6,6 +6,7 @@ import {
 import { ApiReg002ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
 import { ApiReg003ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg003";
 import { ApiReg010ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg010";
+import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
@@ -178,6 +179,25 @@ export class ClubRegistrationService {
       applyId,
     );
     return {};
+  }
+
+  async getStudentRegistrationsClubRegistration(
+    studentId: number,
+    applyId: number,
+  ): Promise<ApiReg011ResponseOk> {
+    const isClubRegistrationEvent =
+      await this.clubRegistrationRepository.isClubRegistrationEvent();
+    if (!isClubRegistrationEvent)
+      throw new HttpException(
+        "Not a club registration event duration",
+        HttpStatus.BAD_REQUEST,
+      );
+    const result =
+      await this.clubRegistrationRepository.getStudentRegistrationsClubRegistration(
+        studentId,
+        applyId,
+      );
+    return result;
   }
 
   async getStudentRegistrationsClubRegistrationsMy(

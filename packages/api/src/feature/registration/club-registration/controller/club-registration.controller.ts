@@ -19,6 +19,10 @@ import apiReg010, {
   ApiReg010RequestParam,
   ApiReg010ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg010";
+import apiReg011, {
+  ApiReg011RequestParam,
+  ApiReg011ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
@@ -81,6 +85,21 @@ export class ClubRegistrationController {
   ): Promise<ApiReg010ResponseOk> {
     const response =
       await this.clubRegistrationService.deleteStudentRegistrationsClubRegistration(
+        user.studentId,
+        applyId,
+      );
+    return response;
+  }
+
+  @Student()
+  @Get("/student/registrations/club-registrations/:applyId")
+  @UsePipes(new ZodPipe(apiReg011))
+  async getStudentRegistrationsClubRegistration(
+    @GetStudent() user: GetStudent,
+    @Param() { applyId }: ApiReg011RequestParam,
+  ): Promise<ApiReg011ResponseOk> {
+    const response =
+      await this.clubRegistrationService.getStudentRegistrationsClubRegistration(
         user.studentId,
         applyId,
       );
