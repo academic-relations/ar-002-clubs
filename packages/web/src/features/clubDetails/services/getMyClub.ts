@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
 import {
-  axiosClient,
+  axiosClientWithAuth,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
@@ -19,7 +19,19 @@ export const GetMyClub = () =>
     queryKey: [apiReg006.url()],
 
     queryFn: async (): Promise<ApiReg006ResponseOk> => {
-      const { data, status } = await axiosClient.get(apiReg006.url(), {});
+      console.log("Try to get token");
+      const accessToken = localStorage.getItem("accessToken");
+      console.log(accessToken);
+      if (!accessToken) {
+        console.log("No access tocken avalilable");
+        throw new Error("No access token available");
+      }
+
+      const { data, status } = await axiosClientWithAuth.get(apiReg006.url(), {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       switch (status) {
         case 200:
           return apiReg006.responseBodyMap[200].parse(data);
@@ -56,6 +68,8 @@ export const useIsInClub = (club_id: number): [boolean, boolean, boolean] => {
   const matchingApply = data.applies.find(
     (apply: { clubId: number }) => apply.clubId === club_id,
   );
+  console.log("matching Apply : ");
+  console.log(matchingApply);
 
   return [!!matchingApply, false, false];
 };

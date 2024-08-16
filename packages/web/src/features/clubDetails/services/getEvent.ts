@@ -1,11 +1,9 @@
 /* eslint-disable import/order */
 
-import { RegistrationEventEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-
 import { z } from "zod";
 
 import {
-  axiosClient,
+  axiosClientWithAuth,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
@@ -23,7 +21,10 @@ export const GetEvents = () =>
     queryKey: [apiReg004.url()],
 
     queryFn: async (): Promise<ApiReg004ResponseOK> => {
-      const { data, status } = await axiosClient.get(apiReg004.url(), {});
+      const { data, status } = await axiosClientWithAuth.get(
+        apiReg004.url(),
+        {},
+      );
       switch (status) {
         case 200:
           return apiReg004.responseBodyMap[200].parse(data);
@@ -68,10 +69,7 @@ export const checkResisteringPeriod = (): [boolean, boolean] => {
   console.log("matching Event :");
   console.log(matchingEvent);
 
-  if (
-    matchingEvent?.registrationEventEnumId ===
-    RegistrationEventEnum.StudentRegistrationApplication
-  ) {
+  if (matchingEvent?.registrationEventEnumId === 1) {
     return [true, false];
   }
   return [false, false];

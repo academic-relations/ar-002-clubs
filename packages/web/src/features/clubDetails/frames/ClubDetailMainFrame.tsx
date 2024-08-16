@@ -23,6 +23,8 @@ import PersonInfoCard from "@sparcs-clubs/web/features/clubDetails/components/Pe
 
 import { useIsInClub } from "../services/getMyClub";
 
+import { useRegisterClub } from "../services/registerClub";
+
 import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
 interface ClubDetailMainFrameProps {
@@ -56,15 +58,15 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   club,
   isRegistrationPeriod,
 }) => {
-  // TODO : 해당 동아리 등록 신청 여부 받아오기
-
   const [isInclub, clubError, clubLoading] = useIsInClub(club.id);
+
   const { isLoggedIn } = useAuth();
+
   const [isRegistered, setIsRegistered] = useState(false);
 
-  const toggleRegistered = (close: () => void) => {
+  const ToggleRegistered = async (close: () => void) => {
     // TODO : 회원가입 승인 or 취소 로직 추가
-    setIsRegistered(prev => !prev);
+    await useRegisterClub(club.id);
     close();
   };
 
@@ -75,7 +77,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
           <CancellableModalContent
             onClose={close}
             onConfirm={() => {
-              toggleRegistered(close);
+              ToggleRegistered(close);
             }}
           >
             2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
@@ -85,7 +87,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
         ) : (
           <CancellableModalContent
             onClose={close}
-            onConfirm={() => {
+            onConfirm={async () => {
               toggleRegistered(close);
             }}
           >
