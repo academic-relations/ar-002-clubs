@@ -1,4 +1,6 @@
-/* eslint-disable import/order */
+import apiReg004 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg004";
+
+import { useQuery } from "@tanstack/react-query";
 
 import { z } from "zod";
 
@@ -10,11 +12,7 @@ import {
 
 import { mockupEvents } from "./_mock/mockupEvent";
 
-import apiReg004 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg004";
-
 import type { ApiReg004ResponseOK } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg004";
-
-import { useQuery } from "@tanstack/react-query";
 
 export const GetEvents = () =>
   useQuery<ApiReg004ResponseOK, Error>({

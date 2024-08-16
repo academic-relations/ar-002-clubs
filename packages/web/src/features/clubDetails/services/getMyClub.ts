@@ -1,3 +1,5 @@
+import React from "react";
+
 import apiReg006 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 
 import { useQuery } from "@tanstack/react-query";
@@ -14,24 +16,15 @@ import mockupRegistraion from "./_mock/mockupRegistraion";
 
 import type { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 
-export const GetMyClub = () =>
+export const useGetMyClub = () =>
   useQuery<ApiReg006ResponseOk, Error>({
     queryKey: [apiReg006.url()],
 
     queryFn: async (): Promise<ApiReg006ResponseOk> => {
-      console.log("Try to get token");
-      const accessToken = localStorage.getItem("accessToken");
-      console.log(accessToken);
-      if (!accessToken) {
-        console.log("No access tocken avalilable");
-        throw new Error("No access token available");
-      }
-
-      const { data, status } = await axiosClientWithAuth.get(apiReg006.url(), {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const { data, status } = await axiosClientWithAuth.get(
+        apiReg006.url(),
+        {},
+      );
       switch (status) {
         case 200:
           return apiReg006.responseBodyMap[200].parse(data);
@@ -50,26 +43,17 @@ defineAxiosMock(mock => {
 });
 
 export const useIsInClub = (club_id: number): [boolean, boolean, boolean] => {
-  const { data, error, isLoading } = GetMyClub();
+  const { data, error, isLoading } = useGetMyClub();
 
-  if (isLoading) {
-    return [false, false, true];
-  }
+  const isInClub = React.useMemo(() => {
+    if (data) {
+      const matchingApply = data.applies.find(
+        (apply: { clubId: number }) => apply.clubId === club_id,
+      );
+      return !!matchingApply;
+    }
+    return false;
+  }, [data, club_id]);
 
-  if (error) {
-    console.error("Error fetching club data:", error);
-    return [false, true, false];
-  }
-
-  if (!data) {
-    return [false, false, false];
-  }
-
-  const matchingApply = data.applies.find(
-    (apply: { clubId: number }) => apply.clubId === club_id,
-  );
-  console.log("matching Apply : ");
-  console.log(matchingApply);
-
-  return [!!matchingApply, false, false];
+  return [isInClub, !!error, isLoading];
 };

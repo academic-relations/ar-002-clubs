@@ -15,20 +15,9 @@ export const useGetClubDetail = (club_id: string) =>
   useQuery<ApiClb002ResponseOK, Error>({
     queryKey: [apiClb002.url(club_id)],
     queryFn: async (): Promise<ApiClb002ResponseOK> => {
-      console.log("Try to get token");
-      const accessToken = localStorage.getItem("accessToken");
-      console.log(accessToken);
-      if (!accessToken) {
-        console.log("No access tocken avalilable");
-        throw new Error("No access token available");
-      }
       const { data, status } = await axiosClientWithAuth.get(
         apiClb002.url(club_id),
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
+        {},
       );
 
       // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError

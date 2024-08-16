@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { overlay } from "overlay-kit";
 
@@ -22,7 +20,6 @@ import ClubInfoCard from "@sparcs-clubs/web/features/clubDetails/components/Club
 import PersonInfoCard from "@sparcs-clubs/web/features/clubDetails/components/PersonInfoCard";
 
 import { useIsInClub } from "../services/getMyClub";
-
 import { useRegisterClub } from "../services/registerClub";
 
 import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
@@ -58,14 +55,25 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   club,
   isRegistrationPeriod,
 }) => {
-  const [isInclub, clubError, clubLoading] = useIsInClub(club.id);
-
   const { isLoggedIn } = useAuth();
 
-  const [isRegistered, setIsRegistered] = useState(false);
+  const [isInclubFromHook, clubError, clubLoading] = useIsInClub(club.id);
+
+  const [isInclub, setIsInclub] = useState(false);
+  const [localError, setLocalError] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // 초기값 설정
+    if (!clubLoading) {
+      setIsInclub(isInclubFromHook);
+      setLocalError(Boolean(clubError));
+      setLoading(clubLoading);
+    }
+  }, [isInclubFromHook, clubError, clubLoading]);
 
   const ToggleRegistered = async (close: () => void) => {
-    // TODO : 회원가입 승인 or 취소 로직 추가
+    setIsInclub(!isInclub);
     await useRegisterClub(club.id);
     close();
   };
@@ -76,8 +84,8 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
         {isInclub ? (
           <CancellableModalContent
             onClose={close}
-            onConfirm={() => {
-              ToggleRegistered(close);
+            onConfirm={async () => {
+              /* TODO : 가입 취소 API 구현 시 연결 */
             }}
           >
             2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
@@ -101,7 +109,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   };
 
   return (
-    <AsyncBoundary isLoading={clubLoading} isError={clubError}>
+    <AsyncBoundary isLoading={loading} isError={localError}>
       <FlexWrapper direction="column" gap={60}>
         <PageHead
           items={[

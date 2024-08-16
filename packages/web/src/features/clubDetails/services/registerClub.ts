@@ -11,27 +11,14 @@ import type { ApiReg005ResponseCreated } from "@sparcs-clubs/interface/api/regis
 export const useRegisterClub = async (
   clubId: number,
 ): Promise<ApiReg005ResponseCreated> => {
-  console.log("Try to get token");
-  const accessToken = localStorage.getItem("accessToken");
-  console.log(accessToken);
-  if (!accessToken) {
-    console.log("No access tocken avalilable");
-    throw new Error("No access token available");
-  }
+  const { data, status } = await axiosClientWithAuth.post(apiReg005.url(), {
+    clubId,
+  });
 
-  const response = await axiosClientWithAuth.post<ApiReg005ResponseCreated>(
-    apiReg005.url(),
-    { clubId },
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    },
-    // 요청 본문
-  );
-
-  if (response.status === 201) {
-    return apiReg005.responseBodyMap[201].parse(response.data);
+  switch (status) {
+    case 201:
+      return apiReg005.responseBodyMap[201].parse(data);
+    default:
+      throw new UnexpectedAPIResponseError();
   }
-  throw new UnexpectedAPIResponseError();
 };
