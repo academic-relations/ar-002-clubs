@@ -4,8 +4,6 @@ import apiReg006 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg0
 
 import { useQuery } from "@tanstack/react-query";
 
-import { z } from "zod";
-
 import {
   axiosClientWithAuth,
   defineAxiosMock,
@@ -35,11 +33,7 @@ export const useGetMyClub = () =>
   });
 
 defineAxiosMock(mock => {
-  mock.onGet(apiReg006.url()).reply(() => {
-    const dummy: z.infer<(typeof apiReg006.responseBodyMap)[200]> =
-      mockupRegistraion;
-    return [200, dummy];
-  });
+  mock.onGet(apiReg006.url()).reply(() => [200, mockupRegistraion]);
 });
 
 export const useIsInClub = (club_id: number): [boolean, boolean, boolean] => {

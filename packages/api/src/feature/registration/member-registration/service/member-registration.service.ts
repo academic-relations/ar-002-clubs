@@ -35,8 +35,7 @@ export class MemberRegistrationService {
       );
     // 해당 학생이 신청 자격이 존재하는지 확인하기
     const cur = getKSTDate();
-    console.log("current date :");
-    console.log(cur);
+
     const semesterId = await this.clubPublicService.dateToSemesterId(cur);
     if (semesterId === undefined)
       throw new HttpException(

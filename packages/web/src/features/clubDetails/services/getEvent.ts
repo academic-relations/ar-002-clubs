@@ -2,8 +2,6 @@ import apiReg004 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg0
 
 import { useQuery } from "@tanstack/react-query";
 
-import { z } from "zod";
-
 import {
   axiosClientWithAuth,
   defineAxiosMock,
@@ -33,24 +31,17 @@ export const GetEvents = () =>
   });
 
 defineAxiosMock(mock => {
-  mock.onGet(apiReg004.url()).reply(() => {
-    const dummy: z.infer<(typeof apiReg004.responseBodyMap)[200]> =
-      mockupEvents;
-    return [200, dummy];
-  });
+  mock.onGet(apiReg004.url()).reply(() => [200, mockupEvents]);
 });
 
 export const checkResisteringPeriod = (): [boolean, boolean] => {
   const { data, error, isLoading } = GetEvents();
-
-  console.log(data);
 
   if (isLoading) {
     return [false, true];
   }
 
   if (error) {
-    console.error("Error fetching event:", error);
     return [false, false];
   }
 
@@ -64,8 +55,6 @@ export const checkResisteringPeriod = (): [boolean, boolean] => {
     (event: { endTerm: Date; startTerm: Date }) =>
       currentDate <= event.endTerm && currentDate >= event.startTerm,
   );
-  console.log("matching Event :");
-  console.log(matchingEvent);
 
   if (matchingEvent?.registrationEventEnumId === 1) {
     return [true, false];
