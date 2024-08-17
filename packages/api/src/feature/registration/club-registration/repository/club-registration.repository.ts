@@ -1,5 +1,9 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
+import {
+  ApiReg009RequestBody,
+  ApiReg009ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg009";
 import { ApiReg010ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg010";
 import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
@@ -93,6 +97,103 @@ export class ClubRegistrationRepository {
       )
       .then(takeUnique);
     return isAvailable === 1;
+  }
+
+  async putStudentRegistrationsClubRegistration(
+    studentId: number,
+    applyId: number,
+    body: ApiReg009RequestBody,
+  ): Promise<ApiReg009ResponseOk> {
+    const cur = getKSTDate();
+    await this.db.transaction(async tx => {
+      const registration = await tx
+        .select()
+        .from(Registration)
+        .where(
+          and(
+            eq(Registration.id, applyId),
+            body.clubId === undefined
+              ? undefined
+              : eq(Registration.clubId, body.clubId),
+            eq(
+              Registration.registrationApplicationTypeEnumId,
+              body.registrationTypeEnum,
+            ),
+            eq(Registration.studentId, studentId),
+            isNull(Registration.deletedAt),
+          ),
+        )
+        .for("update")
+        .then(takeUnique);
+      if (!registration)
+        throw new HttpException(
+          "No registration found",
+          HttpStatus.BAD_REQUEST,
+        );
+      let professorId;
+      if (body.professor) {
+        professorId = await tx
+          .select({
+            professorId: Professor.id,
+          })
+          .from(Professor)
+          .leftJoin(
+            ProfessorT,
+            and(
+              eq(Professor.id, ProfessorT.professorId),
+              eq(ProfessorT.professorEnum, body.professor.professorEnumId),
+              isNull(ProfessorT.deletedAt),
+              lte(ProfessorT.startTerm, cur),
+              or(isNull(ProfessorT.endTerm), gt(ProfessorT.endTerm, cur)),
+            ),
+          )
+          .where(
+            and(
+              eq(Professor.email, body.professor.email),
+              eq(Professor.name, body.professor.name),
+              isNull(Professor.deletedAt),
+            ),
+          )
+          .for("update")
+          .then(takeUnique);
+        if (!professorId)
+          throw new HttpException(
+            "Professor Not Found",
+            HttpStatus.BAD_REQUEST,
+          );
+      }
+      const [result] = await tx
+        .update(Registration)
+        .set({
+          clubNameKr: body.clubNameKr,
+          clubNameEn: body.clubNameEn,
+          phoneNumber: body.phoneNumber,
+          foundedAt: body.foundedAt,
+          divisionId: body.divisionId,
+          activityFieldKr: body.activityFieldKr,
+          activityFieldEn: body.activityFieldEn,
+          professorId,
+          divisionConsistency: body.divisionConsistency,
+          foundationPurpose: body.foundationPurpose,
+          activityPlan: body.activityPlan,
+          registrationActivityPlanFileId: body.activityPlanFileId,
+          registrationClubRuleFileId: body.clubRuleFileId,
+          registrationExternalInstructionFileId: body.externalInstructionFileId,
+          updatedAt: cur,
+        })
+        .where(
+          and(
+            eq(Registration.id, applyId),
+            eq(Registration.studentId, studentId),
+            isNull(Registration.deletedAt),
+          ),
+        );
+      if (result.affectedRows !== 1) {
+        await tx.rollback();
+        throw new HttpException("Registration update failed", 500);
+      }
+    });
+    return {};
   }
 
   async deleteStudentRegistrationsClubRegistration(

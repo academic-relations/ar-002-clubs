@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   UsePipes,
 } from "@nestjs/common";
 import apiReg001, {
@@ -15,6 +16,11 @@ import apiReg002, {
   ApiReg002ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
 import apiReg003 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg003";
+import apiReg009, {
+  ApiReg009RequestBody,
+  ApiReg009RequestParam,
+  ApiReg009ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg009";
 import apiReg010, {
   ApiReg010RequestParam,
   ApiReg010ResponseOk,
@@ -77,18 +83,35 @@ export class ClubRegistrationController {
   }
 
   @Student()
+  @Put("/student/registrations/club-registrations/club-registration/:id")
+  @UsePipes(new ZodPipe(apiReg009))
+  async putStudentRegistrationsClubRegistration(
+    @GetStudent() user: GetStudent,
+    @Param() { applyId }: ApiReg009RequestParam,
+    @Body() body: ApiReg009RequestBody,
+  ): Promise<ApiReg009ResponseOk> {
+    const result =
+      await this.clubRegistrationService.putStudentRegistrationsClubRegistration(
+        user.studentId,
+        applyId,
+        body,
+      );
+    return result;
+  }
+
+  @Student()
   @Delete("/student/registrations/club-registration/:applyId")
   @UsePipes(new ZodPipe(apiReg010))
   async deleteStudentRegistrationsClubRegistration(
     @GetStudent() user: GetStudent,
     @Param() { applyId }: ApiReg010RequestParam,
   ): Promise<ApiReg010ResponseOk> {
-    const response =
+    const result =
       await this.clubRegistrationService.deleteStudentRegistrationsClubRegistration(
         user.studentId,
         applyId,
       );
-    return response;
+    return result;
   }
 
   @Student()
@@ -98,12 +121,12 @@ export class ClubRegistrationController {
     @GetStudent() user: GetStudent,
     @Param() { applyId }: ApiReg011RequestParam,
   ): Promise<ApiReg011ResponseOk> {
-    const response =
+    const result =
       await this.clubRegistrationService.getStudentRegistrationsClubRegistration(
         user.studentId,
         applyId,
       );
-    return response;
+    return result;
   }
 
   @Student()
@@ -111,10 +134,10 @@ export class ClubRegistrationController {
   async getStudentRegistrationsClubRegistrationsMy(
     @GetStudent() user: GetStudent,
   ): Promise<ApiReg012ResponseOk> {
-    const response =
+    const result =
       await this.clubRegistrationService.getStudentRegistrationsClubRegistrationsMy(
         user.studentId,
       );
-    return response;
+    return result;
   }
 }
