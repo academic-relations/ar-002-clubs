@@ -3,7 +3,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, gte, isNull, lte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
-import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
+import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   Division,
@@ -31,5 +31,14 @@ export default class DivisionRepository {
         ),
       );
     return result;
+  }
+
+  async findDivisionById(divisionId: number): Promise<number | null> {
+    const result = await this.db
+      .select({ id: Division.id })
+      .from(Division)
+      .where(and(eq(Division.id, divisionId), isNull(Division.deletedAt)))
+      .then(takeUnique);
+    return result ? result.id : null;
   }
 }
