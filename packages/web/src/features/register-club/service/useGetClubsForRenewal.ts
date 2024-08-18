@@ -4,7 +4,7 @@ import apiReg002, {
 import { useQuery } from "@tanstack/react-query";
 
 import {
-  axiosClient,
+  axiosClientWithAuth,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
@@ -13,7 +13,10 @@ const useGetClubsForRenewal = () =>
   useQuery<ApiReg002ResponseOk, Error>({
     queryKey: [apiReg002.url()],
     queryFn: async (): Promise<ApiReg002ResponseOk> => {
-      const { data, status } = await axiosClient.get(apiReg002.url(), {});
+      const { data, status } = await axiosClientWithAuth.get(
+        apiReg002.url(),
+        {},
+      );
 
       switch (status) {
         case 200:

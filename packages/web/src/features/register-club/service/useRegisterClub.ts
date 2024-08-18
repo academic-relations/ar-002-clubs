@@ -5,7 +5,7 @@ import apiReg001, {
 import { useMutation } from "@tanstack/react-query";
 
 import {
-  axiosClient,
+  axiosClientWithAuth,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
@@ -13,7 +13,10 @@ import {
 const useRegisterClub = () =>
   useMutation<ApiReg001ResponseCreated, Error, { body: ApiReg001RequestBody }>({
     mutationFn: async ({ body }): Promise<ApiReg001ResponseCreated> => {
-      const { data, status } = await axiosClient.post(apiReg001.url(), body);
+      const { data, status } = await axiosClientWithAuth.post(
+        apiReg001.url(),
+        body,
+      );
 
       switch (status) {
         case 201:
