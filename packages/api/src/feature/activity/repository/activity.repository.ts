@@ -467,4 +467,12 @@ export default class ActivityRepository {
 
     return isUpdateSucceed;
   }
+
+  async selectActivityNameById(id: number) {
+    const result = await this.db
+      .select({ name: Activity.name })
+      .from(Activity)
+      .where(eq(Activity.id, id));
+    return result;
+  }
 }

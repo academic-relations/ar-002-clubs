@@ -1,7 +1,6 @@
 import {
   date,
   foreignKey,
-  index,
   int,
   mysqlTable,
   timestamp,
@@ -11,7 +10,6 @@ import {
 import { Club } from "./club.schema";
 import { Division } from "./division.schema";
 import { Professor, Student } from "./user.schema";
-// import { identity } from "rxjs";
 
 export const RegistrationTypeEnum = mysqlTable("registration_type_enum", {
   enumId: int("enum_id").autoincrement().primaryKey(),
@@ -76,12 +74,16 @@ export const Registration = mysqlTable(
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    registrationApplicationTypeEnumIdFk: index(
-      "registration_type_enum_id_fk",
-    ).on(table.registrationApplicationTypeEnumId),
-    registrationApplicationStatusEnumIdFk: index(
-      "registration_status_enum_id_fk",
-    ).on(table.registrationApplicationStatusEnumId),
+    registrationApplicationTypeEnumIdFk: foreignKey({
+      name: "registration_registration_type_enum_id_fk",
+      columns: [table.registrationApplicationTypeEnumId],
+      foreignColumns: [RegistrationTypeEnum.enumId],
+    }),
+    registrationApplicationStatusEnumIdFk: foreignKey({
+      name: "registration_registration_status_enum_id_fk",
+      columns: [table.registrationApplicationStatusEnumId],
+      foreignColumns: [RegistrationStatusEnum.enumId],
+    }),
   }),
 );
 
@@ -96,7 +98,11 @@ export const RegistrationClubRuleFile = mysqlTable(
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    registrationIdFk: index("registration_id_fk").on(table.registrationId),
+    registrationIdFk: foreignKey({
+      name: "registration_club_rule_file_registration_id_fk",
+      columns: [table.registrationId],
+      foreignColumns: [Registration.id],
+    }),
   }),
 );
 
@@ -111,7 +117,11 @@ export const RegistrationExternalInstructionFile = mysqlTable(
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
-    registrationIdFk: index("registration_id_fk").on(table.registrationId),
+    registrationIdFk: foreignKey({
+      name: "registration_external_instruction_file_registration_id_fk",
+      columns: [table.registrationId],
+      foreignColumns: [Registration.id],
+    }),
   }),
 );
 export const RegistrationApplicationStudentStatusEnum = mysqlTable(
@@ -135,7 +145,7 @@ export const RegistrationApplicationStudent = mysqlTable(
       .notNull()
       .references(() => Club.id),
     registrationApplicationStudentEnumId: int(
-      "registration_application_student_student_status_enum",
+      "registration_application_student_status_enum",
     ).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -144,33 +154,36 @@ export const RegistrationApplicationStudent = mysqlTable(
     registrationStudentStatusEnumFk: foreignKey({
       columns: [table.registrationApplicationStudentEnumId],
       foreignColumns: [RegistrationApplicationStudentStatusEnum.enumId],
-      name: "registration_application_student_enum_id_fk",
+      name: "registration_application_student_status_enum_id_fk",
     }),
   }),
 );
 
-export const RegistrationEventEnum = mysqlTable("registration_event_enum", {
-  enumId: int("enum_id").autoincrement().primaryKey(),
-  enumName: varchar("enum_name", { length: 255 }),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  deletedAt: timestamp("deleted_at"),
-});
+export const RegistrationDeadlineEnum = mysqlTable(
+  "registration_deadline_enum",
+  {
+    enumId: int("enum_id").autoincrement().primaryKey(),
+    enumName: varchar("enum_name", { length: 255 }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+);
 
-export const RegistrationEventD = mysqlTable(
-  "registration_event_d",
+export const RegistrationDeadlineD = mysqlTable(
+  "registration_deadline_d",
   {
     id: int("id").autoincrement().primaryKey(),
-    registrationEventEnumId: int("registration_event_enum_id").notNull(),
-    startTerm: date("start_term"),
-    endTerm: date("end_term"),
+    registrationDeadlineEnumId: int("registration_deadline_enum_id").notNull(),
+    startDate: date("start_date"),
+    endDate: date("end_date"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
     registrationEventEnumIdFk: foreignKey({
-      columns: [table.registrationEventEnumId],
-      foreignColumns: [RegistrationEventEnum.enumId],
-      name: "registration_event_enum_id_fk",
+      columns: [table.registrationDeadlineEnumId],
+      foreignColumns: [RegistrationDeadlineEnum.enumId],
+      name: "registration_deadline_d_registration_deadline_enum_id_fk",
     }),
   }),
 );

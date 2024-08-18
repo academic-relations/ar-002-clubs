@@ -2,13 +2,16 @@ import React from "react";
 
 import styled from "styled-components";
 
+import { Theme } from "@sparcs-clubs/web/styles/themes";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
-type FontWeight = "MEDIUM" | "REGULAR";
+type FontWeight = keyof Theme["fonts"]["WEIGHT"];
+export type TextButtonColor = "PRIMARY" | "GRAY" | "BLACK";
 
 interface ButtonProps {
   disabled: boolean;
   color: string;
+  fs: number;
   fw: FontWeight;
 }
 
@@ -17,7 +20,7 @@ const StyledTextButton = styled.button<ButtonProps>`
   border: none;
   color: ${({ color }) => color};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
-  font-size: 16px;
+  font-size: ${({ fs }) => fs}px;
   line-height: 20px;
   font-weight: ${({ theme, fw }) => theme.fonts.WEIGHT[fw]};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
@@ -27,7 +30,8 @@ const StyledTextButton = styled.button<ButtonProps>`
 interface TextButtonProps {
   text: string;
   disabled?: boolean;
-  color?: "primary" | "gray";
+  color?: TextButtonColor;
+  fs?: number;
   fw?: FontWeight;
   onClick?: () => void;
 }
@@ -35,7 +39,8 @@ interface TextButtonProps {
 const TextButton: React.FC<TextButtonProps> = ({
   text,
   disabled = false,
-  color = "primary",
+  color = "PRIMARY",
+  fs = 16,
   fw = "MEDIUM",
   onClick = () => {},
 }) => {
@@ -46,8 +51,9 @@ const TextButton: React.FC<TextButtonProps> = ({
 
   const colorList = {
     disabled: colors.GRAY[300],
-    primary: colors.PRIMARY,
-    gray: colors.GRAY[600],
+    PRIMARY: colors.PRIMARY,
+    GRAY: colors.GRAY[600],
+    BLACK: colors.BLACK,
   };
 
   const textColor = disabled ? colorList.disabled : colorList[color];
@@ -57,6 +63,7 @@ const TextButton: React.FC<TextButtonProps> = ({
       disabled={disabled}
       onClick={handleClick}
       color={textColor}
+      fs={fs}
       fw={fw}
     >
       {text}

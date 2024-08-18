@@ -43,11 +43,13 @@ const RentalInfoThirdFrame: React.FC<
   };
 
   useEffect(() => {
-    setRental({
-      ...rental,
-      purpose,
-    });
-  }, [purpose, rental, setRental]);
+    if (purpose.length > 0) {
+      setRental({
+        ...rental,
+        purpose,
+      });
+    }
+  }, [purpose]);
 
   useEffect(() => {
     const enableNext = !!rental.purpose;

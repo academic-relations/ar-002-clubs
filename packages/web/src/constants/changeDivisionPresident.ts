@@ -1,14 +1,20 @@
-type ChangeDivisionStatusType =
-  | "Requested"
-  | "Canceled"
-  | "Rejected"
-  | "Completed";
+export const enum ChangeDivisionPresidentStatusEnum {
+  Requested = 1,
+  Canceled,
+  Rejected,
+  Confirmed,
+  None,
+}
+
 type Pages = "/my" | "/manage-division";
 
 interface ChangeDivisionPresidentMessageContextProps {
   actingPresident: boolean;
   division: string;
-  status: ChangeDivisionStatusType;
+  status: Exclude<
+    ChangeDivisionPresidentStatusEnum,
+    ChangeDivisionPresidentStatusEnum.None
+  >;
   page: Pages;
   change?: [string, string];
   isModal: boolean;
@@ -19,7 +25,10 @@ export class ChangeDivisionPresidentMessageContext {
 
   division: string;
 
-  status: ChangeDivisionStatusType;
+  status: Exclude<
+    ChangeDivisionPresidentStatusEnum,
+    ChangeDivisionPresidentStatusEnum.None
+  >;
 
   page: Pages;
 
@@ -51,10 +60,10 @@ export class ChangeDivisionPresidentMessageContext {
 
   public getBody(): string {
     const manageDivisionPageInner = {
-      Requested: ` 변경이 다음과 같이 요청되었습니다 `,
-      Canceled: ` 변경이 취소되었습니다`,
-      Rejected: ` 변경 요청이 거절되었습니다 `,
-      Completed: "error",
+      [ChangeDivisionPresidentStatusEnum.Requested]: ` 변경이 다음과 같이 요청되었습니다 `,
+      [ChangeDivisionPresidentStatusEnum.Canceled]: ` 변경이 취소되었습니다`,
+      [ChangeDivisionPresidentStatusEnum.Rejected]: ` 변경 요청이 거절되었습니다 `,
+      [ChangeDivisionPresidentStatusEnum.Confirmed]: "error",
     };
 
     const innerMessage =
@@ -63,18 +72,24 @@ export class ChangeDivisionPresidentMessageContext {
         : manageDivisionPageInner[this.status];
 
     return `${this.getFullPronoun()}${innerMessage}${
-      this.status === "Canceled" && this.page === "/manage-division"
+      this.status === ChangeDivisionPresidentStatusEnum.Canceled &&
+      this.page === "/manage-division"
         ? ""
         : this.getChange()
     }${
-      this.status === "Requested" && this.page === "/my" && !this.isModal
+      this.status === ChangeDivisionPresidentStatusEnum.Rejected &&
+      this.page === "/my" &&
+      !this.isModal
         ? " (승인 전)"
         : ""
     }`;
   }
 
   public getRequestNotice(): string {
-    if (this.page === "/manage-division" && this.status === "Requested") {
+    if (
+      this.page === "/manage-division" &&
+      this.status === ChangeDivisionPresidentStatusEnum.Requested
+    ) {
       return `${this.getPronoun()} 변경 요청을 취소할 수 있으며, 요청이 3일 내로 승인 또는 거절되지 않을 경우 자동으로 취소됩니다`;
     }
 
@@ -83,17 +98,17 @@ export class ChangeDivisionPresidentMessageContext {
 
   private getStatus() {
     const myPageStatus = {
-      Requested: "요청",
-      Completed: "완료",
-      Canceled: "error",
-      Rejected: "error",
+      [ChangeDivisionPresidentStatusEnum.Requested]: "요청",
+      [ChangeDivisionPresidentStatusEnum.Confirmed]: "완료",
+      [ChangeDivisionPresidentStatusEnum.Canceled]: "error",
+      [ChangeDivisionPresidentStatusEnum.Rejected]: "error",
     };
 
     const manageDivisionPageStatus = {
-      Requested: "완료",
-      Canceled: "취소",
-      Rejected: "거절",
-      Completed: "error",
+      [ChangeDivisionPresidentStatusEnum.Requested]: "완료",
+      [ChangeDivisionPresidentStatusEnum.Canceled]: "취소",
+      [ChangeDivisionPresidentStatusEnum.Rejected]: "거절",
+      [ChangeDivisionPresidentStatusEnum.Confirmed]: "error",
     };
 
     return (this.page === "/my" ? myPageStatus : manageDivisionPageStatus)[

@@ -15,7 +15,7 @@ import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   RegistrationApplicationStudent,
-  RegistrationEventD,
+  RegistrationDeadlineD,
 } from "@sparcs-clubs/api/drizzle/schema/registration.schema";
 
 @Injectable()
@@ -27,15 +27,15 @@ export class MemberRegistrationRepository {
     const memberRegistrationEventEnum =
       RegistrationEventEnum.StudentRegistrationApplication;
     const { isAvailable } = await this.db
-      .select({ isAvailable: count(RegistrationEventD.id) })
-      .from(RegistrationEventD)
+      .select({ isAvailable: count(RegistrationDeadlineD.id) })
+      .from(RegistrationDeadlineD)
       .where(
         and(
-          isNotNull(RegistrationEventD.endTerm),
-          gt(RegistrationEventD.endTerm, cur),
-          lt(RegistrationEventD.startTerm, cur),
+          isNotNull(RegistrationDeadlineD.endDate),
+          gt(RegistrationDeadlineD.endDate, cur),
+          lt(RegistrationDeadlineD.startDate, cur),
           eq(
-            RegistrationEventD.registrationEventEnumId,
+            RegistrationDeadlineD.registrationDeadlineEnumId,
             memberRegistrationEventEnum,
           ),
         ),

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 
+import FoldUnfoldButton from "@sparcs-clubs/web/common/components/Buttons/FoldUnfoldButton";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { singleSemesterFundingListSectionTitleText } from "@sparcs-clubs/web/constants/manageClubFunding";
 
@@ -34,16 +35,6 @@ const SingleSemesterTitleRow = styled.div`
   gap: 20px;
 
   width: 100%;
-`;
-
-const MoreInfo = styled.div`
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  color: ${({ theme }) => theme.colors.BLACK};
-  text-decoration-line: underline;
-  cursor: pointer;
 `;
 
 const mockData: {
@@ -107,7 +98,7 @@ const mockData: {
 };
 
 const PastSingleSemesterFundingListSection: React.FC = () => {
-  const [toggle, setToggle] = useState<boolean>(true);
+  const [folded, setFolded] = useState<boolean>(false);
   return (
     <PastSingleSemesterFundingListSectionInner>
       <SingleSemesterTitleRow>
@@ -117,11 +108,9 @@ const PastSingleSemesterFundingListSection: React.FC = () => {
             mockData.fundings.length,
           )}
         </Typography>
-        <MoreInfo onClick={() => setToggle(!toggle)}>
-          {toggle ? `접기` : `펼치기`}
-        </MoreInfo>
+        <FoldUnfoldButton folded={folded} setFolded={setFolded} />
       </SingleSemesterTitleRow>
-      {toggle ? <PastFundingListTable /> : null}
+      {folded ? null : <PastFundingListTable />}
     </PastSingleSemesterFundingListSectionInner>
   );
 };

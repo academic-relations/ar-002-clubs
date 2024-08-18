@@ -4,7 +4,7 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { SemesterD } from "@sparcs-clubs/api/drizzle/schema/club.schema";
-import { RefreshToken } from "@sparcs-clubs/api/drizzle/schema/refresh-token.schema";
+import { AuthActivatedRefreshTokens } from "@sparcs-clubs/api/drizzle/schema/refresh-token.schema";
 import {
   Employee,
   EmployeeT,
@@ -420,11 +420,11 @@ export class AuthRepository {
       .select()
       .from(User)
       .innerJoin(
-        RefreshToken,
+        AuthActivatedRefreshTokens,
         and(
-          eq(User.id, RefreshToken.userId),
-          eq(RefreshToken.refreshToken, refreshToken),
-          gte(RefreshToken.expiresAt, cur),
+          eq(User.id, AuthActivatedRefreshTokens.userId),
+          eq(AuthActivatedRefreshTokens.refreshToken, refreshToken),
+          gte(AuthActivatedRefreshTokens.expiresAt, cur),
         ),
       )
       .where(eq(User.id, userId));
@@ -438,7 +438,7 @@ export class AuthRepository {
   ): Promise<boolean> {
     return this.db.transaction(async tx => {
       const [result] = await this.db
-        .insert(RefreshToken)
+        .insert(AuthActivatedRefreshTokens)
         .values({ userId, expiresAt, refreshToken });
       const { affectedRows } = result;
       if (affectedRows > 1) {
@@ -456,12 +456,12 @@ export class AuthRepository {
     const cur = getKSTDate();
     return this.db.transaction(async tx => {
       const [result] = await this.db
-        .delete(RefreshToken)
+        .delete(AuthActivatedRefreshTokens)
         .where(
           and(
-            eq(RefreshToken.userId, userId),
-            eq(RefreshToken.refreshToken, refreshToken),
-            gte(RefreshToken.expiresAt, cur),
+            eq(AuthActivatedRefreshTokens.userId, userId),
+            eq(AuthActivatedRefreshTokens.refreshToken, refreshToken),
+            gte(AuthActivatedRefreshTokens.expiresAt, cur),
           ),
         );
       const { affectedRows } = result;

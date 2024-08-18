@@ -4,6 +4,7 @@ import isPropValid from "@emotion/is-prop-valid";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
+import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
@@ -91,15 +92,12 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
           {Text}
         </Typography>
         {type === "Requested" && (
-          <Typography
-            fs={16}
-            lh={20}
-            color="GRAY.600"
-            style={{ cursor: "pointer", textDecoration: "underline" }}
+          <TextButton
+            color="GRAY"
+            text="클릭해서 더보기"
+            fw="REGULAR"
             onClick={openConfirmModal}
-          >
-            클릭하여 더보기
-          </Typography>
+          />
         )}
       </FlexWrapper>
     </MyChangeRepresentativeWrapper>

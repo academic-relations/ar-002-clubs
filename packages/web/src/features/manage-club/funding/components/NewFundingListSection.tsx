@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -36,21 +36,13 @@ const NewFundingOrderButtonRow = styled.div`
 `;
 
 const NewFundingListSection: React.FC = () => {
-  const [toggle, setToggle] = useState<boolean>(true);
-
   const router = useRouter();
   const createFundingClick = () => {
     router.push(`/manage-club/funding/create`);
   };
 
   return (
-    <FoldableSectionTitle
-      title={newFundingListSectionTitle}
-      toggle={toggle}
-      toggleHandler={() => {
-        setToggle(!toggle);
-      }}
-    >
+    <FoldableSectionTitle title={newFundingListSectionTitle}>
       <FlexWrapper direction="column" gap={20}>
         {/* TODO: 지원금 신청 기간 받아오는 API 생기면 대체해야함! */}
         <Info text={newFundingListSectionInfoText("2024 봄", new Date())} />

@@ -36,7 +36,7 @@ export class MemberRegistrationController {
   ) {}
 
   @Student()
-  @Post("/studnet/registrations/member-registrations/member-registration")
+  @Post("/student/registrations/member-registrations/member-registration")
   @UsePipes(new ZodPipe(apiReg005))
   async postStudentRegistrationsMemberRegistration(
     @GetStudent() user: GetStudent,
