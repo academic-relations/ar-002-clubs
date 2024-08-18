@@ -44,8 +44,6 @@ export const useIsInClub = (club_id: number): [number, boolean] => {
       const matchingApply = data.applies.find(
         (apply: { clubId: number }) => apply.clubId === club_id,
       );
-      console.log("matching Apply");
-      console.log(matchingApply);
       if (matchingApply) {
         return matchingApply.applyStatusEnumId;
       }
