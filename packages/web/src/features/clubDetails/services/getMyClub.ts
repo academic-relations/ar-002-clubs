@@ -36,18 +36,23 @@ defineAxiosMock(mock => {
   mock.onGet(apiReg006.url()).reply(() => [200, mockupRegistraion]);
 });
 
-export const useIsInClub = (club_id: number): [boolean, boolean, boolean] => {
-  const { data, error, isLoading } = useGetMyClub();
+export const useIsInClub = (club_id: number): [number, boolean] => {
+  const { data, isLoading } = useGetMyClub();
 
   const isInClub = React.useMemo(() => {
     if (data) {
       const matchingApply = data.applies.find(
         (apply: { clubId: number }) => apply.clubId === club_id,
       );
-      return !!matchingApply;
+      console.log("matching Apply");
+      console.log(matchingApply);
+      if (matchingApply) {
+        return matchingApply.applyStatusEnumId;
+      }
+      return 0;
     }
-    return false;
+    return 0;
   }, [data, club_id]);
 
-  return [isInClub, !!error, isLoading];
+  return [isInClub, isLoading];
 };

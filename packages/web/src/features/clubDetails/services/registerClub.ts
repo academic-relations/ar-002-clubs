@@ -2,6 +2,7 @@ import apiReg005 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg0
 
 import {
   axiosClientWithAuth,
+  defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
@@ -22,3 +23,14 @@ export const useRegisterClub = async (
       throw new UnexpectedAPIResponseError();
   }
 };
+
+defineAxiosMock(mock => {
+  mock.onPost(apiReg005.url()).reply(config => {
+    const { clubId } = JSON.parse(config.data);
+
+    if (clubId) {
+      return [201, { message: "success" }];
+    }
+    return [400, { message: "no club ID" }];
+  });
+});

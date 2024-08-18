@@ -57,35 +57,41 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
 }) => {
   const { isLoggedIn } = useAuth();
 
-  const [isInclubFromHook, clubError, clubLoading] = useIsInClub(club.id);
+  const [isInclubFromHook, clubLoading] = useIsInClub(club.id);
 
-  const [isInclub, setIsInclub] = useState(false);
-  const [localError, setLocalError] = useState(false);
+  const [isInclub, setIsInclub] = useState(0);
+  const localError = false;
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // 초기값 설정
-    if (!clubLoading) {
+    if (!clubLoading && isRegistrationPeriod) {
       setIsInclub(isInclubFromHook);
-      setLocalError(Boolean(clubError));
       setLoading(clubLoading);
     }
-  }, [isInclubFromHook, clubError, clubLoading]);
+  }, [isInclubFromHook, clubLoading]);
 
   const ToggleRegistered = async (close: () => void) => {
-    setIsInclub(!isInclub);
-    await useRegisterClub(club.id);
     close();
+    setIsInclub(1);
+    await useRegisterClub(club.id);
+  };
+
+  const ToggleUnRegistered = async (close: () => void) => {
+    // await useRegisterClub(club.id);
+    close();
+    setIsInclub(0);
   };
 
   const submitHandler = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen} onClose={close}>
-        {isInclub ? (
+        {isInclub === 1 ? (
           <CancellableModalContent
             onClose={close}
             onConfirm={async () => {
               /* TODO : 가입 취소 API 구현 시 연결 */
+              ToggleUnRegistered(close);
             }}
           >
             2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
@@ -108,6 +114,28 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
     ));
   };
 
+  const renderButton = () => {
+    if (isInclub === 1) {
+      return (
+        <Button type="default" onClick={submitHandler}>
+          회원 등록 취소
+        </Button>
+      );
+    }
+    if (isInclub === 2) {
+      return (
+        <Button type="disabled" onClick={submitHandler}>
+          회장 승인 완료
+        </Button>
+      );
+    }
+    return (
+      <Button type="default" onClick={submitHandler}>
+        회원 등록 신청
+      </Button>
+    );
+  };
+
   return (
     <AsyncBoundary isLoading={loading} isError={localError}>
       <FlexWrapper direction="column" gap={60}>
@@ -119,18 +147,14 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
           title={club.name}
           action={
             isLoggedIn &&
-            (isRegistrationPeriod ? (
+            isRegistrationPeriod && (
               <ResisterInfoWrapper>
                 <Typography fs={16} color="GRAY.600" fw="REGULAR">
                   등록 신청 {club.totalMemberCnt}명
                 </Typography>
-                <Button type="default" onClick={submitHandler}>
-                  {isInclub ? "회원 등록 취소" : "회원 등록 신청"}
-                </Button>
+                {renderButton()}
               </ResisterInfoWrapper>
-            ) : (
-              isInclub && <Button type="disabled">회원 승인 대기</Button>
-            ))
+            )
           }
         />
 
