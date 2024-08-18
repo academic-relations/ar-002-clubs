@@ -32,10 +32,7 @@ import apiReg011, {
 import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
-import {
-  Public,
-  Student,
-} from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 
 import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
@@ -47,7 +44,7 @@ export class ClubRegistrationController {
     private readonly clubRegistrationService: ClubRegistrationService,
   ) {}
 
-  @Public()
+  @Student()
   @Post("/student/registrations/club-registrations/club-registration")
   @UsePipes(new ZodPipe(apiReg001))
   async postStudentRegistrationClubRegistration(
@@ -62,7 +59,7 @@ export class ClubRegistrationController {
     return response;
   }
 
-  @Public()
+  @Student()
   @Get(
     "/student/registrations/club-registrations/club-registration/qualifications/renewal",
   )
@@ -73,7 +70,7 @@ export class ClubRegistrationController {
     return orders;
   }
 
-  @Public()
+  @Student()
   @Get(
     "/student/registrations/club-registrations/club-registration/qualifications/promotional",
   )
