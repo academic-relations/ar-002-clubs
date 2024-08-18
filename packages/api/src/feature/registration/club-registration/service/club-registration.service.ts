@@ -34,21 +34,49 @@ export class ClubRegistrationService {
   ) {}
 
   async postStudentRegistrationClubRegistration(
+    studentId: number,
     body: ApiReg001RequestBody,
   ): Promise<ApiReg001ResponseCreated> {
-    await this.validateRegistration(body.clubId, body.registrationTypeEnumId);
+    await this.validateRegistration(body.clubId, body.registrationTypeEnum);
 
+    // studentId 일치 확인
+    if (studentId !== body.studentId)
+      throw new HttpException("StudentId not match", HttpStatus.BAD_REQUEST);
+
+    const validateDivisionId =
+      await this.divisionPublicService.findDivisionById(body.divisionId);
+    if (!validateDivisionId)
+      throw new HttpException("division not found", HttpStatus.NOT_FOUND);
+    // 각각의 fileid들이 실제로 존재하는지 확인
+    const fileIds = [
+      "activityPlanFileId",
+      "clubRuleFileId",
+      "externalInstructionFileId",
+    ];
+    await Promise.all(
+      fileIds.map(key => this.filePublicService.getFileInfoById(body[key])),
+    );
+    // 동아리 등록 기간인지 확인
+    const isClubRegistrationEvent =
+      await this.clubRegistrationRepository.isClubRegistrationEvent();
+    if (!isClubRegistrationEvent) {
+      throw new HttpException(
+        "Not a club registration event duration",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const transformedBody = {
       ...body,
       foundedAt: await this.transformFoundedAt(
         body.foundedAt,
-        body.registrationTypeEnumId,
+        body.registrationTypeEnum,
       ),
     };
 
     // TODO: 활동 id 검증 로직 필요
-    await this.clubRegistrationRepository.createRegistration(transformedBody);
-    return {};
+    const result =
+      await this.clubRegistrationRepository.createRegistration(transformedBody);
+    return result;
   }
 
   // 정동아리 재등록 신청
@@ -177,6 +205,8 @@ export class ClubRegistrationService {
     applyId: number,
     body: ApiReg009RequestBody,
   ): Promise<ApiReg009ResponseOk> {
+    if (studentId !== body.studentId)
+      throw new HttpException("StudentId not match", HttpStatus.BAD_REQUEST);
     // divisionId가 유효한지 확인
     const validateDivisionId =
       await this.divisionPublicService.findDivisionById(body.divisionId);

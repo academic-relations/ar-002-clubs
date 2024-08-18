@@ -51,10 +51,12 @@ export class ClubRegistrationController {
   @Post("/student/registrations/club-registrations/club-registration")
   @UsePipes(new ZodPipe(apiReg001))
   async postStudentRegistrationClubRegistration(
+    @GetStudent() user: GetStudent,
     @Body() body: ApiReg001RequestBody,
   ): Promise<ApiReg001ResponseCreated> {
     const response =
       await this.clubRegistrationService.postStudentRegistrationClubRegistration(
+        user.studentId,
         body,
       );
     return response;

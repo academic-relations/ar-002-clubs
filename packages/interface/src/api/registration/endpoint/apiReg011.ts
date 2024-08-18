@@ -46,7 +46,12 @@ const responseBodyMap = {
       professor: z
         .object({
           name: z.coerce.string().max(255),
-          email: z.coerce.string().email().endsWith("@kaist.ac.kr"),
+          email: z
+            .string()
+            .email()
+            .refine(email => email.endsWith("@kaist.ac.kr"), {
+              message: "Must be a valid KAIST email address",
+            }),
           professorEnumId: z.nativeEnum(ProfessorEnum),
         })
         .optional(),
@@ -55,8 +60,8 @@ const responseBodyMap = {
       activityPlan: z.coerce.string().max(500),
       activityPlanFileId: z.coerce.string().max(128),
       activityPlanFileName: z.coerce.string().max(255),
-      clubRuleFileId: z.coerce.string().max(128),
-      clubRuleFileName: z.coerce.string().max(255),
+      clubRuleFileId: z.coerce.string().max(128).optional(),
+      clubRuleFileName: z.coerce.string().max(255).optional(),
       externalInstructionFileId: z.coerce.string().max(128).optional(),
       externalInstructionFileName: z.coerce.string().max(255).optional(),
     })

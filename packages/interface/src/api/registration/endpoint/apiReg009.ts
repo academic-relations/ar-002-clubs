@@ -40,7 +40,12 @@ const requestBody = z
     professor: z
       .object({
         name: z.coerce.string().max(255),
-        email: z.coerce.string().email().endsWith("@kaist.ac.kr"),
+        email: z
+          .string()
+          .email()
+          .refine(email => email.endsWith("@kaist.ac.kr"), {
+            message: "Must be a valid KAIST email address",
+          }),
         professorEnumId: z.nativeEnum(ProfessorEnum),
       })
       .optional(),
@@ -48,7 +53,7 @@ const requestBody = z
     foundationPurpose: z.coerce.string().max(500),
     activityPlan: z.coerce.string().max(500),
     activityPlanFileId: z.coerce.string().max(128),
-    clubRuleFileId: z.coerce.string().max(128),
+    clubRuleFileId: z.coerce.string().max(128).optional(),
     externalInstructionFileId: z.coerce.string().max(128).optional(),
   })
   .refine(args => {

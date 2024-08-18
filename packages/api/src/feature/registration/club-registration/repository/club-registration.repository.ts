@@ -1,5 +1,8 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
-import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
+import {
+  ApiReg001RequestBody,
+  ApiReg001ResponseCreated,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import {
   ApiReg009RequestBody,
   ApiReg009ResponseOk,
@@ -7,7 +10,10 @@ import {
 import { ApiReg010ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg010";
 import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
-import { RegistrationEventEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import {
+  RegistrationEventEnum,
+  RegistrationStatusEnum,
+} from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { and, count, eq, gt, inArray, isNull, lte, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/mysql-core";
 import { MySql2Database } from "drizzle-orm/mysql2";
@@ -40,27 +46,63 @@ export class ClubRegistrationRepository {
     return clubs;
   }
 
-  async createRegistration(body: ApiReg001RequestBody) {
+  async createRegistration(
+    body: ApiReg001RequestBody,
+  ): Promise<ApiReg001ResponseCreated> {
+    const cur = getKSTDate();
     await this.db.transaction(async tx => {
+      let professorId;
+      if (body.professor) {
+        professorId = await tx
+          .select({
+            professorId: Professor.id,
+          })
+          .from(Professor)
+          .leftJoin(
+            ProfessorT,
+            and(
+              eq(Professor.id, ProfessorT.professorId),
+              eq(ProfessorT.professorEnum, body.professor.professorEnumId),
+              isNull(ProfessorT.deletedAt),
+              lte(ProfessorT.startTerm, cur),
+              or(isNull(ProfessorT.endTerm), gt(ProfessorT.endTerm, cur)),
+            ),
+          )
+          .where(
+            and(
+              eq(Professor.email, body.professor.email),
+              eq(Professor.name, body.professor.name),
+              isNull(Professor.deletedAt),
+            ),
+          )
+          .for("share")
+          .then(takeUnique);
+        if (!professorId)
+          throw new HttpException(
+            "Professor Not Found",
+            HttpStatus.BAD_REQUEST,
+          );
+      }
+
       const [registrationInsertResult] = await tx.insert(Registration).values({
         clubId: body.clubId,
-        registrationApplicationTypeEnumId: body.registrationTypeEnumId,
-        clubNameKr: body.krName,
-        clubNameEn: body.enName,
+        registrationApplicationTypeEnumId: body.registrationTypeEnum,
+        clubNameKr: body.clubNameKr,
+        clubNameEn: body.clubNameEn,
         studentId: body.studentId,
-        studentPhoneNumber: body.phoneNumber,
+        phoneNumber: body.phoneNumber,
         foundedAt: body.foundedAt,
         divisionId: body.divisionId,
-        activityFieldKr: body.kr활동분야,
-        activityFieldEn: body.en활동분야,
-        professorId: body.professor?.ProfessorEnumId,
-        divisionConsistency: body.divisionIntegrity,
+        activityFieldKr: body.activityFieldKr,
+        activityFieldEn: body.activityFieldEn,
+        professorId,
+        divisionConsistency: body.divisionConsistency,
         foundationPurpose: body.foundationPurpose,
         activityPlan: body.activityPlan,
-        // clubRuleFileId: body.clubRuleFileId,
-        // externalInstructionFileId: body.externalInstructionFileId,
-        // activityId: body.activityId,
-        registrationApplicationStatusEnumId: 1, // Example status ID
+        registrationActivityPlanFileId: body.activityPlanFileId,
+        registrationClubRuleFileId: body.clubRuleFileId,
+        registrationExternalInstructionFileId: body.externalInstructionFileId,
+        registrationApplicationStatusEnumId: RegistrationStatusEnum.Pending,
       });
 
       if (registrationInsertResult.affectedRows !== 1) {
@@ -74,6 +116,7 @@ export class ClubRegistrationRepository {
     });
 
     logger.debug("[createRegistration] insertion ends successfully");
+    return {};
   }
 
   async isClubRegistrationEvent(): Promise<boolean> {
@@ -154,7 +197,7 @@ export class ClubRegistrationRepository {
               isNull(Professor.deletedAt),
             ),
           )
-          .for("update")
+          .for("share")
           .then(takeUnique);
         if (!professorId)
           throw new HttpException(
