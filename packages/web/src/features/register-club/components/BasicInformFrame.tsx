@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
+import { useFormContext } from "react-hook-form";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
@@ -10,32 +12,62 @@ import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 
-import Select from "@sparcs-clubs/web/common/components/Select";
+import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 import DivisionSelect from "./_atomic/DivisionSelect";
 import MonthSelect from "./_atomic/MonthSelect";
 import YearSelect from "./_atomic/YearSelect";
 import ProfessorInformFrame from "./ProfessorInformFrame";
 
+export type ProfileInfo = {
+  name: string;
+  phoneNumber?: string;
+};
+
 interface BasicInformSectionProps {
   type: RegistrationTypeEnum;
+  clubIds: { id: number }[];
+  profile: ProfileInfo;
+  onCheckedClubName: (data: boolean) => void;
+  onCheckProfessor: (data: boolean) => void;
 }
 
-const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
+const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
+  type,
+  clubIds,
+  profile,
+  onCheckedClubName,
+  onCheckProfessor,
+}) => {
   const isProvisional = type === RegistrationTypeEnum.NewProvisional;
   const isPromotional = type === RegistrationTypeEnum.Promotional;
   const isRenewal = type === RegistrationTypeEnum.Renewal;
 
-  const [clubName, setClubName] = useState("");
-
   const [isCheckedClubName, setIsCheckedClubName] = useState(false);
   const [isCheckedProfessor, setIsCheckedProfessor] = useState(isPromotional);
 
+  const { watch } = useFormContext();
+
+  const clubName = watch("clubId");
+
   useEffect(() => {
-    if (isRenewal && clubName.length > 0) {
+    if (isRenewal && clubName != null) {
+      onCheckProfessor(true);
       setIsCheckedProfessor(true);
     }
-  }, [clubName.length, isRenewal]);
+  }, [clubName, isRenewal, onCheckProfessor]);
+
+  const clubOptions = useCallback(
+    () =>
+      clubIds.map(
+        data =>
+          ({
+            label: data.id.toString(),
+            value: data.id,
+          }) as SelectItem<number>,
+      ),
+    [clubIds],
+  );
 
   // TODO. 지도교수 정보 가져오기
   const hasProfessorInfo = false;
@@ -43,6 +75,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
   return (
     <FlexWrapper direction="column" gap={40}>
       <SectionTitle>기본 정보</SectionTitle>
+
       <Card outline gap={32} style={{ marginLeft: 20 }}>
         <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
           {isProvisional ? (
@@ -58,16 +91,17 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
               )}
             />
           ) : (
-            <Select
-              label="동아리명 (국문)"
-              placeholder="동아리명을 선택해주세요"
-              // TODO. 신규등록, 재등록 가능한 동아리명 옵션 데이터 추가
-              items={[
-                { value: "1", label: "동아리1" },
-                { value: "2", label: "동아리2" },
-              ]}
-              value={clubName}
-              onChange={setClubName}
+            <FormController
+              name="clubId"
+              required
+              renderItem={props => (
+                <Select
+                  {...props}
+                  label="동아리명 (국문)"
+                  placeholder="동아리명을 선택해주세요"
+                  items={clubOptions()}
+                />
+              )}
             />
           )}
           {isProvisional && (
@@ -84,7 +118,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
             />
           )}
         </FlexWrapper>
-        {(isProvisional || (!isProvisional && clubName.length > 0)) && (
+        {(isProvisional || (!isProvisional && clubName != null)) && (
           <CheckboxOption
             optionText={
               isProvisional
@@ -92,7 +126,10 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
                 : "동아리명을 변경하고 싶어요 "
             }
             checked={isCheckedClubName}
-            onClick={() => setIsCheckedClubName(!isCheckedClubName)}
+            onClick={() => {
+              onCheckedClubName(!isCheckedClubName);
+              setIsCheckedClubName(!isCheckedClubName);
+            }}
           />
         )}
         {!isProvisional && isCheckedClubName && (
@@ -124,14 +161,13 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
         <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
           <TextInput
             label="대표자 이름"
-            // TODO. 대표자 이름 현재 로그인한 사람으로 변경
-            placeholder="이지윤"
+            placeholder={profile?.name ?? ""}
             disabled
           />
-          {/* // TODO. 디비에 전화번호 있으면 기본값 넣기 */}
           <FormController
             name="phoneNumber"
             required
+            defaultValue={profile?.phoneNumber}
             renderItem={props => (
               <PhoneInput
                 {...props}
@@ -170,11 +206,14 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
         />
 
         {(isProvisional ||
-          (isRenewal && clubName.length > 0 && !hasProfessorInfo)) && (
+          (isRenewal && clubName != null && !hasProfessorInfo)) && (
           <CheckboxOption
             optionText="지도교수를 신청하겠습니다"
             checked={isCheckedProfessor}
-            onClick={() => setIsCheckedProfessor(!isCheckedProfessor)}
+            onClick={() => {
+              onCheckProfessor(!isCheckedProfessor);
+              setIsCheckedProfessor(!isCheckedProfessor);
+            }}
           />
         )}
       </Card>
