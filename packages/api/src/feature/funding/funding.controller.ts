@@ -46,7 +46,6 @@ import FundingService from "./funding.service";
 export default class FundingController {
   constructor(private fundingService: FundingService) {}
 
-  // TODO: Authentication 필요
   @Student()
   @Post("student/fundings/funding")
   @UsePipes(new ZodPipe(apiFnd001))
@@ -58,7 +57,6 @@ export default class FundingController {
     return {};
   }
 
-  // TODO: Authentication 필요
   @Student()
   @Get("student/fundings/funding/:id")
   @UsePipes(new ZodPipe(apiFnd002))
@@ -73,7 +71,6 @@ export default class FundingController {
     return result;
   }
 
-  // TODO: Authentication 필요
   @Student()
   @Put("student/fundings/funding/:id")
   @UsePipes(new ZodPipe(apiFnd003))
