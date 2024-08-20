@@ -89,9 +89,9 @@ const My: React.FC = () => {
             onRejected={onDivisionPresidentChangeRequestRejected}
           />
         )}
-        <MyRegisterFrame />
         <MyInfoFrame />
         <MyClubFrame />
+        <MyRegisterFrame />
         <MyServiceFrame />
       </FlexWrapper>
     </AsyncBoundary>
