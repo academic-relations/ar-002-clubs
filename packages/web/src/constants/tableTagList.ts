@@ -1,6 +1,10 @@
 import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
 import { PromotionalPrintingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
+import {
+  RegistrationStatusEnum,
+  RegistrationTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
 
 import {
@@ -124,6 +128,22 @@ const ActTypeTagList: {
     color: "PURPLE",
   },
 };
+const RegistrationStatusTagList: {
+  [key in RegistrationStatusEnum]: StatusDetail;
+} = {
+  [RegistrationStatusEnum.Approved]: { text: "승인", color: "GREEN" },
+  [RegistrationStatusEnum.Pending]: { text: "신청", color: "BLUE" },
+  [RegistrationStatusEnum.Rejected]: { text: "반려", color: "RED" },
+};
+
+const RegistrationTypeTagList: { [key in RegistrationTypeEnum]: StatusDetail } =
+  {
+    [RegistrationTypeEnum.Renewal]: { text: "재등록", color: "PURPLE" },
+    [RegistrationTypeEnum.Promotional]: { text: "신규 등록", color: "YELLOW" },
+    [RegistrationTypeEnum.NewProvisional]: { text: "가등록", color: "BLUE" },
+    [RegistrationTypeEnum.ReProvisional]: { text: "가등록", color: "BLUE" },
+  };
+
 export {
   AcfTagList,
   CmsTagList,
@@ -134,4 +154,6 @@ export {
   ProfessorApprovalTagList,
   ActTypeTagList,
   FundingTagList,
+  RegistrationTypeTagList,
+  RegistrationStatusTagList,
 };

@@ -15,6 +15,7 @@ import MyChangeDivisionPresident, {
 import MyChangeRepresentative from "@sparcs-clubs/web/features/my/components/MyChangeRepresentative";
 import MyClubFrame from "@sparcs-clubs/web/features/my/frames/MyClubFrame";
 import MyInfoFrame from "@sparcs-clubs/web/features/my/frames/MyInfoFrame";
+import MyRegisterFrame from "@sparcs-clubs/web/features/my/frames/MyRegisterFrame";
 import MyServiceFrame from "@sparcs-clubs/web/features/my/frames/MyServiceFrame";
 import { useGetMyDelegateRequest } from "@sparcs-clubs/web/features/my/services/getMyDelegateRequest";
 
@@ -88,6 +89,7 @@ const My: React.FC = () => {
             onRejected={onDivisionPresidentChangeRequestRejected}
           />
         )}
+        <MyRegisterFrame />
         <MyInfoFrame />
         <MyClubFrame />
         <MyServiceFrame />
