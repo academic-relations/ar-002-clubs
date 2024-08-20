@@ -1,13 +1,27 @@
 import { ApiAct002ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
 
-import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
+import {
+  ActivityStatusEnum,
+  ActivityTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 import { Participant } from "../types/activityReport";
 
-export interface ApiAct002ResponseOkTemp extends ApiAct002ResponseOk {
-  advisorProfessorApproval: ActivityProfessorApprovalEnum;
+export interface ParticipantTemp {
+  studentId: number; // 고유 ID
+  studentNumber: number; // 학번
+  name: string; // 이름
+}
+
+export interface ApiAct002ResponseOkTemp
+  extends Omit<ApiAct002ResponseOk, "participants"> {
+  advisorProfessorApproval: ActivityProfessorApprovalEnum; // 지도교수 승인 상태
+  activityStatusEnumId: ActivityStatusEnum; // 신청 상태 (동연 승인 등)
+  participants: ParticipantTemp[];
+  writtenTime: Date; // 작성 시간
+  checkedTime?: Date; // 승인 또는 반려한 시간
 }
 
 export const mockNewActivityData = [
@@ -143,7 +157,10 @@ export const mockActivityDetailData: ApiAct002ResponseOkTemp = {
   clubId: 1,
   originalName: "술박스",
   name: "스팍스 봄학기 해커톤",
+  activityStatusEnumId: ActivityStatusEnum.Rejected,
   activityTypeEnumId: ActivityTypeEnum.matchedInternalActivity,
+  writtenTime: new Date("2024-07-01 13:00"),
+  checkedTime: new Date("2024-07-02 13:00"),
   durations: [
     {
       startTerm: new Date("2024-07-01"),
@@ -164,16 +181,24 @@ export const mockActivityDetailData: ApiAct002ResponseOkTemp = {
   ],
   participants: [
     {
-      studentId: 20200510,
+      studentId: 1,
+      studentNumber: 20200510,
+      name: "이지윤",
     },
     {
-      studentId: 20200511,
+      studentId: 2,
+      studentNumber: 20200511,
+      name: "박병찬",
     },
     {
-      studentId: 20230510,
+      studentId: 3,
+      studentNumber: 20230510,
+      name: "이도라",
     },
     {
-      studentId: 20240510,
+      studentId: 4,
+      studentNumber: 20240510,
+      name: "스팍스",
     },
   ],
   advisorProfessorApproval: ActivityProfessorApprovalEnum.Requested,

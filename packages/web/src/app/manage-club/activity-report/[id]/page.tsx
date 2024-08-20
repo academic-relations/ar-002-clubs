@@ -2,7 +2,10 @@
 
 import React, { ReactNode } from "react";
 
-import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
+import {
+  ActivityStatusEnum,
+  ActivityTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import { useParams, useRouter } from "next/navigation";
 import styled from "styled-components";
@@ -129,6 +132,37 @@ const ActivityReportDetail: React.FC = () => {
     }
   };
 
+  const activityStatus: (type: ActivityStatusEnum) => string = type => {
+    switch (type) {
+      case ActivityStatusEnum.Applied:
+        return "신청 완료";
+        break;
+      case ActivityStatusEnum.Approved:
+        return "동아리 연합회 승인 완료";
+        break;
+      case ActivityStatusEnum.Rejected:
+        return "동아리 연합회 승인 반려";
+        break;
+      default:
+        return "";
+    }
+  };
+
+  const activityStatusToProgressStatus: (
+    type: ActivityStatusEnum,
+  ) => Status = type => {
+    switch (type) {
+      case ActivityStatusEnum.Applied:
+        return Status.Pending;
+        break;
+      case ActivityStatusEnum.Approved:
+        return Status.Approved;
+        break;
+      default: // ActivityStatusEnum.Rejected:
+        return Status.Canceled;
+    }
+  };
+
   return (
     <FlexWrapper direction="column" gap={60}>
       <PageHead
@@ -136,16 +170,21 @@ const ActivityReportDetail: React.FC = () => {
           { name: "대표 동아리 관리", path: "/manage-club" },
           { name: "활동 보고서", path: "/manage-club/activity-report" },
         ]}
-        title={`활동 보고서 : ${id}(id 가져오기 테스트용)`}
+        title="활동 보고서"
         enableLast
       />
       <FlexWrapper direction="column" gap={40} style={{ alignSelf: "stretch" }}>
         <Card outline={false} padding="32px" gap={20}>
           <ProgressStatus
-            labels={["신청 완료", "동아리 연합회 신청 반려"]}
+            labels={["신청 완료", activityStatus(data.activityStatusEnumId)]}
             progress={[
-              { status: Status.Approved, date: new Date("2024-03-11 21:00") },
-              { status: Status.Canceled, date: new Date("2024-03-11 21:00") },
+              { status: Status.Approved, date: data.writtenTime },
+              {
+                status: activityStatusToProgressStatus(
+                  data.activityStatusEnumId,
+                ),
+                date: data.checkedTime,
+              },
             ]}
           />
           <ActivitySection label="활동 정보">
@@ -163,17 +202,30 @@ const ActivityReportDetail: React.FC = () => {
             <ActivityDetail>{`활동 내용: ${data.detail}`}</ActivityDetail>
           </ActivitySection>
           <ActivitySection label={`활동 인원(${data.participants.length}명)`}>
-            {data.participants.map((participant: { studentId: number }) => (
-              <ActivityDetail key="1">{`${participant.studentId}`}</ActivityDetail>
-            ))}
+            {data.participants.map(
+              (participant: {
+                studentId: number;
+                studentNumber: number;
+                name: string;
+              }) => (
+                <ActivityDetail
+                  key={participant.studentId}
+                >{`${participant.studentNumber} ${participant.name}`}</ActivityDetail>
+              ),
+            )}
           </ActivitySection>
           <ActivitySection label="활동 증빙">
             <ActivityDetail>첨부 파일</ActivityDetail>
             <ActivityDetail>
               <FilePreviewContainer>
-                {data.evidenceFiles.map((evidenceFile: { uuid: string }) => (
-                  <FilePreview key="1" fileName={evidenceFile.uuid} />
-                ))}
+                {data.evidenceFiles.map(
+                  (evidenceFile: { uuid: string }, index: number) => (
+                    <FilePreview
+                      key={`${evidenceFile.uuid}_${index.toString()}`}
+                      fileName={evidenceFile.uuid}
+                    />
+                  ),
+                )}
               </FilePreviewContainer>
             </ActivityDetail>
             <ActivityDetail>{`부가 설명: ${data.evidence}`}</ActivityDetail>
