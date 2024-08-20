@@ -9,7 +9,7 @@ import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/service
 const mockMyClubRegisterDetail = {
   id: 1,
   registrationStatusEnum: RegistrationStatusEnum.Pending,
-  registrationTypeEnum: RegistrationTypeEnum.NewProvisional,
+  registrationTypeEnum: RegistrationTypeEnum.Promotional,
   clubNameKr: "스팍스",
   clubId: 1,
   studentName: "이지윤",
