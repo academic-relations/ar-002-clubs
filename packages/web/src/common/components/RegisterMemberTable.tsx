@@ -10,7 +10,7 @@ import Link from "next/link";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import mockupRegistrationMember from "@sparcs-clubs/web/features/executive/_mock/mockMemberRegistration";
+import mockupRegistrationMember from "@sparcs-clubs/web/features/executive/register-member/_mock/mockMemberRegistration";
 import {
   getTagColorFromClubType,
   getTagColorFromDivision,
