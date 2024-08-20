@@ -55,17 +55,13 @@ const MainPageMainFrame: React.FC = () => (
   <FlexWrapper direction="column" gap={60}>
     <PageTitleWrapper>
       <ResponsiveSloganTypography
-        ff="PRETENDARD"
         fw="SEMIBOLD"
-        color="BLACK"
         style={{ width: "fit-content" }}
       >
         <StyledSpan>동아리</StyledSpan>의 모든 것을 한번에
       </ResponsiveSloganTypography>
       <ResponsiveSloganTypography
-        ff="PRETENDARD"
         fw="SEMIBOLD"
-        color="BLACK"
         style={{ width: "fit-content" }}
       >
         동아리연합회 통합 플랫폼, <BreakBeforeStyledSpan />
