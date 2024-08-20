@@ -13,7 +13,7 @@ interface InfoProps {
 const InfoInner = styled.div`
   display: flex;
   padding: 12px 16px;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   align-self: stretch;
   border-radius: 8px;
@@ -31,9 +31,16 @@ const ResponsiveTypography = styled(Typography)`
   }
 `;
 
+const ResponsiveIcon = styled(Icon)`
+  font-size: 20px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 16px;
+  }
+`;
+
 const Info: React.FC<InfoProps> = ({ text }) => (
   <InfoInner>
-    <Icon type="info_outlined" size={20} />
+    <ResponsiveIcon type="info_outlined" size={20} />
     <ResponsiveTypography fw="REGULAR">{text}</ResponsiveTypography>
   </InfoInner>
 );
