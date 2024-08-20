@@ -26,6 +26,11 @@ const NoticeAndServiceWrapper = styled.div`
   }
 `;
 
+const StyledSpan = styled.span`
+  color: ${colors.PRIMARY};
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.SEMIBOLD};
+`;
+
 const MainPageMainFrame: React.FC = () => (
   <FlexWrapper direction="column" gap={60}>
     <PageTitleWrapper>
@@ -37,7 +42,7 @@ const MainPageMainFrame: React.FC = () => (
         color="BLACK"
         style={{ width: "fit-content" }}
       >
-        <span style={{ color: colors.PRIMARY }}>동아리</span>의 모든 것을 한번에
+        <StyledSpan>동아리</StyledSpan>의 모든 것을 한번에
       </Typography>
       <Typography
         ff="PRETENDARD"
@@ -47,8 +52,7 @@ const MainPageMainFrame: React.FC = () => (
         color="BLACK"
         style={{ width: "fit-content" }}
       >
-        동아리연합회 통합 플랫폼,{" "}
-        <span style={{ color: colors.PRIMARY }}>Clubs</span>입니다
+        동아리연합회 통합 플랫폼, <StyledSpan>Clubs</StyledSpan>입니다
       </Typography>
     </PageTitleWrapper>
     <NoticeAndServiceWrapper>
