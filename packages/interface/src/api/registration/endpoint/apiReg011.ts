@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zClubName } from "@sparcs-clubs/interface/common/commonString";
 
 import {
-  RegistrationApplicationStudentStatusEnum,
+  RegistrationStatusEnum,
   RegistrationTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
@@ -33,9 +33,7 @@ const responseBodyMap = {
     .object({
       id: z.coerce.number().int().min(1),
       registrationTypeEnumId: z.nativeEnum(RegistrationTypeEnum),
-      registrationStatusEnumId: z.nativeEnum(
-        RegistrationApplicationStudentStatusEnum,
-      ),
+      registrationStatusEnumId: z.nativeEnum(RegistrationStatusEnum),
       clubId: z.coerce.number().int().min(1).optional(),
       clubNameKr: zClubName,
       clubNameEn: zClubName,
