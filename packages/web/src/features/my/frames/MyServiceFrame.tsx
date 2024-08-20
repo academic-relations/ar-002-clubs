@@ -17,8 +17,6 @@ import { useGetMyPrinting } from "../services/getMyPrinting";
 import { useGetMyRentals } from "../services/getMyRentals";
 
 const MyServiceFrame: React.FC = () => {
-  const [toggle, setToggle] = React.useState<boolean>(true);
-
   // TODO: 실제 필요한 값으로 바꾸기
   const startDate = new Date("2024-01-01");
   const endDate = new Date("2024-12-31");
@@ -50,11 +48,7 @@ const MyServiceFrame: React.FC = () => {
   } = useGetMyCommonSpace(startDate, endDate, pageOffset, itemCount);
 
   return (
-    <FoldableSectionTitle
-      title="서비스 신청 내역"
-      toggle={toggle}
-      toggleHandler={() => setToggle(!toggle)}
-    >
+    <FoldableSectionTitle title="서비스 신청 내역">
       <FlexWrapper direction="column" gap={40}>
         <FlexWrapper direction="column" gap={20}>
           <MoreDetailTitle

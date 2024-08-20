@@ -20,6 +20,7 @@ import apiClb005, {
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb005";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
+import { Public } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 
 import { ClubService } from "../service/club.service";
 
@@ -27,6 +28,7 @@ import { ClubService } from "../service/club.service";
 export class ClubController {
   constructor(private readonly clubService: ClubService) {}
 
+  @Public()
   @Get("clubs")
   @UsePipes(new ZodPipe(apiClb001))
   async getClubs(): Promise<ApiClb001ResponseOK> {
@@ -35,6 +37,7 @@ export class ClubController {
     return result;
   }
 
+  @Public()
   @Get("clubs/club/:clubId")
   @UsePipes(new ZodPipe(apiClb002))
   async getClub(

@@ -43,14 +43,16 @@ const RentalInfoFirstFrame: React.FC<
   const [hasSelectError, setHasSelectError] = useState(false);
 
   useEffect(() => {
-    setRental({
-      ...rental,
-      info: {
-        ...rental.info,
-        phone,
-      },
-    });
-  }, [phone, rental, setRental]);
+    if (phone != null && phone.length > 0) {
+      setRental({
+        ...rental,
+        info: {
+          ...rental.info,
+          phone,
+        },
+      });
+    }
+  }, [phone, setRental]);
 
   useEffect(() => {
     const allConditionsMet =
@@ -77,7 +79,7 @@ const RentalInfoFirstFrame: React.FC<
         },
       });
     }
-  }, [selectedValue, phone, setRental, clubList, rental, userName]);
+  }, [selectedValue, phone, setRental]);
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>

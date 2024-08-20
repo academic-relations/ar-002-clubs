@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import styled from "styled-components";
+
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -9,8 +11,17 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import ChangeRepresentativeCard from "@sparcs-clubs/web/features/manage-club/components/ChangeRepresentativeCard";
 import { mockClubDescription } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
+const InfoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  gap: 20px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    flex-direction: column;
+  }
+`;
+
 const InfoManageFrame: React.FC = () => {
-  const [toggle, setToggle] = useState<boolean>(true);
   const [description, setDescription] = useState<string>(
     mockClubDescription.description,
   );
@@ -47,12 +58,8 @@ const InfoManageFrame: React.FC = () => {
 
   return (
     <FlexWrapper direction="column" gap={40}>
-      <FoldableSectionTitle
-        title="동아리 정보"
-        toggle={toggle}
-        toggleHandler={() => setToggle(!toggle)}
-      >
-        <FlexWrapper direction="row" gap={20}>
+      <FoldableSectionTitle title="동아리 정보">
+        <InfoWrapper>
           <Card outline gap={32} style={{ flex: 1, height: "fit-content" }}>
             <Typography fw="MEDIUM" fs={20} lh={24}>
               기본 정보
@@ -80,7 +87,7 @@ const InfoManageFrame: React.FC = () => {
             </Button>
           </Card>
           <ChangeRepresentativeCard />
-        </FlexWrapper>
+        </InfoWrapper>
       </FoldableSectionTitle>
     </FlexWrapper>
   );

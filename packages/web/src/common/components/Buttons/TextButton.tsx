@@ -6,6 +6,7 @@ import { Theme } from "@sparcs-clubs/web/styles/themes";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 type FontWeight = keyof Theme["fonts"]["WEIGHT"];
+export type TextButtonColor = "PRIMARY" | "GRAY" | "BLACK";
 
 interface ButtonProps {
   disabled: boolean;
@@ -21,6 +22,10 @@ const StyledTextButton = styled.button<ButtonProps>`
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   font-size: ${({ fs }) => fs}px;
   line-height: 20px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: ${({ fs }) => fs * 0.875}px;
+    line-height: 16px;
+  }
   font-weight: ${({ theme, fw }) => theme.fonts.WEIGHT[fw]};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   text-decoration: underline;
@@ -29,7 +34,7 @@ const StyledTextButton = styled.button<ButtonProps>`
 interface TextButtonProps {
   text: string;
   disabled?: boolean;
-  color?: "PRIMARY" | "GRAY" | "BLACK";
+  color?: TextButtonColor;
   fs?: number;
   fw?: FontWeight;
   onClick?: () => void;

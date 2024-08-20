@@ -9,6 +9,7 @@ import Icon from "../Icon";
 interface IconButtonProps {
   type?: keyof typeof IconButtonTypeInner;
   icon: string;
+  size?: number;
   onClick: () => void;
   children?: React.ReactNode;
   style?: React.CSSProperties;
@@ -64,6 +65,7 @@ const IconButton = ({
   type = "default",
   icon,
   onClick,
+  size = 16,
   children = null,
   style = {},
   ...props
@@ -78,7 +80,7 @@ const IconButton = ({
       style={style}
       {...props}
     >
-      <Icon type={icon} size={16} color="inherit" />
+      <Icon type={icon} size={size} color="inherit" />
       {children}
     </IconButtonChosenInner>
   );

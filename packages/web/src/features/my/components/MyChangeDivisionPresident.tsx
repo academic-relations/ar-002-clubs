@@ -8,13 +8,18 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import NotificationCard from "@sparcs-clubs/web/common/components/NotificationCard";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { ChangeDivisionPresidentMessageContext } from "@sparcs-clubs/web/constants/changeDivisionPresident";
+import {
+  ChangeDivisionPresidentMessageContext,
+  ChangeDivisionPresidentStatusEnum,
+} from "@sparcs-clubs/web/constants/changeDivisionPresident";
 import ChangeDivisionPresidentModalContent from "@sparcs-clubs/web/features/my/components/ChangeDivisionPresidentModalContent";
 
-type StatusType = "Requested" | "Confirmed";
+export type MyChangeDivisionPresidentStatusEnum =
+  | ChangeDivisionPresidentStatusEnum.Requested
+  | ChangeDivisionPresidentStatusEnum.Confirmed;
 
 interface MyChangeDivisionPresidentProps {
-  status: StatusType;
+  status: MyChangeDivisionPresidentStatusEnum;
   isDivisionPresident: boolean;
   actingPresident?: boolean;
   change?: [string, string];
@@ -23,13 +28,16 @@ interface MyChangeDivisionPresidentProps {
   onRejected: () => void;
 }
 
-const notificationStatus: Record<StatusType, "Alert" | "Success"> = {
-  Requested: "Alert",
-  Confirmed: "Success",
+const notificationStatus: Record<
+  MyChangeDivisionPresidentStatusEnum,
+  "Alert" | "Success"
+> = {
+  [ChangeDivisionPresidentStatusEnum.Requested]: "Alert",
+  [ChangeDivisionPresidentStatusEnum.Confirmed]: "Success",
 };
 
 const MyChangeDivisionPresident: React.FC<MyChangeDivisionPresidentProps> = ({
-  status = "Requested",
+  status = ChangeDivisionPresidentStatusEnum.Requested,
   isDivisionPresident,
   actingPresident = false,
   change = undefined,
@@ -48,7 +56,9 @@ const MyChangeDivisionPresident: React.FC<MyChangeDivisionPresidentProps> = ({
   });
 
   const buttonString =
-    status === "Requested" ? "클릭하여 더보기" : "분과 관리 페이지 바로가기";
+    status === ChangeDivisionPresidentStatusEnum.Requested
+      ? "클릭하여 더보기"
+      : "분과 관리 페이지 바로가기";
 
   const openConfirmModal = () => {
     overlay.open(({ isOpen, close }) => (
@@ -67,7 +77,7 @@ const MyChangeDivisionPresident: React.FC<MyChangeDivisionPresidentProps> = ({
   };
 
   const onClick =
-    status === "Requested"
+    status === ChangeDivisionPresidentStatusEnum.Requested
       ? openConfirmModal
       : () => {
           router.push("/manage-division");

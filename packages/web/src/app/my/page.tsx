@@ -8,10 +8,14 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
-import MyChangeDivisionPresident from "@sparcs-clubs/web/features/my/components/MyChangeDivisionPresident";
+import { ChangeDivisionPresidentStatusEnum } from "@sparcs-clubs/web/constants/changeDivisionPresident";
+import MyChangeDivisionPresident, {
+  MyChangeDivisionPresidentStatusEnum,
+} from "@sparcs-clubs/web/features/my/components/MyChangeDivisionPresident";
 import MyChangeRepresentative from "@sparcs-clubs/web/features/my/components/MyChangeRepresentative";
 import MyClubFrame from "@sparcs-clubs/web/features/my/frames/MyClubFrame";
 import MyInfoFrame from "@sparcs-clubs/web/features/my/frames/MyInfoFrame";
+import MyRegisterFrame from "@sparcs-clubs/web/features/my/frames/MyRegisterFrame";
 import MyServiceFrame from "@sparcs-clubs/web/features/my/frames/MyServiceFrame";
 import { useGetMyDelegateRequest } from "@sparcs-clubs/web/features/my/services/getMyDelegateRequest";
 
@@ -32,10 +36,12 @@ const My: React.FC = () => {
   const mockRejectDivisionPresidentChange = () => {}; // TODO: set divisionPresidentChange status to "Rejected"
 
   const [divisionChangeRequestStatus, setDivisionChangeRequestStatus] =
-    useState<"Requested" | "Confirmed">("Requested");
+    useState<MyChangeDivisionPresidentStatusEnum>(
+      ChangeDivisionPresidentStatusEnum.Requested,
+    );
 
   const onDivisionPresidentChangeRequestConfirmed = () => {
-    setDivisionChangeRequestStatus("Confirmed"); // TODO: 변경 요청 보내고 다시 받아오는 방식 (api 구현 이후)
+    setDivisionChangeRequestStatus(ChangeDivisionPresidentStatusEnum.Confirmed); // TODO: 변경 요청 보내고 다시 받아오는 방식 (api 구현 이후)
     mockChangeDivisionPresident();
   };
 
@@ -85,6 +91,7 @@ const My: React.FC = () => {
         )}
         <MyInfoFrame />
         <MyClubFrame />
+        <MyRegisterFrame />
         <MyServiceFrame />
       </FlexWrapper>
     </AsyncBoundary>

@@ -96,7 +96,7 @@ const TextInput: React.FC<TextInputProps> = ({
   value = "",
   handleChange = () => {},
   setErrorStatus = () => {},
-  onChange = () => {},
+  onChange = undefined,
   onBlur = () => {},
   ...props
 }) => {

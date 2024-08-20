@@ -76,7 +76,7 @@ export class ClubService {
 
     return {
       id: clubDetails.id,
-      name: clubDetails.name,
+      name: clubDetails.name_kr,
       type: clubDetails.type,
       characteristic: clubDetails.characteristic,
       advisor: clubDetails.advisor,
@@ -124,7 +124,7 @@ export class ClubService {
             return {
               type: clubInfo.clubStatusEnumId,
               id: club.id,
-              name: clubName,
+              name: clubName.name_kr,
               isPermanent,
               characteristic: clubInfo.characteristicKr,
               representative: representative
