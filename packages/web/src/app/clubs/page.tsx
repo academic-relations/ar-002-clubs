@@ -16,6 +16,11 @@ const Clubs: React.FC = () => {
   const { data, isLoading, isError } = useGetClubsList();
   const isRegistrationPeriod = true;
   const [searchText, setSearchText] = useState<string>("");
+  // const searchFilter = item => return (
+  //   item.name.includes(searchText.toLowerCase()) ||
+  //     item.name.includes(searchText.toUpperCase()) ||
+  //     hangulIncludes(item.name, searchText);
+  // );
 
   return (
     <FlexWrapper direction="column" gap={60}>
@@ -33,25 +38,33 @@ const Clubs: React.FC = () => {
           <Info text="현재는 2024년 봄학기 동아리 신청 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
         )}
         <FlexWrapper direction="column" gap={40}>
-          {(data?.divisions ?? []).map(division => (
-            <ClubsSectionFrame
-              title={division.name}
-              clubList={division.clubs
-                .filter(
-                  item =>
-                    item.name.includes(searchText.toLowerCase()) ||
-                    item.name.includes(searchText.toUpperCase()) ||
-                    hangulIncludes(item.name, searchText),
-                )
-                .sort((a, b) => {
-                  if (a.isPermanent && !b.isPermanent) return -1;
-                  if (!a.isPermanent && b.isPermanent) return 1;
-                  return a.type - b.type || a.name.localeCompare(b.name);
-                })}
-              key={division.name}
-              isRegistrationPeriod={isRegistrationPeriod}
-            />
-          ))}
+          {(data?.divisions ?? []).map(
+            division =>
+              division.clubs.filter(
+                item =>
+                  item.name.includes(searchText.toLowerCase()) ||
+                  item.name.includes(searchText.toUpperCase()) ||
+                  hangulIncludes(item.name, searchText),
+              ).length !== 0 && (
+                <ClubsSectionFrame
+                  title={division.name}
+                  clubList={division.clubs
+                    .filter(
+                      item =>
+                        item.name.includes(searchText.toLowerCase()) ||
+                        item.name.includes(searchText.toUpperCase()) ||
+                        hangulIncludes(item.name, searchText),
+                    )
+                    .sort((a, b) => {
+                      if (a.isPermanent && !b.isPermanent) return -1;
+                      if (!a.isPermanent && b.isPermanent) return 1;
+                      return a.type - b.type || a.name.localeCompare(b.name);
+                    })}
+                  key={division.name}
+                  isRegistrationPeriod={isRegistrationPeriod}
+                />
+              ),
+          )}
         </FlexWrapper>
       </AsyncBoundary>
     </FlexWrapper>
