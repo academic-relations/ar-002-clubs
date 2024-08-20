@@ -20,7 +20,8 @@ const responseBodyMap = {
     clubs: z.array(
       z.object({
         id: z.number().int().min(1),
-        name: z.string().max(30),
+        name_kr: z.string().max(30),
+        name_en: z.string().max(30),
       }),
     ),
     name: z.string().max(30),
