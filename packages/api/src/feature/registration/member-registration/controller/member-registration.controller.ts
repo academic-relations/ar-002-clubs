@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -22,6 +23,10 @@ import apiReg008, {
   ApiReg008RequestParam,
   ApiReg008ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
+import apiReg013, {
+  ApiReg013RequestParam,
+  ApiReg013ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg013";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
@@ -58,6 +63,23 @@ export class MemberRegistrationController {
     const result =
       await this.memberRegistrationService.getStudentRegistrationsMemberRegistrationsMy(
         user.studentId,
+      );
+    return result;
+  }
+
+  @Student()
+  @Delete(
+    "/student/registrations/member-registrations/member-registration/:applyId",
+  )
+  @UsePipes(new ZodPipe(apiReg013))
+  async deleteStudentRegistrationsMemberRegistration(
+    @GetStudent() user: GetStudent,
+    @Param() { applyId }: ApiReg013RequestParam,
+  ): Promise<ApiReg013ResponseOk> {
+    const result =
+      await this.memberRegistrationService.deleteStudentRegistrationsMemberRegistration(
+        user.studentId,
+        applyId,
       );
     return result;
   }

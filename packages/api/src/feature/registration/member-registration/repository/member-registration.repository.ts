@@ -4,9 +4,10 @@ import { ApiReg005ResponseCreated } from "@sparcs-clubs/interface/api/registrati
 import { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 import { ApiReg007ResponseNoContent } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg007";
 import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
+import { ApiReg013ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg013";
 import {
-  RegistrationEventEnum,
-  RegistrationStatusEnum,
+  RegistrationApplicationStudentStatusEnum,
+  RegistrationDeadlineEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { and, count, eq, gt, isNotNull, isNull, lt, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
@@ -25,7 +26,7 @@ export class MemberRegistrationRepository {
   async isMemberRegistrationEvent(): Promise<boolean> {
     const cur = getKSTDate();
     const memberRegistrationEventEnum =
-      RegistrationEventEnum.StudentRegistrationApplication;
+      RegistrationDeadlineEnum.StudentRegistrationApplication;
     const { isAvailable } = await this.db
       .select({ isAvailable: count(RegistrationDeadlineD.id) })
       .from(RegistrationDeadlineD)
@@ -51,8 +52,8 @@ export class MemberRegistrationRepository {
     studentId: number,
     clubId: number,
   ) {
-    const pending = RegistrationStatusEnum.Pending;
-    const approved = RegistrationStatusEnum.Approved;
+    const pending = RegistrationApplicationStudentStatusEnum.Pending;
+    const approved = RegistrationApplicationStudentStatusEnum.Approved;
     const { getMemberRegistration } = await this.db
       .select({
         getMemberRegistration: count(RegistrationApplicationStudent.id),
@@ -88,10 +89,11 @@ export class MemberRegistrationRepository {
       const [result] = await tx.insert(RegistrationApplicationStudent).values({
         studentId,
         clubId,
-        registrationApplicationStudentEnumId: RegistrationStatusEnum.Pending,
+        registrationApplicationStudentEnumId:
+          RegistrationApplicationStudentStatusEnum.Pending,
       });
       const { affectedRows } = result;
-      if (affectedRows > 2) {
+      if (affectedRows !== 1) {
         await tx.rollback();
         throw new HttpException("Registration failed", 500);
       }
@@ -102,8 +104,8 @@ export class MemberRegistrationRepository {
   async getStudentRegistrationsMemberRegistrationsMy(
     studentId: number,
   ): Promise<ApiReg006ResponseOk> {
-    const pending = RegistrationStatusEnum.Pending;
-    const approved = RegistrationStatusEnum.Approved;
+    const pending = RegistrationApplicationStudentStatusEnum.Pending;
+    const approved = RegistrationApplicationStudentStatusEnum.Approved;
     const result = await this.db
       .select({
         id: RegistrationApplicationStudent.id,
@@ -131,6 +133,38 @@ export class MemberRegistrationRepository {
     return { applies: result };
   }
 
+  async deleteMemberRegistration(
+    studentId,
+    applyId,
+  ): Promise<ApiReg013ResponseOk> {
+    const cur = getKSTDate();
+    await this.db.transaction(async tx => {
+      const [result] = await tx
+        .update(RegistrationApplicationStudent)
+        .set({
+          deletedAt: cur,
+        })
+        .where(
+          and(
+            eq(RegistrationApplicationStudent.id, applyId),
+            eq(RegistrationApplicationStudent.studentId, studentId),
+            isNull(RegistrationApplicationStudent.deletedAt),
+          ),
+        );
+      if (result.affectedRows > 2) {
+        await tx.rollback();
+        throw new HttpException("Registration delete failed", 500);
+      } else if (result.affectedRows === 0) {
+        await tx.rollback();
+        throw new HttpException(
+          "Not available application",
+          HttpStatus.FORBIDDEN,
+        );
+      }
+    });
+    return {};
+  }
+
   async patchMemberRegistration(
     applyId,
     clubId,
@@ -148,7 +182,7 @@ export class MemberRegistrationRepository {
             eq(RegistrationApplicationStudent.clubId, clubId),
             eq(
               RegistrationApplicationStudent.registrationApplicationStudentEnumId,
-              RegistrationStatusEnum.Pending,
+              RegistrationApplicationStudentStatusEnum.Pending,
             ),
             isNull(RegistrationApplicationStudent.deletedAt),
           ),
@@ -157,6 +191,7 @@ export class MemberRegistrationRepository {
         await tx.rollback();
         throw new HttpException("Registration update failed", 500);
       } else if (result.affectedRows === 0) {
+        await tx.rollback();
         throw new HttpException(
           "Not available application",
           HttpStatus.FORBIDDEN,
