@@ -9,12 +9,20 @@ import {
   ApiFnd003RequestBody,
   ApiFnd003RequestParam,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd003";
+import { ApiFnd004RequestParam } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd004";
+import { ApiFnd005RequestBody } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
+import {
+  ApiFnd006RequestBody,
+  ApiFnd006RequestParam,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
 
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
+import ActivityPublicService from "@sparcs-clubs/api/feature/activity/service/activity.public.service";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
-import FundingRepository from "../repository/funding.repository";
+import FundingRepository from "./funding.repository";
 
 @Injectable()
 export default class FundingService {
@@ -23,6 +31,7 @@ export default class FundingService {
     private readonly filePublicService: FilePublicService,
     private readonly userPublicService: UserPublicService,
     private readonly clubPublicSevice: ClubPublicService,
+    private readonly activityPublicService: ActivityPublicService,
   ) {}
 
   async postStudentFunding(body: ApiFnd001RequestBody, studentId: number) {
@@ -245,5 +254,92 @@ export default class FundingService {
       throw new HttpException("Student is not delegate", HttpStatus.FORBIDDEN);
     }
     return this.fundingRepository.putStudentFunding(body, param.id);
+  }
+
+  async deleteStudentFunding(studentId: number, param: ApiFnd004RequestParam) {
+    const user = await this.userPublicService.getStudentById({ id: studentId });
+    if (!user) {
+      throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
+    }
+    return this.fundingRepository.deleteStudentFunding(param.id);
+  }
+
+  async getStudentFundings(studentId: number, body: ApiFnd005RequestBody) {
+    const user = await this.userPublicService.getStudentById({ id: studentId });
+    if (!user) {
+      throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
+    }
+
+    const now = getKSTDate();
+    // TODO: 지원금 학기 기준으로 semeterId 설정
+    const thisSemester = await this.clubPublicSevice.dateToSemesterId(now);
+
+    const fundings =
+      await this.fundingRepository.selectFundingsSemesterByClubId(
+        body.clubId,
+        thisSemester,
+      );
+
+    const activityNames = await Promise.all(
+      fundings.map(async funding => {
+        const activityName =
+          await this.activityPublicService.getActivityNameById(
+            funding.purposeId,
+          );
+        return { activityName: activityName[0], id: funding.purposeId };
+      }),
+    );
+
+    return {
+      fundings: fundings.map(funding => ({
+        id: funding.id,
+        fundingOrderStatusEnumId: funding.fundingOrderStatusEnumId,
+        activityName: activityNames.find(name => name.id === funding.purposeId)
+          .activityName.name,
+        name: funding.name,
+        expenditureAmount: funding.expenditureAmount,
+        approvedAmount: funding.approvedAmount,
+      })),
+    };
+  }
+
+  async getStudentFundingSemester(
+    studentId: number,
+    param: ApiFnd006RequestParam,
+    body: ApiFnd006RequestBody,
+  ) {
+    const user = await this.userPublicService.getStudentById({ id: studentId });
+    if (!user) {
+      throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
+    }
+
+    // TODO: 지원금 학기 기준으로 semeterId 설정
+    const fundings =
+      await this.fundingRepository.selectFundingsSemesterByClubId(
+        body.clubId,
+        param.semesterId,
+      );
+
+    const activityNames = await Promise.all(
+      fundings.map(async funding => {
+        const activityName =
+          await this.activityPublicService.getActivityNameById(
+            funding.purposeId,
+          );
+        return { activityName: activityName[0], id: funding.purposeId };
+      }),
+    );
+
+    return {
+      fundings: fundings.map(funding => ({
+        id: funding.id,
+        fundingOrderStatusEnumId: funding.fundingOrderStatusEnumId,
+        activityName: activityNames.find(name => name.id === funding.purposeId)
+          .activityName.name,
+        name: funding.name,
+        expenditureAmount: funding.expenditureAmount,
+        approvedAmount: funding.approvedAmount,
+      })),
+    };
   }
 }

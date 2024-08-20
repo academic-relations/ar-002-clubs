@@ -12,6 +12,7 @@ import { ClubModule } from "./feature/club/club.module";
 import { CommonSpaceModule } from "./feature/common-space/common-space.module";
 import DivisionModule from "./feature/division/division.module";
 import { FileModule } from "./feature/file/file.module";
+import FundingModule from "./feature/funding/funding.module";
 import { MeetingModule } from "./feature/meeting/meeting.module";
 import { NoticeModule } from "./feature/notice/notice.module";
 import { PromotionalPrintingModule } from "./feature/promotional-printing/promotional-printing.module";
@@ -27,6 +28,8 @@ import UserModule from "./feature/user/user.module";
     DivisionModule,
     DrizzleModule,
     FileModule,
+    FundingModule,
+    MeetingModule,
     NoticeModule,
     PromotionalPrintingModule,
     RegistrationModule,

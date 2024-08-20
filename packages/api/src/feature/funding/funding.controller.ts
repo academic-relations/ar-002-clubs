@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -20,13 +21,26 @@ import apiFnd003, {
   ApiFnd003RequestParam,
   ApiFnd003ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd003";
+import apiFnd004, {
+  ApiFnd004RequestParam,
+  ApiFnd004ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd004";
+import apiFnd005, {
+  ApiFnd005RequestBody,
+  ApiFnd005ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
+import apiFnd006, {
+  ApiFnd006RequestBody,
+  ApiFnd006RequestParam,
+  ApiFnd006ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
 import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
-import FundingService from "../service/funding.service";
+import FundingService from "./funding.service";
 
 @Controller()
 export default class FundingController {
@@ -40,11 +54,8 @@ export default class FundingController {
     @GetStudent() user: GetStudent,
     @Body() body: ApiFnd001RequestBody,
   ): Promise<ApiFnd001ResponseCreated> {
-    const result = await this.fundingService.postStudentFunding(
-      body,
-      user.studentId,
-    );
-    return result;
+    await this.fundingService.postStudentFunding(body, user.studentId);
+    return {};
   }
 
   // TODO: Authentication 필요
@@ -71,11 +82,43 @@ export default class FundingController {
     @Param() param: ApiFnd003RequestParam,
     @Body() body: ApiFnd003RequestBody,
   ): Promise<ApiFnd003ResponseOk> {
-    const result = await this.fundingService.putStudentFunding(
-      body,
-      param,
+    await this.fundingService.putStudentFunding(body, param, user.studentId);
+    return {};
+  }
+
+  @Student()
+  @Delete("student/fundings/funding/:id")
+  @UsePipes(new ZodPipe(apiFnd004))
+  async deleteStudentFunding(
+    @GetStudent() user: GetStudent,
+    @Param() param: ApiFnd004RequestParam,
+  ): Promise<ApiFnd004ResponseOk> {
+    await this.fundingService.deleteStudentFunding(user.studentId, param);
+    return {};
+  }
+
+  @Student()
+  @Get("student/fundings")
+  @UsePipes(new ZodPipe(apiFnd005))
+  async getStudentFundings(
+    @GetStudent() user: GetStudent,
+    @Body() body: ApiFnd005RequestBody,
+  ): Promise<ApiFnd005ResponseOk> {
+    return this.fundingService.getStudentFundings(user.studentId, body);
+  }
+
+  @Student()
+  @Get("student/fundings/semesters/semester/:semesterId")
+  @UsePipes(new ZodPipe(apiFnd006))
+  async getStudentFundingSemester(
+    @GetStudent() user: GetStudent,
+    @Param() param: ApiFnd006RequestParam,
+    @Body() body: ApiFnd006RequestBody,
+  ): Promise<ApiFnd006ResponseOk> {
+    return this.fundingService.getStudentFundingSemester(
       user.studentId,
+      param,
+      body,
     );
-    return result;
   }
 }
