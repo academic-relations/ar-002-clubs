@@ -125,7 +125,7 @@ const ClubCard: React.FC<
 
       <ClubCardTagRow>
         <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
-          {getClubType(club)}
+          {getClubType(club, false)}
         </Tag>
         {isRegistrationPeriod && isLoggedIn && (
           <TextButton
