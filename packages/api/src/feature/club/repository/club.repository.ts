@@ -28,8 +28,7 @@ interface IClubs {
   clubs: {
     type: number;
     id: number;
-    name_kr: string;
-    name_en: string;
+    name: string;
     isPermanent: boolean;
     characteristic: string;
     representative: string;
@@ -100,8 +99,7 @@ export default class ClubRepository {
         clubs: {
           type: ClubT.clubStatusEnumId,
           id: Club.id,
-          name_kr: Club.name_kr,
-          name_en: Club.name_en,
+          name: Club.name_kr,
           isPermanent: sql`COALESCE(MAX(CASE WHEN ${DivisionPermanentClubD.id} IS NOT NULL THEN TRUE ELSE FALSE END), FALSE)`,
           characteristic: ClubT.characteristicKr,
           representative: Student.name,
@@ -178,8 +176,7 @@ export default class ClubRepository {
   async findClubActivities(studentId: number): Promise<{
     clubs: {
       id: number;
-      name_kr: string;
-      name_en: string;
+      name: string;
       startMonth: Date;
       endMonth: Date;
     }[];
@@ -192,8 +189,7 @@ export default class ClubRepository {
       .then(rows =>
         rows.map(row => ({
           id: row.club_student_t.clubId,
-          name_kr: row.club.name_kr,
-          name_en: row.club.name_en,
+          name: row.club.name_kr,
           startMonth: row.club_student_t.startTerm,
           endMonth: row.club_student_t.endTerm,
         })),

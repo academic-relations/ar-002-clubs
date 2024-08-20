@@ -23,8 +23,7 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     id: z.coerce.number().int().min(1),
     clubId: z.coerce.number().int().min(1),
-    clubNameKr: z.string(),
-    clubNameEn: z.string(),
+    clubName: z.string(),
     studentName: z.string(),
     studentPhoneNumber: zKrPhoneNumber,
     objects: z.array(
