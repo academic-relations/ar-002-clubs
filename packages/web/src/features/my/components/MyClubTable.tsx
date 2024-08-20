@@ -87,7 +87,7 @@ const MyClubTable: React.FC<MyClubTableProps> = ({ clubRegisterList }) => {
     enableSorting: false,
   });
 
-  return <Table table={table} />;
+  return <Table table={table} emptyMessage="동아리 등록 내역이 없습니다." />;
 };
 
 export default MyClubTable;
