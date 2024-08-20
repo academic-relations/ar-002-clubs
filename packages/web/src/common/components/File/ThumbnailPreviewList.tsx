@@ -18,6 +18,7 @@ const ThumbnailPreviewList = ({ fileList }: ThumbnailPreviewListProps) => (
         direction="row"
         style={{
           overflow: "auto",
+          paddingBottom: "14px",
         }}
       >
         {fileList.map((file, index) => (
