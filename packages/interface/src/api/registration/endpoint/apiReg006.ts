@@ -30,7 +30,15 @@ const responseBodyMap = {
     ),
   }),
   [HttpStatusCode.NoContent]: z.object({
-    applies: z.array(z.object({})),
+    applies: z.array(
+      z.object({
+        id: z.coerce.number().int().min(1),
+        clubId: z.coerce.number().int().min(1),
+        applyStatusEnumId: z.nativeEnum(
+          RegistrationApplicationStudentStatusEnum,
+        ),
+      }),
+    ),
   }),
 };
 
