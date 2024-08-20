@@ -94,10 +94,10 @@ const FundingTagList: {
 const ApplyTagList: {
   [key in ActivityStatusEnum]: StatusDetail;
 } = {
-  [ActivityStatusEnum.Writing]: { text: "작성 중", color: "BLUE" },
-  [ActivityStatusEnum.Applied]: { text: "신청 완료", color: "PURPLE" },
-  [ActivityStatusEnum.Approved]: { text: "승인 완료", color: "GREEN" },
-  [ActivityStatusEnum.Rejected]: { text: "신청 반려", color: "RED" },
+  [ActivityStatusEnum.Committe]: { text: "운위", color: "ORANGE" },
+  [ActivityStatusEnum.Applied]: { text: "신청", color: "BLUE" },
+  [ActivityStatusEnum.Approved]: { text: "승인", color: "GREEN" },
+  [ActivityStatusEnum.Rejected]: { text: "반려", color: "RED" },
 };
 
 const ProfessorApprovalTagList: {
