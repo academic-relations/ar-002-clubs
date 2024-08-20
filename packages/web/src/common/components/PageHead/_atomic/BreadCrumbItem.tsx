@@ -32,12 +32,7 @@ const BreadCrumbItem: React.FC<BreadCrumbItemProps> = ({
   disabled = false,
 }) => (
   <BreadCrumbInner disabled={disabled}>
-    <ResponsiveTypography
-      fs={16}
-      lh={20}
-      fw="MEDIUM"
-      onClick={!disabled ? onClick : undefined}
-    >
+    <ResponsiveTypography fw="MEDIUM" onClick={!disabled ? onClick : undefined}>
       {text}
     </ResponsiveTypography>
   </BreadCrumbInner>

@@ -21,12 +21,20 @@ const InfoInner = styled.div`
   background: ${({ theme }) => theme.colors.WHITE};
 `;
 
+const ResponsiveTypography = styled(Typography)`
+  font-size: 16px;
+  line-height: 24px;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 14px;
+    line-height: 20px;
+  }
+`;
+
 const Info: React.FC<InfoProps> = ({ text }) => (
   <InfoInner>
     <Icon type="info_outlined" size={20} />
-    <Typography fs={16} lh={24} fw="REGULAR">
-      {text}
-    </Typography>
+    <ResponsiveTypography fw="REGULAR">{text}</ResponsiveTypography>
   </InfoInner>
 );
 
