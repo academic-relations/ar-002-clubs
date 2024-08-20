@@ -113,7 +113,11 @@ const ClubCard: React.FC<
       </ClubCardNameRow>
 
       <ClubCardRow>
-        {club.advisor === null
+        {club.advisor === "null" ||
+        club.advisor === "undefined" ||
+        club.advisor === undefined ||
+        club.advisor === null ||
+        club.advisor === ""
           ? `회장 ${club.representative}`
           : `회장 ${club.representative} | 지도교수 ${club.advisor}`}
       </ClubCardRow>
