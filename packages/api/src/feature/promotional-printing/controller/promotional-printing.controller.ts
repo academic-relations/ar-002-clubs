@@ -95,7 +95,7 @@ export class PromotionalPrintingController {
   @Get("/student/promotional-printings/orders/order/:orderId")
   @UsePipes(new ZodPipe(apiPrt003))
   async getStudentPromotionalPrintingsOrder(
-    @GetStudent() user: GetStudent, // Q1 이거를 아래 param interface에 포함시키지 않아도 되는가?
+    @GetStudent() user: GetStudent,
     @Param() parameter: ApiPrt003RequestParam,
   ): Promise<ApiPrt003ResponseOk> {
     const order =
