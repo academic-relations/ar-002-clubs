@@ -9,7 +9,10 @@ import {
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { RegistrationStatusTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import { mockMemberRegister } from "@sparcs-clubs/web/features/my/services/_mock/mockMyRegister";
+import {
+  mockClubRegister,
+  mockMemberRegister,
+} from "@sparcs-clubs/web/features/my/services/_mock/mockMyRegister";
 import {
   getTagColorFromClubType,
   getTagColorFromDivision,
@@ -83,8 +86,10 @@ const MyMemberTable: React.FC<MyMemberTableProps> = ({
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
-
-  return <Table table={table} />;
+  const getRowLink = (row: (typeof mockClubRegister)["items"][number]) => ({
+    pathname: `/clubs/${row.clubId.toString()}`,
+  });
+  return <Table table={table} rowLink={getRowLink} />;
 };
 
 export default MyMemberTable;
