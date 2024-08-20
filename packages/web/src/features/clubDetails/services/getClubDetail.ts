@@ -20,10 +20,6 @@ export const useGetClubDetail = (club_id: string) =>
         {},
       );
 
-      if (data.advisor == null) {
-        data.advisor = "-";
-      }
-
       // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
       switch (status) {
         case 200:

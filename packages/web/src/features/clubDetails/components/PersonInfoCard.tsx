@@ -18,7 +18,14 @@ const PersonInfoCard: React.FC<PersonInfoCardProps> = ({ club }) => (
     <PersonInfoItem title="대표자" content={club.representative} />
     <PersonInfoItem
       title="지도교수"
-      content={club.advisor ? club.advisor : "-"}
+      content={
+        club.advisor === null ||
+        club.advisor === undefined ||
+        club.advisor === "null" ||
+        club.advisor === "undefined"
+          ? "-"
+          : club.advisor
+      }
     />
   </Card>
 );
