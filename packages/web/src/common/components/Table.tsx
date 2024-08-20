@@ -13,7 +13,7 @@ interface TableProps<T> {
   emptyMessage?: string;
   count?: number;
   footer?: React.ReactNode;
-  rowLink?: (row: T) => string | { pathname: string } | undefined;
+  rowLink?: (row: T) => string | { pathname: string };
 }
 const TableInnerWrapper = styled.div`
   width: calc(100% + (100vw - 100%));
