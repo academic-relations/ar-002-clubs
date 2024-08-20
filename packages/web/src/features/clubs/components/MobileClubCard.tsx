@@ -54,17 +54,12 @@ const ClubCardNameRow = styled.div`
 `;
 
 const ClubCharacteristic = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-self: stretch;
-  justify-content: center;
   width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 14px;
   line-height: 16px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `;
 
 const ClubCardRow = styled.div`
@@ -72,9 +67,6 @@ const ClubCardRow = styled.div`
   flex: 1 0 0;
   align-items: center;
   justify-content: space-between;
-`;
-
-const TextButtonWrapper = styled.div`
   white-space: nowrap;
   align-self: stretch;
 `;
@@ -138,18 +130,14 @@ const MobileClubCard: React.FC<
       <ClubCardRow>
         <ClubCharacteristic>{club.characteristic}</ClubCharacteristic>
         {isRegistrationPeriod && isLoggedIn && (
-          <TextButtonWrapper>
-            <TextButton
-              text={isRegistered ? "신청 취소" : "등록 신청"}
-              onClick={handleRegister}
-              fs={14}
-            />
-          </TextButtonWrapper>
+          <TextButton
+            text={isRegistered ? "신청 취소" : "등록 신청"}
+            onClick={handleRegister}
+            fs={14}
+          />
         )}
         {!isRegistrationPeriod && isRegistered && isLoggedIn && (
-          <TextButtonWrapper>
-            <TextButton text="승인 대기" disabled fs={14} />
-          </TextButtonWrapper>
+          <TextButton text="승인 대기" disabled fs={14} />
         )}
       </ClubCardRow>
     </Card>
