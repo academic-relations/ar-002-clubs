@@ -45,11 +45,11 @@ const MyRegisterClubDetail = () => {
   const router = useRouter();
   const professorEnumToText = (profEnum: ProfessorEnum) => {
     switch (profEnum) {
-      case 1:
+      case ProfessorEnum.Assistant:
         return "조교수";
-      case 2:
+      case ProfessorEnum.Associate:
         return "부교수";
-      case 3:
+      case ProfessorEnum.Full:
       default:
         return "정교수";
     }
