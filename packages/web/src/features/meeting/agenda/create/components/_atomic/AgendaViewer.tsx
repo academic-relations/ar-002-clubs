@@ -23,11 +23,7 @@ const AgendaViewer: React.FC<AgendaViewerProps> = ({
   onEdit,
 }: AgendaViewerProps) => (
   <Card outline gap={32} style={{ marginLeft: 32 }}>
-    <TextArea>
-      {
-        `제목: ${agendaContent.title} / 내용: ${agendaContent.content}` /* TODO: set appropriate text */
-      }
-    </TextArea>
+    <TextArea>{agendaContent.content ?? "내용 없음"}</TextArea>
     <FlexWrapper gap={10} direction="row" style={{ marginLeft: "auto" }}>
       <Button onClick={onDelete}>삭제</Button>
       <Button onClick={onEdit}>수정</Button>

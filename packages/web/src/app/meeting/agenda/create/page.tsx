@@ -18,6 +18,11 @@ const AgendaCreate: React.FC = () => {
       content: "술박스가 5조 5억개 있습니다.",
     },
     {
+      type: AgendaTypeEnum.Discuss,
+      title: "술박스 구입 개수 논의",
+      content: "술박스를 10개 구입하기로 결정했습니다.",
+    },
+    {
       type: AgendaTypeEnum.Approval,
       title: "술박스 구입 허락",
       content: "술박스 구입이 허락되었습니다.",

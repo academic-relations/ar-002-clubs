@@ -10,12 +10,17 @@ import MeetingAttendanceFrame, {
   President,
 } from "@sparcs-clubs/web/features/meeting/agenda/create/frames/MeetingAttendanceFrame";
 
+import EditAgendaListFrame from "./EditAgendaListFrame";
+
 interface EditAgendaFrameProps {
   agendaList: AgendaContent[];
   setAgendaList: (agendaContent: AgendaContent[]) => void;
 }
 
-const EditAgendaFrame: React.FC<EditAgendaFrameProps> = () => {
+const EditAgendaFrame: React.FC<EditAgendaFrameProps> = ({
+  agendaList,
+  setAgendaList,
+}: EditAgendaFrameProps) => {
   const mockPresidentList: President[] = [
     { position: "회장", name: "권혁원" },
     { position: "부회장", name: "조현준" },
@@ -63,6 +68,10 @@ const EditAgendaFrame: React.FC<EditAgendaFrameProps> = () => {
         presidentList={mockPresidentList}
         clubRepresentativeList={mockClubRepresentativeList}
         divisionPresidentList={mockDivisionPresidentList}
+      />
+      <EditAgendaListFrame
+        agendaList={agendaList}
+        setAgendaList={setAgendaList}
       />
     </FlexWrapper>
   );
