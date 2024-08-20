@@ -8,23 +8,23 @@ import ImagePreview from "./_atomic/ImagePreview";
 import UnsupportedPreview from "./_atomic/UnsupportedPreview";
 
 interface ThumbnailPreviewProps {
-  fileUrl: string;
+  fileSrc: string;
   fileName: string;
 }
 
 const ThumbnailPreview: React.FC<ThumbnailPreviewProps> = ({
-  fileUrl,
+  fileSrc,
   fileName,
 }: ThumbnailPreviewProps) => {
   const fileExt = fileName.split(".").pop() || "unknown";
 
   const previewSupportFile = ["png", "jpeg", "jpg", "webp"];
-  const isPreviewSupported = previewSupportFile.includes(fileExt);
+  const isPreviewSupported = previewSupportFile.includes(fileExt.toLowerCase());
 
   return (
     <FlexWrapper gap={8} direction="column" style={{ width: "160px" }}>
       {isPreviewSupported ? (
-        <ImagePreview src={fileUrl} />
+        <ImagePreview src={fileSrc} />
       ) : (
         <UnsupportedPreview />
       )}
