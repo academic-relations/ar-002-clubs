@@ -114,8 +114,6 @@ export class PromotionalPrintingService {
     parameter: ApiPrt003RequestParam,
     reqStudentID: number,
   ): Promise<ApiPrt003ResponseOk> {
-    const mockUpStudentId = 605; // 하승종 Id
-
     const search = await this.promotionalPrintingOrderRepository.findByOrderId(
       parameter.orderId,
     );
