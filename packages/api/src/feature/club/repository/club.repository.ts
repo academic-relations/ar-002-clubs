@@ -207,7 +207,7 @@ export default class ClubRepository {
       .then(result =>
         result[0]
           ? { name_kr: result[0].name_kr, name_en: result[0].name_en }
-          : null,
+          : undefined,
       );
   }
 
