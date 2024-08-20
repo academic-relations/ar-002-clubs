@@ -10,7 +10,7 @@ import {
 
 import apiPrt001 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
 import apiPrt002 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt002";
-import apiprt003 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt003";
+import apiPrt003 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt003";
 import apiPrt005 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt005";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
@@ -93,7 +93,7 @@ export class PromotionalPrintingController {
   }
 
   @Get("/student/promotional-printings/orders/order/:orderId")
-  @UsePipes(new ZodPipe(apiprt003))
+  @UsePipes(new ZodPipe(apiPrt003))
   async getStudentPromotionalPrintingsOrder(
     @GetStudent() user: GetStudent,
     @Param() parameter: ApiPrt003RequestParam,
