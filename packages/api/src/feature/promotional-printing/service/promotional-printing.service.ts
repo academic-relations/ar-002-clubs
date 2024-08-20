@@ -136,21 +136,6 @@ export class PromotionalPrintingService {
         HttpStatus.FORBIDDEN,
       );
 
-    const representatives =
-      await this.clubDelegateDRepository.findRepresentativeIdListByClubId(
-        order.clubId,
-      );
-    logger.debug(
-      `[getStudentPromotionalPrintingsOrder] ${order.clubId}'s current representatives are ${representatives}`,
-    );
-    if (
-      order.studentId !== mockUpStudentId &&
-      representatives.find(row => row.studentId === order.studentId) ===
-        undefined
-    ) {
-      throw new HttpException("permission denied", HttpStatus.FORBIDDEN);
-    }
-
     const orders =
       await this.promotionalPrintingOrderSizeRepository.findPromotionalPrintingOrderSizeByPromotionalPrintingOrderId(
         order.id,
