@@ -16,11 +16,6 @@ const Clubs: React.FC = () => {
   const { data, isLoading, isError } = useGetClubsList();
   const isRegistrationPeriod = true;
   const [searchText, setSearchText] = useState<string>("");
-  // const searchFilter = item => return (
-  //   item.name.includes(searchText.toLowerCase()) ||
-  //     item.name.includes(searchText.toUpperCase()) ||
-  //     hangulIncludes(item.name, searchText);
-  // );
 
   return (
     <FlexWrapper direction="column" gap={60}>
