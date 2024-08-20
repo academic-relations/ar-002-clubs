@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 
+import { hangulIncludes } from "es-hangul";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Info from "@sparcs-clubs/web/common/components/Info";
@@ -35,7 +37,12 @@ const Clubs: React.FC = () => {
             <ClubsSectionFrame
               title={division.name}
               clubList={division.clubs
-                .filter(item => item.name.startsWith(searchText))
+                .filter(
+                  item =>
+                    item.name.includes(searchText.toLowerCase()) ||
+                    item.name.includes(searchText.toUpperCase()) ||
+                    hangulIncludes(item.name, searchText),
+                )
                 .sort((a, b) => {
                   if (a.isPermanent && !b.isPermanent) return -1;
                   if (!a.isPermanent && b.isPermanent) return 1;
