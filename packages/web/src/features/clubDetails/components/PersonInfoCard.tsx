@@ -22,7 +22,8 @@ const PersonInfoCard: React.FC<PersonInfoCardProps> = ({ club }) => (
         club.advisor === null ||
         club.advisor === undefined ||
         club.advisor === "null" ||
-        club.advisor === "undefined"
+        club.advisor === "undefined" ||
+        club.advisor === ""
           ? "-"
           : club.advisor
       }
