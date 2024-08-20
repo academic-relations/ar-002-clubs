@@ -1,5 +1,3 @@
-import React from "react";
-
 import apiReg006 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 
 import { useQuery } from "@tanstack/react-query";
@@ -23,6 +21,7 @@ export const useGetMyClub = () =>
         apiReg006.url(),
         {},
       );
+      console.log(data);
       switch (status) {
         case 200:
           return apiReg006.responseBodyMap[200].parse(data);
@@ -35,22 +34,3 @@ export const useGetMyClub = () =>
 defineAxiosMock(mock => {
   mock.onGet(apiReg006.url()).reply(() => [200, mockupRegistraion]);
 });
-
-export const useIsInClub = (club_id: number): [number, boolean] => {
-  const { data, isLoading } = useGetMyClub();
-
-  const isInClub = React.useMemo(() => {
-    if (data) {
-      const matchingApply = data.applies.find(
-        (apply: { clubId: number }) => apply.clubId === club_id,
-      );
-      if (matchingApply) {
-        return matchingApply.applyStatusEnumId;
-      }
-      return 0;
-    }
-    return 0;
-  }, [data, club_id]);
-
-  return [isInClub, isLoading];
-};

@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 
+import { RegistrationStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
 import { overlay } from "overlay-kit";
 
 import styled from "styled-components";
@@ -19,7 +21,8 @@ import ClubDetailCard from "@sparcs-clubs/web/features/clubDetails/components/Cl
 import ClubInfoCard from "@sparcs-clubs/web/features/clubDetails/components/ClubInfoCard";
 import PersonInfoCard from "@sparcs-clubs/web/features/clubDetails/components/PersonInfoCard";
 
-import { useIsInClub } from "../services/getMyClub";
+import { useIsInClub } from "@sparcs-clubs/web/hooks/isInClub";
+
 import { useRegisterClub } from "../services/registerClub";
 
 import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
@@ -57,41 +60,44 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
 }) => {
   const { isLoggedIn } = useAuth();
 
-  const [isInclubFromHook, clubLoading] = useIsInClub(club.id);
+  const [isInClubFromHook, clubLoading] = useIsInClub(
+    club.id,
+    isRegistrationPeriod,
+  );
 
-  const [isInclub, setIsInclub] = useState(0);
+  const [isInClub, setIsInclub] = useState(RegistrationStatusEnum.Rejected);
   const localError = false;
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // 초기값 설정
-    if (!clubLoading && isRegistrationPeriod) {
-      setIsInclub(isInclubFromHook);
+    if (!clubLoading) {
+      setIsInclub(isInClubFromHook);
       setLoading(clubLoading);
     }
-  }, [isInclubFromHook, clubLoading]);
+  }, [isInClubFromHook, clubLoading]);
 
   const ToggleRegistered = async (close: () => void) => {
     close();
-    setIsInclub(1);
+    setIsInclub(RegistrationStatusEnum.Pending);
     await useRegisterClub(club.id);
   };
 
-  const ToggleUnRegistered = async (close: () => void) => {
+  const ToggleUnregistered = async (close: () => void) => {
     // await useRegisterClub(club.id);
     close();
-    setIsInclub(0);
+    setIsInclub(RegistrationStatusEnum.Rejected);
   };
 
   const submitHandler = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen} onClose={close}>
-        {isInclub === 1 ? (
+        {isInClub === RegistrationStatusEnum.Pending ? (
           <CancellableModalContent
             onClose={close}
             onConfirm={async () => {
               /* TODO : 가입 취소 API 구현 시 연결 */
-              ToggleUnRegistered(close);
+              ToggleUnregistered(close);
             }}
           >
             2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
@@ -115,14 +121,14 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   };
 
   const renderButton = () => {
-    if (isInclub === 1) {
+    if (isInClub === RegistrationStatusEnum.Pending) {
       return (
         <Button type="default" onClick={submitHandler}>
           회원 등록 취소
         </Button>
       );
     }
-    if (isInclub === 2) {
+    if (isInClub === RegistrationStatusEnum.Approved) {
       return (
         <Button type="disabled" onClick={submitHandler}>
           회장 승인 완료

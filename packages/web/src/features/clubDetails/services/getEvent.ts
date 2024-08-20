@@ -12,7 +12,7 @@ import { mockupEvents } from "./_mock/mockupEvent";
 
 import type { ApiReg004ResponseOK } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg004";
 
-export const GetEvents = () =>
+export const useGetEvents = () =>
   useQuery<ApiReg004ResponseOK, Error>({
     queryKey: [apiReg004.url()],
 
@@ -21,6 +21,8 @@ export const GetEvents = () =>
         apiReg004.url(),
         {},
       );
+
+      console.log(data);
       switch (status) {
         case 200:
           return apiReg004.responseBodyMap[200].parse(data);
@@ -33,31 +35,3 @@ export const GetEvents = () =>
 defineAxiosMock(mock => {
   mock.onGet(apiReg004.url()).reply(() => [200, mockupEvents]);
 });
-
-export const checkResisteringPeriod = (): [boolean, boolean] => {
-  const { data, error, isLoading } = GetEvents();
-
-  if (isLoading) {
-    return [false, true];
-  }
-
-  if (error) {
-    return [false, false];
-  }
-
-  if (!data) {
-    return [false, false];
-  }
-
-  const currentDate = new Date();
-
-  const matchingEvent = data.events.find(
-    (event: { endTerm: Date; startTerm: Date }) =>
-      currentDate <= event.endTerm && currentDate >= event.startTerm,
-  );
-
-  if (matchingEvent?.registrationEventEnumId === 1) {
-    return [true, false];
-  }
-  return [false, false];
-};
