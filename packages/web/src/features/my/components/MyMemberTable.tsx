@@ -84,7 +84,7 @@ const MyMemberTable: React.FC<MyMemberTableProps> = ({
     enableSorting: false,
   });
 
-  return <Table table={table} />;
+  return <Table table={table} emptyMessage="회원 등록 내역이 없습니다." />;
 };
 
 export default MyMemberTable;
