@@ -36,7 +36,7 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
     if (data == null) return null;
 
     if (data?.meetingType === "분과회의") {
-      return MeetingTemplate.SubcommitteeMeetingTemplate(data);
+      return MeetingTemplate.SubcommitteeMeetingTemplate();
     }
     return MeetingTemplate.defaultTemplate(data);
   };

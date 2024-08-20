@@ -28,6 +28,13 @@ const RowFlexWrapper = styled.div`
     flex: 1;
   }
 `;
+
+const GridView = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 32px;
+`;
 const AlignEnd = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -98,7 +105,7 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
         </FlexWrapper>
         {hasValue &&
           (!isSubcommitteeMeeting ? (
-            <RowFlexWrapper>
+            <GridView>
               <FormController
                 name="date"
                 control={control}
@@ -135,13 +142,26 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
                 renderItem={props => (
                   <TextInput
                     {...props}
-                    label="장소"
+                    label="장소 (국문)"
                     placeholder="장소를 입력해주세요"
                     disabled={readOnly}
                   />
                 )}
               />
-            </RowFlexWrapper>
+              <FormController
+                name="locationEn"
+                required={!isSubcommitteeMeeting}
+                control={control}
+                renderItem={props => (
+                  <TextInput
+                    {...props}
+                    label="장소 (영문)"
+                    placeholder="장소를 입력해주세요"
+                    disabled={readOnly}
+                  />
+                )}
+              />
+            </GridView>
           ) : (
             <RowFlexWrapper>
               <FormController

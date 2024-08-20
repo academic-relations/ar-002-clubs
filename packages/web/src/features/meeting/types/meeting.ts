@@ -6,6 +6,7 @@ export interface CreateMeetingModel {
   startDate: Date;
   endDate?: Date;
   location?: string;
+  locationEn?: string;
   isRegular: boolean;
 }
 
