@@ -48,23 +48,25 @@ const Clubs: React.FC = () => {
             division =>
               division.clubs.filter(
                 item =>
-                  item.name.includes(searchText.toLowerCase()) ||
-                  item.name.includes(searchText.toUpperCase()) ||
-                  hangulIncludes(item.name, searchText),
+                  item.name_kr.includes(searchText.toLowerCase()) ||
+                  item.name_kr.includes(searchText.toUpperCase()) ||
+                  hangulIncludes(item.name_kr, searchText),
               ).length !== 0 && (
                 <ClubsSectionFrame
                   title={division.name}
                   clubList={division.clubs
                     .filter(
                       item =>
-                        item.name.includes(searchText.toLowerCase()) ||
-                        item.name.includes(searchText.toUpperCase()) ||
-                        hangulIncludes(item.name, searchText),
+                        item.name_kr.includes(searchText.toLowerCase()) ||
+                        item.name_kr.includes(searchText.toUpperCase()) ||
+                        hangulIncludes(item.name_kr, searchText),
                     )
                     .sort((a, b) => {
                       if (a.isPermanent && !b.isPermanent) return -1;
                       if (!a.isPermanent && b.isPermanent) return 1;
-                      return a.type - b.type || a.name.localeCompare(b.name);
+                      return (
+                        a.type - b.type || a.name_kr.localeCompare(b.name_kr)
+                      );
                     })}
                   key={division.name}
                   isRegistrationPeriod={isRegistrationPeriod}
