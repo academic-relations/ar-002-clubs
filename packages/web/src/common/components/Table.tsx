@@ -48,10 +48,11 @@ const Content = styled.tbody`
   overflow-y: auto;
   width: 100%;
 `;
-const ContentRow = styled.tr<{ selected: boolean }>`
+const ContentRow = styled.tr<{ selected: boolean; isClickable: boolean }>`
   width: 100%;
   display: flex;
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+  cursor: ${({ isClickable }) => (isClickable ? "pointer" : "default")};
   background-color: ${({ selected, theme }) =>
     selected ? theme.colors.MINT[100] : "transparent"};
 `;
@@ -158,6 +159,7 @@ const Table = <T,>({
                 <ContentRow
                   key={row.id}
                   selected={row.getIsSelected()}
+                  isClickable={!!rowLink}
                   onClick={() => handleRowClick(row.original)}
                 >
                   {row.getVisibleCells().map(cell => (
