@@ -15,6 +15,11 @@ const PersonInfoItemInner = styled.div`
   gap: 40px;
   font-size: 16px;
   line-height: 24px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 14px;
+    line-height: 20px;
+    gap: 12px;
+  }
   justify-content: center;
 `;
 
