@@ -83,8 +83,16 @@ const MyMemberTable: React.FC<MyMemberTableProps> = ({
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
-
-  return <Table table={table} emptyMessage="회원 등록 내역이 없습니다." />;
+  const getRowLink = (row: (typeof mockMemberRegister)["items"][number]) => ({
+    pathname: `/clubs/${row.clubId.toString()}`,
+  });
+  return (
+    <Table
+      table={table}
+      rowLink={getRowLink}
+      emptyMessage="회원 등록 내역이 없습니다."
+    />
+  );
 };
 
 export default MyMemberTable;
