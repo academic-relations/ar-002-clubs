@@ -85,6 +85,6 @@ const MyClubTable: React.FC<MyClubTableProps> = ({ clubRegisterList }) => {
   const getRowLink = (row: (typeof mockClubRegister)["items"][number]) => ({
     pathname: `/my/register-club/${row.clubId.toString()}`,
   });
-  return <Table table={table} rowLink={getRowLink} />;
+  return <Table table={table} rowLink={getRowLink} emptyMessage="동아리 등록 내역이 없습니다." />;
 };
 export default MyClubTable;

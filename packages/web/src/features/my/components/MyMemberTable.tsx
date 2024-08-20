@@ -89,7 +89,7 @@ const MyMemberTable: React.FC<MyMemberTableProps> = ({
   const getRowLink = (row: (typeof mockClubRegister)["items"][number]) => ({
     pathname: `/clubs/${row.clubId.toString()}`,
   });
-  return <Table table={table} rowLink={getRowLink} />;
+  return <Table table={table} rowLink={getRowLink} emptyMessage="회원 등록 내역이 없습니다." />;
 };
 
 export default MyMemberTable;

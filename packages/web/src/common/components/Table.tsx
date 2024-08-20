@@ -60,6 +60,7 @@ const EmptyCenterPlacer = styled.div`
   height: 100%;
   display: flex;
   flex: 1;
+  padding: 12px 8px 12px 8px;
   justify-content: center;
   align-items: center;
 `;
