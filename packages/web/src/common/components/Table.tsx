@@ -24,6 +24,7 @@ const TableInner = styled.table<{ height?: number }>`
   flex-direction: column;
   align-items: flex-start;
   min-width: 100%;
+  width: fit-content;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
   border-radius: 8px;
   overflow: hidden;
@@ -117,7 +118,7 @@ const Table = <T,>({
                     return (
                       <TableCell
                         key={header.id}
-                        width={header.getSize()}
+                        width={header.column.getSize()}
                         type="HeaderSort"
                       >
                         {flexRender(
@@ -130,7 +131,7 @@ const Table = <T,>({
                   return (
                     <TableCell
                       key={header.id}
-                      width={header.getSize()}
+                      width={header.column.getSize()}
                       type="Header"
                     >
                       {flexRender(
