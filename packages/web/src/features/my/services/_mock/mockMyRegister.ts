@@ -1,6 +1,6 @@
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import {
-  RegistrationEventEnum,
+  RegistrationDeadlineEnum,
   RegistrationStatusEnum,
   RegistrationTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
@@ -55,8 +55,8 @@ const mockMemberRegister = {
   offset: 4,
 };
 const mockRegisterPeriod = [
-  RegistrationEventEnum.ClubRegistrationApplication,
-  RegistrationEventEnum.StudentRegistrationApplication,
+  RegistrationDeadlineEnum.ClubRegistrationApplication,
+  RegistrationDeadlineEnum.StudentRegistrationApplication,
 ];
 
 export { mockClubRegister, mockMemberRegister, mockRegisterPeriod };

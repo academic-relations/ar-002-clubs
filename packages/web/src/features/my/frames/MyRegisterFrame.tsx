@@ -1,6 +1,6 @@
 import React from "react";
 
-import { RegistrationEventEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -16,16 +16,16 @@ import {
 
 const MyRegisterFrame: React.FC = () =>
   (mockRegisterPeriod.includes(
-    RegistrationEventEnum.ClubRegistrationApplication,
+    RegistrationDeadlineEnum.ClubRegistrationApplication,
   ) ||
     mockRegisterPeriod.includes(
-      RegistrationEventEnum.StudentRegistrationApplication,
+      RegistrationDeadlineEnum.StudentRegistrationApplication,
     )) && (
     <FoldableSectionTitle title="동아리 신청 내역">
       <AsyncBoundary isLoading={false} isError={false}>
         <FlexWrapper direction="column" gap={40}>
           {mockRegisterPeriod.includes(
-            RegistrationEventEnum.ClubRegistrationApplication,
+            RegistrationDeadlineEnum.ClubRegistrationApplication,
           ) && (
             <FlexWrapper direction="column" gap={20}>
               <MoreDetailTitle
@@ -43,7 +43,7 @@ const MyRegisterFrame: React.FC = () =>
             </FlexWrapper>
           )}
           {mockRegisterPeriod.includes(
-            RegistrationEventEnum.StudentRegistrationApplication,
+            RegistrationDeadlineEnum.StudentRegistrationApplication,
           ) && (
             <FlexWrapper direction="column" gap={20}>
               <MoreDetailTitle
