@@ -32,15 +32,27 @@ const ResponsiveTypography = styled(Typography)`
 `;
 
 const ResponsiveIcon = styled(Icon)`
-  font-size: 20px;
+  font-size: 20px !important;
+
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
-    font-size: 16px;
+    font-size: 16px !important;
   }
+`;
+
+const IconWrapper = styled.div`
+  height: 24px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    height: 20px;
+  }
+  display: flex;
+  align-items: center;
 `;
 
 const Info: React.FC<InfoProps> = ({ text }) => (
   <InfoInner>
-    <ResponsiveIcon type="info_outlined" size={20} />
+    <IconWrapper>
+      <ResponsiveIcon type="info_outlined" size={20} />
+    </IconWrapper>
     <ResponsiveTypography fw="REGULAR">{text}</ResponsiveTypography>
   </InfoInner>
 );
