@@ -9,10 +9,7 @@ import {
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { RegistrationStatusTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import {
-  mockClubRegister,
-  mockMemberRegister,
-} from "@sparcs-clubs/web/features/my/services/_mock/mockMyRegister";
+import { mockMemberRegister } from "@sparcs-clubs/web/features/my/services/_mock/mockMyRegister";
 import {
   getTagColorFromClubType,
   getTagColorFromDivision,
@@ -86,10 +83,16 @@ const MyMemberTable: React.FC<MyMemberTableProps> = ({
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
-  const getRowLink = (row: (typeof mockClubRegister)["items"][number]) => ({
+  const getRowLink = (row: (typeof mockMemberRegister)["items"][number]) => ({
     pathname: `/clubs/${row.clubId.toString()}`,
   });
-  return <Table table={table} rowLink={getRowLink} emptyMessage="회원 등록 내역이 없습니다." />;
+  return (
+    <Table
+      table={table}
+      rowLink={getRowLink}
+      emptyMessage="회원 등록 내역이 없습니다."
+    />
+  );
 };
 
 export default MyMemberTable;
