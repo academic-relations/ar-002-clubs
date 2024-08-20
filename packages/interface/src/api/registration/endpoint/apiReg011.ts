@@ -32,8 +32,8 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z
     .object({
       id: z.coerce.number().int().min(1),
-      registrationTypeEnum: z.nativeEnum(RegistrationTypeEnum),
-      registrationStatusEnum: z.nativeEnum(RegistrationStatusEnum),
+      registrationTypeEnumId: z.nativeEnum(RegistrationTypeEnum),
+      registrationStatusEnumId: z.nativeEnum(RegistrationStatusEnum),
       clubId: z.coerce.number().int().min(1).optional(),
       clubNameKr: zClubName,
       clubNameEn: zClubName,
@@ -66,7 +66,7 @@ const responseBodyMap = {
       externalInstructionFileName: z.coerce.string().max(255).optional(),
     })
     .refine(args => {
-      switch (args.registrationTypeEnum) {
+      switch (args.registrationTypeEnumId) {
         case RegistrationTypeEnum.NewProvisional:
           if (args.clubId === undefined) return false;
           if (args.clubRuleFileId !== undefined) return false;

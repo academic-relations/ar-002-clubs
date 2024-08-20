@@ -37,7 +37,7 @@ export class ClubRegistrationService {
     studentId: number,
     body: ApiReg001RequestBody,
   ): Promise<ApiReg001ResponseCreated> {
-    await this.validateRegistration(body.clubId, body.registrationTypeEnum);
+    await this.validateRegistration(body.clubId, body.registrationTypeEnumId);
 
     // studentId 일치 확인
     if (studentId !== body.studentId)
@@ -69,7 +69,7 @@ export class ClubRegistrationService {
       ...body,
       foundedAt: await this.transformFoundedAt(
         body.foundedAt,
-        body.registrationTypeEnum,
+        body.registrationTypeEnumId,
       ),
     };
 

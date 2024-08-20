@@ -23,7 +23,7 @@ const requestQuery = z.object({});
 const requestBody = z
   .object({
     clubId: z.coerce.number().int().min(1).optional(),
-    registrationTypeEnum: z.nativeEnum(RegistrationTypeEnum),
+    registrationTypeEnumId: z.nativeEnum(RegistrationTypeEnum),
     clubNameKr: zClubName,
     clubNameEn: zClubName,
     studentId: z.coerce.number().int().min(1), // 동아리 대표자 학생 id
@@ -67,7 +67,7 @@ const requestBody = z
     externalInstructionFileId: z.coerce.string().max(128).optional(),
   })
   .refine(args => {
-    switch (args.registrationTypeEnum) {
+    switch (args.registrationTypeEnumId) {
       case RegistrationTypeEnum.NewProvisional:
         if (args.clubId === undefined) return false;
         if (args.clubRuleFileId !== undefined) return false;

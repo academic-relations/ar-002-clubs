@@ -86,7 +86,7 @@ export class ClubRegistrationRepository {
 
       const [registrationInsertResult] = await tx.insert(Registration).values({
         clubId: body.clubId,
-        registrationApplicationTypeEnumId: body.registrationTypeEnum,
+        registrationApplicationTypeEnumId: body.registrationTypeEnumId,
         clubNameKr: body.clubNameKr,
         clubNameEn: body.clubNameEn,
         studentId: body.studentId,
@@ -160,7 +160,7 @@ export class ClubRegistrationRepository {
               : eq(Registration.clubId, body.clubId),
             eq(
               Registration.registrationApplicationTypeEnumId,
-              body.registrationTypeEnum,
+              body.registrationTypeEnumId,
             ),
             eq(Registration.studentId, studentId),
             isNull(Registration.deletedAt),
@@ -277,8 +277,9 @@ export class ClubRegistrationRepository {
       const registration = await tx
         .select({
           id: Registration.id,
-          registrationTypeEnum: Registration.registrationApplicationTypeEnumId,
-          registrationStatusEnum:
+          registrationTypeEnumId:
+            Registration.registrationApplicationTypeEnumId,
+          registrationStatusEnumId:
             Registration.registrationApplicationStatusEnumId,
           clubId: Registration.clubId,
           clubNameKr: Registration.clubNameKr,

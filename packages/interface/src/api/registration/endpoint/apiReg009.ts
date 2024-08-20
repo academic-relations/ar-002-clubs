@@ -2,10 +2,7 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import { zClubName } from "@sparcs-clubs/interface/common/commonString";
-import {
-  RegistrationStatusEnum,
-  RegistrationTypeEnum,
-} from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 
@@ -26,8 +23,7 @@ const requestQuery = z.object({});
 
 const requestBody = z
   .object({
-    registrationTypeEnum: z.nativeEnum(RegistrationTypeEnum),
-    registrationStatusEnum: z.nativeEnum(RegistrationStatusEnum),
+    registrationTypeEnumId: z.nativeEnum(RegistrationTypeEnum),
     clubId: z.coerce.number().int().min(1).optional(),
     clubNameKr: zClubName,
     clubNameEn: zClubName,
@@ -57,7 +53,7 @@ const requestBody = z
     externalInstructionFileId: z.coerce.string().max(128).optional(),
   })
   .refine(args => {
-    switch (args.registrationTypeEnum) {
+    switch (args.registrationTypeEnumId) {
       case RegistrationTypeEnum.NewProvisional:
         if (args.clubId === undefined) return false;
         if (args.clubRuleFileId !== undefined) return false;
