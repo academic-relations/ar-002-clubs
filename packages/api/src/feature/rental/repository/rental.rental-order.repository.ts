@@ -23,7 +23,8 @@ export class RentalOrderRepository {
       .select({
         id: RentalOrder.id,
         clubId: RentalOrder.clubId,
-        clubName: Club.name,
+        clubNameKR: Club.name_kr,
+        clubNameEN: Club.name_en,
         studentName: Student.name,
         studentPhoneNumber: RentalOrder.studentPhoneNumber,
         purpose: RentalOrder.purpose,

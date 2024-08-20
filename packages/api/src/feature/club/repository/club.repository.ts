@@ -57,7 +57,8 @@ export default class ClubRepository {
     const clubInfo = await this.db
       .select({
         id: Club.id,
-        name: Club.name,
+        name_kr: Club.name_kr,
+        name_en: Club.name_en,
         type: ClubT.clubStatusEnumId,
         characteristic: ClubT.characteristicKr,
         advisor: Professor.name,
@@ -98,7 +99,8 @@ export default class ClubRepository {
         clubs: {
           type: ClubT.clubStatusEnumId,
           id: Club.id,
-          name: Club.name,
+          name_kr: Club.name_kr,
+          name_en: Club.name_en,
           isPermanent: sql`COALESCE(MAX(CASE WHEN ${DivisionPermanentClubD.id} IS NOT NULL THEN TRUE ELSE FALSE END), FALSE)`,
           characteristic: ClubT.characteristicKr,
           representative: Student.name,
@@ -144,7 +146,8 @@ export default class ClubRepository {
         Division.id,
         Division.name,
         Club.id,
-        Club.name,
+        Club.name_kr,
+        Club.name_en,
         ClubT.clubStatusEnumId,
         ClubT.characteristicKr,
         Student.name,
@@ -192,7 +195,7 @@ export default class ClubRepository {
 
   async findClubName(clubId: number): Promise<string> {
     return this.db
-      .select({ name: Club.name })
+      .select({ name_kr: Club.name_kr, name_en: Club.name_en })
       .from(Club)
       .where(eq(Club.id, clubId))
       .then(result => result[0]?.name);
