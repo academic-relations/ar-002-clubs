@@ -45,7 +45,7 @@ export interface Members {
 
 export enum ActivityStatusEnum {
   Applied = 1, // 신청
-  Committe, // 운위
+  Committee, // 운위
   Approved, // 승인
   Rejected, // 반려
 }
@@ -64,7 +64,7 @@ export enum ActivityTypeEnum {
 
 export enum FundingStatusEnum {
   Applied = 1, // 신청
-  Committe, // 운위
+  Committee, // 운위
   Approved, // 승인
   Rejected, // 반려
 }
