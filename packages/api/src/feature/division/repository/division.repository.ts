@@ -33,12 +33,12 @@ export default class DivisionRepository {
     return result;
   }
 
-  async findDivisionById(divisionId: number): Promise<number | null> {
+  async findDivisionById(divisionId: number): Promise<number | undefined> {
     const result = await this.db
       .select({ id: Division.id })
       .from(Division)
       .where(and(eq(Division.id, divisionId), isNull(Division.deletedAt)))
       .then(takeUnique);
-    return result ? result.id : null;
+    return result ? result.id : undefined;
   }
 }

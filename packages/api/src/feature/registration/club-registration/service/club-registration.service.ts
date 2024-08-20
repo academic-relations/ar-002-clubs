@@ -33,6 +33,9 @@ export class ClubRegistrationService {
     private filePublicService: FilePublicService,
   ) {}
 
+  /**
+   * @description 동아리 대표자인지 검증하는 로직은 repository쪽에서 진행됩니다.
+   */
   async postStudentRegistrationClubRegistration(
     studentId: number,
     body: ApiReg001RequestBody,
@@ -49,10 +52,10 @@ export class ClubRegistrationService {
       throw new HttpException("division not found", HttpStatus.NOT_FOUND);
     // 각각의 fileid들이 실제로 존재하는지 확인
     const fileIds = [
-      "activityPlanFileId",
-      "clubRuleFileId",
-      "externalInstructionFileId",
-    ];
+      body.activityPlanFileId ? "activityPlanFileId" : null,
+      body.clubRuleFileId ? "clubRuleFileId" : null,
+      body.externalInstructionFileId ? "externalInstructionFileId" : null,
+    ].filter(Boolean);
     await Promise.all(
       fileIds.map(key => this.filePublicService.getFileInfoById(body[key])),
     );
@@ -73,7 +76,6 @@ export class ClubRegistrationService {
       ),
     };
 
-    // TODO: 활동 id 검증 로직 필요
     const result =
       await this.clubRegistrationRepository.createRegistration(transformedBody);
     return result;
@@ -200,6 +202,9 @@ export class ClubRegistrationService {
     return new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
   }
 
+  /**
+   * @description studentId가 유효한지에 대한 검증은 repository쪽에서 진행됩니다.
+   */
   async putStudentRegistrationsClubRegistration(
     studentId: number,
     applyId: number,
@@ -214,10 +219,10 @@ export class ClubRegistrationService {
       throw new HttpException("division not found", HttpStatus.NOT_FOUND);
     // 각각의 fileid들이 실제로 존재하는지 확인
     const fileIds = [
-      "activityPlanFileId",
-      "clubRuleFileId",
-      "externalInstructionFileId",
-    ];
+      body.activityPlanFileId ? "activityPlanFileId" : null,
+      body.clubRuleFileId ? "clubRuleFileId" : null,
+      body.externalInstructionFileId ? "externalInstructionFileId" : null,
+    ].filter(Boolean);
     await Promise.all(
       fileIds.map(key => this.filePublicService.getFileInfoById(body[key])),
     );
@@ -239,6 +244,9 @@ export class ClubRegistrationService {
     return result;
   }
 
+  /**
+   * @description studentId가 유효한지에 대한 검증은 repository쪽에서 진행됩니다.
+   */
   async deleteStudentRegistrationsClubRegistration(
     studentId: number,
     applyId: number,
@@ -258,6 +266,9 @@ export class ClubRegistrationService {
     return {};
   }
 
+  /**
+   * @description studentId가 유효한지에 대한 검증은 repository쪽에서 진행됩니다.
+   */
   async getStudentRegistrationsClubRegistration(
     studentId: number,
     applyId: number,
@@ -277,6 +288,9 @@ export class ClubRegistrationService {
     return result;
   }
 
+  /**
+   * @description studentId가 유효한지에 대한 검증은 repository쪽에서 진행됩니다.
+   */
   async getStudentRegistrationsClubRegistrationsMy(
     studentId: number,
   ): Promise<ApiReg012ResponseOk> {

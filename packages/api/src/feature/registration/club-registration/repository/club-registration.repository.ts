@@ -13,14 +13,16 @@ import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/en
 import {
   RegistrationEventEnum,
   RegistrationStatusEnum,
+  RegistrationTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
-import { and, count, eq, gt, inArray, isNull, lte, or } from "drizzle-orm";
+import { and, count, eq, gt, gte, inArray, isNull, lte, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/mysql-core";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
+import { ClubDelegateD } from "@sparcs-clubs/api/drizzle/schema/club.schema";
 import { File } from "@sparcs-clubs/api/drizzle/schema/file.schema";
 import {
   Registration,
@@ -51,6 +53,36 @@ export class ClubRegistrationRepository {
   ): Promise<ApiReg001ResponseCreated> {
     const cur = getKSTDate();
     await this.db.transaction(async tx => {
+      if (body.registrationTypeEnumId !== RegistrationTypeEnum.NewProvisional) {
+        const delegate = await tx
+          .select({
+            clubId: ClubDelegateD.clubId,
+            studentId: ClubDelegateD.studentId,
+          })
+          .from(ClubDelegateD)
+          .where(
+            and(
+              eq(ClubDelegateD.studentId, body.studentId),
+              eq(ClubDelegateD.clubId, body.clubId),
+              lte(ClubDelegateD.startTerm, cur),
+              or(
+                gte(ClubDelegateD.endTerm, cur),
+                isNull(ClubDelegateD.endTerm),
+              ),
+              isNull(ClubDelegateD.deletedAt),
+            ),
+          )
+          .for("share")
+          .then(takeUnique);
+        if (!delegate) {
+          tx.rollback();
+          throw new HttpException(
+            "Student is not delegate of the club",
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      }
+
       let professorId;
       if (body.professor) {
         professorId = await tx
@@ -77,11 +109,13 @@ export class ClubRegistrationRepository {
           )
           .for("share")
           .then(takeUnique);
-        if (!professorId)
+        if (!professorId) {
+          tx.rollback();
           throw new HttpException(
             "Professor Not Found",
             HttpStatus.BAD_REQUEST,
           );
+        }
       }
 
       const [registrationInsertResult] = await tx.insert(Registration).values({
@@ -168,11 +202,13 @@ export class ClubRegistrationRepository {
         )
         .for("update")
         .then(takeUnique);
-      if (!registration)
+      if (!registration) {
+        tx.rollback();
         throw new HttpException(
           "No registration found",
           HttpStatus.BAD_REQUEST,
         );
+      }
       let professorId;
       if (body.professor) {
         professorId = await tx
@@ -199,11 +235,13 @@ export class ClubRegistrationRepository {
           )
           .for("share")
           .then(takeUnique);
-        if (!professorId)
+        if (!professorId) {
+          tx.rollback();
           throw new HttpException(
             "Professor Not Found",
             HttpStatus.BAD_REQUEST,
           );
+        }
       }
       const [result] = await tx
         .update(Registration)
@@ -334,6 +372,7 @@ export class ClubRegistrationRepository {
         .for("update")
         .then(takeUnique);
       if (!registration) {
+        tx.rollback();
         throw new HttpException(
           "Registration student or applyId not found",
           HttpStatus.BAD_REQUEST,
