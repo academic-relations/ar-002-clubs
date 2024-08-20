@@ -16,20 +16,30 @@ const BreadCrumbInner = styled.div<{ disabled: boolean }>`
   cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
 `;
 
+const ResponsiveTypography = styled(Typography)`
+  font-size: 16px;
+  line-height: 20px;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 14px;
+    line-height: 16px;
+  }
+`;
+
 const BreadCrumbItem: React.FC<BreadCrumbItemProps> = ({
   text,
   onClick = () => {},
   disabled = false,
 }) => (
   <BreadCrumbInner disabled={disabled}>
-    <Typography
+    <ResponsiveTypography
       fs={16}
       lh={20}
       fw="MEDIUM"
       onClick={!disabled ? onClick : undefined}
     >
       {text}
-    </Typography>
+    </ResponsiveTypography>
   </BreadCrumbInner>
 );
 
