@@ -9,21 +9,12 @@ import {
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { ActTypeTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 import { mockMyClubRegisterAcf } from "@sparcs-clubs/web/features/my/services/_mock/mockMyClubRegisterDetail";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface MyRegisterClubAcfTableProps {
-  clubRegisterAcfList: {
-    items: [
-      {
-        activityName: string;
-        activityType: ActivityTypeEnum;
-        activityPeriod: string;
-      },
-    ];
-  };
+  clubRegisterAcfList: typeof mockMyClubRegisterAcf;
 }
 
 const columnHelper =
@@ -46,15 +37,15 @@ const columns = [
     size: 128,
   }),
 
-  columnHelper.accessor("activityPeriod", {
-    id: "activityPeriod",
-    header: "활동 기간",
-    cell: info => {
-      const { activityStart, activityEnd } = info.row.original;
-      return `${formatDate(activityStart)} ~ ${formatDate(activityEnd)}`;
+  columnHelper.accessor(
+    row => `${formatDate(row.activityStart)} ~ ${formatDate(row.activityEnd)}`,
+    {
+      id: "activityPeriod",
+      header: "활동 기간",
+      cell: info => info.getValue(),
+      size: 255,
     },
-    size: 255,
-  }),
+  ),
 ];
 
 const MyRegisterClubAcfTable: React.FC<MyRegisterClubAcfTableProps> = ({
