@@ -18,14 +18,14 @@ const getTagColorFromClubType = (
   return color;
 };
 
-const getClubType = (club: ClubCardProps["club"]) => {
+const getClubType = (club: ClubCardProps["club"], mobile: boolean) => {
   let clubType: string;
   if (club.isPermanent) {
-    clubType = "상임동아리";
+    clubType = mobile ? "상임" : "상임동아리";
   } else if (club.type === ClubTypeEnum.Regular) {
-    clubType = "정동아리";
+    clubType = mobile ? "정" : "정동아리";
   } else {
-    clubType = "가동아리";
+    clubType = mobile ? "가" : "가동아리";
   }
   return clubType;
 };
