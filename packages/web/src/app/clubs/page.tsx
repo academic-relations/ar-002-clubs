@@ -1,23 +1,30 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
 import { useGetClubsList } from "@sparcs-clubs/web/features/clubs/services/useGetClubsList";
 
 const Clubs: React.FC = () => {
   const { data, isLoading, isError } = useGetClubsList();
   const isRegistrationPeriod = true;
+  const [searchText, setSearchText] = useState<string>("");
 
   return (
     <FlexWrapper direction="column" gap={60}>
       <PageHead
         items={[{ name: "동아리 목록", path: "/clubs" }]}
         title="동아리 목록"
+      />
+      <SearchInput
+        searchText={searchText}
+        handleChange={setSearchText}
+        placeholder="동아리 이름으로 검색하세요"
       />
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         {isRegistrationPeriod && (
@@ -27,11 +34,13 @@ const Clubs: React.FC = () => {
           {(data?.divisions ?? []).map(division => (
             <ClubsSectionFrame
               title={division.name}
-              clubList={division.clubs.sort((a, b) => {
-                if (a.isPermanent && !b.isPermanent) return -1;
-                if (!a.isPermanent && b.isPermanent) return 1;
-                return a.type - b.type || a.name.localeCompare(b.name);
-              })}
+              clubList={division.clubs
+                .filter(item => item.name.startsWith(searchText))
+                .sort((a, b) => {
+                  if (a.isPermanent && !b.isPermanent) return -1;
+                  if (!a.isPermanent && b.isPermanent) return 1;
+                  return a.type - b.type || a.name.localeCompare(b.name);
+                })}
               key={division.name}
               isRegistrationPeriod={isRegistrationPeriod}
             />
