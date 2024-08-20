@@ -1,7 +1,5 @@
 import React from "react";
 
-import mime from "mime";
-
 import FlexWrapper from "../FlexWrapper";
 
 import Typography from "../Typography";
@@ -18,15 +16,10 @@ const ThumbnailPreview: React.FC<ThumbnailPreviewProps> = ({
   fileUrl,
   fileName,
 }: ThumbnailPreviewProps) => {
-  const mimeType = mime.getType(fileName) || "unknown";
+  const fileExt = fileName.split(".").pop() || "unknown";
 
-  const previewSupportFile = [
-    "image/png",
-    "image/jpeg",
-    "image/jpg",
-    "image/webp",
-  ];
-  const isPreviewSupported = previewSupportFile.includes(mimeType);
+  const previewSupportFile = ["png", "jpeg", "jpg", "webp"];
+  const isPreviewSupported = previewSupportFile.includes(fileExt);
 
   return (
     <FlexWrapper gap={8} direction="column" style={{ width: "160px" }}>

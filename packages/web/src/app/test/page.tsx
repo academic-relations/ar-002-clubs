@@ -6,7 +6,7 @@ import ThumbnailPreview from "@sparcs-clubs/web/common/components/File/Thumbnail
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 const Test = () => (
-  <FlexWrapper gap={24} direction="column">
+  <FlexWrapper gap={24} direction="row">
     <ThumbnailPreview
       fileUrl="https://4.img-dpreview.com/files/p/E~TS590x0~articles/3925134721/0266554465.jpeg"
       fileName="parrot.jpeg"
