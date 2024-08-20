@@ -4,6 +4,8 @@ import React, { useState } from "react";
 
 import { hangulIncludes } from "es-hangul";
 
+import styled from "styled-components";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Info from "@sparcs-clubs/web/common/components/Info";
@@ -17,8 +19,17 @@ const Clubs: React.FC = () => {
   const isRegistrationPeriod = true;
   const [searchText, setSearchText] = useState<string>("");
 
+  const ResponsiveWrapper = styled(FlexWrapper)`
+    gap: 60px;
+    direction: column;
+
+    @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+      gap: 40px;
+    }
+  `;
+
   return (
-    <FlexWrapper direction="column" gap={60}>
+    <ResponsiveWrapper direction="column" gap={60}>
       <PageHead
         items={[{ name: "동아리 목록", path: "/clubs" }]}
         title="동아리 목록"
@@ -62,7 +73,7 @@ const Clubs: React.FC = () => {
           )}
         </FlexWrapper>
       </AsyncBoundary>
-    </FlexWrapper>
+    </ResponsiveWrapper>
   );
 };
 

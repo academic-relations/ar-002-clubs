@@ -16,6 +16,9 @@ const PageHeadWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    gap: 12px;
+  }
   align-items: flex-start;
   align-self: stretch;
 `;
