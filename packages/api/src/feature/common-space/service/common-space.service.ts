@@ -1,5 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import logger from "@sparcs-clubs/api/common/util/logger";
+
 import { getKSTDate, isEmptyObject } from "@sparcs-clubs/api/common/util/util";
 import ClubStudentTRepository from "@sparcs-clubs/api/feature/club/repository/club.club-student-t.repository";
 
@@ -25,6 +27,7 @@ import type { ApiCms004ResponseOK } from "@sparcs-clubs/interface/api/common-spa
 import type { ApiCms005ResponseCreated } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms005";
 import type { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
 import type { ApiCms007ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
+import type { ApiCms008ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms008";
 
 @Injectable()
 export class CommonSpaceService {
@@ -235,6 +238,27 @@ export class CommonSpaceService {
         pageOffset - 1,
         itemCount,
       );
+    return result;
+  }
+
+  async getStudentCommonSpacesUsageOrderDetail(
+    orderId: number,
+  ): Promise<ApiCms008ResponseOk> {
+    const order =
+      await this.commonSpaceUsageOrderDRepository.findCommonSpaceUsageOrderById(
+        orderId,
+      );
+    // const { id } = order;
+    logger.debug(order);
+    const result = {
+      orderId,
+      statusEnum: order.statusEnum,
+      spaceName: order.spaceName,
+      chargeStudentName: order.chargeStudentName,
+      startTerm: order.startTerm,
+      endTerm: order.endTerm,
+      createdAt: order.createdAt,
+    };
     return result;
   }
 }
