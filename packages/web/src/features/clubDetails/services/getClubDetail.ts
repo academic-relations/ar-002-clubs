@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import mockupData from "@sparcs-clubs/web/features/clubDetails/services/_mock/mockupClubDetail";
 import {
-  axiosClient,
+  axiosClientWithAuth,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
@@ -15,10 +15,14 @@ export const useGetClubDetail = (club_id: string) =>
   useQuery<ApiClb002ResponseOK, Error>({
     queryKey: [apiClb002.url(club_id)],
     queryFn: async (): Promise<ApiClb002ResponseOK> => {
-      const { data, status } = await axiosClient.get(
+      const { data, status } = await axiosClientWithAuth.get(
         apiClb002.url(club_id),
         {},
       );
+
+      if (data.advisor == null) {
+        data.advisor = "-";
+      }
 
       // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
       switch (status) {

@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import mockupData from "@sparcs-clubs/web/features/clubs/services/_mock/mockupClubData";
 import {
-  axiosClient,
+  axiosClientWithAuth,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
@@ -17,7 +17,10 @@ export const useGetClubsList = () =>
   useQuery<ISuccessResponseType, Error>({
     queryKey: [apiClb001.url()],
     queryFn: async (): Promise<ISuccessResponseType> => {
-      const { data, status } = await axiosClient.get(apiClb001.url(), {});
+      const { data, status } = await axiosClientWithAuth.get(
+        apiClb001.url(),
+        {},
+      );
 
       // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
       switch (status) {
