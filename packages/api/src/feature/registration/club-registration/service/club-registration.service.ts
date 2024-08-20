@@ -14,7 +14,10 @@ import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/en
 import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
 
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
-import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import {
+  RegistrationDeadlineEnum,
+  RegistrationTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
@@ -24,6 +27,8 @@ import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.publi
 
 import { ClubRegistrationRepository } from "../repository/club-registration.repository";
 
+import { ClubRegistrationPublicService } from "./club-registration.public.service";
+
 @Injectable()
 export class ClubRegistrationService {
   constructor(
@@ -31,6 +36,7 @@ export class ClubRegistrationService {
     private clubPublicService: ClubPublicService,
     private divisionPublicService: DivisionPublicService,
     private filePublicService: FilePublicService,
+    private clubRegistrationPublicService: ClubRegistrationPublicService,
   ) {}
 
   /**
@@ -60,14 +66,9 @@ export class ClubRegistrationService {
       fileIds.map(key => this.filePublicService.getFileInfoById(body[key])),
     );
     // 동아리 등록 기간인지 확인
-    const isClubRegistrationEvent =
-      await this.clubRegistrationRepository.isClubRegistrationEvent();
-    if (!isClubRegistrationEvent) {
-      throw new HttpException(
-        "Not a club registration event duration",
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [RegistrationDeadlineEnum.ClubRegistrationApplication],
+    });
     const transformedBody = {
       ...body,
       foundedAt: await this.transformFoundedAt(
@@ -227,14 +228,12 @@ export class ClubRegistrationService {
       fileIds.map(key => this.filePublicService.getFileInfoById(body[key])),
     );
     // 동아리 등록 기간인지 확인
-    const isClubRegistrationEvent =
-      await this.clubRegistrationRepository.isClubRegistrationEvent();
-    if (!isClubRegistrationEvent) {
-      throw new HttpException(
-        "Not a club registration event duration",
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [
+        RegistrationDeadlineEnum.ClubRegistrationApplication,
+        RegistrationDeadlineEnum.ClubRegistrationModification,
+      ],
+    });
     const result =
       await this.clubRegistrationRepository.putStudentRegistrationsClubRegistration(
         studentId,
@@ -251,14 +250,14 @@ export class ClubRegistrationService {
     studentId: number,
     applyId: number,
   ): Promise<ApiReg010ResponseOk> {
-    const isClubRegistrationEvent =
-      await this.clubRegistrationRepository.isClubRegistrationEvent();
-    if (!isClubRegistrationEvent) {
-      throw new HttpException(
-        "Not a club registration event duration",
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    // 동아리 신청, 집행부원 피드백, 동아리 수정 기간인지 확인합니다.
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [
+        RegistrationDeadlineEnum.ClubRegistrationApplication,
+        RegistrationDeadlineEnum.ClubRegistrationModification,
+        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+      ],
+    });
     await this.clubRegistrationRepository.deleteStudentRegistrationsClubRegistration(
       studentId,
       applyId,
@@ -273,13 +272,14 @@ export class ClubRegistrationService {
     studentId: number,
     applyId: number,
   ): Promise<ApiReg011ResponseOk> {
-    const isClubRegistrationEvent =
-      await this.clubRegistrationRepository.isClubRegistrationEvent();
-    if (!isClubRegistrationEvent)
-      throw new HttpException(
-        "Not a club registration event duration",
-        HttpStatus.BAD_REQUEST,
-      );
+    // 동아리 신청, 집행부원 피드백, 동아리 수정 기간인지 확인합니다.
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [
+        RegistrationDeadlineEnum.ClubRegistrationApplication,
+        RegistrationDeadlineEnum.ClubRegistrationModification,
+        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+      ],
+    });
     const result =
       await this.clubRegistrationRepository.getStudentRegistrationsClubRegistration(
         studentId,
@@ -294,13 +294,14 @@ export class ClubRegistrationService {
   async getStudentRegistrationsClubRegistrationsMy(
     studentId: number,
   ): Promise<ApiReg012ResponseOk> {
-    const isClubRegistrationEvent =
-      await this.clubRegistrationRepository.isClubRegistrationEvent();
-    if (!isClubRegistrationEvent)
-      throw new HttpException(
-        "Not a club registration event duration",
-        HttpStatus.BAD_REQUEST,
-      );
+    // 동아리 신청, 집행부원 피드백, 동아리 수정 기간인지 확인합니다.
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [
+        RegistrationDeadlineEnum.ClubRegistrationApplication,
+        RegistrationDeadlineEnum.ClubRegistrationModification,
+        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+      ],
+    });
     const result =
       await this.clubRegistrationRepository.getStudentRegistrationsClubRegistrationsMy(
         studentId,

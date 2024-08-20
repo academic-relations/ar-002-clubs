@@ -6,7 +6,7 @@ import { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/en
 import { ApiReg007ResponseNoContent } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg007";
 import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
 import { ApiReg013ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg013";
-import { RegistrationStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
@@ -109,8 +109,8 @@ export class MemberRegistrationService {
     applyStatusEnumId: number,
   ): Promise<ApiReg007ResponseNoContent> {
     if (
-      applyStatusEnumId !== RegistrationStatusEnum.Approved &&
-      applyStatusEnumId !== RegistrationStatusEnum.Rejected
+      applyStatusEnumId !== RegistrationApplicationStudentStatusEnum.Approved &&
+      applyStatusEnumId !== RegistrationApplicationStudentStatusEnum.Rejected
     )
       throw new HttpException("Invalid status enum", HttpStatus.BAD_REQUEST);
     const isPresident = await this.clubPublicService.isStudentPresident(

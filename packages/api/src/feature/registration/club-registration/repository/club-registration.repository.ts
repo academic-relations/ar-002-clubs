@@ -11,11 +11,11 @@ import { ApiReg010ResponseOk } from "@sparcs-clubs/interface/api/registration/en
 import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
 import {
-  RegistrationEventEnum,
+  RegistrationDeadlineEnum,
   RegistrationStatusEnum,
   RegistrationTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
-import { and, count, eq, gt, gte, inArray, isNull, lte, or } from "drizzle-orm";
+import { and, eq, gt, gte, inArray, isNull, lte, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/mysql-core";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -36,6 +36,24 @@ import {
 @Injectable()
 export class ClubRegistrationRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
+
+  async selectDeadlineByDate(
+    date: Date,
+    enums: Array<RegistrationDeadlineEnum>,
+  ) {
+    const result = await this.db
+      .select()
+      .from(RegistrationDeadlineD)
+      .where(
+        and(
+          lte(RegistrationDeadlineD.startDate, date),
+          gt(RegistrationDeadlineD.endDate, date),
+          inArray(RegistrationDeadlineD.registrationDeadlineEnumId, enums),
+          isNull(RegistrationDeadlineD.deletedAt),
+        ),
+      );
+    return result;
+  }
 
   async findByClubId(clubId: number) {
     const clubs = await this.db
@@ -153,29 +171,6 @@ export class ClubRegistrationRepository {
     return {};
   }
 
-  async isClubRegistrationEvent(): Promise<boolean> {
-    const cur = getKSTDate();
-    const clubRegistrationEventEnum = [
-      RegistrationEventEnum.ClubRegistrationApplication,
-      RegistrationEventEnum.ClubRegistrationModification,
-    ];
-    const { isAvailable } = await this.db
-      .select({ isAvailable: count(RegistrationDeadlineD.id) })
-      .from(RegistrationDeadlineD)
-      .where(
-        and(
-          lte(RegistrationDeadlineD.startDate, cur),
-          gt(RegistrationDeadlineD.endDate, cur),
-          inArray(
-            RegistrationDeadlineD.registrationDeadlineEnumId,
-            clubRegistrationEventEnum,
-          ),
-        ),
-      )
-      .then(takeUnique);
-    return isAvailable === 1;
-  }
-
   async putStudentRegistrationsClubRegistration(
     studentId: number,
     applyId: number,
@@ -184,7 +179,10 @@ export class ClubRegistrationRepository {
     const cur = getKSTDate();
     await this.db.transaction(async tx => {
       const registration = await tx
-        .select()
+        .select({
+          RegistrationStatusEnum:
+            Registration.registrationApplicationStatusEnumId,
+        })
         .from(Registration)
         .where(
           and(
@@ -202,7 +200,10 @@ export class ClubRegistrationRepository {
         )
         .for("update")
         .then(takeUnique);
-      if (!registration) {
+      if (
+        !registration ||
+        registration.RegistrationStatusEnum === RegistrationStatusEnum.Approved
+      ) {
         tx.rollback();
         throw new HttpException(
           "No registration found",

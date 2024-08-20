@@ -2,7 +2,7 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import {
-  RegistrationStatusEnum,
+  RegistrationApplicationStudentStatusEnum,
   RegistrationTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
@@ -26,7 +26,9 @@ const responseBodyMap = {
       z.object({
         id: z.coerce.number().int().min(1),
         registrationTypeEnumId: z.nativeEnum(RegistrationTypeEnum),
-        registrationStatusEnumId: z.nativeEnum(RegistrationStatusEnum),
+        registrationStatusEnumId: z.nativeEnum(
+          RegistrationApplicationStudentStatusEnum,
+        ),
         krName: z.string().max(128),
         enName: z.string().max(128),
       }),
