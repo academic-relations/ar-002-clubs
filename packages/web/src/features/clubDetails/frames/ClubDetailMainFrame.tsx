@@ -48,13 +48,6 @@ const ResisterInfoWrapper = styled.div`
   align-items: center;
 `;
 
-const DescriptionWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  flex: 1 0 0;
-`;
-
 const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   club,
   isRegistrationPeriod,
@@ -140,12 +133,12 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
           </CardWrapper>
         </FlexWrapper>
 
-        <DescriptionWrapper>
+        <FlexWrapper direction="column" gap={20} style={{ flex: "1 0 0" }}>
           <SectionTitle size="lg">동아리 설명</SectionTitle>
           <CardWrapper>
             <ClubDetailCard club={club} />
           </CardWrapper>
-        </DescriptionWrapper>
+        </FlexWrapper>
       </MoreInfoWrapper>
     </FlexWrapper>
   );
