@@ -60,7 +60,7 @@ const WarningTextsWrapper = styled.div`
 
 const WarningLink = () => {
   const router = useRouter();
-  const link = "register-club/renewal"; // ToDo : 실제 데이터 연결
+  const link = "/"; // ToDo : 실제 데이터 연결
 
   const onClick = () => {
     router.push(link);
