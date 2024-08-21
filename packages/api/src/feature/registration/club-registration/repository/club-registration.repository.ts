@@ -10,12 +10,24 @@ import {
 import { ApiReg010ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg010";
 import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
+import { ApiReg014ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg014";
 import {
   RegistrationDeadlineEnum,
   RegistrationStatusEnum,
   RegistrationTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
-import { and, eq, gt, gte, inArray, isNull, lte, or } from "drizzle-orm";
+import {
+  and,
+  count,
+  desc,
+  eq,
+  gt,
+  gte,
+  inArray,
+  isNull,
+  lte,
+  or,
+} from "drizzle-orm";
 import { alias } from "drizzle-orm/mysql-core";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -31,6 +43,7 @@ import {
 import {
   Professor,
   ProfessorT,
+  Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 @Injectable()
@@ -435,5 +448,54 @@ export class ClubRegistrationRepository {
         ),
       );
     return { registrations: result };
+  }
+
+  async getExecutiveRegistrationsClubRegistrations(
+    pageOffset: number,
+    itemCount: number,
+  ): Promise<ApiReg014ResponseOk> {
+    const numberOfClubRegistrations = (
+      await this.db
+        .select({ count: count(Registration.id) })
+        .from(Registration)
+        .then(takeUnique)
+    ).count;
+
+    const startOffset = (pageOffset - 1) * itemCount;
+    const clubRegistrations = await this.db
+      .select({
+        id: Registration.id,
+        registrationTypeEnumId: Registration.registrationApplicationTypeEnumId,
+        registrationStatusEnumId:
+          Registration.registrationApplicationStatusEnumId,
+        divisionId: Registration.divisionId,
+        clubNameKr: Registration.clubNameKr,
+        clubNameEn: Registration.clubNameEn,
+        representativeName: Student.name,
+        activityFieldKr: Registration.activityFieldKr,
+        activityFieldEn: Registration.activityFieldEn,
+        professorName: Professor.name,
+      })
+      .from(Registration)
+      .innerJoin(
+        Student,
+        and(eq(Registration.studentId, Student.id), isNull(Student.deletedAt)),
+      )
+      .leftJoin(
+        Professor,
+        and(
+          eq(Registration.professorId, Professor.id),
+          isNull(Professor.deletedAt),
+        ),
+      )
+      .orderBy(desc(Registration.createdAt))
+      .limit(itemCount)
+      .offset(startOffset);
+
+    return {
+      items: clubRegistrations,
+      total: numberOfClubRegistrations,
+      offset: pageOffset,
+    };
   }
 }

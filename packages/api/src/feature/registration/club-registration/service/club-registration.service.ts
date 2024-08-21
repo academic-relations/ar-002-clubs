@@ -13,6 +13,7 @@ import { ApiReg010ResponseOk } from "@sparcs-clubs/interface/api/registration/en
 import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
 
+import { ApiReg014ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg014";
 import { ApiReg018ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg018";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import {
@@ -349,6 +350,18 @@ export class ClubRegistrationService {
     const result =
       await this.clubRegistrationRepository.getStudentRegistrationsClubRegistrationsMy(
         studentId,
+      );
+    return result;
+  }
+
+  async getExecutiveRegistrationsClubRegistrations(
+    pageOffset: number,
+    itemCount: number,
+  ): Promise<ApiReg014ResponseOk> {
+    const result =
+      await this.clubRegistrationRepository.getExecutiveRegistrationsClubRegistrations(
+        pageOffset,
+        itemCount,
       );
     return result;
   }
