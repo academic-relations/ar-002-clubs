@@ -76,7 +76,7 @@ const CommonSpaceInfoThirdFrame: React.FC<
             isError={userProfileError}
           >
             <StyledList>
-              <li>동아리: {userProfileData?.clubs[clubId]?.name}</li>
+              <li>동아리: {userProfileData?.clubs[clubId]?.name_kr}</li>
               <li>담당자: {userProfileData?.name}</li>
               <li>연락처: {userProfileData?.phoneNumber}</li>
             </StyledList>
