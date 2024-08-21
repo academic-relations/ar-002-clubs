@@ -67,21 +67,22 @@ const requestBody = z
     externalInstructionFileId: z.coerce.string().max(128).optional(),
   })
   .refine(args => {
+    // - 신규 가동아리 신청을 제외하곤 기존 동아리 id를 제출해야 합니다.
     switch (args.registrationTypeEnumId) {
       case RegistrationTypeEnum.NewProvisional:
-        if (args.clubId === undefined) return false;
+        if (args.clubId !== undefined) return false;
         if (args.clubRuleFileId !== undefined) return false;
         break;
       case RegistrationTypeEnum.ReProvisional:
-        if (args.clubId !== undefined) return false;
+        if (args.clubId === undefined) return false;
         if (args.clubRuleFileId !== undefined) return false;
         break;
       case RegistrationTypeEnum.Promotional:
-        if (args.clubId !== undefined) return false;
+        if (args.clubId === undefined) return false;
         if (args.clubRuleFileId === undefined) return false;
         break;
       case RegistrationTypeEnum.Renewal:
-        if (args.clubId !== undefined) return false;
+        if (args.clubId === undefined) return false;
         if (args.clubRuleFileId !== undefined) return false;
         break;
       default:
