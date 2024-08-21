@@ -1,4 +1,4 @@
-import { RegistrationStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import type { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 
@@ -6,10 +6,22 @@ import type { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registrati
 
 const mockupRegistraion: ApiReg006ResponseOk = {
   applies: [
-    { id: 1, clubId: 1, applyStatusEnumId: RegistrationStatusEnum.Pending },
+    {
+      id: 1,
+      clubId: 1,
+      applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Pending,
+    },
 
-    { id: 2, clubId: 2, applyStatusEnumId: RegistrationStatusEnum.Approved },
-    { id: 3, clubId: 3, applyStatusEnumId: RegistrationStatusEnum.Approved },
+    {
+      id: 2,
+      clubId: 2,
+      applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Approved,
+    },
+    {
+      id: 3,
+      clubId: 3,
+      applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Approved,
+    },
   ],
 };
 
