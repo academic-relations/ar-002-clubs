@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import mockupAvailableRental from "@sparcs-clubs/web/features/rental-business/service/_mock/mockAvailableRental";
 import {
-  axiosClient,
+  axiosClientWithAuth,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
@@ -19,7 +19,7 @@ export const useGetAvailableRentals = (startDate: Date, endDate: Date) => {
   return useQuery<ApiRnt001ResponseOK, Error>({
     queryKey: [apiRnt001.url(), requestQuery],
     queryFn: async (): Promise<ApiRnt001ResponseOK> => {
-      const { data, status } = await axiosClient.get(apiRnt001.url(), {
+      const { data, status } = await axiosClientWithAuth.get(apiRnt001.url(), {
         params: requestQuery,
       });
 

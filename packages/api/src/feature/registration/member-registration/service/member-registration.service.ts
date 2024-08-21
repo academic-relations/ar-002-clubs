@@ -1,7 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { ApiReg005ResponseCreated } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg005";
-import { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
+import {
+  ApiReg006ResponseNoContent,
+  ApiReg006ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 
 import { ApiReg007ResponseNoContent } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg007";
 import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
@@ -14,6 +17,10 @@ import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.publi
 
 import { MemberRegistrationRepository } from "../repository/member-registration.repository";
 
+interface ApiReg006ResponseType {
+  status: number;
+  data: ApiReg006ResponseOk | ApiReg006ResponseNoContent;
+}
 @Injectable()
 export class MemberRegistrationService {
   constructor(
@@ -68,19 +75,16 @@ export class MemberRegistrationService {
 
   async getStudentRegistrationsMemberRegistrationsMy(
     studentId: number,
-  ): Promise<ApiReg006ResponseOk> {
+  ): Promise<ApiReg006ResponseType> {
     const ismemberRegistrationEvent =
       await this.memberRegistrationRepository.isMemberRegistrationEvent();
     if (!ismemberRegistrationEvent)
-      throw new HttpException(
-        "Not a member registration event duration",
-        HttpStatus.BAD_REQUEST,
-      );
+      return { status: HttpStatus.NO_CONTENT, data: { applies: [] } };
     const result =
       await this.memberRegistrationRepository.getStudentRegistrationsMemberRegistrationsMy(
         studentId,
       );
-    return result;
+    return { status: HttpStatus.OK, data: result };
   }
 
   async deleteStudentRegistrationsMemberRegistration(

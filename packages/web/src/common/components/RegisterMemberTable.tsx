@@ -6,8 +6,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import Link from "next/link";
-
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import mockupRegistrationMember from "@sparcs-clubs/web/features/executive/register-member/_mock/mockMemberRegistration";
@@ -55,15 +53,7 @@ const columns = [
   columnHelper.accessor("clubName", {
     id: "clubName",
     header: "동아리",
-    cell: info => (
-      <Link
-        key={info.row.original.id}
-        href={`/executive/register-member/${info.row.original.id.toString()}`}
-        style={{ display: "flex", flexDirection: "column" }}
-      >
-        {info.getValue()}
-      </Link>
-    ),
+    cell: info => info.getValue(),
     size: 291.67,
   }),
   columnHelper.accessor("registeredAll", {
@@ -92,7 +82,13 @@ const RegistrationMemberTable: React.FC<RegisterMemberTableProps> = ({
     enableSorting: false,
   });
 
-  return <Table table={table} count={registerMemberList.total} />;
+  return (
+    <Table
+      table={table}
+      count={registerMemberList.total}
+      rowLink={row => `/executive/register-member/${row.id}`}
+    />
+  );
 };
 
 export default RegistrationMemberTable;
