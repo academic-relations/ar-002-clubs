@@ -22,7 +22,7 @@ axiosClient.interceptors.request.use(
   mockInterceptor.onRejected,
 );
 
-axiosClient.interceptors.request.use(
+axiosClient.interceptors.response.use(
   errorInterceptor.onFulfilled,
   errorInterceptor.onRejected,
 );
@@ -47,7 +47,7 @@ axiosClientWithAuth.interceptors.request.use(
   tokenInterceptor.onRejected,
 );
 
-axiosClientWithAuth.interceptors.request.use(
+axiosClientWithAuth.interceptors.response.use(
   errorInterceptor.onFulfilled,
   errorInterceptor.onRejected,
 );
