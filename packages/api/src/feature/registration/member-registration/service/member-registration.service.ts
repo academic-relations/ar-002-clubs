@@ -131,32 +131,52 @@ export class MemberRegistrationService {
         HttpStatus.BAD_REQUEST,
       );
 
+    const application =
+      await this.memberRegistrationRepository.findMemberRegistrationById(
+        applyId,
+      );
+    if (!application) {
+      throw new HttpException("Application not found", HttpStatus.NOT_FOUND);
+    }
+
+    const applicationStudentId = application.studentId;
+    const isAlreadyMember = await this.clubPublicService.isStudentBelongsTo(
+      applicationStudentId, // 동아리 가입 신청 내부의 studentId 사용
+      clubId,
+    );
+
     if (
       applyStatusEnumId === RegistrationApplicationStudentStatusEnum.Approved
     ) {
-      const isAlreadyMember = await this.clubPublicService.isStudentBelongsTo(
-        studentId,
-        clubId,
-      );
-
-      if (!isAlreadyMember)
-        await this.clubPublicService.addStudentToClub(studentId, clubId);
-      else
+      if (isAlreadyMember)
         throw new HttpException(
-          "this registration is already approved, or student is already belongs to this club",
+          "student is already belongs to this club",
           HttpStatus.BAD_REQUEST,
+        );
+      else
+        await this.clubPublicService.addStudentToClub(
+          applicationStudentId,
+          clubId,
         );
     } else if (
       applyStatusEnumId === RegistrationApplicationStudentStatusEnum.Rejected
-    )
-      if (isDelegate)
+    ) {
+      const isAplicatedStudentDelegate =
+        await this.clubPublicService.isStudentDelegate(
+          applicationStudentId,
+          clubId,
+        );
+      if (isAplicatedStudentDelegate)
         throw new HttpException(
           "club delegate cannot be rejected",
           HttpStatus.BAD_REQUEST,
         );
       else
-        await this.clubPublicService.removeStudentFromClub(studentId, clubId);
-
+        await this.clubPublicService.removeStudentFromClub(
+          applicationStudentId,
+          clubId,
+        );
+    }
     const result =
       await this.memberRegistrationRepository.patchMemberRegistration(
         applyId,
