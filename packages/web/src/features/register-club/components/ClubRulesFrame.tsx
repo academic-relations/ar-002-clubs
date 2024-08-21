@@ -17,8 +17,8 @@ import {
   DEPARTMENT_AUTONOMY_RULES,
 } from "../constants/registerClub";
 
+import RulesButton from "./_atomic/RulesButton";
 import ClubRegulationsComplianceSection from "./ClubRegulationsComplianceSection";
-import RulesButton from "./RulesButton";
 
 interface ClubRulesFrameProps {
   isProvisional?: boolean;

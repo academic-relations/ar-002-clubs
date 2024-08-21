@@ -6,6 +6,8 @@ import styled from "styled-components";
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import { CLUBS_COMPLIANCE_LIST } from "../constants/registerClub";
+
 interface ClubRegulationsComplianceSectionProps {
   isProvisional?: boolean;
 }
@@ -20,13 +22,6 @@ const ClubRegulationsComplianceSectionInner = styled.div`
   color: ${({ theme }) => theme.colors.BLACK};
 `;
 
-const clubsComplianceList = [
-  "1. 동아리연합회칙을 준수하겠습니다.",
-  "2. KAIST의 대학 문화 발전을 위해 이바지하겠습니다.",
-  "3. 본 회의 민주적 의사결정에 성실히 참여하겠습니다.",
-  "4. 분과자치규칙을 준수하겠습니다.",
-];
-
 const ClubRegulationsComplianceSection: React.FC<
   ClubRegulationsComplianceSectionProps
 > = ({ isProvisional = false }) => (
@@ -35,8 +30,8 @@ const ClubRegulationsComplianceSection: React.FC<
       동아리연합회칙 준수 서약서
     </Typography>
     <div>
-      {...clubsComplianceList.map((value, index) => {
-        if (isProvisional && index === clubsComplianceList.length - 1) {
+      {...CLUBS_COMPLIANCE_LIST.map((value, index) => {
+        if (isProvisional && index === CLUBS_COMPLIANCE_LIST.length - 1) {
           return null;
         }
         return (
