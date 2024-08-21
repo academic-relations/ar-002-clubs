@@ -27,7 +27,6 @@ const requestBody = z
     clubId: z.coerce.number().int().min(1).optional(),
     clubNameKr: zClubName,
     clubNameEn: zClubName,
-    studentId: z.coerce.number().int().min(1),
     phoneNumber: zKrPhoneNumber,
     foundedAt: z.coerce.date(),
     divisionId: z.coerce.number().int().min(1),

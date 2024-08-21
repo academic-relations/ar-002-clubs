@@ -67,6 +67,7 @@ export class ClubRegistrationRepository {
   }
 
   async createRegistration(
+    studentId: number,
     body: ApiReg001RequestBody,
   ): Promise<ApiReg001ResponseCreated> {
     const cur = getKSTDate();
@@ -80,7 +81,7 @@ export class ClubRegistrationRepository {
           .from(ClubDelegateD)
           .where(
             and(
-              eq(ClubDelegateD.studentId, body.studentId),
+              eq(ClubDelegateD.studentId, studentId),
               eq(ClubDelegateD.clubId, body.clubId),
               lte(ClubDelegateD.startTerm, cur),
               or(
@@ -141,7 +142,7 @@ export class ClubRegistrationRepository {
         registrationApplicationTypeEnumId: body.registrationTypeEnumId,
         clubNameKr: body.clubNameKr,
         clubNameEn: body.clubNameEn,
-        studentId: body.studentId,
+        studentId,
         phoneNumber: body.phoneNumber,
         foundedAt: body.foundedAt,
         divisionId: body.divisionId,

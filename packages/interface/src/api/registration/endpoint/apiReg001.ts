@@ -26,7 +26,6 @@ const requestBody = z
     registrationTypeEnumId: z.nativeEnum(RegistrationTypeEnum),
     clubNameKr: zClubName,
     clubNameEn: zClubName,
-    studentId: z.coerce.number().int().min(1), // 동아리 대표자 학생 id
     phoneNumber: zKrPhoneNumber, // 대표자 전화번호
     /**
      * 가동아리 신청의 경우 설립연월이 신청에 포함됩니다.

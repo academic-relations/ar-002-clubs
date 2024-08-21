@@ -54,10 +54,6 @@ export class ClubRegistrationService {
       body.registrationTypeEnumId,
     );
 
-    // studentId 일치 확인
-    if (studentId !== body.studentId)
-      throw new HttpException("StudentId not match", HttpStatus.BAD_REQUEST);
-
     const validateDivisionId =
       await this.divisionPublicService.findDivisionById(body.divisionId);
     if (!validateDivisionId)
@@ -83,8 +79,10 @@ export class ClubRegistrationService {
       ),
     };
 
-    const result =
-      await this.clubRegistrationRepository.createRegistration(transformedBody);
+    const result = await this.clubRegistrationRepository.createRegistration(
+      studentId,
+      transformedBody,
+    );
     return result;
   }
 
@@ -255,8 +253,6 @@ export class ClubRegistrationService {
     applyId: number,
     body: ApiReg009RequestBody,
   ): Promise<ApiReg009ResponseOk> {
-    if (studentId !== body.studentId)
-      throw new HttpException("StudentId not match", HttpStatus.BAD_REQUEST);
     // divisionId가 유효한지 확인
     const validateDivisionId =
       await this.divisionPublicService.findDivisionById(body.divisionId);
