@@ -16,6 +16,9 @@ const Dropdown = styled.div.withConfig({
   background-color: ${({ theme }) => theme.colors.WHITE};
   gap: 4px;
   z-index: 1000; // Ensure the dropdown appears above other content
+
+  max-height: 200px;
+  overflow-y: auto;
 `;
 
 export default Dropdown;
