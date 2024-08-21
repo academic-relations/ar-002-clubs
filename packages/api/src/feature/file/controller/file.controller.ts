@@ -8,8 +8,8 @@ import {
   UsePipes,
 } from "@nestjs/common";
 
-import apiFil001 from "@sparcs-clubs/interface/api/file/endpoint/apiFil001";
-import apiFil002 from "@sparcs-clubs/interface/api/file/endpoint/apiFil002";
+import apiFil001 from "@sparcs-clubs/interface/api/file/apiFil001";
+import apiFil002 from "@sparcs-clubs/interface/api/file/apiFil002";
 
 import { Request } from "express";
 
@@ -23,11 +23,11 @@ import type { UserAccessTokenPayload } from "@sparcs-clubs/api/feature/auth/dto/
 import type {
   ApiFil001RequestBody,
   ApiFil001ResponseCreated,
-} from "@sparcs-clubs/interface/api/file/endpoint/apiFil001";
+} from "@sparcs-clubs/interface/api/file/apiFil001";
 import type {
   ApiFil002RequestBody,
   ApiFil002ResponseOk,
-} from "@sparcs-clubs/interface/api/file/endpoint/apiFil002";
+} from "@sparcs-clubs/interface/api/file/apiFil002";
 
 @Controller()
 export class FileController {

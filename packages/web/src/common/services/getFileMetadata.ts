@@ -1,7 +1,7 @@
 import apiFil002, {
   ApiFil002RequestBody,
   ApiFil002ResponseOk,
-} from "@sparcs-clubs/interface/api/file/endpoint/apiFil002";
+} from "@sparcs-clubs/interface/api/file/apiFil002";
 import { useQuery } from "@tanstack/react-query";
 
 import {

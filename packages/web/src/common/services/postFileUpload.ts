@@ -1,7 +1,7 @@
 import apiFil001, {
   ApiFil001RequestBody,
   ApiFil001ResponseCreated,
-} from "@sparcs-clubs/interface/api/file/endpoint/apiFil001";
+} from "@sparcs-clubs/interface/api/file/apiFil001";
 import { useMutation } from "@tanstack/react-query";
 
 import {
