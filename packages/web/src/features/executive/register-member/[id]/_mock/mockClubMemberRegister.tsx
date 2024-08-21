@@ -23,10 +23,10 @@ const applies = Array.from({ length: 100 }, (_, index) => ({
   studentPhoneNumber: "010-xxxx-xxxx",
 }));
 
-const mockupClubMr = {
+const mockupClubMemberRegister = {
   total: applies.length,
   applies,
   offset: 0,
 };
 
-export default mockupClubMr;
+export default mockupClubMemberRegister;

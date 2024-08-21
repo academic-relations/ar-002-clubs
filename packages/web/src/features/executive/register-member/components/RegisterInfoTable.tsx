@@ -16,10 +16,10 @@ import { MemTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { MemberStatusEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-import mockupClubMr from "../_mock/mockClubMr";
+import mockupClubMemberRegister from "../[id]/_mock/mockClubMemberRegister";
 
 interface RegisterInfoTableProps {
-  mrInfoList: typeof mockupClubMr;
+  memberRegisterInfoList: typeof mockupClubMemberRegister;
 }
 
 const ToggleWrapper = styled.div`
@@ -30,7 +30,7 @@ const ToggleWrapper = styled.div`
   display: flex;
 `;
 const columnHelper =
-  createColumnHelper<(typeof mockupClubMr)["applies"][number]>();
+  createColumnHelper<(typeof mockupClubMemberRegister)["applies"][number]>();
 
 const columns = [
   columnHelper.accessor("registrationStatus", {
@@ -116,7 +116,7 @@ const columns = [
 ];
 
 const RegisterInfoTable: React.FC<RegisterInfoTableProps> = ({
-  mrInfoList,
+  memberRegisterInfoList: mrInfoList,
 }) => {
   const table = useReactTable({
     columns,

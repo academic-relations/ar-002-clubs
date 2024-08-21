@@ -10,10 +10,12 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
-import mockupClubMr from "@sparcs-clubs/web/features/executive/register-member/[id]/_mock/mockClubMr";
-import RegisterInfoTable from "@sparcs-clubs/web/features/executive/register-member/[id]/components/registerInfoTable";
-import StatusInfoFrame from "@sparcs-clubs/web/features/executive/register-member/[id]/components/statusInfoFrame";
+import mockupClubMemberRegister from "@sparcs-clubs/web/features/executive/register-member/[id]/_mock/mockClubMemberRegister";
 import calcRegisterInfo from "@sparcs-clubs/web/features/executive/register-member/[id]/services/calcRegisterInfo";
+
+import RegisterInfoTable from "@sparcs-clubs/web/features/executive/register-member/components/RegisterInfoTable";
+import StatusInfoFrame from "@sparcs-clubs/web/features/executive/register-member/components/StatusInfoFrame";
+
 import { MemberStatusEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 const RegisterMember = () => {
@@ -25,8 +27,8 @@ const RegisterMember = () => {
 
   /* TODO : API로 데이터 받아오기 */
   const paginatedData = {
-    total: mockupClubMr.total,
-    applies: mockupClubMr.applies.slice(
+    total: mockupClubMemberRegister.total,
+    applies: mockupClubMemberRegister.applies.slice(
       (currentPage - 1) * limit,
       currentPage * limit,
     ),
@@ -37,7 +39,7 @@ const RegisterMember = () => {
     setCurrentPage(page);
   };
 
-  const calcRegister = calcRegisterInfo(mockupClubMr);
+  const calcRegister = calcRegisterInfo(mockupClubMemberRegister);
 
   const defaultStatusInfo = { Regular: 0, NonRegular: 0, Total: 0 };
 
@@ -80,10 +82,10 @@ const RegisterMember = () => {
             status={MemberStatusEnum.Rejected}
           />
         </Card>
-        <RegisterInfoTable mrInfoList={paginatedData} />
+        <RegisterInfoTable memberRegisterInfoList={paginatedData} />
         <FlexWrapper direction="row" gap={16} justify="center">
           <Pagination
-            totalPage={Math.ceil(mockupClubMr.total / limit)}
+            totalPage={Math.ceil(mockupClubMemberRegister.total / limit)}
             currentPage={currentPage}
             limit={limit}
             setPage={handlePageChange}

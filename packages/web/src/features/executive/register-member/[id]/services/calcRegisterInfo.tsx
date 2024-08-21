@@ -1,6 +1,6 @@
 import { MemberStatusEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
-import mockupClubMr from "../_mock/mockClubMr";
+import mockupClubMemberRegister from "../_mock/mockClubMemberRegister";
 
 const calcStudentStatus = (studentID: number) => {
   if (
@@ -13,7 +13,7 @@ const calcStudentStatus = (studentID: number) => {
   return "NonRegular";
 };
 
-const calcRegisterInfo = (data: typeof mockupClubMr) => {
+const calcRegisterInfo = (data: typeof mockupClubMemberRegister) => {
   // Map 생성 및 초기화
   const result: Map<
     MemberStatusEnum,

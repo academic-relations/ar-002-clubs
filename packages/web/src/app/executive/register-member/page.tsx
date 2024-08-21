@@ -7,7 +7,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import RegistrationMemberTable from "@sparcs-clubs/web/common/components/RegisterMemberTable";
-import mockupRegistrationMember from "@sparcs-clubs/web/features/executive/register-member/_mock/mockMemberRegistration";
+import mockupRegistrationMember from "@sparcs-clubs/web/features/executive/_mock/mockupMemberRegistration";
 
 const RegisterMember = () => {
   const [currentPage, setCurrentPage] = useState(1);
