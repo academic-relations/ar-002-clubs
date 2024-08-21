@@ -2,10 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
 import { overlay } from "overlay-kit";
 
 import styled, { useTheme } from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
@@ -18,6 +21,10 @@ import ClubDetailCard from "@sparcs-clubs/web/features/clubDetails/components/Cl
 import ClubInfoCard from "@sparcs-clubs/web/features/clubDetails/components/ClubInfoCard";
 import PersonInfoCard from "@sparcs-clubs/web/features/clubDetails/components/PersonInfoCard";
 
+import { useIsInClub } from "@sparcs-clubs/web/hooks/isInClub";
+
+import { useRegisterClub } from "../services/registerClub";
+
 import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
 interface ClubDetailMainFrameProps {
@@ -26,6 +33,7 @@ interface ClubDetailMainFrameProps {
 }
 
 const CardWrapper = styled.div`
+  width: 100%;
   padding-left: 20px;
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
@@ -62,15 +70,34 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   club,
   isRegistrationPeriod,
 }) => {
-  // TODO : 해당 동아리 등록 신청 여부 받아오기
-  const [isRegistered, setIsRegistered] = useState(false);
-
   const { isLoggedIn } = useAuth();
 
-  const toggleRegistered = (close: () => void) => {
-    // TODO : 회원가입 승인 or 취소 로직 추가
-    setIsRegistered(prev => !prev);
+  const [isInClubFromHook, clubLoading] = useIsInClub(club.id);
+
+  const [isInClub, setIsInclub] = useState(
+    RegistrationApplicationStudentStatusEnum.Rejected,
+  );
+  const localError = false;
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // 초기값 설정
+    if (!clubLoading) {
+      setIsInclub(isInClubFromHook);
+      setLoading(clubLoading);
+    }
+  }, [isInClubFromHook, clubLoading]);
+
+  const ToggleRegistered = async (close: () => void) => {
     close();
+    await useRegisterClub(club.id);
+    setIsInclub(RegistrationApplicationStudentStatusEnum.Pending);
+  };
+
+  const ToggleUnregistered = async (close: () => void) => {
+    // await useRegisterClub(club.id);
+    close();
+    setIsInclub(RegistrationApplicationStudentStatusEnum.Rejected);
   };
 
   const theme = useTheme();
@@ -95,11 +122,12 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   const submitHandler = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen} onClose={close}>
-        {isRegistered ? (
+        {isInClub === RegistrationApplicationStudentStatusEnum.Pending ? (
           <CancellableModalContent
             onClose={close}
-            onConfirm={() => {
-              toggleRegistered(close);
+            onConfirm={async () => {
+              /* TODO : 가입 취소 API 구현 시 연결 */
+              ToggleUnregistered(close);
             }}
           >
             2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
@@ -109,8 +137,8 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
         ) : (
           <CancellableModalContent
             onClose={close}
-            onConfirm={() => {
-              toggleRegistered(close);
+            onConfirm={async () => {
+              ToggleRegistered(close);
             }}
           >
             2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
@@ -122,7 +150,30 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
     ));
   };
 
+  const renderButton = () => {
+    if (isInClub === RegistrationApplicationStudentStatusEnum.Pending) {
+      return (
+        <Button type="default" onClick={submitHandler}>
+          회원 등록 취소
+        </Button>
+      );
+    }
+    if (isInClub === RegistrationApplicationStudentStatusEnum.Approved) {
+      return (
+        <Button type="disabled" onClick={submitHandler}>
+          회장 승인 완료
+        </Button>
+      );
+    }
+    return (
+      <Button type="default" onClick={submitHandler}>
+        회원 등록 신청
+      </Button>
+    );
+  };
+
   return (
+
     <ResponsiveWrapper gap={60} direction="column">
       <PageHead
         items={[
@@ -155,23 +206,30 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
           <ClubInfoCard club={club} />
         </CardWrapper>
       </FlexWrapper>
-
-      <MoreInfoWrapper>
         <FlexWrapper direction="column" gap={20}>
-          <SectionTitle size="lg">인적 사항 </SectionTitle>
+          <SectionTitle size="lg">동아리 정보</SectionTitle>
           <CardWrapper>
-            <PersonInfoCard club={club} />
+            <ClubInfoCard club={club} />
           </CardWrapper>
         </FlexWrapper>
 
-        <FlexWrapper direction="column" gap={20}>
-          <SectionTitle size="lg">동아리 설명</SectionTitle>
-          <CardWrapper>
-            <ClubDetailCard club={club} />
-          </CardWrapper>
-        </FlexWrapper>
-      </MoreInfoWrapper>
-    </ResponsiveWrapper>
+        <MoreInfoWrapper>
+          <FlexWrapper direction="column" gap={20}>
+            <SectionTitle size="lg">인적 사항 </SectionTitle>
+            <CardWrapper>
+              <PersonInfoCard club={club} />
+            </CardWrapper>
+          </FlexWrapper>
+
+          <FlexWrapper direction="column" gap={20} style={{ flex: "1 0 0" }}>
+            <SectionTitle size="lg">동아리 설명</SectionTitle>
+            <CardWrapper>
+              <ClubDetailCard club={club} />
+            </CardWrapper>
+          </FlexWrapper>
+        </MoreInfoWrapper>
+      </FlexWrapper>
+    </AsyncBoundary>
   );
 };
 

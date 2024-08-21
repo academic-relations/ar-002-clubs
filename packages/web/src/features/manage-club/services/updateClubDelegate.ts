@@ -1,7 +1,7 @@
 import apiClb007 from "@sparcs-clubs/interface/api/club/endpoint/apiClb007";
 
 import {
-  axiosClient,
+  axiosClientWithAuth,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
@@ -15,7 +15,7 @@ export const updateClubDelegates = async (
   requestParam: ApiClb007RequestParam,
   requestBody: ApiClb007RequestBody,
 ) => {
-  const { data, status } = await axiosClient.put(
+  const { data, status } = await axiosClientWithAuth.put(
     apiClb007.url(requestParam.clubId),
     requestBody,
   );

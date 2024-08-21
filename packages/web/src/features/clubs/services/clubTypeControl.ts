@@ -30,4 +30,16 @@ const getClubType = (club: ClubCardProps["club"]) => {
   return clubType;
 };
 
-export { getClubType, getTagColorFromClubType };
+const getShortClubType = (club: ClubCardProps["club"]) => {
+  let clubType: string;
+  if (club.isPermanent) {
+    clubType = "상임";
+  } else if (club.type === ClubTypeEnum.Regular) {
+    clubType = "정";
+  } else {
+    clubType = "가";
+  }
+  return clubType;
+};
+
+export { getClubType, getShortClubType, getTagColorFromClubType };

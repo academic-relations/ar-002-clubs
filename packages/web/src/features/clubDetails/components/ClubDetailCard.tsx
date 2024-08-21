@@ -23,9 +23,25 @@ const ClubDetailText = styled.div`
   font-weight: 400;
 `;
 
+const EmptyDetailText = styled.div`
+  width: 100%;
+  font-size: 16px;
+  line-height: 28px;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.GRAY[300]};
+`;
+
 const ClubDetailCard: React.FC<ClubDetailCardProps> = ({ club }) => (
   <Card gap={16} padding="16px 20px">
-    <ClubDetailText>{club.description}</ClubDetailText>
+    {club.description ? (
+      <ClubDetailText>{club.description}</ClubDetailText>
+    ) : (
+      <EmptyDetailText>등록된 동아리 설명이 없습니다.</EmptyDetailText>
+    )}
   </Card>
 );
 

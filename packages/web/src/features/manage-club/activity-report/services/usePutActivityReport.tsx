@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 
 import {
-  axiosClient,
+  axiosClientWithAuth,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
@@ -16,7 +16,7 @@ export const usePutActivityReport = () =>
     { activityId: number; body: z.infer<typeof apiAct003.requestBody> }
   >({
     mutationFn: async ({ activityId, body }): Promise<ISuccessResponseType> => {
-      const { data, status } = await axiosClient.put(
+      const { data, status } = await axiosClientWithAuth.put(
         apiAct003.url(activityId),
         body,
       );

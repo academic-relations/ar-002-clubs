@@ -86,7 +86,7 @@ const RegistrationMemberTable: React.FC<RegisterMemberTableProps> = ({
     <Table
       table={table}
       count={registerMemberList.total}
-      rowLink={row => row.id.toString()}
+      rowLink={row => `/executive/register-member/${row.id}`}
     />
   );
 };
