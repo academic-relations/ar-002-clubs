@@ -17,6 +17,9 @@ const RegisterMember = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
 
+  if (profile !== "executive") {
+    return <Custom404 />;
+  }
   /* TODO : API로 데이터 받아오기 */
   const paginatedData = {
     total: mockupRegistrationMember.total,
@@ -31,7 +34,7 @@ const RegisterMember = () => {
     setCurrentPage(page);
   };
 
-  return profile === "executive" ? (
+  return (
     <FlexWrapper direction="column" gap={20}>
       <PageHead
         items={[
@@ -52,8 +55,6 @@ const RegisterMember = () => {
         </FlexWrapper>
       </AsyncBoundary>
     </FlexWrapper>
-  ) : (
-    <Custom404 />
   );
 };
 
