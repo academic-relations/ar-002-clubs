@@ -2,7 +2,7 @@ import apiPrt005 from "@sparcs-clubs/interface/api/promotional-printing/endpoint
 import { useQuery } from "@tanstack/react-query";
 
 import {
-  axiosClient,
+  axiosClientWithAuth,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
@@ -30,7 +30,7 @@ export const useGetMyPrinting = (
   return useQuery<ApiPrt005ResponseOk, Error>({
     queryKey: [apiPrt005.url(), requestQuery],
     queryFn: async (): Promise<ApiPrt005ResponseOk> => {
-      const { data, status } = await axiosClient.get(apiPrt005.url(), {
+      const { data, status } = await axiosClientWithAuth.get(apiPrt005.url(), {
         params: requestQuery,
       });
 

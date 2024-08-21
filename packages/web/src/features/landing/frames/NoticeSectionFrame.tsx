@@ -28,6 +28,10 @@ const NoticeWrapper = styled.div`
   flex-direction: column;
   gap: 20px;
   margin-left: 24px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    margin-left: 16px;
+    gap: 16px;
+  }
 `;
 
 const NoticeSectionFrame: React.FC = () => {
@@ -48,6 +52,8 @@ const NoticeSectionFrame: React.FC = () => {
                 noticeInfo.link
               } /* TODO - 각 notice에 따른 올바른 path로 수정 바람 --> paths.NOTICE.path + "/" + noticeInfo.id.toString() */
               style={{ display: "flex", flexDirection: "column" }}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <NoticeCard noticeList={noticeInfo} />
             </Link>

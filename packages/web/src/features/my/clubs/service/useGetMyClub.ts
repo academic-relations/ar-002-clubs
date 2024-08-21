@@ -2,7 +2,7 @@ import apiClb003 from "@sparcs-clubs/interface/api/club/endpoint/apiClb003";
 import { useQuery } from "@tanstack/react-query";
 
 import {
-  axiosClient,
+  axiosClientWithAuth,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
@@ -15,7 +15,10 @@ const useGetMyClub = () =>
   useQuery<ApiClb003ResponseOK, Error>({
     queryKey: [apiClb003.url()],
     queryFn: async (): Promise<ApiClb003ResponseOK> => {
-      const { data, status } = await axiosClient.get(apiClb003.url(), {});
+      const { data, status } = await axiosClientWithAuth.get(
+        apiClb003.url(),
+        {},
+      );
 
       // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
       switch (status) {

@@ -26,30 +26,47 @@ const NoticeAndServiceWrapper = styled.div`
   }
 `;
 
+const StyledSpan = styled.span`
+  color: ${colors.PRIMARY};
+  font-weight: ${({ theme }) => theme.fonts.WEIGHT.SEMIBOLD};
+`;
+
+const BreakBeforeStyledSpan = styled.span`
+  display: none;
+  @media (max-width: 360px) {
+    display: block;
+  }
+`;
+
+const ResponsiveSloganTypography = styled(Typography)`
+  font-size: 32px;
+  line-height: 48px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    font-size: 28px;
+    line-height: 40px;
+  }
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 20px;
+    line-height: 32px;
+  }
+`;
+
 const MainPageMainFrame: React.FC = () => (
   <FlexWrapper direction="column" gap={60}>
     <PageTitleWrapper>
-      <Typography
-        ff="PRETENDARD"
-        fs={32}
-        lh={48}
+      <ResponsiveSloganTypography
         fw="SEMIBOLD"
-        color="BLACK"
         style={{ width: "fit-content" }}
       >
-        <span style={{ color: colors.PRIMARY }}>동아리</span>의 모든 것을 한번에
-      </Typography>
-      <Typography
-        ff="PRETENDARD"
-        fs={32}
-        lh={48}
+        <StyledSpan>동아리</StyledSpan>의 모든 것을 한번에
+      </ResponsiveSloganTypography>
+      <ResponsiveSloganTypography
         fw="SEMIBOLD"
-        color="BLACK"
         style={{ width: "fit-content" }}
       >
-        동아리연합회 통합 플랫폼,{" "}
-        <span style={{ color: colors.PRIMARY }}>Clubs</span>입니다
-      </Typography>
+        동아리연합회 통합 플랫폼, <BreakBeforeStyledSpan />
+        <StyledSpan>Clubs</StyledSpan>입니다
+      </ResponsiveSloganTypography>
     </PageTitleWrapper>
     <NoticeAndServiceWrapper>
       <NoticeSectionFrame />

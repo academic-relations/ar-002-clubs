@@ -79,7 +79,7 @@ const ClubCard: React.FC<
             }}
           >
             2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-            {club.name}의
+            {club.name_kr}의
             <br />
             회원 등록을 취소합니다.
           </CancellableModalContent>
@@ -92,7 +92,7 @@ const ClubCard: React.FC<
             }}
           >
             2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-            {club.name}의
+            {club.name_kr}의
             <br />
             회원 등록 신청을 진행합니다.
           </CancellableModalContent>
@@ -103,7 +103,7 @@ const ClubCard: React.FC<
   return (
     <Card gap={16} padding="16px 20px">
       <ClubCardNameRow>
-        <ClubName>{club.name}</ClubName>
+        <ClubName>{club.name_kr}</ClubName>
         <FlexWrapper direction="row" gap={4}>
           <Icon type="person" size={16} />
           <Typography fs={14} lh={16}>

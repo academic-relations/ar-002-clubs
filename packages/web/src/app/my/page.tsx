@@ -15,11 +15,13 @@ import MyChangeDivisionPresident, {
 import MyChangeRepresentative from "@sparcs-clubs/web/features/my/components/MyChangeRepresentative";
 import MyClubFrame from "@sparcs-clubs/web/features/my/frames/MyClubFrame";
 import MyInfoFrame from "@sparcs-clubs/web/features/my/frames/MyInfoFrame";
+import MyRegisterFrame from "@sparcs-clubs/web/features/my/frames/MyRegisterFrame";
 import MyServiceFrame from "@sparcs-clubs/web/features/my/frames/MyServiceFrame";
 import { useGetMyDelegateRequest } from "@sparcs-clubs/web/features/my/services/getMyDelegateRequest";
 
 const My: React.FC = () => {
   // TODO: clb014 api 구현되면 refetch 테스트
+  const isStudent = false; // 학생 <--> 지도교수 TODO: 로그인 정보로 대체
   const { data, isLoading, isError, refetch } = useGetMyDelegateRequest();
   const fetchDivisionPresident = () => {}; // TODO
 
@@ -62,7 +64,7 @@ const My: React.FC = () => {
     }
   }, [data]);
 
-  return (
+  return isStudent ? (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <FlexWrapper direction="column" gap={60}>
         <PageHead
@@ -90,9 +92,20 @@ const My: React.FC = () => {
         )}
         <MyInfoFrame />
         <MyClubFrame />
+        <MyRegisterFrame isStudent={isStudent} />
         <MyServiceFrame />
       </FlexWrapper>
     </AsyncBoundary>
+  ) : (
+    <FlexWrapper direction="column" gap={60}>
+      <PageHead
+        items={[{ name: "마이페이지", path: "/my" }]}
+        title="마이페이지"
+      />
+      <MyInfoFrame />
+      <MyClubFrame />
+      <MyRegisterFrame isStudent={isStudent} />
+    </FlexWrapper>
   );
 };
 
