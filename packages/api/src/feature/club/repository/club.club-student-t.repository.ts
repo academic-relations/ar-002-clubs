@@ -155,11 +155,8 @@ export default class ClubStudentTRepository {
     clubId: number,
     semesterId: number,
   ): Promise<void> {
-    const cur = getKSTDate();
-
     await this.db
-      .update(ClubStudentT)
-      .set({ deletedAt: cur })
+      .delete(ClubStudentT)
       .where(
         and(
           eq(ClubStudentT.studentId, studentId),

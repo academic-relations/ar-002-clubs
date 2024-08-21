@@ -141,7 +141,8 @@ export class MemberRegistrationService {
           "club delegate cannot be rejected",
           HttpStatus.BAD_REQUEST,
         );
-    await this.clubPublicService.removeStudentFromClub(studentId, clubId);
+      else
+        await this.clubPublicService.removeStudentFromClub(studentId, clubId);
 
     const result =
       await this.memberRegistrationRepository.patchMemberRegistration(
