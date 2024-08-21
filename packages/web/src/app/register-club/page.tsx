@@ -14,6 +14,7 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import ClubButton from "@sparcs-clubs/web/features/register-club/components/ClubButton";
 
+import { mockMyRegistration } from "@sparcs-clubs/web/features/register-club/service/_mock/mockMyRegistration";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 const ClubButtonWrapper = styled.div`
@@ -58,12 +59,11 @@ const WarningTextsWrapper = styled.div`
   opacity: 1;
 `;
 
-const WarningLink = () => {
+const WarningLink: React.FC<{ id: number }> = ({ id }) => {
   const router = useRouter();
-  const link = "/"; // ToDo : 실제 데이터 연결
 
   const onClick = () => {
-    router.push(link);
+    router.push(`my/register-club/${id}`);
   };
 
   const AnchorTypography = styled(Typography)`
@@ -78,7 +78,7 @@ const WarningLink = () => {
   );
 };
 
-const WarningArea = () => (
+const WarningArea: React.FC<{ id: number }> = ({ id }) => (
   <WarningWrapper>
     <WarningIconWrapper>
       <Icon type="error" color={colors.RED["600"]} size={20} />
@@ -87,7 +87,7 @@ const WarningArea = () => (
       <Typography fs={16} fw="REGULAR" lh={24}>
         동아리 등록 신청 내역이 이미 존재하여 추가로 신청할 수 없습니다
       </Typography>
-      <WarningLink />
+      <WarningLink id={id} />
     </WarningTextsWrapper>
   </WarningWrapper>
 );
@@ -102,6 +102,8 @@ const RegisterClub = () => {
   const [selectedType, setSelectedType] = useState<RegistrationType | null>(
     null,
   );
+
+  const myRegistration = mockMyRegistration; // ToDo: 실제 데이터 연결
 
   const router = useRouter();
   const onClick = () => {
@@ -123,7 +125,9 @@ const RegisterClub = () => {
         items={[{ name: "동아리 등록", path: "/register-club" }]}
         title="동아리 등록"
       />
-      <WarningArea />
+      {myRegistration.registrations.length > 0 && (
+        <WarningArea id={myRegistration.registrations[0].id} />
+      )}
       <Info text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
       <ClubButtonWrapper>
         <ClubButton
