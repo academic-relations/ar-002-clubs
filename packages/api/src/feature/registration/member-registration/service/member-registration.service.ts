@@ -117,11 +117,11 @@ export class MemberRegistrationService {
       applyStatusEnumId !== RegistrationApplicationStudentStatusEnum.Rejected
     )
       throw new HttpException("Invalid status enum", HttpStatus.BAD_REQUEST);
-    const isPresident = await this.clubPublicService.isStudentDelegate(
+    const isDelegate = await this.clubPublicService.isStudentDelegate(
       studentId,
       clubId,
     );
-    if (!isPresident)
+    if (!isDelegate)
       throw new HttpException("Not a club delegate", HttpStatus.FORBIDDEN);
     const ismemberRegistrationEvent =
       await this.memberRegistrationRepository.isMemberRegistrationEvent();
@@ -143,7 +143,7 @@ export class MemberRegistrationService {
     studentId: number,
     clubId: number,
   ): Promise<ApiReg008ResponseOk> {
-    const isPresident = await this.clubPublicService.isStudentPresident(
+    const isPresident = await this.clubPublicService.isStudentDelegate(
       studentId,
       clubId,
     );
