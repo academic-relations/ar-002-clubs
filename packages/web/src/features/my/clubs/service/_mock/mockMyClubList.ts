@@ -9,7 +9,8 @@ const mockMyClubList: ApiClb003ResponseOK = {
       clubs: [
         {
           id: 42,
-          name: "KAINATION",
+          name_kr: "KAINATION",
+          name_en: "KAINATION",
           type: 2,
           isPermanent: false,
           characteristic: "기부",
@@ -25,7 +26,8 @@ const mockMyClubList: ApiClb003ResponseOK = {
       clubs: [
         {
           id: 42,
-          name: "KAINATION",
+          name_kr: "KAINATION",
+          name_en: "KAINATION",
           type: 1,
           isPermanent: false,
           characteristic: "기부",
@@ -41,7 +43,8 @@ const mockMyClubList: ApiClb003ResponseOK = {
       clubs: [
         {
           id: 34,
-          name: "MUSE",
+          name_kr: "MUSE",
+          name_en: "MUSE",
           type: 2,
           isPermanent: false,
           characteristic: "밴드세션&코러스",
@@ -51,7 +54,8 @@ const mockMyClubList: ApiClb003ResponseOK = {
         },
         {
           id: 42,
-          name: "KAINATION",
+          name_kr: "KAINATION",
+          name_en: "KAINATION",
           type: 1,
           isPermanent: false,
           characteristic: "기부",

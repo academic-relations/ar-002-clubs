@@ -103,7 +103,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
             }}
           >
             2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-            {club.name}의<br />
+            {club.name_kr}의<br />
             회원 등록을 취소합니다.
           </CancellableModalContent>
         ) : (
@@ -114,7 +114,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
             }}
           >
             2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-            {club.name}의<br />
+            {club.name_kr}의<br />
             회원 등록 신청을 진행합니다.
           </CancellableModalContent>
         )}
@@ -145,14 +145,14 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   };
 
   return (
-    <AsyncBoundary isLoading={loading} isError={localError}>
+    <AsyncBoundary isError={localError} isLoading={loading}>
       <FlexWrapper direction="column" gap={60}>
         <PageHead
           items={[
             { name: "동아리 목록", path: "/clubs" },
-            { name: club.name, path: `/clubs/${club.id}` },
+            { name: club.name_kr, path: `/clubs/${club.id}` },
           ]}
-          title={club.name}
+          title={club.name_kr}
           action={
             isLoggedIn &&
             isRegistrationPeriod && (

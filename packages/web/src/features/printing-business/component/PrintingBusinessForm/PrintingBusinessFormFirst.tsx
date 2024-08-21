@@ -29,7 +29,7 @@ const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
   setFormError,
 }) => {
   const clubSelection: Array<SelectItem<string>> = clubs.map(club => ({
-    label: club.name,
+    label: club.name_kr,
     value: club.id.toString(),
     selectable: true,
   }));

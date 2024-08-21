@@ -1,6 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { zClubName } from "@sparcs-clubs/interface/common/commonString";
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 
 /**
@@ -23,7 +24,8 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     id: z.coerce.number().int().min(1),
     clubId: z.coerce.number().int().min(1),
-    clubName: z.string(),
+    clubNameKr: zClubName,
+    clubNameEn: zClubName,
     studentName: z.string(),
     studentPhoneNumber: zKrPhoneNumber,
     objects: z.array(
