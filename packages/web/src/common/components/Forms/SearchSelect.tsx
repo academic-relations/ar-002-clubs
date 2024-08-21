@@ -191,6 +191,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
 
   const handleItemClick = (clickedValue: string) => {
     setSelected(clickedValue);
+    handleChange(clickedValue);
     setListToggle(false);
   };
 
