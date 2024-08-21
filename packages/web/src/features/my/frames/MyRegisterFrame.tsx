@@ -14,7 +14,7 @@ import {
   mockRegisterPeriod,
 } from "@sparcs-clubs/web/features/my/services/_mock/mockMyRegister";
 
-const MyRegisterFrame: React.FC = () =>
+const MyRegisterFrame: React.FC<{ isStudent: boolean }> = ({ isStudent }) =>
   (mockRegisterPeriod.includes(
     RegistrationDeadlineEnum.ClubRegistrationApplication,
   ) ||
@@ -44,22 +44,23 @@ const MyRegisterFrame: React.FC = () =>
           )}
           {mockRegisterPeriod.includes(
             RegistrationDeadlineEnum.StudentRegistrationApplication,
-          ) && (
-            <FlexWrapper direction="column" gap={20}>
-              <MoreDetailTitle
-                title="회원 등록"
-                moreDetail=""
-                moreDetailPath=""
-              />
-              <AsyncBoundary isLoading={false} isError={false}>
-                <MyMemberTable
-                  memberRegisterList={
-                    mockMemberRegister ?? { total: 0, items: [], offset: 0 }
-                  }
+          ) &&
+            isStudent && (
+              <FlexWrapper direction="column" gap={20}>
+                <MoreDetailTitle
+                  title="회원 등록"
+                  moreDetail=""
+                  moreDetailPath=""
                 />
-              </AsyncBoundary>
-            </FlexWrapper>
-          )}
+                <AsyncBoundary isLoading={false} isError={false}>
+                  <MyMemberTable
+                    memberRegisterList={
+                      mockMemberRegister ?? { total: 0, items: [], offset: 0 }
+                    }
+                  />
+                </AsyncBoundary>
+              </FlexWrapper>
+            )}
         </FlexWrapper>
       </AsyncBoundary>
     </FoldableSectionTitle>
