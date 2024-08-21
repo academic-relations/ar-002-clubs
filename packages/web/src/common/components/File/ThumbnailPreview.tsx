@@ -6,42 +6,41 @@ import Typography from "../Typography";
 
 import ImagePreview from "./_atomic/ImagePreview";
 import UnsupportedPreview from "./_atomic/UnsupportedPreview";
+import Attachment, { isPreviewSupported } from "./attachment";
 
 interface ThumbnailPreviewProps {
-  fileSrc: string;
-  fileName: string;
+  file: Attachment;
+  onClick: () => void;
 }
 
 const ThumbnailPreview: React.FC<ThumbnailPreviewProps> = ({
-  fileSrc,
-  fileName,
-}: ThumbnailPreviewProps) => {
-  const fileExt = fileName.split(".").pop() || "unknown";
-
-  const previewSupportFile = ["png", "jpeg", "jpg", "webp"];
-  const isPreviewSupported = previewSupportFile.includes(fileExt.toLowerCase());
-
-  return (
-    <FlexWrapper gap={8} direction="column" style={{ width: "160px" }}>
-      {isPreviewSupported ? (
-        <ImagePreview src={fileSrc} />
-      ) : (
-        <UnsupportedPreview />
-      )}
-      <Typography
-        fs={14}
-        lh={16}
-        style={{
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-        }}
-        title={fileName}
-      >
-        {fileName}
-      </Typography>
-    </FlexWrapper>
-  );
-};
+  file,
+  onClick,
+}: ThumbnailPreviewProps) => (
+  <FlexWrapper
+    gap={8}
+    direction="column"
+    style={{ width: "160px" }}
+    onClick={onClick}
+  >
+    {isPreviewSupported(file) ? (
+      <ImagePreview src={file.src} alt={file.name} />
+    ) : (
+      <UnsupportedPreview file={file} />
+    )}
+    <Typography
+      fs={14}
+      lh={16}
+      style={{
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+      }}
+      title={file.name}
+    >
+      {file.name}
+    </Typography>
+  </FlexWrapper>
+);
 
 export default ThumbnailPreview;

@@ -1,8 +1,11 @@
 import styled from "styled-components";
 
+import noPreview from "@sparcs-clubs/web/assets/no-preview.png";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
+
+import Attachment from "../attachment";
 
 const UnsupportedPreviewWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.GRAY[100]};
@@ -18,11 +21,12 @@ const UnsupportedPreviewWrapper = styled.div`
   gap: 8px;
 `;
 
-const UnsupportedPreview = () => (
+const UnsupportedPreview = ({ file }: { file: Attachment }) => (
   <UnsupportedPreviewWrapper>
     <Icon type="insert_drive_file" size={24} color={colors.GRAY[300]} />
     <Typography fs={14} lh={16} color="GRAY.300">
       미리보기가 없습니다
+      <img src={noPreview.src} alt={file.name} style={{ display: "none" }} />
     </Typography>
   </UnsupportedPreviewWrapper>
 );
