@@ -200,7 +200,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
           placeholder={placeholder}
           hasError={!!errorMessage}
           disabled={disabled}
-          value={value}
+          value={value || selected}
           onChange={onChange ?? handleValueChange}
           {...props}
         />
