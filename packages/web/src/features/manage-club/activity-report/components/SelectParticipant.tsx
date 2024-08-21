@@ -24,6 +24,7 @@ import { type Participant } from "../types/activityReport";
 
 interface SelectParticipantProps {
   data: Participant[];
+  onSelected?: (value: Participant[]) => void;
   onChange?: React.Dispatch<React.SetStateAction<RowSelectionState>>;
   value?: RowSelectionState;
 }
@@ -97,6 +98,7 @@ const containsTextFilter: FilterFn<Participant> = (
 
 const SelectParticipant: React.FC<SelectParticipantProps> = ({
   data,
+  onSelected = null,
   onChange = null,
   value = null,
 }) => {
@@ -110,6 +112,9 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
       ? data.filter((_, i) => value?.[i])
       : data.filter((_, i) => rowValues?.[i]);
     setSelected(res);
+    if (onSelected != null) {
+      onSelected(res);
+    }
   }, [rowValues, value, data]);
 
   const table = useReactTable({

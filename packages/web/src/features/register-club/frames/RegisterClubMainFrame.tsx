@@ -19,7 +19,7 @@ import ActivityReportFrame from "../components/ActivityReportFrame";
 import AdvancedInformFrame from "../components/AdvancedInformFrame";
 import BasicInformFrame from "../components/BasicInformFrame";
 import ClubRulesFrame from "../components/ClubRulesFrame";
-import useRegisterClub from "../service/useRegisterClub";
+import useRegisterClub from "../services/useRegisterClub";
 import { RegisterClubInterface } from "../types/registerClub";
 
 interface RegisterClubMainFrameProps {
