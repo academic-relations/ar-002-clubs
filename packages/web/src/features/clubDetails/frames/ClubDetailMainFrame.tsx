@@ -60,10 +60,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
 }) => {
   const { isLoggedIn } = useAuth();
 
-  const [isInClubFromHook, clubLoading] = useIsInClub(
-    club.id,
-    isRegistrationPeriod,
-  );
+  const [isInClubFromHook, clubLoading] = useIsInClub(club.id);
 
   const [isInClub, setIsInclub] = useState(
     RegistrationApplicationStudentStatusEnum.Rejected,
