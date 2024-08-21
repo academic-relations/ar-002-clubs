@@ -1,6 +1,7 @@
 import React from "react";
 
 import isPropValid from "@emotion/is-prop-valid";
+import { useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
@@ -49,6 +50,7 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
   newRepresentative,
   refetch,
 }) => {
+  const router = useRouter();
   const Title =
     type === "Requested"
       ? "동아리 대표자 변경 요청"
@@ -60,8 +62,12 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
           prevRepresentative,
           newRepresentative,
         )
-      : myChangeRepresentativeFinishText(clubName);
-
+      : myChangeRepresentativeFinishText(
+          clubName,
+          prevRepresentative,
+          newRepresentative,
+        );
+  const isNewRepresentative = true; // TODO: 본인이 새로운 대표자인지 확인하는 로직 필요
   const openConfirmModal = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
@@ -94,9 +100,19 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
         {type === "Requested" && (
           <TextButton
             color="GRAY"
-            text="클릭해서 더보기"
+            text="클릭하여 더보기"
             fw="REGULAR"
             onClick={openConfirmModal}
+          />
+        )}
+        {type === "Finished" && isNewRepresentative && (
+          <TextButton
+            color="GRAY"
+            text="대표 동아리 관리 페이지 바로가기"
+            fw="REGULAR"
+            onClick={() => {
+              router.push(`/manage-club/`);
+            }}
           />
         )}
       </FlexWrapper>
