@@ -19,6 +19,7 @@ import MyInfoFrame from "@sparcs-clubs/web/features/my/frames/MyInfoFrame";
 import MyRegisterFrame from "@sparcs-clubs/web/features/my/frames/MyRegisterFrame";
 import MyServiceFrame from "@sparcs-clubs/web/features/my/frames/MyServiceFrame";
 import { useGetMyDelegateRequest } from "@sparcs-clubs/web/features/my/services/getMyDelegateRequest";
+import { useGetProfileNow } from "@sparcs-clubs/web/hooks/getProfileNow";
 
 const ResponsiveWrapper = styled(FlexWrapper)`
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
@@ -28,7 +29,8 @@ const ResponsiveWrapper = styled(FlexWrapper)`
 
 const My: React.FC = () => {
   // TODO: clb014 api 구현되면 refetch 테스트
-  const isStudent = true; // 학생 <--> 지도교수 TODO: 로그인 정보로 대체
+  const profile = useGetProfileNow();
+  const isProfessor = profile === "professor";
   const { data, isLoading, isError, refetch } = useGetMyDelegateRequest();
   const fetchDivisionPresident = () => {}; // TODO
 
@@ -71,7 +73,7 @@ const My: React.FC = () => {
     }
   }, [data]);
 
-  return isStudent ? (
+  return !isProfessor ? (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <ResponsiveWrapper direction="column" gap={60}>
         <PageHead
@@ -99,7 +101,7 @@ const My: React.FC = () => {
         )}
         <MyInfoFrame />
         <MyClubFrame />
-        <MyRegisterFrame isStudent={isStudent} />
+        <MyRegisterFrame isProfessor={isProfessor} />
         <MyServiceFrame />
       </ResponsiveWrapper>
     </AsyncBoundary>
@@ -111,7 +113,7 @@ const My: React.FC = () => {
       />
       <MyInfoFrame />
       <MyClubFrame />
-      <MyRegisterFrame isStudent={isStudent} />
+      <MyRegisterFrame isProfessor={isProfessor} />
     </FlexWrapper>
   );
 };
