@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -10,7 +10,7 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import ClubButton from "@sparcs-clubs/web/features/register-club/components/ClubButton";
+import ClubButton from "@sparcs-clubs/web/features/register-club/components/_atomic/ClubButton";
 
 const ClubButtonWrapper = styled.div`
   display: flex;
