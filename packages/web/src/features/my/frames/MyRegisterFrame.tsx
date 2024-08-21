@@ -6,11 +6,13 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
+import MyClubProfTable from "@sparcs-clubs/web/features/my/components/MyClubProfTable";
 import MyClubTable from "@sparcs-clubs/web/features/my/components/MyClubTable";
 import MyMemberTable from "@sparcs-clubs/web/features/my/components/MyMemberTable";
 import {
   mockClubRegister,
   mockMemberRegister,
+  mockProfClubRegister,
   mockRegisterPeriod,
 } from "@sparcs-clubs/web/features/my/services/_mock/mockMyRegister";
 
@@ -34,11 +36,19 @@ const MyRegisterFrame: React.FC<{ isStudent: boolean }> = ({ isStudent }) =>
                 moreDetailPath=""
               />
               <AsyncBoundary isLoading={false} isError={false}>
-                <MyClubTable
-                  clubRegisterList={
-                    mockClubRegister ?? { total: 0, items: [], offset: 0 }
-                  }
-                />
+                {isStudent ? (
+                  <MyClubTable
+                    clubRegisterList={
+                      mockClubRegister ?? { total: 0, items: [], offset: 0 }
+                    }
+                  />
+                ) : (
+                  <MyClubProfTable
+                    clubProfRegisterList={
+                      mockProfClubRegister ?? { total: 0, items: [], offset: 0 }
+                    }
+                  />
+                )}
               </AsyncBoundary>
             </FlexWrapper>
           )}
