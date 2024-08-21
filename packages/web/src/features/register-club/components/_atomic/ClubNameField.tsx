@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import { useFormContext } from "react-hook-form";
@@ -16,7 +16,8 @@ interface ClubNameFieldProps {
 }
 
 const ClubNameField: React.FC<ClubNameFieldProps> = ({ clubList = [] }) => {
-  const { control } = useFormContext<ApiReg001RequestBody>();
+  const { control, resetField, setValue } =
+    useFormContext<ApiReg001RequestBody>();
 
   const [isCheckedClubName, setIsCheckedClubName] = useState(false);
 
@@ -31,6 +32,15 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({ clubList = [] }) => {
       ),
     [clubList],
   );
+
+  useEffect(() => {
+    if (clubList.length > 0 && !isCheckedClubName) {
+      resetField("clubNameKr", { keepError: false });
+      resetField("clubNameEn", { keepError: false });
+      setValue("clubNameKr", "");
+      setValue("clubNameEn", "");
+    }
+  }, [clubList.length, isCheckedClubName, resetField, setValue]);
 
   if (clubList.length === 0) {
     return (
@@ -89,7 +99,7 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({ clubList = [] }) => {
         <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
           <FormController
             name="clubNameKr"
-            required
+            required={isCheckedClubName}
             control={control}
             renderItem={props => (
               <TextInput
@@ -101,7 +111,7 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({ clubList = [] }) => {
           />
           <FormController
             name="clubNameEn"
-            required
+            required={isCheckedClubName}
             control={control}
             renderItem={props => (
               <TextInput
