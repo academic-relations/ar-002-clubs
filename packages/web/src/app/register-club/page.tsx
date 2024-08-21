@@ -156,7 +156,11 @@ const RegisterClub = () => {
         />
       </ClubButtonWrapper>
       <Button
-        type={selectedType === null ? "disabled" : "default"}
+        type={
+          selectedType === null || myRegistration.registrations.length > 0
+            ? "disabled"
+            : "default"
+        }
         onClick={() => onClick()}
       >
         등록 신청
