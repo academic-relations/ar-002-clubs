@@ -1,6 +1,5 @@
 import apiClb005 from "@sparcs-clubs/interface/api/club/endpoint/apiClb005";
 import { useMutation } from "@tanstack/react-query";
-import { z } from "zod";
 
 import {
   axiosClientWithAuth,
@@ -8,23 +7,25 @@ import {
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
-import type { ApiClb005RequestParam } from "@sparcs-clubs/interface/api/club/endpoint/apiClb005";
-
-type ISuccessResponseType = z.infer<(typeof apiClb005.responseBodyMap)[201]>;
+import type {
+  ApiClb005RequestBody,
+  ApiClb005RequestParam,
+  ApiClb005ResponseCreated,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb005";
 
 export const usePutClubInfo = () =>
   useMutation<
-    ISuccessResponseType,
+    ApiClb005ResponseCreated,
     Error,
     {
       requestParam: ApiClb005RequestParam;
-      body: z.infer<typeof apiClb005.requestBody>;
+      body: ApiClb005RequestBody;
     }
   >({
     mutationFn: async ({
       requestParam,
       body,
-    }): Promise<ISuccessResponseType> => {
+    }): Promise<ApiClb005ResponseCreated> => {
       const { data, status } = await axiosClientWithAuth.put(
         apiClb005.url(requestParam.clubId),
         body,
