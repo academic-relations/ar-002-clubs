@@ -34,15 +34,15 @@ const Clubs: React.FC = () => {
         items={[{ name: "동아리 목록", path: "/clubs" }]}
         title="동아리 목록"
       />
+      {isRegistrationPeriod && (
+        <Info text="현재는 2024년 봄학기 동아리 신청 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
+      )}
       <SearchInput
         searchText={searchText}
         handleChange={setSearchText}
         placeholder="동아리 이름으로 검색하세요"
       />
       <AsyncBoundary isLoading={isLoading} isError={isError}>
-        {isRegistrationPeriod && (
-          <Info text="현재는 2024년 봄학기 동아리 신청 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
-        )}
         <FlexWrapper direction="column" gap={40}>
           {(data?.divisions ?? []).map(
             division =>
