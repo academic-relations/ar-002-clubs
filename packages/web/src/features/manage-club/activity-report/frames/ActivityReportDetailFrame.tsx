@@ -46,11 +46,11 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
 // label prop으로 이름을 넣고, children으로 ActivityDetail들을 넣어 주세요.
 
 const FlexTypography = styled(Typography)`
-display: flex;
-fiex-direction: column;
-gap: 12px;
-align-items: flex-start;
-align-self; stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  align-self: stretch;
 `;
 
 const ActivityDetail: React.FC<{ children: string | ReactNode }> = ({

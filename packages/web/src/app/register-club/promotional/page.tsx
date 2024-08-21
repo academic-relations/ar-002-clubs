@@ -6,7 +6,7 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 
 import RegisterClubMainFrame from "@sparcs-clubs/web/features/register-club/frames/RegisterClubMainFrame";
-import useGetClubsForPromotional from "@sparcs-clubs/web/features/register-club/service/useGetClubsForPromotional";
+import useGetClubsForPromotional from "@sparcs-clubs/web/features/register-club/services/useGetClubsForPromotional";
 
 const PromotionalRegisterClub = () => {
   const { data, isLoading, isError } = useGetClubsForPromotional();
