@@ -70,6 +70,7 @@ export const getDbInstance = async () => {
         meetingSchema,
       },
       mode: "default",
+      logger: true,
     });
   }
   return dbInstance;

@@ -220,25 +220,19 @@ export default class ClubRepository {
   ) {
     const result = await this.db.transaction(async tx => {
       const cur = getKSTDate();
-      const delegate = (
-        await tx
-          .select({
-            clubId: ClubDelegateD.clubId,
-          })
-          .from(ClubDelegateD)
-          .where(
-            and(
-              eq(ClubDelegateD.studentId, studentId),
-              lte(ClubDelegateD.startTerm, cur),
-              or(
-                gte(ClubDelegateD.endTerm, cur),
-                isNull(ClubDelegateD.endTerm),
-              ),
-              isNull(ClubDelegateD.deletedAt),
-            ),
-          )
-          .for("share")
-      ).map(obj => obj.clubId);
+      const delegate = tx
+        .select({
+          clubId: ClubDelegateD.clubId,
+        })
+        .from(ClubDelegateD)
+        .where(
+          and(
+            eq(ClubDelegateD.studentId, studentId),
+            lte(ClubDelegateD.startTerm, cur),
+            or(gte(ClubDelegateD.endTerm, cur), isNull(ClubDelegateD.endTerm)),
+            isNull(ClubDelegateD.deletedAt),
+          ),
+        );
       const club = await tx
         .select({
           id: Club.id,
