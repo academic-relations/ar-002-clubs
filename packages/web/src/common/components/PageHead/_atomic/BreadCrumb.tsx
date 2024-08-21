@@ -22,6 +22,9 @@ const BreadCrumbContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    gap: 8px;
+  }
 `;
 
 const BreadCrumb: React.FC<BreadCrumbProps> = ({

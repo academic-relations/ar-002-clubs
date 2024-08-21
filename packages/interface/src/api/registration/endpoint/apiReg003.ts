@@ -6,7 +6,7 @@ import { z } from "zod";
  * @description 이번학기 동아리 신규등록 신청이 가능한 동아리 id 목록을 리턴합니다.
  */
 
-const url = () => `/student/registration/qualification/renewal`;
+const url = () => `/student/registration/qualification/promotional`;
 const method = "GET";
 
 const requestParam = z.object({});

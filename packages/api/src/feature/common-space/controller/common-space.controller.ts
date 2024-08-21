@@ -16,6 +16,7 @@ import apiCms006 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms0
 import apiCms007 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
+import { Public } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 
 import { CommonSpaceService } from "../service/common-space.service";
 
@@ -52,12 +53,14 @@ import type {
 export class CommonSpaceController {
   constructor(private readonly commonspaceService: CommonSpaceService) {}
 
+  @Public()
   @Get("common-spaces")
   async getCommonSpaces(): Promise<ApiCms001ResponseOK> {
     const result = await this.commonspaceService.getCommonSpaces();
     return result;
   }
 
+  @Public()
   @Get("common-spaces/common-space/:spaceId/orders")
   @UsePipes(new ZodPipe(apiCms002))
   async getCommonSpaceUsageOrder(
