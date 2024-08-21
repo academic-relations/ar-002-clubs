@@ -43,7 +43,11 @@ const columns = [
         info.getValue(),
         RegistrationTypeTagList,
       );
-      return <Tag color={color}>{text}</Tag>;
+      return (
+        <Tag color={color} width="80px">
+          {text}
+        </Tag>
+      );
     },
     size: 120,
   }),
@@ -55,7 +59,11 @@ const columns = [
         info.getValue(),
         DivisionTypeTagList,
       );
-      return <Tag color={color}>{text}</Tag>;
+      return (
+        <Tag color={color} width="80px">
+          {text}
+        </Tag>
+      );
     },
     size: 120,
   }),
