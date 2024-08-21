@@ -1,6 +1,6 @@
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import {
-  RegistrationEventEnum,
+  RegistrationDeadlineEnum,
   RegistrationStatusEnum,
   RegistrationTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
@@ -14,6 +14,23 @@ const mockClubRegister = {
       clubNameKr: "술박스",
       activityFieldKr: "개발개발한 어떤 활동",
       professorName: "박지호",
+      clubId: 1,
+    },
+  ],
+  total: 1,
+  offset: 1,
+};
+
+const mockProfClubRegister = {
+  items: [
+    {
+      registrationStatusEnum: RegistrationStatusEnum.Pending,
+      clubDivision: "생활문화",
+      clubNameKr: "술박스",
+      studentNumber: "202XXXXX",
+      studentName: "이지윤",
+      phoneNumber: "XXX-XXXX-XXXX",
+      studentEmail: "xxxxx@kaist.ac.kr",
       clubId: 1,
     },
   ],
@@ -55,8 +72,13 @@ const mockMemberRegister = {
   offset: 4,
 };
 const mockRegisterPeriod = [
-  RegistrationEventEnum.ClubRegistrationApplication,
-  RegistrationEventEnum.StudentRegistrationApplication,
+  RegistrationDeadlineEnum.ClubRegistrationApplication,
+  RegistrationDeadlineEnum.StudentRegistrationApplication,
 ];
 
-export { mockClubRegister, mockMemberRegister, mockRegisterPeriod };
+export {
+  mockClubRegister,
+  mockProfClubRegister,
+  mockMemberRegister,
+  mockRegisterPeriod,
+};

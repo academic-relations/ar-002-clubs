@@ -42,7 +42,7 @@ const PrintingBusinessFormThird: React.FC<PrintingBusinessFormThirdProps> = ({
           [
             "동아리",
             `동아리: ${
-              clubs.at(requestParam.clubId ?? 0)?.name.toString() ??
+              clubs.at(requestParam.clubId ?? 0)?.name_kr.toString() ??
               "동아리 선택에 오류가 있습니다. 이전 단계를 검토해주세요"
             }`,
           ],

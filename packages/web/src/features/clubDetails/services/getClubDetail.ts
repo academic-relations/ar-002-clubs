@@ -1,10 +1,9 @@
 import apiClb002 from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 import { useQuery } from "@tanstack/react-query";
-import { z } from "zod";
 
 import mockupData from "@sparcs-clubs/web/features/clubDetails/services/_mock/mockupClubDetail";
 import {
-  axiosClientWithAuth,
+  axiosClient,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
@@ -15,7 +14,7 @@ export const useGetClubDetail = (club_id: string) =>
   useQuery<ApiClb002ResponseOK, Error>({
     queryKey: [apiClb002.url(club_id)],
     queryFn: async (): Promise<ApiClb002ResponseOK> => {
-      const { data, status } = await axiosClientWithAuth.get(
+      const { data, status } = await axiosClient.get(
         apiClb002.url(club_id),
         {},
       );
@@ -31,8 +30,5 @@ export const useGetClubDetail = (club_id: string) =>
   });
 
 defineAxiosMock(mock => {
-  mock.onGet(apiClb002.url("1")).reply(() => {
-    const dummy: z.infer<(typeof apiClb002.responseBodyMap)[200]> = mockupData;
-    return [200, dummy];
-  });
+  mock.onGet(apiClb002.url("1")).reply(() => [200, mockupData]);
 });

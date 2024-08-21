@@ -1,10 +1,10 @@
-import { AxiosError, HttpStatusCode, InternalAxiosRequestConfig } from "axios";
+import { AxiosError, AxiosResponse, HttpStatusCode } from "axios";
 
 import postRefresh from "./postRefresh";
 
 const errorInterceptor = {
-  onFulfilled(config: InternalAxiosRequestConfig) {
-    return config;
+  onFulfilled(values: AxiosResponse) {
+    return values;
   },
   async onRejected(error: AxiosError) {
     switch (error.response?.status) {

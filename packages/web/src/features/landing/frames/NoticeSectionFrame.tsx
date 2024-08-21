@@ -28,6 +28,10 @@ const NoticeWrapper = styled.div`
   flex-direction: column;
   gap: 20px;
   margin-left: 24px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    margin-left: 16px;
+    gap: 16px;
+  }
 `;
 
 const NoticeSectionFrame: React.FC = () => {

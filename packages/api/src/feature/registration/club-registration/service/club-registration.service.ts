@@ -5,26 +5,70 @@ import {
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import { ApiReg002ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
 import { ApiReg003ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg003";
+import {
+  ApiReg009RequestBody,
+  ApiReg009ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg009";
+import { ApiReg010ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg010";
+import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
+import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
+
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
-import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import {
+  RegistrationDeadlineEnum,
+  RegistrationTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
+import DivisionPublicService from "@sparcs-clubs/api/feature/division/service/division.public.service";
+
+import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 
 import { ClubRegistrationRepository } from "../repository/club-registration.repository";
+
+import { ClubRegistrationPublicService } from "./club-registration.public.service";
 
 @Injectable()
 export class ClubRegistrationService {
   constructor(
     private readonly clubRegistrationRepository: ClubRegistrationRepository,
     private clubPublicService: ClubPublicService,
+    private divisionPublicService: DivisionPublicService,
+    private filePublicService: FilePublicService,
+    private clubRegistrationPublicService: ClubRegistrationPublicService,
   ) {}
 
+  /**
+   * @description 동아리 대표자인지 검증하는 로직은 repository쪽에서 진행됩니다.
+   */
   async postStudentRegistrationClubRegistration(
+    studentId: number,
     body: ApiReg001RequestBody,
   ): Promise<ApiReg001ResponseCreated> {
     await this.validateRegistration(body.clubId, body.registrationTypeEnumId);
 
+    // studentId 일치 확인
+    if (studentId !== body.studentId)
+      throw new HttpException("StudentId not match", HttpStatus.BAD_REQUEST);
+
+    const validateDivisionId =
+      await this.divisionPublicService.findDivisionById(body.divisionId);
+    if (!validateDivisionId)
+      throw new HttpException("division not found", HttpStatus.NOT_FOUND);
+    // 각각의 fileid들이 실제로 존재하는지 확인
+    const fileIds = [
+      body.activityPlanFileId ? "activityPlanFileId" : null,
+      body.clubRuleFileId ? "clubRuleFileId" : null,
+      body.externalInstructionFileId ? "externalInstructionFileId" : null,
+    ].filter(Boolean);
+    await Promise.all(
+      fileIds.map(key => this.filePublicService.getFileInfoById(body[key])),
+    );
+    // 동아리 등록 기간인지 확인
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [RegistrationDeadlineEnum.ClubRegistrationApplication],
+    });
     const transformedBody = {
       ...body,
       foundedAt: await this.transformFoundedAt(
@@ -33,9 +77,9 @@ export class ClubRegistrationService {
       ),
     };
 
-    // TODO: 활동 id 검증 로직 필요
-    await this.clubRegistrationRepository.createRegistration(transformedBody);
-    return {};
+    const result =
+      await this.clubRegistrationRepository.createRegistration(transformedBody);
+    return result;
   }
 
   // 정동아리 재등록 신청
@@ -157,5 +201,111 @@ export class ClubRegistrationService {
 
     // 시간 부분을 00:00:00으로 설정
     return new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
+  }
+
+  /**
+   * @description studentId가 유효한지에 대한 검증은 repository쪽에서 진행됩니다.
+   */
+  async putStudentRegistrationsClubRegistration(
+    studentId: number,
+    applyId: number,
+    body: ApiReg009RequestBody,
+  ): Promise<ApiReg009ResponseOk> {
+    if (studentId !== body.studentId)
+      throw new HttpException("StudentId not match", HttpStatus.BAD_REQUEST);
+    // divisionId가 유효한지 확인
+    const validateDivisionId =
+      await this.divisionPublicService.findDivisionById(body.divisionId);
+    if (!validateDivisionId)
+      throw new HttpException("division not found", HttpStatus.NOT_FOUND);
+    // 각각의 fileid들이 실제로 존재하는지 확인
+    const fileIds = [
+      body.activityPlanFileId ? "activityPlanFileId" : null,
+      body.clubRuleFileId ? "clubRuleFileId" : null,
+      body.externalInstructionFileId ? "externalInstructionFileId" : null,
+    ].filter(Boolean);
+    await Promise.all(
+      fileIds.map(key => this.filePublicService.getFileInfoById(body[key])),
+    );
+    // 동아리 등록 기간인지 확인
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [
+        RegistrationDeadlineEnum.ClubRegistrationApplication,
+        RegistrationDeadlineEnum.ClubRegistrationModification,
+      ],
+    });
+    const result =
+      await this.clubRegistrationRepository.putStudentRegistrationsClubRegistration(
+        studentId,
+        applyId,
+        body,
+      );
+    return result;
+  }
+
+  /**
+   * @description studentId가 유효한지에 대한 검증은 repository쪽에서 진행됩니다.
+   */
+  async deleteStudentRegistrationsClubRegistration(
+    studentId: number,
+    applyId: number,
+  ): Promise<ApiReg010ResponseOk> {
+    // 동아리 신청, 집행부원 피드백, 동아리 수정 기간인지 확인합니다.
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [
+        RegistrationDeadlineEnum.ClubRegistrationApplication,
+        RegistrationDeadlineEnum.ClubRegistrationModification,
+        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+      ],
+    });
+    await this.clubRegistrationRepository.deleteStudentRegistrationsClubRegistration(
+      studentId,
+      applyId,
+    );
+    return {};
+  }
+
+  /**
+   * @description studentId가 유효한지에 대한 검증은 repository쪽에서 진행됩니다.
+   */
+  async getStudentRegistrationsClubRegistration(
+    studentId: number,
+    applyId: number,
+  ): Promise<ApiReg011ResponseOk> {
+    // 동아리 신청, 집행부원 피드백, 동아리 수정 기간인지 확인합니다.
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [
+        RegistrationDeadlineEnum.ClubRegistrationApplication,
+        RegistrationDeadlineEnum.ClubRegistrationModification,
+        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+      ],
+    });
+    const result =
+      await this.clubRegistrationRepository.getStudentRegistrationsClubRegistration(
+        studentId,
+        applyId,
+      );
+    return result;
+  }
+
+  /**
+   * @description studentId가 유효한지에 대한 검증은 repository쪽에서 진행됩니다.
+   */
+  async getStudentRegistrationsClubRegistrationsMy(
+    studentId: number,
+  ): Promise<ApiReg012ResponseOk> {
+    // 동아리 신청, 집행부원 피드백, 동아리 수정 기간인지 확인합니다.
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [
+        RegistrationDeadlineEnum.ClubRegistrationApplication,
+        RegistrationDeadlineEnum.ClubRegistrationModification,
+        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+      ],
+    });
+    const result =
+      await this.clubRegistrationRepository.getStudentRegistrationsClubRegistrationsMy(
+        studentId,
+      );
+    return result;
   }
 }
