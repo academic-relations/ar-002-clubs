@@ -11,7 +11,7 @@ import { z } from "zod";
  */
 
 const url = () => `/files/download-links`;
-const method = "GET";
+const method = "POST";
 
 const requestParam = z.object({});
 

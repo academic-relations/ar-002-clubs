@@ -23,11 +23,11 @@ import type {
 import type {
   ApiFil002RequestBody,
   ApiFil002ResponseOk,
-} from "@sparcs-clubs/interface/api/file/endpoint/apiFil002";
+} from "@sparcs-clubs/interface/api/file/apiFil002";
 import type {
   ApiFil003RequestBody,
   ApiFil003ResponseOk,
-} from "@sparcs-clubs/interface/api/file/endpoint/apiFil003";
+} from "@sparcs-clubs/interface/api/file/apiFil003";
 
 @Injectable()
 export class FileService {

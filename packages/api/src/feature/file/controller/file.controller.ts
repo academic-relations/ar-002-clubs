@@ -8,9 +8,9 @@ import {
   UsePipes,
 } from "@nestjs/common";
 
-import apiFil001 from "@sparcs-clubs/interface/api/file/endpoint/apiFil001";
-import apiFil002 from "@sparcs-clubs/interface/api/file/endpoint/apiFil002";
-import apiFil003 from "@sparcs-clubs/interface/api/file/endpoint/apiFil003";
+import apiFil001 from "@sparcs-clubs/interface/api/file/apiFil001";
+import apiFil002 from "@sparcs-clubs/interface/api/file/apiFil002";
+import apiFil003 from "@sparcs-clubs/interface/api/file/apiFil003";
 
 import { Request } from "express";
 
@@ -28,11 +28,11 @@ import type {
 import type {
   ApiFil002RequestBody,
   ApiFil002ResponseOk,
-} from "@sparcs-clubs/interface/api/file/endpoint/apiFil002";
+} from "@sparcs-clubs/interface/api/file/apiFil002";
 import type {
   ApiFil003RequestBody,
   ApiFil003ResponseOk,
-} from "@sparcs-clubs/interface/api/file/endpoint/apiFil003";
+} from "@sparcs-clubs/interface/api/file/apiFil003";
 
 @Controller()
 export class FileController {
