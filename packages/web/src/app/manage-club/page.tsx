@@ -3,9 +3,7 @@
 import React from "react";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import ChangeClubInfoCard from "@sparcs-clubs/web/features/manage-club/components/ChangeClubInfoCard";
 import ActivityManageFrame from "@sparcs-clubs/web/features/manage-club/frames/ActivityManageFrame";
 import InfoManageFrame from "@sparcs-clubs/web/features/manage-club/frames/InfoManageFrame";
 import MembersManageFrame from "@sparcs-clubs/web/features/manage-club/frames/MembersManageFrame";
@@ -20,15 +18,7 @@ const ManageClub: React.FC = () => {
         items={[{ name: "대표 동아리 관리", path: "/manage-club" }]}
         title="대표 동아리 관리"
       />
-      {isRepresentative ? (
-        <InfoManageFrame />
-      ) : (
-        <FoldableSectionTitle title="동아리 정보">
-          <FlexWrapper direction="column" gap={40}>
-            <ChangeClubInfoCard />
-          </FlexWrapper>
-        </FoldableSectionTitle>
-      )}
+      <InfoManageFrame isRepresentative={isRepresentative} />
       <ActivityManageFrame />
       <MembersManageFrame />
       <ServiceManageFrame />

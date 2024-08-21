@@ -17,12 +17,14 @@ const InfoWrapper = styled.div`
   }
 `;
 
-const InfoManageFrame: React.FC = () => (
+const InfoManageFrame: React.FC<{
+  isRepresentative: boolean;
+}> = ({ isRepresentative }) => (
   <FlexWrapper direction="column" gap={40}>
     <FoldableSectionTitle title="동아리 정보">
       <InfoWrapper>
         <ChangeClubInfoCard />
-        <ChangeRepresentativeCard />
+        {isRepresentative && <ChangeRepresentativeCard />}
       </InfoWrapper>
     </FoldableSectionTitle>
   </FlexWrapper>
