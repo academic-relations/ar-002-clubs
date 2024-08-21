@@ -130,6 +130,12 @@ export class MemberRegistrationService {
         "Not a member registration event duration",
         HttpStatus.BAD_REQUEST,
       );
+
+    // if (applyStatusEnumId === RegistrationApplicationStudentStatusEnum.Approved) {
+
+    // }
+    // TODO: Enum이 Approved 이면 동아리 회원목록에 추가
+    // TODO: Enum이 Rejected 되면 동아리 회원목록에서 제거
     const result =
       await this.memberRegistrationRepository.patchMemberRegistration(
         applyId,
