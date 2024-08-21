@@ -38,7 +38,7 @@ const MoreInfoWrapper = styled.div`
   flex-direction: row;
   gap: 60px;
 
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
     flex-direction: column;
   }
 `;
@@ -134,7 +134,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
           isLoggedIn &&
           (isRegistrationPeriod ? (
             <ResisterInfoWrapper>
-              {isMobile ? null : (
+              {!isMobile ?? (
                 <Typography fs={16} color="GRAY.600" fw="REGULAR">
                   등록 신청 {club.totalMemberCnt}명
                 </Typography>

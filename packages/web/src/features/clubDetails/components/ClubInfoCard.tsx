@@ -55,14 +55,6 @@ const ResponsiveClubCard = styled(Card)`
   }
 `;
 
-const ResponsiveTagWrapper = styled.div`
-  width: 73px;
-  height: 24px;
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
-    width: 58px;
-    height: 18px;
-  }
-`;
 const ClubInfoCard: React.FC<ClubInfoCardProps> = ({ club }) => {
   const theme = useTheme();
   const [isMobile, setIsMobile] = useState(false);
@@ -89,11 +81,9 @@ const ClubInfoCard: React.FC<ClubInfoCardProps> = ({ club }) => {
         <ClubInfoItem
           title={isMobile ? "지위" : "동아리 지위"}
           content={
-            <ResponsiveTagWrapper>
-              <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
-                {getTagContentFromClubType(club.type, club.isPermanent)}
-              </Tag>
-            </ResponsiveTagWrapper>
+            <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
+              {getTagContentFromClubType(club.type, club.isPermanent)}
+            </Tag>
           }
         />
         <ClubInfoItem
