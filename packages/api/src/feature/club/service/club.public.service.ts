@@ -1,5 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 
 import { ClubDelegateDRepository } from "../repository/club.club-delegate-d.repository";
@@ -103,27 +105,28 @@ export default class ClubPublicService {
   }
 
   /**
-   * @param clubStatusEnumId 동아리 상태 enum id
+   * @param clubStatusEnumId 동아리 상태 enum id의 배열
+   * @param studentId 사용중인 학생 id
    * @param semesterId 신청 학기 id
-   * @returns 특정 학기의 특정 상태(정동아리/가동아리)의 동아리(clubId) list
-   * 예를 들어, getClubIdByClubStatusEnumId(ClubTypeEnum.Regular, semesterId) 의 경우,
+   * @returns 특정 학기의 특정 상태(정동아리/가동아리/정동아리 or 가동아리)의 동아리(clubId) list
+   * 예를 들어, getClubIdByClubStatusEnumId([ClubTypeEnum.Regular], semesterId) 의 경우,
    * semsterId 학기 당시 정동아리였던 동아리의 clubId list를 반환합니다.
    */
   async getClubIdByClubStatusEnumId(
     studentId: number,
-    clubStatusEnumId: number,
+    clubStatusEnumIds: Array<ClubTypeEnum>,
     semesterId: number,
   ) {
     const clubList = await this.clubRepository.findClubIdByClubStatusEnumId(
       studentId,
-      clubStatusEnumId,
+      clubStatusEnumIds,
       semesterId,
     );
     return clubList;
   }
 
   /**
-   *
+   * @param studentId
    * @param semesterId
    * @returns 신규 등록 신청이 가능한 동아리 list
    * 신청 학기를 기준으로 아래에 포함되는 clubId list를 반환합니다.

@@ -13,6 +13,7 @@ import { ApiReg010ResponseOk } from "@sparcs-clubs/interface/api/registration/en
 import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
 
+import { ApiReg018ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg018";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import {
   RegistrationDeadlineEnum,
@@ -99,10 +100,30 @@ export class ClubRegistrationService {
     const reRegAbleList =
       await this.clubPublicService.getClubIdByClubStatusEnumId(
         studentId,
-        ClubTypeEnum.Regular,
+        [ClubTypeEnum.Regular],
         semesterId,
       ); // 현재 학기 기준 정동아리 list
     logger.debug(`[getReRegistrationAbleList] semester Id is ${semesterId}`);
+    return {
+      clubs: reRegAbleList,
+    };
+  }
+
+  // 가동아리 재등록 신청
+  async getStudentRegistrationClubRegistrationQualificationProvisionalRenewal(
+    studentId: number,
+  ): Promise<ApiReg018ResponseOk> {
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [RegistrationDeadlineEnum.ClubRegistrationApplication],
+    });
+    const cur = getKSTDate();
+    const semesterId = await this.clubPublicService.dateToSemesterId(cur);
+    const reRegAbleList =
+      await this.clubPublicService.getClubIdByClubStatusEnumId(
+        studentId,
+        [ClubTypeEnum.Regular, ClubTypeEnum.Provisional],
+        semesterId,
+      );
     return {
       clubs: reRegAbleList,
     };

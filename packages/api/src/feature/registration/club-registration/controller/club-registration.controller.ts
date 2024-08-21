@@ -32,6 +32,9 @@ import apiReg011, {
   ApiReg011ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
+import apiReg018, {
+  ApiReg018ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg018";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
@@ -66,7 +69,7 @@ export class ClubRegistrationController {
     "/student/registrations/club-registrations/club-registration/qualifications/renewal",
   )
   @UsePipes(new ZodPipe(apiReg002))
-  async getStudentRegistrationClubRegistrationQualificationRenewal(
+  async getStudentRegistrationsClubRegistrationQualificationRenewal(
     @GetStudent() user: GetStudent,
   ): Promise<ApiReg002ResponseOk> {
     const orders =
@@ -78,10 +81,25 @@ export class ClubRegistrationController {
 
   @Student()
   @Get(
+    "/student/registrations/club-registrations/club-registration/qualifications/provisional-renewal",
+  )
+  @UsePipes(new ZodPipe(apiReg018))
+  async getStudentRegistrationsClubRegistrationQualificationProvisionalRenewal(
+    @GetStudent() user: GetStudent,
+  ): Promise<ApiReg018ResponseOk> {
+    const orders =
+      await this.clubRegistrationService.getStudentRegistrationClubRegistrationQualificationProvisionalRenewal(
+        user.studentId,
+      );
+    return orders;
+  }
+
+  @Student()
+  @Get(
     "/student/registrations/club-registrations/club-registration/qualifications/promotional",
   )
   @UsePipes(new ZodPipe(apiReg003))
-  async getStudentRegistrationClubRegistrationQualificationPromotional(
+  async getStudentRegistrationsClubRegistrationQualificationPromotional(
     @GetStudent() user: GetStudent,
   ): Promise<ApiReg003ResponseOk> {
     const orders =

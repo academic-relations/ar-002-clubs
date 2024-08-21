@@ -215,7 +215,7 @@ export default class ClubRepository {
 
   async findClubIdByClubStatusEnumId(
     studentId: number,
-    clubStatusEnumId: number,
+    clubStatusEnumIds: Array<ClubTypeEnum>,
     semesterId: number,
   ) {
     const result = await this.db.transaction(async tx => {
@@ -255,7 +255,7 @@ export default class ClubRepository {
           ClubT,
           and(
             eq(Club.id, ClubT.clubId),
-            eq(ClubT.clubStatusEnumId, clubStatusEnumId),
+            inArray(ClubT.clubStatusEnumId, clubStatusEnumIds),
             eq(ClubT.semesterId, semesterId),
             isNull(ClubT.deletedAt),
           ),
