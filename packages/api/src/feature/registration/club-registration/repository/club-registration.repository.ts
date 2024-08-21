@@ -71,6 +71,7 @@ export class ClubRegistrationRepository {
   ): Promise<ApiReg001ResponseCreated> {
     const cur = getKSTDate();
     await this.db.transaction(async tx => {
+      // - 신규 가동아리 신청을 제외하곤 기존 동아리 대표자의 신청인지 검사합니다.
       if (body.registrationTypeEnumId !== RegistrationTypeEnum.NewProvisional) {
         const delegate = await tx
           .select({
