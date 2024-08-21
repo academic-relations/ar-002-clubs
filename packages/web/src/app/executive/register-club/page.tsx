@@ -17,10 +17,6 @@ const RegisterClub = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
 
-  if (profile !== "executive") {
-    return <Custom404 />;
-  }
-
   /* TODO : API로 데이터 받아오기 */
   const data = mockRegisterClub;
   const paginatedData = {
@@ -33,7 +29,7 @@ const RegisterClub = () => {
     setCurrentPage(page);
   };
 
-  return (
+  return profile === "executive" ? (
     <FlexWrapper direction="column" gap={20}>
       <PageHead
         items={[
@@ -54,6 +50,8 @@ const RegisterClub = () => {
         </FlexWrapper>
       </AsyncBoundary>
     </FlexWrapper>
+  ) : (
+    <Custom404 />
   );
 };
 
