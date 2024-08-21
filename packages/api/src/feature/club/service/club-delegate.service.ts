@@ -170,6 +170,8 @@ export default class ClubDelegateService {
         status: HttpStatus.NO_CONTENT,
         data: {},
       };
+    if (result.length > 1)
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
     return {
       status: HttpStatus.OK,
       data: {
