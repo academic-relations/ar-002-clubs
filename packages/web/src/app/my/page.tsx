@@ -21,7 +21,7 @@ import { useGetMyDelegateRequest } from "@sparcs-clubs/web/features/my/services/
 
 const My: React.FC = () => {
   // TODO: clb014 api 구현되면 refetch 테스트
-  const isStudent = false; // 학생 <--> 지도교수
+  const isStudent = false; // 학생 <--> 지도교수 TODO: 로그인 정보로 대체
   const { data, isLoading, isError, refetch } = useGetMyDelegateRequest();
   const fetchDivisionPresident = () => {}; // TODO
 
