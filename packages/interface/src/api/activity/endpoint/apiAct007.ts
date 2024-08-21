@@ -43,7 +43,7 @@ const requestBody = z.object({
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({}),
+  [HttpStatusCode.Created]: z.object({}),
 };
 
 const responseErrorMap = {};
@@ -61,13 +61,15 @@ const apiAct007 = {
 type ApiAct007RequestParam = z.infer<typeof apiAct007.requestParam>;
 type ApiAct007RequestQuery = z.infer<typeof apiAct007.requestQuery>;
 type ApiAct007RequestBody = z.infer<typeof apiAct007.requestBody>;
-type ApiAct007ResponseOk = z.infer<(typeof apiAct007.responseBodyMap)[200]>;
+type ApiAct007ResponseCreated = z.infer<
+  (typeof apiAct007.responseBodyMap)[201]
+>;
 
 export default apiAct007;
 
 export type {
+  ApiAct007RequestBody,
   ApiAct007RequestParam,
   ApiAct007RequestQuery,
-  ApiAct007RequestBody,
-  ApiAct007ResponseOk,
+  ApiAct007ResponseCreated,
 };
