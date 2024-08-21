@@ -131,9 +131,22 @@ export class MemberRegistrationService {
         HttpStatus.BAD_REQUEST,
       );
 
-    if (applyStatusEnumId === RegistrationApplicationStudentStatusEnum.Approved)
-      await this.clubPublicService.addStudentToClub(studentId, clubId);
-    else if (
+    if (
+      applyStatusEnumId === RegistrationApplicationStudentStatusEnum.Approved
+    ) {
+      const isAlreadyMember = await this.clubPublicService.isStudentBelongsTo(
+        studentId,
+        clubId,
+      );
+
+      if (!isAlreadyMember)
+        await this.clubPublicService.addStudentToClub(studentId, clubId);
+      else
+        throw new HttpException(
+          "this registration is already approved, or student is already belongs to this club",
+          HttpStatus.BAD_REQUEST,
+        );
+    } else if (
       applyStatusEnumId === RegistrationApplicationStudentStatusEnum.Rejected
     )
       if (isDelegate)
