@@ -20,7 +20,6 @@ const ChangeClubInfoCard = () => {
   const [password, setPassword] = useState<string>("");
   const [errorDescription, setErrorDescription] = useState<string>("");
   const [errorPassword, setErrorPassword] = useState<string>("");
-  // const [changed, setChanged] = useState<boolean>(false);
 
   useEffect(() => {
     if (!isLoading && data?.description && data?.roomPassword) {

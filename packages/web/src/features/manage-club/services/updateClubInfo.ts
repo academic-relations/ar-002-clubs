@@ -10,12 +10,12 @@ import {
 import type {
   ApiClb005RequestBody,
   ApiClb005RequestParam,
-  ApiClb005ResponseCreated,
+  ApiClb005ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb005";
 
 export const usePutClubInfo = () =>
   useMutation<
-    ApiClb005ResponseCreated,
+    ApiClb005ResponseOk,
     Error,
     {
       requestParam: ApiClb005RequestParam;
@@ -25,15 +25,15 @@ export const usePutClubInfo = () =>
     mutationFn: async ({
       requestParam,
       body,
-    }): Promise<ApiClb005ResponseCreated> => {
+    }): Promise<ApiClb005ResponseOk> => {
       const { data, status } = await axiosClientWithAuth.put(
         apiClb005.url(requestParam.clubId),
         body,
       );
 
       switch (status) {
-        case 201:
-          return apiClb005.responseBodyMap[201].parse(data);
+        case 200:
+          return apiClb005.responseBodyMap[200].parse(data);
         default:
           throw new UnexpectedAPIResponseError();
       }
@@ -41,5 +41,10 @@ export const usePutClubInfo = () =>
   });
 
 defineAxiosMock(mock => {
-  mock.onPut(apiClb005.url(1)).reply(() => [201, {}]);
+  mock
+    .onPut(apiClb005.url(1), {
+      description: "",
+      roomPassword: "",
+    })
+    .reply(() => [201, {}]);
 });

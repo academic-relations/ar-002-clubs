@@ -21,7 +21,7 @@ const requestBody = z.object({
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Created]: z.object({}),
+  [HttpStatusCode.Ok]: z.object({}),
 };
 
 const responseErrorMap = {};
@@ -29,9 +29,7 @@ const responseErrorMap = {};
 type ApiClb005RequestParam = z.infer<typeof apiClb005.requestParam>;
 type ApiClb005RequestQuery = z.infer<typeof apiClb005.requestQuery>;
 type ApiClb005RequestBody = z.infer<typeof apiClb005.requestBody>;
-type ApiClb005ResponseCreated = z.infer<
-  (typeof apiClb005.responseBodyMap)[201]
->;
+type ApiClb005ResponseOk = z.infer<(typeof apiClb005.responseBodyMap)[200]>;
 
 const apiClb005 = {
   url,
@@ -49,5 +47,5 @@ export type {
   ApiClb005RequestParam,
   ApiClb005RequestQuery,
   ApiClb005RequestBody,
-  ApiClb005ResponseCreated,
+  ApiClb005ResponseOk,
 };
