@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-import { RegistrationStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import { overlay } from "overlay-kit";
 
@@ -65,7 +65,9 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
     isRegistrationPeriod,
   );
 
-  const [isInClub, setIsInclub] = useState(RegistrationStatusEnum.Rejected);
+  const [isInClub, setIsInclub] = useState(
+    RegistrationApplicationStudentStatusEnum.Rejected,
+  );
   const localError = false;
   const [loading, setLoading] = useState(true);
 
@@ -79,20 +81,20 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
 
   const ToggleRegistered = async (close: () => void) => {
     close();
-    setIsInclub(RegistrationStatusEnum.Pending);
+    setIsInclub(RegistrationApplicationStudentStatusEnum.Pending);
     await useRegisterClub(club.id);
   };
 
   const ToggleUnregistered = async (close: () => void) => {
     // await useRegisterClub(club.id);
     close();
-    setIsInclub(RegistrationStatusEnum.Rejected);
+    setIsInclub(RegistrationApplicationStudentStatusEnum.Rejected);
   };
 
   const submitHandler = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen} onClose={close}>
-        {isInClub === RegistrationStatusEnum.Pending ? (
+        {isInClub === RegistrationApplicationStudentStatusEnum.Pending ? (
           <CancellableModalContent
             onClose={close}
             onConfirm={async () => {
@@ -121,14 +123,14 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   };
 
   const renderButton = () => {
-    if (isInClub === RegistrationStatusEnum.Pending) {
+    if (isInClub === RegistrationApplicationStudentStatusEnum.Pending) {
       return (
         <Button type="default" onClick={submitHandler}>
           회원 등록 취소
         </Button>
       );
     }
-    if (isInClub === RegistrationStatusEnum.Approved) {
+    if (isInClub === RegistrationApplicationStudentStatusEnum.Approved) {
       return (
         <Button type="disabled" onClick={submitHandler}>
           회장 승인 완료

@@ -24,7 +24,7 @@ export const useCheckResisteringPeriod = (): [boolean, boolean] => {
       currentDate <= event.endTerm && currentDate >= event.startTerm,
   );
 
-  if (matchingEvent?.registrationEventEnumId === 3) {
+  if (matchingEvent?.registrationEventEnumId === 4) {
     return [true, false];
   }
   return [false, false];
