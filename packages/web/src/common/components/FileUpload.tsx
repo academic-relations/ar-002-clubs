@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-import { ApiFil001RequestBody } from "@sparcs-clubs/interface/api/file/endpoint/apiFil001";
+import { ApiFil001RequestBody } from "@sparcs-clubs/interface/api/file/apiFil001";
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
