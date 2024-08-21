@@ -12,16 +12,26 @@ interface ClubDetailCardProps {
   club: ApiClb002ResponseOK;
 }
 
-const ClubDetailText = styled.div`
+const ClubDetailText = styled.div<{ text: string }>`
   width: 100%;
   font-size: 16px;
   line-height: 28px;
   font-weight: 400;
+  ${props =>
+    props.text === "" &&
+    `
+    
+    color: gray;`}
+
+  &:before {
+    content: "${props =>
+      props.text === "" ? "등록된 동아리 설명이 없습니다." : props.text}";
+  }
 `;
 
 const ClubDetailCard: React.FC<ClubDetailCardProps> = ({ club }) => (
   <Card gap={16} padding="16px 20px">
-    <ClubDetailText>{club.description}</ClubDetailText>
+    <ClubDetailText text={club.description} />
   </Card>
 );
 
