@@ -5,6 +5,9 @@ import apiClb007 from "@sparcs-clubs/interface/api/club/endpoint/apiClb007";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
+import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
+
 import ClubDelegateService from "../service/club-delegate.service";
 
 import type {
@@ -21,31 +24,31 @@ import type {
 export default class ClubDelegateController {
   constructor(private clubDelegateService: ClubDelegateService) {}
 
+  @Student()
   @Get("/student/clubs/club/:clubId/delegates")
   @UsePipes(new ZodPipe(apiClb006))
   async getStudentClubDelegates(
+    @GetStudent() user: GetStudent,
     @Param() param: ApiClb006RequestParam,
   ): Promise<ApiClb006ResponseOK> {
-    const mockStudentId = 605;
-
     const result = await this.clubDelegateService.getStudentClubDelegates({
-      studentId: mockStudentId,
+      studentId: user.studentId,
       clubId: param.clubId,
     });
 
     return result;
   }
 
+  @Student()
   @Put("/student/clubs/club/:clubId/delegates/delegate")
   @UsePipes(new ZodPipe(apiClb007))
   async putStudentClubDelegate(
+    @GetStudent() user: GetStudent,
     @Body() body: ApiClb007RequestBody,
     @Param() param: ApiClb007RequestParam,
   ): Promise<ApiClb007ResponseCreated> {
-    const mockStudentId = 605;
-
     await this.clubDelegateService.putStudentClubDelegate({
-      studentId: mockStudentId,
+      studentId: user.studentId,
       targetStudentId: body.studentId,
       clubId: param.clubId,
       clubDelegateEnumId: body.delegateEnumId,

@@ -6,11 +6,11 @@ import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 /**
  * @version v0.1
- * @description 이번학기 동아리 재등록 신청이 가능한 동아리 id 목록을 리턴합니다.
+ * @description 이번학기 가동아리 재등록 신청이 가능한 동아리 id 목록을 리턴합니다.
  */
 
 const url = () =>
-  `/student/registrations/club-registrations/club-registration/qualifications/renewal`;
+  `/student/registrations/club-registrations/club-registration/qualifications/provisional-renewal`;
 const method = "GET";
 
 const requestParam = z.object({});
@@ -45,7 +45,7 @@ const responseBodyMap = {
 
 const responseErrorMap = {};
 
-const apiReg002 = {
+const apiReg018 = {
   url,
   method,
   requestParam,
@@ -55,16 +55,16 @@ const apiReg002 = {
   responseErrorMap,
 };
 
-type ApiReg002RequestParam = z.infer<typeof apiReg002.requestParam>;
-type ApiReg002RequestQuery = z.infer<typeof apiReg002.requestQuery>;
-type ApiReg002RequestBody = z.infer<typeof apiReg002.requestBody>;
-type ApiReg002ResponseOk = z.infer<(typeof apiReg002.responseBodyMap)[200]>;
+type ApiReg018RequestParam = z.infer<typeof apiReg018.requestParam>;
+type ApiReg018RequestQuery = z.infer<typeof apiReg018.requestQuery>;
+type ApiReg018RequestBody = z.infer<typeof apiReg018.requestBody>;
+type ApiReg018ResponseOk = z.infer<(typeof apiReg018.responseBodyMap)[200]>;
 
-export default apiReg002;
+export default apiReg018;
 
 export type {
-  ApiReg002RequestParam,
-  ApiReg002RequestQuery,
-  ApiReg002RequestBody,
-  ApiReg002ResponseOk,
+  ApiReg018RequestParam,
+  ApiReg018RequestQuery,
+  ApiReg018RequestBody,
+  ApiReg018ResponseOk,
 };

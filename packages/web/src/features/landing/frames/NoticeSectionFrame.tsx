@@ -52,6 +52,8 @@ const NoticeSectionFrame: React.FC = () => {
                 noticeInfo.link
               } /* TODO - 각 notice에 따른 올바른 path로 수정 바람 --> paths.NOTICE.path + "/" + noticeInfo.id.toString() */
               style={{ display: "flex", flexDirection: "column" }}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <NoticeCard noticeList={noticeInfo} />
             </Link>

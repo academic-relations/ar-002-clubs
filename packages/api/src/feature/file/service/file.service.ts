@@ -16,11 +16,11 @@ import FilePublicService from "./file.public.service";
 import type {
   ApiFil001RequestBody,
   ApiFil001ResponseCreated,
-} from "@sparcs-clubs/interface/api/file/endpoint/apiFil001";
+} from "@sparcs-clubs/interface/api/file/apiFil001";
 import type {
   ApiFil002RequestBody,
   ApiFil002ResponseOk,
-} from "@sparcs-clubs/interface/api/file/endpoint/apiFil002";
+} from "@sparcs-clubs/interface/api/file/apiFil002";
 
 @Injectable()
 export class FileService {

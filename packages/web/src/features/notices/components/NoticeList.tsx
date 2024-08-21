@@ -34,7 +34,12 @@ const NoticeListItemWrapper = styled(Link)`
 const NoticeList: React.FC<NoticeListProps> = ({ infos }) => (
   <NoticeListInner>
     {infos.map(noticeInfo => (
-      <NoticeListItemWrapper key={noticeInfo.id} href={noticeInfo.link}>
+      <NoticeListItemWrapper
+        key={noticeInfo.id}
+        href={noticeInfo.link}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <NoticeListItem title={noticeInfo.title} date={noticeInfo.date} />
       </NoticeListItemWrapper>
     ))}
