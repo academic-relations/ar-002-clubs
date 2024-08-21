@@ -33,6 +33,7 @@ interface ClubDetailMainFrameProps {
 }
 
 const CardWrapper = styled.div`
+  width: 100%;
   padding-left: 20px;
 `;
 
@@ -178,7 +179,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
             </CardWrapper>
           </FlexWrapper>
 
-          <FlexWrapper direction="column" gap={20}>
+          <FlexWrapper direction="column" gap={20} style={{ flex: "1 0 0" }}>
             <SectionTitle size="lg">동아리 설명</SectionTitle>
             <CardWrapper>
               <ClubDetailCard club={club} />
