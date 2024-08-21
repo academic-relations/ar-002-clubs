@@ -23,7 +23,7 @@ const Clubs: React.FC = () => {
     gap: 60px;
     direction: column;
 
-    @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
       gap: 40px;
     }
   `;

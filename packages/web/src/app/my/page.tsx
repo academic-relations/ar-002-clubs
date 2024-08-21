@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 
 import { ClubDelegateChangeRequestStatusEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -18,6 +19,12 @@ import MyInfoFrame from "@sparcs-clubs/web/features/my/frames/MyInfoFrame";
 import MyRegisterFrame from "@sparcs-clubs/web/features/my/frames/MyRegisterFrame";
 import MyServiceFrame from "@sparcs-clubs/web/features/my/frames/MyServiceFrame";
 import { useGetMyDelegateRequest } from "@sparcs-clubs/web/features/my/services/getMyDelegateRequest";
+
+const ResponsiveWrapper = styled(FlexWrapper)`
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    gap: 40px;
+  }
+`;
 
 const My: React.FC = () => {
   // TODO: clb014 api 구현되면 refetch 테스트
@@ -65,7 +72,7 @@ const My: React.FC = () => {
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <FlexWrapper direction="column" gap={60}>
+      <ResponsiveWrapper direction="column" gap={60}>
         <PageHead
           items={[{ name: "마이페이지", path: "/my" }]}
           title="마이페이지"
@@ -93,7 +100,7 @@ const My: React.FC = () => {
         <MyClubFrame />
         <MyRegisterFrame />
         <MyServiceFrame />
-      </FlexWrapper>
+      </ResponsiveWrapper>
     </AsyncBoundary>
   );
 };

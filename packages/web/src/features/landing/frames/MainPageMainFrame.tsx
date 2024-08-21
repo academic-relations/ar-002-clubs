@@ -51,8 +51,14 @@ const ResponsiveSloganTypography = styled(Typography)`
   }
 `;
 
+const ResponsiveWrapper = styled(FlexWrapper)`
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    gap: 40px;
+  }
+`;
+
 const MainPageMainFrame: React.FC = () => (
-  <FlexWrapper direction="column" gap={60}>
+  <ResponsiveWrapper direction="column" gap={60}>
     <PageTitleWrapper>
       <ResponsiveSloganTypography
         fw="SEMIBOLD"
@@ -72,7 +78,7 @@ const MainPageMainFrame: React.FC = () => (
       <NoticeSectionFrame />
       <ServiceSectionFrame />
     </NoticeAndServiceWrapper>
-  </FlexWrapper>
+  </ResponsiveWrapper>
 );
 
 export default MainPageMainFrame;

@@ -12,6 +12,10 @@ const NoticePageMainFrameInner = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 60px;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    row-gap: 40px;
+  }
 `;
 
 const NoticePageMainFrame = () => (
