@@ -35,6 +35,10 @@ const ServiceCardWrapper = styled.div`
   flex-direction: column;
   gap: 12px;
   margin-left: 24px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    gap: 8px;
+    margin-left: 16px;
+  }
 `;
 
 const ServiceSectionFrame: React.FC = () => (
