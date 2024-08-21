@@ -131,11 +131,18 @@ export class MemberRegistrationService {
         HttpStatus.BAD_REQUEST,
       );
 
-    // if (applyStatusEnumId === RegistrationApplicationStudentStatusEnum.Approved) {
+    if (applyStatusEnumId === RegistrationApplicationStudentStatusEnum.Approved)
+      await this.clubPublicService.addStudentToClub(studentId, clubId);
+    else if (
+      applyStatusEnumId === RegistrationApplicationStudentStatusEnum.Rejected
+    )
+      if (isDelegate)
+        throw new HttpException(
+          "club delegate cannot be rejected",
+          HttpStatus.BAD_REQUEST,
+        );
+    await this.clubPublicService.removeStudentFromClub(studentId, clubId);
 
-    // }
-    // TODO: Enum이 Approved 이면 동아리 회원목록에 추가
-    // TODO: Enum이 Rejected 되면 동아리 회원목록에서 제거
     const result =
       await this.memberRegistrationRepository.patchMemberRegistration(
         applyId,
