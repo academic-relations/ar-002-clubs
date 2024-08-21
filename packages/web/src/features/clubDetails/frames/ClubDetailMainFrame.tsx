@@ -26,6 +26,7 @@ interface ClubDetailMainFrameProps {
 }
 
 const CardWrapper = styled.div`
+  width: 100%;
   padding-left: 20px;
 `;
 
@@ -45,6 +46,13 @@ const ResisterInfoWrapper = styled.div`
   gap: 12px;
   flex: 1 0 0;
   align-items: center;
+`;
+
+const DescriptionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1 0 0;
 `;
 
 const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
@@ -132,12 +140,12 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
           </CardWrapper>
         </FlexWrapper>
 
-        <FlexWrapper direction="column" gap={20}>
+        <DescriptionWrapper>
           <SectionTitle size="lg">동아리 설명</SectionTitle>
           <CardWrapper>
             <ClubDetailCard club={club} />
           </CardWrapper>
-        </FlexWrapper>
+        </DescriptionWrapper>
       </MoreInfoWrapper>
     </FlexWrapper>
   );
