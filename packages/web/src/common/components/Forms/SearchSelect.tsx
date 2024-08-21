@@ -18,7 +18,7 @@ import FormError from "../FormError";
 import Label from "../FormLabel";
 
 export interface SearchSelectProps
-  extends InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
+  extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   placeholder: string;
   errorMessage?: string;
@@ -30,6 +30,14 @@ export interface SearchSelectProps
   options: string[];
   selected: string;
   setSelected: (value: string) => void;
+}
+
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  placeholder: string;
+  disabled?: boolean;
+  hasError?: boolean;
+  value?: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
 }
 
 const RightContentWrapper = styled.div.withConfig({
@@ -58,7 +66,7 @@ const disabledStyle = css`
   border-color: ${({ theme }) => theme.colors.GRAY[200]};
 `;
 
-const Input = styled.input<SearchSelectProps & { hasError: boolean }>`
+const Input = styled.input<InputProps>`
   display: block;
   width: 100%;
   padding: 8px 12px 8px 12px;
