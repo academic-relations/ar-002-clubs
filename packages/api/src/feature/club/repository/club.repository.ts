@@ -233,40 +233,47 @@ export default class ClubRepository {
             isNull(ClubDelegateD.deletedAt),
           ),
         );
+      const professor = tx
+        .select({
+          id: Professor.id,
+          name: Professor.name,
+          email: Professor.email,
+          professorEnumId: ProfessorT.professorEnum,
+        })
+        .from(Professor)
+        .innerJoin(
+          ProfessorT,
+          and(
+            eq(Professor.id, ProfessorT.professorId),
+            lte(ProfessorT.startTerm, cur),
+            or(gt(ProfessorT.endTerm, cur), isNull(ProfessorT.endTerm)),
+            isNull(ProfessorT.deletedAt),
+          ),
+        )
+        .where(isNull(Professor.deletedAt))
+        .as("professor");
       const club = await tx
         .select({
           id: Club.id,
           clubNameKr: Club.name_kr,
           clubNameEn: Club.name_en,
           professor: {
-            name: Professor.name,
-            email: Professor.email,
-            professorEnumId: ProfessorT.professorEnum,
+            name: professor.name,
+            email: professor.email,
+            professorEnumId: professor.professorEnumId,
           },
         })
         .from(Club)
-        .leftJoin(
+        .innerJoin(
           ClubT,
           and(
             eq(Club.id, ClubT.clubId),
-            inArray(ClubT.clubStatusEnumId, clubStatusEnumIds),
             eq(ClubT.semesterId, semesterId),
             isNull(ClubT.deletedAt),
+            inArray(ClubT.clubStatusEnumId, clubStatusEnumIds),
           ),
         )
-        .leftJoin(
-          Professor,
-          and(eq(Professor.id, ClubT.professorId), isNull(Professor.deletedAt)),
-        )
-        .leftJoin(
-          ProfessorT,
-          and(
-            eq(ProfessorT.professorId, ClubT.professorId),
-            lte(ProfessorT.startTerm, cur),
-            or(gt(ProfessorT.endTerm, cur), isNull(ProfessorT.endTerm)),
-            isNull(ProfessorT.deletedAt),
-          ),
-        )
+        .leftJoin(professor, eq(professor.id, ClubT.professorId))
         .where(and(inArray(Club.id, delegate), isNull(Club.deletedAt)));
       return club;
     });
@@ -303,7 +310,7 @@ export default class ClubRepository {
           id: Club.id,
         })
         .from(Club)
-        .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
+        .innerJoin(ClubT, eq(Club.id, ClubT.clubId))
         .where(
           and(
             eq(ClubT.clubStatusEnumId, ClubTypeEnum.Provisional), // 가동아리
@@ -314,14 +321,13 @@ export default class ClubRepository {
         )
         .groupBy(Club.id)
         .having(sql`COUNT(DISTINCT ${ClubT.semesterId}) = ${length}`);
-
       // 최근 3학기 중 하나라도 정동아리 상태인 클럽을 조회
       const regularClubs = tx
         .select({
           id: Club.id,
         })
         .from(Club)
-        .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
+        .innerJoin(ClubT, eq(Club.id, ClubT.clubId))
         .where(
           and(
             eq(ClubT.clubStatusEnumId, ClubTypeEnum.Regular), // 정동아리
@@ -331,56 +337,52 @@ export default class ClubRepository {
           ),
         )
         .groupBy(Club.id);
-      const sq = union(provisionalClubs, regularClubs);
-      const clubList = tx.$with("clubList").as(
-        tx
-          .select({
-            id: Club.id,
-            clubNameKr: Club.name_kr,
-            clubNameEn: Club.name_en,
-            professor: ClubT.professorId,
-          })
-          .from(Club)
-          .leftJoin(
-            ClubT,
-            and(
-              eq(Club.id, ClubT.clubId),
-              lte(ClubT.startTerm, cur),
-              isNull(ClubT.deletedAt),
-              or(isNull(ClubT.endTerm), gt(ClubT.endTerm, cur)),
-            ),
-          )
-          .where(and(inArray(Club.id, sq), isNull(Club.deletedAt))),
-      );
-      const response = await tx
-        .with(clubList)
+
+      const professor = tx
         .select({
-          id: clubList.id,
-          clubNameKr: clubList.clubNameKr,
-          clubNameEn: clubList.clubNameEn,
-          professor: {
-            name: Professor.name,
-            email: Professor.email,
-            professorEnumId: ProfessorT.professorEnum,
-          },
+          id: Professor.id,
+          name: Professor.name,
+          email: Professor.email,
+          professorEnumId: ProfessorT.professorEnum,
         })
-        .from(clubList)
-        .leftJoin(
-          Professor,
-          and(
-            eq(Professor.id, clubList.professor),
-            isNull(Professor.deletedAt),
-          ),
-        )
-        .leftJoin(
+        .from(Professor)
+        .innerJoin(
           ProfessorT,
           and(
             eq(Professor.id, ProfessorT.professorId),
-            isNull(ProfessorT.deletedAt),
             lte(ProfessorT.startTerm, cur),
-            or(isNull(ProfessorT.endTerm), gt(ProfessorT.endTerm, cur)),
+            or(gt(ProfessorT.endTerm, cur), isNull(ProfessorT.endTerm)),
+            isNull(ProfessorT.deletedAt),
           ),
-        );
+        )
+        .where(isNull(Professor.deletedAt))
+        .as("professor");
+
+      const sq = union(provisionalClubs, regularClubs);
+      const response = await tx
+        .select({
+          id: Club.id,
+          clubNameKr: Club.name_kr,
+          clubNameEn: Club.name_en,
+          professor: {
+            name: professor.name,
+            email: professor.email,
+            professorEnumId: professor.professorEnumId,
+          },
+        })
+        .from(Club)
+        .innerJoin(
+          ClubT,
+          and(
+            eq(Club.id, ClubT.clubId),
+            inArray(ClubT.clubId, sq),
+            lte(ClubT.startTerm, cur),
+            isNull(ClubT.deletedAt),
+            or(isNull(ClubT.endTerm), gt(ClubT.endTerm, cur)),
+          ),
+        )
+        .leftJoin(professor, eq(professor.id, ClubT.professorId))
+        .where(isNull(Club.deletedAt));
       return response;
     });
     return result;

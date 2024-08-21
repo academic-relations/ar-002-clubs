@@ -143,6 +143,7 @@ export class ClubRegistrationService {
         studentId,
         semesterId,
       ); // 2학기 연속 가동아리, 3학기 이내 정동아리 list
+
     return {
       clubs: promAbleList,
     };
