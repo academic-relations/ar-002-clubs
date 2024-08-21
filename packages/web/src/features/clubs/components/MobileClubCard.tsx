@@ -16,7 +16,7 @@ import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import {
-  getClubType,
+  getShortClubType,
   getTagColorFromClubType,
 } from "@sparcs-clubs/web/features/clubs/services/clubTypeControl";
 
@@ -65,6 +65,7 @@ const ClubCharacteristic = styled.div`
 const ClubCardRow = styled.div`
   display: flex;
   flex: 1 0 0;
+  gap: 8px;
   align-items: center;
   justify-content: space-between;
   white-space: nowrap;
@@ -90,7 +91,7 @@ const MobileClubCard: React.FC<
             }}
           >
             2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-            {club.name}의
+            {club.name_kr}의
             <br />
             회원 등록을 취소합니다.
           </CancellableModalContent>
@@ -103,7 +104,7 @@ const MobileClubCard: React.FC<
             }}
           >
             2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-            {club.name}의
+            {club.name_kr}의
             <br />
             회원 등록 신청을 진행합니다.
           </CancellableModalContent>
@@ -116,9 +117,9 @@ const MobileClubCard: React.FC<
       <ClubCardNameRow>
         <ClubCardNameWithTag>
           <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
-            {getClubType(club, true)}
+            {getShortClubType(club)}
           </Tag>
-          <ClubName>{club.name}</ClubName>
+          <ClubName>{club.name_kr}</ClubName>
         </ClubCardNameWithTag>
         <FlexWrapper direction="row" gap={4}>
           <Icon type="person" size={16} />
