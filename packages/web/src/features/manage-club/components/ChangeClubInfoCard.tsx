@@ -83,22 +83,6 @@ const ChangeClubInfoCard = () => {
     );
   }, [description, password, updateClubInfo, refetch]);
 
-  // useEffect(() => {
-  //   if (isSuccess) {
-  //     overlay.open(({ isOpen, close }) => (
-  //       <Modal isOpen={isOpen}>
-  //         <ConfirmModalContent
-  //           onConfirm={() => {
-  //             close();
-  //           }}
-  //         >
-  //           저장이 완료되었습니다.
-  //         </ConfirmModalContent>
-  //       </Modal>
-  //     ));
-  //   }
-  // }, [isSuccess]);
-
   return (
     <Card outline gap={32} style={{ flex: 1, height: "fit-content" }}>
       <Typography fw="MEDIUM" fs={20} lh={24}>
