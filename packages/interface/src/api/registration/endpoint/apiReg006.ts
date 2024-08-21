@@ -29,6 +29,17 @@ const responseBodyMap = {
       }),
     ),
   }),
+  [HttpStatusCode.NoContent]: z.object({
+    applies: z.array(
+      z.object({
+        id: z.coerce.number().int().min(1),
+        clubId: z.coerce.number().int().min(1),
+        applyStatusEnumId: z.nativeEnum(
+          RegistrationApplicationStudentStatusEnum,
+        ),
+      }),
+    ),
+  }),
 };
 
 const responseErrorMap = {};
@@ -47,6 +58,9 @@ type ApiReg006RequestParam = z.infer<typeof apiReg006.requestParam>;
 type ApiReg006RequestQuery = z.infer<typeof apiReg006.requestQuery>;
 type ApiReg006RequestBody = z.infer<typeof apiReg006.requestBody>;
 type ApiReg006ResponseOk = z.infer<(typeof apiReg006.responseBodyMap)[200]>;
+type ApiReg006ResponseNoContent = z.infer<
+  (typeof apiReg006.responseBodyMap)[204]
+>;
 
 export default apiReg006;
 
@@ -55,4 +69,5 @@ export type {
   ApiReg006RequestQuery,
   ApiReg006RequestBody,
   ApiReg006ResponseOk,
+  ApiReg006ResponseNoContent,
 };

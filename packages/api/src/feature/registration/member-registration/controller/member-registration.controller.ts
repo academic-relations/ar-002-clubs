@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Res,
   UsePipes,
 } from "@nestjs/common";
 
@@ -13,7 +14,10 @@ import apiReg005, {
   ApiReg005RequestBody,
   ApiReg005ResponseCreated,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg005";
-import { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
+import {
+  ApiReg006ResponseNoContent,
+  ApiReg006ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 import apiReg007, {
   ApiReg007RequestBody,
   ApiReg007RequestParam,
@@ -27,6 +31,7 @@ import apiReg013, {
   ApiReg013RequestParam,
   ApiReg013ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg013";
+import { Response } from "express";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
@@ -59,12 +64,14 @@ export class MemberRegistrationController {
   @Get("/student/registrations/member-registrations/my")
   async getStudentRegistrationsMemberRegistrationsMy(
     @GetStudent() user: GetStudent,
-  ): Promise<ApiReg006ResponseOk> {
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<ApiReg006ResponseOk | ApiReg006ResponseNoContent> {
     const result =
       await this.memberRegistrationService.getStudentRegistrationsMemberRegistrationsMy(
         user.studentId,
       );
-    return result;
+    res.status(result.status);
+    return result.data;
   }
 
   @Student()
