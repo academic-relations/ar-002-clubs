@@ -1,17 +1,20 @@
 import {
   GetObjectAttributesCommand,
+  GetObjectCommand,
   ObjectAttributes,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 
 import { FileRepository } from "../repository/file.repository";
 
 import FilePublicService from "./file.public.service";
+
+import type { UserAccessTokenPayload } from "@sparcs-clubs/api/feature/auth/dto/auth.dto";
 
 import type {
   ApiFil001RequestBody,
@@ -21,6 +24,10 @@ import type {
   ApiFil002RequestBody,
   ApiFil002ResponseOk,
 } from "@sparcs-clubs/interface/api/file/apiFil002";
+import type {
+  ApiFil003RequestBody,
+  ApiFil003ResponseOk,
+} from "@sparcs-clubs/interface/api/file/apiFil003";
 
 @Injectable()
 export class FileService {
@@ -59,6 +66,47 @@ export class FileService {
       expiresIn: 600,
     });
     return { uploadUrl, fileId };
+  }
+
+  async getFilesDownloadLinks(param: {
+    user: UserAccessTokenPayload["user"];
+    body: ApiFil003RequestBody;
+  }): Promise<ApiFil003ResponseOk> {
+    const getFileUrls = (fileKey: string) => {
+      const command = new GetObjectCommand({
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: fileKey,
+      });
+      return getSignedUrl(this.s3Client, command, { expiresIn: 3600 });
+    };
+
+    const fileInfos = await Promise.all(
+      param.body.files.map(async e => this.fileRepository.findById(e.fileId)),
+    );
+    const fileKeys = fileInfos.map(e => {
+      // fileId와 매칭되는 파일이 존재하지 않는다면 예외를 발생시킵니다.
+      if (e === undefined)
+        throw new HttpException(
+          "Some fileId is invalid",
+          HttpStatus.BAD_REQUEST,
+        );
+      return {
+        id: e.id,
+        fileKey: `file/${e.userId}.${e.signedAt.valueOf()}.${e.name}`,
+      };
+    });
+
+    // 구성된 fileKeys를 바탕으로 presignedURL을 구성합니다.
+    const files = await Promise.all(
+      fileKeys.map(async e => ({
+        id: e.id,
+        url: await getFileUrls(e.fileKey),
+      })),
+    );
+
+    return {
+      files,
+    };
   }
 
   async getFilesMetadata(param: {

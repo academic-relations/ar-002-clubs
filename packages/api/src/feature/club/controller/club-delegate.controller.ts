@@ -1,7 +1,17 @@
-import { Body, Controller, Get, Param, Put, UsePipes } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Put,
+  Res,
+  UsePipes,
+} from "@nestjs/common";
 
 import apiClb006 from "@sparcs-clubs/interface/api/club/endpoint/apiClb006";
 import apiClb007 from "@sparcs-clubs/interface/api/club/endpoint/apiClb007";
+import apiClb015 from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
+import { Response } from "express";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -19,6 +29,10 @@ import type {
   ApiClb007RequestParam,
   ApiClb007ResponseCreated,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb007";
+import type {
+  ApiClb015ResponseNoContent,
+  ApiClb015ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
 
 @Controller()
 export default class ClubDelegateController {
@@ -55,5 +69,20 @@ export default class ClubDelegateController {
     });
 
     return {};
+  }
+
+  @Student()
+  @Get("/student/clubs/delegates/delegate/my")
+  @UsePipes(new ZodPipe(apiClb015))
+  async getStudentClubDelegate(
+    @GetStudent() user: GetStudent,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<ApiClb015ResponseOk | ApiClb015ResponseNoContent> {
+    const result = await this.clubDelegateService.getStudentClubDelegate(
+      user.studentId,
+    );
+
+    res.status(result.status);
+    return result.data;
   }
 }
