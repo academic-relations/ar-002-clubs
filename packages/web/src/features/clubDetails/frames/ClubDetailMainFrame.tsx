@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { overlay } from "overlay-kit";
 
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -27,6 +27,10 @@ interface ClubDetailMainFrameProps {
 
 const CardWrapper = styled.div`
   padding-left: 20px;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    padding-left: 16px;
+  }
 `;
 
 const MoreInfoWrapper = styled.div`
@@ -47,6 +51,13 @@ const ResisterInfoWrapper = styled.div`
   align-items: center;
 `;
 
+const ResponsiveWrapper = styled(FlexWrapper)`
+  gap: 60px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    gap: 40px;
+  }
+`;
+
 const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   club,
   isRegistrationPeriod,
@@ -61,6 +72,25 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
     setIsRegistered(prev => !prev);
     close();
   };
+
+  const theme = useTheme();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(
+      `(max-width: ${theme.responsive.BREAKPOINT.sm})`,
+    );
+
+    // Check the initial state
+    setIsMobile(mediaQuery.matches);
+
+    // Set up an event listener to update the state when the window resizes
+    const handleResize = () => setIsMobile(mediaQuery.matches);
+    mediaQuery.addEventListener("change", handleResize);
+
+    // Clean up the event listener on component unmount
+    return () => mediaQuery.removeEventListener("change", handleResize);
+  }, [theme]);
 
   const submitHandler = () => {
     overlay.open(({ isOpen, close }) => (
@@ -93,7 +123,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   };
 
   return (
-    <FlexWrapper direction="column" gap={60}>
+    <ResponsiveWrapper gap={60} direction="column">
       <PageHead
         items={[
           { name: "동아리 목록", path: "/clubs" },
@@ -104,9 +134,11 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
           isLoggedIn &&
           (isRegistrationPeriod ? (
             <ResisterInfoWrapper>
-              <Typography fs={16} color="GRAY.600" fw="REGULAR">
-                등록 신청 {club.totalMemberCnt}명
-              </Typography>
+              {isMobile ? null : (
+                <Typography fs={16} color="GRAY.600" fw="REGULAR">
+                  등록 신청 {club.totalMemberCnt}명
+                </Typography>
+              )}
               <Button type="default" onClick={submitHandler}>
                 {isRegistered ? "회원 등록 취소" : "회원 등록 신청"}
               </Button>
@@ -139,7 +171,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
           </CardWrapper>
         </FlexWrapper>
       </MoreInfoWrapper>
-    </FlexWrapper>
+    </ResponsiveWrapper>
   );
 };
 
