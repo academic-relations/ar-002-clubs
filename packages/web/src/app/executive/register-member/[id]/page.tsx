@@ -45,7 +45,7 @@ const RegisterMember = () => {
 
   const club = useGetClubDetail(id);
 
-  const GetPageTitle = () => `회원 등록 신청 내역 (${club.data?.name})`;
+  const GetPageTitle = () => `회원 등록 신청 내역 (${club.data?.name_kr})`;
 
   return (
     <AsyncBoundary isLoading={club.isLoading} isError={club.isError}>
