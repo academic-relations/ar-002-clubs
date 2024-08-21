@@ -73,7 +73,17 @@ const My: React.FC = () => {
     }
   }, [data]);
 
-  return !isProfessor ? (
+  return isProfessor ? (
+    <FlexWrapper direction="column" gap={60}>
+      <PageHead
+        items={[{ name: "마이페이지", path: "/my" }]}
+        title="마이페이지"
+      />
+      <MyInfoFrame />
+      <MyClubFrame />
+      <MyRegisterFrame isProfessor={isProfessor} />
+    </FlexWrapper>
+  ) : (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <ResponsiveWrapper direction="column" gap={60}>
         <PageHead
@@ -105,16 +115,6 @@ const My: React.FC = () => {
         <MyServiceFrame />
       </ResponsiveWrapper>
     </AsyncBoundary>
-  ) : (
-    <FlexWrapper direction="column" gap={60}>
-      <PageHead
-        items={[{ name: "마이페이지", path: "/my" }]}
-        title="마이페이지"
-      />
-      <MyInfoFrame />
-      <MyClubFrame />
-      <MyRegisterFrame isProfessor={isProfessor} />
-    </FlexWrapper>
   );
 };
 
