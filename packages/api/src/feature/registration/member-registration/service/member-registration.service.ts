@@ -143,12 +143,12 @@ export class MemberRegistrationService {
     studentId: number,
     clubId: number,
   ): Promise<ApiReg008ResponseOk> {
-    const isPresident = await this.clubPublicService.isStudentDelegate(
+    const isDelegate = await this.clubPublicService.isStudentDelegate(
       studentId,
       clubId,
     );
-    if (!isPresident)
-      throw new HttpException("Not a club president", HttpStatus.FORBIDDEN);
+    if (!isDelegate)
+      throw new HttpException("Not a club delegate", HttpStatus.FORBIDDEN);
     const ismemberRegistrationEvent =
       await this.memberRegistrationRepository.isMemberRegistrationEvent();
     if (!ismemberRegistrationEvent)
