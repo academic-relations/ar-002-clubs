@@ -14,12 +14,13 @@ import { useGetClubInfo } from "@sparcs-clubs/web/features/manage-club/services/
 import { usePutClubInfo } from "@sparcs-clubs/web/features/manage-club/services/updateClubInfo";
 
 const ChangeClubInfoCard = () => {
-  const { data, isLoading, isError } = useGetClubInfo({ clubId: 1 });
-  const { mutate: updateClubInfo, isSuccess } = usePutClubInfo();
+  const { data, isLoading, isError, refetch } = useGetClubInfo({ clubId: 23 }); // TODO: clubId 받아오기
+  const { mutate: updateClubInfo } = usePutClubInfo();
   const [description, setDescription] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorDescription, setErrorDescription] = useState<string>("");
   const [errorPassword, setErrorPassword] = useState<string>("");
+  // const [changed, setChanged] = useState<boolean>(false);
 
   useEffect(() => {
     if (!isLoading && data?.description && data?.roomPassword) {
@@ -53,32 +54,50 @@ const ChangeClubInfoCard = () => {
       : "default";
 
   const handleSave = useCallback(() => {
-    const clubId = 1;
+    const clubId = 23;
 
-    updateClubInfo({
-      requestParam: { clubId },
-      body: {
-        description,
-        roomPassword: password,
+    updateClubInfo(
+      {
+        requestParam: { clubId },
+        body: {
+          description,
+          roomPassword: password,
+        },
       },
-    });
-  }, [description, password, updateClubInfo]);
+      {
+        onSuccess: () => {
+          overlay.open(({ isOpen, close }) => (
+            <Modal isOpen={isOpen}>
+              <ConfirmModalContent
+                onConfirm={() => {
+                  close();
+                }}
+              >
+                저장이 완료되었습니다.
+              </ConfirmModalContent>
+            </Modal>
+          ));
+          refetch();
+        },
+      },
+    );
+  }, [description, password, updateClubInfo, refetch]);
 
-  useEffect(() => {
-    if (isSuccess) {
-      overlay.open(({ isOpen, close }) => (
-        <Modal isOpen={isOpen}>
-          <ConfirmModalContent
-            onConfirm={() => {
-              close();
-            }}
-          >
-            저장이 완료되었습니다.
-          </ConfirmModalContent>
-        </Modal>
-      ));
-    }
-  }, [isSuccess]);
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     overlay.open(({ isOpen, close }) => (
+  //       <Modal isOpen={isOpen}>
+  //         <ConfirmModalContent
+  //           onConfirm={() => {
+  //             close();
+  //           }}
+  //         >
+  //           저장이 완료되었습니다.
+  //         </ConfirmModalContent>
+  //       </Modal>
+  //     ));
+  //   }
+  // }, [isSuccess]);
 
   return (
     <Card outline gap={32} style={{ flex: 1, height: "fit-content" }}>
