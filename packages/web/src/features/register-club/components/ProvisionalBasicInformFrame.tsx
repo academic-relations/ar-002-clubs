@@ -1,11 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
-
-import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
-import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import React, { useEffect, useState } from "react";
 
 import { useFormContext } from "react-hook-form";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -14,65 +12,39 @@ import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 
-import useGetClubsForPromotional from "../services/useGetClubsForPromotional";
-import useGetClubsForRenewal from "../services/useGetClubsForRenewal";
+import useGetClubsForReProvisional from "../services/useGetClubsForReProvisional";
 
 import ClubNameField from "./_atomic/ClubNameField";
 import DivisionSelect from "./_atomic/DivisionSelect";
+import MonthSelect from "./_atomic/MonthSelect";
 import YearSelect from "./_atomic/YearSelect";
 import ProfessorInformFrame from "./ProfessorInformFrame";
 
-interface BasicInformSectionProps {
-  type: RegistrationTypeEnum;
-}
+const ProvisionalBasicInformFrame: React.FC = () => {
+  const [isCheckedProfessor, setIsCheckedProfessor] = useState(false);
+  const [isReProvisional, setIsReProvisional] = useState(false);
 
-const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
-  const isRenewal = type === RegistrationTypeEnum.Renewal;
+  const { control, resetField, setValue } = useFormContext();
 
-  const [isCheckedProfessor, setIsCheckedProfessor] = useState(true);
-
-  const { watch, control, resetField, setValue } =
-    useFormContext<ApiReg001RequestBody>();
-  const clubId = watch("clubId");
-
-  const {
-    data: promotionalList,
-    isLoading: isLoadingPromotional,
-    isError: isErrorPromotional,
-  } = useGetClubsForPromotional();
-  const {
-    data: renewalList,
-    isLoading: isLoadingRenewal,
-    isError: isErrorRenewal,
-  } = useGetClubsForRenewal();
+  const { data, isLoading, isError } = useGetClubsForReProvisional();
   const {
     data: profile,
     isLoading: isLoadingProfile,
     isError: isErrorProfile,
   } = useGetUserProfile();
 
-  const isLoading = isRenewal ? isLoadingRenewal : isLoadingPromotional;
-  const isError = isRenewal ? isErrorRenewal : isErrorPromotional;
-  const clubList = isRenewal ? renewalList : promotionalList;
-
-  const professorInfo = useMemo(() => {
-    if (clubId == null) return undefined;
-    return clubList?.clubs.find(club => club.id === clubId)?.professor;
-  }, [clubId, clubList]);
-
   useEffect(() => {
-    if (professorInfo == null || !isCheckedProfessor) {
+    if (!isCheckedProfessor) {
       resetField("professor.email");
       resetField("professor.name");
       resetField("professor.professorEnumId");
       setValue("professor", undefined);
-
-      return;
     }
-    setValue("professor", professorInfo);
-  }, [professorInfo, resetField, setValue, isCheckedProfessor]);
+  }, [resetField, setValue, isCheckedProfessor]);
 
   return (
     <AsyncBoundary
@@ -81,7 +53,6 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
     >
       <FlexWrapper direction="column" gap={40}>
         <SectionTitle>기본 정보</SectionTitle>
-
         <Card outline gap={32} style={{ marginLeft: 20 }}>
           <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
             <TextInput
@@ -104,13 +75,45 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
               )}
             />
           </FlexWrapper>
-          <ClubNameField clubList={clubList?.clubs} />
+          <FlexWrapper direction="column" gap={4}>
+            <FlexWrapper
+              direction="row"
+              gap={8}
+              style={{ width: "100%", marginLeft: 2 }}
+            >
+              <Typography fw="MEDIUM" color="BLACK">
+                가등록 신청 구분
+              </Typography>
+              <Typography fs={14} color="GRAY.600">
+                * 동아리 신청이 처음이라면 가등록(신규), 이전에 동아리로 활동한
+                적이 있다면 가등록(재)를 선택해주세요
+              </Typography>
+            </FlexWrapper>
+            <FlexWrapper direction="row" gap={16} style={{ width: "100%" }}>
+              <Button
+                type={isReProvisional ? "outlined" : "default"}
+                style={{ width: "100%" }}
+                onClick={() => setIsReProvisional(false)}
+              >
+                가등록(신규)
+              </Button>
+              <Button
+                type={isReProvisional ? "default" : "outlined"}
+                style={{ width: "100%" }}
+                onClick={() => setIsReProvisional(true)}
+              >
+                가등록(재)
+              </Button>
+            </FlexWrapper>
+          </FlexWrapper>
+          <ClubNameField clubList={isReProvisional ? data?.clubs : []} />
           <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
-            <YearSelect />
-            <DivisionSelect isRenewal={isRenewal} />
+            <YearSelect isProvisional />
+            <MonthSelect />
+            <DivisionSelect />
           </FlexWrapper>
           <FormController
-            name="activityFieldKr"
+            name="kr활동분야"
             required
             control={control}
             renderItem={props => (
@@ -122,7 +125,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
             )}
           />
           <FormController
-            name="activityFieldEn"
+            name="en활동분야"
             required
             control={control}
             renderItem={props => (
@@ -133,23 +136,18 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
               />
             )}
           />
-
-          {isRenewal && clubId != null && professorInfo == null && (
-            <CheckboxOption
-              optionText="지도교수를 신청하겠습니다"
-              checked={isCheckedProfessor}
-              onClick={() => {
-                setIsCheckedProfessor(!isCheckedProfessor);
-              }}
-            />
-          )}
+          <CheckboxOption
+            optionText="지도교수를 신청하겠습니다"
+            checked={isCheckedProfessor}
+            onClick={() => {
+              setIsCheckedProfessor(!isCheckedProfessor);
+            }}
+          />
         </Card>
-        {(!isRenewal || (isCheckedProfessor && clubId != null)) && (
-          <ProfessorInformFrame />
-        )}
+        {isCheckedProfessor && <ProfessorInformFrame />}
       </FlexWrapper>
     </AsyncBoundary>
   );
 };
 
-export default BasicInformFrame;
+export default ProvisionalBasicInformFrame;

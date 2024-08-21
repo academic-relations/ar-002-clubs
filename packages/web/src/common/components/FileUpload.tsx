@@ -156,7 +156,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   }, [files, multiple, placeholder]);
 
   return (
-    <FlexWrapper direction="column" gap={12}>
+    <FlexWrapper direction="column" gap={12} style={{ alignSelf: "stretch" }}>
       <FileUploadInner onClick={handleClick}>
         <FileName>
           <Typography
