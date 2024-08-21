@@ -13,11 +13,13 @@ type CheckboxProps = {
 };
 
 const CheckboxInner = styled.div<{ disabled: boolean }>`
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 16px;
   height: 16px;
+  flex-grow: 0;
+  flex-shrink: 0;
   border-radius: 4px;
   border: 1px solid
     ${({ disabled, theme }) =>

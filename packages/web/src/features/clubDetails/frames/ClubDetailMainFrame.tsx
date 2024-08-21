@@ -78,8 +78,8 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
 
   const ToggleRegistered = async (close: () => void) => {
     close();
-    setIsInclub(RegistrationApplicationStudentStatusEnum.Pending);
     await useRegisterClub(club.id);
+    setIsInclub(RegistrationApplicationStudentStatusEnum.Pending);
   };
 
   const ToggleUnregistered = async (close: () => void) => {

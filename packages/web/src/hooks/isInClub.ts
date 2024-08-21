@@ -2,12 +2,12 @@ import React from "react";
 
 import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
-import { useGetMyClub } from "../features/clubDetails/services/getMyClub";
+import { useGetMyClubRegistration } from "../features/clubDetails/services/getMyClub";
 
 export const useIsInClub = (
   clubId: number,
 ): [RegistrationApplicationStudentStatusEnum, boolean] => {
-  const { data, isLoading } = useGetMyClub();
+  const { data, isLoading } = useGetMyClubRegistration();
 
   const isInClub = React.useMemo(() => {
     if (data) {

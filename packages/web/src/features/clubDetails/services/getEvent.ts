@@ -22,7 +22,6 @@ export const useGetEvents = () =>
         {},
       );
 
-      console.log(data);
       switch (status) {
         case 200:
           return apiReg004.responseBodyMap[200].parse(data);

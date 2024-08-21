@@ -12,7 +12,7 @@ import mockupRegistraion from "./_mock/mockupRegistraion";
 
 import type { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 
-export const useGetMyClub = () =>
+export const useGetMyClubRegistration = () =>
   useQuery<ApiReg006ResponseOk, Error>({
     queryKey: [apiReg006.url()],
 
@@ -21,7 +21,7 @@ export const useGetMyClub = () =>
         apiReg006.url(),
         {},
       );
-      console.log(data);
+
       switch (status) {
         case 200:
           return apiReg006.responseBodyMap[200].parse(data);
