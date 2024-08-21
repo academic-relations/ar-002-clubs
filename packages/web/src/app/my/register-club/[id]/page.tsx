@@ -43,6 +43,7 @@ const TagWrapper = styled.div`
 
 const MyRegisterClubDetail = () => {
   const router = useRouter();
+  const isStudent = false; // 학생 <--> 지도교수 TODO: user 정보에서 가져오는 로직 추가
   const professorEnumToText = (profEnum: ProfessorEnum) => {
     switch (profEnum) {
       case ProfessorEnum.Assistant:
@@ -187,14 +188,22 @@ const MyRegisterClubDetail = () => {
         >
           목록으로 돌아가기
         </Button>
-        <FlexWrapper direction="row" gap={10}>
-          <Button style={{ width: "max-content" }} onClick={() => {}}>
-            삭제
-          </Button>
-          <Button style={{ width: "max-content" }} onClick={() => {}}>
-            수정
-          </Button>
-        </FlexWrapper>
+        {isStudent ? (
+          <FlexWrapper direction="row" gap={10}>
+            <Button style={{ width: "max-content" }} onClick={() => {}}>
+              삭제
+            </Button>
+            <Button style={{ width: "max-content" }} onClick={() => {}}>
+              수정
+            </Button>
+          </FlexWrapper>
+        ) : (
+          <FlexWrapper direction="row" gap={10}>
+            <Button style={{ width: "max-content" }} onClick={() => {}}>
+              승인
+            </Button>
+          </FlexWrapper>
+        )}
       </ButtonWrapper>
     </FlexWrapper>
   );

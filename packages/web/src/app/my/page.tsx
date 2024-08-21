@@ -28,6 +28,7 @@ const ResponsiveWrapper = styled(FlexWrapper)`
 
 const My: React.FC = () => {
   // TODO: clb014 api 구현되면 refetch 테스트
+  const isStudent = true; // 학생 <--> 지도교수 TODO: 로그인 정보로 대체
   const { data, isLoading, isError, refetch } = useGetMyDelegateRequest();
   const fetchDivisionPresident = () => {}; // TODO
 
@@ -37,7 +38,7 @@ const My: React.FC = () => {
   const [
     mockHasDivisionPresidentChangeNotice,
     setMockHasDivisionPresidentChangeNotice,
-  ] = useState(true);
+  ] = useState(false);
   const mockIsDivisionPresident = true; // TODO: divisionPresident == user
   const mockChangeDivisionPresident = () => {}; // TODO: change divisionPresident
   const mockRejectDivisionPresidentChange = () => {}; // TODO: set divisionPresidentChange status to "Rejected"
@@ -70,7 +71,7 @@ const My: React.FC = () => {
     }
   }, [data]);
 
-  return (
+  return isStudent ? (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <ResponsiveWrapper direction="column" gap={60}>
         <PageHead
@@ -98,10 +99,20 @@ const My: React.FC = () => {
         )}
         <MyInfoFrame />
         <MyClubFrame />
-        <MyRegisterFrame />
+        <MyRegisterFrame isStudent={isStudent} />
         <MyServiceFrame />
       </ResponsiveWrapper>
     </AsyncBoundary>
+  ) : (
+    <FlexWrapper direction="column" gap={60}>
+      <PageHead
+        items={[{ name: "마이페이지", path: "/my" }]}
+        title="마이페이지"
+      />
+      <MyInfoFrame />
+      <MyClubFrame />
+      <MyRegisterFrame isStudent={isStudent} />
+    </FlexWrapper>
   );
 };
 

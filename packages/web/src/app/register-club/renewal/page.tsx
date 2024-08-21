@@ -6,7 +6,7 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 
 import RegisterClubMainFrame from "@sparcs-clubs/web/features/register-club/frames/RegisterClubMainFrame";
-import useGetClubsForRenewal from "@sparcs-clubs/web/features/register-club/service/useGetClubsForRenewal";
+import useGetClubsForRenewal from "@sparcs-clubs/web/features/register-club/services/useGetClubsForRenewal";
 
 const RenewalRegisterClub = () => {
   const { data, isLoading, isError } = useGetClubsForRenewal();

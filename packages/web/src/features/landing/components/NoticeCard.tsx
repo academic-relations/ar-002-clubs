@@ -22,15 +22,40 @@ const NoticeTitle = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 14px;
+    line-height: 16px;
+  }
 `;
 
-const NoticeDate = styled.div`
+const NoticeDate = styled.div<{ date: Date }>`
   color: ${({ theme }) => theme.colors.BLACK};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: 14px;
+  font-size: 16px;
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   white-space: nowrap;
+
+  &::after {
+    content: "${({ date }) =>
+      date.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })}";
+  }
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 14px;
+    line-height: 16px;
+    &::after {
+      content: "${({ date }) =>
+        date.toLocaleDateString("ko-KR", {
+          year: "2-digit",
+          month: "2-digit",
+          day: "2-digit",
+        })}";
+    }
+  }
 `;
 
 const NoticeCard: React.FC<{
@@ -38,13 +63,7 @@ const NoticeCard: React.FC<{
 }> = ({ noticeList }) => (
   <NoticeCardInner>
     <NoticeTitle>{noticeList.title}</NoticeTitle>
-    <NoticeDate>
-      {noticeList.date.toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      })}
-    </NoticeDate>
+    <NoticeDate date={noticeList.date} />
   </NoticeCardInner>
 );
 
