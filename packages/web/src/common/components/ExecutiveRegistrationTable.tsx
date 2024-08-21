@@ -31,7 +31,11 @@ const columns = [
         info.getValue(),
         RegistrationStatusTagList,
       );
-      return <Tag color={color}>{text}</Tag>;
+      return (
+        <Tag color={color} width="50px">
+          {text}
+        </Tag>
+      );
     },
     size: 90,
   }),
