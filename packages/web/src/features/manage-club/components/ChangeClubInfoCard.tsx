@@ -56,11 +56,11 @@ const ChangeClubInfoCard = () => {
     const clubId = 1;
 
     updateClubInfo({
-      requestParam: { clubId }, // URL 파라미터로 사용될 클럽 ID
+      requestParam: { clubId },
       body: {
         description,
         roomPassword: password,
-      }, // 요청 본문 데이터
+      },
     });
   }, [description, password, updateClubInfo]);
 
