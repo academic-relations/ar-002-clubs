@@ -20,6 +20,7 @@ import {
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import DivisionPublicService from "@sparcs-clubs/api/feature/division/service/division.public.service";
 
@@ -46,7 +47,11 @@ export class ClubRegistrationService {
     studentId: number,
     body: ApiReg001RequestBody,
   ): Promise<ApiReg001ResponseCreated> {
-    await this.validateRegistration(body.clubId, body.registrationTypeEnumId);
+    await this.validateRegistration(
+      studentId,
+      body.clubId,
+      body.registrationTypeEnumId,
+    );
 
     // studentId 일치 확인
     if (studentId !== body.studentId)
@@ -83,12 +88,17 @@ export class ClubRegistrationService {
   }
 
   // 정동아리 재등록 신청
-  async getStudentRegistrationClubRegistrationQualificationRenewal(): Promise<ApiReg002ResponseOk> {
-    const semesterId = await this.clubPublicService.dateToSemesterId(
-      new Date(),
-    );
+  async getStudentRegistrationClubRegistrationQualificationRenewal(
+    studentId: number,
+  ): Promise<ApiReg002ResponseOk> {
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [RegistrationDeadlineEnum.ClubRegistrationApplication],
+    });
+    const cur = getKSTDate();
+    const semesterId = await this.clubPublicService.dateToSemesterId(cur);
     const reRegAbleList =
       await this.clubPublicService.getClubIdByClubStatusEnumId(
+        studentId,
         ClubTypeEnum.Regular,
         semesterId,
       ); // 현재 학기 기준 정동아리 list
@@ -99,18 +109,26 @@ export class ClubRegistrationService {
   }
 
   // 정동아리 신규 등록 신청
-  async getStudentRegistrationClubRegistrationQualificationPromotional(): Promise<ApiReg003ResponseOk> {
-    const semesterId = await this.clubPublicService.dateToSemesterId(
-      new Date(),
-    );
+  async getStudentRegistrationClubRegistrationQualificationPromotional(
+    studentId: number,
+  ): Promise<ApiReg003ResponseOk> {
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [RegistrationDeadlineEnum.ClubRegistrationApplication],
+    });
+    const cur = getKSTDate();
+    const semesterId = await this.clubPublicService.dateToSemesterId(cur);
     const promAbleList =
-      await this.clubPublicService.getEligibleClubsForRegistration(semesterId); // 2학기 연속 가동아리, 3학기 이내 정동아리 list
+      await this.clubPublicService.getEligibleClubsForRegistration(
+        studentId,
+        semesterId,
+      ); // 2학기 연속 가동아리, 3학기 이내 정동아리 list
     return {
       clubs: promAbleList,
     };
   }
 
   async validateRegistration(
+    studentId: number,
     clubId: number | undefined,
     registrationTypeEnumId: number,
   ) {
@@ -134,7 +152,9 @@ export class ClubRegistrationService {
         case RegistrationTypeEnum.Renewal: // 정동아리 재등록 신청
           if (
             !(
-              await this.getStudentRegistrationClubRegistrationQualificationRenewal()
+              await this.getStudentRegistrationClubRegistrationQualificationRenewal(
+                studentId,
+              )
             ).clubs.find(club => club.id === clubId)
           ) {
             // clubId가 목록에 포함되지 않았을 때의 처리
@@ -147,7 +167,9 @@ export class ClubRegistrationService {
         case RegistrationTypeEnum.Promotional: // 정동아리 신규 등록 신청
           if (
             !(
-              await this.getStudentRegistrationClubRegistrationQualificationPromotional()
+              await this.getStudentRegistrationClubRegistrationQualificationPromotional(
+                studentId,
+              )
             ).clubs.find(club => club.id === clubId)
           ) {
             // clubId가 목록에 포함되지 않았을 때의 처리

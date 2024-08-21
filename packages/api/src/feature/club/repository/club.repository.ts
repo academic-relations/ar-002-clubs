@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
-import { and, eq, gte, inArray, isNull, lte, or, sql } from "drizzle-orm";
+import { and, eq, gt, gte, inArray, isNull, lte, or, sql } from "drizzle-orm";
+import { union } from "drizzle-orm/mysql-core";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
@@ -16,6 +17,7 @@ import {
 } from "@sparcs-clubs/api/drizzle/schema/division.schema";
 import {
   Professor,
+  ProfessorT,
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
@@ -212,67 +214,181 @@ export default class ClubRepository {
   }
 
   async findClubIdByClubStatusEnumId(
+    studentId: number,
     clubStatusEnumId: number,
     semesterId: number,
   ) {
-    return this.db
-      .select({ id: Club.id })
-      .from(Club)
-      .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
-      .where(
-        and(
-          eq(ClubT.clubStatusEnumId, clubStatusEnumId),
-          eq(ClubT.semesterId, semesterId),
-        ),
-      );
+    const result = await this.db.transaction(async tx => {
+      const cur = getKSTDate();
+      const delegate = (
+        await tx
+          .select({
+            clubId: ClubDelegateD.clubId,
+          })
+          .from(ClubDelegateD)
+          .where(
+            and(
+              eq(ClubDelegateD.studentId, studentId),
+              lte(ClubDelegateD.startTerm, cur),
+              or(
+                gte(ClubDelegateD.endTerm, cur),
+                isNull(ClubDelegateD.endTerm),
+              ),
+              isNull(ClubDelegateD.deletedAt),
+            ),
+          )
+          .for("share")
+      ).map(obj => obj.clubId);
+      const club = await tx
+        .select({
+          id: Club.id,
+          clubNameKr: Club.name_kr,
+          clubNameEn: Club.name_en,
+          professor: {
+            name: Professor.name,
+            email: Professor.email,
+            professorEnumId: ProfessorT.professorEnum,
+          },
+        })
+        .from(Club)
+        .leftJoin(
+          ClubT,
+          and(
+            eq(Club.id, ClubT.clubId),
+            eq(ClubT.clubStatusEnumId, clubStatusEnumId),
+            eq(ClubT.semesterId, semesterId),
+            isNull(ClubT.deletedAt),
+          ),
+        )
+        .leftJoin(
+          Professor,
+          and(eq(Professor.id, ClubT.professorId), isNull(Professor.deletedAt)),
+        )
+        .leftJoin(
+          ProfessorT,
+          and(
+            eq(ProfessorT.professorId, ClubT.professorId),
+            lte(ProfessorT.startTerm, cur),
+            or(gt(ProfessorT.endTerm, cur), isNull(ProfessorT.endTerm)),
+            isNull(ProfessorT.deletedAt),
+          ),
+        )
+        .where(and(inArray(Club.id, delegate), isNull(Club.deletedAt)));
+      return club;
+    });
+    return result;
   }
 
-  async findEligibleClubsForRegistration(semesterId: number) {
+  async findEligibleClubsForRegistration(
+    studentId: number,
+    semesterId: number,
+  ) {
     // 주어진 semesterId를 기준으로 최근 2학기와 3학기를 계산
     const recentTwoSemesters = [semesterId - 1, semesterId];
+    const { length } = recentTwoSemesters;
     const recentThreeSemesters = [semesterId - 2, semesterId - 1, semesterId];
 
-    // 최근 2학기 동안 가동아리 상태를 유지한 클럽을 조회
-    const provisionalClubs = await this.db
-      .select({ id: Club.id })
-      .from(Club)
-      .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
-      .where(
-        and(
-          eq(ClubT.clubStatusEnumId, ClubTypeEnum.Provisional), // 가동아리
-          inArray(ClubT.semesterId, recentTwoSemesters), // recentTwoSemesters에 포함된 학기 동안
-        ),
-      )
-      .groupBy(Club.id);
+    const result = await this.db.transaction(async tx => {
+      const cur = getKSTDate();
+      const delegate = tx
+        .select({
+          clubId: ClubDelegateD.clubId,
+        })
+        .from(ClubDelegateD)
+        .where(
+          and(
+            eq(ClubDelegateD.studentId, studentId),
+            lte(ClubDelegateD.startTerm, cur),
+            or(gte(ClubDelegateD.endTerm, cur), isNull(ClubDelegateD.endTerm)),
+            isNull(ClubDelegateD.deletedAt),
+          ),
+        );
+      // 최근 2학기 동안 가동아리 상태를 유지한 클럽을 조회
+      const provisionalClubs = tx
+        .select({
+          id: Club.id,
+        })
+        .from(Club)
+        .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
+        .where(
+          and(
+            eq(ClubT.clubStatusEnumId, ClubTypeEnum.Provisional), // 가동아리
+            inArray(ClubT.semesterId, recentTwoSemesters), // recentTwoSemesters에 포함된 학기 동안
+            inArray(Club.id, delegate),
+            isNull(ClubT.deletedAt),
+          ),
+        )
+        .groupBy(Club.id)
+        .having(sql`COUNT(DISTINCT ${ClubT.semesterId}) = ${length}`);
 
-    // 최근 3학기 중 하나라도 정동아리 상태인 클럽을 조회
-    const regularClubs = await this.db
-      .select({ id: Club.id })
-      .from(Club)
-      .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
-      .where(
-        and(
-          eq(ClubT.clubStatusEnumId, ClubTypeEnum.Regular), // 정동아리
-          inArray(ClubT.semesterId, recentThreeSemesters), // recentThreeSemesters에 포함된 학기 동안
-          isNull(ClubT.deletedAt),
-        ),
-      )
-      .groupBy(Club.id);
-
-    const provisionalClubIds = new Set(provisionalClubs.map(club => club.id));
-    const regularClubIds = new Set(regularClubs.map(club => club.id));
-
-    // 필터링된 가동아리 클럽 ID와 정동아리 클럽 ID를 합치기
-    const eligibleClubIds = new Set([
-      ...Array.from(provisionalClubIds).filter(id => {
-        const count = provisionalClubs.filter(club => club.id === id).length;
-        return count === 2; // 가동아리 상태가 최근 2학기 모두에 존재하는 클럽
-      }),
-      // 정동아리 상태 클럽을 추가
-      ...Array.from(regularClubIds),
-    ]);
-
-    // 중복 제거된 클럽 ID 리스트를 반환
-    return Array.from(eligibleClubIds).map(id => ({ id }));
+      // 최근 3학기 중 하나라도 정동아리 상태인 클럽을 조회
+      const regularClubs = tx
+        .select({
+          id: Club.id,
+        })
+        .from(Club)
+        .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
+        .where(
+          and(
+            eq(ClubT.clubStatusEnumId, ClubTypeEnum.Regular), // 정동아리
+            inArray(ClubT.semesterId, recentThreeSemesters), // recentThreeSemesters에 포함된 학기 동안
+            inArray(Club.id, delegate),
+            isNull(ClubT.deletedAt),
+          ),
+        )
+        .groupBy(Club.id);
+      const sq = union(provisionalClubs, regularClubs);
+      const clubList = tx.$with("clubList").as(
+        tx
+          .select({
+            id: Club.id,
+            clubNameKr: Club.name_kr,
+            clubNameEn: Club.name_en,
+            professor: ClubT.professorId,
+          })
+          .from(Club)
+          .leftJoin(
+            ClubT,
+            and(
+              eq(Club.id, ClubT.clubId),
+              lte(ClubT.startTerm, cur),
+              isNull(ClubT.deletedAt),
+              or(isNull(ClubT.endTerm), gt(ClubT.endTerm, cur)),
+            ),
+          )
+          .where(and(inArray(Club.id, sq), isNull(Club.deletedAt))),
+      );
+      const response = await tx
+        .with(clubList)
+        .select({
+          id: clubList.id,
+          clubNameKr: clubList.clubNameKr,
+          clubNameEn: clubList.clubNameEn,
+          professor: {
+            name: Professor.name,
+            email: Professor.email,
+            professorEnumId: ProfessorT.professorEnum,
+          },
+        })
+        .from(clubList)
+        .leftJoin(
+          Professor,
+          and(
+            eq(Professor.id, clubList.professor),
+            isNull(Professor.deletedAt),
+          ),
+        )
+        .leftJoin(
+          ProfessorT,
+          and(
+            eq(Professor.id, ProfessorT.professorId),
+            isNull(ProfessorT.deletedAt),
+            lte(ProfessorT.startTerm, cur),
+            or(isNull(ProfessorT.endTerm), gt(ProfessorT.endTerm, cur)),
+          ),
+        );
+      return response;
+    });
+    return result;
   }
 }

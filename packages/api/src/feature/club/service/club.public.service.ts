@@ -110,10 +110,12 @@ export default class ClubPublicService {
    * semsterId 학기 당시 정동아리였던 동아리의 clubId list를 반환합니다.
    */
   async getClubIdByClubStatusEnumId(
+    studentId: number,
     clubStatusEnumId: number,
     semesterId: number,
   ) {
     const clubList = await this.clubRepository.findClubIdByClubStatusEnumId(
+      studentId,
       clubStatusEnumId,
       semesterId,
     );
@@ -128,9 +130,11 @@ export default class ClubPublicService {
    * 1. 최근 2학기 동안 가동아리 상태를 유지한 동아리
    * 2. 최근 3학기 이내 한 번이라도 정동아리였던 동아리
    */
-  async getEligibleClubsForRegistration(semesterId: number) {
-    const clubList =
-      await this.clubRepository.findEligibleClubsForRegistration(semesterId);
+  async getEligibleClubsForRegistration(studentId: number, semesterId: number) {
+    const clubList = await this.clubRepository.findEligibleClubsForRegistration(
+      studentId,
+      semesterId,
+    );
     return clubList;
   }
 

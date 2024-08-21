@@ -15,7 +15,9 @@ import apiReg001, {
 import apiReg002, {
   ApiReg002ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
-import apiReg003 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg003";
+import apiReg003, {
+  ApiReg003ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg003";
 import apiReg009, {
   ApiReg009RequestBody,
   ApiReg009RequestParam,
@@ -64,9 +66,13 @@ export class ClubRegistrationController {
     "/student/registrations/club-registrations/club-registration/qualifications/renewal",
   )
   @UsePipes(new ZodPipe(apiReg002))
-  async getStudentRegistrationClubRegistrationQualificationRenewal(): Promise<ApiReg002ResponseOk> {
+  async getStudentRegistrationClubRegistrationQualificationRenewal(
+    @GetStudent() user: GetStudent,
+  ): Promise<ApiReg002ResponseOk> {
     const orders =
-      await this.clubRegistrationService.getStudentRegistrationClubRegistrationQualificationRenewal();
+      await this.clubRegistrationService.getStudentRegistrationClubRegistrationQualificationRenewal(
+        user.studentId,
+      );
     return orders;
   }
 
@@ -75,9 +81,13 @@ export class ClubRegistrationController {
     "/student/registrations/club-registrations/club-registration/qualifications/promotional",
   )
   @UsePipes(new ZodPipe(apiReg003))
-  async getStudentRegistrationClubRegistrationQualificationPromotional(): Promise<ApiReg002ResponseOk> {
+  async getStudentRegistrationClubRegistrationQualificationPromotional(
+    @GetStudent() user: GetStudent,
+  ): Promise<ApiReg003ResponseOk> {
     const orders =
-      await this.clubRegistrationService.getStudentRegistrationClubRegistrationQualificationPromotional();
+      await this.clubRegistrationService.getStudentRegistrationClubRegistrationQualificationPromotional(
+        user.studentId,
+      );
     return orders;
   }
 
