@@ -30,7 +30,6 @@ const ResponsiveWrapper = styled(FlexWrapper)`
 const My: React.FC = () => {
   // TODO: clb014 api 구현되면 refetch 테스트
   const profile = useGetProfileNow();
-  const isProfessor = profile === "professor";
   const { data, isLoading, isError, refetch } = useGetMyDelegateRequest();
   const fetchDivisionPresident = () => {}; // TODO
 
@@ -73,48 +72,44 @@ const My: React.FC = () => {
     }
   }, [data]);
 
-  return isProfessor ? (
-    <FlexWrapper direction="column" gap={60}>
+  return (
+    <ResponsiveWrapper direction="column" gap={60}>
       <PageHead
         items={[{ name: "마이페이지", path: "/my" }]}
         title="마이페이지"
       />
+      {profile === "undergraduate" && (
+        <AsyncBoundary isLoading={isLoading} isError={isError}>
+          {data?.requests && data?.requests.length > 0 && (
+            <MyChangeRepresentative
+              type={type}
+              clubName={data?.requests[0].clubName}
+              prevRepresentative={`${data?.requests[0].prevStudentId} ${data?.requests[0].prevStudentName}`}
+              newRepresentative={`${myProfile?.studentNumber} ${myProfile?.name}`}
+              refetch={refetch}
+            />
+          )}
+          {mockHasDivisionPresidentChangeNotice && (
+            <MyChangeDivisionPresident
+              status={divisionChangeRequestStatus}
+              change={["20210227 박병찬", "20200510 이지윤"]}
+              fetch={fetchDivisionPresident}
+              isDivisionPresident={mockIsDivisionPresident}
+              onConfirmed={onDivisionPresidentChangeRequestConfirmed}
+              onRejected={onDivisionPresidentChangeRequestRejected}
+            />
+          )}
+        </AsyncBoundary>
+      )}
       <MyInfoFrame />
-      <MyClubFrame />
-      <MyRegisterFrame isProfessor={isProfessor} />
-    </FlexWrapper>
-  ) : (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <ResponsiveWrapper direction="column" gap={60}>
-        <PageHead
-          items={[{ name: "마이페이지", path: "/my" }]}
-          title="마이페이지"
-        />
-        {data?.requests && data?.requests.length > 0 && (
-          <MyChangeRepresentative
-            type={type}
-            clubName={data?.requests[0].clubName}
-            prevRepresentative={`${data?.requests[0].prevStudentId} ${data?.requests[0].prevStudentName}`}
-            newRepresentative={`${myProfile?.studentNumber} ${myProfile?.name}`}
-            refetch={refetch}
-          />
-        )}
-        {mockHasDivisionPresidentChangeNotice && (
-          <MyChangeDivisionPresident
-            status={divisionChangeRequestStatus}
-            change={["20210227 박병찬", "20200510 이지윤"]}
-            fetch={fetchDivisionPresident}
-            isDivisionPresident={mockIsDivisionPresident}
-            onConfirmed={onDivisionPresidentChangeRequestConfirmed}
-            onRejected={onDivisionPresidentChangeRequestRejected}
-          />
-        )}
-        <MyInfoFrame />
-        <MyClubFrame />
-        <MyRegisterFrame isProfessor={isProfessor} />
-        <MyServiceFrame />
-      </ResponsiveWrapper>
-    </AsyncBoundary>
+      {profile !== "executive" && <MyClubFrame />}
+      {profile && profile !== "executive" && (
+        <MyRegisterFrame profile={profile} />
+      )}
+      {(profile === "undergraduate" ||
+        profile === "master" ||
+        profile === "doctor") && <MyServiceFrame />}
+    </ResponsiveWrapper>
   );
 };
 

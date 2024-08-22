@@ -4,9 +4,9 @@ import React from "react";
 
 import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
-import NoManageClub from "@sparcs-clubs/web/app/NoManageClub";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
 import ActivityManageFrame from "@sparcs-clubs/web/features/manage-club/frames/ActivityManageFrame";
 import InfoManageFrame from "@sparcs-clubs/web/features/manage-club/frames/InfoManageFrame";
 import MembersManageFrame from "@sparcs-clubs/web/features/manage-club/frames/MembersManageFrame";
