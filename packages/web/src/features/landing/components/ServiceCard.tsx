@@ -26,6 +26,10 @@ const ServiceTitle = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 14px;
+    line-height: 16px;
+  }
 `;
 
 const ServiceCard: React.FC<ServiceCardProps> = ({

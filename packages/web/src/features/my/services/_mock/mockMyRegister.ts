@@ -20,6 +20,23 @@ const mockClubRegister = {
   total: 1,
   offset: 1,
 };
+
+const mockProfClubRegister = {
+  items: [
+    {
+      registrationStatusEnum: RegistrationStatusEnum.Pending,
+      clubDivision: "생활문화",
+      clubNameKr: "술박스",
+      studentNumber: "202XXXXX",
+      studentName: "이지윤",
+      phoneNumber: "XXX-XXXX-XXXX",
+      studentEmail: "xxxxx@kaist.ac.kr",
+      clubId: 1,
+    },
+  ],
+  total: 1,
+  offset: 1,
+};
 const mockMemberRegister = {
   items: [
     {
@@ -59,4 +76,9 @@ const mockRegisterPeriod = [
   RegistrationDeadlineEnum.StudentRegistrationApplication,
 ];
 
-export { mockClubRegister, mockMemberRegister, mockRegisterPeriod };
+export {
+  mockClubRegister,
+  mockProfClubRegister,
+  mockMemberRegister,
+  mockRegisterPeriod,
+};

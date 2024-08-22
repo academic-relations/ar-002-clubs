@@ -5,6 +5,7 @@ interface FlexWrapperProps {
   direction: "row" | "column";
   gap: number;
   justify?: string;
+  padding?: string;
 }
 
 const FlexWrapper = styled.div.withConfig({
@@ -14,6 +15,7 @@ const FlexWrapper = styled.div.withConfig({
   flex-direction: ${({ direction }) => direction};
   gap: ${({ gap }) => `${gap}px`};
   justify-content: ${({ justify }) => justify ?? "flex-start"};
+  padding: ${({ padding }) => padding ?? 0};
 `;
 
 export default FlexWrapper;

@@ -16,12 +16,16 @@ const calcStudentStatus = (studentID: number) => {
 const calcRegisterInfo = (data: typeof mockupClubMemberRegister) => {
   // Map 생성 및 초기화
   const result: Map<
-    MemberStatusEnum,
+    MemberStatusEnum | string,
     { Regular: number; NonRegular: number; Total: number }
-  > = new Map([
+  > = new Map<
+    MemberStatusEnum | string,
+    { Regular: number; NonRegular: number; Total: number }
+  >([
     [MemberStatusEnum.Applied, { Regular: 0, NonRegular: 0, Total: 0 }],
     [MemberStatusEnum.Approved, { Regular: 0, NonRegular: 0, Total: 0 }],
     [MemberStatusEnum.Rejected, { Regular: 0, NonRegular: 0, Total: 0 }],
+    ["Total", { Regular: 0, NonRegular: 0, Total: 0 }],
   ]);
 
   data.applies.forEach(apply => {
@@ -30,9 +34,13 @@ const calcRegisterInfo = (data: typeof mockupClubMemberRegister) => {
 
     if (result.has(status)) {
       const statusInfo = result.get(status)!;
+      const totalInfo = result.get("Total")!;
       statusInfo[studentStatus] += 1;
       statusInfo.Total += 1;
+      totalInfo.Total += 1;
+      totalInfo[studentStatus] += 1;
       result.set(status, statusInfo);
+      result.set("Total", totalInfo);
     }
   });
 

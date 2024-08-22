@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { MemTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { MemberStatusEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
@@ -19,20 +18,45 @@ const StatusWrapper = styled.div`
 `;
 
 const TotalCountContationer = styled.div`
-  width: 40px;
+  width: 120px;
   height: 24px;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
   display: flex;
+  flex-direction: row;
 `;
 
 const StatusCountContationer = styled.div`
+  width: 160px;
+  height: 24px;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+`;
+
+const StatusContentsContationer = styled.div`
   width: 60px;
   height: 24px;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   display: flex;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
 `;
+
+const TotalContentsContationer = styled.div`
+  width: 40px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+`;
+
 const StatusInfoFrame: React.FC<StatusInfoFrameProps> = ({
   statusInfo,
   status,
@@ -42,30 +66,24 @@ const StatusInfoFrame: React.FC<StatusInfoFrameProps> = ({
   return (
     <StatusWrapper>
       <FlexWrapper gap={40} direction="row">
-        <FlexWrapper gap={20} direction="row">
+        <TotalCountContationer>
           <Tag color={color}>{text}</Tag>
-          <TotalCountContationer>
-            <Typography fs={16} lh={20}>
-              {statusInfo.Total}명
-            </Typography>
-          </TotalCountContationer>
-        </FlexWrapper>
-        <FlexWrapper gap={20} direction="row">
+          <TotalContentsContationer>
+            {statusInfo.Total}명
+          </TotalContentsContationer>
+        </TotalCountContationer>
+        <StatusCountContationer>
           <Tag color="BLUE">정회원</Tag>
-          <StatusCountContationer>
-            <Typography fs={16} lh={20}>
-              {statusInfo.Regular}명
-            </Typography>
-          </StatusCountContationer>
-        </FlexWrapper>
-        <FlexWrapper gap={20} direction="row">
+          <StatusContentsContationer>
+            {statusInfo.Regular}명
+          </StatusContentsContationer>
+        </StatusCountContationer>
+        <StatusCountContationer>
           <Tag color="GRAY">준회원</Tag>
-          <StatusCountContationer>
-            <Typography fs={16} lh={20}>
-              {statusInfo.NonRegular}명
-            </Typography>
-          </StatusCountContationer>
-        </FlexWrapper>
+          <StatusContentsContationer>
+            {statusInfo.NonRegular}명
+          </StatusContentsContationer>
+        </StatusCountContationer>
       </FlexWrapper>
     </StatusWrapper>
   );

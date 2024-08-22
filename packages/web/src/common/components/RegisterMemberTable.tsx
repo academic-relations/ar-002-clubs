@@ -44,7 +44,7 @@ const columns = [
     id: "division",
     header: "분과",
     cell: info => {
-      const tagColor = getTagColorFromDivision(info.getValue());
+      const tagColor = getTagColorFromDivision(`${info.getValue()}`);
 
       return <Tag color={tagColor}>{info.getValue()}</Tag>;
     },

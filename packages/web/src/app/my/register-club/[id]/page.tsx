@@ -25,6 +25,7 @@ import {
   mockMyClubRegisterDetail,
 } from "@sparcs-clubs/web/features/my/services/_mock/mockMyClubRegisterDetail";
 
+import { useGetProfileNow } from "@sparcs-clubs/web/hooks/getProfileNow";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 const ButtonWrapper = styled.div`
@@ -43,6 +44,7 @@ const TagWrapper = styled.div`
 
 const MyRegisterClubDetail = () => {
   const router = useRouter();
+  const profile = useGetProfileNow();
   const professorEnumToText = (profEnum: ProfessorEnum) => {
     switch (profEnum) {
       case ProfessorEnum.Assistant:
@@ -187,14 +189,23 @@ const MyRegisterClubDetail = () => {
         >
           목록으로 돌아가기
         </Button>
-        <FlexWrapper direction="row" gap={10}>
-          <Button style={{ width: "max-content" }} onClick={() => {}}>
-            삭제
-          </Button>
-          <Button style={{ width: "max-content" }} onClick={() => {}}>
-            수정
-          </Button>
-        </FlexWrapper>
+        {/* TODO: 집행부원은 다른 화면 보여야 하는지? */}
+        {profile !== "professor" ? (
+          <FlexWrapper direction="row" gap={10}>
+            <Button style={{ width: "max-content" }} onClick={() => {}}>
+              삭제
+            </Button>
+            <Button style={{ width: "max-content" }} onClick={() => {}}>
+              수정
+            </Button>
+          </FlexWrapper>
+        ) : (
+          <FlexWrapper direction="row" gap={10}>
+            <Button style={{ width: "max-content" }} onClick={() => {}}>
+              승인
+            </Button>
+          </FlexWrapper>
+        )}
       </ButtonWrapper>
     </FlexWrapper>
   );

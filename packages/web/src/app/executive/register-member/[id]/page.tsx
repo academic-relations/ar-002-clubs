@@ -2,6 +2,10 @@
 
 import React, { useState } from "react";
 
+import { Divider } from "@mui/material";
+
+import styled from "styled-components";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -10,12 +14,13 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
+
 import mockupClubMemberRegister from "@sparcs-clubs/web/features/executive/register-member/[id]/_mock/mockClubMemberRegister";
 import calcRegisterInfo from "@sparcs-clubs/web/features/executive/register-member/[id]/services/calcRegisterInfo";
-
 import RegisterInfoTable from "@sparcs-clubs/web/features/executive/register-member/components/RegisterInfoTable";
 import StatusInfoFrame from "@sparcs-clubs/web/features/executive/register-member/components/StatusInfoFrame";
 
+import TotalInfoFrame from "@sparcs-clubs/web/features/executive/register-member/components/TotalInfoFrame";
 import { MemberStatusEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 const RegisterMember = () => {
@@ -24,6 +29,10 @@ const RegisterMember = () => {
 
   const pathSegments = window.location.pathname.split("/").filter(Boolean);
   const id = pathSegments[pathSegments.length - 1];
+
+  const DividerContatiner = styled.div`
+    padding-left: 28px;
+  `;
 
   /* TODO : API로 데이터 받아오기 */
   const paginatedData = {
@@ -75,12 +84,20 @@ const RegisterMember = () => {
             }
             status={MemberStatusEnum.Approved}
           />
-          <StatusInfoFrame
-            statusInfo={
-              calcRegister.get(MemberStatusEnum.Rejected) || defaultStatusInfo
-            }
-            status={MemberStatusEnum.Rejected}
-          />
+          <FlexWrapper gap={8} direction="column">
+            <StatusInfoFrame
+              statusInfo={
+                calcRegister.get(MemberStatusEnum.Rejected) || defaultStatusInfo
+              }
+              status={MemberStatusEnum.Rejected}
+            />
+            <DividerContatiner>
+              <Divider />
+            </DividerContatiner>
+            <TotalInfoFrame
+              statusInfo={calcRegister.get("Total") || defaultStatusInfo}
+            />
+          </FlexWrapper>
         </Card>
         <RegisterInfoTable memberRegisterInfoList={paginatedData} />
         <FlexWrapper direction="row" gap={16} justify="center">

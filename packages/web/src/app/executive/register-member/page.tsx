@@ -2,17 +2,24 @@
 
 import React, { useState } from "react";
 
+import Custom404 from "@sparcs-clubs/web/app/not-found";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import RegistrationMemberTable from "@sparcs-clubs/web/common/components/RegisterMemberTable";
 import mockupRegistrationMember from "@sparcs-clubs/web/features/executive/_mock/mockupMemberRegistration";
+import { useGetProfileNow } from "@sparcs-clubs/web/hooks/getProfileNow";
 
 const RegisterMember = () => {
+  const profile = useGetProfileNow();
+
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
 
+  if (profile !== "executive") {
+    return <Custom404 />;
+  }
   /* TODO : API로 데이터 받아오기 */
   const paginatedData = {
     total: mockupRegistrationMember.total,
