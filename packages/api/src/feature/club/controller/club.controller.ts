@@ -16,7 +16,7 @@ import apiClb004, {
 import apiClb005, {
   ApiClb005RequestBody,
   ApiClb005RequestParam,
-  ApiClb005ResponseCreated,
+  ApiClb005ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb005";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
@@ -83,7 +83,7 @@ export class ClubController {
     @GetStudent() user: GetStudent,
     @Param() param: ApiClb005RequestParam,
     @Body() body: ApiClb005RequestBody,
-  ): Promise<ApiClb005ResponseCreated> {
+  ): Promise<ApiClb005ResponseOk> {
     const result = await this.clubService.putStudentClubBrief(
       user.studentId,
       param,
