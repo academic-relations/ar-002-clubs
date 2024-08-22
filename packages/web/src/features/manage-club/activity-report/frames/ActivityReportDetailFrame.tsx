@@ -10,7 +10,7 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FilePreview from "@sparcs-clubs/web/common/components/FilePreview";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
+import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -112,8 +112,14 @@ const ActivityReportDetailFrame: React.FC = () => {
           <ProgressStatus
             labels={["신청 완료", "동아리 연합회 신청 반려"]}
             progress={[
-              { status: Status.Approved, date: new Date("2024-03-11 21:00") },
-              { status: Status.Canceled, date: new Date("2024-03-11 21:00") },
+              {
+                status: ProgressCheckSectionStatusEnum.Approved,
+                date: new Date("2024-03-11 21:00"),
+              },
+              {
+                status: ProgressCheckSectionStatusEnum.Canceled,
+                date: new Date("2024-03-11 21:00"),
+              },
             ]}
           />
           <ActivitySection label="활동 정보">
