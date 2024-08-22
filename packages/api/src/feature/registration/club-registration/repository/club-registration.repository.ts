@@ -115,7 +115,6 @@ export class ClubRegistrationRepository {
           .for("share")
           .then(takeUnique);
         if (!delegate) {
-          await tx.rollback();
           throw new HttpException(
             "Student is not delegate of the club",
             HttpStatus.BAD_REQUEST,
@@ -150,7 +149,6 @@ export class ClubRegistrationRepository {
           .for("share")
           .then(takeUnique);
         if (!professorId) {
-          await tx.rollback();
           throw new HttpException(
             "Professor Not Found",
             HttpStatus.BAD_REQUEST,
@@ -226,7 +224,6 @@ export class ClubRegistrationRepository {
         !registration ||
         registration.RegistrationStatusEnum === RegistrationStatusEnum.Approved
       ) {
-        await tx.rollback();
         throw new HttpException(
           "No registration found",
           HttpStatus.BAD_REQUEST,
@@ -259,7 +256,6 @@ export class ClubRegistrationRepository {
           .for("share")
           .then(takeUnique);
         if (!professorId) {
-          await tx.rollback();
           throw new HttpException(
             "Professor Not Found",
             HttpStatus.BAD_REQUEST,
@@ -291,9 +287,10 @@ export class ClubRegistrationRepository {
             isNull(Registration.deletedAt),
           ),
         );
-      if (result.affectedRows !== 1) {
-        await tx.rollback();
+      if (result.affectedRows > 1) {
         throw new HttpException("Registration update failed", 500);
+      } else if (result.affectedRows === 0) {
+        throw new HttpException("Registration Not Found", HttpStatus.NOT_FOUND);
       }
     });
     return {};
@@ -317,9 +314,10 @@ export class ClubRegistrationRepository {
             isNull(Registration.deletedAt),
           ),
         );
-      if (result.affectedRows !== 1) {
-        await tx.rollback();
+      if (result.affectedRows > 1) {
         throw new HttpException("Registration delete failed", 500);
+      } else if (result.affectedRows === 0) {
+        throw new HttpException("Registration Not Found", HttpStatus.NOT_FOUND);
       }
     });
     return {};
@@ -395,7 +393,6 @@ export class ClubRegistrationRepository {
         .for("share")
         .then(takeUnique);
       if (!registration) {
-        await tx.rollback();
         throw new HttpException(
           "Registration student or applyId not found",
           HttpStatus.BAD_REQUEST,
@@ -426,6 +423,12 @@ export class ClubRegistrationRepository {
           )
           .for("share")
           .then(takeUnique);
+        if (!professorDetail) {
+          throw new HttpException(
+            "Professor Not Found",
+            HttpStatus.BAD_REQUEST,
+          );
+        }
         const registrationDetail = {
           ...registration,
           professor: professorDetail,
@@ -625,7 +628,6 @@ export class ClubRegistrationRepository {
         .for("share")
         .then(takeUnique);
       if (!registration) {
-        await tx.rollback();
         throw new HttpException(
           "Registration not found",
           HttpStatus.BAD_REQUEST,
@@ -679,10 +681,8 @@ export class ClubRegistrationRepository {
           ),
         );
       if (result.affectedRows > 1) {
-        await tx.rollback();
         throw new HttpException("Registration update failed", 500);
       } else if (result.affectedRows === 0) {
-        await tx.rollback();
         throw new HttpException(
           "Registration not found",
           HttpStatus.BAD_REQUEST,
@@ -710,10 +710,8 @@ export class ClubRegistrationRepository {
           and(isNull(Registration.deletedAt), eq(Registration.id, applyId)),
         );
       if (result1.affectedRows > 1) {
-        await tx.rollback();
         throw new HttpException("Registration update failed", 500);
       } else if (result1.affectedRows === 0) {
-        await tx.rollback();
         throw new HttpException(
           "Registration not found",
           HttpStatus.BAD_REQUEST,
@@ -726,7 +724,6 @@ export class ClubRegistrationRepository {
       });
       if (result2.affectedRows !== 1) {
         await tx.rollback();
-        throw new HttpException("Registration comment insert failed", 500);
       }
       return {};
     });
