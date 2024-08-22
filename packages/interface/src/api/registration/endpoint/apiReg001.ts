@@ -15,7 +15,7 @@ import registrationTypeEnumChecker from "../utils/registrationTypeEnumChecker";
  * 신청의 종류에 따라 RequestBody의 검사 규칙이 다릅니다.
  */
 
-const url = () => `/student/registration`;
+const url = () => `/student/registrations/club-registrations/club-registration`;
 const method = "POST";
 
 const requestParam = z.object({});
