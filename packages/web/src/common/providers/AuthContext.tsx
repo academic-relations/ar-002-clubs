@@ -43,10 +43,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       if (response.accessToken) {
         localStorage.setItem(
           "accessToken",
-          response.accessToken.undergraduate ??
-            response.accessToken.master ??
+          response.accessToken.professor ??
             response.accessToken.doctor ??
-            response.accessToken.professor ??
+            response.accessToken.master ??
+            response.accessToken.undergraduate ??
             response.accessToken.employee ??
             response.accessToken.executive ??
             "",
