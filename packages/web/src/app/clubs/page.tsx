@@ -42,22 +42,24 @@ const Clubs: React.FC = () => {
   useEffect(() => {
     if (termData) {
       const now = new Date();
-      const currentEvent = termData.events.find(
+      const currentEvents = termData.events.filter(
         event => now >= event.startTerm && now <= event.endTerm,
       );
-      if (!currentEvent) {
+      if (currentEvents.length === 0) {
         setIsRegistrationPeriod(false);
         return;
       }
-      if (
-        currentEvent.registrationEventEnumId ===
-        RegistrationDeadlineEnum.StudentRegistrationApplication
-      ) {
+      const regisEvent = currentEvents.filter(
+        event =>
+          event.registrationEventEnumId ===
+          RegistrationDeadlineEnum.StudentRegistrationApplication,
+      );
+      if (regisEvent.length > 0) {
         setIsRegistrationPeriod(true);
+        setMemberRegisPeriodEnd(regisEvent[0].endTerm);
       } else {
         setIsRegistrationPeriod(false);
       }
-      setMemberRegisPeriodEnd(currentEvent.endTerm);
     }
   }, [termData]);
 
