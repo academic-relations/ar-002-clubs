@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
+import NotFound from "@sparcs-clubs/web/app/not-found";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -45,6 +46,7 @@ const TagWrapper = styled.div`
 const MyRegisterClubDetail = () => {
   const router = useRouter();
   const profile = useGetProfileNow();
+
   const professorEnumToText = (profEnum: ProfessorEnum) => {
     switch (profEnum) {
       case ProfessorEnum.Assistant:
@@ -57,6 +59,10 @@ const MyRegisterClubDetail = () => {
     }
   };
   const data = useMemo(() => mockMyClubRegisterAcf.items, []);
+
+  if (profile === "executive") {
+    return <NotFound />;
+  }
 
   return (
     <FlexWrapper direction="column" gap={60}>
