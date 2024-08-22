@@ -1,12 +1,14 @@
 "use client";
 
+import React from "react";
+
 import styled from "styled-components";
 
 import ErrorPageTemplate from "@sparcs-clubs/web/common/frames/ErrorPageTemplate";
 
-import { useAuth } from "../providers/AuthContext";
-
-import type { NextPage } from "next";
+interface LoginRequiredProps {
+  login: () => void;
+}
 
 const ErrorMessage = styled.div`
   color: ${({ theme }) => theme.colors.BLACK};
@@ -26,7 +28,7 @@ const ErrorMessage = styled.div`
   }
 `;
 
-const LoginRequired: NextPage = () => {
+const LoginRequired: React.FC<LoginRequiredProps> = ({ login }) => {
   const Message = (
     <ErrorMessage>
       현재 접근한 페이지는
@@ -34,7 +36,6 @@ const LoginRequired: NextPage = () => {
       로그인해야 볼 수 있습니다
     </ErrorMessage>
   );
-  const { login } = useAuth();
 
   return (
     <ErrorPageTemplate

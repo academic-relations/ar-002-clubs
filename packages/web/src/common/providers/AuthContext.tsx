@@ -9,6 +9,13 @@ import React, {
   useState,
 } from "react";
 
+import { noLoginList } from "@sparcs-clubs/web/constants/noLoginList";
+
+import DebugBadge from "../components/DebugBadge";
+import Footer from "../components/Footer";
+import LoginRequiredHeader from "../components/Header/LoginRequiredHeader";
+import ResponsiveContent from "../components/Responsive";
+import LoginRequired from "../frames/LoginRequired";
 import postLogin from "../services/postLogin";
 import postLogout from "../services/postLogout";
 
@@ -73,6 +80,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const value = useMemo(() => ({ isLoggedIn, login, logout }), [isLoggedIn]);
 
+  if (!isLoggedIn && !noLoginList.includes(window.location.pathname)) {
+    return (
+      <AuthContext.Provider value={value}>
+        <DebugBadge />
+        <LoginRequiredHeader />
+        <ResponsiveContent>
+          <LoginRequired login={login} />
+        </ResponsiveContent>
+        <Footer />
+      </AuthContext.Provider>
+    );
+  }
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
