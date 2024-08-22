@@ -15,6 +15,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { ProfessorApprovalTagList } from "@sparcs-clubs/web/constants/tableTagList";
 
+import PastActivityReportList from "@sparcs-clubs/web/features/manage-club/activity-report/components/PastActivityReportList";
 import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 import RegisterClubTypeEnum, {
@@ -38,6 +39,7 @@ export interface ClubRegisterDetail {
   clubDetail: Record<string, string>;
   attachmentList: Record<string, Attachment[]>;
   professorApproval: ActivityProfessorApprovalEnum;
+  activityReports: boolean;
 }
 
 const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
@@ -56,6 +58,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
   clubDetail,
   attachmentList,
   professorApproval,
+  activityReports,
 }: ClubRegisterDetail) => {
   const progressCheckSectionLabel = () => {
     switch (statusAndDate[1].status) {
@@ -67,6 +70,45 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
         return "승인 대기";
     }
   };
+
+  const mockActivityData = [
+    {
+      activity: "개발개발한 어떠한 활동",
+      category: "동아리 성격에 합치하는 내부 활동",
+      startDate: new Date("2024-03-11"),
+      endDate: new Date("2024-03-18"),
+    },
+    {
+      activity: "개발개발한 어떠한 활동",
+      category: "동아리 성격에 합치하는 내부 활동",
+      startDate: new Date("2024-03-11"),
+      endDate: new Date("2024-03-18"),
+    },
+    {
+      activity: "개발개발한 어떠한 활동",
+      category: "동아리 성격에 합치하는 외부 활동",
+      startDate: new Date("2024-03-11"),
+      endDate: new Date("2024-03-18"),
+    },
+    {
+      activity: "개발개발한 어떠한 활동",
+      category: "동아리 성격에 합치하는 외부 활동",
+      startDate: new Date("2024-03-11"),
+      endDate: new Date("2024-03-18"),
+    },
+    {
+      activity: "개발개발한 어떠한 활동",
+      category: "동아리 성격에 합치하는 내부 활동",
+      startDate: new Date("2024-03-11"),
+      endDate: new Date("2024-03-18"),
+    },
+    {
+      activity: "2024년도 봄의기 MT",
+      category: "동아리 성격에 합치하지 않는 활동",
+      startDate: new Date("2024-03-11"),
+      endDate: new Date("2024-03-18"),
+    },
+  ];
 
   return (
     <Card padding="32px" gap={20} outline>
@@ -145,6 +187,17 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
           </>
         ))}
       </FlexWrapper>
+      {activityReports && (
+        <FlexWrapper direction="column" gap={16}>
+          <Typography fw="MEDIUM" lh={20} fs={16}>
+            가등록 / 등록 취소 기간 활동 보고서 (총 6개)
+          </Typography>
+          <PastActivityReportList
+            data={mockActivityData}
+            showItemCount={false}
+          />
+        </FlexWrapper>
+      )}
       <FlexWrapper gap={20} direction="row">
         <Typography fw="MEDIUM" lh={20} fs={16} style={{ flex: 1 }}>
           지도교수 승인

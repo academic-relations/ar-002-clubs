@@ -60,6 +60,7 @@ const RegisterClubDetail: React.FC = () => {
       ],
     },
     professorApproval: ActivityProfessorApprovalEnum.Requested,
+    activityReports: true,
   };
 
   return (
