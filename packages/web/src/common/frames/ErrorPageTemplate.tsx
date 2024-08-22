@@ -68,6 +68,7 @@ const ButtonsWrapper = styled.div`
 // height: 원 모양의 높이
 const LogoFrame = styled.div`
   display: flex;
+  width: 100%;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
@@ -94,6 +95,7 @@ const LogoImage = styled(Image)`
   height: 450px;
   flex-shrink: 0;
   opacity: 0.3;
+  max-width: calc(100vw - 20px);
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
     width: 438px;
