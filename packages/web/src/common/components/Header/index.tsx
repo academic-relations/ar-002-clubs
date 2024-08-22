@@ -9,6 +9,7 @@ import NavList from "@sparcs-clubs/web/common/components/NavTools/NavList";
 import navPaths from "@sparcs-clubs/web/constants/nav";
 
 import paths from "@sparcs-clubs/web/constants/paths";
+import { getFeatureFlagString } from "@sparcs-clubs/web/hooks/getFlag";
 import { useGetProfileNow } from "@sparcs-clubs/web/hooks/getProfileNow";
 
 import MobileNavMenu from "../NavTools/MobileNavMenu";
@@ -75,11 +76,13 @@ const Header: React.FC = () => {
 
   const profile = (useGetProfileNow() as string) ?? "";
 
-  const headerPaths = navPaths.header.filter(
-    menu =>
-      paths[menu].authority.includes(profile) ||
-      paths[menu].authority.includes("all"),
-  );
+  const headerPaths = navPaths.header
+    .filter(
+      menu =>
+        paths[menu].authority.includes(profile) ||
+        paths[menu].authority.includes("all"),
+    )
+    .filter(menu => getFeatureFlagString(paths[menu].featureFlag));
 
   return (
     <HeaderInner>

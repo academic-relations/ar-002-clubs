@@ -4,11 +4,14 @@ import React from "react";
 
 import styled from "styled-components";
 
+import { useGetFeatureFlagString } from "@sparcs-clubs/web/hooks/getFlag";
+
 import NavSubItem from "./NavSubItem";
 
 type SubPath = {
   name: string;
   path?: string;
+  featureFlag?: string;
 };
 
 const NavItemOuter = styled.div`
@@ -29,14 +32,23 @@ const NavItemInner = styled.div`
   border-radius: 8px;
 `;
 
-const NavSubMenu = ({ sub }: { sub: SubPath[] }) => (
-  <NavItemOuter>
-    <NavItemInner>
-      {sub.map(({ name, path }) => (
-        <NavSubItem key={name} name={name} path={path} />
-      ))}
-    </NavItemInner>
-  </NavItemOuter>
-);
+const NavSubMenu = ({ sub }: { sub: SubPath[] }) => {
+  const ff = useGetFeatureFlagString();
+
+  const filteredSub = sub.filter(({ featureFlag }) => {
+    if (!featureFlag) return false;
+    return ff(featureFlag);
+  });
+
+  return (
+    <NavItemOuter>
+      <NavItemInner>
+        {filteredSub.map(({ name, path }) => (
+          <NavSubItem key={name} name={name} path={path} />
+        ))}
+      </NavItemInner>
+    </NavItemOuter>
+  );
+};
 
 export default NavSubMenu;
