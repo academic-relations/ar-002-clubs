@@ -32,6 +32,10 @@ const PersonInfoContent = styled(PersonInfoItemInner)`
   @media (max-width: 1200px) {
     width: 100%;
   }
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  display: block;
 `;
 
 const PersonInfoItem: React.FC<PersonInfoItemProps> = ({ title, content }) => (

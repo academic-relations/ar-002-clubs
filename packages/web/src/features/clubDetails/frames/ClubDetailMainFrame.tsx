@@ -172,7 +172,11 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
         </FlexWrapper>
 
         <MoreInfoWrapper>
-          <FlexWrapper direction="column" gap={20}>
+          <FlexWrapper
+            direction="column"
+            gap={20}
+            style={{ width: "fit-content", maxWidth: "50%" }}
+          >
             <SectionTitle size="lg">인적 사항 </SectionTitle>
             <CardWrapper>
               <PersonInfoCard club={club} />
