@@ -8,9 +8,13 @@ import Icon from "@sparcs-clubs/web/common/components/Icon";
 import NavList from "@sparcs-clubs/web/common/components/NavTools/NavList";
 import navPaths from "@sparcs-clubs/web/constants/nav";
 
+import paths from "@sparcs-clubs/web/constants/paths";
+import { useGetProfileNow } from "@sparcs-clubs/web/hooks/getProfileNow";
+
 import MobileNavMenu from "../NavTools/MobileNavMenu";
 
 import Login from "./_atomic/Login";
+
 import Logo from "./_atomic/Logo";
 
 const IdentityBar = styled.div`
@@ -68,6 +72,15 @@ const Menu = styled.div`
 
 const Header: React.FC = () => {
   const [isMobileMenuVisible, setIsMobileMenuVisible] = useState<boolean>();
+
+  const profile = (useGetProfileNow() as string) ?? "";
+
+  const headerPaths = navPaths.header.filter(
+    menu =>
+      paths[menu].authority.includes(profile) ||
+      paths[menu].authority.includes("all"),
+  );
+
   return (
     <HeaderInner>
       <IdentityBar />
@@ -81,11 +94,11 @@ const Header: React.FC = () => {
             onClick={() => setIsMobileMenuVisible(!isMobileMenuVisible)}
           />
         </Menu>
-        <StyledNavList highlight keys={navPaths.header} />
+        <StyledNavList highlight keys={headerPaths} />
       </NavInner>
       {isMobileMenuVisible && (
         <MobileNavMenu
-          keys={navPaths.header}
+          keys={headerPaths}
           onClose={() => setIsMobileMenuVisible(!isMobileMenuVisible)}
         />
       )}
