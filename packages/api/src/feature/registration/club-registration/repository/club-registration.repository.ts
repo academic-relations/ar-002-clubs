@@ -327,8 +327,47 @@ export class ClubRegistrationRepository {
     studentId: number,
     applyId: number,
   ): Promise<ApiReg011ResponseOk> {
-    const cur = getKSTDate();
     const result = await this.db.transaction(async tx => {
+      const cur = getKSTDate();
+      const professor = tx
+        .select({
+          id: Professor.id,
+          name: Professor.name,
+          email: Professor.email,
+          professorEnumId: ProfessorT.professorEnum,
+        })
+        .from(Professor)
+        .innerJoin(
+          ProfessorT,
+          and(
+            eq(Professor.id, ProfessorT.professorId),
+            lte(ProfessorT.startTerm, cur),
+            or(gt(ProfessorT.endTerm, cur), isNull(ProfessorT.endTerm)),
+            isNull(ProfessorT.deletedAt),
+          ),
+        )
+        .where(isNull(Professor.deletedAt))
+        .as("professor");
+
+      const representative = tx
+        .select({
+          id: Student.id,
+          name: Student.name,
+          studentNumber: Student.number,
+        })
+        .from(Student)
+        .innerJoin(
+          StudentT,
+          and(
+            eq(Student.id, StudentT.studentId),
+            lte(StudentT.startTerm, cur),
+            or(gt(StudentT.endTerm, cur), isNull(StudentT.endTerm)),
+            isNull(StudentT.deletedAt),
+          ),
+        )
+        .where(and(isNull(Student.deletedAt), eq(Student.id, studentId)))
+        .as("representative");
+
       const File1 = alias(File, "File1");
       const File2 = alias(File, "File2");
       const File3 = alias(File, "File3");
@@ -342,13 +381,20 @@ export class ClubRegistrationRepository {
           clubId: Registration.clubId,
           clubNameKr: Registration.clubNameKr,
           clubNameEn: Registration.clubNameEn,
-          studentId: Registration.studentId,
+          representative: {
+            studentNumber: representative.studentNumber,
+            name: representative.name,
+          },
           phoneNumber: Registration.phoneNumber,
           foundedAt: Registration.foundedAt,
           divisionId: Registration.divisionId,
           activityFieldKr: Registration.activityFieldKr,
           activityFieldEn: Registration.activityFieldEn,
-          professor: Registration.professorId,
+          professor: {
+            name: professor.name,
+            email: professor.email,
+            professorEnumId: professor.professorEnumId,
+          },
           divisionConsistency: Registration.divisionConsistency,
           foundationPurpose: Registration.foundationPurpose,
           activityPlan: Registration.activityPlan,
@@ -359,9 +405,15 @@ export class ClubRegistrationRepository {
           externalInstructionFileId:
             Registration.registrationExternalInstructionFileId,
           externalInstructionFileName: File3.name,
+          isProfessorSigned: Registration.professorApprovedAt,
           updatedAt: Registration.updatedAt,
         })
         .from(Registration)
+        .innerJoin(
+          representative,
+          eq(Registration.studentId, representative.id),
+        ) // 대표자가 없는 학생이라면 잘못된 신청이라는 의미인것 같아서 innerjoin으로 연결시킴.
+        .leftJoin(professor, eq(Registration.professorId, professor.id))
         .leftJoin(
           File1,
           and(
@@ -385,8 +437,8 @@ export class ClubRegistrationRepository {
         )
         .where(
           and(
-            eq(Registration.studentId, studentId),
             eq(Registration.id, applyId),
+            eq(Registration.studentId, studentId),
             isNull(Registration.deletedAt),
           ),
         )
@@ -394,48 +446,27 @@ export class ClubRegistrationRepository {
         .then(takeUnique);
       if (!registration) {
         throw new HttpException(
-          "Registration student or applyId not found",
+          "Registration not found",
           HttpStatus.BAD_REQUEST,
         );
       }
-      if (registration.professor) {
-        const professorDetail = await tx
-          .select({
-            name: Professor.name,
-            email: Professor.email,
-            professorEnumId: ProfessorT.professorEnum,
-          })
-          .from(Professor)
-          .leftJoin(
-            ProfessorT,
-            and(
-              eq(Professor.id, ProfessorT.professorId),
-              isNull(ProfessorT.deletedAt),
-              lte(ProfessorT.startTerm, cur),
-              or(isNull(ProfessorT.endTerm), gt(ProfessorT.endTerm, cur)),
-            ),
-          )
-          .where(
-            and(
-              eq(Professor.id, registration.professor),
-              isNull(Professor.deletedAt),
-            ),
-          )
-          .for("share")
-          .then(takeUnique);
-        if (!professorDetail) {
-          throw new HttpException(
-            "Professor Not Found",
-            HttpStatus.BAD_REQUEST,
-          );
-        }
-        const registrationDetail = {
-          ...registration,
-          professor: professorDetail,
-        };
-        return registrationDetail;
-      }
-      return { ...registration, professor: undefined };
+      const comments = await tx
+        .select({
+          content: RegistrationExecutiveComment.content,
+          createdAt: RegistrationExecutiveComment.createdAt,
+        })
+        .from(RegistrationExecutiveComment)
+        .where(
+          and(
+            eq(RegistrationExecutiveComment.registrationId, applyId),
+            isNull(RegistrationExecutiveComment.deletedAt),
+          ),
+        );
+      return {
+        ...registration,
+        isProfessorSigned: !!registration.isProfessorSigned,
+        comments,
+      };
     });
     return result;
   }
