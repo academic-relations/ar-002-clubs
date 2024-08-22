@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 
+import styled from "styled-components";
+
 import Custom404 from "@sparcs-clubs/web/app/not-found";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import ExecutiveRegistrationTable from "@sparcs-clubs/web/common/components/ExecutiveRegistrationTable";
@@ -18,7 +20,10 @@ const ExeRegisterClub = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
 
-  const { data, isLoading, isError } = useGetRegisterClub();
+  const { data, isLoading, isError } = useGetRegisterClub({
+    pageOffset: 10,
+    itemCount: 10,
+  });
   const [clubData, setClubData] = useState<RegisterClubList>({
     items: [],
     total: 0,
@@ -52,6 +57,10 @@ const ExeRegisterClub = () => {
     return <Custom404 />;
   }
 
+  const TableWithPaginationWrapper = styled.div`
+    display: flex;
+  `;
+
   return (
     <FlexWrapper direction="column" gap={20}>
       <PageHead
@@ -62,15 +71,19 @@ const ExeRegisterClub = () => {
         title="동아리 등록 신청 내역"
       />
       <AsyncBoundary isLoading={isLoading} isError={isError}>
-        <ExecutiveRegistrationTable registerList={paginatedData} />
-        <FlexWrapper direction="row" gap={16} justify="center">
-          <Pagination
-            totalPage={Math.ceil(clubData.total / limit)}
-            currentPage={currentPage}
-            limit={limit}
-            setPage={handlePageChange}
-          />
-        </FlexWrapper>
+        {clubData.items.length !== 0 && (
+          <TableWithPaginationWrapper>
+            <ExecutiveRegistrationTable registerList={paginatedData} />
+            <FlexWrapper direction="row" gap={16} justify="center">
+              <Pagination
+                totalPage={Math.ceil(clubData.total / limit)}
+                currentPage={currentPage}
+                limit={limit}
+                setPage={handlePageChange}
+              />
+            </FlexWrapper>
+          </TableWithPaginationWrapper>
+        )}
       </AsyncBoundary>
     </FlexWrapper>
   );
