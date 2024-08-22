@@ -104,7 +104,13 @@ const ExecutiveRegistrationTable: React.FC<ExecutiveRegistrationTableProps> = ({
     enableSorting: false,
   });
 
-  return <Table table={table} count={registerList.total} />;
+  return (
+    <Table
+      table={table}
+      count={registerList.total}
+      emptyMessage="동아리 등록 신청 내역이 없습니다."
+    />
+  );
 };
 
 export default ExecutiveRegistrationTable;
