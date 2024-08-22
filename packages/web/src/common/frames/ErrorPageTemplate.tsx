@@ -78,7 +78,7 @@ const ButtonsWrapper = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: flex-start;
-  gap: 20px;
+  gap: 10px 20px;
   flex-wrap: wrap;
 `;
 

@@ -13,6 +13,7 @@ const ErrorMessage = styled.div`
   font-size: 32px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   line-height: 48px;
+  word-break: keep-all;
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
     font-size: 28px;
