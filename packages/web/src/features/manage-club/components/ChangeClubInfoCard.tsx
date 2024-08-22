@@ -11,11 +11,19 @@ import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/Confi
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { useGetClubInfo } from "@sparcs-clubs/web/features/manage-club/services/getClubInfo";
-import { useGetDelegateId } from "@sparcs-clubs/web/features/manage-club/services/getDelegateClubId";
+import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 import { usePutClubInfo } from "@sparcs-clubs/web/features/manage-club/services/updateClubInfo";
 
+interface MyManageClubData {
+  clubId: number;
+  delegateEnumId: number;
+}
+
 const ChangeClubInfoCard = () => {
-  const { data: idData, isLoading: idIsLoading } = useGetDelegateId();
+  const { data: idData, isLoading: idIsLoading } = useGetMyManageClub() as {
+    data: MyManageClubData;
+    isLoading: boolean;
+  };
   const [clubId, setClubId] = useState<number>(0);
   const { data, isLoading, isError, refetch } = useGetClubInfo({
     clubId,
@@ -27,8 +35,8 @@ const ChangeClubInfoCard = () => {
   const { mutate: updateClubInfo } = usePutClubInfo();
 
   useEffect(() => {
-    if (!idIsLoading && idData?.clubId) {
-      setClubId(idData?.clubId);
+    if (!idIsLoading && idData && Object.keys(idData).length > 0) {
+      setClubId(idData.clubId);
       if (clubId && !isLoading && data?.description && data?.roomPassword) {
         setDescription(data.description);
         setPassword(data.roomPassword);
@@ -36,28 +44,28 @@ const ChangeClubInfoCard = () => {
     }
   }, [
     idIsLoading,
+    idData,
     isLoading,
     clubId,
     data?.description,
     data?.roomPassword,
-    idData?.clubId,
   ]);
 
   useEffect(() => {
-    if (description === "") {
+    if (clubId && description === "") {
       setErrorDescription("동아리 설명을 입력하세요");
     } else {
       setErrorDescription("");
     }
-  }, [description, setErrorDescription]);
+  }, [clubId, description, setErrorDescription]);
 
   useEffect(() => {
-    if (password === "") {
+    if (clubId && password === "") {
       setErrorPassword("동아리방 비밀번호를 입력하세요");
     } else {
       setErrorPassword("");
     }
-  }, [password, setErrorPassword]);
+  }, [clubId, password, setErrorPassword]);
   // TODO: 동방 없는 곳은 비밀번호 입력 안 해도 에러 안 뜨게 수정
 
   const buttonType =
