@@ -3,13 +3,12 @@ import React, { useState } from "react";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
-import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import Modal from "@sparcs-clubs/web/common/components/Modal";
-import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import ActivityTermRow from "@sparcs-clubs/web/features/register-club/components/_atomic/ActivityTermRow";
+import EditActivityTermModal, {
+  ActivityTermProps,
+} from "./_atomic/EditActivityTermModal";
 
 const ActivityTermArea = styled.div`
   display: flex;
@@ -41,94 +40,27 @@ const ActivityTermContent = styled.div`
   flex-grow: 1;
 `;
 
-interface ActivityTermProps {
-  startDate: string;
-  endDate: string;
-}
-
 const SelectActivityTerm = () => {
   const [activityTermList, setActivityTermList] = useState<ActivityTermProps[]>(
     [],
   );
-  const [activityTermTmpList, setActivityTermTmpList] = useState<
-    ActivityTermProps[]
-  >([
-    {
-      startDate: "",
-      endDate: "",
-    },
-  ]);
-  console.log("Updated activityTermTmpList:", activityTermTmpList);
-
-  console.log("Updated activityTermList:", activityTermList);
-
-  const addRow = () => {
-    setActivityTermTmpList(prevList => [
-      ...prevList,
-      { startDate: "", endDate: "" },
-    ]);
-  };
-
-  const handleDateChange = (index: number, start: string, end: string) => {
-    const updatedTerms = activityTermTmpList.map((term, i) =>
-      i === index ? { startDate: start, endDate: end } : term,
-    );
-    setActivityTermTmpList(updatedTerms);
-  };
 
   const handleTerm = () => {
-    if (activityTermList.length > 0) {
-      setActivityTermTmpList(activityTermList);
-    } else {
-      setActivityTermTmpList([
-        {
-          startDate: "",
-          endDate: "",
-        },
-      ]);
-    }
+    overlay.open(({ isOpen, close }) => {
+      const handleConfirm = (terms: ActivityTermProps[]) => {
+        setActivityTermList(terms);
+        close();
+      };
 
-    const handleDelete = (index: number) => {
-      const updatedTerms = activityTermTmpList.filter((_, i) => i !== index);
-      setActivityTermTmpList(updatedTerms);
-      console.log(activityTermTmpList);
-    };
-
-    overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen} onClose={close}>
-        <CancellableModalContent
-          onClose={() => {
-            close();
-          }}
-          onConfirm={() => {
-            console.log("at Confirm:", activityTermTmpList, activityTermList);
-            setActivityTermList(activityTermTmpList);
-            close();
-          }}
-        >
-          <FlexWrapper direction="column" gap={12} style={{ flex: "1 0 0" }}>
-            {activityTermTmpList.map((term, index) => (
-              <ActivityTermRow
-                key={index}
-                index={index}
-                startDate={term.startDate}
-                endDate={term.endDate}
-                onDateChange={handleDateChange}
-                onDelete={handleDelete}
-              />
-            ))}
-            <IconButton
-              icon="add"
-              onClick={addRow}
-              style={{ backgroundColor: "white", color: "black" }}
-              type="outlined"
-            >
-              활동 기간 추가
-            </IconButton>
-          </FlexWrapper>
-        </CancellableModalContent>
-      </Modal>
-    ));
+      return (
+        <EditActivityTermModal
+          initialData={activityTermList}
+          isOpen={isOpen}
+          onClose={close}
+          onConfirm={handleConfirm}
+        />
+      );
+    });
   };
 
   return (
