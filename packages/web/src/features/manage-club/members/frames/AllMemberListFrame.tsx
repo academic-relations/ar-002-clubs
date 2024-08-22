@@ -18,7 +18,6 @@ const AllMemberListWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 40px;
-  padding-left: 24px;
 `;
 
 const IconButtonWrapper = styled.div`
