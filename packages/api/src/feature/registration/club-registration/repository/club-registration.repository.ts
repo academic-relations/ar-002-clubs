@@ -91,6 +91,8 @@ export class ClubRegistrationRepository {
   ): Promise<ApiReg001ResponseCreated> {
     const cur = getKSTDate();
     await this.db.transaction(async tx => {
+      // - 신규 가동아리 신청을 제외하곤 기존 동아리 대표자의 신청인지 검사합니다.
+      // 한 학생이 여러 동아리의 대표자나 대의원일 수 없기 때문에, 1개 또는 0개의 지위를 가지고 있다고 가정합니다.
       if (body.registrationTypeEnumId !== RegistrationTypeEnum.NewProvisional) {
         const delegate = await tx
           .select({
@@ -113,7 +115,6 @@ export class ClubRegistrationRepository {
           .for("share")
           .then(takeUnique);
         if (!delegate) {
-          await tx.rollback();
           throw new HttpException(
             "Student is not delegate of the club",
             HttpStatus.BAD_REQUEST,
@@ -148,7 +149,6 @@ export class ClubRegistrationRepository {
           .for("share")
           .then(takeUnique);
         if (!professorId) {
-          await tx.rollback();
           throw new HttpException(
             "Professor Not Found",
             HttpStatus.BAD_REQUEST,
@@ -224,7 +224,6 @@ export class ClubRegistrationRepository {
         !registration ||
         registration.RegistrationStatusEnum === RegistrationStatusEnum.Approved
       ) {
-        await tx.rollback();
         throw new HttpException(
           "No registration found",
           HttpStatus.BAD_REQUEST,
@@ -257,7 +256,6 @@ export class ClubRegistrationRepository {
           .for("share")
           .then(takeUnique);
         if (!professorId) {
-          await tx.rollback();
           throw new HttpException(
             "Professor Not Found",
             HttpStatus.BAD_REQUEST,
@@ -289,9 +287,10 @@ export class ClubRegistrationRepository {
             isNull(Registration.deletedAt),
           ),
         );
-      if (result.affectedRows !== 1) {
-        await tx.rollback();
+      if (result.affectedRows > 1) {
         throw new HttpException("Registration update failed", 500);
+      } else if (result.affectedRows === 0) {
+        throw new HttpException("Registration Not Found", HttpStatus.NOT_FOUND);
       }
     });
     return {};
@@ -315,9 +314,10 @@ export class ClubRegistrationRepository {
             isNull(Registration.deletedAt),
           ),
         );
-      if (result.affectedRows !== 1) {
-        await tx.rollback();
+      if (result.affectedRows > 1) {
         throw new HttpException("Registration delete failed", 500);
+      } else if (result.affectedRows === 0) {
+        throw new HttpException("Registration Not Found", HttpStatus.NOT_FOUND);
       }
     });
     return {};
@@ -393,7 +393,6 @@ export class ClubRegistrationRepository {
         .for("share")
         .then(takeUnique);
       if (!registration) {
-        await tx.rollback();
         throw new HttpException(
           "Registration student or applyId not found",
           HttpStatus.BAD_REQUEST,
@@ -424,6 +423,12 @@ export class ClubRegistrationRepository {
           )
           .for("share")
           .then(takeUnique);
+        if (!professorDetail) {
+          throw new HttpException(
+            "Professor Not Found",
+            HttpStatus.BAD_REQUEST,
+          );
+        }
         const registrationDetail = {
           ...registration,
           professor: professorDetail,
@@ -623,7 +628,6 @@ export class ClubRegistrationRepository {
         .for("share")
         .then(takeUnique);
       if (!registration) {
-        await tx.rollback();
         throw new HttpException(
           "Registration not found",
           HttpStatus.BAD_REQUEST,
@@ -677,10 +681,8 @@ export class ClubRegistrationRepository {
           ),
         );
       if (result.affectedRows > 1) {
-        await tx.rollback();
         throw new HttpException("Registration update failed", 500);
       } else if (result.affectedRows === 0) {
-        await tx.rollback();
         throw new HttpException(
           "Registration not found",
           HttpStatus.BAD_REQUEST,
@@ -708,10 +710,8 @@ export class ClubRegistrationRepository {
           and(isNull(Registration.deletedAt), eq(Registration.id, applyId)),
         );
       if (result1.affectedRows > 1) {
-        await tx.rollback();
         throw new HttpException("Registration update failed", 500);
       } else if (result1.affectedRows === 0) {
-        await tx.rollback();
         throw new HttpException(
           "Registration not found",
           HttpStatus.BAD_REQUEST,
@@ -724,7 +724,6 @@ export class ClubRegistrationRepository {
       });
       if (result2.affectedRows !== 1) {
         await tx.rollback();
-        throw new HttpException("Registration comment insert failed", 500);
       }
       return {};
     });

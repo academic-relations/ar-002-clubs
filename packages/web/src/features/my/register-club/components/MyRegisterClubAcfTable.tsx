@@ -58,7 +58,7 @@ const MyRegisterClubAcfTable: React.FC<MyRegisterClubAcfTableProps> = ({
     enableSorting: false,
   });
 
-  return <Table table={table} />;
+  return <Table table={table} minWidth={900} />;
 };
 
 export default MyRegisterClubAcfTable;

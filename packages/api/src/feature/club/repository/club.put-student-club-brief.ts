@@ -39,7 +39,7 @@ export class ClubPutStudentClubBrief {
       AND ((${ClubT.endTerm} IS NULL AND ${ClubT.startTerm} <= ${crt})
       OR (${ClubT.endTerm} >= ${crt})));`); // 수정 필요. 트랜잭션 넣어야 할거 같음.
       const { affectedRows } = result;
-      if (affectedRows > 2) {
+      if (affectedRows !== 1) {
         await tx.rollback();
       }
     });

@@ -9,22 +9,25 @@ import Typography from "./Typography";
 
 interface TableProps<T> {
   table: TableType<T>;
-  height?: number | undefined;
+  minWidth?: number;
+  height?: number;
   emptyMessage?: string;
   count?: number;
   footer?: React.ReactNode;
   rowLink?: (row: T) => string | { pathname: string };
+  unit?: string;
 }
 const TableInnerWrapper = styled.div`
   width: calc(100% + (100vw - 100%));
   padding: 0 calc((100vw - 100%) / 2);
   overflow-x: auto;
 `;
-const TableInner = styled.table<{ height?: number }>`
+const TableInner = styled.table<{ height?: number; minWidth?: number }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  min-width: 100%;
+  min-width: ${({ minWidth }) =>
+    minWidth ? `max(100%, ${minWidth}px)` : "100%"};
   width: fit-content;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
   border-radius: 8px;
@@ -79,11 +82,13 @@ const Count = styled.div`
 `;
 const Table = <T,>({
   table,
+  minWidth = undefined,
   height = undefined,
   emptyMessage = "",
   footer = null,
   count = undefined,
   rowLink = undefined,
+  unit = "개",
 }: TableProps<T>) => {
   // 야매로 min-width 바꿔치기 (고치지 마세요)
   // eslint-disable-next-line no-underscore-dangle
@@ -111,12 +116,13 @@ const Table = <T,>({
       <Count>
         {count && (
           <Typography fs={16} lh={20}>
-            총 {count}개
+            총 {count}
+            {unit}
           </Typography>
         )}
       </Count>
       <TableInnerWrapper>
-        <TableInner height={height}>
+        <TableInner height={height} minWidth={minWidth}>
           <Header>
             {table.getHeaderGroups().map(headerGroup => (
               <HeaderRow key={headerGroup.id}>
