@@ -29,6 +29,7 @@ export const useGetClubInfo = (requestParam: ApiClb004RequestParam) =>
           throw new UnexpectedAPIResponseError();
       }
     },
+    enabled: !!requestParam.clubId,
   });
 
 defineAxiosMock(mock => {
