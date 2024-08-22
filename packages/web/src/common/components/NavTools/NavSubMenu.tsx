@@ -4,7 +4,7 @@ import React from "react";
 
 import styled from "styled-components";
 
-import { useGetFeatureFlagString } from "@sparcs-clubs/web/hooks/getFlag";
+import { useGetFeatureFlagString } from "@sparcs-clubs/web/hooks/getFeatureFlag";
 
 import NavSubItem from "./NavSubItem";
 
