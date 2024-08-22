@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
@@ -15,6 +16,10 @@ import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/C
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/clubDetails/services/getMyClub";
+import { useRegisterClub } from "@sparcs-clubs/web/features/clubDetails/services/registerClub";
+import { useUnRegisterClub } from "@sparcs-clubs/web/features/clubDetails/services/unregisterClub";
+
 import {
   getClubType,
   getTagColorFromClubType,
@@ -63,9 +68,44 @@ const ClubName = styled.div`
 const ClubCard: React.FC<
   ClubCardProps & { isRegistrationPeriod?: boolean }
 > = ({ club, isRegistrationPeriod = false }) => {
-  const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const { isLoggedIn } = useAuth();
+  const { data: myRegisList } = useGetMyClubRegistration();
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [isInClub, setIsInclub] = useState(
+    RegistrationApplicationStudentStatusEnum.Rejected,
+  );
   useEffect(() => {}, [isLoggedIn]);
+  useEffect(() => {
+    if (!myRegisList) return;
+    if (myRegisList.applies.length > 0) {
+      const thisRegis = myRegisList.applies.find(
+        apply => apply.clubId === club.id,
+      );
+      if (thisRegis) {
+        setIsInclub(thisRegis.applyStatusEnumId);
+        setIsRegistered(true);
+      } else {
+        setIsRegistered(false);
+      }
+    }
+  }, [myRegisList]);
+
+  const ToggleRegistered = async (close: () => void) => {
+    close();
+    await useRegisterClub(club.id);
+    setIsInclub(RegistrationApplicationStudentStatusEnum.Pending);
+    setIsRegistered(true);
+  };
+
+  const ToggleUnregistered = async (close: () => void) => {
+    const thisRegis = myRegisList.applies.find(
+      apply => apply.clubId === club.id,
+    );
+
+    await useUnRegisterClub({ applyId: thisRegis.id });
+    setIsRegistered(false);
+    close();
+  };
 
   const handleRegister = () => {
     overlay.open(({ isOpen, close }) => (
@@ -74,8 +114,7 @@ const ClubCard: React.FC<
           <CancellableModalContent
             onClose={close}
             onConfirm={() => {
-              setIsRegistered(!isRegistered);
-              close();
+              ToggleUnregistered(close);
             }}
           >
             2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
@@ -87,8 +126,7 @@ const ClubCard: React.FC<
           <CancellableModalContent
             onClose={close}
             onConfirm={() => {
-              setIsRegistered(!isRegistered);
-              close();
+              ToggleRegistered(close);
             }}
           >
             2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
@@ -133,7 +171,7 @@ const ClubCard: React.FC<
             onClick={handleRegister}
           />
         )}
-        {!isRegistrationPeriod && isRegistered && isLoggedIn && (
+        {!isRegistrationPeriod && isInClub && isLoggedIn && (
           <TextButton text="승인 대기" disabled />
         )}
       </ClubCardTagRow>
