@@ -12,7 +12,7 @@ interface RejectReason {
   reason: string;
 }
 
-const ClubRegistorApproveFrame = ({
+const ClubRegisterApproveFrame = ({
   canApprove,
   rejectReasonList,
 }: {
@@ -75,4 +75,4 @@ const ClubRegistorApproveFrame = ({
   );
 };
 
-export default ClubRegistorApproveFrame;
+export default ClubRegisterApproveFrame;
