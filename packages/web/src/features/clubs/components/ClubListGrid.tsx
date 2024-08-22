@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 
 import Link from "next/link";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 import paths from "@sparcs-clubs/web/constants/paths";
 import ClubCard from "@sparcs-clubs/web/features/clubs/components/ClubCard";
@@ -41,11 +41,14 @@ const ClubListGrid: React.FC<ClubListGridItemProps> = ({
   clubList,
   isRegistrationPeriod = false,
 }) => {
+  const theme = useTheme();
   const [isMobileView, setIsMobileView] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobileView(window.innerWidth <= 720);
+      setIsMobileView(
+        window.innerWidth <= parseInt(theme.responsive.BREAKPOINT.sm),
+      );
     };
 
     handleResize();
