@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 import clubsLogoSvg from "@sparcs-clubs/web/assets/logo-icon.svg";
+import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 interface NoticeListItemProps {
   title: string;
@@ -85,12 +86,7 @@ const NoticeDate = styled.div<{ date: Date }>`
   overflow: hidden;
   display: inline-block;
   &::after {
-    content: "${({ date }) =>
-      date.toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      })}";
+    content: "${({ date }) => formatDotDate(date)}";
   }
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
     font-size: 12px;
@@ -111,11 +107,14 @@ const NoticeDate = styled.div<{ date: Date }>`
 `;
 
 const NoticeListItem: React.FC<NoticeListItemProps> = ({ title, date }) => {
+  const theme = useTheme();
   const [isMobileView, setIsMobileView] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobileView(window.innerWidth <= 720);
+      setIsMobileView(
+        window.innerWidth <= parseInt(theme.responsive.BREAKPOINT.sm),
+      );
     };
 
     handleResize();

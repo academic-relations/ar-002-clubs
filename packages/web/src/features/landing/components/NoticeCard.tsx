@@ -4,6 +4,8 @@ import React from "react";
 
 import styled from "styled-components";
 
+import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+
 import type { ApiNtc001ResponseOK } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 
 const NoticeCardInner = styled.div`
@@ -37,12 +39,7 @@ const NoticeDate = styled.div<{ date: Date }>`
   white-space: nowrap;
 
   &::after {
-    content: "${({ date }) =>
-      date.toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      })}";
+    content: "${({ date }) => formatDotDate(date)}";
   }
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
     font-size: 14px;
