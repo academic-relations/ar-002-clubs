@@ -19,6 +19,7 @@ import MyInfoFrame from "@sparcs-clubs/web/features/my/frames/MyInfoFrame";
 import MyRegisterFrame from "@sparcs-clubs/web/features/my/frames/MyRegisterFrame";
 import MyServiceFrame from "@sparcs-clubs/web/features/my/frames/MyServiceFrame";
 import { useGetMyDelegateRequest } from "@sparcs-clubs/web/features/my/services/getMyDelegateRequest";
+import { useGetProfileNow } from "@sparcs-clubs/web/hooks/getProfileNow";
 
 const ResponsiveWrapper = styled(FlexWrapper)`
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
@@ -28,7 +29,7 @@ const ResponsiveWrapper = styled(FlexWrapper)`
 
 const My: React.FC = () => {
   // TODO: clb014 api 구현되면 refetch 테스트
-  const isStudent = true; // 학생 <--> 지도교수 TODO: 로그인 정보로 대체
+  const profile = useGetProfileNow();
   const { data, isLoading, isError, refetch } = useGetMyDelegateRequest();
   const fetchDivisionPresident = () => {}; // TODO
 
@@ -71,48 +72,44 @@ const My: React.FC = () => {
     }
   }, [data]);
 
-  return isStudent ? (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <ResponsiveWrapper direction="column" gap={60}>
-        <PageHead
-          items={[{ name: "마이페이지", path: "/my" }]}
-          title="마이페이지"
-        />
-        {data?.requests && data?.requests.length > 0 && (
-          <MyChangeRepresentative
-            type={type}
-            clubName={data?.requests[0].clubName}
-            prevRepresentative={`${data?.requests[0].prevStudentId} ${data?.requests[0].prevStudentName}`}
-            newRepresentative={`${myProfile?.studentNumber} ${myProfile?.name}`}
-            refetch={refetch}
-          />
-        )}
-        {mockHasDivisionPresidentChangeNotice && (
-          <MyChangeDivisionPresident
-            status={divisionChangeRequestStatus}
-            change={["20210227 박병찬", "20200510 이지윤"]}
-            fetch={fetchDivisionPresident}
-            isDivisionPresident={mockIsDivisionPresident}
-            onConfirmed={onDivisionPresidentChangeRequestConfirmed}
-            onRejected={onDivisionPresidentChangeRequestRejected}
-          />
-        )}
-        <MyInfoFrame />
-        <MyClubFrame />
-        <MyRegisterFrame isStudent={isStudent} />
-        <MyServiceFrame />
-      </ResponsiveWrapper>
-    </AsyncBoundary>
-  ) : (
-    <FlexWrapper direction="column" gap={60}>
+  return (
+    <ResponsiveWrapper direction="column" gap={60}>
       <PageHead
         items={[{ name: "마이페이지", path: "/my" }]}
         title="마이페이지"
       />
+      {profile === "undergraduate" && (
+        <AsyncBoundary isLoading={isLoading} isError={isError}>
+          {data?.requests && data?.requests.length > 0 && (
+            <MyChangeRepresentative
+              type={type}
+              clubName={data?.requests[0].clubName}
+              prevRepresentative={`${data?.requests[0].prevStudentId} ${data?.requests[0].prevStudentName}`}
+              newRepresentative={`${myProfile?.studentNumber} ${myProfile?.name}`}
+              refetch={refetch}
+            />
+          )}
+          {mockHasDivisionPresidentChangeNotice && (
+            <MyChangeDivisionPresident
+              status={divisionChangeRequestStatus}
+              change={["20210227 박병찬", "20200510 이지윤"]}
+              fetch={fetchDivisionPresident}
+              isDivisionPresident={mockIsDivisionPresident}
+              onConfirmed={onDivisionPresidentChangeRequestConfirmed}
+              onRejected={onDivisionPresidentChangeRequestRejected}
+            />
+          )}
+        </AsyncBoundary>
+      )}
       <MyInfoFrame />
-      <MyClubFrame />
-      <MyRegisterFrame isStudent={isStudent} />
-    </FlexWrapper>
+      {profile !== "executive" && <MyClubFrame />}
+      {profile && profile !== "executive" && (
+        <MyRegisterFrame profile={profile} />
+      )}
+      {(profile === "undergraduate" ||
+        profile === "master" ||
+        profile === "doctor") && <MyServiceFrame />}
+    </ResponsiveWrapper>
   );
 };
 
