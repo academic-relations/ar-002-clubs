@@ -9,7 +9,7 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
-import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
+import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/services/_mock/mockFundingDetail";
@@ -83,8 +83,14 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
           <ProgressStatus
             labels={["신청 완료", "동아리 연합회 신청 반려"]}
             progress={[
-              { status: Status.Approved, date: new Date() },
-              { status: Status.Canceled, date: new Date() },
+              {
+                status: ProgressCheckSectionStatusEnum.Approved,
+                date: new Date(),
+              },
+              {
+                status: ProgressCheckSectionStatusEnum.Canceled,
+                date: new Date(),
+              },
             ]}
             optional={
               <RejectReasonToast

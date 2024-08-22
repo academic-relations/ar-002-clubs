@@ -17,6 +17,7 @@ import { type PastActivityReport } from "../types/activityReport";
 
 interface ActivityReportListProps {
   data: PastActivityReport[];
+  showItemCount?: boolean;
 }
 
 const columnHelper = createColumnHelper<PastActivityReport>();
@@ -68,6 +69,7 @@ const TableOuter = styled.div`
 
 const PastActivityReportList: React.FC<ActivityReportListProps> = ({
   data,
+  showItemCount = true,
 }) => {
   const table = useReactTable({
     columns,
@@ -77,9 +79,17 @@ const PastActivityReportList: React.FC<ActivityReportListProps> = ({
   });
   return (
     <TableOuter>
-      <Typography fs={14} fw="REGULAR" lh={20} ff="PRETENDARD" color="GRAY.600">
-        총 {data.length}개
-      </Typography>
+      {showItemCount && (
+        <Typography
+          fs={14}
+          fw="REGULAR"
+          lh={20}
+          ff="PRETENDARD"
+          color="GRAY.600"
+        >
+          총 {data.length}개
+        </Typography>
+      )}
       <Table table={table} />
     </TableOuter>
   );

@@ -3,11 +3,11 @@ import React from "react";
 import styled from "styled-components";
 
 import Progress from "./_atomic/Progress";
-import { Status } from "./_atomic/ProgressDot";
 import ProgressLine from "./_atomic/ProgressLine";
+import { ProgressCheckSectionStatusEnum } from "./progressCheckStationStatus";
 
 export interface StatusAndDate {
-  status: Status;
+  status: ProgressCheckSectionStatusEnum;
   date: Date | undefined;
 }
 interface ProgressCheckSectionProps {
@@ -39,7 +39,11 @@ const ProgressCheckSection: React.FC<ProgressCheckSectionProps> = ({
     {labels.map((label, index) => (
       <React.Fragment key={String(index) + label}>
         <Progress
-          status={progress[index] ? progress[index].status : Status.Pending}
+          status={
+            progress[index]
+              ? progress[index].status
+              : ProgressCheckSectionStatusEnum.Pending
+          }
           label={label}
           date={progress[index] ? progress[index].date : undefined}
         />
@@ -47,7 +51,9 @@ const ProgressCheckSection: React.FC<ProgressCheckSectionProps> = ({
           <ProgressLineWrapper>
             <ProgressLine
               status={
-                progress[index + 1] ? progress[index].status : Status.Pending
+                progress[index + 1]
+                  ? progress[index].status
+                  : ProgressCheckSectionStatusEnum.Pending
               }
             />
           </ProgressLineWrapper>

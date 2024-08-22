@@ -16,7 +16,7 @@ import { fromUUID } from "@sparcs-clubs/web/common/components/File/attachment";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
+import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
@@ -151,16 +151,16 @@ const ActivityReportDetail: React.FC = () => {
 
   const activityStatusToProgressStatus: (
     type: ActivityStatusEnum,
-  ) => Status = type => {
+  ) => ProgressCheckSectionStatusEnum = type => {
     switch (type) {
       case ActivityStatusEnum.Applied:
-        return Status.Pending;
+        return ProgressCheckSectionStatusEnum.Pending;
         break;
       case ActivityStatusEnum.Approved:
-        return Status.Approved;
+        return ProgressCheckSectionStatusEnum.Approved;
         break;
       default: // ActivityStatusEnum.Rejected:
-        return Status.Canceled;
+        return ProgressCheckSectionStatusEnum.Canceled;
     }
   };
 
@@ -179,7 +179,10 @@ const ActivityReportDetail: React.FC = () => {
           <ProgressStatus
             labels={["신청 완료", activityStatus(data.activityStatusEnumId)]}
             progress={[
-              { status: Status.Approved, date: data.writtenTime },
+              {
+                status: ProgressCheckSectionStatusEnum.Approved,
+                date: data.writtenTime,
+              },
               {
                 status: activityStatusToProgressStatus(
                   data.activityStatusEnumId,
