@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
 import styled from "styled-components";
@@ -19,6 +19,10 @@ const NoticeListItemInner = styled.div`
   flex-wrap: nowrap;
   align-items: center;
   column-gap: 20px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    flex-direction: column;
+    column-gap: 4px;
+  }
 `;
 
 const NoticeIconAndTitle = styled.div`
@@ -56,7 +60,7 @@ const NoticeTitleWrapper = styled.div`
   text-overflow: ellipsis;
 `;
 
-const NoticeDate = styled.div`
+const NoticeDate = styled.div<{ date: Date }>`
   flex-basis: 100px;
   flex-grow: 0;
   flex-shrink: 0;
@@ -66,24 +70,54 @@ const NoticeDate = styled.div`
   line-height: 24px;
   text-align: center;
   overflow: hidden;
-`;
-
-const NoticeListItem: React.FC<NoticeListItemProps> = ({ title, date }) => (
-  <NoticeListItemInner>
-    <NoticeIconAndTitle>
-      <NoticeIconWrapper>
-        <Image src={clubsLogoSvg} alt="clubs-logo" />
-      </NoticeIconWrapper>
-      <NoticeTitleWrapper>{title}</NoticeTitleWrapper>
-    </NoticeIconAndTitle>
-    <NoticeDate>
-      {date.toLocaleDateString("ko-KR", {
+  &::after {
+    content: "${({ date }) =>
+      date.toLocaleDateString("ko-KR", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
-      })}
-    </NoticeDate>
-  </NoticeListItemInner>
-);
+      })}";
+  }
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 14px;
+    line-height: 16px;
+    &::after {
+      content: "${({ date }) =>
+        date.toLocaleDateString("ko-KR", {
+          year: "2-digit",
+          month: "2-digit",
+          day: "2-digit",
+        })}";
+    }
+  }
+`;
+
+const NoticeListItem: React.FC<NoticeListItemProps> = ({ title, date }) => {
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 720);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  return (
+    <NoticeListItemInner>
+      <NoticeIconAndTitle>
+        {!isMobileView && (
+          <NoticeIconWrapper>
+            <Image src={clubsLogoSvg} alt="clubs-logo" />
+          </NoticeIconWrapper>
+        )}
+        <NoticeTitleWrapper>{title}</NoticeTitleWrapper>
+      </NoticeIconAndTitle>
+      <NoticeDate date={date} />
+    </NoticeListItemInner>
+  );
+};
 
 export default NoticeListItem;
