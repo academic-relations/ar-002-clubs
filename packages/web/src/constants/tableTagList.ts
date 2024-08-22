@@ -84,7 +84,7 @@ const MemTagList: {
   [key in MemberStatusEnum]: StatusDetail;
 } = {
   [MemberStatusEnum.Applied]: { text: "신청", color: "BLUE" },
-  [MemberStatusEnum.Approved]: { text: "승인", color: "YELLOW" },
+  [MemberStatusEnum.Approved]: { text: "승인", color: "GREEN" },
   [MemberStatusEnum.Rejected]: { text: "반려", color: "RED" },
 };
 
