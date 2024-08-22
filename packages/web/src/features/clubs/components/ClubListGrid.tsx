@@ -18,7 +18,7 @@ interface ClubListGridItemProps {
 }
 
 const ClubListGridInner = styled.div`
-  width: calc(100% - 48px);
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
