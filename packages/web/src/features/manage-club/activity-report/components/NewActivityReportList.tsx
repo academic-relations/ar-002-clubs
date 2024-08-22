@@ -22,13 +22,13 @@ const columnHelper = createColumnHelper<NewActivityReport>();
 
 const getStatusTagColor = (status: string): TagColor => {
   switch (status) {
-    case "작성중":
+    case "운위":
+      return "ORANGE";
+    case "신청":
       return "BLUE";
-    case "신청 완료":
-      return "PURPLE";
-    case "신청 반려":
+    case "반려":
       return "RED";
-    case "승인 완료":
+    case "승인":
       return "GREEN";
     default:
       return "GRAY";

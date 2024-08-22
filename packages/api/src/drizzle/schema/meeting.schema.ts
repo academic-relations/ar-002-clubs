@@ -53,10 +53,10 @@ export const Meeting = mysqlTable(
     announcementId: int("announcement_id")
       .references(() => MeetingAnnouncement.id)
       .notNull(),
-    meetingEnum: int("meeting_enum"),
-    memo: text("memo"),
+    meetingEnumId: int("meeting_enum_id"),
     isRegular: boolean("is_regular").notNull(),
     location: varchar("location", { length: 255 }),
+    locationEn: varchar("location_en", { length: 255 }),
     startDate: datetime("start_date").notNull(),
     endDate: datetime("end_date"),
     createdAt: timestamp("created_at").defaultNow(),
@@ -66,7 +66,7 @@ export const Meeting = mysqlTable(
   table => ({
     meetingEnumForeignKey: foreignKey({
       name: "meeting_enum_foreign_key",
-      columns: [table.meetingEnum],
+      columns: [table.meetingEnumId],
       foreignColumns: [MeetingEnum.id],
     }),
   }),

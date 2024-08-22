@@ -51,6 +51,7 @@ const ActivityReportFrame: React.FC = () => {
             활동 보고서 작성
           </IconButton>
         </OptionOuter>
+        {/* // TODO. 백엔드 api 완성되면 수정 */}
         <PastActivityReportList data={mockPastActivityData} />
       </Card>
     </FlexWrapper>

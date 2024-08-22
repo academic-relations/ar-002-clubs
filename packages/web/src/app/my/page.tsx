@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 
 import { ClubDelegateChangeRequestStatusEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -15,11 +16,20 @@ import MyChangeDivisionPresident, {
 import MyChangeRepresentative from "@sparcs-clubs/web/features/my/components/MyChangeRepresentative";
 import MyClubFrame from "@sparcs-clubs/web/features/my/frames/MyClubFrame";
 import MyInfoFrame from "@sparcs-clubs/web/features/my/frames/MyInfoFrame";
+import MyRegisterFrame from "@sparcs-clubs/web/features/my/frames/MyRegisterFrame";
 import MyServiceFrame from "@sparcs-clubs/web/features/my/frames/MyServiceFrame";
 import { useGetMyDelegateRequest } from "@sparcs-clubs/web/features/my/services/getMyDelegateRequest";
+import { useGetProfileNow } from "@sparcs-clubs/web/hooks/getProfileNow";
+
+const ResponsiveWrapper = styled(FlexWrapper)`
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    gap: 40px;
+  }
+`;
 
 const My: React.FC = () => {
   // TODO: clb014 api 구현되면 refetch 테스트
+  const profile = useGetProfileNow();
   const { data, isLoading, isError, refetch } = useGetMyDelegateRequest();
   const fetchDivisionPresident = () => {}; // TODO
 
@@ -29,7 +39,7 @@ const My: React.FC = () => {
   const [
     mockHasDivisionPresidentChangeNotice,
     setMockHasDivisionPresidentChangeNotice,
-  ] = useState(true);
+  ] = useState(false);
   const mockIsDivisionPresident = true; // TODO: divisionPresident == user
   const mockChangeDivisionPresident = () => {}; // TODO: change divisionPresident
   const mockRejectDivisionPresidentChange = () => {}; // TODO: set divisionPresidentChange status to "Rejected"
@@ -63,36 +73,43 @@ const My: React.FC = () => {
   }, [data]);
 
   return (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <FlexWrapper direction="column" gap={60}>
-        <PageHead
-          items={[{ name: "마이페이지", path: "/my" }]}
-          title="마이페이지"
-        />
-        {data?.requests && data?.requests.length > 0 && (
-          <MyChangeRepresentative
-            type={type}
-            clubName={data?.requests[0].clubName}
-            prevRepresentative={`${data?.requests[0].prevStudentId} ${data?.requests[0].prevStudentName}`}
-            newRepresentative={`${myProfile?.studentNumber} ${myProfile?.name}`}
-            refetch={refetch}
-          />
-        )}
-        {mockHasDivisionPresidentChangeNotice && (
-          <MyChangeDivisionPresident
-            status={divisionChangeRequestStatus}
-            change={["20210227 박병찬", "20200510 이지윤"]}
-            fetch={fetchDivisionPresident}
-            isDivisionPresident={mockIsDivisionPresident}
-            onConfirmed={onDivisionPresidentChangeRequestConfirmed}
-            onRejected={onDivisionPresidentChangeRequestRejected}
-          />
-        )}
-        <MyInfoFrame />
-        <MyClubFrame />
-        <MyServiceFrame />
-      </FlexWrapper>
-    </AsyncBoundary>
+    <ResponsiveWrapper direction="column" gap={60}>
+      <PageHead
+        items={[{ name: "마이페이지", path: "/my" }]}
+        title="마이페이지"
+      />
+      {profile === "undergraduate" && (
+        <AsyncBoundary isLoading={isLoading} isError={isError}>
+          {data?.requests && data?.requests.length > 0 && (
+            <MyChangeRepresentative
+              type={type}
+              clubName={data?.requests[0].clubName}
+              prevRepresentative={`${data?.requests[0].prevStudentId} ${data?.requests[0].prevStudentName}`}
+              newRepresentative={`${myProfile?.studentNumber} ${myProfile?.name}`}
+              refetch={refetch}
+            />
+          )}
+          {mockHasDivisionPresidentChangeNotice && (
+            <MyChangeDivisionPresident
+              status={divisionChangeRequestStatus}
+              change={["20210227 박병찬", "20200510 이지윤"]}
+              fetch={fetchDivisionPresident}
+              isDivisionPresident={mockIsDivisionPresident}
+              onConfirmed={onDivisionPresidentChangeRequestConfirmed}
+              onRejected={onDivisionPresidentChangeRequestRejected}
+            />
+          )}
+        </AsyncBoundary>
+      )}
+      <MyInfoFrame />
+      {profile !== "executive" && <MyClubFrame />}
+      {profile && profile !== "executive" && (
+        <MyRegisterFrame profile={profile} />
+      )}
+      {(profile === "undergraduate" ||
+        profile === "master" ||
+        profile === "doctor") && <MyServiceFrame />}
+    </ResponsiveWrapper>
   );
 };
 

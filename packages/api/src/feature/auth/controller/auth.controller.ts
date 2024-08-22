@@ -11,7 +11,7 @@ import apiAut001, {
   ApiAut001ResponseOk,
 } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut001";
 import apiAut002, {
-  ApiAut002ResponseOk,
+  ApiAut002ResponseCreated,
 } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut002";
 import apiAut003, {
   ApiAut003ResponseOk,
@@ -60,7 +60,7 @@ export class AuthController {
   @UsePipes(new ZodPipe(apiAut002))
   async postAuthRefresh(
     @Req() req: Request & UserRefreshTokenPayload,
-  ): Promise<ApiAut002ResponseOk> {
+  ): Promise<ApiAut002ResponseCreated> {
     return this.authService.postAuthRefresh(req.user);
   }
 

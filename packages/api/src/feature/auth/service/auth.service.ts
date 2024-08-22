@@ -2,7 +2,7 @@ import { HttpException, Injectable } from "@nestjs/common";
 
 import { JwtService } from "@nestjs/jwt";
 
-import { ApiAut002ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut002";
+import { ApiAut002ResponseCreated } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut002";
 import { ApiAut003ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut003";
 
 import { getSsoConfig } from "@sparcs-clubs/api/env";
@@ -75,7 +75,7 @@ export class AuthService {
     sid: string;
     name: string;
     email: string;
-  }): Promise<ApiAut002ResponseOk> {
+  }): Promise<ApiAut002ResponseCreated> {
     const user = await this.authRepository.findUserById(_user.id);
     const accessToken = this.getAccessToken(user);
 

@@ -6,7 +6,7 @@ import { z } from "zod";
  * @description 동아리의 기본 정보를 가져옵니다
  */
 
-const url = () => `/student/clubs/club/{club_id}/brief`;
+const url = (club_id: number) => `/student/clubs/club/${club_id}/brief`;
 const method = "GET";
 
 const requestParam = z.object({

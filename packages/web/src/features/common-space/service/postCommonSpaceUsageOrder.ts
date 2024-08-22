@@ -1,7 +1,7 @@
 import apiCms003 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms003";
 
 import {
-  axiosClient,
+  axiosClientWithAuth,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
@@ -16,7 +16,7 @@ const postCommonSpaceUsageOrder = async (
   requestParam: ApiCms003RequestParam,
   requestBody: ApiCms003RequestBody,
 ): Promise<ApiCms003ResponseCreated | ApiCms003Error423> => {
-  const { data, status } = await axiosClient.post(
+  const { data, status } = await axiosClientWithAuth.post(
     apiCms003.url(requestParam.spaceId),
     requestBody,
   );
