@@ -6,6 +6,7 @@ import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interfac
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -69,16 +70,21 @@ const ClubCard: React.FC<
   ClubCardProps & { isRegistrationPeriod?: boolean }
 > = ({ club, isRegistrationPeriod = false }) => {
   const { isLoggedIn } = useAuth();
-  const { data: myRegisList } = useGetMyClubRegistration();
+  const {
+    data: myRegistrationList,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetMyClubRegistration();
   const [isRegistered, setIsRegistered] = useState(false);
   const [isInClub, setIsInclub] = useState(
     RegistrationApplicationStudentStatusEnum.Rejected,
   );
   useEffect(() => {}, [isLoggedIn]);
   useEffect(() => {
-    if (!myRegisList) return;
-    if (myRegisList.applies.length > 0) {
-      const thisRegis = myRegisList.applies.find(
+    if (!myRegistrationList) return;
+    if (myRegistrationList.applies.length > 0) {
+      const thisRegis = myRegistrationList.applies.find(
         apply => apply.clubId === club.id,
       );
       if (thisRegis) {
@@ -88,20 +94,21 @@ const ClubCard: React.FC<
         setIsRegistered(false);
       }
     }
-  }, [myRegisList]);
+  }, [myRegistrationList]);
 
   const ToggleRegistered = async (close: () => void) => {
     close();
     await useRegisterClub(club.id);
+    await refetch();
     setIsInclub(RegistrationApplicationStudentStatusEnum.Pending);
     setIsRegistered(true);
   };
 
   const ToggleUnregistered = async (close: () => void) => {
-    const thisRegis = myRegisList.applies.find(
+    const thisRegis = myRegistrationList.applies.find(
       apply => apply.clubId === club.id,
     );
-
+    console.log("thisRegis: ", thisRegis.id);
     await useUnRegisterClub({ applyId: thisRegis.id });
     setIsRegistered(false);
     close();
@@ -109,33 +116,35 @@ const ClubCard: React.FC<
 
   const handleRegister = () => {
     overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen} onClose={close}>
-        {isRegistered ? (
-          <CancellableModalContent
-            onClose={close}
-            onConfirm={() => {
-              ToggleUnregistered(close);
-            }}
-          >
-            2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-            {club.name_kr}의
-            <br />
-            회원 등록을 취소합니다.
-          </CancellableModalContent>
-        ) : (
-          <CancellableModalContent
-            onClose={close}
-            onConfirm={() => {
-              ToggleRegistered(close);
-            }}
-          >
-            2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-            {club.name_kr}의
-            <br />
-            회원 등록 신청을 진행합니다.
-          </CancellableModalContent>
-        )}
-      </Modal>
+      <AsyncBoundary isLoading={isLoading} isError={isError}>
+        <Modal isOpen={isOpen} onClose={close}>
+          {isRegistered ? (
+            <CancellableModalContent
+              onClose={close}
+              onConfirm={() => {
+                ToggleUnregistered(close);
+              }}
+            >
+              2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
+              {club.name_kr}의
+              <br />
+              회원 등록을 취소합니다.
+            </CancellableModalContent>
+          ) : (
+            <CancellableModalContent
+              onClose={close}
+              onConfirm={() => {
+                ToggleRegistered(close);
+              }}
+            >
+              2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
+              {club.name_kr}의
+              <br />
+              회원 등록 신청을 진행합니다.
+            </CancellableModalContent>
+          )}
+        </Modal>
+      </AsyncBoundary>
     ));
   };
   return (

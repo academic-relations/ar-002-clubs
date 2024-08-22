@@ -27,11 +27,5 @@ export const useUnRegisterClub = async (
 };
 
 defineAxiosMock(mock => {
-  mock.onDelete(apiReg013.url("1")).reply(config => {
-    const { clubId } = JSON.parse(config.data);
-    if (clubId) {
-      return [201, { message: "success" }];
-    }
-    return [400, { message: "no apply ID" }];
-  });
+  mock.onDelete(apiReg013.url("1")).reply(() => [200]);
 });
