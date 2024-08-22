@@ -36,6 +36,7 @@ const ErrorMessage = styled.div`
 `;
 */
 
+// min-height: ResponsiveContent의 min-height
 const ResponsiveWrapper = styled.div`
   display: flex;
   width: 100%;
@@ -82,6 +83,7 @@ const ButtonsWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
+// height: 원 모양의 높이
 const LogoFrame = styled.div`
   display: flex;
   flex-direction: column;
@@ -120,6 +122,7 @@ const LogoImage = styled(Image)`
   }
 `;
 
+// height: (LogoImage의 높이) - (LogoFrame의 높이)
 const BufferDiv = styled.div`
   width: 100%;
   height: 65px;
