@@ -16,16 +16,19 @@ const TableWithPagination = styled.div`
 
 const RegisterMemberList = () => {
   const [page, setPage] = useState<number>(1);
+  const totalPage = Math.ceil(mockRegisterMembers.members.length / 10);
 
   return (
     <TableWithPagination>
       <MembersTable memberList={mockRegisterMembers.members} />
-      <Pagination
-        totalPage={Math.ceil(mockRegisterMembers.members.length / 10)}
-        currentPage={page}
-        limit={10}
-        setPage={setPage}
-      />
+      {totalPage !== 1 && (
+        <Pagination
+          totalPage={totalPage}
+          currentPage={page}
+          limit={10}
+          setPage={setPage}
+        />
+      )}
     </TableWithPagination>
   );
 };
