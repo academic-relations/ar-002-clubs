@@ -7,7 +7,7 @@ import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import FilePreview from "@sparcs-clubs/web/common/components/FilePreview";
+import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
@@ -141,9 +141,22 @@ const ActivityReportDetailFrame: React.FC = () => {
             <ActivityDetail>첨부 파일</ActivityDetail>
             <ActivityDetail>
               <FilePreviewContainer>
-                <FilePreview fileName="bamsaem.pdf" />
-                <FilePreview fileName="coffee.pdf" />
-                <FilePreview fileName="gaebal.pdf" />
+                <ThumbnailPreviewList
+                  fileList={[
+                    {
+                      name: "bamseam.pdf",
+                      src: "https://pdfobject.com/pdf/sample.pdf",
+                    },
+                    {
+                      name: "coffee.pdf",
+                      src: "https://pdfobject.com/pdf/sample.pdf",
+                    },
+                    {
+                      name: "gaebal.pdf",
+                      src: "https://pdfobject.com/pdf/sample.pdf",
+                    },
+                  ]}
+                />
               </FilePreviewContainer>
             </ActivityDetail>
             <ActivityDetail>
