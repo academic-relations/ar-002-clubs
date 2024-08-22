@@ -10,6 +10,8 @@ import {
 import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 
+import registrationTypeEnumChecker from "../utils/registrationTypeEnumChecker";
+
 /**
  * @version v0.1
  * @description 집행부원이 이번 학기 동아리 등록 신청서를 조회합니다.
@@ -74,29 +76,7 @@ const responseBodyMap = {
         }),
       ),
     })
-    .refine(args => {
-      switch (args.registrationTypeEnumId) {
-        case RegistrationTypeEnum.NewProvisional:
-          if (args.clubId === undefined) return false;
-          if (args.clubRuleFileId !== undefined) return false;
-          break;
-        case RegistrationTypeEnum.ReProvisional:
-          if (args.clubId !== undefined) return false;
-          if (args.clubRuleFileId !== undefined) return false;
-          break;
-        case RegistrationTypeEnum.Promotional:
-          if (args.clubId !== undefined) return false;
-          if (args.clubRuleFileId === undefined) return false;
-          break;
-        case RegistrationTypeEnum.Renewal:
-          if (args.clubId !== undefined) return false;
-          if (args.clubRuleFileId !== undefined) return false;
-          break;
-        default:
-          break;
-      }
-      return true;
-    }),
+    .refine(args => registrationTypeEnumChecker(args)),
 };
 
 const responseErrorMap = {};
