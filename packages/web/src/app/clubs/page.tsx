@@ -14,7 +14,7 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
 import { useGetClubsList } from "@sparcs-clubs/web/features/clubs/services/useGetClubsList";
-import { useGetRegisTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegisTerm";
+import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 const ResponsiveWrapper = styled(FlexWrapper)`
@@ -32,11 +32,10 @@ const Clubs: React.FC = () => {
     data: termData,
     isLoading: isLoadingTerm,
     isError: isErrorTerm,
-  } = useGetRegisTerm();
+  } = useGetRegistrationTerm();
   const [isRegistrationPeriod, setIsRegistrationPeriod] = useState<boolean>();
-  const [memberRegisPeriodEnd, setMemberRegisPeriodEnd] = useState<Date>(
-    new Date(),
-  );
+  const [memberRegistrationPeriodEnd, setMemberRegistrationPeriodEnd] =
+    useState<Date>(new Date());
   const [searchText, setSearchText] = useState<string>("");
 
   useEffect(() => {
@@ -49,14 +48,14 @@ const Clubs: React.FC = () => {
         setIsRegistrationPeriod(false);
         return;
       }
-      const regisEvent = currentEvents.filter(
+      const registrationEvent = currentEvents.filter(
         event =>
           event.registrationEventEnumId ===
           RegistrationDeadlineEnum.StudentRegistrationApplication,
       );
-      if (regisEvent.length > 0) {
+      if (registrationEvent.length > 0) {
         setIsRegistrationPeriod(true);
-        setMemberRegisPeriodEnd(regisEvent[0].endTerm);
+        setMemberRegistrationPeriodEnd(registrationEvent[0].endTerm);
       } else {
         setIsRegistrationPeriod(false);
       }
@@ -95,7 +94,7 @@ const Clubs: React.FC = () => {
       <AsyncBoundary isLoading={isLoadingTerm} isError={isErrorTerm}>
         {isRegistrationPeriod && (
           <Info
-            text={`현재는 2024년 가을학기 동아리 신청 기간입니다 (신청 마감 : ${formatDateTime(memberRegisPeriodEnd)})`}
+            text={`현재는 2024년 가을학기 동아리 신청 기간입니다 (신청 마감 : ${formatDateTime(memberRegistrationPeriodEnd)})`}
           />
         )}
       </AsyncBoundary>

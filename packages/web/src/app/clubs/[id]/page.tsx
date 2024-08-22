@@ -8,7 +8,7 @@ import { useParams } from "next/navigation";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import ClubDetailMainFrame from "@sparcs-clubs/web/features/clubDetails/frames/ClubDetailMainFrame";
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
-import { useGetRegisTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegisTerm";
+import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 
 const ClubDetail = () => {
   const { id } = useParams();
@@ -17,7 +17,7 @@ const ClubDetail = () => {
     data: termData,
     isLoading: isLoadingTerm,
     isError: isErrorTerm,
-  } = useGetRegisTerm();
+  } = useGetRegistrationTerm();
   const [isRegistrationPeriod, setIsRegistrationPeriod] =
     useState<boolean>(false);
 
@@ -31,12 +31,12 @@ const ClubDetail = () => {
         setIsRegistrationPeriod(false);
         return;
       }
-      const regisEvent = currentEvents.filter(
+      const registrationEvent = currentEvents.filter(
         event =>
           event.registrationEventEnumId ===
           RegistrationDeadlineEnum.StudentRegistrationApplication,
       );
-      if (regisEvent.length > 0) {
+      if (registrationEvent.length > 0) {
         setIsRegistrationPeriod(true);
       } else {
         setIsRegistrationPeriod(false);

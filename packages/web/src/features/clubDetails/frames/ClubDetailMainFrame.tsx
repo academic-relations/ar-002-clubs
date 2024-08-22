@@ -97,11 +97,11 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   useEffect(() => {
     if (!myRegistrationList) return;
     if (myRegistrationList.applies.length > 0) {
-      const thisRegis = myRegistrationList.applies.find(
+      const thisRegistration = myRegistrationList.applies.find(
         apply => apply.clubId === club.id,
       );
-      if (thisRegis) {
-        setIsInclub(thisRegis.applyStatusEnumId);
+      if (thisRegistration) {
+        setIsInclub(thisRegistration.applyStatusEnumId);
         setIsRegistered(true);
       } else {
         setIsRegistered(false);
@@ -126,7 +126,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   };
 
   const ToggleUnregistered = async (close: () => void) => {
-    const thisRegis = (
+    const thisRegistration = (
       myRegistrationList as {
         applies: {
           id: number;
@@ -137,7 +137,7 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
     ).applies.find(apply => apply.clubId === club.id);
     await useUnregisterClub({
       applyId: (
-        thisRegis as {
+        thisRegistration as {
           id: number;
           clubId: number;
           applyStatusEnumId: RegistrationApplicationStudentStatusEnum;

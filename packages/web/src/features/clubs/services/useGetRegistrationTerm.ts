@@ -10,7 +10,7 @@ import {
 } from "@sparcs-clubs/web/lib/axios";
 
 type ISuccessResponseType = z.infer<(typeof apiReg004.responseBodyMap)[200]>;
-export const useGetRegisTerm = () =>
+export const useGetRegistrationTerm = () =>
   useQuery<ISuccessResponseType, Error>({
     queryKey: [apiReg004.url()],
     queryFn: async (): Promise<ISuccessResponseType> => {
