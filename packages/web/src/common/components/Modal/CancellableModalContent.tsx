@@ -12,7 +12,6 @@ interface CancellableModalContentProps {
   onConfirm: () => void;
   closeButtonText?: string;
   confirmButtonText?: string;
-  disabled?: boolean;
   children: React.ReactNode;
 }
 
@@ -27,7 +26,6 @@ const CancellableModalContent: React.FC<CancellableModalContentProps> = ({
   children,
   closeButtonText = "취소",
   confirmButtonText = "확인",
-  disabled = false,
 }) => (
   <FlexWrapper direction="column" gap={12}>
     <Typography fs={16} lh={28} fw="MEDIUM" style={{ textAlign: "center" }}>
@@ -37,9 +35,7 @@ const CancellableModalContent: React.FC<CancellableModalContentProps> = ({
       <Button type="outlined" onClick={onClose}>
         {closeButtonText}
       </Button>
-      <Button onClick={onConfirm} type={disabled ? "disabled" : "default"}>
-        {confirmButtonText}
-      </Button>
+      <Button onClick={onConfirm}>{confirmButtonText}</Button>
     </ButtonWrapper>
   </FlexWrapper>
 );
