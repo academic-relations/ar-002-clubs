@@ -10,6 +10,7 @@ import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 
 const FoldableSectionOuter = styled.div`
   width: 100%;
+  max-width: calc(100vw + (100% - 100vw));
 `;
 
 const FoldableSectionTitleInner = styled.div`

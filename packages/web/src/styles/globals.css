@@ -38,6 +38,11 @@ a {
   color: inherit;
 }
 
+main {
+  overflow-x: hidden;
+  min-width: 320px;
+}
+
 .viewer-download {
   color: #fff;
   font-family: FontAwesome, serif;
