@@ -60,7 +60,7 @@ const paths = {
   },
   VOTING: {
     name: "의결기구",
-    featureFlag: "NO_RELEASE",
+    featureFlag: "DEFAULT",
     // TODO: 임시 링크
     sub: [
       {
@@ -72,25 +72,25 @@ const paths = {
         name: "전동대회",
         path: externalLinks.allClubRepresentativeMeeting,
         authority: ["all"],
-        featureFlag: "NO_RELEASE",
+        featureFlag: "DEFAULT",
       },
       {
         name: "확대운영위원회",
         path: externalLinks.expandedOperatingCommittee,
         authority: ["all"],
-        featureFlag: "NO_RELEASE",
+        featureFlag: "DEFAULT",
       },
       {
         name: "운영위원회",
         path: externalLinks.operatingCommittee,
         authority: ["all"],
-        featureFlag: "NO_RELEASE",
+        featureFlag: "DEFAULT",
       },
       {
         name: "분과회의",
         path: externalLinks.divisionMeeting,
         authority: ["all"],
-        featureFlag: "NO_RELEASE",
+        featureFlag: "DEFAULT",
       },
     ],
     authority: ["all"],
