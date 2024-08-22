@@ -18,7 +18,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/clubDetails/services/getMyClub";
 import { useRegisterClub } from "@sparcs-clubs/web/features/clubDetails/services/registerClub";
-import { useUnRegisterClub } from "@sparcs-clubs/web/features/clubDetails/services/unregisterClub";
+import { useUnregisterClub } from "@sparcs-clubs/web/features/clubDetails/services/unregisterClub";
 import {
   getClubType,
   getTagColorFromClubType,
@@ -106,7 +106,7 @@ const ClubCard: React.FC<
         }[];
       }
     ).applies.find(apply => apply.clubId === club.id);
-    await useUnRegisterClub({
+    await useUnregisterClub({
       applyId: (
         thisRegis as {
           id: number;

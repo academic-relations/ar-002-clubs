@@ -11,7 +11,7 @@ import type {
   ApiReg013ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg013";
 
-export const useUnRegisterClub = async (
+export const useUnregisterClub = async (
   requestParam: ApiReg013RequestParam,
 ): Promise<ApiReg013ResponseOk> => {
   const { data, status } = await axiosClientWithAuth.delete(
