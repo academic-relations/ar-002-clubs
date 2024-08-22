@@ -46,7 +46,13 @@ const MobileNavItem: React.FC<MobileNavItemProps> = ({
   onClick = () => {},
 }) => (
   <MobileNavItemInner highlight={highlight} onClick={onClick}>
-    {path ? <Link href={path}>{name}</Link> : name}
+    {path ? (
+      <Link href={path} target={path.startsWith("http") ? "_blank" : ""}>
+        {name}
+      </Link>
+    ) : (
+      name
+    )}
     {!path && (
       <Icon type={isExpanded ? "expand_less" : "expand_more"} size={20} />
     )}
