@@ -229,7 +229,12 @@ export class MemberRegistrationRepository {
     const result = await this.db
       .select()
       .from(RegistrationApplicationStudent)
-      .where(eq(RegistrationApplicationStudent.id, applyId))
+      .where(
+        and(
+          eq(RegistrationApplicationStudent.id, applyId),
+          isNull(RegistrationApplicationStudent.deletedAt),
+        ),
+      )
       .execute();
 
     return result.length > 0 ? result[0] : null;
