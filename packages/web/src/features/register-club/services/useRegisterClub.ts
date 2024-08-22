@@ -30,5 +30,5 @@ const useRegisterClub = () =>
 export default useRegisterClub;
 
 defineAxiosMock(mock => {
-  mock.onPost(apiReg001.url()).reply(() => [201, {}]);
+  mock.onPost(apiReg001.url()).reply(() => [400, {}]);
 });

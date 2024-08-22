@@ -15,6 +15,8 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
+import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
+
 import ActivityReportFrame from "../components/ActivityReportFrame";
 import AdvancedInformFrame from "../components/AdvancedInformFrame";
 import BasicInformFrame from "../components/BasicInformFrame";
@@ -37,16 +39,23 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   const router = useRouter();
   const [isAgreed, setIsAgreed] = useState(false);
 
-  const { mutate: registerClubApi, isSuccess } = useRegisterClub();
-
   const formCtx = useForm<ApiReg001RequestBody>({
     mode: "all",
   });
 
   const {
+    getValues,
     handleSubmit,
+
     formState: { isValid },
   } = formCtx;
+
+  const { mutate: registerClubApi, isSuccess, isError } = useRegisterClub();
+  const {
+    data: clubDetail,
+    isLoading: isLoadingClubDetail,
+    isError: isErrorClubDetail,
+  } = useGetClubDetail(getValues().clubId?.toString() ?? "");
 
   const title = useMemo(() => {
     switch (type) {
@@ -88,8 +97,33 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
           </ConfirmModalContent>
         </Modal>
       ));
+      return;
     }
-  }, [isSuccess]);
+    if (isError) {
+      const clubName =
+        isLoadingClubDetail || isErrorClubDetail ? "" : clubDetail?.name_kr;
+      overlay.open(({ isOpen, close }) => (
+        <Modal isOpen={isOpen}>
+          <ConfirmModalContent
+            onConfirm={() => {
+              close();
+              // TODO. 신청내역 페이지로 이동
+            }}
+          >
+            {clubName} 동아리 등록 신청이 이미 존재하여
+            <br />
+            등록 신청을 할 수 없습니다.
+          </ConfirmModalContent>
+        </Modal>
+      ));
+    }
+  }, [
+    isSuccess,
+    isError,
+    isLoadingClubDetail,
+    isErrorClubDetail,
+    clubDetail?.name_kr,
+  ]);
 
   return (
     <FormProvider {...formCtx}>
