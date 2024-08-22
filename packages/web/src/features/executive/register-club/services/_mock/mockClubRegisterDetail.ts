@@ -5,7 +5,7 @@ import { ClubRegisterDetail } from "@sparcs-clubs/web/features/executive/registe
 
 import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
-export const mockClubRegisterDetial: ClubRegisterDetail = {
+export const mockClubRegisterDetail: ClubRegisterDetail = {
   statusAndDate: [
     {
       status: ProgressCheckSectionStatusEnum.Approved,
