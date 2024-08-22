@@ -8,7 +8,6 @@ import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
-
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
@@ -20,7 +19,6 @@ import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/clubDetails/services/getMyClub";
 import { useRegisterClub } from "@sparcs-clubs/web/features/clubDetails/services/registerClub";
 import { useUnRegisterClub } from "@sparcs-clubs/web/features/clubDetails/services/unregisterClub";
-
 import {
   getClubType,
   getTagColorFromClubType,
@@ -31,14 +29,12 @@ import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpo
 interface ClubCardProps {
   club: ApiClb001ResponseOK["divisions"][number]["clubs"][number];
 }
-
 const ClubCardRow = styled.div`
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
-
 const ClubCardNameRow = styled(ClubCardRow)`
   display: flex;
   flex-direction: row;
@@ -46,7 +42,6 @@ const ClubCardNameRow = styled(ClubCardRow)`
   justify-content: space-between;
   align-items: center;
 `;
-
 const ClubCardTagRow = styled(ClubCardRow)`
   display: flex;
   flex-direction: row;
@@ -54,7 +49,6 @@ const ClubCardTagRow = styled(ClubCardRow)`
   justify-content: space-between;
   align-items: center;
 `;
-
 const ClubName = styled.div`
   width: 100%;
   height: 24px;
@@ -65,7 +59,6 @@ const ClubName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 `;
-
 const ClubCard: React.FC<
   ClubCardProps & { isRegistrationPeriod?: boolean }
 > = ({ club, isRegistrationPeriod = false }) => {
@@ -95,7 +88,6 @@ const ClubCard: React.FC<
       }
     }
   }, [myRegistrationList]);
-
   const ToggleRegistered = async (close: () => void) => {
     close();
     await useRegisterClub(club.id);
@@ -105,12 +97,27 @@ const ClubCard: React.FC<
   };
 
   const ToggleUnregistered = async (close: () => void) => {
-    const thisRegis = myRegistrationList.applies.find(
-      apply => apply.clubId === club.id,
-    );
-    console.log("thisRegis: ", thisRegis.id);
-    await useUnRegisterClub({ applyId: thisRegis.id });
+    const thisRegis = (
+      myRegistrationList as {
+        applies: {
+          id: number;
+          clubId: number;
+          applyStatusEnumId: RegistrationApplicationStudentStatusEnum;
+        }[];
+      }
+    ).applies.find(apply => apply.clubId === club.id);
+    await useUnRegisterClub({
+      applyId: (
+        thisRegis as {
+          id: number;
+          clubId: number;
+          applyStatusEnumId: RegistrationApplicationStudentStatusEnum;
+        }
+      ).id,
+    });
+    await refetch();
     setIsRegistered(false);
+
     close();
   };
 
@@ -158,7 +165,6 @@ const ClubCard: React.FC<
           </Typography>
         </FlexWrapper>
       </ClubCardNameRow>
-
       <ClubCardRow>
         {club.advisor === "null" ||
         club.advisor === "undefined" ||
@@ -169,7 +175,6 @@ const ClubCard: React.FC<
           : `회장 ${club.representative} | 지도교수 ${club.advisor}`}
       </ClubCardRow>
       <ClubCardRow>{club.characteristic}</ClubCardRow>
-
       <ClubCardTagRow>
         <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
           {getClubType(club)}
@@ -187,7 +192,5 @@ const ClubCard: React.FC<
     </Card>
   );
 };
-
 export default ClubCard;
-
 export type { ClubCardProps };
