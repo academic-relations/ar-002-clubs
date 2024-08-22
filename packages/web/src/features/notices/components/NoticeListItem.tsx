@@ -6,7 +6,10 @@ import Image from "next/image";
 import styled, { useTheme } from "styled-components";
 
 import clubsLogoSvg from "@sparcs-clubs/web/assets/logo-icon.svg";
-import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+import {
+  formatDotDate,
+  formatDotSimpleDate,
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 
 interface NoticeListItemProps {
   title: string;
@@ -96,12 +99,7 @@ const NoticeDate = styled.div<{ date: Date }>`
     text-align: left;
     justify-content: flex-start;
     &::after {
-      content: "${({ date }) =>
-        date.toLocaleDateString("ko-KR", {
-          year: "2-digit",
-          month: "2-digit",
-          day: "2-digit",
-        })}";
+      content: "${({ date }) => formatDotSimpleDate(date)}";
     }
   }
 `;

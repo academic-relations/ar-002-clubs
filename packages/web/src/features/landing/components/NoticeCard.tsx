@@ -4,7 +4,10 @@ import React from "react";
 
 import styled from "styled-components";
 
-import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+import {
+  formatDotDate,
+  formatDotSimpleDate,
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import type { ApiNtc001ResponseOK } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 
@@ -45,12 +48,7 @@ const NoticeDate = styled.div<{ date: Date }>`
     font-size: 14px;
     line-height: 16px;
     &::after {
-      content: "${({ date }) =>
-        date.toLocaleDateString("ko-KR", {
-          year: "2-digit",
-          month: "2-digit",
-          day: "2-digit",
-        })}";
+      content: "${({ date }) => formatDotSimpleDate(date)}";
     }
   }
 `;
