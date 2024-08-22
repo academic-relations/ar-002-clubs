@@ -12,6 +12,7 @@ import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import { fromUUID } from "@sparcs-clubs/web/common/components/File/attachment";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
@@ -218,7 +219,11 @@ const ActivityReportDetail: React.FC = () => {
             <ActivityDetail>첨부 파일</ActivityDetail>
             <ActivityDetail>
               <FilePreviewContainer>
-                <ThumbnailPreviewList uuidList={data.evidenceFiles} />
+                <ThumbnailPreviewList
+                  fileList={data.evidenceFiles.map((file, _) =>
+                    fromUUID(file.uuid),
+                  )}
+                />
               </FilePreviewContainer>
             </ActivityDetail>
             <ActivityDetail>{`부가 설명: ${data.evidence}`}</ActivityDetail>
