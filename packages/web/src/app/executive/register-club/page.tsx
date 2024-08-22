@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Custom404 from "@sparcs-clubs/web/app/not-found";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -8,30 +8,49 @@ import ExecutiveRegistrationTable from "@sparcs-clubs/web/common/components/Exec
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
-import { mockRegisterClub } from "@sparcs-clubs/web/features/register-club/service/_mock/mockRegisterClub";
+import { RegisterClubList } from "@sparcs-clubs/web/features/executive/register-club/services/_mock/mockRegisterClub";
+import { useGetRegisterClub } from "@sparcs-clubs/web/features/executive/register-club/services/useGetRegisterClub";
 import { useGetProfileNow } from "@sparcs-clubs/web/hooks/getProfileNow";
 
-const RegisterClub = () => {
+const ExeRegisterClub = () => {
   const profile = useGetProfileNow();
 
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
 
-  if (profile !== "executive") {
-    return <Custom404 />;
-  }
+  const { data, isLoading, isError } = useGetRegisterClub();
+  const [clubData, setClubData] = useState<RegisterClubList>({
+    items: [],
+    total: 0,
+    offset: 0,
+  });
+  const [paginatedData, setPaginatedData] = useState<RegisterClubList>({
+    items: [],
+    total: 0,
+    offset: 0,
+  });
 
-  /* TODO : API로 데이터 받아오기 */
-  const data = mockRegisterClub;
-  const paginatedData = {
-    total: data.total,
-    items: data.items.slice((currentPage - 1) * limit, currentPage * limit),
-    offset: (currentPage - 1) * limit,
-  };
+  useEffect(() => {
+    if (!isLoading && data) {
+      setClubData(data);
+      setPaginatedData({
+        total: data?.total,
+        items: data?.items.slice(
+          (currentPage - 1) * limit,
+          currentPage * limit,
+        ),
+        offset: (currentPage - 1) * limit,
+      });
+    }
+  }, [isLoading, data, currentPage]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  if (profile !== "executive") {
+    return <Custom404 />;
+  }
 
   return (
     <FlexWrapper direction="column" gap={20}>
@@ -42,11 +61,11 @@ const RegisterClub = () => {
         ]}
         title="동아리 등록 신청 내역"
       />
-      <AsyncBoundary isLoading={false} isError={false}>
+      <AsyncBoundary isLoading={isLoading} isError={isError}>
         <ExecutiveRegistrationTable registerList={paginatedData} />
         <FlexWrapper direction="row" gap={16} justify="center">
           <Pagination
-            totalPage={Math.ceil(data.total / limit)}
+            totalPage={Math.ceil(clubData.total / limit)}
             currentPage={currentPage}
             limit={limit}
             setPage={handlePageChange}
@@ -57,4 +76,4 @@ const RegisterClub = () => {
   );
 };
 
-export default RegisterClub;
+export default ExeRegisterClub;
