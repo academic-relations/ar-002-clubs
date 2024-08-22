@@ -3,12 +3,9 @@ import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import StepProcess, {
   StepInputType,
 } from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
-
-import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
 
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 
@@ -115,10 +112,6 @@ const ActivityCertificateInfoFrame: React.FC<ActivityCertificateFrameProps> = ({
 
   return (
     <>
-      <FlexWrapper direction="column" gap={20} style={{ flex: "1 0 0" }}>
-        <SelectActivityTerm />
-      </FlexWrapper>
-      {/* TODO: 이거 지우기 */}
       <RentalNoticeFrameInner>
         <StepProcess steps={steps} activeStepIndex={step + 1} />
         <CurrentFrame {...props} />

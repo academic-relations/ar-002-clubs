@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import DateRangeInput from "@sparcs-clubs/web/common/components/Forms/DateRangeInput";
 
@@ -7,8 +8,9 @@ const ActivityTermRow: React.FC<{
   startDate: string;
   endDate: string;
   onDateChange: (index: number, start: string, end: string) => void;
+  onDelete: (index: number) => void;
   index: number;
-}> = ({ startDate, endDate, onDateChange, index }) => {
+}> = ({ startDate, endDate, onDateChange, onDelete, index }) => {
   const [startMonth, setStartMonth] = useState<string>(startDate);
   const [endMonth, setEndMonth] = useState<string>(endDate);
   const handleDateChange = (monthString: string) => {
@@ -17,6 +19,9 @@ const ActivityTermRow: React.FC<{
     setStartMonth(start);
     setEndMonth(end);
     onDateChange(index, start, end);
+  };
+  const deleteRow = () => {
+    onDelete(index);
   };
 
   return (
@@ -28,6 +33,11 @@ const ActivityTermRow: React.FC<{
         limitEndValue="2030.01"
         placeholder="20XX.XX"
         onChange={handleDateChange}
+      />
+      <IconButton
+        icon="delete"
+        onClick={deleteRow}
+        style={{ backgroundColor: "transparent", color: "black" }}
       />
     </FlexWrapper>
   );

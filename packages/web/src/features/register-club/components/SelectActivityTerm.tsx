@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
@@ -32,6 +32,15 @@ const ActivityTermArea = styled.div`
   }
 `;
 
+const ActivityTermContent = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  flex-grow: 1;
+`;
+
 interface ActivityTermProps {
   startDate: string;
   endDate: string;
@@ -49,22 +58,14 @@ const SelectActivityTerm = () => {
       endDate: "",
     },
   ]);
+  console.log("Updated activityTermTmpList:", activityTermTmpList);
 
-  useEffect(() => {
-    console.log(activityTermTmpList);
-  }, [activityTermTmpList]);
-
-  useEffect(() => {
-    console.log("list:", activityTermList);
-  }, [activityTermList]);
+  console.log("Updated activityTermList:", activityTermList);
 
   const addRow = () => {
-    setActivityTermTmpList([
-      ...activityTermTmpList,
-      {
-        startDate: "",
-        endDate: "",
-      },
+    setActivityTermTmpList(prevList => [
+      ...prevList,
+      { startDate: "", endDate: "" },
     ]);
   };
 
@@ -76,24 +77,31 @@ const SelectActivityTerm = () => {
   };
 
   const handleTerm = () => {
+    if (activityTermList.length > 0) {
+      setActivityTermTmpList(activityTermList);
+    } else {
+      setActivityTermTmpList([
+        {
+          startDate: "",
+          endDate: "",
+        },
+      ]);
+    }
+
+    const handleDelete = (index: number) => {
+      const updatedTerms = activityTermTmpList.filter((_, i) => i !== index);
+      setActivityTermTmpList(updatedTerms);
+      console.log(activityTermTmpList);
+    };
+
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen} onClose={close}>
         <CancellableModalContent
           onClose={() => {
-            if (activityTermList.length > 0) {
-              setActivityTermTmpList(activityTermList);
-            } else {
-              setActivityTermTmpList([
-                {
-                  startDate: "",
-                  endDate: "",
-                },
-              ]);
-            }
-
             close();
           }}
           onConfirm={() => {
+            console.log("at Confirm:", activityTermTmpList, activityTermList);
             setActivityTermList(activityTermTmpList);
             close();
           }}
@@ -106,6 +114,7 @@ const SelectActivityTerm = () => {
                 startDate={term.startDate}
                 endDate={term.endDate}
                 onDateChange={handleDateChange}
+                onDelete={handleDelete}
               />
             ))}
             <IconButton
@@ -123,22 +132,33 @@ const SelectActivityTerm = () => {
   };
 
   return (
-    <FlexWrapper direction="column" gap={4} style={{ width: "100%" }}>
+    <FlexWrapper
+      direction="column"
+      gap={4}
+      style={{
+        width: "100%",
+      }}
+    >
       <Typography fw="MEDIUM" fs={16} lh={20}>
         활동 기간
       </Typography>
       <ActivityTermArea onClick={handleTerm}>
-        {activityTermList.length > 0
-          ? `${activityTermList[0].startDate} ~ ${
-              activityTermList[0].endDate
-            }${activityTermList.length > 1 ? ` 외 ${activityTermList.length - 1}개` : ""}`
-          : ""}
+        <ActivityTermContent>
+          {activityTermList.length > 0
+            ? `${activityTermList[0].startDate} ~ ${
+                activityTermList[0].endDate
+              }${activityTermList.length > 1 ? ` 외 ${activityTermList.length - 1}개` : ""}`
+            : ""}
+        </ActivityTermContent>
+
         <Typography
           fw="MEDIUM"
           fs={16}
           lh={20}
           color="PRIMARY"
-          style={{ textDecoration: "underline", paddingLeft: "12px" }}
+          style={{
+            textDecoration: "underline",
+          }}
         >
           수정
         </Typography>
