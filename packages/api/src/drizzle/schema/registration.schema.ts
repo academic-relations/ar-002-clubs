@@ -107,16 +107,24 @@ export const RegistrationExecutiveComment = mysqlTable(
   "registration_executive_comment",
   {
     id: int("id").autoincrement().primaryKey(),
-    registrationId: int("registration_id")
-      .notNull()
-      .references(() => Registration.id),
-    executiveId: int("executive_id")
-      .notNull()
-      .references(() => Executive.id),
+    registrationId: int("registration_id").notNull(),
+    executiveId: int("executive_id").notNull(),
     content: text("content").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
+  table => ({
+    registrationExecutiveCommentRegistrationIdFk: foreignKey({
+      name: "registration_executive_comment_registration_id_fk",
+      columns: [table.registrationId],
+      foreignColumns: [Registration.id],
+    }),
+    registrationExecutiveCommentExecutiveIdFk: foreignKey({
+      name: "registration_executive_comment_executive_id_fk",
+      columns: [table.executiveId],
+      foreignColumns: [Executive.id],
+    }),
+  }),
 );
 
 export const RegistrationApplicationStudentStatusEnum = mysqlTable(
