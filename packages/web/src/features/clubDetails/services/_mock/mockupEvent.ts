@@ -29,7 +29,7 @@ export const mockupEvents: ApiReg004ResponseOK = {
       startTerm: new Date(2024, 9, 25, 10, 30, 0),
       endTerm: new Date(2024, 12, 25, 10, 30, 0),
       registrationEventEnumId:
-        RegistrationDeadlineEnum.ClubRegistrationModification,
+        RegistrationDeadlineEnum.ClubRegistrationApplication,
     },
   ],
 };
