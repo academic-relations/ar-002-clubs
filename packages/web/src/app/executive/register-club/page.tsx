@@ -14,7 +14,7 @@ import { RegisterClubList } from "@sparcs-clubs/web/features/executive/register-
 import { useGetRegisterClub } from "@sparcs-clubs/web/features/executive/register-club/services/useGetRegisterClub";
 import { useGetProfileNow } from "@sparcs-clubs/web/hooks/getProfileNow";
 
-const ExeRegisterClub = () => {
+const ExecutiveRegisterClub = () => {
   const profile = useGetProfileNow();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,6 +34,7 @@ const ExeRegisterClub = () => {
     total: 0,
     offset: 0,
   });
+  console.log(clubData.items.length);
 
   useEffect(() => {
     if (!isLoading && data) {
@@ -75,7 +76,7 @@ const ExeRegisterClub = () => {
         title="동아리 등록 신청 내역"
       />
       <AsyncBoundary isLoading={isLoading} isError={isError}>
-        {clubData.items.length !== 0 && (
+        {clubData.items.length > 0 && (
           <TableWithPaginationWrapper>
             <ExecutiveRegistrationTable registerList={paginatedData} />
             <FlexWrapper direction="row" gap={16} justify="center">
@@ -93,4 +94,4 @@ const ExeRegisterClub = () => {
   );
 };
 
-export default ExeRegisterClub;
+export default ExecutiveRegisterClub;
