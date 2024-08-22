@@ -5,18 +5,21 @@ import Viewer from "viewerjs";
 import FlexWrapper from "../FlexWrapper";
 import Typography from "../Typography";
 
-import Attachment from "./attachment";
+import Attachment, { fromUUID } from "./attachment";
 
 import ThumbnailPreview from "./ThumbnailPreview";
 
 import "viewerjs/dist/viewer.css";
 
 interface ThumbnailPreviewListProps {
-  fileList: Attachment[];
+  uuidList: { uuid: string }[];
 }
+
 const ThumbnailPreviewList: React.FC<ThumbnailPreviewListProps> = ({
-  fileList,
+  uuidList,
 }: ThumbnailPreviewListProps) => {
+  const fileList: Attachment[] = uuidList.map((file, _) => fromUUID(file.uuid));
+
   const viewerRef = useRef<HTMLDivElement>(null);
 
   const handleClick = (index: number) => {
