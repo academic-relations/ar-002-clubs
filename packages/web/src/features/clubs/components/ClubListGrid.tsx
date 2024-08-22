@@ -1,12 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import Link from "next/link";
 import styled from "styled-components";
 
 import paths from "@sparcs-clubs/web/constants/paths";
 import ClubCard from "@sparcs-clubs/web/features/clubs/components/ClubCard";
+
+import MobileClubCard from "@sparcs-clubs/web/features/clubs/components/MobileClubCard";
 
 import type { ClubCardProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
@@ -38,22 +40,44 @@ const ClubListGridInner = styled.div`
 const ClubListGrid: React.FC<ClubListGridItemProps> = ({
   clubList,
   isRegistrationPeriod = false,
-}) => (
-  <ClubListGridInner>
-    {clubList.map((club: ClubCardProps["club"]) => (
-      <Link
-        key={club.id}
-        href={`${paths.CLUBS.sub[0].path}/${club.id.toString()}`}
-        style={{ display: "flex", flexDirection: "column" }}
-      >
-        <ClubCard
-          key={club.name_kr}
-          club={club}
-          isRegistrationPeriod={isRegistrationPeriod}
-        />
-      </Link>
-    ))}
-  </ClubListGridInner>
-);
+}) => {
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 720);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  return (
+    <ClubListGridInner>
+      {clubList.map((club: ClubCardProps["club"]) => (
+        <Link
+          key={club.id}
+          href={`${paths.CLUBS.sub[0].path}/${club.id.toString()}`}
+          style={{ display: "flex", flexDirection: "column" }}
+        >
+          {isMobileView ? (
+            <MobileClubCard
+              key={club.name_kr}
+              club={club}
+              isRegistrationPeriod={isRegistrationPeriod}
+            />
+          ) : (
+            <ClubCard
+              key={club.name_kr}
+              club={club}
+              isRegistrationPeriod={isRegistrationPeriod}
+            />
+          )}
+        </Link>
+      ))}
+    </ClubListGridInner>
+  );
+};
 
 export default ClubListGrid;
