@@ -13,7 +13,7 @@ import {
  * @description 집행부원이 이번 학기 동아리 등록 신청서 목록을 조회합니다.
  */
 
-const url = () => `/executive/registrations/club-registraions`;
+const url = () => `/executive/registrations/club-registrations`;
 const method = "GET";
 
 const requestParam = z.object({});
