@@ -56,11 +56,10 @@ export class ClubRegistrationService {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [RegistrationDeadlineEnum.ClubRegistrationApplication],
     });
-    // - 신청자의 Id가 AccessToken의 보유자와 동일한지 검사합니다.
-    if (studentId !== body.studentId)
-      throw new HttpException("StudentId not match", HttpStatus.BAD_REQUEST);
-    logger.debug(`[postRegistration] studentId check passed`);
-    // - 신규 가동아리 신청을 제외하곤 기존 동아리 대표자의 신청인지 검사합니다.
+    logger.debug(
+      "[postStudentRegistrationClubRegistration] deadline check passed",
+    );
+    // - 신규 가동아리 신청을 제외하곤 기존 동아리 대표자 또는 대의원의 신청인지 검사합니다.
     // 위 검사는 repository transaction 첫 파트에서 검사됩니다.
     // - 신규 가동아리 신청을 제외하곤 기존 동아리 id를 제출해야 합니다.
     // 위 검사는 REG-001 인터페이스에서 검사합니다
@@ -97,7 +96,7 @@ export class ClubRegistrationService {
     await Promise.all(
       fileIds.map(key => this.filePublicService.getFileInfoById(body[key])),
     );
-
+    // - 정동아리 재등록을 제외하고 활동계획서를 받아야합니다.
     await this.validateRegistration(
       studentId,
       body.clubId,
@@ -293,7 +292,7 @@ export class ClubRegistrationService {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [
         RegistrationDeadlineEnum.ClubRegistrationApplication,
-        RegistrationDeadlineEnum.ClubRegistrationModification,
+        // RegistrationDeadlineEnum.ClubRegistrationModification,
       ],
     });
     const result =
@@ -316,8 +315,8 @@ export class ClubRegistrationService {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [
         RegistrationDeadlineEnum.ClubRegistrationApplication,
-        RegistrationDeadlineEnum.ClubRegistrationModification,
-        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+        // RegistrationDeadlineEnum.ClubRegistrationModification,
+        // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
       ],
     });
     await this.clubRegistrationRepository.deleteStudentRegistrationsClubRegistration(
@@ -338,8 +337,8 @@ export class ClubRegistrationService {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [
         RegistrationDeadlineEnum.ClubRegistrationApplication,
-        RegistrationDeadlineEnum.ClubRegistrationModification,
-        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+        // RegistrationDeadlineEnum.ClubRegistrationModification,
+        // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
       ],
     });
     const result =
@@ -360,8 +359,8 @@ export class ClubRegistrationService {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [
         RegistrationDeadlineEnum.ClubRegistrationApplication,
-        RegistrationDeadlineEnum.ClubRegistrationModification,
-        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+        // RegistrationDeadlineEnum.ClubRegistrationModification,
+        // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
       ],
     });
     const result =
@@ -400,8 +399,8 @@ export class ClubRegistrationService {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [
         RegistrationDeadlineEnum.ClubRegistrationApplication,
-        RegistrationDeadlineEnum.ClubRegistrationModification,
-        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+        // RegistrationDeadlineEnum.ClubRegistrationModification,
+        // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
       ],
     });
     const result =
@@ -420,8 +419,8 @@ export class ClubRegistrationService {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [
         RegistrationDeadlineEnum.ClubRegistrationApplication,
-        RegistrationDeadlineEnum.ClubRegistrationModification,
-        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+        // RegistrationDeadlineEnum.ClubRegistrationModification,
+        // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
       ],
     });
     const result =

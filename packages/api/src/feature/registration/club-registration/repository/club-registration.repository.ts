@@ -92,6 +92,7 @@ export class ClubRegistrationRepository {
     const cur = getKSTDate();
     await this.db.transaction(async tx => {
       // - 신규 가동아리 신청을 제외하곤 기존 동아리 대표자의 신청인지 검사합니다.
+      // 한 학생이 여러 동아리의 대표자나 대의원일 수 없기 때문에, 1개 또는 0개의 지위를 가지고 있다고 가정합니다.
       if (body.registrationTypeEnumId !== RegistrationTypeEnum.NewProvisional) {
         const delegate = await tx
           .select({
