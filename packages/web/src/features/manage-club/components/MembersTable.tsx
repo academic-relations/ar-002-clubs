@@ -85,7 +85,7 @@ const MembersTable: React.FC<MembersTableProps> = ({ memberList }) => {
     enableSorting: false,
   });
 
-  return <Table table={table} />;
+  return <Table table={table} count={memberList.length} unit="명" />;
 };
 
 export default MembersTable;
