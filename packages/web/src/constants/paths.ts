@@ -4,6 +4,20 @@
  * @author andy@sparcs.org (Sangwoo Ye)
  */
 
+const externalLinks = {
+  allClubRepresentativeMeeting:
+    "https://cafe.naver.com/ArticleList.nhn?search.clubid=26985838&search.menuid=14&search.boardtype=L",
+  expandedOperatingCommittee:
+    "https://cafe.naver.com/ArticleList.nhn?search.clubid=26985838&search.menuid=41&search.boardtype=L",
+  operatingCommittee:
+    "https://cafe.naver.com/ArticleList.nhn?search.clubid=26985838&search.menuid=13&search.boardtype=L",
+  divisionMeeting:
+    "https://cafe.naver.com/ArticleList.nhn?search.clubid=26985838&search.menuid=16&search.boardtype=L",
+  kakaotalk: "https://pf.kakao.com/_zpxaSd/chat",
+  rules:
+    "https://cafe.naver.com/ArticleList.nhn?search.clubid=26985838&search.menuid=19&search.boardtype=L",
+};
+
 const paths = {
   HOME: { name: "홈", path: "/" },
   CLUBS: {
@@ -35,25 +49,25 @@ const paths = {
     name: "의결기구",
     // TODO: 임시 링크
     sub: [
-      {
-        name: "최근 회의",
-        path: "/recent-meeting",
-      },
+      // {
+      //   name: "최근 회의",
+      //   path: "/recent-meeting",
+      // },
       {
         name: "전동대회",
-        path: "/all-club-representative-meeting",
+        path: externalLinks.allClubRepresentativeMeeting,
       },
       {
         name: "확대운영위원회",
-        path: "/expanded-operating-committee",
+        path: externalLinks.expandedOperatingCommittee,
       },
       {
         name: "운영위원회",
-        path: "/operating-committee",
+        path: externalLinks.operatingCommittee,
       },
       {
         name: "분과회의",
-        path: "/division-meeting",
+        path: externalLinks.divisionMeeting,
       },
     ],
   },
@@ -61,41 +75,41 @@ const paths = {
     name: "소통",
     // TODO: 임시 링크
     sub: [
-      {
-        name: "소통채널 안내",
-        path: "/communication-channel",
-      },
+      // {
+      //   name: "소통채널 안내",
+      //   path: "/communication-channel",
+      // },
       {
         name: "카카오톡 문의하기",
-        path: "/kakaotalk",
+        path: externalLinks.kakaotalk,
       },
       {
         name: "동아리연합회칙",
-        path: "/rules",
+        path: externalLinks.rules,
       },
     ],
   },
-  SERVICE: {
-    name: "서비스 신청",
-    sub: [
-      {
-        name: "대여 사업",
-        path: "/rental-business",
-      },
-      {
-        name: "홍보물 인쇄",
-        path: "/printing-business",
-      },
-      {
-        name: "활동확인서 발급",
-        path: "/activity-certificate",
-      },
-      {
-        name: "공용공간 비정기사용",
-        path: "/common-space",
-      },
-    ],
-  },
+  // SERVICE: {
+  //   name: "서비스 신청",
+  //   sub: [
+  //     {
+  //       name: "대여 사업",
+  //       path: "/rental-business",
+  //     },
+  //     {
+  //       name: "홍보물 인쇄",
+  //       path: "/printing-business",
+  //     },
+  //     {
+  //       name: "활동확인서 발급",
+  //       path: "/activity-certificate",
+  //     },
+  //     {
+  //       name: "공용공간 비정기사용",
+  //       path: "/common-space",
+  //     },
+  //   ],
+  // },
   // TODO: 임시 링크
   MADE_BY: { name: "만든 사람들", path: "/credits" },
   LICENSE: { name: "라이센스", path: "/" },
