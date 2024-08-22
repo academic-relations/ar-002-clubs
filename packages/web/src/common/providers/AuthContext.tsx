@@ -9,13 +9,8 @@ import React, {
   useState,
 } from "react";
 
-import { noLoginList } from "@sparcs-clubs/web/constants/noLoginList";
+import { jwtDecode } from "jwt-decode";
 
-import DebugBadge from "../components/DebugBadge";
-import Footer from "../components/Footer";
-import LoginRequiredHeader from "../components/Header/LoginRequiredHeader";
-import ResponsiveContent from "../components/Responsive";
-import LoginRequired from "../frames/LoginRequired";
 import postLogin from "../services/postLogin";
 import postLogout from "../services/postLogout";
 
@@ -23,6 +18,7 @@ interface AuthContextType {
   isLoggedIn: boolean;
   login: () => void;
   logout: () => void;
+  profile: string | undefined;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,11 +27,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [profile, setProfile] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       setIsLoggedIn(true);
+      const decoded: { type?: string } = jwtDecode(accessToken);
+      setProfile(decoded.type);
     }
   }, []);
 
@@ -78,20 +77,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  const value = useMemo(() => ({ isLoggedIn, login, logout }), [isLoggedIn]);
+  const value = useMemo(
+    () => ({ isLoggedIn, login, logout, profile }),
+    [isLoggedIn],
+  );
 
-  if (!isLoggedIn && !noLoginList.includes(window.location.pathname)) {
-    return (
-      <AuthContext.Provider value={value}>
-        <DebugBadge />
-        <LoginRequiredHeader />
-        <ResponsiveContent>
-          <LoginRequired login={login} />
-        </ResponsiveContent>
-        <Footer />
-      </AuthContext.Provider>
-    );
-  }
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
