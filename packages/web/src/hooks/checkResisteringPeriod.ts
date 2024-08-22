@@ -1,3 +1,5 @@
+import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
 import { useGetEvents } from "../features/clubDetails/services/getEvent";
 
 // [isLoading, isResisteringPeriod]를 [boolean, boolean] 형태의 리스트로 반환합니다.
@@ -24,7 +26,10 @@ export const useCheckResisteringPeriod = (): [boolean, boolean] => {
       currentDate <= event.endTerm && currentDate >= event.startTerm,
   );
 
-  if (matchingEvent?.registrationEventEnumId === 4) {
+  if (
+    matchingEvent?.registrationEventEnumId ===
+    RegistrationDeadlineEnum.StudentRegistrationApplication
+  ) {
     return [true, false];
   }
   return [false, false];
