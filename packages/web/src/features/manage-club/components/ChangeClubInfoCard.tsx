@@ -11,22 +11,37 @@ import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/Confi
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { useGetClubInfo } from "@sparcs-clubs/web/features/manage-club/services/getClubInfo";
+import { useGetDelegateId } from "@sparcs-clubs/web/features/manage-club/services/getDelegateClubId";
 import { usePutClubInfo } from "@sparcs-clubs/web/features/manage-club/services/updateClubInfo";
 
 const ChangeClubInfoCard = () => {
-  const { data, isLoading, isError, refetch } = useGetClubInfo({ clubId: 23 }); // TODO: clubId 받아오기
-  const { mutate: updateClubInfo } = usePutClubInfo();
+  const { data: idData, isLoading: idIsLoading } = useGetDelegateId();
+  const [clubId, setClubId] = useState<number>(0);
+  const { data, isLoading, isError, refetch } = useGetClubInfo({
+    clubId,
+  });
   const [description, setDescription] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorDescription, setErrorDescription] = useState<string>("");
   const [errorPassword, setErrorPassword] = useState<string>("");
+  const { mutate: updateClubInfo } = usePutClubInfo();
 
   useEffect(() => {
-    if (!isLoading && data?.description && data?.roomPassword) {
-      setDescription(data.description);
-      setPassword(data.roomPassword);
+    if (!idIsLoading && idData?.clubId) {
+      setClubId(idData?.clubId);
+      if (clubId && !isLoading && data?.description && data?.roomPassword) {
+        setDescription(data.description);
+        setPassword(data.roomPassword);
+      }
     }
-  }, [isLoading, data?.description, data?.roomPassword]);
+  }, [
+    idIsLoading,
+    isLoading,
+    clubId,
+    data?.description,
+    data?.roomPassword,
+    idData?.clubId,
+  ]);
 
   useEffect(() => {
     if (description === "") {
@@ -53,8 +68,6 @@ const ChangeClubInfoCard = () => {
       : "default";
 
   const handleSave = useCallback(() => {
-    const clubId = 23;
-
     updateClubInfo(
       {
         requestParam: { clubId },
@@ -80,7 +93,7 @@ const ChangeClubInfoCard = () => {
         },
       },
     );
-  }, [description, password, updateClubInfo, refetch]);
+  }, [clubId, description, password, updateClubInfo, refetch]);
 
   return (
     <Card outline gap={32} style={{ flex: 1, height: "fit-content" }}>
