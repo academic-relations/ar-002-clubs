@@ -47,12 +47,30 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
     setActivityTermList(updatedTerms);
   };
 
+  const checkChange = () => {
+    const differentTerms = activityTermList.filter((term, index) => {
+      if (initialData.length <= index) {
+        return true;
+      }
+      const initialTerm = initialData[index];
+      return (
+        term.startDate !== initialTerm.startDate ||
+        term.endDate !== initialTerm.endDate
+      );
+    });
+    return differentTerms.length > 0;
+  };
+
   const handleConfirm = () => {
     onConfirm(activityTermList);
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <CancellableModalContent onClose={onClose} onConfirm={handleConfirm}>
+      <CancellableModalContent
+        onClose={onClose}
+        onConfirm={handleConfirm}
+        disabled={checkChange()}
+      >
         <FlexWrapper direction="column" gap={12}>
           {activityTermList.map((term, index) => (
             <ActivityTermRow

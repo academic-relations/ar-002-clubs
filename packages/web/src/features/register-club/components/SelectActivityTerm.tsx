@@ -54,7 +54,7 @@ const SelectActivityTerm = () => {
 
       return (
         <EditActivityTermModal
-          initialData={activityTermList}
+          initialData={activityTermList || [{ startDate: "", endDate: "" }]}
           isOpen={isOpen}
           onClose={close}
           onConfirm={handleConfirm}
