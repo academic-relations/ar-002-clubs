@@ -46,5 +46,5 @@ defineAxiosMock(mock => {
       description: "",
       roomPassword: "",
     })
-    .reply(() => [201, {}]);
+    .reply(() => [200, {}]);
 });
