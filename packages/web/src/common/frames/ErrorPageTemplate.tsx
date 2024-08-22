@@ -17,26 +17,6 @@ export interface ErrorPageTemplateProps
   buttons?: { text: string; onClick: () => void }[];
 }
 
-/* 24.08.22. : message로 넘길 Node 예시
-const ErrorMessage = styled.div`
-  color: ${({ theme }) => theme.colors.BLACK};
-  text-align: center;
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: 32px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
-  line-height: 48px;
-  word-break: keep-all;
-
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
-    font-size: 28px;
-  }
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xs}) {
-    font-size: 20px;
-    line-height: 32px;
-  }
-`;
-*/
-
 // min-height: ResponsiveContent의 min-height
 const ResponsiveWrapper = styled.div`
   display: flex;
@@ -73,6 +53,7 @@ const ContentsWrapper = styled.div`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  z-index: 2;
 `;
 
 const ButtonsWrapper = styled.div`
@@ -98,6 +79,7 @@ const LogoFrame = styled.div`
   top: 50%;
   transform: translate(-50%, -50%);
   height: 385px;
+  z-index: 1;
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
     height: 283px;

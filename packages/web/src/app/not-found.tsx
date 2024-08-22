@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import styled from "styled-components";
 
 import ErrorPageTemplate from "@sparcs-clubs/web/common/frames/ErrorPageTemplate";
@@ -33,10 +35,22 @@ const NotFound: NextPage = () => {
       존재하지 않습니다
     </ErrorMessage>
   );
+
+  const router = useRouter();
+
+  const goToMain = () => {
+    router.push("/");
+  };
+
   return (
     <ErrorPageTemplate
       message={Message}
-      buttons={[{ text: "메인 바로가기", onClick: () => {} }]}
+      buttons={[
+        {
+          text: "메인 바로가기",
+          onClick: goToMain,
+        },
+      ]}
     />
   );
 };
