@@ -16,6 +16,7 @@ const PersonInfoItemInner = styled.div`
   font-size: 16px;
   line-height: 24px;
   justify-content: center;
+  flex-grow: 1;
 `;
 
 const PersonInfoTitle = styled(PersonInfoItemInner)`
@@ -28,7 +29,6 @@ const PersonInfoTitle = styled(PersonInfoItemInner)`
 
 const PersonInfoContent = styled(PersonInfoItemInner)`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  width: 120px;
   @media (max-width: 1200px) {
     width: 100%;
   }
@@ -36,6 +36,8 @@ const PersonInfoContent = styled(PersonInfoItemInner)`
   overflow: hidden;
   white-space: nowrap;
   display: block;
+  flex-grow: 1;
+  min-width: 0;
 `;
 
 const PersonInfoItem: React.FC<PersonInfoItemProps> = ({ title, content }) => (
