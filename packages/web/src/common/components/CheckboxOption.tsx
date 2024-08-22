@@ -22,15 +22,6 @@ const CheckboxOptionWrapper = styled.div`
   padding-left: 2px;
 `;
 
-const CheckboxWrapper = styled.div`
-  height: 20px !important;
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
-    height: 16px !important;
-  }
-  justify-content: center;
-  align-items: center;
-`;
-
 const ResponsiveTypography = styled(Typography)`
   font-size: 16px;
   line-height: 20px;
@@ -46,9 +37,7 @@ const CheckboxOption: React.FC<CheckboxOptionProps> = ({
   onClick,
 }) => (
   <CheckboxOptionWrapper>
-    <CheckboxWrapper>
-      <Checkbox checked={checked} onClick={onClick} />
-    </CheckboxWrapper>
+    <Checkbox checked={checked} onClick={onClick} />
     <ResponsiveTypography ff="PRETENDARD" color="BLACK">
       {optionText}
     </ResponsiveTypography>

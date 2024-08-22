@@ -40,11 +40,6 @@ const CheckboxOutter = styled.div`
   width: 20px;
   height: 20px;
   flex-shrink: 0;
-
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
-    width: 16px;
-    height: 16px;
-  }
 `;
 
 const Checkbox: React.FC<CheckboxProps> = ({

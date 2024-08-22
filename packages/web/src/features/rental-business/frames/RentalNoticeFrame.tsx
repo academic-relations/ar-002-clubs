@@ -68,7 +68,7 @@ const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
         <CheckboxOption
           checked={checked}
           onClick={() => setChecked(prev => !prev)}
-          optionText="이건 테스트용이에용 이건 테스트용이에용 이건 테스트용이에용 이건 테스트용이에용 이건 테스트용이에용 이건 테스트용이에용 이건 테스트용이에용 이건 테스트용이에용 이건 테스트용이에용 이건 테스트용이에용 이건 테스트용이에용 이건 테스트용이에용 이건 테스트용이에용"
+          optionText="위 안내사항을 모두 숙지하였으며, 이에 동의합니다"
         />
         <Button
           type={checked ? "default" : "disabled"}
