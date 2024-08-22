@@ -15,7 +15,7 @@ import registrationTypeEnumChecker from "../utils/registrationTypeEnumChecker";
  * 신청의 종류에 따라 RequestBody의 검사 규칙이 다릅니다.
  */
 
-const url = () => `/student/registration`;
+const url = () => `/student/registrations/club-registrations/club-registration`;
 const method = "POST";
 
 const requestParam = z.object({});
@@ -56,7 +56,7 @@ const requestBody = z
     divisionConsistency: z.coerce.string().max(255),
     foundationPurpose: z.coerce.string().max(500),
     activityPlan: z.coerce.string().max(500), // 길이제한이 추가될 수 있습니다.
-    activityPlanFileId: z.coerce.string().max(128),
+    activityPlanFileId: z.coerce.string().max(128).optional(),
     /**
      * 동아리 회칙 파일은 가등록 | 재등록인 경우 undefined,
      * 신규등록의 경우 업로드한 파일 id가 존재해야 합니다.,

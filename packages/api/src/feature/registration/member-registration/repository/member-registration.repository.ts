@@ -193,14 +193,14 @@ export class MemberRegistrationRepository {
           ),
         );
       if (result.affectedRows > 2) {
-        throw new HttpException("Registration update failed", 500);
         await tx.rollback();
+        throw new HttpException("Registration update failed", 500);
       } else if (result.affectedRows === 0) {
+        await tx.rollback();
         throw new HttpException(
           "Not available application",
           HttpStatus.FORBIDDEN,
         );
-        await tx.rollback();
       }
     });
     return {};

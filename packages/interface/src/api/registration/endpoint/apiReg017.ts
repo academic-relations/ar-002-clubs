@@ -17,12 +17,12 @@ const requestParam = z.object({
 
 const requestQuery = z.object({});
 
-const requestBody = z.object({});
+const requestBody = z.object({
+  comment: z.string(),
+});
 
 const responseBodyMap = {
-  [HttpStatusCode.Created]: z.object({
-    comment: z.string(),
-  }),
+  [HttpStatusCode.Created]: z.object({}),
 };
 
 const responseErrorMap = {};

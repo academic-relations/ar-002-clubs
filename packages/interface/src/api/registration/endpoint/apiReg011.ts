@@ -60,12 +60,13 @@ const responseBodyMap = {
       divisionConsistency: z.coerce.string().max(255),
       foundationPurpose: z.coerce.string().max(500),
       activityPlan: z.coerce.string().max(500),
-      activityPlanFileId: z.coerce.string().max(128),
-      activityPlanFileName: z.coerce.string().max(255),
+      activityPlanFileId: z.coerce.string().max(128).optional(),
+      activityPlanFileName: z.coerce.string().max(255).optional(),
       clubRuleFileId: z.coerce.string().max(128).optional(),
       clubRuleFileName: z.coerce.string().max(255).optional(),
       externalInstructionFileId: z.coerce.string().max(128).optional(),
       externalInstructionFileName: z.coerce.string().max(255).optional(),
+      updatedAt: z.coerce.date(),
     })
     .refine(args => registrationTypeEnumChecker(args)),
 };
