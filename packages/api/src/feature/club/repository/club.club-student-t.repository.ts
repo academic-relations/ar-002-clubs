@@ -6,7 +6,12 @@ import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
-import { Club, ClubStudentT, SemesterD } from "src/drizzle/schema/club.schema";
+import {
+  Club,
+  ClubDelegateD,
+  ClubStudentT,
+  SemesterD,
+} from "src/drizzle/schema/club.schema";
 
 @Injectable()
 export default class ClubStudentTRepository {
@@ -154,7 +159,19 @@ export default class ClubStudentTRepository {
     studentId: number,
     clubId: number,
     semesterId: number,
+    isTargetStudentDelegate: boolean,
   ): Promise<void> {
+    if (isTargetStudentDelegate)
+      await this.db
+        .delete(ClubDelegateD)
+        .where(
+          and(
+            eq(ClubDelegateD.studentId, studentId),
+            eq(ClubDelegateD.clubId, clubId),
+            isNull(ClubDelegateD.deletedAt),
+          ),
+        )
+        .execute();
     await this.db
       .delete(ClubStudentT)
       .where(

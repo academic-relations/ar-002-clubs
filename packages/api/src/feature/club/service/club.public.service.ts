@@ -208,11 +208,16 @@ export default class ClubPublicService {
       );
     }
 
+    const isTargetStudentDelegate = await this.isStudentDelegate(
+      studentId,
+      clubId,
+    );
     // 신입 부원 제거
     await this.clubStudentTRepository.removeStudentFromClub(
       studentId,
       clubId,
       semesterId,
+      isTargetStudentDelegate,
     );
   }
 }
