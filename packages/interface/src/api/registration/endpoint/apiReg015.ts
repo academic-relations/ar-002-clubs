@@ -1,13 +1,12 @@
 import { HttpStatusCode } from "axios";
+
 import { z } from "zod";
 
 import { zClubName } from "@sparcs-clubs/interface/common/commonString";
-
 import {
   RegistrationStatusEnum,
   RegistrationTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
-
 import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 
@@ -15,11 +14,11 @@ import registrationTypeEnumChecker from "../utils/registrationTypeEnumChecker";
 
 /**
  * @version v0.1
- * @description 동아리 등록 조회
+ * @description 집행부원이 이번 학기 동아리 등록 신청서를 조회합니다.
  */
 
 const url = (applyId: string) =>
-  `/student/registrations/club-registrations/${applyId}`;
+  `/executive/registrations/club-registraions/club-registration/${applyId}`;
 const method = "GET";
 
 const requestParam = z.object({
@@ -39,7 +38,10 @@ const responseBodyMap = {
       clubId: z.coerce.number().int().min(1).optional(),
       clubNameKr: zClubName,
       clubNameEn: zClubName,
-      studentId: z.coerce.number().int().min(1),
+      representative: z.object({
+        studentId: z.coerce.number().int().min(1),
+        name: z.string().max(30),
+      }),
       phoneNumber: zKrPhoneNumber,
       foundedAt: z.coerce.date(),
       divisionId: z.coerce.number().int().min(1),
@@ -66,13 +68,20 @@ const responseBodyMap = {
       clubRuleFileName: z.coerce.string().max(255).optional(),
       externalInstructionFileId: z.coerce.string().max(128).optional(),
       externalInstructionFileName: z.coerce.string().max(255).optional(),
+      isProfessorSigned: z.coerce.boolean(),
+      comments: z.array(
+        z.object({
+          content: z.string(),
+          createdAt: z.coerce.date(),
+        }),
+      ),
     })
     .refine(args => registrationTypeEnumChecker(args)),
 };
 
 const responseErrorMap = {};
 
-const apiReg011 = {
+const apiReg015 = {
   url,
   method,
   requestParam,
@@ -82,16 +91,16 @@ const apiReg011 = {
   responseErrorMap,
 };
 
-type ApiReg011RequestParam = z.infer<typeof apiReg011.requestParam>;
-type ApiReg011RequestQuery = z.infer<typeof apiReg011.requestQuery>;
-type ApiReg011RequestBody = z.infer<typeof apiReg011.requestBody>;
-type ApiReg011ResponseOk = z.infer<(typeof apiReg011.responseBodyMap)[200]>;
+type ApiReg015RequestParam = z.infer<typeof apiReg015.requestParam>;
+type ApiReg015RequestQuery = z.infer<typeof apiReg015.requestQuery>;
+type ApiReg015RequestBody = z.infer<typeof apiReg015.requestBody>;
+type ApiReg015ResponseOk = z.infer<(typeof apiReg015.responseBodyMap)[200]>;
 
-export default apiReg011;
+export default apiReg015;
 
 export type {
-  ApiReg011RequestParam,
-  ApiReg011RequestQuery,
-  ApiReg011RequestBody,
-  ApiReg011ResponseOk,
+  ApiReg015RequestParam,
+  ApiReg015RequestQuery,
+  ApiReg015RequestBody,
+  ApiReg015ResponseOk,
 };
