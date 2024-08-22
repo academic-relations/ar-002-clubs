@@ -16,6 +16,10 @@ const ClubDetailText = styled.div`
   width: 100%;
   font-size: 16px;
   line-height: 28px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 14px;
+    line-height: 20px;
+  }
   font-weight: 400;
 `;
 

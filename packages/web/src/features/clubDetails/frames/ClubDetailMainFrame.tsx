@@ -35,6 +35,9 @@ interface ClubDetailMainFrameProps {
 const CardWrapper = styled.div`
   width: 100%;
   padding-left: 20px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    padding-left: 16px;
+  }
 `;
 
 const MoreInfoWrapper = styled.div`
@@ -42,7 +45,7 @@ const MoreInfoWrapper = styled.div`
   flex-direction: row;
   gap: 60px;
 
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
     flex-direction: column;
   }
 `;
@@ -61,7 +64,7 @@ const PersonInfoWrapper = styled.div`
   gap: 20px;
   width: fit-content;
   max-width: 50%;
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
     width: 100%;
     max-width: 100%;
   }
