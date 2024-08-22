@@ -13,6 +13,7 @@ interface ProgressProps {
   status?: Status;
   label: string;
   date: Date | undefined;
+  isLatest: boolean;
 }
 
 const ProgressWrapper = styled.div`
@@ -34,7 +35,12 @@ const TextWrapper = styled.div`
   width: max-content;
 `;
 
-const Progress = ({ status = Status.Pending, label, date }: ProgressProps) => {
+const Progress = ({
+  status = Status.Pending,
+  label,
+  date,
+  isLatest,
+}: ProgressProps) => {
   let labelColor: ThemeColors;
   switch (status) {
     case Status.Approved:
@@ -54,7 +60,7 @@ const Progress = ({ status = Status.Pending, label, date }: ProgressProps) => {
         <Typography fw="MEDIUM" fs={16} lh={20} color={labelColor}>
           {label}
         </Typography>
-        {date !== undefined && (
+        {date !== undefined && isLatest && (
           <Typography fw="REGULAR" fs={14} lh={16} color={labelColor}>
             {formatSlashDateTime(date)}
           </Typography>

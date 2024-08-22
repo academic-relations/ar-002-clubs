@@ -34,26 +34,40 @@ const ProgressLineWrapper = styled.div`
 const ProgressCheckSection: React.FC<ProgressCheckSectionProps> = ({
   labels,
   progress,
-}) => (
-  <ProgressCheckSectionWrapper>
-    {labels.map((label, index) => (
-      <React.Fragment key={String(index) + label}>
-        <Progress
-          status={progress[index] ? progress[index].status : Status.Pending}
-          label={label}
-          date={progress[index] ? progress[index].date : undefined}
-        />
-        {index < labels.length - 1 && (
-          <ProgressLineWrapper>
-            <ProgressLine
-              status={
-                progress[index + 1] ? progress[index].status : Status.Pending
-              }
-            />
-          </ProgressLineWrapper>
-        )}
-      </React.Fragment>
-    ))}
-  </ProgressCheckSectionWrapper>
-);
+}) => {
+  const isLatest = (index: number) => {
+    if (index < progress.length - 1) {
+      if (progress[index + 1].status === Status.Pending) {
+        return true;
+      }
+
+      return false;
+    }
+
+    return true;
+  };
+  return (
+    <ProgressCheckSectionWrapper>
+      {labels.map((label, index) => (
+        <React.Fragment key={String(index) + label}>
+          <Progress
+            status={progress[index] ? progress[index].status : Status.Pending}
+            label={label}
+            date={progress[index] ? progress[index].date : undefined}
+            isLatest={isLatest(index)}
+          />
+          {index < labels.length - 1 && (
+            <ProgressLineWrapper>
+              <ProgressLine
+                status={
+                  progress[index + 1] ? progress[index].status : Status.Pending
+                }
+              />
+            </ProgressLineWrapper>
+          )}
+        </React.Fragment>
+      ))}
+    </ProgressCheckSectionWrapper>
+  );
+};
 export default ProgressCheckSection;
