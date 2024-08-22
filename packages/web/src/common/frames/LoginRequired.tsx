@@ -1,7 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import styled from "styled-components";
 
 import ErrorPageTemplate from "@sparcs-clubs/web/common/frames/ErrorPageTemplate";
@@ -26,33 +24,21 @@ const ErrorMessage = styled.div`
   }
 `;
 
-const NotFound: NextPage = () => {
+const LoginRequired: NextPage = () => {
   // ToDo : 버튼 onClick 연결
   const Message = (
     <ErrorMessage>
       현재 접근한 페이지는
       <br />
-      존재하지 않습니다
+      로그인해야 볼 수 있습니다
     </ErrorMessage>
   );
-
-  const router = useRouter();
-
-  const goToMain = () => {
-    router.push("/");
-  };
-
   return (
     <ErrorPageTemplate
       message={Message}
-      buttons={[
-        {
-          text: "메인 바로가기",
-          onClick: goToMain,
-        },
-      ]}
+      buttons={[{ text: "로그인 바로가기", onClick: () => {} }]}
     />
   );
 };
 
-export default NotFound;
+export default LoginRequired;

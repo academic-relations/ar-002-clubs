@@ -6,6 +6,8 @@ import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/regist
 import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 
+import registrationTypeEnumChecker from "../utils/registrationTypeEnumChecker";
+
 /**
  * @version v0.1
  * @description 새로운 동아리 등록을 신청합니다.
@@ -26,7 +28,6 @@ const requestBody = z
     registrationTypeEnumId: z.nativeEnum(RegistrationTypeEnum),
     clubNameKr: zClubName,
     clubNameEn: zClubName,
-    studentId: z.coerce.number().int().min(1), // 동아리 대표자 학생 id
     phoneNumber: zKrPhoneNumber, // 대표자 전화번호
     /**
      * 가동아리 신청의 경우 설립연월이 신청에 포함됩니다.
@@ -66,29 +67,7 @@ const requestBody = z
      */
     externalInstructionFileId: z.coerce.string().max(128).optional(),
   })
-  .refine(args => {
-    switch (args.registrationTypeEnumId) {
-      case RegistrationTypeEnum.NewProvisional:
-        if (args.clubId === undefined) return false;
-        if (args.clubRuleFileId !== undefined) return false;
-        break;
-      case RegistrationTypeEnum.ReProvisional:
-        if (args.clubId !== undefined) return false;
-        if (args.clubRuleFileId !== undefined) return false;
-        break;
-      case RegistrationTypeEnum.Promotional:
-        if (args.clubId !== undefined) return false;
-        if (args.clubRuleFileId === undefined) return false;
-        break;
-      case RegistrationTypeEnum.Renewal:
-        if (args.clubId !== undefined) return false;
-        if (args.clubRuleFileId !== undefined) return false;
-        break;
-      default:
-        break;
-    }
-    return true;
-  });
+  .refine(args => registrationTypeEnumChecker(args));
 
 const responseBodyMap = {
   [HttpStatusCode.Created]: z.object({}),

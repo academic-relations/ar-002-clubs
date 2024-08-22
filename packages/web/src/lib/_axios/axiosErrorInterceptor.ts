@@ -31,11 +31,21 @@ const errorInterceptor = {
           }
         } catch (refreshError) {
           console.error("Login failed", refreshError);
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("responseToken");
+          window.location.href = "/";
         }
         return Promise.reject(error);
       }
       case HttpStatusCode.Forbidden: {
-        // TODO: handle forbidden error
+        const previousPage = document.referrer;
+
+        if (previousPage.startsWith(window.location.origin)) {
+          window.history.back();
+        } else {
+          window.location.href = "/";
+        }
+
         return Promise.reject(error);
       }
       default: {

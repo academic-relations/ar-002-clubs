@@ -49,9 +49,6 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   const formCtx = useForm<RegisterClubInterface>({
     mode: "all",
-    defaultValues: {
-      studentId: profile?.studentNumber,
-    },
   });
 
   const {
@@ -88,7 +85,6 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
               : type,
           clubNameKr: isNewClubName ? data.clubNameKr : "",
           clubNameEn: isNewClubName ? data.clubNameEn : "",
-          studentId: data.studentId,
           phoneNumber: data.phoneNumber,
           foundedAt:
             data.foundedMonthAt != null

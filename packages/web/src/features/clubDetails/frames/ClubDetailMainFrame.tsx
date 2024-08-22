@@ -55,6 +55,18 @@ const ResisterInfoWrapper = styled.div`
   align-items: center;
 `;
 
+const PersonInfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: fit-content;
+  max-width: 50%;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    width: 100%;
+    max-width: 100%;
+  }
+`;
+
 const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
   club,
   isRegistrationPeriod,
@@ -172,12 +184,12 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
         </FlexWrapper>
 
         <MoreInfoWrapper>
-          <FlexWrapper direction="column" gap={20}>
+          <PersonInfoWrapper>
             <SectionTitle size="lg">인적 사항 </SectionTitle>
             <CardWrapper>
               <PersonInfoCard club={club} />
             </CardWrapper>
-          </FlexWrapper>
+          </PersonInfoWrapper>
 
           <FlexWrapper direction="column" gap={20} style={{ flex: "1 0 0" }}>
             <SectionTitle size="lg">동아리 설명</SectionTitle>
