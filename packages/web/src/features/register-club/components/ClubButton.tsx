@@ -17,9 +17,11 @@ interface ClubButtonProps {
 const ClubButtonTextInner = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-self: stretch;
-  height: 120px;
+  align-items: flex-start;
+  min-height: 120px;
+  height: auto;
+  gap: 16px;
 `;
 
 const ClubButtonDot = styled(Typography)`
@@ -28,6 +30,7 @@ const ClubButtonDot = styled(Typography)`
   font-size: 12px;
   line-height: 24px;
   width: fit-content;
+  font-family: "Pretendard";
 `;
 
 const ClubButtonDescription = styled(Typography)`
@@ -36,6 +39,7 @@ const ClubButtonDescription = styled(Typography)`
   font-weight: normal;
   font-size: 12px;
   line-height: 24px;
+  font-family: "Pretendard";
 `;
 
 const ClubButton: React.FC<ClubButtonProps> = ({
@@ -56,17 +60,24 @@ const ClubButton: React.FC<ClubButtonProps> = ({
       flexDirection: "column",
     }}
   >
-    <Typography fw="MEDIUM" fs={20} lh={24}>
-      {title}
-    </Typography>
-    {buttonText.map((text, index) => (
-      <FlexWrapper direction="row" gap={16} key={index}>
-        <ClubButtonDot>•</ClubButtonDot>
-        <ClubButtonDescription>{text}</ClubButtonDescription>
+    <ClubButtonTextInner>
+      <Typography fw="MEDIUM" fs={20} lh={24}>
+        {title}
+      </Typography>
+      <FlexWrapper direction="column" gap={16} style={{ height: "100%" }}>
+        {buttonText.map((text, index) => (
+          <FlexWrapper
+            direction="row"
+            gap={16}
+            key={index}
+            style={{ alignItems: "flex-start", height: "100%" }}
+          >
+            <ClubButtonDot>•</ClubButtonDot>
+            <ClubButtonDescription>{text}</ClubButtonDescription>
+          </FlexWrapper>
+        ))}
       </FlexWrapper>
-    ))}
-
-    <ClubButtonTextInner />
+    </ClubButtonTextInner>
   </Card>
 );
 
