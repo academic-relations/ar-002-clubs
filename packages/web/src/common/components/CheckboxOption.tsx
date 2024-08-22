@@ -13,12 +13,22 @@ interface CheckboxOptionProps {
 
 const CheckboxOptionWrapper = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: row;
+  align-items: flex-start;
   gap: 12px;
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
     gap: 8px;
   }
   padding-left: 2px;
+`;
+
+const CheckboxWrapper = styled.div`
+  height: 20px !important;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    height: 16px !important;
+  }
+  justify-content: center;
+  align-items: center;
 `;
 
 const ResponsiveTypography = styled(Typography)`
@@ -36,7 +46,9 @@ const CheckboxOption: React.FC<CheckboxOptionProps> = ({
   onClick,
 }) => (
   <CheckboxOptionWrapper>
-    <Checkbox checked={checked} onClick={onClick} />
+    <CheckboxWrapper>
+      <Checkbox checked={checked} onClick={onClick} />
+    </CheckboxWrapper>
     <ResponsiveTypography ff="PRETENDARD" color="BLACK">
       {optionText}
     </ResponsiveTypography>
