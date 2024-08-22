@@ -3,6 +3,7 @@ import {
   foreignKey,
   int,
   mysqlTable,
+  text,
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
@@ -10,7 +11,7 @@ import {
 import { Club } from "./club.schema";
 import { Division } from "./division.schema";
 import { File } from "./file.schema";
-import { Professor, Student } from "./user.schema";
+import { Executive, Professor, Student } from "./user.schema";
 
 export const RegistrationTypeEnum = mysqlTable("registration_type_enum", {
   enumId: int("enum_id").autoincrement().primaryKey(),
@@ -100,6 +101,22 @@ export const Registration = mysqlTable(
       foreignColumns: [File.id],
     }),
   }),
+);
+
+export const RegistrationExecutiveComment = mysqlTable(
+  "registration_executive_comment",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    registrationId: int("registration_id")
+      .notNull()
+      .references(() => Registration.id),
+    executiveId: int("executive_id")
+      .notNull()
+      .references(() => Executive.id),
+    content: text("content").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
 );
 
 export const RegistrationApplicationStudentStatusEnum = mysqlTable(

@@ -39,7 +39,7 @@ const responseBodyMap = {
       clubNameKr: zClubName,
       clubNameEn: zClubName,
       representative: z.object({
-        studentId: z.coerce.number().int().min(1),
+        studentNumber: z.coerce.number().int().min(1),
         name: z.string().max(30),
       }),
       phoneNumber: zKrPhoneNumber,
