@@ -281,7 +281,6 @@ export class ClubRegistrationRepository {
           registrationActivityPlanFileId: body.activityPlanFileId,
           registrationClubRuleFileId: body.clubRuleFileId,
           registrationExternalInstructionFileId: body.externalInstructionFileId,
-          updatedAt: cur,
         })
         .where(
           and(
@@ -360,6 +359,7 @@ export class ClubRegistrationRepository {
           externalInstructionFileId:
             Registration.registrationExternalInstructionFileId,
           externalInstructionFileName: File3.name,
+          updatedAt: Registration.updatedAt,
         })
         .from(Registration)
         .leftJoin(
@@ -588,6 +588,7 @@ export class ClubRegistrationRepository {
             Registration.registrationExternalInstructionFileId,
           externalInstructionFileName: File3.name,
           isProfessorSigned: Registration.professorApprovedAt,
+          updatedAt: Registration.updatedAt,
         })
         .from(Registration)
         .innerJoin(

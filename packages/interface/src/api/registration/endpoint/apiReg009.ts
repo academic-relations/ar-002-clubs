@@ -49,7 +49,7 @@ const requestBody = z
     divisionConsistency: z.coerce.string().max(255),
     foundationPurpose: z.coerce.string().max(500),
     activityPlan: z.coerce.string().max(500),
-    activityPlanFileId: z.coerce.string().max(128),
+    activityPlanFileId: z.coerce.string().max(128).optional(),
     clubRuleFileId: z.coerce.string().max(128).optional(),
     externalInstructionFileId: z.coerce.string().max(128).optional(),
   })

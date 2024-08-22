@@ -6,23 +6,28 @@ import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/regist
 const registrationTypeEnumChecker = (param: {
   registrationTypeEnumId: RegistrationTypeEnum;
   clubId?: number;
+  activityPlanFileId?: string;
   clubRuleFileId?: string;
 }): boolean => {
   switch (param.registrationTypeEnumId) {
     case RegistrationTypeEnum.NewProvisional:
       if (param.clubId !== undefined) return false;
+      if (param.activityPlanFileId === undefined) return false;
       if (param.clubRuleFileId !== undefined) return false;
       break;
     case RegistrationTypeEnum.ReProvisional:
       if (param.clubId === undefined) return false;
+      if (param.activityPlanFileId === undefined) return false;
       if (param.clubRuleFileId !== undefined) return false;
       break;
     case RegistrationTypeEnum.Promotional:
       if (param.clubId === undefined) return false;
+      if (param.activityPlanFileId === undefined) return false;
       if (param.clubRuleFileId === undefined) return false;
       break;
     case RegistrationTypeEnum.Renewal:
       if (param.clubId === undefined) return false;
+      if (param.activityPlanFileId !== undefined) return false;
       if (param.clubRuleFileId !== undefined) return false;
       break;
     default:
