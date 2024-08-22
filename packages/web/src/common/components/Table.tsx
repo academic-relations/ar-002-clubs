@@ -14,6 +14,7 @@ interface TableProps<T> {
   count?: number;
   footer?: React.ReactNode;
   rowLink?: (row: T) => string | { pathname: string };
+  unit?: string;
 }
 const TableInnerWrapper = styled.div`
   width: calc(100% + (100vw - 100%));
@@ -84,6 +85,7 @@ const Table = <T,>({
   footer = null,
   count = undefined,
   rowLink = undefined,
+  unit = "개",
 }: TableProps<T>) => {
   // 야매로 min-width 바꿔치기 (고치지 마세요)
   // eslint-disable-next-line no-underscore-dangle
@@ -111,7 +113,8 @@ const Table = <T,>({
       <Count>
         {count && (
           <Typography fs={16} lh={20}>
-            총 {count}개
+            총 {count}
+            {unit}
           </Typography>
         )}
       </Count>
