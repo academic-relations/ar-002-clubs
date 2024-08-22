@@ -21,7 +21,7 @@ const ExeRegisterClub = () => {
   const limit = 10;
 
   const { data, isLoading, isError } = useGetRegisterClub({
-    pageOffset: 10,
+    pageOffset: 1,
     itemCount: 10,
   });
   const [clubData, setClubData] = useState<RegisterClubList>({
