@@ -9,7 +9,8 @@ import Typography from "./Typography";
 
 interface TableProps<T> {
   table: TableType<T>;
-  height?: number | undefined;
+  minWidth?: number;
+  height?: number;
   emptyMessage?: string;
   count?: number;
   footer?: React.ReactNode;
@@ -21,11 +22,12 @@ const TableInnerWrapper = styled.div`
   padding: 0 calc((100vw - 100%) / 2);
   overflow-x: auto;
 `;
-const TableInner = styled.table<{ height?: number }>`
+const TableInner = styled.table<{ height?: number; minWidth?: number }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  min-width: 100%;
+  min-width: ${({ minWidth }) =>
+    minWidth ? `max(100%, ${minWidth}px)` : "100%"};
   width: fit-content;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
   border-radius: 8px;
@@ -80,6 +82,7 @@ const Count = styled.div`
 `;
 const Table = <T,>({
   table,
+  minWidth = undefined,
   height = undefined,
   emptyMessage = "",
   footer = null,
@@ -119,7 +122,7 @@ const Table = <T,>({
         )}
       </Count>
       <TableInnerWrapper>
-        <TableInner height={height}>
+        <TableInner height={height} minWidth={minWidth}>
           <Header>
             {table.getHeaderGroups().map(headerGroup => (
               <HeaderRow key={headerGroup.id}>
