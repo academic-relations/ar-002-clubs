@@ -237,7 +237,10 @@ const ClubDetailMainFrame: React.FC<ClubDetailMainFrameProps> = ({
           <PersonInfoWrapper>
             <SectionTitle size="lg">인적 사항 </SectionTitle>
             <CardWrapper>
-              <PersonInfoCard club={club} />
+              <PersonInfoCard
+                club={club}
+                isRegistrationPeriod={isRegistrationPeriod}
+              />
             </CardWrapper>
           </PersonInfoWrapper>
 
