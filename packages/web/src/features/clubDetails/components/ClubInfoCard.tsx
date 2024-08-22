@@ -24,10 +24,9 @@ const ClubInfoRow = styled.div`
   display: flex;
   flex-direction: row;
   gap: 16px;
-
+  justify-content: space-between;
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
     gap: 8px;
-    justify-content: space-between;
   }
   > * {
     flex: 1;

@@ -14,14 +14,21 @@ interface PersonInfoCardProps {
   club: ApiClb002ResponseOK;
 }
 
-const ResponsiveCard = styled(Card)`
+const StyledCard = styled(Card)`
+  width: fit-content;
+  min-width: 300px;
+  max-width: 100%;
+  padding: 16px 20px;
   gap: 16px;
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
-    gap: 8px;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    width: 100%;
+    max-width: 100%;
   }
 `;
+
 const PersonInfoCard: React.FC<PersonInfoCardProps> = ({ club }) => (
-  <ResponsiveCard padding="16px 20px">
+  <StyledCard>
     <PersonInfoItem title="총원" content={`${club.totalMemberCnt}명`} />
     <PersonInfoItem title="대표자" content={club.representative} />
     <PersonInfoItem
@@ -36,7 +43,7 @@ const PersonInfoCard: React.FC<PersonInfoCardProps> = ({ club }) => (
           : club.advisor
       }
     />
-  </ResponsiveCard>
+  </StyledCard>
 );
 
 export default PersonInfoCard;

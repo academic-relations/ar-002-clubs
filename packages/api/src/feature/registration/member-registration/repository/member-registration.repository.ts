@@ -19,6 +19,15 @@ import {
   RegistrationDeadlineD,
 } from "@sparcs-clubs/api/drizzle/schema/registration.schema";
 
+interface IRegistrationApplicationStudent {
+  id: number;
+  studentId: number;
+  clubId: number;
+  registrationApplicationStudentEnumId: number;
+  createdAt: Date;
+  deletedAt?: Date; // nullable
+}
+
 @Injectable()
 export class MemberRegistrationRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
@@ -180,22 +189,18 @@ export class MemberRegistrationRepository {
           and(
             eq(RegistrationApplicationStudent.id, applyId),
             eq(RegistrationApplicationStudent.clubId, clubId),
-            eq(
-              RegistrationApplicationStudent.registrationApplicationStudentEnumId,
-              RegistrationApplicationStudentStatusEnum.Pending,
-            ),
             isNull(RegistrationApplicationStudent.deletedAt),
           ),
         );
       if (result.affectedRows > 2) {
-        await tx.rollback();
         throw new HttpException("Registration update failed", 500);
-      } else if (result.affectedRows === 0) {
         await tx.rollback();
+      } else if (result.affectedRows === 0) {
         throw new HttpException(
           "Not available application",
           HttpStatus.FORBIDDEN,
         );
+        await tx.rollback();
       }
     });
     return {};
@@ -216,5 +221,22 @@ export class MemberRegistrationRepository {
         ),
       );
     return { applies: result };
+  }
+
+  async findMemberRegistrationById(
+    applyId: number,
+  ): Promise<IRegistrationApplicationStudent | null> {
+    const result = await this.db
+      .select()
+      .from(RegistrationApplicationStudent)
+      .where(
+        and(
+          eq(RegistrationApplicationStudent.id, applyId),
+          isNull(RegistrationApplicationStudent.deletedAt),
+        ),
+      )
+      .execute();
+
+    return result.length > 0 ? result[0] : null;
   }
 }

@@ -20,7 +20,8 @@ const PersonInfoItemInner = styled.div`
     line-height: 20px;
     gap: 12px;
   }
-  justify-content: center;
+  justify-content: space-between;
+  flex-grow: 1;
 `;
 
 const PersonInfoTitle = styled(PersonInfoItemInner)`
@@ -29,14 +30,23 @@ const PersonInfoTitle = styled(PersonInfoItemInner)`
   @media (max-width: 1200px) {
     width: 100%;
   }
+  justify-content: center;
 `;
 
 const PersonInfoContent = styled(PersonInfoItemInner)`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  width: 120px;
   @media (max-width: 1200px) {
     width: 100%;
   }
+  width: 120px;
+  text-overflow: ellipsis;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  display: block;
+  flex-grow: 1;
+  min-width: 0;
+  position: relative;
 `;
 
 const PersonInfoItem: React.FC<PersonInfoItemProps> = ({ title, content }) => (

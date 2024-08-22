@@ -9,7 +9,7 @@ import { z } from "zod";
  */
 
 const url = () => `/files/metadata`;
-const method = "GET";
+const method = "POST";
 
 const requestParam = z.object({});
 

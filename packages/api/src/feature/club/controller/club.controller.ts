@@ -20,7 +20,11 @@ import apiClb005, {
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb005";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
-import { Public } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import {
+  Public,
+  Student,
+} from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
 import { ClubService } from "../service/club.service";
 
@@ -48,35 +52,40 @@ export class ClubController {
     return clubInfo;
   }
 
+  @Student()
   @Get("student/clubs/my")
   @UsePipes(new ZodPipe(apiClb003))
-  async getStudentClubsMy(): Promise<ApiClb003ResponseOK> {
-    // TODO: getProfileStudent로 인증 로직 이용해 수정 필요
-    const studentId = 605;
-    const result = await this.clubService.getStudentClubsMy(studentId);
-    // return apiClb003.responseBodyMap[200].parse(result);
+  async getStudentClubsMy(
+    @GetStudent() user: GetStudent,
+  ): Promise<ApiClb003ResponseOK> {
+    const result = await this.clubService.getStudentClubsMy(user.studentId);
     return result;
   }
 
+  @Student()
   @Get("student/clubs/club/:clubId/brief")
   @UsePipes(new ZodPipe(apiClb004))
   async getStudentClubBrief(
+    @GetStudent() user: GetStudent,
     @Param() param: ApiClb004RequestParam,
   ): Promise<ApiClb004ResponseOK> {
-    const studentId = 605;
-    const result = await this.clubService.getStudentClubBrief(studentId, param);
+    const result = await this.clubService.getStudentClubBrief(
+      user.studentId,
+      param,
+    );
     return result;
   }
 
+  @Student()
   @Put("student/clubs/club/:clubId/brief")
   @UsePipes(new ZodPipe(apiClb005))
   async putStudentClubBrief(
+    @GetStudent() user: GetStudent,
     @Param() param: ApiClb005RequestParam,
     @Body() body: ApiClb005RequestBody,
   ): Promise<ApiClb005ResponseCreated> {
-    const studentId = 605;
     const result = await this.clubService.putStudentClubBrief(
-      studentId,
+      user.studentId,
       param,
       body,
     );

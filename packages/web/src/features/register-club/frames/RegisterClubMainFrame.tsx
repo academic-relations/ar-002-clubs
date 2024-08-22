@@ -19,7 +19,7 @@ import ActivityReportFrame from "../components/ActivityReportFrame";
 import AdvancedInformFrame from "../components/AdvancedInformFrame";
 import BasicInformFrame from "../components/BasicInformFrame";
 import ClubRulesFrame from "../components/ClubRulesFrame";
-import useRegisterClub from "../service/useRegisterClub";
+import useRegisterClub from "../services/useRegisterClub";
 import { RegisterClubInterface } from "../types/registerClub";
 
 interface RegisterClubMainFrameProps {
@@ -49,9 +49,6 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   const formCtx = useForm<RegisterClubInterface>({
     mode: "all",
-    defaultValues: {
-      studentId: profile?.studentNumber,
-    },
   });
 
   const {
@@ -88,7 +85,6 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
               : type,
           clubNameKr: isNewClubName ? data.clubNameKr : "",
           clubNameEn: isNewClubName ? data.clubNameEn : "",
-          studentId: data.studentId,
           phoneNumber: data.phoneNumber,
           foundedAt:
             data.foundedMonthAt != null
