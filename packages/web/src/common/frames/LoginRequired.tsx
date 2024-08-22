@@ -1,7 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import styled from "styled-components";
 
 import ErrorPageTemplate from "@sparcs-clubs/web/common/frames/ErrorPageTemplate";
@@ -26,31 +24,21 @@ const ErrorMessage = styled.div`
   }
 `;
 
-const NoManageClub: NextPage = () => {
+const LoginRequired: NextPage = () => {
   // ToDo : 버튼 onClick 연결
-  const router = useRouter();
-
   const Message = (
     <ErrorMessage>
-      이번 학기에 대표자 / 대의원으로
+      현재 접근한 페이지는
       <br />
-      관리하는 동아리가 없습니다
+      로그인해야 볼 수 있습니다
     </ErrorMessage>
   );
-
-  const goToMain = () => {
-    router.push("/");
-  };
-
   return (
     <ErrorPageTemplate
       message={Message}
-      buttons={[
-        { text: "메인 바로가기", onClick: goToMain },
-        { text: "나의 동아리 바로가기", onClick: () => {} },
-      ]}
+      buttons={[{ text: "로그인 바로가기", onClick: () => {} }]}
     />
   );
 };
 
-export default NoManageClub;
+export default LoginRequired;
