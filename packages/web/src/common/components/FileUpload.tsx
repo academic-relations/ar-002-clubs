@@ -9,6 +9,7 @@ import useFileUpload from "../services/postFileUpload";
 
 import usePutFileS3 from "../services/putFileS3";
 
+import ThumbnailPreviewList from "./File/ThumbnailPreviewList";
 import FlexWrapper from "./FlexWrapper";
 import Typography from "./Typography";
 
@@ -83,10 +84,6 @@ const UploadIcon = styled.div`
 
 const HiddenInput = styled.input`
   display: none;
-`;
-
-const FlexExpand = styled.div`
-  flex: 1;
 `;
 
 const FileUpload: React.FC<FileUploadProps> = ({
@@ -180,25 +177,12 @@ const FileUpload: React.FC<FileUploadProps> = ({
         />
       </FileUploadInner>
       <FlexWrapper direction="column" gap={8} padding="0 4px">
-        {files.map(file => (
-          <FlexWrapper direction="row" gap={8} key={file.file.name}>
-            <Icon type="description_outlined" size={16} color="BLACK" />
-            <FlexExpand>
-              <Typography color="BLACK" fs={14} lh={16} fw="REGULAR">
-                {file.file.name}
-              </Typography>
-            </FlexExpand>
-
-            <Icon
-              type="close_outlined"
-              size={16}
-              color="BLACK"
-              onClick={() => {
-                setFiles(files.filter(f => f.file.name !== file.file.name));
-              }}
-            />
-          </FlexWrapper>
-        ))}
+        <ThumbnailPreviewList
+          fileList={files.map(file => ({
+            name: file.file.name,
+            src: URL.createObjectURL(file.file),
+          }))}
+        />
       </FlexWrapper>
     </FlexWrapper>
   );

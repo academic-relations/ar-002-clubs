@@ -12,10 +12,11 @@ import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import FilePreview from "@sparcs-clubs/web/common/components/FilePreview";
+import { fromUUID } from "@sparcs-clubs/web/common/components/File/attachment";
+import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
+import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
@@ -50,11 +51,11 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
 // label prop으로 이름을 넣고, children으로 ActivityDetail들을 넣어 주세요.
 
 const FlexTypography = styled(Typography)`
-display: flex;
-fiex-direction: column;
-gap: 12px;
-align-items: flex-start;
-align-self; stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  align-self: stretch;
 `;
 
 const ActivityDetail: React.FC<{ children: string | ReactNode }> = ({
@@ -150,16 +151,16 @@ const ActivityReportDetail: React.FC = () => {
 
   const activityStatusToProgressStatus: (
     type: ActivityStatusEnum,
-  ) => Status = type => {
+  ) => ProgressCheckSectionStatusEnum = type => {
     switch (type) {
       case ActivityStatusEnum.Applied:
-        return Status.Pending;
+        return ProgressCheckSectionStatusEnum.Pending;
         break;
       case ActivityStatusEnum.Approved:
-        return Status.Approved;
+        return ProgressCheckSectionStatusEnum.Approved;
         break;
       default: // ActivityStatusEnum.Rejected:
-        return Status.Canceled;
+        return ProgressCheckSectionStatusEnum.Canceled;
     }
   };
 
@@ -178,7 +179,10 @@ const ActivityReportDetail: React.FC = () => {
           <ProgressStatus
             labels={["신청 완료", activityStatus(data.activityStatusEnumId)]}
             progress={[
-              { status: Status.Approved, date: data.writtenTime },
+              {
+                status: ProgressCheckSectionStatusEnum.Approved,
+                date: data.writtenTime,
+              },
               {
                 status: activityStatusToProgressStatus(
                   data.activityStatusEnumId,
@@ -218,14 +222,11 @@ const ActivityReportDetail: React.FC = () => {
             <ActivityDetail>첨부 파일</ActivityDetail>
             <ActivityDetail>
               <FilePreviewContainer>
-                {data.evidenceFiles.map(
-                  (evidenceFile: { uuid: string }, index: number) => (
-                    <FilePreview
-                      key={`${evidenceFile.uuid}_${index.toString()}`}
-                      fileName={evidenceFile.uuid}
-                    />
-                  ),
-                )}
+                <ThumbnailPreviewList
+                  fileList={data.evidenceFiles.map((file, _) =>
+                    fromUUID(file.uuid),
+                  )}
+                />
               </FilePreviewContainer>
             </ActivityDetail>
             <ActivityDetail>{`부가 설명: ${data.evidence}`}</ActivityDetail>

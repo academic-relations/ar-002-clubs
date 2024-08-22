@@ -13,6 +13,10 @@ import { ApiReg010ResponseOk } from "@sparcs-clubs/interface/api/registration/en
 import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
 
+import { ApiReg014ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg014";
+import { ApiReg015ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg015";
+import { ApiReg016ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg016";
+import { ApiReg017ResponseCreated } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg017";
 import { ApiReg018ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg018";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import {
@@ -100,8 +104,10 @@ export class ClubRegistrationService {
       body.registrationTypeEnumId,
     );
 
-    const result =
-      await this.clubRegistrationRepository.createRegistration(transformedBody);
+    const result = await this.clubRegistrationRepository.createRegistration(
+      studentId,
+      transformedBody,
+    );
     return result;
   }
 
@@ -269,8 +275,6 @@ export class ClubRegistrationService {
     applyId: number,
     body: ApiReg009RequestBody,
   ): Promise<ApiReg009ResponseOk> {
-    if (studentId !== body.studentId)
-      throw new HttpException("StudentId not match", HttpStatus.BAD_REQUEST);
     // divisionId가 유효한지 확인
     const validateDivisionId =
       await this.divisionPublicService.findDivisionById(body.divisionId);
@@ -363,6 +367,68 @@ export class ClubRegistrationService {
     const result =
       await this.clubRegistrationRepository.getStudentRegistrationsClubRegistrationsMy(
         studentId,
+      );
+    return result;
+  }
+
+  async getExecutiveRegistrationsClubRegistrations(
+    pageOffset: number,
+    itemCount: number,
+  ): Promise<ApiReg014ResponseOk> {
+    const result =
+      await this.clubRegistrationRepository.getExecutiveRegistrationsClubRegistrations(
+        pageOffset,
+        itemCount,
+      );
+    return result;
+  }
+
+  async getExecutiveRegistrationsClubRegistration(
+    applyId: number,
+  ): Promise<ApiReg015ResponseOk> {
+    const result =
+      await this.clubRegistrationRepository.getExecutiveRegistrationsClubRegistration(
+        applyId,
+      );
+    return result;
+  }
+
+  async patchExecutiveRegistrationsClubRegistrationApproval(
+    applyId: number,
+  ): Promise<ApiReg016ResponseOk> {
+    // 동아리 신청, 집행부원 피드백, 동아리 수정 기간인지 확인합니다.
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [
+        RegistrationDeadlineEnum.ClubRegistrationApplication,
+        RegistrationDeadlineEnum.ClubRegistrationModification,
+        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+      ],
+    });
+    const result =
+      await this.clubRegistrationRepository.patchExecutiveRegistrationsClubRegistrationApproval(
+        applyId,
+      );
+    return result;
+  }
+
+  async postExecutiveRegistrationsClubRegistrationSendBack(
+    applyId: number,
+    executiveId: number,
+    comment: string,
+  ): Promise<ApiReg017ResponseCreated> {
+    // 동아리 신청, 집행부원 피드백, 동아리 수정 기간인지 확인합니다.
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [
+        RegistrationDeadlineEnum.ClubRegistrationApplication,
+        RegistrationDeadlineEnum.ClubRegistrationModification,
+        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+      ],
+    });
+    const result =
+      await this.clubRegistrationRepository.postExecutiveRegistrationsClubRegistrationSendBack(
+        applyId,
+        executiveId,
+        comment,
       );
     return result;
   }

@@ -11,6 +11,8 @@ import {
 import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 
+import registrationTypeEnumChecker from "../utils/registrationTypeEnumChecker";
+
 /**
  * @version v0.1
  * @description 동아리 등록 조회
@@ -58,36 +60,15 @@ const responseBodyMap = {
       divisionConsistency: z.coerce.string().max(255),
       foundationPurpose: z.coerce.string().max(500),
       activityPlan: z.coerce.string().max(500),
-      activityPlanFileId: z.coerce.string().max(128),
-      activityPlanFileName: z.coerce.string().max(255),
+      activityPlanFileId: z.coerce.string().max(128).optional(),
+      activityPlanFileName: z.coerce.string().max(255).optional(),
       clubRuleFileId: z.coerce.string().max(128).optional(),
       clubRuleFileName: z.coerce.string().max(255).optional(),
       externalInstructionFileId: z.coerce.string().max(128).optional(),
       externalInstructionFileName: z.coerce.string().max(255).optional(),
+      updatedAt: z.coerce.date(),
     })
-    .refine(args => {
-      switch (args.registrationTypeEnumId) {
-        case RegistrationTypeEnum.NewProvisional:
-          if (args.clubId === undefined) return false;
-          if (args.clubRuleFileId !== undefined) return false;
-          break;
-        case RegistrationTypeEnum.ReProvisional:
-          if (args.clubId !== undefined) return false;
-          if (args.clubRuleFileId !== undefined) return false;
-          break;
-        case RegistrationTypeEnum.Promotional:
-          if (args.clubId !== undefined) return false;
-          if (args.clubRuleFileId === undefined) return false;
-          break;
-        case RegistrationTypeEnum.Renewal:
-          if (args.clubId !== undefined) return false;
-          if (args.clubRuleFileId !== undefined) return false;
-          break;
-        default:
-          break;
-      }
-      return true;
-    }),
+    .refine(args => registrationTypeEnumChecker(args)),
 };
 
 const responseErrorMap = {};

@@ -19,6 +19,15 @@ import {
   RegistrationDeadlineD,
 } from "@sparcs-clubs/api/drizzle/schema/registration.schema";
 
+interface IRegistrationApplicationStudent {
+  id: number;
+  studentId: number;
+  clubId: number;
+  registrationApplicationStudentEnumId: number;
+  createdAt: Date;
+  deletedAt?: Date; // nullable
+}
+
 @Injectable()
 export class MemberRegistrationRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
@@ -180,10 +189,6 @@ export class MemberRegistrationRepository {
           and(
             eq(RegistrationApplicationStudent.id, applyId),
             eq(RegistrationApplicationStudent.clubId, clubId),
-            eq(
-              RegistrationApplicationStudent.registrationApplicationStudentEnumId,
-              RegistrationApplicationStudentStatusEnum.Pending,
-            ),
             isNull(RegistrationApplicationStudent.deletedAt),
           ),
         );
@@ -216,5 +221,22 @@ export class MemberRegistrationRepository {
         ),
       );
     return { applies: result };
+  }
+
+  async findMemberRegistrationById(
+    applyId: number,
+  ): Promise<IRegistrationApplicationStudent | null> {
+    const result = await this.db
+      .select()
+      .from(RegistrationApplicationStudent)
+      .where(
+        and(
+          eq(RegistrationApplicationStudent.id, applyId),
+          isNull(RegistrationApplicationStudent.deletedAt),
+        ),
+      )
+      .execute();
+
+    return result.length > 0 ? result[0] : null;
   }
 }
