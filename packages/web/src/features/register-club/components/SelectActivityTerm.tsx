@@ -15,7 +15,7 @@ const ActivityTermArea = styled.div`
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  padding: 8px 12px 8px 12px;
+  padding: 8px 12px;
   outline: none;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
   border-radius: 4px;
