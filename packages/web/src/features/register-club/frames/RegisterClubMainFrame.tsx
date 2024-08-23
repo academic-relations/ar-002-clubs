@@ -19,7 +19,7 @@ import ActivityReportFrame from "../components/ActivityReportFrame";
 import AdvancedInformFrame from "../components/AdvancedInformFrame";
 import BasicInformFrame from "../components/BasicInformFrame";
 import ClubRulesFrame from "../components/ClubRulesFrame";
-import useRegisterClub from "../service/useRegisterClub";
+import useRegisterClub from "../services/useRegisterClub";
 import { RegisterClubInterface } from "../types/registerClub";
 
 interface RegisterClubMainFrameProps {
@@ -49,9 +49,6 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   const formCtx = useForm<RegisterClubInterface>({
     mode: "all",
-    defaultValues: {
-      studentId: profile?.studentNumber,
-    },
   });
 
   const {
@@ -86,32 +83,30 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
             type === RegistrationTypeEnum.NewProvisional && isCheckedClubName
               ? RegistrationTypeEnum.ReProvisional
               : type,
-          krName: isNewClubName ? data.krName : "",
-          enName: isNewClubName ? data.enName : "",
-          studentId: data.studentId,
+          clubNameKr: isNewClubName ? data.clubNameKr : "",
+          clubNameEn: isNewClubName ? data.clubNameEn : "",
           phoneNumber: data.phoneNumber,
           foundedAt:
             data.foundedMonthAt != null
               ? new Date(+data.foundedYearAt, +data.foundedMonthAt! - 1)
               : new Date(data.foundedYearAt),
           divisionId: data.divisionId,
-          kr활동분야: data.kr활동분야,
-          en활동분야: data.en활동분야,
+          activityFieldKr: data.activityFieldKr,
+          activityFieldEn: data.activityFieldEn,
           professor:
             isCheckedProfessor && data.professor
               ? {
                   name: data.professor.name,
-                  mail: data.professor.mail,
-                  ProfessorEnumId: data.professor.ProfessorEnumId,
+                  email: data.professor.email,
+                  professorEnumId: data.professor.professorEnumId,
                 }
               : undefined,
-          divisionIntegrity: data.divisionIntegrity,
+          divisionConsistency: data.divisionConsistency,
           foundationPurpose: data.foundationPurpose,
           activityPlan: data.activityPlan,
           activityPlanFileId: data.activityPlanFileId,
           clubRuleFileId: data.clubRuleFileId,
           externalInstructionFileId: data.externalInstructionFileId,
-          activityId: data.activityId,
         },
       });
     },

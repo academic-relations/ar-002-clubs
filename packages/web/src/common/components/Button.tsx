@@ -20,6 +20,7 @@ const ButtonInner = styled.button`
   font-size: 16px;
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
+  flex-shrink: 0;
 `;
 
 const ButtonDefaultInner = styled(ButtonInner)`

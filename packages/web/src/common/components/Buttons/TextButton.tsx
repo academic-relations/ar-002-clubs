@@ -22,9 +22,15 @@ const StyledTextButton = styled.button<ButtonProps>`
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   font-size: ${({ fs }) => fs}px;
   line-height: 20px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: ${({ fs }) => fs * 0.875}px;
+    line-height: 16px;
+  }
   font-weight: ${({ theme, fw }) => theme.fonts.WEIGHT[fw]};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   text-decoration: underline;
+  flex-shrink: 0;
+  width: fit-content;
 `;
 
 interface TextButtonProps {

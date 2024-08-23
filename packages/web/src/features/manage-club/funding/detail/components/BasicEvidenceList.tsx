@@ -1,6 +1,6 @@
 import React from "react";
 
-import FilePreview from "@sparcs-clubs/web/common/components/FilePreview";
+import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -21,11 +21,25 @@ const BasicEvidenceList = () => (
     {/* TODO: file이랑 연결 */}
     <ListItem>거래 사실 증빙</ListItem>
     <FlexWrapper direction="column" gap={12} style={{ paddingLeft: 24 }}>
-      <FilePreview fileName="거래 사실 증빙 파일명" />
+      <ThumbnailPreviewList
+        fileList={[
+          {
+            name: "거래 사실 증빙.pdf",
+            src: "https://pdfobject.com/pdf/sample.pdf",
+          },
+        ]}
+      />
     </FlexWrapper>
     <ListItem>거래 세부항목 증빙</ListItem>
     <FlexWrapper direction="column" gap={12} style={{ paddingLeft: 24 }}>
-      <FilePreview fileName="거래 세부항목 증빙 파일명" />
+      <ThumbnailPreviewList
+        fileList={[
+          {
+            name: "거래 세부항목 증빙.pdf",
+            src: "https://pdfobject.com/pdf/sample.pdf",
+          },
+        ]}
+      />
     </FlexWrapper>
   </FlexWrapper>
 );

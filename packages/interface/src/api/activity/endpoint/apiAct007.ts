@@ -68,8 +68,8 @@ type ApiAct007ResponseCreated = z.infer<
 export default apiAct007;
 
 export type {
+  ApiAct007RequestBody,
   ApiAct007RequestParam,
   ApiAct007RequestQuery,
-  ApiAct007RequestBody,
   ApiAct007ResponseCreated,
 };

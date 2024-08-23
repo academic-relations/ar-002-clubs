@@ -1,7 +1,13 @@
 import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
 import { PromotionalPrintingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
+import {
+  RegistrationStatusEnum,
+  RegistrationTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
+
+import { DivisionType } from "@sparcs-clubs/web/types/divisions.types";
 
 import {
   ActivityProfessorApprovalEnum,
@@ -78,7 +84,7 @@ const MemTagList: {
   [key in MemberStatusEnum]: StatusDetail;
 } = {
   [MemberStatusEnum.Applied]: { text: "신청", color: "BLUE" },
-  [MemberStatusEnum.Approved]: { text: "승인", color: "YELLOW" },
+  [MemberStatusEnum.Approved]: { text: "승인", color: "GREEN" },
   [MemberStatusEnum.Rejected]: { text: "반려", color: "RED" },
 };
 
@@ -124,6 +130,40 @@ const ActTypeTagList: {
     color: "PURPLE",
   },
 };
+const RegistrationStatusTagList: {
+  [key in RegistrationStatusEnum]: StatusDetail;
+} = {
+  [RegistrationStatusEnum.Approved]: { text: "승인", color: "GREEN" },
+  [RegistrationStatusEnum.Pending]: { text: "신청", color: "BLUE" },
+  [RegistrationStatusEnum.Rejected]: { text: "반려", color: "RED" },
+};
+
+const RegistrationTypeTagList: { [key in RegistrationTypeEnum]: StatusDetail } =
+  {
+    [RegistrationTypeEnum.Renewal]: { text: "재등록", color: "PURPLE" },
+    [RegistrationTypeEnum.Promotional]: { text: "신규 등록", color: "YELLOW" },
+    [RegistrationTypeEnum.NewProvisional]: { text: "가등록", color: "BLUE" },
+    [RegistrationTypeEnum.ReProvisional]: { text: "가등록", color: "BLUE" },
+  };
+
+const DivisionTypeTagList: { [key in DivisionType]: StatusDetail } = {
+  [DivisionType.InstrumentalMusic]: { text: "연주음악", color: "ORANGE" },
+  [DivisionType.VocalMusic]: { text: "보컬음악", color: "ORANGE" },
+  [DivisionType.BandMusic]: { text: "밴드음악", color: "ORANGE" },
+  [DivisionType.LifeSports]: { text: "생활체육", color: "PINK" },
+  [DivisionType.BallSports]: { text: "구기체육", color: "PINK" },
+  [DivisionType.HumanitiesAcademics]: { text: "인문학술", color: "YELLOW" },
+  [DivisionType.ScienceEngineeringAcademics]: {
+    text: "이공학술",
+    color: "YELLOW",
+  },
+  [DivisionType.PerformingArts]: { text: "연행예술", color: "BLUE" },
+  [DivisionType.ExhibitionCreation]: { text: "전시창작", color: "BLUE" },
+  [DivisionType.LifeCulture]: { text: "생활문화", color: "GREEN" },
+  [DivisionType.Society]: { text: "사회", color: "PURPLE" },
+  [DivisionType.Religion]: { text: "종교", color: "PURPLE" },
+};
+
 export {
   AcfTagList,
   CmsTagList,
@@ -134,4 +174,7 @@ export {
   ProfessorApprovalTagList,
   ActTypeTagList,
   FundingTagList,
+  RegistrationTypeTagList,
+  RegistrationStatusTagList,
+  DivisionTypeTagList,
 };

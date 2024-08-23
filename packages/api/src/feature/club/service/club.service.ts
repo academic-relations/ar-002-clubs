@@ -28,7 +28,7 @@ import type {
 import type {
   ApiClb005RequestBody,
   ApiClb005RequestParam,
-  ApiClb005ResponseCreated,
+  ApiClb005ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb005";
 
 @Injectable()
@@ -76,7 +76,8 @@ export class ClubService {
 
     return {
       id: clubDetails.id,
-      name: clubDetails.name,
+      name_kr: clubDetails.name_kr,
+      name_en: clubDetails.name_en,
       type: clubDetails.type,
       characteristic: clubDetails.characteristic,
       advisor: clubDetails.advisor,
@@ -124,7 +125,8 @@ export class ClubService {
             return {
               type: clubInfo.clubStatusEnumId,
               id: club.id,
-              name: clubName,
+              name_kr: clubName.name_kr,
+              name_en: clubName.name_en,
               isPermanent,
               characteristic: clubInfo.characteristicKr,
               representative: representative
@@ -187,7 +189,7 @@ export class ClubService {
     studentId: number,
     param: ApiClb005RequestParam,
     body: ApiClb005RequestBody,
-  ): Promise<ApiClb005ResponseCreated> {
+  ): Promise<ApiClb005ResponseOk> {
     const { clubId } = param;
     const isAvailableClub = await this.clubTRepository.findClubById(clubId);
     if (!isAvailableClub) {

@@ -10,6 +10,10 @@ const PageTitleInner = styled.div`
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 32px;
   line-height: 48px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 24px;
+    line-height: 36px;
+  }
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.SEMIBOLD};
   color: ${({ theme }) => theme.colors.BLACK};
 `;

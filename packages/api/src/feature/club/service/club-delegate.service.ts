@@ -10,7 +10,15 @@ import type {
   ApiClb006RequestParam,
   ApiClb006ResponseOK,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb006";
+import type {
+  ApiClb015ResponseNoContent,
+  ApiClb015ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
 
+interface ApiClb015ResponseType {
+  status: number;
+  data: ApiClb015ResponseOk | ApiClb015ResponseNoContent;
+}
 @Injectable()
 export default class ClubDelegateService {
   constructor(
@@ -143,5 +151,33 @@ export default class ClubDelegateService {
         "Failed to insert request",
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+  }
+
+  /**
+   * @param studentId 신청자 학생 Id
+   *
+   * @description 동아리 대표자의 변경을 적용합니다.
+   */
+  // 내가 대표자 또는 대의원으로 있는 동아리의 clubId를 가져옵니다. 대표자 또는 대의원이 아닐 경우 204 No Content를 반환합니다.
+  async getStudentClubDelegate(
+    studentId: number,
+  ): Promise<ApiClb015ResponseType> {
+    const result =
+      await this.clubDelegateDRepository.findDelegateByStudentId(studentId);
+
+    if (result.length === 0)
+      return {
+        status: HttpStatus.NO_CONTENT,
+        data: {},
+      };
+    if (result.length > 1)
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+    return {
+      status: HttpStatus.OK,
+      data: {
+        clubId: result[0].clubId,
+        delegateEnumId: result[0].ClubDelegateEnumId,
+      },
+    };
   }
 }

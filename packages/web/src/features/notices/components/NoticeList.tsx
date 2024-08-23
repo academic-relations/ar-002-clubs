@@ -25,16 +25,24 @@ const NoticeListInner = styled.div`
 `;
 
 const NoticeListItemWrapper = styled(Link)`
-  flex-grow: 1;
+  flex-grow: 0;
   min-height: 48px;
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
   padding: 8px;
+  display: flex;
+  overflow: hidden;
+  align-items: center;
 `;
 
 const NoticeList: React.FC<NoticeListProps> = ({ infos }) => (
   <NoticeListInner>
     {infos.map(noticeInfo => (
-      <NoticeListItemWrapper key={noticeInfo.id} href={noticeInfo.link}>
+      <NoticeListItemWrapper
+        key={noticeInfo.id}
+        href={noticeInfo.link}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <NoticeListItem title={noticeInfo.title} date={noticeInfo.date} />
       </NoticeListItemWrapper>
     ))}

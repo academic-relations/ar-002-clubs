@@ -9,7 +9,8 @@ const mockupData: ApiClb001ResponseOK = {
       clubs: [
         {
           id: 1,
-          name: "궁극의 맛",
+          name_kr: "궁극의 맛",
+          name_en: "궁극의 맛",
           type: 1,
           isPermanent: false,
           characteristic: "요리",
@@ -19,7 +20,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 2,
-          name: "샹그릴라",
+          name_kr: "샹그릴라",
+          name_en: "샹그릴라",
           type: 1,
           isPermanent: true,
           characteristic: "애니메이션 감상 및 서브컬쳐",
@@ -29,7 +31,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 3,
-          name: "여로",
+          name_kr: "여로",
+          name_en: "여로",
           type: 1,
           isPermanent: false,
           characteristic: "여행",
@@ -39,7 +42,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 4,
-          name: "예쁜영화",
+          name_kr: "예쁜영화",
+          name_en: "예쁜영화",
           type: 1,
           isPermanent: false,
           characteristic: "영화감상",
@@ -49,7 +53,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 5,
-          name: "칼디",
+          name_kr: "칼디",
+          name_en: "칼디",
           type: 1,
           isPermanent: true,
           characteristic: "커피&바리스타",
@@ -59,7 +64,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 6,
-          name: "판놀음",
+          name_en: "판놀음",
+          name_kr: "판놀음",
           type: 1,
           isPermanent: false,
           characteristic: "보드 게임",
@@ -69,7 +75,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 7,
-          name: "Khartes",
+          name_kr: "Khartes",
+          name_en: "Khartes",
           type: 1,
           isPermanent: false,
           characteristic: "트레이딩 카드 게임",
@@ -79,7 +86,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 8,
-          name: "OPTeamus",
+          name_kr: "OPTeamus",
+          name_en: "OPTeamus",
           type: 1,
           isPermanent: false,
           characteristic: "이스포츠",
@@ -89,7 +97,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 9,
-          name: "THE MIXER",
+          name_kr: "THE MIXER",
+          name_en: "THE MIXER",
           type: 1,
           isPermanent: false,
           characteristic: "칵테일",
@@ -99,7 +108,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 75,
-          name: "패플리",
+          name_kr: "패플리",
+          name_en: "패플리",
           type: 1,
           isPermanent: false,
           characteristic: "패션",
@@ -109,7 +119,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 76,
-          name: "Boardom",
+          name_kr: "Boardom",
+          name_en: "Boardom",
           type: 1,
           isPermanent: false,
           characteristic: "보드게임",
@@ -119,7 +130,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 77,
-          name: "Moonshine",
+          name_kr: "Moonshine",
+          name_en: "Moonshine",
           type: 2,
           isPermanent: false,
           characteristic: "양조",
@@ -129,7 +141,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 89,
-          name: "KASTLE",
+          name_kr: "KASTLE",
+          name_en: "KASTLE",
           type: 2,
           isPermanent: false,
           characteristic: "체스",
@@ -139,7 +152,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 92,
-          name: "카이시엘",
+          name_kr: "카이시엘",
+          name_en: "카이시엘",
           type: 2,
           isPermanent: false,
           characteristic:
@@ -150,7 +164,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 104,
-          name: "COKAIN",
+          name_kr: "COKAIN",
+          name_en: "COKAIN",
           type: 2,
           isPermanent: false,
           characteristic: "코스프레",
@@ -160,7 +175,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 106,
-          name: "모닥불",
+          name_kr: "모닥불",
+          name_en: "모닥불",
           type: 2,
           isPermanent: false,
           characteristic: "캠핑",
@@ -170,7 +186,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 107,
-          name: "카슐랭",
+          name_kr: "카슐랭",
+          name_en: "카슐랭",
           type: 2,
           isPermanent: false,
           characteristic: "맛집탐방",
@@ -180,7 +197,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 110,
-          name: "웅(熊)",
+          name_kr: "웅(熊)",
+          name_en: "웅(熊)",
           type: 2,
           isPermanent: false,
           characteristic: "고기굽기에 대한 연구",
@@ -196,7 +214,8 @@ const mockupData: ApiClb001ResponseOK = {
       clubs: [
         {
           id: 10,
-          name: "이박터",
+          name_kr: "이박터",
+          name_en: "이박터",
           type: 1,
           isPermanent: false,
           characteristic: "연극",
@@ -206,7 +225,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 11,
-          name: "일루젼 카이스트",
+          name_kr: "일루젼 카이스트",
+          name_en: "일루젼 카이스트",
           type: 1,
           isPermanent: false,
           characteristic: "힙합, 스트릿 및 K-POP댄스",
@@ -216,7 +236,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 12,
-          name: "Lunatic",
+          name_kr: "Lunatic",
+          name_en: "Lunatic",
           type: 1,
           isPermanent: false,
           characteristic: "스트릿 댄스",
@@ -226,7 +247,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 13,
-          name: "MindFreak",
+          name_kr: "MindFreak",
+          name_en: "MindFreak",
           type: 1,
           isPermanent: false,
           characteristic: "마술 및 타로",
@@ -236,7 +258,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 14,
-          name: "Number",
+          name_kr: "Number",
+          name_en: "Number",
           type: 1,
           isPermanent: false,
           characteristic: "뮤지컬",
@@ -252,7 +275,8 @@ const mockupData: ApiClb001ResponseOK = {
       clubs: [
         {
           id: 15,
-          name: "곰발바닥",
+          name_kr: "곰발바닥",
+          name_en: "곰발바닥",
           type: 1,
           isPermanent: false,
           characteristic: "수공예",
@@ -262,7 +286,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 16,
-          name: "그리미주아",
+          name_kr: "그리미주아",
+          name_en: "그리미주아",
           type: 1,
           isPermanent: false,
           characteristic: "순수미술",
@@ -272,7 +297,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 17,
-          name: "문학의 뜨락",
+          name_kr: "문학의 뜨락",
+          name_en: "문학의 뜨락",
           type: 1,
           isPermanent: false,
           characteristic: "문예창작 및 합평",
@@ -282,7 +308,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 18,
-          name: "별바라기",
+          name_kr: "별바라기",
+          name_en: "별바라기",
           type: 1,
           isPermanent: false,
           characteristic: "별 관측 및 사진 촬영, 사진 전시회 운영과 외부 출사",
@@ -292,7 +319,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 19,
-          name: "빛따라",
+          name_kr: "빛따라",
+          name_en: "빛따라",
           type: 1,
           isPermanent: false,
           characteristic: "사진",
@@ -302,7 +330,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 20,
-          name: "열정부",
+          name_kr: "열정부",
+          name_en: "열정부",
           type: 1,
           isPermanent: false,
           characteristic:
@@ -313,7 +342,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 21,
-          name: "은막",
+          name_kr: "은막",
+          name_en: "은막",
           type: 1,
           isPermanent: false,
           characteristic: "독립영화 제작",
@@ -323,7 +353,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 91,
-          name: "KAIST Chronicles",
+          name_kr: "KAIST Chronicles",
+          name_en: "KAIST Chronicles",
           type: 2,
           isPermanent: false,
           characteristic: "영문",
@@ -333,7 +364,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 95,
-          name: "위로자전거",
+          name_kr: "위로자전거",
+          name_en: "위로자전거",
           type: 2,
           isPermanent: false,
           characteristic: "새활용",
@@ -343,7 +375,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 98,
-          name: "LEtsGO",
+          name_kr: "LEtsGO",
+          name_en: "LEtsGO",
           type: 2,
           isPermanent: false,
           characteristic: "일반 레고 및 나노블럭 조립 후 전시활동",
@@ -359,7 +392,8 @@ const mockupData: ApiClb001ResponseOK = {
       clubs: [
         {
           id: 22,
-          name: "강적",
+          name_kr: "강적",
+          name_en: "강적",
           type: 1,
           isPermanent: false,
           characteristic: "하드 락 밴드",
@@ -369,7 +403,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 23,
-          name: "동틀무렵",
+          name_kr: "동틀무렵",
+          name_en: "동틀무렵",
           type: 1,
           isPermanent: false,
           characteristic: "모던락 밴드",
@@ -379,7 +414,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 24,
-          name: "인피니트",
+          name_kr: "인피니트",
+          name_en: "인피니트",
           type: 1,
           isPermanent: false,
           characteristic: "메탈 및 얼터너티브 메탈 관련 밴드음악",
@@ -389,7 +425,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 25,
-          name: "창작동화",
+          name_kr: "창작동화",
+          name_en: "창작동화",
           type: 1,
           isPermanent: false,
           characteristic: "재즈 및 창작곡 공연",
@@ -399,7 +436,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 26,
-          name: "CarpeDiem",
+          name_kr: "CarpeDiem",
+          name_en: "CarpeDiem",
           type: 1,
           isPermanent: false,
           characteristic: "팝 밴드",
@@ -409,7 +447,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 27,
-          name: "Praiser",
+          name_kr: "Praiser",
+          name_en: "Praiser",
           type: 1,
           isPermanent: false,
           characteristic: "KAIST 내 크리스천들을 위한 CCM을 연주하는 밴드",
@@ -419,7 +458,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 28,
-          name: "STURGEON",
+          name_kr: "STURGEON",
+          name_en: "STURGEON",
           type: 1,
           isPermanent: false,
           characteristic: "EMO/CORE/PUNK 장르의 밴드음악 합주 및 공연",
@@ -429,7 +469,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 29,
-          name: "Twenties Dream",
+          name_kr: "Twenties Dream",
+          name_en: "Twenties Dream",
           type: 1,
           isPermanent: false,
           characteristic: "펑크락 밴드",
@@ -439,7 +480,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 111,
-          name: "Shift",
+          name_kr: "Shift",
+          name_en: "Shift",
           type: 2,
           isPermanent: false,
           characteristic: "International Rock Band",
@@ -455,7 +497,8 @@ const mockupData: ApiClb001ResponseOK = {
       clubs: [
         {
           id: 30,
-          name: "구토스",
+          name_kr: "구토스",
+          name_en: "구토스",
           type: 1,
           isPermanent: false,
           characteristic: "힙합, R&B",
@@ -465,7 +508,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 31,
-          name: "여섯줄",
+          name_kr: "여섯줄",
+          name_en: "여섯줄",
           type: 1,
           isPermanent: false,
           characteristic: "어쿠스틱 보컬",
@@ -475,7 +519,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 32,
-          name: "HUG",
+          name_kr: "HUG",
+          name_en: "HUG",
           type: 1,
           isPermanent: false,
           characteristic: "버스킹 및 실용음악",
@@ -485,7 +530,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 33,
-          name: "KAIST CHORUS",
+          name_en: "KAIST CHORUS",
+          name_kr: "KAIST CHORUS",
           type: 1,
           isPermanent: false,
           characteristic: "합창 및 아카펠라",
@@ -495,7 +541,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 34,
-          name: "MUSE",
+          name_kr: "MUSE",
+          name_en: "MUSE",
           type: 1,
           isPermanent: false,
           characteristic: "밴드세션&코러스",
@@ -511,7 +558,8 @@ const mockupData: ApiClb001ResponseOK = {
       clubs: [
         {
           id: 35,
-          name: "소리모음",
+          name_kr: "소리모음",
+          name_en: "소리모음",
           type: 1,
           isPermanent: false,
           characteristic: "사물놀이 및 풍물",
@@ -521,7 +569,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 36,
-          name: "FingS",
+          name_kr: "FingS",
+          name_en: "FingS",
           type: 1,
           isPermanent: false,
           characteristic: "핑거스타일 기타",
@@ -531,7 +580,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 37,
-          name: "LP",
+          name_kr: "LP",
+          name_en: "LP",
           type: 1,
           isPermanent: false,
           characteristic: "작곡",
@@ -541,7 +591,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 38,
-          name: "PIAST",
+          name_kr: "PIAST",
+          name_en: "PIAST",
           type: 1,
           isPermanent: false,
           characteristic: "피아노 연주",
@@ -551,7 +602,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 80,
-          name: "FUZE",
+          name_kr: "FUZE",
+          name_en: "FUZE",
           type: 1,
           isPermanent: false,
           characteristic: "디제잉 및 파티플래닝",
@@ -567,7 +619,8 @@ const mockupData: ApiClb001ResponseOK = {
       clubs: [
         {
           id: 39,
-          name: "디딤돌",
+          name_kr: "디딤돌",
+          name_en: "디딤돌",
           type: 1,
           isPermanent: false,
           characteristic: "교육봉사 및 장애인 보조",
@@ -577,7 +630,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 40,
-          name: "EWB-KAIST",
+          name_kr: "EWB-KAIST",
+          name_en: "EWB-KAIST",
           type: 1,
           isPermanent: false,
           characteristic: "적정 기술 개발 및 보급",
@@ -587,7 +641,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 41,
-          name: "K-Let",
+          name_kr: "K-Let",
+          name_en: "K-Let",
           type: 1,
           isPermanent: false,
           characteristic: "청소년 대상 강연 및 멘토링",
@@ -597,7 +652,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 42,
-          name: "KAINATION",
+          name_kr: "KAINATION",
+          name_en: "KAINATION",
           type: 1,
           isPermanent: false,
           characteristic: "기부",
@@ -607,7 +663,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 43,
-          name: "SEED KAIST",
+          name_kr: "SEED KAIST",
+          name_en: "SEED KAIST",
           type: 1,
           isPermanent: false,
           characteristic: "과학 분야 교육봉사",
@@ -617,7 +674,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 44,
-          name: "Silver Lining",
+          name_kr: "Silver Lining",
+          name_en: "Silver Lining",
           type: 1,
           isPermanent: false,
           characteristic: "봉사",
@@ -627,7 +685,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 94,
-          name: "KAIST-SAE",
+          name_kr: "KAIST-SAE",
+          name_en: "KAIST-SAE",
           type: 2,
           isPermanent: false,
           characteristic: "지역사회 봉사 및 환경 보호",
@@ -643,7 +702,8 @@ const mockupData: ApiClb001ResponseOK = {
       clubs: [
         {
           id: 45,
-          name: "네비게이토",
+          name_kr: "네비게이토",
+          name_en: "네비게이토",
           type: 1,
           isPermanent: false,
           characteristic: "크리스천 리더십",
@@ -653,7 +713,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 46,
-          name: "사나래",
+          name_kr: "사나래",
+          name_en: "사나래",
           type: 1,
           isPermanent: false,
           characteristic: "가톨릭(천주교)",
@@ -663,7 +724,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 47,
-          name: "CCC",
+          name_kr: "CCC",
+          name_en: "CCC",
           type: 1,
           isPermanent: false,
           characteristic: "대학생 기독교 선교",
@@ -673,7 +735,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 48,
-          name: "IVF",
+          name_kr: "IVF",
+          name_en: "IVF",
           type: 1,
           isPermanent: false,
           characteristic: "성경연구, 공동체 활동",
@@ -689,7 +752,8 @@ const mockupData: ApiClb001ResponseOK = {
       clubs: [
         {
           id: 49,
-          name: "루키",
+          name_kr: "루키",
+          name_en: "루키",
           type: 1,
           isPermanent: false,
           characteristic: "야구",
@@ -699,7 +763,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 50,
-          name: "아퀼라",
+          name_kr: "아퀼라",
+          name_en: "아퀼라",
           type: 1,
           isPermanent: false,
           characteristic: "풋살",
@@ -709,7 +774,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 51,
-          name: "카이큐",
+          name_kr: "카이큐",
+          name_en: "카이큐",
           type: 1,
           isPermanent: false,
           characteristic: "배구",
@@ -719,7 +785,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 52,
-          name: "투 (TU)",
+          name_kr: "투 (TU)",
+          name_en: "투 (TU)",
           type: 1,
           isPermanent: false,
           characteristic: "농구",
@@ -729,7 +796,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 53,
-          name: "허리케인",
+          name_kr: "허리케인",
+          name_en: "허리케인",
           type: 1,
           isPermanent: false,
           characteristic: "축구",
@@ -739,7 +807,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 54,
-          name: "DOOLLY",
+          name_kr: "DOOLLY",
+          name_en: "DOOLLY",
           type: 1,
           isPermanent: false,
           characteristic: "5 대 5 정통 농구",
@@ -749,7 +818,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 55,
-          name: "EDGE",
+          name_kr: "EDGE",
+          name_en: "EDGE",
           type: 1,
           isPermanent: false,
           characteristic: "탁구",
@@ -759,7 +829,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 56,
-          name: "K-Bird",
+          name_kr: "K-Bird",
+          name_en: "K-Bird",
           type: 1,
           isPermanent: false,
           characteristic: "배드민턴",
@@ -769,7 +840,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 57,
-          name: "STROKE",
+          name_kr: "STROKE",
+          name_en: "STROKE",
           type: 1,
           isPermanent: false,
           characteristic: "테니스",
@@ -779,7 +851,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 81,
-          name: "스페어",
+          name_kr: "스페어",
+          name_en: "스페어",
           type: 1,
           isPermanent: false,
           characteristic: "볼링",
@@ -789,7 +862,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 82,
-          name: "UM",
+          name_kr: "UM",
+          name_en: "UM",
           type: 2,
           isPermanent: false,
           characteristic: "족구",
@@ -799,7 +873,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 93,
-          name: "매버릭스",
+          name_kr: "매버릭스",
+          name_en: "매버릭스",
           type: 2,
           isPermanent: false,
           characteristic: "미식축구",
@@ -809,7 +884,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 101,
-          name: "고래당",
+          name_kr: "고래당",
+          name_en: "고래당",
           type: 2,
           isPermanent: false,
           characteristic: "구(4구, 8볼)",
@@ -819,7 +895,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 108,
-          name: "PUD",
+          name_kr: "PUD",
+          name_en: "PUD",
           type: 2,
           isPermanent: false,
           characteristic: "캐주얼 배드민턴",
@@ -835,7 +912,8 @@ const mockupData: ApiClb001ResponseOK = {
       clubs: [
         {
           id: 58,
-          name: "검우회",
+          name_kr: "검우회",
+          name_en: "검우회",
           type: 1,
           isPermanent: false,
           characteristic: "대한검도",
@@ -845,7 +923,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 59,
-          name: "울랄라",
+          name_kr: "울랄라",
+          name_en: "울랄라",
           type: 1,
           isPermanent: false,
           characteristic: "스포츠 클라이밍",
@@ -855,7 +934,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 60,
-          name: "카이스트 수영팀 가오리",
+          name_kr: "카이스트 수영팀 가오리",
+          name_en: "카이스트 수영팀 가오리",
           type: 1,
           isPermanent: false,
           characteristic: "경영(競泳) 및 핀수영",
@@ -865,7 +945,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 61,
-          name: "KAKI",
+          name_kr: "KAKI",
+          name_en: "KAKI",
           type: 1,
           isPermanent: false,
           characteristic: "스노우보드 및 익스트림 스포츠",
@@ -875,7 +956,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 83,
-          name: "감성",
+          name_kr: "감성",
+          name_en: "감성",
           type: 1,
           isPermanent: false,
           characteristic: "자전거 라이딩",
@@ -885,7 +967,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 85,
-          name: "주짓스님",
+          name_kr: "주짓스님",
+          name_en: "주짓스님",
           type: 1,
           isPermanent: false,
           characteristic: "주짓수, MMA, 킥복싱",
@@ -895,7 +978,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 90,
-          name: "KAIST Winner Wrestling",
+          name_kr: "KAIST Winner Wrestling",
+          name_en: "KAIST Winner Wrestling",
           type: 2,
           isPermanent: false,
           characteristic: "레슬링",
@@ -905,7 +989,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 96,
-          name: "ASCEND",
+          name_kr: "ASCEND",
+          name_en: "ASCEND",
           type: 2,
           isPermanent: false,
           characteristic: "국제 종합운동 동아리",
@@ -915,7 +1000,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 103,
-          name: "쨉쨉원투",
+          name_kr: "쨉쨉원투",
+          name_en: "쨉쨉원투",
           type: 2,
           isPermanent: false,
           characteristic: "복싱",
@@ -925,7 +1011,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 105,
-          name: "북극곰",
+          name_kr: "북극곰",
+          name_en: "북극곰",
           type: 2,
           isPermanent: false,
           characteristic: "유도",
@@ -941,7 +1028,8 @@ const mockupData: ApiClb001ResponseOK = {
       clubs: [
         {
           id: 62,
-          name: "숲",
+          name_kr: "숲",
+          name_en: "숲",
           type: 1,
           isPermanent: false,
           characteristic: "생물의 관찰 및 탐구",
@@ -951,7 +1039,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 63,
-          name: "질주",
+          name_kr: "질주",
+          name_en: "질주",
           type: 1,
           isPermanent: false,
           characteristic: "모터스포츠",
@@ -961,7 +1050,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 64,
-          name: "하제",
+          name_kr: "하제",
+          name_en: "하제",
           type: 1,
           isPermanent: false,
           characteristic: "게임 연구 및 제작",
@@ -971,7 +1061,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 65,
-          name: "GoN",
+          name_kr: "GoN",
+          name_en: "GoN",
           type: 1,
           isPermanent: false,
           characteristic: "정보보안 및 해킹",
@@ -981,7 +1072,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 66,
-          name: "KAIST 수학문제연구회",
+          name_kr: "KAIST 수학문제연구회",
+          name_en: "KAIST 수학문제연구회",
           type: 1,
           isPermanent: false,
           characteristic: "수학",
@@ -991,7 +1083,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 67,
-          name: "KAIST Puple",
+          name_kr: "KAIST Puple",
+          name_en: "KAIST Puple",
           type: 1,
           isPermanent: false,
           characteristic: "퍼즐 연구 및 공유",
@@ -1001,7 +1094,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 68,
-          name: "MR",
+          name_kr: "MR",
+          name_en: "MR",
           type: 1,
           isPermanent: false,
           characteristic: "로봇 연구 및 제작, 메이커 활동",
@@ -1011,7 +1105,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 69,
-          name: "RUN",
+          name_kr: "RUN",
+          name_en: "RUN",
           type: 1,
           isPermanent: false,
           characteristic: "알고리즘 문제 해결",
@@ -1021,7 +1116,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 70,
-          name: "Vlab",
+          name_kr: "Vlab",
+          name_en: "Vlab",
           type: 1,
           isPermanent: false,
           characteristic: "과학퀴즈와 인공지능",
@@ -1031,7 +1127,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 86,
-          name: "Include",
+          name_kr: "Include",
+          name_en: "Include",
           type: 2,
           isPermanent: false,
           characteristic: "AI 학술",
@@ -1041,7 +1138,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 100,
-          name: "GDSC",
+          name_kr: "GDSC",
+          name_en: "GDSC",
           type: 2,
           isPermanent: false,
           characteristic: "KAIST 개발자 네트워킹 및 개발 관련 행사 주최",
@@ -1051,7 +1149,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 102,
-          name: "우주벌레",
+          name_kr: "우주벌레",
+          name_en: "우주벌레",
           type: 2,
           isPermanent: false,
           characteristic: "우주생물학 탐구 및 외계지적생명체 탐사",
@@ -1061,7 +1160,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 109,
-          name: "NUPS(NUPzuki Search club)",
+          name_kr: "NUPS(NUPzuki Search club)",
+          name_en: "NUPS(NUPzuki Search club)",
           type: 2,
           isPermanent: false,
           characteristic:
@@ -1078,7 +1178,8 @@ const mockupData: ApiClb001ResponseOK = {
       clubs: [
         {
           id: 71,
-          name: "Freethinkers KAIST",
+          name_kr: "Freethinkers KAIST",
+          name_en: "Freethinkers KAIST",
           type: 1,
           isPermanent: false,
           characteristic: "자유사상",
@@ -1088,7 +1189,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 72,
-          name: "ICISTS",
+          name_kr: "ICISTS",
+          name_en: "ICISTS",
           type: 1,
           isPermanent: false,
           characteristic: "학술행사 개최",
@@ -1098,7 +1200,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 73,
-          name: "KFAC",
+          name_kr: "KFAC",
+          name_en: "KFAC",
           type: 1,
           isPermanent: false,
           characteristic: "금융 학술 동아리",
@@ -1108,7 +1211,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 74,
-          name: "MSK",
+          name_kr: "MSK",
+          name_en: "MSK",
           type: 1,
           isPermanent: false,
           characteristic: "경영전략",
@@ -1118,7 +1222,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 87,
-          name: "KAIST 법학회 Lawgical",
+          name_kr: "KAIST 법학회 Lawgical",
+          name_en: "KAIST 법학회 Lawgical",
           type: 1,
           isPermanent: false,
           characteristic: "법학",
@@ -1128,7 +1233,8 @@ const mockupData: ApiClb001ResponseOK = {
         },
         {
           id: 99,
-          name: "KAIST LOOKIE",
+          name_kr: "KAIST LOOKIE",
+          name_en: "KAIST LOOKIE",
           type: 2,
           isPermanent: false,
           characteristic: "사회 문제 소셜 임팩트 창출, 소셜 벤처 창업 동아리",

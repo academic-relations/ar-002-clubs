@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
 import {
-  axiosClient,
+  axiosClientWithAuth,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
@@ -13,7 +13,7 @@ export const useGetActivityReport = (activityId: number) =>
   useQuery<ISuccessResponseType, Error>({
     queryKey: [apiAct002.url(activityId)],
     queryFn: async (): Promise<ISuccessResponseType> => {
-      const { data, status } = await axiosClient.get(
+      const { data, status } = await axiosClientWithAuth.get(
         apiAct002.url(activityId),
         {},
       );
