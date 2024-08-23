@@ -27,7 +27,6 @@ const ErrorMessage = styled.div`
 `;
 
 const NoManageClub: NextPage = () => {
-  // ToDo : 버튼 onClick 연결
   const router = useRouter();
 
   const Message = (
@@ -42,12 +41,16 @@ const NoManageClub: NextPage = () => {
     router.push("/");
   };
 
+  const goToMyClub = () => {
+    router.push("/my/clubs");
+  };
+
   return (
     <ErrorPageTemplate
       message={Message}
       buttons={[
         { text: "메인 바로가기", onClick: goToMain },
-        { text: "나의 동아리 바로가기", onClick: () => {} },
+        { text: "나의 동아리 바로가기", onClick: goToMyClub },
       ]}
     />
   );
