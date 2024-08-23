@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 
-import Image from "next/image";
 import Link from "next/link";
 
 import { useTheme } from "styled-components";
@@ -34,7 +33,7 @@ const SPARCSLogo = () => {
       rel={isSmallView ? undefined : "noopener noreferrer"}
     >
       <object data={sparcsSvg} type="image/svg+xml">
-        <Image src={sparcsSvg} alt="SPARCS" height={24} />
+        alt
       </object>
     </Link>
   );
