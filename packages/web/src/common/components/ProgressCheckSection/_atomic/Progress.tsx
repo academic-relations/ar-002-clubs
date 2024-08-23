@@ -38,7 +38,7 @@ const TextWrapper = styled.div`
 `;
 
 const Progress = ({
-  status = Status.Pending,
+  status = ProgressCheckSectionStatusEnum.Pending,
   label,
   date,
   isLatest,
