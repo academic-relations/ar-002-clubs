@@ -13,7 +13,7 @@ import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/C
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { useIsInClub } from "@sparcs-clubs/web/hooks/isInClub";
 
-import { useGetMyClubRegistration } from "../services/getMyClubRegistration";
+import { useGetMyMemberRegistration } from "../services/getMyMemberRegistration";
 import { useRegisterClub } from "../services/registerClub";
 import { useUnregisterClub } from "../services/unregisterClub";
 
@@ -42,7 +42,7 @@ export const RegisterInfo: React.FC<RegisterInfoProps> = ({ club }) => {
     isLoading,
     isError,
     refetch,
-  } = useGetMyClubRegistration();
+  } = useGetMyMemberRegistration();
 
   useEffect(() => {
     if (!myRegistrationList) return;
