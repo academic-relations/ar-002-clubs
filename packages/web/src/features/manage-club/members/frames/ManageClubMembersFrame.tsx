@@ -6,7 +6,7 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
-import AllMemberListFrame from "@sparcs-clubs/web/features/manage-club/members/frames/AllMemberListFrame";
+// import AllMemberListFrame from "@sparcs-clubs/web/features/manage-club/members/frames/AllMemberListFrame";
 import RegisterMemberListFrame from "@sparcs-clubs/web/features/manage-club/members/frames/RegisterMemberListFrame";
 import { useCheckManageClub } from "@sparcs-clubs/web/hooks/checkManageClub";
 
@@ -32,7 +32,7 @@ const ManageClubMembers = () => {
       />
       <RegisterMemberListFrame />
       {/* TODO: registereMember는 신청 시기에만 나오도록 */}
-      <AllMemberListFrame />
+      {/* <AllMemberListFrame /> */}
     </FlexWrapper>
   );
 };
