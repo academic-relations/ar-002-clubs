@@ -10,7 +10,7 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
-import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/clubDetails/services/getMyClub";
+import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/clubDetails/services/getMyClubRegistration";
 import { useRegisterClub } from "@sparcs-clubs/web/features/clubDetails/services/registerClub";
 import { useUnregisterClub } from "@sparcs-clubs/web/features/clubDetails/services/unregisterClub";
 

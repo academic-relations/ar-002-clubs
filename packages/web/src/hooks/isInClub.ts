@@ -2,7 +2,7 @@ import React from "react";
 
 import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
-import { useGetMyClubRegistration } from "../features/clubDetails/services/getMyClub";
+import { useGetMyClubRegistration } from "../features/clubDetails/services/getMyClubRegistration";
 
 export const useIsInClub = (
   clubId: number,
