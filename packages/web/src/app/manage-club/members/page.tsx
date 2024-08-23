@@ -1,25 +1,36 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import AllMemberListFrame from "@sparcs-clubs/web/features/manage-club/members/frames/AllMemberListFrame";
-import RegisterMemberListFrame from "@sparcs-clubs/web/features/manage-club/members/frames/RegisterMemberListFrame";
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
+import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import ManageClubMembers from "@sparcs-clubs/web/features/manage-club/members/frames/ManageClubMembersFrame";
 
-const Members = () => (
-  <FlexWrapper direction="column" gap={60}>
-    <PageHead
-      items={[
-        { name: "대표 동아리 관리", path: "/manage-club" },
-        { name: "회원 명단", path: "/manage-club/members" },
-      ]}
-      title="회원 명단"
-    />
-    <RegisterMemberListFrame />
-    {/* TODO: registereMember는 신청 시기에만 나오도록 */}
-    <AllMemberListFrame />
-  </FlexWrapper>
-);
+const Members = () => {
+  const { isLoggedIn, login, profile } = useAuth();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (isLoggedIn !== undefined || profile !== undefined) {
+      setLoading(false);
+    }
+  }, [isLoggedIn, profile]);
+
+  if (loading) {
+    return <AsyncBoundary isLoading={loading} isError />;
+  }
+
+  if (!isLoggedIn) {
+    return <LoginRequired login={login} />;
+  }
+
+  if (profile !== "undergraduate") {
+    return <NoManageClub />;
+  }
+
+  return <ManageClubMembers />;
+};
 
 export default Members;

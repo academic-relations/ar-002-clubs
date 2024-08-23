@@ -32,7 +32,7 @@ const LabelWrapper = styled.div`
 `;
 
 const ChangeRepresentativeCard: React.FC = () => {
-  const clubId = 1; // TODO: 동아리 id 받아오기
+  const clubId = 23; // TODO: 동아리 id 받아오기
 
   const {
     data: delegatesNow,
