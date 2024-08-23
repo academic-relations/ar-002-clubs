@@ -13,7 +13,7 @@ import { MyChangesFrame } from "@sparcs-clubs/web/features/my/frames/MyChangesFr
 import MyClubFrame from "@sparcs-clubs/web/features/my/frames/MyClubFrame";
 import MyInfoFrame from "@sparcs-clubs/web/features/my/frames/MyInfoFrame";
 import MyRegisterFrame from "@sparcs-clubs/web/features/my/frames/MyRegisterFrame";
-import MyServiceFrame from "@sparcs-clubs/web/features/my/frames/MyServiceFrame";
+// import MyServiceFrame from "@sparcs-clubs/web/features/my/frames/MyServiceFrame";
 
 const ResponsiveWrapper = styled(FlexWrapper)`
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
@@ -51,9 +51,9 @@ const My: React.FC = () => {
       {profile && profile !== "executive" && (
         <MyRegisterFrame profile={profile} />
       )}
-      {(profile === "undergraduate" ||
+      {/* {(profile === "undergraduate" ||
         profile === "master" ||
-        profile === "doctor") && <MyServiceFrame />}
+        profile === "doctor") && <MyServiceFrame />} */}
     </ResponsiveWrapper>
   );
 };

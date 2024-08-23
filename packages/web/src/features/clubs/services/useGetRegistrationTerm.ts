@@ -1,6 +1,7 @@
-import apiReg004 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg004";
+import apiReg004, {
+  ApiReg004ResponseOK,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg004";
 import { useQuery } from "@tanstack/react-query";
-import { z } from "zod";
 
 import mockupData from "@sparcs-clubs/web/features/clubs/services/_mock/mockupRegisTermData";
 import {
@@ -9,11 +10,10 @@ import {
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
-type ISuccessResponseType = z.infer<(typeof apiReg004.responseBodyMap)[200]>;
 export const useGetRegistrationTerm = () =>
-  useQuery<ISuccessResponseType, Error>({
+  useQuery<ApiReg004ResponseOK, Error>({
     queryKey: [apiReg004.url()],
-    queryFn: async (): Promise<ISuccessResponseType> => {
+    queryFn: async (): Promise<ApiReg004ResponseOK> => {
       const { data, status } = await axiosClientWithAuth.get(
         apiReg004.url(),
         {},
@@ -30,8 +30,5 @@ export const useGetRegistrationTerm = () =>
   });
 
 defineAxiosMock(mock => {
-  mock.onGet(apiReg004.url()).reply(() => {
-    const dummy: z.infer<(typeof apiReg004.responseBodyMap)[200]> = mockupData;
-    return [200, dummy];
-  });
+  mock.onGet(apiReg004.url()).reply(() => [200, mockupData]);
 });

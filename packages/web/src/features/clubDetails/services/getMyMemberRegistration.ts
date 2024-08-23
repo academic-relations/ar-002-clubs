@@ -12,7 +12,7 @@ import mockupRegistraion from "./_mock/mockupRegistraion";
 
 import type { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 
-export const useGetMyClubRegistration = () =>
+export const useGetMyMemberRegistration = () =>
   useQuery<ApiReg006ResponseOk, Error>({
     queryKey: [apiReg006.url()],
 
