@@ -5,6 +5,8 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+
 import ActivityTermRow from "./ActivityTermRow";
 
 export interface ActivityTermProps {
@@ -65,19 +67,21 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
     });
   };
 
-  const isEmpty = () => {
+  const isEmpty = () => activityTermList.length === 0;
+
+  const isSomethingEmpty = () => {
     if (activityTermList.length === 0) {
-      return true;
+      return false;
     }
-    return activityTermList.every(
-      term => term.startDate === "" && term.endDate === "",
+    return activityTermList.some(
+      term => term.startDate === "" || term.endDate === "",
     );
   };
 
   const checkError = () => hasErrorList.some(error => error);
 
   const handleConfirm = () => {
-    if (isEmpty() || checkError()) return;
+    if (isEmpty() || isSomethingEmpty() || checkError()) return;
 
     onConfirm(activityTermList);
   };
@@ -104,6 +108,16 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
           >
             활동 기간 추가
           </IconButton>
+          {isEmpty() && (
+            <Typography fw="MEDIUM" fs={12} lh={18} color="RED.600">
+              기간을 하나 이상 추가해주세요.
+            </Typography>
+          )}
+          {isSomethingEmpty() && (
+            <Typography fw="MEDIUM" fs={12} lh={18} color="RED.600">
+              기간을 입력하거나 해당 항목을 삭제해주세요.
+            </Typography>
+          )}
         </FlexWrapper>
       </CancellableModalContent>
     </Modal>
