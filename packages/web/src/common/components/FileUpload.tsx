@@ -13,6 +13,7 @@ import FlexWrapper from "./FlexWrapper";
 import Typography from "./Typography";
 
 interface FileUploadProps {
+  fileId?: string;
   placeholder?: string;
   onChange?: (string: string[]) => void;
   allowedTypes?: string[];
@@ -90,6 +91,7 @@ const FlexExpand = styled.div`
 `;
 
 const FileUpload: React.FC<FileUploadProps> = ({
+  fileId = "file-upload-input",
   placeholder = "파일을 선택해주세요",
   onChange = () => {},
   allowedTypes = [],
@@ -140,7 +142,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   const handleClick = () => {
-    document.getElementById("file-upload-input")?.click();
+    document.getElementById(fileId)?.click();
   };
 
   const text = useMemo(() => {
@@ -175,7 +177,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
           type="file"
           accept={allowedTypes.join(",")}
           multiple={multiple}
-          id="file-upload-input"
+          id={fileId}
           onChange={handleFileChange}
         />
       </FileUploadInner>
