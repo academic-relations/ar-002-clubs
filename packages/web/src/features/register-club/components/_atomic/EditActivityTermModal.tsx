@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -32,6 +32,18 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
   const [hasErrorList, setHasErrorList] = useState<boolean[]>(
     Array.from({ length: initialData.length }, () => false),
   );
+  const [isSmallView, setIsSmallView] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallView(window.innerWidth <= 600);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const addRow = () => {
     setActivityTermList(prevList => [
@@ -88,7 +100,11 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <CancellableModalContent onClose={onClose} onConfirm={handleConfirm}>
-        <FlexWrapper direction="column" gap={12}>
+        <FlexWrapper
+          direction="column"
+          gap={12}
+          style={{ minWidth: isSmallView ? "320px" : "545px" }}
+        >
           {activityTermList.map((term, index) => (
             <ActivityTermRow
               key={index}
