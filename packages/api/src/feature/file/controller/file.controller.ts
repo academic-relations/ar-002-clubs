@@ -62,7 +62,7 @@ export class FileController {
     };
   }
 
-  @Get("files/download-links")
+  @Post("files/download-links")
   @UsePipes(new ZodPipe(apiFil003))
   async getFilesDownloadLinks(
     @Req() { user }: Request & UserAccessTokenPayload,
@@ -76,7 +76,7 @@ export class FileController {
     return result;
   }
 
-  @Get("files/metadata")
+  @Post("files/metadata")
   @UsePipes(new ZodPipe(apiFil002))
   async getFilesMetadata(
     @Req() req: Request & UserAccessTokenPayload,

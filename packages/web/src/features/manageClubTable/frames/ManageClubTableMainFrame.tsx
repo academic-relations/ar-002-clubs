@@ -11,8 +11,6 @@ import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import paths from "@sparcs-clubs/web/constants/paths";
-
 import {
   activityCertificateColumnSort,
   commonSpaceColumnSort,
@@ -139,10 +137,14 @@ const ManageClubTableMainFrame: React.FC<ManageClubTableMainFrameProps> = ({
   );
 
   const headers = headerTypes(pageType);
-  const title =
-    pageType === "rental-business"
-      ? "대여 사업 신청"
-      : paths.SERVICE.sub.find(value => value.path.includes(pageType))?.name;
+
+  const titles = {
+    "rental-business": "대여 사업 신청",
+    "printing-business": "홍보물 인쇄",
+    "activity-certificate": "활동확인서 발급",
+    "common-space": "공용공간 비정기사용",
+  };
+  const title = titles[pageType];
 
   return (
     <FlexWrapper direction="column" gap={60}>

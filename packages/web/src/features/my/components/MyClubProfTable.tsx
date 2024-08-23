@@ -72,7 +72,9 @@ const columns = [
     size: 128,
   }),
 ];
-const MyClubTable: React.FC<MyClubTableProps> = ({ clubProfRegisterList }) => {
+const MyClubProfTable: React.FC<MyClubTableProps> = ({
+  clubProfRegisterList,
+}) => {
   const table = useReactTable({
     columns,
     data: clubProfRegisterList.items,
@@ -90,4 +92,4 @@ const MyClubTable: React.FC<MyClubTableProps> = ({ clubProfRegisterList }) => {
     />
   );
 };
-export default MyClubTable;
+export default MyClubProfTable;

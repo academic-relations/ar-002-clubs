@@ -1,3 +1,5 @@
+import { MemberStatusEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
+
 const mockSemester = "봄";
 const mockDeadline = new Date();
 
@@ -12,6 +14,56 @@ const mockAllSemesters = {
     { id: 7, year: 2023, name: "봄" },
     { id: 8, year: 2023, name: "가을" },
     { id: 9, year: 2024, name: "봄" },
+  ],
+};
+
+const mockRegisterMembers = {
+  members: [
+    {
+      id: 1,
+      status: MemberStatusEnum.Applied,
+      applicationDate: new Date(),
+      studentId: "20200510",
+      applicantName: "이지윤",
+      phoneNumber: "XXX-XXXX-XXXX",
+      email: "nicolelee2001@kaist.ac.kr",
+    },
+    {
+      id: 2,
+      status: MemberStatusEnum.Applied,
+      applicationDate: new Date(),
+      studentId: "20200510",
+      applicantName: "박지호",
+      phoneNumber: "XXX-XXXX-XXXX",
+      email: "nicolelee2001@kaist.ac.kr",
+    },
+    {
+      id: 3,
+      status: MemberStatusEnum.Applied,
+      applicationDate: new Date(),
+      studentId: "20200510",
+      applicantName: "박병찬",
+      phoneNumber: "XXX-XXXX-XXXX",
+      email: "nicolelee2001@kaist.ac.kr",
+    },
+    {
+      id: 4,
+      status: MemberStatusEnum.Approved,
+      applicationDate: new Date(),
+      studentId: "20200510",
+      applicantName: "이도라",
+      phoneNumber: "XXX-XXXX-XXXX",
+      email: "nicolelee2001@kaist.ac.kr",
+    },
+    {
+      id: 5,
+      status: MemberStatusEnum.Rejected,
+      applicationDate: new Date(),
+      studentId: "20200510",
+      applicantName: "스팍스",
+      phoneNumber: "XXX-XXXX-XXXX",
+      email: "nicolelee2001@kaist.ac.kr",
+    },
   ],
 };
 
@@ -98,4 +150,10 @@ const mockSemesterMembers = {
   ],
 };
 
-export { mockDeadline, mockSemester, mockAllSemesters, mockSemesterMembers };
+export {
+  mockDeadline,
+  mockSemester,
+  mockAllSemesters,
+  mockRegisterMembers,
+  mockSemesterMembers,
+};

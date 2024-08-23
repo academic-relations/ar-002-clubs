@@ -14,6 +14,7 @@ import "viewerjs/dist/viewer.css";
 interface ThumbnailPreviewListProps {
   fileList: Attachment[];
 }
+
 const ThumbnailPreviewList: React.FC<ThumbnailPreviewListProps> = ({
   fileList,
 }: ThumbnailPreviewListProps) => {

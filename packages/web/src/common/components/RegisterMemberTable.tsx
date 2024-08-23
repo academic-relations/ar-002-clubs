@@ -8,13 +8,12 @@ import {
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import { DivisionTypeTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import mockupRegistrationMember from "@sparcs-clubs/web/features/executive/_mock/mockMemberRegistration";
+import mockupRegistrationMember from "@sparcs-clubs/web/features/executive/register-member/_mock/mockMemberRegistration";
 import {
   getTagColorFromClubType,
+  getTagColorFromDivision,
   getTagContentFromClubType,
 } from "@sparcs-clubs/web/types/clubdetail.types";
-import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface RegisterMemberTableProps {
   registerMemberList: typeof mockupRegistrationMember;
@@ -45,7 +44,7 @@ const columns = [
     id: "division",
     header: "분과",
     cell: info => {
-      const tagColor = getTagDetail(info.getValue(), DivisionTypeTagList).color;
+      const tagColor = getTagColorFromDivision(`${info.getValue()}`);
 
       return <Tag color={tagColor}>{info.getValue()}</Tag>;
     },

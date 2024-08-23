@@ -117,12 +117,12 @@ export class MemberRegistrationService {
       applyStatusEnumId !== RegistrationApplicationStudentStatusEnum.Rejected
     )
       throw new HttpException("Invalid status enum", HttpStatus.BAD_REQUEST);
-    const isPresident = await this.clubPublicService.isStudentPresident(
+    const isDelegate = await this.clubPublicService.isStudentDelegate(
       studentId,
       clubId,
     );
-    if (!isPresident)
-      throw new HttpException("Not a club president", HttpStatus.FORBIDDEN);
+    if (!isDelegate)
+      throw new HttpException("Not a club delegate", HttpStatus.FORBIDDEN);
     const ismemberRegistrationEvent =
       await this.memberRegistrationRepository.isMemberRegistrationEvent();
     if (!ismemberRegistrationEvent)
@@ -130,6 +130,53 @@ export class MemberRegistrationService {
         "Not a member registration event duration",
         HttpStatus.BAD_REQUEST,
       );
+
+    const application =
+      await this.memberRegistrationRepository.findMemberRegistrationById(
+        applyId,
+      );
+    if (!application) {
+      throw new HttpException("Application not found", HttpStatus.NOT_FOUND);
+    }
+
+    const applicationStudentId = application.studentId;
+    const isAlreadyMember = await this.clubPublicService.isStudentBelongsTo(
+      applicationStudentId, // 동아리 가입 신청 내부의 studentId 사용
+      clubId,
+    );
+
+    if (
+      applyStatusEnumId === RegistrationApplicationStudentStatusEnum.Approved
+    ) {
+      if (isAlreadyMember)
+        throw new HttpException(
+          "student is already belongs to this club",
+          HttpStatus.BAD_REQUEST,
+        );
+      else
+        await this.clubPublicService.addStudentToClub(
+          applicationStudentId,
+          clubId,
+        );
+    } else if (
+      applyStatusEnumId === RegistrationApplicationStudentStatusEnum.Rejected
+    ) {
+      const isAplicatedStudentDelegate =
+        await this.clubPublicService.isStudentDelegate(
+          applicationStudentId,
+          clubId,
+        );
+      if (isAplicatedStudentDelegate)
+        throw new HttpException(
+          "club delegate cannot be rejected",
+          HttpStatus.BAD_REQUEST,
+        );
+      else
+        await this.clubPublicService.removeStudentFromClub(
+          applicationStudentId,
+          clubId,
+        );
+    }
     const result =
       await this.memberRegistrationRepository.patchMemberRegistration(
         applyId,
@@ -143,12 +190,12 @@ export class MemberRegistrationService {
     studentId: number,
     clubId: number,
   ): Promise<ApiReg008ResponseOk> {
-    const isPresident = await this.clubPublicService.isStudentPresident(
+    const isDelegate = await this.clubPublicService.isStudentDelegate(
       studentId,
       clubId,
     );
-    if (!isPresident)
-      throw new HttpException("Not a club president", HttpStatus.FORBIDDEN);
+    if (!isDelegate)
+      throw new HttpException("Not a club delegate", HttpStatus.FORBIDDEN);
     const ismemberRegistrationEvent =
       await this.memberRegistrationRepository.isMemberRegistrationEvent();
     if (!ismemberRegistrationEvent)

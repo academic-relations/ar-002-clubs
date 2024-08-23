@@ -3,13 +3,13 @@
 // import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import React from "react";
 
-import Link from "next/link";
+// import Link from "next/link";
 import styled from "styled-components";
 
-import paths from "@sparcs-clubs/web/constants/paths";
+// import paths from "@sparcs-clubs/web/constants/paths";
 
 import MoreSectionTitle from "../components/MoreSectionTitle";
-import ServiceCard from "../components/ServiceCard";
+// import ServiceCard from "../components/ServiceCard";
 
 const ServiceSectionFrameInner = styled.div`
   display: flex;
@@ -45,7 +45,7 @@ const ServiceSectionFrame: React.FC = () => (
   <ServiceSectionFrameInner>
     <MoreSectionTitle title="서비스 신청" showMore={false} />
     <ServiceCardWrapper>
-      <Link
+      {/* <Link
         href={paths.SERVICE.sub[0].path}
         style={{ display: "flex", flexDirection: "column" }}
       >
@@ -68,7 +68,7 @@ const ServiceSectionFrame: React.FC = () => (
         style={{ display: "flex", flexDirection: "column" }}
       >
         <ServiceCard serviceTitle="공용공간 비정기사용신청" serviceLink="" />
-      </Link>
+      </Link> */}
     </ServiceCardWrapper>
   </ServiceSectionFrameInner>
 );

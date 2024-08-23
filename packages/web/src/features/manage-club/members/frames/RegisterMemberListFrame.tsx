@@ -14,7 +14,6 @@ const RegisterMemberListWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding-left: 24px;
 `;
 
 const RegisterMemberListFrame = () => (

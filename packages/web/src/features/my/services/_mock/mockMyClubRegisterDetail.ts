@@ -6,6 +6,18 @@ import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
+const mockMyClubRegisterList = {
+  registrations: [
+    {
+      id: 1,
+      registrationTypeEnumId: RegistrationTypeEnum.Promotional,
+      registrationStatusEnumId: RegistrationStatusEnum.Pending,
+      krName: "스팍스",
+      enName: "SPACRS",
+    },
+  ],
+};
+
 const mockMyClubRegisterDetail = {
   id: 1,
   registrationStatusEnum: RegistrationStatusEnum.Pending,
@@ -53,4 +65,8 @@ const mockMyClubRegisterAcf = {
   offset: 3,
 };
 
-export { mockMyClubRegisterDetail, mockMyClubRegisterAcf };
+export {
+  mockMyClubRegisterDetail,
+  mockMyClubRegisterAcf,
+  mockMyClubRegisterList,
+};

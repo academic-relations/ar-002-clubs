@@ -21,6 +21,11 @@ const TagInner = styled.div<{ color: TagColor; width: string }>`
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: 14px;
   line-height: 16px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 12px;
+    line-height: 14px;
+    padding: 2px 8px;
+  }
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   color: ${({ theme, color }) =>
     color === "RED" ? theme.colors.WHITE : theme.colors[color][600]};

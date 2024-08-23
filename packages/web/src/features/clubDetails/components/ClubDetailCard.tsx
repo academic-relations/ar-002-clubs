@@ -16,6 +16,10 @@ const ClubDetailText = styled.div`
   width: 100%;
   font-size: 16px;
   line-height: 28px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 14px;
+    line-height: 20px;
+  }
   font-weight: 400;
 `;
 
@@ -32,7 +36,7 @@ const EmptyDetailText = styled.div`
 `;
 
 const ClubDetailCard: React.FC<ClubDetailCardProps> = ({ club }) => (
-  <Card gap={16} padding="16px 20px">
+  <Card gap={16} padding="16px 20px" style={{ flexGrow: "1" }}>
     {club.description ? (
       <ClubDetailText>{club.description}</ClubDetailText>
     ) : (

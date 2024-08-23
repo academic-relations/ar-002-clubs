@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
+import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { hangulIncludes } from "es-hangul";
 
 import styled from "styled-components";
@@ -13,6 +14,8 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
 import { useGetClubsList } from "@sparcs-clubs/web/features/clubs/services/useGetClubsList";
+import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
+import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 const ResponsiveWrapper = styled(FlexWrapper)`
   gap: 60px;
@@ -25,8 +28,39 @@ const ResponsiveWrapper = styled(FlexWrapper)`
 
 const Clubs: React.FC = () => {
   const { data, isLoading, isError } = useGetClubsList();
-  const isRegistrationPeriod = true;
+  const {
+    data: termData,
+    isLoading: isLoadingTerm,
+    isError: isErrorTerm,
+  } = useGetRegistrationTerm();
+  const [isRegistrationPeriod, setIsRegistrationPeriod] = useState<boolean>();
+  const [memberRegistrationPeriodEnd, setMemberRegistrationPeriodEnd] =
+    useState<Date>(new Date());
   const [searchText, setSearchText] = useState<string>("");
+
+  useEffect(() => {
+    if (termData) {
+      const now = new Date();
+      const currentEvents = termData.events.filter(
+        event => now >= event.startTerm && now <= event.endTerm,
+      );
+      if (currentEvents.length === 0) {
+        setIsRegistrationPeriod(false);
+        return;
+      }
+      const registrationEvent = currentEvents.filter(
+        event =>
+          event.registrationEventEnumId ===
+          RegistrationDeadlineEnum.StudentRegistrationApplication,
+      );
+      if (registrationEvent.length > 0) {
+        setIsRegistrationPeriod(true);
+        setMemberRegistrationPeriodEnd(registrationEvent[0].endTerm);
+      } else {
+        setIsRegistrationPeriod(false);
+      }
+    }
+  }, [termData]);
 
   const filteredDivisions = useMemo(
     () =>
@@ -57,9 +91,14 @@ const Clubs: React.FC = () => {
         items={[{ name: "동아리 목록", path: "/clubs" }]}
         title="동아리 목록"
       />
-      {isRegistrationPeriod && (
-        <Info text="현재는 2024년 봄학기 동아리 신청 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
-      )}
+      <AsyncBoundary isLoading={isLoadingTerm} isError={isErrorTerm}>
+        {isRegistrationPeriod && (
+          <Info
+            text={`현재는 2024년 가을학기 동아리 신청 기간입니다 (신청 마감 : ${formatDateTime(memberRegistrationPeriodEnd)})`}
+          />
+        )}
+      </AsyncBoundary>
+
       <SearchInput
         searchText={searchText}
         handleChange={setSearchText}

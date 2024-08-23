@@ -26,11 +26,15 @@ const formatSlashDateTime = (date: Date) =>
 const formatDotDate = (date: Date) =>
   format(date, "yyyy.MM.dd", { locale: ko });
 
+const formatDotSimpleDate = (date: Date) =>
+  format(date, "yy.MM.dd", { locale: ko });
+
 const formatDotDetailDate = (date: Date) =>
   format(date, "yyyy.MM.dd HH:mm", { locale: ko });
 
 export {
   formatDate,
+  formatDotSimpleDate,
   formatDateTime,
   formatDotDate,
   formatMonth,

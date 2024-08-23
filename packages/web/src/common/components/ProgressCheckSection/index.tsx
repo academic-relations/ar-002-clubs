@@ -3,11 +3,11 @@ import React from "react";
 import styled from "styled-components";
 
 import Progress from "./_atomic/Progress";
-import { Status } from "./_atomic/ProgressDot";
 import ProgressLine from "./_atomic/ProgressLine";
+import { ProgressCheckSectionStatusEnum } from "./progressCheckStationStatus";
 
 export interface StatusAndDate {
-  status: Status;
+  status: ProgressCheckSectionStatusEnum;
   date: Date | undefined;
 }
 interface ProgressCheckSectionProps {

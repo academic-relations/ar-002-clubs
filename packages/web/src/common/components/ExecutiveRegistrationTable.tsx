@@ -13,7 +13,7 @@ import {
   RegistrationStatusTagList,
   RegistrationTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
-import { RegisterClubList } from "@sparcs-clubs/web/features/register-club/service/_mock/mockRegisterClub";
+import { RegisterClubList } from "@sparcs-clubs/web/features/executive/register-club/services/_mock/mockRegisterClub";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface ExecutiveRegistrationTableProps {
@@ -23,7 +23,7 @@ interface ExecutiveRegistrationTableProps {
 const columnHelper = createColumnHelper<RegisterClubList["items"][number]>();
 
 const columns = [
-  columnHelper.accessor("status", {
+  columnHelper.accessor("registrationStatusEnumId", {
     id: "status",
     header: "상태",
     cell: info => {
@@ -39,7 +39,7 @@ const columns = [
     },
     size: 90,
   }),
-  columnHelper.accessor("type", {
+  columnHelper.accessor("registrationTypeEnumId", {
     id: "type",
     header: "구분",
     cell: info => {
@@ -55,7 +55,7 @@ const columns = [
     },
     size: 120,
   }),
-  columnHelper.accessor("division", {
+  columnHelper.accessor("divisionId", {
     id: "division",
     header: "분과",
     cell: info => {
@@ -71,23 +71,23 @@ const columns = [
     },
     size: 120,
   }),
-  columnHelper.accessor("clubName", {
+  columnHelper.accessor("clubNameKr", {
     id: "clubName",
     header: "동아리",
     cell: info => info.getValue(),
   }),
-  columnHelper.accessor("president", {
+  columnHelper.accessor("representativeName", {
     id: "president",
     header: "대표자",
     cell: info => info.getValue(),
   }),
-  columnHelper.accessor("activityField", {
+  columnHelper.accessor("activityFieldKr", {
     id: "activityField",
     header: "활동 분야",
     cell: info => info.getValue(),
     size: 240,
   }),
-  columnHelper.accessor("advisorProfessor", {
+  columnHelper.accessor("professorName", {
     id: "advisorProfessor",
     header: "지도교수",
     cell: info => info.getValue(),
@@ -104,7 +104,13 @@ const ExecutiveRegistrationTable: React.FC<ExecutiveRegistrationTableProps> = ({
     enableSorting: false,
   });
 
-  return <Table table={table} count={registerList.total} />;
+  return (
+    <Table
+      table={table}
+      count={registerList.total}
+      emptyMessage="동아리 등록 신청 내역이 없습니다."
+    />
+  );
 };
 
 export default ExecutiveRegistrationTable;

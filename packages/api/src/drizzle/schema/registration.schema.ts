@@ -3,6 +3,7 @@ import {
   foreignKey,
   int,
   mysqlTable,
+  text,
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
@@ -10,7 +11,7 @@ import {
 import { Club } from "./club.schema";
 import { Division } from "./division.schema";
 import { File } from "./file.schema";
-import { Professor, Student } from "./user.schema";
+import { Executive, Professor, Student } from "./user.schema";
 
 export const RegistrationTypeEnum = mysqlTable("registration_type_enum", {
   enumId: int("enum_id").autoincrement().primaryKey(),
@@ -59,7 +60,7 @@ export const Registration = mysqlTable(
     registrationActivityPlanFileId: varchar(
       "registration_activity_plan_file_id",
       { length: 128 },
-    ).notNull(),
+    ),
     registrationClubRuleFileId: varchar("registration_club_rule_file_id", {
       length: 128,
     }),
@@ -98,6 +99,30 @@ export const Registration = mysqlTable(
       name: "registration_external_instruction_file_id_file_id_fk",
       columns: [table.registrationExternalInstructionFileId],
       foreignColumns: [File.id],
+    }),
+  }),
+);
+
+export const RegistrationExecutiveComment = mysqlTable(
+  "registration_executive_comment",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    registrationId: int("registration_id").notNull(),
+    executiveId: int("executive_id").notNull(),
+    content: text("content").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    registrationExecutiveCommentRegistrationIdFk: foreignKey({
+      name: "registration_executive_comment_registration_id_fk",
+      columns: [table.registrationId],
+      foreignColumns: [Registration.id],
+    }),
+    registrationExecutiveCommentExecutiveIdFk: foreignKey({
+      name: "registration_executive_comment_executive_id_fk",
+      columns: [table.executiveId],
+      foreignColumns: [Executive.id],
     }),
   }),
 );
