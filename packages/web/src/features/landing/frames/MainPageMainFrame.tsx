@@ -6,7 +6,6 @@ import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 import NoticeSectionFrame from "./NoticeSectionFrame";
@@ -54,7 +53,6 @@ const ResponsiveSloganTypography = styled(Typography)`
 
 const MainPageMainFrame: React.FC = () => (
   <FlexWrapper direction="column" gap={60}>
-    <SelectActivityTerm />
     <PageTitleWrapper>
       <ResponsiveSloganTypography
         fw="SEMIBOLD"
