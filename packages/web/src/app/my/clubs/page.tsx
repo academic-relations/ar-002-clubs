@@ -7,6 +7,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
+import NotForExecutive from "@sparcs-clubs/web/common/frames/NotForExecutive";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import MyClubsMainFrame from "@sparcs-clubs/web/features/my/clubs/frames/MyClubsMainFrame";
 
@@ -26,6 +27,10 @@ const MyClubs = () => {
 
   if (!isLoggedIn) {
     return <LoginRequired login={login} />;
+  }
+
+  if (profile === "executive") {
+    return <NotForExecutive />;
   }
 
   return (
