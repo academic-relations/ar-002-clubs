@@ -9,8 +9,9 @@ const ActivityTermRow: React.FC<{
   endDate: string;
   onDateChange: (index: number, start: string, end: string) => void;
   onDelete: (index: number) => void;
+  onError: (index: number, hasError: boolean) => void;
   index: number;
-}> = ({ startDate, endDate, onDateChange, onDelete, index }) => {
+}> = ({ startDate, endDate, onDateChange, onDelete, onError, index }) => {
   const [startMonth, setStartMonth] = useState<string>(startDate);
   const [endMonth, setEndMonth] = useState<string>(endDate);
   const handleDateChange = (monthString: string) => {
@@ -33,6 +34,7 @@ const ActivityTermRow: React.FC<{
         limitEndValue="2030.01"
         placeholder="20XX.XX"
         onChange={handleDateChange}
+        setErrorStatus={hasError => onError(index, hasError)}
       />
       <IconButton
         icon="delete"

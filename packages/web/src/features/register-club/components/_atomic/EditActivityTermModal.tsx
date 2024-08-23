@@ -27,17 +27,23 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
 }) => {
   const [activityTermList, setActivityTermList] =
     useState<ActivityTermProps[]>(initialData);
+  const [hasErrorList, setHasErrorList] = useState<boolean[]>(
+    Array.from({ length: initialData.length }, () => false),
+  );
 
   const addRow = () => {
     setActivityTermList(prevList => [
       ...prevList,
       { startDate: "", endDate: "" },
     ]);
+    setHasErrorList(prevList => [...prevList, false]);
   };
 
   const handleDelete = (index: number) => {
     const updatedTerms = activityTermList.filter((_, i) => i !== index);
+    const updatedErrorList = hasErrorList.filter((_, i) => i !== index);
     setActivityTermList(updatedTerms);
+    setHasErrorList(updatedErrorList);
   };
 
   const handleDateChange = (index: number, start: string, end: string) => {
@@ -47,7 +53,32 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
     setActivityTermList(updatedTerms);
   };
 
+  const handleHasErrorList = (index: number, hasError: boolean) => {
+    setHasErrorList(prevErrorList => {
+      if (prevErrorList[index] !== hasError) {
+        const updatedErrorList = prevErrorList.map((error, i) =>
+          i === index ? hasError : error,
+        );
+        return updatedErrorList;
+      }
+      return prevErrorList;
+    });
+  };
+
+  const isEmpty = () => {
+    if (activityTermList.length === 0) {
+      return true;
+    }
+    return activityTermList.every(
+      term => term.startDate === "" && term.endDate === "",
+    );
+  };
+
+  const checkError = () => hasErrorList.some(error => error);
+
   const handleConfirm = () => {
+    if (isEmpty() || checkError()) return;
+
     onConfirm(activityTermList);
   };
   return (
@@ -62,6 +93,7 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
               endDate={term.endDate}
               onDateChange={handleDateChange}
               onDelete={handleDelete}
+              onError={handleHasErrorList}
             />
           ))}
           <IconButton
