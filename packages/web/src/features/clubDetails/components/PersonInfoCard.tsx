@@ -13,6 +13,7 @@ import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpo
 
 interface PersonInfoCardProps {
   club: ApiClb002ResponseOK;
+  isRegistrationPeriod: boolean;
 }
 
 const StyledCard = styled(Card)`
@@ -76,7 +77,10 @@ const PersonInfoContents = styled(Typography)`
   position: relative;
 `;
 
-const PersonInfoCard: React.FC<PersonInfoCardProps> = ({ club }) => (
+const PersonInfoCard: React.FC<PersonInfoCardProps> = ({
+  club,
+  isRegistrationPeriod,
+}) => (
   <StyledCard>
     <PersonInfoTitileWrapper direction="column" gap={16}>
       <PersonInfoTiltie>총원</PersonInfoTiltie>
@@ -84,7 +88,9 @@ const PersonInfoCard: React.FC<PersonInfoCardProps> = ({ club }) => (
       <PersonInfoTiltie>지도교수</PersonInfoTiltie>
     </PersonInfoTitileWrapper>
     <PersonInfoContentsWrapper direction="column" gap={16}>
-      <PersonInfoContents>{`${club.totalMemberCnt}명`}</PersonInfoContents>
+      <PersonInfoContents>
+        {isRegistrationPeriod ? "-" : `${club.totalMemberCnt}명`}
+      </PersonInfoContents>
       <PersonInfoContents>{club.representative}</PersonInfoContents>
       <PersonInfoContents>
         {club.advisor === null ||

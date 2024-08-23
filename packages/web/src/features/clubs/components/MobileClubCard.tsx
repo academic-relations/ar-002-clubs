@@ -1,17 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import { overlay } from "overlay-kit";
 import styled from "styled-components";
-
-import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
-import Modal from "@sparcs-clubs/web/common/components/Modal";
-import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
@@ -19,6 +14,8 @@ import {
   getShortClubType,
   getTagColorFromClubType,
 } from "@sparcs-clubs/web/features/clubs/services/clubTypeControl";
+
+import ClubRegistrationButton from "./ClubRegistrationButton";
 
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 
@@ -75,43 +72,8 @@ const ClubCardRow = styled.div`
 const MobileClubCard: React.FC<
   ClubCardProps & { isRegistrationPeriod?: boolean }
 > = ({ club, isRegistrationPeriod = false }) => {
-  const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const { isLoggedIn } = useAuth();
-  useEffect(() => {}, [isLoggedIn]);
 
-  const handleRegister = () => {
-    overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen} onClose={close}>
-        {isRegistered ? (
-          <CancellableModalContent
-            onClose={close}
-            onConfirm={() => {
-              setIsRegistered(!isRegistered);
-              close();
-            }}
-          >
-            2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-            {club.name_kr}의
-            <br />
-            회원 등록을 취소합니다.
-          </CancellableModalContent>
-        ) : (
-          <CancellableModalContent
-            onClose={close}
-            onConfirm={() => {
-              setIsRegistered(!isRegistered);
-              close();
-            }}
-          >
-            2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-            {club.name_kr}의
-            <br />
-            회원 등록 신청을 진행합니다.
-          </CancellableModalContent>
-        )}
-      </Modal>
-    ));
-  };
   return (
     <Card gap={12} padding="16px 20px">
       <ClubCardNameRow>
@@ -131,14 +93,7 @@ const MobileClubCard: React.FC<
       <ClubCardRow>
         <ClubCharacteristic>{club.characteristic}</ClubCharacteristic>
         {isRegistrationPeriod && isLoggedIn && (
-          <TextButton
-            text={isRegistered ? "신청 취소" : "등록 신청"}
-            onClick={handleRegister}
-            fs={14}
-          />
-        )}
-        {!isRegistrationPeriod && isRegistered && isLoggedIn && (
-          <TextButton text="승인 대기" disabled fs={14} />
+          <ClubRegistrationButton club={club} isMobile />
         )}
       </ClubCardRow>
     </Card>
