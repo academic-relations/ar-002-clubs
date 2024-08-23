@@ -26,7 +26,7 @@ const ActivityTermRow: React.FC<{
   };
 
   return (
-    <FlexWrapper direction="row" gap={8}>
+    <FlexWrapper direction="row" gap={8} style={{ alignItems: "center" }}>
       <DateRangeInput
         startValue={startMonth}
         endValue={endMonth}
@@ -39,7 +39,11 @@ const ActivityTermRow: React.FC<{
       <IconButton
         icon="delete"
         onClick={deleteRow}
-        style={{ backgroundColor: "transparent", color: "black" }}
+        style={{
+          backgroundColor: "transparent",
+          color: "black",
+          alignSelf: "flex-start",
+        }}
       />
     </FlexWrapper>
   );
