@@ -83,7 +83,7 @@ const Table = <T,>({
   table,
   minWidth = 900,
   height = undefined,
-  emptyMessage = "",
+  emptyMessage = "내역이 없습니다",
   footer = null,
   count = undefined,
   rowLink = undefined,
