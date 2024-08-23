@@ -64,13 +64,19 @@ const ClubButton: React.FC<ClubButtonProps> = ({
       <Typography fw="MEDIUM" fs={20} lh={24}>
         {title}
       </Typography>
-      <FlexWrapper direction="column" gap={16} style={{ height: "100%" }}>
+      <FlexWrapper
+        direction="column"
+        gap={8}
+        style={{ height: "100%", justifyContent: "center" }}
+      >
         {buttonText.map((text, index) => (
           <FlexWrapper
             direction="row"
             gap={16}
             key={index}
-            style={{ alignItems: "flex-start", height: "100%" }}
+            style={{
+              alignItems: "flex-start",
+            }}
           >
             <ClubButtonDot>•</ClubButtonDot>
             <ClubButtonDescription>{text}</ClubButtonDescription>
