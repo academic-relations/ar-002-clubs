@@ -14,7 +14,6 @@ import paths from "@sparcs-clubs/web/constants/paths";
 import MobileNavMenu from "../NavTools/MobileNavMenu";
 
 import Login from "./_atomic/Login";
-
 import Logo from "./_atomic/Logo";
 
 const IdentityBar = styled.div`
@@ -81,17 +80,24 @@ const Header: React.FC = () => {
       paths[menu].authority.includes("all"),
   );
 
+  const handleClose = () => {
+    setIsMobileMenuVisible(false);
+  };
+  const handleClick = () => {
+    setIsMobileMenuVisible(prev => !prev);
+  };
+
   return (
     <HeaderInner>
       <IdentityBar />
       <NavInner>
-        <Logo />
+        <Logo onClick={handleClose} />
         <Login />
         <Menu>
           <Icon
-            type="menu"
+            type={isMobileMenuVisible ? "close" : "menu"}
             size={24}
-            onClick={() => setIsMobileMenuVisible(!isMobileMenuVisible)}
+            onClick={handleClick}
           />
         </Menu>
         <StyledNavList highlight keys={headerPaths} />
