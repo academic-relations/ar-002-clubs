@@ -7,14 +7,10 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
-import MyClubProfTable from "@sparcs-clubs/web/features/my/components/MyClubProfTable";
-import MyClubTable from "@sparcs-clubs/web/features/my/components/MyClubTable";
 import MyMemberTable from "@sparcs-clubs/web/features/my/components/MyMemberTable";
-import {
-  mockClubRegister,
-  mockMemberRegister,
-  mockProfClubRegister,
-} from "@sparcs-clubs/web/features/my/services/_mock/mockMyRegister";
+import { mockMemberRegister } from "@sparcs-clubs/web/features/my/services/_mock/mockMyRegister";
+
+import MyClubRegisterFrame from "./_atomic/MyClubRegisterFrame";
 
 const MyRegisterFrame: React.FC<{ profile: string }> = ({ profile }) => {
   const {
@@ -65,51 +61,24 @@ const MyRegisterFrame: React.FC<{ profile: string }> = ({ profile }) => {
         <FlexWrapper direction="column" gap={40}>
           {registrationStatus ===
             RegistrationDeadlineEnum.ClubRegistrationApplication && (
-            <FlexWrapper direction="column" gap={20}>
-              <MoreDetailTitle
-                title="동아리 등록"
-                moreDetail=""
-                moreDetailPath=""
-              />
-              <AsyncBoundary isLoading={false} isError={false}>
-                {profile === "professor" ? (
-                  <MyClubProfTable
-                    clubProfRegisterList={
-                      mockProfClubRegister ?? {
-                        total: 0,
-                        items: [],
-                        offset: 0,
-                      }
-                    }
-                  />
-                ) : (
-                  <MyClubTable
-                    clubRegisterList={
-                      mockClubRegister ?? { total: 0, items: [], offset: 0 }
-                    }
-                  />
-                )}
-              </AsyncBoundary>
-            </FlexWrapper>
+            <MyClubRegisterFrame profile={profile} />
           )}
-          {registrationStatus ===
-            RegistrationDeadlineEnum.StudentRegistrationApplication &&
-            profile !== "professor" && (
-              <FlexWrapper direction="column" gap={20}>
-                <MoreDetailTitle
-                  title="회원 등록"
-                  moreDetail=""
-                  moreDetailPath=""
-                />
-                <AsyncBoundary isLoading={false} isError={false}>
-                  <MyMemberTable
-                    memberRegisterList={
-                      mockMemberRegister ?? { total: 0, items: [], offset: 0 }
-                    }
-                  />
-                </AsyncBoundary>
-              </FlexWrapper>
-            )}
+          {/* {registrationStatus ===
+            RegistrationDeadlineEnum.StudentRegistrationApplication && */}
+          {/* profile !== "professor" && ( */}
+          <FlexWrapper direction="column" gap={20}>
+            <MoreDetailTitle
+              title="회원 등록"
+              moreDetail=""
+              moreDetailPath=""
+            />
+            <MyMemberTable
+              memberRegisterList={
+                mockMemberRegister ?? { total: 0, items: [], offset: 0 }
+              }
+            />
+          </FlexWrapper>
+          {/* )} */}
         </FlexWrapper>
       </AsyncBoundary>
     </FoldableSectionTitle>

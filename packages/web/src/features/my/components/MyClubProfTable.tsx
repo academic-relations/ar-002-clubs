@@ -13,6 +13,9 @@ import { mockProfClubRegister } from "@sparcs-clubs/web/features/my/services/_mo
 import { getTagColorFromDivision } from "@sparcs-clubs/web/types/clubdetail.types";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
+interface MyClubTableProps {
+  clubProfRegisterList: typeof mockProfClubRegister;
+}
 const columnHelper =
   createColumnHelper<(typeof mockProfClubRegister)["items"][number]>();
 const columns = [
@@ -69,9 +72,9 @@ const columns = [
     size: 128,
   }),
 ];
-const MyClubTable: React.FC = () => {
-  // TODO: reg022 작업 후 수정
-  const clubProfRegisterList = mockProfClubRegister;
+const MyClubProfTable: React.FC<MyClubTableProps> = ({
+  clubProfRegisterList,
+}) => {
   const table = useReactTable({
     columns,
     data: clubProfRegisterList.items,
@@ -89,4 +92,4 @@ const MyClubTable: React.FC = () => {
     />
   );
 };
-export default MyClubTable;
+export default MyClubProfTable;
