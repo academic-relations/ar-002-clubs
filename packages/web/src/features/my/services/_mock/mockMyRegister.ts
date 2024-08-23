@@ -38,7 +38,7 @@ const mockProfClubRegister = {
   offset: 1,
 };
 const mockMemberRegister = {
-  items: [
+  applies: [
     {
       applyStatusEnum: RegistrationStatusEnum.Pending,
       clubType: { type: ClubTypeEnum.Regular, isPermanent: false },
@@ -68,8 +68,6 @@ const mockMemberRegister = {
       clubId: 1,
     },
   ],
-  total: 4,
-  offset: 4,
 };
 const mockRegisterPeriod = [
   RegistrationDeadlineEnum.ClubRegistrationApplication,
