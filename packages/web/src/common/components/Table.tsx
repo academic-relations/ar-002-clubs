@@ -22,12 +22,11 @@ const TableInnerWrapper = styled.div`
   padding: 0 calc((100vw - 100%) / 2);
   overflow-x: auto;
 `;
-const TableInner = styled.table<{ height?: number; minWidth?: number }>`
+const TableInner = styled.table<{ height?: number; minWidth: number }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  min-width: ${({ minWidth }) =>
-    minWidth ? `max(100%, ${minWidth}px)` : "100%"};
+  min-width: ${({ minWidth }) => `max(100%, ${minWidth}px)`};
   width: fit-content;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
   border-radius: 8px;
@@ -82,7 +81,7 @@ const Count = styled.div`
 `;
 const Table = <T,>({
   table,
-  minWidth = undefined,
+  minWidth = 900,
   height = undefined,
   emptyMessage = "",
   footer = null,
