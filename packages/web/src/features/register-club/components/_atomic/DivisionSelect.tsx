@@ -5,7 +5,9 @@ import { useFormContext } from "react-hook-form";
 
 import FormController from "@sparcs-clubs/web/common/components/FormController";
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
+import { DivisionTypeTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { DivisionType } from "@sparcs-clubs/web/types/divisions.types";
+import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface DivisionSelectProps {
   isRenewal?: boolean;
@@ -15,12 +17,16 @@ const DivisionSelect: React.FC<DivisionSelectProps> = ({
   isRenewal = false,
 }) => {
   const { control } = useFormContext<ApiReg001RequestBody>();
-  const divisionItems: SelectItem<string>[] = Object.values(DivisionType).map(
-    data => ({
-      value: data.toString(),
-      label: data.toString(),
-    }),
-  );
+
+  const divisionItems: SelectItem<number>[] = Object.values(DivisionType)
+    .filter(value => typeof value === "number")
+    .map(data => {
+      const { text } = getTagDetail(+data, DivisionTypeTagList);
+      return {
+        value: +data,
+        label: text,
+      };
+    });
 
   return (
     <FormController
