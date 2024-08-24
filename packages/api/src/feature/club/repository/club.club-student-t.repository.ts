@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, count, desc, eq, gte, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
-import { takeUnique } from "@sparcs-clubs/api/common/util/util";
+import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
@@ -131,5 +131,40 @@ export default class ClubStudentTRepository {
         ),
       );
     return clubs;
+  }
+
+  async addStudentToClub(
+    studentId: number,
+    clubId: number,
+    semesterId: number,
+  ): Promise<void> {
+    const cur = getKSTDate();
+    await this.db
+      .insert(ClubStudentT)
+      .values({
+        studentId,
+        clubId,
+        semesterId,
+        startTerm: cur,
+      })
+      .execute();
+  }
+
+  async removeStudentFromClub(
+    studentId: number,
+    clubId: number,
+    semesterId: number,
+  ): Promise<void> {
+    await this.db
+      .delete(ClubStudentT)
+      .where(
+        and(
+          eq(ClubStudentT.studentId, studentId),
+          eq(ClubStudentT.clubId, clubId),
+          eq(ClubStudentT.semesterId, semesterId),
+          isNull(ClubStudentT.deletedAt),
+        ),
+      )
+      .execute();
   }
 }

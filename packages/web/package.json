@@ -37,6 +37,7 @@
     "react-hook-form": "^7.52.1",
     "socket.io": "^4.7.5",
     "styled-components": "^6.1.8",
+    "viewerjs": "^1.11.6",
     "zod": "^3.21.4",
     "zustand": "^4.5.2"
   },

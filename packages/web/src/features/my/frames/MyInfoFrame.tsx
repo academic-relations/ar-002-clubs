@@ -33,7 +33,7 @@ const MyInfoFrame: React.FC = () => {
         <Card outline gap={32} style={{ flex: 1 }}>
           <PhoneInput
             label="전화번호"
-            placeholder="전화번호를 입력하세요"
+            placeholder="XXX-XXXX-XXXX"
             value={phone}
             onChange={setPhone}
             setErrorStatus={setErrorPhone}

@@ -1,31 +1,36 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
+import Custom404 from "@sparcs-clubs/web/app/not-found";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import Pagination from "@sparcs-clubs/web/common/components/Pagination";
-import RegistrationMemberTable from "@sparcs-clubs/web/common/components/RegisterMemberTable";
-import mockupRegistrationMember from "@sparcs-clubs/web/features/executive/_mock/mockMemberRegistration";
+import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import { ExecutiveRegisterMember } from "@sparcs-clubs/web/features/executive/register-member/frames/ExecutiveRegisterMemberFrame";
 
 const RegisterMember = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const limit = 10;
+  const { isLoggedIn, login, profile } = useAuth();
+  const [loading, setLoading] = useState(true);
 
-  /* TODO : API로 데이터 받아오기 */
-  const paginatedData = {
-    total: mockupRegistrationMember.total,
-    items: mockupRegistrationMember.items.slice(
-      (currentPage - 1) * limit,
-      currentPage * limit,
-    ),
-    offset: (currentPage - 1) * limit,
-  };
+  useEffect(() => {
+    if (isLoggedIn !== undefined || profile !== undefined) {
+      setLoading(false);
+    }
+  }, [isLoggedIn, profile]);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  if (loading) {
+    return <AsyncBoundary isLoading={loading} isError />;
+  }
+
+  if (!isLoggedIn) {
+    return <LoginRequired login={login} />;
+  }
+
+  if (profile !== "executive") {
+    return <Custom404 />;
+  }
 
   return (
     <FlexWrapper direction="column" gap={20}>
@@ -36,17 +41,7 @@ const RegisterMember = () => {
         ]}
         title="회원 등록 신청 내역"
       />
-      <AsyncBoundary isLoading={false} isError={false}>
-        <RegistrationMemberTable registerMemberList={paginatedData} />
-        <FlexWrapper direction="row" gap={16} justify="center">
-          <Pagination
-            totalPage={Math.ceil(mockupRegistrationMember.total / limit)}
-            currentPage={currentPage}
-            limit={limit}
-            setPage={handlePageChange}
-          />
-        </FlexWrapper>
-      </AsyncBoundary>
+      <ExecutiveRegisterMember />
     </FlexWrapper>
   );
 };

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Patch,
   Post,
@@ -95,6 +96,7 @@ export class MemberRegistrationController {
   @Patch(
     "/student/registrations/member-registrations/member-registration/:applyId",
   )
+  @HttpCode(204)
   @UsePipes(new ZodPipe(apiReg007))
   async patchStudentRegistrationsMemberRegistration(
     @GetStudent() user: GetStudent,

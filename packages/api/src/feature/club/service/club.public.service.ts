@@ -152,4 +152,67 @@ export default class ClubPublicService {
       );
     return isPresident;
   }
+
+  /**
+   * @param studentId 학생의 ID
+   * @param clubId 동아리의 ID
+   * @returns void
+   *
+   * 학생을 특정 동아리에 추가합니다.
+   * 이 메소드는 현재 학기(`semesterId`)에 해당하는 동아리에 학생을 추가합니다.
+   * 현재 학기를 기준으로 `semesterId`를 조회하고, 조회된 학기가 없는 경우 예외를 발생시킵니다.
+   * 조회된 `semesterId`를 사용하여 해당 동아리(`clubId`)에 학생(`studentId`)을 추가합니다.
+   */
+
+  async addStudentToClub(studentId: number, clubId: number): Promise<void> {
+    const cur = getKSTDate(); // 현재 KST 시간을 가져옴
+
+    const semesterId = await this.dateToSemesterId(cur);
+    if (!semesterId) {
+      throw new HttpException(
+        "No current semester found.",
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    // 신입 부원 추가
+    await this.clubStudentTRepository.addStudentToClub(
+      studentId,
+      clubId,
+      semesterId,
+    );
+  }
+
+  /**
+   * 학생을 특정 동아리에서 제거합니다.
+   *
+   * @param studentId 학생의 ID
+   * @param clubId 동아리의 ID
+   * @returns void
+   *
+   * 이 메소드는 현재 학기(`semesterId`)에 해당하는 동아리에서 학생을 제거합니다.
+   * 현재 학기를 기준으로 `semesterId`를 조회하고, 조회된 학기가 없는 경우 예외를 발생시킵니다.
+   * 조회된 `semesterId`를 사용하여 해당 동아리(`clubId`)에서 학생(`studentId`)을 제거합니다.
+   */
+  async removeStudentFromClub(
+    studentId: number,
+    clubId: number,
+  ): Promise<void> {
+    const cur = getKSTDate(); // 현재 KST 시간을 가져옴
+
+    const semesterId = await this.dateToSemesterId(cur);
+    if (!semesterId) {
+      throw new HttpException(
+        "No current semester found.",
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    // 신입 부원 제거
+    await this.clubStudentTRepository.removeStudentFromClub(
+      studentId,
+      clubId,
+      semesterId,
+    );
+  }
 }

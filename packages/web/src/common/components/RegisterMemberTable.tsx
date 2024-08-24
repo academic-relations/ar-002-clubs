@@ -8,7 +8,7 @@ import {
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import mockupRegistrationMember from "@sparcs-clubs/web/features/executive/_mock/mockMemberRegistration";
+import mockupRegistrationMember from "@sparcs-clubs/web/features/executive/register-member/_mock/mockMemberRegistration";
 import {
   getTagColorFromClubType,
   getTagColorFromDivision,
@@ -44,7 +44,7 @@ const columns = [
     id: "division",
     header: "분과",
     cell: info => {
-      const tagColor = getTagColorFromDivision(info.getValue());
+      const tagColor = getTagColorFromDivision(`${info.getValue()}`);
 
       return <Tag color={tagColor}>{info.getValue()}</Tag>;
     },

@@ -31,31 +31,31 @@ const columns = [
       const { color, text } = getTagDetail(info.getValue(), RntTagList);
       return <Tag color={color}>{text}</Tag>;
     },
-    size: 10,
+    size: 5,
   }),
   columnHelper.accessor("createdAt", {
     id: "createdAt",
     header: "신청 일시",
     cell: info => formatDateTime(info.getValue()),
-    size: 20,
+    size: 25,
   }),
   columnHelper.accessor("studentName", {
     id: "studentName",
     header: "신청자",
     cell: info => info.getValue(),
-    size: 14,
+    size: 5,
   }),
   columnHelper.accessor("desiredStart", {
     id: "desiredStart",
     header: "대여 일자",
     cell: info => formatDate(info.getValue()),
-    size: 18,
+    size: 20,
   }),
   columnHelper.accessor("desiredEnd", {
     id: "desiredEnd",
     header: "반납 일자",
     cell: info => formatDate(info.getValue()),
-    size: 18,
+    size: 20,
   }),
   columnHelper.accessor(
     row =>

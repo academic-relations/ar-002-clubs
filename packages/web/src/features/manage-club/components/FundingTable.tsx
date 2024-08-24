@@ -35,13 +35,13 @@ const columns = [
     id: "name",
     header: "활동명",
     cell: info => info.getValue(),
-    size: 40,
+    size: 30,
   }),
   columnHelper.accessor("itemName", {
     id: "itemName",
     header: "항목명",
     cell: info => info.getValue(),
-    size: 20,
+    size: 30,
   }),
   columnHelper.accessor("requestedAmount", {
     id: "requestedAmount",

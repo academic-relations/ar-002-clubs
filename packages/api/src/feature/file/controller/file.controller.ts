@@ -10,6 +10,7 @@ import {
 
 import apiFil001 from "@sparcs-clubs/interface/api/file/apiFil001";
 import apiFil002 from "@sparcs-clubs/interface/api/file/apiFil002";
+import apiFil003 from "@sparcs-clubs/interface/api/file/apiFil003";
 
 import { Request } from "express";
 
@@ -28,6 +29,10 @@ import type {
   ApiFil002RequestBody,
   ApiFil002ResponseOk,
 } from "@sparcs-clubs/interface/api/file/apiFil002";
+import type {
+  ApiFil003RequestBody,
+  ApiFil003ResponseOk,
+} from "@sparcs-clubs/interface/api/file/apiFil003";
 
 @Controller()
 export class FileController {
@@ -57,7 +62,21 @@ export class FileController {
     };
   }
 
-  @Get("files/metadata")
+  @Post("files/download-links")
+  @UsePipes(new ZodPipe(apiFil003))
+  async getFilesDownloadLinks(
+    @Req() { user }: Request & UserAccessTokenPayload,
+    @Body() body: ApiFil003RequestBody,
+  ): Promise<ApiFil003ResponseOk> {
+    const result = await this.fileService.getFilesDownloadLinks({
+      user,
+      body,
+    });
+
+    return result;
+  }
+
+  @Post("files/metadata")
   @UsePipes(new ZodPipe(apiFil002))
   async getFilesMetadata(
     @Req() req: Request & UserAccessTokenPayload,

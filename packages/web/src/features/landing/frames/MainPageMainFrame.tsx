@@ -9,7 +9,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 import NoticeSectionFrame from "./NoticeSectionFrame";
-import ServiceSectionFrame from "./ServiceSectionFrame";
+// import ServiceSectionFrame from "./ServiceSectionFrame";
 
 const PageTitleWrapper = styled.div`
   display: flex;
@@ -51,8 +51,14 @@ const ResponsiveSloganTypography = styled(Typography)`
   }
 `;
 
+const ResponsiveWrapper = styled(FlexWrapper)`
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    gap: 40px;
+  }
+`;
+
 const MainPageMainFrame: React.FC = () => (
-  <FlexWrapper direction="column" gap={60}>
+  <ResponsiveWrapper direction="column" gap={60}>
     <PageTitleWrapper>
       <ResponsiveSloganTypography
         fw="SEMIBOLD"
@@ -70,9 +76,9 @@ const MainPageMainFrame: React.FC = () => (
     </PageTitleWrapper>
     <NoticeAndServiceWrapper>
       <NoticeSectionFrame />
-      <ServiceSectionFrame />
+      {/* <ServiceSectionFrame /> */}
     </NoticeAndServiceWrapper>
-  </FlexWrapper>
+  </ResponsiveWrapper>
 );
 
 export default MainPageMainFrame;

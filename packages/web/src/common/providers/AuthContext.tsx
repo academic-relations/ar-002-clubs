@@ -9,6 +9,8 @@ import React, {
   useState,
 } from "react";
 
+import { jwtDecode } from "jwt-decode";
+
 import postLogin from "../services/postLogin";
 import postLogout from "../services/postLogout";
 
@@ -16,6 +18,7 @@ interface AuthContextType {
   isLoggedIn: boolean;
   login: () => void;
   logout: () => void;
+  profile: string | undefined;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,11 +27,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [profile, setProfile] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       setIsLoggedIn(true);
+      const decoded: { type?: string } = jwtDecode(accessToken);
+      setProfile(decoded.type);
     }
   }, []);
 
@@ -43,10 +49,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       if (response.accessToken) {
         localStorage.setItem(
           "accessToken",
-          response.accessToken.undergraduate ??
-            response.accessToken.master ??
+          response.accessToken.professor ??
             response.accessToken.doctor ??
-            response.accessToken.professor ??
+            response.accessToken.master ??
+            response.accessToken.undergraduate ??
             response.accessToken.employee ??
             response.accessToken.executive ??
             "",
@@ -71,7 +77,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  const value = useMemo(() => ({ isLoggedIn, login, logout }), [isLoggedIn]);
+  const value = useMemo(
+    () => ({ isLoggedIn, login, logout, profile }),
+    [isLoggedIn],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

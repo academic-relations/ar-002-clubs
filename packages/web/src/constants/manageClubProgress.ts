@@ -4,7 +4,7 @@ import { PromotionalPrintingOrderStatusEnum } from "@sparcs-clubs/interface/comm
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
 
 import { StatusAndDate } from "../common/components/ProgressCheckSection";
-import { Status } from "../common/components/ProgressCheckSection/_atomic/ProgressDot";
+import { ProgressCheckSectionStatusEnum } from "../common/components/ProgressCheckSection/progressCheckStationStatus";
 
 interface ManageProgress {
   labels: string[];
@@ -24,7 +24,9 @@ export const manageRentalProgress = (
           "대여 대기",
           "반납 대기",
         ],
-        progress: [{ status: Status.Approved, date: new Date() }],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+        ],
         infoText: "승인이 완료되기 전까지 신청을 취소할 수 있습니다",
       };
     case RentalOrderStatusEnum.Approved:
@@ -36,8 +38,8 @@ export const manageRentalProgress = (
           "반납 대기",
         ],
         progress: [
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
         ],
         // TODO: 날짜 넣기
         infoText: "2024년 3월 11일(월)부터 대여할 수 있습니다",
@@ -51,9 +53,9 @@ export const manageRentalProgress = (
           "반납 대기",
         ],
         progress: [
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
         ],
         // TODO: 날짜 넣기
         infoText: "2024년 3월 18일(월)까지 반납해주시기 바랍니다",
@@ -67,10 +69,10 @@ export const manageRentalProgress = (
           "반납 완료",
         ],
         progress: [
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
         ],
       };
     case RentalOrderStatusEnum.Rejected:
@@ -82,8 +84,8 @@ export const manageRentalProgress = (
           "반납 대기",
         ],
         progress: [
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Canceled, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Canceled, date: new Date() },
         ],
         // TODO: 반려사유 넣기
         infoText: "동아리 연합회 반려 사유: 어쩌고 저쩌고",
@@ -97,7 +99,9 @@ export const manageRentalProgress = (
           "대여 대기",
           "반납 대기",
         ],
-        progress: [{ status: Status.Approved, date: new Date() }],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+        ],
         infoText: "승인이 완료되기 전까지 신청을 취소할 수 있습니다",
       };
   }
@@ -110,21 +114,25 @@ export const manageCommonSpaceProgress = (
     case CommonSpaceUsageOrderStatusEnum.Applied:
       return {
         labels: ["신청 완료", "사용 대기"],
-        progress: [{ status: Status.Approved, date: new Date() }],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+        ],
         infoText: "승인이 완료되기 전까지 신청을 취소할 수 있습니다",
       };
     case CommonSpaceUsageOrderStatusEnum.Used:
       return {
         labels: ["신청 완료", "사용 완료"],
         progress: [
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
         ],
       };
     default: // Canceled
       return {
         labels: ["신청 취소", "사용 대기"],
-        progress: [{ status: Status.Canceled, date: new Date() }],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Canceled, date: new Date() },
+        ],
       };
   }
 };
@@ -141,7 +149,9 @@ export const managePrintingProgress = (
           "출력 대기",
           "수령 대기",
         ],
-        progress: [{ status: Status.Approved, date: new Date() }],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+        ],
         infoText: "승인이 완료되기 전까지 신청을 취소할 수 있습니다",
       };
     case PromotionalPrintingOrderStatusEnum.Approved:
@@ -153,8 +163,8 @@ export const managePrintingProgress = (
           "수령 대기",
         ],
         progress: [
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
         ],
         infoText: "2024년 3월 11일(월) 21:00에 수령해주시기 바랍니다",
       };
@@ -167,9 +177,9 @@ export const managePrintingProgress = (
           "수령 대기",
         ],
         progress: [
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
         ],
         infoText: "2024년 3월 11일(월) 21:00에 수령해주시기 바랍니다",
       };
@@ -182,17 +192,19 @@ export const managePrintingProgress = (
           "수령 완료",
         ],
         progress: [
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
         ],
       };
     // TODO: 취소, 반려 필요
     default:
       return {
         labels: ["신청 취소", "사용 대기"],
-        progress: [{ status: Status.Canceled, date: new Date() }],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Canceled, date: new Date() },
+        ],
       };
   }
 };
@@ -209,7 +221,9 @@ export const manageActivityCertificateProgress = (
           "동아리 연합회 승인 대기",
           "발급 대기",
         ],
-        progress: [{ status: Status.Approved, date: new Date() }],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+        ],
         infoText:
           "동아리 대표자의 승인이 있어야 다음 단계로 넘어갈 수 있습니다. 반려 시 사유를 입력해야함",
       };
@@ -222,8 +236,8 @@ export const manageActivityCertificateProgress = (
           "발급 대기",
         ],
         progress: [
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
         ],
       };
     case ActivityCertificateOrderStatusEnum.Issued:
@@ -235,9 +249,9 @@ export const manageActivityCertificateProgress = (
           "발급 대기",
         ],
         progress: [
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
         ],
         infoText: "발급이 완료되면 이메일이 갈거에요~",
       };
@@ -250,10 +264,10 @@ export const manageActivityCertificateProgress = (
           "발급 완료",
         ],
         progress: [
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
         ],
       };
     // TODO: 동아리 대표자 / 동아리 연합회 반려 분리 필요
@@ -266,8 +280,8 @@ export const manageActivityCertificateProgress = (
           "발급 대기",
         ],
         progress: [
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Canceled, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Canceled, date: new Date() },
         ],
         infoText: "동아리 대표자 반려 사유: 어쩌고 저쩌고",
       };
@@ -280,9 +294,9 @@ export const manageActivityCertificateProgress = (
           "발급 대기",
         ],
         progress: [
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Approved, date: new Date() },
-          { status: Status.Canceled, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+          { status: ProgressCheckSectionStatusEnum.Canceled, date: new Date() },
         ],
         infoText: "동아리 연합회 반려 사유: 어쩌고 저쩌고",
       };

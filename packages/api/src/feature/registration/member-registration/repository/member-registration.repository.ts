@@ -19,6 +19,15 @@ import {
   RegistrationDeadlineD,
 } from "@sparcs-clubs/api/drizzle/schema/registration.schema";
 
+interface IRegistrationApplicationStudent {
+  id: number;
+  studentId: number;
+  clubId: number;
+  registrationApplicationStudentEnumId: number;
+  createdAt: Date;
+  deletedAt?: Date; // nullable
+}
+
 @Injectable()
 export class MemberRegistrationRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
@@ -94,7 +103,6 @@ export class MemberRegistrationRepository {
       });
       const { affectedRows } = result;
       if (affectedRows !== 1) {
-        await tx.rollback();
         throw new HttpException("Registration failed", 500);
       }
     });
@@ -152,14 +160,9 @@ export class MemberRegistrationRepository {
           ),
         );
       if (result.affectedRows > 2) {
-        await tx.rollback();
         throw new HttpException("Registration delete failed", 500);
       } else if (result.affectedRows === 0) {
-        await tx.rollback();
-        throw new HttpException(
-          "Not available application",
-          HttpStatus.FORBIDDEN,
-        );
+        throw new HttpException("Application Not Found", HttpStatus.NOT_FOUND);
       }
     });
     return {};
@@ -180,22 +183,13 @@ export class MemberRegistrationRepository {
           and(
             eq(RegistrationApplicationStudent.id, applyId),
             eq(RegistrationApplicationStudent.clubId, clubId),
-            eq(
-              RegistrationApplicationStudent.registrationApplicationStudentEnumId,
-              RegistrationApplicationStudentStatusEnum.Pending,
-            ),
             isNull(RegistrationApplicationStudent.deletedAt),
           ),
         );
       if (result.affectedRows > 2) {
-        await tx.rollback();
         throw new HttpException("Registration update failed", 500);
       } else if (result.affectedRows === 0) {
-        await tx.rollback();
-        throw new HttpException(
-          "Not available application",
-          HttpStatus.FORBIDDEN,
-        );
+        throw new HttpException("Application Not Found", HttpStatus.NOT_FOUND);
       }
     });
     return {};
@@ -216,5 +210,22 @@ export class MemberRegistrationRepository {
         ),
       );
     return { applies: result };
+  }
+
+  async findMemberRegistrationById(
+    applyId: number,
+  ): Promise<IRegistrationApplicationStudent | null> {
+    const result = await this.db
+      .select()
+      .from(RegistrationApplicationStudent)
+      .where(
+        and(
+          eq(RegistrationApplicationStudent.id, applyId),
+          isNull(RegistrationApplicationStudent.deletedAt),
+        ),
+      )
+      .execute();
+
+    return result.length > 0 ? result[0] : null;
   }
 }
