@@ -39,21 +39,19 @@ const columns = [
   columnHelper.accessor("activity", {
     header: "활동명",
     cell: info => info.getValue(),
-    size: 35,
   }),
   columnHelper.accessor("category", {
     header: "활동 분류",
     cell: info => (
       <Tag color={getCategoryTagColor(info.getValue())}>{info.getValue()}</Tag>
     ),
-    size: 30,
   }),
   columnHelper.accessor(
     row => `${formatDate(row.startDate)} ~ ${formatDate(row.endDate)}`,
     {
       header: "활동 기간",
       cell: info => info.getValue(),
-      size: 40,
+      size: 340,
     },
   ),
 ];
@@ -90,7 +88,7 @@ const PastActivityReportList: React.FC<ActivityReportListProps> = ({
           총 {data.length}개
         </Typography>
       )}
-      <Table table={table} />
+      <Table table={table} minWidth={900} />
     </TableOuter>
   );
 };
