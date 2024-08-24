@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -12,7 +12,7 @@ import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import ClubButton from "@sparcs-clubs/web/features/register-club/components/ClubButton";
+import ClubButton from "@sparcs-clubs/web/features/register-club/components/_atomic/ClubButton";
 
 import { mockMyRegistration } from "@sparcs-clubs/web/features/register-club/service/_mock/mockMyRegistration";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
@@ -59,6 +59,7 @@ const WarningTextsWrapper = styled.div`
   opacity: 1;
 `;
 
+// eslint-disable-next-line react/prop-types
 const WarningLink: React.FC<{ id: number }> = ({ id }) => {
   const router = useRouter();
 
@@ -78,6 +79,7 @@ const WarningLink: React.FC<{ id: number }> = ({ id }) => {
   );
 };
 
+// eslint-disable-next-line react/prop-types
 const WarningArea: React.FC<{ id: number }> = ({ id }) => (
   <WarningWrapper>
     <WarningIconWrapper>

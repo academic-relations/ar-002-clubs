@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { ApiUsr001ResponseOK } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
+import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
@@ -15,17 +15,17 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
+import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
+
 import ActivityReportFrame from "../components/ActivityReportFrame";
 import AdvancedInformFrame from "../components/AdvancedInformFrame";
 import BasicInformFrame from "../components/BasicInformFrame";
 import ClubRulesFrame from "../components/ClubRulesFrame";
+import ProvisionalBasicInformFrame from "../components/ProvisionalBasicInformFrame";
 import useRegisterClub from "../services/useRegisterClub";
-import { RegisterClubInterface } from "../types/registerClub";
 
 interface RegisterClubMainFrameProps {
   type: RegistrationTypeEnum;
-  profile?: ApiUsr001ResponseOK;
-  clubIds?: { id: number }[];
 }
 
 const ButtonWrapper = styled.div`
@@ -35,27 +35,27 @@ const ButtonWrapper = styled.div`
 
 const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   type,
-  profile = undefined,
-  clubIds = [],
 }) => {
   const router = useRouter();
+  const [isAgreed, setIsAgreed] = useState(false);
 
-  const { mutate: registerClubApi, isSuccess } = useRegisterClub();
-
-  const [isCheckedClubName, setIsCheckedClubName] = useState(false);
-  const [isCheckedProfessor, setIsCheckedProfessor] = useState(
-    type === RegistrationTypeEnum.Promotional,
-  );
-
-  const formCtx = useForm<RegisterClubInterface>({
+  const formCtx = useForm<ApiReg001RequestBody>({
     mode: "all",
   });
 
   const {
     getValues,
     handleSubmit,
+
     formState: { isValid },
   } = formCtx;
+
+  const { mutate: registerClubApi, isSuccess, isError } = useRegisterClub();
+  const {
+    data: clubDetail,
+    isLoading: isLoadingClubDetail,
+    isError: isErrorClubDetail,
+  } = useGetClubDetail(getValues().clubId?.toString() ?? "");
 
   const title = useMemo(() => {
     switch (type) {
@@ -68,49 +68,17 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
     }
   }, [type]);
 
-  const submitHandler = useCallback(
-    (data: RegisterClubInterface) => {
-      const isNewClubName = !(
-        (type === RegistrationTypeEnum.Promotional ||
-          type === RegistrationTypeEnum.Renewal) &&
-        !isCheckedClubName
-      );
+  const isProvisionalClub =
+    type === RegistrationTypeEnum.NewProvisional ||
+    type === RegistrationTypeEnum.ReProvisional;
 
+  const submitHandler = useCallback(
+    (data: ApiReg001RequestBody) => {
       registerClubApi({
-        body: {
-          clubId: data.clubId,
-          registrationTypeEnumId:
-            type === RegistrationTypeEnum.NewProvisional && isCheckedClubName
-              ? RegistrationTypeEnum.ReProvisional
-              : type,
-          clubNameKr: isNewClubName ? data.clubNameKr : "",
-          clubNameEn: isNewClubName ? data.clubNameEn : "",
-          phoneNumber: data.phoneNumber,
-          foundedAt:
-            data.foundedMonthAt != null
-              ? new Date(+data.foundedYearAt, +data.foundedMonthAt! - 1)
-              : new Date(data.foundedYearAt),
-          divisionId: data.divisionId,
-          activityFieldKr: data.activityFieldKr,
-          activityFieldEn: data.activityFieldEn,
-          professor:
-            isCheckedProfessor && data.professor
-              ? {
-                  name: data.professor.name,
-                  email: data.professor.email,
-                  professorEnumId: data.professor.professorEnumId,
-                }
-              : undefined,
-          divisionConsistency: data.divisionConsistency,
-          foundationPurpose: data.foundationPurpose,
-          activityPlan: data.activityPlan,
-          activityPlanFileId: data.activityPlanFileId,
-          clubRuleFileId: data.clubRuleFileId,
-          externalInstructionFileId: data.externalInstructionFileId,
-        },
+        body: data,
       });
     },
-    [isCheckedProfessor, isCheckedClubName, registerClubApi, type],
+    [registerClubApi],
   );
 
   useEffect(() => {
@@ -129,8 +97,33 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
           </ConfirmModalContent>
         </Modal>
       ));
+      return;
     }
-  }, [isSuccess]);
+    if (isError) {
+      const clubName =
+        isLoadingClubDetail || isErrorClubDetail ? "" : clubDetail?.name_kr;
+      overlay.open(({ isOpen, close }) => (
+        <Modal isOpen={isOpen}>
+          <ConfirmModalContent
+            onConfirm={() => {
+              close();
+              // TODO. 신청내역 페이지로 이동
+            }}
+          >
+            {clubName} 동아리 등록 신청이 이미 존재하여
+            <br />
+            등록 신청을 할 수 없습니다.
+          </ConfirmModalContent>
+        </Modal>
+      ));
+    }
+  }, [
+    isSuccess,
+    isError,
+    isLoadingClubDetail,
+    isErrorClubDetail,
+    clubDetail?.name_kr,
+  ]);
 
   return (
     <FormProvider {...formCtx}>
@@ -148,20 +141,17 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
           />
           {/* TODO. 등록 기간, 신청마감 동적처리  */}
           <Info text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
-          <BasicInformFrame
-            type={type}
-            clubIds={clubIds}
-            profile={{
-              name: profile?.name ?? "",
-              phoneNumber: profile?.phoneNumber,
-            }}
-            onCheckedClubName={data => setIsCheckedClubName(data)}
-            onCheckProfessor={data => setIsCheckedProfessor(data)}
-          />
+          {isProvisionalClub ? (
+            <ProvisionalBasicInformFrame />
+          ) : (
+            <BasicInformFrame type={type} />
+          )}
           <AdvancedInformFrame type={type} />
-          {type !== RegistrationTypeEnum.Renewal && <ActivityReportFrame />}
+          {type === RegistrationTypeEnum.Promotional && <ActivityReportFrame />}
           <ClubRulesFrame
             isProvisional={type === RegistrationTypeEnum.NewProvisional}
+            isAgreed={isAgreed}
+            setIsAgreed={setIsAgreed}
           />
           <ButtonWrapper>
             <Button
@@ -172,7 +162,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
             </Button>
             <Button
               buttonType="submit"
-              type={isValid && getValues().isAgreed ? "default" : "disabled"}
+              type={isValid && isAgreed ? "default" : "disabled"}
             >
               신청
             </Button>

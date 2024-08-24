@@ -1,6 +1,6 @@
-import apiReg002, {
-  ApiReg002ResponseOk,
-} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
+import apiReg018, {
+  ApiReg018ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg018";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -11,28 +11,28 @@ import {
 
 import { MockRegistrationAvailableClubList } from "./_mocks/RegistrationAvailableClubList";
 
-const useGetClubsForRenewal = () =>
-  useQuery<ApiReg002ResponseOk, Error>({
-    queryKey: [apiReg002.url()],
-    queryFn: async (): Promise<ApiReg002ResponseOk> => {
+const useGetClubsForReProvisional = () =>
+  useQuery<ApiReg018ResponseOk, Error>({
+    queryKey: [apiReg018.url()],
+    queryFn: async (): Promise<ApiReg018ResponseOk> => {
       const { data, status } = await axiosClientWithAuth.get(
-        apiReg002.url(),
+        apiReg018.url(),
         {},
       );
 
       switch (status) {
         case 200:
-          return apiReg002.responseBodyMap[200].parse(data);
+          return apiReg018.responseBodyMap[200].parse(data);
         default:
           throw new UnexpectedAPIResponseError();
       }
     },
   });
 
-export default useGetClubsForRenewal;
+export default useGetClubsForReProvisional;
 
 defineAxiosMock(mock => {
   mock
-    .onGet(apiReg002.url())
+    .onGet(apiReg018.url())
     .reply(() => [200, { clubs: MockRegistrationAvailableClubList }]);
 });

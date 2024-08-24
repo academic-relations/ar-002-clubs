@@ -9,6 +9,8 @@ import {
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
+import { MockRegistrationAvailableClubList } from "./_mocks/RegistrationAvailableClubList";
+
 const useGetClubsForPromotional = () =>
   useQuery<ApiReg003ResponseOk, Error>({
     queryKey: [apiReg003.url()],
@@ -32,5 +34,5 @@ export default useGetClubsForPromotional;
 defineAxiosMock(mock => {
   mock
     .onGet(apiReg003.url())
-    .reply(() => [200, { clubs: [{ id: 1 }, { id: 2 }, { id: 3 }] }]);
+    .reply(() => [200, { clubs: MockRegistrationAvailableClubList }]);
 });
