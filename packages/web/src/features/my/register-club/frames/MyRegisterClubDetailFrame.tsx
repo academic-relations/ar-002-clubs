@@ -19,7 +19,6 @@ import {
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 import {
   DivisionTypeTagList,
   RegistrationTypeTagList,
@@ -49,7 +48,6 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
 }) => {
   const router = useRouter();
   const { id } = useParams();
-  const { data: userProfile } = useGetUserProfile();
 
   const professorEnumToText = (profEnum?: ProfessorEnum) => {
     switch (profEnum) {
@@ -114,7 +112,9 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
             </Typography>
             <ListContainer>
               <ListItem>동아리: {clubDetail?.clubNameKr}</ListItem>
-              <ListItem>대표자 이름: {userProfile?.name}</ListItem>
+              <ListItem>
+                대표자 이름: {clubDetail?.representative?.name}
+              </ListItem>
               <ListItem>대표자 전화번호: {clubDetail?.phoneNumber}</ListItem>
               <ListItem>
                 설립 연도: {clubDetail?.foundedAt.getFullYear()}
@@ -178,12 +178,11 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
               <Typography fw="MEDIUM" fs={16} lh={20}>
                 지도교수 승인
               </Typography>
-              {/* // api 머지 후 주석 해저, 현재 빌드 에러 남 */}
-              {/* {clubDetail?.professorConfirm ? (
+              {clubDetail?.isProfessorSigned ? (
                 <Tag color="GREEN">승인</Tag>
               ) : (
                 <Tag color="GRAY">대기</Tag>
-              )} */}
+              )}
             </TagWrapper>
           </FlexWrapper>
         </Card>

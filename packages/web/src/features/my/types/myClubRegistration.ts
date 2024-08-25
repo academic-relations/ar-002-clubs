@@ -12,7 +12,7 @@ export interface MyClubRegistrationDetail {
   clubId?: number;
   clubNameKr: string;
   clubNameEn: string;
-  studentId: number;
+  representative: { studentNumber: number; name: string };
   phoneNumber: string;
   foundedAt: Date;
   divisionId: number;
@@ -29,5 +29,6 @@ export interface MyClubRegistrationDetail {
   externalInstructionFileId?: string;
   externalInstructionFileName?: string;
   updatedAt: Date;
-  professorConfirm?: boolean;
+  isProfessorSigned: boolean;
+  comments: { content: string; createdAt: Date }[];
 }

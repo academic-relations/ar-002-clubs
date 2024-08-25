@@ -28,7 +28,10 @@ const mockMyClubRegisterDetail: MyClubRegistrationDetail = {
   clubNameKr: "스팍스",
   clubNameEn: "sparcs",
   clubId: 1,
-  studentId: 123123,
+  representative: {
+    studentNumber: 1,
+    name: "넙죽이",
+  },
   phoneNumber: "010-1234-1234",
   foundedAt: new Date(),
   divisionId: 1,
@@ -43,7 +46,8 @@ const mockMyClubRegisterDetail: MyClubRegistrationDetail = {
   foundationPurpose: "어쩌구저쩌구",
   activityPlan: "어쩌구저쩌구",
   updatedAt: new Date(),
-  professorConfirm: false,
+  isProfessorSigned: false,
+  comments: [{ content: "내용", createdAt: new Date() }],
 };
 
 const mockMyClubRegisterAcf = {
