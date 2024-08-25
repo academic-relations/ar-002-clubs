@@ -46,7 +46,7 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
 }) => {
   const router = useRouter();
 
-  const professorEnumToText = (profEnum: ProfessorEnum) => {
+  const professorEnumToText = (profEnum?: ProfessorEnum) => {
     switch (profEnum) {
       case ProfessorEnum.Assistant:
         return "조교수";
@@ -82,14 +82,14 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
             <Tag
               color={
                 getTagDetail(
-                  mockMyClubRegisterDetail.registrationTypeEnum,
+                  mockMyClubRegisterDetail.registrationTypeEnumId,
                   RegistrationTypeTagList,
                 ).color
               }
             >
               {
                 getTagDetail(
-                  mockMyClubRegisterDetail.registrationTypeEnum,
+                  mockMyClubRegisterDetail.registrationTypeEnumId,
                   RegistrationTypeTagList,
                 ).text
               }
@@ -101,16 +101,16 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
           <ListContainer>
             <ListItem>동아리: {mockMyClubRegisterDetail.clubNameKr}</ListItem>
             <ListItem>
-              대표자 이름: {mockMyClubRegisterDetail.studentName}
+              대표자 이름: {mockMyClubRegisterDetail.studentId}
             </ListItem>
             <ListItem>
               대표자 전화번호: {mockMyClubRegisterDetail.phoneNumber}
             </ListItem>
             <ListItem>
-              설립 연도: {mockMyClubRegisterDetail.foundedYear}
+              설립 연도: {mockMyClubRegisterDetail.foundedAt.getFullYear()}
             </ListItem>
             <ListItem>
-              소속 분과: {mockMyClubRegisterDetail.clubDivision}
+              소속 분과: {mockMyClubRegisterDetail.divisionId}
             </ListItem>
             <ListItem>
               활동 분야 (국문): {mockMyClubRegisterDetail.activityFieldKr}
@@ -123,13 +123,17 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
             지도교수 정보
           </Typography>
           <ListContainer>
-            <ListItem>성함: {mockMyClubRegisterDetail.professorName}</ListItem>
             <ListItem>
-              직급:{" "}
-              {professorEnumToText(mockMyClubRegisterDetail.professorEnum)}
+              성함: {mockMyClubRegisterDetail.professor?.name}
             </ListItem>
             <ListItem>
-              이메일: {mockMyClubRegisterDetail.professorEmail}
+              직급:{" "}
+              {professorEnumToText(
+                mockMyClubRegisterDetail.professor?.professorEnumId,
+              )}
+            </ListItem>
+            <ListItem>
+              이메일: {mockMyClubRegisterDetail.professor?.email}
             </ListItem>
           </ListContainer>
           <Typography fw="MEDIUM" fs={16} lh={20}>
@@ -145,11 +149,11 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
             <ListItem>
               주요 활동 계획: {mockMyClubRegisterDetail.activityPlan}
             </ListItem>
-            {mockMyClubRegisterDetail.registrationTypeEnum ===
+            {mockMyClubRegisterDetail.registrationTypeEnumId ===
               RegistrationTypeEnum.Promotional && (
               <ListItem>활동계획서</ListItem>
             )}
-            {mockMyClubRegisterDetail.registrationTypeEnum ===
+            {mockMyClubRegisterDetail.registrationTypeEnumId ===
               RegistrationTypeEnum.Promotional && (
               <ListItem>동아리 회칙</ListItem>
             )}
@@ -157,7 +161,7 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
             <ListItem>(선택) 외부 강사 지도 계획서</ListItem>
           </ListContainer>
           {/* TODO: Add File Preview */}
-          {mockMyClubRegisterDetail.registrationTypeEnum !==
+          {mockMyClubRegisterDetail.registrationTypeEnumId !==
             RegistrationTypeEnum.Renewal && (
             <FlexWrapper direction="column" gap={16}>
               <Typography fw="MEDIUM" fs={16} lh={20}>
@@ -196,7 +200,14 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
             <Button style={{ width: "max-content" }} onClick={() => {}}>
               삭제
             </Button>
-            <Button style={{ width: "max-content" }} onClick={() => {}}>
+            <Button
+              style={{ width: "max-content" }}
+              onClick={() => {
+                router.push(
+                  `/my/register-club/${mockMyClubRegisterDetail.id}/edit`,
+                );
+              }}
+            >
               수정
             </Button>
           </FlexWrapper>

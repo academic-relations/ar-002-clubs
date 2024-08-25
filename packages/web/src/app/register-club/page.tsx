@@ -14,7 +14,7 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import ClubButton from "@sparcs-clubs/web/features/register-club/components/_atomic/ClubButton";
 
-import { mockMyRegistration } from "@sparcs-clubs/web/features/register-club/service/_mock/mockMyRegistration";
+import { mockMyRegistration } from "@sparcs-clubs/web/features/register-club/services/_mocks/mockMyRegistration";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 const ClubButtonWrapper = styled.div`

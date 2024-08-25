@@ -6,6 +6,8 @@ import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
+import { MyClubRegistrationDetail } from "@sparcs-clubs/web/features/my/types/myClubRegistration";
+
 const mockMyClubRegisterList = {
   registrations: [
     {
@@ -18,26 +20,30 @@ const mockMyClubRegisterList = {
   ],
 };
 
-const mockMyClubRegisterDetail = {
+// validation 검증을 해야 하기에 변경 시 사용되는 곳 api 확인하면서 변경
+const mockMyClubRegisterDetail: MyClubRegistrationDetail = {
   id: 1,
-  registrationStatusEnum: RegistrationStatusEnum.Pending,
-  registrationTypeEnum: RegistrationTypeEnum.Promotional,
+  registrationStatusEnumId: RegistrationStatusEnum.Pending,
+  registrationTypeEnumId: RegistrationTypeEnum.Renewal,
   clubNameKr: "스팍스",
+  clubNameEn: "sparcs",
   clubId: 1,
-  studentName: "이지윤",
-  phoneNumber: "010-XXXX-XXXX",
-  foundedYear: 2020,
-  clubDivision: "생활체육",
+  studentId: 123123,
+  phoneNumber: "010-1234-1234",
+  foundedAt: new Date(),
+  divisionId: 1,
   activityFieldKr: "개발",
   activityFieldEn: "Gaebal",
-  professorName: "이교수",
-  professorEnum: ProfessorEnum.Full,
-  professorEmail: "gyosu@kaist.ac.kr",
-  professorConfirm: false,
+  professor: {
+    name: "이교수",
+    professorEnumId: ProfessorEnum.Full,
+    email: "gyosu@kaist.ac.kr",
+  },
   divisionConsistency: "어쩌구저쩌구",
   foundationPurpose: "어쩌구저쩌구",
   activityPlan: "어쩌구저쩌구",
-  externalInstructionFileId: undefined,
+  updatedAt: new Date(),
+  professorConfirm: false,
 };
 
 const mockMyClubRegisterAcf = {
@@ -66,7 +72,7 @@ const mockMyClubRegisterAcf = {
 };
 
 export {
-  mockMyClubRegisterDetail,
   mockMyClubRegisterAcf,
+  mockMyClubRegisterDetail,
   mockMyClubRegisterList,
 };
