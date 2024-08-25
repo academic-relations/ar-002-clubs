@@ -7,25 +7,18 @@ import { z } from "zod";
  */
 
 const url = () => `/auth/sign-in`;
-const method = "POST";
+const method = "GET";
 
 const requestParam = z.object({});
 
-const requestQuery = z.object({});
+const requestQuery = z.object({
+  next: z.string().optional(),
+});
 
 const requestBody = z.object({});
 
 const responseBodyMap = {
-  [HttpStatusCode.Created]: z.object({
-    accessToken: z.object({
-      undergraduate: z.coerce.string().optional(),
-      master: z.coerce.string().optional(),
-      doctor: z.coerce.string().optional(),
-      executive: z.coerce.string().optional(),
-      professor: z.coerce.string().optional(),
-      employee: z.coerce.string().optional(),
-    }),
-  }),
+  [HttpStatusCode.Ok]: z.object({}),
 };
 
 const responseErrorMap = {};
@@ -43,7 +36,7 @@ const apiAut001 = {
 type ApiAut001RequestParam = z.infer<typeof apiAut001.requestParam>;
 type ApiAut001RequestQuery = z.infer<typeof apiAut001.requestQuery>;
 type ApiAut001RequestBody = z.infer<typeof apiAut001.requestBody>;
-type ApiAut001ResponseOk = z.infer<(typeof apiAut001.responseBodyMap)[201]>;
+type ApiAut001ResponseOk = z.infer<(typeof apiAut001.responseBodyMap)[200]>;
 
 export default apiAut001;
 

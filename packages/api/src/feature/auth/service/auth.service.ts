@@ -1,14 +1,15 @@
 import { HttpException, Injectable } from "@nestjs/common";
-
 import { JwtService } from "@nestjs/jwt";
-
+import { ApiAut001RequestQuery } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut001";
 import { ApiAut002ResponseCreated } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut002";
 import { ApiAut003ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut003";
+import { ApiAut004RequestQuery } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut004";
 
 import { getSsoConfig } from "@sparcs-clubs/api/env";
 
+import { Request, RequestExtra } from "../dto/auth.dto";
+import { SSOUser } from "../dto/sparcs-sso.dto";
 import { AuthRepository } from "../repository/auth.repository";
-
 import { Client } from "../util/sparcs-sso";
 
 @Injectable()
@@ -20,22 +21,47 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {
     const ssoConfig = getSsoConfig();
-    const ssoClient = new Client(
-      ssoConfig.ssoClientId,
-      ssoConfig.ssoSecretKey,
-      ssoConfig.ssoIsBeta,
-    );
+    const ssoClient = new Client(ssoConfig.ssoClientId, ssoConfig.ssoSecretKey);
     this.ssoClient = ssoClient;
   }
 
-  async postAuthSignin() {
-    // TODO: SPARCS SSO 로그인 구현
-    const studentNumber = process.env.USER_KU_STD_NO;
-    const email = process.env.USER_MAIL;
-    const sid = process.env.USER_SID;
-    const name = process.env.USER_KU_KNAME;
-    const type = process.env.USER_KU_PERSON_TYPE;
-    const department = process.env.USER_KU_KAIST_ORG_ID;
+  public async getAuthSignin(query: ApiAut001RequestQuery, req: Request) {
+    if (!req.session) {
+      // eslint-disable-next-line no-param-reassign
+      req.session = {} as RequestExtra["session"];
+    }
+    // eslint-disable-next-line no-param-reassign
+    req.session.next = query.next ?? "/";
+    const { url, state } = this.ssoClient.get_login_params();
+    // eslint-disable-next-line no-param-reassign
+    req.session.ssoState = state;
+    return url;
+  }
+
+  public async getAuthSigninCallback(
+    query: ApiAut004RequestQuery,
+    session: Request["session"],
+  ) {
+    const stateBefore = session.ssoState;
+    if (!stateBefore || stateBefore !== query.state) {
+      return {
+        nextUrl: "/error/invalid-login",
+        refreshToken: null,
+        refreshTokenOptions: null,
+      };
+    }
+
+    const ssoProfile: SSOUser = await this.ssoClient.get_user_info(query.code);
+
+    const studentNumber =
+      ssoProfile.kaist_info.ku_std_no || process.env.USER_KU_STD_NO;
+    const email = ssoProfile.email || process.env.USER_MAIL;
+    const sid = ssoProfile.sid || process.env.USER_SID;
+    const name = ssoProfile.kaist_info.ku_kname || process.env.USER_KU_KNAME;
+    const type =
+      ssoProfile.kaist_info.ku_person_type || process.env.USER_KU_PERSON_TYPE;
+    const department =
+      ssoProfile.kaist_info.ku_kaist_org_id || process.env.USER_KU_KAIST_ORG_ID;
 
     const user = await this.authRepository.findOrCreateUser(
       email,
@@ -55,15 +81,24 @@ export class AuthService {
     const expiresAt = new Date(
       current.getTime() + parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN),
     );
+    const nextUrl = session.next ?? "/";
+
+    const token = {
+      accessToken,
+      refreshToken,
+      expiresAt,
+    };
+
+    console.log(token.accessToken);
+
     return (await this.authRepository.createRefreshTokenRecord(
       user.id,
       refreshToken,
       expiresAt,
     ))
       ? {
-          accessToken,
-          refreshToken,
-          expiresAt,
+          next: nextUrl,
+          token,
         }
       : (() => {
           throw new HttpException("Cannot store refreshtoken", 500);
@@ -270,53 +305,4 @@ export class AuthService {
     );
     return refreshToken;
   }
-
-  // public async getAuthLogin(query, req: Request) {
-  //   if (req.user) {
-  //     return query.next ?? "/";
-  //   }
-  //   // eslint-disable-next-line no-param-reassign
-  //   req.session.next = query.next ?? "/";
-  //   const { url, state } = this.ssoClient.get_login_params();
-  //   // eslint-disable-next-line no-param-reassign
-  //   req.session.ssoState = state;
-  //   if (query.socialLogin === "0") {
-  //     return `${url}&social_enabled=0&show_disabled_button=0`;
-  //   }
-  //   return url;
-  // }
-
-  // public async getAuthLoginCallback(query, session: Request["session"]) {
-  //   const stateBefore = session.ssoState;
-  //   if (!stateBefore || stateBefore !== query.state) {
-  //     return {
-  //       nextUrl: "/error/invalid-login",
-  //       refreshToken: null,
-  //       refreshTokenOptions: null,
-  //     };
-  //   }
-  //   const ssoProfile: SSOUser = await this.ssoClient.get_user_info(query.code);
-  //   const {
-  //     // accessToken,
-  //     // accessTokenOptions,
-  //     refreshToken,
-  //     refreshTokenOptions,
-  //   } = await this.ssoLogin(ssoProfile);
-  //   const nextUrl = session.next ?? "/";
-  //   return { nextUrl, refreshToken, refreshTokenOptions };
-  // }
-
-  // public async getAuthLogout(query, req: Request, user: UserDto) {
-  //   if (user) {
-  //     const { sid } = user;
-  //     const { protocol } = req;
-  //     const host = req.get("host");
-  //     const { originalUrl } = req;
-  //     const absoluteUrl = `${protocol}://${host}${originalUrl}`;
-  //     const logoutUrl = this.ssoClient.get_logout_url(sid, absoluteUrl);
-  //     return logoutUrl;
-  //   }
-
-  //   return query.next ?? "/";
-  // }
 }

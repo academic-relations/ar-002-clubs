@@ -8,7 +8,6 @@ const schema = z.object({
 });
 
 const getSsoConfig = () => ({
-  ssoIsBeta: process.env.SSO_IS_BETA !== "false",
   ssoClientId: process.env.SSO_CLIENT_ID,
   ssoSecretKey: process.env.SSO_SECRET_KEY,
 });

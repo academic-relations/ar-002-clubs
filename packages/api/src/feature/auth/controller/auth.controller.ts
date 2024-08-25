@@ -2,13 +2,15 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   Req,
   Res,
+  Session,
   UseGuards,
   UsePipes,
 } from "@nestjs/common";
 import apiAut001, {
-  ApiAut001ResponseOk,
+  ApiAut001RequestQuery,
 } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut001";
 import apiAut002, {
   ApiAut002ResponseCreated,
@@ -16,7 +18,10 @@ import apiAut002, {
 import apiAut003, {
   ApiAut003ResponseOk,
 } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut003";
-import { Request, Response } from "express";
+import apiAut004, {
+  ApiAut004RequestQuery,
+} from "@sparcs-clubs/interface/api/auth/endpoint/apiAut004";
+import { Response } from "express";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import {
@@ -26,7 +31,7 @@ import {
 import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 import logger from "@sparcs-clubs/api/common/util/logger";
 
-import { UserRefreshTokenPayload } from "../dto/auth.dto";
+import { Request, UserRefreshTokenPayload } from "../dto/auth.dto";
 import { JwtRefreshGuard } from "../guard/jwt-refresh.guard";
 import { AuthService } from "../service/auth.service";
 
@@ -35,12 +40,29 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
-  @Post("/auth/sign-in")
+  @Get("/auth/sign-in")
   @UsePipes(new ZodPipe(apiAut001))
-  async postAuthSignin(
+  async getAuthSignin(
+    @Req() req: Request,
     @Res() res: Response,
-  ): Promise<Response<ApiAut001ResponseOk>> {
-    const token = await this.authService.postAuthSignin();
+    @Query() query: ApiAut001RequestQuery,
+  ) {
+    const url = await this.authService.getAuthSignin(query, req);
+    return res.redirect(url);
+  }
+
+  @Public()
+  @Get("/auth/sign-in/callback")
+  @UsePipes(new ZodPipe(apiAut004))
+  async postAuthSigninCallback(
+    @Res() res: Response,
+    @Query() query: ApiAut004RequestQuery,
+    @Session() session: Request["session"],
+  ) {
+    const { next, token } = await this.authService.getAuthSigninCallback(
+      query,
+      session,
+    );
     res.cookie("refreshToken", token.refreshToken, {
       expires: token.expiresAt,
       httpOnly: true,
@@ -51,7 +73,7 @@ export class AuthController {
       httpOnly: true,
       path: "/auth/sign-out",
     });
-    return res.json({ accessToken: token.accessToken });
+    return res.redirect(next);
   }
 
   @Public()
@@ -99,50 +121,4 @@ export class AuthController {
     printObjectPropertyTypes(user);
     logger.debug(user.studentId + user.studentNumber);
   }
-
-  // @Public()
-  // @Get("/auth/login")
-  // async getAuthLogin(
-  //   @Query("next") next: string,
-  //   @Query("social_login") socialLogin: string,
-  //   @Req() req: Request,
-  //   @Res() res: Response,
-  // ) {
-  //   const query = { next, socialLogin };
-  //   const url = await this.authService.getAuthLogin(query, req);
-  //   return res.redirect(url);
-  // }
-
-  // @Public()
-  // @Get("/auth/login/callback")
-  // async getAuthLoginCallback(
-  //   @Query("state") state: string,
-  //   @Query("code") code: string,
-  //   @Session() session: Request["session"],
-  //   @Res() res: Response,
-  // ) {
-  //   const query = { state, code };
-  //   const { nextUrl, refreshToken, refreshTokenOptions } =
-  //     await this.authService.getAuthLoginCallback(query, session);
-  //   if (refreshToken && refreshTokenOptions) {
-  //     res.cookie("refreshToken", refreshToken, refreshTokenOptions);
-  //   }
-  //   return res.redirect(nextUrl);
-  // }
-
-  // @Public()
-  // @Get("/auth/logout")
-  // async getAuthLogout(
-  //   @Query("next") next: string,
-  //   @Req() req: Request,
-  //   @Res() res: Response,
-  //   @GetUser() user: UserDto,
-  // ) {
-  //   const query = { next };
-  //   const url = await this.authService.getAuthLogout(query, req, user);
-  //   if (user) {
-  //     res.clearCookie("refreshToken", { path: "/", maxAge: 0, httpOnly: true });
-  //   }
-  //   return res.redirect(url);
-  // }
 }
