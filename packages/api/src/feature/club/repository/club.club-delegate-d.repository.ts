@@ -16,7 +16,7 @@ import {
   ClubDelegateD,
   ClubStudentT,
 } from "src/drizzle/schema/club.schema";
-import { Student } from "src/drizzle/schema/user.schema";
+import { Student, StudentT } from "src/drizzle/schema/user.schema";
 
 @Injectable()
 export class ClubDelegateDRepository {
@@ -304,7 +304,7 @@ export class ClubDelegateDRepository {
    * @param clubDelegateEnumId 대표자 분류 id
    *
    * @description 대표자/대의원으로 변경 가능한 학생 목록을 가져옵니다.
-   * clubId에 해당하는 동아리의 정회원이며,
+   * clubId에 해당하는 동아리의 정회원이어야 하고, 대표자나 대의원으로 지정되지 않은 학생이어야 합니다.
    *
    * @returns 변경 가능한 학생 목록을 리턴합니다.
    */
@@ -312,17 +312,37 @@ export class ClubDelegateDRepository {
     clubId: number,
     clubDelegateEnumId: ClubDelegateEnum,
   ) {
-    // 정회원 - StudentT에서 확인
-    // 이름 학번 전화번호 - Student에서 확인
+    console.log(clubDelegateEnumId);
+    const cur = getKSTDate();
     const result = await this.db
-      .select()
+      .select({
+        id: ClubStudentT.studentId,
+        name: Student.name,
+        studentNumber: Student.number,
+        phoneNumber: Student.phoneNumber,
+      })
       .from(ClubStudentT)
       .where(
         and(
           eq(ClubStudentT.clubId, clubId),
-          eq(ClubDelegateD.ClubDelegateEnumId, clubDelegateEnumId),
           isNull(ClubStudentT.deletedAt),
+          lte(ClubStudentT.startTerm, cur),
+          or(isNull(ClubStudentT.endTerm), gte(ClubStudentT.endTerm, cur)),
         ),
+      )
+      .leftJoin(
+        StudentT,
+        and(
+          eq(StudentT.studentId, ClubStudentT.studentId),
+          eq(StudentT.studentEnum, 1),
+          lte(StudentT.startTerm, cur),
+          or(isNull(StudentT.endTerm), gte(StudentT.endTerm, cur)),
+          isNull(StudentT.deletedAt),
+        ),
+      )
+      .leftJoin(
+        Student,
+        and(eq(Student.id, ClubStudentT.studentId), isNull(Student.deletedAt)),
       );
     return result;
   }

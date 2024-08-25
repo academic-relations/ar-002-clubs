@@ -112,7 +112,7 @@ export class AuthRepository {
         .where(eq(Student.number, parseInt(studentNumber)))
         .then(takeUnique);
 
-      // studentNumber의 뒤 네자리가 2000 미만일 경우 studentEnum을 1, 5000미만일 경우 2, 6000미만일 경우 1, 나머지는 3으로 설정
+      // studentNumber의 뒤 네자리가 2000 미만일 경우 studentEnum을 1, 6000미만일 경우 2, 7000미만일 경우 1, 나머지는 3으로 설정
       let studentEnum = 3;
       let studentStatusEnum = 2;
       if (parseInt(studentNumber.slice(-4)) < 2000) {

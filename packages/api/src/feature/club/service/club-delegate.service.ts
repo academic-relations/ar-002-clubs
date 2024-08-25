@@ -198,12 +198,12 @@ export class ClubDelegateService {
         HttpStatus.FORBIDDEN,
       );
     }
-    console.log(clubDelegateEnumId);
 
-    // const result = await this.clubDelegateDRepository.findDelegateCandidates(
-    //   clubId,
-    //   clubDelegateEnumId,
-    // );
-    return { students: [] };
+    const result = await this.clubDelegateDRepository.findDelegateCandidates(
+      clubId,
+      clubDelegateEnumId,
+    );
+
+    return { students: result };
   }
 }
