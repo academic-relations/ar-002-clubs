@@ -24,9 +24,10 @@ export const ExecutiveRegistrationClubFrame = () => {
   const limit = 10;
 
   const { data, isLoading, isError } = useGetRegisterClub({
-    pageOffset: 1,
+    pageOffset: currentPage,
     itemCount: 10,
   });
+
   const [clubData, setClubData] = useState<RegisterClubList>({
     items: [],
     total: 0,
@@ -42,11 +43,8 @@ export const ExecutiveRegistrationClubFrame = () => {
     if (!isLoading && data) {
       setClubData(data);
       setPaginatedData({
-        total: data?.total,
-        items: data?.items.slice(
-          (currentPage - 1) * limit,
-          currentPage * limit,
-        ),
+        total: data.total,
+        items: data.items.slice((currentPage - 1) * limit, currentPage * limit),
         offset: (currentPage - 1) * limit,
       });
     }
@@ -57,19 +55,17 @@ export const ExecutiveRegistrationClubFrame = () => {
   };
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
-      {clubData.items.length > 0 && (
-        <TableWithPaginationWrapper>
-          <ExecutiveRegistrationTable registerList={paginatedData} />
-          <FlexWrapper direction="row" gap={16} justify="center">
-            <Pagination
-              totalPage={Math.ceil(clubData.total / limit)}
-              currentPage={currentPage}
-              limit={limit}
-              setPage={handlePageChange}
-            />
-          </FlexWrapper>
-        </TableWithPaginationWrapper>
-      )}
+      <TableWithPaginationWrapper>
+        <ExecutiveRegistrationTable registerList={paginatedData} />
+        <FlexWrapper direction="row" gap={16} justify="center">
+          <Pagination
+            totalPage={Math.ceil(clubData.total / limit)}
+            currentPage={currentPage}
+            limit={limit}
+            setPage={handlePageChange}
+          />
+        </FlexWrapper>
+      </TableWithPaginationWrapper>
     </AsyncBoundary>
   );
 };
