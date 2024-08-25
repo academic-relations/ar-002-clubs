@@ -167,7 +167,7 @@ export class ClubRegistrationController {
   }
 
   @Student()
-  @Get("/student/registrations/club-registrations/:applyId")
+  @Get("/student/registrations/club-registrations/club-registration/:applyId")
   @UsePipes(new ZodPipe(apiReg011))
   async getStudentRegistrationsClubRegistration(
     @GetStudent() user: GetStudent,
