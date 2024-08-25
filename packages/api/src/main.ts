@@ -22,7 +22,7 @@ async function bootstrap() {
       secret: env.SECRET_KEY,
       resave: false,
       saveUninitialized: false,
-      cookie: { maxAge: 86400000 }, // 24 hours
+      cookie: { maxAge: 600000 },
     }),
   );
 

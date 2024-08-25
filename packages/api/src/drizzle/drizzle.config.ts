@@ -10,7 +10,7 @@ export default {
     uri: env.DATABASE_URL,
   },
   // Print all statements
-  verbose: false,
+  verbose: true,
   // Always ask for confirmation
   strict: false,
 } satisfies Config;

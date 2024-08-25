@@ -7,7 +7,7 @@ import { ApiAut004RequestQuery } from "@sparcs-clubs/interface/api/auth/endpoint
 
 import { getSsoConfig } from "@sparcs-clubs/api/env";
 
-import { Request, RequestExtra } from "../dto/auth.dto";
+import { Request } from "../dto/auth.dto";
 import { SSOUser } from "../dto/sparcs-sso.dto";
 import { AuthRepository } from "../repository/auth.repository";
 import { Client } from "../util/sparcs-sso";
@@ -26,10 +26,6 @@ export class AuthService {
   }
 
   public async getAuthSignin(query: ApiAut001RequestQuery, req: Request) {
-    if (!req.session) {
-      // eslint-disable-next-line no-param-reassign
-      req.session = {} as RequestExtra["session"];
-    }
     // eslint-disable-next-line no-param-reassign
     req.session.next = query.next ?? "/";
     const { url, state } = this.ssoClient.get_login_params();
@@ -88,8 +84,6 @@ export class AuthService {
       refreshToken,
       expiresAt,
     };
-
-    console.log(token.accessToken);
 
     return (await this.authRepository.createRefreshTokenRecord(
       user.id,
