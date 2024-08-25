@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import { ApiClb008ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb008";
 import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
@@ -20,7 +21,7 @@ interface ApiClb015ResponseType {
   data: ApiClb015ResponseOk | ApiClb015ResponseNoContent;
 }
 @Injectable()
-export default class ClubDelegateService {
+export class ClubDelegateService {
   constructor(
     private clubDelegateDRepository: ClubDelegateDRepository,
     private userPublicService: UserPublicService,
@@ -179,5 +180,30 @@ export default class ClubDelegateService {
         delegateEnumId: result[0].ClubDelegateEnumId,
       },
     };
+  }
+
+  async getStudentClubDelegateCandidates(
+    studentId: number,
+    clubId: number,
+    clubDelegateEnumId: ClubDelegateEnum,
+  ): Promise<ApiClb008ResponseOk> {
+    const isRepresentative =
+      await this.clubDelegateDRepository.isPresidentByStudentIdAndClubId(
+        studentId,
+        clubId,
+      );
+    if (!isRepresentative) {
+      throw new HttpException(
+        "This api is allowed for representatives",
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    console.log(clubDelegateEnumId);
+
+    // const result = await this.clubDelegateDRepository.findDelegateCandidates(
+    //   clubId,
+    //   clubDelegateEnumId,
+    // );
+    return { students: [] };
   }
 }

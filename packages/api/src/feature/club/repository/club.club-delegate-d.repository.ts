@@ -14,6 +14,7 @@ import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
   ClubDelegateChangeRequest,
   ClubDelegateD,
+  ClubStudentT,
 } from "src/drizzle/schema/club.schema";
 import { Student } from "src/drizzle/schema/user.schema";
 
@@ -296,5 +297,33 @@ export class ClubDelegateDRepository {
       .then(takeUnique);
     if (president !== 0) return true;
     return false;
+  }
+
+  /**
+   * @param clubId 동아리 id
+   * @param clubDelegateEnumId 대표자 분류 id
+   *
+   * @description 대표자/대의원으로 변경 가능한 학생 목록을 가져옵니다.
+   * clubId에 해당하는 동아리의 정회원이며,
+   *
+   * @returns 변경 가능한 학생 목록을 리턴합니다.
+   */
+  async findDelegateCandidates(
+    clubId: number,
+    clubDelegateEnumId: ClubDelegateEnum,
+  ) {
+    // 정회원 - StudentT에서 확인
+    // 이름 학번 전화번호 - Student에서 확인
+    const result = await this.db
+      .select()
+      .from(ClubStudentT)
+      .where(
+        and(
+          eq(ClubStudentT.clubId, clubId),
+          eq(ClubDelegateD.ClubDelegateEnumId, clubDelegateEnumId),
+          isNull(ClubStudentT.deletedAt),
+        ),
+      );
+    return result;
   }
 }
