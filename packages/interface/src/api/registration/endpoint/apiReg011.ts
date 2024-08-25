@@ -19,7 +19,7 @@ import registrationTypeEnumChecker from "../utils/registrationTypeEnumChecker";
  */
 
 const url = (applyId: string) =>
-  `/student/registrations/club-registrations/${applyId}`;
+  `/student/registrations/club-registrations/club-registration/${applyId}`;
 const method = "GET";
 
 const requestParam = z.object({
@@ -39,7 +39,10 @@ const responseBodyMap = {
       clubId: z.coerce.number().int().min(1).optional(),
       clubNameKr: zClubName,
       clubNameEn: zClubName,
-      studentId: z.coerce.number().int().min(1),
+      representative: z.object({
+        studentNumber: z.coerce.number().int().min(1),
+        name: z.string().max(30),
+      }),
       phoneNumber: zKrPhoneNumber,
       foundedAt: z.coerce.date(),
       divisionId: z.coerce.number().int().min(1),
@@ -66,7 +69,14 @@ const responseBodyMap = {
       clubRuleFileName: z.coerce.string().max(255).optional(),
       externalInstructionFileId: z.coerce.string().max(128).optional(),
       externalInstructionFileName: z.coerce.string().max(255).optional(),
+      isProfessorSigned: z.coerce.boolean(),
       updatedAt: z.coerce.date(),
+      comments: z.array(
+        z.object({
+          content: z.string(),
+          createdAt: z.coerce.date(),
+        }),
+      ),
     })
     .refine(args => registrationTypeEnumChecker(args)),
 };
