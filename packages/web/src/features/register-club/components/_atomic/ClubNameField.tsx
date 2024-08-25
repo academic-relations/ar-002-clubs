@@ -13,9 +13,13 @@ import { ClubRegistrationInfo } from "@sparcs-clubs/web/features/register-club/t
 
 interface ClubNameFieldProps {
   clubList?: ClubRegistrationInfo[];
+  editMode?: boolean;
 }
 
-const ClubNameField: React.FC<ClubNameFieldProps> = ({ clubList = [] }) => {
+const ClubNameField: React.FC<ClubNameFieldProps> = ({
+  clubList = [],
+  editMode = false,
+}) => {
   const { control, resetField, setValue } =
     useFormContext<ApiReg001RequestBody>();
 
@@ -85,6 +89,7 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({ clubList = [] }) => {
             label="동아리명 (국문)"
             placeholder="동아리명을 선택해주세요"
             items={clubOptions()}
+            disabled={editMode}
           />
         )}
       />
