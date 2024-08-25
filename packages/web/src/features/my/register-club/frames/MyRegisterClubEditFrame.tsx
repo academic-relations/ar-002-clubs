@@ -27,7 +27,7 @@ import ProvisionalBasicInformFrame from "@sparcs-clubs/web/features/register-clu
 
 interface RegisterClubMainFrameProps {
   applyId: number;
-  detail: MyClubRegistrationDetail;
+  detail?: MyClubRegistrationDetail;
 }
 
 const ButtonWrapper = styled.div`
@@ -37,7 +37,7 @@ const ButtonWrapper = styled.div`
 
 const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
   applyId,
-  detail,
+  detail = undefined,
 }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -59,7 +59,7 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
   });
 
   const title = useMemo(() => {
-    switch (detail.registrationTypeEnumId) {
+    switch (detail?.registrationTypeEnumId) {
       case RegistrationTypeEnum.Promotional:
         return "신규 등록";
       case RegistrationTypeEnum.Renewal:
@@ -69,7 +69,8 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
     }
   }, [detail]);
 
-  const type = detail.registrationTypeEnumId;
+  const type =
+    detail?.registrationTypeEnumId ?? RegistrationTypeEnum.NewProvisional;
 
   const isProvisionalClub =
     type === RegistrationTypeEnum.NewProvisional ||
