@@ -15,6 +15,8 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+import WarningInfo from "@sparcs-clubs/web/common/components/WarningInfo";
 import usePutClubRegistration from "@sparcs-clubs/web/features/my/services/usePutClubRegistration";
 import { MyClubRegistrationDetail } from "@sparcs-clubs/web/features/my/types/myClubRegistration";
 import ActivityReportFrame from "@sparcs-clubs/web/features/register-club/components/ActivityReportFrame";
@@ -107,9 +109,17 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
             title={`동아리 ${title} 신청 수정`}
             enableLast
           />
-          {/* TODO. 등록 기간, 신청마감 동적처리  */}
-          <Info text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
-          {/* // WarningInfo 공통컴포넌트 생성 후 추가 */}
+          <FlexWrapper direction="column" gap={20}>
+            {/* TODO. 등록 기간, 신청마감 동적처리  */}
+            <Info text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
+            <WarningInfo>
+              <Typography lh={24} color="BLACK">
+                동아리 등록 구분(재등록 / 신규 등록 / 가등록) 변경 또는 가등록
+                신청 구분 변경을 원할 경우, 해당 신청 내역을 삭제한 후 새로운
+                신청을 해주시기 바랍니다
+              </Typography>
+            </WarningInfo>
+          </FlexWrapper>
           {isProvisionalClub ? (
             <ProvisionalBasicInformFrame />
           ) : (
