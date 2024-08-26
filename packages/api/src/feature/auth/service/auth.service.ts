@@ -74,7 +74,10 @@ export class AuthService {
     const accessToken = this.getAccessToken(user);
     const refreshToken = this.getRefreshToken(user);
     const current = new Date(); // todo 시간 변경 필요.
-    const expiresAt = new Date(
+    const accessTokenTokenExpiresAt = new Date(
+      current.getTime() + parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN),
+    );
+    const refreshTokenExpiresAt = new Date(
       current.getTime() + parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN),
     );
     const nextUrl = session.next ?? "/";
@@ -82,13 +85,14 @@ export class AuthService {
     const token = {
       accessToken,
       refreshToken,
-      expiresAt,
+      refreshTokenExpiresAt,
+      accessTokenTokenExpiresAt,
     };
 
     return (await this.authRepository.createRefreshTokenRecord(
       user.id,
       refreshToken,
-      expiresAt,
+      refreshTokenExpiresAt,
     ))
       ? {
           next: nextUrl,

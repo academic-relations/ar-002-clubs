@@ -64,14 +64,18 @@ export class AuthController {
       session,
     );
     res.cookie("refreshToken", token.refreshToken, {
-      expires: token.expiresAt,
+      expires: token.refreshTokenExpiresAt,
       httpOnly: true,
       path: "/auth/refresh",
     });
     res.cookie("refreshToken", token.refreshToken, {
-      expires: token.expiresAt,
+      expires: token.refreshTokenExpiresAt,
       httpOnly: true,
       path: "/auth/sign-out",
+    });
+    res.cookie("accessToken", token.accessToken, {
+      expires: token.accessTokenTokenExpiresAt,
+      httpOnly: false,
     });
     return res.redirect(next);
   }
