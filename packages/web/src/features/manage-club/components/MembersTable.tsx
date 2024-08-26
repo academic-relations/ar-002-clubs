@@ -1,5 +1,7 @@
 import React from "react";
 
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -17,11 +19,18 @@ import { MemTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-import {
-  type Members,
-  MemberStatusEnum,
-} from "../services/_mock/mockManageClub";
-
+interface Members {
+  id: number;
+  createdAt: Date;
+  applyStatusEnumId: RegistrationApplicationStudentStatusEnum;
+  student: {
+    id: number;
+    name: string;
+    studentNumber: number;
+    email: string;
+    phoneNumber?: string | undefined;
+  };
+}
 interface MembersTableProps {
   memberList: Members[];
   clubName: string;
@@ -40,7 +49,7 @@ const openApproveModal = (member: Members, clubName: string) => {
           close();
         }}
       >
-        {member.studentId} {member.applicantName} 학생의{" "}
+        {member.student.studentNumber} {member.student.name} 학생의{" "}
         {new Date().getFullYear()}
         년도 {new Date().getMonth() < 7 ? "봄학기" : "가을학기"} {clubName}{" "}
         동아리 신청을
@@ -63,7 +72,7 @@ const openRejectModal = (member: Members, clubName: string) => {
           close();
         }}
       >
-        {member.studentId} {member.applicantName} 학생의{" "}
+        {member.student.studentNumber} {member.student.name} 학생의{" "}
         {new Date().getFullYear()}
         년도 {new Date().getMonth() < 7 ? "봄학기" : "가을학기"} {clubName}{" "}
         동아리 신청을
@@ -76,7 +85,7 @@ const openRejectModal = (member: Members, clubName: string) => {
 const columnHelper = createColumnHelper<Members>();
 
 const columnsFunction = (clubName: string) => [
-  columnHelper.accessor("status", {
+  columnHelper.accessor("applyStatusEnumId", {
     header: "상태",
     cell: info => {
       const { color, text } = getTagDetail(info.getValue(), MemTagList);
@@ -84,27 +93,27 @@ const columnsFunction = (clubName: string) => [
     },
     size: 5,
   }),
-  columnHelper.accessor("applicationDate", {
+  columnHelper.accessor("createdAt", {
     header: "신청 일시",
     cell: info => formatDateTime(info.getValue()),
     size: 30,
   }),
-  columnHelper.accessor("studentId", {
+  columnHelper.accessor("student.studentNumber", {
     header: "학번",
     cell: info => info.getValue(),
     size: 5,
   }),
-  columnHelper.accessor("applicantName", {
+  columnHelper.accessor("student.name", {
     header: "신청자",
     cell: info => info.getValue(),
     size: 5,
   }),
-  columnHelper.accessor("phoneNumber", {
+  columnHelper.accessor("student.phoneNumber", {
     header: "전화번호",
     cell: info => info.getValue(),
     size: 20,
   }),
-  columnHelper.accessor("email", {
+  columnHelper.accessor("student.email", {
     header: "이메일",
     cell: info => info.getValue(),
     size: 20,
@@ -114,7 +123,8 @@ const columnsFunction = (clubName: string) => [
     header: "비고",
     cell: info => {
       const member = info.row.original;
-      return member.status === MemberStatusEnum.Applied ? (
+      return member.applyStatusEnumId ===
+        RegistrationApplicationStudentStatusEnum.Pending ? (
         <TableButton
           text={["승인", "반려"]}
           onClick={[

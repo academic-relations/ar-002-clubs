@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
 import MembersTable from "@sparcs-clubs/web/features/manage-club/components/MembersTable";
-import { mockRegisterMembers } from "@sparcs-clubs/web/features/manage-club/members/frames/_mock/mockMembers";
+import { useGetMemberRegistration } from "@sparcs-clubs/web/features/manage-club/members/services/getClubMemberRegistration";
 import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 
 const TableWithPagination = styled.div`
@@ -39,11 +41,23 @@ interface MyManageClubDetail {
   room: string; // 동아리방 위치
 }
 
+interface MyRegisterMember {
+  id: number;
+  createdAt: Date;
+  applyStatusEnumId: RegistrationApplicationStudentStatusEnum;
+  student: {
+    id: number;
+    name: string;
+    studentNumber: number;
+    email: string;
+    phoneNumber?: string | undefined;
+  };
+}
+
 const RegisterMemberList = () => {
   const [page, setPage] = useState<number>(1);
-  const totalPage = Math.ceil(mockRegisterMembers.members.length / 10);
 
-  const [clubId, setClubId] = useState<string>("0"); // 자신이 대표자인 동아리의 clubId
+  const [clubId, setClubId] = useState<number>(0); // 자신이 대표자인 동아리의 clubId
   const [clubDetail, setClubDetail] = useState<MyManageClubDetail>({
     // 자신이 대표자인 동아리의 세부 정보
     id: 0,
@@ -60,8 +74,9 @@ const RegisterMemberList = () => {
     foundingYear: 2024,
     room: "",
   });
+  const [registerMember, setRegisterMember] = useState<MyRegisterMember[]>([]);
 
-  // 자신이 대표자인 동아리 정보 가져오기
+  // 자신이 대표자인 동아리 clubId 가져오기
   const { data: idData, isLoading: idIsLoading } = useGetMyManageClub() as {
     data: MyManageClubData;
     isLoading: boolean;
@@ -69,12 +84,17 @@ const RegisterMemberList = () => {
 
   useEffect(() => {
     if (!idIsLoading && idData && Object.keys(idData).length > 0) {
-      setClubId(idData.clubId.toString());
+      setClubId(idData.clubId);
     }
   }, [idIsLoading, idData, clubId]);
 
   // 자신이 대표자인 동아리 clubId에 해당하는 동아리 세부정보 가져오기
-  const { data, isLoading } = useGetClubDetail(clubId);
+  const { data, isLoading } = useGetClubDetail(clubId.toString());
+  const {
+    data: memberData,
+    isLoading: memberIsLoading,
+    isError: memberIsError,
+  } = useGetMemberRegistration({ clubId });
 
   useEffect(() => {
     if (!isLoading && data) {
@@ -82,20 +102,30 @@ const RegisterMemberList = () => {
     }
   }, [isLoading, data]);
 
+  useEffect(() => {
+    if (!memberIsLoading && memberData && memberData.applies) {
+      setRegisterMember(memberData.applies);
+    }
+  }, [memberIsLoading, memberData]);
+
+  const totalPage = Math.ceil(registerMember.length / 10);
+
   return (
     <TableWithPagination>
-      <MembersTable
-        memberList={mockRegisterMembers.members}
-        clubName={clubDetail.name_kr}
-      />
-      {totalPage !== 1 && (
-        <Pagination
-          totalPage={totalPage}
-          currentPage={page}
-          limit={10}
-          setPage={setPage}
+      <AsyncBoundary isLoading={memberIsLoading} isError={memberIsError}>
+        <MembersTable
+          memberList={registerMember}
+          clubName={clubDetail.name_kr}
         />
-      )}
+        {totalPage !== 1 && (
+          <Pagination
+            totalPage={totalPage}
+            currentPage={page}
+            limit={10}
+            setPage={setPage}
+          />
+        )}
+      </AsyncBoundary>
     </TableWithPagination>
   );
 };
