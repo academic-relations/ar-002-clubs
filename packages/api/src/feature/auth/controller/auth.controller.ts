@@ -11,6 +11,7 @@ import {
 } from "@nestjs/common";
 import apiAut001, {
   ApiAut001RequestQuery,
+  ApiAut001ResponseOk,
 } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut001";
 import apiAut002, {
   ApiAut002ResponseCreated,
@@ -44,11 +45,10 @@ export class AuthController {
   @UsePipes(new ZodPipe(apiAut001))
   async getAuthSignin(
     @Req() req: Request,
-    @Res() res: Response,
     @Query() query: ApiAut001RequestQuery,
-  ) {
+  ): Promise<ApiAut001ResponseOk> {
     const url = await this.authService.getAuthSignin(query, req);
-    return res.redirect(url);
+    return { url };
   }
 
   @Public()

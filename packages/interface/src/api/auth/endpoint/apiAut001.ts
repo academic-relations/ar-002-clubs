@@ -18,7 +18,9 @@ const requestQuery = z.object({
 const requestBody = z.object({});
 
 const responseBodyMap = {
-  [HttpStatusCode.Found]: z.object({}),
+  [HttpStatusCode.Ok]: z.object({
+    url: z.string(),
+  }),
 };
 
 const responseErrorMap = {};
@@ -36,7 +38,7 @@ const apiAut001 = {
 type ApiAut001RequestParam = z.infer<typeof apiAut001.requestParam>;
 type ApiAut001RequestQuery = z.infer<typeof apiAut001.requestQuery>;
 type ApiAut001RequestBody = z.infer<typeof apiAut001.requestBody>;
-type ApiAut001ResponseFound = z.infer<(typeof apiAut001.responseBodyMap)[302]>;
+type ApiAut001ResponseOk = z.infer<(typeof apiAut001.responseBodyMap)[200]>;
 
 export default apiAut001;
 
@@ -44,5 +46,5 @@ export type {
   ApiAut001RequestParam,
   ApiAut001RequestQuery,
   ApiAut001RequestBody,
-  ApiAut001ResponseFound,
+  ApiAut001ResponseOk,
 };
