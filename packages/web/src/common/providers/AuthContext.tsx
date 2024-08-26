@@ -9,8 +9,9 @@ import React, {
   useState,
 } from "react";
 
-import getLogin from "../services/getLogin";
+import { jwtDecode } from "jwt-decode";
 
+import getLogin from "../services/getLogin";
 import postLogout from "../services/postLogout";
 
 interface AuthContextType {
@@ -60,7 +61,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       //   setIsLoggedIn(true);
       //   console.log("Logged in successfully.");
       // }
-
     } catch (error) {
       console.error("Login failed", error);
     }
