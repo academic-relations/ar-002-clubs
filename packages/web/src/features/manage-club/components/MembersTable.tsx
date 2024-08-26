@@ -17,7 +17,10 @@ import TableButton from "@sparcs-clubs/web/common/components/Table/TableButton";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { MemTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
+
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
+import { patchClubMemberRegistration } from "../members/services/patchClubMemberRegistration";
 
 interface Members {
   id: number;
@@ -34,15 +37,28 @@ interface Members {
 interface MembersTableProps {
   memberList: Members[];
   clubName: string;
+  clubId: number;
 }
 
-const openApproveModal = (member: Members, clubName: string) => {
+const openApproveModal = (
+  member: Members,
+  clubName: string,
+  clubId: number,
+) => {
   overlay.open(({ isOpen, close }) => (
     <Modal isOpen={isOpen}>
       <CancellableModalContent
         confirmButtonText="승인"
         onConfirm={() => {
           // TODO: 승인 로직 넣기
+          patchClubMemberRegistration(
+            { applyId: member.id },
+            {
+              clubId,
+              applyStatusEnumId:
+                RegistrationApplicationStudentStatusEnum.Approved,
+            },
+          );
           close();
         }}
         onClose={() => {
@@ -59,13 +75,20 @@ const openApproveModal = (member: Members, clubName: string) => {
   ));
 };
 
-const openRejectModal = (member: Members, clubName: string) => {
+const openRejectModal = (member: Members, clubName: string, clubId: number) => {
   overlay.open(({ isOpen, close }) => (
     <Modal isOpen={isOpen}>
       <CancellableModalContent
         confirmButtonText="반려"
         onConfirm={() => {
-          // TODO: 승인 로직 넣기
+          patchClubMemberRegistration(
+            { applyId: member.id },
+            {
+              clubId,
+              applyStatusEnumId:
+                RegistrationApplicationStudentStatusEnum.Rejected,
+            },
+          );
           close();
         }}
         onClose={() => {
@@ -84,7 +107,7 @@ const openRejectModal = (member: Members, clubName: string) => {
 
 const columnHelper = createColumnHelper<Members>();
 
-const columnsFunction = (clubName: string) => [
+const columnsFunction = (clubName: string, clubId: number) => [
   columnHelper.accessor("applyStatusEnumId", {
     header: "상태",
     cell: info => {
@@ -128,10 +151,9 @@ const columnsFunction = (clubName: string) => [
         <TableButton
           text={["승인", "반려"]}
           onClick={[
-            () => openApproveModal(member, clubName),
-            () => openRejectModal(member, clubName),
+            () => openApproveModal(member, clubName, clubId),
+            () => openRejectModal(member, clubName, clubId),
           ]}
-          // TODO: 승인 반려 기능 넣기
         />
       ) : (
         " "
@@ -144,8 +166,9 @@ const columnsFunction = (clubName: string) => [
 const MembersTable: React.FC<MembersTableProps> = ({
   memberList,
   clubName,
+  clubId,
 }) => {
-  const columns = columnsFunction(clubName);
+  const columns = columnsFunction(clubName, clubId);
   const table = useReactTable({
     columns,
     data: memberList,

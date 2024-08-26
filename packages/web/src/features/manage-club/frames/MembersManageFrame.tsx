@@ -139,6 +139,7 @@ const MembersManageFrame: React.FC = () => {
           <MembersTable
             memberList={registerMember}
             clubName={clubDetail.name_kr}
+            clubId={clubId}
           />
         </FlexWrapper>
       </AsyncBoundary>

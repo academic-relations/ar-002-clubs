@@ -103,6 +103,7 @@ const RegisterMemberList = () => {
         <MembersTable
           memberList={registerMember}
           clubName={clubDetail.name_kr}
+          clubId={clubId}
         />
         {totalPage !== 1 && (
           <Pagination
