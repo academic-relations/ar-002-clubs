@@ -40,10 +40,34 @@ const openApproveModal = (member: Members, clubName: string) => {
           close();
         }}
       >
-        {member.studentId} {member.applicantName}의 {new Date().getFullYear()}
+        {member.studentId} {member.applicantName} 학생의{" "}
+        {new Date().getFullYear()}
         년도 {new Date().getMonth() < 7 ? "봄학기" : "가을학기"} {clubName}{" "}
         동아리 신청을
         <br /> 승인하시겠습니까?
+      </CancellableModalContent>
+    </Modal>
+  ));
+};
+
+const openRejectModal = (member: Members, clubName: string) => {
+  overlay.open(({ isOpen, close }) => (
+    <Modal isOpen={isOpen}>
+      <CancellableModalContent
+        confirmButtonText="반려"
+        onConfirm={() => {
+          // TODO: 승인 로직 넣기
+          close();
+        }}
+        onClose={() => {
+          close();
+        }}
+      >
+        {member.studentId} {member.applicantName} 학생의{" "}
+        {new Date().getFullYear()}
+        년도 {new Date().getMonth() < 7 ? "봄학기" : "가을학기"} {clubName}{" "}
+        동아리 신청을
+        <br /> 반려하시겠습니까?
       </CancellableModalContent>
     </Modal>
   ));
@@ -93,7 +117,10 @@ const columnsFunction = (clubName: string) => [
       return member.status === MemberStatusEnum.Applied ? (
         <TableButton
           text={["승인", "반려"]}
-          onClick={[() => openApproveModal(member, clubName), () => {}]}
+          onClick={[
+            () => openApproveModal(member, clubName),
+            () => openRejectModal(member, clubName),
+          ]}
           // TODO: 승인 반려 기능 넣기
         />
       ) : (
