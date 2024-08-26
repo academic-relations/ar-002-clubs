@@ -22,6 +22,16 @@ const OptionOuter = styled.div`
   align-self: stretch;
 `;
 
+const StyledCard = styled(Card)`
+  margin-left: 20px;
+  overflow: hidden;
+  -ms-overflow-style: none;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
 const ActivityReportFrame: React.FC = () => {
   const openCreateActivityReportModal = () => {
     overlay.open(({ isOpen, close }) => (
@@ -32,7 +42,7 @@ const ActivityReportFrame: React.FC = () => {
   return (
     <FlexWrapper direction="column" gap={40}>
       <SectionTitle>가등록 / 등록 취소 기간 활동 보고서</SectionTitle>
-      <Card outline gap={32} style={{ marginLeft: 20 }}>
+      <StyledCard outline gap={32}>
         <OptionOuter>
           <Typography
             fs={14}
@@ -53,7 +63,7 @@ const ActivityReportFrame: React.FC = () => {
         </OptionOuter>
         {/* // TODO. 백엔드 api 완성되면 수정 */}
         <PastActivityReportList data={mockPastActivityData} />
-      </Card>
+      </StyledCard>
     </FlexWrapper>
   );
 };

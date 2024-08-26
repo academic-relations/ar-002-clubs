@@ -18,9 +18,9 @@ interface TableProps<T> {
   unit?: string;
 }
 const TableInnerWrapper = styled.div`
-  display: flex;
-  align-self: stretch;
-  width: 100%;
+  width: calc(100% + (100vw - 100%));
+  padding: 0 calc((100vw - 100%) / 2);
+  overflow-x: auto;
 `;
 
 const TableInner = styled.table<{ height?: number; minWidth: number }>`
@@ -28,8 +28,10 @@ const TableInner = styled.table<{ height?: number; minWidth: number }>`
   flex-direction: column;
   align-items: flex-start;
   min-width: ${({ minWidth }) => `max(100%, ${minWidth}px)`};
+  width: fit-content;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
   border-radius: 8px;
+  overflow: hidden;
   border-spacing: 0;
   height: ${({ height }) => (height ? `${height}px` : "none")};
 `;
@@ -71,7 +73,6 @@ const TableWithCount = styled.div`
   align-items: center;
   gap: 8px;
   width: 100%;
-  overflow: auto;
 `;
 const Count = styled.div`
   display: flex;
