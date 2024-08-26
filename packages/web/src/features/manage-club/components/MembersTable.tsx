@@ -6,6 +6,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import { overlay } from "overlay-kit";
+
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import TableButton from "@sparcs-clubs/web/common/components/Table/TableButton";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
@@ -20,11 +24,34 @@ import {
 
 interface MembersTableProps {
   memberList: Members[];
+  clubName: string;
 }
+
+const openApproveModal = (member: Members, clubName: string) => {
+  overlay.open(({ isOpen, close }) => (
+    <Modal isOpen={isOpen}>
+      <CancellableModalContent
+        confirmButtonText="승인"
+        onConfirm={() => {
+          // TODO: 승인 로직 넣기
+          close();
+        }}
+        onClose={() => {
+          close();
+        }}
+      >
+        {member.studentId} {member.applicantName}의 {new Date().getFullYear()}
+        년도 {new Date().getMonth() < 7 ? "봄학기" : "가을학기"} {clubName}{" "}
+        동아리 신청을
+        <br /> 승인하시겠습니까?
+      </CancellableModalContent>
+    </Modal>
+  ));
+};
 
 const columnHelper = createColumnHelper<Members>();
 
-const columns = [
+const columnsFunction = (clubName: string) => [
   columnHelper.accessor("status", {
     header: "상태",
     cell: info => {
@@ -66,7 +93,7 @@ const columns = [
       return member.status === MemberStatusEnum.Applied ? (
         <TableButton
           text={["승인", "반려"]}
-          onClick={[() => {}, () => {}]}
+          onClick={[() => openApproveModal(member, clubName), () => {}]}
           // TODO: 승인 반려 기능 넣기
         />
       ) : (
@@ -77,7 +104,11 @@ const columns = [
   }),
 ];
 
-const MembersTable: React.FC<MembersTableProps> = ({ memberList }) => {
+const MembersTable: React.FC<MembersTableProps> = ({
+  memberList,
+  clubName,
+}) => {
+  const columns = columnsFunction(clubName);
   const table = useReactTable({
     columns,
     data: memberList,
