@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
-import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import styled from "styled-components";
 
@@ -10,6 +9,7 @@ import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
 import MembersTable from "@sparcs-clubs/web/features/manage-club/components/MembersTable";
 import { useGetMemberRegistration } from "@sparcs-clubs/web/features/manage-club/members/services/getClubMemberRegistration";
+import { Members } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 
 const TableWithPagination = styled.div`
@@ -41,19 +41,6 @@ interface MyManageClubDetail {
   room: string; // 동아리방 위치
 }
 
-interface MyRegisterMember {
-  id: number;
-  createdAt: Date;
-  applyStatusEnumId: RegistrationApplicationStudentStatusEnum;
-  student: {
-    id: number;
-    name: string;
-    studentNumber: number;
-    email: string;
-    phoneNumber?: string | undefined;
-  };
-}
-
 const RegisterMemberList = () => {
   const [page, setPage] = useState<number>(1);
 
@@ -74,7 +61,7 @@ const RegisterMemberList = () => {
     foundingYear: 2024,
     room: "",
   });
-  const [registerMember, setRegisterMember] = useState<MyRegisterMember[]>([]);
+  const [registerMember, setRegisterMember] = useState<Members[]>([]);
 
   // 자신이 대표자인 동아리 clubId 가져오기
   const { data: idData, isLoading: idIsLoading } = useGetMyManageClub() as {
