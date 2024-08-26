@@ -11,6 +11,8 @@ import React, {
 
 import { jwtDecode } from "jwt-decode";
 
+// import postRefresh from "@sparcs-clubs/web/lib/_axios/postRefresh";
+
 import getLogin from "../services/getLogin";
 import postLogout from "../services/postLogout";
 
@@ -42,20 +44,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const response = await getLogin();
       window.location.href = response.url;
-      // TODO: 로그인시 기본 프로필 선택
+      // const refreshed = await postRefresh();
+      // // TODO: 로그인시 기본 프로필 선택
       // localStorage.setItem(
       //   "responseToken",
-      //   JSON.stringify(response.accessToken),
+      //   JSON.stringify(refreshed.accessToken),
       // );
-      // if (response.accessToken) {
+      // if (refreshed.accessToken) {
       //   localStorage.setItem(
       //     "accessToken",
-      //     response.accessToken.undergraduate ??
-      //       response.accessToken.master ??
-      //       response.accessToken.doctor ??
-      //       response.accessToken.professor ??
-      //       response.accessToken.employee ??
-      //       response.accessToken.executive ??
+      //     refreshed.accessToken.undergraduate ??
+      //       refreshed.accessToken.master ??
+      //       refreshed.accessToken.doctor ??
+      //       refreshed.accessToken.professor ??
+      //       refreshed.accessToken.employee ??
+      //       refreshed.accessToken.executive ??
       //       "",
       //   );
       //   setIsLoggedIn(true);
