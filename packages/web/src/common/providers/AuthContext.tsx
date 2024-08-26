@@ -40,8 +40,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const login = async () => {
     try {
-      // const response =
-      await getLogin();
+      const response = await getLogin();
+      window.location.href = response.url;
       // TODO: 로그인시 기본 프로필 선택
       // localStorage.setItem(
       //   "responseToken",
