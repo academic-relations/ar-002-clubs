@@ -22,7 +22,7 @@ interface MyMemberTableProps {
 }
 
 const columnHelper =
-  createColumnHelper<(typeof mockMemberRegister)["items"][number]>();
+  createColumnHelper<(typeof mockMemberRegister)["applies"][number]>();
 
 const columns = [
   columnHelper.accessor("applyStatusEnum", {
@@ -79,11 +79,11 @@ const MyMemberTable: React.FC<MyMemberTableProps> = ({
 }) => {
   const table = useReactTable({
     columns,
-    data: memberRegisterList.items,
+    data: memberRegisterList.applies,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
-  const getRowLink = (row: (typeof mockMemberRegister)["items"][number]) => ({
+  const getRowLink = (row: (typeof mockMemberRegister)["applies"][number]) => ({
     pathname: `/clubs/${row.clubId.toString()}`,
   });
   return (

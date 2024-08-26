@@ -13,7 +13,8 @@ interface CheckboxOptionProps {
 
 const CheckboxOptionWrapper = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: row;
+  align-items: flex-start;
   gap: 12px;
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
     gap: 8px;

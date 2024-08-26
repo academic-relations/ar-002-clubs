@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -12,7 +12,7 @@ import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import ClubButton from "@sparcs-clubs/web/features/register-club/components/ClubButton";
+import ClubButton from "@sparcs-clubs/web/features/register-club/components/_atomic/ClubButton";
 
 import { mockMyRegistration } from "@sparcs-clubs/web/features/register-club/service/_mock/mockMyRegistration";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
@@ -59,6 +59,7 @@ const WarningTextsWrapper = styled.div`
   opacity: 1;
 `;
 
+// eslint-disable-next-line react/prop-types
 const WarningLink: React.FC<{ id: number }> = ({ id }) => {
   const router = useRouter();
 
@@ -78,6 +79,7 @@ const WarningLink: React.FC<{ id: number }> = ({ id }) => {
   );
 };
 
+// eslint-disable-next-line react/prop-types
 const WarningArea: React.FC<{ id: number }> = ({ id }) => (
   <WarningWrapper>
     <WarningIconWrapper>
@@ -132,14 +134,18 @@ const RegisterClub = () => {
       <ClubButtonWrapper>
         <ClubButton
           title="재등록"
-          buttonText="  •  직전 학기에 정동아리 지위를 유지했던 동아리만 등록 가능"
+          buttonText={[
+            "직전 학기에 정동아리 지위를 유지했던 동아리만 등록 가능",
+          ]}
           selected={selectedType === RegistrationType.renewalRegistration}
           onClick={() => setSelectedType(RegistrationType.renewalRegistration)}
         />
         <ClubButton
           title="신규 등록"
-          buttonText={`  •  2개 정규학기 이상 가등록 지위를 유지한 동아리 등록 가능  
-  •  등록 취소 이후 3개 정규학기 이상 지나지 않은 단체 등록 가능`}
+          buttonText={[
+            "2개 정규학기 이상 가등록 지위를 유지한 동아리 등록 가능",
+            "등록 취소 이후 3개 정규학기 이상 지나지 않은 단체 등록 가능",
+          ]}
           selected={selectedType === RegistrationType.promotionalRegistration}
           onClick={() =>
             setSelectedType(RegistrationType.promotionalRegistration)
@@ -147,8 +153,10 @@ const RegisterClub = () => {
         />
         <ClubButton
           title="가등록"
-          buttonText={`  •  새로 동아리를 만들려는 학부 총학생회 정회원 등록 가능  
-  •  직전 학기에 가등록 지위를 유지한 동아리 등록 가능`}
+          buttonText={[
+            "새로 동아리를 만드려는 학부 총학생회 정회원 등록 가능",
+            "직전 학기에 가등록 지위를 유지한 동아리 등록 가능",
+          ]}
           selected={selectedType === RegistrationType.provisionalRegistration}
           onClick={() =>
             setSelectedType(RegistrationType.provisionalRegistration)

@@ -9,7 +9,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 import NoticeSectionFrame from "./NoticeSectionFrame";
-import ServiceSectionFrame from "./ServiceSectionFrame";
+// import ServiceSectionFrame from "./ServiceSectionFrame";
 
 const PageTitleWrapper = styled.div`
   display: flex;
@@ -76,7 +76,7 @@ const MainPageMainFrame: React.FC = () => (
     </PageTitleWrapper>
     <NoticeAndServiceWrapper>
       <NoticeSectionFrame />
-      <ServiceSectionFrame />
+      {/* <ServiceSectionFrame /> */}
     </NoticeAndServiceWrapper>
   </ResponsiveWrapper>
 );

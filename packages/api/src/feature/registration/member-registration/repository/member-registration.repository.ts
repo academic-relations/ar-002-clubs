@@ -103,7 +103,6 @@ export class MemberRegistrationRepository {
       });
       const { affectedRows } = result;
       if (affectedRows !== 1) {
-        await tx.rollback();
         throw new HttpException("Registration failed", 500);
       }
     });
@@ -161,14 +160,9 @@ export class MemberRegistrationRepository {
           ),
         );
       if (result.affectedRows > 2) {
-        await tx.rollback();
         throw new HttpException("Registration delete failed", 500);
       } else if (result.affectedRows === 0) {
-        await tx.rollback();
-        throw new HttpException(
-          "Not available application",
-          HttpStatus.FORBIDDEN,
-        );
+        throw new HttpException("Application Not Found", HttpStatus.NOT_FOUND);
       }
     });
     return {};
@@ -193,14 +187,9 @@ export class MemberRegistrationRepository {
           ),
         );
       if (result.affectedRows > 2) {
-        await tx.rollback();
         throw new HttpException("Registration update failed", 500);
       } else if (result.affectedRows === 0) {
-        await tx.rollback();
-        throw new HttpException(
-          "Not available application",
-          HttpStatus.FORBIDDEN,
-        );
+        throw new HttpException("Application Not Found", HttpStatus.NOT_FOUND);
       }
     });
     return {};

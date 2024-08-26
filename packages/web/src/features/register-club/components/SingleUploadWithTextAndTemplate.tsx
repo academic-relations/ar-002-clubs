@@ -7,9 +7,11 @@ import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 interface SingleUploadWithTextAndTemplateProps {
+  fileId: string;
   title: string;
   content?: string;
   onFormatDownload?: VoidFunction;
+  onChange?: (string: string[]) => void;
 }
 
 const SingleUploadWithTextAndTemplateInner = styled.div`
@@ -23,7 +25,13 @@ const SingleUploadWithTextAndTemplateInner = styled.div`
 
 const SingleUploadWithTextAndTemplate: React.FC<
   SingleUploadWithTextAndTemplateProps
-> = ({ title, content = undefined, onFormatDownload = () => {} }) => (
+> = ({
+  fileId,
+  title,
+  content = undefined,
+  onFormatDownload = () => {},
+  onChange = () => {},
+}) => (
   <SingleUploadWithTextAndTemplateInner>
     <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
       {title}
@@ -33,7 +41,7 @@ const SingleUploadWithTextAndTemplate: React.FC<
         {content}
       </Typography>
     )}
-    <FileUpload />
+    <FileUpload fileId={fileId} onChange={onChange} />
     <IconButton
       style={{ marginTop: 4 }}
       type="default"

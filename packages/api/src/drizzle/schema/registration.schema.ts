@@ -60,7 +60,7 @@ export const Registration = mysqlTable(
     registrationActivityPlanFileId: varchar(
       "registration_activity_plan_file_id",
       { length: 128 },
-    ).notNull(),
+    ),
     registrationClubRuleFileId: varchar("registration_club_rule_file_id", {
       length: 128,
     }),

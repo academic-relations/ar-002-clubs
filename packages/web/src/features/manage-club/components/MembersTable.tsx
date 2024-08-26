@@ -31,27 +31,27 @@ const columns = [
       const { color, text } = getTagDetail(info.getValue(), MemTagList);
       return <Tag color={color}>{text}</Tag>;
     },
-    size: 10,
+    size: 5,
   }),
   columnHelper.accessor("applicationDate", {
     header: "신청 일시",
     cell: info => formatDateTime(info.getValue()),
-    size: 20,
+    size: 30,
   }),
   columnHelper.accessor("studentId", {
     header: "학번",
     cell: info => info.getValue(),
-    size: 10,
+    size: 5,
   }),
   columnHelper.accessor("applicantName", {
     header: "신청자",
     cell: info => info.getValue(),
-    size: 10,
+    size: 5,
   }),
   columnHelper.accessor("phoneNumber", {
     header: "전화번호",
     cell: info => info.getValue(),
-    size: 15,
+    size: 20,
   }),
   columnHelper.accessor("email", {
     header: "이메일",
@@ -85,7 +85,7 @@ const MembersTable: React.FC<MembersTableProps> = ({ memberList }) => {
     enableSorting: false,
   });
 
-  return <Table table={table} />;
+  return <Table table={table} count={memberList.length} unit="명" />;
 };
 
 export default MembersTable;

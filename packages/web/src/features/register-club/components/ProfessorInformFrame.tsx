@@ -1,6 +1,8 @@
 import React from "react";
 
+import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -18,76 +20,83 @@ const RowWrapper = styled.div`
   gap: 32px;
 `;
 
-const ProfessorInformFrame: React.FC = () => (
-  <FlexWrapper direction="column" gap={40}>
-    <SectionTitle>지도교수 정보</SectionTitle>
-    <Card outline gap={32} style={{ marginLeft: 20 }}>
-      <RowWrapper>
+const ProfessorInformFrame: React.FC = () => {
+  const { control } = useFormContext<ApiReg001RequestBody>();
+
+  return (
+    <FlexWrapper direction="column" gap={40}>
+      <SectionTitle>지도교수 정보</SectionTitle>
+      <Card outline gap={32} style={{ marginLeft: 20 }}>
+        <RowWrapper>
+          <FormController
+            name="professor.name"
+            required
+            control={control}
+            renderItem={props => (
+              <TextInput
+                {...props}
+                label="지도교수 성함"
+                placeholder="지도교수 성함을 입력해주세요"
+              />
+            )}
+          />
+          <FormController
+            name="professor.professorEnumId"
+            required
+            control={control}
+            renderItem={props => (
+              <Select
+                {...props}
+                label="지도교수 직급"
+                placeholder="직급을 선택해주세요"
+                items={[
+                  {
+                    value: ProfessorEnum.Full,
+                    label: "정교수",
+                  },
+                  {
+                    value: ProfessorEnum.Associate,
+                    label: "부교수",
+                  },
+                  {
+                    value: ProfessorEnum.Assistant,
+                    label: "조교수",
+                  },
+                ]}
+              />
+            )}
+          />
+        </RowWrapper>
         <FormController
-          name="professor.name"
+          name="professor.email"
           required
+          control={control}
+          rules={{
+            validate: value => {
+              const emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@kaist\.ac\.kr$/;
+
+              if (typeof value !== "string") {
+                return true;
+              }
+
+              if (value.length === 0) {
+                return true;
+              }
+
+              return EmailValidator.validate(value, true, emailRegex) || true;
+            },
+          }}
           renderItem={props => (
             <TextInput
               {...props}
-              label="지도교수 성함"
-              placeholder="지도교수 성함을 입력해주세요"
+              label="지도교수 카이스트 이메일"
+              placeholder="xxxxx@kaist.ac.kr"
             />
           )}
         />
-        <FormController
-          name="professor.ProfessorEnumId"
-          required
-          renderItem={props => (
-            <Select
-              {...props}
-              label="지도교수 직급"
-              placeholder="직급을 선택해주세요"
-              items={[
-                {
-                  value: ProfessorEnum.Full,
-                  label: "정교수",
-                },
-                {
-                  value: ProfessorEnum.Associate,
-                  label: "부교수",
-                },
-                {
-                  value: ProfessorEnum.Assistant,
-                  label: "조교수",
-                },
-              ]}
-            />
-          )}
-        />
-      </RowWrapper>
-      <FormController
-        name="professor.mail"
-        required
-        rules={{
-          validate: value => {
-            const emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@kaist\.ac\.kr$/;
-
-            if (typeof value !== "string") {
-              return true;
-            }
-
-            if (value.length === 0) {
-              return true;
-            }
-
-            return EmailValidator.validate(value, true, emailRegex) || true;
-          },
-        }}
-        renderItem={props => (
-          <TextInput
-            {...props}
-            label="지도교수 카이스트 이메일"
-            placeholder="xxxxx@kaist.ac.kr"
-          />
-        )}
-      />
-    </Card>
-  </FlexWrapper>
-);
+      </Card>
+    </FlexWrapper>
+  );
+};
 
 export default ProfessorInformFrame;

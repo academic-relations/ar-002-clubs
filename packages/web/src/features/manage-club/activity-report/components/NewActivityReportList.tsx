@@ -68,7 +68,7 @@ const columns = [
     cell: info => (
       <Tag color={getStatusTagColor(info.getValue())}>{info.getValue()}</Tag>
     ),
-    size: 8,
+    size: 0,
   }),
   columnHelper.accessor("professorApproval", {
     id: "professorApproval",
@@ -78,13 +78,13 @@ const columns = [
         {info.getValue()}
       </Tag>
     ),
-    size: 8,
+    size: 0,
   }),
   columnHelper.accessor("activity", {
     id: "activity",
     header: "활동명",
     cell: info => info.getValue(),
-    size: 30,
+    size: 20,
   }),
   columnHelper.accessor("category", {
     id: "category",
@@ -92,7 +92,7 @@ const columns = [
     cell: info => (
       <Tag color={getCategoryTagColor(info.getValue())}>{info.getValue()}</Tag>
     ),
-    size: 25,
+    size: 32,
   }),
   columnHelper.accessor(
     row => `${formatDate(row.startDate)} ~ ${formatDate(row.endDate)}`,
@@ -100,7 +100,7 @@ const columns = [
       id: "date-range",
       header: "활동 기간",
       cell: info => info.getValue(),
-      size: 35,
+      size: 48,
     },
   ),
 ];

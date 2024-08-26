@@ -10,12 +10,14 @@ import React, {
 } from "react";
 
 import getLogin from "../services/getLogin";
+
 import postLogout from "../services/postLogout";
 
 interface AuthContextType {
   isLoggedIn: boolean;
   login: () => void;
   logout: () => void;
+  profile: string | undefined;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,11 +26,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [profile, setProfile] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       setIsLoggedIn(true);
+      const decoded: { type?: string } = jwtDecode(accessToken);
+      setProfile(decoded.type);
     }
   }, []);
 
@@ -55,6 +60,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       //   setIsLoggedIn(true);
       //   console.log("Logged in successfully.");
       // }
+
     } catch (error) {
       console.error("Login failed", error);
     }
@@ -72,7 +78,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  const value = useMemo(() => ({ isLoggedIn, login, logout }), [isLoggedIn]);
+  const value = useMemo(
+    () => ({ isLoggedIn, login, logout, profile }),
+    [isLoggedIn],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

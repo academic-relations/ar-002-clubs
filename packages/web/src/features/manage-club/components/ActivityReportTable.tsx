@@ -31,7 +31,7 @@ const columns = [
       const { color, text } = getTagDetail(info.getValue(), ApplyTagList);
       return <Tag color={color}>{text}</Tag>;
     },
-    size: 8,
+    size: 0,
   }),
   columnHelper.accessor("professorApproval", {
     header: "지도교수",
@@ -42,12 +42,12 @@ const columns = [
       );
       return <Tag color={color}>{text}</Tag>;
     },
-    size: 10,
+    size: 0,
   }),
   columnHelper.accessor("name", {
     header: "활동명",
     cell: info => info.getValue(),
-    size: 30,
+    size: 20,
   }),
   columnHelper.accessor("type", {
     header: "활동 분류",
@@ -55,7 +55,7 @@ const columns = [
       const { color, text } = getTagDetail(info.getValue(), ActTypeTagList);
       return <Tag color={color}>{text}</Tag>;
     },
-    size: 25,
+    size: 32,
   }),
   columnHelper.accessor(
     row => `${formatDate(row.startDate)} ~ ${formatDate(row.endDate)}`,
@@ -63,7 +63,7 @@ const columns = [
       id: "date-range",
       header: "활동 기간",
       cell: info => info.getValue(),
-      size: 35,
+      size: 48,
     },
   ),
 ];

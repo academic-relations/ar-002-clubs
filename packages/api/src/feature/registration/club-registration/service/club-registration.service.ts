@@ -52,17 +52,42 @@ export class ClubRegistrationService {
     studentId: number,
     body: ApiReg001RequestBody,
   ): Promise<ApiReg001ResponseCreated> {
-    await this.validateRegistration(
-      studentId,
-      body.clubId,
-      body.registrationTypeEnumId,
+    // - 현재 동아리 등록 신청 기간이 맞는지 확인합니다.
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [RegistrationDeadlineEnum.ClubRegistrationApplication],
+    });
+    logger.debug(
+      "[postStudentRegistrationClubRegistration] deadline check passed",
     );
-
+    // - 신규 가동아리 신청을 제외하곤 기존 동아리 대표자 또는 대의원의 신청인지 검사합니다.
+    // 위 검사는 repository transaction 첫 파트에서 검사됩니다.
+    // - 신규 가동아리 신청을 제외하곤 기존 동아리 id를 제출해야 합니다.
+    // 위 검사는 REG-001 인터페이스에서 검사합니다
+    // - 이미 해당 동아리 id로 신청이 진행중일 경우 신청이 불가합니다.
+    const registrationList = await this.clubRegistrationRepository.findByClubId(
+      body.clubId,
+    );
+    if (registrationList.length !== 0) {
+      throw new HttpException("request already exists", HttpStatus.BAD_REQUEST);
+    }
+    logger.debug(
+      `[postRegistration] registration existence checked. ${registrationList}`,
+    );
+    // - foundedAt의 경우 가동아리 신청인 경우 설립연월의 정보가 처리됩니다. 신규등록|재등록인 경우 설립연도만을 처리합니다.
+    const transformedBody = {
+      ...body,
+      foundedAt: await this.transformFoundedAt(
+        body.foundedAt,
+        body.registrationTypeEnumId,
+      ),
+    };
+    // - 지도교수의 경우 기입시 신청, 미기입시 지도교수 없는 신청으로 처리됩니다.
+    // - 존재하는 분과 id인지 검사합니다.
     const validateDivisionId =
       await this.divisionPublicService.findDivisionById(body.divisionId);
     if (!validateDivisionId)
       throw new HttpException("division not found", HttpStatus.NOT_FOUND);
-    // 각각의 fileid들이 실제로 존재하는지 확인
+    // - 제출한 file들이 유효한 fileId인지 검사합니다.
     const fileIds = [
       body.activityPlanFileId ? "activityPlanFileId" : null,
       body.clubRuleFileId ? "clubRuleFileId" : null,
@@ -71,17 +96,12 @@ export class ClubRegistrationService {
     await Promise.all(
       fileIds.map(key => this.filePublicService.getFileInfoById(body[key])),
     );
-    // 동아리 등록 기간인지 확인
-    await this.clubRegistrationPublicService.checkDeadline({
-      enums: [RegistrationDeadlineEnum.ClubRegistrationApplication],
-    });
-    const transformedBody = {
-      ...body,
-      foundedAt: await this.transformFoundedAt(
-        body.foundedAt,
-        body.registrationTypeEnumId,
-      ),
-    };
+    // - 정동아리 재등록을 제외하고 활동계획서를 받아야합니다.
+    await this.validateRegistration(
+      studentId,
+      body.clubId,
+      body.registrationTypeEnumId,
+    );
 
     const result = await this.clubRegistrationRepository.createRegistration(
       studentId,
@@ -151,27 +171,30 @@ export class ClubRegistrationService {
     };
   }
 
-  async validateRegistration(
+  /**
+   * @description REG-001과 REG-009에서 공통적으로 검사하는 요소들에 대한 검사 메소드입니다.
+   */
+  private async validateRegistration(
     studentId: number,
     clubId: number | undefined,
     registrationTypeEnumId: number,
   ) {
-    if (registrationTypeEnumId === RegistrationTypeEnum.NewProvisional) {
-      // 가동아리 신규 신청 시 clubId는 undefined여야 함
-      if (clubId !== undefined) {
-        throw new HttpException(
-          "[postRegistration] invalid club id. club id should be undefined",
-          HttpStatus.BAD_REQUEST,
-        );
-      }
+    if (false) {
+      // // 가동아리 신규 신청 시 clubId는 undefined여야 함
+      // if (clubId !== undefined) {
+      //   throw new HttpException(
+      //     "[postRegistration] invalid club id. club id should be undefined",
+      //     HttpStatus.BAD_REQUEST,
+      //   );
+      // }
     } else {
-      // 정동아리 재등록/신규 등록, 가동아리 재등록 신청 시 clubId가 정의되어 있어야 함
-      if (clubId === undefined) {
-        throw new HttpException(
-          "[postRegistration] invalid club id. club id should NOT be undefined",
-          HttpStatus.BAD_REQUEST,
-        );
-      }
+      // // 정동아리 재등록/신규 등록, 가동아리 재등록 신청 시 clubId가 정의되어 있어야 함
+      // if (clubId === undefined) {
+      //   throw new HttpException(
+      //     "[postRegistration] invalid club id. club id should NOT be undefined",
+      //     HttpStatus.BAD_REQUEST,
+      //   );
+      // }
       switch (registrationTypeEnumId) {
         case RegistrationTypeEnum.Renewal: // 정동아리 재등록 신청
           if (
@@ -208,20 +231,6 @@ export class ClubRegistrationService {
       }
       await this.validateExistClub(clubId); // 기존에 존재하는지 club 확인
       logger.debug("[postRegistration] club existence checked");
-      await this.validateDuplicateRegistration(clubId); // 중복 신청인지 확인
-      logger.debug("[postRegistration] registration existence checked");
-    }
-  }
-
-  async validateDuplicateRegistration(clubId: number) {
-    // 신청 ClubId가 중복인지 확인
-    const registrationList =
-      await this.clubRegistrationRepository.findByClubId(clubId);
-    if (registrationList.length === 1) {
-      throw new HttpException(
-        "[postRegistration] request already exists",
-        HttpStatus.BAD_REQUEST,
-      );
     }
   }
 
@@ -236,7 +245,15 @@ export class ClubRegistrationService {
     }
   }
 
-  async transformFoundedAt(foundedAt: Date, registrationTypeEnumId: number) {
+  /**
+   * @param foundedAt 설립일을 Date로 받습니다.
+   * @param registrationTypeEnumId 등록 신청 유형에 따라 sanitization의 범위가 바뀝니다.
+   * @returns 등록 신청 유형에 맞추어 설립일의 월일을 0으로 sanitizing 하여 리턴합니다.
+   */
+  private async transformFoundedAt(
+    foundedAt: Date,
+    registrationTypeEnumId: number,
+  ) {
     const year = foundedAt.getUTCFullYear();
     const month =
       registrationTypeEnumId === RegistrationTypeEnum.NewProvisional
@@ -275,7 +292,7 @@ export class ClubRegistrationService {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [
         RegistrationDeadlineEnum.ClubRegistrationApplication,
-        RegistrationDeadlineEnum.ClubRegistrationModification,
+        // RegistrationDeadlineEnum.ClubRegistrationModification,
       ],
     });
     const result =
@@ -298,8 +315,8 @@ export class ClubRegistrationService {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [
         RegistrationDeadlineEnum.ClubRegistrationApplication,
-        RegistrationDeadlineEnum.ClubRegistrationModification,
-        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+        // RegistrationDeadlineEnum.ClubRegistrationModification,
+        // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
       ],
     });
     await this.clubRegistrationRepository.deleteStudentRegistrationsClubRegistration(
@@ -320,8 +337,8 @@ export class ClubRegistrationService {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [
         RegistrationDeadlineEnum.ClubRegistrationApplication,
-        RegistrationDeadlineEnum.ClubRegistrationModification,
-        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+        // RegistrationDeadlineEnum.ClubRegistrationModification,
+        // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
       ],
     });
     const result =
@@ -342,8 +359,8 @@ export class ClubRegistrationService {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [
         RegistrationDeadlineEnum.ClubRegistrationApplication,
-        RegistrationDeadlineEnum.ClubRegistrationModification,
-        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+        // RegistrationDeadlineEnum.ClubRegistrationModification,
+        // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
       ],
     });
     const result =
@@ -382,8 +399,8 @@ export class ClubRegistrationService {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [
         RegistrationDeadlineEnum.ClubRegistrationApplication,
-        RegistrationDeadlineEnum.ClubRegistrationModification,
-        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+        // RegistrationDeadlineEnum.ClubRegistrationModification,
+        // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
       ],
     });
     const result =
@@ -402,8 +419,8 @@ export class ClubRegistrationService {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [
         RegistrationDeadlineEnum.ClubRegistrationApplication,
-        RegistrationDeadlineEnum.ClubRegistrationModification,
-        RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+        // RegistrationDeadlineEnum.ClubRegistrationModification,
+        // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
       ],
     });
     const result =
