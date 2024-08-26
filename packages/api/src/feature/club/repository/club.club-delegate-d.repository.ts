@@ -4,7 +4,7 @@ import {
   ClubDelegateEnum,
 } from "@sparcs-clubs/interface/common/enum/club.enum";
 
-import { and, count, eq, gte, isNull, lte, or } from "drizzle-orm";
+import { and, count, eq, gte, isNull, lte, not, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -312,7 +312,6 @@ export class ClubDelegateDRepository {
     clubId: number,
     clubDelegateEnumId: ClubDelegateEnum,
   ) {
-    console.log(clubDelegateEnumId);
     const cur = getKSTDate();
     const result = await this.db
       .select({
@@ -343,7 +342,18 @@ export class ClubDelegateDRepository {
       .leftJoin(
         Student,
         and(eq(Student.id, ClubStudentT.studentId), isNull(Student.deletedAt)),
-      );
+      )
+      .leftJoin(
+        ClubDelegateD,
+        and(
+          eq(ClubDelegateD.studentId, ClubStudentT.studentId),
+          not(eq(ClubDelegateD.ClubDelegateEnumId, clubDelegateEnumId)),
+          lte(ClubDelegateD.startTerm, cur),
+          or(isNull(ClubDelegateD.endTerm), gte(ClubDelegateD.endTerm, cur)),
+          isNull(ClubDelegateD.deletedAt),
+        ),
+      )
+      .groupBy(ClubStudentT.studentId);
     return result;
   }
 }

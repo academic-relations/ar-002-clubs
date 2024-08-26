@@ -9,13 +9,13 @@ import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.
  * @description 동아리의 대표자 및 대의원 변경을 위한 목록을 가져옵니다.
  */
 
-const url = (clubId: number, delegateEnumId: number) =>
+const url = (clubId: number, delegateEnumId: ClubDelegateEnum) =>
   `/student/clubs/club/${clubId}/delegates/delegate/${delegateEnumId}/candidates`;
 const method = "GET";
 
 const requestParam = z.object({
   clubId: z.coerce.number().int(),
-  delegateEnumId: z.nativeEnum(ClubDelegateEnum),
+  delegateEnumId: z.coerce.number().int().min(1).max(3),
 });
 
 const requestQuery = z.object({});
