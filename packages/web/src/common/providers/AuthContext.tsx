@@ -9,7 +9,7 @@ import React, {
   useState,
 } from "react";
 
-import postLogin from "../services/postLogin";
+import getLogin from "../services/getLogin";
 import postLogout from "../services/postLogout";
 
 interface AuthContextType {
@@ -34,26 +34,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const login = async () => {
     try {
-      const response = await postLogin();
+      // const response =
+      await getLogin();
       // TODO: 로그인시 기본 프로필 선택
-      localStorage.setItem(
-        "responseToken",
-        JSON.stringify(response.accessToken),
-      );
-      if (response.accessToken) {
-        localStorage.setItem(
-          "accessToken",
-          response.accessToken.undergraduate ??
-            response.accessToken.master ??
-            response.accessToken.doctor ??
-            response.accessToken.professor ??
-            response.accessToken.employee ??
-            response.accessToken.executive ??
-            "",
-        );
-        setIsLoggedIn(true);
-        console.log("Logged in successfully.");
-      }
+      // localStorage.setItem(
+      //   "responseToken",
+      //   JSON.stringify(response.accessToken),
+      // );
+      // if (response.accessToken) {
+      //   localStorage.setItem(
+      //     "accessToken",
+      //     response.accessToken.undergraduate ??
+      //       response.accessToken.master ??
+      //       response.accessToken.doctor ??
+      //       response.accessToken.professor ??
+      //       response.accessToken.employee ??
+      //       response.accessToken.executive ??
+      //       "",
+      //   );
+      //   setIsLoggedIn(true);
+      //   console.log("Logged in successfully.");
+      // }
     } catch (error) {
       console.error("Login failed", error);
     }
