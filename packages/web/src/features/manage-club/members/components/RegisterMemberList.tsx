@@ -29,9 +29,14 @@ const RegisterMemberList = () => {
     isLoading: boolean;
   };
 
-  const { data: clubData } = useGetClubDetail(idData.clubId.toString()) as {
+  const {
+    data: clubData,
+    isLoading: clubIsLoading,
+    isError: clubIsError,
+  } = useGetClubDetail(idData.clubId.toString()) as {
     data: ApiClb002ResponseOK;
     isLoading: boolean;
+    isError: boolean;
   };
 
   const {
@@ -48,7 +53,10 @@ const RegisterMemberList = () => {
 
   return (
     <TableWithPagination>
-      <AsyncBoundary isLoading={memberIsLoading} isError={memberIsError}>
+      <AsyncBoundary
+        isLoading={clubIsLoading && memberIsLoading}
+        isError={clubIsError && memberIsError}
+      >
         {clubData && memberData && (
           <MembersTable
             memberList={memberData.applies}

@@ -26,8 +26,14 @@ const MembersManageFrame: React.FC = () => {
   };
 
   // 자신이 대표자인 동아리 clubId에 해당하는 동아리 세부정보 가져오기
-  const { data: clubData } = useGetClubDetail(idData.clubId.toString()) as {
+  const {
+    data: clubData,
+    isLoading: clubIsLoading,
+    isError: clubIsError,
+  } = useGetClubDetail(idData.clubId.toString()) as {
     data: ApiClb002ResponseOK;
+    isLoading: boolean;
+    isError: boolean;
   };
   const {
     data: memberData,
@@ -84,7 +90,10 @@ const MembersManageFrame: React.FC = () => {
 
   return (
     <FoldableSectionTitle title="회원 명단">
-      <AsyncBoundary isLoading={memberIsLoading} isError={memberIsError}>
+      <AsyncBoundary
+        isLoading={memberIsLoading && clubIsLoading}
+        isError={memberIsError && clubIsError}
+      >
         <FlexWrapper direction="column" gap={20}>
           <MoreDetailTitle
             title={isMobileView ? mobileTitle : title}
