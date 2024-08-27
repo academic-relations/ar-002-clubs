@@ -24,7 +24,9 @@ import MonthSelect from "./_atomic/MonthSelect";
 import YearSelect from "./_atomic/YearSelect";
 import ProfessorInformFrame from "./ProfessorInformFrame";
 
-const ProvisionalBasicInformFrame: React.FC = () => {
+const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
+  editMode = false,
+}) => {
   const [isCheckedProfessor, setIsCheckedProfessor] = useState(false);
   const [isReProvisional, setIsReProvisional] = useState(false);
 
@@ -106,7 +108,10 @@ const ProvisionalBasicInformFrame: React.FC = () => {
               </Button>
             </FlexWrapper>
           </FlexWrapper>
-          <ClubNameField clubList={isReProvisional ? data?.clubs : []} />
+          <ClubNameField
+            clubList={isReProvisional ? data?.clubs : []}
+            editMode={editMode}
+          />
           <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
             <YearSelect isProvisional />
             <MonthSelect />

@@ -26,9 +26,13 @@ import ProfessorInformFrame from "./ProfessorInformFrame";
 
 interface BasicInformSectionProps {
   type: RegistrationTypeEnum;
+  editMode?: boolean;
 }
 
-const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
+const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
+  type,
+  editMode = false,
+}) => {
   const isRenewal = type === RegistrationTypeEnum.Renewal;
 
   const [isCheckedProfessor, setIsCheckedProfessor] = useState(true);
@@ -104,7 +108,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
               )}
             />
           </FlexWrapper>
-          <ClubNameField clubList={clubList?.clubs} />
+          <ClubNameField clubList={clubList?.clubs} editMode={editMode} />
           <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
             <YearSelect />
             <DivisionSelect isRenewal={isRenewal} />

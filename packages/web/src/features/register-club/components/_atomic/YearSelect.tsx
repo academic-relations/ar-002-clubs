@@ -21,6 +21,12 @@ const YearSelect: React.FC<{ isProvisional?: boolean }> = ({
   ).reverse();
 
   useEffect(() => {
+    if (value == null && foundedAt != null) {
+      onChange(foundedAt.getFullYear());
+    }
+  }, [foundedAt, value]);
+
+  useEffect(() => {
     if (value == null) return;
 
     const selectedDate = foundedAt == null ? new Date() : foundedAt;
