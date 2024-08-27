@@ -95,17 +95,20 @@ const MembersManageFrame: React.FC = () => {
         isError={memberIsError && clubIsError}
       >
         <FlexWrapper direction="column" gap={20}>
-          <MoreDetailTitle
-            title={isMobileView ? mobileTitle : title}
-            moreDetail="전체 보기"
-            moreDetailPath="/manage-club/members"
-          />
           {memberData && clubData && (
-            <MembersTable
-              memberList={memberData.applies}
-              clubName={clubData.name_kr}
-              clubId={idData.clubId}
-            />
+            <>
+              <MoreDetailTitle
+                title={isMobileView ? mobileTitle : title}
+                moreDetail="전체 보기"
+                moreDetailPath="/manage-club/members"
+              />
+
+              <MembersTable
+                memberList={memberData.applies}
+                clubName={clubData.name_kr}
+                clubId={idData.clubId}
+              />
+            </>
           )}
         </FlexWrapper>
       </AsyncBoundary>
