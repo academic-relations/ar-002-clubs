@@ -22,7 +22,7 @@ export const patchClubMemberRegistration = async (
 
   switch (status) {
     case 204: {
-      // console.log(data); Mock Mode 테스트 용
+      console.log(data);
       return apiReg007.responseBodyMap[204].parse(data);
     }
     default:
@@ -32,6 +32,6 @@ export const patchClubMemberRegistration = async (
 
 defineAxiosMock(mock => {
   mock
-    .onPatch(apiReg007.url("1"), { clubId: 1, applyStatusEnumId: 2 })
+    .onPatch(apiReg007.url("1"), { clubId: 1, applyStatusEnumId: 3 })
     .reply(() => [204, {}]);
 });

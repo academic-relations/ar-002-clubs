@@ -1,5 +1,7 @@
 import React from "react";
 
+import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
+
 import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import {
@@ -22,26 +24,14 @@ import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import { patchClubMemberRegistration } from "../members/services/patchClubMemberRegistration";
 
-interface Members {
-  id: number;
-  createdAt: Date;
-  applyStatusEnumId: RegistrationApplicationStudentStatusEnum;
-  student: {
-    id: number;
-    name: string;
-    studentNumber: number;
-    email: string;
-    phoneNumber?: string | undefined;
-  };
-}
 interface MembersTableProps {
-  memberList: Members[];
+  memberList: ApiReg008ResponseOk["applies"];
   clubName: string;
   clubId: number;
 }
 
 const openApproveModal = (
-  member: Members,
+  member: ApiReg008ResponseOk["applies"][0],
   clubName: string,
   clubId: number,
 ) => {
@@ -49,9 +39,8 @@ const openApproveModal = (
     <Modal isOpen={isOpen}>
       <CancellableModalContent
         confirmButtonText="승인"
-        onConfirm={() => {
-          // TODO: 승인 로직 넣기
-          patchClubMemberRegistration(
+        onConfirm={async () => {
+          await patchClubMemberRegistration(
             { applyId: member.id },
             {
               clubId,
@@ -75,13 +64,17 @@ const openApproveModal = (
   ));
 };
 
-const openRejectModal = (member: Members, clubName: string, clubId: number) => {
+const openRejectModal = (
+  member: ApiReg008ResponseOk["applies"][0],
+  clubName: string,
+  clubId: number,
+) => {
   overlay.open(({ isOpen, close }) => (
     <Modal isOpen={isOpen}>
       <CancellableModalContent
         confirmButtonText="반려"
-        onConfirm={() => {
-          patchClubMemberRegistration(
+        onConfirm={async () => {
+          await patchClubMemberRegistration(
             { applyId: member.id },
             {
               clubId,
@@ -105,7 +98,7 @@ const openRejectModal = (member: Members, clubName: string, clubId: number) => {
   ));
 };
 
-const columnHelper = createColumnHelper<Members>();
+const columnHelper = createColumnHelper<ApiReg008ResponseOk["applies"][0]>();
 
 const columnsFunction = (clubName: string, clubId: number) => [
   columnHelper.accessor("applyStatusEnumId", {

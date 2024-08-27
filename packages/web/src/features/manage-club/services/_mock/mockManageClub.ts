@@ -12,6 +12,7 @@ import type { ApiClb004ResponseOK } from "@sparcs-clubs/interface/api/club/endpo
 import type { ApiClb010ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
 import type { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
 import type { ApiPrt001ResponseOk } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
+import type { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
 import type { ApiRnt003ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt003";
 
 export interface Activity {
@@ -31,19 +32,6 @@ export interface Funding {
   itemName: string;
   requestedAmount: number;
   approvedAmount: number | null;
-}
-
-export interface Members {
-  id: number;
-  createdAt: Date;
-  applyStatusEnumId: RegistrationApplicationStudentStatusEnum;
-  student: {
-    id: number;
-    name: string;
-    studentNumber: number;
-    email: string;
-    phoneNumber?: string | undefined;
-  };
 }
 
 export enum ActivityStatusEnum {
@@ -135,7 +123,7 @@ const mockClubMembers: ApiClb010ResponseOk = {
   ],
 };
 
-const mockupManageMems: Members[] = [
+const mockupManageMems: ApiReg008ResponseOk["applies"][0][] = [
   {
     id: 1,
     createdAt: new Date("2024-03-04T21:00:00"),
