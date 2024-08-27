@@ -10,6 +10,7 @@ import React, {
 } from "react";
 
 import { jwtDecode } from "jwt-decode";
+import { Cookies } from "react-cookie";
 
 // import postRefresh from "@sparcs-clubs/web/lib/_axios/postRefresh";
 
@@ -44,26 +45,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const response = await getLogin();
       window.location.href = response.url;
-      // const refreshed = await postRefresh();
-      // // TODO: 로그인시 기본 프로필 선택
-      // localStorage.setItem(
-      //   "responseToken",
-      //   JSON.stringify(refreshed.accessToken),
-      // );
-      // if (refreshed.accessToken) {
-      //   localStorage.setItem(
-      //     "accessToken",
-      //     refreshed.accessToken.undergraduate ??
-      //       refreshed.accessToken.master ??
-      //       refreshed.accessToken.doctor ??
-      //       refreshed.accessToken.professor ??
-      //       refreshed.accessToken.employee ??
-      //       refreshed.accessToken.executive ??
-      //       "",
-      //   );
-      //   setIsLoggedIn(true);
-      //   console.log("Logged in successfully.");
-      // }
+      const cookies = new Cookies();
+      const responseToken = cookies.get("accessToken");
+      localStorage.setItem("responseToken", JSON.stringify(responseToken));
+      if (responseToken) {
+        localStorage.setItem(
+          "accessToken",
+          responseToken.undergraduate ??
+            responseToken.master ??
+            responseToken.doctor ??
+            responseToken.professor ??
+            responseToken.employee ??
+            responseToken.executive ??
+            "",
+        );
+        setIsLoggedIn(true);
+        cookies.remove("accessToken");
+        console.log("Logged in successfully.");
+      }
     } catch (error) {
       console.error("Login failed", error);
     }
@@ -75,6 +74,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       setIsLoggedIn(false);
       localStorage.removeItem("accessToken");
       localStorage.removeItem("responseToken");
+      const cookies = new Cookies();
+      cookies.remove("accessToken");
       console.log("Logged out successfully.");
     } catch (error) {
       console.error("Logout failed", error);
