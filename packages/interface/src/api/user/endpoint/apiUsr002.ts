@@ -15,11 +15,13 @@ const requestParam = z.object({});
 
 const requestQuery = z.object({});
 
-const requestBody = z.object({});
+const requestBody = z.object({
+  profile: z.string(),
+});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    phoneNumber: zKrPhoneNumber,
+    phoneNumber: z.union([zKrPhoneNumber, z.null()]),
   }),
 };
 
