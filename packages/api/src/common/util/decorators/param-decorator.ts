@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 
+interface UserProfile {
+  id: number;
+  sid: string;
+  name: string;
+  email: string;
+}
+
+export type GetUser = UserProfile;
 interface StudentProfile {
   id: number;
   sid: string;
@@ -40,6 +48,15 @@ interface EmployeeProfile {
 }
 export type GetEmployee = EmployeeProfile;
 // todo: 위치 변경 필요할 경우 옮기기.
+
+export const GetUser = createParamDecorator((data, ctx: ExecutionContext) =>
+  (({ id, sid, name, email }) => ({
+    id,
+    sid,
+    name,
+    email,
+  }))(ctx.switchToHttp().getRequest().user),
+);
 
 export const GetStudent = createParamDecorator((data, ctx: ExecutionContext) =>
   (({ id, sid, name, email, type, studentId, studentNumber }) => ({
