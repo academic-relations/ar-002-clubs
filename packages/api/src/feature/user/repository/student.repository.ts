@@ -76,4 +76,19 @@ export class StudentRepository {
       .then(takeUnique);
     return result;
   }
+
+  async updateStudentPhoneNumber(id: number, phoneNumber: string) {
+    const isUpdateSucceed = await this.db.transaction(async tx => {
+      const [result] = await tx
+        .update(Student)
+        .set({ phoneNumber })
+        .where(and(eq(Student.userId, id), isNull(Student.deletedAt)));
+      if (result.affectedRows === 0) {
+        tx.rollback();
+        return false;
+      }
+      return true;
+    });
+    return isUpdateSucceed;
+  }
 }

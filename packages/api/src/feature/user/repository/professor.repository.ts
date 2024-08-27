@@ -3,6 +3,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, gte, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
+import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
@@ -20,7 +21,7 @@ export default class ProfessorRepository {
     const result = await this.db
       .select({ phoneNumber: Professor.phoneNumber })
       .from(Professor)
-      .where(eq(Professor.userId, id))
+      .where(and(eq(Professor.userId, id), isNull(Professor.deletedAt)))
       .leftJoin(
         ProfessorT,
         and(
@@ -32,5 +33,21 @@ export default class ProfessorRepository {
       )
       .then(takeUnique);
     return result;
+  }
+
+  async updateProfessorPhoneNumber(id: number, phoneNumber: string) {
+    const isUpdateSucceed = await this.db.transaction(async tx => {
+      const [result] = await tx
+        .update(Professor)
+        .set({ phoneNumber })
+        .where(and(eq(Professor.userId, id), isNull(Professor.deletedAt)));
+      if (result.affectedRows === 0) {
+        logger.debug("[updatePhoneNumber] rollback occurs");
+        tx.rollback();
+        return false;
+      }
+      return true;
+    });
+    return isUpdateSucceed;
   }
 }

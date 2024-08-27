@@ -64,4 +64,19 @@ export default class ExecutiveRepository {
       .then(takeUnique);
     return result;
   }
+
+  async updateExecutivePhoneNumber(id: number, phoneNumber: string) {
+    const isUpdateSucceed = await this.db.transaction(async tx => {
+      const [result] = await tx
+        .update(Executive)
+        .set({ phoneNumber })
+        .where(and(eq(Executive.userId, id), isNull(Executive.deletedAt)));
+      if (result.affectedRows === 0) {
+        tx.rollback();
+        return false;
+      }
+      return true;
+    });
+    return isUpdateSucceed;
+  }
 }
