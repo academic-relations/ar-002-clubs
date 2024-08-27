@@ -59,7 +59,7 @@ export class AuthService {
     let department =
       ssoProfile.kaist_info.ku_kaist_org_id || process.env.USER_KU_KAIST_ORG_ID;
 
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === "local") {
       studentNumber = process.env.USER_KU_STD_NO;
       email = process.env.USER_MAIL;
       sid = process.env.USER_SID;

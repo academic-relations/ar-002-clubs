@@ -27,7 +27,7 @@ async function bootstrap() {
   );
 
   // localhost에서의 cors 해결
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === "local") {
     app.enableCors({
       origin: `http://localhost:${process.env.CLIENT_PORT}`,
       credentials: true,
