@@ -57,9 +57,6 @@ export class UserService {
   ): Promise<ApiUsr002ResponseOk> {
     const phoneNumber =
       await this.studentRepository.getStudentPhoneNumber(userId);
-    if (!phoneNumber) {
-      return null;
-    }
     return phoneNumber;
   }
 
@@ -68,9 +65,6 @@ export class UserService {
   ): Promise<ApiUsr002ResponseOk> {
     const phoneNumber =
       await this.executiveRepository.getExecutivePhoneNumber(userId);
-    if (!phoneNumber) {
-      return null;
-    }
     return phoneNumber;
   }
 
@@ -79,9 +73,6 @@ export class UserService {
   ): Promise<ApiUsr002ResponseOk> {
     const phoneNumber =
       await this.professorRepository.getProfessorPhoneNumber(userId);
-    if (!phoneNumber) {
-      return null;
-    }
     return phoneNumber;
   }
 }
