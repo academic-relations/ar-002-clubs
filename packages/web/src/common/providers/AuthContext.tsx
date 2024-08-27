@@ -12,8 +12,6 @@ import React, {
 import { jwtDecode } from "jwt-decode";
 import { Cookies } from "react-cookie";
 
-// import postRefresh from "@sparcs-clubs/web/lib/_axios/postRefresh";
-
 import getLogin from "../services/getLogin";
 import postLogout from "../services/postLogout";
 
@@ -51,10 +49,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       if (responseToken) {
         localStorage.setItem(
           "accessToken",
-          responseToken.undergraduate ??
-            responseToken.master ??
+          responseToken.professor ??
             responseToken.doctor ??
-            responseToken.professor ??
+            responseToken.master ??
+            responseToken.undergraduate ??
             responseToken.employee ??
             responseToken.executive ??
             "",
@@ -84,7 +82,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const value = useMemo(
     () => ({ isLoggedIn, login, logout, profile }),
-    [isLoggedIn],
+    [isLoggedIn, profile],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
