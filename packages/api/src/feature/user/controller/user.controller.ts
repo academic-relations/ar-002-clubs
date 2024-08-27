@@ -60,12 +60,22 @@ export class UserController {
       );
     }
     // TODO: employee
-
-    if (!phoneNumber) {
+    if (
+      !phoneNumber ||
+      phoneNumber.phoneNumber === "" ||
+      phoneNumber.phoneNumber === undefined ||
+      phoneNumber.phoneNumber === null
+    ) {
       phoneNumber = await this.userService.getUserPhoneNumber(user.id);
-      if (!phoneNumber) {
-        return null;
+      if (
+        !phoneNumber ||
+        phoneNumber.phoneNumber === "" ||
+        phoneNumber.phoneNumber === undefined ||
+        phoneNumber.phoneNumber === null
+      ) {
+        return { phoneNumber: null };
       }
+      // TODO: user에서 가져왔을 경우 번호 업데이트
     }
     return phoneNumber;
   }
