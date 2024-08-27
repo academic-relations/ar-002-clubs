@@ -78,7 +78,26 @@ export class UserController {
       ) {
         return { phoneNumber: null };
       }
-      // TODO: user에서 가져왔을 경우 번호 업데이트
+      if (
+        body.profile === "undergraduate" ||
+        body.profile === "master" ||
+        body.profile === "doctor"
+      ) {
+        await this.userService.updateStudentPhoneNumber(
+          user.id,
+          phoneNumber.phoneNumber,
+        );
+      } else if (body.profile === "executive") {
+        await this.userService.updateExecutivePhoneNumber(
+          user.id,
+          phoneNumber.phoneNumber,
+        );
+      } else if (body.profile === "professor") {
+        await this.userService.updateProfessorPhoneNumber(
+          user.id,
+          phoneNumber.phoneNumber,
+        );
+      }
     }
     return phoneNumber;
   }
