@@ -78,6 +78,23 @@ export class UserService {
 
   async updatePhoneNumber(userId: number, phoneNumber: string) {
     await this.userRepository.updatePhoneNumber(userId, phoneNumber);
-    return {};
+  }
+
+  async updateStudentPhoneNumber(userId: number, phoneNumber: string) {
+    await this.studentRepository.updateStudentPhoneNumber(userId, phoneNumber);
+  }
+
+  async updateExecutivePhoneNumber(userId: number, phoneNumber: string) {
+    await this.executiveRepository.updateExecutivePhoneNumber(
+      userId,
+      phoneNumber,
+    );
+  }
+
+  async updateProfessorPhoneNumber(userId: number, phoneNumber: string) {
+    await this.professorRepository.updateProfessorPhoneNumber(
+      userId,
+      phoneNumber,
+    );
   }
 }

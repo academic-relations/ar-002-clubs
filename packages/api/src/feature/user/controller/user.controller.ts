@@ -89,10 +89,27 @@ export class UserController {
     @GetUser() user: GetUser,
     @Body() body: ApiUsr003RequestBody,
   ) {
-    const result = await this.userService.updatePhoneNumber(
-      user.id,
-      body.phoneNumber,
-    );
-    return result;
+    if (
+      body.profile === "undergraduate" ||
+      body.profile === "master" ||
+      body.profile === "doctor"
+    ) {
+      await this.userService.updateStudentPhoneNumber(
+        user.id,
+        body.phoneNumber,
+      );
+    } else if (body.profile === "executive") {
+      await this.userService.updateExecutivePhoneNumber(
+        user.id,
+        body.phoneNumber,
+      );
+    } else if (body.profile === "professor") {
+      await this.userService.updateProfessorPhoneNumber(
+        user.id,
+        body.phoneNumber,
+      );
+    }
+    await this.userService.updatePhoneNumber(user.id, body.phoneNumber);
+    return {};
   }
 }
