@@ -63,6 +63,7 @@ export class AuthController {
       query,
       session,
     );
+
     res.cookie("refreshToken", token.refreshToken, {
       expires: token.refreshTokenExpiresAt,
       httpOnly: true,

@@ -49,15 +49,28 @@ export class AuthService {
 
     const ssoProfile: SSOUser = await this.ssoClient.get_user_info(query.code);
 
-    const studentNumber =
+    let studentNumber =
       ssoProfile.kaist_info.ku_std_no || process.env.USER_KU_STD_NO;
-    const email = ssoProfile.email || process.env.USER_MAIL;
-    const sid = ssoProfile.sid || process.env.USER_SID;
-    const name = ssoProfile.kaist_info.ku_kname || process.env.USER_KU_KNAME;
-    const type =
+    let email = ssoProfile.email || process.env.USER_MAIL;
+    let sid = ssoProfile.sid || process.env.USER_SID;
+    let name = ssoProfile.kaist_info.ku_kname || process.env.USER_KU_KNAME;
+    let type =
       ssoProfile.kaist_info.ku_person_type || process.env.USER_KU_PERSON_TYPE;
-    const department =
+    let department =
       ssoProfile.kaist_info.ku_kaist_org_id || process.env.USER_KU_KAIST_ORG_ID;
+
+    if (process.env.NODE_ENV === "development") {
+      studentNumber = process.env.USER_KU_STD_NO;
+      email = process.env.USER_MAIL;
+      sid = process.env.USER_SID;
+      name = process.env.USER_KU_KNAME;
+      type = process.env.USER_KU_PERSON_TYPE;
+      department = process.env.USER_KU_KAIST_ORG_ID;
+    }
+
+    if (!studentNumber || !email || !sid || !name || !type || !department) {
+      throw new HttpException("Invalid SSO Profile", 403);
+    }
 
     const user = await this.authRepository.findOrCreateUser(
       email,
