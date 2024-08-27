@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { StudentStatusEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
-import { and, count, eq, isNull, or } from "drizzle-orm";
+import { and, count, eq, gte, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
-import { takeUnique } from "@sparcs-clubs/api/common/util/util";
+import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   Student,
@@ -55,6 +55,25 @@ export class StudentRepository {
       .from(StudentT)
       .where(and(eq(StudentT.id, studentTId), isNull(StudentT.deletedAt)));
 
+    return result;
+  }
+
+  async getStudentPhoneNumber(id: number) {
+    const crt = getKSTDate();
+    const result = await this.db
+      .select({ phoneNumber: Student.phoneNumber })
+      .from(Student)
+      .where(eq(Student.userId, id))
+      .leftJoin(
+        StudentT,
+        and(
+          eq(StudentT.studentId, Student.id),
+          or(gte(StudentT.endTerm, crt), isNull(StudentT.endTerm)),
+          lte(StudentT.startTerm, crt),
+          isNull(StudentT.deletedAt),
+        ),
+      )
+      .then(takeUnique);
     return result;
   }
 }

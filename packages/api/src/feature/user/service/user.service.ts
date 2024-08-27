@@ -1,12 +1,21 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import { ApiUsr002ResponseOk } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr002";
+
 import ClubStudentTRepository from "@sparcs-clubs/api/feature/club/repository/club.club-student-t.repository";
 import UserRepository from "@sparcs-clubs/api/feature/user/repository/user.repository";
+
+import ExecutiveRepository from "../repository/executive.repository";
+import ProfessorRepository from "../repository/professor.repository";
+import { StudentRepository } from "../repository/student.repository";
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly studentRepository: StudentRepository,
+    private readonly executiveRepository: ExecutiveRepository,
+    private readonly professorRepository: ProfessorRepository,
     private readonly clubStudentTRepository: ClubStudentTRepository,
   ) {}
 
@@ -36,5 +45,43 @@ export class UserService {
       throw new HttpException("Student Doesn't exist", HttpStatus.NOT_FOUND);
     }
     return student;
+  }
+
+  async getUserPhoneNumber(userId: number): Promise<ApiUsr002ResponseOk> {
+    const phoneNumber = await this.userRepository.getPhoneNumber(userId);
+    return phoneNumber;
+  }
+
+  async getStudentPhoneNumberByUserId(
+    userId: number,
+  ): Promise<ApiUsr002ResponseOk> {
+    const phoneNumber =
+      await this.studentRepository.getStudentPhoneNumber(userId);
+    if (!phoneNumber) {
+      return null;
+    }
+    return phoneNumber;
+  }
+
+  async getExecutivePhoneNumberByUserId(
+    userId: number,
+  ): Promise<ApiUsr002ResponseOk> {
+    const phoneNumber =
+      await this.executiveRepository.getExecutivePhoneNumber(userId);
+    if (!phoneNumber) {
+      return null;
+    }
+    return phoneNumber;
+  }
+
+  async getProfessorPhoneNumberByUserId(
+    userId: number,
+  ): Promise<ApiUsr002ResponseOk> {
+    const phoneNumber =
+      await this.professorRepository.getProfessorPhoneNumber(userId);
+    if (!phoneNumber) {
+      return null;
+    }
+    return phoneNumber;
   }
 }

@@ -40,7 +40,7 @@ const apiUsr002 = {
 type ApiUsr002RequestParam = z.infer<typeof apiUsr002.requestParam>;
 type ApiUsr002RequestQuery = z.infer<typeof apiUsr002.requestQuery>;
 type ApiUsr002RequestBody = z.infer<typeof apiUsr002.requestBody>;
-type ApiUsr002ResponseOK = z.infer<(typeof apiUsr002.responseBodyMap)[200]>;
+type ApiUsr002ResponseOk = z.infer<(typeof apiUsr002.responseBodyMap)[200]>;
 
 export default apiUsr002;
 
@@ -48,5 +48,5 @@ export type {
   ApiUsr002RequestParam,
   ApiUsr002RequestQuery,
   ApiUsr002RequestBody,
-  ApiUsr002ResponseOK,
+  ApiUsr002ResponseOk,
 };
