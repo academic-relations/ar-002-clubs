@@ -1,20 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import WarningInfo from "@sparcs-clubs/web/common/components/WarningInfo";
+import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/my/services/getMyClubRegistration";
 import ClubButton from "@sparcs-clubs/web/features/register-club/components/_atomic/ClubButton";
-
-import { mockMyRegistration } from "@sparcs-clubs/web/features/register-club/services/_mocks/mockMyRegistration";
 
 const ClubButtonWrapper = styled.div`
   display: flex;
@@ -38,7 +38,18 @@ const RegisterClub = () => {
     null,
   );
 
-  const myRegistration = mockMyRegistration; // ToDo: 실제 데이터 연결
+  const {
+    data: myClubRegistrationData,
+    isLoading,
+    isError,
+  } = useGetMyClubRegistration();
+  const hasMyClubRegistration = useMemo<boolean>(
+    () =>
+      myClubRegistrationData
+        ? myClubRegistrationData.registrations.length > 0
+        : false,
+    [myClubRegistrationData],
+  );
 
   const router = useRouter();
   const onClick = () => {
@@ -51,70 +62,75 @@ const RegisterClub = () => {
   };
 
   return (
-    <FlexWrapper direction="column" gap={60}>
-      <PageHead
-        items={[{ name: "동아리 등록", path: "/register-club" }]}
-        title="동아리 등록"
-      />
-      {myRegistration.registrations.length > 0 && (
-        <WarningInfo
-          linkText="동아리 등록 신청 내역 바로가기"
-          onClickLink={() =>
-            router.push(
-              `my/register-club/${myRegistration.registrations[0].id}`,
-            )
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      {/* TODO: (@dora) fix loading boundary to enhance ux */}
+      <FlexWrapper direction="column" gap={60}>
+        <PageHead
+          items={[{ name: "동아리 등록", path: "/register-club" }]}
+          title="동아리 등록"
+        />
+        {hasMyClubRegistration && (
+          <WarningInfo
+            linkText="동아리 등록 신청 내역 바로가기"
+            onClickLink={() =>
+              router.push(
+                `my/register-club/${myClubRegistrationData?.registrations[0].id}`,
+              )
+            }
+          >
+            <Typography fs={16} fw="REGULAR" lh={24}>
+              동아리 등록 신청 내역이 이미 존재하여 추가로 신청할 수 없습니다
+            </Typography>
+          </WarningInfo>
+        )}
+        <Info text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
+        <ClubButtonWrapper>
+          <ClubButton
+            title="재등록"
+            buttonText={[
+              "직전 학기에 정동아리 지위를 유지했던 동아리만 등록 가능",
+            ]}
+            selected={selectedType === RegistrationType.renewalRegistration}
+            onClick={() =>
+              setSelectedType(RegistrationType.renewalRegistration)
+            }
+          />
+          <ClubButton
+            title="신규 등록"
+            buttonText={[
+              "2개 정규학기 이상 가등록 지위를 유지한 동아리 등록 가능",
+              "등록 취소 이후 3개 정규학기 이상 지나지 않은 단체 등록 가능",
+            ]}
+            selected={selectedType === RegistrationType.promotionalRegistration}
+            onClick={() =>
+              setSelectedType(RegistrationType.promotionalRegistration)
+            }
+          />
+          <ClubButton
+            title="가등록"
+            buttonText={[
+              "새로 동아리를 만드려는 학부 총학생회 정회원 등록 가능",
+              "직전 학기에 가등록 지위를 유지한 동아리 등록 가능",
+            ]}
+            selected={selectedType === RegistrationType.provisionalRegistration}
+            onClick={() =>
+              setSelectedType(RegistrationType.provisionalRegistration)
+            }
+          />
+        </ClubButtonWrapper>
+        <Button
+          type={
+            selectedType === null || hasMyClubRegistration
+              ? "disabled"
+              : "default"
           }
+          onClick={() => onClick()}
+          style={{ alignSelf: "end" }}
         >
-          <Typography fs={16} fw="REGULAR" lh={24}>
-            동아리 등록 신청 내역이 이미 존재하여 추가로 신청할 수 없습니다
-          </Typography>
-        </WarningInfo>
-      )}
-      <Info text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
-      <ClubButtonWrapper>
-        <ClubButton
-          title="재등록"
-          buttonText={[
-            "직전 학기에 정동아리 지위를 유지했던 동아리만 등록 가능",
-          ]}
-          selected={selectedType === RegistrationType.renewalRegistration}
-          onClick={() => setSelectedType(RegistrationType.renewalRegistration)}
-        />
-        <ClubButton
-          title="신규 등록"
-          buttonText={[
-            "2개 정규학기 이상 가등록 지위를 유지한 동아리 등록 가능",
-            "등록 취소 이후 3개 정규학기 이상 지나지 않은 단체 등록 가능",
-          ]}
-          selected={selectedType === RegistrationType.promotionalRegistration}
-          onClick={() =>
-            setSelectedType(RegistrationType.promotionalRegistration)
-          }
-        />
-        <ClubButton
-          title="가등록"
-          buttonText={[
-            "새로 동아리를 만드려는 학부 총학생회 정회원 등록 가능",
-            "직전 학기에 가등록 지위를 유지한 동아리 등록 가능",
-          ]}
-          selected={selectedType === RegistrationType.provisionalRegistration}
-          onClick={() =>
-            setSelectedType(RegistrationType.provisionalRegistration)
-          }
-        />
-      </ClubButtonWrapper>
-      <Button
-        type={
-          selectedType === null || myRegistration.registrations.length > 0
-            ? "disabled"
-            : "default"
-        }
-        onClick={() => onClick()}
-        style={{ alignSelf: "end" }}
-      >
-        등록 신청
-      </Button>
-    </FlexWrapper>
+          등록 신청
+        </Button>
+      </FlexWrapper>
+    </AsyncBoundary>
   );
 };
 
