@@ -39,28 +39,31 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     }
   }, []);
 
+  if (!isLoggedIn) {
+    const cookies = new Cookies();
+    const responseToken = cookies.get("accessToken");
+    localStorage.setItem("responseToken", JSON.stringify(responseToken));
+    if (responseToken) {
+      localStorage.setItem(
+        "accessToken",
+        responseToken.professor ??
+          responseToken.doctor ??
+          responseToken.master ??
+          responseToken.undergraduate ??
+          responseToken.employee ??
+          responseToken.executive ??
+          "",
+      );
+      setIsLoggedIn(true);
+      cookies.remove("accessToken");
+      console.log("Logged in successfully.");
+    }
+  }
+
   const login = async () => {
     try {
       const response = await getLogin();
       window.location.href = response.url;
-      const cookies = new Cookies();
-      const responseToken = cookies.get("accessToken");
-      localStorage.setItem("responseToken", JSON.stringify(responseToken));
-      if (responseToken) {
-        localStorage.setItem(
-          "accessToken",
-          responseToken.professor ??
-            responseToken.doctor ??
-            responseToken.master ??
-            responseToken.undergraduate ??
-            responseToken.employee ??
-            responseToken.executive ??
-            "",
-        );
-        setIsLoggedIn(true);
-        cookies.remove("accessToken");
-        console.log("Logged in successfully.");
-      }
     } catch (error) {
       console.error("Login failed", error);
     }
