@@ -49,7 +49,7 @@ const RegisterMemberList = () => {
   return (
     <TableWithPagination>
       <AsyncBoundary isLoading={memberIsLoading} isError={memberIsError}>
-        {idData && clubData && memberData && (
+        {clubData && memberData && (
           <MembersTable
             memberList={memberData.applies}
             clubName={clubData.name_kr}

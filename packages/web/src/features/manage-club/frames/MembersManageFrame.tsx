@@ -91,7 +91,7 @@ const MembersManageFrame: React.FC = () => {
             moreDetail="전체 보기"
             moreDetailPath="/manage-club/members"
           />
-          {memberData && clubData && idData && (
+          {memberData && clubData && (
             <MembersTable
               memberList={memberData.applies}
               clubName={clubData.name_kr}
