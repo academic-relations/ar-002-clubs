@@ -75,4 +75,9 @@ export class UserService {
       await this.professorRepository.getProfessorPhoneNumber(userId);
     return phoneNumber;
   }
+
+  async updatePhoneNumber(userId: number, phoneNumber: string) {
+    await this.userRepository.updatePhoneNumber(userId, phoneNumber);
+    return {};
+  }
 }

@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, gte, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
+import logger from "@sparcs-clubs/api/common/util/logger";
 import { takeUnique } from "@sparcs-clubs/api/common/util/util";
 
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
@@ -64,5 +65,21 @@ export default class UserRepository {
       .where(and(eq(User.id, userId), isNull(User.deletedAt)))
       .then(takeUnique);
     return phoneNumber;
+  }
+
+  async updatePhoneNumber(userId: number, phoneNumber: string) {
+    const isUpdateSucceed = await this.db.transaction(async tx => {
+      const [result] = await tx
+        .update(User)
+        .set({ phoneNumber })
+        .where(and(eq(User.id, userId), isNull(User.deletedAt)));
+      if (result.affectedRows !== 1) {
+        logger.debug("[updatePhoneNumber] rollback occurs");
+        tx.rollback();
+        return false;
+      }
+      return true;
+    });
+    return isUpdateSucceed;
   }
 }

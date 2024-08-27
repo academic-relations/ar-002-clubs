@@ -1,9 +1,12 @@
-import { Body, Controller, Get, Query, UsePipes } from "@nestjs/common";
+import { Body, Controller, Get, Patch, Query, UsePipes } from "@nestjs/common";
 import apiUsr001 from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
 import apiUsr002, {
   ApiUsr002RequestBody,
   ApiUsr002ResponseOk,
 } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr002";
+import apiUsr003, {
+  ApiUsr003RequestBody,
+} from "@sparcs-clubs/interface/api/user/endpoint/apiUsr003";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -78,5 +81,18 @@ export class UserController {
       // TODO: user에서 가져왔을 경우 번호 업데이트
     }
     return phoneNumber;
+  }
+
+  @Patch("/user/my/phone")
+  @UsePipes(new ZodPipe(apiUsr003))
+  async updatePhoneNumber(
+    @GetUser() user: GetUser,
+    @Body() body: ApiUsr003RequestBody,
+  ) {
+    const result = await this.userService.updatePhoneNumber(
+      user.id,
+      body.phoneNumber,
+    );
+    return result;
   }
 }
