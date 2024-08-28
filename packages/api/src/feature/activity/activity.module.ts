@@ -4,6 +4,8 @@ import { DrizzleModule } from "src/drizzle/drizzle.module";
 
 import { ClubModule } from "../club/club.module";
 
+import { RegistrationModule } from "../registration/registration.module";
+
 import ActivityActivityTermController from "./controller/activity.activity-term.controller";
 import ActivityController from "./controller/activity.controller";
 import ActivityActivityTermRepository from "./repository/activity.activity-term.repository";
@@ -13,7 +15,7 @@ import ActivityPublicService from "./service/activity.public.service";
 import ActivityService from "./service/activity.service";
 
 @Module({
-  imports: [ClubModule, DrizzleModule],
+  imports: [ClubModule, DrizzleModule, RegistrationModule],
   controllers: [ActivityController, ActivityActivityTermController],
   providers: [
     ActivityRepository,

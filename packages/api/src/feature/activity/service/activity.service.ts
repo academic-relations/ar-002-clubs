@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { ActivityDeadlineEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
+import { RegistrationEventEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
+import RegistrationPublicService from "@sparcs-clubs/api/feature/registration/service/registration.public.service";
 
 import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
 import ActivityRepository from "../repository/activity.repository";
@@ -15,6 +17,7 @@ import type {
   ApiAct003RequestParam,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
 import type { ApiAct005ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
+import type { ApiAct007RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
 
 @Injectable()
 export default class ActivityService {
@@ -22,6 +25,7 @@ export default class ActivityService {
     private activityRepository: ActivityRepository,
     private activityActivityTermRepository: ActivityActivityTermRepository,
     private clubPublicService: ClubPublicService,
+    private registrationPublicService: RegistrationPublicService,
   ) {}
 
   /**
@@ -267,6 +271,53 @@ export default class ActivityService {
       );
   }
 
+  async postStudentActivityProvisional(
+    body: ApiAct007RequestBody,
+    studentId: number,
+  ): Promise<void> {
+    // 학생이 동아리 대표자 또는 대의원이 맞는지 확인합니다. -> 가동아리 대표자인지 확인
+    await this.checkIsStudentDelegate({ studentId, clubId: body.clubId });
+
+    // TODO: 오늘이 동아리 등록신청기간인지 확인(요구사항: 동아리 등록 신청기간에만 가등록 활보 업로드 가능) // registration.public.service 생성
+    await this.registrationPublicService.checkDeadline({
+      enums: [RegistrationEventEnum.ClubRegistrationApplication],
+    });
+
+    // 현재 학기에 동아리원이 아니었던 참가자가 있는지 검사합니다.
+    const participantIds = await Promise.all(
+      body.participants.map(async e => {
+        if (
+          !(await this.clubPublicService.isStudentBelongsTo(
+            e.studentId,
+            body.clubId,
+          ))
+        )
+          throw new HttpException(
+            "Some student is not belonged to the club",
+            HttpStatus.BAD_REQUEST,
+          );
+        return e.studentId;
+      }),
+    );
+    // TODO: 파일 유효한지 검사하는 로직도 필요해요! 이건 파일 모듈 구성되면 public할듯
+
+    // 모든 활동은 이전 학기로 기록
+    const activityD = await this.getLastActivityD();
+
+    const isInsertionSucceed = await this.activityRepository.insertActivity({
+      ...body,
+      evidenceFileIds: body.evidenceFiles.map(row => row.fileId),
+      participantIds,
+      activityDId: activityD.id,
+    });
+
+    if (!isInsertionSucceed)
+      throw new HttpException(
+        "Failed to insert",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+  }
+
   async putStudentActivity(
     param: ApiAct003RequestParam,
     body: ApiAct003RequestBody,
@@ -303,6 +354,7 @@ export default class ActivityService {
         HttpStatus.BAD_REQUEST,
       );
     });
+
     // 파일 uuid의 유효성을 검사하지 않습니다.
     // 참여 학생이 지난 활동기간 동아리의 소속원이였는지 확인합니다.
     const activityDStartSemester =

@@ -14,10 +14,14 @@ import apiAct002 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
 import apiAct003 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
 import apiAct004 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct004";
 import apiAct005 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
+import apiAct007 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
-import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import {
+  Public,
+  Student,
+} from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
 import ActivityService from "../service/activity.service";
@@ -43,6 +47,10 @@ import type {
   ApiAct005RequestBody,
   ApiAct005ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
+import type {
+  ApiAct007RequestBody,
+  ApiAct007ResponseCreated,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
 
 @Controller()
 export default class ActivityController {
@@ -117,6 +125,22 @@ export default class ActivityController {
     @Body() body: ApiAct003RequestBody,
   ): Promise<ApiAct003ResponseOk> {
     await this.activityService.putStudentActivity(param, body, user.studentId);
+    return {};
+  }
+
+  // TODO: Authentication 필요
+  @Public()
+  @Student()
+  @Post("/student/activities/activity/provisional")
+  @UsePipes(new ZodPipe(apiAct007))
+  async postStudentActivityProvisional(
+    @GetStudent() user: GetStudent,
+    @Body() body: ApiAct007RequestBody,
+  ): Promise<ApiAct007ResponseCreated> {
+    await this.activityService.postStudentActivityProvisional(
+      body,
+      user.studentId,
+    );
     return {};
   }
 }

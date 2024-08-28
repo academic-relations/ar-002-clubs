@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ApiReg004ResponseOK } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg004";
-import { count, desc, isNull } from "drizzle-orm";
+import { and, count, desc, gt, isNull, lte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { takeUnique } from "@sparcs-clubs/api/common/util/util";
@@ -32,5 +32,19 @@ export class RegistrationRepository {
       .orderBy(desc(RegistrationDeadlineD.startDate))
       .limit(eventEnumCount);
     return { events: result };
+  }
+
+  async selectDeadlineByDate(date: Date) {
+    const result = await this.db
+      .select()
+      .from(RegistrationDeadlineD)
+      .where(
+        and(
+          lte(RegistrationDeadlineD.startDate, date),
+          gt(RegistrationDeadlineD.endDate, date),
+          isNull(RegistrationDeadlineD.deletedAt),
+        ),
+      );
+    return result;
   }
 }
