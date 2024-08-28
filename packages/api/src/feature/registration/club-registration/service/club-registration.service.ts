@@ -69,7 +69,18 @@ export class ClubRegistrationService {
       body.clubId,
     );
     if (registrationList.length !== 0) {
-      throw new HttpException("request already exists", HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        "your club request already exists",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const myRegistrationList =
+      await this.clubRegistrationRepository.findByStudentId(studentId);
+    if (myRegistrationList.length !== 0) {
+      throw new HttpException(
+        "your request already exists",
+        HttpStatus.BAD_REQUEST,
+      );
     }
     logger.debug(
       `[postRegistration] registration existence checked. ${registrationList}`,
