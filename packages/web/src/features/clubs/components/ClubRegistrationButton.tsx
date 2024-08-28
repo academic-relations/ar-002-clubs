@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { overlay } from "overlay-kit";
+import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
@@ -80,6 +81,13 @@ const ClubRegistrationButton: React.FC<ClubRegistrationButtonProps> = ({
     close();
   };
 
+  const ResponsiveBr = styled.br`
+    display: none;
+    @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+      display: block;
+    }
+  `;
+
   const handleRegister = () => {
     overlay.open(({ isOpen, close }) => (
       <AsyncBoundary isLoading={isLoading} isError={isError}>
@@ -91,7 +99,8 @@ const ClubRegistrationButton: React.FC<ClubRegistrationButtonProps> = ({
                 ToggleUnregistered(close);
               }}
             >
-              2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
+              2024학년도 봄학기
+              <ResponsiveBr /> {club.type === 1 ? "정동아리" : "가동아리"}{" "}
               {club.name_kr}의
               <br />
               회원 등록을 취소합니다.
@@ -103,7 +112,8 @@ const ClubRegistrationButton: React.FC<ClubRegistrationButtonProps> = ({
                 ToggleRegistered(close);
               }}
             >
-              2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
+              2024학년도 봄학기
+              <ResponsiveBr /> {club.type === 1 ? "정동아리" : "가동아리"}{" "}
               {club.name_kr}의
               <br />
               회원 등록 신청을 진행합니다.
