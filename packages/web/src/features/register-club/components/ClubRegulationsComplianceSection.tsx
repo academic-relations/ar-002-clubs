@@ -1,13 +1,16 @@
 import React from "react";
 
-import { Controller } from "react-hook-form";
 import styled from "styled-components";
 
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import { CLUBS_COMPLIANCE_LIST } from "../constants/registerClub";
+
 interface ClubRegulationsComplianceSectionProps {
   isProvisional?: boolean;
+  isAgreed: boolean;
+  setIsAgreed: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ClubRegulationsComplianceSectionInner = styled.div`
@@ -20,23 +23,16 @@ const ClubRegulationsComplianceSectionInner = styled.div`
   color: ${({ theme }) => theme.colors.BLACK};
 `;
 
-const clubsComplianceList = [
-  "1. 동아리연합회칙을 준수하겠습니다.",
-  "2. KAIST의 대학 문화 발전을 위해 이바지하겠습니다.",
-  "3. 본 회의 민주적 의사결정에 성실히 참여하겠습니다.",
-  "4. 분과자치규칙을 준수하겠습니다.",
-];
-
 const ClubRegulationsComplianceSection: React.FC<
   ClubRegulationsComplianceSectionProps
-> = ({ isProvisional = false }) => (
+> = ({ isProvisional = false, isAgreed, setIsAgreed }) => (
   <ClubRegulationsComplianceSectionInner>
     <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20}>
       동아리연합회칙 준수 서약서
     </Typography>
     <div>
-      {...clubsComplianceList.map((value, index) => {
-        if (isProvisional && index === clubsComplianceList.length - 1) {
+      {...CLUBS_COMPLIANCE_LIST.map((value, index) => {
+        if (isProvisional && index === CLUBS_COMPLIANCE_LIST.length - 1) {
           return null;
         }
         return (
@@ -46,16 +42,10 @@ const ClubRegulationsComplianceSection: React.FC<
         );
       })}
     </div>
-    <Controller
-      name="isAgreed"
-      rules={{ required: true }}
-      render={({ field: { onChange, value } }) => (
-        <CheckboxOption
-          optionText="본 동아리는 다음을 따르고, 그러지 못할 경우 발생하는 불이익에 대해 책임을 질 것을 선서합니다."
-          checked={value}
-          onClick={() => onChange(!value)}
-        />
-      )}
+    <CheckboxOption
+      optionText="본 동아리는 다음을 따르고, 그러지 못할 경우 발생하는 불이익에 대해 책임을 질 것을 선서합니다."
+      checked={isAgreed}
+      onClick={() => setIsAgreed(!isAgreed)}
     />
   </ClubRegulationsComplianceSectionInner>
 );

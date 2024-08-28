@@ -3,9 +3,10 @@ import React from "react";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
+import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import IconButton from "@sparcs-clubs/web/common/components/Forms/IconButton";
+
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { mockPastActivityData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
@@ -44,8 +45,7 @@ const ActivityReportFrame: React.FC = () => {
           </Typography>
           <IconButton
             type="default"
-            buttonText="활동 보고서 작성"
-            iconType="add"
+            icon="add"
             onClick={openCreateActivityReportModal}
           >
             활동 보고서 작성

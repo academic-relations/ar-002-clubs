@@ -18,6 +18,7 @@ import {
   RegistrationApplicationStudent,
   RegistrationDeadlineD,
 } from "@sparcs-clubs/api/drizzle/schema/registration.schema";
+import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 interface IRegistrationApplicationStudent {
   id: number;
@@ -201,6 +202,14 @@ export class MemberRegistrationRepository {
         id: RegistrationApplicationStudent.id,
         applyStatusEnumId:
           RegistrationApplicationStudent.registrationApplicationStudentEnumId,
+        createdAt: RegistrationApplicationStudent.createdAt,
+        student: {
+          id: RegistrationApplicationStudent.studentId,
+          name: Student.name,
+          phoneNumber: Student.phoneNumber,
+          email: Student.email,
+          studentNumber: Student.number,
+        },
       })
       .from(RegistrationApplicationStudent)
       .where(
@@ -208,6 +217,10 @@ export class MemberRegistrationRepository {
           eq(RegistrationApplicationStudent.clubId, clubId),
           isNull(RegistrationApplicationStudent.deletedAt),
         ),
+      )
+      .leftJoin(
+        Student,
+        eq(Student.id, RegistrationApplicationStudent.studentId),
       );
     return { applies: result };
   }

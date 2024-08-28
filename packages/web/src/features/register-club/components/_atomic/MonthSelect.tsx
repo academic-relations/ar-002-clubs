@@ -1,31 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import { Controller } from "react-hook-form";
+import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
+import { useFormContext } from "react-hook-form";
 
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 const MonthSelect: React.FC = () => {
-  const monthSelectItems: SelectItem<string>[] = Array.from(
+  const { watch, setValue } = useFormContext<ApiReg001RequestBody>();
+  const foundedAt = watch("foundedAt");
+
+  const [value, onChange] = useState<number>();
+
+  const monthSelectItems: SelectItem<number>[] = Array.from(
     { length: 12 },
     (_, i) => i + 1,
   ).map(data => ({
-    value: data.toString(),
+    value: data,
     label: data.toString(),
   }));
 
+  useEffect(() => {
+    if (value == null && foundedAt != null) {
+      onChange(foundedAt.getMonth());
+    }
+  }, [foundedAt, value]);
+
+  useEffect(() => {
+    if (value == null) return;
+
+    const selectedDate = foundedAt == null ? new Date() : foundedAt;
+
+    selectedDate.setMonth(value - 1);
+
+    setValue("foundedAt", selectedDate);
+  }, [value, setValue]);
+
   return (
-    <Controller
-      name="foundedMonthAt"
-      rules={{ required: true }}
-      render={({ field: { onChange, value } }) => (
-        <Select
-          label="설립 월"
-          placeholder="설립 월을 선택해주세요"
-          items={monthSelectItems}
-          value={value}
-          onChange={onChange}
-        />
-      )}
+    <Select
+      label="설립 월"
+      placeholder="설립 월을 선택해주세요"
+      items={monthSelectItems}
+      value={value}
+      onChange={onChange}
     />
   );
 };
