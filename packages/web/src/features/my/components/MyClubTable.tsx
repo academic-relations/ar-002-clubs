@@ -1,5 +1,6 @@
 import React from "react";
 
+import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -12,18 +13,17 @@ import {
   RegistrationStatusTagList,
   RegistrationTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
-import { mockClubRegister } from "@sparcs-clubs/web/features/my/services/_mock/mockMyRegister";
 import { getTagColorFromDivision } from "@sparcs-clubs/web/types/clubdetail.types";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface MyClubTableProps {
-  clubRegisterList: typeof mockClubRegister;
+  clubRegisterList: ApiReg012ResponseOk;
 }
 const columnHelper =
-  createColumnHelper<(typeof mockClubRegister)["items"][number]>();
+  createColumnHelper<ApiReg012ResponseOk["registrations"][number]>();
 const columns = [
-  columnHelper.accessor("registrationStatusEnum", {
-    id: "registrationStatusEnum",
+  columnHelper.accessor("registrationStatusEnumId", {
+    id: "registrationStatusEnumId",
     header: "상태",
     cell: info => {
       const { color, text } = getTagDetail(
@@ -34,8 +34,8 @@ const columns = [
     },
     size: 10,
   }),
-  columnHelper.accessor("registrationTypeEnum", {
-    id: "registrationTypeEnum",
+  columnHelper.accessor("registrationTypeEnumId", {
+    id: "registrationTypeEnumId",
     header: "구분",
     cell: info => {
       const { color, text } = getTagDetail(
@@ -46,8 +46,8 @@ const columns = [
     },
     size: 10,
   }),
-  columnHelper.accessor("clubDivision", {
-    id: "clubDivision",
+  columnHelper.accessor("divisionName", {
+    id: "divisionName",
     header: "분과",
     cell: info => (
       <Tag color={getTagColorFromDivision(info.getValue())}>
@@ -78,12 +78,12 @@ const columns = [
 const MyClubTable: React.FC<MyClubTableProps> = ({ clubRegisterList }) => {
   const table = useReactTable({
     columns,
-    data: clubRegisterList.items,
+    data: clubRegisterList.registrations,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
-  const getRowLink = (row: (typeof mockClubRegister)["items"][number]) => ({
-    pathname: `/my/register-club/${row.clubId.toString()}`,
+  const getRowLink = (row: ApiReg012ResponseOk["registrations"][number]) => ({
+    pathname: `/my/register-club/${row.id.toString()}`,
   });
   return (
     <Table
