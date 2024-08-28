@@ -83,7 +83,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       cookies.remove("accessToken");
       console.log("Logged out successfully.");
     } catch (error) {
-      console.error("Logout failed", error);
+      setIsLoggedIn(false);
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("responseToken");
+      const cookies = new Cookies();
+      cookies.remove("accessToken");
+      console.log("Logged out.");
     }
   };
 
