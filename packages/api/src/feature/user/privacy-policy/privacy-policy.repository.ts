@@ -47,4 +47,23 @@ export default class PrivacyPolicyRepository {
 
     return isInsertionSucceed;
   }
+
+  /**
+   * @param userId User 테이블의 id
+   * @returns 해당 유저의 개인정보 제공 및 활용동의를 조회합니다.
+   * 리턴 배열의 길이가 1인지 검사하지 않습니다.
+   */
+  async selectAgreementByUserId(param: { userId: number }) {
+    const result = await this.db
+      .select()
+      .from(UserPrivacyPolicyAgreement)
+      .where(
+        and(
+          eq(UserPrivacyPolicyAgreement.userId, param.userId),
+          isNull(UserPrivacyPolicyAgreement.deletedAt),
+        ),
+      );
+
+    return result;
+  }
 }
