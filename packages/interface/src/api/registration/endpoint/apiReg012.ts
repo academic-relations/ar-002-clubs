@@ -30,6 +30,7 @@ const responseBodyMap = {
         registrationTypeEnumId: z.nativeEnum(RegistrationTypeEnum),
         divisionName: z.string().max(128),
         clubNameKr: zClubName,
+        clubId: z.coerce.number().int().min(1),
         activityFieldKr: z.string().max(255),
         activityFieldEn: z.string().max(255),
         professorName: z.string().max(255),

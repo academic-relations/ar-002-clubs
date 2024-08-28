@@ -433,7 +433,7 @@ export class ClubRegistrationService {
     return result;
   }
 
-  async getProfessorRegistrationsMemberRegistrationsBrief(param: {
+  async getProfessorRegistrationsClubRegistrationsBrief(param: {
     professorId: number;
   }): Promise<ApiReg021ResponseOk> {
     const result =
@@ -451,6 +451,7 @@ export class ClubRegistrationService {
     logger.debug(registrations);
     return {
       items: registrations.map(e => ({
+        id: e.registration.id,
         clubId: e.registration.clubId,
         registrationStatusEnumId:
           e.registration.registrationApplicationStatusEnumId,

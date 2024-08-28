@@ -9,6 +9,7 @@ export const mockMyRegistration: ApiReg012ResponseOk = {
   registrations: [
     {
       id: 1,
+      clubId: 1,
       registrationTypeEnumId: RegistrationTypeEnum.NewProvisional,
       registrationStatusEnumId: RegistrationStatusEnum.Pending,
       divisionName: "테스트 분과",
