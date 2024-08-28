@@ -358,6 +358,22 @@ export class ClubRegistrationService {
         studentId,
         applyId,
       );
+    if (result.externalInstructionFile) {
+      result.externalInstructionFile.url =
+        await this.filePublicService.getFileUrl(
+          result.externalInstructionFile.id,
+        );
+    }
+    if (result.clubRuleFile) {
+      result.clubRuleFile.url = await this.filePublicService.getFileUrl(
+        result.clubRuleFile.id,
+      );
+    }
+    if (result.activityPlanFile) {
+      result.activityPlanFile.url = await this.filePublicService.getFileUrl(
+        result.activityPlanFile.id,
+      );
+    }
     return result;
   }
 
@@ -401,6 +417,22 @@ export class ClubRegistrationService {
       await this.clubRegistrationRepository.getExecutiveRegistrationsClubRegistration(
         applyId,
       );
+    if (result.externalInstructionFile) {
+      result.externalInstructionFile.url =
+        await this.filePublicService.getFileUrl(
+          result.externalInstructionFile.id,
+        );
+    }
+    if (result.clubRuleFile) {
+      result.clubRuleFile.url = await this.filePublicService.getFileUrl(
+        result.clubRuleFile.id,
+      );
+    }
+    if (result.activityPlanFile) {
+      result.activityPlanFile.url = await this.filePublicService.getFileUrl(
+        result.activityPlanFile.id,
+      );
+    }
     return result;
   }
 

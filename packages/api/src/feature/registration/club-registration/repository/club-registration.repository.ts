@@ -399,10 +399,10 @@ export class ClubRegistrationRepository {
           representative: {
             studentNumber: representative.studentNumber,
             name: representative.name,
+            phoneNumber: Registration.phoneNumber,
           },
-          phoneNumber: Registration.phoneNumber,
           foundedAt: Registration.foundedAt,
-          divisionId: Registration.divisionId,
+          divisionName: Division.name,
           activityFieldKr: Registration.activityFieldKr,
           activityFieldEn: Registration.activityFieldEn,
           professor: {
@@ -413,6 +413,21 @@ export class ClubRegistrationRepository {
           divisionConsistency: Registration.divisionConsistency,
           foundationPurpose: Registration.foundationPurpose,
           activityPlan: Registration.activityPlan,
+          acitivityPlanFile: {
+            id: Registration.registrationActivityPlanFileId,
+            name: File1.name,
+            url: null,
+          },
+          clubRuleFile: {
+            id: Registration.registrationClubRuleFileId,
+            name: File2.name,
+            url: null,
+          },
+          externalInstructionFile: {
+            id: Registration.registrationExternalInstructionFileId,
+            name: File3.name,
+            url: null,
+          },
           activityPlanFileId: Registration.registrationActivityPlanFileId,
           activityPlanFileName: File1.name,
           clubRuleFileId: Registration.registrationClubRuleFileId,
@@ -448,6 +463,13 @@ export class ClubRegistrationRepository {
           and(
             eq(Registration.registrationExternalInstructionFileId, File3.id),
             isNull(File3.deletedAt),
+          ),
+        )
+        .leftJoin(
+          Division,
+          and(
+            eq(Registration.divisionId, Division.id),
+            isNull(Division.deletedAt),
           ),
         )
         .where(
@@ -638,10 +660,10 @@ export class ClubRegistrationRepository {
           representative: {
             studentNumber: representative.studentNumber,
             name: representative.name,
+            phoneNumber: Registration.phoneNumber,
           },
-          phoneNumber: Registration.phoneNumber,
           foundedAt: Registration.foundedAt,
-          divisionId: Registration.divisionId,
+          divisionName: Division.name,
           activityFieldKr: Registration.activityFieldKr,
           activityFieldEn: Registration.activityFieldEn,
           professor: {
@@ -652,13 +674,21 @@ export class ClubRegistrationRepository {
           divisionConsistency: Registration.divisionConsistency,
           foundationPurpose: Registration.foundationPurpose,
           activityPlan: Registration.activityPlan,
-          activityPlanFileId: Registration.registrationActivityPlanFileId,
-          activityPlanFileName: File1.name,
-          clubRuleFileId: Registration.registrationClubRuleFileId,
-          clubRuleFileName: File2.name,
-          externalInstructionFileId:
-            Registration.registrationExternalInstructionFileId,
-          externalInstructionFileName: File3.name,
+          acitivityPlanFile: {
+            id: Registration.registrationActivityPlanFileId,
+            name: File1.name,
+            url: null,
+          },
+          clubRuleFile: {
+            id: Registration.registrationClubRuleFileId,
+            name: File2.name,
+            url: null,
+          },
+          externalInstructionFile: {
+            id: Registration.registrationExternalInstructionFileId,
+            name: File3.name,
+            url: null,
+          },
           isProfessorSigned: Registration.professorApprovedAt,
           updatedAt: Registration.updatedAt,
         })
@@ -687,6 +717,13 @@ export class ClubRegistrationRepository {
           and(
             eq(Registration.registrationExternalInstructionFileId, File3.id),
             isNull(File3.deletedAt),
+          ),
+        )
+        .leftJoin(
+          Division,
+          and(
+            eq(Registration.divisionId, Division.id),
+            isNull(Division.deletedAt),
           ),
         )
         .where(
