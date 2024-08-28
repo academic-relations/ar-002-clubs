@@ -10,7 +10,8 @@ interface SingleUploadWithTextAndTemplateProps {
   fileId: string;
   title: string;
   content?: string;
-  onFormatDownload?: VoidFunction;
+  downloadUrl: string;
+  downloadFileName: string;
   onChange?: (string: string[]) => void;
 }
 
@@ -29,28 +30,38 @@ const SingleUploadWithTextAndTemplate: React.FC<
   fileId,
   title,
   content = undefined,
-  onFormatDownload = () => {},
+  downloadUrl,
+  downloadFileName,
   onChange = () => {},
-}) => (
-  <SingleUploadWithTextAndTemplateInner>
-    <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
-      {title}
-    </Typography>
-    {content && (
-      <Typography ff="PRETENDARD" fs={14} lh={20} color="GRAY.600">
-        {content}
+}) => {
+  const onDownload = () => {
+    const a = document.createElement("a");
+    a.href = downloadUrl;
+    a.download = downloadFileName;
+    a.click();
+  };
+
+  return (
+    <SingleUploadWithTextAndTemplateInner>
+      <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
+        {title}
       </Typography>
-    )}
-    <FileUpload fileId={fileId} onChange={onChange} />
-    <IconButton
-      style={{ marginTop: 4 }}
-      type="default"
-      icon="save_alt"
-      onClick={onFormatDownload}
-    >
-      양식 다운로드
-    </IconButton>
-  </SingleUploadWithTextAndTemplateInner>
-);
+      {content && (
+        <Typography ff="PRETENDARD" fs={14} lh={20} color="GRAY.600">
+          {content}
+        </Typography>
+      )}
+      <FileUpload fileId={fileId} onChange={onChange} />
+      <IconButton
+        style={{ marginTop: 4 }}
+        type="default"
+        icon="save_alt"
+        onClick={onDownload}
+      >
+        양식 다운로드
+      </IconButton>
+    </SingleUploadWithTextAndTemplateInner>
+  );
+};
 
 export default SingleUploadWithTextAndTemplate;
