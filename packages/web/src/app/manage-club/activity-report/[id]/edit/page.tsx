@@ -2,10 +2,18 @@
 
 import React from "react";
 
-import ActivityReportEditFrame from "@sparcs-clubs/web/features/manage-club/activity-report/frames/ActivityReportEditFrame";
+// 배포용 not found 페이지 (시작)
+import NotFound from "@sparcs-clubs/web/app/not-found";
 
-const ActivityReport = ({ params }: { params: { id: string } }) => (
-  <ActivityReportEditFrame id={params.id} />
-);
+const TemporaryNotFound = () => <NotFound />;
 
-export default ActivityReport;
+export default TemporaryNotFound;
+// 배포용 not found 페이지 (끝)
+
+// import ActivityReportEditFrame from "@sparcs-clubs/web/features/manage-club/activity-report/frames/ActivityReportEditFrame";
+
+// const ActivityReport = ({ params }: { params: { id: string } }) => (
+//   <ActivityReportEditFrame id={params.id} />
+// );
+
+// export default ActivityReport;
