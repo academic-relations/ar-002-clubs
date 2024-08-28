@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
@@ -17,8 +18,8 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import WarningInfo from "@sparcs-clubs/web/common/components/WarningInfo";
+import useGetClubRegistration from "@sparcs-clubs/web/features/my/services/useGetClubRegistration";
 import usePutClubRegistration from "@sparcs-clubs/web/features/my/services/usePutClubRegistration";
-import { MyClubRegistrationDetail } from "@sparcs-clubs/web/features/my/types/myClubRegistration";
 import ActivityReportFrame from "@sparcs-clubs/web/features/register-club/components/ActivityReportFrame";
 import AdvancedInformFrame from "@sparcs-clubs/web/features/register-club/components/AdvancedInformFrame";
 import BasicInformFrame from "@sparcs-clubs/web/features/register-club/components/BasicInformFrame";
@@ -27,7 +28,6 @@ import ProvisionalBasicInformFrame from "@sparcs-clubs/web/features/register-clu
 
 interface RegisterClubMainFrameProps {
   applyId: number;
-  detail?: MyClubRegistrationDetail;
 }
 
 const ButtonWrapper = styled.div`
@@ -37,12 +37,19 @@ const ButtonWrapper = styled.div`
 
 const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
   applyId,
-  detail = undefined,
 }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const [isAgreed, setIsAgreed] = useState(false);
+
+  const {
+    data: detail,
+    isLoading,
+    isError,
+  } = useGetClubRegistration({
+    applyId: +applyId,
+  });
 
   const formCtx = useForm<ApiReg009RequestBody>({
     mode: "all",
@@ -93,63 +100,67 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
   }, [isSuccess, router, applyId, queryClient]);
 
   return (
-    <FormProvider {...formCtx}>
-      <form onSubmit={handleSubmit(submitHandler)}>
-        <FlexWrapper direction="column" gap={60}>
-          <PageHead
-            items={[
-              {
-                name: `마이페이지`,
-                path: `/my`,
-              },
-              {
-                name: `동아리 등록`,
-                path: `/my/register-club/${applyId}`,
-              },
-            ]}
-            title={`동아리 ${title} 신청 수정`}
-            enableLast
-          />
-          <FlexWrapper direction="column" gap={20}>
-            {/* TODO. 등록 기간, 신청마감 동적처리  */}
-            <Info text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
-            <WarningInfo>
-              <Typography lh={24} color="BLACK">
-                동아리 등록 구분(재등록 / 신규 등록 / 가등록) 변경 또는 가등록
-                신청 구분 변경을 원할 경우, 해당 신청 내역을 삭제한 후 새로운
-                신청을 해주시기 바랍니다
-              </Typography>
-            </WarningInfo>
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <FormProvider {...formCtx}>
+        <form onSubmit={handleSubmit(submitHandler)}>
+          <FlexWrapper direction="column" gap={60}>
+            <PageHead
+              items={[
+                {
+                  name: `마이페이지`,
+                  path: `/my`,
+                },
+                {
+                  name: `동아리 등록`,
+                  path: `/my/register-club/${applyId}`,
+                },
+              ]}
+              title={`동아리 ${title} 신청 수정`}
+              enableLast
+            />
+            <FlexWrapper direction="column" gap={20}>
+              {/* TODO. 등록 기간, 신청마감 동적처리  */}
+              <Info text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
+              <WarningInfo>
+                <Typography lh={24} color="BLACK">
+                  동아리 등록 구분(재등록 / 신규 등록 / 가등록) 변경 또는 가등록
+                  신청 구분 변경을 원할 경우, 해당 신청 내역을 삭제한 후 새로운
+                  신청을 해주시기 바랍니다
+                </Typography>
+              </WarningInfo>
+            </FlexWrapper>
+            {isProvisionalClub ? (
+              <ProvisionalBasicInformFrame />
+            ) : (
+              <BasicInformFrame type={type} />
+            )}
+            <AdvancedInformFrame type={type} />
+            {type === RegistrationTypeEnum.Promotional && (
+              <ActivityReportFrame />
+            )}
+            <ClubRulesFrame
+              isProvisional={type === RegistrationTypeEnum.NewProvisional}
+              isAgreed={isAgreed}
+              setIsAgreed={setIsAgreed}
+            />
+            <ButtonWrapper>
+              <Button
+                type="outlined"
+                onClick={() => router.replace(`/my/register-club/${applyId}`)}
+              >
+                취소
+              </Button>
+              <Button
+                buttonType="submit"
+                type={isValid && isAgreed ? "default" : "disabled"}
+              >
+                저장
+              </Button>
+            </ButtonWrapper>
           </FlexWrapper>
-          {isProvisionalClub ? (
-            <ProvisionalBasicInformFrame />
-          ) : (
-            <BasicInformFrame type={type} />
-          )}
-          <AdvancedInformFrame type={type} />
-          {type === RegistrationTypeEnum.Promotional && <ActivityReportFrame />}
-          <ClubRulesFrame
-            isProvisional={type === RegistrationTypeEnum.NewProvisional}
-            isAgreed={isAgreed}
-            setIsAgreed={setIsAgreed}
-          />
-          <ButtonWrapper>
-            <Button
-              type="outlined"
-              onClick={() => router.replace(`/my/register-club/${applyId}`)}
-            >
-              취소
-            </Button>
-            <Button
-              buttonType="submit"
-              type={isValid && isAgreed ? "default" : "disabled"}
-            >
-              저장
-            </Button>
-          </ButtonWrapper>
-        </FlexWrapper>
-      </form>
-    </FormProvider>
+        </form>
+      </FormProvider>
+    </AsyncBoundary>
   );
 };
 
