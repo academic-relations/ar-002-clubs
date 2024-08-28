@@ -86,6 +86,20 @@ export class ClubRegistrationRepository {
     return clubs;
   }
 
+  async findByStudentId(studentId: number) {
+    const clubs = await this.db
+      .select()
+      .from(Registration)
+      .where(
+        and(
+          eq(Registration.studentId, studentId),
+          isNull(Registration.deletedAt),
+        ),
+      );
+
+    return clubs;
+  }
+
   async createRegistration(
     studentId: number,
     body: ApiReg001RequestBody,
