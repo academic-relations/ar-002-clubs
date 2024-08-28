@@ -479,12 +479,31 @@ export class ClubRegistrationRepository {
       .select({
         id: Registration.id,
         registrationTypeEnumId: Registration.registrationApplicationTypeEnumId,
+        divisionName: Division.name,
+        clubNameKr: Registration.clubNameKr,
+        activityFieldKr: Registration.activityFieldKr,
+        activityFieldEn: Registration.activityFieldEn,
+        professorName: Professor.name,
         registrationStatusEnumId:
           Registration.registrationApplicationStatusEnumId,
         krName: Registration.clubNameKr,
         enName: Registration.clubNameEn,
       })
       .from(Registration)
+      .leftJoin(
+        Division,
+        and(
+          eq(Registration.divisionId, Division.id),
+          isNull(Division.deletedAt),
+        ),
+      )
+      .leftJoin(
+        Professor,
+        and(
+          eq(Registration.professorId, Professor.id),
+          isNull(Professor.deletedAt),
+        ),
+      )
       .where(
         and(
           eq(Registration.studentId, studentId),
