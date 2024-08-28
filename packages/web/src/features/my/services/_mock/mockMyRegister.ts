@@ -24,6 +24,7 @@ const mockClubRegister = {
 const mockProfClubRegister = {
   items: [
     {
+      id: 1,
       clubId: 23,
       registrationStatusEnumId: RegistrationStatusEnum.Pending,
       division: { id: 1, name: "생활문화" },
