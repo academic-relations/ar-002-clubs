@@ -19,6 +19,7 @@ interface FileUploadProps {
   onChange?: (string: string[]) => void;
   allowedTypes?: string[];
   multiple?: boolean;
+  disabled?: boolean;
 }
 
 const FileUploadInner = styled.div`
@@ -87,17 +88,26 @@ const HiddenInput = styled.input`
   display: none;
 `;
 
+const FlexExpand = styled.div`
+  flex: 1;
+`;
+
 const FileUpload: React.FC<FileUploadProps> = ({
   fileId = "file-upload-input",
   placeholder = "파일을 선택해주세요",
   onChange = () => {},
   allowedTypes = [],
   multiple = false,
+  disabled = false,
 }) => {
   const { mutate: uploadFileMutation } = useFileUpload();
   const { mutate: putFileS3Mutation } = usePutFileS3();
 
   const [files, setFiles] = useState<{ file: File; fileId?: string }[]>([]);
+
+  useEffect(() => {
+    onChange(files.filter(file => file.fileId).map(file => file.fileId!));
+  }, [files, onChange]);
 
   useEffect(() => {
     if (files.length === 0) {
@@ -179,12 +189,46 @@ const FileUpload: React.FC<FileUploadProps> = ({
         />
       </FileUploadInner>
       <FlexWrapper direction="column" gap={8} padding="0 4px">
-        <ThumbnailPreviewList
-          fileList={files.map(file => ({
-            name: file.file.name,
-            src: URL.createObjectURL(file.file),
-          }))}
-        />
+        {multiple && (
+          <ThumbnailPreviewList
+            fileList={files.map(file => ({
+              name: file.file.name,
+              src: URL.createObjectURL(file.file),
+            }))}
+            onChange={_files =>
+              setFiles(prevFiles =>
+                /* TODO: (@dora) 이것을 name으로 비교해도 되는 것일까... */
+                prevFiles.filter(f =>
+                  _files.map(_file => _file.name).includes(f.file.name),
+                ),
+              )
+            }
+            disabled={disabled}
+          />
+        )}
+        {!multiple && files.length > 0 && (
+          <FlexWrapper direction="row" gap={8} key={files[0].file.name}>
+            <Icon type="description_outlined" size={16} color="BLACK" />
+            <FlexExpand>
+              <Typography color="BLACK" fs={14} lh={16} fw="REGULAR">
+                {files[0].file.name}
+              </Typography>
+            </FlexExpand>
+
+            {!disabled && (
+              <Icon
+                type="close_outlined"
+                size={16}
+                color="BLACK"
+                onClick={() => {
+                  setFiles(
+                    files.filter(f => f.file.name !== files[0].file.name),
+                  );
+                }}
+              />
+            )}
+          </FlexWrapper>
+        )}
       </FlexWrapper>
     </FlexWrapper>
   );
