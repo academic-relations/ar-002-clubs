@@ -10,7 +10,7 @@ import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.
 
 /**
  * @version v0.1
- * @description 동아리별 가입 신청의 간략한 상태를 확인합니다.
+ * @description 동아리별 가입 신청의 세부 상태를 확인합니다.
  */
 
 const url = () => `/professor/registrations/member-registrations/brief`;
