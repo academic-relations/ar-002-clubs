@@ -551,6 +551,7 @@ export class ClubRegistrationRepository {
           isNull(Professor.deletedAt),
         ),
       )
+      .where(isNull(Registration.deletedAt))
       .orderBy(desc(Registration.createdAt))
       .limit(itemCount)
       .offset(startOffset);
