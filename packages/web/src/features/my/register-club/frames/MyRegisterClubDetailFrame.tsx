@@ -116,7 +116,9 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
               <ListItem>
                 대표자 이름: {clubDetail?.representative?.name}
               </ListItem>
-              <ListItem>대표자 전화번호: {clubDetail?.phoneNumber}</ListItem>
+              <ListItem>
+                대표자 전화번호: {clubDetail?.representative?.phoneNumber}
+              </ListItem>
               <ListItem>
                 설립 연도: {clubDetail && getActualYear(clubDetail?.foundedAt)}
               </ListItem>
