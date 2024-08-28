@@ -168,7 +168,7 @@ export class ClubRegistrationRepository {
         divisionId: body.divisionId,
         activityFieldKr: body.activityFieldKr,
         activityFieldEn: body.activityFieldEn,
-        professorId,
+        professorId: professorId.professorId,
         divisionConsistency: body.divisionConsistency,
         foundationPurpose: body.foundationPurpose,
         activityPlan: body.activityPlan,
@@ -779,5 +779,29 @@ export class ClubRegistrationRepository {
       return {};
     });
     return response;
+  }
+
+  async selectRegistrationsAndRepresentativeByProfessorId(param: {
+    professorId: number;
+  }) {
+    const result = await this.db
+      .select()
+      .from(Registration)
+      .where(
+        and(
+          eq(Registration.professorId, param.professorId),
+          isNull(Registration.deletedAt),
+        ),
+      )
+      .innerJoin(Student, eq(Registration.studentId, Student.id))
+      .innerJoin(
+        Division,
+        and(
+          eq(Registration.divisionId, Division.id),
+          isNull(Division.deletedAt),
+        ),
+      );
+
+    return result;
   }
 }

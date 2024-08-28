@@ -20,6 +20,12 @@ const MonthSelect: React.FC = () => {
   }));
 
   useEffect(() => {
+    if (value == null && foundedAt != null) {
+      onChange(foundedAt.getMonth());
+    }
+  }, [foundedAt, value]);
+
+  useEffect(() => {
     if (value == null) return;
 
     const selectedDate = foundedAt == null ? new Date() : foundedAt;

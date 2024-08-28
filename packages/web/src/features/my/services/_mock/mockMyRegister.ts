@@ -24,18 +24,20 @@ const mockClubRegister = {
 const mockProfClubRegister = {
   items: [
     {
-      registrationStatusEnum: RegistrationStatusEnum.Pending,
-      clubDivision: "생활문화",
-      clubNameKr: "술박스",
-      studentNumber: "202XXXXX",
-      studentName: "이지윤",
-      phoneNumber: "XXX-XXXX-XXXX",
-      studentEmail: "xxxxx@kaist.ac.kr",
-      clubId: 1,
+      clubId: 23,
+      registrationStatusEnumId: RegistrationStatusEnum.Pending,
+      division: { id: 1, name: "생활문화" },
+      clubName: "술박스",
+      student: {
+        id: 1,
+        studentNumber: 20200000,
+        name: "이지윤",
+        phoneNumber: "000-0000-0000",
+        email: "xxxxx@kaist.ac.kr",
+      },
+      professorSignedAt: new Date(),
     },
   ],
-  total: 1,
-  offset: 1,
 };
 const mockMemberRegister = {
   applies: [
