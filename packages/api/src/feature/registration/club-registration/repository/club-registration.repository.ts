@@ -39,6 +39,7 @@ import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import { ClubDelegateD } from "@sparcs-clubs/api/drizzle/schema/club.schema";
+import { Division } from "@sparcs-clubs/api/drizzle/schema/division.schema";
 import { File } from "@sparcs-clubs/api/drizzle/schema/file.schema";
 import {
   Registration,
@@ -167,7 +168,7 @@ export class ClubRegistrationRepository {
         divisionId: body.divisionId,
         activityFieldKr: body.activityFieldKr,
         activityFieldEn: body.activityFieldEn,
-        professorId,
+        professorId: professorId.professorId,
         divisionConsistency: body.divisionConsistency,
         foundationPurpose: body.foundationPurpose,
         activityPlan: body.activityPlan,
@@ -478,12 +479,32 @@ export class ClubRegistrationRepository {
       .select({
         id: Registration.id,
         registrationTypeEnumId: Registration.registrationApplicationTypeEnumId,
+        divisionName: Division.name,
+        clubNameKr: Registration.clubNameKr,
+        clubId: Registration.clubId,
+        activityFieldKr: Registration.activityFieldKr,
+        activityFieldEn: Registration.activityFieldEn,
+        professorName: Professor.name,
         registrationStatusEnumId:
           Registration.registrationApplicationStatusEnumId,
         krName: Registration.clubNameKr,
         enName: Registration.clubNameEn,
       })
       .from(Registration)
+      .leftJoin(
+        Division,
+        and(
+          eq(Registration.divisionId, Division.id),
+          isNull(Division.deletedAt),
+        ),
+      )
+      .leftJoin(
+        Professor,
+        and(
+          eq(Registration.professorId, Professor.id),
+          isNull(Professor.deletedAt),
+        ),
+      )
       .where(
         and(
           eq(Registration.studentId, studentId),
@@ -531,6 +552,7 @@ export class ClubRegistrationRepository {
           isNull(Professor.deletedAt),
         ),
       )
+      .where(isNull(Registration.deletedAt))
       .orderBy(desc(Registration.createdAt))
       .limit(itemCount)
       .offset(startOffset);
@@ -759,5 +781,29 @@ export class ClubRegistrationRepository {
       return {};
     });
     return response;
+  }
+
+  async selectRegistrationsAndRepresentativeByProfessorId(param: {
+    professorId: number;
+  }) {
+    const result = await this.db
+      .select()
+      .from(Registration)
+      .where(
+        and(
+          eq(Registration.professorId, param.professorId),
+          isNull(Registration.deletedAt),
+        ),
+      )
+      .innerJoin(Student, eq(Registration.studentId, Student.id))
+      .innerJoin(
+        Division,
+        and(
+          eq(Registration.divisionId, Division.id),
+          isNull(Division.deletedAt),
+        ),
+      );
+
+    return result;
   }
 }

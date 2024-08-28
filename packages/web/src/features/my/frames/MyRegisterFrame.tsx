@@ -5,10 +5,12 @@ import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/re
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
+import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 
-import MyClubRegisterFrame from "./_atomic/MyClubRegisterFrame";
 import MyMemberRegisterFrame from "./_atomic/MyMemberRegisterFrame";
+import RegisterClubFrame from "./_atomic/RegisterClubFrame";
+import RegisterClubProfFrame from "./_atomic/RegisterClubProfFrame";
 
 const MyRegisterFrame: React.FC<{ profile: string }> = ({ profile }) => {
   const {
@@ -60,7 +62,18 @@ const MyRegisterFrame: React.FC<{ profile: string }> = ({ profile }) => {
           <FlexWrapper direction="column" gap={40}>
             {registrationStatus ===
               RegistrationDeadlineEnum.ClubRegistrationApplication && (
-              <MyClubRegisterFrame profile={profile} />
+              <FlexWrapper direction="column" gap={20}>
+                <MoreDetailTitle
+                  title="동아리 등록"
+                  moreDetail=""
+                  moreDetailPath=""
+                />
+                {profile === "professor" ? (
+                  <RegisterClubProfFrame />
+                ) : (
+                  <RegisterClubFrame />
+                )}
+              </FlexWrapper>
             )}
             {registrationStatus ===
               RegistrationDeadlineEnum.StudentRegistrationApplication &&

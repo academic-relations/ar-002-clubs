@@ -18,6 +18,7 @@ import { ApiReg015ResponseOk } from "@sparcs-clubs/interface/api/registration/en
 import { ApiReg016ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg016";
 import { ApiReg017ResponseCreated } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg017";
 import { ApiReg018ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg018";
+import { ApiReg021ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg021";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import {
   RegistrationDeadlineEnum,
@@ -430,5 +431,44 @@ export class ClubRegistrationService {
         comment,
       );
     return result;
+  }
+
+  async getProfessorRegistrationsClubRegistrationsBrief(param: {
+    professorId: number;
+  }): Promise<ApiReg021ResponseOk> {
+    const result =
+      await this.clubRegistrationRepository.selectRegistrationsAndRepresentativeByProfessorId(
+        {
+          professorId: param.professorId,
+        },
+      );
+    logger.debug(result);
+    const registrations = result.sort((a, b) => {
+      if (a.registration.divisionId !== b.registration.divisionId)
+        return a.registration.divisionId - b.registration.divisionId;
+      return a.registration.clubNameKr > b.registration.clubNameKr ? 1 : -1;
+    });
+    logger.debug(registrations);
+    return {
+      items: registrations.map(e => ({
+        id: e.registration.id,
+        clubId: e.registration.clubId,
+        registrationStatusEnumId:
+          e.registration.registrationApplicationStatusEnumId,
+        division: {
+          id: e.registration.divisionId,
+          name: e.division.name,
+        },
+        clubName: e.registration.clubNameKr,
+        student: {
+          id: e.student.id,
+          studentNumber: e.student.number,
+          name: e.student.name,
+          phoneNumber: e.student.phoneNumber,
+          email: e.student.email,
+        },
+        professorSignedAt: e.registration.professorApprovedAt,
+      })),
+    };
   }
 }

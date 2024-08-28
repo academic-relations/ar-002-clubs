@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 
+import isPropValid from "@emotion/is-prop-valid";
 import { flexRender, type Table as TableType } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
@@ -22,7 +23,9 @@ const TableInnerWrapper = styled.div`
   padding: 0 calc((100vw - 100%) / 2);
   overflow-x: auto;
 `;
-const TableInner = styled.table<{ height?: number; minWidth: number }>`
+const TableInner = styled.table.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ height?: number; minWidth: number }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -50,7 +53,9 @@ const Content = styled.tbody`
   overflow-y: auto;
   width: 100%;
 `;
-const ContentRow = styled.tr<{ selected: boolean; isClickable: boolean }>`
+const ContentRow = styled.tr.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ selected: boolean; isClickable: boolean }>`
   width: 100%;
   display: flex;
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};

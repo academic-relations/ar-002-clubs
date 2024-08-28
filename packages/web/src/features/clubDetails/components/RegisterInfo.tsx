@@ -99,6 +99,13 @@ export const RegisterInfo: React.FC<RegisterInfoProps> = ({ club }) => {
     close();
   };
 
+  const ResponsiveBr = styled.br`
+    display: none;
+    @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+      display: block;
+    }
+  `;
+
   const submitHandler = () => {
     overlay.open(({ isOpen, close }) => (
       <AsyncBoundary isLoading={isLoading} isError={isError}>
@@ -110,7 +117,8 @@ export const RegisterInfo: React.FC<RegisterInfoProps> = ({ club }) => {
                 ToggleUnregistered(close);
               }}
             >
-              2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
+              2024학년도 봄학기
+              <ResponsiveBr /> {club.type === 1 ? "정동아리" : "가동아리"}{" "}
               {club.name_kr}의<br />
               회원 등록을 취소합니다.
             </CancellableModalContent>
@@ -121,7 +129,8 @@ export const RegisterInfo: React.FC<RegisterInfoProps> = ({ club }) => {
                 ToggleRegistered(close);
               }}
             >
-              2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
+              2024학년도 봄학기
+              <ResponsiveBr /> {club.type === 1 ? "정동아리" : "가동아리"}{" "}
               {club.name_kr}의<br />
               회원 등록 신청을 진행합니다.
             </CancellableModalContent>

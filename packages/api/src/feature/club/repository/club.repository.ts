@@ -257,7 +257,7 @@ export default class ClubRepository {
         .where(isNull(Professor.deletedAt))
         .as("professor");
       const club = await tx
-        .select({
+        .selectDistinct({
           id: Club.id,
           clubNameKr: Club.name_kr,
           clubNameEn: Club.name_en,
@@ -281,6 +281,7 @@ export default class ClubRepository {
         .where(and(inArray(Club.id, delegate), isNull(Club.deletedAt)));
       return club;
     });
+    console.log(result);
     return result;
   }
 
@@ -364,7 +365,7 @@ export default class ClubRepository {
 
       const sq = union(provisionalClubs, regularClubs);
       const response = await tx
-        .select({
+        .selectDistinct({
           id: Club.id,
           clubNameKr: Club.name_kr,
           clubNameEn: Club.name_en,
