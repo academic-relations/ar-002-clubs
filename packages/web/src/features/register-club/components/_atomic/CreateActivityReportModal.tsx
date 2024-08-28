@@ -179,6 +179,7 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
                 )}
               />
               <FileUpload
+                multiple
                 onChange={data => {
                   setValue(
                     "evidenceFiles",
