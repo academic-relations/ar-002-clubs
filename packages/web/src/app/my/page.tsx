@@ -46,7 +46,7 @@ const My: React.FC = () => {
         title="마이페이지"
       />
       {profile === "undergraduate" && <MyChangesFrame />}
-      <MyInfoFrame />
+      <MyInfoFrame profile={profile as string} />
       {profile !== "executive" && <MyClubFrame />}
       {profile && profile !== "executive" && (
         <MyRegisterFrame profile={profile} />
