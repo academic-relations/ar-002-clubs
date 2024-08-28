@@ -23,7 +23,7 @@ const useGetMyClub = () =>
       // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
       switch (status) {
         case 200:
-          return apiClb003.responseBodyMap[200].parse(data);
+          return data;
         default:
           throw new UnexpectedAPIResponseError();
       }
