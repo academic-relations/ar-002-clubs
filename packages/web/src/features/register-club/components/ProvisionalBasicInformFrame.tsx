@@ -113,7 +113,7 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
             editMode={editMode}
           />
           <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
-            <YearSelect isProvisional />
+            <YearSelect />
             <MonthSelect />
             <DivisionSelect />
           </FlexWrapper>
