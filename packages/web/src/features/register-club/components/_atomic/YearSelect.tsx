@@ -4,6 +4,7 @@ import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/e
 import { useFormContext } from "react-hook-form";
 
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
+import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
 
 const YearSelect: React.FC = () => {
   const { watch, setValue } = useFormContext<ApiReg001RequestBody>();
@@ -11,7 +12,7 @@ const YearSelect: React.FC = () => {
   const foundedAt = watch("foundedAt");
 
   const [value, onChangeValue] = useState<string>(
-    foundedAt ? foundedAt.getFullYear().toString() : "",
+    foundedAt ? getActualYear(foundedAt).toString() : "",
   );
 
   const startYear = 1980;

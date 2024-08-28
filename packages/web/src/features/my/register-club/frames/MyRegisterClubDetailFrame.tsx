@@ -27,6 +27,7 @@ import MyRegisterClubAcfTable from "@sparcs-clubs/web/features/my/register-club/
 import { mockMyClubRegisterAcf } from "@sparcs-clubs/web/features/my/services/_mock/mockMyClubRegisterDetail";
 
 import useGetClubRegistration from "@sparcs-clubs/web/features/my/services/useGetClubRegistration";
+import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 const ButtonWrapper = styled.div`
@@ -117,7 +118,7 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
               </ListItem>
               <ListItem>대표자 전화번호: {clubDetail?.phoneNumber}</ListItem>
               <ListItem>
-                설립 연도: {clubDetail?.foundedAt.getFullYear()}
+                설립 연도: {clubDetail && getActualYear(clubDetail?.foundedAt)}
               </ListItem>
               <ListItem>
                 소속 분과:{" "}
