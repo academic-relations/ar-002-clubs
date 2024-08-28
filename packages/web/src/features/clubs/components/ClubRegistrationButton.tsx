@@ -112,7 +112,8 @@ const ClubRegistrationButton: React.FC<ClubRegistrationButtonProps> = ({
                 ToggleRegistered(close);
               }}
             >
-              2024학년도 봄학기 {club.type === 1 ? "정동아리" : "가동아리"}{" "}
+              2024학년도 봄학기
+              <ResponsiveBr /> {club.type === 1 ? "정동아리" : "가동아리"}{" "}
               {club.name_kr}의
               <br />
               회원 등록 신청을 진행합니다.
