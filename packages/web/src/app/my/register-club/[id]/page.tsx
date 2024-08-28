@@ -6,6 +6,7 @@ import NotFound from "@sparcs-clubs/web/app/not-found";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
+import NotForExecutive from "@sparcs-clubs/web/common/frames/NotForExecutive";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import MyRegisterClubDetailFrame from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubDetailFrame";
 
@@ -27,7 +28,11 @@ const MyRegisterClubDetail = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile === "executive" || profile === undefined) {
+  if (profile === "executive") {
+    return <NotForExecutive />;
+  }
+
+  if (!profile) {
     return <NotFound />;
   }
 

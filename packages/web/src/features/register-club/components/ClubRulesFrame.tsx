@@ -17,11 +17,13 @@ import {
   DEPARTMENT_AUTONOMY_RULES,
 } from "../constants/registerClub";
 
+import RulesButton from "./_atomic/RulesButton";
 import ClubRegulationsComplianceSection from "./ClubRegulationsComplianceSection";
-import RulesButton from "./RulesButton";
 
 interface ClubRulesFrameProps {
   isProvisional?: boolean;
+  isAgreed: boolean;
+  setIsAgreed: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ButtonWrapper = styled.div`
@@ -31,6 +33,8 @@ const ButtonWrapper = styled.div`
 
 const ClubRulesFrame: React.FC<ClubRulesFrameProps> = ({
   isProvisional = false,
+  isAgreed,
+  setIsAgreed,
 }) => {
   const openModal = () => {
     overlay.open(({ isOpen, close }) => (
@@ -63,7 +67,11 @@ const ClubRulesFrame: React.FC<ClubRulesFrameProps> = ({
         {!isProvisional && (
           <RulesButton title="분과자치규칙" onClick={openModal} />
         )}
-        <ClubRegulationsComplianceSection isProvisional={isProvisional} />
+        <ClubRegulationsComplianceSection
+          isProvisional={isProvisional}
+          isAgreed={isAgreed}
+          setIsAgreed={setIsAgreed}
+        />
       </Card>
     </FlexWrapper>
   );

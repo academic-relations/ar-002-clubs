@@ -5,6 +5,7 @@ import {
   zClubName,
   zUserName,
 } from "@sparcs-clubs/interface/common/commonString";
+import { RegistrationStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 
 /**
@@ -21,14 +22,15 @@ const method = "GET";
 const requestParam = z.object({});
 
 const requestQuery = z.object({});
+
 const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    clubs: z.array(
+    items: z.array(
       z.object({
         clubId: z.coerce.number().int().min(1),
-        clubTypeEnumId: z.coerce.number().int().min(1),
+        registrationStatusEnumId: z.nativeEnum(RegistrationStatusEnum),
         division: z.object({
           id: z.coerce.number().int().min(1),
           name: zUserName,
@@ -39,8 +41,9 @@ const responseBodyMap = {
           studentNumber: z.coerce.number().int().min(1),
           name: zUserName,
           phoneNumber: zKrPhoneNumber.optional(),
-          email: z.coerce.string(),
+          email: z.string(),
         }),
+        professorSignedAt: z.coerce.date(),
       }),
     ),
   }),

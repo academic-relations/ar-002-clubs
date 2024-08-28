@@ -54,17 +54,22 @@ import apiReg017, {
 import apiReg018, {
   ApiReg018ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg018";
+import { ApiReg021ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg021";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import {
   Executive,
+  Professor,
   Student,
 } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 
 import {
   GetExecutive,
+  GetProfessor,
   GetStudent,
 } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
+
+import logger from "@sparcs-clubs/api/common/util/logger";
 
 import { ClubRegistrationService } from "../service/club-registration.service";
 
@@ -167,7 +172,7 @@ export class ClubRegistrationController {
   }
 
   @Student()
-  @Get("/student/registrations/club-registrations/:applyId")
+  @Get("/student/registrations/club-registrations/club-registration/:applyId")
   @UsePipes(new ZodPipe(apiReg011))
   async getStudentRegistrationsClubRegistration(
     @GetStudent() user: GetStudent,
@@ -254,6 +259,23 @@ export class ClubRegistrationController {
         user.executiveId,
         body.comment,
       );
+    return result;
+  }
+
+  @Professor()
+  @Get("/professor/registrations/member-registrations/brief")
+  async getProfessorRegistrationsMemberRegistrationsBrief(
+    @GetProfessor() user: GetProfessor,
+  ): Promise<ApiReg021ResponseOk> {
+    logger.debug(
+      `[getProfessorRegistrationsMemberRegistrationsBrief] log-inned by name: ${user.name} professorId: ${user.id}`,
+    );
+
+    const result =
+      await this.clubRegistrationService.getProfessorRegistrationsMemberRegistrationsBrief(
+        { professorId: user.professorId },
+      );
+
     return result;
   }
 }
