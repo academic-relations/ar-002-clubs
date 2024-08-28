@@ -12,6 +12,7 @@ const FlexWrapper = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<FlexWrapperProps>`
   display: flex;
+  position: relative;
   flex-direction: ${({ direction }) => direction};
   gap: ${({ gap }) => `${gap}px`};
   justify-content: ${({ justify }) => justify ?? "flex-start"};
