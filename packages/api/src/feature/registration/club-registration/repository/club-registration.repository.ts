@@ -402,7 +402,7 @@ export class ClubRegistrationRepository {
             phoneNumber: Registration.phoneNumber,
           },
           foundedAt: Registration.foundedAt,
-          divisionName: Division.name,
+          divisionId: Registration.divisionId,
           activityFieldKr: Registration.activityFieldKr,
           activityFieldEn: Registration.activityFieldEn,
           professor: {
@@ -663,7 +663,7 @@ export class ClubRegistrationRepository {
             phoneNumber: Registration.phoneNumber,
           },
           foundedAt: Registration.foundedAt,
-          divisionName: Division.name,
+          divisionId: Registration.divisionId,
           activityFieldKr: Registration.activityFieldKr,
           activityFieldEn: Registration.activityFieldEn,
           professor: {

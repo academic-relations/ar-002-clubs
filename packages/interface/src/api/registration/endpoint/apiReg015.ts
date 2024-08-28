@@ -44,7 +44,7 @@ const responseBodyMap = {
         phoneNumber: zKrPhoneNumber,
       }),
       foundedAt: z.coerce.date(),
-      divisionName: z.string().max(255),
+      divisionId: z.coerce.number().int().min(1),
       activityFieldKr: z.string().max(255),
       activityFieldEn: z.string().max(255),
       professor: z
