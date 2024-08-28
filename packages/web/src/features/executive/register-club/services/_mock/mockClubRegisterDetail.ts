@@ -1,11 +1,9 @@
 import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
 import RegisterClubTypeEnum from "@sparcs-clubs/web/features/executive/register-club/constants/registerClubType";
 
-import { ClubRegisterDetail } from "@sparcs-clubs/web/features/executive/register-club/frames/ClubRegisterDetailFrame";
-
 import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
-export const mockClubRegisterDetail: ClubRegisterDetail = {
+export const mockClubRegisterDetail = {
   statusAndDate: [
     {
       status: ProgressCheckSectionStatusEnum.Approved,

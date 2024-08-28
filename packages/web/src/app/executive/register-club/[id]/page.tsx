@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 import Custom404 from "@sparcs-clubs/web/app/not-found";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -13,11 +14,12 @@ import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import ClubRegisterApproveFrame from "@sparcs-clubs/web/features/executive/register-club/frames/ClubRegisterApproveFrame";
 import ClubRegisterDetailFrame from "@sparcs-clubs/web/features/executive/register-club/frames/ClubRegisterDetailFrame";
-import { mockClubRegisterDetail } from "@sparcs-clubs/web/features/executive/register-club/services/_mock/mockClubRegisterDetail";
 
 const RegisterClubDetail: React.FC = () => {
   const { isLoggedIn, login, profile } = useAuth();
   const [loading, setLoading] = useState(true);
+
+  const { id: applyId } = useParams();
 
   useEffect(() => {
     if (isLoggedIn !== undefined || profile !== undefined) {
@@ -47,7 +49,7 @@ const RegisterClubDetail: React.FC = () => {
         title="동아리 등록 신청 내역"
         enableLast
       />
-      <ClubRegisterDetailFrame {...mockClubRegisterDetail} />
+      <ClubRegisterDetailFrame applyId={+applyId} />
       <ClubRegisterApproveFrame
         canApprove
         rejectReasonList={[
