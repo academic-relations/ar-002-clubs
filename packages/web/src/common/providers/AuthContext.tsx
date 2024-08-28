@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [profile, setProfile] = useState<string | undefined>(undefined);
-  const [isAgreed, setIsAgreed] = useState(false);
+  const [isAgreed, setIsAgreed] = useState(true);
 
   const checkAgree = async () => {
     const agree = await getUserAgree();
@@ -116,8 +116,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
           <AgreementModal
             isOpen={isOpen}
             onAgree={async () => {
-              setIsAgreed(true);
               await postUserAgree();
+              setIsAgreed(true);
               close();
             }}
             onDisagree={async () => {
