@@ -481,6 +481,7 @@ export class ClubRegistrationRepository {
         registrationTypeEnumId: Registration.registrationApplicationTypeEnumId,
         divisionName: Division.name,
         clubNameKr: Registration.clubNameKr,
+        clubId: Registration.clubId,
         activityFieldKr: Registration.activityFieldKr,
         activityFieldEn: Registration.activityFieldEn,
         professorName: Professor.name,

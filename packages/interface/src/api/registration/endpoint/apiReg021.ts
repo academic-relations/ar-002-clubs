@@ -16,7 +16,7 @@ import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.
  * - 분과 > 구분 > 동아리 이름 우선순위로 정렬한 목록을 리턴합니다.
  */
 
-const url = () => `/professor/registrations/member-registrations/brief`;
+const url = () => `/professor/registrations/club-registrations/brief`;
 const method = "GET";
 
 const requestParam = z.object({});

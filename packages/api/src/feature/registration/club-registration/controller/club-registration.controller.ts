@@ -263,16 +263,16 @@ export class ClubRegistrationController {
   }
 
   @Professor()
-  @Get("/professor/registrations/member-registrations/brief")
-  async getProfessorRegistrationsMemberRegistrationsBrief(
+  @Get("/professor/registrations/club-registrations/brief")
+  async getProfessorRegistrationsClubRegistrationsBrief(
     @GetProfessor() user: GetProfessor,
   ): Promise<ApiReg021ResponseOk> {
     logger.debug(
-      `[getProfessorRegistrationsMemberRegistrationsBrief] log-inned by name: ${user.name} professorId: ${user.id}`,
+      `[getProfessorRegistrationsClubRegistrationsBrief] log-inned by name: ${user.name} professorId: ${user.id}`,
     );
 
     const result =
-      await this.clubRegistrationService.getProfessorRegistrationsMemberRegistrationsBrief(
+      await this.clubRegistrationService.getProfessorRegistrationsClubRegistrationsBrief(
         { professorId: user.professorId },
       );
 
