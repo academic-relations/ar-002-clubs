@@ -2,7 +2,10 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import { zClubName } from "@sparcs-clubs/interface/common/commonString";
-import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import {
+  RegistrationStatusEnum,
+  RegistrationTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 /**
  * @version v0.1
@@ -23,6 +26,7 @@ const responseBodyMap = {
     registrations: z.array(
       z.object({
         id: z.coerce.number().int().min(1),
+        registrationStatusEnumId: z.nativeEnum(RegistrationStatusEnum),
         registrationTypeEnumId: z.nativeEnum(RegistrationTypeEnum),
         divisionName: z.string().max(128),
         clubNameKr: zClubName,
