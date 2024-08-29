@@ -5,18 +5,20 @@ import React, { useMemo } from "react";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { useParams, useRouter } from "next/navigation";
 
+import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import { fromUUID } from "@sparcs-clubs/web/common/components/File/attachment";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import {
   ListContainer,
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
@@ -74,6 +76,60 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
     isLoading,
     isError,
   } = useGetClubRegistration({ applyId: +id });
+
+  const deleteHandler = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <CancellableModalContent
+          onConfirm={async () => {
+            await deleteMyClubRegistration({ applyId: +id });
+            close();
+            router.push("/my");
+          }}
+          onClose={close}
+        >
+          동아리 등록 신청을 삭제하면 복구할 수 없습니다.
+          <br />
+          ㄱㅊ?
+        </CancellableModalContent>
+      </Modal>
+    ));
+  };
+
+  const editHandler = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <CancellableModalContent
+          onConfirm={() => {
+            router.push(`/my/register-club/${clubDetail!.id}/edit`);
+            close();
+          }}
+          onClose={close}
+        >
+          동아리 등록 신청을 수정하면 신청 상태 및 지도교수 승인 여부가 모두
+          초기화 됩니다.
+          <br />
+          ㄱㅊ?
+        </CancellableModalContent>
+      </Modal>
+    ));
+  };
+
+  const professorApproveHandler = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <CancellableModalContent
+          onConfirm={() => {
+            // TODO: reg023 구현 후 연결
+            close();
+          }}
+          onClose={close}
+        >
+          동아리 등록을 승인하시겠습니까?
+        </CancellableModalContent>
+      </Modal>
+    ));
+  };
 
   return (
     <AsyncBoundary
@@ -202,7 +258,10 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
                 <FilePreviewContainer>
                   <ThumbnailPreviewList
                     fileList={[
-                      fromUUID(clubDetail.externalInstructionFile?.id),
+                      {
+                        src: clubDetail?.externalInstructionFile?.url,
+                        name: clubDetail?.externalInstructionFile?.name,
+                      },
                     ]}
                   />
                 </FilePreviewContainer>
@@ -243,28 +302,19 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
           </Button>
           {profile !== "professor" ? (
             <FlexWrapper direction="row" gap={10}>
-              <Button
-                style={{ width: "max-content" }}
-                onClick={async () => {
-                  await deleteMyClubRegistration({ applyId: +id });
-                  router.push("/my");
-                }}
-              >
+              <Button style={{ width: "max-content" }} onClick={deleteHandler}>
                 삭제
               </Button>
-              <Button
-                style={{ width: "max-content" }}
-                onClick={() => {
-                  router.push(`/my/register-club/${clubDetail!.id}/edit`);
-                }}
-              >
+              <Button style={{ width: "max-content" }} onClick={editHandler}>
                 수정
               </Button>
             </FlexWrapper>
           ) : (
             <FlexWrapper direction="row" gap={10}>
-              {/* TODO: reg023 구현 후 연결 */}
-              <Button style={{ width: "max-content" }} onClick={() => {}}>
+              <Button
+                style={{ width: "max-content" }}
+                onClick={professorApproveHandler}
+              >
                 승인
               </Button>
             </FlexWrapper>
