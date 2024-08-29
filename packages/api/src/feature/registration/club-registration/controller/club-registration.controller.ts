@@ -54,7 +54,7 @@ import apiReg017, {
 import apiReg018, {
   ApiReg018ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg018";
-import { ApiReg021ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg021";
+import apiReg022 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg022";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import {
@@ -72,6 +72,12 @@ import {
 import logger from "@sparcs-clubs/api/common/util/logger";
 
 import { ClubRegistrationService } from "../service/club-registration.service";
+
+import type { ApiReg021ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg021";
+import type {
+  ApiReg022RequestParam,
+  ApiReg022ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg022";
 
 @Controller()
 export class ClubRegistrationController {
@@ -276,6 +282,23 @@ export class ClubRegistrationController {
         { professorId: user.professorId },
       );
 
+    return result;
+  }
+
+  @Professor()
+  @Get("/professor/registrations/club-registrations/club-registration/:applyId")
+  @UsePipes(new ZodPipe(apiReg022))
+  async getProfessorRegistrationsClubRegistration(
+    @Param() param: ApiReg022RequestParam,
+    @GetProfessor() user: GetProfessor,
+  ): Promise<ApiReg022ResponseOk> {
+    logger.debug(
+      `[getProfessorRegistrationsClubRegistration] log-inned by name: ${user.name} professorId: ${user.professorId}`,
+    );
+    const result =
+      await this.clubRegistrationService.getProfessorRegistrationsClubRegistration(
+        { registrationId: param.applyId, professorId: user.professorId },
+      );
     return result;
   }
 }

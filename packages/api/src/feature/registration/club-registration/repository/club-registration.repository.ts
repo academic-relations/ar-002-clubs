@@ -413,21 +413,6 @@ export class ClubRegistrationRepository {
           divisionConsistency: Registration.divisionConsistency,
           foundationPurpose: Registration.foundationPurpose,
           activityPlan: Registration.activityPlan,
-          acitivityPlanFile: {
-            id: Registration.registrationActivityPlanFileId,
-            name: File1.name,
-            url: null,
-          },
-          clubRuleFile: {
-            id: Registration.registrationClubRuleFileId,
-            name: File2.name,
-            url: null,
-          },
-          externalInstructionFile: {
-            id: Registration.registrationExternalInstructionFileId,
-            name: File3.name,
-            url: null,
-          },
           activityPlanFileId: Registration.registrationActivityPlanFileId,
           activityPlanFileName: File1.name,
           clubRuleFileId: Registration.registrationClubRuleFileId,
@@ -503,6 +488,27 @@ export class ClubRegistrationRepository {
         ...registration,
         isProfessorSigned: !!registration.isProfessorSigned,
         comments,
+        ...(registration.activityPlanFileId && {
+          activityPlanFile: {
+            id: registration.activityPlanFileId,
+            name: registration.activityPlanFileName,
+            url: null,
+          },
+        }),
+        ...(registration.clubRuleFileId && {
+          clubRuleFile: {
+            id: registration.clubRuleFileId,
+            name: registration.clubRuleFileName,
+            url: null,
+          },
+        }),
+        ...(registration.externalInstructionFileId && {
+          externalInstructionFile: {
+            id: registration.externalInstructionFileId,
+            name: registration.externalInstructionFileName,
+            url: null,
+          },
+        }),
       };
     });
     return result;
@@ -674,21 +680,13 @@ export class ClubRegistrationRepository {
           divisionConsistency: Registration.divisionConsistency,
           foundationPurpose: Registration.foundationPurpose,
           activityPlan: Registration.activityPlan,
-          acitivityPlanFile: {
-            id: Registration.registrationActivityPlanFileId,
-            name: File1.name,
-            url: null,
-          },
-          clubRuleFile: {
-            id: Registration.registrationClubRuleFileId,
-            name: File2.name,
-            url: null,
-          },
-          externalInstructionFile: {
-            id: Registration.registrationExternalInstructionFileId,
-            name: File3.name,
-            url: null,
-          },
+          activityPlanFileId: Registration.registrationActivityPlanFileId,
+          activityPlanFileName: File1.name,
+          clubRuleFileId: Registration.registrationClubRuleFileId,
+          clubRuleFileName: File2.name,
+          externalInstructionFileId:
+            Registration.registrationExternalInstructionFileId,
+          externalInstructionFileName: File3.name,
           isProfessorSigned: Registration.professorApprovedAt,
           updatedAt: Registration.updatedAt,
         })
@@ -753,6 +751,27 @@ export class ClubRegistrationRepository {
         ...registration,
         isProfessorSigned: !!registration.isProfessorSigned,
         comments,
+        ...(registration.activityPlanFileId && {
+          activityPlanFile: {
+            id: registration.activityPlanFileId,
+            name: registration.activityPlanFileName,
+            url: null,
+          },
+        }),
+        ...(registration.clubRuleFileId && {
+          clubRuleFile: {
+            id: registration.clubRuleFileId,
+            name: registration.clubRuleFileName,
+            url: null,
+          },
+        }),
+        ...(registration.externalInstructionFileId && {
+          externalInstructionFile: {
+            id: registration.externalInstructionFileId,
+            name: registration.externalInstructionFileName,
+            url: null,
+          },
+        }),
       };
     });
     return result;
@@ -856,5 +875,63 @@ export class ClubRegistrationRepository {
       );
 
     return result;
+  }
+
+  async getProfessorRegistrationsClubRegistration(param: {
+    registrationId: number;
+    professorId: number;
+  }) {
+    const results = await this.db
+      .select()
+      .from(Registration)
+      .innerJoin(
+        Student,
+        and(eq(Registration.studentId, Student.id), isNull(Student.deletedAt)),
+      )
+      .innerJoin(
+        Professor,
+        and(
+          eq(Registration.professorId, Professor.id),
+          isNull(Professor.deletedAt),
+        ),
+      )
+      .innerJoin(
+        ProfessorT,
+        and(
+          eq(Professor.id, ProfessorT.professorId),
+          isNull(ProfessorT.deletedAt),
+        ),
+      )
+      .where(
+        and(
+          eq(Registration.id, param.registrationId),
+          eq(Registration.professorId, param.professorId),
+          isNull(Registration.deletedAt),
+        ),
+      );
+    logger.debug(results);
+    if (results.length > 1)
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+    if (results.length === 0)
+      throw new HttpException(
+        "not a valid applyId or ProfessorId",
+        HttpStatus.NOT_FOUND,
+      );
+    const result = results[0];
+
+    const comments = await this.db
+      .select()
+      .from(RegistrationExecutiveComment)
+      .where(
+        and(
+          eq(
+            RegistrationExecutiveComment.registrationId,
+            result.registration.id,
+          ),
+          isNull(RegistrationExecutiveComment.deletedAt),
+        ),
+      );
+
+    return { ...result, comments };
   }
 }

@@ -1,24 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import {
-  ApiReg001RequestBody,
-  ApiReg001ResponseCreated,
-} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
-import { ApiReg002ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
-import { ApiReg003ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg003";
-import {
-  ApiReg009RequestBody,
-  ApiReg009ResponseOk,
-} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg009";
-import { ApiReg010ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg010";
-import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
-import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
 
-import { ApiReg014ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg014";
-import { ApiReg015ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg015";
-import { ApiReg016ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg016";
-import { ApiReg017ResponseCreated } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg017";
-import { ApiReg018ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg018";
-import { ApiReg021ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg021";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import {
   RegistrationDeadlineEnum,
@@ -35,6 +16,28 @@ import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.publi
 import { ClubRegistrationRepository } from "../repository/club-registration.repository";
 
 import { ClubRegistrationPublicService } from "./club-registration.public.service";
+
+import type {
+  ApiReg001RequestBody,
+  ApiReg001ResponseCreated,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
+import type { ApiReg002ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg002";
+import type { ApiReg003ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg003";
+import type {
+  ApiReg009RequestBody,
+  ApiReg009ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg009";
+import type { ApiReg010ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg010";
+import type { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
+import type { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
+
+import type { ApiReg014ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg014";
+import type { ApiReg015ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg015";
+import type { ApiReg016ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg016";
+import type { ApiReg017ResponseCreated } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg017";
+import type { ApiReg018ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg018";
+import type { ApiReg021ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg021";
+import type { ApiReg022ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg022";
 
 @Injectable()
 export class ClubRegistrationService {
@@ -511,6 +514,120 @@ export class ClubRegistrationService {
           email: e.student.email,
         },
         professorSignedAt: e.registration.professorApprovedAt,
+      })),
+    };
+  }
+
+  async getProfessorRegistrationsClubRegistration(param: {
+    registrationId: number;
+    professorId: number;
+  }): Promise<ApiReg022ResponseOk> {
+    // 동아리 등록 기간인지 검사합니다.
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [
+        RegistrationDeadlineEnum.ClubRegistrationApplication,
+        // RegistrationDeadlineEnum.ClubRegistrationModification,
+        // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+      ],
+    });
+
+    const result =
+      await this.clubRegistrationRepository.getProfessorRegistrationsClubRegistration(
+        {
+          registrationId: param.registrationId,
+          professorId: param.professorId,
+        },
+      );
+    const activityPlanFile =
+      result.registration.registrationActivityPlanFileId !== null
+        ? {
+            name: await this.filePublicService
+              .getFileInfoById(
+                result.registration.registrationActivityPlanFileId,
+              )
+              .then(e => e.name),
+            url: await this.filePublicService.getFileUrl(
+              result.registration.registrationActivityPlanFileId,
+            ),
+          }
+        : undefined;
+    const clubRuleFile =
+      result.registration.registrationClubRuleFileId !== null
+        ? {
+            name: await this.filePublicService
+              .getFileInfoById(result.registration.registrationClubRuleFileId)
+              .then(e => e.name),
+            url: await this.filePublicService.getFileUrl(
+              result.registration.registrationClubRuleFileId,
+            ),
+          }
+        : undefined;
+    const externalInstructionFile =
+      result.registration.registrationExternalInstructionFileId !== null
+        ? {
+            name: await this.filePublicService
+              .getFileInfoById(
+                result.registration.registrationExternalInstructionFileId,
+              )
+              .then(e => e.name),
+            url: await this.filePublicService.getFileUrl(
+              result.registration.registrationExternalInstructionFileId,
+            ),
+          }
+        : undefined;
+
+    return {
+      id: result.registration.id,
+      registrationTypeEnumId:
+        result.registration.registrationApplicationTypeEnumId,
+      registrationStatusEnumId:
+        result.registration.registrationApplicationStatusEnumId,
+      clubId: result.registration.clubId,
+      clubNameKr: result.registration.clubNameKr,
+      clubNameEn: result.registration.clubNameEn,
+      representative: {
+        studentNumber: result.student.number,
+        name: result.student.name,
+        phoneNumber: result.registration.phoneNumber,
+      },
+      foundedAt: result.registration.foundedAt,
+      divisionId: result.registration.divisionId,
+      activityFieldKr: result.registration.activityFieldKr,
+      activityFieldEn: result.registration.activityFieldEn,
+      professor: {
+        name: result.professor.name,
+        email: result.professor.email,
+        professorEnumId: result.professor_t.professorEnum,
+      },
+      divisionConsistency: result.registration.divisionConsistency,
+      foundationPurpose: result.registration.foundationPurpose,
+      activityPlan: result.registration.activityPlan,
+      activityPlanFile:
+        result.registration.registrationActivityPlanFileId !== null
+          ? {
+              id: result.registration.registrationActivityPlanFileId,
+              ...activityPlanFile,
+            }
+          : undefined,
+      clubRuleFile:
+        result.registration.registrationClubRuleFileId !== null
+          ? {
+              id: result.registration.registrationClubRuleFileId,
+              ...clubRuleFile,
+            }
+          : undefined,
+      externalInstructionFile:
+        result.registration.registrationExternalInstructionFileId !== null
+          ? {
+              id: result.registration.registrationExternalInstructionFileId,
+              ...externalInstructionFile,
+            }
+          : undefined,
+      isProfessorSigned: result.registration.professorApprovedAt !== undefined,
+      updatedAt: result.registration.updatedAt,
+      comments: result.comments.map(e => ({
+        content: e.content,
+        createdAt: e.createdAt,
       })),
     };
   }
