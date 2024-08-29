@@ -1,33 +1,36 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
-import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
-
-import RegisterClubMainFrame from "@sparcs-clubs/web/features/register-club/frames/RegisterClubMainFrame";
-import useGetClubsForPromotional from "@sparcs-clubs/web/features/register-club/services/useGetClubsForPromotional";
+import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
+import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import RegisterClubAuthFrame from "@sparcs-clubs/web/features/register-club/frames/RegisterClubAuthFrame";
 
 const PromotionalRegisterClub = () => {
-  const { data, isLoading, isError } = useGetClubsForPromotional();
-  const {
-    data: profile,
-    isLoading: isLoadingProfile,
-    isError: isErrorProfile,
-  } = useGetUserProfile();
+  const { isLoggedIn, login, profile } = useAuth();
+  const [loading, setLoading] = useState(true);
 
-  return (
-    <AsyncBoundary
-      isLoading={isLoading || isLoadingProfile}
-      isError={isError || isErrorProfile}
-    >
-      <RegisterClubMainFrame
-        type={RegistrationTypeEnum.Promotional}
-        profile={profile}
-        clubIds={data?.clubs}
-      />
-    </AsyncBoundary>
-  );
+  useEffect(() => {
+    if (isLoggedIn !== undefined || profile !== undefined) {
+      setLoading(false);
+    }
+  }, [isLoggedIn, profile]);
+
+  if (loading) {
+    return <AsyncBoundary isLoading={loading} isError />;
+  }
+
+  if (!isLoggedIn) {
+    return <LoginRequired login={login} />;
+  }
+  if (profile !== "undergraduate") {
+    return <NoManageClub />;
+  }
+  return <RegisterClubAuthFrame type={RegistrationTypeEnum.Promotional} />;
 };
 
 export default PromotionalRegisterClub;

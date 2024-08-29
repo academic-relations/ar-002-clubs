@@ -49,9 +49,11 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           <Icon type={iconType} size={20} color={colors[color][600]} />
         </IconWrapper>
         <FlexWrapper gap={8} direction="column">
-          <Typography fw="MEDIUM" fs={16} lh={24}>
-            {header}
-          </Typography>
+          {header.length > 0 && (
+            <Typography fw="MEDIUM" fs={16} lh={24}>
+              {header}
+            </Typography>
+          )}
           {children}
         </FlexWrapper>
       </FlexWrapper>

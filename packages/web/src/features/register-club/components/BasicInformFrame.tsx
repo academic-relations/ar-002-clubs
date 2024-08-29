@@ -1,9 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
+import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import { useFormContext } from "react-hook-form";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -12,214 +14,151 @@ import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 
-import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
+import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 
+import useGetClubsForPromotional from "../services/useGetClubsForPromotional";
+import useGetClubsForRenewal from "../services/useGetClubsForRenewal";
+
+import ClubNameField from "./_atomic/ClubNameField";
 import DivisionSelect from "./_atomic/DivisionSelect";
-import MonthSelect from "./_atomic/MonthSelect";
 import YearSelect from "./_atomic/YearSelect";
 import ProfessorInformFrame from "./ProfessorInformFrame";
 
-export type ProfileInfo = {
-  name: string;
-  phoneNumber?: string;
-};
-
 interface BasicInformSectionProps {
   type: RegistrationTypeEnum;
-  clubIds: { id: number }[];
-  profile: ProfileInfo;
-  onCheckedClubName: (data: boolean) => void;
-  onCheckProfessor: (data: boolean) => void;
+  editMode?: boolean;
 }
 
 const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
   type,
-  clubIds,
-  profile,
-  onCheckedClubName,
-  onCheckProfessor,
+  editMode = false,
 }) => {
-  const isProvisional = type === RegistrationTypeEnum.NewProvisional;
-  const isPromotional = type === RegistrationTypeEnum.Promotional;
   const isRenewal = type === RegistrationTypeEnum.Renewal;
 
-  const [isCheckedClubName, setIsCheckedClubName] = useState(false);
-  const [isCheckedProfessor, setIsCheckedProfessor] = useState(isPromotional);
+  const [isCheckedProfessor, setIsCheckedProfessor] = useState(true);
 
-  const { watch } = useFormContext();
+  const { watch, control, resetField, setValue } =
+    useFormContext<ApiReg001RequestBody>();
+  const clubId = watch("clubId");
 
-  const clubName = watch("clubId");
+  const {
+    data: promotionalList,
+    isLoading: isLoadingPromotional,
+    isError: isErrorPromotional,
+  } = useGetClubsForPromotional();
+  const {
+    data: renewalList,
+    isLoading: isLoadingRenewal,
+    isError: isErrorRenewal,
+  } = useGetClubsForRenewal();
+  const {
+    data: profile,
+    isLoading: isLoadingProfile,
+    isError: isErrorProfile,
+  } = useGetUserProfile();
+
+  const isLoading = isRenewal ? isLoadingRenewal : isLoadingPromotional;
+  const isError = isRenewal ? isErrorRenewal : isErrorPromotional;
+  const clubList = isRenewal ? renewalList : promotionalList;
+
+  const professorInfo = useMemo(() => {
+    if (clubId == null) return undefined;
+    return clubList?.clubs.find(club => club.id === clubId)?.professor;
+  }, [clubId, clubList]);
 
   useEffect(() => {
-    if (isRenewal && clubName != null) {
-      onCheckProfessor(true);
-      setIsCheckedProfessor(true);
+    if (professorInfo == null || !isCheckedProfessor) {
+      resetField("professor.email");
+      resetField("professor.name");
+      resetField("professor.professorEnumId");
+      setValue("professor", undefined, { shouldValidate: true });
+
+      return;
     }
-  }, [clubName, isRenewal, onCheckProfessor]);
-
-  const clubOptions = useCallback(
-    () =>
-      clubIds.map(
-        data =>
-          ({
-            label: data.id.toString(),
-            value: data.id,
-          }) as SelectItem<number>,
-      ),
-    [clubIds],
-  );
-
-  // TODO. 지도교수 정보 가져오기
-  const hasProfessorInfo = false;
+    setValue("professor", professorInfo);
+  }, [professorInfo, resetField, setValue, isCheckedProfessor]);
 
   return (
-    <FlexWrapper direction="column" gap={40}>
-      <SectionTitle>기본 정보</SectionTitle>
+    <AsyncBoundary
+      isLoading={isLoading || isLoadingProfile}
+      isError={isError || isErrorProfile}
+    >
+      <FlexWrapper direction="column" gap={40}>
+        <SectionTitle>기본 정보</SectionTitle>
 
-      <Card outline gap={32} style={{ marginLeft: 20 }}>
-        <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
-          {isProvisional ? (
-            <FormController
-              name="krName"
-              required
-              renderItem={props => (
-                <TextInput
-                  {...props}
-                  label="동아리명 (국문)"
-                  placeholder="국문 동아리명을 입력해주세요"
-                />
-              )}
-            />
-          ) : (
-            <FormController
-              name="clubId"
-              required
-              renderItem={props => (
-                <Select
-                  {...props}
-                  label="동아리명 (국문)"
-                  placeholder="동아리명을 선택해주세요"
-                  items={clubOptions()}
-                />
-              )}
-            />
-          )}
-          {isProvisional && (
-            <FormController
-              name="enName"
-              required
-              renderItem={props => (
-                <TextInput
-                  {...props}
-                  label="동아리명 (영문)"
-                  placeholder="영문 동아리명을 입력해주세요"
-                />
-              )}
-            />
-          )}
-        </FlexWrapper>
-        {(isProvisional || (!isProvisional && clubName != null)) && (
-          <CheckboxOption
-            optionText={
-              isProvisional
-                ? "이전에 가동아리로 활동한 적이 있어요"
-                : "동아리명을 변경하고 싶어요 "
-            }
-            checked={isCheckedClubName}
-            onClick={() => {
-              onCheckedClubName(!isCheckedClubName);
-              setIsCheckedClubName(!isCheckedClubName);
-            }}
-          />
-        )}
-        {!isProvisional && isCheckedClubName && (
+        <Card outline gap={32} style={{ marginLeft: 20 }}>
           <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
-            <FormController
-              name="krName"
-              required
-              renderItem={props => (
-                <TextInput
-                  {...props}
-                  label="신규 동아리명 (국문)"
-                  placeholder="국문 동아리명을 입력해주세요"
-                />
-              )}
+            <TextInput
+              label="대표자 이름"
+              placeholder={profile?.name ?? ""}
+              disabled
             />
             <FormController
-              name="enName"
+              name="phoneNumber"
               required
+              control={control}
+              defaultValue={profile?.phoneNumber}
+              minLength={13}
+              // TODO: phoneNumber validation
+              // pattern={/^010-\d{4}-\d{4}$/}
               renderItem={props => (
-                <TextInput
+                <PhoneInput
                   {...props}
-                  label="신규 동아리명 (영문)"
-                  placeholder="영문 동아리명을 입력해주세요"
+                  label="대표자 전화번호"
+                  placeholder="010-XXXX-XXXX"
                 />
               )}
             />
           </FlexWrapper>
-        )}
-        <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
-          <TextInput
-            label="대표자 이름"
-            placeholder={profile?.name ?? ""}
-            disabled
+          <ClubNameField
+            type={type}
+            clubList={clubList?.clubs}
+            editMode={editMode}
           />
+          <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
+            <YearSelect />
+            <DivisionSelect isRenewal={isRenewal} />
+          </FlexWrapper>
           <FormController
-            name="phoneNumber"
+            name="activityFieldKr"
             required
-            defaultValue={profile?.phoneNumber}
+            control={control}
             renderItem={props => (
-              <PhoneInput
+              <TextInput
                 {...props}
-                label="대표자 전화번호"
-                placeholder="XXX-XXXX-XXXX"
+                label="활동 분야 (국문)"
+                placeholder="활동 분야를 입력해주세요"
               />
             )}
           />
-        </FlexWrapper>
-        <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
-          <YearSelect />
-          {isProvisional && <MonthSelect />}
-          <DivisionSelect isRenewal={isRenewal} />
-        </FlexWrapper>
-        <FormController
-          name="kr활동분야"
-          required
-          renderItem={props => (
-            <TextInput
-              {...props}
-              label="활동 분야 (국문)"
-              placeholder="활동 분야를 입력해주세요"
-            />
-          )}
-        />
-        <FormController
-          name="en활동분야"
-          required
-          renderItem={props => (
-            <TextInput
-              {...props}
-              label="활동 분야 (영문)"
-              placeholder="활동 분야를 입력해주세요"
-            />
-          )}
-        />
-
-        {(isProvisional ||
-          (isRenewal && clubName != null && !hasProfessorInfo)) && (
-          <CheckboxOption
-            optionText="지도교수를 신청하겠습니다"
-            checked={isCheckedProfessor}
-            onClick={() => {
-              onCheckProfessor(!isCheckedProfessor);
-              setIsCheckedProfessor(!isCheckedProfessor);
-            }}
+          <FormController
+            name="activityFieldEn"
+            required
+            control={control}
+            renderItem={props => (
+              <TextInput
+                {...props}
+                label="활동 분야 (영문)"
+                placeholder="활동 분야를 입력해주세요"
+              />
+            )}
           />
+
+          {isRenewal && clubId != null && professorInfo == null && (
+            <CheckboxOption
+              optionText="지도교수를 신청하겠습니다"
+              checked={isCheckedProfessor}
+              onClick={() => {
+                setIsCheckedProfessor(!isCheckedProfessor);
+              }}
+            />
+          )}
+        </Card>
+        {(!isRenewal || (isCheckedProfessor && clubId != null)) && (
+          <ProfessorInformFrame />
         )}
-      </Card>
-      {/* // TODO. 지도교수 정보 있는 경우 정보 보여주기 */}
-      {isCheckedProfessor && <ProfessorInformFrame />}
-    </FlexWrapper>
+      </FlexWrapper>
+    </AsyncBoundary>
   );
 };
 

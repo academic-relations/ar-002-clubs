@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 
+import isPropValid from "@emotion/is-prop-valid";
 import { flexRender, type Table as TableType } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
@@ -9,7 +10,8 @@ import Typography from "./Typography";
 
 interface TableProps<T> {
   table: TableType<T>;
-  height?: number | undefined;
+  minWidth?: number;
+  height?: number;
   emptyMessage?: string;
   count?: number;
   footer?: React.ReactNode;
@@ -21,11 +23,13 @@ const TableInnerWrapper = styled.div`
   padding: 0 calc((100vw - 100%) / 2);
   overflow-x: auto;
 `;
-const TableInner = styled.table<{ height?: number }>`
+const TableInner = styled.table.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ height?: number; minWidth: number }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  min-width: 100%;
+  min-width: ${({ minWidth }) => `max(100%, ${minWidth}px)`};
   width: fit-content;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
   border-radius: 8px;
@@ -49,7 +53,9 @@ const Content = styled.tbody`
   overflow-y: auto;
   width: 100%;
 `;
-const ContentRow = styled.tr<{ selected: boolean; isClickable: boolean }>`
+const ContentRow = styled.tr.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ selected: boolean; isClickable: boolean }>`
   width: 100%;
   display: flex;
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
@@ -80,8 +86,9 @@ const Count = styled.div`
 `;
 const Table = <T,>({
   table,
+  minWidth = 900,
   height = undefined,
-  emptyMessage = "",
+  emptyMessage = "내역이 없습니다",
   footer = null,
   count = undefined,
   rowLink = undefined,
@@ -119,7 +126,7 @@ const Table = <T,>({
         )}
       </Count>
       <TableInnerWrapper>
-        <TableInner height={height}>
+        <TableInner height={height} minWidth={minWidth}>
           <Header>
             {table.getHeaderGroups().map(headerGroup => (
               <HeaderRow key={headerGroup.id}>

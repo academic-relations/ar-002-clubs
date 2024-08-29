@@ -3,20 +3,22 @@ import React, { useRef } from "react";
 import Viewer from "viewerjs";
 
 import FlexWrapper from "../FlexWrapper";
-import Typography from "../Typography";
 
 import Attachment from "./attachment";
-
 import ThumbnailPreview from "./ThumbnailPreview";
 
 import "viewerjs/dist/viewer.css";
 
 interface ThumbnailPreviewListProps {
   fileList: Attachment[];
+  onChange?: (files: Attachment[]) => void;
+  disabled?: boolean;
 }
 
 const ThumbnailPreviewList: React.FC<ThumbnailPreviewListProps> = ({
   fileList,
+  onChange = () => {},
+  disabled = false,
 }: ThumbnailPreviewListProps) => {
   const viewerRef = useRef<HTMLDivElement>(null);
 
@@ -64,36 +66,33 @@ const ThumbnailPreviewList: React.FC<ThumbnailPreviewListProps> = ({
     viewer.show();
   };
 
+  const onDelete = (file: Attachment) => {
+    // console.log("onDelete", file, fileList);
+    const newFileList = fileList.filter(f => f !== file);
+    onChange(newFileList);
+  };
+
   return (
     <div>
-      {fileList.length > 0 ? (
-        <FlexWrapper
-          gap={16}
-          direction="row"
-          style={{
-            overflow: "auto",
-            paddingBottom: "14px",
-          }}
-          ref={viewerRef}
-        >
-          {fileList.map((file, index) => (
-            <ThumbnailPreview
-              onClick={() => handleClick(index)}
-              key={`${index.toString()}`}
-              file={file}
-            />
-          ))}
-        </FlexWrapper>
-      ) : (
-        <Typography
-          fs={16}
-          lh={20}
-          color="GRAY.300"
-          style={{ textAlign: "center" }}
-        >
-          업로드한 파일이 없습니다
-        </Typography>
-      )}
+      <FlexWrapper
+        gap={16}
+        direction="row"
+        style={{
+          overflow: "auto",
+          paddingBottom: "14px",
+        }}
+        ref={viewerRef}
+      >
+        {fileList.map((file, index) => (
+          <ThumbnailPreview
+            key={`${index.toString()}`}
+            file={file}
+            onClick={() => handleClick(index)}
+            onDelete={onDelete}
+            disabled={disabled}
+          />
+        ))}
+      </FlexWrapper>
     </div>
   );
 };

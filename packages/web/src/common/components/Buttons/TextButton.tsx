@@ -29,6 +29,8 @@ const StyledTextButton = styled.button<ButtonProps>`
   font-weight: ${({ theme, fw }) => theme.fonts.WEIGHT[fw]};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   text-decoration: underline;
+  flex-shrink: 0;
+  width: fit-content;
 `;
 
 interface TextButtonProps {

@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
+import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import {
@@ -47,13 +47,6 @@ const StyledBottom = styled.div`
   align-self: stretch;
 `;
 
-const StyledCheckboxOuter = styled.div`
-  display: flex;
-  padding-left: 4px;
-  align-items: center;
-  gap: 12px;
-`;
-
 const ActivityCertificateNoticeFrame: React.FC<
   ActivityCertificateFrameProps
 > = ({
@@ -81,15 +74,11 @@ const ActivityCertificateNoticeFrame: React.FC<
         </Typography>
       </Card>
       <StyledBottom>
-        <StyledCheckboxOuter>
-          <Checkbox
-            checked={checked}
-            onClick={() => setChecked(prev => !prev)}
-          />
-          <Typography fs={16} lh={20} fw="REGULAR">
-            위의 안내사항을 모두 숙지하였으며, 이에 동의합니다
-          </Typography>
-        </StyledCheckboxOuter>
+        <CheckboxOption
+          checked={checked}
+          onClick={() => setChecked(prev => !prev)}
+          optionText="위의 안내사항을 모두 숙지하였으며, 이에 동의합니다"
+        />
         <Button
           type={checked ? "default" : "disabled"}
           onClick={

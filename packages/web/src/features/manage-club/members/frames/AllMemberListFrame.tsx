@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 
-import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
+// import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 
@@ -20,12 +20,12 @@ const AllMemberListWrapper = styled.div`
   gap: 40px;
 `;
 
-const IconButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: flex-end;
-`;
+// const IconButtonWrapper = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   width: 100%;
+//   align-items: flex-end;
+// `;
 
 const AllMemberListFrame = () => {
   const [searchText, setSearchText] = useState<string>("");
@@ -39,17 +39,17 @@ const AllMemberListFrame = () => {
       <AllMemberListWrapper>
         {mockAllSemesters.semesters.length > 0 && (
           <>
-            <IconButtonWrapper>
-              <IconButton
-                type="default"
-                icon="save_alt"
-                onClick={() => {
-                  /* TODO: 엑셀 다운로드 기능 구현 */
-                }}
-              >
-                엑셀로 다운로드
-              </IconButton>
-            </IconButtonWrapper>
+            {/* <IconButtonWrapper> */}
+            {/*  <IconButton */}
+            {/*    type="default" */}
+            {/*    icon="save_alt" */}
+            {/*    onClick={() => { */}
+            {/*      TODO: 엑셀 다운로드 기능 구현  */}
+            {/*    }} */}
+            {/*  > */}
+            {/*    엑셀로 다운로드 */}
+            {/*  </IconButton> */}
+            {/* </IconButtonWrapper> */}
             <MemberSearchAndFilter
               semesters={mockAllSemesters.semesters}
               selectedSemesters={selectedSemesters}

@@ -8,8 +8,8 @@ const mockupData: ApiReg004ResponseOK = {
       id: 1,
       registrationEventEnumId:
         RegistrationDeadlineEnum.ClubRegistrationApplication,
-      startTerm: new Date(`2024-09-02T09:00:00Z`),
-      endTerm: new Date(`2024-09-14T09:00:00Z`),
+      startTerm: new Date(`2024-08-02T09:00:00Z`),
+      endTerm: new Date(`2024-08-31T09:00:00Z`),
     },
     {
       id: 2,

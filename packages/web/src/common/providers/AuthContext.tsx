@@ -9,13 +9,21 @@ import React, {
   useState,
 } from "react";
 
-import postLogin from "../services/postLogin";
+import { jwtDecode } from "jwt-decode";
+import { overlay } from "overlay-kit";
+import { Cookies } from "react-cookie";
+
+import AgreementModal from "../components/Modal/AgreeModal";
+import getLogin from "../services/getLogin";
+import getUserAgree from "../services/getUserAgree";
 import postLogout from "../services/postLogout";
+import postUserAgree from "../services/postUserAgree";
 
 interface AuthContextType {
   isLoggedIn: boolean;
   login: () => void;
   logout: () => void;
+  profile: string | undefined;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,36 +32,52 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [profile, setProfile] = useState<string | undefined>(undefined);
+  const [isAgreed, setIsAgreed] = useState(true);
+
+  const checkAgree = async () => {
+    const agree = await getUserAgree();
+    setIsAgreed(agree.status.isAgree);
+  };
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       setIsLoggedIn(true);
+      const decoded: { type?: string } = jwtDecode(accessToken);
+      setProfile(decoded.type);
     }
   }, []);
 
+  useEffect(() => {
+    if (!isLoggedIn) {
+      const cookies = new Cookies();
+      const responseToken = cookies.get("accessToken");
+      if (responseToken !== undefined) {
+        localStorage.setItem("responseToken", JSON.stringify(responseToken));
+        if (responseToken) {
+          localStorage.setItem(
+            "accessToken",
+            responseToken.professor ??
+              responseToken.doctor ??
+              responseToken.master ??
+              responseToken.undergraduate ??
+              responseToken.employee ??
+              responseToken.executive ??
+              "",
+          );
+          setIsLoggedIn(true);
+          cookies.remove("accessToken");
+          console.log("Logged in successfully.");
+        }
+      }
+    }
+  }, [isLoggedIn]);
+
   const login = async () => {
     try {
-      const response = await postLogin();
-      // TODO: 로그인시 기본 프로필 선택
-      localStorage.setItem(
-        "responseToken",
-        JSON.stringify(response.accessToken),
-      );
-      if (response.accessToken) {
-        localStorage.setItem(
-          "accessToken",
-          response.accessToken.undergraduate ??
-            response.accessToken.master ??
-            response.accessToken.doctor ??
-            response.accessToken.professor ??
-            response.accessToken.employee ??
-            response.accessToken.executive ??
-            "",
-        );
-        setIsLoggedIn(true);
-        console.log("Logged in successfully.");
-      }
+      const response = await getLogin();
+      window.location.href = response.url;
     } catch (error) {
       console.error("Login failed", error);
     }
@@ -65,13 +89,54 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       setIsLoggedIn(false);
       localStorage.removeItem("accessToken");
       localStorage.removeItem("responseToken");
+      const cookies = new Cookies();
+      cookies.remove("accessToken");
       console.log("Logged out successfully.");
     } catch (error) {
-      console.error("Logout failed", error);
+      setIsLoggedIn(false);
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("responseToken");
+      const cookies = new Cookies();
+      cookies.remove("accessToken");
+      console.log("Logged out.");
     }
   };
 
-  const value = useMemo(() => ({ isLoggedIn, login, logout }), [isLoggedIn]);
+  useEffect(() => {
+    if (isLoggedIn) {
+      checkAgree();
+    }
+    if (isAgreed) {
+      overlay.closeAll();
+    }
+    overlay.open(
+      ({ isOpen, close }) =>
+        !isAgreed &&
+        isLoggedIn && (
+          <AgreementModal
+            isOpen={isOpen}
+            onAgree={async () => {
+              try {
+                await postUserAgree();
+                setIsAgreed(true);
+                close();
+              } catch (error) {
+                window.location.reload();
+              }
+            }}
+            onDisagree={async () => {
+              await logout();
+              close();
+            }}
+          />
+        ),
+    );
+  }, [isAgreed, isLoggedIn]);
+
+  const value = useMemo(
+    () => ({ isLoggedIn, login, logout, profile }),
+    [isLoggedIn, profile],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

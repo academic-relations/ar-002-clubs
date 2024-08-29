@@ -6,26 +6,48 @@ import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
-const mockMyClubRegisterDetail = {
+import { MyClubRegistrationDetail } from "@sparcs-clubs/web/features/my/types/myClubRegistration";
+
+const mockMyClubRegisterList = {
+  registrations: [
+    {
+      id: 1,
+      registrationTypeEnumId: RegistrationTypeEnum.Promotional,
+      registrationStatusEnumId: RegistrationStatusEnum.Pending,
+      krName: "스팍스",
+      enName: "SPACRS",
+    },
+  ],
+};
+
+// validation 검증을 해야 하기에 변경 시 사용되는 곳 api 확인하면서 변경
+const mockMyClubRegisterDetail: MyClubRegistrationDetail = {
   id: 1,
-  registrationStatusEnum: RegistrationStatusEnum.Pending,
-  registrationTypeEnum: RegistrationTypeEnum.Promotional,
+  registrationStatusEnumId: RegistrationStatusEnum.Pending,
+  registrationTypeEnumId: RegistrationTypeEnum.Renewal,
   clubNameKr: "스팍스",
+  clubNameEn: "sparcs",
   clubId: 1,
-  studentName: "이지윤",
-  phoneNumber: "010-XXXX-XXXX",
-  foundedYear: 2020,
-  clubDivision: "생활체육",
+  representative: {
+    studentNumber: 1,
+    name: "넙죽이",
+  },
+  phoneNumber: "010-1234-1234",
+  foundedAt: new Date(),
+  divisionId: 1,
   activityFieldKr: "개발",
   activityFieldEn: "Gaebal",
-  professorName: "이교수",
-  professorEnum: ProfessorEnum.Full,
-  professorEmail: "gyosu@kaist.ac.kr",
-  professorConfirm: false,
+  professor: {
+    name: "이교수",
+    professorEnumId: ProfessorEnum.Full,
+    email: "gyosu@kaist.ac.kr",
+  },
   divisionConsistency: "어쩌구저쩌구",
   foundationPurpose: "어쩌구저쩌구",
   activityPlan: "어쩌구저쩌구",
-  externalInstructionFileId: undefined,
+  updatedAt: new Date(),
+  isProfessorSigned: false,
+  comments: [{ content: "내용", createdAt: new Date() }],
 };
 
 const mockMyClubRegisterAcf = {
@@ -53,4 +75,8 @@ const mockMyClubRegisterAcf = {
   offset: 3,
 };
 
-export { mockMyClubRegisterDetail, mockMyClubRegisterAcf };
+export {
+  mockMyClubRegisterAcf,
+  mockMyClubRegisterDetail,
+  mockMyClubRegisterList,
+};

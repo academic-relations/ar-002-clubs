@@ -38,7 +38,11 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
-import { ClubDelegateD } from "@sparcs-clubs/api/drizzle/schema/club.schema";
+import {
+  Club,
+  ClubDelegateD,
+} from "@sparcs-clubs/api/drizzle/schema/club.schema";
+import { Division } from "@sparcs-clubs/api/drizzle/schema/division.schema";
 import { File } from "@sparcs-clubs/api/drizzle/schema/file.schema";
 import {
   Registration,
@@ -85,6 +89,20 @@ export class ClubRegistrationRepository {
     return clubs;
   }
 
+  async findByStudentId(studentId: number) {
+    const clubs = await this.db
+      .select()
+      .from(Registration)
+      .where(
+        and(
+          eq(Registration.studentId, studentId),
+          isNull(Registration.deletedAt),
+        ),
+      );
+
+    return clubs;
+  }
+
   async createRegistration(
     studentId: number,
     body: ApiReg001RequestBody,
@@ -115,7 +133,6 @@ export class ClubRegistrationRepository {
           .for("share")
           .then(takeUnique);
         if (!delegate) {
-          await tx.rollback();
           throw new HttpException(
             "Student is not delegate of the club",
             HttpStatus.BAD_REQUEST,
@@ -150,7 +167,6 @@ export class ClubRegistrationRepository {
           .for("share")
           .then(takeUnique);
         if (!professorId) {
-          await tx.rollback();
           throw new HttpException(
             "Professor Not Found",
             HttpStatus.BAD_REQUEST,
@@ -169,7 +185,7 @@ export class ClubRegistrationRepository {
         divisionId: body.divisionId,
         activityFieldKr: body.activityFieldKr,
         activityFieldEn: body.activityFieldEn,
-        professorId,
+        professorId: professorId ?? null,
         divisionConsistency: body.divisionConsistency,
         foundationPurpose: body.foundationPurpose,
         activityPlan: body.activityPlan,
@@ -226,7 +242,6 @@ export class ClubRegistrationRepository {
         !registration ||
         registration.RegistrationStatusEnum === RegistrationStatusEnum.Approved
       ) {
-        await tx.rollback();
         throw new HttpException(
           "No registration found",
           HttpStatus.BAD_REQUEST,
@@ -259,7 +274,6 @@ export class ClubRegistrationRepository {
           .for("share")
           .then(takeUnique);
         if (!professorId) {
-          await tx.rollback();
           throw new HttpException(
             "Professor Not Found",
             HttpStatus.BAD_REQUEST,
@@ -276,7 +290,7 @@ export class ClubRegistrationRepository {
           divisionId: body.divisionId,
           activityFieldKr: body.activityFieldKr,
           activityFieldEn: body.activityFieldEn,
-          professorId,
+          professorId: professorId ?? null,
           divisionConsistency: body.divisionConsistency,
           foundationPurpose: body.foundationPurpose,
           activityPlan: body.activityPlan,
@@ -291,9 +305,10 @@ export class ClubRegistrationRepository {
             isNull(Registration.deletedAt),
           ),
         );
-      if (result.affectedRows !== 1) {
-        await tx.rollback();
+      if (result.affectedRows > 1) {
         throw new HttpException("Registration update failed", 500);
+      } else if (result.affectedRows === 0) {
+        throw new HttpException("Registration Not Found", HttpStatus.NOT_FOUND);
       }
     });
     return {};
@@ -317,9 +332,10 @@ export class ClubRegistrationRepository {
             isNull(Registration.deletedAt),
           ),
         );
-      if (result.affectedRows !== 1) {
-        await tx.rollback();
+      if (result.affectedRows > 1) {
         throw new HttpException("Registration delete failed", 500);
+      } else if (result.affectedRows === 0) {
+        throw new HttpException("Registration Not Found", HttpStatus.NOT_FOUND);
       }
     });
     return {};
@@ -329,8 +345,47 @@ export class ClubRegistrationRepository {
     studentId: number,
     applyId: number,
   ): Promise<ApiReg011ResponseOk> {
-    const cur = getKSTDate();
     const result = await this.db.transaction(async tx => {
+      const cur = getKSTDate();
+      const professor = tx
+        .select({
+          id: Professor.id,
+          name: Professor.name,
+          email: Professor.email,
+          professorEnumId: ProfessorT.professorEnum,
+        })
+        .from(Professor)
+        .innerJoin(
+          ProfessorT,
+          and(
+            eq(Professor.id, ProfessorT.professorId),
+            lte(ProfessorT.startTerm, cur),
+            or(gt(ProfessorT.endTerm, cur), isNull(ProfessorT.endTerm)),
+            isNull(ProfessorT.deletedAt),
+          ),
+        )
+        .where(isNull(Professor.deletedAt))
+        .as("professor");
+
+      const representative = tx
+        .select({
+          id: Student.id,
+          name: Student.name,
+          studentNumber: Student.number,
+        })
+        .from(Student)
+        .innerJoin(
+          StudentT,
+          and(
+            eq(Student.id, StudentT.studentId),
+            lte(StudentT.startTerm, cur),
+            or(gt(StudentT.endTerm, cur), isNull(StudentT.endTerm)),
+            isNull(StudentT.deletedAt),
+          ),
+        )
+        .where(and(isNull(Student.deletedAt), eq(Student.id, studentId)))
+        .as("representative");
+
       const File1 = alias(File, "File1");
       const File2 = alias(File, "File2");
       const File3 = alias(File, "File3");
@@ -342,15 +397,24 @@ export class ClubRegistrationRepository {
           registrationStatusEnumId:
             Registration.registrationApplicationStatusEnumId,
           clubId: Registration.clubId,
-          clubNameKr: Registration.clubNameKr,
-          clubNameEn: Registration.clubNameEn,
-          studentId: Registration.studentId,
-          phoneNumber: Registration.phoneNumber,
+          clubNameKr: Club.name_kr,
+          clubNameEn: Club.name_en,
+          newClubNameKr: Registration.clubNameKr,
+          newClubNameEn: Registration.clubNameEn,
+          representative: {
+            studentNumber: representative.studentNumber,
+            name: representative.name,
+            phoneNumber: Registration.phoneNumber,
+          },
           foundedAt: Registration.foundedAt,
           divisionId: Registration.divisionId,
           activityFieldKr: Registration.activityFieldKr,
           activityFieldEn: Registration.activityFieldEn,
-          professor: Registration.professorId,
+          professor: {
+            name: professor.name,
+            email: professor.email,
+            professorEnumId: professor.professorEnumId,
+          },
           divisionConsistency: Registration.divisionConsistency,
           foundationPurpose: Registration.foundationPurpose,
           activityPlan: Registration.activityPlan,
@@ -361,9 +425,19 @@ export class ClubRegistrationRepository {
           externalInstructionFileId:
             Registration.registrationExternalInstructionFileId,
           externalInstructionFileName: File3.name,
+          isProfessorSigned: Registration.professorApprovedAt,
           updatedAt: Registration.updatedAt,
         })
         .from(Registration)
+        .innerJoin(
+          representative,
+          eq(Registration.studentId, representative.id),
+        ) // 대표자가 없는 학생이라면 잘못된 신청이라는 의미인것 같아서 innerjoin으로 연결시킴.
+        .leftJoin(
+          Club,
+          and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
+        )
+        .leftJoin(professor, eq(Registration.professorId, professor.id))
         .leftJoin(
           File1,
           and(
@@ -385,54 +459,66 @@ export class ClubRegistrationRepository {
             isNull(File3.deletedAt),
           ),
         )
+        .leftJoin(
+          Division,
+          and(
+            eq(Registration.divisionId, Division.id),
+            isNull(Division.deletedAt),
+          ),
+        )
         .where(
           and(
-            eq(Registration.studentId, studentId),
             eq(Registration.id, applyId),
+            eq(Registration.studentId, studentId),
             isNull(Registration.deletedAt),
           ),
         )
         .for("share")
         .then(takeUnique);
       if (!registration) {
-        await tx.rollback();
         throw new HttpException(
-          "Registration student or applyId not found",
+          "Registration not found",
           HttpStatus.BAD_REQUEST,
         );
       }
-      if (registration.professor) {
-        const professorDetail = await tx
-          .select({
-            name: Professor.name,
-            email: Professor.email,
-            professorEnumId: ProfessorT.professorEnum,
-          })
-          .from(Professor)
-          .leftJoin(
-            ProfessorT,
-            and(
-              eq(Professor.id, ProfessorT.professorId),
-              isNull(ProfessorT.deletedAt),
-              lte(ProfessorT.startTerm, cur),
-              or(isNull(ProfessorT.endTerm), gt(ProfessorT.endTerm, cur)),
-            ),
-          )
-          .where(
-            and(
-              eq(Professor.id, registration.professor),
-              isNull(Professor.deletedAt),
-            ),
-          )
-          .for("share")
-          .then(takeUnique);
-        const registrationDetail = {
-          ...registration,
-          professor: professorDetail,
-        };
-        return registrationDetail;
-      }
-      return { ...registration, professor: undefined };
+      const comments = await tx
+        .select({
+          content: RegistrationExecutiveComment.content,
+          createdAt: RegistrationExecutiveComment.createdAt,
+        })
+        .from(RegistrationExecutiveComment)
+        .where(
+          and(
+            eq(RegistrationExecutiveComment.registrationId, applyId),
+            isNull(RegistrationExecutiveComment.deletedAt),
+          ),
+        );
+      return {
+        ...registration,
+        isProfessorSigned: !!registration.isProfessorSigned,
+        comments,
+        ...(registration.activityPlanFileId && {
+          activityPlanFile: {
+            id: registration.activityPlanFileId,
+            name: registration.activityPlanFileName,
+            url: null,
+          },
+        }),
+        ...(registration.clubRuleFileId && {
+          clubRuleFile: {
+            id: registration.clubRuleFileId,
+            name: registration.clubRuleFileName,
+            url: null,
+          },
+        }),
+        ...(registration.externalInstructionFileId && {
+          externalInstructionFile: {
+            id: registration.externalInstructionFileId,
+            name: registration.externalInstructionFileName,
+            url: null,
+          },
+        }),
+      };
     });
     return result;
   }
@@ -444,12 +530,35 @@ export class ClubRegistrationRepository {
       .select({
         id: Registration.id,
         registrationTypeEnumId: Registration.registrationApplicationTypeEnumId,
+        divisionName: Division.name,
+        clubNameKr: Club.name_kr,
+        newClubNameKr: Registration.clubNameKr,
+        clubId: Registration.clubId,
+        activityFieldKr: Registration.activityFieldKr,
+        activityFieldEn: Registration.activityFieldEn,
+        professorName: Professor.name,
         registrationStatusEnumId:
           Registration.registrationApplicationStatusEnumId,
-        krName: Registration.clubNameKr,
-        enName: Registration.clubNameEn,
       })
       .from(Registration)
+      .leftJoin(
+        Club,
+        and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
+      )
+      .leftJoin(
+        Division,
+        and(
+          eq(Registration.divisionId, Division.id),
+          isNull(Division.deletedAt),
+        ),
+      )
+      .leftJoin(
+        Professor,
+        and(
+          eq(Registration.professorId, Professor.id),
+          isNull(Professor.deletedAt),
+        ),
+      )
       .where(
         and(
           eq(Registration.studentId, studentId),
@@ -497,6 +606,7 @@ export class ClubRegistrationRepository {
           isNull(Professor.deletedAt),
         ),
       )
+      .where(isNull(Registration.deletedAt))
       .orderBy(desc(Registration.createdAt))
       .limit(itemCount)
       .offset(startOffset);
@@ -563,13 +673,15 @@ export class ClubRegistrationRepository {
           registrationStatusEnumId:
             Registration.registrationApplicationStatusEnumId,
           clubId: Registration.clubId,
-          clubNameKr: Registration.clubNameKr,
-          clubNameEn: Registration.clubNameEn,
+          clubNameKr: Club.name_kr,
+          clubNameEn: Club.name_en,
+          newClubNameKr: Registration.clubNameKr,
+          newClubNameEn: Registration.clubNameEn,
           representative: {
             studentNumber: representative.studentNumber,
             name: representative.name,
+            phoneNumber: Registration.phoneNumber,
           },
-          phoneNumber: Registration.phoneNumber,
           foundedAt: Registration.foundedAt,
           divisionId: Registration.divisionId,
           activityFieldKr: Registration.activityFieldKr,
@@ -597,6 +709,10 @@ export class ClubRegistrationRepository {
           representative,
           eq(Registration.studentId, representative.id),
         ) // 대표자가 없는 학생이라면 잘못된 신청이라는 의미인것 같아서 innerjoin으로 연결시킴.
+        .leftJoin(
+          Club,
+          and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
+        )
         .leftJoin(professor, eq(Registration.professorId, professor.id))
         .leftJoin(
           File1,
@@ -619,13 +735,19 @@ export class ClubRegistrationRepository {
             isNull(File3.deletedAt),
           ),
         )
+        .leftJoin(
+          Division,
+          and(
+            eq(Registration.divisionId, Division.id),
+            isNull(Division.deletedAt),
+          ),
+        )
         .where(
           and(eq(Registration.id, applyId), isNull(Registration.deletedAt)),
         )
         .for("share")
         .then(takeUnique);
       if (!registration) {
-        await tx.rollback();
         throw new HttpException(
           "Registration not found",
           HttpStatus.BAD_REQUEST,
@@ -647,6 +769,27 @@ export class ClubRegistrationRepository {
         ...registration,
         isProfessorSigned: !!registration.isProfessorSigned,
         comments,
+        ...(registration.activityPlanFileId && {
+          activityPlanFile: {
+            id: registration.activityPlanFileId,
+            name: registration.activityPlanFileName,
+            url: null,
+          },
+        }),
+        ...(registration.clubRuleFileId && {
+          clubRuleFile: {
+            id: registration.clubRuleFileId,
+            name: registration.clubRuleFileName,
+            url: null,
+          },
+        }),
+        ...(registration.externalInstructionFileId && {
+          externalInstructionFile: {
+            id: registration.externalInstructionFileId,
+            name: registration.externalInstructionFileName,
+            url: null,
+          },
+        }),
       };
     });
     return result;
@@ -679,10 +822,8 @@ export class ClubRegistrationRepository {
           ),
         );
       if (result.affectedRows > 1) {
-        await tx.rollback();
         throw new HttpException("Registration update failed", 500);
       } else if (result.affectedRows === 0) {
-        await tx.rollback();
         throw new HttpException(
           "Registration not found",
           HttpStatus.BAD_REQUEST,
@@ -710,10 +851,8 @@ export class ClubRegistrationRepository {
           and(isNull(Registration.deletedAt), eq(Registration.id, applyId)),
         );
       if (result1.affectedRows > 1) {
-        await tx.rollback();
         throw new HttpException("Registration update failed", 500);
       } else if (result1.affectedRows === 0) {
-        await tx.rollback();
         throw new HttpException(
           "Registration not found",
           HttpStatus.BAD_REQUEST,
@@ -726,10 +865,95 @@ export class ClubRegistrationRepository {
       });
       if (result2.affectedRows !== 1) {
         await tx.rollback();
-        throw new HttpException("Registration comment insert failed", 500);
       }
       return {};
     });
     return response;
+  }
+
+  async selectRegistrationsAndRepresentativeByProfessorId(param: {
+    professorId: number;
+  }) {
+    const result = await this.db
+      .select()
+      .from(Registration)
+      .where(
+        and(
+          eq(Registration.professorId, param.professorId),
+          isNull(Registration.deletedAt),
+        ),
+      )
+      .innerJoin(Student, eq(Registration.studentId, Student.id))
+      .innerJoin(
+        Division,
+        and(
+          eq(Registration.divisionId, Division.id),
+          isNull(Division.deletedAt),
+        ),
+      );
+
+    return result;
+  }
+
+  async getProfessorRegistrationsClubRegistration(param: {
+    registrationId: number;
+    professorId: number;
+  }) {
+    const results = await this.db
+      .select()
+      .from(Registration)
+      .innerJoin(
+        Student,
+        and(eq(Registration.studentId, Student.id), isNull(Student.deletedAt)),
+      )
+      .innerJoin(
+        Club,
+        and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
+      )
+      .innerJoin(
+        Professor,
+        and(
+          eq(Registration.professorId, Professor.id),
+          isNull(Professor.deletedAt),
+        ),
+      )
+      .innerJoin(
+        ProfessorT,
+        and(
+          eq(Professor.id, ProfessorT.professorId),
+          isNull(ProfessorT.deletedAt),
+        ),
+      )
+      .where(
+        and(
+          eq(Registration.id, param.registrationId),
+          eq(Registration.professorId, param.professorId),
+          isNull(Registration.deletedAt),
+        ),
+      );
+    logger.debug(results);
+    if (results.length > 1)
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+    if (results.length === 0)
+      throw new HttpException(
+        "not a valid applyId or ProfessorId",
+        HttpStatus.NOT_FOUND,
+      );
+    const result = results[0];
+
+    const comments = await this.db
+      .select()
+      .from(RegistrationExecutiveComment)
+      .where(
+        and(
+          eq(
+            RegistrationExecutiveComment.registrationId,
+            result.registration.id,
+          ),
+          isNull(RegistrationExecutiveComment.deletedAt),
+        ),
+      );
+
+    return { ...result, comments };
   }
 }

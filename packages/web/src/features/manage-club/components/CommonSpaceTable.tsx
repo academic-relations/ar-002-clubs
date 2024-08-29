@@ -32,25 +32,25 @@ const columns = [
       const { color, text } = getTagDetail(info.getValue(), CmsTagList);
       return <Tag color={color}>{text}</Tag>;
     },
-    size: 10,
+    size: 5,
   }),
   columnHelper.accessor("createdAt", {
     id: "createdAt",
     header: "신청 일시",
     cell: info => formatDateTime(info.getValue()),
-    size: 20,
+    size: 27,
   }),
   columnHelper.accessor("chargeStudentName", {
     id: "chargeStudentName",
     header: "신청자",
     cell: info => info.getValue(),
-    size: 10,
+    size: 5,
   }),
   columnHelper.accessor("startTerm", {
     id: "startTerm",
     header: "예약 일자",
     cell: info => formatDate(info.getValue()),
-    size: 16,
+    size: 22,
   }),
   columnHelper.accessor(
     row => `${formatTime(row.startTerm)} ~ ${formatTime(row.endTerm)}`,
@@ -58,14 +58,14 @@ const columns = [
       id: "time-range",
       header: "예약 시간",
       cell: info => info.getValue(),
-      size: 16,
+      size: 15,
     },
   ),
   columnHelper.accessor("spaceName", {
     id: "spaceName",
     header: "예약 호실",
     cell: info => info.getValue(),
-    size: 28,
+    size: 26,
   }),
 ];
 

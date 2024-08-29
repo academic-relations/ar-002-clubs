@@ -6,39 +6,42 @@ import {
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 const mockClubRegister = {
-  items: [
+  registrations: [
     {
-      registrationStatusEnum: RegistrationStatusEnum.Pending,
-      registrationTypeEnum: RegistrationTypeEnum.NewProvisional,
-      clubDivision: "생활문화",
+      registrationStatusEnumId: RegistrationStatusEnum.Pending,
+      registrationTypeEnumId: RegistrationTypeEnum.NewProvisional,
+      divisionName: "생활문화",
       clubNameKr: "술박스",
       activityFieldKr: "개발개발한 어떤 활동",
       professorName: "박지호",
       clubId: 1,
+      id: 1,
+      activityFieldEn: "Some activity that is developed",
     },
   ],
-  total: 1,
-  offset: 1,
 };
 
 const mockProfClubRegister = {
   items: [
     {
-      registrationStatusEnum: RegistrationStatusEnum.Pending,
-      clubDivision: "생활문화",
-      clubNameKr: "술박스",
-      studentNumber: "202XXXXX",
-      studentName: "이지윤",
-      phoneNumber: "XXX-XXXX-XXXX",
-      studentEmail: "xxxxx@kaist.ac.kr",
-      clubId: 1,
+      id: 1,
+      clubId: 23,
+      registrationStatusEnumId: RegistrationStatusEnum.Pending,
+      division: { id: 1, name: "생활문화" },
+      clubName: "술박스",
+      student: {
+        id: 1,
+        studentNumber: 20200000,
+        name: "이지윤",
+        phoneNumber: "000-0000-0000",
+        email: "xxxxx@kaist.ac.kr",
+      },
+      professorSignedAt: new Date(),
     },
   ],
-  total: 1,
-  offset: 1,
 };
 const mockMemberRegister = {
-  items: [
+  applies: [
     {
       applyStatusEnum: RegistrationStatusEnum.Pending,
       clubType: { type: ClubTypeEnum.Regular, isPermanent: false },
@@ -68,8 +71,6 @@ const mockMemberRegister = {
       clubId: 1,
     },
   ],
-  total: 4,
-  offset: 4,
 };
 const mockRegisterPeriod = [
   RegistrationDeadlineEnum.ClubRegistrationApplication,

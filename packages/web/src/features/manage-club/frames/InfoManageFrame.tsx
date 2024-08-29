@@ -5,7 +5,7 @@ import styled from "styled-components";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import ChangeClubInfoCard from "@sparcs-clubs/web/features/manage-club/components/ChangeClubInfoCard";
-import ChangeRepresentativeCard from "@sparcs-clubs/web/features/manage-club/components/ChangeRepresentativeCard";
+// import ChangeRepresentativeCard from "@sparcs-clubs/web/features/manage-club/components/ChangeRepresentativeCard";
 
 const InfoWrapper = styled.div`
   display: flex;
@@ -19,12 +19,14 @@ const InfoWrapper = styled.div`
 
 const InfoManageFrame: React.FC<{
   isRepresentative: boolean;
+  // TODO: 대표자 변경 기능 추가
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 }> = ({ isRepresentative }) => (
   <FlexWrapper direction="column" gap={40}>
     <FoldableSectionTitle title="동아리 정보">
       <InfoWrapper>
         <ChangeClubInfoCard />
-        {isRepresentative && <ChangeRepresentativeCard />}
+        {/* {isRepresentative && <ChangeRepresentativeCard />} */}
       </InfoWrapper>
     </FoldableSectionTitle>
   </FlexWrapper>

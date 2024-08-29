@@ -441,9 +441,8 @@ export class AuthRepository {
         .insert(AuthActivatedRefreshTokens)
         .values({ userId, expiresAt, refreshToken });
       const { affectedRows } = result;
-      if (affectedRows > 1) {
+      if (affectedRows !== 1) {
         await tx.rollback();
-        return false;
       }
       return true;
     });
@@ -465,9 +464,8 @@ export class AuthRepository {
           ),
         );
       const { affectedRows } = result;
-      if (affectedRows > 1) {
+      if (affectedRows !== 1) {
         await tx.rollback();
-        return false;
       }
       return true;
     });
