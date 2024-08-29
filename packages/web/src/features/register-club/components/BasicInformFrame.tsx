@@ -19,7 +19,7 @@ import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile"
 import useGetClubsForPromotional from "../services/useGetClubsForPromotional";
 import useGetClubsForRenewal from "../services/useGetClubsForRenewal";
 
-import ClubNameSelect from "./_atomic/ClubNameSelect";
+import ClubNameField from "./_atomic/ClubNameField";
 import DivisionSelect from "./_atomic/DivisionSelect";
 import YearSelect from "./_atomic/YearSelect";
 import ProfessorInformFrame from "./ProfessorInformFrame";
@@ -108,7 +108,11 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
               )}
             />
           </FlexWrapper>
-          <ClubNameSelect clubList={clubList?.clubs} editMode={editMode} />
+          <ClubNameField
+            type={type}
+            clubList={clubList?.clubs}
+            editMode={editMode}
+          />
           <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
             <YearSelect />
             <DivisionSelect isRenewal={isRenewal} />

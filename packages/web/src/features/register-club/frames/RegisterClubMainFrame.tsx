@@ -49,6 +49,8 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   const { mutate: registerClubApi, isSuccess, isError } = useRegisterClub();
 
   const title = useMemo(() => {
+    formCtx.setValue("registrationTypeEnumId", type);
+
     switch (type) {
       case RegistrationTypeEnum.Promotional:
         return "신규 등록";
@@ -57,7 +59,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
       default:
         return "가등록";
     }
-  }, [type]);
+  }, [formCtx, type]);
 
   const isProvisionalClub =
     type === RegistrationTypeEnum.NewProvisional ||

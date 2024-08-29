@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { useFormContext } from "react-hook-form";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -78,11 +79,7 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
             />
           </FlexWrapper>
           <FlexWrapper direction="column" gap={4}>
-            <FlexWrapper
-              direction="row"
-              gap={8}
-              style={{ width: "100%", marginLeft: 2 }}
-            >
+            <FlexWrapper direction="row" gap={8} style={{ marginLeft: 2 }}>
               <Typography fw="MEDIUM" color="BLACK">
                 가등록 신청 구분
               </Typography>
@@ -94,21 +91,26 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
             <FlexWrapper direction="row" gap={16} style={{ width: "100%" }}>
               <Button
                 type={isReProvisional ? "outlined" : "default"}
-                style={{ width: "100%" }}
                 onClick={() => setIsReProvisional(false)}
+                style={{ flex: 1 }}
               >
                 가등록(신규)
               </Button>
               <Button
                 type={isReProvisional ? "default" : "outlined"}
-                style={{ width: "100%" }}
                 onClick={() => setIsReProvisional(true)}
+                style={{ flex: 1 }}
               >
                 가등록(재)
               </Button>
             </FlexWrapper>
           </FlexWrapper>
           <ClubNameField
+            type={
+              isReProvisional
+                ? RegistrationTypeEnum.ReProvisional
+                : RegistrationTypeEnum.NewProvisional
+            }
             clubList={isReProvisional ? data?.clubs : []}
             editMode={editMode}
           />
