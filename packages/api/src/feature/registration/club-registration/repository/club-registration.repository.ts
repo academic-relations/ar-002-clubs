@@ -287,7 +287,7 @@ export class ClubRegistrationRepository {
           divisionId: body.divisionId,
           activityFieldKr: body.activityFieldKr,
           activityFieldEn: body.activityFieldEn,
-          professorId,
+          professorId: professorId ?? null,
           divisionConsistency: body.divisionConsistency,
           foundationPurpose: body.foundationPurpose,
           activityPlan: body.activityPlan,
