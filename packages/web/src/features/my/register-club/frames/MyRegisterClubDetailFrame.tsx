@@ -149,7 +149,6 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
             },
           ]}
           title="동아리 등록"
-          enableLast
         />
         <Card outline gap={20}>
           {clubDetail && (
@@ -344,7 +343,7 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
           <Button
             style={{ width: "max-content" }}
             onClick={() => {
-              router.push("/my/register-club");
+              router.push("/my");
             }}
           >
             목록으로 돌아가기
