@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -40,10 +40,6 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
     ]);
     setHasErrorList(prevList => [...prevList, false]);
   };
-
-  useEffect(() => {
-    console.log(activityTermList);
-  }, [activityTermList]);
 
   const handleDelete = (index: number) => {
     const updatedTerms = activityTermList.filter((_, i) => i !== index);

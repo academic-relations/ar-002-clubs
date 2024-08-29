@@ -92,10 +92,6 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
     };
   }, [detail]);
 
-  useEffect(() => {
-    console.log("applyId", applyId);
-  }, [applyId]);
-
   const formCtx = useForm<ApiReg009RequestBody>({
     mode: "all",
     defaultValues: initialData,
@@ -131,10 +127,9 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   const submitHandler = useCallback(
     (data: ApiReg009RequestBody) => {
-      console.log("submit", data);
       mutate({ requestParam: { applyId }, body: data });
     },
-    [mutate],
+    [mutate, applyId],
   );
 
   useEffect(() => {

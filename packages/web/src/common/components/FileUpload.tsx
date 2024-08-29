@@ -114,8 +114,6 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
   useEffect(() => {
     setFiles(initialFiles);
-    console.log(fileId, "FileUpload", files, files[0]?.file?.name);
-    console.log(fileId, "FileUpload", "initialFiles", initialFiles);
   }, [initialFiles]);
 
   /* TODO: (@dora) refactor !!!!!!! */
@@ -160,7 +158,6 @@ const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   const updateFiles = (_files: Attachment[]) => {
-    // console.log("updateFiles", _files);
     const updatedFiles = files.filter(f =>
       _files.map(_file => _file.name).includes(f.file.name),
     );
@@ -169,7 +166,6 @@ const FileUpload: React.FC<FileUploadProps> = ({
     onSubmit(updatedFiles);
   };
   const removeFile = (_file: FinalFile) => {
-    // console.log("removeFile", _file);
     const updatedFiles = files.filter(file => file.fileId !== _file.fileId);
     setFiles(updatedFiles);
     onChange(updatedFiles.map(file => file.fileId!));

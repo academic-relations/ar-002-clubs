@@ -35,15 +35,12 @@ const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({
 }) => {
   const { control, setValue } = formCtx;
 
-  console.log("files", files);
-
   /* TODO: (@dora) refactor !!!!! */
   type FileIdType =
     | "activityPlanFileId"
     | "clubRuleFileId"
     | "externalInstructionFileId";
   const updateSingleFile = (fileId: FileIdType, data: string[]) => {
-    // console.log("updateFile", fileId, data);
     if (data.length === 0) {
       setValue(fileId, undefined, { shouldValidate: true });
       return;

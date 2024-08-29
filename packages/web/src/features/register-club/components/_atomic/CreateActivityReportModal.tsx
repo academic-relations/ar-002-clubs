@@ -69,7 +69,6 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
 
   const submitHandler = useCallback(
     (data: ApiAct007RequestBody) => {
-      console.log("submit", { ...data, participants });
       mutate(
         { body: { ...data, participants } },
         {

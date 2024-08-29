@@ -41,7 +41,6 @@ const SingleUploadWithTextAndTemplate: React.FC<
 }) => {
   const [files, setFiles] = useState<{ file: File; fileId?: string }[]>([]);
   useEffect(() => {
-    console.log(fileId, "initialFile", initialFile);
     if (initialFile) {
       getFileFromUrl(initialFile.url, initialFile.name).then(file =>
         setFiles([
@@ -53,10 +52,6 @@ const SingleUploadWithTextAndTemplate: React.FC<
       );
     }
   }, [initialFile, setFiles]);
-
-  useEffect(() => {
-    console.log("files", files);
-  }, [files]);
 
   return (
     <SingleUploadWithTextAndTemplateInner>
