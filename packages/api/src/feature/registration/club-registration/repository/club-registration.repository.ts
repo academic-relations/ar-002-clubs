@@ -38,7 +38,10 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
-import { ClubDelegateD } from "@sparcs-clubs/api/drizzle/schema/club.schema";
+import {
+  Club,
+  ClubDelegateD,
+} from "@sparcs-clubs/api/drizzle/schema/club.schema";
 import { Division } from "@sparcs-clubs/api/drizzle/schema/division.schema";
 import { File } from "@sparcs-clubs/api/drizzle/schema/file.schema";
 import {
@@ -394,8 +397,10 @@ export class ClubRegistrationRepository {
           registrationStatusEnumId:
             Registration.registrationApplicationStatusEnumId,
           clubId: Registration.clubId,
-          clubNameKr: Registration.clubNameKr,
-          clubNameEn: Registration.clubNameEn,
+          clubNameKr: Club.name_kr,
+          clubNameEn: Club.name_en,
+          newClubNameKr: Registration.clubNameKr,
+          newClubNameEn: Registration.clubNameEn,
           representative: {
             studentNumber: representative.studentNumber,
             name: representative.name,
@@ -428,6 +433,10 @@ export class ClubRegistrationRepository {
           representative,
           eq(Registration.studentId, representative.id),
         ) // 대표자가 없는 학생이라면 잘못된 신청이라는 의미인것 같아서 innerjoin으로 연결시킴.
+        .leftJoin(
+          Club,
+          and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
+        )
         .leftJoin(professor, eq(Registration.professorId, professor.id))
         .leftJoin(
           File1,
@@ -659,8 +668,10 @@ export class ClubRegistrationRepository {
           registrationStatusEnumId:
             Registration.registrationApplicationStatusEnumId,
           clubId: Registration.clubId,
-          clubNameKr: Registration.clubNameKr,
-          clubNameEn: Registration.clubNameEn,
+          clubNameKr: Club.name_kr,
+          clubNameEn: Club.name_en,
+          newClubNameKr: Registration.clubNameKr,
+          newClubNameEn: Registration.clubNameEn,
           representative: {
             studentNumber: representative.studentNumber,
             name: representative.name,
@@ -693,6 +704,10 @@ export class ClubRegistrationRepository {
           representative,
           eq(Registration.studentId, representative.id),
         ) // 대표자가 없는 학생이라면 잘못된 신청이라는 의미인것 같아서 innerjoin으로 연결시킴.
+        .leftJoin(
+          Club,
+          and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
+        )
         .leftJoin(professor, eq(Registration.professorId, professor.id))
         .leftJoin(
           File1,
@@ -885,6 +900,10 @@ export class ClubRegistrationRepository {
       .innerJoin(
         Student,
         and(eq(Registration.studentId, Student.id), isNull(Student.deletedAt)),
+      )
+      .innerJoin(
+        Club,
+        and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
       )
       .innerJoin(
         Professor,
