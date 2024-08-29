@@ -4,6 +4,7 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import { ListItem } from "@sparcs-clubs/web/common/components/ListItem";
 import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
@@ -13,6 +14,7 @@ import {
   RegistrationTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
 import PastActivityReportList from "@sparcs-clubs/web/features/manage-club/activity-report/components/PastActivityReportList";
+import { FilePreviewContainer } from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubDetailFrame";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
 import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
@@ -77,105 +79,87 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
           <Typography fw="MEDIUM" lh={20} fs={16}>
             기본 정보
           </Typography>
-          <Typography lh={20} fs={16}>
-            {`\u2022  동아리명: ${data?.clubNameKr}`}
-          </Typography>
-          <Typography lh={20} fs={16}>
-            {`\u2022  대표자 이름: ${data?.representative.name}`}
-          </Typography>
-          <Typography lh={20} fs={16}>
-            {`\u2022  대표자 전화번호: ${data?.representative.phoneNumber}`}
-          </Typography>
-          <Typography lh={20} fs={16}>
-            {`\u2022  설립 연도: ${data && getActualYear(data?.foundedAt)}`}
-          </Typography>
-          <Typography lh={20} fs={16}>
-            {`\u2022  소속 분과: ${data && getTagDetail(data?.divisionId, DivisionTypeTagList).text}`}
-          </Typography>
-          <Typography lh={20} fs={16}>
-            {`\u2022  활동 분야 (국문): ${data?.activityFieldKr}`}
-          </Typography>
-          <Typography lh={20} fs={16}>
-            {`\u2022  활동 분야 (영문): ${data?.activityFieldEn}`}
-          </Typography>
+          <ListItem>{`동아리명: ${data?.clubNameKr}`}</ListItem>
+          <ListItem>{`대표자 이름: ${data?.representative.name}`}</ListItem>
+          <ListItem>
+            {`대표자 전화번호: ${data?.representative.phoneNumber}`}
+          </ListItem>
+          <ListItem>
+            {`설립 연도: ${data && getActualYear(data?.foundedAt)}`}
+          </ListItem>
+          <ListItem>
+            {`소속 분과: ${data && getTagDetail(data?.divisionId, DivisionTypeTagList).text}`}
+          </ListItem>
+          <ListItem>{`활동 분야 (국문): ${data?.activityFieldKr}`}</ListItem>
+          <ListItem>{`활동 분야 (영문): ${data?.activityFieldEn}`}</ListItem>
         </FlexWrapper>
         {data?.professor && (
           <FlexWrapper gap={12} direction="column">
             <Typography fw="MEDIUM" lh={20} fs={16}>
               지도교수 정보
             </Typography>
-            <Typography lh={20} fs={16}>
-              {`\u2022  성함: ${data?.professor?.name}`}
-            </Typography>
-            <Typography lh={20} fs={16}>
-              {`\u2022  직급: ${professorEnumToText(data?.professor?.professorEnumId)}`}
-            </Typography>
-            <Typography lh={20} fs={16}>
-              {`\u2022  이메일: ${data?.professor?.email}`}
-            </Typography>
+            <ListItem>{`성함: ${data?.professor?.name}`}</ListItem>
+            <ListItem>
+              {`직급: ${professorEnumToText(data?.professor?.professorEnumId)}`}
+            </ListItem>
+            <ListItem>{`이메일: ${data?.professor?.email}`}</ListItem>
           </FlexWrapper>
         )}
         <FlexWrapper gap={12} direction="column">
           <Typography fw="MEDIUM" lh={20} fs={16}>
             동아리 정보
           </Typography>
-          <Typography lh={20} fs={16}>
-            {`\u2022  분과 정합성: ${data?.divisionConsistency}`}
-          </Typography>
-          <Typography lh={20} fs={16}>
-            {`\u2022  설립 목적: ${data?.foundationPurpose}`}
-          </Typography>
-          <Typography lh={20} fs={16}>
-            {`\u2022  주요 활동 계획: ${data?.activityPlan}`}
-          </Typography>
+          <ListItem>{`분과 정합성: ${data?.divisionConsistency}`}</ListItem>
+          <ListItem>{`설립 목적: ${data?.foundationPurpose}`}</ListItem>
+          <ListItem>{`주요 활동 계획: ${data?.activityPlan}`}</ListItem>
           {data?.activityPlanFile && (
             <>
-              <Typography lh={20} fs={16}>
-                {`\u2022  활동 계획서`}
-              </Typography>
+              <ListItem>활동계획서</ListItem>
               {data?.activityPlanFile && (
-                <ThumbnailPreviewList
-                  fileList={[
-                    {
-                      src: data?.activityPlanFile?.url,
-                      name: data?.activityPlanFile?.name,
-                    },
-                  ]}
-                />
+                <FilePreviewContainer>
+                  <ThumbnailPreviewList
+                    fileList={[
+                      {
+                        src: data?.activityPlanFile?.url,
+                        name: data?.activityPlanFile?.name,
+                      },
+                    ]}
+                  />
+                </FilePreviewContainer>
               )}
             </>
           )}
           {data?.clubRuleFile && (
             <>
-              <Typography lh={20} fs={16}>
-                {`\u2022  동아리 회칙`}
-              </Typography>
+              <ListItem>동아리 회칙</ListItem>
               {data?.clubRuleFile && (
-                <ThumbnailPreviewList
-                  fileList={[
-                    {
-                      src: data?.clubRuleFile?.url,
-                      name: data?.clubRuleFile?.name,
-                    },
-                  ]}
-                />
+                <FilePreviewContainer>
+                  <ThumbnailPreviewList
+                    fileList={[
+                      {
+                        src: data?.clubRuleFile?.url,
+                        name: data?.clubRuleFile?.name,
+                      },
+                    ]}
+                  />
+                </FilePreviewContainer>
               )}
             </>
           )}
           {data?.externalInstructionFile && (
             <>
-              <Typography lh={20} fs={16}>
-                {`\u2022  (선택) 외부 강사 지도 계획서`}
-              </Typography>
+              <ListItem>(선택) 외부 강사 지도 계획서</ListItem>
               {data?.externalInstructionFile && (
-                <ThumbnailPreviewList
-                  fileList={[
-                    {
-                      src: data?.externalInstructionFile?.url,
-                      name: data?.externalInstructionFile?.name,
-                    },
-                  ]}
-                />
+                <FilePreviewContainer>
+                  <ThumbnailPreviewList
+                    fileList={[
+                      {
+                        src: data?.externalInstructionFile?.url,
+                        name: data?.externalInstructionFile?.name,
+                      },
+                    ]}
+                  />
+                </FilePreviewContainer>
               )}
             </>
           )}
