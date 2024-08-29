@@ -61,6 +61,7 @@ const ClubRegisterApproveFrame = ({ applyId }: { applyId: number }) => {
             }
             onClick={() => {
               patchClubRegistrationExecutive({ applyId });
+              refetch();
             }}
           >
             신청 승인

@@ -5,7 +5,6 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
-import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
@@ -14,6 +13,7 @@ import {
   RegistrationTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
 import PastActivityReportList from "@sparcs-clubs/web/features/manage-club/activity-report/components/PastActivityReportList";
+import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
 import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 import { professorEnumToText } from "@sparcs-clubs/web/utils/getUserType";
@@ -29,17 +29,6 @@ export interface ClubRegisterDetail {
 const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
   applyId,
 }: ClubRegisterDetail) => {
-  const progressCheckSectionLabel = () => {
-    switch (mockClubRegisterDetail.statusAndDate[1].status) {
-      case ProgressCheckSectionStatusEnum.Approved:
-        return "동아리 연합회 승인 완료";
-      case ProgressCheckSectionStatusEnum.Canceled:
-        return "동아리 연합회 신청 반려";
-      default:
-        return "승인 대기";
-    }
-  };
-
   const { data, isLoading, isError } = useRegisterClubDetail({
     applyId: +applyId,
   });
@@ -51,11 +40,22 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
           <Typography fw="MEDIUM" lh={20} fs={16}>
             신청 상태
           </Typography>
-          {/* TODO: progresschecksection */}
-          <ProgressCheckSection
-            labels={["신청 완료", progressCheckSectionLabel()]}
-            progress={mockClubRegisterDetail.statusAndDate}
-          />
+          {data && (
+            <ProgressCheckSection
+              labels={
+                getRegisterClubProgress(
+                  data?.registrationStatusEnumId,
+                  data?.updatedAt,
+                ).labels
+              }
+              progress={
+                getRegisterClubProgress(
+                  data?.registrationStatusEnumId,
+                  data?.updatedAt,
+                ).progress
+              }
+            />
+          )}
         </FlexWrapper>
         <FlexWrapper gap={20} direction="row">
           <Typography fw="MEDIUM" lh={20} fs={16} style={{ flex: 1 }}>
@@ -131,9 +131,6 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
               <Typography lh={20} fs={16}>
                 {`\u2022  활동 계획서`}
               </Typography>
-              <Typography lh={20} fs={16}>
-                {`\u2022  ${data?.activityPlanFile?.name}`}
-              </Typography>
               {data?.activityPlanFile && (
                 <ThumbnailPreviewList
                   fileList={[
@@ -151,9 +148,6 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
               <Typography lh={20} fs={16}>
                 {`\u2022  동아리 회칙`}
               </Typography>
-              <Typography lh={20} fs={16}>
-                {`\u2022  ${data?.clubRuleFile?.name}`}
-              </Typography>
               {data?.clubRuleFile && (
                 <ThumbnailPreviewList
                   fileList={[
@@ -170,9 +164,6 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
             <>
               <Typography lh={20} fs={16}>
                 {`\u2022  (선택) 외부 강사 지도 계획서`}
-              </Typography>
-              <Typography lh={20} fs={16}>
-                {`\u2022  ${data?.externalInstructionFile?.name}`}
               </Typography>
               {data?.externalInstructionFile && (
                 <ThumbnailPreviewList
