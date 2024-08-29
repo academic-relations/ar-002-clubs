@@ -28,6 +28,7 @@ import {
 } from "@sparcs-clubs/web/constants/tableTagList";
 import MyRegisterClubAcfTable from "@sparcs-clubs/web/features/my/register-club/components/MyRegisterClubAcfTable";
 import { mockMyClubRegisterAcf } from "@sparcs-clubs/web/features/my/services/_mock/mockMyClubRegisterDetail";
+import { deleteMyClubRegistration } from "@sparcs-clubs/web/features/my/services/deleteMyClubRegistration";
 import useGetClubRegistration from "@sparcs-clubs/web/features/my/services/useGetClubRegistration";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
 import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
@@ -242,7 +243,13 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
           </Button>
           {profile !== "professor" ? (
             <FlexWrapper direction="row" gap={10}>
-              <Button style={{ width: "max-content" }} onClick={() => {}}>
+              <Button
+                style={{ width: "max-content" }}
+                onClick={async () => {
+                  await deleteMyClubRegistration({ applyId: +id });
+                  router.push("/my");
+                }}
+              >
                 삭제
               </Button>
               <Button
@@ -256,6 +263,7 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
             </FlexWrapper>
           ) : (
             <FlexWrapper direction="row" gap={10}>
+              {/* TODO: reg023 구현 후 연결 */}
               <Button style={{ width: "max-content" }} onClick={() => {}}>
                 승인
               </Button>
