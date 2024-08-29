@@ -79,7 +79,14 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
           <Typography fw="MEDIUM" lh={20} fs={16}>
             기본 정보
           </Typography>
-          <ListItem>{`동아리명: ${data?.clubNameKr}`}</ListItem>
+          <ListItem>동아리명 (국문): {data?.clubNameKr}</ListItem>
+          <ListItem>동아리명 (영문): {data?.clubNameEn}</ListItem>
+          {data?.newClubNameKr && (
+            <ListItem>신규 동아리명 (국문): {data?.newClubNameKr}</ListItem>
+          )}
+          {data?.newClubNameEn && (
+            <ListItem>신규 동아리명 (영문): {data?.newClubNameEn}</ListItem>
+          )}
           <ListItem>{`대표자 이름: ${data?.representative.name}`}</ListItem>
           <ListItem>
             {`대표자 전화번호: ${data?.representative.phoneNumber}`}

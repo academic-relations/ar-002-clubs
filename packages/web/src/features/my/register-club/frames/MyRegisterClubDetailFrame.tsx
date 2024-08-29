@@ -205,7 +205,18 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
               기본 정보
             </Typography>
             <ListContainer>
-              <ListItem>동아리: {clubDetail?.clubNameKr}</ListItem>
+              <ListItem>동아리명 (국문): {clubDetail?.clubNameKr}</ListItem>
+              <ListItem>동아리명 (영문): {clubDetail?.clubNameEn}</ListItem>
+              {clubDetail?.newClubNameKr && (
+                <ListItem>
+                  신규 동아리명 (국문): {clubDetail?.newClubNameKr}
+                </ListItem>
+              )}
+              {clubDetail?.newClubNameEn && (
+                <ListItem>
+                  신규 동아리명 (영문): {clubDetail?.newClubNameEn}
+                </ListItem>
+              )}
               <ListItem>
                 대표자 이름: {clubDetail?.representative?.name}
               </ListItem>
