@@ -75,6 +75,7 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
               control={control}
               defaultValue={profile?.phoneNumber}
               minLength={13}
+              pattern={/^010-\d{4}-\d{4}$/}
               renderItem={props => (
                 <PhoneInput
                   {...props}
