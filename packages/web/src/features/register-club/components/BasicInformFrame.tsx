@@ -103,7 +103,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
                 <PhoneInput
                   {...props}
                   label="대표자 전화번호"
-                  placeholder="XXX-XXXX-XXXX"
+                  placeholder="010-XXXX-XXXX"
                 />
               )}
             />
