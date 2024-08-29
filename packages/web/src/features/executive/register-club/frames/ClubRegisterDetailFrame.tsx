@@ -44,8 +44,6 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
     applyId: +applyId,
   });
 
-  const { attachmentList } = mockClubRegisterDetail;
-
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <Card padding="32px" gap={20} outline>
@@ -128,20 +126,66 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
           <Typography lh={20} fs={16}>
             {`\u2022  주요 활동 계획: ${data?.activityPlan}`}
           </Typography>
-          <Typography lh={20} fs={16}>
-            {`\u2022  (선택) 외부 강사 지도 계획서`}
-          </Typography>
-          {/* TODO: file 제대로 넣기 */}
-          {Object.keys(attachmentList).map((key, index) => (
+          {data?.activityPlanFile && (
             <>
-              <Typography lh={20} fs={16} key={`${index.toString()}`}>
-                {`\u2022  ${key}`}
+              <Typography lh={20} fs={16}>
+                {`\u2022  활동 계획서`}
               </Typography>
-              <ThumbnailPreviewList
-                fileList={attachmentList[key as keyof typeof attachmentList]}
-              />
+              <Typography lh={20} fs={16}>
+                {`\u2022  ${data?.activityPlanFile?.name}`}
+              </Typography>
+              {data?.activityPlanFile && (
+                <ThumbnailPreviewList
+                  fileList={[
+                    {
+                      src: data?.activityPlanFile?.url,
+                      name: data?.activityPlanFile?.name,
+                    },
+                  ]}
+                />
+              )}
             </>
-          ))}
+          )}
+          {data?.clubRuleFile && (
+            <>
+              <Typography lh={20} fs={16}>
+                {`\u2022  동아리 회칙`}
+              </Typography>
+              <Typography lh={20} fs={16}>
+                {`\u2022  ${data?.clubRuleFile?.name}`}
+              </Typography>
+              {data?.clubRuleFile && (
+                <ThumbnailPreviewList
+                  fileList={[
+                    {
+                      src: data?.clubRuleFile?.url,
+                      name: data?.clubRuleFile?.name,
+                    },
+                  ]}
+                />
+              )}
+            </>
+          )}
+          {data?.externalInstructionFile && (
+            <>
+              <Typography lh={20} fs={16}>
+                {`\u2022  (선택) 외부 강사 지도 계획서`}
+              </Typography>
+              <Typography lh={20} fs={16}>
+                {`\u2022  ${data?.externalInstructionFile?.name}`}
+              </Typography>
+              {data?.externalInstructionFile && (
+                <ThumbnailPreviewList
+                  fileList={[
+                    {
+                      src: data?.externalInstructionFile?.url,
+                      name: data?.externalInstructionFile?.name,
+                    },
+                  ]}
+                />
+              )}
+            </>
+          )}
         </FlexWrapper>
         {/* TODO: 활보 연결 */}
         {mockClubRegisterDetail.activityReports && (
