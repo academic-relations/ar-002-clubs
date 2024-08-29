@@ -204,14 +204,20 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
               기본 정보
             </Typography>
             <ListContainer>
-              <ListItem>동아리명 (국문): {clubDetail?.clubNameKr}</ListItem>
-              <ListItem>동아리명 (영문): {clubDetail?.clubNameEn}</ListItem>
-              {clubDetail?.newClubNameKr && (
+              <ListItem>
+                동아리명 (국문):{" "}
+                {clubDetail?.clubNameKr ?? clubDetail?.newClubNameKr}
+              </ListItem>
+              <ListItem>
+                동아리명 (영문):{" "}
+                {clubDetail?.clubNameEn ?? clubDetail?.newClubNameEn}
+              </ListItem>
+              {clubDetail?.clubNameKr && (
                 <ListItem>
                   신규 동아리명 (국문): {clubDetail?.newClubNameKr}
                 </ListItem>
               )}
-              {clubDetail?.newClubNameEn && (
+              {clubDetail?.clubNameEn && (
                 <ListItem>
                   신규 동아리명 (영문): {clubDetail?.newClubNameEn}
                 </ListItem>
