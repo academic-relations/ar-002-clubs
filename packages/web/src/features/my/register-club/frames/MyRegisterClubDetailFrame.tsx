@@ -91,7 +91,7 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
         >
           동아리 등록 신청을 삭제하면 복구할 수 없습니다.
           <br />
-          ㄱㅊ?
+          삭제하시겠습니까?
         </CancellableModalContent>
       </Modal>
     ));
@@ -109,9 +109,9 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
           confirmButtonText="수정"
         >
           동아리 등록 신청을 수정하면 신청 상태 및 지도교수 승인 여부가 모두
-          초기화 됩니다.
+          초기화됩니다.
           <br />
-          ㄱㅊ?
+          수정하시겠습니까?
         </CancellableModalContent>
       </Modal>
     ));
