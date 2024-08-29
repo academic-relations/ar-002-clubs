@@ -14,6 +14,7 @@ import {
 const usePutClubRegistration = (param: ApiReg009RequestParam) =>
   useMutation<ApiReg009ResponseOk, Error, { body: ApiReg009RequestBody }>({
     mutationFn: async ({ body }): Promise<ApiReg009ResponseOk> => {
+      console.log("applyId", param.applyId.toString());
       const { data, status } = await axiosClientWithAuth.put(
         apiReg009.url(param.applyId.toString()),
         body,

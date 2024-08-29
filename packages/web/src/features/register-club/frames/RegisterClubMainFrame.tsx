@@ -145,7 +145,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
           ) : (
             <BasicInformFrame type={type} />
           )}
-          <AdvancedInformFrame type={type} />
+          <AdvancedInformFrame type={type} formCtx={formCtx} />
           {type === RegistrationTypeEnum.Promotional && clubId && (
             <ActivityReportFrame clubId={clubId} />
           )}

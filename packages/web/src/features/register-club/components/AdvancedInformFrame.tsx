@@ -13,12 +13,29 @@ import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 
 import SingleUploadWithTextAndTemplate from "./SingleUploadWithTextAndTemplate";
 
+type FileObject = {
+  id: string;
+  name: string;
+  url: string;
+};
 interface AdvancedInformFrameProps {
   type: RegistrationTypeEnum;
+  formCtx: ReturnType<typeof useFormContext<ApiReg001RequestBody>>;
+  files?: {
+    activityPlanFile?: FileObject;
+    clubRuleFile?: FileObject;
+    externalInstructionFile?: FileObject;
+  };
 }
 
-const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({ type }) => {
-  const { control, setValue } = useFormContext<ApiReg001RequestBody>();
+const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({
+  type,
+  formCtx,
+  files = {},
+}) => {
+  const { control, setValue } = formCtx;
+
+  console.log("files", files);
 
   /* TODO: (@dora) refactor !!!!! */
   type FileIdType =
@@ -91,6 +108,7 @@ const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({ type }) => {
                 title="활동 계획서"
                 content={`* 활동 목적 및 대중사업 계획을 포함한 활동 계획서 1부 제출 필수
           * 활동마다 활동명, 활동 기간, 활동 내용, 운영 예산을 포함한 자유 양식으로 제출`}
+                initialFile={files.activityPlanFile}
                 onChange={data => {
                   updateSingleFile("activityPlanFileId", data);
                 }}
@@ -108,6 +126,7 @@ const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({ type }) => {
                 {...props}
                 fileId="clubRuleFileId"
                 title="동아리 회칙"
+                initialFile={files.clubRuleFile}
                 onChange={data => {
                   updateSingleFile("clubRuleFileId", data);
                 }}
@@ -125,6 +144,7 @@ const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({ type }) => {
                 fileId="externalInstructionFileId"
                 title="(선택) 외부 강사 지도 계획서"
                 content="* 외부 강사가 직접 작성하여 제출"
+                initialFile={files.externalInstructionFile}
                 onChange={data => {
                   updateSingleFile("externalInstructionFileId", data);
                 }}
