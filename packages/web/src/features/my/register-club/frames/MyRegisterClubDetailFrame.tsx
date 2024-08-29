@@ -42,7 +42,7 @@ const FilePreviewContainerWrapper = styled(FlexWrapper)`
   align-self: stretch;
 `;
 
-const FilePreviewContainer: React.FC<React.PropsWithChildren> = ({
+export const FilePreviewContainer: React.FC<React.PropsWithChildren> = ({
   children = null,
 }) => (
   <FilePreviewContainerWrapper direction="column" gap={12}>
@@ -149,7 +149,6 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
             },
           ]}
           title="동아리 등록"
-          enableLast
         />
         <Card outline gap={20}>
           {clubDetail && (
@@ -205,7 +204,24 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
               기본 정보
             </Typography>
             <ListContainer>
-              <ListItem>동아리: {clubDetail?.clubNameKr}</ListItem>
+              <ListItem>
+                동아리명 (국문):{" "}
+                {clubDetail?.clubNameKr ?? clubDetail?.newClubNameKr}
+              </ListItem>
+              <ListItem>
+                동아리명 (영문):{" "}
+                {clubDetail?.clubNameEn ?? clubDetail?.newClubNameEn}
+              </ListItem>
+              {clubDetail?.clubNameKr && (
+                <ListItem>
+                  신규 동아리명 (국문): {clubDetail?.newClubNameKr}
+                </ListItem>
+              )}
+              {clubDetail?.clubNameEn && (
+                <ListItem>
+                  신규 동아리명 (영문): {clubDetail?.newClubNameEn}
+                </ListItem>
+              )}
               <ListItem>
                 대표자 이름: {clubDetail?.representative?.name}
               </ListItem>
@@ -253,27 +269,54 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
               </ListItem>
               <ListItem>설립 목적: {clubDetail?.foundationPurpose}</ListItem>
               <ListItem>주요 활동 계획: {clubDetail?.activityPlan}</ListItem>
-              {clubDetail?.registrationTypeEnumId ===
-                RegistrationTypeEnum.Promotional && (
-                <ListItem>활동계획서</ListItem>
+              {clubDetail?.activityPlanFile && (
+                <>
+                  <ListItem>활동계획서</ListItem>
+                  {clubDetail?.activityPlanFile && (
+                    <FilePreviewContainer>
+                      <ThumbnailPreviewList
+                        fileList={[
+                          {
+                            src: clubDetail?.activityPlanFile?.url,
+                            name: clubDetail?.activityPlanFile?.name,
+                          },
+                        ]}
+                      />
+                    </FilePreviewContainer>
+                  )}
+                </>
               )}
-              {clubDetail?.registrationTypeEnumId ===
-                RegistrationTypeEnum.Promotional && (
-                <ListItem>동아리 회칙</ListItem>
+              {clubDetail?.clubRuleFile && (
+                <>
+                  <ListItem>동아리 회칙</ListItem>
+                  {clubDetail?.clubRuleFile && (
+                    <FilePreviewContainer>
+                      <ThumbnailPreviewList
+                        fileList={[
+                          {
+                            src: clubDetail?.clubRuleFile?.url,
+                            name: clubDetail?.clubRuleFile?.name,
+                          },
+                        ]}
+                      />
+                    </FilePreviewContainer>
+                  )}
+                </>
               )}
-              {/* TODO: File Preview 잘 됐는지 확인 필요 */}
-              <ListItem>(선택) 외부 강사 지도 계획서</ListItem>
               {clubDetail?.externalInstructionFile?.id && (
-                <FilePreviewContainer>
-                  <ThumbnailPreviewList
-                    fileList={[
-                      {
-                        src: clubDetail?.externalInstructionFile?.url,
-                        name: clubDetail?.externalInstructionFile?.name,
-                      },
-                    ]}
-                  />
-                </FilePreviewContainer>
+                <>
+                  <ListItem>(선택) 외부 강사 지도 계획서</ListItem>
+                  <FilePreviewContainer>
+                    <ThumbnailPreviewList
+                      fileList={[
+                        {
+                          src: clubDetail.externalInstructionFile.url,
+                          name: clubDetail.externalInstructionFile.name,
+                        },
+                      ]}
+                    />
+                  </FilePreviewContainer>
+                </>
               )}
             </ListContainer>
             {clubDetail?.registrationTypeEnumId !==
@@ -306,7 +349,7 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
           <Button
             style={{ width: "max-content" }}
             onClick={() => {
-              router.push("/my/register-club");
+              router.push("/my");
             }}
           >
             목록으로 돌아가기
