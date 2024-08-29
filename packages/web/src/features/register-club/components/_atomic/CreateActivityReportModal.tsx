@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 
 import { ApiAct007RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
+import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 
@@ -14,7 +15,6 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { mockParticipantData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
 import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
-import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 import usePostActivityReportForNewClub from "@sparcs-clubs/web/features/register-club/services/usePostActivityReportForNewClub";
 
 interface CreateActivityReportModalProps {
@@ -91,17 +91,19 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
                     label="활동 분류"
                     items={[
                       {
-                        value: ActivityTypeEnum.FitInside.toString(),
+                        value:
+                          ActivityTypeEnum.matchedInternalActivity.toString(),
                         label: "동아리 성격에 합치하는 내부 활동",
                         selectable: true,
                       },
                       {
-                        value: ActivityTypeEnum.FitOutside.toString(),
+                        value:
+                          ActivityTypeEnum.matchedExternalActivity.toString(),
                         label: "동아리 성격에 합치하는 외부 활동",
                         selectable: true,
                       },
                       {
-                        value: ActivityTypeEnum.NotFit.toString(),
+                        value: ActivityTypeEnum.notMatchedActivity.toString(),
                         label: "동아리 성격에 합치하지 않는 활동",
                         selectable: true,
                       },
