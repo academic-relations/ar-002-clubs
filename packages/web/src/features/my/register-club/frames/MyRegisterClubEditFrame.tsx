@@ -57,9 +57,12 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
   });
 
   const {
+    watch,
     handleSubmit,
     formState: { isValid },
   } = formCtx;
+
+  const clubId = watch("clubId");
 
   const { mutate, isSuccess } = usePutClubRegistration({
     applyId,
@@ -135,8 +138,8 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
               <BasicInformFrame type={type} />
             )}
             <AdvancedInformFrame type={type} />
-            {type === RegistrationTypeEnum.Promotional && (
-              <ActivityReportFrame />
+            {type === RegistrationTypeEnum.Promotional && clubId && (
+              <ActivityReportFrame clubId={clubId} />
             )}
             <ClubRulesFrame
               isProvisional={type === RegistrationTypeEnum.NewProvisional}

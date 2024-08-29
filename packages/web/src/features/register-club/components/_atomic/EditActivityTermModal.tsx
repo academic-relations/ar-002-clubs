@@ -32,18 +32,6 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
   const [hasErrorList, setHasErrorList] = useState<boolean[]>(
     Array.from({ length: initialData.length }, () => false),
   );
-  const [isSmallView, setIsSmallView] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsSmallView(window.innerWidth <= 600);
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const addRow = () => {
     setActivityTermList(prevList => [
@@ -52,6 +40,10 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
     ]);
     setHasErrorList(prevList => [...prevList, false]);
   };
+
+  useEffect(() => {
+    console.log(activityTermList);
+  }, [activityTermList]);
 
   const handleDelete = (index: number) => {
     const updatedTerms = activityTermList.filter((_, i) => i !== index);
@@ -103,7 +95,7 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
         <FlexWrapper
           direction="column"
           gap={12}
-          style={{ minWidth: isSmallView ? "320px" : "545px" }}
+          style={{ width: "min(600px, 80vw)" }}
         >
           {activityTermList.map((term, index) => (
             <ActivityTermRow

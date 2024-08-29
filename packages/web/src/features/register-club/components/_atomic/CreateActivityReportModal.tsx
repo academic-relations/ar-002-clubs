@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { ApiAct007RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
 import { FormProvider, useForm } from "react-hook-form";
@@ -17,7 +17,10 @@ import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-r
 import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 import usePostActivityReportForNewClub from "@sparcs-clubs/web/features/register-club/services/usePostActivityReportForNewClub";
 
+import SelectActivityTerm from "../SelectActivityTerm";
+
 interface CreateActivityReportModalProps {
+  clubId: number;
   isOpen: boolean;
   close: VoidFunction;
 }
@@ -34,6 +37,7 @@ const ButtonWrapper = styled.div`
 
 // TODO. 활동기간 리스트 추가, 파일업로드 추가
 const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
+  clubId,
   isOpen,
   close,
 }) => {
@@ -46,12 +50,26 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
     formState: { isValid },
   } = formCtx;
 
+  /* TODO: (@dora) refactor !!!!! */
+  type FileIdType = "evidenceFiles";
+  const updateMultipleFile = (
+    fileId: FileIdType,
+    data: { fileId: string }[],
+  ) => {
+    setValue(fileId, data, { shouldValidate: true });
+  };
+
+  useEffect(() => {
+    if (clubId) setValue("clubId", clubId, { shouldValidate: true });
+  }, [clubId]);
+
   const { mutate } = usePostActivityReportForNewClub();
 
   const [participants, setParticipants] = useState<{ studentId: number }[]>([]);
 
   const submitHandler = useCallback(
     (data: ApiAct007RequestBody) => {
+      console.log("submit", { ...data, participants });
       mutate(
         { body: { ...data, participants } },
         {
@@ -91,17 +109,17 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
                     label="활동 분류"
                     items={[
                       {
-                        value: ActivityTypeEnum.FitInside.toString(),
+                        value: ActivityTypeEnum.FitInside,
                         label: "동아리 성격에 합치하는 내부 활동",
                         selectable: true,
                       },
                       {
-                        value: ActivityTypeEnum.FitOutside.toString(),
+                        value: ActivityTypeEnum.FitOutside,
                         label: "동아리 성격에 합치하는 외부 활동",
                         selectable: true,
                       },
                       {
-                        value: ActivityTypeEnum.NotFit.toString(),
+                        value: ActivityTypeEnum.NotFit,
                         label: "동아리 성격에 합치하지 않는 활동",
                         selectable: true,
                       },
@@ -110,7 +128,28 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
                 )}
               />
 
-              {/* <DateRangeInput label="활동 기간" /> */}
+              <FormController
+                name="activityTypeEnumId"
+                required
+                control={control}
+                renderItem={() => (
+                  <SelectActivityTerm
+                    onChange={terms => {
+                      const processedTerms = terms.map(term => ({
+                        startTerm: new Date(
+                          `${term.startDate.replace(".", "-")}-01`,
+                        ),
+                        endTerm: new Date(
+                          `${term.endDate.replace(".", "-")}-01`,
+                        ),
+                      }));
+                      setValue("durations", processedTerms, {
+                        shouldValidate: true,
+                      });
+                    }}
+                  />
+                )}
+              />
             </HorizontalPlacer>
             <FormController
               name="location"
@@ -178,15 +217,23 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
                   />
                 )}
               />
-              <FileUpload
-                multiple
-                onChange={data => {
-                  setValue(
-                    "evidenceFiles",
-                    data.map(file => ({ fileId: file })),
-                    { shouldValidate: true },
-                  );
-                }}
+              <FormController
+                name="evidenceFiles"
+                control={control}
+                renderItem={props => (
+                  <FileUpload
+                    {...props}
+                    multiple
+                    onChange={data => {
+                      updateMultipleFile(
+                        "evidenceFiles",
+                        data.map(d => ({
+                          fileId: d,
+                        })),
+                      );
+                    }}
+                  />
+                )}
               />
             </FlexWrapper>
             <ButtonWrapper>

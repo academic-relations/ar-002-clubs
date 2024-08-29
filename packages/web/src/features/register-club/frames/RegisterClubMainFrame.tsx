@@ -42,9 +42,12 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   });
 
   const {
+    watch,
     handleSubmit,
     formState: { isValid },
   } = formCtx;
+
+  const clubId = watch("clubId");
 
   const { mutate: registerClubApi, isSuccess, isError } = useRegisterClub();
 
@@ -143,7 +146,9 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
             <BasicInformFrame type={type} />
           )}
           <AdvancedInformFrame type={type} />
-          {type === RegistrationTypeEnum.Promotional && <ActivityReportFrame />}
+          {type === RegistrationTypeEnum.Promotional && clubId && (
+            <ActivityReportFrame clubId={clubId} />
+          )}
           <ClubRulesFrame
             isProvisional={type === RegistrationTypeEnum.NewProvisional}
             isAgreed={isAgreed}
