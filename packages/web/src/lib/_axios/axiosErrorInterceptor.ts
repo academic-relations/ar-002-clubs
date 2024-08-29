@@ -1,5 +1,10 @@
 import { AxiosError, AxiosResponse, HttpStatusCode } from "axios";
 
+import {
+  removeLocalstorageItem,
+  setLocalstorageItem,
+} from "@sparcs-clubs/web/utils/localstorage";
+
 import postRefresh from "./postRefresh";
 
 const errorInterceptor = {
@@ -12,12 +17,12 @@ const errorInterceptor = {
         try {
           const response = await postRefresh();
           // TODO: 로그인시 기본 프로필 선택
-          localStorage.setItem(
+          setLocalstorageItem(
             "responseToken",
             JSON.stringify(response.accessToken),
           );
           if (response.accessToken) {
-            localStorage.setItem(
+            setLocalstorageItem(
               "accessToken",
               response.accessToken.professor ??
                 response.accessToken.doctor ??
@@ -31,8 +36,8 @@ const errorInterceptor = {
           }
         } catch (refreshError) {
           console.error("Login failed", refreshError);
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("responseToken");
+          removeLocalstorageItem("accessToken");
+          removeLocalstorageItem("responseToken");
           window.location.href = "/";
         }
         return Promise.reject(error);
