@@ -274,7 +274,7 @@ export class ClubRegistrationController {
     @GetProfessor() user: GetProfessor,
   ): Promise<ApiReg021ResponseOk> {
     logger.debug(
-      `[getProfessorRegistrationsMemberRegistrationsBrief] log-inned by name: ${user.name} professorId: ${user.id}`,
+      `[getProfessorRegistrationsClubRegistrationsBrief] log-inned by name: ${user.name} professorId: ${user.id}`,
     );
 
     const result =

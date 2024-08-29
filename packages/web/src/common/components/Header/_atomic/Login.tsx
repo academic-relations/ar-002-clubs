@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 
 import { jwtDecode } from "jwt-decode";
-
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";

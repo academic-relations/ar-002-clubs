@@ -72,7 +72,18 @@ export class ClubRegistrationService {
       body.clubId,
     );
     if (registrationList.length !== 0) {
-      throw new HttpException("request already exists", HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        "your club request already exists",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const myRegistrationList =
+      await this.clubRegistrationRepository.findByStudentId(studentId);
+    if (myRegistrationList.length !== 0) {
+      throw new HttpException(
+        "your request already exists",
+        HttpStatus.BAD_REQUEST,
+      );
     }
     logger.debug(
       `[postRegistration] registration existence checked. ${registrationList}`,
@@ -350,6 +361,22 @@ export class ClubRegistrationService {
         studentId,
         applyId,
       );
+    if (result.externalInstructionFile) {
+      result.externalInstructionFile.url =
+        await this.filePublicService.getFileUrl(
+          result.externalInstructionFile.id,
+        );
+    }
+    if (result.clubRuleFile) {
+      result.clubRuleFile.url = await this.filePublicService.getFileUrl(
+        result.clubRuleFile.id,
+      );
+    }
+    if (result.activityPlanFile) {
+      result.activityPlanFile.url = await this.filePublicService.getFileUrl(
+        result.activityPlanFile.id,
+      );
+    }
     return result;
   }
 
@@ -393,6 +420,22 @@ export class ClubRegistrationService {
       await this.clubRegistrationRepository.getExecutiveRegistrationsClubRegistration(
         applyId,
       );
+    if (result.externalInstructionFile) {
+      result.externalInstructionFile.url =
+        await this.filePublicService.getFileUrl(
+          result.externalInstructionFile.id,
+        );
+    }
+    if (result.clubRuleFile) {
+      result.clubRuleFile.url = await this.filePublicService.getFileUrl(
+        result.clubRuleFile.id,
+      );
+    }
+    if (result.activityPlanFile) {
+      result.activityPlanFile.url = await this.filePublicService.getFileUrl(
+        result.activityPlanFile.id,
+      );
+    }
     return result;
   }
 
@@ -454,6 +497,7 @@ export class ClubRegistrationService {
     logger.debug(registrations);
     return {
       items: registrations.map(e => ({
+        id: e.registration.id,
         clubId: e.registration.clubId,
         registrationStatusEnumId:
           e.registration.registrationApplicationStatusEnumId,

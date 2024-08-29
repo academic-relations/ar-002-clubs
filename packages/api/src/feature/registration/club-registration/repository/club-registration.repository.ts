@@ -86,6 +86,20 @@ export class ClubRegistrationRepository {
     return clubs;
   }
 
+  async findByStudentId(studentId: number) {
+    const clubs = await this.db
+      .select()
+      .from(Registration)
+      .where(
+        and(
+          eq(Registration.studentId, studentId),
+          isNull(Registration.deletedAt),
+        ),
+      );
+
+    return clubs;
+  }
+
   async createRegistration(
     studentId: number,
     body: ApiReg001RequestBody,
@@ -385,8 +399,8 @@ export class ClubRegistrationRepository {
           representative: {
             studentNumber: representative.studentNumber,
             name: representative.name,
+            phoneNumber: Registration.phoneNumber,
           },
-          phoneNumber: Registration.phoneNumber,
           foundedAt: Registration.foundedAt,
           divisionId: Registration.divisionId,
           activityFieldKr: Registration.activityFieldKr,
@@ -399,6 +413,21 @@ export class ClubRegistrationRepository {
           divisionConsistency: Registration.divisionConsistency,
           foundationPurpose: Registration.foundationPurpose,
           activityPlan: Registration.activityPlan,
+          acitivityPlanFile: {
+            id: Registration.registrationActivityPlanFileId,
+            name: File1.name,
+            url: null,
+          },
+          clubRuleFile: {
+            id: Registration.registrationClubRuleFileId,
+            name: File2.name,
+            url: null,
+          },
+          externalInstructionFile: {
+            id: Registration.registrationExternalInstructionFileId,
+            name: File3.name,
+            url: null,
+          },
           activityPlanFileId: Registration.registrationActivityPlanFileId,
           activityPlanFileName: File1.name,
           clubRuleFileId: Registration.registrationClubRuleFileId,
@@ -434,6 +463,13 @@ export class ClubRegistrationRepository {
           and(
             eq(Registration.registrationExternalInstructionFileId, File3.id),
             isNull(File3.deletedAt),
+          ),
+        )
+        .leftJoin(
+          Division,
+          and(
+            eq(Registration.divisionId, Division.id),
+            isNull(Division.deletedAt),
           ),
         )
         .where(
@@ -479,12 +515,32 @@ export class ClubRegistrationRepository {
       .select({
         id: Registration.id,
         registrationTypeEnumId: Registration.registrationApplicationTypeEnumId,
+        divisionName: Division.name,
+        clubNameKr: Registration.clubNameKr,
+        clubId: Registration.clubId,
+        activityFieldKr: Registration.activityFieldKr,
+        activityFieldEn: Registration.activityFieldEn,
+        professorName: Professor.name,
         registrationStatusEnumId:
           Registration.registrationApplicationStatusEnumId,
         krName: Registration.clubNameKr,
         enName: Registration.clubNameEn,
       })
       .from(Registration)
+      .leftJoin(
+        Division,
+        and(
+          eq(Registration.divisionId, Division.id),
+          isNull(Division.deletedAt),
+        ),
+      )
+      .leftJoin(
+        Professor,
+        and(
+          eq(Registration.professorId, Professor.id),
+          isNull(Professor.deletedAt),
+        ),
+      )
       .where(
         and(
           eq(Registration.studentId, studentId),
@@ -532,6 +588,7 @@ export class ClubRegistrationRepository {
           isNull(Professor.deletedAt),
         ),
       )
+      .where(isNull(Registration.deletedAt))
       .orderBy(desc(Registration.createdAt))
       .limit(itemCount)
       .offset(startOffset);
@@ -603,8 +660,8 @@ export class ClubRegistrationRepository {
           representative: {
             studentNumber: representative.studentNumber,
             name: representative.name,
+            phoneNumber: Registration.phoneNumber,
           },
-          phoneNumber: Registration.phoneNumber,
           foundedAt: Registration.foundedAt,
           divisionId: Registration.divisionId,
           activityFieldKr: Registration.activityFieldKr,
@@ -617,13 +674,21 @@ export class ClubRegistrationRepository {
           divisionConsistency: Registration.divisionConsistency,
           foundationPurpose: Registration.foundationPurpose,
           activityPlan: Registration.activityPlan,
-          activityPlanFileId: Registration.registrationActivityPlanFileId,
-          activityPlanFileName: File1.name,
-          clubRuleFileId: Registration.registrationClubRuleFileId,
-          clubRuleFileName: File2.name,
-          externalInstructionFileId:
-            Registration.registrationExternalInstructionFileId,
-          externalInstructionFileName: File3.name,
+          acitivityPlanFile: {
+            id: Registration.registrationActivityPlanFileId,
+            name: File1.name,
+            url: null,
+          },
+          clubRuleFile: {
+            id: Registration.registrationClubRuleFileId,
+            name: File2.name,
+            url: null,
+          },
+          externalInstructionFile: {
+            id: Registration.registrationExternalInstructionFileId,
+            name: File3.name,
+            url: null,
+          },
           isProfessorSigned: Registration.professorApprovedAt,
           updatedAt: Registration.updatedAt,
         })
@@ -652,6 +717,13 @@ export class ClubRegistrationRepository {
           and(
             eq(Registration.registrationExternalInstructionFileId, File3.id),
             isNull(File3.deletedAt),
+          ),
+        )
+        .leftJoin(
+          Division,
+          and(
+            eq(Registration.divisionId, Division.id),
+            isNull(Division.deletedAt),
           ),
         )
         .where(

@@ -18,13 +18,20 @@ import apiClb005, {
   ApiClb005RequestParam,
   ApiClb005ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb005";
+import apiClb016, {
+  ApiClb016ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb016";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import {
+  Professor,
   Public,
   Student,
 } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
-import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
+import {
+  GetProfessor,
+  GetStudent,
+} from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
 import { ClubService } from "../service/club.service";
 
@@ -89,6 +96,16 @@ export class ClubController {
       param,
       body,
     );
+    return result;
+  }
+
+  @Professor()
+  @Get("professor/clubs/my")
+  @UsePipes(new ZodPipe(apiClb016))
+  async getProfessorClubsMy(
+    @GetProfessor() user: GetProfessor,
+  ): Promise<ApiClb016ResponseOk> {
+    const result = await this.clubService.getProfessorClubsMy(user.professorId);
     return result;
   }
 }

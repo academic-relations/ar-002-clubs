@@ -10,10 +10,13 @@ import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.
 
 /**
  * @version v0.1
- * @description 동아리별 가입 신청의 세부 상태를 확인합니다.
+ * @description  동아리별 가입 신청의 간략한 상태를 확인합니다.
+ * - 교수로 로그인되어 있어야 합니다.
+ * - 자신을 지도교수로 신청한 동아리 등록 신청만을 조회합니다.
+ * - 분과 > 구분 > 동아리 이름 우선순위로 정렬한 목록을 리턴합니다.
  */
 
-const url = () => `/professor/registrations/member-registrations/brief`;
+const url = () => `/professor/registrations/club-registrations/brief`;
 const method = "GET";
 
 const requestParam = z.object({});
@@ -26,6 +29,7 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     items: z.array(
       z.object({
+        id: z.coerce.number().int().min(1),
         clubId: z.coerce.number().int().min(1),
         registrationStatusEnumId: z.nativeEnum(RegistrationStatusEnum),
         division: z.object({

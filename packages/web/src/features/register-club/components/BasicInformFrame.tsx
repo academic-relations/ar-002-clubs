@@ -108,7 +108,11 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
               )}
             />
           </FlexWrapper>
-          <ClubNameField clubList={clubList?.clubs} editMode={editMode} />
+          <ClubNameField
+            type={type}
+            clubList={clubList?.clubs}
+            editMode={editMode}
+          />
           <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
             <YearSelect />
             <DivisionSelect isRenewal={isRenewal} />

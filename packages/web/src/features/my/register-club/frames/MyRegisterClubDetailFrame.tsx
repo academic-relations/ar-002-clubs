@@ -11,12 +11,17 @@ import styled from "styled-components";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import { fromUUID } from "@sparcs-clubs/web/common/components/File/attachment";
+import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import {
   ListContainer,
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
+import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
+import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
@@ -25,9 +30,22 @@ import {
 } from "@sparcs-clubs/web/constants/tableTagList";
 import MyRegisterClubAcfTable from "@sparcs-clubs/web/features/my/register-club/components/MyRegisterClubAcfTable";
 import { mockMyClubRegisterAcf } from "@sparcs-clubs/web/features/my/services/_mock/mockMyClubRegisterDetail";
-
 import useGetClubRegistration from "@sparcs-clubs/web/features/my/services/useGetClubRegistration";
+import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
+const FilePreviewContainerWrapper = styled(FlexWrapper)`
+  padding-left: 24px;
+  align-self: stretch;
+`;
+
+const FilePreviewContainer: React.FC<React.PropsWithChildren> = ({
+  children = null,
+}) => (
+  <FilePreviewContainerWrapper direction="column" gap={12}>
+    {children}
+  </FilePreviewContainerWrapper>
+);
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -85,7 +103,30 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
           enableLast
         />
         <Card outline gap={20}>
-          {/* TODO: Add Progress */}
+          <ProgressStatus
+            labels={["신청 완료", "동아리 연합회 신청 반려"]}
+            progress={[
+              {
+                status: ProgressCheckSectionStatusEnum.Approved,
+                date: new Date(),
+              },
+              {
+                status: ProgressCheckSectionStatusEnum.Canceled,
+                date: new Date(),
+              },
+            ]}
+            optional={
+              <RejectReasonToast
+                title="반려 사유"
+                reasons={[
+                  {
+                    reason: "대충 어떤 반려 사유 어쩌고",
+                    datetime: new Date(),
+                  },
+                ]}
+              />
+            }
+          />
           <FlexWrapper direction="column" gap={16}>
             <TagWrapper>
               <Typography fw="MEDIUM" fs={16} lh={20}>
@@ -115,9 +156,11 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
               <ListItem>
                 대표자 이름: {clubDetail?.representative?.name}
               </ListItem>
-              <ListItem>대표자 전화번호: {clubDetail?.phoneNumber}</ListItem>
               <ListItem>
-                설립 연도: {clubDetail?.foundedAt.getFullYear()}
+                대표자 전화번호: {clubDetail?.representative?.phoneNumber}
+              </ListItem>
+              <ListItem>
+                설립 연도: {clubDetail && getActualYear(clubDetail?.foundedAt)}
               </ListItem>
               <ListItem>
                 소속 분과:{" "}
@@ -159,10 +202,18 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
                 RegistrationTypeEnum.Promotional && (
                 <ListItem>동아리 회칙</ListItem>
               )}
-
+              {/* TODO: File Preview 잘 됐는지 확인 필요 */}
               <ListItem>(선택) 외부 강사 지도 계획서</ListItem>
+              {clubDetail?.externalInstructionFile?.id && (
+                <FilePreviewContainer>
+                  <ThumbnailPreviewList
+                    fileList={[
+                      fromUUID(clubDetail.externalInstructionFile?.id),
+                    ]}
+                  />
+                </FilePreviewContainer>
+              )}
             </ListContainer>
-            {/* TODO: Add File Preview */}
             {clubDetail?.registrationTypeEnumId !==
               RegistrationTypeEnum.Renewal && (
               <FlexWrapper direction="column" gap={16}>
