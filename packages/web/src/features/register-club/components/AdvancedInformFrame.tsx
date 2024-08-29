@@ -27,7 +27,7 @@ const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({ type }) => {
     | "externalInstructionFileId";
   const updateSingleFile = (fileId: FileIdType, data: string[]) => {
     // console.log("updateFile", fileId, data);
-    setValue(fileId, data[0]);
+    setValue(fileId, data[0], { shouldValidate: true });
   };
 
   return (

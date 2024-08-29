@@ -44,8 +44,8 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({
     if (clubList.length > 0 && !isCheckedClubName) {
       resetField("clubNameKr", { keepError: false });
       resetField("clubNameEn", { keepError: false });
-      setValue("clubNameKr", "");
-      setValue("clubNameEn", "");
+      setValue("clubNameKr", "", { shouldValidate: true });
+      setValue("clubNameEn", "", { shouldValidate: true });
     }
   }, [clubList.length, isCheckedClubName, resetField, setValue]);
 

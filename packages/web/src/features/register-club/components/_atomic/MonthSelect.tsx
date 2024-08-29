@@ -30,7 +30,7 @@ const MonthSelect: React.FC = () => {
     const month = parseInt(_value);
     const year = foundedAt ? getActualYear(foundedAt) : 2020;
     const date = new Date(`${year}-${month.toString().padStart(2, "0")}-01`);
-    setValue("foundedAt", date);
+    setValue("foundedAt", date, { shouldValidate: true });
     onChangeValue(_value);
   };
 

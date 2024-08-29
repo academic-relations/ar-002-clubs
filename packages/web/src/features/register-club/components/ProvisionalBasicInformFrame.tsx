@@ -36,7 +36,7 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
 
   const updateRegistrationType = (type: RegistrationTypeEnum) => {
     setRegistrationType(type);
-    setValue("registrationTypeEnumId", type);
+    setValue("registrationTypeEnumId", type, { shouldValidate: true });
   };
 
   const { data, isLoading, isError } = useGetClubsForReProvisional();
@@ -51,7 +51,7 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
       resetField("professor.email");
       resetField("professor.name");
       resetField("professor.professorEnumId");
-      setValue("professor", undefined);
+      setValue("professor", undefined, { shouldValidate: true });
     }
   }, [resetField, setValue, isCheckedProfessor]);
 
