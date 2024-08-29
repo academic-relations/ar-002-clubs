@@ -22,7 +22,7 @@ const useGetClubsForRenewal = () =>
 
       switch (status) {
         case 200:
-          return apiReg002.responseBodyMap[200].parse(data);
+          return data;
         default:
           throw new UnexpectedAPIResponseError();
       }

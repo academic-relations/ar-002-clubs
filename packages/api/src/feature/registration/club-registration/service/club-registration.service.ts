@@ -194,14 +194,14 @@ export class ClubRegistrationService {
     clubId: number | undefined,
     registrationTypeEnumId: number,
   ) {
-    if (false) {
-      // // 가동아리 신규 신청 시 clubId는 undefined여야 함
-      // if (clubId !== undefined) {
-      //   throw new HttpException(
-      //     "[postRegistration] invalid club id. club id should be undefined",
-      //     HttpStatus.BAD_REQUEST,
-      //   );
-      // }
+    if (registrationTypeEnumId === RegistrationTypeEnum.NewProvisional) {
+      // 가동아리 신규 신청 시 clubId는 undefined여야 함
+      if (clubId !== undefined) {
+        throw new HttpException(
+          "[postRegistration] invalid club id. club id should be undefined",
+          HttpStatus.BAD_REQUEST,
+        );
+      }
     } else {
       // // 정동아리 재등록/신규 등록, 가동아리 재등록 신청 시 clubId가 정의되어 있어야 함
       // if (clubId === undefined) {
@@ -583,8 +583,10 @@ export class ClubRegistrationService {
       registrationStatusEnumId:
         result.registration.registrationApplicationStatusEnumId,
       clubId: result.registration.clubId,
-      clubNameKr: result.registration.clubNameKr,
-      clubNameEn: result.registration.clubNameEn,
+      clubNameKr: result.club.name_kr,
+      clubNameEn: result.club.name_en,
+      newClubNameKr: result.registration.clubNameKr,
+      newClubNameEn: result.registration.clubNameEn,
       representative: {
         studentNumber: result.student.number,
         name: result.student.name,

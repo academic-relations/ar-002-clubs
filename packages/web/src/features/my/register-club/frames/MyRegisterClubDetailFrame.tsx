@@ -5,18 +5,20 @@ import React, { useMemo } from "react";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { useParams, useRouter } from "next/navigation";
 
+import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import { fromUUID } from "@sparcs-clubs/web/common/components/File/attachment";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import {
   ListContainer,
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
@@ -28,6 +30,7 @@ import {
 } from "@sparcs-clubs/web/constants/tableTagList";
 import MyRegisterClubAcfTable from "@sparcs-clubs/web/features/my/register-club/components/MyRegisterClubAcfTable";
 import { mockMyClubRegisterAcf } from "@sparcs-clubs/web/features/my/services/_mock/mockMyClubRegisterDetail";
+import { deleteMyClubRegistration } from "@sparcs-clubs/web/features/my/services/deleteMyClubRegistration";
 import useGetClubRegistration from "@sparcs-clubs/web/features/my/services/useGetClubRegistration";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
 import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
@@ -39,7 +42,7 @@ const FilePreviewContainerWrapper = styled(FlexWrapper)`
   align-self: stretch;
 `;
 
-const FilePreviewContainer: React.FC<React.PropsWithChildren> = ({
+export const FilePreviewContainer: React.FC<React.PropsWithChildren> = ({
   children = null,
 }) => (
   <FilePreviewContainerWrapper direction="column" gap={12}>
@@ -74,6 +77,63 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
     isError,
   } = useGetClubRegistration({ applyId: +id });
 
+  const deleteHandler = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <CancellableModalContent
+          onConfirm={async () => {
+            await deleteMyClubRegistration({ applyId: +id });
+            close();
+            router.push("/my");
+          }}
+          onClose={close}
+          confirmButtonText="삭제"
+        >
+          동아리 등록 신청을 삭제하면 복구할 수 없습니다.
+          <br />
+          삭제하시겠습니까?
+        </CancellableModalContent>
+      </Modal>
+    ));
+  };
+
+  const editHandler = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <CancellableModalContent
+          onConfirm={() => {
+            router.push(`/my/register-club/${clubDetail!.id}/edit`);
+            close();
+          }}
+          onClose={close}
+          confirmButtonText="수정"
+        >
+          동아리 등록 신청을 수정하면 신청 상태 및 지도교수 승인 여부가 모두
+          초기화됩니다.
+          <br />
+          수정하시겠습니까?
+        </CancellableModalContent>
+      </Modal>
+    ));
+  };
+
+  const professorApproveHandler = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <CancellableModalContent
+          onConfirm={() => {
+            // TODO: reg023 구현 후 연결
+            close();
+          }}
+          onClose={close}
+          confirmButtonText="승인"
+        >
+          동아리 등록을 승인하시겠습니까?
+        </CancellableModalContent>
+      </Modal>
+    ));
+  };
+
   return (
     <AsyncBoundary
       isLoading={isLoading}
@@ -89,7 +149,6 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
             },
           ]}
           title="동아리 등록"
-          enableLast
         />
         <Card outline gap={20}>
           {clubDetail && (
@@ -145,7 +204,24 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
               기본 정보
             </Typography>
             <ListContainer>
-              <ListItem>동아리: {clubDetail?.clubNameKr}</ListItem>
+              <ListItem>
+                동아리명 (국문):{" "}
+                {clubDetail?.clubNameKr ?? clubDetail?.newClubNameKr}
+              </ListItem>
+              <ListItem>
+                동아리명 (영문):{" "}
+                {clubDetail?.clubNameEn ?? clubDetail?.newClubNameEn}
+              </ListItem>
+              {clubDetail?.clubNameKr && (
+                <ListItem>
+                  신규 동아리명 (국문): {clubDetail?.newClubNameKr}
+                </ListItem>
+              )}
+              {clubDetail?.clubNameEn && (
+                <ListItem>
+                  신규 동아리명 (영문): {clubDetail?.newClubNameEn}
+                </ListItem>
+              )}
               <ListItem>
                 대표자 이름: {clubDetail?.representative?.name}
               </ListItem>
@@ -167,17 +243,23 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
                 활동 분야 (영문): {clubDetail?.activityFieldEn}
               </ListItem>
             </ListContainer>
-            <Typography fw="MEDIUM" fs={16} lh={20}>
-              지도교수 정보
-            </Typography>
-            <ListContainer>
-              <ListItem>성함: {clubDetail?.professor?.name}</ListItem>
-              <ListItem>
-                직급:{" "}
-                {professorEnumToText(clubDetail?.professor?.professorEnumId)}
-              </ListItem>
-              <ListItem>이메일: {clubDetail?.professor?.email}</ListItem>
-            </ListContainer>
+            {clubDetail?.professor && (
+              <>
+                <Typography fw="MEDIUM" fs={16} lh={20}>
+                  지도교수 정보
+                </Typography>
+                <ListContainer>
+                  <ListItem>성함: {clubDetail?.professor?.name}</ListItem>
+                  <ListItem>
+                    직급:{" "}
+                    {professorEnumToText(
+                      clubDetail?.professor?.professorEnumId,
+                    )}
+                  </ListItem>
+                  <ListItem>이메일: {clubDetail?.professor?.email}</ListItem>
+                </ListContainer>
+              </>
+            )}
             <Typography fw="MEDIUM" fs={16} lh={20}>
               동아리 정보
             </Typography>
@@ -187,24 +269,54 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
               </ListItem>
               <ListItem>설립 목적: {clubDetail?.foundationPurpose}</ListItem>
               <ListItem>주요 활동 계획: {clubDetail?.activityPlan}</ListItem>
-              {clubDetail?.registrationTypeEnumId ===
-                RegistrationTypeEnum.Promotional && (
-                <ListItem>활동계획서</ListItem>
+              {clubDetail?.activityPlanFile && (
+                <>
+                  <ListItem>활동계획서</ListItem>
+                  {clubDetail?.activityPlanFile && (
+                    <FilePreviewContainer>
+                      <ThumbnailPreviewList
+                        fileList={[
+                          {
+                            src: clubDetail?.activityPlanFile?.url,
+                            name: clubDetail?.activityPlanFile?.name,
+                          },
+                        ]}
+                      />
+                    </FilePreviewContainer>
+                  )}
+                </>
               )}
-              {clubDetail?.registrationTypeEnumId ===
-                RegistrationTypeEnum.Promotional && (
-                <ListItem>동아리 회칙</ListItem>
+              {clubDetail?.clubRuleFile && (
+                <>
+                  <ListItem>동아리 회칙</ListItem>
+                  {clubDetail?.clubRuleFile && (
+                    <FilePreviewContainer>
+                      <ThumbnailPreviewList
+                        fileList={[
+                          {
+                            src: clubDetail?.clubRuleFile?.url,
+                            name: clubDetail?.clubRuleFile?.name,
+                          },
+                        ]}
+                      />
+                    </FilePreviewContainer>
+                  )}
+                </>
               )}
-              {/* TODO: File Preview 잘 됐는지 확인 필요 */}
-              <ListItem>(선택) 외부 강사 지도 계획서</ListItem>
               {clubDetail?.externalInstructionFile?.id && (
-                <FilePreviewContainer>
-                  <ThumbnailPreviewList
-                    fileList={[
-                      fromUUID(clubDetail.externalInstructionFile?.id),
-                    ]}
-                  />
-                </FilePreviewContainer>
+                <>
+                  <ListItem>(선택) 외부 강사 지도 계획서</ListItem>
+                  <FilePreviewContainer>
+                    <ThumbnailPreviewList
+                      fileList={[
+                        {
+                          src: clubDetail.externalInstructionFile.url,
+                          name: clubDetail.externalInstructionFile.name,
+                        },
+                      ]}
+                    />
+                  </FilePreviewContainer>
+                </>
               )}
             </ListContainer>
             {clubDetail?.registrationTypeEnumId !==
@@ -218,16 +330,18 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
                 />
               </FlexWrapper>
             )}
-            <TagWrapper>
-              <Typography fw="MEDIUM" fs={16} lh={20}>
-                지도교수 승인
-              </Typography>
-              {clubDetail?.isProfessorSigned ? (
-                <Tag color="GREEN">승인</Tag>
-              ) : (
-                <Tag color="GRAY">대기</Tag>
-              )}
-            </TagWrapper>
+            {clubDetail?.professor && (
+              <TagWrapper>
+                <Typography fw="MEDIUM" fs={16} lh={20}>
+                  지도교수 승인
+                </Typography>
+                {clubDetail?.isProfessorSigned ? (
+                  <Tag color="GREEN">승인</Tag>
+                ) : (
+                  <Tag color="GRAY">대기</Tag>
+                )}
+              </TagWrapper>
+            )}
           </FlexWrapper>
         </Card>
 
@@ -235,28 +349,26 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
           <Button
             style={{ width: "max-content" }}
             onClick={() => {
-              router.push("/my/register-club");
+              router.push("/my");
             }}
           >
             목록으로 돌아가기
           </Button>
           {profile !== "professor" ? (
             <FlexWrapper direction="row" gap={10}>
-              <Button style={{ width: "max-content" }} onClick={() => {}}>
+              <Button style={{ width: "max-content" }} onClick={deleteHandler}>
                 삭제
               </Button>
-              <Button
-                style={{ width: "max-content" }}
-                onClick={() => {
-                  router.push(`/my/register-club/${clubDetail!.id}/edit`);
-                }}
-              >
+              <Button style={{ width: "max-content" }} onClick={editHandler}>
                 수정
               </Button>
             </FlexWrapper>
           ) : (
             <FlexWrapper direction="row" gap={10}>
-              <Button style={{ width: "max-content" }} onClick={() => {}}>
+              <Button
+                style={{ width: "max-content" }}
+                onClick={professorApproveHandler}
+              >
                 승인
               </Button>
             </FlexWrapper>

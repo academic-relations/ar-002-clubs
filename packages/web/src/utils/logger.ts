@@ -1,18 +1,18 @@
-import log from "loglevel";
+import logger from "loglevel";
 
 const initialize = () => {
-  switch (process.env.NEXT_PUBLIC_ENVIRONMENT) {
+  switch (process.env.NEXT_PUBLIC_APP_MODE) {
     case "mock":
     case "swagger":
     case "stage":
     case "dev":
-      return log.setLevel(log.levels.TRACE);
-    case "prod":
+      return logger.setLevel(logger.levels.DEBUG);
+    case "production":
     default:
-      return log.setLevel(log.levels.SILENT);
+      return logger.setLevel(logger.levels.SILENT);
   }
 };
 
 initialize();
 
-export default log;
+export default logger;

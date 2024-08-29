@@ -22,7 +22,7 @@ const useGetClubsForPromotional = () =>
 
       switch (status) {
         case 200:
-          return apiReg003.responseBodyMap[200].parse(data);
+          return data;
         default:
           throw new UnexpectedAPIResponseError();
       }

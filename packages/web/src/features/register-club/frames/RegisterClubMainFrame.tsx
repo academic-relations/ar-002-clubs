@@ -1,12 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
-import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import {
+  RegistrationDeadlineEnum,
+  RegistrationTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
@@ -14,6 +18,8 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
+import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import ActivityReportFrame from "../components/ActivityReportFrame";
 import AdvancedInformFrame from "../components/AdvancedInformFrame";
@@ -36,6 +42,39 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
 }) => {
   const router = useRouter();
   const [isAgreed, setIsAgreed] = useState(false);
+
+  const {
+    data: termData,
+    isLoading: isLoadingTerm,
+    isError: isErrorTerm,
+  } = useGetRegistrationTerm();
+  // const [isRegistrationPeriod, setIsRegistrationPeriod] = useState<boolean>();
+  const [clubRegistrationPeriodEnd, setClubRegistrationPeriodEnd] =
+    useState<Date>(new Date());
+
+  useEffect(() => {
+    if (termData) {
+      const now = new Date();
+      const currentEvents = termData.events.filter(
+        event => now >= event.startTerm && now <= event.endTerm,
+      );
+      if (currentEvents.length === 0) {
+        // setIsRegistrationPeriod(false);
+        return;
+      }
+      const registrationEvent = currentEvents.filter(
+        event =>
+          event.registrationEventEnumId ===
+          RegistrationDeadlineEnum.ClubRegistrationApplication,
+      );
+      if (registrationEvent.length > 0) {
+        // setIsRegistrationPeriod(true);
+        setClubRegistrationPeriodEnd(registrationEvent[0].endTerm);
+      } else {
+        // setIsRegistrationPeriod(false);
+      }
+    }
+  }, [termData]);
 
   const formCtx = useForm<ApiReg001RequestBody>({
     mode: "all",
@@ -136,8 +175,12 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
             title={`동아리 ${title} 신청`}
             enableLast
           />
-          {/* TODO. 등록 기간, 신청마감 동적처리  */}
-          <Info text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
+          <AsyncBoundary isLoading={isLoadingTerm} isError={isErrorTerm}>
+            {/* TODO: 학기 동적처리  */}
+            <Info
+              text={`현재는 2024년 가을학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
+            />
+          </AsyncBoundary>
           {isProvisionalClub ? (
             <ProvisionalBasicInformFrame />
           ) : (
