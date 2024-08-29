@@ -27,6 +27,8 @@ import apiAct008, {
 import apiAct011 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
 import apiAct012 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct012";
 import apiAct013 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct013";
+import apiAct014 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct014";
+import apiAct015 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct015";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -72,6 +74,14 @@ import type {
   ApiAct013RequestQuery,
   ApiAct013ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct013";
+import type {
+  ApiAct014RequestParam,
+  ApiAct014ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct014";
+import type {
+  ApiAct015RequestParam,
+  ApiAct015ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct015";
 
 @Controller()
 export default class ActivityController {
@@ -219,6 +229,32 @@ export default class ActivityController {
       {
         query,
       },
+    );
+
+    return result;
+  }
+
+  @Executive()
+  @Get("/executive/activities/activity/:activityId")
+  @UsePipes(new ZodPipe(apiAct014))
+  async getExcutiveActivity(
+    @Param() param: ApiAct014RequestParam,
+  ): Promise<ApiAct014ResponseOk> {
+    const result = await this.activityService.getExecutiveActivity(
+      param.activityId,
+    );
+
+    return result;
+  }
+
+  @Professor()
+  @Get("/professor/activities/activity/:activityId")
+  @UsePipes(new ZodPipe(apiAct015))
+  async getProfessorActivity(
+    @Param() param: ApiAct015RequestParam,
+  ): Promise<ApiAct015ResponseOk> {
+    const result = await this.activityService.getProfessorActivity(
+      param.activityId,
     );
 
     return result;

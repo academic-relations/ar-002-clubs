@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
+import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
@@ -13,8 +14,10 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import WarningInfo from "@sparcs-clubs/web/common/components/WarningInfo";
+import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/my/services/getMyClubRegistration";
 import ClubButton from "@sparcs-clubs/web/features/register-club/components/_atomic/ClubButton";
+import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 const ClubButtonWrapper = styled.div`
   display: flex;
@@ -51,6 +54,39 @@ const RegisterClub = () => {
     [myClubRegistrationData],
   );
 
+  const {
+    data: termData,
+    isLoading: isLoadingTerm,
+    isError: isErrorTerm,
+  } = useGetRegistrationTerm();
+  const [isRegistrationPeriod, setIsRegistrationPeriod] = useState<boolean>();
+  const [clubRegistrationPeriodEnd, setClubRegistrationPeriodEnd] =
+    useState<Date>(new Date());
+
+  useEffect(() => {
+    if (termData) {
+      const now = new Date();
+      const currentEvents = termData.events.filter(
+        event => now >= event.startTerm && now <= event.endTerm,
+      );
+      if (currentEvents.length === 0) {
+        setIsRegistrationPeriod(false);
+        return;
+      }
+      const registrationEvent = currentEvents.filter(
+        event =>
+          event.registrationEventEnumId ===
+          RegistrationDeadlineEnum.ClubRegistrationApplication,
+      );
+      if (registrationEvent.length > 0) {
+        setIsRegistrationPeriod(true);
+        setClubRegistrationPeriodEnd(registrationEvent[0].endTerm);
+      } else {
+        setIsRegistrationPeriod(false);
+      }
+    }
+  }, [termData]);
+
   const router = useRouter();
   const onClick = () => {
     if (selectedType === RegistrationType.renewalRegistration)
@@ -83,7 +119,16 @@ const RegisterClub = () => {
             </Typography>
           </WarningInfo>
         )}
-        <Info text="현재는 2024년 봄학기 동아리 등록 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
+        <AsyncBoundary isLoading={isLoadingTerm} isError={isErrorTerm}>
+          {/* TODO: 학기 동적처리  */}
+          {isRegistrationPeriod ? (
+            <Info
+              text={`현재는 2024년 가을학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
+            />
+          ) : (
+            <Info text="현재는 동아리 등록 기간이 아닙니다" />
+          )}
+        </AsyncBoundary>
         <ClubButtonWrapper>
           <ClubButton
             title="재등록"

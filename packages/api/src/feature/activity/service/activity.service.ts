@@ -566,4 +566,72 @@ export default class ActivityService {
     });
     return { activities };
   }
+
+  async getExecutiveActivity(activityId: number): Promise<ApiAct002ResponseOk> {
+    const activity = await this.getActivity({ activityId });
+
+    const evidence = await this.activityRepository.selectFileByActivityId(
+      activity.id,
+    );
+    const participants =
+      await this.activityRepository.selectParticipantByActivityId(activity.id);
+    const duration = await this.activityRepository.selectDurationByActivityId(
+      activity.id,
+    );
+
+    return {
+      clubId: activity.clubId,
+      name: activity.name,
+      originalName: activity.originalName,
+      activityTypeEnumId: activity.activityTypeEnumId,
+      location: activity.location,
+      purpose: activity.purpose,
+      detail: activity.detail,
+      evidence: activity.evidence,
+      evidenceFiles: evidence.map(e => ({
+        uuid: e.fileId,
+      })),
+      participants: participants.map(e => ({
+        studentId: e.studentId,
+      })),
+      durations: duration.map(e => ({
+        startTerm: e.startTerm,
+        endTerm: e.endTerm,
+      })),
+    };
+  }
+
+  async getProfessorActivity(activityId: number): Promise<ApiAct002ResponseOk> {
+    const activity = await this.getActivity({ activityId });
+
+    const evidence = await this.activityRepository.selectFileByActivityId(
+      activity.id,
+    );
+    const participants =
+      await this.activityRepository.selectParticipantByActivityId(activity.id);
+    const duration = await this.activityRepository.selectDurationByActivityId(
+      activity.id,
+    );
+
+    return {
+      clubId: activity.clubId,
+      name: activity.name,
+      originalName: activity.originalName,
+      activityTypeEnumId: activity.activityTypeEnumId,
+      location: activity.location,
+      purpose: activity.purpose,
+      detail: activity.detail,
+      evidence: activity.evidence,
+      evidenceFiles: evidence.map(e => ({
+        uuid: e.fileId,
+      })),
+      participants: participants.map(e => ({
+        studentId: e.studentId,
+      })),
+      durations: duration.map(e => ({
+        startTerm: e.startTerm,
+        endTerm: e.endTerm,
+      })),
+    };
+  }
 }
