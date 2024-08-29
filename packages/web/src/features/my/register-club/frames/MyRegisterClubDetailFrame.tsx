@@ -76,7 +76,7 @@ const MyRegisterClubDetailFrame: React.FC<{
   const router = useRouter();
   const { id } = useParams();
 
-  const data = useMemo(() => mockMyClubRegisterAcf.items, []);
+  const data = useMemo(() => mockMyClubRegisterAcf.activities, []);
 
   const isProfessor = profile === "professor";
 
