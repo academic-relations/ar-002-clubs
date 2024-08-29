@@ -21,6 +21,18 @@ import type {
   ApiAct003RequestParam,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
 import type { ApiAct005ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
+import type {
+  ApiAct011RequestQuery,
+  ApiAct011ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
+import type {
+  ApiAct012RequestQuery,
+  ApiAct012ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct012";
+import type {
+  ApiAct013RequestQuery,
+  ApiAct013ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct013";
 
 @Injectable()
 export default class ActivityService {
@@ -474,5 +486,84 @@ export default class ActivityService {
         "Failed to update",
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+  }
+
+  /**
+   * @param clubId 동아리 ID
+   * @description REG-011, 012, 013에서 공통적으로 이용하는 동아리 활동 전체조회 입니다.
+   * @returns 해당 동아리가 작성한 모든 활동을 REG-011의 리턴 타입에 맞추어 가져옵니다.
+   */
+  private async getProvisionalActivities(param: { clubId: number }) {
+    const result = await this.activityRepository.selectActivityByClubId({
+      clubId: param.clubId,
+    });
+    const activities = await Promise.all(
+      result.map(async activity => {
+        const duration =
+          await this.activityRepository.selectDurationByActivityId(activity.id);
+        return {
+          name: activity.name,
+          activityTypeEnumId: activity.activityTypeEnumId,
+          activityStatusEnumId: activity.activityStatusEnumId,
+          duration: {
+            startTerm: duration.reduce(
+              (prev, curr) => (prev < curr.startTerm ? prev : curr.startTerm),
+              duration[0].startTerm,
+            ),
+            endTerm: duration.reduce(
+              (prev, curr) => (prev > curr.endTerm ? prev : curr.endTerm),
+              duration[0].endTerm,
+            ),
+          },
+        };
+      }),
+    ).then(arr =>
+      arr.sort((a, b) => (a.duration.startTerm < b.duration.endTerm ? -1 : 1)),
+    );
+
+    return activities;
+  }
+
+  /**
+   * @param param
+   * @description getStudentProvisionalActivities와 대응되는 서비스 진입점 입니다.
+   */
+  async getStudentProvisionalActivities(param: {
+    studentId: number;
+    query: ApiAct011RequestQuery;
+  }): Promise<ApiAct011ResponseOk> {
+    // 해당 학생이 동아리 대표자가 맞는지 검사합니다.
+    await this.checkIsStudentDelegate({
+      studentId: param.studentId,
+      clubId: param.query.clubId,
+    });
+    const activities = await this.getProvisionalActivities({
+      clubId: param.query.clubId,
+    });
+    return { activities };
+  }
+
+  /**
+   * @param param
+   * @description getStudentProvisionalActivities와 대응되는 서비스 진입점 입니다.
+   */
+  async getExecutiveProvisionalActivities(param: {
+    query: ApiAct012RequestQuery;
+  }): Promise<ApiAct012ResponseOk> {
+    // 집행부원은 아직 검사하는 권한이 없습니다.
+    const activities = await this.getProvisionalActivities({
+      clubId: param.query.clubId,
+    });
+    return { activities };
+  }
+
+  async getProfessorProvisionalActivities(param: {
+    query: ApiAct013RequestQuery;
+  }): Promise<ApiAct013ResponseOk> {
+    // 교수님은 아직 검사하는 권한이 없습니다.
+    const activities = await this.getProvisionalActivities({
+      clubId: param.query.clubId,
+    });
+    return { activities };
   }
 }

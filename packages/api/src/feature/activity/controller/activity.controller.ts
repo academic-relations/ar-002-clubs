@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UsePipes,
 } from "@nestjs/common";
 
@@ -23,10 +24,17 @@ import apiAct008, {
   ApiAct008RequestParam,
   ApiAct008ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
+import apiAct011 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
+import apiAct012 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct012";
+import apiAct013 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct013";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
-import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import {
+  Executive,
+  Professor,
+  Student,
+} from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
 import ActivityService from "../service/activity.service";
@@ -52,6 +60,18 @@ import type {
   ApiAct005RequestBody,
   ApiAct005ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
+import type {
+  ApiAct011RequestQuery,
+  ApiAct011ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
+import type {
+  ApiAct012RequestQuery,
+  ApiAct012ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct012";
+import type {
+  ApiAct013RequestQuery,
+  ApiAct013ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct013";
 
 @Controller()
 export default class ActivityController {
@@ -157,5 +177,50 @@ export default class ActivityController {
       user.studentId,
     );
     return {};
+  }
+
+  @Student()
+  @Get("/student/provisional/activities")
+  @UsePipes(new ZodPipe(apiAct011))
+  async getStudentProvisionalActivities(
+    @GetStudent() user: GetStudent,
+    @Query() query: ApiAct011RequestQuery,
+  ): Promise<ApiAct011ResponseOk> {
+    const result = await this.activityService.getStudentProvisionalActivities({
+      studentId: user.studentId,
+      query,
+    });
+
+    return result;
+  }
+
+  @Executive()
+  @Get("/executive/provisional/activities")
+  @UsePipes(new ZodPipe(apiAct012))
+  async getExecutiveProvisionalActivities(
+    @Query() query: ApiAct012RequestQuery,
+  ): Promise<ApiAct012ResponseOk> {
+    const result = await this.activityService.getExecutiveProvisionalActivities(
+      {
+        query,
+      },
+    );
+
+    return result;
+  }
+
+  @Professor()
+  @Get("/professor/provisional/activities")
+  @UsePipes(new ZodPipe(apiAct013))
+  async getProfessorProvisionalActivities(
+    @Query() query: ApiAct013RequestQuery,
+  ): Promise<ApiAct013ResponseOk> {
+    const result = await this.activityService.getProfessorProvisionalActivities(
+      {
+        query,
+      },
+    );
+
+    return result;
   }
 }
