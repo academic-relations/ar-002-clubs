@@ -269,7 +269,7 @@ export class ClubRegistrationController {
   }
 
   @Professor()
-  @Get("/professor/registrations/member-registrations/brief")
+  @Get("/professor/registrations/club-registrations/brief")
   async getProfessorRegistrationsClubRegistrationsBrief(
     @GetProfessor() user: GetProfessor,
   ): Promise<ApiReg021ResponseOk> {
