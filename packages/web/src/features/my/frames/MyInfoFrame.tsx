@@ -6,18 +6,25 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
+import usePatchMyPhoneNumber from "@sparcs-clubs/web/features/my/services/usePatchMyPhoneNumber";
 
-const MyInfoFrame: React.FC = () => {
+const MyInfoFrame: React.FC<{ profile: string }> = ({ profile }) => {
   const {
     data: myInfo,
     isLoading: infoLoading,
     isError: infoError,
+    refetch,
   } = useGetUserProfile();
 
   const myPhone = myInfo?.phoneNumber;
 
   const [phone, setPhone] = useState<string>(myPhone ?? "");
   const [errorPhone, setErrorPhone] = useState<boolean>(false);
+
+  const OnPhoneChange = async () => {
+    await usePatchMyPhoneNumber({ phoneNumber: phone, profile });
+    await refetch();
+  };
 
   useEffect(() => {
     if (myInfo) {
@@ -26,7 +33,6 @@ const MyInfoFrame: React.FC = () => {
   }, [myInfo, myPhone]);
 
   const buttonType = phone === myPhone || errorPhone ? "disabled" : "default";
-
   return (
     <FoldableSectionTitle title="나의 정보">
       <AsyncBoundary isLoading={infoLoading} isError={infoError}>
@@ -41,7 +47,7 @@ const MyInfoFrame: React.FC = () => {
           <Button
             type={buttonType}
             style={{ width: "max-content", alignSelf: "flex-end" }}
-            onClick={() => {}} // TODO: 실제 전화번호 수정 기능 연결
+            onClick={OnPhoneChange}
           >
             저장
           </Button>
