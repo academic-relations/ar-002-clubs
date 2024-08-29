@@ -1,9 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import { ApiAct007RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
+import {
+  ApiAct008RequestBody,
+  ApiAct008RequestParam,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
 import { ActivityDeadlineEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
+import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 
 import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
 import ActivityRepository from "../repository/activity.repository";
@@ -22,6 +28,7 @@ export default class ActivityService {
     private activityRepository: ActivityRepository,
     private activityActivityTermRepository: ActivityActivityTermRepository,
     private clubPublicService: ClubPublicService,
+    private filePublicService: FilePublicService,
   ) {}
 
   /**
@@ -342,6 +349,123 @@ export default class ActivityService {
       detail: body.detail,
       evidence: body.evidence,
       evidenceFileIds: body.evidenceFiles.map(e => e.uuid),
+      participantIds: body.participants.map(e => e.studentId),
+      activityDId: activity.activityDId,
+    });
+    if (!isUpdateSucceed)
+      throw new HttpException(
+        "Failed to update",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+  }
+
+  async postStudentActivityProvisional(
+    body: ApiAct007RequestBody,
+    studentId: number,
+  ): Promise<void> {
+    // 학생이 동아리 대표자 또는 대의원이 맞는지 확인합니다.
+    await this.checkIsStudentDelegate({ studentId, clubId: body.clubId });
+
+    // 오늘이 활동보고서 작성기간이거나, 예외적 작성기간인지 확인하지 않습니다.
+
+    const activityD = await this.getLastActivityD();
+    // 현재학기에 동아리원이 아니였던 참가자가 있는지 검사합니다.
+    const participantIds = await Promise.all(
+      body.participants.map(
+        async e =>
+          // if (
+          //   !(await this.clubPublicService.isStudentBelongsTo(
+          //     e.studentId,
+          //     body.clubId,
+          //   ))
+          // )
+          //   throw new HttpException(
+          //     "Some student is not belonged to the club",
+          //     HttpStatus.BAD_REQUEST,
+          //   );
+          e.studentId,
+      ),
+    );
+    // 파일 유효한지 검사합니다.
+    const evidenceFiles = await Promise.all(
+      body.evidenceFiles.map(key =>
+        this.filePublicService.getFileInfoById(key.fileId),
+      ),
+    );
+
+    const isInsertionSucceed = await this.activityRepository.insertActivity({
+      ...body,
+      evidenceFileIds: evidenceFiles.map(row => row.id),
+      participantIds,
+      activityDId: activityD.id,
+      duration: body.durations,
+    });
+
+    if (!isInsertionSucceed)
+      throw new HttpException(
+        "Failed to insert",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+  }
+
+  async putStudentActivityProvisional(
+    param: ApiAct008RequestParam,
+    body: ApiAct008RequestBody,
+    studentId: number,
+  ): Promise<void> {
+    const activity = await this.getActivity({ activityId: param.activityId });
+    // 학생이 동아리 대표자 또는 대의원이 맞는지 확인합니다.
+    await this.checkIsStudentDelegate({ studentId, clubId: activity.clubId });
+    // 오늘이 활동보고서 작성기간이거나, 예외적 작성기간인지 확인하지 않습니다.
+    // 해당 활동이 지난 활동기간에 대한 활동인지 확인하지 않습니다.
+    const lastActivityD = await this.getLastActivityD();
+
+    // 제출한 활동 기간들이 지난 활동기간 이내인지 확인하지 않습니다.
+
+    // 파일 uuid의 유효성을 검사합니다.
+    const evidenceFiles = await Promise.all(
+      body.evidenceFiles.map(key =>
+        this.filePublicService.getFileInfoById(key.fileId),
+      ),
+    );
+    // 참여 학생이 지난 활동기간 동아리의 소속원이였는지 확인합니다.
+    const activityDStartSemester =
+      await this.clubPublicService.dateToSemesterId(lastActivityD.startTerm);
+    const activityDEndSemester = await this.clubPublicService.dateToSemesterId(
+      lastActivityD.endTerm,
+    );
+    const members = (
+      await this.clubPublicService.getMemberFromSemester({
+        semesterId: activityDStartSemester,
+        clubId: activity.clubId,
+      })
+    ).concat(
+      await this.clubPublicService.getMemberFromSemester({
+        semesterId: activityDEndSemester,
+        clubId: activity.clubId,
+      }),
+    );
+    body.participants.forEach(participant => {
+      if (
+        members.find(e => e.studentId === participant.studentId) === undefined
+      )
+        throw new HttpException(
+          "Some participant is not belonged to the club in the activity duration",
+          HttpStatus.BAD_REQUEST,
+        );
+    });
+
+    // PUT 처리를 시작합니다.
+    const isUpdateSucceed = this.activityRepository.updateActivity({
+      activityId: param.activityId,
+      name: body.name,
+      activityTypeEnumId: body.activityTypeEnumId,
+      duration: body.durations,
+      location: body.location,
+      purpose: body.purpose,
+      detail: body.detail,
+      evidence: body.evidence,
+      evidenceFileIds: evidenceFiles.map(e => e.id),
       participantIds: body.participants.map(e => e.studentId),
       activityDId: activity.activityDId,
     });
