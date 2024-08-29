@@ -8,7 +8,7 @@ import { z } from "zod";
  */
 
 const url = (applyId: string) =>
-  `/executive/registrations/club-registraions/club-registration/${applyId}/approval`;
+  `/executive/registrations/club-registrations/club-registration/${applyId}/approval`;
 const method = "PATCH";
 
 const requestParam = z.object({
