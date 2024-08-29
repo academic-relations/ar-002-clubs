@@ -538,25 +538,42 @@ export class ClubRegistrationService {
           professorId: param.professorId,
         },
       );
-    const activityPlanFileName =
+    const activityPlanFile =
       result.registration.registrationActivityPlanFileId !== null
-        ? await this.filePublicService
-            .getFileInfoById(result.registration.registrationActivityPlanFileId)
-            .then(e => e.name)
+        ? {
+            name: await this.filePublicService
+              .getFileInfoById(
+                result.registration.registrationActivityPlanFileId,
+              )
+              .then(e => e.name),
+            url: await this.filePublicService.getFileUrl(
+              result.registration.registrationActivityPlanFileId,
+            ),
+          }
         : undefined;
-    const clubRuleFileName =
+    const clubRuleFile =
       result.registration.registrationClubRuleFileId !== null
-        ? await this.filePublicService
-            .getFileInfoById(result.registration.registrationClubRuleFileId)
-            .then(e => e.name)
+        ? {
+            name: await this.filePublicService
+              .getFileInfoById(result.registration.registrationClubRuleFileId)
+              .then(e => e.name),
+            url: await this.filePublicService.getFileUrl(
+              result.registration.registrationClubRuleFileId,
+            ),
+          }
         : undefined;
-    const externalInstructionFileName =
+    const externalInstructionFile =
       result.registration.registrationExternalInstructionFileId !== null
-        ? await this.filePublicService
-            .getFileInfoById(
+        ? {
+            name: await this.filePublicService
+              .getFileInfoById(
+                result.registration.registrationExternalInstructionFileId,
+              )
+              .then(e => e.name),
+            url: await this.filePublicService.getFileUrl(
               result.registration.registrationExternalInstructionFileId,
-            )
-            .then(e => e.name)
+            ),
+          }
         : undefined;
 
     return {
@@ -571,8 +588,8 @@ export class ClubRegistrationService {
       representative: {
         studentNumber: result.student.number,
         name: result.student.name,
+        phoneNumber: result.registration.phoneNumber,
       },
-      phoneNumber: result.registration.phoneNumber,
       foundedAt: result.registration.foundedAt,
       divisionId: result.registration.divisionId,
       activityFieldKr: result.registration.activityFieldKr,
@@ -585,13 +602,27 @@ export class ClubRegistrationService {
       divisionConsistency: result.registration.divisionConsistency,
       foundationPurpose: result.registration.foundationPurpose,
       activityPlan: result.registration.activityPlan,
-      activityPlanFileId: result.registration.registrationActivityPlanFileId,
-      activityPlanFileName,
-      clubRuleFileId: result.registration.registrationClubRuleFileId,
-      clubRuleFileName,
-      externalInstructionFileId:
-        result.registration.registrationExternalInstructionFileId,
-      externalInstructionFileName,
+      activityPlanFile:
+        result.registration.registrationActivityPlanFileId !== null
+          ? {
+              id: result.registration.registrationActivityPlanFileId,
+              ...activityPlanFile,
+            }
+          : undefined,
+      clubRuleFile:
+        result.registration.registrationClubRuleFileId !== null
+          ? {
+              id: result.registration.registrationClubRuleFileId,
+              ...clubRuleFile,
+            }
+          : undefined,
+      externalInstructionFile:
+        result.registration.registrationExternalInstructionFileId !== null
+          ? {
+              id: result.registration.registrationExternalInstructionFileId,
+              ...externalInstructionFile,
+            }
+          : undefined,
       isProfessorSigned: result.registration.professorApprovedAt !== undefined,
       updatedAt: result.registration.updatedAt,
       comments: result.comments.map(e => ({
