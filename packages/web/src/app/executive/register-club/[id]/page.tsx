@@ -51,6 +51,7 @@ const RegisterClubDetail: React.FC = () => {
       />
       <ClubRegisterDetailFrame applyId={+applyId} />
       <ClubRegisterApproveFrame
+        applyId={+applyId}
         canApprove
         rejectReasonList={[
           {

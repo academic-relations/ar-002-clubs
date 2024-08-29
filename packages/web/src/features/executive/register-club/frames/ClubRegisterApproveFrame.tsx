@@ -7,21 +7,29 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { formatSlashDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
+import { patchClubRegistrationExecutive } from "../services/patchClubRegistrationExecutive";
+
 interface RejectReason {
   date: Date;
   reason: string;
 }
 
 const ClubRegisterApproveFrame = ({
+  applyId,
   canApprove,
   rejectReasonList,
 }: {
+  applyId: number;
   canApprove: boolean;
   rejectReasonList: RejectReason[];
 }) => {
   const [rejectionDetail, setRejectionDetail] = useState("");
   const [rejectReasonListState, setRejectReasonListState] =
     useState(rejectReasonList);
+
+  const approve = () => {
+    patchClubRegistrationExecutive({ applyId });
+  };
 
   return (
     <Card gap={20} outline>
@@ -54,7 +62,9 @@ const ClubRegisterApproveFrame = ({
         />
       </FlexWrapper>
       <FlexWrapper gap={16} direction="row" style={{ marginLeft: "auto" }}>
-        <Button type={canApprove ? "default" : "disabled"}>신청 승인</Button>
+        <Button type={canApprove ? "default" : "disabled"} onClick={approve}>
+          신청 승인
+        </Button>
         <Button
           type={rejectionDetail && canApprove ? "default" : "disabled"}
           onClick={() => {
