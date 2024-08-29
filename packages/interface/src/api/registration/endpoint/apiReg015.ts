@@ -38,6 +38,8 @@ const responseBodyMap = {
       clubId: z.coerce.number().int().min(1).optional(),
       clubNameKr: zClubName,
       clubNameEn: zClubName,
+      newClubNameKr: zClubName,
+      newClubNameEn: zClubName,
       representative: z.object({
         studentNumber: z.coerce.number().int().min(1),
         name: z.string().max(30),

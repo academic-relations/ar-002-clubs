@@ -6,10 +6,10 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
-import useGetMyClub from "@sparcs-clubs/web/features/my/clubs/service/useGetMyClub";
+import useGetMyClubProfessor from "@sparcs-clubs/web/features/my/clubs/service/getMyClubProfessor";
 
-const MyClubsMainFrame: React.FC = () => {
-  const { data, isLoading, isError } = useGetMyClub();
+const MyClubsProfessorFrame: React.FC = () => {
+  const { data, isLoading, isError } = useGetMyClubProfessor();
   const isMyClubsExist = useMemo(
     () => (data?.semesters ?? []).length > 0,
     [data],
@@ -39,4 +39,4 @@ const MyClubsMainFrame: React.FC = () => {
   );
 };
 
-export default MyClubsMainFrame;
+export default MyClubsProfessorFrame;
