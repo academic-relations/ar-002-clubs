@@ -932,8 +932,6 @@ export class ClubRegistrationRepository {
         ),
       );
     logger.debug(results);
-    if (results.length > 1)
-      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
     if (results.length === 0)
       throw new HttpException(
         "not a valid applyId or ProfessorId",
