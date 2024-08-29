@@ -785,4 +785,62 @@ export class ClubRegistrationRepository {
 
     return result;
   }
+
+  async getProfessorRegistrationsClubRegistration(param: {
+    registrationId: number;
+    professorId: number;
+  }) {
+    const results = await this.db
+      .select()
+      .from(Registration)
+      .innerJoin(
+        Student,
+        and(eq(Registration.studentId, Student.id), isNull(Student.deletedAt)),
+      )
+      .innerJoin(
+        Professor,
+        and(
+          eq(Registration.professorId, Professor.id),
+          isNull(Professor.deletedAt),
+        ),
+      )
+      .innerJoin(
+        ProfessorT,
+        and(
+          eq(Professor.id, ProfessorT.professorId),
+          isNull(ProfessorT.deletedAt),
+        ),
+      )
+      .where(
+        and(
+          eq(Registration.id, param.registrationId),
+          eq(Registration.professorId, param.professorId),
+          isNull(Registration.deletedAt),
+        ),
+      );
+    logger.debug(results);
+    if (results.length > 1)
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+    if (results.length === 0)
+      throw new HttpException(
+        "not a valid applyId or ProfessorId",
+        HttpStatus.NOT_FOUND,
+      );
+    const result = results[0];
+
+    const comments = await this.db
+      .select()
+      .from(RegistrationExecutiveComment)
+      .where(
+        and(
+          eq(
+            RegistrationExecutiveComment.registrationId,
+            result.registration.id,
+          ),
+          isNull(RegistrationExecutiveComment.deletedAt),
+        ),
+      );
+
+    return { ...result, comments };
+  }
 }
