@@ -38,7 +38,7 @@ const responseBodyMap = {
               }),
             professorEnumId: z.nativeEnum(ProfessorEnum),
           })
-          .or(z.object({}).optional()),
+          .optional(),
       }),
     ),
   }),
