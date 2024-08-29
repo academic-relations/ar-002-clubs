@@ -413,21 +413,6 @@ export class ClubRegistrationRepository {
           divisionConsistency: Registration.divisionConsistency,
           foundationPurpose: Registration.foundationPurpose,
           activityPlan: Registration.activityPlan,
-          acitivityPlanFile: {
-            id: Registration.registrationActivityPlanFileId,
-            name: File1.name,
-            url: null,
-          },
-          clubRuleFile: {
-            id: Registration.registrationClubRuleFileId,
-            name: File2.name,
-            url: null,
-          },
-          externalInstructionFile: {
-            id: Registration.registrationExternalInstructionFileId,
-            name: File3.name,
-            url: null,
-          },
           activityPlanFileId: Registration.registrationActivityPlanFileId,
           activityPlanFileName: File1.name,
           clubRuleFileId: Registration.registrationClubRuleFileId,
@@ -503,6 +488,27 @@ export class ClubRegistrationRepository {
         ...registration,
         isProfessorSigned: !!registration.isProfessorSigned,
         comments,
+        ...(registration.activityPlanFileId && {
+          activityPlanFile: {
+            id: registration.activityPlanFileId,
+            name: registration.activityPlanFileName,
+            url: null,
+          },
+        }),
+        ...(registration.clubRuleFileId && {
+          clubRuleFile: {
+            id: registration.clubRuleFileId,
+            name: registration.clubRuleFileName,
+            url: null,
+          },
+        }),
+        ...(registration.externalInstructionFileId && {
+          externalInstructionFile: {
+            id: registration.externalInstructionFileId,
+            name: registration.externalInstructionFileName,
+            url: null,
+          },
+        }),
       };
     });
     return result;
@@ -674,21 +680,13 @@ export class ClubRegistrationRepository {
           divisionConsistency: Registration.divisionConsistency,
           foundationPurpose: Registration.foundationPurpose,
           activityPlan: Registration.activityPlan,
-          acitivityPlanFile: {
-            id: Registration.registrationActivityPlanFileId,
-            name: File1.name,
-            url: null,
-          },
-          clubRuleFile: {
-            id: Registration.registrationClubRuleFileId,
-            name: File2.name,
-            url: null,
-          },
-          externalInstructionFile: {
-            id: Registration.registrationExternalInstructionFileId,
-            name: File3.name,
-            url: null,
-          },
+          activityPlanFileId: Registration.registrationActivityPlanFileId,
+          activityPlanFileName: File1.name,
+          clubRuleFileId: Registration.registrationClubRuleFileId,
+          clubRuleFileName: File2.name,
+          externalInstructionFileId:
+            Registration.registrationExternalInstructionFileId,
+          externalInstructionFileName: File3.name,
           isProfessorSigned: Registration.professorApprovedAt,
           updatedAt: Registration.updatedAt,
         })
@@ -753,6 +751,27 @@ export class ClubRegistrationRepository {
         ...registration,
         isProfessorSigned: !!registration.isProfessorSigned,
         comments,
+        ...(registration.activityPlanFileId && {
+          activityPlanFile: {
+            id: registration.activityPlanFileId,
+            name: registration.activityPlanFileName,
+            url: null,
+          },
+        }),
+        ...(registration.clubRuleFileId && {
+          clubRuleFile: {
+            id: registration.clubRuleFileId,
+            name: registration.clubRuleFileName,
+            url: null,
+          },
+        }),
+        ...(registration.externalInstructionFileId && {
+          externalInstructionFile: {
+            id: registration.externalInstructionFileId,
+            name: registration.externalInstructionFileName,
+            url: null,
+          },
+        }),
       };
     });
     return result;
