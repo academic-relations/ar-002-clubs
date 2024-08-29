@@ -20,6 +20,16 @@ interface AdvancedInformFrameProps {
 const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({ type }) => {
   const { control, setValue } = useFormContext<ApiReg001RequestBody>();
 
+  /* TODO: (@dora) refactor !!!!! */
+  type FileIdType =
+    | "activityPlanFileId"
+    | "clubRuleFileId"
+    | "externalInstructionFileId";
+  const updateSingleFile = (fileId: FileIdType, data: string[]) => {
+    // console.log("updateFile", fileId, data);
+    setValue(fileId, data[0], { shouldValidate: true });
+  };
+
   return (
     <FlexWrapper direction="column" gap={40}>
       <SectionTitle>동아리 신청 정보</SectionTitle>
@@ -78,7 +88,7 @@ const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({ type }) => {
                 content={`* 활동 목적 및 대중사업 계획을 포함한 활동 계획서 1부 제출 필수
           * 활동마다 활동명, 활동 기간, 활동 내용, 운영 예산을 포함한 자유 양식으로 제출`}
                 onChange={data => {
-                  setValue("activityPlanFileId", data[0]);
+                  updateSingleFile("activityPlanFileId", data);
                 }}
               />
             )}
@@ -95,7 +105,7 @@ const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({ type }) => {
                 fileId="clubRuleFileId"
                 title="동아리 회칙"
                 onChange={data => {
-                  setValue("clubRuleFileId", data[0]);
+                  updateSingleFile("clubRuleFileId", data);
                 }}
               />
             )}
@@ -112,7 +122,7 @@ const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({ type }) => {
                 title="(선택) 외부 강사 지도 계획서"
                 content="* 외부 강사가 직접 작성하여 제출"
                 onChange={data => {
-                  setValue("externalInstructionFileId", data[0]);
+                  updateSingleFile("externalInstructionFileId", data);
                 }}
               />
             )}

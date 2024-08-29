@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { ApiFil001RequestBody } from "@sparcs-clubs/interface/api/file/apiFil001";
 import styled from "styled-components";
@@ -9,6 +9,7 @@ import useFileUpload from "../services/postFileUpload";
 
 import usePutFileS3 from "../services/putFileS3";
 
+import Attachment from "./File/attachment";
 import ThumbnailPreviewList from "./File/ThumbnailPreviewList";
 import FlexWrapper from "./FlexWrapper";
 import Typography from "./Typography";
@@ -105,16 +106,18 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
   const [files, setFiles] = useState<{ file: File; fileId?: string }[]>([]);
 
-  useEffect(() => {
-    onChange(files.filter(file => file.fileId).map(file => file.fileId!));
-  }, [files, onChange]);
+  /* TODO: (@dora) refactor !!!!!!! */
+  interface FinalFile {
+    file: File;
+    fileId?: string;
+  }
 
-  useEffect(() => {
-    if (files.length === 0) {
+  const onSubmit = (_files: FinalFile[]) => {
+    if (_files.length === 0) {
       return;
     }
 
-    const notUploadedFiles = files.filter(file => !file.fileId);
+    const notUploadedFiles = _files.filter(file => !file.fileId);
 
     const info: ApiFil001RequestBody = {
       metadata: notUploadedFiles.map(file => ({
@@ -130,7 +133,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
         onSuccess: data => {
           putFileS3Mutation(
             {
-              files: files.map(file => file.file),
+              files: _files.map(file => file.file),
               uploadUrls: data.urls.map(url => url.uploadUrl),
             },
             {
@@ -142,10 +145,31 @@ const FileUpload: React.FC<FileUploadProps> = ({
         },
       },
     );
-  }, [files, putFileS3Mutation, uploadFileMutation, onChange]);
+  };
+
+  const updateFiles = (_files: Attachment[]) => {
+    // console.log("updateFiles", _files);
+    const updatedFiles = files.filter(f =>
+      _files.map(_file => _file.name).includes(f.file.name),
+    );
+    setFiles(updatedFiles);
+    onChange(updatedFiles.map(file => file.fileId!));
+    onSubmit(updatedFiles);
+  };
+  const removeFile = (_file: FinalFile) => {
+    // console.log("removeFile", _file);
+    const updatedFiles = files.filter(file => file.fileId !== _file.fileId);
+    setFiles(updatedFiles);
+    onChange(updatedFiles.map(file => file.fileId!));
+    onSubmit(updatedFiles);
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFiles(Array.from(event.target.files ?? []).map(file => ({ file })));
+    const updatedFiles = Array.from(event.target.files ?? []).map(file => ({
+      file,
+    }));
+    setFiles(updatedFiles);
+    onSubmit(updatedFiles);
   };
 
   const handleClick = () => {
@@ -195,14 +219,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
               name: file.file.name,
               src: URL.createObjectURL(file.file),
             }))}
-            onChange={_files =>
-              setFiles(prevFiles =>
-                /* TODO: (@dora) 이것을 name으로 비교해도 되는 것일까... */
-                prevFiles.filter(f =>
-                  _files.map(_file => _file.name).includes(f.file.name),
-                ),
-              )
-            }
+            onChange={_files => updateFiles(_files)}
             disabled={disabled}
           />
         )}
@@ -220,11 +237,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
                 type="close_outlined"
                 size={16}
                 color="BLACK"
-                onClick={() => {
-                  setFiles(
-                    files.filter(f => f.file.name !== files[0].file.name),
-                  );
-                }}
+                onClick={() => removeFile(files[0])}
               />
             )}
           </FlexWrapper>

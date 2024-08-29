@@ -30,8 +30,8 @@ const ClubNameSelect: React.FC<ClubNameSelectProps> = ({
 
   const onChange = (_value: string) => {
     const clubInfo = clubList.filter(club => club.id === parseInt(_value))[0];
-    setValue("clubNameKr", clubInfo.clubNameKr);
-    setValue("clubNameEn", clubInfo.clubNameEn);
+    setValue("clubNameKr", clubInfo.clubNameKr, { shouldValidate: true });
+    setValue("clubNameEn", clubInfo.clubNameEn, { shouldValidate: true });
     onChangeValue(clubInfo.clubNameKr);
   };
 

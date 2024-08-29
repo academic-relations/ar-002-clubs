@@ -184,6 +184,7 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
                   setValue(
                     "evidenceFiles",
                     data.map(file => ({ fileId: file })),
+                    { shouldValidate: true },
                   );
                 }}
               />

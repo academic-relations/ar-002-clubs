@@ -71,7 +71,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
       resetField("professor.email");
       resetField("professor.name");
       resetField("professor.professorEnumId");
-      setValue("professor", undefined);
+      setValue("professor", undefined, { shouldValidate: true });
 
       return;
     }
