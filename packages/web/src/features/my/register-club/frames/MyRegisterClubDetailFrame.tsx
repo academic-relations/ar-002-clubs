@@ -204,10 +204,12 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
               )}
               {/* TODO: File Preview 잘 됐는지 확인 필요 */}
               <ListItem>(선택) 외부 강사 지도 계획서</ListItem>
-              {clubDetail?.externalInstructionFileId && (
+              {clubDetail?.externalInstructionFile?.id && (
                 <FilePreviewContainer>
                   <ThumbnailPreviewList
-                    fileList={[fromUUID(clubDetail.externalInstructionFileId)]}
+                    fileList={[
+                      fromUUID(clubDetail.externalInstructionFile?.id),
+                    ]}
                   />
                 </FilePreviewContainer>
               )}
