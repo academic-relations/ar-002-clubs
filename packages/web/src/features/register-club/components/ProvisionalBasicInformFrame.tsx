@@ -73,7 +73,7 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
                 <PhoneInput
                   {...props}
                   label="대표자 전화번호"
-                  placeholder="XXX-XXXX-XXXX"
+                  placeholder="010-XXXX-XXXX"
                 />
               )}
             />
