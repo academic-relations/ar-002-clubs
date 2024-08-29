@@ -22,9 +22,7 @@ const useProvisionalActivities = (
       const { data, status } = await axiosClientWithAuth.get(
         activitiesGet(profile),
         {
-          params: {
-            requestQuery,
-          },
+          params: requestQuery,
         },
       );
 

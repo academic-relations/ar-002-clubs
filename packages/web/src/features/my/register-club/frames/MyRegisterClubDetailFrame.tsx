@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React from "react";
 
-// import { ApiAct011ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
 import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { useParams, useRouter } from "next/navigation";
@@ -29,13 +28,13 @@ import {
   DivisionTypeTagList,
   RegistrationTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
-import MyRegisterClubAcfTable from "@sparcs-clubs/web/features/my/register-club/components/MyRegisterClubAcfTable";
-import { mockMyClubRegisterAcf } from "@sparcs-clubs/web/features/my/services/_mock/mockMyClubRegisterDetail";
 import { deleteMyClubRegistration } from "@sparcs-clubs/web/features/my/services/deleteMyClubRegistration";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
 import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 import { professorEnumToText } from "@sparcs-clubs/web/utils/getUserType";
+
+import MyRegisterClubAcfFrame from "./MyRegisterClubAcfFrame";
 
 const FilePreviewContainerWrapper = styled(FlexWrapper)`
   padding-left: 24px;
@@ -66,17 +65,10 @@ const TagWrapper = styled.div`
 
 const MyRegisterClubDetailFrame: React.FC<{
   clubDetail: ApiReg011ResponseOk;
-  // mockMyClubRegisterAcf: ApiAct011ResponseOk;
   profile: string;
-}> = ({
-  // mockMyClubRegisterAcf,
-  clubDetail,
-  profile,
-}) => {
+}> = ({ clubDetail, profile }) => {
   const router = useRouter();
   const { id } = useParams();
-
-  const data = useMemo(() => mockMyClubRegisterAcf.activities, []);
 
   const isProfessor = profile === "professor";
 
@@ -308,17 +300,13 @@ const MyRegisterClubDetailFrame: React.FC<{
               </>
             )}
           </ListContainer>
-          {clubDetail.registrationTypeEnumId !==
-            RegistrationTypeEnum.Renewal && (
-            <FlexWrapper direction="column" gap={16}>
-              <Typography fw="MEDIUM" fs={16} lh={20}>
-                가등록 / 등록 취소 기간 활동 보고서 (총 {data.length}개)
-              </Typography>
-              <MyRegisterClubAcfTable
-                clubRegisterAcfList={mockMyClubRegisterAcf}
+          {clubDetail.registrationTypeEnumId !== RegistrationTypeEnum.Renewal &&
+            clubDetail.clubId && (
+              <MyRegisterClubAcfFrame
+                profile={profile}
+                clubId={clubDetail.clubId}
               />
-            </FlexWrapper>
-          )}
+            )}
           {clubDetail.professor && (
             <TagWrapper>
               <Typography fw="MEDIUM" fs={16} lh={20}>

@@ -59,7 +59,9 @@ const MyRegisterClubAcfTable: React.FC<MyRegisterClubAcfTableProps> = ({
     enableSorting: false,
   });
 
-  return <Table table={table} />;
+  return (
+    <Table table={table} emptyMessage="활동 보고서 작성 내역이 없습니다." />
+  );
 };
 
 export default MyRegisterClubAcfTable;
