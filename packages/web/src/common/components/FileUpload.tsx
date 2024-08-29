@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { ApiFil001RequestBody } from "@sparcs-clubs/interface/api/file/apiFil001";
 import styled from "styled-components";
@@ -17,6 +17,10 @@ import Typography from "./Typography";
 interface FileUploadProps {
   fileId?: string;
   placeholder?: string;
+  initialFiles?: {
+    file: File;
+    fileId?: string;
+  }[];
   onChange?: (string: string[]) => void;
   allowedTypes?: string[];
   multiple?: boolean;
@@ -96,6 +100,7 @@ const FlexExpand = styled.div`
 const FileUpload: React.FC<FileUploadProps> = ({
   fileId = "file-upload-input",
   placeholder = "파일을 선택해주세요",
+  initialFiles = [],
   onChange = () => {},
   allowedTypes = [],
   multiple = false,
@@ -104,7 +109,12 @@ const FileUpload: React.FC<FileUploadProps> = ({
   const { mutate: uploadFileMutation } = useFileUpload();
   const { mutate: putFileS3Mutation } = usePutFileS3();
 
-  const [files, setFiles] = useState<{ file: File; fileId?: string }[]>([]);
+  const [files, setFiles] =
+    useState<{ file: File; fileId?: string }[]>(initialFiles);
+
+  useEffect(() => {
+    setFiles(initialFiles);
+  }, [initialFiles]);
 
   /* TODO: (@dora) refactor !!!!!!! */
   interface FinalFile {
@@ -148,7 +158,6 @@ const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   const updateFiles = (_files: Attachment[]) => {
-    // console.log("updateFiles", _files);
     const updatedFiles = files.filter(f =>
       _files.map(_file => _file.name).includes(f.file.name),
     );
@@ -157,7 +166,6 @@ const FileUpload: React.FC<FileUploadProps> = ({
     onSubmit(updatedFiles);
   };
   const removeFile = (_file: FinalFile) => {
-    // console.log("removeFile", _file);
     const updatedFiles = files.filter(file => file.fileId !== _file.fileId);
     setFiles(updatedFiles);
     onChange(updatedFiles.map(file => file.fileId!));

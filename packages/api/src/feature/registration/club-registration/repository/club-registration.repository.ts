@@ -531,7 +531,8 @@ export class ClubRegistrationRepository {
         id: Registration.id,
         registrationTypeEnumId: Registration.registrationApplicationTypeEnumId,
         divisionName: Division.name,
-        clubNameKr: Registration.clubNameKr,
+        clubNameKr: Club.name_kr,
+        newClubNameKr: Registration.clubNameKr,
         clubId: Registration.clubId,
         activityFieldKr: Registration.activityFieldKr,
         activityFieldEn: Registration.activityFieldEn,
@@ -540,6 +541,10 @@ export class ClubRegistrationRepository {
           Registration.registrationApplicationStatusEnumId,
       })
       .from(Registration)
+      .leftJoin(
+        Club,
+        and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
+      )
       .leftJoin(
         Division,
         and(

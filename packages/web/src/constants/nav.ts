@@ -4,7 +4,7 @@ const headerPaths: (keyof Paths)[] = [
   "CLUBS",
   "VOTING",
   "COMMUNITY",
-  // "SERVICE",
+  "SERVICE",
   "EXECUTIVE",
 ];
 
