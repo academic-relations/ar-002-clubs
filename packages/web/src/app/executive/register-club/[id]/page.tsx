@@ -50,21 +50,7 @@ const RegisterClubDetail: React.FC = () => {
         enableLast
       />
       <ClubRegisterDetailFrame applyId={+applyId} />
-      <ClubRegisterApproveFrame
-        applyId={+applyId}
-        canApprove
-        rejectReasonList={[
-          {
-            date: new Date(2024, 5, 25, 9, 16),
-            reason:
-              "대충 어떤 기이이이이ㅣ이이이ㅣ이이이ㅣ이이ㅣ이이ㅣㅣㅣ이이이ㅣ이이ㅣ이이ㅣ이이ㅣ이이ㅣ이이ㅣ이이이이ㅣ이이이이이이ㅣ이이이이이이이이이ㅣ이이이ㅣ이이이ㅣ이이이이ㅣ이이ㅣ이인 반려 사유",
-          },
-          {
-            date: new Date(2024, 5, 25, 8, 16),
-            reason: "대충 어떤 반려 사유",
-          },
-        ]}
-      />
+      <ClubRegisterApproveFrame applyId={+applyId} />
       <Link href="/executive/register-club">
         <Button>목록으로 돌아가기</Button>
       </Link>
