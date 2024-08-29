@@ -1,10 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import {
-  ActivityStatusEnum,
-  ActivityTypeEnum,
-} from "@sparcs-clubs/interface/common/enum/activity.enum";
+import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 /**
  * @version v0.1
@@ -26,7 +23,6 @@ const responseBodyMap = {
       z.object({
         name: z.string(),
         activityTypeEnumId: z.nativeEnum(ActivityTypeEnum),
-        activityStatusEnumId: z.nativeEnum(ActivityStatusEnum),
         duration: z.object({
           startTerm: z.coerce.date(),
           endTerm: z.coerce.date(),

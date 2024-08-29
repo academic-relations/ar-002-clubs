@@ -504,7 +504,6 @@ export default class ActivityService {
         return {
           name: activity.name,
           activityTypeEnumId: activity.activityTypeEnumId,
-          activityStatusEnumId: activity.activityStatusEnumId,
           duration: {
             startTerm: duration.reduce(
               (prev, curr) => (prev < curr.startTerm ? prev : curr.startTerm),
