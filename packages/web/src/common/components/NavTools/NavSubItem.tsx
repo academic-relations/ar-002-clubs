@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+
 import Link from "next/link";
 import styled from "styled-components";
 
@@ -34,7 +35,13 @@ const StyledLink = styled(Link)`
 
 const NavSubItem = ({ name, path = "" }: Path) => (
   <NavSubItemInner>
-    {path ? <StyledLink href={path}>{name}</StyledLink> : name}
+    {path ? (
+      <StyledLink href={path} target={path.startsWith("http") ? "_blank" : ""}>
+        {name}
+      </StyledLink>
+    ) : (
+      name
+    )}
   </NavSubItemInner>
 );
 

@@ -1,22 +1,14 @@
 import React, { useEffect } from "react";
-import styled from "styled-components";
-import Card from "@sparcs-clubs/web/common/components/Card";
 
+import Card from "@sparcs-clubs/web/common/components/Card";
 import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
 
+import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
-import Select from "@sparcs-clubs/web/common/components/Forms/Select";
-
-import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
+import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
-
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
-  gap: 40px;
-  align-self: stretch;
-`;
 
 const ActivityCertificateInfoFirstFrame: React.FC<
   ActivityCertificateFrameProps
@@ -28,6 +20,13 @@ const ActivityCertificateInfoFirstFrame: React.FC<
   firstErrorStatus,
   setFirstErrorStatus,
 }) => {
+  const mockClubList: SelectItem<string>[] = [
+    { label: "동아리", value: "1", selectable: true },
+    { label: "또다른동아리", value: "2", selectable: true },
+    { label: "안되는동아리", value: "3", selectable: false },
+  ];
+  // TODO: 이름 전화번호 동아리 목록 백에서 받아오기
+
   useEffect(() => {
     if (
       !activityCertificate.clubId ||
@@ -65,14 +64,10 @@ const ActivityCertificateInfoFirstFrame: React.FC<
   }, [firstErrorStatus]);
 
   return (
-    <StyledCard outline>
+    <Card outline gap={40}>
       <Select
         label="동아리 이름"
-        items={[
-          { label: "이런 동아리", value: "1", selectable: true },
-          { label: "저런 동아리", value: "2", selectable: true },
-          { label: "요런 동아리", value: "3", selectable: true },
-        ]}
+        items={mockClubList}
         // TODO - 아래 clubId를 넘겨줄 때 parseInt를 통해서 clubId 값을 받기 때문에 실제 items를 넣어줄 때는 value가 해당 동아리의 실제 clubId여야 함
         setErrorStatus={value =>
           JSON.stringify(firstErrorStatus) ===
@@ -83,13 +78,13 @@ const ActivityCertificateInfoFirstFrame: React.FC<
                 hasClubIdError: value,
               })
         }
-        onSelect={value => {
+        onChange={value => {
           setActivityCertificate({
             ...activityCertificate,
-            clubId: parseInt(value),
+            clubId: parseInt(value ?? ""),
           });
         }}
-        selectedValue={
+        value={
           activityCertificate.clubId
             ? activityCertificate.clubId.toString()
             : undefined
@@ -121,9 +116,29 @@ const ActivityCertificateInfoFirstFrame: React.FC<
           });
         }}
       />
-      <TextInput label="신청자 이름" placeholder="" disabled />
-      <TextInput label="신청자 학과" placeholder="" disabled />
-      <TextInput label="신청자 학번" placeholder="" disabled />
+      <TextInput
+        label="신청자 이름"
+        placeholder={
+          activityCertificate.applicant ? activityCertificate.applicant : ""
+        }
+        disabled
+      />
+      <TextInput
+        label="신청자 학과"
+        placeholder={
+          activityCertificate.department ? activityCertificate.department : ""
+        }
+        disabled
+      />
+      <TextInput
+        label="신청자 학번"
+        placeholder={
+          activityCertificate.studentNumber
+            ? activityCertificate.studentNumber
+            : ""
+        }
+        disabled
+      />
       <PhoneInput
         label="신청자 전화번호"
         placeholder="010-XXXX-XXXX"
@@ -144,7 +159,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
           });
         }}
       />
-    </StyledCard>
+    </Card>
   );
 };
 

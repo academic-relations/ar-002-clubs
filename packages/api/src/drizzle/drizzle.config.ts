@@ -1,5 +1,6 @@
-import type { Config } from "drizzle-kit";
 import { env } from "src/env";
+
+import type { Config } from "drizzle-kit";
 
 export default {
   driver: "mysql2",

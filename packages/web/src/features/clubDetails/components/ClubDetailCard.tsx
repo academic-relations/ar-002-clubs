@@ -1,30 +1,48 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
-import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
+
+import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
 interface ClubDetailCardProps {
   club: ApiClb002ResponseOK;
 }
 
-const ClubDetailCardInner = styled(Card)`
-  gap: 10px;
-`;
-
 const ClubDetailText = styled.div`
   width: 100%;
   font-size: 16px;
   line-height: 28px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 14px;
+    line-height: 20px;
+  }
   font-weight: 400;
 `;
 
+const EmptyDetailText = styled.div`
+  width: 100%;
+  font-size: 16px;
+  line-height: 28px;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.GRAY[300]};
+`;
+
 const ClubDetailCard: React.FC<ClubDetailCardProps> = ({ club }) => (
-  <ClubDetailCardInner>
-    <ClubDetailText>{club.description}</ClubDetailText>
-  </ClubDetailCardInner>
+  <Card gap={16} padding="16px 20px" style={{ flexGrow: "1" }}>
+    {club.description ? (
+      <ClubDetailText>{club.description}</ClubDetailText>
+    ) : (
+      <EmptyDetailText>등록된 동아리 설명이 없습니다.</EmptyDetailText>
+    )}
+  </Card>
 );
 
 export default ClubDetailCard;

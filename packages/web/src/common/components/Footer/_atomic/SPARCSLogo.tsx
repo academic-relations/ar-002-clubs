@@ -1,16 +1,41 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
+import React, { useEffect, useState } from "react";
+
 import Image from "next/image";
+import Link from "next/link";
+
+import { useTheme } from "styled-components";
 
 import sparcsSvg from "@sparcs-clubs/web/assets/sparcs-black.svg";
 import paths from "@sparcs-clubs/web/constants/paths";
 
-const SPARCSLogo = () => (
-  <Link href={paths.HOME.path}>
-    <Image src={sparcsSvg} alt="SPARCS" height={24} />
-  </Link>
-);
+const SPARCSLogo = () => {
+  const theme = useTheme();
+  const [isSmallView, setIsSmallView] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallView(
+        window.innerWidth <= parseInt(theme.responsive.BREAKPOINT.md),
+      );
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <Link
+      href={isSmallView ? paths.MADE_BY.path : "https://sparcs.org"}
+      target={isSmallView ? "_self" : "_blank"}
+      rel={isSmallView ? undefined : "noopener noreferrer"}
+    >
+      <Image src={sparcsSvg} alt="SPARCS" height={24} />
+    </Link>
+  );
+};
 
 export default SPARCSLogo;

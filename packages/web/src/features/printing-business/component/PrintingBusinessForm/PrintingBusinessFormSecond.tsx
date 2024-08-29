@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
+
+import { PromotionalPrintingSizeEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
-import Info from "@sparcs-clubs/web/common/components/Info";
+import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
-
-import FileUpload from "@sparcs-clubs/web/features/printing-business/component/FileUpload";
-
+import Info from "@sparcs-clubs/web/common/components/Info";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { leftoverPrintsInfoText } from "@sparcs-clubs/web/constants/printingBusiness";
 
-import { PromotionalPrintingSizeEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
-import type { PrintingBusinessFormProps } from ".";
 import BinaryRadio from "./_atomic/BinaryRadio";
+
+import type { PrintingBusinessFormProps } from ".";
 
 type PrintingBusinessFormSecondProps = Pick<
   PrintingBusinessFormProps,
@@ -24,12 +24,6 @@ const PrintingBusinessFormSecondInner = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-`;
-
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
-  gap: 20px;
-  align-self: stretch;
 `;
 
 const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
@@ -84,7 +78,7 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
     <PrintingBusinessFormSecondInner>
       {/* todo!: 이후 동아리의 홍보물 인쇄가능 매수 확인 API 추가후 수정이 필요합니다. */}
       <Info text={leftoverPrintsInfoText("술박스", 45, 45)} />
-      <StyledCard outline>
+      <Card outline gap={20}>
         <Typography>인쇄 매수</Typography>
         <ItemNumberInput
           label="A3"
@@ -106,8 +100,8 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
             setA4PrintCount(Number(value));
           }}
         />
-      </StyledCard>
-      <StyledCard outline>
+      </Card>
+      <Card outline gap={20}>
         <Typography>인쇄 설정</Typography>
         <BinaryRadio
           label="색상"
@@ -130,12 +124,12 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
           isFirstOptionSelected={!requireMarginChopping}
           setIsFirstOptionSelected={value => setRequireMarginChopping(!value)}
         />
-      </StyledCard>
-      <StyledCard outline>
+      </Card>
+      <Card outline gap={20}>
         <Typography>인쇄 파일 업로드</Typography>
         {/* todo!: 파일 업로드 api 완성 이후 적용이 필요합니다. */}
         <FileUpload />
-      </StyledCard>
+      </Card>
     </PrintingBusinessFormSecondInner>
   );
 };

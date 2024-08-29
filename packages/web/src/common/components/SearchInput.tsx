@@ -1,10 +1,13 @@
 import React, { ChangeEvent } from "react";
+
 import styled from "styled-components";
+
 import Icon from "./Icon";
 
 interface SearchInputProps {
   searchText: string;
   handleChange?: (value: string) => void;
+  placeholder?: string;
 }
 
 const SearchInputWrapper = styled.div`
@@ -44,6 +47,7 @@ const SeachInput = styled.input`
 const SearchInput: React.FC<SearchInputProps> = ({
   searchText,
   handleChange = () => {},
+  placeholder = "회원 이름을 검색하세요",
 }) => {
   const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
@@ -54,7 +58,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       <Icon type="search" size={20} />
       <SeachInput
         value={searchText}
-        placeholder="회원 이름을 검색하세요"
+        placeholder={placeholder}
         onChange={handleValueChange}
       />
     </SearchInputWrapper>

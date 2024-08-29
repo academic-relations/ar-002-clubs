@@ -1,22 +1,28 @@
 import React, { useCallback, useState } from "react";
+
 import styled from "styled-components";
+
 import Button from "@sparcs-clubs/web/common/components/Button";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
-
 import { printingBusinessOrderSteps } from "@sparcs-clubs/web/constants/printingBusiness";
-
-import type {
-  ApiPrt002RequestParam,
-  ApiPrt002RequestBody,
-} from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt002";
 
 import PrintingBusinessFormFirst from "./PrintingBusinessFormFirst";
 import PrintingBusinessFormSecond from "./PrintingBusinessFormSecond";
 import PrintingBusinessFormThird from "./PrintingBusinessFormThird";
 
+import type {
+  ApiPrt002RequestBody,
+  ApiPrt002RequestParam,
+} from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt002";
+
 interface PrintingBusinessFormProps {
   username: string;
-  clubs: Array<{ id: ApiPrt002RequestParam["clubId"]; name: string }>;
+  clubs: Array<{
+    id: ApiPrt002RequestParam["clubId"];
+    name_kr: string;
+    name_en: string;
+  }>;
   setAgreement: React.Dispatch<React.SetStateAction<boolean>>;
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -29,12 +35,6 @@ interface PrintingBusinessFormProps {
     React.SetStateAction<Partial<ApiPrt002RequestBody>>
   >;
 }
-
-const PrintingBusinessFormInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
 
 const StyledButton = styled.div`
   display: flex;
@@ -81,7 +81,7 @@ const PrintingBusinessForm: React.FC<PrintingBusinessFormProps> = ({
   const [formError, setFormError] = useState<boolean>(false);
 
   return (
-    <PrintingBusinessFormInner>
+    <FlexWrapper direction="column" gap={60}>
       <StepProcess steps={printingBusinessOrderSteps} activeStepIndex={step} />
       <CurrentForm
         username={username}
@@ -99,7 +99,7 @@ const PrintingBusinessForm: React.FC<PrintingBusinessFormProps> = ({
           {step === Step2Form.length ? "신청" : "다음"}
         </Button>
       </StyledButton>
-    </PrintingBusinessFormInner>
+    </FlexWrapper>
   );
 };
 

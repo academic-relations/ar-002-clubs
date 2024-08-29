@@ -12,8 +12,8 @@ const method = "GET";
 const requestParam = z.object({});
 
 const requestQuery = z.object({
-  pageOffset: z.number().int().min(1),
-  itemCount: z.number().int().min(1),
+  pageOffset: z.coerce.number().int().min(1),
+  itemCount: z.coerce.number().int().min(1),
 });
 
 const requestBody = z.object({});

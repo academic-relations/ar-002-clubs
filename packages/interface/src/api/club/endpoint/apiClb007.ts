@@ -1,25 +1,26 @@
-import { ClubRepresentativeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
+
+import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 /**
  * @version v0.1
  * @description 동아리의 대표자 및 대의원을 변경합니다
  */
 
-const url = () =>
-  `/student/clubs/club/{clubId}/representatives/representative/{representativeId}`;
+const url = (clubId: number) =>
+  `/student/clubs/club/${clubId}/delegates/delegate/`;
 const method = "PUT";
 
 const requestParam = z.object({
-  clubId: z.number().int(),
-  representativeEnumId: z.nativeEnum(ClubRepresentativeEnum),
+  clubId: z.coerce.number().int().min(1),
 });
 
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  studentId: z.number().int(),
+  studentId: z.coerce.number().int().min(1),
+  delegateEnumId: z.nativeEnum(ClubDelegateEnum),
 });
 
 const responseBodyMap = {

@@ -1,6 +1,9 @@
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 import React from "react";
+
 import styled from "styled-components";
+
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+
 import Icon from "./Icon";
 
 interface InfoProps {
@@ -18,10 +21,39 @@ const InfoInner = styled.div`
   background: ${({ theme }) => theme.colors.WHITE};
 `;
 
+const ResponsiveTypography = styled(Typography)`
+  font-size: 16px;
+  line-height: 24px;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 14px;
+    line-height: 20px;
+  }
+`;
+
+const ResponsiveIcon = styled(Icon)`
+  font-size: 20px !important;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 16px !important;
+  }
+`;
+
+const IconWrapper = styled.div`
+  height: 24px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    height: 20px;
+  }
+  display: flex;
+  align-items: center;
+`;
+
 const Info: React.FC<InfoProps> = ({ text }) => (
   <InfoInner>
-    <Icon type="info_outlined" size={20} />
-    <Typography type="p">{text}</Typography>
+    <IconWrapper>
+      <ResponsiveIcon type="info_outlined" size={20} />
+    </IconWrapper>
+    <ResponsiveTypography fw="REGULAR">{text}</ResponsiveTypography>
   </InfoInner>
 );
 

@@ -5,6 +5,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
+
 import { Club } from "./club.schema";
 import { Student } from "./user.schema";
 

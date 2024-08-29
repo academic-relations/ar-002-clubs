@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
 
 interface ClubInfoItemProps {
@@ -12,6 +13,9 @@ const ClubInfoItemInner = styled.div`
   display: flex;
   flex-direction: row;
   gap: 40px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    gap: 12px;
+  }
   font-size: 16px;
   line-height: 24px;
 `;
@@ -19,11 +23,20 @@ const ClubInfoItemInner = styled.div`
 const ClubInfoTitle = styled(ClubInfoItemInner)`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   width: 120px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    width: 28px;
+    font-size: 14px;
+    line-height: 20px;
+  }
   justify-content: center;
 `;
 
 const ClubInfoContent = styled(ClubInfoItemInner)`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 14px;
+    line-height: 20px;
+  }
   display: fill;
 `;
 

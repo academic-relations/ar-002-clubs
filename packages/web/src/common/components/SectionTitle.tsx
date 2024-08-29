@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
 
 type Size = "sm" | "lg";
@@ -10,6 +11,9 @@ const SectionTitleInner = styled.div`
   display: flex;
   gap: 20px;
   width: fit-content;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    gap: 12px;
+  }
 `;
 
 const IdentityBar = styled.div`
@@ -23,6 +27,12 @@ const Title = styled.p<{ size: Size }>`
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
   font-size: ${({ size }) => (size === "sm" ? "20px" : "24px")};
   line-height: ${({ size }) => (size === "sm" ? "28px" : "32px")};
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: ${({ size }) => (size === "sm" ? "16px" : "20px")};
+    line-height: ${({ size }) => (size === "sm" ? "20px" : "24px")};
+  }
+
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   color: ${({ theme }) => theme.colors.BLACK};
 `;

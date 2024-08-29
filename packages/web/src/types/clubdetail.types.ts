@@ -1,6 +1,6 @@
-import type { TagColor } from "@sparcs-clubs/web/common/components/Tag";
-
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+
+import type { TagColor } from "@sparcs-clubs/web/common/components/Tag";
 
 interface RawClubDetail {
   id: number;
@@ -87,6 +87,7 @@ const getTagContentFromClubType = (
 };
 
 const getTagColorFromDivision = (divisionName: string): TagColor => {
+  // TODO : getTagDetail 사용
   switch (divisionName) {
     case "생활문화":
     case "사회":

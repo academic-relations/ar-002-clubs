@@ -1,8 +1,15 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
-import { NoticeInfo } from "@sparcs-clubs/web/features/notice/types/notice.type";
+
+import {
+  formatDotDate,
+  formatDotSimpleDate,
+} from "@sparcs-clubs/web/utils/Date/formatDate";
+
+import type { ApiNtc001ResponseOK } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 
 const NoticeCardInner = styled.div`
   display: flex;
@@ -20,21 +27,38 @@ const NoticeTitle = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 14px;
+    line-height: 16px;
+  }
 `;
 
-const NoticeDate = styled.div`
+const NoticeDate = styled.div<{ date: Date }>`
   color: ${({ theme }) => theme.colors.BLACK};
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: 14px;
+  font-size: 16px;
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   white-space: nowrap;
+
+  &::after {
+    content: "${({ date }) => formatDotDate(date)}";
+  }
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 14px;
+    line-height: 16px;
+    &::after {
+      content: "${({ date }) => formatDotSimpleDate(date)}";
+    }
+  }
 `;
 
-const NoticeCard: React.FC<{ noticeList: NoticeInfo }> = ({ noticeList }) => (
+const NoticeCard: React.FC<{
+  noticeList: ApiNtc001ResponseOK["notices"][number];
+}> = ({ noticeList }) => (
   <NoticeCardInner>
     <NoticeTitle>{noticeList.title}</NoticeTitle>
-    <NoticeDate>{noticeList.date}</NoticeDate>
+    <NoticeDate date={noticeList.date} />
   </NoticeCardInner>
 );
 

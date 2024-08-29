@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -11,12 +12,9 @@ interface ServiceCardProps {
   serviceLink: string;
 }
 
-const ServiceCardInner = styled(Card)`
-  gap: 16px;
-  display: flex;
+const ServiceCardInner = styled(Card).attrs({ padding: "12px 20px", gap: 16 })`
   flex-direction: row;
   flex: 1;
-  padding: 12px 20px;
   align-items: center;
 `;
 
@@ -28,6 +26,10 @@ const ServiceTitle = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 14px;
+    line-height: 16px;
+  }
 `;
 
 const ServiceCard: React.FC<ServiceCardProps> = ({

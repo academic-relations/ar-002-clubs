@@ -1,10 +1,15 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
+
 import Image from "next/image";
-import React from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 import clubsLogoSvg from "@sparcs-clubs/web/assets/logo-icon.svg";
+import {
+  formatDotDate,
+  formatDotSimpleDate,
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 
 interface NoticeListItemProps {
   title: string;
@@ -13,11 +18,17 @@ interface NoticeListItemProps {
 
 const NoticeListItemInner = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
   column-gap: 20px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    flex-direction: column;
+    column-gap: 4px;
+    justify-content: flex-start;
+  }
 `;
 
 const NoticeIconAndTitle = styled.div`
@@ -32,6 +43,10 @@ const NoticeIconAndTitle = styled.div`
   flex-wrap: nowrap;
   align-items: center;
   column-gap: 12px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    width: 100%;
+    justify-content: flex-start;
+  }
 `;
 
 // 공지사항별 아이콘이 표기되야 하는 구역입니다.
@@ -44,7 +59,6 @@ const NoticeIconWrapper = styled.div`
 
 const NoticeTitleWrapper = styled.div`
   flex-grow: 1;
-  flex-shrink: 1;
   height: 24px;
   color: ${({ theme }) => theme.colors.BLACK};
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
@@ -53,10 +67,18 @@ const NoticeTitleWrapper = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: block;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    width: 100%;
+    height: 20px;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: left;
+  }
 `;
 
-const NoticeDate = styled.div`
-  flex-basis: 100px;
+const NoticeDate = styled.div<{ date: Date }>`
+  width: 100px;
   flex-grow: 0;
   flex-shrink: 0;
   height: 24px;
@@ -65,24 +87,52 @@ const NoticeDate = styled.div`
   line-height: 24px;
   text-align: center;
   overflow: hidden;
+  display: inline-block;
+  &::after {
+    content: "${({ date }) => formatDotDate(date)}";
+  }
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    font-size: 12px;
+    line-height: 16px;
+    width: 100%;
+    height: 16px;
+    text-align: left;
+    justify-content: flex-start;
+    &::after {
+      content: "${({ date }) => formatDotSimpleDate(date)}";
+    }
+  }
 `;
 
-const NoticeListItem: React.FC<NoticeListItemProps> = ({ title, date }) => (
-  <NoticeListItemInner>
-    <NoticeIconAndTitle>
-      <NoticeIconWrapper>
-        <Image src={clubsLogoSvg} alt="clubs-logo" />
-      </NoticeIconWrapper>
-      <NoticeTitleWrapper>{title}</NoticeTitleWrapper>
-    </NoticeIconAndTitle>
-    <NoticeDate>
-      {date.toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      })}
-    </NoticeDate>
-  </NoticeListItemInner>
-);
+const NoticeListItem: React.FC<NoticeListItemProps> = ({ title, date }) => {
+  const theme = useTheme();
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(
+        window.innerWidth <= parseInt(theme.responsive.BREAKPOINT.sm),
+      );
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  return (
+    <NoticeListItemInner>
+      <NoticeIconAndTitle>
+        {!isMobileView && (
+          <NoticeIconWrapper>
+            <Image src={clubsLogoSvg} alt="clubs-logo" />
+          </NoticeIconWrapper>
+        )}
+        <NoticeTitleWrapper>{title}</NoticeTitleWrapper>
+      </NoticeIconAndTitle>
+      <NoticeDate date={date} />
+    </NoticeListItemInner>
+  );
+};
 
 export default NoticeListItem;

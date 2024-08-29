@@ -1,7 +1,10 @@
+import React from "react";
+
+import isPropValid from "@emotion/is-prop-valid";
+import styled, { css } from "styled-components";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import React from "react";
-import styled, { css } from "styled-components";
 
 interface ItemButtonProps {
   image?: string;
@@ -29,7 +32,9 @@ const ImageContent = styled.img`
   max-width: 100%;
   max-height: 100%;
 `;
-const HaveIndicator = styled.div<{ have: boolean; selected: boolean }>`
+const HaveIndicator = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ have: boolean; selected: boolean }>`
   width: 16px;
   height: 16px;
   border-radius: 50%;
@@ -64,14 +69,20 @@ const ItemButton: React.FC<ItemButtonProps> = ({
   selected,
   onClick,
   have = false,
-}) => (
-  <StyledButton selected={selected} onClick={onClick}>
-    <StyledImage>
-      <ImageContent src={image} alt="item image" />
-      {have && <HaveIndicator have={have} selected={selected} />}
-    </StyledImage>
-    <Typography type={selected ? "h3_b" : "h3"}>{name}</Typography>
-  </StyledButton>
-);
+}) => {
+  const fw = selected ? "SEMIBOLD" : "MEDIUM";
+  const color = selected ? "WHITE" : "BLACK";
+  return (
+    <StyledButton selected={selected} onClick={onClick}>
+      <StyledImage>
+        <ImageContent src={image} alt="item image" />
+        {have && <HaveIndicator have={have} selected={selected} />}
+      </StyledImage>
+      <Typography fs={20} lh={24} fw={fw} color={color}>
+        {name}
+      </Typography>
+    </StyledButton>
+  );
+};
 
 export default ItemButton;

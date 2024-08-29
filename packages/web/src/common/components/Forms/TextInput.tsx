@@ -1,7 +1,16 @@
-import React, { ChangeEvent, InputHTMLAttributes, useEffect } from "react";
+import React, {
+  ChangeEvent,
+  ChangeEventHandler,
+  FocusEventHandler,
+  InputHTMLAttributes,
+  useEffect,
+} from "react";
+
+import isPropValid from "@emotion/is-prop-valid";
 import styled, { css } from "styled-components";
-import Label from "./_atomic/Label";
-import ErrorMessage from "./_atomic/ErrorMessage";
+
+import FormError from "../FormError";
+import Label from "../FormLabel";
 
 // PhoneInput, RentalInput에서 사용하기 위해 export
 export interface TextInputProps
@@ -14,6 +23,8 @@ export interface TextInputProps
   value?: string;
   handleChange?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
 }
 
 const errorBorderStyle = css`
@@ -31,36 +42,41 @@ const areaInputStyle = css`
   overflow: auto;
 `;
 
-const Input = styled.input.attrs<TextInputProps>(({ area }) => ({
-  as: area ? "textarea" : "input",
-}))<TextInputProps & { hasError: boolean }>`
-  display: block;
-  width: 100%;
-  padding: 8px 12px 8px 12px;
-  outline: none;
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
-  border-radius: 4px;
-  gap: 8px;
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  color: ${({ theme }) => theme.colors.BLACK};
-  background-color: ${({ theme }) => theme.colors.WHITE};
-  &:focus {
-    border-color: ${({ theme, hasError, disabled }) =>
-      !hasError && !disabled && theme.colors.PRIMARY};
-  }
-  &:hover:not(:focus) {
-    border-color: ${({ theme, hasError, disabled }) =>
-      !hasError && !disabled && theme.colors.GRAY[300]};
-  }
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.GRAY[200]};
-  }
-  ${({ disabled }) => disabled && disabledStyle}
-  ${({ hasError }) => hasError && errorBorderStyle}
-  ${({ area }) => area && areaInputStyle} // TextAreaInput
+const Input = styled.input
+  .withConfig({
+    shouldForwardProp: prop =>
+      isPropValid(prop) && prop !== "hasError" && prop !== "area",
+  })
+  .attrs<TextInputProps>(({ area }) => ({
+    as: area ? "textarea" : "input",
+  }))<TextInputProps & { hasError: boolean }>`
+    display: block;
+    width: 100%;
+    padding: 8px 12px 8px 12px;
+    outline: none;
+    border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+    border-radius: 4px;
+    gap: 8px;
+    font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
+    color: ${({ theme }) => theme.colors.BLACK};
+    background-color: ${({ theme }) => theme.colors.WHITE};
+    &:focus {
+        border-color: ${({ theme, hasError, disabled }) =>
+          !hasError && !disabled && theme.colors.PRIMARY};
+    }
+    &:hover:not(:focus) {
+        border-color: ${({ theme, hasError, disabled }) =>
+          !hasError && !disabled && theme.colors.GRAY[300]};
+    }
+    &::placeholder {
+        color: ${({ theme }) => theme.colors.GRAY[200]};
+    }
+    ${({ disabled }) => disabled && disabledStyle}
+    ${({ hasError }) => hasError && errorBorderStyle}
+    ${({ area }) => area && areaInputStyle} // TextAreaInput
 `;
 
 const InputWrapper = styled.div`
@@ -80,6 +96,8 @@ const TextInput: React.FC<TextInputProps> = ({
   value = "",
   handleChange = () => {},
   setErrorStatus = () => {},
+  onChange = undefined,
+  onBlur = () => {},
   ...props
 }) => {
   const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -104,10 +122,11 @@ const TextInput: React.FC<TextInputProps> = ({
           area={area}
           disabled={disabled}
           value={value}
-          onChange={handleValueChange}
+          onChange={onChange ?? handleValueChange}
+          onBlur={onBlur}
           {...props}
         />
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+        {errorMessage && <FormError>{errorMessage}</FormError>}
       </InputWrapper>
     </InputWrapper>
   );

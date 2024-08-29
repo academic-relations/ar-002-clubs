@@ -6,22 +6,22 @@ import { z } from "zod";
  * @description 동아리의 기본 정보를 수정합니다
  */
 
-const url = () => `/student/clubs/club/{club_id}/brief`;
+const url = (club_id: number) => `/student/clubs/club/${club_id}/brief`;
 const method = "PUT";
 
 const requestParam = z.object({
-  clubId: z.number().int(), // clubId는 정수형 숫자
+  clubId: z.coerce.number().int(), // clubId는 정수형 숫자
 });
 
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  description: z.string(),
-  roomPassword: z.string().max(20),
+  description: z.coerce.string(),
+  roomPassword: z.coerce.string().max(20),
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Created]: z.object({}),
+  [HttpStatusCode.Ok]: z.object({}),
 };
 
 const responseErrorMap = {};
@@ -29,9 +29,7 @@ const responseErrorMap = {};
 type ApiClb005RequestParam = z.infer<typeof apiClb005.requestParam>;
 type ApiClb005RequestQuery = z.infer<typeof apiClb005.requestQuery>;
 type ApiClb005RequestBody = z.infer<typeof apiClb005.requestBody>;
-type ApiClb005ResponseCreated = z.infer<
-  (typeof apiClb005.responseBodyMap)[201]
->;
+type ApiClb005ResponseOk = z.infer<(typeof apiClb005.responseBodyMap)[200]>;
 
 const apiClb005 = {
   url,
@@ -49,5 +47,5 @@ export type {
   ApiClb005RequestParam,
   ApiClb005RequestQuery,
   ApiClb005RequestBody,
-  ApiClb005ResponseCreated,
+  ApiClb005ResponseOk,
 };

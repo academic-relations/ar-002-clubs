@@ -1,9 +1,10 @@
-import { addWeeks, format, getWeekOfMonth, subWeeks } from "date-fns";
-
 import React, { useState } from "react";
+
+import { addWeeks, getWeekOfMonth, subWeeks } from "date-fns";
 import styled from "styled-components";
+
 import Icon from "@sparcs-clubs/web/common/components/Icon";
-import { ko } from "date-fns/locale";
+import { formatMonth } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 interface WeekNavigatorProps {
   initialDate?: Date;
@@ -53,7 +54,7 @@ const WeekNavigator: React.FC<WeekNavigatorProps> = ({
     <NavigatorWrapper>
       <Icon type="chevron_left" size={20} onClick={handlePrevious} />
       <WeekDisplay>
-        {`${format(addWeeks(currentDate, 1), "yyyy년 M월", { locale: ko })} ${getWeekOfMonth(addWeeks(currentDate, 1))}주`}
+        {`${formatMonth(addWeeks(currentDate, 1))} ${getWeekOfMonth(addWeeks(currentDate, 1))}주`}
       </WeekDisplay>
       <Icon type="chevron_right" size={20} onClick={handleNext} />
     </NavigatorWrapper>

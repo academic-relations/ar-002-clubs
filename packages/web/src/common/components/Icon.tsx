@@ -1,8 +1,11 @@
 "use client";
 
 import React from "react";
-import styled, { css } from "styled-components";
+
+import isPropValid from "@emotion/is-prop-valid";
 import { Icon as MUIIcon } from "@mui/material";
+import styled, { css } from "styled-components";
+
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 interface IconProps {
@@ -10,15 +13,15 @@ interface IconProps {
   size: number;
   onClick?: () => void;
   color?: string;
+  className?: string;
 }
 
-const IconInner = styled.div<{
-  size: number;
+const IconInner = styled(MUIIcon).withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{
   clickable: boolean;
 }>`
   display: flex;
-  font-size: ${({ size }) => size}px;
-  color: ${({ color, theme }) => color || theme.colors.BLACK};
   ${({ clickable }) =>
     clickable &&
     css`
@@ -31,9 +34,15 @@ const Icon: React.FC<IconProps> = ({
   size,
   onClick = undefined,
   color = colors.BLACK,
+  className = "",
 }) => (
-  <IconInner size={size} clickable={!!onClick} color={color} onClick={onClick}>
-    <MUIIcon fontSize="inherit">{type}</MUIIcon>
+  <IconInner
+    className={className}
+    clickable={!!onClick}
+    onClick={onClick}
+    style={{ color, fontSize: size }}
+  >
+    {type}
   </IconInner>
 );
 

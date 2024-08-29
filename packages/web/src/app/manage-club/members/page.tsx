@@ -1,40 +1,71 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import PageTitle from "@sparcs-clubs/web/common/components/PageTitle";
-import BreadCrumb from "@sparcs-clubs/web/common/components/BreadCrumb";
-import styled from "styled-components";
-import RegisterMemberListFrame from "@sparcs-clubs/web/features/manage-club/members/frames/RegisterMemberListFrame";
-import AllMemberListFrame from "@sparcs-clubs/web/features/manage-club/members/frames/AllMemberListFrame";
+import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
-const MembersPageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-`;
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
+import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
+import NotRegistrationPeriod from "@sparcs-clubs/web/common/frames/NotRegistrationPeriod";
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
+import ManageClubMembers from "@sparcs-clubs/web/features/manage-club/members/frames/ManageClubMembersFrame";
 
-const PageHeadWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
+const Members = () => {
+  const { isLoggedIn, login, profile } = useAuth();
+  const [loading, setLoading] = useState(true);
 
-const Members = () => (
-  <MembersPageWrapper>
-    <PageHeadWrapper>
-      <BreadCrumb
-        items={[
-          { name: "대표 동아리 관리", path: "/manage-club" },
-          { name: "회원 명단", path: "/manage-club/members" },
-        ]}
-      />
-      <PageTitle>회원 명단</PageTitle>
-    </PageHeadWrapper>
-    <RegisterMemberListFrame />
-    {/* TODO: registereMember는 신청 시기에만 나오도록 */}
-    <AllMemberListFrame />
-  </MembersPageWrapper>
-);
+  useEffect(() => {
+    if (isLoggedIn !== undefined || profile !== undefined) {
+      setLoading(false);
+    }
+  }, [isLoggedIn, profile]);
+
+  const { data, isLoading, isError } = useGetRegistrationTerm();
+  const [isRegistrationPeriod, setIsRegistrationPeriod] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    if (data) {
+      const now = new Date();
+      const currentEvents = data.events.filter(
+        event => now >= event.startTerm && now <= event.endTerm,
+      );
+      if (currentEvents.length === 0) {
+        setIsRegistrationPeriod(false);
+        return;
+      }
+      const registrationEvent = currentEvents.filter(
+        event =>
+          event.registrationEventEnumId ===
+          RegistrationDeadlineEnum.StudentRegistrationApplication,
+      );
+      if (registrationEvent.length > 0) {
+        setIsRegistrationPeriod(true);
+      } else {
+        setIsRegistrationPeriod(false);
+      }
+    }
+  }, [data]);
+
+  if (loading || isLoading) {
+    return <AsyncBoundary isLoading={loading || isLoading} isError={isError} />;
+  }
+
+  if (!isRegistrationPeriod) {
+    return <NotRegistrationPeriod />;
+  }
+
+  if (!isLoggedIn) {
+    return <LoginRequired login={login} />;
+  }
+
+  if (profile !== "undergraduate") {
+    return <NoManageClub />;
+  }
+
+  return <ManageClubMembers />;
+};
 
 export default Members;

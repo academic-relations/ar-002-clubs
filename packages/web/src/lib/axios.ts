@@ -1,9 +1,11 @@
 import axios, { AxiosError } from "axios";
 import MockAdapter from "axios-mock-adapter";
+
 import { env } from "@sparcs-clubs/web/env";
-import mockInterceptor from "./_axios/axiosMockInterceptor";
+
 import tokenInterceptor from "./_axios/axiosAuthTokenInterceptor";
 import errorInterceptor from "./_axios/axiosErrorInterceptor";
+import mockInterceptor from "./_axios/axiosMockInterceptor";
 
 /**
  * @name axiosClient
@@ -20,7 +22,7 @@ axiosClient.interceptors.request.use(
   mockInterceptor.onRejected,
 );
 
-axiosClient.interceptors.request.use(
+axiosClient.interceptors.response.use(
   errorInterceptor.onFulfilled,
   errorInterceptor.onRejected,
 );
@@ -45,7 +47,7 @@ axiosClientWithAuth.interceptors.request.use(
   tokenInterceptor.onRejected,
 );
 
-axiosClientWithAuth.interceptors.request.use(
+axiosClientWithAuth.interceptors.response.use(
   errorInterceptor.onFulfilled,
   errorInterceptor.onRejected,
 );

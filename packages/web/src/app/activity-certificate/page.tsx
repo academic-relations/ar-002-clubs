@@ -1,7 +1,8 @@
 "use client";
 
-import ActivityCertificateMainFrame from "@sparcs-clubs/web/features/activity-certificate/frames/ActivityCertificateMainFrame";
 import React from "react";
+
+import ActivityCertificateMainFrame from "@sparcs-clubs/web/features/activity-certificate/frames/ActivityCertificateMainFrame";
 
 const Clubs = () => <ActivityCertificateMainFrame />;
 

@@ -1,34 +1,33 @@
 "use client";
 
 import React from "react";
+
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import {
   getClubType,
   getTagColorFromClubType,
 } from "@sparcs-clubs/web/features/clubs/services/clubTypeControl";
+
+import ClubRegistrationButton from "./ClubRegistrationButton";
 
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 
 interface ClubCardProps {
   club: ApiClb001ResponseOK["divisions"][number]["clubs"][number];
 }
-
-const ClubCardInner = styled(Card)`
-  gap: 16px;
-`;
-
 const ClubCardRow = styled.div`
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
-
 const ClubCardNameRow = styled(ClubCardRow)`
   display: flex;
   flex-direction: row;
@@ -36,7 +35,13 @@ const ClubCardNameRow = styled(ClubCardRow)`
   justify-content: space-between;
   align-items: center;
 `;
-
+const ClubCardTagRow = styled(ClubCardRow)`
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+`;
 const ClubName = styled.div`
   width: 100%;
   height: 24px;
@@ -47,40 +52,41 @@ const ClubName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 `;
-
-const ClubMemberCount = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-  font-size: 14px;
-  line-height: 16px;
-`;
-
-const ClubCard: React.FC<ClubCardProps> = ({ club }) => (
-  <ClubCardInner>
-    <ClubCardNameRow>
-      <ClubName>{club.name}</ClubName>
-      <ClubMemberCount>
-        <Icon type="person" size={16} />
-        <div>{club.totalMemberCnt}</div>
-      </ClubMemberCount>
-    </ClubCardNameRow>
-
-    <ClubCardRow>
-      {club.advisor === null
-        ? `회장 ${club.representative}`
-        : `회장 ${club.representative} | 지도교수 ${club.advisor}`}
-    </ClubCardRow>
-    <ClubCardRow>{club.characteristic}</ClubCardRow>
-
-    <ClubCardRow>
-      <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
-        {getClubType(club)}
-      </Tag>
-    </ClubCardRow>
-  </ClubCardInner>
-);
-
+const ClubCard: React.FC<
+  ClubCardProps & { isRegistrationPeriod?: boolean }
+> = ({ club, isRegistrationPeriod = false }) => {
+  const { isLoggedIn } = useAuth();
+  return (
+    <Card gap={16} padding="16px 20px">
+      <ClubCardNameRow>
+        <ClubName>{club.name_kr}</ClubName>
+        <FlexWrapper direction="row" gap={4}>
+          <Icon type="person" size={16} />
+          <Typography fs={14} lh={16}>
+            {club.totalMemberCnt}
+          </Typography>
+        </FlexWrapper>
+      </ClubCardNameRow>
+      <ClubCardRow>
+        {club.advisor === "null" ||
+        club.advisor === "undefined" ||
+        club.advisor === undefined ||
+        club.advisor === null ||
+        club.advisor === ""
+          ? `회장 ${club.representative}`
+          : `회장 ${club.representative} | 지도교수 ${club.advisor}`}
+      </ClubCardRow>
+      <ClubCardRow>{club.characteristic}</ClubCardRow>
+      <ClubCardTagRow>
+        <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
+          {getClubType(club)}
+        </Tag>
+        {isRegistrationPeriod && isLoggedIn && (
+          <ClubRegistrationButton club={club} />
+        )}
+      </ClubCardTagRow>
+    </Card>
+  );
+};
 export default ClubCard;
-
 export type { ClubCardProps };

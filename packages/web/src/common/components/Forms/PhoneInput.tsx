@@ -1,10 +1,11 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
+
 import TextInput, {
   TextInputProps,
 } from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
 interface PhoneInputProps extends Omit<TextInputProps, "onChange"> {
-  value: string;
+  value?: string;
   onChange: (value: string) => void;
 }
 
@@ -27,7 +28,10 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
         setError("필수로 채워야 하는 항목입니다");
       } else if (!isValidFormat) {
         setError("숫자만 입력 가능합니다");
-      } else if (value.replace(/-/g, "").length !== 11) {
+      } else if (
+        value.replace(/-/g, "").length !== 11 ||
+        value.slice(0, 3) !== "010"
+      ) {
         setError("유효하지 않은 전화번호입니다");
       } else {
         setError("");

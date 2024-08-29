@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
-
-import Select from "@sparcs-clubs/web/common/components/Forms/Select";
-import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
-
-import type { SelectItem } from "@sparcs-clubs/web/common/components/Forms/Select";
+import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
+import Select from "@sparcs-clubs/web/common/components/Select";
 
 import type { PrintingBusinessFormProps } from ".";
+
+import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 type PrintingBusinessFormFirstProps = Pick<
   PrintingBusinessFormProps,
@@ -20,12 +19,6 @@ type PrintingBusinessFormFirstProps = Pick<
   | "setRequestForm"
 > & { setFormError: React.Dispatch<React.SetStateAction<boolean>> };
 
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
-  gap: 20px;
-  align-self: stretch;
-`;
-
 const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
   username,
   clubs,
@@ -35,8 +28,8 @@ const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
   setRequestForm,
   setFormError,
 }) => {
-  const clubSelection: Array<SelectItem> = clubs.map(club => ({
-    label: club.name,
+  const clubSelection: Array<SelectItem<string>> = clubs.map(club => ({
+    label: club.name_kr,
     value: club.id.toString(),
     selectable: true,
   }));
@@ -57,19 +50,19 @@ const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
     // console.log("[PrintingBusinessFormFirst] state changed to", clubId, phoneNumber);
     setRequestParam({ clubId: Number(clubId) });
     setRequestForm({ ...requestForm, krPhoneNumber: phoneNumber });
-  }, [clubId, phoneNumber]);
+  }, [clubId, phoneNumber, requestForm, setRequestForm, setRequestParam]);
 
   useEffect(() => {
     setFormError(clubIdSelectionError || usernameError || phoneNumberError);
-  }, [clubIdSelectionError, usernameError, phoneNumberError]);
+  }, [clubIdSelectionError, usernameError, phoneNumberError, setFormError]);
 
   return (
-    <StyledCard outline>
+    <Card outline gap={20}>
       <Select
         items={clubSelection}
         label="동아리 이름"
-        selectedValue={clubId}
-        onSelect={setClubId}
+        value={clubId}
+        onChange={setClubId}
         setErrorStatus={setClubIdSelectionError}
       />
       <TextInput
@@ -86,7 +79,7 @@ const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
         onChange={setPhoneNumber}
         setErrorStatus={setPhoneNumberError}
       />
-    </StyledCard>
+    </Card>
   );
 };
 

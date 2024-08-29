@@ -1,15 +1,13 @@
-import Filter from "@sparcs-clubs/web/common/components/Filter/Index";
-import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
-import TextButton from "@sparcs-clubs/web/common/components/TextButton";
 import React from "react";
-import styled from "styled-components";
-import { SemesterListProps } from "../types/semesterList";
 
-const MemberSearchAndFilterWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
+import styled from "styled-components";
+
+import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
+import Filter from "@sparcs-clubs/web/common/components/Filter/Index";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
+
+import { SemesterListProps } from "../types/semesterList";
 
 const SearchAndFilterWrapper = styled.div`
   display: flex;
@@ -42,7 +40,7 @@ const MemberSearchAndFilter: React.FC<
     handleChange("");
   };
   return (
-    <MemberSearchAndFilterWrapper>
+    <FlexWrapper direction="column" gap={20}>
       <SearchAndFilterWrapper>
         <SearchInput searchText={searchText} handleChange={handleChange} />
         <Filter
@@ -58,7 +56,7 @@ const MemberSearchAndFilter: React.FC<
           disabled={semesters === selectedSemesters && searchText === ""}
         />
       </ResetButtonWrapper>
-    </MemberSearchAndFilterWrapper>
+    </FlexWrapper>
   );
 };
 

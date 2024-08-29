@@ -1,27 +1,21 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+
 import { setHours } from "date-fns";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
-
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-
 import { printingBusinessOrderSteps } from "@sparcs-clubs/web/constants/printingBusiness";
 import DesiredPickUpTimeSelection from "@sparcs-clubs/web/features/printing-business/component/DesiredPickUpTimeSelection/DesiredPickUpTimeSelection";
-
 import { mockExistDates } from "@sparcs-clubs/web/features/rental-business/frames/RentalInfoFrame/_atomic/mockExistDate";
-import type { PrintingBusinessFormProps } from ".";
+
 import FormCheck from "./_atomic/FormCheck";
+
+import type { PrintingBusinessFormProps } from ".";
 
 type PrintingBusinessFormThirdProps = Pick<
   PrintingBusinessFormProps,
   "username" | "clubs" | "requestParam" | "requestForm" | "setRequestForm"
 > & { setFormError: React.Dispatch<React.SetStateAction<boolean>> };
-
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
-  gap: 20px;
-  align-self: stretch;
-`;
 
 const PrintingBusinessFormThird: React.FC<PrintingBusinessFormThirdProps> = ({
   username,
@@ -41,14 +35,14 @@ const PrintingBusinessFormThird: React.FC<PrintingBusinessFormThirdProps> = ({
   }, [printingPurpose]);
 
   return (
-    <StyledCard outline>
+    <Card outline gap={20}>
       <FormCheck
         label={printingBusinessOrderSteps[0].label}
         formContents={[
           [
             "동아리",
             `동아리: ${
-              clubs.at(requestParam.clubId ?? 0)?.name.toString() ??
+              clubs.at(requestParam.clubId ?? 0)?.name_kr.toString() ??
               "동아리 선택에 오류가 있습니다. 이전 단계를 검토해주세요"
             }`,
           ],
@@ -105,7 +99,7 @@ const PrintingBusinessFormThird: React.FC<PrintingBusinessFormThirdProps> = ({
           })
         }
       />
-    </StyledCard>
+    </Card>
   );
 };
 

@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+
+import Link from "next/link";
 import styled from "styled-components";
 
 import NoticeListItem from "@sparcs-clubs/web/features/notices/components/NoticeListItem";
@@ -22,17 +24,25 @@ const NoticeListInner = styled.div`
   flex-direction: column;
 `;
 
-const NoticeListItemWrapper = styled.div`
-  flex-grow: 1;
+const NoticeListItemWrapper = styled(Link)`
+  flex-grow: 0;
   min-height: 48px;
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
   padding: 8px;
+  display: flex;
+  overflow: hidden;
+  align-items: center;
 `;
 
 const NoticeList: React.FC<NoticeListProps> = ({ infos }) => (
   <NoticeListInner>
     {infos.map(noticeInfo => (
-      <NoticeListItemWrapper key={noticeInfo.id}>
+      <NoticeListItemWrapper
+        key={noticeInfo.id}
+        href={noticeInfo.link}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <NoticeListItem title={noticeInfo.title} date={noticeInfo.date} />
       </NoticeListItemWrapper>
     ))}

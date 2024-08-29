@@ -1,11 +1,13 @@
 import React, { HTMLAttributes } from "react";
+
 import styled from "styled-components";
+
 import Button from "../Button";
-import Typography from "../Typography";
 import Icon from "../Icon";
+import Typography from "../Typography";
 
 // TODO: 나중에 Buttons 폴더로 묶으면 어떨지
-export interface IconButtonProps extends HTMLAttributes<HTMLDivElement> {
+export interface IconButtonProps extends HTMLAttributes<HTMLButtonElement> {
   type: "default" | "disabled" | "outlined";
   buttonText: string;
   iconType: string;
@@ -29,7 +31,9 @@ const IconButton: React.FC<IconButtonProps> = ({
   <Button type={type} {...props}>
     <ButtonInner>
       <Icon type={iconType} size={16} color="white" />
-      <Typography type="span">{buttonText}</Typography>
+      <Typography fs={14} lh={20} fw="REGULAR">
+        {buttonText}
+      </Typography>
     </ButtonInner>
   </Button>
 );

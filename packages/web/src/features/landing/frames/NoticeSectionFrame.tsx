@@ -1,10 +1,17 @@
 "use client";
 
 import React from "react";
-import styled from "styled-components";
-import { NoticeInfo } from "@sparcs-clubs/web/features/notice/types/notice.type";
+
 import Link from "next/link";
-import paths from "@sparcs-clubs/web/constants/paths";
+import styled from "styled-components";
+
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import {
+  noticeItemCount,
+  noticePageOffset,
+} from "@sparcs-clubs/web/constants/mainPage";
+import { useGetNotice } from "@sparcs-clubs/web/features/notices/services/useGetNotice";
+
 import MoreSectionTitle from "../components/MoreSectionTitle";
 import NoticeCard from "../components/NoticeCard";
 
@@ -21,31 +28,40 @@ const NoticeWrapper = styled.div`
   flex-direction: column;
   gap: 20px;
   margin-left: 24px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    margin-left: 16px;
+    gap: 16px;
+  }
 `;
 
-type NoticeSectionFrameProps = {
-  noticeList: Array<NoticeInfo>;
-};
+const NoticeSectionFrame: React.FC = () => {
+  const { data, isLoading, isError } = useGetNotice(
+    noticePageOffset,
+    noticeItemCount,
+  );
 
-const NoticeSectionFrame: React.FC<NoticeSectionFrameProps> = ({
-  noticeList,
-}) => (
-  <NoticeSectionFrameInner>
-    <MoreSectionTitle title="공지사항" />
-    <NoticeWrapper>
-      {noticeList.map(noticeInfo => (
-        <Link
-          key={noticeInfo.id}
-          href={
-            paths.HOME.path
-          } /* TODO - 각 notice에 따른 올바른 path로 수정 바람 --> paths.NOTICE.path + "/" + noticeInfo.id.toString() */
-          style={{ display: "flex", flexDirection: "column" }}
-        >
-          <NoticeCard noticeList={noticeInfo} />
-        </Link>
-      ))}
-    </NoticeWrapper>
-  </NoticeSectionFrameInner>
-);
+  return (
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <NoticeSectionFrameInner>
+        <MoreSectionTitle title="공지사항" />
+        <NoticeWrapper>
+          {data?.notices.map(noticeInfo => (
+            <Link
+              key={noticeInfo.id}
+              href={
+                noticeInfo.link
+              } /* TODO - 각 notice에 따른 올바른 path로 수정 바람 --> paths.NOTICE.path + "/" + noticeInfo.id.toString() */
+              style={{ display: "flex", flexDirection: "column" }}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <NoticeCard noticeList={noticeInfo} />
+            </Link>
+          ))}
+        </NoticeWrapper>
+      </NoticeSectionFrameInner>
+    </AsyncBoundary>
+  );
+};
 
 export default NoticeSectionFrame;

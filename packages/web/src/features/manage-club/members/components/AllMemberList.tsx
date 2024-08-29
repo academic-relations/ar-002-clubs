@@ -1,8 +1,16 @@
-import { MoreInfo } from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 import React, { useState } from "react";
+
+import {
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import styled from "styled-components";
+
+import FoldUnfoldButton from "@sparcs-clubs/web/common/components/Buttons/FoldUnfoldButton";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Table from "@sparcs-clubs/web/common/components/Table";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 interface AllMemberListProps {
   semester: string;
@@ -14,12 +22,6 @@ interface AllMemberListProps {
   }[];
   searchText?: string;
 }
-
-const AllMemberListWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
 
 const AllMemberListTitle = styled.div`
   display: flex;
@@ -33,36 +35,65 @@ const TableWithCount = styled.div`
   gap: 8px;
 `;
 
-const TableWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
-  border-radius: 8px;
-  width: 100%;
-  overflow: hidden;
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
-`;
+const columnHelper =
+  createColumnHelper<AllMemberListProps["members"][number]>();
 
-const TableRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 0px;
-`;
+const columns = [
+  columnHelper.accessor("studentNumber", {
+    id: "studentNumber",
+    header: "학번",
+    cell: info => info.getValue(),
+    size: 20,
+  }),
+  columnHelper.accessor("name", {
+    id: "name",
+    header: "신청자",
+    cell: info => info.getValue(),
+    size: 20,
+  }),
+  columnHelper.accessor("phoneNumber", {
+    id: "phoneNumber",
+    header: "전화번호",
+    cell: info => info.getValue(),
+    size: 20,
+    enableSorting: false,
+  }),
+  columnHelper.accessor("email", {
+    id: "email",
+    header: "이메일",
+    cell: info => info.getValue(),
+    size: 20,
+    enableSorting: false,
+  }),
+  columnHelper.display({
+    id: "remarks",
+    header: "비고",
+    cell: () => " ",
+    size: 20,
+    enableSorting: false,
+  }),
+];
 
 const AllMemberList: React.FC<AllMemberListProps> = ({
   semester,
   members,
   searchText = "",
 }) => {
-  const [toggle, setToggle] = useState<boolean>(false);
-  const toggleHandler = () => setToggle(!toggle);
+  const [folded, setFolded] = useState<boolean>(false);
   const searchedMembers = members.filter(member =>
     member.name.startsWith(searchText),
   );
 
   const memberCount = searchedMembers.length;
+
+  const table = useReactTable({
+    columns,
+    data: searchedMembers,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
   return (
-    <AllMemberListWrapper>
+    <FlexWrapper direction="column" gap={20}>
       <AllMemberListTitle>
         <Typography
           fs={20}
@@ -74,11 +105,9 @@ const AllMemberList: React.FC<AllMemberListProps> = ({
         >
           {semester} (총 {memberCount}명)
         </Typography>
-        <MoreInfo onClick={toggleHandler}>
-          {toggle ? `접기` : `펼치기`}
-        </MoreInfo>
+        <FoldUnfoldButton folded={folded} setFolded={setFolded} />
       </AllMemberListTitle>
-      {toggle && (
+      {!folded && (
         <TableWithCount>
           <Typography
             fw="REGULAR"
@@ -89,49 +118,10 @@ const AllMemberList: React.FC<AllMemberListProps> = ({
           >
             총 {memberCount}명
           </Typography>
-          <TableWrapper>
-            <TableRow>
-              <TableCell type="HeaderSort" width="20%">
-                학번
-              </TableCell>
-              <TableCell type="HeaderSort" width="20%">
-                신청자
-              </TableCell>
-              <TableCell type="Header" width="20%">
-                전화번호
-              </TableCell>
-              <TableCell type="Header" width="20%">
-                이메일
-              </TableCell>
-              <TableCell type="Header" width="20%">
-                비고
-              </TableCell>
-            </TableRow>
-            {searchedMembers
-              .sort((a, b) => a.studentNumber - b.studentNumber)
-              .map(member => (
-                <TableRow key={member.studentNumber}>
-                  <TableCell type="Default" width="20%">
-                    {member.studentNumber}
-                  </TableCell>
-                  <TableCell type="Default" width="20%">
-                    {member.name}
-                  </TableCell>
-                  <TableCell type="Default" width="20%">
-                    {member.phoneNumber}
-                  </TableCell>
-                  <TableCell type="Default" width="20%">
-                    {member.email}
-                  </TableCell>
-                  <TableCell type="Default" width="20%">
-                    {" "}
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableWrapper>
+          <Table table={table} />
         </TableWithCount>
       )}
-    </AllMemberListWrapper>
+    </FlexWrapper>
   );
 };
 

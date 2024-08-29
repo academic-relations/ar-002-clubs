@@ -1,12 +1,14 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { zClubName } from "@sparcs-clubs/interface/common/commonString";
+
 /**
  * @version v0.1
  * @description 서비스를 신청하는 유저의 정보를 가져옵니다
  */
 
-const url = () => `/user/my`;
+const url = () => `student/user/my`;
 const method = "GET";
 
 const requestParam = z.object({});
@@ -20,7 +22,8 @@ const responseBodyMap = {
     clubs: z.array(
       z.object({
         id: z.number().int().min(1),
-        name: z.string().max(30),
+        name_kr: zClubName,
+        name_en: zClubName,
       }),
     ),
     name: z.string().max(30),

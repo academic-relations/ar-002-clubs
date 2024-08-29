@@ -1,22 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
+
+import { differenceInHours, differenceInMinutes } from "date-fns";
+
 import styled from "styled-components";
+
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 import Info from "@sparcs-clubs/web/common/components/Info";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { differenceInHours, differenceInMinutes, format } from "date-fns";
-import { ko } from "date-fns/locale";
-import type { CommonSpaceFrameProps } from "../CommonSpaceNoticeFrame";
+import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
+import useGetCommonSpaces from "@sparcs-clubs/web/features/common-space/service/getCommonSpaces";
 
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
-  gap: 20px;
-  align-self: stretch;
-`;
-
-const StyledTypography = styled(Typography)`
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
-`;
+import { CommonSpaceInfoProps } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
+import {
+  formatSimpleSlashDate,
+  formatTime,
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 
 const CardInner = styled.div`
   display: flex;
@@ -42,37 +42,70 @@ const ReservationInfo = styled.div`
   align-self: stretch;
 `;
 
-const CommonSpaceInfoThirdFrame: React.FC<CommonSpaceFrameProps> = ({
-  commonSpace,
-}) => {
-  const { start, end } = commonSpace.reservation!;
-  const diffHours = differenceInHours(end, start);
-  const diffMinutes = differenceInMinutes(end, start);
+const CommonSpaceInfoThirdFrame: React.FC<
+  CommonSpaceInfoProps & { setNextEnabled: (enabled: boolean) => void }
+> = ({ setNextEnabled, body, param }) => {
+  const { email, clubId, startTerm, endTerm } = body;
+  const { spaceId } = param;
+  const correct = email && clubId && startTerm && endTerm && spaceId;
+  const {
+    data: commonSpacesData,
+    isLoading: commonSpacesLoading,
+    isError: commonSpacesError,
+  } = useGetCommonSpaces();
 
-  return (
+  const {
+    data: userProfileData,
+    isLoading: userProfileLoading,
+    isError: userProfileError,
+  } = useGetUserProfile();
+
+  useEffect(() => {
+    setNextEnabled(!!correct);
+  }, [correct, setNextEnabled]);
+
+  return correct ? (
     <>
-      <StyledCard outline>
+      <Card outline gap={20}>
         <CardInner>
-          <StyledTypography type="p">신청자 정보</StyledTypography>
-          <StyledList>
-            <li>동아리: {commonSpace.info?.clubName}</li>
-            <li>담당자: {commonSpace.info?.applicant}</li>
-            <li>연락처: {commonSpace.info?.phone}</li>
-          </StyledList>
+          <Typography fs={16} lh={20} fw="MEDIUM">
+            신청자 정보
+          </Typography>
+          <AsyncBoundary
+            isLoading={userProfileLoading}
+            isError={userProfileError}
+          >
+            <StyledList>
+              <li>동아리: {userProfileData?.clubs[clubId]?.name_kr}</li>
+              <li>담당자: {userProfileData?.name}</li>
+              <li>연락처: {userProfileData?.phoneNumber}</li>
+            </StyledList>
+          </AsyncBoundary>
         </CardInner>
         <ReservationInfo>
-          <Typography type="p_b">예약 공간</Typography>
-          <Typography type="p">
-            {commonSpace.space}, {format(start, "M/d(E) ", { locale: ko })}
-            {format(start, "HH:mm", { locale: ko })} ~
-            {format(end, "HH:mm", { locale: ko })} ({`${diffHours}시간`}
-            {diffMinutes! % 60 ? ` ${diffMinutes! % 60}분` : ""})
+          <Typography fs={16} lh={20} fw="MEDIUM">
+            예약 공간
           </Typography>
+          <AsyncBoundary
+            isLoading={commonSpacesLoading}
+            isError={commonSpacesError}
+          >
+            <Typography fs={16} lh={20} fw="REGULAR">
+              {commonSpacesData?.commonSpaces[spaceId]?.name},{" "}
+              {`${formatSimpleSlashDate(startTerm)} `}
+              {formatTime(startTerm)} ~ {formatTime(endTerm)} (
+              {`${differenceInHours(endTerm, startTerm)}시간`}
+              {differenceInMinutes(endTerm, startTerm) % 60
+                ? ` ${differenceInMinutes(endTerm, startTerm) % 60}분`
+                : ""}
+              )
+            </Typography>
+          </AsyncBoundary>
         </ReservationInfo>
-      </StyledCard>
+      </Card>
       <Info text="먼가 넣을 것이 없을까나" />
     </>
-  );
+  ) : null;
 };
 
 export default CommonSpaceInfoThirdFrame;

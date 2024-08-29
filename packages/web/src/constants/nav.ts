@@ -4,8 +4,10 @@ const headerPaths: (keyof Paths)[] = [
   "CLUBS",
   "VOTING",
   "COMMUNITY",
-  "SERVICE",
+  // "SERVICE",
+  "EXECUTIVE",
 ];
+
 const footerPaths: (keyof Paths)[] = ["MADE_BY", "LICENSE", "TERMS_OF_SERVICE"];
 
 const navPaths = {

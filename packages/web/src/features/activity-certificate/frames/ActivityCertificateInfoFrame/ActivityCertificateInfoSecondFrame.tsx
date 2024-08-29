@@ -1,21 +1,17 @@
 import React, { useEffect, useState } from "react";
+
 import styled from "styled-components";
+
+import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import DateRangeInput from "@sparcs-clubs/web/common/components/Forms/DateRangeInput";
+import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
+import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Info from "@sparcs-clubs/web/common/components/Info";
 
-import Icon from "@sparcs-clubs/web/common/components/Icon";
-import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import DateRangeInput from "@sparcs-clubs/web/common/components/Forms/DateRangeInput";
-import IconButton from "@sparcs-clubs/web/common/components/Forms/IconButton";
-import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 // eslint-disable-next-line no-restricted-imports
 import { ActivityDescription } from "../../types/activityCertificate";
-
-const StyledCard = styled(Card)<{ outline: boolean }>`
-  padding: 32px;
-  gap: 20px;
-  align-self: stretch;
-`;
+import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 
 const ActivityCertificateSecondFrameInner = styled.div`
   display: flex;
@@ -273,7 +269,7 @@ const ActivityCertificateInfoSecondFrame: React.FC<
   return (
     <ActivityCertificateSecondFrameInner>
       <Info text="활동 내역 최대 5개까지 입력 가능, 날짜 포함 => 워딩은 병찬이나 동연에서 고쳐주겟징~~" />
-      <StyledCard outline>
+      <Card outline gap={20}>
         {activityCertificate.detail.map(activityDescription => (
           <ActivityCertificateRow
             key={activityDescription.key}
@@ -359,10 +355,11 @@ const ActivityCertificateInfoSecondFrame: React.FC<
         <IconButton
           type={activityCertificate.detail.length < 5 ? "default" : "disabled"}
           onClick={handleAddActivityDescription}
-          buttonText="활동 내역 추가"
-          iconType="add"
-        />
-      </StyledCard>
+          icon="add"
+        >
+          활동 내역 추가
+        </IconButton>
+      </Card>
     </ActivityCertificateSecondFrameInner>
   );
 };
