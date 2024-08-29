@@ -105,15 +105,15 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
               },
             ]}
             optional={
-              <RejectReasonToast
-                title="반려 사유"
-                reasons={[
-                  {
-                    reason: "대충 어떤 반려 사유 어쩌고",
-                    datetime: new Date(),
-                  },
-                ]}
-              />
+              clubDetail?.comments && (
+                <RejectReasonToast
+                  title="반려 사유"
+                  reasons={clubDetail?.comments.map(comment => ({
+                    datetime: comment.createdAt,
+                    reason: comment.content,
+                  }))}
+                />
+              )
             }
           />
           <FlexWrapper direction="column" gap={16}>
