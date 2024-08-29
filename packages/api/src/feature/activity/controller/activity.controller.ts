@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UsePipes,
 } from "@nestjs/common";
 
@@ -23,6 +24,7 @@ import apiAct008, {
   ApiAct008RequestParam,
   ApiAct008ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
+import apiAct011 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -52,6 +54,10 @@ import type {
   ApiAct005RequestBody,
   ApiAct005ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
+import type {
+  ApiAct011RequestQuery,
+  ApiAct011ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
 
 @Controller()
 export default class ActivityController {
@@ -157,5 +163,20 @@ export default class ActivityController {
       user.studentId,
     );
     return {};
+  }
+
+  @Student()
+  @Get("/student/provisional/activities")
+  @UsePipes(new ZodPipe(apiAct011))
+  async getStudentProvisionalActivities(
+    @GetStudent() user: GetStudent,
+    @Query() query: ApiAct011RequestQuery,
+  ): Promise<ApiAct011ResponseOk> {
+    const result = await this.activityService.getStudentProvisionalActivities({
+      studentId: user.studentId,
+      query,
+    });
+
+    return result;
   }
 }

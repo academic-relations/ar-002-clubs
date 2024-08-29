@@ -242,6 +242,22 @@ export default class ActivityRepository {
     return result;
   }
 
+  /**
+   * @param clubId 동아리 ID
+   * @description 가동아리 활보 작성은 하나의 기간만 존재하기에
+   * clubId기준으로 한번에 가져오기 위한 쿼리입니다.
+   * @returns 해당 동아리가 적은 삭제되지 않은 모든 활동을 가져옵니다.
+   */
+  async selectActivityByClubId(param: { clubId: number }) {
+    const result = await this.db
+      .select()
+      .from(Activity)
+      .where(
+        and(eq(Activity.clubId, param.clubId), isNull(Activity.deletedAt)),
+      );
+    return result;
+  }
+
   async selectActivityByClubIdAndActivityDId(
     clubId: number,
     activityDId: number,
