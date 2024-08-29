@@ -1,6 +1,6 @@
-import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
-import RegisterClubTypeEnum from "@sparcs-clubs/web/features/executive/register-club/constants/registerClubType";
+import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
+import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
 import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 export const mockClubRegisterDetail = {
@@ -14,7 +14,7 @@ export const mockClubRegisterDetail = {
       date: new Date(2024, 3, 11, 21, 0),
     },
   ],
-  registerClubType: RegisterClubTypeEnum.Promotional,
+  registerClubType: RegistrationTypeEnum.Promotional,
   clubName: "스팍스",
   representativeName: "이지윤",
   representativePhoneNumber: "010-XXXX-XXXX",
