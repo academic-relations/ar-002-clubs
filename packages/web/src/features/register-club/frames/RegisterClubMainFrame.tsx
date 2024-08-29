@@ -81,7 +81,8 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
           <ConfirmModalContent
             onConfirm={() => {
               close();
-              // TODO. 신청내역 페이지로 이동
+              /* TODO: (@dora) 신청 내역 id 받아서 넣기 */
+              router.push("/my");
             }}
           >
             신청이 완료되었습니다.
@@ -98,16 +99,18 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
         원래 useGetClubDetail()을 통해 clubName을 가져와서 
         "{clubName} 동아리 등록 신청이 이미 존재하여 등록 신청을 할 수 없습니다."라고 표시해주었는데,
         해당 API 호출에 이슈가 있어서 clubName에 대한 부분을 임시로 빼둔 상태
+        그리고 에러 케이스가 다양해지면서 그냥 문구를 퉁쳐버림...
       */
       overlay.open(({ isOpen, close }) => (
         <Modal isOpen={isOpen}>
           <ConfirmModalContent
             onConfirm={() => {
               close();
-              // TODO. 신청내역 페이지로 이동
             }}
           >
-            해당 동아리에 대한 등록 신청이 이미 존재하여
+            해당 동아리에 대한 등록 신청이 이미 존재하거나
+            <br />
+            이미 등록 신청 기록이 있어
             <br />
             등록 신청을 할 수 없습니다.
           </ConfirmModalContent>
