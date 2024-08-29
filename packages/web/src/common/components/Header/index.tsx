@@ -76,7 +76,6 @@ const Header: React.FC = () => {
 
   const { profile } = useAuth();
 
-
   const headerPaths = navPaths.header
     .filter(
       menu =>
@@ -84,7 +83,6 @@ const Header: React.FC = () => {
         paths[menu].authority.includes("all"),
     )
     .filter(menu => getFeatureFlagString(paths[menu].featureFlag));
-
 
   const handleClose = () => {
     setIsMobileMenuVisible(false);

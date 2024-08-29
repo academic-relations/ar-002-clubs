@@ -13,7 +13,7 @@ import registrationTypeEnumChecker from "../utils/registrationTypeEnumChecker";
  * @description 동아리 등록 수정
  */
 
-const url = (applyId: string) =>
+const url = (applyId: number) =>
   `/student/registrations/club-registrations/club-registration/${applyId}`;
 const method = "PUT";
 

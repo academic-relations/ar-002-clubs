@@ -6,13 +6,17 @@ import styled from "styled-components";
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+
 import { mockPastActivityData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
 import PastActivityReportList from "@sparcs-clubs/web/features/manage-club/activity-report/components/PastActivityReportList";
 
 import CreateActivityReportModal from "./_atomic/CreateActivityReportModal";
+
+interface ActivityReportFrameProps {
+  clubId: number;
+}
 
 const OptionOuter = styled.div`
   display: flex;
@@ -22,10 +26,18 @@ const OptionOuter = styled.div`
   align-self: stretch;
 `;
 
-const ActivityReportFrame: React.FC = () => {
+const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
+  clubId,
+}) => {
+  // const { data, isLoading, isError } = useGetActivityReport();
+
   const openCreateActivityReportModal = () => {
     overlay.open(({ isOpen, close }) => (
-      <CreateActivityReportModal isOpen={isOpen} close={close} />
+      <CreateActivityReportModal
+        clubId={clubId}
+        isOpen={isOpen}
+        close={close}
+      />
     ));
   };
 
