@@ -148,6 +148,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   const updateFiles = (_files: Attachment[]) => {
+    // console.log("updateFiles", _files);
     const updatedFiles = files.filter(f =>
       _files.map(_file => _file.name).includes(f.file.name),
     );
@@ -218,7 +219,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
               name: file.file.name,
               src: URL.createObjectURL(file.file),
             }))}
-            onChange={updateFiles}
+            onChange={_files => updateFiles(_files)}
             disabled={disabled}
           />
         )}

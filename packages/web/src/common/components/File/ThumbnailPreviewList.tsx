@@ -67,6 +67,7 @@ const ThumbnailPreviewList: React.FC<ThumbnailPreviewListProps> = ({
   };
 
   const onDelete = (file: Attachment) => {
+    // console.log("onDelete", file, fileList);
     const newFileList = fileList.filter(f => f !== file);
     onChange(newFileList);
   };
