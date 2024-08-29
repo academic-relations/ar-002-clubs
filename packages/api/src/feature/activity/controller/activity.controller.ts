@@ -14,6 +14,15 @@ import apiAct002 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
 import apiAct003 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
 import apiAct004 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct004";
 import apiAct005 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
+import apiAct007, {
+  ApiAct007RequestBody,
+  ApiAct007ResponseCreated,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
+import apiAct008, {
+  ApiAct008RequestBody,
+  ApiAct008RequestParam,
+  ApiAct008ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -117,6 +126,36 @@ export default class ActivityController {
     @Body() body: ApiAct003RequestBody,
   ): Promise<ApiAct003ResponseOk> {
     await this.activityService.putStudentActivity(param, body, user.studentId);
+    return {};
+  }
+
+  @Student()
+  @Post("/student/activities/activity/provisional")
+  @UsePipes(new ZodPipe(apiAct007))
+  async postStudentActivityProvisional(
+    @GetStudent() user: GetStudent,
+    @Body() body: ApiAct007RequestBody,
+  ): Promise<ApiAct007ResponseCreated> {
+    await this.activityService.postStudentActivityProvisional(
+      body,
+      user.studentId,
+    );
+    return {};
+  }
+
+  @Student()
+  @Put("/student/activities/activity/:activityId/provisional")
+  @UsePipes(new ZodPipe(apiAct008))
+  async putStudentActivityProvisional(
+    @GetStudent() user: GetStudent,
+    @Param() param: ApiAct008RequestParam,
+    @Body() body: ApiAct008RequestBody,
+  ): Promise<ApiAct008ResponseOk> {
+    await this.activityService.putStudentActivityProvisional(
+      param,
+      body,
+      user.studentId,
+    );
     return {};
   }
 }
