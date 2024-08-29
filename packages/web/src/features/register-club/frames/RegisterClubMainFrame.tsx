@@ -15,8 +15,6 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
-import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
-
 import ActivityReportFrame from "../components/ActivityReportFrame";
 import AdvancedInformFrame from "../components/AdvancedInformFrame";
 import BasicInformFrame from "../components/BasicInformFrame";
@@ -44,20 +42,15 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   });
 
   const {
-    getValues,
     handleSubmit,
-
     formState: { isValid },
   } = formCtx;
 
   const { mutate: registerClubApi, isSuccess, isError } = useRegisterClub();
-  const {
-    data: clubDetail,
-    isLoading: isLoadingClubDetail,
-    isError: isErrorClubDetail,
-  } = useGetClubDetail(getValues().clubId?.toString() ?? "");
 
   const title = useMemo(() => {
+    formCtx.setValue("registrationTypeEnumId", type);
+
     switch (type) {
       case RegistrationTypeEnum.Promotional:
         return "신규 등록";
@@ -66,7 +59,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
       default:
         return "가등록";
     }
-  }, [type]);
+  }, [formCtx, type]);
 
   const isProvisionalClub =
     type === RegistrationTypeEnum.NewProvisional ||
@@ -100,8 +93,12 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
       return;
     }
     if (isError) {
-      const clubName =
-        isLoadingClubDetail || isErrorClubDetail ? "" : clubDetail?.name_kr;
+      /* 
+        TODO: (@dora)
+        원래 useGetClubDetail()을 통해 clubName을 가져와서 
+        "{clubName} 동아리 등록 신청이 이미 존재하여 등록 신청을 할 수 없습니다."라고 표시해주었는데,
+        해당 API 호출에 이슈가 있어서 clubName에 대한 부분을 임시로 빼둔 상태
+      */
       overlay.open(({ isOpen, close }) => (
         <Modal isOpen={isOpen}>
           <ConfirmModalContent
@@ -110,20 +107,14 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
               // TODO. 신청내역 페이지로 이동
             }}
           >
-            {clubName} 동아리 등록 신청이 이미 존재하여
+            해당 동아리에 대한 등록 신청이 이미 존재하여
             <br />
             등록 신청을 할 수 없습니다.
           </ConfirmModalContent>
         </Modal>
       ));
     }
-  }, [
-    isSuccess,
-    isError,
-    isLoadingClubDetail,
-    isErrorClubDetail,
-    clubDetail?.name_kr,
-  ]);
+  }, [isSuccess, isError]);
 
   return (
     <FormProvider {...formCtx}>

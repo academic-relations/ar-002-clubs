@@ -42,6 +42,7 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { isValid },
   } = formCtx;
 
@@ -177,7 +178,15 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
                   />
                 )}
               />
-              <FileUpload />
+              <FileUpload
+                multiple
+                onChange={data => {
+                  setValue(
+                    "evidenceFiles",
+                    data.map(file => ({ fileId: file })),
+                  );
+                }}
+              />
             </FlexWrapper>
             <ButtonWrapper>
               <Button type="outlined" onClick={close}>
