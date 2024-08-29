@@ -78,6 +78,7 @@ const ClubRegisterApproveFrame = ({ applyId }: { applyId: number }) => {
                 { comment: rejectionDetail },
               );
               refetch();
+              setRejectionDetail("");
             }}
           >
             신청 반려

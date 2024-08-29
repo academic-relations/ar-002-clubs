@@ -15,7 +15,7 @@ export const postClubRegistrationSendBack = async (
   requestParam: ApiReg017RequestParam,
   requestBody: ApiReg017RequestBody,
 ) => {
-  const { data, status } = await axiosClientWithAuth.patch(
+  const { data, status } = await axiosClientWithAuth.post(
     apiReg017.url(requestParam.applyId.toString()),
     requestBody,
   );
