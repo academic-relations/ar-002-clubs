@@ -1,11 +1,9 @@
+// import { ApiReg015ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg015";
+import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
 import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
-import RegisterClubTypeEnum from "@sparcs-clubs/web/features/executive/register-club/constants/registerClubType";
 
-import { ClubRegisterDetail } from "@sparcs-clubs/web/features/executive/register-club/frames/ClubRegisterDetailFrame";
-
-import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
-
-export const mockClubRegisterDetail: ClubRegisterDetail = {
+export const mockClubRegisterDetail = {
   statusAndDate: [
     {
       status: ProgressCheckSectionStatusEnum.Approved,
@@ -16,7 +14,7 @@ export const mockClubRegisterDetail: ClubRegisterDetail = {
       date: new Date(2024, 3, 11, 21, 0),
     },
   ],
-  registerClubType: RegisterClubTypeEnum.Promotional,
+  registerClubType: RegistrationTypeEnum.Promotional,
   clubName: "스팍스",
   representativeName: "이지윤",
   representativePhoneNumber: "010-XXXX-XXXX",
@@ -33,6 +31,6 @@ export const mockClubRegisterDetail: ClubRegisterDetail = {
     "주요 활동 계획": "어쩌고 저쩌고",
   },
   attachmentList: {},
-  professorApproval: ActivityProfessorApprovalEnum.Requested,
+  isProfessorSigned: true,
   activityReports: true,
 };

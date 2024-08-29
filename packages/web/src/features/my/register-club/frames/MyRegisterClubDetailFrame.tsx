@@ -3,7 +3,6 @@
 import React, { useMemo } from "react";
 
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { useParams, useRouter } from "next/navigation";
 
 import styled from "styled-components";
@@ -33,6 +32,7 @@ import { mockMyClubRegisterAcf } from "@sparcs-clubs/web/features/my/services/_m
 import useGetClubRegistration from "@sparcs-clubs/web/features/my/services/useGetClubRegistration";
 import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+import { professorEnumToText } from "@sparcs-clubs/web/utils/getUserType";
 
 const FilePreviewContainerWrapper = styled(FlexWrapper)`
   padding-left: 24px;
@@ -67,17 +67,6 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
   const router = useRouter();
   const { id } = useParams();
 
-  const professorEnumToText = (profEnum?: ProfessorEnum) => {
-    switch (profEnum) {
-      case ProfessorEnum.Assistant:
-        return "조교수";
-      case ProfessorEnum.Associate:
-        return "부교수";
-      case ProfessorEnum.Full:
-      default:
-        return "정교수";
-    }
-  };
   const data = useMemo(() => mockMyClubRegisterAcf.items, []);
   const {
     data: clubDetail,

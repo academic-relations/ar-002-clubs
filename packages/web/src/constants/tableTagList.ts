@@ -9,6 +9,7 @@ import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/renta
 
 import { DivisionType } from "@sparcs-clubs/web/types/divisions.types";
 
+import { TagColor } from "../common/components/Tag";
 import {
   ActivityProfessorApprovalEnum,
   ActivityStatusEnum,
@@ -114,6 +115,14 @@ const ProfessorApprovalTagList: {
   [ActivityProfessorApprovalEnum.Denied]: { text: "반려", color: "RED" },
 };
 
+const ProfessorIsApprovedTagList: (isApproved: boolean) => {
+  text: string;
+  color: TagColor;
+} = isApproved => {
+  if (isApproved) return { text: "승인", color: "GREEN" };
+  return { text: "대기", color: "GRAY" };
+};
+
 const ActTypeTagList: {
   [key in ActivityTypeEnum]: StatusDetail;
 } = {
@@ -172,6 +181,7 @@ export {
   MemTagList,
   ApplyTagList,
   ProfessorApprovalTagList,
+  ProfessorIsApprovedTagList,
   ActTypeTagList,
   FundingTagList,
   RegistrationTypeTagList,

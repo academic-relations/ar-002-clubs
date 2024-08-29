@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
+import NotFound from "@sparcs-clubs/web/app/not-found";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
-import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import RegisterClubAuthFrame from "@sparcs-clubs/web/features/register-club/frames/RegisterClubAuthFrame";
 
@@ -29,7 +29,7 @@ const ProvisionalRegisterClub = () => {
   }
 
   if (profile !== "undergraduate") {
-    return <NoManageClub />;
+    return <NotFound />;
   }
 
   return <RegisterClubAuthFrame type={RegistrationTypeEnum.NewProvisional} />;

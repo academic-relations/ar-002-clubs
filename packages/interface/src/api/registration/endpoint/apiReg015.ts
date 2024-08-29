@@ -18,7 +18,7 @@ import registrationTypeEnumChecker from "../utils/registrationTypeEnumChecker";
  */
 
 const url = (applyId: string) =>
-  `/executive/registrations/club-registraions/club-registration/${applyId}`;
+  `/executive/registrations/club-registrations/club-registration/${applyId}`;
 const method = "GET";
 
 const requestParam = z.object({
