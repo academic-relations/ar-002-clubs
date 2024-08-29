@@ -8,7 +8,7 @@ import { z } from "zod";
  */
 
 const url = (applyId: string) =>
-  `/executive/registrations/club-registraions/club-registration/${applyId}/send-back`;
+  `/executive/registrations/club-registrations/club-registration/${applyId}/send-back`;
 const method = "POST";
 
 const requestParam = z.object({
