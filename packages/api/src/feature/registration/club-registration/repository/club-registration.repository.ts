@@ -529,8 +529,6 @@ export class ClubRegistrationRepository {
         professorName: Professor.name,
         registrationStatusEnumId:
           Registration.registrationApplicationStatusEnumId,
-        krName: Registration.clubNameKr,
-        enName: Registration.clubNameEn,
       })
       .from(Registration)
       .leftJoin(
