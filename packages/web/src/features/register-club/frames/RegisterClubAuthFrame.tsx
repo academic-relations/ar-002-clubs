@@ -35,7 +35,8 @@ const RegisterClubAuthFrame: React.FC<{
   }
 
   if (
-    (delegate === undefined && type !== RegistrationTypeEnum.ReProvisional) ||
+    delegate === undefined &&
+    type !== RegistrationTypeEnum.ReProvisional &&
     type !== RegistrationTypeEnum.NewProvisional
   ) {
     return <NoManageClub />;
