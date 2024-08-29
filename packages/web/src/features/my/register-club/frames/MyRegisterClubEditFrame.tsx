@@ -109,9 +109,7 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   const clubId = watch("clubId");
 
-  const { mutate, isSuccess } = usePutClubRegistration({
-    applyId,
-  });
+  const { mutate, isSuccess } = usePutClubRegistration();
 
   const title = useMemo(() => {
     switch (detail?.registrationTypeEnumId) {
@@ -134,7 +132,7 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
   const submitHandler = useCallback(
     (data: ApiReg009RequestBody) => {
       console.log("submit", data);
-      mutate({ body: data as ApiReg009RequestBody });
+      mutate({ requestParam: { applyId }, body: data });
     },
     [mutate],
   );

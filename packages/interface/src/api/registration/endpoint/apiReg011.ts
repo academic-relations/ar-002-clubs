@@ -18,8 +18,10 @@ import registrationTypeEnumChecker from "../utils/registrationTypeEnumChecker";
  * @description 동아리 등록 조회
  */
 
-const url = (applyId: string) =>
-  `/student/registrations/club-registrations/club-registration/${applyId}`;
+const url = (applyId: string) => {
+  console.log("applyId", "applyId", applyId);
+  return `/student/registrations/club-registrations/club-registration/${applyId}`;
+};
 const method = "GET";
 
 const requestParam = z.object({
