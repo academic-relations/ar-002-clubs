@@ -12,7 +12,6 @@ import navPaths from "@sparcs-clubs/web/constants/nav";
 import paths from "@sparcs-clubs/web/constants/paths";
 
 import { getFeatureFlagString } from "@sparcs-clubs/web/hooks/getFeatureFlag";
-import { useGetProfileNow } from "@sparcs-clubs/web/hooks/getProfileNow";
 
 import MobileNavMenu from "../NavTools/MobileNavMenu";
 
