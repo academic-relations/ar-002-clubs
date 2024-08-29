@@ -167,17 +167,23 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
                 활동 분야 (영문): {clubDetail?.activityFieldEn}
               </ListItem>
             </ListContainer>
-            <Typography fw="MEDIUM" fs={16} lh={20}>
-              지도교수 정보
-            </Typography>
-            <ListContainer>
-              <ListItem>성함: {clubDetail?.professor?.name}</ListItem>
-              <ListItem>
-                직급:{" "}
-                {professorEnumToText(clubDetail?.professor?.professorEnumId)}
-              </ListItem>
-              <ListItem>이메일: {clubDetail?.professor?.email}</ListItem>
-            </ListContainer>
+            {clubDetail?.professor && (
+              <>
+                <Typography fw="MEDIUM" fs={16} lh={20}>
+                  지도교수 정보
+                </Typography>
+                <ListContainer>
+                  <ListItem>성함: {clubDetail?.professor?.name}</ListItem>
+                  <ListItem>
+                    직급:{" "}
+                    {professorEnumToText(
+                      clubDetail?.professor?.professorEnumId,
+                    )}
+                  </ListItem>
+                  <ListItem>이메일: {clubDetail?.professor?.email}</ListItem>
+                </ListContainer>
+              </>
+            )}
             <Typography fw="MEDIUM" fs={16} lh={20}>
               동아리 정보
             </Typography>
@@ -218,16 +224,18 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
                 />
               </FlexWrapper>
             )}
-            <TagWrapper>
-              <Typography fw="MEDIUM" fs={16} lh={20}>
-                지도교수 승인
-              </Typography>
-              {clubDetail?.isProfessorSigned ? (
-                <Tag color="GREEN">승인</Tag>
-              ) : (
-                <Tag color="GRAY">대기</Tag>
-              )}
-            </TagWrapper>
+            {clubDetail?.professor && (
+              <TagWrapper>
+                <Typography fw="MEDIUM" fs={16} lh={20}>
+                  지도교수 승인
+                </Typography>
+                {clubDetail?.isProfessorSigned ? (
+                  <Tag color="GREEN">승인</Tag>
+                ) : (
+                  <Tag color="GRAY">대기</Tag>
+                )}
+              </TagWrapper>
+            )}
           </FlexWrapper>
         </Card>
 

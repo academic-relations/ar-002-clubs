@@ -99,20 +99,22 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
             {`\u2022  활동 분야 (영문): ${data?.activityFieldEn}`}
           </Typography>
         </FlexWrapper>
-        <FlexWrapper gap={12} direction="column">
-          <Typography fw="MEDIUM" lh={20} fs={16}>
-            지도교수 정보
-          </Typography>
-          <Typography lh={20} fs={16}>
-            {`\u2022  성함: ${data?.professor?.name}`}
-          </Typography>
-          <Typography lh={20} fs={16}>
-            {`\u2022  직급: ${professorEnumToText(data?.professor?.professorEnumId)}`}
-          </Typography>
-          <Typography lh={20} fs={16}>
-            {`\u2022  이메일: ${data?.professor?.email}`}
-          </Typography>
-        </FlexWrapper>
+        {data?.professor && (
+          <FlexWrapper gap={12} direction="column">
+            <Typography fw="MEDIUM" lh={20} fs={16}>
+              지도교수 정보
+            </Typography>
+            <Typography lh={20} fs={16}>
+              {`\u2022  성함: ${data?.professor?.name}`}
+            </Typography>
+            <Typography lh={20} fs={16}>
+              {`\u2022  직급: ${professorEnumToText(data?.professor?.professorEnumId)}`}
+            </Typography>
+            <Typography lh={20} fs={16}>
+              {`\u2022  이메일: ${data?.professor?.email}`}
+            </Typography>
+          </FlexWrapper>
+        )}
         <FlexWrapper gap={12} direction="column">
           <Typography fw="MEDIUM" lh={20} fs={16}>
             동아리 정보
@@ -190,18 +192,21 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
             />
           </FlexWrapper>
         )}
-        <FlexWrapper gap={20} direction="row">
-          <Typography fw="MEDIUM" lh={20} fs={16} style={{ flex: 1 }}>
-            지도교수 승인
-          </Typography>
-          <Tag
-            color={
-              data && ProfessorIsApprovedTagList(data?.isProfessorSigned).color
-            }
-          >
-            {data && ProfessorIsApprovedTagList(data?.isProfessorSigned).text}
-          </Tag>
-        </FlexWrapper>
+        {data?.professor && (
+          <FlexWrapper gap={20} direction="row">
+            <Typography fw="MEDIUM" lh={20} fs={16} style={{ flex: 1 }}>
+              지도교수 승인
+            </Typography>
+            <Tag
+              color={
+                data &&
+                ProfessorIsApprovedTagList(data?.isProfessorSigned).color
+              }
+            >
+              {data && ProfessorIsApprovedTagList(data?.isProfessorSigned).text}
+            </Tag>
+          </FlexWrapper>
+        )}
       </Card>
     </AsyncBoundary>
   );
