@@ -8,13 +8,16 @@ import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCh
 import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { ProfessorApprovalTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import PastActivityReportList from "@sparcs-clubs/web/features/manage-club/activity-report/components/PastActivityReportList";
-
 import {
-  RegisterClubTypeName,
-  RegisterClubTypeTagColor,
-} from "../constants/registerClubType";
+  DivisionTypeTagList,
+  ProfessorIsApprovedTagList,
+  RegistrationTypeTagList,
+} from "@sparcs-clubs/web/constants/tableTagList";
+import PastActivityReportList from "@sparcs-clubs/web/features/manage-club/activity-report/components/PastActivityReportList";
+import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
+import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+import { professorEnumToText } from "@sparcs-clubs/web/utils/getUserType";
+
 import { mockActivityData } from "../services/_mock/mockActivityList";
 import { mockClubRegisterDetail } from "../services/_mock/mockClubRegisterDetail";
 import useRegisterClubDetail from "../services/getRegisterClubDetail";
@@ -50,6 +53,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
           <Typography fw="MEDIUM" lh={20} fs={16}>
             신청 상태
           </Typography>
+          {/* TODO: progresschecksection */}
           <ProgressCheckSection
             labels={["신청 완료", progressCheckSectionLabel()]}
             progress={mockClubRegisterDetail.statusAndDate}
@@ -61,10 +65,14 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
           </Typography>
           <Tag
             color={
-              RegisterClubTypeTagColor[mockClubRegisterDetail.registerClubType]
+              data &&
+              getTagDetail(data.registrationTypeEnumId, RegistrationTypeTagList)
+                .color
             }
           >
-            {RegisterClubTypeName[mockClubRegisterDetail.registerClubType]}
+            {data &&
+              getTagDetail(data.registrationTypeEnumId, RegistrationTypeTagList)
+                .text}
           </Tag>
         </FlexWrapper>
         <FlexWrapper gap={12} direction="column">
@@ -78,13 +86,13 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
             {`\u2022  대표자 이름: ${data?.representative.name}`}
           </Typography>
           <Typography lh={20} fs={16}>
-            {`\u2022  대표자 전화번호: ${data?.phoneNumber}`}
+            {`\u2022  대표자 전화번호: ${data?.representative.phoneNumber}`}
           </Typography>
           <Typography lh={20} fs={16}>
-            {`\u2022  설립 연도: ${data?.foundedAt.getFullYear()}`}
+            {`\u2022  설립 연도: ${data && getActualYear(data?.foundedAt)}`}
           </Typography>
           <Typography lh={20} fs={16}>
-            {`\u2022  소속 분과: ${mockClubRegisterDetail.divisionName}`}
+            {`\u2022  소속 분과: ${data && getTagDetail(data?.divisionId, DivisionTypeTagList).text}`}
           </Typography>
           <Typography lh={20} fs={16}>
             {`\u2022  활동 분야 (국문): ${data?.activityFieldKr}`}
@@ -101,7 +109,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
             {`\u2022  성함: ${data?.professor?.name}`}
           </Typography>
           <Typography lh={20} fs={16}>
-            {`\u2022  직급: ${mockClubRegisterDetail.professorPosition}`}
+            {`\u2022  직급: ${professorEnumToText(data?.professor?.professorEnumId)}`}
           </Typography>
           <Typography lh={20} fs={16}>
             {`\u2022  이메일: ${data?.professor?.email}`}
@@ -118,11 +126,12 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
             {`\u2022  설립 목적: ${data?.foundationPurpose}`}
           </Typography>
           <Typography lh={20} fs={16}>
-            {`\u2022  주요 활동 계획: ${data?.divisionConsistency}`}
+            {`\u2022  주요 활동 계획: ${data?.activityPlan}`}
           </Typography>
           <Typography lh={20} fs={16}>
-            {`\u2022  (선택) 외부 강사 지도 계획서: ${data?.divisionConsistency}`}
+            {`\u2022  (선택) 외부 강사 지도 계획서`}
           </Typography>
+          {/* TODO: file 제대로 넣기 */}
           {Object.keys(attachmentList).map((key, index) => (
             <>
               <Typography lh={20} fs={16} key={`${index.toString()}`}>
@@ -134,6 +143,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
             </>
           ))}
         </FlexWrapper>
+        {/* TODO: 활보 연결 */}
         {mockClubRegisterDetail.activityReports && (
           <FlexWrapper direction="column" gap={16}>
             <Typography fw="MEDIUM" lh={20} fs={16}>
@@ -151,14 +161,10 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
           </Typography>
           <Tag
             color={
-              ProfessorApprovalTagList[mockClubRegisterDetail.professorApproval]
-                .color
+              data && ProfessorIsApprovedTagList(data?.isProfessorSigned).color
             }
           >
-            {
-              ProfessorApprovalTagList[mockClubRegisterDetail.professorApproval]
-                .text
-            }
+            {data && ProfessorIsApprovedTagList(data?.isProfessorSigned).text}
           </Tag>
         </FlexWrapper>
       </Card>

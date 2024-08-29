@@ -1,7 +1,7 @@
+// import { ApiReg015ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg015";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
-import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 export const mockClubRegisterDetail = {
   statusAndDate: [
@@ -31,6 +31,6 @@ export const mockClubRegisterDetail = {
     "주요 활동 계획": "어쩌고 저쩌고",
   },
   attachmentList: {},
-  professorApproval: ActivityProfessorApprovalEnum.Requested,
+  isProfessorSigned: true,
   activityReports: true,
 };
