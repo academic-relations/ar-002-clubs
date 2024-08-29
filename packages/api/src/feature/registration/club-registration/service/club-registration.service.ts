@@ -583,8 +583,10 @@ export class ClubRegistrationService {
       registrationStatusEnumId:
         result.registration.registrationApplicationStatusEnumId,
       clubId: result.registration.clubId,
-      clubNameKr: result.registration.clubNameKr,
-      clubNameEn: result.registration.clubNameEn,
+      clubNameKr: result.club.name_kr,
+      clubNameEn: result.club.name_en,
+      newClubNameKr: result.registration.clubNameKr,
+      newClubNameEn: result.registration.clubNameEn,
       representative: {
         studentNumber: result.student.number,
         name: result.student.name,
