@@ -93,6 +93,7 @@ const Clubs: React.FC = () => {
       />
       <AsyncBoundary isLoading={isLoadingTerm} isError={isErrorTerm}>
         {isRegistrationPeriod && (
+          // TODO: 학기 동적처리
           <Info
             text={`현재는 2024년 가을학기 동아리 신청 기간입니다 (신청 마감 : ${formatDateTime(memberRegistrationPeriodEnd)})`}
           />
