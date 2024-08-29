@@ -67,6 +67,8 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   const submitHandler = useCallback(
     (data: ApiReg001RequestBody) => {
+      /* TODO: (@dora) remove after test */
+      console.log("submit", data);
       registerClubApi({
         body: data,
       });
