@@ -18,7 +18,6 @@ import {
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
@@ -30,6 +29,7 @@ import {
 import MyRegisterClubAcfTable from "@sparcs-clubs/web/features/my/register-club/components/MyRegisterClubAcfTable";
 import { mockMyClubRegisterAcf } from "@sparcs-clubs/web/features/my/services/_mock/mockMyClubRegisterDetail";
 import useGetClubRegistration from "@sparcs-clubs/web/features/my/services/useGetClubRegistration";
+import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
 import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 import { professorEnumToText } from "@sparcs-clubs/web/utils/getUserType";
@@ -92,30 +92,34 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
           enableLast
         />
         <Card outline gap={20}>
-          <ProgressStatus
-            labels={["신청 완료", "동아리 연합회 신청 반려"]}
-            progress={[
-              {
-                status: ProgressCheckSectionStatusEnum.Approved,
-                date: new Date(),
-              },
-              {
-                status: ProgressCheckSectionStatusEnum.Canceled,
-                date: new Date(),
-              },
-            ]}
-            optional={
-              clubDetail?.comments && (
-                <RejectReasonToast
-                  title="반려 사유"
-                  reasons={clubDetail?.comments.map(comment => ({
-                    datetime: comment.createdAt,
-                    reason: comment.content,
-                  }))}
-                />
-              )
-            }
-          />
+          {clubDetail && (
+            <ProgressStatus
+              labels={
+                getRegisterClubProgress(
+                  clubDetail?.registrationStatusEnumId,
+                  clubDetail?.updatedAt,
+                ).labels
+              }
+              progress={
+                getRegisterClubProgress(
+                  clubDetail?.registrationStatusEnumId,
+                  clubDetail?.updatedAt,
+                ).progress
+              }
+              optional={
+                clubDetail?.comments &&
+                clubDetail?.comments.length > 0 && (
+                  <RejectReasonToast
+                    title="반려 사유"
+                    reasons={clubDetail?.comments.map(comment => ({
+                      datetime: comment.createdAt,
+                      reason: comment.content,
+                    }))}
+                  />
+                )
+              }
+            />
+          )}
           <FlexWrapper direction="column" gap={16}>
             <TagWrapper>
               <Typography fw="MEDIUM" fs={16} lh={20}>
@@ -236,7 +240,6 @@ const MyRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
           >
             목록으로 돌아가기
           </Button>
-          {/* TODO: 집행부원은 다른 화면 보여야 하는지? */}
           {profile !== "professor" ? (
             <FlexWrapper direction="row" gap={10}>
               <Button style={{ width: "max-content" }} onClick={() => {}}>
