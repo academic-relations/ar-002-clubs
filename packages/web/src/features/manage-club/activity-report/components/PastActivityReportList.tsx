@@ -1,5 +1,6 @@
 import React from "react";
 
+import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -13,8 +14,14 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
-import { type PastActivityReport } from "../types/activityReport";
-
+type PastActivityReport = {
+  name: string;
+  activityTypeEnumId: ActivityTypeEnum;
+  duration: {
+    startTerm: Date;
+    endTerm: Date;
+  };
+};
 interface ActivityReportListProps {
   data: PastActivityReport[];
   showItemCount?: boolean;
@@ -22,34 +29,50 @@ interface ActivityReportListProps {
 
 const columnHelper = createColumnHelper<PastActivityReport>();
 
-const getCategoryTagColor = (category: string): TagColor => {
-  switch (category) {
-    case "동아리 성격에 합치하는 내부 활동":
+const getActivityTypeTagColor = (activityType: ActivityTypeEnum): TagColor => {
+  switch (activityType) {
+    case ActivityTypeEnum.matchedInternalActivity:
       return "ORANGE";
-    case "동아리 성격에 합치하는 외부 활동":
+    case ActivityTypeEnum.matchedExternalActivity:
       return "BLUE";
-    case "동아리 성격에 합치하지 않는 활동":
+    case ActivityTypeEnum.notMatchedActivity:
       return "PURPLE";
     default:
       return "GRAY";
   }
 };
 
+const getActivityTypeTagLabel = (activityType: ActivityTypeEnum): string => {
+  switch (activityType) {
+    case ActivityTypeEnum.matchedInternalActivity:
+      return "동아리 성격에 합치하는 내부 활동";
+    case ActivityTypeEnum.matchedExternalActivity:
+      return "동아리 성격에 합치하는 외부 활동";
+    case ActivityTypeEnum.notMatchedActivity:
+      return "동아리 성격에 합치하지 않는 활동";
+    default:
+      return "-";
+  }
+};
+
 const columns = [
-  columnHelper.accessor("activity", {
+  columnHelper.accessor("name", {
     header: "활동명",
     cell: info => info.getValue(),
     size: 35,
   }),
-  columnHelper.accessor("category", {
+  columnHelper.accessor("activityTypeEnumId", {
     header: "활동 분류",
     cell: info => (
-      <Tag color={getCategoryTagColor(info.getValue())}>{info.getValue()}</Tag>
+      <Tag color={getActivityTypeTagColor(info.getValue())}>
+        {getActivityTypeTagLabel(info.getValue())}
+      </Tag>
     ),
     size: 30,
   }),
   columnHelper.accessor(
-    row => `${formatDate(row.startDate)} ~ ${formatDate(row.endDate)}`,
+    row =>
+      `${formatDate(row.duration.startTerm)} ~ ${formatDate(row.duration.endTerm)}`,
     {
       header: "활동 기간",
       cell: info => info.getValue(),
@@ -71,6 +94,8 @@ const PastActivityReportList: React.FC<ActivityReportListProps> = ({
   data,
   showItemCount = true,
 }) => {
+  console.log("past-activity-report", data);
+
   const table = useReactTable({
     columns,
     data,

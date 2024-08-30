@@ -108,22 +108,17 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
                     label="활동 분류"
                     items={[
                       {
-                        value:
-                          ActivityTypeEnum.matchedInternalActivity.toString(),
-
+                        value: ActivityTypeEnum.matchedInternalActivity,
                         label: "동아리 성격에 합치하는 내부 활동",
                         selectable: true,
                       },
                       {
-                        value:
-                          ActivityTypeEnum.matchedExternalActivity.toString(),
-
+                        value: ActivityTypeEnum.matchedExternalActivity,
                         label: "동아리 성격에 합치하는 외부 활동",
                         selectable: true,
                       },
                       {
-                        value: ActivityTypeEnum.notMatchedActivity.toString(),
-
+                        value: ActivityTypeEnum.notMatchedActivity,
                         label: "동아리 성격에 합치하지 않는 활동",
                         selectable: true,
                       },

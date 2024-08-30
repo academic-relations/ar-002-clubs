@@ -3,6 +3,7 @@ import React from "react";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
+// import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -11,6 +12,8 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { mockPastActivityData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
 import PastActivityReportList from "@sparcs-clubs/web/features/manage-club/activity-report/components/PastActivityReportList";
+
+// import { useGetActivityReportsForPromotional } from "../services/useGetActivityReportsForPromotional";
 
 import CreateActivityReportModal from "./_atomic/CreateActivityReportModal";
 
@@ -29,7 +32,10 @@ const OptionOuter = styled.div`
 const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
   clubId,
 }) => {
-  // const { data, isLoading, isError } = useGetActivityReport();
+  /* TODO: (@dora) connect api when durations is fixed */
+  // const { data, isLoading, isError } = useGetActivityReportsForPromotional({
+  //   clubId,
+  // });
 
   const openCreateActivityReportModal = () => {
     overlay.open(({ isOpen, close }) => (
@@ -42,6 +48,7 @@ const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
   };
 
   return (
+    // <AsyncBoundary isLoading={isLoading} isError={isError}>
     <FlexWrapper direction="column" gap={40}>
       <SectionTitle>가등록 / 등록 취소 기간 활동 보고서</SectionTitle>
       <Card outline gap={32} style={{ marginLeft: 20 }}>
@@ -64,9 +71,12 @@ const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
           </IconButton>
         </OptionOuter>
         {/* // TODO. 백엔드 api 완성되면 수정 */}
-        <PastActivityReportList data={mockPastActivityData} />
+        <PastActivityReportList
+          data={mockPastActivityData.activities /* data ?? [] */}
+        />
       </Card>
     </FlexWrapper>
+    // </AsyncBoundary>
   );
 };
 
