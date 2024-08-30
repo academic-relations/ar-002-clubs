@@ -1,59 +1,33 @@
 import React from "react";
 
-import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
-import Tag, { type TagColor } from "@sparcs-clubs/web/common/components/Tag";
+import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import PastActivityReportModal from "@sparcs-clubs/web/features/register-club/components/_atomic/PastActivityReportModal";
+
+import {
+  getActivityTypeTagColor,
+  getActivityTypeTagLabel,
+} from "@sparcs-clubs/web/features/register-club/utils/activityType";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
-type PastActivityReport = {
-  name: string;
-  activityTypeEnumId: ActivityTypeEnum;
-  duration: {
-    startTerm: Date;
-    endTerm: Date;
-  };
-};
+import { PastActivityReport } from "../_mock/mock";
+
 interface ActivityReportListProps {
   data: PastActivityReport[];
   showItemCount?: boolean;
 }
 
 const columnHelper = createColumnHelper<PastActivityReport>();
-
-const getActivityTypeTagColor = (activityType: ActivityTypeEnum): TagColor => {
-  switch (activityType) {
-    case ActivityTypeEnum.matchedInternalActivity:
-      return "ORANGE";
-    case ActivityTypeEnum.matchedExternalActivity:
-      return "BLUE";
-    case ActivityTypeEnum.notMatchedActivity:
-      return "PURPLE";
-    default:
-      return "GRAY";
-  }
-};
-
-const getActivityTypeTagLabel = (activityType: ActivityTypeEnum): string => {
-  switch (activityType) {
-    case ActivityTypeEnum.matchedInternalActivity:
-      return "동아리 성격에 합치하는 내부 활동";
-    case ActivityTypeEnum.matchedExternalActivity:
-      return "동아리 성격에 합치하는 외부 활동";
-    case ActivityTypeEnum.notMatchedActivity:
-      return "동아리 성격에 합치하지 않는 활동";
-    default:
-      return "-";
-  }
-};
 
 const columns = [
   columnHelper.accessor("name", {
@@ -72,7 +46,10 @@ const columns = [
   }),
   columnHelper.accessor(
     row =>
-      `${formatDate(row.duration.startTerm)} ~ ${formatDate(row.duration.endTerm)}`,
+      row.duration.map(
+        (duration, index) =>
+          `${formatDate(duration.startTerm)} ~ ${formatDate(duration.endTerm)}${index === row.duration.length - 1 ? "" : ", "}`,
+      ),
     {
       header: "활동 기간",
       cell: info => info.getValue(),
@@ -94,14 +71,23 @@ const PastActivityReportList: React.FC<ActivityReportListProps> = ({
   data,
   showItemCount = true,
 }) => {
-  console.log("past-activity-report", data);
-
   const table = useReactTable({
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
+
+  const openPastActivityReportModal = (activityId: number) => {
+    overlay.open(({ isOpen, close }) => (
+      <PastActivityReportModal
+        activityId={activityId}
+        isOpen={isOpen}
+        close={close}
+      />
+    ));
+  };
+
   return (
     <TableOuter>
       {showItemCount && (
@@ -115,7 +101,10 @@ const PastActivityReportList: React.FC<ActivityReportListProps> = ({
           총 {data.length}개
         </Typography>
       )}
-      <Table table={table} />
+      <Table
+        table={table}
+        onClick={row => openPastActivityReportModal(row.id)}
+      />
     </TableOuter>
   );
 };

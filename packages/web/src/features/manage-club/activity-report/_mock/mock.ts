@@ -75,55 +75,99 @@ export const mockNewActivityData = [
   },
 ];
 
-export const mockPastActivityData = {
+/* TODO: (@dora) replace with actual ApiAct011ResponseOk */
+export type PastActivityReport = {
+  id: number;
+  name: string;
+  activityTypeEnumId: number;
+  duration: {
+    startTerm: Date;
+    endTerm: Date;
+  }[];
+};
+export interface ApiAct011ResponseOk {
+  activities: PastActivityReport[];
+}
+
+export const mockPastActivityData: ApiAct011ResponseOk = {
   activities: [
     {
+      id: 1,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 1,
-      duration: {
-        startTerm: new Date("2024-03-11"),
-        endTerm: new Date("2024-03-18"),
-      },
+      duration: [
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+      ],
     },
     {
+      id: 2,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 1,
-      duration: {
-        startTerm: new Date("2024-03-11"),
-        endTerm: new Date("2024-03-18"),
-      },
+      duration: [
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+      ],
     },
     {
+      id: 3,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 2,
-      duration: {
-        startTerm: new Date("2024-03-11"),
-        endTerm: new Date("2024-03-18"),
-      },
+      duration: [
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+      ],
     },
     {
+      id: 4,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 2,
-      duration: {
-        startTerm: new Date("2024-03-11"),
-        endTerm: new Date("2024-03-18"),
-      },
+      duration: [
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+      ],
     },
     {
+      id: 5,
       name: "개발개발한 어떠한 활동",
-      activityTypeEnumId: 1,
-      duration: {
-        startTerm: new Date("2024-03-11"),
-        endTerm: new Date("2024-03-18"),
-      },
-    },
-    {
-      name: "2024년도 봄의기 MT",
       activityTypeEnumId: 3,
-      duration: {
-        startTerm: new Date("2024-03-11"),
-        endTerm: new Date("2024-03-18"),
-      },
+      duration: [
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+      ],
+    },
+    {
+      id: 6,
+      name: "개발개발한 어떠한 활동",
+      activityTypeEnumId: 3,
+      duration: [
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+      ],
     },
   ],
 };
