@@ -273,6 +273,7 @@ export class ClubRegistrationRepository {
           )
           .for("share")
           .then(takeUnique);
+        logger.debug(professorId);
         if (!professorId) {
           throw new HttpException(
             "Professor Not Found",
@@ -290,7 +291,7 @@ export class ClubRegistrationRepository {
           divisionId: body.divisionId,
           activityFieldKr: body.activityFieldKr,
           activityFieldEn: body.activityFieldEn,
-          professorId: professorId ?? null,
+          professorId: professorId.professorId ?? null,
           divisionConsistency: body.divisionConsistency,
           foundationPurpose: body.foundationPurpose,
           activityPlan: body.activityPlan,

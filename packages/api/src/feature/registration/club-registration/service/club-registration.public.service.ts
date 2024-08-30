@@ -24,7 +24,7 @@ export class ClubRegistrationPublicService {
       .then(arr => {
         if (arr.length === 0)
           throw new HttpException(
-            "Today is not in the range of deadline",
+            `Today(${today}) is not in the range of deadline`,
             HttpStatus.BAD_REQUEST,
           );
         return arr[0];
