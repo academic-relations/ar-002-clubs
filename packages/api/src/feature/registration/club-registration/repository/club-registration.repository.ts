@@ -896,6 +896,55 @@ export class ClubRegistrationRepository {
     return result;
   }
 
+  /**
+   * @param registrationId 동아리 등록 신청 ID
+   * @return 등록 신청 ID가 일치하는 등록 신청들을 배열로 리턴합니다.
+   * @description 위 등록 신청 ID 기반으로 조회하기에, 배열의 길이는 1 또는 0이여야 합니다.
+   * 이 함수는 이를 검사하지 않습니다.
+   */
+  async selectRegistrationsById(param: { registrationId: number }) {
+    const result = await this.db
+      .select()
+      .from(Registration)
+      .where(
+        and(
+          eq(Registration.id, param.registrationId),
+          isNull(Registration.deletedAt),
+        ),
+      );
+    return result;
+  }
+
+  /**
+   * @param registrationId 동아리 등록 신청 ID
+   * @param approvedAt 갱신할 시간
+   * @description 해당 등록 신청의 교수 서명 시간을 갱신합니다. 신청 ID가 유효한지 검사하지 않습니다.
+   * @return 갱신 성공 여부를 boolean으로 리턴합니다. 참을 리턴하거나 예외가 발생합니다.
+   */
+  async updateRegistrationProfessorApprovedAt(param: {
+    registrationId: number;
+    approvedAt: Date;
+  }): Promise<boolean> {
+    const isUpdateSucceed = await this.db.transaction(async tx => {
+      const [updateResult] = await tx
+        .update(Registration)
+        .set({ professorApprovedAt: param.approvedAt })
+        .where(
+          and(
+            eq(Registration.id, param.registrationId),
+            isNull(Registration.deletedAt),
+          ),
+        );
+      if (updateResult.affectedRows !== 1)
+        throw new HttpException(
+          "update failed",
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      return true;
+    });
+    return isUpdateSucceed;
+  }
+
   async getProfessorRegistrationsClubRegistration(param: {
     registrationId: number;
     professorId: number;
