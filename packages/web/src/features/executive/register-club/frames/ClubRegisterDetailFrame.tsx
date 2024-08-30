@@ -1,5 +1,7 @@
 import React from "react";
 
+import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
@@ -13,15 +15,13 @@ import {
   ProfessorIsApprovedTagList,
   RegistrationTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
-import PastActivityReportList from "@sparcs-clubs/web/features/manage-club/activity-report/components/PastActivityReportList";
+import MyRegisterClubAcfFrame from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubAcfFrame";
 import { FilePreviewContainer } from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubDetailFrame";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
 import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 import { professorEnumToText } from "@sparcs-clubs/web/utils/getUserType";
 
-import { mockActivityData } from "../services/_mock/mockActivityList";
-import { mockClubRegisterDetail } from "../services/_mock/mockClubRegisterDetail";
 import useRegisterClubDetail from "../services/getRegisterClubDetail";
 
 export interface ClubRegisterDetail {
@@ -175,18 +175,11 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
             </>
           )}
         </FlexWrapper>
-        {/* TODO: 활보 연결 */}
-        {mockClubRegisterDetail.activityReports && (
-          <FlexWrapper direction="column" gap={16}>
-            <Typography fw="MEDIUM" lh={20} fs={16}>
-              가등록 / 등록 취소 기간 활동 보고서 (총 6개)
-            </Typography>
-            <PastActivityReportList
-              data={mockActivityData.activities}
-              showItemCount={false}
-            />
-          </FlexWrapper>
-        )}
+        {data &&
+          data.registrationTypeEnumId !== RegistrationTypeEnum.Renewal &&
+          data.clubId && (
+            <MyRegisterClubAcfFrame profile="executive" clubId={data.clubId} />
+          )}
         {data?.professor && (
           <FlexWrapper gap={20} direction="row">
             <Typography fw="MEDIUM" lh={20} fs={16} style={{ flex: 1 }}>
