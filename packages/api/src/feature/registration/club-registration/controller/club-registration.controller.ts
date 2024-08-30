@@ -168,7 +168,9 @@ export class ClubRegistrationController {
   }
 
   @Student()
-  @Delete("/student/registrations/club-registration/:applyId")
+  @Delete(
+    "/student/registrations/club-registrations/club-registration/:applyId",
+  )
   @UsePipes(new ZodPipe(apiReg010))
   async deleteStudentRegistrationsClubRegistration(
     @GetStudent() user: GetStudent,

@@ -12,7 +12,7 @@ export const deleteMyClubRegistration = async (
   requestParam: ApiReg010RequestParam,
 ) => {
   const { data, status } = await axiosClientWithAuth.delete(
-    apiReg010.url(requestParam.applyId.toString()),
+    apiReg010.url(requestParam.applyId),
   );
 
   switch (status) {
@@ -24,5 +24,5 @@ export const deleteMyClubRegistration = async (
 };
 
 defineAxiosMock(mock => {
-  mock.onDelete(apiReg010.url("1")).reply(() => [200, {}]);
+  mock.onDelete(apiReg010.url(1)).reply(() => [200, {}]);
 });
