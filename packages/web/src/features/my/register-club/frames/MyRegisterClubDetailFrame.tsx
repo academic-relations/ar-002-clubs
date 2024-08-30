@@ -29,6 +29,7 @@ import {
   RegistrationTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
 import { deleteMyClubRegistration } from "@sparcs-clubs/web/features/my/services/deleteMyClubRegistration";
+import patchClubRegProfessorApprove from "@sparcs-clubs/web/features/my/services/patchClubRegProfessorApprove";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
 import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
@@ -66,7 +67,8 @@ const TagWrapper = styled.div`
 const MyRegisterClubDetailFrame: React.FC<{
   clubDetail: ApiReg011ResponseOk;
   profile: string;
-}> = ({ clubDetail, profile }) => {
+  refetch: () => void;
+}> = ({ clubDetail, profile, refetch }) => {
   const router = useRouter();
   const { id } = useParams();
 
@@ -116,9 +118,10 @@ const MyRegisterClubDetailFrame: React.FC<{
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <CancellableModalContent
-          onConfirm={() => {
-            // TODO: reg023 구현 후 연결
+          onConfirm={async () => {
+            await patchClubRegProfessorApprove({ applyId: +id });
             close();
+            refetch();
           }}
           onClose={close}
           confirmButtonText="승인"
