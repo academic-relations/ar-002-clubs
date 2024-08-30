@@ -9,6 +9,8 @@ import React, {
   useState,
 } from "react";
 
+import * as ChannelService from "@channel.io/channel-web-sdk-loader";
+
 import { jwtDecode } from "jwt-decode";
 import { overlay } from "overlay-kit";
 import { Cookies } from "react-cookie";
@@ -137,6 +139,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     () => ({ isLoggedIn, login, logout, profile }),
     [isLoggedIn, profile],
   );
+
+  // Channel Talk
+  useEffect(() => {
+    ChannelService.loadScript();
+    ChannelService.boot({
+      pluginKey: "f9e90cc5-6304-4987-8a60-5332d572c332",
+    });
+  }, []);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
