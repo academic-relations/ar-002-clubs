@@ -108,6 +108,7 @@ export class ClubRegistrationRepository {
     body: ApiReg001RequestBody,
   ): Promise<ApiReg001ResponseCreated> {
     const cur = getKSTDate();
+    let registrationId: number;
     await this.db.transaction(async tx => {
       // - 신규 가동아리 신청을 제외하곤 기존 동아리 대표자의 신청인지 검사합니다.
       // 한 학생이 여러 동아리의 대표자나 대의원일 수 없기 때문에, 1개 또는 0개의 지위를 가지고 있다고 가정합니다.
@@ -174,6 +175,7 @@ export class ClubRegistrationRepository {
         }
       }
 
+      // registration insert 후 id 가져오기
       const [registrationInsertResult] = await tx.insert(Registration).values({
         clubId: body.clubId,
         registrationApplicationTypeEnumId: body.registrationTypeEnumId,
@@ -185,7 +187,7 @@ export class ClubRegistrationRepository {
         divisionId: body.divisionId,
         activityFieldKr: body.activityFieldKr,
         activityFieldEn: body.activityFieldEn,
-        professorId: professorId ?? null,
+        professorId: professorId.professorId ?? null,
         divisionConsistency: body.divisionConsistency,
         foundationPurpose: body.foundationPurpose,
         activityPlan: body.activityPlan,
@@ -195,18 +197,15 @@ export class ClubRegistrationRepository {
         registrationApplicationStatusEnumId: RegistrationStatusEnum.Pending,
       });
 
-      if (registrationInsertResult.affectedRows !== 1) {
-        logger.debug("[createRegistration] rollback occurs");
-        await tx.rollback();
-      }
+      registrationId = registrationInsertResult.insertId;
 
       logger.debug(
-        `[createRegistration] Registration inserted with id ${registrationInsertResult.insertId}`,
+        `[createRegistration] Registration inserted with id ${registrationId}`,
       );
     });
 
     logger.debug("[createRegistration] insertion ends successfully");
-    return {};
+    return { id: registrationId };
   }
 
   async putStudentRegistrationsClubRegistration(

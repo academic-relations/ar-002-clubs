@@ -70,7 +70,9 @@ const requestBody = z
   .refine(args => registrationTypeEnumChecker(args));
 
 const responseBodyMap = {
-  [HttpStatusCode.Created]: z.object({}),
+  [HttpStatusCode.Created]: z.object({
+    id: z.number().int().min(1),
+  }),
 };
 
 const responseErrorMap = {};
