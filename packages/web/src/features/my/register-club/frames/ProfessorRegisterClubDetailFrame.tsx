@@ -16,12 +16,17 @@ const ProfessorRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
     data: clubDetail,
     isLoading,
     isError,
+    refetch,
   } = useGetClubRegistrationProfessor({ applyId: +id });
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       {clubDetail && (
-        <MyRegisterClubDetailFrame profile={profile} clubDetail={clubDetail} />
+        <MyRegisterClubDetailFrame
+          profile={profile}
+          clubDetail={clubDetail}
+          refetch={refetch}
+        />
       )}
     </AsyncBoundary>
   );
