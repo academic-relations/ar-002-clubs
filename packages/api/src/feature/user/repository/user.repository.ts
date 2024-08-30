@@ -21,6 +21,7 @@ export default class UserRepository {
     const crt = new Date();
     const user = await this.db
       .select({
+        id: Student.id,
         name: Student.name,
         email: Student.email,
         department: Department.name,
