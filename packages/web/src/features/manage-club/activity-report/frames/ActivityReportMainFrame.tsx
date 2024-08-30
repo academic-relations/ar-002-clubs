@@ -78,13 +78,13 @@ const ActivityReportMainFrame: React.FC = () => (
     <FoldableSectionTitle title="과거 활동 보고서">
       <PastSectionInner>
         <FoldableSection title="2023년 가을학기 (총 6개)">
-          <PastActivityReportList data={mockPastActivityData} />
+          <PastActivityReportList data={mockPastActivityData.activities} />
         </FoldableSection>
         <FoldableSection title="2023년 봄학기 (총 6개)">
-          <PastActivityReportList data={mockPastActivityData} />
+          <PastActivityReportList data={mockPastActivityData.activities} />
         </FoldableSection>
         <FoldableSection title="2022년 가을학기 (총 6개)">
-          <PastActivityReportList data={mockPastActivityData} />
+          <PastActivityReportList data={mockPastActivityData.activities} />
         </FoldableSection>
       </PastSectionInner>
     </FoldableSectionTitle>

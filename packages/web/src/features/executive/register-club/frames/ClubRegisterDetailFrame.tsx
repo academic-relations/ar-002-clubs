@@ -182,7 +182,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
               가등록 / 등록 취소 기간 활동 보고서 (총 6개)
             </Typography>
             <PastActivityReportList
-              data={mockActivityData}
+              data={mockActivityData.activities}
               showItemCount={false}
             />
           </FlexWrapper>
