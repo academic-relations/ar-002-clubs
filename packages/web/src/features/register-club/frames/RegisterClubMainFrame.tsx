@@ -88,7 +88,12 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   const clubId = watch("clubId");
 
-  const { mutate: registerClubApi, isSuccess, isError } = useRegisterClub();
+  const {
+    data: registrationData,
+    mutate: registerClubApi,
+    isSuccess,
+    isError,
+  } = useRegisterClub();
 
   const title = useMemo(() => {
     formCtx.setValue("registrationTypeEnumId", type);
@@ -123,8 +128,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
           <ConfirmModalContent
             onConfirm={() => {
               close();
-              /* TODO: (@dora) 신청 내역 id 받아서 넣기 */
-              router.push("/my");
+              router.push(`/my/register-club/${registrationData.id}`);
             }}
           >
             신청이 완료되었습니다.
