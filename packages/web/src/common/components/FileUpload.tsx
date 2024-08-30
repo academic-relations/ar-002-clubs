@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { ApiFil001RequestBody } from "@sparcs-clubs/interface/api/file/apiFil001";
 import styled from "styled-components";
@@ -112,9 +112,10 @@ const FileUpload: React.FC<FileUploadProps> = ({
   const [files, setFiles] =
     useState<{ file: File; fileId?: string }[]>(initialFiles);
 
-  useEffect(() => {
-    setFiles(initialFiles);
-  }, [initialFiles]);
+  /* NOTE: (@dora) must remove to prevent infinite loop */
+  // useEffect(() => {
+  //   setFiles(initialFiles);
+  // }, [initialFiles]);
 
   /* TODO: (@dora) refactor !!!!!!! */
   interface FinalFile {
