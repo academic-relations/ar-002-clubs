@@ -20,6 +20,7 @@ import getLogin from "../services/getLogin";
 import getUserAgree from "../services/getUserAgree";
 import postLogout from "../services/postLogout";
 import postUserAgree from "../services/postUserAgree";
+// import useGetUserProfile from "../services/getUserProfile";
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -141,12 +142,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   );
 
   // Channel Talk
-  useEffect(() => {
-    ChannelService.loadScript();
-    ChannelService.boot({
-      pluginKey: "f9e90cc5-6304-4987-8a60-5332d572c332",
-    });
-  }, []);
+  // const { data } = useGetUserProfile();
+  // useEffect(() => {
+  ChannelService.loadScript();
+  ChannelService.boot({
+    pluginKey: "f9e90cc5-6304-4987-8a60-5332d572c332",
+    // memberId: "clubs-member-id",
+    //   profile:
+    //     isLoggedIn && data
+    //       ? {
+    //           name: data?.name,
+    //           email: data?.email,
+    //           mobileNumber: data?.phoneNumber ?? "",
+    //         }
+    //       : undefined,
+  });
+  // }, []);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
