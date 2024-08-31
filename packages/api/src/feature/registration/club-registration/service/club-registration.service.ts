@@ -637,7 +637,9 @@ export class ClubRegistrationService {
               ...externalInstructionFile,
             }
           : undefined,
-      isProfessorSigned: result.registration.professorApprovedAt !== undefined,
+      isProfessorSigned:
+        result.registration.professorApprovedAt !== undefined &&
+        result.registration.professorApprovedAt !== null,
       updatedAt: result.registration.updatedAt,
       comments: result.comments.map(e => ({
         content: e.content,
