@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 
+import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -8,10 +9,13 @@ import { fromUUID } from "@sparcs-clubs/web/common/components/File/attachment";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
+import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import { useDeleteActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useDeleteActivityReport";
 import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
 import { getActivityTypeTagLabel } from "@sparcs-clubs/web/features/register-club/utils/activityType";
+
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 interface PastActivityReportModalProps {
@@ -69,6 +73,45 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   close,
 }) => {
   const { data, isLoading, isError } = useGetActivityReport(activityId);
+  const {
+    mutate: deleteActivityReport,
+    isSuccess: isDeleteSuccess,
+    isError: isDeleteError,
+  } = useDeleteActivityReport();
+
+  const handleDelete = () => {
+    deleteActivityReport({ requestParam: { activityId } });
+    close();
+  };
+
+  useEffect(() => {
+    if (isDeleteSuccess) {
+      overlay.open(
+        ({
+          isOpen: isOpenDeleteSuccessModal,
+          close: closeDeleteSuccessModal,
+        }) => (
+          <Modal isOpen={isOpenDeleteSuccessModal}>
+            <ConfirmModalContent onConfirm={closeDeleteSuccessModal}>
+              활동 보고서가 삭제되었습니다.
+            </ConfirmModalContent>
+          </Modal>
+        ),
+      );
+      return;
+    }
+    if (isDeleteError) {
+      overlay.open(
+        ({ isOpen: isOpenDeleteErrorModal, close: closeDeleteErrorModal }) => (
+          <Modal isOpen={isOpenDeleteErrorModal}>
+            <ConfirmModalContent onConfirm={closeDeleteErrorModal}>
+              활동 보고서 삭제에 실패했습니다.
+            </ConfirmModalContent>
+          </Modal>
+        ),
+      );
+    }
+  }, [isDeleteSuccess]);
 
   return (
     <Modal isOpen={isOpen}>
@@ -131,7 +174,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
               취소
             </Button>
             <FlexWrapper direction="row" gap={12}>
-              <Button onClick={() => close()}>삭제</Button>
+              <Button onClick={handleDelete}>삭제</Button>
               <Button onClick={() => close()}>수정</Button>
             </FlexWrapper>
           </FlexWrapper>
