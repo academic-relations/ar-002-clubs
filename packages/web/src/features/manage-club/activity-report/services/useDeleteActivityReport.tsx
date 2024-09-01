@@ -18,7 +18,7 @@ export const useDeleteActivityReport = () =>
     { requestParam: ApiAct004RequestParam }
   >({
     mutationFn: async ({ requestParam }): Promise<ISuccessResponseType> => {
-      const { data, status } = await axiosClientWithAuth.put(
+      const { data, status } = await axiosClientWithAuth.delete(
         apiAct004.url(requestParam.activityId),
         {},
       );

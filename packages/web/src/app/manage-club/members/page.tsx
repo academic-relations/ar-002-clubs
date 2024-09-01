@@ -1,71 +1,79 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+// 배포용 not found 페이지 (시작) - 회원 등록
+import NotFound from "@sparcs-clubs/web/app/not-found";
 
-import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+const TemporaryNotFound = () => <NotFound />;
 
-import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
-import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
-import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
-import NotRegistrationPeriod from "@sparcs-clubs/web/common/frames/NotRegistrationPeriod";
-import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
-import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
-import ManageClubMembers from "@sparcs-clubs/web/features/manage-club/members/frames/ManageClubMembersFrame";
+export default TemporaryNotFound;
+// 배포용 not found 페이지 (끝)
 
-const Members = () => {
-  const { isLoggedIn, login, profile } = useAuth();
-  const [loading, setLoading] = useState(true);
+// import React, { useEffect, useState } from "react";
 
-  useEffect(() => {
-    if (isLoggedIn !== undefined || profile !== undefined) {
-      setLoading(false);
-    }
-  }, [isLoggedIn, profile]);
+// import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
-  const { data, isLoading, isError } = useGetRegistrationTerm();
-  const [isRegistrationPeriod, setIsRegistrationPeriod] =
-    useState<boolean>(false);
+// import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+// import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
+// import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
+// import NotRegistrationPeriod from "@sparcs-clubs/web/common/frames/NotRegistrationPeriod";
+// import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+// import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
+// import ManageClubMembers from "@sparcs-clubs/web/features/manage-club/members/frames/ManageClubMembersFrame";
 
-  useEffect(() => {
-    if (data) {
-      const now = new Date();
-      const currentEvents = data.events.filter(
-        event => now >= event.startTerm && now <= event.endTerm,
-      );
-      if (currentEvents.length === 0) {
-        setIsRegistrationPeriod(false);
-        return;
-      }
-      const registrationEvent = currentEvents.filter(
-        event =>
-          event.registrationEventEnumId ===
-          RegistrationDeadlineEnum.StudentRegistrationApplication,
-      );
-      if (registrationEvent.length > 0) {
-        setIsRegistrationPeriod(true);
-      } else {
-        setIsRegistrationPeriod(false);
-      }
-    }
-  }, [data]);
+// const Members = () => {
+//   const { isLoggedIn, login, profile } = useAuth();
+//   const [loading, setLoading] = useState(true);
 
-  if (loading || isLoading) {
-    return <AsyncBoundary isLoading={loading || isLoading} isError={isError} />;
-  }
+//   useEffect(() => {
+//     if (isLoggedIn !== undefined || profile !== undefined) {
+//       setLoading(false);
+//     }
+//   }, [isLoggedIn, profile]);
 
-  if (!isRegistrationPeriod) {
-    return <NotRegistrationPeriod />;
-  }
+//   const { data, isLoading, isError } = useGetRegistrationTerm();
+//   const [isRegistrationPeriod, setIsRegistrationPeriod] =
+//     useState<boolean>(false);
 
-  if (!isLoggedIn) {
-    return <LoginRequired login={login} />;
-  }
+//   useEffect(() => {
+//     if (data) {
+//       const now = new Date();
+//       const currentEvents = data.events.filter(
+//         event => now >= event.startTerm && now <= event.endTerm,
+//       );
+//       if (currentEvents.length === 0) {
+//         setIsRegistrationPeriod(false);
+//         return;
+//       }
+//       const registrationEvent = currentEvents.filter(
+//         event =>
+//           event.registrationEventEnumId ===
+//           RegistrationDeadlineEnum.StudentRegistrationApplication,
+//       );
+//       if (registrationEvent.length > 0) {
+//         setIsRegistrationPeriod(true);
+//       } else {
+//         setIsRegistrationPeriod(false);
+//       }
+//     }
+//   }, [data]);
 
-  if (profile !== "undergraduate") {
-    return <NoManageClub />;
-  }
+//   if (loading || isLoading) {
+//     return <AsyncBoundary isLoading={loading || isLoading} isError={isError} />;
+//   }
 
-  return <ManageClubMembers />;
-};
+//   if (!isRegistrationPeriod) {
+//     return <NotRegistrationPeriod />;
+//   }
 
-export default Members;
+//   if (!isLoggedIn) {
+//     return <LoginRequired login={login} />;
+//   }
+
+//   if (profile !== "undergraduate") {
+//     return <NoManageClub />;
+//   }
+
+//   return <ManageClubMembers />;
+// };
+
+// export default Members;

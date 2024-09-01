@@ -17,6 +17,7 @@ import {
   ActivityT,
   ProfessorSignStatus,
 } from "@sparcs-clubs/api/drizzle/schema/activity.schema";
+import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 @Injectable()
 export default class ActivityRepository {
@@ -316,8 +317,13 @@ export default class ActivityRepository {
 
   async selectParticipantByActivityId(activityId: number) {
     const result = await this.db
-      .select()
+      .select({
+        studentId: ActivityParticipant.studentId,
+        studentNumber: Student.number,
+        name: Student.name,
+      })
       .from(ActivityParticipant)
+      .leftJoin(Student, eq(ActivityParticipant.studentId, Student.id))
       .where(
         and(
           eq(ActivityParticipant.activityId, activityId),

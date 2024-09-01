@@ -46,18 +46,24 @@ defineAxiosMock(mock => {
       evidence: "Activity Evidence",
       evidenceFiles: [
         {
-          uuid: "file-uuid",
+          fileId: "file-uuid",
         },
       ],
       participants: [
         {
           studentId: 20200515,
+          studnetNumber: 20200515,
+          name: "이지윤",
         },
         {
           studentId: 20200513,
+          studnetNumber: 20200513,
+          name: "박병찬",
         },
         {
           studentId: 20230512,
+          studnetNumber: 20230512,
+          name: "이도라",
         },
       ],
     };

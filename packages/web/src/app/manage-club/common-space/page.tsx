@@ -1,9 +1,17 @@
 "use client";
 
-import ManageClubTableMainFrame from "@sparcs-clubs/web/features/manageClubTable/frames/ManageClubTableMainFrame";
+// 배포용 not found 페이지 (시작)
+import NotFound from "@sparcs-clubs/web/app/not-found";
 
-const ManageClubCommonSpace = () => (
-  <ManageClubTableMainFrame pageType="common-space" />
-);
+const TemporaryNotFound = () => <NotFound />;
 
-export default ManageClubCommonSpace;
+export default TemporaryNotFound;
+// 배포용 not found 페이지 (끝)
+
+// import ManageClubTableMainFrame from "@sparcs-clubs/web/features/manageClubTable/frames/ManageClubTableMainFrame";
+
+// const ManageClubCommonSpace = () => (
+//   <ManageClubTableMainFrame pageType="common-space" />
+// );
+
+// export default ManageClubCommonSpace;

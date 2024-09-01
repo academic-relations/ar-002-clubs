@@ -16,7 +16,7 @@ import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.e
  */
 
 const url = (activityId: number) =>
-  `/student/activities/activity/${activityId}`;
+  `/student/activities/activity/${activityId}/provisional`;
 const method = "PUT";
 
 const requestParam = z.object({

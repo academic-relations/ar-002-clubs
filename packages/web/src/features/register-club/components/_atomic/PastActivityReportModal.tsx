@@ -18,10 +18,13 @@ import { getActivityTypeTagLabel } from "@sparcs-clubs/web/features/register-clu
 
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
+import EditActivityReportModal from "./EditActivityReportModal";
+
 interface PastActivityReportModalProps {
   activityId: number;
   isOpen: boolean;
   close: VoidFunction;
+  viewOnly?: boolean;
 }
 
 interface ActivitySectionProps extends React.PropsWithChildren {
@@ -71,6 +74,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   activityId,
   isOpen,
   close,
+  viewOnly = false,
 }) => {
   const { data, isLoading, isError } = useGetActivityReport(activityId);
   const {
@@ -82,6 +86,18 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   const handleDelete = () => {
     deleteActivityReport({ requestParam: { activityId } });
     close();
+  };
+
+  const handleEdit = () => {
+    overlay.open(
+      ({ isOpen: isOpenEditActivityModal, close: closeEditActivityModal }) => (
+        <EditActivityReportModal
+          activityId={activityId}
+          isOpen={isOpenEditActivityModal}
+          close={closeEditActivityModal}
+        />
+      ),
+    );
   };
 
   useEffect(() => {
@@ -111,7 +127,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
         ),
       );
     }
-  }, [isDeleteSuccess]);
+  }, [isDeleteSuccess, isDeleteError]);
 
   return (
     <Modal isOpen={isOpen}>
@@ -157,7 +173,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
               >
                 <ThumbnailPreviewList
                   fileList={
-                    data.evidenceFiles.map(file => fromUUID(file.uuid)) ?? []
+                    data.evidenceFiles.map(file => fromUUID(file.fileId)) ?? []
                   }
                   disabled
                 />
@@ -165,19 +181,31 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
             )}
             <ActivityDetail text={`부가 설명: ${data?.evidence}`} />
           </ActivitySection>
-          <FlexWrapper
-            direction="row"
-            gap={12}
-            style={{ flex: 1, justifyContent: "space-between" }}
-          >
-            <Button type="outlined" onClick={close}>
-              취소
-            </Button>
+          {viewOnly ? (
             <FlexWrapper direction="row" gap={12}>
-              <Button onClick={handleDelete}>삭제</Button>
-              <Button onClick={() => close()}>수정</Button>
+              <Button type="outlined" onClick={close}>
+                닫기
+              </Button>
             </FlexWrapper>
-          </FlexWrapper>
+          ) : (
+            <FlexWrapper
+              direction="column"
+              gap={12}
+              style={{
+                flex: 1,
+                alignItems: "flex-end",
+                justifyContent: "space-between",
+              }}
+            >
+              <Button type="outlined" onClick={close}>
+                취소
+              </Button>
+              <FlexWrapper direction="row" gap={12}>
+                <Button onClick={handleDelete}>삭제</Button>
+                <Button onClick={handleEdit}>수정</Button>
+              </FlexWrapper>
+            </FlexWrapper>
+          )}
         </FlexWrapper>
       </AsyncBoundary>
     </Modal>

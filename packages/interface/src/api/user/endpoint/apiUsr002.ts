@@ -13,11 +13,11 @@ const method = "GET";
 
 const requestParam = z.object({});
 
-const requestQuery = z.object({});
-
-const requestBody = z.object({
+const requestQuery = z.object({
   profile: z.string(),
 });
+
+const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
