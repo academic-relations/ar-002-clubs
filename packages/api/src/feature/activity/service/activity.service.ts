@@ -497,30 +497,48 @@ export default class ActivityService {
     const result = await this.activityRepository.selectActivityByClubId({
       clubId: param.clubId,
     });
+
     const activities = await Promise.all(
       result.map(async activity => {
-        const duration =
-          await this.activityRepository.selectDurationByActivityId(activity.id);
+        const durations = (
+          await this.activityRepository.selectDurationByActivityId(activity.id)
+        ).map(e => ({
+          startTerm: e.startTerm,
+          endTerm: e.endTerm,
+        }));
+
+        // 가장 빠른 startTerm을 추출
+        const earliestStartTerm = durations[0]?.startTerm;
+
+        // 가장 늦은 endTerm을 추출 (startTerm이 같을 경우 대비)
+        const latestEndTerm = durations[0]?.endTerm;
+
         return {
+          id: activity.id,
           name: activity.name,
           activityTypeEnumId: activity.activityTypeEnumId,
-          duration: {
-            startTerm: duration.reduce(
-              (prev, curr) => (prev < curr.startTerm ? prev : curr.startTerm),
-              duration[0].startTerm,
-            ),
-            endTerm: duration.reduce(
-              (prev, curr) => (prev > curr.endTerm ? prev : curr.endTerm),
-              duration[0].endTerm,
-            ),
-          },
+          durations,
+          earliestStartTerm, // 추후 정렬을 위해 추가
+          latestEndTerm, // 추후 정렬을 위해 추가
         };
       }),
-    ).then(arr =>
-      arr.sort((a, b) => (a.duration.startTerm < b.duration.endTerm ? -1 : 1)),
     );
 
-    return activities;
+    // activities를 duration의 가장 빠른 startTerm 기준으로 오름차순 정렬
+    // startTerm이 같으면 가장 늦은 endTerm 기준으로 내림차순 정렬
+    activities.sort((a, b) => {
+      if (a.earliestStartTerm === b.earliestStartTerm) {
+        return a.latestEndTerm > b.latestEndTerm ? -1 : 1; // endTerm 내림차순
+      }
+      return a.earliestStartTerm < b.earliestStartTerm ? -1 : 1; // startTerm 오름차순
+    });
+
+    return activities.map(activity => ({
+      id: activity.id,
+      name: activity.name,
+      activityTypeEnumId: activity.activityTypeEnumId,
+      durations: activity.durations,
+    }));
   }
 
   /**

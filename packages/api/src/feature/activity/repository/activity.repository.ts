@@ -3,7 +3,7 @@ import {
   ActivityStatusEnum,
   ActivityTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { and, eq, gt, isNull, lte } from "drizzle-orm";
+import { and, asc, eq, gt, isNull, lte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -308,7 +308,8 @@ export default class ActivityRepository {
       .from(ActivityT)
       .where(
         and(eq(ActivityT.activityId, activityId), isNull(ActivityT.deletedAt)),
-      );
+      )
+      .orderBy(asc(ActivityT.startTerm), asc(ActivityT.endTerm));
 
     return result;
   }
