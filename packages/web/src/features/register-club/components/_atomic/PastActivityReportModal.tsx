@@ -157,7 +157,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
               >
                 <ThumbnailPreviewList
                   fileList={
-                    data.evidenceFiles.map(file => fromUUID(file.uuid)) ?? []
+                    data.evidenceFiles.map(file => fromUUID(file.fileId)) ?? []
                   }
                   disabled
                 />
