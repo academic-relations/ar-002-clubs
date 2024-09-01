@@ -46,7 +46,7 @@ export default class ActivityService {
   /**
    * @param activityId 활동 id
    * @returns 해당id의 활동이 존재할 경우 그 정보를 리턴합니다.
-   * 존재하지 않을 경우 not found exception을 throw합니다.
+   * 존재하지 않을 경우 not found exception을 throw합니다.`
    */
   private async getActivity(param: { activityId: number }) {
     const activities = await this.activityRepository.selectActivityByActivityId(
@@ -229,10 +229,12 @@ export default class ActivityService {
       detail: activity.detail,
       evidence: activity.evidence,
       evidenceFiles: evidence.map(e => ({
-        uuid: e.fileId,
+        fileId: e.fileId,
       })),
       participants: participants.map(e => ({
         studentId: e.studentId,
+        studnetNumber: e.studentNumber,
+        name: e.name,
       })),
       durations: duration.map(e => ({
         startTerm: e.startTerm,
@@ -606,10 +608,12 @@ export default class ActivityService {
       detail: activity.detail,
       evidence: activity.evidence,
       evidenceFiles: evidence.map(e => ({
-        uuid: e.fileId,
+        fileId: e.fileId,
       })),
       participants: participants.map(e => ({
         studentId: e.studentId,
+        studnetNumber: e.studentNumber,
+        name: e.name,
       })),
       durations: duration.map(e => ({
         startTerm: e.startTerm,
@@ -640,10 +644,12 @@ export default class ActivityService {
       detail: activity.detail,
       evidence: activity.evidence,
       evidenceFiles: evidence.map(e => ({
-        uuid: e.fileId,
+        fileId: e.fileId,
       })),
       participants: participants.map(e => ({
         studentId: e.studentId,
+        studnetNumber: e.studentNumber,
+        name: e.name,
       })),
       durations: duration.map(e => ({
         startTerm: e.startTerm,
