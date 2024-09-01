@@ -5,7 +5,7 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
-import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
+import useUserPhoneNumber from "@sparcs-clubs/web/common/services/getUserPhoneNumber";
 import usePatchMyPhoneNumber from "@sparcs-clubs/web/features/my/services/usePatchMyPhoneNumber";
 
 const MyInfoFrame: React.FC<{ profile: string }> = ({ profile }) => {
@@ -14,7 +14,7 @@ const MyInfoFrame: React.FC<{ profile: string }> = ({ profile }) => {
     isLoading: infoLoading,
     isError: infoError,
     refetch,
-  } = useGetUserProfile();
+  } = useUserPhoneNumber({ profile });
 
   const myPhone = myInfo?.phoneNumber;
 
