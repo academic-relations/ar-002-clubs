@@ -18,6 +18,8 @@ import { getActivityTypeTagLabel } from "@sparcs-clubs/web/features/register-clu
 
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
+import EditActivityReportModal from "./EditActivityReportModal";
+
 interface PastActivityReportModalProps {
   activityId: number;
   isOpen: boolean;
@@ -84,6 +86,18 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
     close();
   };
 
+  const handleEdit = () => {
+    overlay.open(
+      ({ isOpen: isOpenEditActivityModal, close: closeEditActivityModal }) => (
+        <EditActivityReportModal
+          activityId={activityId}
+          isOpen={isOpenEditActivityModal}
+          close={closeEditActivityModal}
+        />
+      ),
+    );
+  };
+
   useEffect(() => {
     if (isDeleteSuccess) {
       overlay.open(
@@ -111,7 +125,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
         ),
       );
     }
-  }, [isDeleteSuccess]);
+  }, [isDeleteSuccess, isDeleteError]);
 
   return (
     <Modal isOpen={isOpen}>
@@ -175,7 +189,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
             </Button>
             <FlexWrapper direction="row" gap={12}>
               <Button onClick={handleDelete}>삭제</Button>
-              <Button onClick={() => close()}>수정</Button>
+              <Button onClick={handleEdit}>수정</Button>
             </FlexWrapper>
           </FlexWrapper>
         </FlexWrapper>
