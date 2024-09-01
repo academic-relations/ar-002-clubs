@@ -29,7 +29,6 @@ const usePutClubRegistration = () =>
 
       switch (status) {
         case 200:
-        case 304:
           return apiReg009.responseBodyMap[200].parse(data);
         default:
           throw new UnexpectedAPIResponseError();

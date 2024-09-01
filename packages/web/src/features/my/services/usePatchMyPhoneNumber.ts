@@ -16,7 +16,6 @@ const usePatchClubRegistration = async (body: ApiUsr003RequestBody) => {
 
   switch (status) {
     case 200:
-    case 304:
       return apiUsr003.responseBodyMap[200].parse(data);
     default:
       throw new UnexpectedAPIResponseError();

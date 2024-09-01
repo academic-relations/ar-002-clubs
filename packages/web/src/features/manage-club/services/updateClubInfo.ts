@@ -33,7 +33,6 @@ export const usePutClubInfo = () =>
 
       switch (status) {
         case 200:
-        case 304:
           return apiClb005.responseBodyMap[200].parse(data);
         default:
           throw new UnexpectedAPIResponseError();

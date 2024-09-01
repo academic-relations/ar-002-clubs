@@ -25,7 +25,6 @@ export const useDeleteActivityReport = () =>
 
       switch (status) {
         case 200:
-        case 304:
           return apiAct004.responseBodyMap[200].parse(data);
         default:
           throw new UnexpectedAPIResponseError();
