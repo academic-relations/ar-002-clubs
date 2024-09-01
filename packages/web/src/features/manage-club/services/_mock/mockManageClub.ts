@@ -47,12 +47,6 @@ export enum ActivityProfessorApprovalEnum {
   Denied, // 반려
 }
 
-export enum ActivityTypeEnum {
-  FitInside = 1, // 동아리 성격에 합치하는 내부활동
-  FitOutside, // 동아리 성격에 합치하는 외부활동
-  NotFit, // 동아리 성격에 합치하지 않는 활동
-}
-
 export enum FundingStatusEnum {
   Applied = 1, // 신청
   Committee, // 운위

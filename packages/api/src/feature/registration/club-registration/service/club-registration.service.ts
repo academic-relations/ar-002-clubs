@@ -38,6 +38,10 @@ import type { ApiReg017ResponseCreated } from "@sparcs-clubs/interface/api/regis
 import type { ApiReg018ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg018";
 import type { ApiReg021ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg021";
 import type { ApiReg022ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg022";
+import type {
+  ApiReg023RequestParam,
+  ApiReg023ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg023";
 
 @Injectable()
 export class ClubRegistrationService {
@@ -479,6 +483,10 @@ export class ClubRegistrationService {
     return result;
   }
 
+  /**
+   * @param para
+   * @description getProfessorRegistrationsClubRegistrationsBrief의 진입점입니다.
+   */
   async getProfessorRegistrationsClubRegistrationsBrief(param: {
     professorId: number;
   }): Promise<ApiReg021ResponseOk> {
@@ -518,6 +526,10 @@ export class ClubRegistrationService {
     };
   }
 
+  /**
+   * @param para
+   * @description getProfessorRegistrationsClubRegistration 서비스 진입점입니다.
+   */
   async getProfessorRegistrationsClubRegistration(param: {
     registrationId: number;
     professorId: number;
@@ -625,12 +637,69 @@ export class ClubRegistrationService {
               ...externalInstructionFile,
             }
           : undefined,
-      isProfessorSigned: result.registration.professorApprovedAt !== undefined,
+      isProfessorSigned:
+        result.registration.professorApprovedAt !== undefined &&
+        result.registration.professorApprovedAt !== null,
       updatedAt: result.registration.updatedAt,
       comments: result.comments.map(e => ({
         content: e.content,
         createdAt: e.createdAt,
       })),
     };
+  }
+
+  /**
+   * @description getProfessorRegistrationsClubRegistrationApproval 의 서비스 진입점입니다.
+   */
+  async getProfessorRegistrationsClubRegistrationApproval(param: {
+    professorId: number;
+    param: ApiReg023RequestParam;
+  }): Promise<ApiReg023ResponseOk> {
+    // 현재 동아리 등록 기간인지 검사합니다.
+    await this.clubRegistrationPublicService.checkDeadline({
+      enums: [
+        RegistrationDeadlineEnum.ClubRegistrationApplication,
+        // RegistrationDeadlineEnum.ClubRegistrationModification,
+        // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+      ],
+    });
+
+    const registrations =
+      await this.clubRegistrationRepository.selectRegistrationsById({
+        registrationId: param.param.applyId,
+      });
+    if (registrations.length > 1)
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+    if (registrations.length === 0)
+      throw new HttpException(
+        "no such registration-apply",
+        HttpStatus.NOT_FOUND,
+      );
+    // 해당 동아라의 등록 신청서상의 이번학기 지도교수가 professorId와 일치하는지 검사합니다.
+    if (registrations[0].professorId !== param.professorId)
+      throw new HttpException(
+        "It seems that you are not a advisor of the club",
+        HttpStatus.BAD_REQUEST,
+      );
+    // 해당 신청이 서명대기 상태인지 검사합니다. 쿼리가 null을주는것 같아 둘다 넣어두었어요.
+    logger.debug(registrations[0].professorApprovedAt);
+    if (
+      registrations[0].professorApprovedAt !== undefined &&
+      registrations[0].professorApprovedAt !== null
+    )
+      throw new HttpException(
+        "It seems already approved",
+        HttpStatus.BAD_REQUEST,
+      );
+
+    // 동아리 신청에 서명합니다.
+    await this.clubRegistrationRepository.updateRegistrationProfessorApprovedAt(
+      {
+        registrationId: param.param.applyId,
+        approvedAt: getKSTDate(),
+      },
+    );
+
+    return {};
   }
 }

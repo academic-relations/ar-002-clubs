@@ -13,7 +13,6 @@ const postUserAgree = async (): Promise<ApiUsr004ResponseCreated> => {
 
   switch (status) {
     case 201:
-      console.log("");
       return apiUsr004.responseBodyMap[201];
     default:
       throw new UnexpectedAPIResponseError();

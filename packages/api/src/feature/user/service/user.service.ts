@@ -24,10 +24,11 @@ export class UserService {
     if (!user) {
       throw new HttpException("User not found", HttpStatus.NOT_FOUND);
     }
-    const { name, email, department, studentNumber, phoneNumber } = user[0];
+    const { id, name, email, department, studentNumber, phoneNumber } = user[0];
     const clubs =
       await this.clubStudentTRepository.getClubsByStudentId(studentId);
     const userData = {
+      id,
       name,
       email,
       department: department || "학과 정보 없음",

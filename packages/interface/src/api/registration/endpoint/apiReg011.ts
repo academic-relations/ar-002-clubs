@@ -20,6 +20,7 @@ import registrationTypeEnumChecker from "../utils/registrationTypeEnumChecker";
 
 const url = (applyId: string) =>
   `/student/registrations/club-registrations/club-registration/${applyId}`;
+
 const method = "GET";
 
 const requestParam = z.object({
@@ -62,9 +63,9 @@ const responseBodyMap = {
           professorEnumId: z.nativeEnum(ProfessorEnum),
         })
         .optional(),
-      divisionConsistency: z.coerce.string().max(255),
-      foundationPurpose: z.coerce.string().max(500),
-      activityPlan: z.coerce.string().max(500),
+      divisionConsistency: z.coerce.string(),
+      foundationPurpose: z.coerce.string(),
+      activityPlan: z.coerce.string(),
       activityPlanFile: z
         .object({
           id: z.string().max(128),

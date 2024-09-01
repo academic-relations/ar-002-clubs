@@ -11,6 +11,8 @@ import navPaths from "@sparcs-clubs/web/constants/nav";
 
 import paths from "@sparcs-clubs/web/constants/paths";
 
+import { getFeatureFlagString } from "@sparcs-clubs/web/hooks/getFeatureFlag";
+
 import MobileNavMenu from "../NavTools/MobileNavMenu";
 
 import Login from "./_atomic/Login";
@@ -74,11 +76,13 @@ const Header: React.FC = () => {
 
   const { profile } = useAuth();
 
-  const headerPaths = navPaths.header.filter(
-    menu =>
-      paths[menu].authority.includes(profile as string) ||
-      paths[menu].authority.includes("all"),
-  );
+  const headerPaths = navPaths.header
+    .filter(
+      menu =>
+        paths[menu].authority.includes(profile as string) ||
+        paths[menu].authority.includes("all"),
+    )
+    .filter(menu => getFeatureFlagString(paths[menu].featureFlag));
 
   const handleClose = () => {
     setIsMobileMenuVisible(false);
