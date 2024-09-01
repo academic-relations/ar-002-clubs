@@ -126,7 +126,7 @@ const Table = <T,>({
   return (
     <TableWithCount>
       <Count>
-        {count && (
+        {(count || count === 0) && (
           <Typography fs={16} lh={20}>
             총 {count}
             {unit}
