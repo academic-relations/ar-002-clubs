@@ -140,6 +140,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                           name: data?.activityPlanFile?.name,
                         },
                       ]}
+                      disabled
                     />
                   </FilePreviewContainer>
                 )}
@@ -158,6 +159,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                         name: data?.clubRuleFile?.name,
                       },
                     ]}
+                    disabled
                   />
                 </FilePreviewContainer>
               )}
@@ -175,6 +177,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                         name: data?.externalInstructionFile?.name,
                       },
                     ]}
+                    disabled
                   />
                 </FilePreviewContainer>
               )}

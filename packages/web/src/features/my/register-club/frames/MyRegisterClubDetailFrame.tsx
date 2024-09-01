@@ -206,12 +206,12 @@ const MyRegisterClubDetailFrame: React.FC<{
               동아리명 (영문):{" "}
               {clubDetail.clubNameEn ?? clubDetail.newClubNameEn}
             </ListItem>
-            {clubDetail.clubNameKr && (
+            {clubDetail.clubNameKr && clubDetail.newClubNameKr !== "" && (
               <ListItem>
                 신규 동아리명 (국문): {clubDetail.newClubNameKr}
               </ListItem>
             )}
-            {clubDetail.clubNameEn && (
+            {clubDetail.clubNameEn && clubDetail.newClubNameEn !== "" && (
               <ListItem>
                 신규 동아리명 (영문): {clubDetail.newClubNameEn}
               </ListItem>
@@ -265,6 +265,7 @@ const MyRegisterClubDetailFrame: React.FC<{
                           name: clubDetail.activityPlanFile?.name,
                         },
                       ]}
+                      disabled
                     />
                   </FilePreviewContainer>
                 )}
@@ -282,6 +283,7 @@ const MyRegisterClubDetailFrame: React.FC<{
                           name: clubDetail.clubRuleFile?.name,
                         },
                       ]}
+                      disabled
                     />
                   </FilePreviewContainer>
                 )}
@@ -298,6 +300,7 @@ const MyRegisterClubDetailFrame: React.FC<{
                         name: clubDetail.externalInstructionFile.name,
                       },
                     ]}
+                    disabled
                   />
                 </FilePreviewContainer>
               </>
