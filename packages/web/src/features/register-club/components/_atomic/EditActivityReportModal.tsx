@@ -2,7 +2,6 @@ import React, { BaseSyntheticEvent, useCallback, useEffect } from "react";
 
 import { ApiAct008RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
 
-import _ from "lodash";
 import { useForm } from "react-hook-form";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -27,29 +26,42 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
 }) => {
   const formCtx = useForm<ApiAct008RequestBody>({ mode: "all" });
 
-  const {
-    data: activityReportData,
-    isLoading,
-    isError,
-  } = useGetActivityReport(activityId);
+  const { data, isLoading, isError } = useGetActivityReport(activityId);
 
   useEffect(() => {
-    if (activityReportData) {
+    if (data) {
       /* NOTE: (@dora) request body of put should not include clubId */
-      formCtx.reset(_.omit(activityReportData, "clubId"));
+      formCtx.reset({
+        name: data.name,
+        activityTypeEnumId: data.activityTypeEnumId,
+        durations: data.durations,
+        location: data.location,
+        purpose: data.purpose,
+        detail: data.detail,
+        evidence: data.evidence,
+        evidenceFiles: data.evidenceFiles,
+        /* TODO: (@dora) connect actual participant info */
+        participants: [
+          {
+            studentId: 20200510,
+          },
+        ],
+      });
+      /* TODO: (@dora) refactor to use lodash */
+      // formCtx.reset(_.omit(activityReportData, "clubId"));
     }
-  }, [activityReportData, formCtx]);
+  }, [data, formCtx]);
 
   const { mutate } = usePutActivityReportForNewClub();
 
   const submitHandler = useCallback(
-    (data: ApiAct008RequestBody, e: React.BaseSyntheticEvent) => {
+    (_data: ApiAct008RequestBody, e: React.BaseSyntheticEvent) => {
       e.preventDefault();
       mutate(
         {
           params: { activityId },
           /* TODO: (@dora) connect actual participants */
-          body: { ...data, participants: [{ studentId: 20200510 }] },
+          body: { ..._data, participants: [{ studentId: 20200510 }] },
         },
         { onSuccess: close },
       );
@@ -62,7 +74,7 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
   };
 
   const handleSubmit = (e: BaseSyntheticEvent) => {
-    formCtx.handleSubmit(data => submitHandler(data, e))();
+    formCtx.handleSubmit(_data => submitHandler(_data, e))();
   };
 
   return (
