@@ -48,8 +48,8 @@ const Profile: React.FC<ProfileProps> = ({
 }) => {
   const profileText = (number: number, mail: string) => {
     if (number && mail) return `${number} / ${mail}`;
-    if (number) return `${number}`;
-    if (mail) return `${mail}`;
+    if (number === undefined || number === null) return `${mail}`;
+    if (mail === undefined || mail === null || mail === "") return `${number}`;
     return "";
   };
 
