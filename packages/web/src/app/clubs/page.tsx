@@ -70,6 +70,7 @@ const Clubs: React.FC = () => {
             .filter(
               item =>
                 item.name_kr.toLowerCase().includes(searchText.toLowerCase()) ||
+                item.name_en.toLowerCase().includes(searchText.toLowerCase()) ||
                 hangulIncludes(item.name_kr, searchText),
             )
             .sort((a, b) => {
