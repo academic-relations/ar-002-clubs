@@ -46,10 +46,7 @@ const columns = [
   }),
   columnHelper.accessor(
     row =>
-      row.durations.map(
-        (duration, index) =>
-          `${formatDate(duration.startTerm)} ~ ${formatDate(duration.endTerm)}${index === row.durations.length - 1 ? "" : ", "}`,
-      ),
+      `${formatDate(row.durations[0].startTerm)} ~ ${formatDate(row.durations[0].endTerm)}${row.durations.length > 1 ? ` 외 ${row.durations.length - 1}개` : ""}`,
     {
       header: "활동 기간",
       cell: info => info.getValue(),

@@ -216,7 +216,7 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
             {isProvisionalClub ? (
               <ProvisionalBasicInformFrame editMode />
             ) : (
-              <BasicInformFrame type={type} />
+              <BasicInformFrame type={type} editMode />
             )}
             <AdvancedInformFrame
               type={type}
