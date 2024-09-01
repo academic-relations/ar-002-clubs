@@ -24,6 +24,7 @@ interface PastActivityReportModalProps {
   activityId: number;
   isOpen: boolean;
   close: VoidFunction;
+  viewOnly?: boolean;
 }
 
 interface ActivitySectionProps extends React.PropsWithChildren {
@@ -73,6 +74,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   activityId,
   isOpen,
   close,
+  viewOnly = false,
 }) => {
   const { data, isLoading, isError } = useGetActivityReport(activityId);
   const {
@@ -179,19 +181,31 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
             )}
             <ActivityDetail text={`부가 설명: ${data?.evidence}`} />
           </ActivitySection>
-          <FlexWrapper
-            direction="row"
-            gap={12}
-            style={{ flex: 1, justifyContent: "space-between" }}
-          >
-            <Button type="outlined" onClick={close}>
-              취소
-            </Button>
+          {viewOnly ? (
             <FlexWrapper direction="row" gap={12}>
-              <Button onClick={handleDelete}>삭제</Button>
-              <Button onClick={handleEdit}>수정</Button>
+              <Button type="outlined" onClick={close}>
+                닫기
+              </Button>
             </FlexWrapper>
-          </FlexWrapper>
+          ) : (
+            <FlexWrapper
+              direction="column"
+              gap={12}
+              style={{
+                flex: 1,
+                alignItems: "flex-end",
+                justifyContent: "space-between",
+              }}
+            >
+              <Button type="outlined" onClick={close}>
+                취소
+              </Button>
+              <FlexWrapper direction="row" gap={12}>
+                <Button onClick={handleDelete}>삭제</Button>
+                <Button onClick={handleEdit}>수정</Button>
+              </FlexWrapper>
+            </FlexWrapper>
+          )}
         </FlexWrapper>
       </AsyncBoundary>
     </Modal>
