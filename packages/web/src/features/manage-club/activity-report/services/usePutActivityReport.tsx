@@ -23,6 +23,7 @@ export const usePutActivityReport = () =>
 
       switch (status) {
         case 200:
+        case 304:
           return apiAct003.responseBodyMap[200].parse(data);
         default:
           throw new UnexpectedAPIResponseError();
