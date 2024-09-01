@@ -69,8 +69,7 @@ const Clubs: React.FC = () => {
           const filteredClubs = division.clubs
             .filter(
               item =>
-                item.name_kr.includes(searchText.toLowerCase()) ||
-                item.name_kr.includes(searchText.toUpperCase()) ||
+                item.name_kr.toLowerCase().includes(searchText.toLowerCase()) ||
                 hangulIncludes(item.name_kr, searchText),
             )
             .sort((a, b) => {
