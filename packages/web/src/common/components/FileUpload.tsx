@@ -174,9 +174,10 @@ const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const updatedFiles = Array.from(event.target.files ?? []).map(file => ({
+    const newFiles = Array.from(event.target.files ?? []).map(file => ({
       file,
     }));
+    const updatedFiles = multiple ? [...files, ...newFiles] : newFiles;
     setFiles(updatedFiles);
     onSubmit(updatedFiles);
   };
