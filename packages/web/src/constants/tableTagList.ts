@@ -1,3 +1,4 @@
+import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
 import { PromotionalPrintingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
@@ -9,10 +10,10 @@ import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/renta
 
 import { DivisionType } from "@sparcs-clubs/web/types/divisions.types";
 
+import { TagColor } from "../common/components/Tag";
 import {
   ActivityProfessorApprovalEnum,
   ActivityStatusEnum,
-  ActivityTypeEnum,
   FundingStatusEnum,
   MemberStatusEnum,
 } from "../features/manage-club/services/_mock/mockManageClub";
@@ -114,18 +115,26 @@ const ProfessorApprovalTagList: {
   [ActivityProfessorApprovalEnum.Denied]: { text: "반려", color: "RED" },
 };
 
+const ProfessorIsApprovedTagList: (isApproved: boolean) => {
+  text: string;
+  color: TagColor;
+} = isApproved => {
+  if (isApproved) return { text: "승인", color: "GREEN" };
+  return { text: "대기", color: "GRAY" };
+};
+
 const ActTypeTagList: {
   [key in ActivityTypeEnum]: StatusDetail;
 } = {
-  [ActivityTypeEnum.FitInside]: {
+  [ActivityTypeEnum.matchedInternalActivity]: {
     text: "동아리 성격에 합치하는 내부 활동",
     color: "YELLOW",
   },
-  [ActivityTypeEnum.FitOutside]: {
+  [ActivityTypeEnum.matchedExternalActivity]: {
     text: "동아리 성격에 합치하는 외부 활동",
     color: "BLUE",
   },
-  [ActivityTypeEnum.NotFit]: {
+  [ActivityTypeEnum.notMatchedActivity]: {
     text: "동아리 성격에 합치하지 않는 활동",
     color: "PURPLE",
   },
@@ -172,6 +181,7 @@ export {
   MemTagList,
   ApplyTagList,
   ProfessorApprovalTagList,
+  ProfessorIsApprovedTagList,
   ActTypeTagList,
   FundingTagList,
   RegistrationTypeTagList,

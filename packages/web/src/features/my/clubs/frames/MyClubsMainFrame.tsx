@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
 import useGetMyClub from "@sparcs-clubs/web/features/my/clubs/service/useGetMyClub";
 
@@ -15,7 +16,7 @@ const MyClubsMainFrame: React.FC = () => {
   );
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
-      {isMyClubsExist && (
+      {isMyClubsExist ? (
         <FlexWrapper direction="column" gap={60}>
           {(data?.semesters ?? []).map(
             myClub =>
@@ -29,6 +30,10 @@ const MyClubsMainFrame: React.FC = () => {
               ),
           )}
         </FlexWrapper>
+      ) : (
+        <Typography color="GRAY.300" fs={20} fw="MEDIUM">
+          동아리가 없습니다
+        </Typography>
       )}
     </AsyncBoundary>
   );

@@ -12,6 +12,7 @@ import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decor
 import ActivityActivityTermService from "../service/activity.activity-term.service";
 
 import type {
+  ApiAct006RequestBody,
   ApiAct006RequestParam,
   ApiAct006ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct006";
@@ -47,7 +48,7 @@ export default class ActivityActivityTermController {
   async getStudentActivitiesActivityTerm(
     @GetStudent() user: GetStudent,
     @Param() param: ApiAct006RequestParam,
-    @Body() body: ApiAct009RequestBody,
+    @Body() body: ApiAct006RequestBody,
   ): Promise<ApiAct006ResponseOk> {
     const result =
       await this.activityActivityTermService.getStudentActivitiesActivityTerm(

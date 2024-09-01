@@ -2,14 +2,23 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
+import logger from "@sparcs-clubs/api/common/util/logger";
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
+
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import { ClubDelegateDRepository } from "../repository/club.club-delegate-d.repository";
+
+import ClubPublicService from "./club.public.service";
 
 import type {
   ApiClb006RequestParam,
   ApiClb006ResponseOK,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb006";
+import type {
+  ApiClb008RequestParam,
+  ApiClb008ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb008";
 import type {
   ApiClb015ResponseNoContent,
   ApiClb015ResponseOk,
@@ -24,6 +33,7 @@ export default class ClubDelegateService {
   constructor(
     private clubDelegateDRepository: ClubDelegateDRepository,
     private userPublicService: UserPublicService,
+    private clubPublicService: ClubPublicService,
   ) {}
 
   async getStudentClubDelegates(
@@ -179,5 +189,60 @@ export default class ClubDelegateService {
         delegateEnumId: result[0].ClubDelegateEnumId,
       },
     };
+  }
+
+  /**
+   * @param studentId 학생 Id
+   * @param param
+   * @description getStudentClubDelegateCandidates 의 서비스 진입점입니다.
+   */
+  async getStudentClubDelegateCandidates(param: {
+    studentId: number;
+    param: ApiClb008RequestParam;
+  }): Promise<ApiClb008ResponseOk> {
+    // 동아리 대표자 또는 대의원이 맞는지 확인합니다.
+    if (param.param.delegateEnumId === ClubDelegateEnum.Representative) {
+      const isPresident = await this.clubPublicService.isStudentPresident(
+        param.studentId,
+        param.param.clubId,
+      );
+      if (!isPresident)
+        throw new HttpException(
+          "It seems that you are not a representative of the club",
+          HttpStatus.UNAUTHORIZED,
+        );
+    } else {
+      const isDelegate = await this.clubPublicService.isStudentDelegate(
+        param.studentId,
+        param.param.clubId,
+      );
+      if (!isDelegate)
+        throw new HttpException(
+          "It seems that you are not a delegate of the club",
+          HttpStatus.UNAUTHORIZED,
+        );
+    }
+
+    const semesterId =
+      await this.clubPublicService.dateToSemesterId(getKSTDate());
+    logger.debug(semesterId);
+    const result =
+      await this.clubDelegateDRepository.selectDelegateCandidatesByClubId({
+        clubId: param.param.clubId,
+        semesterId,
+        filterClubDelegateEnum:
+          param.param.delegateEnumId === ClubDelegateEnum.Representative
+            ? [ClubDelegateEnum.Representative]
+            : [ClubDelegateEnum.Delegate1, ClubDelegateEnum.Delegate2],
+      });
+
+    const response = {
+      students: result.map(e => ({
+        id: e.student.id,
+        name: e.student.name,
+        phoneNumber: e.student.phoneNumber,
+      })),
+    };
+    return response;
   }
 }

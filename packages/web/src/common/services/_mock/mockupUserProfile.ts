@@ -1,6 +1,7 @@
 import type { ApiUsr001ResponseOK } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
 
 const mockupUserProfile: ApiUsr001ResponseOK = {
+  id: 1234,
   name: "넙죽이",
   studentNumber: 23456789,
   clubs: [

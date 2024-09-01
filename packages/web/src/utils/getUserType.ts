@@ -1,3 +1,5 @@
+import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+
 export const getUserType = (type: string) => {
   switch (type) {
     case "undergraduate":
@@ -14,5 +16,17 @@ export const getUserType = (type: string) => {
       return "교직원";
     default:
       return "None";
+  }
+};
+
+export const professorEnumToText = (profEnum?: ProfessorEnum) => {
+  switch (profEnum) {
+    case ProfessorEnum.Assistant:
+      return "조교수";
+    case ProfessorEnum.Associate:
+      return "부교수";
+    case ProfessorEnum.Full:
+    default:
+      return "정교수";
   }
 };

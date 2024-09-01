@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
+import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import FoldableSection from "@sparcs-clubs/web/common/components/FoldableSection";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Info from "@sparcs-clubs/web/common/components/Info";
@@ -67,7 +67,9 @@ const ActivityReportMainFrame: React.FC = () => (
             활동 보고서는 최대 20개까지 작성 가능합니다
           </Typography>
           <Link href="/manage-club/activity-report/create">
-            <Button type="default">+ 활동 보고서 작성</Button>
+            <IconButton type="default" icon="add" onClick={() => {}}>
+              활동 보고서 작성
+            </IconButton>
           </Link>
         </OptionOuter>
         <NewActivityReportList data={mockNewActivityData} />
@@ -76,13 +78,13 @@ const ActivityReportMainFrame: React.FC = () => (
     <FoldableSectionTitle title="과거 활동 보고서">
       <PastSectionInner>
         <FoldableSection title="2023년 가을학기 (총 6개)">
-          <PastActivityReportList data={mockPastActivityData} />
+          <PastActivityReportList data={mockPastActivityData.activities} />
         </FoldableSection>
         <FoldableSection title="2023년 봄학기 (총 6개)">
-          <PastActivityReportList data={mockPastActivityData} />
+          <PastActivityReportList data={mockPastActivityData.activities} />
         </FoldableSection>
         <FoldableSection title="2022년 가을학기 (총 6개)">
-          <PastActivityReportList data={mockPastActivityData} />
+          <PastActivityReportList data={mockPastActivityData.activities} />
         </FoldableSection>
       </PastSectionInner>
     </FoldableSectionTitle>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { useFormContext } from "react-hook-form";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -27,10 +28,16 @@ import ProfessorInformFrame from "./ProfessorInformFrame";
 const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
   editMode = false,
 }) => {
-  const [isCheckedProfessor, setIsCheckedProfessor] = useState(false);
-  const [isReProvisional, setIsReProvisional] = useState(false);
-
   const { control, resetField, setValue } = useFormContext();
+
+  const [isCheckedProfessor, setIsCheckedProfessor] = useState(false);
+  const [registrationType, setRegistrationType] =
+    useState<RegistrationTypeEnum | null>(null);
+
+  const updateRegistrationType = (type: RegistrationTypeEnum) => {
+    setRegistrationType(type);
+    setValue("registrationTypeEnumId", type, { shouldValidate: true });
+  };
 
   const { data, isLoading, isError } = useGetClubsForReProvisional();
   const {
@@ -44,7 +51,7 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
       resetField("professor.email");
       resetField("professor.name");
       resetField("professor.professorEnumId");
-      setValue("professor", undefined);
+      setValue("professor", undefined, { shouldValidate: true });
     }
   }, [resetField, setValue, isCheckedProfessor]);
 
@@ -68,21 +75,19 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
               control={control}
               defaultValue={profile?.phoneNumber}
               minLength={13}
+              // TODO: phoneNumber validation
+              // pattern={/^010-\d{4}-\d{4}$/}
               renderItem={props => (
                 <PhoneInput
                   {...props}
                   label="대표자 전화번호"
-                  placeholder="XXX-XXXX-XXXX"
+                  placeholder="010-XXXX-XXXX"
                 />
               )}
             />
           </FlexWrapper>
           <FlexWrapper direction="column" gap={4}>
-            <FlexWrapper
-              direction="row"
-              gap={8}
-              style={{ width: "100%", marginLeft: 2 }}
-            >
+            <FlexWrapper direction="row" gap={8} style={{ marginLeft: 2 }}>
               <Typography fw="MEDIUM" color="BLACK">
                 가등록 신청 구분
               </Typography>
@@ -93,61 +98,82 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
             </FlexWrapper>
             <FlexWrapper direction="row" gap={16} style={{ width: "100%" }}>
               <Button
-                type={isReProvisional ? "outlined" : "default"}
-                style={{ width: "100%" }}
-                onClick={() => setIsReProvisional(false)}
+                type={
+                  registrationType === RegistrationTypeEnum.NewProvisional
+                    ? "default"
+                    : "outlined"
+                }
+                onClick={() =>
+                  updateRegistrationType(RegistrationTypeEnum.NewProvisional)
+                }
+                style={{ flex: 1 }}
               >
                 가등록(신규)
               </Button>
               <Button
-                type={isReProvisional ? "default" : "outlined"}
-                style={{ width: "100%" }}
-                onClick={() => setIsReProvisional(true)}
+                type={
+                  registrationType === RegistrationTypeEnum.ReProvisional
+                    ? "default"
+                    : "outlined"
+                }
+                onClick={() =>
+                  updateRegistrationType(RegistrationTypeEnum.ReProvisional)
+                }
+                style={{ flex: 1 }}
               >
                 가등록(재)
               </Button>
             </FlexWrapper>
           </FlexWrapper>
-          <ClubNameField
-            clubList={isReProvisional ? data?.clubs : []}
-            editMode={editMode}
-          />
-          <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
-            <YearSelect />
-            <MonthSelect />
-            <DivisionSelect />
-          </FlexWrapper>
-          <FormController
-            name="kr활동분야"
-            required
-            control={control}
-            renderItem={props => (
-              <TextInput
-                {...props}
-                label="활동 분야 (국문)"
-                placeholder="활동 분야를 입력해주세요"
+          {registrationType && (
+            <>
+              <ClubNameField
+                type={registrationType}
+                clubList={
+                  registrationType === RegistrationTypeEnum.ReProvisional
+                    ? data?.clubs
+                    : []
+                }
+                editMode={editMode}
               />
-            )}
-          />
-          <FormController
-            name="en활동분야"
-            required
-            control={control}
-            renderItem={props => (
-              <TextInput
-                {...props}
-                label="활동 분야 (영문)"
-                placeholder="활동 분야를 입력해주세요"
+              <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
+                <YearSelect />
+                <MonthSelect />
+                <DivisionSelect />
+              </FlexWrapper>
+              <FormController
+                name="activityFieldKr"
+                required
+                control={control}
+                renderItem={props => (
+                  <TextInput
+                    {...props}
+                    label="활동 분야 (국문)"
+                    placeholder="활동 분야를 입력해주세요"
+                  />
+                )}
               />
-            )}
-          />
-          <CheckboxOption
-            optionText="지도교수를 신청하겠습니다"
-            checked={isCheckedProfessor}
-            onClick={() => {
-              setIsCheckedProfessor(!isCheckedProfessor);
-            }}
-          />
+              <FormController
+                name="activityFieldEn"
+                required
+                control={control}
+                renderItem={props => (
+                  <TextInput
+                    {...props}
+                    label="활동 분야 (영문)"
+                    placeholder="활동 분야를 입력해주세요"
+                  />
+                )}
+              />
+              <CheckboxOption
+                optionText="지도교수를 신청하겠습니다"
+                checked={isCheckedProfessor}
+                onClick={() => {
+                  setIsCheckedProfessor(!isCheckedProfessor);
+                }}
+              />
+            </>
+          )}
         </Card>
         {isCheckedProfessor && <ProfessorInformFrame />}
       </FlexWrapper>

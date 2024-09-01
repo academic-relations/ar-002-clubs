@@ -116,9 +116,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
           <AgreementModal
             isOpen={isOpen}
             onAgree={async () => {
-              await postUserAgree();
-              setIsAgreed(true);
-              close();
+              try {
+                await postUserAgree();
+                setIsAgreed(true);
+                close();
+              } catch (error) {
+                window.location.reload();
+              }
             }}
             onDisagree={async () => {
               await logout();

@@ -4,7 +4,7 @@ import {
   ClubDelegateEnum,
 } from "@sparcs-clubs/interface/common/enum/club.enum";
 
-import { and, count, eq, gte, isNull, lte, or } from "drizzle-orm";
+import { and, count, eq, gte, isNull, lte, notInArray, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -12,8 +12,10 @@ import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate, takeUnique } from "src/common/util/util";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
+  Club,
   ClubDelegateChangeRequest,
   ClubDelegateD,
+  ClubStudentT,
 } from "src/drizzle/schema/club.schema";
 import { Student } from "src/drizzle/schema/user.schema";
 
@@ -175,6 +177,60 @@ export class ClubDelegateDRepository {
       )
       .limit(1)
       .then(takeUnique));
+    return result;
+  }
+
+  /**
+   * @param clubId
+   * @param semesterId
+   * @param filterClubDelegateEnum 후보자로 선정하기 위해 필터링되어야하는 ClubDelegateEnum 목록
+   * 예를 들어, 대표자 후보를 얻기 위해 이 쿼리를 이용할 경우 filterClubDelegateEnum은 [filterClubDelegateEnum.Representative]
+   * 가 되어야 합니다.
+   * @returns 해당 동아리에서 해당 학기에 대표자 지위를 넘길 수 있는 학생 목록을 리턴합니다.
+   */
+  async selectDelegateCandidatesByClubId(param: {
+    clubId: number;
+    semesterId: number;
+    filterClubDelegateEnum: Array<ClubDelegateEnum>;
+  }) {
+    const today = getKSTDate();
+    logger.debug(param.semesterId);
+    logger.debug(today);
+    const result = await this.db
+      .select()
+      .from(Club)
+      .innerJoin(
+        ClubStudentT,
+        and(eq(Club.id, ClubStudentT.clubId), isNull(ClubStudentT.deletedAt)),
+      )
+      .innerJoin(
+        Student,
+        and(eq(ClubStudentT.studentId, Student.id), isNull(Student.deletedAt)),
+      )
+      .leftJoin(
+        ClubDelegateD,
+        and(
+          eq(ClubDelegateD.studentId, Student.id),
+          lte(ClubDelegateD.startTerm, today),
+          or(gte(ClubDelegateD.endTerm, today), isNull(ClubDelegateD.endTerm)),
+          isNull(ClubDelegateD.deletedAt),
+        ),
+      )
+      .where(
+        and(
+          eq(Club.id, param.clubId),
+          eq(ClubStudentT.semesterId, param.semesterId),
+          or(
+            notInArray(
+              ClubDelegateD.ClubDelegateEnumId,
+              param.filterClubDelegateEnum,
+            ),
+            isNull(ClubDelegateD.ClubDelegateEnumId),
+          ),
+          isNull(Club.deletedAt),
+        ),
+      );
+    // logger.debug(result);
     return result;
   }
 

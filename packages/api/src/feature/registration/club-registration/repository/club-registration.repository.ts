@@ -38,7 +38,10 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
-import { ClubDelegateD } from "@sparcs-clubs/api/drizzle/schema/club.schema";
+import {
+  Club,
+  ClubDelegateD,
+} from "@sparcs-clubs/api/drizzle/schema/club.schema";
 import { Division } from "@sparcs-clubs/api/drizzle/schema/division.schema";
 import { File } from "@sparcs-clubs/api/drizzle/schema/file.schema";
 import {
@@ -86,11 +89,26 @@ export class ClubRegistrationRepository {
     return clubs;
   }
 
+  async findByStudentId(studentId: number) {
+    const clubs = await this.db
+      .select()
+      .from(Registration)
+      .where(
+        and(
+          eq(Registration.studentId, studentId),
+          isNull(Registration.deletedAt),
+        ),
+      );
+
+    return clubs;
+  }
+
   async createRegistration(
     studentId: number,
     body: ApiReg001RequestBody,
   ): Promise<ApiReg001ResponseCreated> {
     const cur = getKSTDate();
+    let registrationId: number;
     await this.db.transaction(async tx => {
       // - 신규 가동아리 신청을 제외하곤 기존 동아리 대표자의 신청인지 검사합니다.
       // 한 학생이 여러 동아리의 대표자나 대의원일 수 없기 때문에, 1개 또는 0개의 지위를 가지고 있다고 가정합니다.
@@ -157,6 +175,7 @@ export class ClubRegistrationRepository {
         }
       }
 
+      // registration insert 후 id 가져오기
       const [registrationInsertResult] = await tx.insert(Registration).values({
         clubId: body.clubId,
         registrationApplicationTypeEnumId: body.registrationTypeEnumId,
@@ -168,7 +187,7 @@ export class ClubRegistrationRepository {
         divisionId: body.divisionId,
         activityFieldKr: body.activityFieldKr,
         activityFieldEn: body.activityFieldEn,
-        professorId: professorId.professorId,
+        professorId: professorId.professorId ?? null,
         divisionConsistency: body.divisionConsistency,
         foundationPurpose: body.foundationPurpose,
         activityPlan: body.activityPlan,
@@ -178,18 +197,15 @@ export class ClubRegistrationRepository {
         registrationApplicationStatusEnumId: RegistrationStatusEnum.Pending,
       });
 
-      if (registrationInsertResult.affectedRows !== 1) {
-        logger.debug("[createRegistration] rollback occurs");
-        await tx.rollback();
-      }
+      registrationId = registrationInsertResult.insertId;
 
       logger.debug(
-        `[createRegistration] Registration inserted with id ${registrationInsertResult.insertId}`,
+        `[createRegistration] Registration inserted with id ${registrationId}`,
       );
     });
 
     logger.debug("[createRegistration] insertion ends successfully");
-    return {};
+    return { id: registrationId };
   }
 
   async putStudentRegistrationsClubRegistration(
@@ -256,6 +272,7 @@ export class ClubRegistrationRepository {
           )
           .for("share")
           .then(takeUnique);
+        logger.debug(professorId);
         if (!professorId) {
           throw new HttpException(
             "Professor Not Found",
@@ -273,7 +290,7 @@ export class ClubRegistrationRepository {
           divisionId: body.divisionId,
           activityFieldKr: body.activityFieldKr,
           activityFieldEn: body.activityFieldEn,
-          professorId,
+          professorId: professorId.professorId ?? null,
           divisionConsistency: body.divisionConsistency,
           foundationPurpose: body.foundationPurpose,
           activityPlan: body.activityPlan,
@@ -380,13 +397,15 @@ export class ClubRegistrationRepository {
           registrationStatusEnumId:
             Registration.registrationApplicationStatusEnumId,
           clubId: Registration.clubId,
-          clubNameKr: Registration.clubNameKr,
-          clubNameEn: Registration.clubNameEn,
+          clubNameKr: Club.name_kr,
+          clubNameEn: Club.name_en,
+          newClubNameKr: Registration.clubNameKr,
+          newClubNameEn: Registration.clubNameEn,
           representative: {
             studentNumber: representative.studentNumber,
             name: representative.name,
+            phoneNumber: Registration.phoneNumber,
           },
-          phoneNumber: Registration.phoneNumber,
           foundedAt: Registration.foundedAt,
           divisionId: Registration.divisionId,
           activityFieldKr: Registration.activityFieldKr,
@@ -414,6 +433,10 @@ export class ClubRegistrationRepository {
           representative,
           eq(Registration.studentId, representative.id),
         ) // 대표자가 없는 학생이라면 잘못된 신청이라는 의미인것 같아서 innerjoin으로 연결시킴.
+        .leftJoin(
+          Club,
+          and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
+        )
         .leftJoin(professor, eq(Registration.professorId, professor.id))
         .leftJoin(
           File1,
@@ -434,6 +457,13 @@ export class ClubRegistrationRepository {
           and(
             eq(Registration.registrationExternalInstructionFileId, File3.id),
             isNull(File3.deletedAt),
+          ),
+        )
+        .leftJoin(
+          Division,
+          and(
+            eq(Registration.divisionId, Division.id),
+            isNull(Division.deletedAt),
           ),
         )
         .where(
@@ -467,6 +497,27 @@ export class ClubRegistrationRepository {
         ...registration,
         isProfessorSigned: !!registration.isProfessorSigned,
         comments,
+        ...(registration.activityPlanFileId && {
+          activityPlanFile: {
+            id: registration.activityPlanFileId,
+            name: registration.activityPlanFileName,
+            url: null,
+          },
+        }),
+        ...(registration.clubRuleFileId && {
+          clubRuleFile: {
+            id: registration.clubRuleFileId,
+            name: registration.clubRuleFileName,
+            url: null,
+          },
+        }),
+        ...(registration.externalInstructionFileId && {
+          externalInstructionFile: {
+            id: registration.externalInstructionFileId,
+            name: registration.externalInstructionFileName,
+            url: null,
+          },
+        }),
       };
     });
     return result;
@@ -480,17 +531,20 @@ export class ClubRegistrationRepository {
         id: Registration.id,
         registrationTypeEnumId: Registration.registrationApplicationTypeEnumId,
         divisionName: Division.name,
-        clubNameKr: Registration.clubNameKr,
+        clubNameKr: Club.name_kr,
+        newClubNameKr: Registration.clubNameKr,
         clubId: Registration.clubId,
         activityFieldKr: Registration.activityFieldKr,
         activityFieldEn: Registration.activityFieldEn,
         professorName: Professor.name,
         registrationStatusEnumId:
           Registration.registrationApplicationStatusEnumId,
-        krName: Registration.clubNameKr,
-        enName: Registration.clubNameEn,
       })
       .from(Registration)
+      .leftJoin(
+        Club,
+        and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
+      )
       .leftJoin(
         Division,
         and(
@@ -619,13 +673,15 @@ export class ClubRegistrationRepository {
           registrationStatusEnumId:
             Registration.registrationApplicationStatusEnumId,
           clubId: Registration.clubId,
-          clubNameKr: Registration.clubNameKr,
-          clubNameEn: Registration.clubNameEn,
+          clubNameKr: Club.name_kr,
+          clubNameEn: Club.name_en,
+          newClubNameKr: Registration.clubNameKr,
+          newClubNameEn: Registration.clubNameEn,
           representative: {
             studentNumber: representative.studentNumber,
             name: representative.name,
+            phoneNumber: Registration.phoneNumber,
           },
-          phoneNumber: Registration.phoneNumber,
           foundedAt: Registration.foundedAt,
           divisionId: Registration.divisionId,
           activityFieldKr: Registration.activityFieldKr,
@@ -653,6 +709,10 @@ export class ClubRegistrationRepository {
           representative,
           eq(Registration.studentId, representative.id),
         ) // 대표자가 없는 학생이라면 잘못된 신청이라는 의미인것 같아서 innerjoin으로 연결시킴.
+        .leftJoin(
+          Club,
+          and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
+        )
         .leftJoin(professor, eq(Registration.professorId, professor.id))
         .leftJoin(
           File1,
@@ -673,6 +733,13 @@ export class ClubRegistrationRepository {
           and(
             eq(Registration.registrationExternalInstructionFileId, File3.id),
             isNull(File3.deletedAt),
+          ),
+        )
+        .leftJoin(
+          Division,
+          and(
+            eq(Registration.divisionId, Division.id),
+            isNull(Division.deletedAt),
           ),
         )
         .where(
@@ -702,6 +769,27 @@ export class ClubRegistrationRepository {
         ...registration,
         isProfessorSigned: !!registration.isProfessorSigned,
         comments,
+        ...(registration.activityPlanFileId && {
+          activityPlanFile: {
+            id: registration.activityPlanFileId,
+            name: registration.activityPlanFileName,
+            url: null,
+          },
+        }),
+        ...(registration.clubRuleFileId && {
+          clubRuleFile: {
+            id: registration.clubRuleFileId,
+            name: registration.clubRuleFileName,
+            url: null,
+          },
+        }),
+        ...(registration.externalInstructionFileId && {
+          externalInstructionFile: {
+            id: registration.externalInstructionFileId,
+            name: registration.externalInstructionFileName,
+            url: null,
+          },
+        }),
       };
     });
     return result;
@@ -805,5 +893,114 @@ export class ClubRegistrationRepository {
       );
 
     return result;
+  }
+
+  /**
+   * @param registrationId 동아리 등록 신청 ID
+   * @return 등록 신청 ID가 일치하는 등록 신청들을 배열로 리턴합니다.
+   * @description 위 등록 신청 ID 기반으로 조회하기에, 배열의 길이는 1 또는 0이여야 합니다.
+   * 이 함수는 이를 검사하지 않습니다.
+   */
+  async selectRegistrationsById(param: { registrationId: number }) {
+    const result = await this.db
+      .select()
+      .from(Registration)
+      .where(
+        and(
+          eq(Registration.id, param.registrationId),
+          isNull(Registration.deletedAt),
+        ),
+      );
+    return result;
+  }
+
+  /**
+   * @param registrationId 동아리 등록 신청 ID
+   * @param approvedAt 갱신할 시간
+   * @description 해당 등록 신청의 교수 서명 시간을 갱신합니다. 신청 ID가 유효한지 검사하지 않습니다.
+   * @return 갱신 성공 여부를 boolean으로 리턴합니다. 참을 리턴하거나 예외가 발생합니다.
+   */
+  async updateRegistrationProfessorApprovedAt(param: {
+    registrationId: number;
+    approvedAt: Date;
+  }): Promise<boolean> {
+    const isUpdateSucceed = await this.db.transaction(async tx => {
+      const [updateResult] = await tx
+        .update(Registration)
+        .set({ professorApprovedAt: param.approvedAt })
+        .where(
+          and(
+            eq(Registration.id, param.registrationId),
+            isNull(Registration.deletedAt),
+          ),
+        );
+      if (updateResult.affectedRows !== 1)
+        throw new HttpException(
+          "update failed",
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      return true;
+    });
+    return isUpdateSucceed;
+  }
+
+  async getProfessorRegistrationsClubRegistration(param: {
+    registrationId: number;
+    professorId: number;
+  }) {
+    const results = await this.db
+      .select()
+      .from(Registration)
+      .innerJoin(
+        Student,
+        and(eq(Registration.studentId, Student.id), isNull(Student.deletedAt)),
+      )
+      .innerJoin(
+        Club,
+        and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
+      )
+      .innerJoin(
+        Professor,
+        and(
+          eq(Registration.professorId, Professor.id),
+          isNull(Professor.deletedAt),
+        ),
+      )
+      .innerJoin(
+        ProfessorT,
+        and(
+          eq(Professor.id, ProfessorT.professorId),
+          isNull(ProfessorT.deletedAt),
+        ),
+      )
+      .where(
+        and(
+          eq(Registration.id, param.registrationId),
+          eq(Registration.professorId, param.professorId),
+          isNull(Registration.deletedAt),
+        ),
+      );
+    logger.debug(results);
+    if (results.length === 0)
+      throw new HttpException(
+        "not a valid applyId or ProfessorId",
+        HttpStatus.NOT_FOUND,
+      );
+    const result = results[0];
+
+    const comments = await this.db
+      .select()
+      .from(RegistrationExecutiveComment)
+      .where(
+        and(
+          eq(
+            RegistrationExecutiveComment.registrationId,
+            result.registration.id,
+          ),
+          isNull(RegistrationExecutiveComment.deletedAt),
+        ),
+      );
+
+    return { ...result, comments };
   }
 }

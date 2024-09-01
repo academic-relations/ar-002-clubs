@@ -1,21 +1,29 @@
 import apiReg009, {
   ApiReg009RequestBody,
   ApiReg009RequestParam,
-  ApiReg009ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg009";
 import { useMutation } from "@tanstack/react-query";
+import { z } from "zod";
 
 import {
   axiosClientWithAuth,
-  defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
-const usePutClubRegistration = (param: ApiReg009RequestParam) =>
-  useMutation<ApiReg009ResponseOk, Error, { body: ApiReg009RequestBody }>({
-    mutationFn: async ({ body }): Promise<ApiReg009ResponseOk> => {
+type ISuccessResponseType = z.infer<(typeof apiReg009.responseBodyMap)[200]>;
+
+const usePutClubRegistration = () =>
+  useMutation<
+    ISuccessResponseType,
+    Error,
+    { requestParam: ApiReg009RequestParam; body: ApiReg009RequestBody }
+  >({
+    mutationFn: async ({
+      requestParam,
+      body,
+    }): Promise<ISuccessResponseType> => {
       const { data, status } = await axiosClientWithAuth.put(
-        apiReg009.url(param.applyId.toString()),
+        apiReg009.url(requestParam.applyId),
         body,
       );
 
@@ -29,7 +37,3 @@ const usePutClubRegistration = (param: ApiReg009RequestParam) =>
   });
 
 export default usePutClubRegistration;
-
-defineAxiosMock(mock => {
-  mock.onPut(apiReg009.url("1")).reply(() => [200, {}]);
-});

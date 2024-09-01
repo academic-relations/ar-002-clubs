@@ -9,7 +9,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
-import { MyChangesFrame } from "@sparcs-clubs/web/features/my/frames/MyChangesFrame";
+// import { MyChangesFrame } from "@sparcs-clubs/web/features/my/frames/MyChangesFrame";
 import MyClubFrame from "@sparcs-clubs/web/features/my/frames/MyClubFrame";
 import MyInfoFrame from "@sparcs-clubs/web/features/my/frames/MyInfoFrame";
 import MyRegisterFrame from "@sparcs-clubs/web/features/my/frames/MyRegisterFrame";
@@ -45,8 +45,8 @@ const My: React.FC = () => {
         items={[{ name: "마이페이지", path: "/my" }]}
         title="마이페이지"
       />
-      {profile === "undergraduate" && <MyChangesFrame />}
-      <MyInfoFrame />
+      {/* {profile === "undergraduate" && <MyChangesFrame />} */}
+      <MyInfoFrame profile={profile as string} />
       {profile !== "executive" && <MyClubFrame />}
       {profile && profile !== "executive" && (
         <MyRegisterFrame profile={profile} />

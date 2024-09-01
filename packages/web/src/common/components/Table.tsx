@@ -15,7 +15,9 @@ interface TableProps<T> {
   emptyMessage?: string;
   count?: number;
   footer?: React.ReactNode;
+  /* TODO: (@dora) refactor to use onClick only */
   rowLink?: (row: T) => string | { pathname: string };
+  onClick?: (row: T) => void;
   unit?: string;
 }
 const TableInnerWrapper = styled.div`
@@ -92,6 +94,7 @@ const Table = <T,>({
   footer = null,
   count = undefined,
   rowLink = undefined,
+  onClick = undefined,
   unit = "개",
 }: TableProps<T>) => {
   // 야매로 min-width 바꿔치기 (고치지 마세요)
@@ -103,22 +106,27 @@ const Table = <T,>({
   const router = useRouter();
   const handleRowClick = useCallback(
     (row: T) => {
-      const link = rowLink?.(row);
-      if (link) {
-        if (typeof link === "string") {
-          router.push(link);
-        } else if (link?.pathname) {
-          router.push(link.pathname);
+      if (rowLink) {
+        const link = rowLink(row);
+        if (link) {
+          if (typeof link === "string") {
+            router.push(link);
+          } else if (link?.pathname) {
+            router.push(link.pathname);
+          }
         }
       }
+      if (onClick) {
+        onClick(row);
+      }
     },
-    [rowLink, router],
+    [rowLink, onClick, router],
   );
 
   return (
     <TableWithCount>
       <Count>
-        {count && (
+        {(count || count === 0) && (
           <Typography fs={16} lh={20}>
             총 {count}
             {unit}
@@ -170,7 +178,7 @@ const Table = <T,>({
                 <ContentRow
                   key={row.id}
                   selected={row.getIsSelected()}
-                  isClickable={!!rowLink}
+                  isClickable={!!rowLink || !!onClick}
                   onClick={() => handleRowClick(row.original)}
                 >
                   {row.getVisibleCells().map(cell => (

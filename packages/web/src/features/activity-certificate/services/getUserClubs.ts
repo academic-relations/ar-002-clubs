@@ -20,7 +20,6 @@ export const useGetUserClubs = () =>
         apiAcf002.url(),
         {},
       );
-      console.log(data);
 
       // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
       switch (status) {
