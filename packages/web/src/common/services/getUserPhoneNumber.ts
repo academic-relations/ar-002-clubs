@@ -1,5 +1,5 @@
 import apiUsr002, {
-  ApiUsr002RequestBody,
+  ApiUsr002RequestQuery,
   ApiUsr002ResponseOk,
 } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr002";
 import { useQuery } from "@tanstack/react-query";
@@ -10,12 +10,12 @@ import {
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
-const useUserPhoneNumber = (requestBody: ApiUsr002RequestBody) =>
+const useUserPhoneNumber = (requestQuery: ApiUsr002RequestQuery) =>
   useQuery<ApiUsr002ResponseOk, Error>({
-    queryKey: [apiUsr002.url(), requestBody],
+    queryKey: [apiUsr002.url(), requestQuery],
     queryFn: async (): Promise<ApiUsr002ResponseOk> => {
       const { data, status } = await axiosClientWithAuth.get(apiUsr002.url(), {
-        params: requestBody,
+        params: requestQuery,
       });
 
       switch (status) {
