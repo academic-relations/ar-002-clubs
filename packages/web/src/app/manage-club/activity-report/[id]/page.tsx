@@ -224,7 +224,7 @@ const ActivityReportDetail: React.FC = () => {
               <FilePreviewContainer>
                 <ThumbnailPreviewList
                   fileList={data.evidenceFiles.map((file, _) =>
-                    fromUUID(file.uuid),
+                    fromUUID(file.fileId),
                   )}
                 />
               </FilePreviewContainer>

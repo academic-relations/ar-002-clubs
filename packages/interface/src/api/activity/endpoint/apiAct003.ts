@@ -43,7 +43,7 @@ const requestBody = z.object({
   evidenceFiles: z
     .array(
       z.object({
-        uuid: z.string().max(255),
+        fileId: z.string().max(255),
       }),
     )
     .min(1), // 최소 하나의 evidenceFile 객체가 있어야 함을 보장

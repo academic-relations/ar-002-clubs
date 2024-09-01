@@ -362,7 +362,7 @@ export default class ActivityService {
       purpose: body.purpose,
       detail: body.detail,
       evidence: body.evidence,
-      evidenceFileIds: body.evidenceFiles.map(e => e.uuid),
+      evidenceFileIds: body.evidenceFiles.map(e => e.fileId),
       participantIds: body.participants.map(e => e.studentId),
       activityDId: activity.activityDId,
     });
