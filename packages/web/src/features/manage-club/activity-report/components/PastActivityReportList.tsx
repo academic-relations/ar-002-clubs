@@ -46,9 +46,9 @@ const columns = [
   }),
   columnHelper.accessor(
     row =>
-      row.duration.map(
+      row.durations.map(
         (duration, index) =>
-          `${formatDate(duration.startTerm)} ~ ${formatDate(duration.endTerm)}${index === row.duration.length - 1 ? "" : ", "}`,
+          `${formatDate(duration.startTerm)} ~ ${formatDate(duration.endTerm)}${index === row.durations.length - 1 ? "" : ", "}`,
       ),
     {
       header: "활동 기간",
