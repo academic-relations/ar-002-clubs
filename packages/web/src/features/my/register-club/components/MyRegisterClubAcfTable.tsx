@@ -39,7 +39,7 @@ const columns = [
 
   columnHelper.accessor(
     row =>
-      `${formatDate(row.duration.startTerm)} ~ ${formatDate(row.duration.endTerm)}`,
+      `${formatDate(row.durations[0].startTerm)} ~ ${formatDate(row.durations[0].endTerm)}`,
     {
       id: "activityPeriod",
       header: "활동 기간",
