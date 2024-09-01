@@ -189,7 +189,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
             </FlexWrapper>
           ) : (
             <FlexWrapper
-              direction="column"
+              direction="row"
               gap={12}
               style={{
                 flex: 1,
