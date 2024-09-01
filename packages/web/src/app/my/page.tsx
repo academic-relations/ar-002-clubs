@@ -13,6 +13,7 @@ import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import MyClubFrame from "@sparcs-clubs/web/features/my/frames/MyClubFrame";
 import MyInfoFrame from "@sparcs-clubs/web/features/my/frames/MyInfoFrame";
 import MyRegisterFrame from "@sparcs-clubs/web/features/my/frames/MyRegisterFrame";
+import ProfessorMyClubFrame from "@sparcs-clubs/web/features/my/frames/ProfessorMyClubFrame";
 // import MyServiceFrame from "@sparcs-clubs/web/features/my/frames/MyServiceFrame";
 
 const ResponsiveWrapper = styled(FlexWrapper)`
@@ -47,7 +48,8 @@ const My: React.FC = () => {
       />
       {/* {profile === "undergraduate" && <MyChangesFrame />} */}
       <MyInfoFrame profile={profile as string} />
-      {profile !== "executive" && <MyClubFrame />}
+      {profile !== "executive" &&
+        (profile === "professor" ? <ProfessorMyClubFrame /> : <MyClubFrame />)}
       {profile && profile !== "executive" && (
         <MyRegisterFrame profile={profile} />
       )}
