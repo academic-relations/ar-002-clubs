@@ -31,7 +31,9 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
   <FlexWrapper
     direction="column"
     gap={16}
-    style={{ alignItems: "flex-start", alignSelf: "stretch" }}
+    style={{
+      alignSelf: "stretch",
+    }}
   >
     <Typography
       fw="MEDIUM"
@@ -61,24 +63,6 @@ const ActivityDetail: React.FC<{ text: string }> = ({ text }) => (
   </FlexTypography>
 );
 
-// ActivityDetail은 세부 활동 내역을 나타냅니다.
-// string이면 bullet point가 자동으로 포함됩니다.
-// string이 아닌 경우는 FilePreview가 들어가는 경우입니다. padding이 포함됩니다.
-
-const FilePreviewContainerWrapper = styled(FlexWrapper)`
-  padding-left: 24px;
-  align-items: flex-start;
-  align-self: stretch;
-`;
-
-const FilePreviewContainer: React.FC<React.PropsWithChildren> = ({
-  children = null,
-}) => (
-  <FilePreviewContainerWrapper direction="column" gap={12}>
-    {children}
-  </FilePreviewContainerWrapper>
-);
-// TODO. 활동기간 리스트 추가, 파일업로드 추가
 const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   activityId,
   isOpen,
@@ -99,7 +83,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
             <FlexWrapper
               direction="column"
               gap={12}
-              style={{ paddingLeft: 24 }}
+              style={{ paddingLeft: 16 }}
             >
               {data?.durations.map((duration, index) => (
                 <Typography key={index}>
@@ -119,15 +103,23 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
             ))}
           </ActivitySection>
           <ActivitySection label="활동 증빙">
-            <ActivityDetail text="첨부 파일" />
-            <FilePreviewContainer>
-              <ThumbnailPreviewList
-                fileList={
-                  data?.evidenceFiles.map(file => fromUUID(file.uuid)) ?? []
-                }
-                disabled
-              />
-            </FilePreviewContainer>
+            <ActivityDetail
+              text={`첨부 파일(${data?.evidenceFiles.length ?? 0}개)`}
+            />
+            {data && data.evidenceFiles.length > 0 && (
+              <FlexWrapper
+                direction="column"
+                gap={0}
+                style={{ paddingLeft: 16 }}
+              >
+                <ThumbnailPreviewList
+                  fileList={
+                    data.evidenceFiles.map(file => fromUUID(file.uuid)) ?? []
+                  }
+                  disabled
+                />
+              </FlexWrapper>
+            )}
             <ActivityDetail text={`부가 설명: ${data?.evidence}`} />
           </ActivitySection>
           <FlexWrapper
