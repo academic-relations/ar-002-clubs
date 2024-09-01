@@ -23,6 +23,7 @@ const useGetUserProfile = () =>
       // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
       switch (status) {
         case 200:
+        case 304:
           return apiUsr001.responseBodyMap[200].parse(data);
         default:
           throw new UnexpectedAPIResponseError();

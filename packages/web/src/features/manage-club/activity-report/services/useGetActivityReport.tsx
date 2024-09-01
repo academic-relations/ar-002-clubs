@@ -20,6 +20,7 @@ export const useGetActivityReport = (activityId: number) =>
 
       switch (status) {
         case 200:
+        case 304:
           return apiAct002.responseBodyMap[200].parse(data);
         default:
           throw new UnexpectedAPIResponseError();

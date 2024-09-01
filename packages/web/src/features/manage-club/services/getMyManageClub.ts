@@ -21,6 +21,7 @@ export const useGetMyManageClub = () =>
       const { data, status } = await axiosClientWithAuth.get(apiClb015.url());
       switch (status) {
         case 200:
+        case 304:
           return apiClb015.responseBodyMap[200].parse(data);
         case 204:
           return {};

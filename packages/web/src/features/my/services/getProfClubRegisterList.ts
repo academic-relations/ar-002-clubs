@@ -24,6 +24,7 @@ const useProfClubRegisterList = () =>
 
       switch (status) {
         case 200:
+        case 304:
           return data;
         default:
           throw new UnexpectedAPIResponseError();
