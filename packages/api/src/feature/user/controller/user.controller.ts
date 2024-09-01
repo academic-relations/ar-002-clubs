@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Patch, Query, UsePipes } from "@nestjs/common";
 import apiUsr001 from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
 import apiUsr002, {
-  ApiUsr002RequestBody,
+  ApiUsr002RequestQuery,
   ApiUsr002ResponseOk,
 } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr002";
 import apiUsr003, {
@@ -41,23 +41,23 @@ export class UserController {
   @UsePipes(new ZodPipe(apiUsr002))
   async getPhoneNumber(
     @GetUser() user: GetUser,
-    @Body() body: ApiUsr002RequestBody,
+    @Query() query: ApiUsr002RequestQuery,
   ): Promise<ApiUsr002ResponseOk> {
     let phoneNumber;
 
     if (
-      body.profile === "undergraduate" ||
-      body.profile === "master" ||
-      body.profile === "doctor"
+      query.profile === "undergraduate" ||
+      query.profile === "master" ||
+      query.profile === "doctor"
     ) {
       phoneNumber = await this.userService.getStudentPhoneNumberByUserId(
         user.id,
       );
-    } else if (body.profile === "executive") {
+    } else if (query.profile === "executive") {
       phoneNumber = await this.userService.getExecutivePhoneNumberByUserId(
         user.id,
       );
-    } else if (body.profile === "professor") {
+    } else if (query.profile === "professor") {
       phoneNumber = await this.userService.getProfessorPhoneNumberByUserId(
         user.id,
       );
@@ -79,20 +79,20 @@ export class UserController {
         return { phoneNumber: null };
       }
       if (
-        body.profile === "undergraduate" ||
-        body.profile === "master" ||
-        body.profile === "doctor"
+        query.profile === "undergraduate" ||
+        query.profile === "master" ||
+        query.profile === "doctor"
       ) {
         await this.userService.updateStudentPhoneNumber(
           user.id,
           phoneNumber.phoneNumber,
         );
-      } else if (body.profile === "executive") {
+      } else if (query.profile === "executive") {
         await this.userService.updateExecutivePhoneNumber(
           user.id,
           phoneNumber.phoneNumber,
         );
-      } else if (body.profile === "professor") {
+      } else if (query.profile === "professor") {
         await this.userService.updateProfessorPhoneNumber(
           user.id,
           phoneNumber.phoneNumber,
