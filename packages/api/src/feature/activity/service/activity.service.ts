@@ -500,17 +500,12 @@ export default class ActivityService {
 
     const activities = await Promise.all(
       result.map(async activity => {
-        const durations =
-          await this.activityRepository.selectDurationByActivityId(activity.id);
-
-        // duration을 startTerm 기준으로 오름차순 정렬,
-        // startTerm이 같으면 endTerm 기준으로 내림차순 정렬
-        durations.sort((a, b) => {
-          if (a.startTerm === b.startTerm) {
-            return a.endTerm > b.endTerm ? -1 : 1; // endTerm 내림차순
-          }
-          return a.startTerm < b.startTerm ? -1 : 1; // startTerm 오름차순
-        });
+        const durations = (
+          await this.activityRepository.selectDurationByActivityId(activity.id)
+        ).map(e => ({
+          startTerm: e.startTerm,
+          endTerm: e.endTerm,
+        }));
 
         // 가장 빠른 startTerm을 추출
         const earliestStartTerm = durations[0]?.startTerm;
@@ -538,7 +533,12 @@ export default class ActivityService {
       return a.earliestStartTerm < b.earliestStartTerm ? -1 : 1; // startTerm 오름차순
     });
 
-    return activities;
+    return activities.map(activity => ({
+      id: activity.id,
+      name: activity.name,
+      activityTypeEnumId: activity.activityTypeEnumId,
+      durations: activity.durations,
+    }));
   }
 
   /**
