@@ -75,71 +75,78 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                 .text}
           </Tag>
         </FlexWrapper>
-        <FlexWrapper gap={12} direction="column">
+        <FlexWrapper gap={16} direction="column">
           <Typography fw="MEDIUM" lh={20} fs={16}>
             기본 정보
           </Typography>
-          <ListItem>
-            동아리명 (국문): {data?.clubNameKr ?? data?.newClubNameKr}
-          </ListItem>
-          <ListItem>
-            동아리명 (영문): {data?.clubNameEn ?? data?.newClubNameEn}
-          </ListItem>
-          {data?.clubNameKr && (
-            <ListItem>신규 동아리명 (국문): {data?.newClubNameKr}</ListItem>
-          )}
-          {data?.clubNameEn && (
-            <ListItem>신규 동아리명 (영문): {data?.newClubNameEn}</ListItem>
-          )}
-          <ListItem>{`대표자 이름: ${data?.representative.name}`}</ListItem>
-          <ListItem>
-            {`대표자 전화번호: ${data?.representative.phoneNumber}`}
-          </ListItem>
-          <ListItem>
-            {`설립 연도: ${data && getActualYear(data?.foundedAt)}`}
-          </ListItem>
-          <ListItem>
-            {`소속 분과: ${data && getTagDetail(data?.divisionId, DivisionTypeTagList).text}`}
-          </ListItem>
-          <ListItem>{`활동 분야 (국문): ${data?.activityFieldKr}`}</ListItem>
-          <ListItem>{`활동 분야 (영문): ${data?.activityFieldEn}`}</ListItem>
+          <FlexWrapper gap={12} direction="column">
+            <ListItem>
+              동아리명 (국문): {data?.clubNameKr ?? data?.newClubNameKr}
+            </ListItem>
+            <ListItem>
+              동아리명 (영문): {data?.clubNameEn ?? data?.newClubNameEn}
+            </ListItem>
+            {data?.clubNameKr && data?.newClubNameKr !== "" && (
+              <ListItem>신규 동아리명 (국문): {data?.newClubNameKr}</ListItem>
+            )}
+            {data?.clubNameEn && data?.newClubNameEn !== "" && (
+              <ListItem>신규 동아리명 (영문): {data?.newClubNameEn}</ListItem>
+            )}
+            <ListItem>{`대표자 이름: ${data?.representative.name}`}</ListItem>
+            <ListItem>
+              {`대표자 전화번호: ${data?.representative.phoneNumber}`}
+            </ListItem>
+            <ListItem>
+              {`설립 연도: ${data && getActualYear(data?.foundedAt)}`}
+            </ListItem>
+            <ListItem>
+              {`소속 분과: ${data && getTagDetail(data?.divisionId, DivisionTypeTagList).text}`}
+            </ListItem>
+            <ListItem>{`활동 분야 (국문): ${data?.activityFieldKr}`}</ListItem>
+            <ListItem>{`활동 분야 (영문): ${data?.activityFieldEn}`}</ListItem>
+          </FlexWrapper>
         </FlexWrapper>
         {data?.professor && (
-          <FlexWrapper gap={12} direction="column">
+          <FlexWrapper gap={16} direction="column">
             <Typography fw="MEDIUM" lh={20} fs={16}>
               지도교수 정보
             </Typography>
-            <ListItem>{`성함: ${data?.professor?.name}`}</ListItem>
-            <ListItem>
-              {`직급: ${professorEnumToText(data?.professor?.professorEnumId)}`}
-            </ListItem>
-            <ListItem>{`이메일: ${data?.professor?.email}`}</ListItem>
+            <FlexWrapper gap={12} direction="column">
+              <ListItem>{`성함: ${data?.professor?.name}`}</ListItem>
+              <ListItem>
+                {`직급: ${professorEnumToText(data?.professor?.professorEnumId)}`}
+              </ListItem>
+              <ListItem>{`이메일: ${data?.professor?.email}`}</ListItem>
+            </FlexWrapper>
           </FlexWrapper>
         )}
-        <FlexWrapper gap={12} direction="column">
+        <FlexWrapper gap={16} direction="column">
           <Typography fw="MEDIUM" lh={20} fs={16}>
             동아리 정보
           </Typography>
-          <ListItem>{`분과 정합성: ${data?.divisionConsistency}`}</ListItem>
-          <ListItem>{`설립 목적: ${data?.foundationPurpose}`}</ListItem>
-          <ListItem>{`주요 활동 계획: ${data?.activityPlan}`}</ListItem>
-          {data?.activityPlanFile && (
-            <>
-              <ListItem>활동계획서</ListItem>
-              {data?.activityPlanFile && (
-                <FilePreviewContainer>
-                  <ThumbnailPreviewList
-                    fileList={[
-                      {
-                        src: data?.activityPlanFile?.url,
-                        name: data?.activityPlanFile?.name,
-                      },
-                    ]}
-                  />
-                </FilePreviewContainer>
-              )}
-            </>
-          )}
+          <FlexWrapper gap={12} direction="column">
+            <ListItem>{`분과 정합성: ${data?.divisionConsistency}`}</ListItem>
+            <ListItem>{`설립 목적: ${data?.foundationPurpose}`}</ListItem>
+            <ListItem>{`주요 활동 계획: ${data?.activityPlan}`}</ListItem>
+            {data?.activityPlanFile && (
+              <>
+                <ListItem>활동계획서</ListItem>
+                {data?.activityPlanFile && (
+                  <FilePreviewContainer>
+                    <ThumbnailPreviewList
+                      fileList={[
+                        {
+                          src: data?.activityPlanFile?.url,
+                          name: data?.activityPlanFile?.name,
+                        },
+                      ]}
+                      disabled
+                    />
+                  </FilePreviewContainer>
+                )}
+              </>
+            )}
+          </FlexWrapper>
           {data?.clubRuleFile && (
             <>
               <ListItem>동아리 회칙</ListItem>
@@ -152,6 +159,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                         name: data?.clubRuleFile?.name,
                       },
                     ]}
+                    disabled
                   />
                 </FilePreviewContainer>
               )}
@@ -169,6 +177,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                         name: data?.externalInstructionFile?.name,
                       },
                     ]}
+                    disabled
                   />
                 </FilePreviewContainer>
               )}
