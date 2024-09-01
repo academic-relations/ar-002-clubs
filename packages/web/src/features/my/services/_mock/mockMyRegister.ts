@@ -6,24 +6,25 @@ import {
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 const mockClubRegister = {
-  items: [
+  registrations: [
     {
-      registrationStatusEnum: RegistrationStatusEnum.Pending,
-      registrationTypeEnum: RegistrationTypeEnum.NewProvisional,
-      clubDivision: "생활문화",
+      registrationStatusEnumId: RegistrationStatusEnum.Pending,
+      registrationTypeEnumId: RegistrationTypeEnum.NewProvisional,
+      divisionName: "생활문화",
       clubNameKr: "술박스",
       activityFieldKr: "개발개발한 어떤 활동",
       professorName: "박지호",
       clubId: 1,
+      id: 1,
+      activityFieldEn: "Some activity that is developed",
     },
   ],
-  total: 1,
-  offset: 1,
 };
 
 const mockProfClubRegister = {
   items: [
     {
+      id: 1,
       clubId: 23,
       registrationStatusEnumId: RegistrationStatusEnum.Pending,
       division: { id: 1, name: "생활문화" },

@@ -26,6 +26,7 @@ const responseBodyMap = {
         name_en: zClubName,
       }),
     ),
+    id: z.number().int().min(1),
     name: z.string().max(30),
     email: z.string().max(50),
     department: z.string().max(10),

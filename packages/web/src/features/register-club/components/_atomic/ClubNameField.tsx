@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
+import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { useFormContext } from "react-hook-form";
 
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
@@ -12,11 +13,13 @@ import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import { ClubRegistrationInfo } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 
 interface ClubNameFieldProps {
+  type: RegistrationTypeEnum;
   clubList?: ClubRegistrationInfo[];
   editMode?: boolean;
 }
 
 const ClubNameField: React.FC<ClubNameFieldProps> = ({
+  type,
   clubList = [],
   editMode = false,
 }) => {
@@ -41,12 +44,12 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({
     if (clubList.length > 0 && !isCheckedClubName) {
       resetField("clubNameKr", { keepError: false });
       resetField("clubNameEn", { keepError: false });
-      setValue("clubNameKr", "");
-      setValue("clubNameEn", "");
+      setValue("clubNameKr", "", { shouldValidate: true });
+      setValue("clubNameEn", "", { shouldValidate: true });
     }
   }, [clubList.length, isCheckedClubName, resetField, setValue]);
 
-  if (clubList.length === 0) {
+  if (type === RegistrationTypeEnum.NewProvisional) {
     return (
       <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
         <FormController

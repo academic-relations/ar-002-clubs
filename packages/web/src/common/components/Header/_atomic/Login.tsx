@@ -3,16 +3,11 @@
 import React, { useEffect, useState } from "react";
 
 import { jwtDecode } from "jwt-decode";
-
-import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
-import AgreementModal from "@sparcs-clubs/web/common/components/Modal/AgreeModal";
 import MyMenu from "@sparcs-clubs/web/common/components/MyMenu";
-
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
-
 import { getUserType } from "@sparcs-clubs/web/utils/getUserType";
 
 const LoginInner = styled.div`
@@ -38,10 +33,6 @@ const Login = () => {
   const [userName, setUserName] = useState("");
   const [type, setType] = useState("");
   const [selectedToken, setSelectedToken] = useState<string>("");
-  const { logout } = useAuth();
-
-  /* TODO 동의 여부 BE 연결하기 */
-  const [isAgreed, setIsAgreed] = useState(false);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -57,27 +48,6 @@ const Login = () => {
     }
   }, [isLoggedIn, selectedToken]);
 
-  const submitHandler = async () => {
-    console.log("modal Opended!");
-    await login();
-    overlay.open(
-      ({ isOpen, close }) =>
-        !isAgreed && (
-          <AgreementModal
-            isOpen={isOpen}
-            onAgree={() => {
-              setIsAgreed(true);
-              close();
-            }}
-            onDisagree={async () => {
-              await logout();
-              close();
-            }}
-          />
-        ),
-    );
-  };
-
   return (
     <>
       {isLoggedIn ? (
@@ -86,7 +56,7 @@ const Login = () => {
           {userName} ({getUserType(type)})
         </LoginInner>
       ) : (
-        <LoginInner onClick={submitHandler}>
+        <LoginInner onClick={login}>
           <Icon type="login" size={16} />
           로그인
         </LoginInner>

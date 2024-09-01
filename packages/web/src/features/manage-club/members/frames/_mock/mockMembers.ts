@@ -1,4 +1,4 @@
-import { MemberStatusEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 const mockSemester = "봄";
 const mockDeadline = new Date();
@@ -18,51 +18,66 @@ const mockAllSemesters = {
 };
 
 const mockRegisterMembers = {
-  members: [
+  applies: [
     {
       id: 1,
-      status: MemberStatusEnum.Applied,
-      applicationDate: new Date(),
-      studentId: "20200510",
-      applicantName: "이지윤",
-      phoneNumber: "XXX-XXXX-XXXX",
-      email: "nicolelee2001@kaist.ac.kr",
+      applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Pending,
+      createdAt: new Date("2024-03-04T21:00:00"),
+      student: {
+        id: 1,
+        name: "이지윤",
+        studentNumber: 20200510,
+        email: "nicolelee2001@kaist.ac.kr",
+        phoneNumber: "010-1234-5678",
+      },
     },
     {
       id: 2,
-      status: MemberStatusEnum.Applied,
-      applicationDate: new Date(),
-      studentId: "20200510",
-      applicantName: "박지호",
-      phoneNumber: "XXX-XXXX-XXXX",
-      email: "nicolelee2001@kaist.ac.kr",
+      applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Pending,
+      createdAt: new Date("2024-03-04T21:00:00"),
+      student: {
+        id: 1,
+        name: "박지호",
+        studentNumber: 20200510,
+        email: "nicolelee2001@kaist.ac.kr",
+        phoneNumber: "010-1234-5678",
+      },
     },
     {
       id: 3,
-      status: MemberStatusEnum.Applied,
-      applicationDate: new Date(),
-      studentId: "20200510",
-      applicantName: "박병찬",
-      phoneNumber: "XXX-XXXX-XXXX",
-      email: "nicolelee2001@kaist.ac.kr",
+      applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Pending,
+      createdAt: new Date("2024-03-04T21:00:00"),
+      student: {
+        id: 1,
+        name: "박병찬",
+        studentNumber: 20200510,
+        email: "nicolelee2001@kaist.ac.kr",
+        phoneNumber: "010-1234-5678",
+      },
     },
     {
       id: 4,
-      status: MemberStatusEnum.Approved,
-      applicationDate: new Date(),
-      studentId: "20200510",
-      applicantName: "이도라",
-      phoneNumber: "XXX-XXXX-XXXX",
-      email: "nicolelee2001@kaist.ac.kr",
+      applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Approved,
+      createdAt: new Date("2024-03-04T21:00:00"),
+      student: {
+        id: 1,
+        name: "이도라",
+        studentNumber: 20200510,
+        email: "nicolelee2001@kaist.ac.kr",
+        phoneNumber: "010-1234-5678",
+      },
     },
     {
       id: 5,
-      status: MemberStatusEnum.Rejected,
-      applicationDate: new Date(),
-      studentId: "20200510",
-      applicantName: "스팍스",
-      phoneNumber: "XXX-XXXX-XXXX",
-      email: "nicolelee2001@kaist.ac.kr",
+      applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Rejected,
+      createdAt: new Date("2024-03-04T21:00:00"),
+      student: {
+        id: 1,
+        name: "이지윤",
+        studentNumber: 20200510,
+        email: "nicolelee2001@kaist.ac.kr",
+        phoneNumber: "010-1234-5678",
+      },
     },
   ],
 };

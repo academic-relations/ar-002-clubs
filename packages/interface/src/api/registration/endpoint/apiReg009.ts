@@ -13,7 +13,7 @@ import registrationTypeEnumChecker from "../utils/registrationTypeEnumChecker";
  * @description 동아리 등록 수정
  */
 
-const url = (applyId: string) =>
+const url = (applyId: number) =>
   `/student/registrations/club-registrations/club-registration/${applyId}`;
 const method = "PUT";
 
@@ -46,9 +46,9 @@ const requestBody = z
         professorEnumId: z.nativeEnum(ProfessorEnum),
       })
       .optional(),
-    divisionConsistency: z.coerce.string().max(255),
-    foundationPurpose: z.coerce.string().max(500),
-    activityPlan: z.coerce.string().max(500),
+    divisionConsistency: z.coerce.string(),
+    foundationPurpose: z.coerce.string(),
+    activityPlan: z.coerce.string(),
     activityPlanFileId: z.coerce.string().max(128).optional(),
     clubRuleFileId: z.coerce.string().max(128).optional(),
     externalInstructionFileId: z.coerce.string().max(128).optional(),

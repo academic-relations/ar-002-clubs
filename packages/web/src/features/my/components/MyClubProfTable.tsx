@@ -81,7 +81,7 @@ const MyClubProfTable: React.FC<MyClubTableProps> = ({
     enableSorting: false,
   });
   const getRowLink = (row: ApiReg021ResponseOk["items"][number]) => ({
-    pathname: `/my/register-club/${row.clubId.toString()}`,
+    pathname: `/my/register-club/${row.id.toString()}`,
   });
   return (
     <Table

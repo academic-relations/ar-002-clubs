@@ -10,10 +10,14 @@ import React, {
 } from "react";
 
 import { jwtDecode } from "jwt-decode";
+import { overlay } from "overlay-kit";
 import { Cookies } from "react-cookie";
 
+import AgreementModal from "../components/Modal/AgreeModal";
 import getLogin from "../services/getLogin";
+import getUserAgree from "../services/getUserAgree";
 import postLogout from "../services/postLogout";
+import postUserAgree from "../services/postUserAgree";
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -29,6 +33,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [profile, setProfile] = useState<string | undefined>(undefined);
+  const [isAgreed, setIsAgreed] = useState(true);
+
+  const checkAgree = async () => {
+    const agree = await getUserAgree();
+    setIsAgreed(agree.status.isAgree);
+  };
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -91,6 +101,37 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       console.log("Logged out.");
     }
   };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      checkAgree();
+    }
+    if (isAgreed) {
+      overlay.closeAll();
+    }
+    overlay.open(
+      ({ isOpen, close }) =>
+        !isAgreed &&
+        isLoggedIn && (
+          <AgreementModal
+            isOpen={isOpen}
+            onAgree={async () => {
+              try {
+                await postUserAgree();
+                setIsAgreed(true);
+                close();
+              } catch (error) {
+                window.location.reload();
+              }
+            }}
+            onDisagree={async () => {
+              await logout();
+              close();
+            }}
+          />
+        ),
+    );
+  }, [isAgreed, isLoggedIn]);
 
   const value = useMemo(
     () => ({ isLoggedIn, login, logout, profile }),

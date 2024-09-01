@@ -4,6 +4,7 @@ import {
   PromotionalPrintingOrderStatusEnum,
   PromotionalPrintingSizeEnum,
 } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
 
 import type { ApiAcf003ResponseOk } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf003";
@@ -11,6 +12,7 @@ import type { ApiClb004ResponseOK } from "@sparcs-clubs/interface/api/club/endpo
 import type { ApiClb010ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
 import type { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
 import type { ApiPrt001ResponseOk } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
+import type { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
 import type { ApiRnt003ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt003";
 
 export interface Activity {
@@ -32,17 +34,6 @@ export interface Funding {
   approvedAmount: number | null;
 }
 
-export interface Members {
-  id: number;
-  status: number;
-  applicationDate: Date;
-  studentId: string;
-  applicantName: string;
-  phoneNumber: string;
-  email: string;
-  memo?: string;
-}
-
 export enum ActivityStatusEnum {
   Applied = 1, // 신청
   Committee, // 운위
@@ -54,12 +45,6 @@ export enum ActivityProfessorApprovalEnum {
   Requested = 1, // 대기
   Approved, // 완료
   Denied, // 반려
-}
-
-export enum ActivityTypeEnum {
-  FitInside = 1, // 동아리 성격에 합치하는 내부활동
-  FitOutside, // 동아리 성격에 합치하는 외부활동
-  NotFit, // 동아리 성격에 합치하지 않는 활동
 }
 
 export enum FundingStatusEnum {
@@ -132,52 +117,66 @@ const mockClubMembers: ApiClb010ResponseOk = {
   ],
 };
 
-const mockupManageMems: Members[] = [
+const mockupManageMems: ApiReg008ResponseOk["applies"][0][] = [
   {
     id: 1,
-    status: 1,
-    applicationDate: new Date("2024-03-04T21:00:00"),
-    studentId: "20200510",
-    applicantName: "이지윤",
-    phoneNumber: "XXX-XXXX-XXXX",
-    email: "nicolelee2001@kaist.ac.kr",
+    createdAt: new Date("2024-03-04T21:00:00"),
+    applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Pending,
+    student: {
+      id: 1,
+      name: "이지윤",
+      studentNumber: 20200510,
+      email: "nicolelee2001@kaist.ac.kr",
+      phoneNumber: "XXX-XXXX-XXXX",
+    },
   },
   {
-    id: 2,
-    status: 1,
-    applicationDate: new Date("2024-03-04T22:00:00"),
-    studentId: "20200511",
-    applicantName: "박지호",
-    phoneNumber: "XXX-XXXX-XXXX",
-    email: "nicolelee2001@kaist.ac.kr",
+    id: 1,
+    createdAt: new Date("2024-03-04T21:00:00"),
+    applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Pending,
+    student: {
+      id: 1,
+      name: "박지호",
+      studentNumber: 20200510,
+      email: "nicolelee2001@kaist.ac.kr",
+      phoneNumber: "XXX-XXXX-XXXX",
+    },
   },
   {
     id: 3,
-    status: 1,
-    applicationDate: new Date("2024-03-04T23:00:00"),
-    studentId: "20200512",
-    applicantName: "박병찬",
-    phoneNumber: "XXX-XXXX-XXXX",
-    email: "nicolelee2001@kaist.ac.kr",
+    createdAt: new Date("2024-03-04T21:00:00"),
+    applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Pending,
+    student: {
+      id: 1,
+      name: "박병찬",
+      studentNumber: 20200510,
+      email: "nicolelee2001@kaist.ac.kr",
+      phoneNumber: "XXX-XXXX-XXXX",
+    },
   },
   {
     id: 4,
-    status: 2,
-    applicationDate: new Date("2024-03-04T21:30:00"),
-    studentId: "20200513",
-    applicantName: "이도라",
-    phoneNumber: "XXX-XXXX-XXXX",
-    email: "nicolelee2001@kaist.ac.kr",
+    createdAt: new Date("2024-03-04T21:00:00"),
+    applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Approved,
+    student: {
+      id: 1,
+      name: "이도라",
+      studentNumber: 20200510,
+      email: "nicolelee2001@kaist.ac.kr",
+      phoneNumber: "XXX-XXXX-XXXX",
+    },
   },
   {
     id: 5,
-    status: 3,
-    applicationDate: new Date("2024-03-04T20:30:00"),
-    studentId: "20200514",
-    applicantName: "스팍스",
-    phoneNumber: "XXX-XXXX-XXXX",
-    email: "nicolelee2001@kaist.ac.kr",
-    memo: "휴동",
+    createdAt: new Date("2024-03-04T21:00:00"),
+    applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Rejected,
+    student: {
+      id: 1,
+      name: "이지윤",
+      studentNumber: 20200510,
+      email: "nicolelee2001@kaist.ac.kr",
+      phoneNumber: "XXX-XXXX-XXXX",
+    },
   },
 ];
 

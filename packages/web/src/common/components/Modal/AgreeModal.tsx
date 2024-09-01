@@ -88,7 +88,7 @@ const AgreementModal: React.FC<AgreementModalProps> = ({
         <Card gap={16} padding="16px" outline>
           <Toggle
             label={
-              <Typography fs={isMobile ? 14 : 16} lh={isMobile ? 16 : 20}>
+              <Typography fs={isMobile ? 14 : 16}>
                 개인정보 수집 및 이용 약관
               </Typography>
             }
@@ -122,9 +122,7 @@ const AgreementModal: React.FC<AgreementModalProps> = ({
         <Card gap={16} padding="16px" outline>
           <Toggle
             label={
-              <Typography fs={isMobile ? 14 : 16} lh={isMobile ? 16 : 20}>
-                제3자 이용 약관{" "}
-              </Typography>
+              <Typography fs={isMobile ? 14 : 16}>제3자 이용 약관 </Typography>
             }
           >
             <Typography fs={isMobile ? 14 : 16} lh={isMobile ? 24 : 28}>
