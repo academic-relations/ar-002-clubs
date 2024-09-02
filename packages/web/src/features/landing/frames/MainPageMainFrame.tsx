@@ -8,6 +8,8 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
+import Banner from "../components/Banner";
+
 import NoticeSectionFrame from "./NoticeSectionFrame";
 // import ServiceSectionFrame from "./ServiceSectionFrame";
 
@@ -59,6 +61,11 @@ const ResponsiveWrapper = styled(FlexWrapper)`
 
 const MainPageMainFrame: React.FC = () => (
   <ResponsiveWrapper direction="column" gap={60}>
+    <Banner icon="star">
+      현재 Clubs는 동아리 등록 신청을 위한 베타 서비스로 운영되고 있습니다.
+      <br />
+      문의나 피드백은 하단 채널톡 버튼을 통해 제보 부탁드립니다!
+    </Banner>
     <PageTitleWrapper>
       <ResponsiveSloganTypography
         fw="SEMIBOLD"
