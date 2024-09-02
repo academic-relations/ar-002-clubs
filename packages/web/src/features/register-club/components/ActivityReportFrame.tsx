@@ -33,9 +33,10 @@ const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
   clubId,
 }) => {
   const { profile } = useAuth();
-  const { data, isLoading, isError } = useGetActivityReportsForPromotional({
-    clubId,
-  });
+  const { data, isLoading, isError, refetch } =
+    useGetActivityReportsForPromotional({
+      clubId,
+    });
 
   const openCreateActivityReportModal = () => {
     overlay.open(({ isOpen, close }) => (
@@ -43,6 +44,7 @@ const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
         clubId={clubId}
         isOpen={isOpen}
         close={close}
+        refetch={refetch}
       />
     ));
   };

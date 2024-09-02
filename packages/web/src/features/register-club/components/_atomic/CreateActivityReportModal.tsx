@@ -23,6 +23,7 @@ interface CreateActivityReportModalProps {
   clubId: number;
   isOpen: boolean;
   close: VoidFunction;
+  refetch?: () => void;
 }
 
 const HorizontalPlacer = styled.div`
@@ -40,6 +41,7 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
   clubId,
   isOpen,
   close,
+  refetch = () => {},
 }) => {
   const formCtx = useForm<ApiAct007RequestBody>({ mode: "all" });
 
@@ -75,6 +77,7 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
           onSuccess: close,
         },
       );
+      refetch();
     },
     [close, mutate, participants],
   );
