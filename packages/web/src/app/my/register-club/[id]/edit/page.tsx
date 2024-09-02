@@ -29,7 +29,7 @@ const MyRegisterClubEdit = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile === "executive") {
+  if (profile?.type === "executive") {
     return <NotForExecutive />;
   }
 

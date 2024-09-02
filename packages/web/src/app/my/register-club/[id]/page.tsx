@@ -29,7 +29,7 @@ const MyRegisterClubDetail = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile === "executive") {
+  if (profile?.type === "executive") {
     return <NotForExecutive />;
   }
 
@@ -37,10 +37,10 @@ const MyRegisterClubDetail = () => {
     return <NotFound />;
   }
 
-  return profile === "professor" ? (
-    <ProfessorRegisterClubDetailFrame profile={profile} />
+  return profile?.type === "professor" ? (
+    <ProfessorRegisterClubDetailFrame profile={profile.type} />
   ) : (
-    <StudentRegisterClubDetailFrame profile={profile} />
+    <StudentRegisterClubDetailFrame profile={profile.type} />
   );
 };
 export default MyRegisterClubDetail;
