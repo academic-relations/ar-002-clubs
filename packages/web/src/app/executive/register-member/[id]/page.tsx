@@ -35,7 +35,7 @@ export default TemporaryNotFound;
 //     return <LoginRequired login={login} />;
 //   }
 
-//   if (profile !== "executive") {
+//   if (profile?.type !== "executive") {
 //     return <Custom404 />;
 //   }
 

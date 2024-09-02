@@ -28,13 +28,18 @@ import getLogin from "../services/getLogin";
 import getUserAgree from "../services/getUserAgree";
 import postLogout from "../services/postLogout";
 import postUserAgree from "../services/postUserAgree";
-// import useGetUserProfile from "../services/getUserProfile";
 
+export type Profile = {
+  id: number;
+  name: string;
+  type: string;
+  email?: string;
+};
 interface AuthContextType {
   isLoggedIn: boolean;
   login: () => void;
   logout: () => void;
-  profile: string | undefined;
+  profile: Profile | undefined;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -43,7 +48,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [profile, setProfile] = useState<string | undefined>(undefined);
+  const [profile, setProfile] = useState<Profile | undefined>(undefined);
   const [isAgreed, setIsAgreed] = useState(true);
 
   const checkAgree = async () => {
@@ -56,8 +61,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       const token = getLocalStorageItem("accessToken");
       if (token) {
         setIsLoggedIn(true);
-        const decoded: { name?: string; type?: string } = jwtDecode(token);
-        setProfile(decoded.name);
+        const decoded: Profile = jwtDecode(token);
+        setProfile(decoded);
       }
     };
     subscribeLocalStorageSet(handleLocalStorageUpdate);
@@ -155,22 +160,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   );
 
   // Channel Talk
-  // const { data } = useGetUserProfile();
-  // useEffect(() => {
   ChannelService.loadScript();
   ChannelService.boot({
     pluginKey: "f9e90cc5-6304-4987-8a60-5332d572c332",
-    // memberId: "clubs-member-id",
-    //   profile:
-    //     isLoggedIn && data
-    //       ? {
-    //           name: data?.name,
-    //           email: data?.email,
-    //           mobileNumber: data?.phoneNumber ?? "",
-    //         }
-    //       : undefined,
+    memberId: profile?.id,
+    profile:
+      isLoggedIn && profile
+        ? {
+            name: profile.name,
+            email: profile.email,
+          }
+        : undefined,
   });
-  // }, []);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

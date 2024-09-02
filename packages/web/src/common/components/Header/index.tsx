@@ -86,7 +86,7 @@ const Header: React.FC = () => {
   const headerPaths = navPaths.header
     .filter(
       menu =>
-        paths[menu].authority.includes(profile as string) ||
+        paths[menu].authority.includes(profile?.type as string) ||
         paths[menu].authority.includes("all"),
     )
     .filter(menu => getFeatureFlagString(paths[menu].featureFlag));

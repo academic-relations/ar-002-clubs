@@ -27,7 +27,7 @@ const PromotionalRegisterClub = () => {
   if (!isLoggedIn) {
     return <LoginRequired login={login} />;
   }
-  if (profile !== "undergraduate") {
+  if (profile?.type !== "undergraduate") {
     return <NoManageClub />;
   }
   return <RegisterClubAuthFrame type={RegistrationTypeEnum.Promotional} />;

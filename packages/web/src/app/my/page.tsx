@@ -46,16 +46,20 @@ const My: React.FC = () => {
         items={[{ name: "마이페이지", path: "/my" }]}
         title="마이페이지"
       />
-      {/* {profile === "undergraduate" && <MyChangesFrame />} */}
-      <MyInfoFrame profile={profile as string} />
-      {profile !== "executive" &&
-        (profile === "professor" ? <ProfessorMyClubFrame /> : <MyClubFrame />)}
-      {profile && profile !== "executive" && (
-        <MyRegisterFrame profile={profile} />
+      {/* {profile?.type === "undergraduate" && <MyChangesFrame />} */}
+      <MyInfoFrame profile={profile?.type as string} />
+      {profile?.type !== "executive" &&
+        (profile?.type === "professor" ? (
+          <ProfessorMyClubFrame />
+        ) : (
+          <MyClubFrame />
+        ))}
+      {profile && profile.type !== "executive" && (
+        <MyRegisterFrame profile={profile.type} />
       )}
-      {/* {(profile === "undergraduate" ||
-        profile === "master" ||
-        profile === "doctor") && <MyServiceFrame />} */}
+      {/* {(profile?.type === "undergraduate" ||
+        profile?.type === "master" ||
+        profile?.type === "doctor") && <MyServiceFrame />} */}
     </ResponsiveWrapper>
   );
 };
