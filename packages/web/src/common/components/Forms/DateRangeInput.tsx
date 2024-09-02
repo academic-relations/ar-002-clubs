@@ -65,7 +65,6 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
           : parse(date, "yyyy.MM", new Date(), { locale: ko });
         return isValid(parsed);
       };
-      console.log(isValidDate(startValue), isValidDate(endValue));
       if (!startValue) {
         setError("시작 기간을 입력하지 않았습니다");
       } else if (!isValidFormat) {
