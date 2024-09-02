@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 
 import { overlay } from "overlay-kit";
-import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import { fromUUID } from "@sparcs-clubs/web/common/components/File/attachment";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import { ListItem } from "@sparcs-clubs/web/common/components/ListItem";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
@@ -26,49 +26,6 @@ interface PastActivityReportModalProps {
   close: VoidFunction;
   viewOnly?: boolean;
 }
-
-interface ActivitySectionProps extends React.PropsWithChildren {
-  label: string;
-}
-
-const ActivitySection: React.FC<ActivitySectionProps> = ({
-  label,
-  children = null,
-}) => (
-  <FlexWrapper
-    direction="column"
-    gap={16}
-    style={{
-      alignSelf: "stretch",
-    }}
-  >
-    <Typography
-      fw="MEDIUM"
-      fs={16}
-      lh={20}
-      style={{ paddingLeft: "2px", paddingRight: "2px" }}
-    >
-      {label}
-    </Typography>
-    {children}
-  </FlexWrapper>
-);
-// ActivitySection은 활동 보고서에서 구분된 각 영역을 나타냅니다.
-// label prop으로 이름을 넣고, children으로 ActivityDetail들을 넣어 주세요.
-
-const FlexTypography = styled(Typography)`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: flex-start;
-  align-self: stretch;
-`;
-
-const ActivityDetail: React.FC<{ text: string }> = ({ text }) => (
-  <FlexTypography fw="REGULAR" fs={16} lh={20}>
-    {`• ${text}`}
-  </FlexTypography>
-);
 
 const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   activityId,
@@ -133,54 +90,68 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
     <Modal isOpen={isOpen}>
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         <FlexWrapper gap={20} direction="column">
-          <ActivitySection label="활동 정보">
-            <ActivityDetail text={`활동명: ${data?.name}`} />
-            <ActivityDetail
-              text={`활동 분류: ${data ? getActivityTypeTagLabel(data.activityTypeEnumId) : "-"}`}
-            />
-            <ActivityDetail text="활동 기간:" />
-            <FlexWrapper
-              direction="column"
-              gap={12}
-              style={{ paddingLeft: 16 }}
-            >
-              {data?.durations.map((duration, index) => (
-                <Typography key={index}>
-                  {`${formatDate(duration.startTerm)} ~ ${formatDate(duration.endTerm)}`}
-                </Typography>
-              ))}
-            </FlexWrapper>
-            <ActivityDetail text={`활동 장소: ${data?.location}`} />
-            <ActivityDetail text={`활동 목적: ${data?.purpose}`} />
-            <ActivityDetail text={`활동 내용: ${data?.detail}`} />
-          </ActivitySection>
-          <ActivitySection
-            label={`활동 인원(${data?.participants.length ?? 0}명)`}
-          >
-            {data?.participants.map((participant, index) => (
-              <ActivityDetail key={index} text={`${participant.studentId}`} />
-            ))}
-          </ActivitySection>
-          <ActivitySection label="활동 증빙">
-            <ActivityDetail
-              text={`첨부 파일(${data?.evidenceFiles.length ?? 0}개)`}
-            />
-            {data && data.evidenceFiles.length > 0 && (
+          <FlexWrapper gap={16} direction="column">
+            <Typography fw="MEDIUM" fs={16} lh={20}>
+              활동 정보
+            </Typography>
+            <FlexWrapper gap={12} direction="column">
+              <ListItem>활동명: {data?.name}</ListItem>
+              <ListItem>
+                활동 분류:{" "}
+                {data ? getActivityTypeTagLabel(data.activityTypeEnumId) : "-"}
+              </ListItem>
+              <ListItem>활동 기간: </ListItem>
               <FlexWrapper
                 direction="column"
-                gap={0}
-                style={{ paddingLeft: 16 }}
+                gap={12}
+                style={{ paddingLeft: 24 }}
               >
-                <ThumbnailPreviewList
-                  fileList={
-                    data.evidenceFiles.map(file => fromUUID(file.fileId)) ?? []
-                  }
-                  disabled
-                />
+                {data?.durations.map((duration, index) => (
+                  <Typography key={index}>
+                    {`${formatDate(duration.startTerm)} ~ ${formatDate(duration.endTerm)}`}
+                  </Typography>
+                ))}
               </FlexWrapper>
-            )}
-            <ActivityDetail text={`부가 설명: ${data?.evidence}`} />
-          </ActivitySection>
+              <ListItem>활동 장소: {data?.location}</ListItem>
+              <ListItem>활동 목적: {data?.purpose}</ListItem>
+              <ListItem>활동 내용: {data?.detail}</ListItem>
+            </FlexWrapper>
+          </FlexWrapper>
+          <FlexWrapper gap={16} direction="column">
+            <Typography fw="MEDIUM" fs={16} lh={20}>
+              활동 인원({data?.participants.length ?? 0}명)
+            </Typography>
+
+            {data?.participants.map((participant, index) => (
+              <ListItem key={index}>{participant.studentId}</ListItem>
+            ))}
+          </FlexWrapper>
+          <FlexWrapper gap={16} direction="column">
+            <Typography fw="MEDIUM" fs={16} lh={20}>
+              활동 증빙
+            </Typography>
+            <FlexWrapper gap={12} direction="column">
+              <ListItem>
+                첨부 파일 ({data?.evidenceFiles.length ?? 0}개)
+              </ListItem>
+              {data && data.evidenceFiles.length > 0 && (
+                <FlexWrapper
+                  direction="column"
+                  gap={0}
+                  style={{ paddingLeft: 16 }}
+                >
+                  <ThumbnailPreviewList
+                    fileList={
+                      data.evidenceFiles.map(file => fromUUID(file.fileId)) ??
+                      []
+                    }
+                    disabled
+                  />
+                </FlexWrapper>
+              )}
+              <ListItem>부가 설명: {data?.evidence}</ListItem>
+            </FlexWrapper>
+          </FlexWrapper>
           {viewOnly ? (
             <FlexWrapper direction="row" gap={12}>
               <Button type="outlined" onClick={close}>
