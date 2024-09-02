@@ -19,7 +19,7 @@ import {
   setLocalStorageItem,
   subscribeLocalStorageSet,
   unsubscribeLocalStorageSet,
-} from "@sparcs-clubs/web/utils/local_storage";
+} from "@sparcs-clubs/web/utils/localStorage";
 
 import AgreementModal from "../components/Modal/AgreeModal";
 import getLogin from "../services/getLogin";

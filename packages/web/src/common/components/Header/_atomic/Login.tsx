@@ -9,7 +9,7 @@ import Icon from "@sparcs-clubs/web/common/components/Icon";
 import MyMenu from "@sparcs-clubs/web/common/components/MyMenu";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import { getUserType } from "@sparcs-clubs/web/utils/getUserType";
-import { getLocalStorageItem } from "@sparcs-clubs/web/utils/local_storage";
+import { getLocalStorageItem } from "@sparcs-clubs/web/utils/localStorage";
 
 const LoginInner = styled.div`
   display: flex;

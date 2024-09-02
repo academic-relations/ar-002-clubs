@@ -3,7 +3,7 @@ import { AxiosError, AxiosResponse, HttpStatusCode } from "axios";
 import {
   removeLocalStorageItem,
   setLocalStorageItem,
-} from "@sparcs-clubs/web/utils/local_storage";
+} from "@sparcs-clubs/web/utils/localStorage";
 
 import postRefresh from "./postRefresh";
 

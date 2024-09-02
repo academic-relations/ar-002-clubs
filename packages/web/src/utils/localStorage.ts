@@ -1,6 +1,6 @@
 // WARNING: MUST BE CALLED IN A BROWSER ENVIRONMENT
 
-const LOCAL_STORAGE_SET_EVENT = "localStorage-set";
+const LOCAL_STORAGE_SET_EVENT = "local-storage-set";
 
 export const getLocalStorageItem = (key: string) => localStorage.getItem(key);
 
