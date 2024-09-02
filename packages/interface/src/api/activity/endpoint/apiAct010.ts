@@ -1,10 +1,11 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { zUserName } from "@sparcs-clubs/interface/common/commonString";
+
 /**
  * @version v0.1
- * @description 동아리가 활동한 활동 기간 리스트를 조회합니다.
- * - 동아리 대표자 또는 대의원으로 로그인되어 있어야 합니다.
+ * @description
  */
 
 const url = () => `/student/activities/available-members`;
@@ -12,21 +13,21 @@ const method = "GET";
 
 const requestParam = z.object({});
 
-const requestQuery = z.object({});
-
-const requestBody = z.object({
+const requestQuery = z.object({
   clubId: z.coerce.number().int().min(1),
+  startTerm: z.coerce.date(),
+  endTerm: z.coerce.date(),
 });
+
+const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    terms: z.array(
+    students: z.array(
       z.object({
         id: z.coerce.number().int().min(1),
         studentNumber: z.coerce.number().int().min(1),
-        name: z.string().max(30),
-        phoneNumber: z.string().max(20),
-        email: z.string().max(50),
+        name: zUserName,
       }),
     ),
   }),
@@ -34,7 +35,7 @@ const responseBodyMap = {
 
 const responseErrorMap = {};
 
-const apiAct009 = {
+const apiAct010 = {
   url,
   method,
   requestParam,
@@ -44,16 +45,16 @@ const apiAct009 = {
   responseErrorMap,
 };
 
-type ApiAct009RequestParam = z.infer<typeof apiAct009.requestParam>;
-type ApiAct009RequestQuery = z.infer<typeof apiAct009.requestQuery>;
-type ApiAct009RequestBody = z.infer<typeof apiAct009.requestBody>;
-type ApiAct009ResponseOk = z.infer<(typeof apiAct009.responseBodyMap)[200]>;
+type ApiAct010RequestParam = z.infer<typeof apiAct010.requestParam>;
+type ApiAct010RequestQuery = z.infer<typeof apiAct010.requestQuery>;
+type ApiAct010RequestBody = z.infer<typeof apiAct010.requestBody>;
+type ApiAct010ResponseOk = z.infer<(typeof apiAct010.responseBodyMap)[200]>;
 
-export default apiAct009;
+export default apiAct010;
 
 export type {
-  ApiAct009RequestParam,
-  ApiAct009RequestQuery,
-  ApiAct009RequestBody,
-  ApiAct009ResponseOk,
+  ApiAct010RequestParam,
+  ApiAct010RequestQuery,
+  ApiAct010RequestBody,
+  ApiAct010ResponseOk,
 };

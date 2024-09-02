@@ -22,6 +22,10 @@ import type {
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
 import type { ApiAct005ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
 import type {
+  ApiAct010RequestQuery,
+  ApiAct010ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct010";
+import type {
   ApiAct011RequestQuery,
   ApiAct011ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
@@ -199,6 +203,41 @@ export default class ActivityService {
       startTerm: row.startTerm,
       endTerm: row.endTerm,
     }));
+  }
+
+  /**
+   * @description getStudentActivitiesAvailableMembers의 서비스 진입점입니다.
+   */
+  async getStudentActivitiesAvailableMembers(param: {
+    studentId: number;
+    query: ApiAct010RequestQuery;
+  }): Promise<ApiAct010ResponseOk> {
+    if (
+      !(await this.clubPublicService.isStudentDelegate(
+        param.studentId,
+        param.query.clubId,
+      ))
+    )
+      throw new HttpException(
+        "It seems that you are not a delegate of the club",
+        HttpStatus.BAD_REQUEST,
+      );
+
+    const result = await this.clubPublicService.getMemberFromDuration({
+      clubId: param.query.clubId,
+      duration: {
+        startTerm: param.query.startTerm,
+        endTerm: param.query.endTerm,
+      },
+    });
+
+    return {
+      students: result.map(e => ({
+        id: e.studentId,
+        name: e.name,
+        studentNumber: e.studentNumber,
+      })),
+    };
   }
 
   async getStudentActivity(
