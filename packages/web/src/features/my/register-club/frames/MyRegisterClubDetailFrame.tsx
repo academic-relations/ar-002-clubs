@@ -78,7 +78,7 @@ const MyRegisterClubDetailFrame: React.FC<{
           onConfirm={async () => {
             await deleteMyClubRegistration({ applyId: +id });
             close();
-            router.push("/my");
+            window.location.href = "/my";
           }}
           onClose={close}
           confirmButtonText="삭제"
