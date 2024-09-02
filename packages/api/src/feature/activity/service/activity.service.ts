@@ -258,6 +258,16 @@ export default class ActivityService {
       activity.id,
     );
 
+    const evidenceFiles = await Promise.all(
+      evidence.map(async e => ({
+        fileId: e.fileId,
+        name: await this.filePublicService
+          .getFileInfoById(e.fileId)
+          .then(f => f.name),
+        url: await this.filePublicService.getFileUrl(e.fileId),
+      })),
+    );
+
     return {
       clubId: activity.clubId,
       name: activity.name,
@@ -267,9 +277,7 @@ export default class ActivityService {
       purpose: activity.purpose,
       detail: activity.detail,
       evidence: activity.evidence,
-      evidenceFiles: evidence.map(e => ({
-        fileId: e.fileId,
-      })),
+      evidenceFiles,
       participants: participants.map(e => ({
         studentId: e.studentId,
         studnetNumber: e.studentNumber,
@@ -637,6 +645,16 @@ export default class ActivityService {
       activity.id,
     );
 
+    const evidenceFiles = await Promise.all(
+      evidence.map(async e => ({
+        fileId: e.fileId,
+        name: await this.filePublicService
+          .getFileInfoById(e.fileId)
+          .then(f => f.name),
+        url: await this.filePublicService.getFileUrl(e.fileId),
+      })),
+    );
+
     return {
       clubId: activity.clubId,
       name: activity.name,
@@ -646,9 +664,7 @@ export default class ActivityService {
       purpose: activity.purpose,
       detail: activity.detail,
       evidence: activity.evidence,
-      evidenceFiles: evidence.map(e => ({
-        fileId: e.fileId,
-      })),
+      evidenceFiles,
       participants: participants.map(e => ({
         studentId: e.studentId,
         studnetNumber: e.studentNumber,
@@ -673,6 +689,16 @@ export default class ActivityService {
       activity.id,
     );
 
+    const evidenceFiles = await Promise.all(
+      evidence.map(async e => ({
+        fileId: e.fileId,
+        name: await this.filePublicService
+          .getFileInfoById(e.fileId)
+          .then(f => f.name),
+        url: await this.filePublicService.getFileUrl(e.fileId),
+      })),
+    );
+
     return {
       clubId: activity.clubId,
       name: activity.name,
@@ -682,9 +708,7 @@ export default class ActivityService {
       purpose: activity.purpose,
       detail: activity.detail,
       evidence: activity.evidence,
-      evidenceFiles: evidence.map(e => ({
-        fileId: e.fileId,
-      })),
+      evidenceFiles,
       participants: participants.map(e => ({
         studentId: e.studentId,
         studnetNumber: e.studentNumber,
