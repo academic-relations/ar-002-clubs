@@ -14,6 +14,7 @@ import ActivityReportForm from "./ActivityReportForm";
 
 interface EditActivityReportModalProps {
   activityId: number;
+  profile: string;
   isOpen: boolean;
   close: () => void;
 }
@@ -21,12 +22,16 @@ interface EditActivityReportModalProps {
 // TODO. 활동기간 리스트 추가, 파일업로드 추가
 const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
   activityId,
+  profile,
   isOpen,
   close,
 }) => {
   const formCtx = useForm<ApiAct008RequestBody>({ mode: "all" });
 
-  const { data, isLoading, isError } = useGetActivityReport(activityId);
+  const { data, isLoading, isError } = useGetActivityReport(
+    profile,
+    activityId,
+  );
 
   useEffect(() => {
     if (data) {

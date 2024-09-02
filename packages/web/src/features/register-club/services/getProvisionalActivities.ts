@@ -10,7 +10,7 @@ import {
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
-import activitiesGet from "./_atomic/actApiList";
+import { activitiesGet } from "./_atomic/actApiList";
 
 const useProvisionalActivities = (
   profile: string,

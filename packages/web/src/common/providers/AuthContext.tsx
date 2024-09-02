@@ -19,8 +19,6 @@ import {
   getLocalStorageItem,
   removeLocalStorageItem,
   setLocalStorageItem,
-  subscribeLocalStorageSet,
-  unsubscribeLocalStorageSet,
 } from "@sparcs-clubs/web/utils/localStorage";
 
 import AgreementModal from "../components/Modal/AgreeModal";
@@ -57,17 +55,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
-    const handleLocalStorageUpdate = () => {
-      const token = getLocalStorageItem("accessToken");
-      if (token) {
-        setIsLoggedIn(true);
-        const decoded: Profile = jwtDecode(token);
-        setProfile(decoded);
-      }
-    };
-    subscribeLocalStorageSet(handleLocalStorageUpdate);
-
-    return () => unsubscribeLocalStorageSet(handleLocalStorageUpdate);
+    const accessToken = getLocalStorageItem("accessToken");
+    if (accessToken) {
+      setIsLoggedIn(true);
+      const decoded: { type?: string } = jwtDecode(accessToken);
+      setProfile(decoded.type);
+    }
   }, []);
 
   useEffect(() => {
