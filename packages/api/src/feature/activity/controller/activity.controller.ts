@@ -24,6 +24,7 @@ import apiAct008, {
   ApiAct008RequestParam,
   ApiAct008ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
+import apiAct010 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct010";
 import apiAct011 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
 import apiAct012 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct012";
 import apiAct013 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct013";
@@ -62,6 +63,10 @@ import type {
   ApiAct005RequestBody,
   ApiAct005ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
+import type {
+  ApiAct010RequestQuery,
+  ApiAct010ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct010";
 import type {
   ApiAct011RequestQuery,
   ApiAct011ResponseOk,
@@ -187,6 +192,21 @@ export default class ActivityController {
       user.studentId,
     );
     return {};
+  }
+
+  @Student()
+  @Get("/student/activities/available-members")
+  @UsePipes(new ZodPipe(apiAct010))
+  async getStudentActivitiesAvailableMembers(
+    @GetStudent() user: GetStudent,
+    @Query() query: ApiAct010RequestQuery,
+  ): Promise<ApiAct010ResponseOk> {
+    const result =
+      await this.activityService.getStudentActivitiesAvailableMembers({
+        studentId: user.studentId,
+        query,
+      });
+    return result;
   }
 
   @Student()
