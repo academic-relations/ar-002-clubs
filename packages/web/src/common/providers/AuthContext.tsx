@@ -14,12 +14,12 @@ import { overlay } from "overlay-kit";
 import { Cookies } from "react-cookie";
 
 import {
-  getLocalstorageItem,
-  removeLocalstorageItem,
-  setLocalstorageItem,
-  subscribeLocalstorageSet,
-  unsubscribeLocalstorageSet,
-} from "@sparcs-clubs/web/utils/localstorage";
+  getLocalStorageItem,
+  removeLocalStorageItem,
+  setLocalStorageItem,
+  subscribeLocalStorageSet,
+  unsubscribeLocalStorageSet,
+} from "@sparcs-clubs/web/utils/local_storage";
 
 import AgreementModal from "../components/Modal/AgreeModal";
 import getLogin from "../services/getLogin";
@@ -49,17 +49,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
-    const handleLocalstorageUpdate = () => {
-      const token = getLocalstorageItem("accessToken");
+    const handleLocalStorageUpdate = () => {
+      const token = getLocalStorageItem("accessToken");
       if (token) {
         setIsLoggedIn(true);
         const decoded: { name?: string; type?: string } = jwtDecode(token);
         setProfile(decoded.name);
       }
     };
-    subscribeLocalstorageSet(handleLocalstorageUpdate);
+    subscribeLocalStorageSet(handleLocalStorageUpdate);
 
-    return () => unsubscribeLocalstorageSet(handleLocalstorageUpdate);
+    return () => unsubscribeLocalStorageSet(handleLocalStorageUpdate);
   }, []);
 
   useEffect(() => {
@@ -67,9 +67,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       const cookies = new Cookies();
       const responseToken = cookies.get("accessToken");
       if (responseToken !== undefined) {
-        setLocalstorageItem("responseToken", JSON.stringify(responseToken));
+        setLocalStorageItem("responseToken", JSON.stringify(responseToken));
         if (responseToken) {
-          setLocalstorageItem(
+          setLocalStorageItem(
             "accessToken",
             responseToken.professor ??
               responseToken.doctor ??
@@ -100,15 +100,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     try {
       await postLogout();
       setIsLoggedIn(false);
-      removeLocalstorageItem("accessToken");
-      removeLocalstorageItem("responseToken");
+      removeLocalStorageItem("accessToken");
+      removeLocalStorageItem("responseToken");
       const cookies = new Cookies();
       cookies.remove("accessToken");
       console.log("Logged out successfully.");
     } catch (error) {
       setIsLoggedIn(false);
-      removeLocalstorageItem("accessToken");
-      removeLocalstorageItem("responseToken");
+      removeLocalStorageItem("accessToken");
+      removeLocalStorageItem("responseToken");
       const cookies = new Cookies();
       cookies.remove("accessToken");
       console.log("Logged out.");

@@ -9,7 +9,7 @@ import Icon from "@sparcs-clubs/web/common/components/Icon";
 import MyMenu from "@sparcs-clubs/web/common/components/MyMenu";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import { getUserType } from "@sparcs-clubs/web/utils/getUserType";
-import { getLocalstorageItem } from "@sparcs-clubs/web/utils/localstorage";
+import { getLocalStorageItem } from "@sparcs-clubs/web/utils/local_storage";
 
 const LoginInner = styled.div`
   display: flex;
@@ -39,7 +39,7 @@ const Login = () => {
     if (!isLoggedIn) {
       setIsMenuOpen(false);
     } else {
-      const token = getLocalstorageItem("accessToken");
+      const token = getLocalStorageItem("accessToken");
       if (token) {
         setSelectedToken(token);
         const decoded: { name?: string; type?: string } = jwtDecode(token);
