@@ -51,7 +51,11 @@ const ButtonPlaceRight = styled.div`
 
 type PutActivityReportBody = z.infer<typeof apiAct003.requestBody>;
 const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
-  const { data, isLoading, isError } = useGetActivityReport(Number(id));
+  // TODO: 실제 프로필 사용
+  const { data, isLoading, isError } = useGetActivityReport(
+    "undergraduate",
+    Number(id),
+  );
   const { mutate } = usePutActivityReport();
   const [formData, setFormData] = useState<PutActivityReportBody>();
   const [duration, setDuration] = useState<[string, string]>(["", ""]);

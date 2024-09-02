@@ -26,7 +26,12 @@ const MyRegisterClubAcfFrame: React.FC<MyRegisterClubAcfFrameProps> = ({
           가등록 / 등록 취소 기간 활동 보고서 (총{" "}
           {data ? data.activities.length : 0}개)
         </Typography>
-        {data && <MyRegisterClubAcfTable clubRegisterAcfList={data} />}
+        {data && (
+          <MyRegisterClubAcfTable
+            clubRegisterAcfList={data}
+            profile={profile}
+          />
+        )}
       </FlexWrapper>
     </AsyncBoundary>
   );

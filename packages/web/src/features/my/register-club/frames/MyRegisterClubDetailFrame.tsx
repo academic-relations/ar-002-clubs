@@ -13,10 +13,7 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import {
-  ListContainer,
-  ListItem,
-} from "@sparcs-clubs/web/common/components/ListItem";
+import { ListItem } from "@sparcs-clubs/web/common/components/ListItem";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
@@ -173,31 +170,31 @@ const MyRegisterClubDetailFrame: React.FC<{
             }
           />
         )}
-        <FlexWrapper direction="column" gap={16}>
-          <TagWrapper>
-            <Typography fw="MEDIUM" fs={16} lh={20}>
-              등록 구분
-            </Typography>
-            <Tag
-              color={
-                clubDetail &&
-                getTagDetail(
-                  clubDetail.registrationTypeEnumId,
-                  RegistrationTypeTagList,
-                ).color
-              }
-            >
-              {clubDetail &&
-                getTagDetail(
-                  clubDetail.registrationTypeEnumId,
-                  RegistrationTypeTagList,
-                ).text}
-            </Tag>
-          </TagWrapper>
+        <TagWrapper>
+          <Typography fw="MEDIUM" fs={16} lh={20}>
+            등록 구분
+          </Typography>
+          <Tag
+            color={
+              clubDetail &&
+              getTagDetail(
+                clubDetail.registrationTypeEnumId,
+                RegistrationTypeTagList,
+              ).color
+            }
+          >
+            {clubDetail &&
+              getTagDetail(
+                clubDetail.registrationTypeEnumId,
+                RegistrationTypeTagList,
+              ).text}
+          </Tag>
+        </TagWrapper>
+        <FlexWrapper gap={16} direction="column">
           <Typography fw="MEDIUM" fs={16} lh={20}>
             기본 정보
           </Typography>
-          <ListContainer>
+          <FlexWrapper gap={12} direction="column">
             <ListItem>
               동아리명 (국문):{" "}
               {clubDetail.clubNameKr ?? clubDetail.newClubNameKr}
@@ -206,12 +203,12 @@ const MyRegisterClubDetailFrame: React.FC<{
               동아리명 (영문):{" "}
               {clubDetail.clubNameEn ?? clubDetail.newClubNameEn}
             </ListItem>
-            {clubDetail.clubNameKr && (
+            {clubDetail.clubNameKr && clubDetail.newClubNameKr !== "" && (
               <ListItem>
                 신규 동아리명 (국문): {clubDetail.newClubNameKr}
               </ListItem>
             )}
-            {clubDetail.clubNameEn && (
+            {clubDetail.clubNameEn && clubDetail.newClubNameEn !== "" && (
               <ListItem>
                 신규 동아리명 (영문): {clubDetail.newClubNameEn}
               </ListItem>
@@ -230,26 +227,28 @@ const MyRegisterClubDetailFrame: React.FC<{
             </ListItem>
             <ListItem>활동 분야 (국문): {clubDetail.activityFieldKr}</ListItem>
             <ListItem>활동 분야 (영문): {clubDetail.activityFieldEn}</ListItem>
-          </ListContainer>
-          {clubDetail.professor && (
-            <>
-              <Typography fw="MEDIUM" fs={16} lh={20}>
-                지도교수 정보
-              </Typography>
-              <ListContainer>
-                <ListItem>성함: {clubDetail.professor?.name}</ListItem>
-                <ListItem>
-                  직급:{" "}
-                  {professorEnumToText(clubDetail.professor?.professorEnumId)}
-                </ListItem>
-                <ListItem>이메일: {clubDetail.professor?.email}</ListItem>
-              </ListContainer>
-            </>
-          )}
+          </FlexWrapper>
+        </FlexWrapper>
+        {clubDetail.professor && (
+          <FlexWrapper gap={12} direction="column">
+            <Typography fw="MEDIUM" fs={16} lh={20}>
+              지도교수 정보
+            </Typography>
+            <FlexWrapper gap={12} direction="column">
+              <ListItem>성함: {clubDetail.professor?.name}</ListItem>
+              <ListItem>
+                직급:{" "}
+                {professorEnumToText(clubDetail.professor?.professorEnumId)}
+              </ListItem>
+              <ListItem>이메일: {clubDetail.professor?.email}</ListItem>
+            </FlexWrapper>
+          </FlexWrapper>
+        )}
+        <FlexWrapper gap={16} direction="column">
           <Typography fw="MEDIUM" fs={16} lh={20}>
             동아리 정보
           </Typography>
-          <ListContainer>
+          <FlexWrapper gap={12} direction="column">
             <ListItem>분과 정합성: {clubDetail.divisionConsistency}</ListItem>
             <ListItem>설립 목적: {clubDetail.foundationPurpose}</ListItem>
             <ListItem>주요 활동 계획: {clubDetail.activityPlan}</ListItem>
@@ -265,6 +264,7 @@ const MyRegisterClubDetailFrame: React.FC<{
                           name: clubDetail.activityPlanFile?.name,
                         },
                       ]}
+                      disabled
                     />
                   </FilePreviewContainer>
                 )}
@@ -282,6 +282,7 @@ const MyRegisterClubDetailFrame: React.FC<{
                           name: clubDetail.clubRuleFile?.name,
                         },
                       ]}
+                      disabled
                     />
                   </FilePreviewContainer>
                 )}
@@ -298,31 +299,32 @@ const MyRegisterClubDetailFrame: React.FC<{
                         name: clubDetail.externalInstructionFile.name,
                       },
                     ]}
+                    disabled
                   />
                 </FilePreviewContainer>
               </>
             )}
-          </ListContainer>
-          {clubDetail.registrationTypeEnumId !== RegistrationTypeEnum.Renewal &&
-            clubDetail.clubId && (
-              <MyRegisterClubAcfFrame
-                profile={profile}
-                clubId={clubDetail.clubId}
-              />
-            )}
-          {clubDetail.professor && (
-            <TagWrapper>
-              <Typography fw="MEDIUM" fs={16} lh={20}>
-                지도교수 승인
-              </Typography>
-              {clubDetail.isProfessorSigned ? (
-                <Tag color="GREEN">승인</Tag>
-              ) : (
-                <Tag color="GRAY">대기</Tag>
-              )}
-            </TagWrapper>
-          )}
+          </FlexWrapper>
         </FlexWrapper>
+        {clubDetail.registrationTypeEnumId !== RegistrationTypeEnum.Renewal &&
+          clubDetail.clubId && (
+            <MyRegisterClubAcfFrame
+              profile={profile}
+              clubId={clubDetail.clubId}
+            />
+          )}
+        {clubDetail.professor && (
+          <TagWrapper>
+            <Typography fw="MEDIUM" fs={16} lh={20}>
+              지도교수 승인
+            </Typography>
+            {clubDetail.isProfessorSigned ? (
+              <Tag color="GREEN">승인</Tag>
+            ) : (
+              <Tag color="GRAY">대기</Tag>
+            )}
+          </TagWrapper>
+        )}
       </Card>
 
       <ButtonWrapper>

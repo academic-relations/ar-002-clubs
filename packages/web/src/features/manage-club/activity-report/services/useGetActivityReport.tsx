@@ -1,25 +1,28 @@
-import apiAct002 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
+import apiAct002, {
+  ApiAct002ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
+import { activityDetailGet } from "@sparcs-clubs/web/features/register-club/services/_atomic/actApiList";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
-type ISuccessResponseType = z.infer<(typeof apiAct002.responseBodyMap)[200]>;
-export const useGetActivityReport = (activityId: number) =>
-  useQuery<ISuccessResponseType, Error>({
-    queryKey: [apiAct002.url(activityId)],
-    queryFn: async (): Promise<ISuccessResponseType> => {
+export const useGetActivityReport = (profile: string, activityId: number) =>
+  useQuery<ApiAct002ResponseOk, Error>({
+    queryKey: [activityDetailGet(profile, activityId)],
+    queryFn: async (): Promise<ApiAct002ResponseOk> => {
       const { data, status } = await axiosClientWithAuth.get(
-        apiAct002.url(activityId),
+        activityDetailGet(profile, activityId),
         {},
       );
 
       switch (status) {
         case 200:
+        case 304:
           return apiAct002.responseBodyMap[200].parse(data);
         default:
           throw new UnexpectedAPIResponseError();
@@ -46,18 +49,24 @@ defineAxiosMock(mock => {
       evidence: "Activity Evidence",
       evidenceFiles: [
         {
-          uuid: "file-uuid",
+          fileId: "file-uuid",
         },
       ],
       participants: [
         {
           studentId: 20200515,
+          studnetNumber: 20200515,
+          name: "이지윤",
         },
         {
           studentId: 20200513,
+          studnetNumber: 20200513,
+          name: "박병찬",
         },
         {
           studentId: 20230512,
+          studnetNumber: 20230512,
+          name: "이도라",
         },
       ],
     };

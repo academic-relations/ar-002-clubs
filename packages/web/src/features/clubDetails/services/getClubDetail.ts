@@ -22,6 +22,7 @@ export const useGetClubDetail = (club_id: string) =>
       // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
       switch (status) {
         case 200:
+        case 304:
           return apiClb002.responseBodyMap[200].parse(data);
         default:
           throw new UnexpectedAPIResponseError();

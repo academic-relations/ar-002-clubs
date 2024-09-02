@@ -2,8 +2,16 @@
 
 import React from "react";
 
-import MyCommonSpaceDetailFrame from "@sparcs-clubs/web/features/my/common-space/frames/MyCommonSpaceDetailFrame";
+// 배포용 not found 페이지 (시작)
+import NotFound from "@sparcs-clubs/web/app/not-found";
 
-const MyCommonSpaceDetail = () => <MyCommonSpaceDetailFrame />;
+const TemporaryNotFound = () => <NotFound />;
 
-export default MyCommonSpaceDetail;
+export default TemporaryNotFound;
+// 배포용 not found 페이지 (끝)
+
+// import MyCommonSpaceDetailFrame from "@sparcs-clubs/web/features/my/common-space/frames/MyCommonSpaceDetailFrame";
+
+// const MyCommonSpaceDetail = () => <MyCommonSpaceDetailFrame />;
+
+// export default MyCommonSpaceDetail;

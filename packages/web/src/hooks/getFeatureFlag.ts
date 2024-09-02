@@ -40,7 +40,7 @@ export const getFeatureFlagString = (key: string) => {
 };
 
 /**
- * React Hook to get feature flag. ONLY USE IN CLIENT COMPONENTS (USES LOCALSTORAGE)
+ * React Hook to get feature flag. ONLY USE IN CLIENT COMPONENTS (USES LOCAL STORAGE)
  * In Client-Side React Components, use this.
  * In SSR or constant declarations, use getFlag instead.
  *

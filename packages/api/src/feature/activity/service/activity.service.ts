@@ -22,6 +22,10 @@ import type {
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
 import type { ApiAct005ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
 import type {
+  ApiAct010RequestQuery,
+  ApiAct010ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct010";
+import type {
   ApiAct011RequestQuery,
   ApiAct011ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
@@ -46,7 +50,7 @@ export default class ActivityService {
   /**
    * @param activityId 활동 id
    * @returns 해당id의 활동이 존재할 경우 그 정보를 리턴합니다.
-   * 존재하지 않을 경우 not found exception을 throw합니다.
+   * 존재하지 않을 경우 not found exception을 throw합니다.`
    */
   private async getActivity(param: { activityId: number }) {
     const activities = await this.activityRepository.selectActivityByActivityId(
@@ -201,6 +205,41 @@ export default class ActivityService {
     }));
   }
 
+  /**
+   * @description getStudentActivitiesAvailableMembers의 서비스 진입점입니다.
+   */
+  async getStudentActivitiesAvailableMembers(param: {
+    studentId: number;
+    query: ApiAct010RequestQuery;
+  }): Promise<ApiAct010ResponseOk> {
+    if (
+      !(await this.clubPublicService.isStudentDelegate(
+        param.studentId,
+        param.query.clubId,
+      ))
+    )
+      throw new HttpException(
+        "It seems that you are not a delegate of the club",
+        HttpStatus.BAD_REQUEST,
+      );
+
+    const result = await this.clubPublicService.getMemberFromDuration({
+      clubId: param.query.clubId,
+      duration: {
+        startTerm: param.query.startTerm,
+        endTerm: param.query.endTerm,
+      },
+    });
+
+    return {
+      students: result.map(e => ({
+        id: e.studentId,
+        name: e.name,
+        studentNumber: e.studentNumber,
+      })),
+    };
+  }
+
   async getStudentActivity(
     activityId: number,
     studentId: number,
@@ -229,10 +268,12 @@ export default class ActivityService {
       detail: activity.detail,
       evidence: activity.evidence,
       evidenceFiles: evidence.map(e => ({
-        uuid: e.fileId,
+        fileId: e.fileId,
       })),
       participants: participants.map(e => ({
         studentId: e.studentId,
+        studnetNumber: e.studentNumber,
+        name: e.name,
       })),
       durations: duration.map(e => ({
         startTerm: e.startTerm,
@@ -360,7 +401,7 @@ export default class ActivityService {
       purpose: body.purpose,
       detail: body.detail,
       evidence: body.evidence,
-      evidenceFileIds: body.evidenceFiles.map(e => e.uuid),
+      evidenceFileIds: body.evidenceFiles.map(e => e.fileId),
       participantIds: body.participants.map(e => e.studentId),
       activityDId: activity.activityDId,
     });
@@ -606,10 +647,12 @@ export default class ActivityService {
       detail: activity.detail,
       evidence: activity.evidence,
       evidenceFiles: evidence.map(e => ({
-        uuid: e.fileId,
+        fileId: e.fileId,
       })),
       participants: participants.map(e => ({
         studentId: e.studentId,
+        studnetNumber: e.studentNumber,
+        name: e.name,
       })),
       durations: duration.map(e => ({
         startTerm: e.startTerm,
@@ -640,10 +683,12 @@ export default class ActivityService {
       detail: activity.detail,
       evidence: activity.evidence,
       evidenceFiles: evidence.map(e => ({
-        uuid: e.fileId,
+        fileId: e.fileId,
       })),
       participants: participants.map(e => ({
         studentId: e.studentId,
+        studnetNumber: e.studentNumber,
+        name: e.name,
       })),
       durations: duration.map(e => ({
         startTerm: e.startTerm,

@@ -28,7 +28,7 @@ const ExecutiveRegisterClub = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile !== "executive") {
+  if (profile?.type !== "executive") {
     return <Custom404 />;
   }
 

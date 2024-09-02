@@ -15,6 +15,7 @@ import { getFeatureFlagString } from "@sparcs-clubs/web/hooks/getFeatureFlag";
 
 import MobileNavMenu from "../NavTools/MobileNavMenu";
 
+import Beta from "./_atomic/Beta";
 import Login from "./_atomic/Login";
 import Logo from "./_atomic/Logo";
 
@@ -23,6 +24,10 @@ const IdentityBar = styled.div`
   width: 100%;
   height: 5px;
   background-color: ${({ theme }) => theme.colors.PRIMARY};
+`;
+
+const LogoContainer = styled.div`
+  position: relative;
 `;
 
 const NavInner = styled.div`
@@ -72,6 +77,8 @@ const Menu = styled.div`
 `;
 
 const Header: React.FC = () => {
+  const isBetaPeriod = true;
+
   const [isMobileMenuVisible, setIsMobileMenuVisible] = useState<boolean>();
 
   const { profile } = useAuth();
@@ -79,7 +86,7 @@ const Header: React.FC = () => {
   const headerPaths = navPaths.header
     .filter(
       menu =>
-        paths[menu].authority.includes(profile as string) ||
+        paths[menu].authority.includes(profile?.type as string) ||
         paths[menu].authority.includes("all"),
     )
     .filter(menu => getFeatureFlagString(paths[menu].featureFlag));
@@ -95,7 +102,10 @@ const Header: React.FC = () => {
     <HeaderInner>
       <IdentityBar />
       <NavInner>
-        <Logo onClick={handleClose} />
+        <LogoContainer>
+          <Logo onClick={handleClose} />
+          {isBetaPeriod && <Beta />}
+        </LogoContainer>
         <Login />
         <Menu>
           <Icon

@@ -45,18 +45,27 @@ const Profile: React.FC<ProfileProps> = ({
   email,
   isSelected = false,
   onClick,
-}) => (
-  <ProfileWrapper selected={isSelected} onClick={onClick}>
-    <ProfileText>
-      <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
-        {profileName}
-      </Typography>
-      <Typography ff="PRETENDARD" fw="REGULAR" fs={14} lh={16} color="GRAY.600">
-        {profileNumber} / {email}
-      </Typography>
-    </ProfileText>
-    {isSelected && <Icon type="check" size={16} color="BLACK" />}
-  </ProfileWrapper>
-);
+}) => {
+  const profileText = (number: number, mail: string) => {
+    if (number && mail) return `${number} / ${mail}`;
+    if (number === undefined || number === null) return `${mail}`;
+    if (mail === undefined || mail === null || mail === "") return `${number}`;
+    return "";
+  };
+
+  return (
+    <ProfileWrapper selected={isSelected} onClick={onClick}>
+      <ProfileText>
+        <Typography fw="MEDIUM" fs={16} lh={20} color="BLACK">
+          {profileName}
+        </Typography>
+        <Typography fs={14} lh={16} color="GRAY.600">
+          {profileText(profileNumber, email)}
+        </Typography>
+      </ProfileText>
+      {isSelected && <Icon type="check" size={16} color="BLACK" />}
+    </ProfileWrapper>
+  );
+};
 
 export default Profile;

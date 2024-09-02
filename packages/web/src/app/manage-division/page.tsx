@@ -1,26 +1,34 @@
 "use client";
 
-import Custom404 from "@sparcs-clubs/web/app/not-found";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import DivisionInfoFrame from "@sparcs-clubs/web/features/manage-division/frames/DivisionInfoFrame";
+// 배포용 not found 페이지 (시작)
+import NotFound from "@sparcs-clubs/web/app/not-found";
 
-const ManageDivision: React.FC = () => {
-  const mockIsDivisionPresident = true; // TODO: divisionPresident == user
+const TemporaryNotFound = () => <NotFound />;
 
-  if (!mockIsDivisionPresident) {
-    return <Custom404 />; // TODO: "접근 권한이 없음" 페이지
-  }
+export default TemporaryNotFound;
+// 배포용 not found 페이지 (끝)
 
-  return (
-    <FlexWrapper gap={60} direction="column">
-      <PageHead
-        items={[{ name: "분과 관리", path: "/manage-division" }]}
-        title="분과 관리"
-      />
-      <DivisionInfoFrame />
-    </FlexWrapper>
-  );
-};
+// import Custom404 from "@sparcs-clubs/web/app/not-found";
+// import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+// import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+// import DivisionInfoFrame from "@sparcs-clubs/web/features/manage-division/frames/DivisionInfoFrame";
 
-export default ManageDivision;
+// const ManageDivision: React.FC = () => {
+//   const mockIsDivisionPresident = true; // TODO: divisionPresident == user
+
+//   if (!mockIsDivisionPresident) {
+//     return <Custom404 />; // TODO: "접근 권한이 없음" 페이지
+//   }
+
+//   return (
+//     <FlexWrapper gap={60} direction="column">
+//       <PageHead
+//         items={[{ name: "분과 관리", path: "/manage-division" }]}
+//         title="분과 관리"
+//       />
+//       <DivisionInfoFrame />
+//     </FlexWrapper>
+//   );
+// };
+
+// export default ManageDivision;

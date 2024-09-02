@@ -12,6 +12,7 @@
     "mock:back": "echo \"In mock:back mode, the 'web' package will not be run. Exiting.\""
   },
   "dependencies": {
+    "@channel.io/channel-web-sdk-loader": "^2.0.0",
     "@emotion/cache": "11.11.0",
     "@emotion/is-prop-valid": "^1.2.2",
     "@emotion/react": "11.11.4",

@@ -10,6 +10,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import PastActivityReportList from "@sparcs-clubs/web/features/manage-club/activity-report/components/PastActivityReportList";
 
 import { useGetActivityReportsForPromotional } from "../services/useGetActivityReportsForPromotional";
@@ -31,6 +32,7 @@ const OptionOuter = styled.div`
 const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
   clubId,
 }) => {
+  const { profile } = useAuth();
   const { data, isLoading, isError } = useGetActivityReportsForPromotional({
     clubId,
   });
@@ -68,7 +70,10 @@ const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
               활동 보고서 작성
             </IconButton>
           </OptionOuter>
-          <PastActivityReportList data={data?.activities ?? []} />
+          <PastActivityReportList
+            data={data?.activities ?? []}
+            profile={profile?.type ?? ""}
+          />
         </Card>
       </FlexWrapper>
     </AsyncBoundary>

@@ -30,7 +30,7 @@ const MyClubs = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile === "executive") {
+  if (profile?.type === "executive") {
     return <NotForExecutive />;
   }
 
@@ -43,7 +43,7 @@ const MyClubs = () => {
         ]}
         title="나의 동아리"
       />
-      {profile === "professor" ? (
+      {profile?.type === "professor" ? (
         <MyClubsProfessorFrame />
       ) : (
         <MyClubsMainFrame />

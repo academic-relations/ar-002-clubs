@@ -10,7 +10,7 @@ import {
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
-import activitiesGet from "./_atomic/actApiList";
+import { activitiesGet } from "./_atomic/actApiList";
 
 const useProvisionalActivities = (
   profile: string,
@@ -28,6 +28,7 @@ const useProvisionalActivities = (
 
       switch (status) {
         case 200:
+        case 304:
           return apiAct011.responseBodyMap[200].parse(data);
         default:
           throw new UnexpectedAPIResponseError();

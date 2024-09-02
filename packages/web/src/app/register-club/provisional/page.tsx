@@ -28,7 +28,7 @@ const ProvisionalRegisterClub = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile !== "undergraduate") {
+  if (profile?.type !== "undergraduate") {
     return <NotFound />;
   }
 

@@ -2,7 +2,6 @@
 
 import React from "react";
 
-import Link from "next/link";
 import styled from "styled-components";
 
 import NavList from "@sparcs-clubs/web/common/components/NavTools/NavList";
@@ -42,28 +41,9 @@ const StyledNavList = styled(NavList)`
   }
 `;
 
-const MailToOuter = styled.div`
-  @media (max-width: 720px) {
-    display: none;
-  }
-`;
-
-const MailTo = styled(Link)`
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
-  color: ${({ theme }) => theme.colors.BLACK};
-`;
-
 const Footer = () => (
   <FooterInner>
     <SPARCSLogo />
-    <MailToOuter>
-      <MailTo href="mailto:clubsunion2019@gmail.com">
-        문의: clubsunion2019@gmail.com
-      </MailTo>
-    </MailToOuter>
     <StyledNavList keys={navPaths.footer} />
   </FooterInner>
 );

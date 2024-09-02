@@ -22,9 +22,9 @@ export const useGetClubInfo = (requestParam: ApiClb004RequestParam) =>
         apiClb004.url(requestParam.clubId),
       );
       switch (status) {
-        case 200: {
+        case 200:
+        case 304:
           return apiClb004.responseBodyMap[200].parse(data);
-        }
         default:
           throw new UnexpectedAPIResponseError();
       }
