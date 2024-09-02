@@ -17,6 +17,7 @@ import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface MyRegisterClubAcfTableProps {
   clubRegisterAcfList: ApiAct011ResponseOk;
+  profile: string;
 }
 
 const columnHelper =
@@ -52,6 +53,7 @@ const columns = [
 
 const MyRegisterClubAcfTable: React.FC<MyRegisterClubAcfTableProps> = ({
   clubRegisterAcfList,
+  profile,
 }) => {
   const table = useReactTable({
     columns,
@@ -63,6 +65,7 @@ const MyRegisterClubAcfTable: React.FC<MyRegisterClubAcfTableProps> = ({
   const openPastActivityReportModal = (activityId: number) => {
     overlay.open(({ isOpen, close }) => (
       <PastActivityReportModal
+        profile={profile}
         activityId={activityId}
         isOpen={isOpen}
         close={close}

@@ -24,6 +24,7 @@ import { PastActivityReport } from "../_mock/mock";
 
 interface ActivityReportListProps {
   data: PastActivityReport[];
+  profile: string;
   showItemCount?: boolean;
 }
 
@@ -66,6 +67,7 @@ const TableOuter = styled.div`
 
 const PastActivityReportList: React.FC<ActivityReportListProps> = ({
   data,
+  profile,
   showItemCount = true,
 }) => {
   const table = useReactTable({
@@ -78,6 +80,7 @@ const PastActivityReportList: React.FC<ActivityReportListProps> = ({
   const openPastActivityReportModal = (activityId: number) => {
     overlay.open(({ isOpen, close }) => (
       <PastActivityReportModal
+        profile={profile}
         activityId={activityId}
         isOpen={isOpen}
         close={close}
