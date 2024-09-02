@@ -97,6 +97,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
     overlay.open(
       ({ isOpen: isOpenEditActivityModal, close: closeEditActivityModal }) => (
         <EditActivityReportModal
+          profile={profile}
           activityId={activityId}
           isOpen={isOpenEditActivityModal}
           close={closeEditActivityModal}
