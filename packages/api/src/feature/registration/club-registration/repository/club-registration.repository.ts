@@ -576,6 +576,7 @@ export class ClubRegistrationRepository {
       await this.db
         .select({ count: count(Registration.id) })
         .from(Registration)
+        .where(isNull(Registration.deletedAt))
         .then(takeUnique)
     ).count;
 
