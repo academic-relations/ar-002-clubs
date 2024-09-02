@@ -1,6 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { zFileName } from "@sparcs-clubs/interface/common/commonString";
+
 /**
  * @version v0.1
  * @description 파일 업로드를 위한 url과 flieId를 받아옵니다.
@@ -18,7 +20,7 @@ const requestQuery = z.object({});
 const requestBody = z.object({
   metadata: z.array(
     z.object({
-      name: z.coerce.string().max(256),
+      name: zFileName,
       type: z.coerce.string().max(30),
       size: z.coerce.number().int().min(1),
     }),
@@ -31,6 +33,7 @@ const responseBodyMap = {
       z.object({
         uploadUrl: z.string(),
         fileId: z.string().max(128),
+        name: zFileName,
       }),
     ),
   }),

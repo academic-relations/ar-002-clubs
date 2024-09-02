@@ -23,6 +23,7 @@ const useRegisterClubDetail = (requestParam: ApiReg015RequestParam) =>
 
       switch (status) {
         case 200:
+        case 304:
           // return apiReg015.responseBodyMap[200].parse(data);
           return data;
         default:

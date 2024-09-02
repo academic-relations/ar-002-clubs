@@ -53,9 +53,9 @@ const requestBody = z
         professorEnumId: z.nativeEnum(ProfessorEnum),
       })
       .optional(),
-    divisionConsistency: z.coerce.string().max(255),
-    foundationPurpose: z.coerce.string().max(500),
-    activityPlan: z.coerce.string().max(500), // 길이제한이 추가될 수 있습니다.
+    divisionConsistency: z.coerce.string(),
+    foundationPurpose: z.coerce.string(),
+    activityPlan: z.coerce.string(),
     activityPlanFileId: z.coerce.string().max(128).optional(),
     /**
      * 동아리 회칙 파일은 가등록 | 재등록인 경우 undefined,

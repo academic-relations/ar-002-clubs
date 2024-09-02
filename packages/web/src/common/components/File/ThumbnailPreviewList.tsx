@@ -72,12 +72,12 @@ const ThumbnailPreviewList: React.FC<ThumbnailPreviewListProps> = ({
   };
 
   return (
-    <div>
+    fileList.length > 0 && (
       <FlexWrapper
         gap={16}
         direction="row"
         style={{
-          overflow: "auto",
+          overflowX: "scroll",
           paddingBottom: "14px",
         }}
         ref={viewerRef}
@@ -92,7 +92,7 @@ const ThumbnailPreviewList: React.FC<ThumbnailPreviewListProps> = ({
           />
         ))}
       </FlexWrapper>
-    </div>
+    )
   );
 };
 

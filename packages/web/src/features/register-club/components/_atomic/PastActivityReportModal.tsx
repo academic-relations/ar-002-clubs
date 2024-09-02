@@ -1,21 +1,30 @@
-import React, { ReactNode } from "react";
+import React, { useEffect } from "react";
 
+import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
+import { fromUUID } from "@sparcs-clubs/web/common/components/File/attachment";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
+import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { mockPastActivityData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
+import { useDeleteActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useDeleteActivityReport";
+import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
 import { getActivityTypeTagLabel } from "@sparcs-clubs/web/features/register-club/utils/activityType";
-// import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
+
+import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+
+import EditActivityReportModal from "./EditActivityReportModal";
 
 interface PastActivityReportModalProps {
   activityId: number;
   isOpen: boolean;
   close: VoidFunction;
+  viewOnly?: boolean;
 }
 
 interface ActivitySectionProps extends React.PropsWithChildren {
@@ -29,7 +38,9 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
   <FlexWrapper
     direction="column"
     gap={16}
-    style={{ alignItems: "flex-start", alignSelf: "stretch" }}
+    style={{
+      alignSelf: "stretch",
+    }}
   >
     <Typography
       fw="MEDIUM"
@@ -53,104 +64,150 @@ const FlexTypography = styled(Typography)`
   align-self: stretch;
 `;
 
-const ActivityDetail: React.FC<{ children: string | ReactNode }> = ({
-  children = "",
-}) => (
+const ActivityDetail: React.FC<{ text: string }> = ({ text }) => (
   <FlexTypography fw="REGULAR" fs={16} lh={20}>
-    {`• ${children}`}
+    {`• ${text}`}
   </FlexTypography>
 );
 
-// ActivityDetail은 세부 활동 내역을 나타냅니다.
-// string이면 bullet point가 자동으로 포함됩니다.
-// string이 아닌 경우는 FilePreview가 들어가는 경우입니다. padding이 포함됩니다.
-
-const FilePreviewContainerWrapper = styled(FlexWrapper)`
-  padding-left: 24px;
-  align-items: flex-start;
-  align-self: stretch;
-`;
-
-const FilePreviewContainer: React.FC<React.PropsWithChildren> = ({
-  children = null,
-}) => (
-  <FilePreviewContainerWrapper direction="column" gap={12}>
-    {children}
-  </FilePreviewContainerWrapper>
-);
-// TODO. 활동기간 리스트 추가, 파일업로드 추가
 const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   activityId,
   isOpen,
   close,
+  viewOnly = false,
 }) => {
-  /* TODO: (@dora) connect api */
-  // const { data, isLoading, isError } = useGetActivityReport(activityId);
-  const data = mockPastActivityData.activities.filter(
-    activity => activity.id === activityId,
-  )[0];
+  const { data, isLoading, isError } = useGetActivityReport(activityId);
+  const {
+    mutate: deleteActivityReport,
+    isSuccess: isDeleteSuccess,
+    isError: isDeleteError,
+  } = useDeleteActivityReport();
+
+  const handleDelete = () => {
+    deleteActivityReport({ requestParam: { activityId } });
+    close();
+  };
+
+  const handleEdit = () => {
+    overlay.open(
+      ({ isOpen: isOpenEditActivityModal, close: closeEditActivityModal }) => (
+        <EditActivityReportModal
+          activityId={activityId}
+          isOpen={isOpenEditActivityModal}
+          close={closeEditActivityModal}
+        />
+      ),
+    );
+  };
+
+  useEffect(() => {
+    if (isDeleteSuccess) {
+      overlay.open(
+        ({
+          isOpen: isOpenDeleteSuccessModal,
+          close: closeDeleteSuccessModal,
+        }) => (
+          <Modal isOpen={isOpenDeleteSuccessModal}>
+            <ConfirmModalContent onConfirm={closeDeleteSuccessModal}>
+              활동 보고서가 삭제되었습니다.
+            </ConfirmModalContent>
+          </Modal>
+        ),
+      );
+      return;
+    }
+    if (isDeleteError) {
+      overlay.open(
+        ({ isOpen: isOpenDeleteErrorModal, close: closeDeleteErrorModal }) => (
+          <Modal isOpen={isOpenDeleteErrorModal}>
+            <ConfirmModalContent onConfirm={closeDeleteErrorModal}>
+              활동 보고서 삭제에 실패했습니다.
+            </ConfirmModalContent>
+          </Modal>
+        ),
+      );
+    }
+  }, [isDeleteSuccess, isDeleteError]);
 
   return (
     <Modal isOpen={isOpen}>
-      <FlexWrapper gap={20} direction="column">
-        <ActivitySection label="활동 정보">
-          <ActivityDetail>활동명: {data.name}</ActivityDetail>
-          <ActivityDetail>
-            활동 분류: {getActivityTypeTagLabel(data.activityTypeEnumId)}
-          </ActivityDetail>
-          <ActivityDetail>
-            활동 기간: 2024년 5월 24일 (금) ~ 2024년 5월 25일 (토)
-          </ActivityDetail>
-          <ActivityDetail>활동 장소: 동아리방</ActivityDetail>
-          <ActivityDetail>활동 목적: 동아리 회원 개발 실력 향상</ActivityDetail>
-          <ActivityDetail>활동 내용: 밤을 새서 개발을 했다.</ActivityDetail>
-        </ActivitySection>
-        <ActivitySection label="활동 인원(4명)">
-          <ActivityDetail>20200510 이지윤</ActivityDetail>
-          <ActivityDetail>20200511 박병찬</ActivityDetail>
-          <ActivityDetail>20230510 이도라</ActivityDetail>
-          <ActivityDetail>20240510 스팍스</ActivityDetail>
-        </ActivitySection>
-        <ActivitySection label="활동 증빙">
-          <ActivityDetail>첨부 파일</ActivityDetail>
-          <ActivityDetail>
-            <FilePreviewContainer>
-              <ThumbnailPreviewList
-                fileList={[
-                  {
-                    name: "bamseam.pdf",
-                    src: "https://pdfobject.com/pdf/sample.pdf",
-                  },
-                  {
-                    name: "coffee.pdf",
-                    src: "https://pdfobject.com/pdf/sample.pdf",
-                  },
-                  {
-                    name: "gaebal.pdf",
-                    src: "https://pdfobject.com/pdf/sample.pdf",
-                  },
-                ]}
-              />
-            </FilePreviewContainer>
-          </ActivityDetail>
-          <ActivityDetail>
-            부가 설명: 커피를 마시며 개발을 했고 밤을 샜어요
-          </ActivityDetail>
-        </ActivitySection>
-        <FlexWrapper
-          direction="row"
-          gap={12}
-          style={{ flex: 1, justifyContent: "space-between" }}
-        >
-          <Button type="outlined" onClick={close}>
-            취소
-          </Button>
-          <FlexWrapper direction="row" gap={12}>
-            <Button onClick={() => close()}>삭제</Button>
-            <Button onClick={() => close()}>수정</Button>
-          </FlexWrapper>
+      <AsyncBoundary isLoading={isLoading} isError={isError}>
+        <FlexWrapper gap={20} direction="column">
+          <ActivitySection label="활동 정보">
+            <ActivityDetail text={`활동명: ${data?.name}`} />
+            <ActivityDetail
+              text={`활동 분류: ${data ? getActivityTypeTagLabel(data.activityTypeEnumId) : "-"}`}
+            />
+            <ActivityDetail text="활동 기간:" />
+            <FlexWrapper
+              direction="column"
+              gap={12}
+              style={{ paddingLeft: 16 }}
+            >
+              {data?.durations.map((duration, index) => (
+                <Typography key={index}>
+                  {`${formatDate(duration.startTerm)} ~ ${formatDate(duration.endTerm)}`}
+                </Typography>
+              ))}
+            </FlexWrapper>
+            <ActivityDetail text={`활동 장소: ${data?.location}`} />
+            <ActivityDetail text={`활동 목적: ${data?.purpose}`} />
+            <ActivityDetail text={`활동 내용: ${data?.detail}`} />
+          </ActivitySection>
+          <ActivitySection
+            label={`활동 인원(${data?.participants.length ?? 0}명)`}
+          >
+            {data?.participants.map((participant, index) => (
+              <ActivityDetail key={index} text={`${participant.studentId}`} />
+            ))}
+          </ActivitySection>
+          <ActivitySection label="활동 증빙">
+            <ActivityDetail
+              text={`첨부 파일(${data?.evidenceFiles.length ?? 0}개)`}
+            />
+            {data && data.evidenceFiles.length > 0 && (
+              <FlexWrapper
+                direction="column"
+                gap={0}
+                style={{ paddingLeft: 16 }}
+              >
+                <ThumbnailPreviewList
+                  fileList={
+                    data.evidenceFiles.map(file => fromUUID(file.fileId)) ?? []
+                  }
+                  disabled
+                />
+              </FlexWrapper>
+            )}
+            <ActivityDetail text={`부가 설명: ${data?.evidence}`} />
+          </ActivitySection>
+          {viewOnly ? (
+            <FlexWrapper direction="row" gap={12}>
+              <Button type="outlined" onClick={close}>
+                닫기
+              </Button>
+            </FlexWrapper>
+          ) : (
+            <FlexWrapper
+              direction="row"
+              gap={12}
+              style={{
+                flex: 1,
+                alignItems: "flex-end",
+                justifyContent: "space-between",
+              }}
+            >
+              <Button type="outlined" onClick={close}>
+                취소
+              </Button>
+              <FlexWrapper direction="row" gap={12}>
+                <Button onClick={handleDelete}>삭제</Button>
+                <Button onClick={handleEdit}>수정</Button>
+              </FlexWrapper>
+            </FlexWrapper>
+          )}
         </FlexWrapper>
-      </FlexWrapper>
+      </AsyncBoundary>
     </Modal>
   );
 };

@@ -20,6 +20,7 @@ export const useGetActivityReport = (activityId: number) =>
 
       switch (status) {
         case 200:
+        case 304:
           return apiAct002.responseBodyMap[200].parse(data);
         default:
           throw new UnexpectedAPIResponseError();
@@ -46,18 +47,24 @@ defineAxiosMock(mock => {
       evidence: "Activity Evidence",
       evidenceFiles: [
         {
-          uuid: "file-uuid",
+          fileId: "file-uuid",
         },
       ],
       participants: [
         {
           studentId: 20200515,
+          studnetNumber: 20200515,
+          name: "이지윤",
         },
         {
           studentId: 20200513,
+          studnetNumber: 20200513,
+          name: "박병찬",
         },
         {
           studentId: 20230512,
+          studnetNumber: 20230512,
+          name: "이도라",
         },
       ],
     };

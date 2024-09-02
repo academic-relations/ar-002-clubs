@@ -21,12 +21,15 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     activities: z.array(
       z.object({
+        id: z.coerce.number().int().min(1),
         name: z.string(),
         activityTypeEnumId: z.nativeEnum(ActivityTypeEnum),
-        duration: z.object({
-          startTerm: z.coerce.date(),
-          endTerm: z.coerce.date(),
-        }),
+        durations: z.array(
+          z.object({
+            startTerm: z.coerce.date(),
+            endTerm: z.coerce.date(),
+          }),
+        ),
       }),
     ),
   }),

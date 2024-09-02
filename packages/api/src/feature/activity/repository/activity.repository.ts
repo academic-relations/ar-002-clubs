@@ -3,7 +3,7 @@ import {
   ActivityStatusEnum,
   ActivityTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { and, eq, gt, isNull, lte } from "drizzle-orm";
+import { and, asc, eq, gt, isNull, lte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -17,6 +17,7 @@ import {
   ActivityT,
   ProfessorSignStatus,
 } from "@sparcs-clubs/api/drizzle/schema/activity.schema";
+import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 @Injectable()
 export default class ActivityRepository {
@@ -308,15 +309,21 @@ export default class ActivityRepository {
       .from(ActivityT)
       .where(
         and(eq(ActivityT.activityId, activityId), isNull(ActivityT.deletedAt)),
-      );
+      )
+      .orderBy(asc(ActivityT.startTerm), asc(ActivityT.endTerm));
 
     return result;
   }
 
   async selectParticipantByActivityId(activityId: number) {
     const result = await this.db
-      .select()
+      .select({
+        studentId: ActivityParticipant.studentId,
+        studentNumber: Student.number,
+        name: Student.name,
+      })
       .from(ActivityParticipant)
+      .leftJoin(Student, eq(ActivityParticipant.studentId, Student.id))
       .where(
         and(
           eq(ActivityParticipant.activityId, activityId),

@@ -30,11 +30,12 @@ const ActivityTermRow: React.FC<{
       <DateRangeInput
         startValue={startMonth}
         endValue={endMonth}
-        limitStartValue="1970.01"
-        limitEndValue="2030.01"
-        placeholder="20XX.XX"
+        limitStartValue="1970.01.01"
+        limitEndValue="2030.01.01"
+        placeholder="20XX.XX.XX"
         onChange={handleDateChange}
         setErrorStatus={hasError => onError(index, hasError)}
+        useDays
       />
       <IconButton
         icon="delete"

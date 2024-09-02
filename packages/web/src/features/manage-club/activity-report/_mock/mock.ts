@@ -1,4 +1,5 @@
 import { ApiAct002ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
+import { ApiAct011ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
 
 import {
   ActivityStatusEnum,
@@ -75,19 +76,15 @@ export const mockNewActivityData = [
   },
 ];
 
-/* TODO: (@dora) replace with actual ApiAct011ResponseOk */
 export type PastActivityReport = {
   id: number;
   name: string;
   activityTypeEnumId: number;
-  duration: {
+  durations: {
     startTerm: Date;
     endTerm: Date;
   }[];
 };
-export interface ApiAct011ResponseOk {
-  activities: PastActivityReport[];
-}
 
 export const mockPastActivityData: ApiAct011ResponseOk = {
   activities: [
@@ -95,7 +92,7 @@ export const mockPastActivityData: ApiAct011ResponseOk = {
       id: 1,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 1,
-      duration: [
+      durations: [
         {
           startTerm: new Date("2024-03-11"),
           endTerm: new Date("2024-03-18"),
@@ -106,7 +103,7 @@ export const mockPastActivityData: ApiAct011ResponseOk = {
       id: 2,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 1,
-      duration: [
+      durations: [
         {
           startTerm: new Date("2024-03-11"),
           endTerm: new Date("2024-03-18"),
@@ -117,7 +114,7 @@ export const mockPastActivityData: ApiAct011ResponseOk = {
       id: 3,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 2,
-      duration: [
+      durations: [
         {
           startTerm: new Date("2024-03-11"),
           endTerm: new Date("2024-03-18"),
@@ -132,7 +129,7 @@ export const mockPastActivityData: ApiAct011ResponseOk = {
       id: 4,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 2,
-      duration: [
+      durations: [
         {
           startTerm: new Date("2024-03-11"),
           endTerm: new Date("2024-03-18"),
@@ -151,7 +148,7 @@ export const mockPastActivityData: ApiAct011ResponseOk = {
       id: 5,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 3,
-      duration: [
+      durations: [
         {
           startTerm: new Date("2024-03-11"),
           endTerm: new Date("2024-03-18"),
@@ -162,7 +159,7 @@ export const mockPastActivityData: ApiAct011ResponseOk = {
       id: 6,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 3,
-      duration: [
+      durations: [
         {
           startTerm: new Date("2024-03-11"),
           endTerm: new Date("2024-03-18"),
@@ -231,10 +228,10 @@ export const mockActivityDetailData: ApiAct002ResponseOkTemp = {
   evidence: "증거",
   evidenceFiles: [
     {
-      uuid: "file-uuid",
+      fileId: "file-uuid",
     },
     {
-      uuid: "file-uuid2",
+      fileId: "file-uuid2",
     },
   ],
   participants: [

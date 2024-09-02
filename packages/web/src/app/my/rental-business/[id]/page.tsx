@@ -2,8 +2,16 @@
 
 import React from "react";
 
-import MyRentalDetailFrame from "@sparcs-clubs/web/features/my/rental-business/frames/MyRentalDetailFrame";
+// 배포용 not found 페이지 (시작)
+import NotFound from "@sparcs-clubs/web/app/not-found";
 
-const MyRentalDetail = () => <MyRentalDetailFrame />;
+const TemporaryNotFound = () => <NotFound />;
 
-export default MyRentalDetail;
+export default TemporaryNotFound;
+// 배포용 not found 페이지 (끝)
+
+// import MyRentalDetailFrame from "@sparcs-clubs/web/features/my/rental-business/frames/MyRentalDetailFrame";
+
+// const MyRentalDetail = () => <MyRentalDetailFrame />;
+
+// export default MyRentalDetail;

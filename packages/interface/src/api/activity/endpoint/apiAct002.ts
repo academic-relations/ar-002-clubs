@@ -40,12 +40,14 @@ const responseBodyMap = {
     evidence: z.string(),
     evidenceFiles: z.array(
       z.object({
-        uuid: z.string().max(255),
+        fileId: z.string().max(255),
       }),
     ),
     participants: z.array(
       z.object({
         studentId: z.coerce.number().int().min(1),
+        studnetNumber: z.coerce.number().int().min(20000000),
+        name: z.string().max(255),
       }),
     ),
   }),

@@ -2,8 +2,16 @@
 
 import React from "react";
 
-import ActivityReportCreateFrame from "@sparcs-clubs/web/features/manage-club/activity-report/frames/ActivityReportCreateFrame";
+// 배포용 not found 페이지 (시작)
+import NotFound from "@sparcs-clubs/web/app/not-found";
 
-const ActivityReportCreate = () => <ActivityReportCreateFrame />;
+const TemporaryNotFound = () => <NotFound />;
 
-export default ActivityReportCreate;
+export default TemporaryNotFound;
+// 배포용 not found 페이지 (끝)
+
+// import ActivityReportCreateFrame from "@sparcs-clubs/web/features/manage-club/activity-report/frames/ActivityReportCreateFrame";
+
+// const ActivityReportCreate = () => <ActivityReportCreateFrame />;
+
+// export default ActivityReportCreate;
