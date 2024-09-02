@@ -139,11 +139,9 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
                     onChange={terms => {
                       const processedTerms = terms.map(term => ({
                         startTerm: new Date(
-                          `${term.startDate.replace(".", "-")}-01`,
+                          `${term.startDate.replace(".", "-")}`,
                         ),
-                        endTerm: new Date(
-                          `${term.endDate.replace(".", "-")}-01`,
-                        ),
+                        endTerm: new Date(`${term.endDate.replace(".", "-")}`),
                       }));
                       setValue("durations", processedTerms, {
                         shouldValidate: true,
