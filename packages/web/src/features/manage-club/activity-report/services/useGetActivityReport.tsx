@@ -50,6 +50,8 @@ defineAxiosMock(mock => {
       evidenceFiles: [
         {
           fileId: "file-uuid",
+          name: "file-name",
+          url: "file-url",
         },
       ],
       participants: [
