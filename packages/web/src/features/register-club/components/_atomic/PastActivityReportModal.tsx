@@ -22,6 +22,7 @@ import EditActivityReportModal from "./EditActivityReportModal";
 
 interface PastActivityReportModalProps {
   activityId: number;
+  profile: string;
   isOpen: boolean;
   close: VoidFunction;
   viewOnly?: boolean;
@@ -72,11 +73,15 @@ const ActivityDetail: React.FC<{ text: string }> = ({ text }) => (
 
 const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   activityId,
+  profile,
   isOpen,
   close,
   viewOnly = false,
 }) => {
-  const { data, isLoading, isError } = useGetActivityReport(activityId);
+  const { data, isLoading, isError } = useGetActivityReport(
+    profile,
+    activityId,
+  );
   const {
     mutate: deleteActivityReport,
     isSuccess: isDeleteSuccess,
@@ -92,6 +97,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
     overlay.open(
       ({ isOpen: isOpenEditActivityModal, close: closeEditActivityModal }) => (
         <EditActivityReportModal
+          profile={profile}
           activityId={activityId}
           isOpen={isOpenEditActivityModal}
           close={closeEditActivityModal}

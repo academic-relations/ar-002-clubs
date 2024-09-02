@@ -75,16 +75,26 @@ const ActivityReportMainFrame: React.FC = () => (
         <NewActivityReportList data={mockNewActivityData} />
       </SectionInner>
     </FoldableSectionTitle>
+    {/* TODO: profile 설정 */}
     <FoldableSectionTitle title="과거 활동 보고서">
       <PastSectionInner>
         <FoldableSection title="2023년 가을학기 (총 6개)">
-          <PastActivityReportList data={mockPastActivityData.activities} />
+          <PastActivityReportList
+            data={mockPastActivityData.activities}
+            profile="undergraduate"
+          />
         </FoldableSection>
         <FoldableSection title="2023년 봄학기 (총 6개)">
-          <PastActivityReportList data={mockPastActivityData.activities} />
+          <PastActivityReportList
+            data={mockPastActivityData.activities}
+            profile="undergraduate"
+          />
         </FoldableSection>
         <FoldableSection title="2022년 가을학기 (총 6개)">
-          <PastActivityReportList data={mockPastActivityData.activities} />
+          <PastActivityReportList
+            data={mockPastActivityData.activities}
+            profile="undergraduate"
+          />
         </FoldableSection>
       </PastSectionInner>
     </FoldableSectionTitle>
