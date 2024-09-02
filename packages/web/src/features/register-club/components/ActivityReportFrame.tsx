@@ -72,7 +72,7 @@ const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
           </OptionOuter>
           <PastActivityReportList
             data={data?.activities ?? []}
-            profile={profile ?? ""}
+            profile={profile?.type ?? ""}
           />
         </Card>
       </FlexWrapper>

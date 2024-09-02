@@ -55,11 +55,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
-    const accessToken = getLocalStorageItem("accessToken");
-    if (accessToken) {
+    const token = getLocalStorageItem("accessToken");
+    if (token) {
       setIsLoggedIn(true);
-      const decoded: { type?: string } = jwtDecode(accessToken);
-      setProfile(decoded.type);
+      const decoded: Profile = jwtDecode(token);
+      setProfile(decoded);
     }
   }, []);
 
@@ -156,12 +156,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   ChannelService.loadScript();
   ChannelService.boot({
     pluginKey: "f9e90cc5-6304-4987-8a60-5332d572c332",
-    memberId: profile?.id,
+    memberId: profile?.id.toString(),
     profile:
-      isLoggedIn && profile
+      profile !== undefined
         ? {
             name: profile.name,
-            email: profile.email,
+            email: profile?.email || null,
           }
         : undefined,
   });
