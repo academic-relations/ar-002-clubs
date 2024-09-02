@@ -1,6 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { zFileName } from "@sparcs-clubs/interface/common/commonString";
+
 /**
  * @version v0.1
  * @description ileId를 통해 다운로드용 링크를 얻습니다.
@@ -31,6 +33,7 @@ const responseBodyMap = {
       z.object({
         id: z.string().max(256),
         url: z.string(),
+        name: zFileName,
       }),
     ),
   }),
