@@ -230,7 +230,7 @@ export class ClubDelegateDRepository {
           isNull(Club.deletedAt),
         ),
       );
-    // logger.debug(result);
+    // logger.debug(result); // 로그가 너무 길어서 주석처리해 두었어요
     return result;
   }
 
