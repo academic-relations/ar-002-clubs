@@ -41,6 +41,8 @@ const responseBodyMap = {
     evidenceFiles: z.array(
       z.object({
         fileId: z.string().max(255),
+        name: z.string().max(255),
+        url: z.string().max(255),
       }),
     ),
     participants: z.array(

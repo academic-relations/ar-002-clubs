@@ -4,7 +4,6 @@ import { overlay } from "overlay-kit";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
-import { fromUUID } from "@sparcs-clubs/web/common/components/File/attachment";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import { ListItem } from "@sparcs-clubs/web/common/components/ListItem";
@@ -148,8 +147,11 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
                 >
                   <ThumbnailPreviewList
                     fileList={
-                      data.evidenceFiles.map(file => fromUUID(file.fileId)) ??
-                      []
+                      data.evidenceFiles.map(file => ({
+                        id: file.fileId,
+                        name: file.name,
+                        src: file.url,
+                      })) ?? []
                     }
                     disabled
                   />
