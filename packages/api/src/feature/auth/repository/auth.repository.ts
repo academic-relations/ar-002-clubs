@@ -201,7 +201,7 @@ export class AuthRepository {
     // professor_t에서 해당 professor_id이 있는지 확인 후 upsert
     // type이 "Employee"를 포함하는 경우 Employee table에서 해당 email이 있는지 확인 후 upsert
     // employee_t에서 해당 employee_id이 있는지 확인 후 upsert
-    if (type === "Teacher") {
+    if (type.includes("Teacher")) {
       await this.db
         .insert(Professor)
         .values({ userId: user.id, name, email })
