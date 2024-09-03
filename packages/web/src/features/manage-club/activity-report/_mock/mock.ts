@@ -229,9 +229,13 @@ export const mockActivityDetailData: ApiAct002ResponseOkTemp = {
   evidenceFiles: [
     {
       fileId: "file-uuid",
+      name: "file-name",
+      url: "file-url",
     },
     {
-      fileId: "file-uuid2",
+      fileId: "file-uuid",
+      name: "file-name",
+      url: "file-url",
     },
   ],
   participants: [
