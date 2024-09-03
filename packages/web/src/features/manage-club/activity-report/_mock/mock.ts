@@ -11,7 +11,7 @@ import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage
 import { Participant } from "../types/activityReport";
 
 export interface ParticipantTemp {
-  studentId: number; // 고유 ID
+  id: number; // 고유 ID
   studentNumber: number; // 학번
   name: string; // 이름
 }
@@ -171,40 +171,46 @@ export const mockPastActivityData: ApiAct011ResponseOk = {
 
 export const mockParticipantData: Participant[] = [
   {
-    studentId: "20200515",
+    id: 1,
+    studentNumber: 20200515,
     name: "이지윤",
-    phoneNumber: "XXX-XXXX-XXXX",
-    email: "nicolelee2001@kaist.ac.kr",
+    // phoneNumber: "XXX-XXXX-XXXX",
+    // email: "nicolelee2001@kaist.ac.kr",
   },
   {
-    studentId: "20210514",
+    id: 2,
+    studentNumber: 20210514,
     name: "박지윤",
-    phoneNumber: "XXX-XXXX-XXXX",
-    email: "nicolelee2001@kaist.ac.kr",
+    // phoneNumber: "XXX-XXXX-XXXX",
+    // email: "nicolelee2001@kaist.ac.kr",
   },
   {
-    studentId: "20200513",
+    id: 3,
+    studentNumber: 20200513,
     name: "박병찬",
-    phoneNumber: "XXX-XXXX-XXXX",
-    email: "nicolelee2001@kaist.ac.kr",
+    // phoneNumber: "XXX-XXXX-XXXX",
+    // email: "nicolelee2001@kaist.ac.kr",
   },
   {
-    studentId: "20230512",
+    id: 4,
+    studentNumber: 20230512,
     name: "이도라",
-    phoneNumber: "XXX-XXXX-XXXX",
-    email: "nicolelee2001@kaist.ac.kr",
+    // phoneNumber: "XXX-XXXX-XXXX",
+    // email: "nicolelee2001@kaist.ac.kr",
   },
   {
-    studentId: "20240510",
+    id: 5,
+    studentNumber: 20240510,
     name: "스팍스",
-    phoneNumber: "XXX-XXXX-XXXX",
-    email: "nicolelee2001@kaist.ac.kr",
+    // phoneNumber: "XXX-XXXX-XXXX",
+    // email: "nicolelee2001@kaist.ac.kr",
   },
   {
-    studentId: "20200230",
+    id: 6,
+    studentNumber: 20200230,
     name: "스팍스",
-    phoneNumber: "XXX-XXXX-XXXX",
-    email: "nicolelee2001@kaist.ac.kr",
+    // phoneNumber: "XXX-XXXX-XXXX",
+    // email: "nicolelee2001@kaist.ac.kr",
   },
 ];
 
@@ -240,22 +246,22 @@ export const mockActivityDetailData: ApiAct002ResponseOkTemp = {
   ],
   participants: [
     {
-      studentId: 1,
+      id: 1,
       studentNumber: 20200510,
       name: "이지윤",
     },
     {
-      studentId: 2,
+      id: 2,
       studentNumber: 20200511,
       name: "박병찬",
     },
     {
-      studentId: 3,
+      id: 3,
       studentNumber: 20230510,
       name: "이도라",
     },
     {
-      studentId: 4,
+      id: 4,
       studentNumber: 20240510,
       name: "스팍스",
     },

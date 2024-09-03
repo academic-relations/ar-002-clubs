@@ -280,7 +280,7 @@ export default class ActivityService {
       evidenceFiles,
       participants: participants.map(e => ({
         studentId: e.studentId,
-        studnetNumber: e.studentNumber,
+        studentNumber: e.studentNumber,
         name: e.name,
       })),
       durations: duration.map(e => ({
@@ -667,7 +667,7 @@ export default class ActivityService {
       evidenceFiles,
       participants: participants.map(e => ({
         studentId: e.studentId,
-        studnetNumber: e.studentNumber,
+        studentNumber: e.studentNumber,
         name: e.name,
       })),
       durations: duration.map(e => ({
@@ -711,7 +711,7 @@ export default class ActivityService {
       evidenceFiles,
       participants: participants.map(e => ({
         studentId: e.studentId,
-        studnetNumber: e.studentNumber,
+        studentNumber: e.studentNumber,
         name: e.name,
       })),
       durations: duration.map(e => ({

@@ -48,7 +48,7 @@ const responseBodyMap = {
     participants: z.array(
       z.object({
         studentId: z.coerce.number().int().min(1),
-        studnetNumber: z.coerce.number().int().min(20000000),
+        studentNumber: z.coerce.number().int().min(20000000),
         name: z.string().max(255),
       }),
     ),

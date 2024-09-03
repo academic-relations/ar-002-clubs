@@ -58,17 +58,17 @@ defineAxiosMock(mock => {
       participants: [
         {
           studentId: 20200515,
-          studnetNumber: 20200515,
+          studentNumber: 20200515,
           name: "이지윤",
         },
         {
           studentId: 20200513,
-          studnetNumber: 20200513,
+          studentNumber: 20200513,
           name: "박병찬",
         },
         {
           studentId: 20230512,
-          studnetNumber: 20230512,
+          studentNumber: 20230512,
           name: "이도라",
         },
       ],

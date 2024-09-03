@@ -23,10 +23,15 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({
   clubList = [],
   editMode = false,
 }) => {
-  const { control, resetField, setValue } =
+  const { control, resetField, setValue, getValues, watch } =
     useFormContext<ApiReg001RequestBody>();
 
-  const [isCheckedClubName, setIsCheckedClubName] = useState(false);
+  const krName = watch("clubNameKr");
+  const enName = watch("clubNameEn");
+
+  const [isCheckedClubName, setIsCheckedClubName] = useState(
+    getValues("clubNameKr") !== "",
+  );
 
   const clubOptions = useCallback(
     () =>
@@ -59,6 +64,7 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({
           renderItem={props => (
             <TextInput
               {...props}
+              value={krName}
               label="동아리명 (국문)"
               placeholder="국문 동아리명을 입력해주세요"
             />
@@ -71,6 +77,7 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({
           renderItem={props => (
             <TextInput
               {...props}
+              value={enName}
               label="동아리명 (영문)"
               placeholder="영문 동아리명을 입력해주세요"
             />

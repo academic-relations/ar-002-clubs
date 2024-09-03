@@ -65,7 +65,7 @@ const columns = [
       </CheckboxCenterPlacer>
     ),
   }),
-  columnHelper.accessor("studentId", {
+  columnHelper.accessor("studentNumber", {
     header: "학번",
     cell: info => info.getValue(),
     enableGlobalFilter: true,
@@ -75,14 +75,14 @@ const columns = [
     cell: info => info.getValue(),
     enableGlobalFilter: true,
   }),
-  columnHelper.accessor("phoneNumber", {
-    header: "전화번호",
-    cell: info => info.getValue(),
-  }),
-  columnHelper.accessor("email", {
-    header: "이메일",
-    cell: info => info.getValue(),
-  }),
+  // columnHelper.accessor("phoneNumber", {
+  //   header: "전화번호",
+  //   cell: info => info.getValue(),
+  // }),
+  // columnHelper.accessor("email", {
+  //   header: "이메일",
+  //   cell: info => info.getValue(),
+  // }),
 ];
 
 const containsTextFilter: FilterFn<Participant> = (
@@ -172,9 +172,9 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
         }
       >
         {selected.length ? (
-          selected.map((participant, i) => (
-            <Typography key={i} fs={16} lh={20} fw="REGULAR">
-              {participant.studentId} {participant.name}
+          selected.map(participant => (
+            <Typography key={participant.id} fs={16} lh={20} fw="REGULAR">
+              {participant.studentNumber} {participant.name}
             </Typography>
           ))
         ) : (

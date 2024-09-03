@@ -128,7 +128,9 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
             </Typography>
 
             {data?.participants.map((participant, index) => (
-              <ListItem key={index}>{participant.studentId}</ListItem>
+              <ListItem key={index}>
+                {participant.studentNumber} {participant.name}
+              </ListItem>
             ))}
           </FlexWrapper>
           <FlexWrapper gap={16} direction="column">

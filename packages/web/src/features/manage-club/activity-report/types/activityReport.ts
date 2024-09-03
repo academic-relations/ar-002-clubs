@@ -11,10 +11,11 @@ export interface NewActivityReport extends PastActivityReport {
 }
 
 export interface Participant {
-  studentId: string;
+  id: number;
+  studentNumber: number;
   name: string;
-  phoneNumber: string;
-  email: string;
+  // phoneNumber: string;
+  // email: string;
 }
 
 export interface ActivityReport {
