@@ -172,3 +172,15 @@ export const Department = mysqlTable("department", {
   createdAt: timestamp("created_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),
 });
+
+export const UserPrivacyPolicyAgreement = mysqlTable(
+  "user_privacy_policy_agreement",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    userId: int("user_id")
+      .notNull()
+      .references(() => User.id),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at"),
+  },
+);

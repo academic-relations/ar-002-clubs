@@ -8,10 +8,10 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
-import ActivityManageFrame from "@sparcs-clubs/web/features/manage-club/frames/ActivityManageFrame";
+// import ActivityManageFrame from "@sparcs-clubs/web/features/manage-club/frames/ActivityManageFrame";
 import InfoManageFrame from "@sparcs-clubs/web/features/manage-club/frames/InfoManageFrame";
-import MembersManageFrame from "@sparcs-clubs/web/features/manage-club/frames/MembersManageFrame";
-import ServiceManageFrame from "@sparcs-clubs/web/features/manage-club/frames/ServiceManageFrame";
+// import MembersManageFrame from "@sparcs-clubs/web/features/manage-club/frames/MembersManageFrame";
+// import ServiceManageFrame from "@sparcs-clubs/web/features/manage-club/frames/ServiceManageFrame";
 import { useCheckManageClub } from "@sparcs-clubs/web/hooks/checkManageClub";
 
 const ManageClubFrame: React.FC = () => {
@@ -34,9 +34,10 @@ const ManageClubFrame: React.FC = () => {
       <InfoManageFrame
         isRepresentative={delegate === ClubDelegateEnum.Representative}
       />
-      <ActivityManageFrame />
+      {/* TODO: 회원 등록 배포 때 MembersManageFrame 주석 해제 */}
+      {/* <ActivityManageFrame />
       <MembersManageFrame />
-      <ServiceManageFrame />
+      <ServiceManageFrame /> */}
     </FlexWrapper>
   );
 };

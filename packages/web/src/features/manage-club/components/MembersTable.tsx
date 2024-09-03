@@ -1,31 +1,107 @@
 import React from "react";
 
+import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
+
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
+import { overlay } from "overlay-kit";
+
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import TableButton from "@sparcs-clubs/web/common/components/Table/TableButton";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { MemTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
+
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-import {
-  type Members,
-  MemberStatusEnum,
-} from "../services/_mock/mockManageClub";
+import { patchClubMemberRegistration } from "../members/services/patchClubMemberRegistration";
 
 interface MembersTableProps {
-  memberList: Members[];
+  memberList: ApiReg008ResponseOk["applies"];
+  clubName: string;
+  clubId: number;
 }
 
-const columnHelper = createColumnHelper<Members>();
+const openApproveModal = (
+  member: ApiReg008ResponseOk["applies"][0],
+  clubName: string,
+  clubId: number,
+) => {
+  overlay.open(({ isOpen, close }) => (
+    <Modal isOpen={isOpen}>
+      <CancellableModalContent
+        confirmButtonText="승인"
+        onConfirm={async () => {
+          await patchClubMemberRegistration(
+            { applyId: member.id },
+            {
+              clubId,
+              applyStatusEnumId:
+                RegistrationApplicationStudentStatusEnum.Approved,
+            },
+          );
+          close();
+        }}
+        onClose={() => {
+          close();
+        }}
+      >
+        {member.student.studentNumber} {member.student.name} 학생의{" "}
+        {new Date().getFullYear()}
+        년도 {new Date().getMonth() < 7 ? "봄학기" : "가을학기"} {clubName}{" "}
+        동아리 신청을
+        <br /> 승인하시겠습니까?
+      </CancellableModalContent>
+    </Modal>
+  ));
+};
 
-const columns = [
-  columnHelper.accessor("status", {
+const openRejectModal = (
+  member: ApiReg008ResponseOk["applies"][0],
+  clubName: string,
+  clubId: number,
+) => {
+  overlay.open(({ isOpen, close }) => (
+    <Modal isOpen={isOpen}>
+      <CancellableModalContent
+        confirmButtonText="반려"
+        onConfirm={async () => {
+          await patchClubMemberRegistration(
+            { applyId: member.id },
+            {
+              clubId,
+              applyStatusEnumId:
+                RegistrationApplicationStudentStatusEnum.Rejected,
+            },
+          );
+          close();
+        }}
+        onClose={() => {
+          close();
+        }}
+      >
+        {member.student.studentNumber} {member.student.name} 학생의{" "}
+        {new Date().getFullYear()}
+        년도 {new Date().getMonth() < 7 ? "봄학기" : "가을학기"} {clubName}{" "}
+        동아리 신청을
+        <br /> 반려하시겠습니까?
+      </CancellableModalContent>
+    </Modal>
+  ));
+};
+
+const columnHelper = createColumnHelper<ApiReg008ResponseOk["applies"][0]>();
+
+const columnsFunction = (clubName: string, clubId: number) => [
+  columnHelper.accessor("applyStatusEnumId", {
     header: "상태",
     cell: info => {
       const { color, text } = getTagDetail(info.getValue(), MemTagList);
@@ -33,27 +109,27 @@ const columns = [
     },
     size: 5,
   }),
-  columnHelper.accessor("applicationDate", {
+  columnHelper.accessor("createdAt", {
     header: "신청 일시",
     cell: info => formatDateTime(info.getValue()),
     size: 30,
   }),
-  columnHelper.accessor("studentId", {
+  columnHelper.accessor("student.studentNumber", {
     header: "학번",
     cell: info => info.getValue(),
     size: 5,
   }),
-  columnHelper.accessor("applicantName", {
+  columnHelper.accessor("student.name", {
     header: "신청자",
     cell: info => info.getValue(),
     size: 5,
   }),
-  columnHelper.accessor("phoneNumber", {
+  columnHelper.accessor("student.phoneNumber", {
     header: "전화번호",
     cell: info => info.getValue(),
     size: 20,
   }),
-  columnHelper.accessor("email", {
+  columnHelper.accessor("student.email", {
     header: "이메일",
     cell: info => info.getValue(),
     size: 20,
@@ -63,11 +139,14 @@ const columns = [
     header: "비고",
     cell: info => {
       const member = info.row.original;
-      return member.status === MemberStatusEnum.Applied ? (
+      return member.applyStatusEnumId ===
+        RegistrationApplicationStudentStatusEnum.Pending ? (
         <TableButton
           text={["승인", "반려"]}
-          onClick={[() => {}, () => {}]}
-          // TODO: 승인 반려 기능 넣기
+          onClick={[
+            () => openApproveModal(member, clubName, clubId),
+            () => openRejectModal(member, clubName, clubId),
+          ]}
         />
       ) : (
         " "
@@ -77,7 +156,12 @@ const columns = [
   }),
 ];
 
-const MembersTable: React.FC<MembersTableProps> = ({ memberList }) => {
+const MembersTable: React.FC<MembersTableProps> = ({
+  memberList,
+  clubName,
+  clubId,
+}) => {
+  const columns = columnsFunction(clubName, clubId);
   const table = useReactTable({
     columns,
     data: memberList,

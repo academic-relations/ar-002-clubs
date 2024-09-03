@@ -42,6 +42,7 @@ const StyledLink = styled(Link)`
 
 const NavItem = ({ name, path = "", sub = [], highlight = false }: Path) => {
   const [isHover, setIsHover] = useState(false);
+
   return (
     <NavItemInner
       highlight={highlight}

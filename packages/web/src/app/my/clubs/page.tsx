@@ -10,6 +10,7 @@ import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import NotForExecutive from "@sparcs-clubs/web/common/frames/NotForExecutive";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import MyClubsMainFrame from "@sparcs-clubs/web/features/my/clubs/frames/MyClubsMainFrame";
+import MyClubsProfessorFrame from "@sparcs-clubs/web/features/my/clubs/frames/MyClubsProfessorFrame";
 
 const MyClubs = () => {
   const { isLoggedIn, login, profile } = useAuth();
@@ -29,7 +30,7 @@ const MyClubs = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile === "executive") {
+  if (profile?.type === "executive") {
     return <NotForExecutive />;
   }
 
@@ -42,7 +43,11 @@ const MyClubs = () => {
         ]}
         title="나의 동아리"
       />
-      <MyClubsMainFrame />
+      {profile?.type === "professor" ? (
+        <MyClubsProfessorFrame />
+      ) : (
+        <MyClubsMainFrame />
+      )}
     </FlexWrapper>
   );
 };

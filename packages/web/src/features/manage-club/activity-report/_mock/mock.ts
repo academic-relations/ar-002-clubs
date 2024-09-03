@@ -1,4 +1,5 @@
 import { ApiAct002ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
+import { ApiAct011ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
 
 import {
   ActivityStatusEnum,
@@ -75,44 +76,98 @@ export const mockNewActivityData = [
   },
 ];
 
-export const mockPastActivityData = [
-  {
-    activity: "개발개발한 어떠한 활동",
-    category: "동아리 성격에 합치하는 내부 활동",
-    startDate: new Date("2024-03-11"),
-    endDate: new Date("2024-03-18"),
-  },
-  {
-    activity: "개발개발한 어떠한 활동",
-    category: "동아리 성격에 합치하는 내부 활동",
-    startDate: new Date("2024-03-11"),
-    endDate: new Date("2024-03-18"),
-  },
-  {
-    activity: "개발개발한 어떠한 활동",
-    category: "동아리 성격에 합치하는 외부 활동",
-    startDate: new Date("2024-03-11"),
-    endDate: new Date("2024-03-18"),
-  },
-  {
-    activity: "개발개발한 어떠한 활동",
-    category: "동아리 성격에 합치하는 외부 활동",
-    startDate: new Date("2024-03-11"),
-    endDate: new Date("2024-03-18"),
-  },
-  {
-    activity: "개발개발한 어떠한 활동",
-    category: "동아리 성격에 합치하는 내부 활동",
-    startDate: new Date("2024-03-11"),
-    endDate: new Date("2024-03-18"),
-  },
-  {
-    activity: "2024년도 봄의기 MT",
-    category: "동아리 성격에 합치하지 않는 활동",
-    startDate: new Date("2024-03-11"),
-    endDate: new Date("2024-03-18"),
-  },
-];
+export type PastActivityReport = {
+  id: number;
+  name: string;
+  activityTypeEnumId: number;
+  durations: {
+    startTerm: Date;
+    endTerm: Date;
+  }[];
+};
+
+export const mockPastActivityData: ApiAct011ResponseOk = {
+  activities: [
+    {
+      id: 1,
+      name: "개발개발한 어떠한 활동",
+      activityTypeEnumId: 1,
+      durations: [
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: "개발개발한 어떠한 활동",
+      activityTypeEnumId: 1,
+      durations: [
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+      ],
+    },
+    {
+      id: 3,
+      name: "개발개발한 어떠한 활동",
+      activityTypeEnumId: 2,
+      durations: [
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+      ],
+    },
+    {
+      id: 4,
+      name: "개발개발한 어떠한 활동",
+      activityTypeEnumId: 2,
+      durations: [
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+      ],
+    },
+    {
+      id: 5,
+      name: "개발개발한 어떠한 활동",
+      activityTypeEnumId: 3,
+      durations: [
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+      ],
+    },
+    {
+      id: 6,
+      name: "개발개발한 어떠한 활동",
+      activityTypeEnumId: 3,
+      durations: [
+        {
+          startTerm: new Date("2024-03-11"),
+          endTerm: new Date("2024-03-18"),
+        },
+      ],
+    },
+  ],
+};
 
 export const mockParticipantData: Participant[] = [
   {
@@ -173,10 +228,10 @@ export const mockActivityDetailData: ApiAct002ResponseOkTemp = {
   evidence: "증거",
   evidenceFiles: [
     {
-      uuid: "file-uuid",
+      fileId: "file-uuid",
     },
     {
-      uuid: "file-uuid2",
+      fileId: "file-uuid2",
     },
   ],
   participants: [

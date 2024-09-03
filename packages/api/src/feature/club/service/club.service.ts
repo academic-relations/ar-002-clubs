@@ -30,6 +30,7 @@ import type {
   ApiClb005RequestParam,
   ApiClb005ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb005";
+import type { ApiClb016ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb016";
 
 @Injectable()
 export class ClubService {
@@ -218,5 +219,71 @@ export class ClubService {
       );
     // result가 null인지 확인해서 null인 경우 에러?
     return {};
+  }
+
+  async getProfessorClubsMy(professorId: number): Promise<ApiClb016ResponseOk> {
+    const professorSemesters =
+      await this.clubTRepository.findProfessorSemester(professorId);
+
+    const result = await Promise.all(
+      professorSemesters.map(async semester => {
+        const clubs = await Promise.all(
+          semester.clubs.map(async (club: { id: number }) => {
+            const clubName = await this.clubRepository.findClubName(club.id);
+            const clubInfo = await this.clubTRepository.findClubDetail(
+              semester.id,
+              club.id,
+            );
+            const totalMemberCnt =
+              await this.clubStudentTRepository.findTotalMemberCnt(
+                club.id,
+                semester.id,
+              );
+            const representative =
+              await this.clubDelegateDRepository.findRepresentativeName(
+                club.id,
+                semester.startTerm,
+              );
+            const isPermanent =
+              await this.divisionPermanentClubDRepository.findPermenantClub(
+                club.id,
+                semester.startTerm,
+              );
+
+            return {
+              type: clubInfo.clubStatusEnumId,
+              id: club.id,
+              name_kr: clubName.name_kr,
+              name_en: clubName.name_en,
+              isPermanent,
+              characteristic: clubInfo.characteristicKr,
+              representative: representative
+                ? representative.name
+                : "기록 없음",
+              advisor: clubInfo.advisor,
+              totalMemberCnt,
+            };
+          }),
+        );
+
+        return {
+          id: semester.id,
+          name: semester.name,
+          clubs,
+        };
+      }),
+    );
+
+    const uniqueSemesters = result.reduce((acc, curr) => {
+      const existingSemester = acc.find(s => s.id === curr.id);
+      if (existingSemester) {
+        existingSemester.clubs.push(...curr.clubs);
+      } else {
+        acc.push(curr);
+      }
+      return acc;
+    }, []);
+
+    return { semesters: uniqueSemesters };
   }
 }

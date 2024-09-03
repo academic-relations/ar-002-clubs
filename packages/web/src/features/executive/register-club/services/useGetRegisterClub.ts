@@ -21,7 +21,13 @@ export const useGetRegisterClub = (requestQuery: ApiReg014RequestQuery) =>
 
       switch (status) {
         case 200:
+        case 304: {
+          if (data.total === 0 && data.items.length === 0 && data.offset)
+            // items = []일 때 isError = true 방지
+            return data;
           return apiReg014.responseBodyMap[200].parse(data);
+        }
+
         default:
           throw new UnexpectedAPIResponseError();
       }

@@ -1,6 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { zClubName } from "@sparcs-clubs/interface/common/commonString";
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 /**
@@ -23,6 +25,10 @@ const responseBodyMap = {
       z.object({
         id: z.coerce.number().int().min(1),
         clubId: z.coerce.number().int().min(1),
+        clubNameKr: zClubName,
+        type: z.nativeEnum(ClubTypeEnum), // 동아리 유형(정동아리 | 가동아리)
+        isPermanent: z.coerce.boolean(), // 상임동아리 여부
+        divisionName: z.string().max(128),
         applyStatusEnumId: z.nativeEnum(
           RegistrationApplicationStudentStatusEnum,
         ),
@@ -34,6 +40,10 @@ const responseBodyMap = {
       z.object({
         id: z.coerce.number().int().min(1),
         clubId: z.coerce.number().int().min(1),
+        clubNameKr: zClubName,
+        type: z.nativeEnum(ClubTypeEnum), // 동아리 유형(정동아리 | 가동아리)
+        isPermanent: z.coerce.boolean(), // 상임동아리 여부
+        divisionName: z.string().max(128),
         applyStatusEnumId: z.nativeEnum(
           RegistrationApplicationStudentStatusEnum,
         ),

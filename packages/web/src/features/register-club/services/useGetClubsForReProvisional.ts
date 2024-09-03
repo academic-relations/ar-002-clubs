@@ -22,6 +22,7 @@ const useGetClubsForReProvisional = () =>
 
       switch (status) {
         case 200:
+        case 304:
           return apiReg018.responseBodyMap[200].parse(data);
         default:
           throw new UnexpectedAPIResponseError();

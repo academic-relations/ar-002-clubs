@@ -1,6 +1,7 @@
 import { HttpException } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import cookieParser from "cookie-parser";
+import session from "express-session";
 import { ZodError } from "zod";
 
 import { env } from "@sparcs-clubs/api/env";
@@ -15,8 +16,18 @@ import {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
+
+  app.use(
+    session({
+      secret: env.SECRET_KEY,
+      resave: false,
+      saveUninitialized: false,
+      cookie: { maxAge: 600000 },
+    }),
+  );
+
   // localhost에서의 cors 해결
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === "local") {
     app.enableCors({
       origin: `http://localhost:${process.env.CLIENT_PORT}`,
       credentials: true,

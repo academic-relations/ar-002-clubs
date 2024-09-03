@@ -1,9 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import { ApiAct007RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
+import {
+  ApiAct008RequestBody,
+  ApiAct008RequestParam,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
 import { ActivityDeadlineEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
+import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 
 import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
 import ActivityRepository from "../repository/activity.repository";
@@ -15,6 +21,22 @@ import type {
   ApiAct003RequestParam,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
 import type { ApiAct005ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
+import type {
+  ApiAct010RequestQuery,
+  ApiAct010ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct010";
+import type {
+  ApiAct011RequestQuery,
+  ApiAct011ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
+import type {
+  ApiAct012RequestQuery,
+  ApiAct012ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct012";
+import type {
+  ApiAct013RequestQuery,
+  ApiAct013ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct013";
 
 @Injectable()
 export default class ActivityService {
@@ -22,12 +44,13 @@ export default class ActivityService {
     private activityRepository: ActivityRepository,
     private activityActivityTermRepository: ActivityActivityTermRepository,
     private clubPublicService: ClubPublicService,
+    private filePublicService: FilePublicService,
   ) {}
 
   /**
    * @param activityId 활동 id
    * @returns 해당id의 활동이 존재할 경우 그 정보를 리턴합니다.
-   * 존재하지 않을 경우 not found exception을 throw합니다.
+   * 존재하지 않을 경우 not found exception을 throw합니다.`
    */
   private async getActivity(param: { activityId: number }) {
     const activities = await this.activityRepository.selectActivityByActivityId(
@@ -182,6 +205,41 @@ export default class ActivityService {
     }));
   }
 
+  /**
+   * @description getStudentActivitiesAvailableMembers의 서비스 진입점입니다.
+   */
+  async getStudentActivitiesAvailableMembers(param: {
+    studentId: number;
+    query: ApiAct010RequestQuery;
+  }): Promise<ApiAct010ResponseOk> {
+    if (
+      !(await this.clubPublicService.isStudentDelegate(
+        param.studentId,
+        param.query.clubId,
+      ))
+    )
+      throw new HttpException(
+        "It seems that you are not a delegate of the club",
+        HttpStatus.BAD_REQUEST,
+      );
+
+    const result = await this.clubPublicService.getMemberFromDuration({
+      clubId: param.query.clubId,
+      duration: {
+        startTerm: param.query.startTerm,
+        endTerm: param.query.endTerm,
+      },
+    });
+
+    return {
+      students: result.map(e => ({
+        id: e.studentId,
+        name: e.name,
+        studentNumber: e.studentNumber,
+      })),
+    };
+  }
+
   async getStudentActivity(
     activityId: number,
     studentId: number,
@@ -210,10 +268,12 @@ export default class ActivityService {
       detail: activity.detail,
       evidence: activity.evidence,
       evidenceFiles: evidence.map(e => ({
-        uuid: e.fileId,
+        fileId: e.fileId,
       })),
       participants: participants.map(e => ({
         studentId: e.studentId,
+        studnetNumber: e.studentNumber,
+        name: e.name,
       })),
       durations: duration.map(e => ({
         startTerm: e.startTerm,
@@ -341,7 +401,7 @@ export default class ActivityService {
       purpose: body.purpose,
       detail: body.detail,
       evidence: body.evidence,
-      evidenceFileIds: body.evidenceFiles.map(e => e.uuid),
+      evidenceFileIds: body.evidenceFiles.map(e => e.fileId),
       participantIds: body.participants.map(e => e.studentId),
       activityDId: activity.activityDId,
     });
@@ -350,5 +410,290 @@ export default class ActivityService {
         "Failed to update",
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+  }
+
+  async postStudentActivityProvisional(
+    body: ApiAct007RequestBody,
+    studentId: number,
+  ): Promise<void> {
+    // 학생이 동아리 대표자 또는 대의원이 맞는지 확인합니다.
+    await this.checkIsStudentDelegate({ studentId, clubId: body.clubId });
+
+    // 오늘이 활동보고서 작성기간이거나, 예외적 작성기간인지 확인하지 않습니다.
+
+    const activityD = await this.getLastActivityD();
+    // 현재학기에 동아리원이 아니였던 참가자가 있는지 검사합니다.
+    const participantIds = await Promise.all(
+      body.participants.map(
+        async e =>
+          // if (
+          //   !(await this.clubPublicService.isStudentBelongsTo(
+          //     e.studentId,
+          //     body.clubId,
+          //   ))
+          // )
+          //   throw new HttpException(
+          //     "Some student is not belonged to the club",
+          //     HttpStatus.BAD_REQUEST,
+          //   );
+          e.studentId,
+      ),
+    );
+    // 파일 유효한지 검사합니다.
+    const evidenceFiles = await Promise.all(
+      body.evidenceFiles.map(key =>
+        this.filePublicService.getFileInfoById(key.fileId),
+      ),
+    );
+
+    const isInsertionSucceed = await this.activityRepository.insertActivity({
+      ...body,
+      evidenceFileIds: evidenceFiles.map(row => row.id),
+      participantIds,
+      activityDId: activityD.id,
+      duration: body.durations,
+    });
+
+    if (!isInsertionSucceed)
+      throw new HttpException(
+        "Failed to insert",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+  }
+
+  async putStudentActivityProvisional(
+    param: ApiAct008RequestParam,
+    body: ApiAct008RequestBody,
+    studentId: number,
+  ): Promise<void> {
+    const activity = await this.getActivity({ activityId: param.activityId });
+    // 학생이 동아리 대표자 또는 대의원이 맞는지 확인합니다.
+    await this.checkIsStudentDelegate({ studentId, clubId: activity.clubId });
+    // 오늘이 활동보고서 작성기간이거나, 예외적 작성기간인지 확인하지 않습니다.
+    // 해당 활동이 지난 활동기간에 대한 활동인지 확인하지 않습니다.
+    const lastActivityD = await this.getLastActivityD();
+
+    // 제출한 활동 기간들이 지난 활동기간 이내인지 확인하지 않습니다.
+
+    // 파일 uuid의 유효성을 검사합니다.
+    const evidenceFiles = await Promise.all(
+      body.evidenceFiles.map(key =>
+        this.filePublicService.getFileInfoById(key.fileId),
+      ),
+    );
+    // 참여 학생이 지난 활동기간 동아리의 소속원이였는지 확인합니다.
+    const activityDStartSemester =
+      await this.clubPublicService.dateToSemesterId(lastActivityD.startTerm);
+    const activityDEndSemester = await this.clubPublicService.dateToSemesterId(
+      lastActivityD.endTerm,
+    );
+    const members = (
+      await this.clubPublicService.getMemberFromSemester({
+        semesterId: activityDStartSemester,
+        clubId: activity.clubId,
+      })
+    ).concat(
+      await this.clubPublicService.getMemberFromSemester({
+        semesterId: activityDEndSemester,
+        clubId: activity.clubId,
+      }),
+    );
+    body.participants.forEach(participant => {
+      if (
+        members.find(e => e.studentId === participant.studentId) === undefined
+      )
+        throw new HttpException(
+          "Some participant is not belonged to the club in the activity duration",
+          HttpStatus.BAD_REQUEST,
+        );
+    });
+
+    // PUT 처리를 시작합니다.
+    const isUpdateSucceed = this.activityRepository.updateActivity({
+      activityId: param.activityId,
+      name: body.name,
+      activityTypeEnumId: body.activityTypeEnumId,
+      duration: body.durations,
+      location: body.location,
+      purpose: body.purpose,
+      detail: body.detail,
+      evidence: body.evidence,
+      evidenceFileIds: evidenceFiles.map(e => e.id),
+      participantIds: body.participants.map(e => e.studentId),
+      activityDId: activity.activityDId,
+    });
+    if (!isUpdateSucceed)
+      throw new HttpException(
+        "Failed to update",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+  }
+
+  /**
+   * @param clubId 동아리 ID
+   * @description REG-011, 012, 013에서 공통적으로 이용하는 동아리 활동 전체조회 입니다.
+   * @returns 해당 동아리가 작성한 모든 활동을 REG-011의 리턴 타입에 맞추어 가져옵니다.
+   */
+  private async getProvisionalActivities(param: { clubId: number }) {
+    const result = await this.activityRepository.selectActivityByClubId({
+      clubId: param.clubId,
+    });
+
+    const activities = await Promise.all(
+      result.map(async activity => {
+        const durations = (
+          await this.activityRepository.selectDurationByActivityId(activity.id)
+        ).map(e => ({
+          startTerm: e.startTerm,
+          endTerm: e.endTerm,
+        }));
+
+        // 가장 빠른 startTerm을 추출
+        const earliestStartTerm = durations[0]?.startTerm;
+
+        // 가장 늦은 endTerm을 추출 (startTerm이 같을 경우 대비)
+        const latestEndTerm = durations[0]?.endTerm;
+
+        return {
+          id: activity.id,
+          name: activity.name,
+          activityTypeEnumId: activity.activityTypeEnumId,
+          durations,
+          earliestStartTerm, // 추후 정렬을 위해 추가
+          latestEndTerm, // 추후 정렬을 위해 추가
+        };
+      }),
+    );
+
+    // activities를 duration의 가장 빠른 startTerm 기준으로 오름차순 정렬
+    // startTerm이 같으면 가장 늦은 endTerm 기준으로 내림차순 정렬
+    activities.sort((a, b) => {
+      if (a.earliestStartTerm === b.earliestStartTerm) {
+        return a.latestEndTerm > b.latestEndTerm ? -1 : 1; // endTerm 내림차순
+      }
+      return a.earliestStartTerm < b.earliestStartTerm ? -1 : 1; // startTerm 오름차순
+    });
+
+    return activities.map(activity => ({
+      id: activity.id,
+      name: activity.name,
+      activityTypeEnumId: activity.activityTypeEnumId,
+      durations: activity.durations,
+    }));
+  }
+
+  /**
+   * @param param
+   * @description getStudentProvisionalActivities와 대응되는 서비스 진입점 입니다.
+   */
+  async getStudentProvisionalActivities(param: {
+    studentId: number;
+    query: ApiAct011RequestQuery;
+  }): Promise<ApiAct011ResponseOk> {
+    // 해당 학생이 동아리 대표자가 맞는지 검사합니다.
+    await this.checkIsStudentDelegate({
+      studentId: param.studentId,
+      clubId: param.query.clubId,
+    });
+    const activities = await this.getProvisionalActivities({
+      clubId: param.query.clubId,
+    });
+    return { activities };
+  }
+
+  /**
+   * @param param
+   * @description getStudentProvisionalActivities와 대응되는 서비스 진입점 입니다.
+   */
+  async getExecutiveProvisionalActivities(param: {
+    query: ApiAct012RequestQuery;
+  }): Promise<ApiAct012ResponseOk> {
+    // 집행부원은 아직 검사하는 권한이 없습니다.
+    const activities = await this.getProvisionalActivities({
+      clubId: param.query.clubId,
+    });
+    return { activities };
+  }
+
+  async getProfessorProvisionalActivities(param: {
+    query: ApiAct013RequestQuery;
+  }): Promise<ApiAct013ResponseOk> {
+    // 교수님은 아직 검사하는 권한이 없습니다.
+    const activities = await this.getProvisionalActivities({
+      clubId: param.query.clubId,
+    });
+    return { activities };
+  }
+
+  async getExecutiveActivity(activityId: number): Promise<ApiAct002ResponseOk> {
+    const activity = await this.getActivity({ activityId });
+
+    const evidence = await this.activityRepository.selectFileByActivityId(
+      activity.id,
+    );
+    const participants =
+      await this.activityRepository.selectParticipantByActivityId(activity.id);
+    const duration = await this.activityRepository.selectDurationByActivityId(
+      activity.id,
+    );
+
+    return {
+      clubId: activity.clubId,
+      name: activity.name,
+      originalName: activity.originalName,
+      activityTypeEnumId: activity.activityTypeEnumId,
+      location: activity.location,
+      purpose: activity.purpose,
+      detail: activity.detail,
+      evidence: activity.evidence,
+      evidenceFiles: evidence.map(e => ({
+        fileId: e.fileId,
+      })),
+      participants: participants.map(e => ({
+        studentId: e.studentId,
+        studnetNumber: e.studentNumber,
+        name: e.name,
+      })),
+      durations: duration.map(e => ({
+        startTerm: e.startTerm,
+        endTerm: e.endTerm,
+      })),
+    };
+  }
+
+  async getProfessorActivity(activityId: number): Promise<ApiAct002ResponseOk> {
+    const activity = await this.getActivity({ activityId });
+
+    const evidence = await this.activityRepository.selectFileByActivityId(
+      activity.id,
+    );
+    const participants =
+      await this.activityRepository.selectParticipantByActivityId(activity.id);
+    const duration = await this.activityRepository.selectDurationByActivityId(
+      activity.id,
+    );
+
+    return {
+      clubId: activity.clubId,
+      name: activity.name,
+      originalName: activity.originalName,
+      activityTypeEnumId: activity.activityTypeEnumId,
+      location: activity.location,
+      purpose: activity.purpose,
+      detail: activity.detail,
+      evidence: activity.evidence,
+      evidenceFiles: evidence.map(e => ({
+        fileId: e.fileId,
+      })),
+      participants: participants.map(e => ({
+        studentId: e.studentId,
+        studnetNumber: e.studentNumber,
+        name: e.name,
+      })),
+      durations: duration.map(e => ({
+        startTerm: e.startTerm,
+        endTerm: e.endTerm,
+      })),
+    };
   }
 }

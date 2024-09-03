@@ -69,8 +69,8 @@ const Clubs: React.FC = () => {
           const filteredClubs = division.clubs
             .filter(
               item =>
-                item.name_kr.includes(searchText.toLowerCase()) ||
-                item.name_kr.includes(searchText.toUpperCase()) ||
+                item.name_kr.toLowerCase().includes(searchText.toLowerCase()) ||
+                item.name_en.toLowerCase().includes(searchText.toLowerCase()) ||
                 hangulIncludes(item.name_kr, searchText),
             )
             .sort((a, b) => {
@@ -93,6 +93,7 @@ const Clubs: React.FC = () => {
       />
       <AsyncBoundary isLoading={isLoadingTerm} isError={isErrorTerm}>
         {isRegistrationPeriod && (
+          // TODO: 학기 동적처리
           <Info
             text={`현재는 2024년 가을학기 동아리 신청 기간입니다 (신청 마감 : ${formatDateTime(memberRegistrationPeriodEnd)})`}
           />

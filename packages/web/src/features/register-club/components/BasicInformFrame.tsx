@@ -26,9 +26,13 @@ import ProfessorInformFrame from "./ProfessorInformFrame";
 
 interface BasicInformSectionProps {
   type: RegistrationTypeEnum;
+  editMode?: boolean;
 }
 
-const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
+const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
+  type,
+  editMode = false,
+}) => {
   const isRenewal = type === RegistrationTypeEnum.Renewal;
 
   const [isCheckedProfessor, setIsCheckedProfessor] = useState(true);
@@ -67,7 +71,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
       resetField("professor.email");
       resetField("professor.name");
       resetField("professor.professorEnumId");
-      setValue("professor", undefined);
+      setValue("professor", undefined, { shouldValidate: true });
 
       return;
     }
@@ -95,16 +99,22 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({ type }) => {
               control={control}
               defaultValue={profile?.phoneNumber}
               minLength={13}
+              // TODO: phoneNumber validation
+              // pattern={/^010-\d{4}-\d{4}$/}
               renderItem={props => (
                 <PhoneInput
                   {...props}
                   label="대표자 전화번호"
-                  placeholder="XXX-XXXX-XXXX"
+                  placeholder="010-XXXX-XXXX"
                 />
               )}
             />
           </FlexWrapper>
-          <ClubNameField clubList={clubList?.clubs} />
+          <ClubNameField
+            type={type}
+            clubList={clubList?.clubs}
+            editMode={editMode}
+          />
           <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
             <YearSelect />
             <DivisionSelect isRenewal={isRenewal} />

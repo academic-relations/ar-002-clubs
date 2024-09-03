@@ -21,6 +21,7 @@ export const useGetClubsList = () =>
       // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
       switch (status) {
         case 200:
+        case 304:
           return apiClb001.responseBodyMap[200].parse(data);
         default:
           throw new UnexpectedAPIResponseError();

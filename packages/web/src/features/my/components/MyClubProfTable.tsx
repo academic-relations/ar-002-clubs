@@ -1,5 +1,6 @@
 import React from "react";
 
+import { ApiReg021ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg021";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -9,18 +10,16 @@ import {
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { RegistrationStatusTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import { mockProfClubRegister } from "@sparcs-clubs/web/features/my/services/_mock/mockMyRegister";
 import { getTagColorFromDivision } from "@sparcs-clubs/web/types/clubdetail.types";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface MyClubTableProps {
-  clubProfRegisterList: typeof mockProfClubRegister;
+  clubProfRegisterList: ApiReg021ResponseOk;
 }
-const columnHelper =
-  createColumnHelper<(typeof mockProfClubRegister)["items"][number]>();
+const columnHelper = createColumnHelper<ApiReg021ResponseOk["items"][number]>();
 const columns = [
-  columnHelper.accessor("registrationStatusEnum", {
-    id: "registrationStatusEnum",
+  columnHelper.accessor("registrationStatusEnumId", {
+    id: "registrationStatusEnumId",
     header: "상태",
     cell: info => {
       const { color, text } = getTagDetail(
@@ -31,8 +30,8 @@ const columns = [
     },
     size: 10,
   }),
-  columnHelper.accessor("clubDivision", {
-    id: "clubDivision",
+  columnHelper.accessor("division.name", {
+    id: "division.name",
     header: "분과",
     cell: info => (
       <Tag color={getTagColorFromDivision(info.getValue())}>
@@ -41,32 +40,32 @@ const columns = [
     ),
     size: 10,
   }),
-  columnHelper.accessor("clubNameKr", {
-    id: "clubNameKr",
+  columnHelper.accessor("clubName", {
+    id: "clubName",
     header: "동아리",
     cell: info => info.getValue(),
     size: 128,
   }),
-  columnHelper.accessor("studentNumber", {
-    id: "studentNumber",
+  columnHelper.accessor("student.studentNumber", {
+    id: "student.studentNumber",
     header: "학번",
     cell: info => info.getValue(),
     size: 128,
   }),
-  columnHelper.accessor("studentName", {
-    id: "studentName",
+  columnHelper.accessor("student.name", {
+    id: "student.name",
     header: "대표자",
     cell: info => info.getValue(),
     size: 128,
   }),
-  columnHelper.accessor("phoneNumber", {
-    id: "phoneNumber",
+  columnHelper.accessor("student.phoneNumber", {
+    id: "student.phoneNumber",
     header: "전화번호",
     cell: info => info.getValue(),
     size: 128,
   }),
-  columnHelper.accessor("studentEmail", {
-    id: "studentEmail",
+  columnHelper.accessor("student.email", {
+    id: "student.email",
     header: "이메일",
     cell: info => info.getValue(),
     size: 128,
@@ -81,8 +80,8 @@ const MyClubProfTable: React.FC<MyClubTableProps> = ({
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
-  const getRowLink = (row: (typeof mockProfClubRegister)["items"][number]) => ({
-    pathname: `/my/register-club/${row.clubId.toString()}`,
+  const getRowLink = (row: ApiReg021ResponseOk["items"][number]) => ({
+    pathname: `/my/register-club/${row.id.toString()}`,
   });
   return (
     <Table

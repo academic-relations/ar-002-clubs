@@ -109,6 +109,7 @@ const ExecutiveRegistrationTable: React.FC<ExecutiveRegistrationTableProps> = ({
       table={table}
       count={registerList.total}
       emptyMessage="동아리 등록 신청 내역이 없습니다."
+      rowLink={row => `/executive/register-club/${row.id}`}
     />
   );
 };

@@ -65,7 +65,7 @@ export class FileService {
     const uploadUrl = await getSignedUrl(this.s3Client, command, {
       expiresIn: 600,
     });
-    return { uploadUrl, fileId };
+    return { uploadUrl, fileId, name };
   }
 
   async getFilesDownloadLinks(param: {
@@ -93,6 +93,7 @@ export class FileService {
       return {
         id: e.id,
         fileKey: `file/${e.userId}.${e.signedAt.valueOf()}.${e.name}`,
+        name: e.name,
       };
     });
 
@@ -101,6 +102,7 @@ export class FileService {
       fileKeys.map(async e => ({
         id: e.id,
         url: await getFileUrls(e.fileKey),
+        name: e.name,
       })),
     );
 

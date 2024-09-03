@@ -26,7 +26,7 @@ const ManageClub: React.FC = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile !== "undergraduate") {
+  if (profile?.type !== "undergraduate") {
     return <NoManageClub />;
   }
 

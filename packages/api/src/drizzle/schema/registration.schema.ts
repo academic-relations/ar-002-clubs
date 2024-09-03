@@ -54,9 +54,9 @@ export const Registration = mysqlTable(
     activityFieldKr: varchar("activity_field_kr", { length: 255 }),
     activityFieldEn: varchar("activity_field_en", { length: 255 }),
     professorId: int("professor_id").references(() => Professor.id),
-    divisionConsistency: varchar("division_consistency", { length: 255 }),
-    foundationPurpose: varchar("foundation_purpose", { length: 500 }),
-    activityPlan: varchar("activity_plan", { length: 500 }),
+    divisionConsistency: text("division_consistency"),
+    foundationPurpose: text("foundation_purpose"),
+    activityPlan: text("activity_plan"),
     registrationActivityPlanFileId: varchar(
       "registration_activity_plan_file_id",
       { length: 128 },

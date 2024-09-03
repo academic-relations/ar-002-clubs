@@ -9,15 +9,33 @@ import {
   RegistrationApplicationStudentStatusEnum,
   RegistrationDeadlineEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
-import { and, count, eq, gt, isNotNull, isNull, lt, or } from "drizzle-orm";
+import {
+  and,
+  count,
+  eq,
+  gt,
+  gte,
+  isNotNull,
+  isNull,
+  lt,
+  lte,
+  or,
+  sql,
+} from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
+import { Club, ClubT } from "@sparcs-clubs/api/drizzle/schema/club.schema";
+import {
+  Division,
+  DivisionPermanentClubD,
+} from "@sparcs-clubs/api/drizzle/schema/division.schema";
 import {
   RegistrationApplicationStudent,
   RegistrationDeadlineD,
 } from "@sparcs-clubs/api/drizzle/schema/registration.schema";
+import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 interface IRegistrationApplicationStudent {
   id: number;
@@ -114,14 +132,36 @@ export class MemberRegistrationRepository {
   ): Promise<ApiReg006ResponseOk> {
     const pending = RegistrationApplicationStudentStatusEnum.Pending;
     const approved = RegistrationApplicationStudentStatusEnum.Approved;
+    const crt = getKSTDate();
     const result = await this.db
       .select({
         id: RegistrationApplicationStudent.id,
         clubId: RegistrationApplicationStudent.clubId,
+        clubNameKr: Club.name_kr,
+        type: ClubT.clubStatusEnumId,
+        isPermanent: sql<boolean>`COALESCE(MAX(CASE WHEN ${DivisionPermanentClubD.id} IS NOT NULL THEN TRUE ELSE FALSE END), FALSE)`,
+        divisionName: Division.name,
         applyStatusEnumId:
           RegistrationApplicationStudent.registrationApplicationStudentEnumId,
       })
       .from(RegistrationApplicationStudent)
+      .leftJoin(Club, eq(Club.id, RegistrationApplicationStudent.clubId))
+      .innerJoin(
+        ClubT,
+        and(
+          eq(Club.id, ClubT.clubId),
+          or(
+            and(isNull(ClubT.endTerm), lte(ClubT.startTerm, crt)),
+            gte(ClubT.endTerm, crt),
+          ),
+          or(eq(ClubT.clubStatusEnumId, 1), eq(ClubT.clubStatusEnumId, 2)),
+        ),
+      )
+      .leftJoin(
+        DivisionPermanentClubD,
+        eq(Club.id, DivisionPermanentClubD.clubId),
+      )
+      .leftJoin(Division, eq(Division.id, Club.divisionId))
       .where(
         and(
           or(
@@ -201,6 +241,14 @@ export class MemberRegistrationRepository {
         id: RegistrationApplicationStudent.id,
         applyStatusEnumId:
           RegistrationApplicationStudent.registrationApplicationStudentEnumId,
+        createdAt: RegistrationApplicationStudent.createdAt,
+        student: {
+          id: RegistrationApplicationStudent.studentId,
+          name: Student.name,
+          phoneNumber: Student.phoneNumber,
+          email: Student.email,
+          studentNumber: Student.number,
+        },
       })
       .from(RegistrationApplicationStudent)
       .where(
@@ -208,6 +256,10 @@ export class MemberRegistrationRepository {
           eq(RegistrationApplicationStudent.clubId, clubId),
           isNull(RegistrationApplicationStudent.deletedAt),
         ),
+      )
+      .leftJoin(
+        Student,
+        eq(Student.id, RegistrationApplicationStudent.studentId),
       );
     return { applies: result };
   }

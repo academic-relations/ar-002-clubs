@@ -53,6 +53,36 @@ export default class ClubPublicService {
     return false;
   }
 
+  /**
+   * @param param
+   * @returns 해당 동아리에서 해당 기간동안 활동했던 학생 목록을 리턴합니다.
+   */
+  async getMemberFromDuration(param: {
+    clubId: number;
+    duration: {
+      startTerm: Date;
+      endTerm: Date;
+    };
+  }): Promise<
+    Array<{
+      studentId: number;
+      name: string;
+      studentNumber: number;
+    }>
+  > {
+    const result =
+      await this.clubStudentTRepository.selectStudentByClubIdAndDuration({
+        clubId: param.clubId,
+        duration: param.duration,
+      });
+
+    return result.map(e => ({
+      studentId: e.id,
+      name: e.name,
+      studentNumber: e.number,
+    }));
+  }
+
   async getMemberFromSemester(param: { semesterId: number; clubId: number }) {
     const result = await this.clubStudentTRepository.findByClubIdAndSemesterId(
       param.clubId,
@@ -110,7 +140,7 @@ export default class ClubPublicService {
    * @param semesterId 신청 학기 id
    * @returns 특정 학기의 특정 상태(정동아리/가동아리/정동아리 or 가동아리)의 동아리(clubId) list
    * 예를 들어, getClubIdByClubStatusEnumId([ClubTypeEnum.Regular], semesterId) 의 경우,
-   * semsterId 학기 당시 정동아리였던 동아리의 clubId list를 반환합니다.
+   * semesterId 학기 당시 정동아리였던 동아리의 clubId list를 반환합니다.
    */
   async getClubIdByClubStatusEnumId(
     studentId: number,

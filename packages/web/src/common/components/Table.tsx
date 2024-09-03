@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 
+import isPropValid from "@emotion/is-prop-valid";
 import { flexRender, type Table as TableType } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
@@ -14,7 +15,9 @@ interface TableProps<T> {
   emptyMessage?: string;
   count?: number;
   footer?: React.ReactNode;
+  /* TODO: (@dora) refactor to use onClick only */
   rowLink?: (row: T) => string | { pathname: string };
+  onClick?: (row: T) => void;
   unit?: string;
 }
 const TableInnerWrapper = styled.div`
@@ -23,7 +26,9 @@ const TableInnerWrapper = styled.div`
   overflow-x: auto;
 `;
 
-const TableInner = styled.table<{ height?: number; minWidth: number }>`
+const TableInner = styled.table.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ height?: number; minWidth: number }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -51,7 +56,9 @@ const Content = styled.tbody`
   overflow-y: auto;
   width: 100%;
 `;
-const ContentRow = styled.tr<{ selected: boolean; isClickable: boolean }>`
+const ContentRow = styled.tr.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ selected: boolean; isClickable: boolean }>`
   width: 100%;
   display: flex;
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
@@ -88,6 +95,7 @@ const Table = <T,>({
   footer = null,
   count = undefined,
   rowLink = undefined,
+  onClick = undefined,
   unit = "개",
 }: TableProps<T>) => {
   // 야매로 min-width 바꿔치기 (고치지 마세요)
@@ -99,22 +107,27 @@ const Table = <T,>({
   const router = useRouter();
   const handleRowClick = useCallback(
     (row: T) => {
-      const link = rowLink?.(row);
-      if (link) {
-        if (typeof link === "string") {
-          router.push(link);
-        } else if (link?.pathname) {
-          router.push(link.pathname);
+      if (rowLink) {
+        const link = rowLink(row);
+        if (link) {
+          if (typeof link === "string") {
+            router.push(link);
+          } else if (link?.pathname) {
+            router.push(link.pathname);
+          }
         }
       }
+      if (onClick) {
+        onClick(row);
+      }
     },
-    [rowLink, router],
+    [rowLink, onClick, router],
   );
 
   return (
     <TableWithCount>
       <Count>
-        {count && (
+        {(count || count === 0) && (
           <Typography fs={16} lh={20}>
             총 {count}
             {unit}
@@ -166,7 +179,7 @@ const Table = <T,>({
                 <ContentRow
                   key={row.id}
                   selected={row.getIsSelected()}
-                  isClickable={!!rowLink}
+                  isClickable={!!rowLink || !!onClick}
                   onClick={() => handleRowClick(row.original)}
                 >
                   {row.getVisibleCells().map(cell => (

@@ -6,7 +6,7 @@ import { z } from "zod";
  * @description 동아리 등록을 삭제합니다.
  */
 
-const url = (applyId: string) =>
+const url = (applyId: number) =>
   `/student/registrations/club-registrations/club-registration/${applyId}`;
 
 const method = "DELETE";
