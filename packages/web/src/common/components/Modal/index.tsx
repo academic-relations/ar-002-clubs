@@ -1,5 +1,6 @@
 import React, { FC, useRef } from "react";
 
+import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 
 export interface ModalProps {
@@ -25,7 +26,9 @@ const ModalBackground = styled.div`
   z-index: 100;
 `;
 
-const ModalContainer = styled.div<{ width?: string }>`
+const ModalContainer = styled.div.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ width?: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
