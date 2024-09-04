@@ -75,7 +75,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
 
       return;
     }
-    setValue("professor", professorInfo);
+    setValue("professor", professorInfo, { shouldValidate: true });
   }, [professorInfo, resetField, setValue, isCheckedProfessor]);
 
   return (

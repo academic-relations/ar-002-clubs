@@ -1,22 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import { ApiAct007RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
-
-import { useFormContext } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import useGetParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetParticipants";
-
 import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
+import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 
 interface ParticipantSectionProps {
   clubId: number;
+  formCtx: ReturnType<typeof useForm>;
 }
 
-const ParticipantSection: React.FC<ParticipantSectionProps> = ({ clubId }) => {
-  const { watch, setValue } = useFormContext<ApiAct007RequestBody>();
+const ParticipantSection: React.FC<ParticipantSectionProps> = ({
+  clubId,
+  formCtx,
+}) => {
+  const { watch } = formCtx;
 
-  const durations = watch("durations");
+  const durations: Duration[] = watch("durations");
   const startTerm = durations
     .map(d => d.startTerm)
     .reduce((a, b) => (a < b ? a : b));
@@ -30,16 +32,34 @@ const ParticipantSection: React.FC<ParticipantSectionProps> = ({ clubId }) => {
     endTerm,
   });
 
+  const initialParticipants = watch("participants");
+  const [participants, setParticipants] = useState<Record<number, boolean>>({});
+  useEffect(() => {
+    if (data && initialParticipants) {
+      setParticipants(
+        initialParticipants.reduce((acc, participant) => {
+          const index = data.students.findIndex(
+            _data => _data.id === participant.studentId,
+          );
+          return { ...acc, [index]: true };
+        }, {}),
+      );
+    }
+  }, [data, initialParticipants]);
+
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <SelectParticipant
         data={data?.students ?? []}
+        onChange={setParticipants}
         onSelected={selectList => {
           const participantIds = selectList.map(_data => ({
             studentId: +_data.id,
           }));
-          setValue("participants", participantIds);
+          formCtx.setValue("participants", participantIds);
+          formCtx.trigger("participants");
         }}
+        value={participants}
       />
     </AsyncBoundary>
   );
