@@ -98,8 +98,8 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
       formCtx.reset({
         registrationTypeEnumId: detail.registrationTypeEnumId,
         clubId: detail.clubId,
-        clubNameKr: detail.clubNameKr,
-        clubNameEn: detail.clubNameEn,
+        clubNameKr: detail.newClubNameEn,
+        clubNameEn: detail.newClubNameEn,
         phoneNumber: detail.representative?.phoneNumber,
         foundedAt: detail.foundedAt,
         divisionId: detail.divisionId,
