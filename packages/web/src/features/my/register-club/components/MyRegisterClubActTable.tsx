@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { overlay } from "overlay-kit";
+import styled from "styled-components";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
@@ -15,10 +16,19 @@ import PastActivityReportModal from "@sparcs-clubs/web/features/register-club/co
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-interface MyRegisterClubAcfTableProps {
-  clubRegisterAcfList: ApiAct011ResponseOk;
+interface MyRegisterClubActTableProps {
+  clubRegisterActList: ApiAct011ResponseOk;
   profile: string;
 }
+
+const TableWrapper = styled.div`
+  overflow: hidden;
+  -ms-overflow-style: none;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
 
 const columnHelper =
   createColumnHelper<ApiAct011ResponseOk["activities"][number]>();
@@ -51,13 +61,13 @@ const columns = [
   ),
 ];
 
-const MyRegisterClubAcfTable: React.FC<MyRegisterClubAcfTableProps> = ({
-  clubRegisterAcfList,
+const MyRegisterClubActTable: React.FC<MyRegisterClubActTableProps> = ({
+  clubRegisterActList,
   profile,
 }) => {
   const table = useReactTable({
     columns,
-    data: clubRegisterAcfList.activities,
+    data: clubRegisterActList.activities,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
@@ -75,12 +85,14 @@ const MyRegisterClubAcfTable: React.FC<MyRegisterClubAcfTableProps> = ({
   };
 
   return (
-    <Table
-      table={table}
-      emptyMessage="활동 보고서 작성 내역이 없습니다."
-      onClick={row => openPastActivityReportModal(row.id)}
-    />
+    <TableWrapper>
+      <Table
+        table={table}
+        emptyMessage="활동 보고서 작성 내역이 없습니다."
+        onClick={row => openPastActivityReportModal(row.id)}
+      />
+    </TableWrapper>
   );
 };
 
-export default MyRegisterClubAcfTable;
+export default MyRegisterClubActTable;
