@@ -43,7 +43,7 @@ const ClubRegisterApproveFrame = ({ applyId }: { applyId: number }) => {
             fw="MEDIUM"
             style={{ marginLeft: 2, marginRight: 2 }}
           >
-            반려 사유
+            반려 사유 (반려 시에만 입력)
           </Typography>
           <TextInput
             value={rejectionDetail}

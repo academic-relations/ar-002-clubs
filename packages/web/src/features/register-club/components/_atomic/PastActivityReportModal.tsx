@@ -11,6 +11,7 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import { patchActivityExecutive } from "@sparcs-clubs/web/features/executive/register-club/services/patchActivityExecutive";
 import { useDeleteActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useDeleteActivityReport";
 import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
 import { getActivityTypeTagLabel } from "@sparcs-clubs/web/features/register-club/utils/activityType";
@@ -25,6 +26,7 @@ interface PastActivityReportModalProps {
   isOpen: boolean;
   close: VoidFunction;
   viewOnly?: boolean;
+  isExecutive?: boolean;
 }
 
 const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
@@ -33,6 +35,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   isOpen,
   close,
   viewOnly = false,
+  isExecutive = false,
 }) => {
   const { data, isLoading, isError } = useGetActivityReport(
     profile,
@@ -90,6 +93,11 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
       );
     }
   }, [isDeleteSuccess, isDeleteError]);
+
+  const handleApprove = async () => {
+    await patchActivityExecutive({ activityId });
+    close();
+  };
 
   return (
     <Modal isOpen={isOpen} width="full">
@@ -182,8 +190,12 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
                 취소
               </Button>
               <FlexWrapper direction="row" gap={12}>
-                <Button onClick={handleDelete}>삭제</Button>
-                <Button onClick={handleEdit}>수정</Button>
+                <Button onClick={isExecutive ? handleApprove : handleDelete}>
+                  {isExecutive ? "신청 승인" : "삭제"}
+                </Button>
+                <Button onClick={handleEdit}>
+                  {isExecutive ? "신청 반려" : "수정"}
+                </Button>
               </FlexWrapper>
             </FlexWrapper>
           )}
