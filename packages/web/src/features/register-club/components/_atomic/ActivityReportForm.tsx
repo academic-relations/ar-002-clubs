@@ -52,7 +52,7 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   const durations: Duration[] = watch("durations");
   const participants: { studentId: number }[] = watch("participants");
   const evidenceFiles: { id: string; name: string; url: string }[] =
-    watch("evidenceFiles");
+    watch("evidenceFiles") ?? [];
 
   const initialDurations = useMemo(
     () =>
@@ -66,7 +66,7 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   );
 
   const data = useSuspenseQueries({
-    queries: evidenceFiles?.map(file => fileQuery(file)),
+    queries: evidenceFiles.map(file => fileQuery(file)),
   });
 
   /* TODO: (@dora) refactor !!!!! */

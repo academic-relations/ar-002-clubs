@@ -179,8 +179,14 @@ const FileUpload: React.FC<FileUploadProps> = ({
       file,
     }));
     const updatedFiles = multiple ? [...files, ...newFiles] : newFiles;
-    setFiles(updatedFiles);
-    onSubmit(updatedFiles);
+    const filteredFiles = updatedFiles.reduce((acc, file) => {
+      if (acc.find(f => f.file.name === file.file.name)) {
+        return acc;
+      }
+      return [...acc, file];
+    }, [] as FinalFile[]);
+    setFiles(filteredFiles);
+    onSubmit(filteredFiles);
   };
 
   const handleClick = () => {
