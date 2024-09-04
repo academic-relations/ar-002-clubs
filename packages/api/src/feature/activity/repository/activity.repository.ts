@@ -235,6 +235,36 @@ export default class ActivityRepository {
     return isInsertionSucceed;
   }
 
+  /**
+   * @param param
+   * @description 동아리활동 반려 사유를 생성합니다.
+   * activityId와 activityId의의 유효성을 검사하지 않습니다.
+   * @returns 생성의 성공 여부를 boolean으로 리턴합니다.
+   */
+  async insertActivityFeedback(param: {
+    activityId: number;
+    comment: string;
+    executiveId: number;
+  }): Promise<boolean> {
+    const isInsertionSucceed = await this.db.transaction(async tx => {
+      const [insertionResult] = await tx.insert(ActivityFeedback).values({
+        activityId: param.activityId,
+        comment: param.comment,
+        executiveId: param.executiveId,
+      });
+      if (insertionResult.affectedRows > 1)
+        throw new HttpException(
+          "unreachable",
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      if (insertionResult.affectedRows === 0) return false;
+
+      return true;
+    });
+
+    return isInsertionSucceed;
+  }
+
   async selectActivityByActivityId(activityId: number) {
     const result = await this.db
       .select()
@@ -504,13 +534,24 @@ export default class ActivityRepository {
    * @description 해당 활동의 승인 상태(ActivityStatusEnumId)를 변경합니다.
    * 해당 활동의 상태가 이미 승인인 경우 예외(Bad Request)를 발생시킵니다.
    * @returns update에 성공했는지 성공여부를 리턴합니다.
-   * 실패시 예외가 발생하여 항상 true를 리턴해야 합니다.
+   * 이미 해당 activity의 enumId가 동알할 경우 false를 리턴합니다.
+   * 이 외의실패시 예외가 발생하여 항상 true를 리턴해야 합니다.
    */
   async updateActivityStatusEnumId(param: {
     activityId: number;
     activityStatusEnumId: ActivityStatusEnum;
   }): Promise<boolean> {
     const isUpdateSucceed = await this.db.transaction(async tx => {
+      const activities = await tx
+        .select()
+        .from(Activity)
+        .where(
+          and(eq(Activity.id, param.activityId), isNull(Activity.deletedAt)),
+        );
+      if (activities.length === 0)
+        throw new HttpException("not found", HttpStatus.NOT_FOUND);
+      if (activities[0].activityStatusEnumId === param.activityStatusEnumId)
+        return false;
       const [updateResult] = await tx
         .update(Activity)
         .set({

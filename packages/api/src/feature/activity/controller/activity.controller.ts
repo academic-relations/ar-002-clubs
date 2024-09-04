@@ -32,6 +32,7 @@ import apiAct013 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct013";
 import apiAct014 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct014";
 import apiAct015 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct015";
 import apiAct016 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct016";
+import apiAct017 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct017";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -96,6 +97,11 @@ import type {
   ApiAct016RequestParam,
   ApiAct016ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct016";
+import type {
+  ApiAct017RequestBody,
+  ApiAct017RequestParam,
+  ApiAct017ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct017";
 
 @Controller()
 export default class ActivityController {
@@ -299,6 +305,22 @@ export default class ActivityController {
     const result = await this.activityService.patchExecutiveActivityApproval({
       executiveId: user.executiveId,
       param,
+    });
+    return result;
+  }
+
+  @Executive()
+  @Patch("/executive/activities/activity/:activityId/send-back")
+  @UsePipes(new ZodPipe(apiAct017))
+  async patchExecutiveActivitySendBack(
+    @GetExecutive() user: GetExecutive,
+    @Param() param: ApiAct017RequestParam,
+    @Body() body: ApiAct017RequestBody,
+  ): Promise<ApiAct017ResponseOk> {
+    const result = await this.activityService.patchExecutiveActivitySendBack({
+      executiveId: user.executiveId,
+      param,
+      body,
     });
     return result;
   }

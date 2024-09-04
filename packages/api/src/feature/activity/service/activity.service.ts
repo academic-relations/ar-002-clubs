@@ -44,6 +44,11 @@ import type {
   ApiAct016RequestParam,
   ApiAct016ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct016";
+import type {
+  ApiAct017RequestBody,
+  ApiAct017RequestParam,
+  ApiAct017ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct017";
 
 @Injectable()
 export default class ActivityService {
@@ -741,7 +746,37 @@ export default class ActivityService {
         activityStatusEnumId: ActivityStatusEnum.Approved,
       });
     if (!isApprovalSucceed)
+      throw new HttpException(
+        "the activity is already approved",
+        HttpStatus.BAD_REQUEST,
+      );
+    return {};
+  }
+
+  /**
+   * @param param
+   * @description patchExecutiveActivitySendBack의 서비스 진입점입니다.
+   * 동시성을 고려하지 않고 구현했습니다.
+   */
+  async patchExecutiveActivitySendBack(param: {
+    executiveId: number;
+    param: ApiAct017RequestParam;
+    body: ApiAct017RequestBody;
+  }): Promise<ApiAct017ResponseOk> {
+    await this.activityRepository.updateActivityStatusEnumId({
+      activityId: param.param.activityId,
+      activityStatusEnumId: ActivityStatusEnum.Rejected,
+    });
+
+    const isInsertionSucceed =
+      await this.activityRepository.insertActivityFeedback({
+        activityId: param.param.activityId,
+        comment: param.body.comment,
+        executiveId: param.executiveId,
+      });
+    if (!isInsertionSucceed)
       throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+
     return {};
   }
 }
