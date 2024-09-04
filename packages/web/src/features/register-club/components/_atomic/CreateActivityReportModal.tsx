@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import { ApiAct007RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
@@ -13,11 +13,11 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { mockParticipantData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
-import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
 import usePostActivityReportForNewClub from "@sparcs-clubs/web/features/register-club/services/usePostActivityReportForNewClub";
 
 import SelectActivityTerm from "../SelectActivityTerm";
+
+import ParticipantSection from "./ParticipantSection";
 
 interface CreateActivityReportModalProps {
   clubId: number;
@@ -47,10 +47,13 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
 
   const {
     control,
+    watch,
     handleSubmit,
     setValue,
     formState: { isValid },
   } = formCtx;
+
+  const durations = watch("durations");
 
   /* TODO: (@dora) refactor !!!!! */
   type FileIdType = "evidenceFiles";
@@ -67,7 +70,7 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
 
   const { mutate } = usePostActivityReportForNewClub();
 
-  const [participants, setParticipants] = useState<{ studentId: number }[]>([]);
+  const participants = watch("participants");
 
   const submitHandler = useCallback(
     (data: ApiAct007RequestBody) => {
@@ -188,20 +191,14 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
                 />
               )}
             />
-            <FlexWrapper direction="column" gap={4}>
-              <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
-                활동 인원
-              </Typography>
-              <SelectParticipant
-                data={mockParticipantData}
-                onSelected={selectList => {
-                  const participantIds = selectList.map(data => ({
-                    studentId: +data.studentId,
-                  }));
-                  setParticipants(participantIds);
-                }}
-              />
-            </FlexWrapper>
+            {durations && (
+              <FlexWrapper direction="column" gap={4}>
+                <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
+                  활동 인원
+                </Typography>
+                <ParticipantSection clubId={clubId} />
+              </FlexWrapper>
+            )}
             <FlexWrapper direction="column" gap={4}>
               <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
                 활동 증빙
