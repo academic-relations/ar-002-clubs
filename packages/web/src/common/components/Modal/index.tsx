@@ -28,7 +28,7 @@ const ModalBackground = styled.div`
 
 const ModalContainer = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
-})<{ width: string }>`
+})<{ width: "fit-content" | "full" }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
