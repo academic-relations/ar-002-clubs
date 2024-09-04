@@ -88,7 +88,7 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
   return (
     <FormProvider {...formCtx}>
       <form onSubmit={handleSubmit(submitHandler)}>
-        <Modal isOpen={isOpen}>
+        <Modal isOpen={isOpen} width="full">
           <FlexWrapper direction="column" gap={32}>
             <FormController
               name="name"

@@ -6,7 +6,7 @@ import styled from "styled-components";
 export interface ModalProps {
   isOpen?: boolean;
   onClose?: () => void;
-  width?: string;
+  width?: "fit-content" | "full";
 }
 
 const ModalBackground = styled.div`
@@ -28,7 +28,7 @@ const ModalBackground = styled.div`
 
 const ModalContainer = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
-})<{ width?: string }>`
+})<{ width: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -38,7 +38,20 @@ const ModalContainer = styled.div.withConfig({
   background-color: ${({ theme }) => theme.colors.WHITE};
   border-radius: ${({ theme }) => theme.round.md};
   box-shadow: ${({ theme }) => theme.shadow.md};
-  width: ${({ width }) => width};
+  width: ${({ width, theme }) =>
+    width === "full" ? theme.responsive.CONTENT.xxl : width};
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    max-width: ${({ theme }) => theme.responsive.CONTENT.xl};
+    width: ${({ width, theme }) =>
+      width === "full" ? theme.responsive.CONTENT.xl : width};
+  }
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    max-width: ${({ theme }) => theme.responsive.CONTENT.lg};
+    width: ${({ width, theme }) =>
+      width === "full" ? theme.responsive.CONTENT.lg : width};
+  }
 `;
 
 const ModalScrollContainer = styled.div`
@@ -49,16 +62,6 @@ const ModalScrollContainer = styled.div`
   overflow-x: hidden;
 
   padding: 32px;
-
-  max-width: ${({ theme }) => theme.responsive.CONTENT.xxl};
-
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
-    max-width: ${({ theme }) => theme.responsive.CONTENT.xl};
-  }
-
-  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
-    max-width: ${({ theme }) => theme.responsive.CONTENT.lg};
-  }
 `;
 
 const Modal: FC<React.PropsWithChildren<ModalProps>> = ({
