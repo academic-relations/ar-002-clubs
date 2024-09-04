@@ -32,7 +32,7 @@ const ParticipantSection: React.FC<ParticipantSectionProps> = ({
     endTerm,
   });
 
-  const initialParticipants = watch("participants");
+  const initialParticipants: { studentId: number }[] = watch("participants");
   const [participants, setParticipants] = useState<Record<number, boolean>>({});
   useEffect(() => {
     if (data && initialParticipants) {

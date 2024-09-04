@@ -50,7 +50,7 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   } = formCtx;
 
   const durations: Duration[] = watch("durations");
-  const participants = watch("participants");
+  const participants: { studentId: number }[] = watch("participants");
   const evidenceFiles: { id: string; name: string; url: string }[] =
     watch("evidenceFiles");
 
