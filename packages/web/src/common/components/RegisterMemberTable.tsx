@@ -18,26 +18,24 @@ import {
 } from "@sparcs-clubs/web/types/clubdetail.types";
 
 interface RegisterMemberTableProps {
-  isPermanent: boolean;
   registerMemberList: ApiReg019ResponseOk;
 }
 
 const columnHelper =
   createColumnHelper<(typeof mockupRegistrationMember)["items"][number]>();
 
-const columnsFunction = (isPermanent: boolean) => [
-  // 만약 isPermanent 까지 받는다면 isPermanent => info.row.original.isPermanent, 함수 형태 없애기
+const columns = [
   columnHelper.accessor("clubTypeEnumId", {
     id: "type",
     header: "구분",
     cell: info => {
       const tagColor = getTagColorFromClubType(
         info.row.original.clubTypeEnumId,
-        isPermanent,
+        info.row.original.isPermanent,
       );
       const tagContents = getTagContentFromClubType(
         info.row.original.clubTypeEnumId,
-        isPermanent,
+        info.row.original.isPermanent,
       );
 
       return <Tag color={tagColor}>{tagContents}</Tag>;
@@ -77,11 +75,10 @@ const columnsFunction = (isPermanent: boolean) => [
 ];
 
 const RegistrationMemberTable: React.FC<RegisterMemberTableProps> = ({
-  isPermanent,
   registerMemberList,
 }) => {
   const table = useReactTable({
-    columns: columnsFunction(isPermanent),
+    columns,
     data: registerMemberList.items,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,

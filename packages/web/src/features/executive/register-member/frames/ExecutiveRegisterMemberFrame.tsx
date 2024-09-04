@@ -30,10 +30,7 @@ export const ExecutiveRegisterMember = () => {
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       {data && paginatedData && (
         <>
-          <RegistrationMemberTable
-            isPermanent={false}
-            registerMemberList={paginatedData}
-          />
+          <RegistrationMemberTable registerMemberList={paginatedData} />
           <FlexWrapper direction="row" gap={16} justify="center">
             <Pagination
               totalPage={Math.ceil(data.total / limit)}

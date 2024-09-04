@@ -22,6 +22,7 @@ const clubType = [ClubTypeEnum.Provisional, ClubTypeEnum.Regular];
 const items = Array.from({ length: 120 }, (_, index) => ({
   clubId: index + 1,
   clubTypeEnumId: (index % clubType.length) + 1,
+  isPermanent: true,
   division: {
     id: (index % divisionType.length) + 1,
     name: "분과명",
