@@ -19,6 +19,8 @@ import {
   getLocalStorageItem,
   removeLocalStorageItem,
   setLocalStorageItem,
+  subscribeLocalStorageSet,
+  unsubscribeLocalStorageSet,
 } from "@sparcs-clubs/web/utils/localStorage";
 
 import AgreementModal from "../components/Modal/AgreeModal";
@@ -55,12 +57,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
-    const token = getLocalStorageItem("accessToken");
-    if (token) {
-      setIsLoggedIn(true);
-      const decoded: Profile = jwtDecode(token);
-      setProfile(decoded);
-    }
+    const update = () => {
+      const token = getLocalStorageItem("accessToken");
+      if (token) {
+        setIsLoggedIn(true);
+        const decoded: Profile = jwtDecode(token);
+        setProfile(decoded);
+      }
+      if (!token) {
+        setIsLoggedIn(false);
+        setProfile(undefined);
+      }
+    };
+
+    update();
+    subscribeLocalStorageSet(update);
+
+    return () => unsubscribeLocalStorageSet(update);
   }, []);
 
   useEffect(() => {
@@ -152,19 +165,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     [isLoggedIn, profile],
   );
 
-  // Channel Talk
-  ChannelService.loadScript();
-  ChannelService.boot({
-    pluginKey: "f9e90cc5-6304-4987-8a60-5332d572c332",
-    memberId: profile?.id ? profile?.id.toString() : undefined,
-    profile:
-      profile !== undefined
-        ? {
-            name: profile.name,
-            email: profile?.email || null,
-          }
-        : undefined,
-  });
+  useEffect(() => {
+    // Channel Talk
+    ChannelService.loadScript();
+    ChannelService.boot({
+      pluginKey: "f9e90cc5-6304-4987-8a60-5332d572c332",
+      memberId: profile?.id ? profile?.id.toString() : undefined,
+      profile:
+        profile !== undefined
+          ? {
+              name: profile.name,
+              email: profile?.email || null,
+            }
+          : undefined,
+    });
+  }, []);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
