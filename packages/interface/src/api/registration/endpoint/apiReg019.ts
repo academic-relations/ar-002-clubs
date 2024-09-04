@@ -28,6 +28,7 @@ const responseBodyMap = {
       z.object({
         clubId: z.coerce.number().int().min(1),
         clubTypeEnumId: z.coerce.number().int().min(1),
+        isPermanent: z.boolean(),
         division: z.object({
           id: z.coerce.number().int().min(1),
           name: zUserName,
