@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -30,6 +31,7 @@ import apiAct012 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct012";
 import apiAct013 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct013";
 import apiAct014 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct014";
 import apiAct015 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct015";
+import apiAct016 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct016";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -38,7 +40,10 @@ import {
   Professor,
   Student,
 } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
-import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
+import {
+  GetExecutive,
+  GetStudent,
+} from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
 import ActivityService from "../service/activity.service";
 
@@ -87,6 +92,10 @@ import type {
   ApiAct015RequestParam,
   ApiAct015ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct015";
+import type {
+  ApiAct016RequestParam,
+  ApiAct016ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct016";
 
 @Controller()
 export default class ActivityController {
@@ -257,7 +266,7 @@ export default class ActivityController {
   @Executive()
   @Get("/executive/activities/activity/:activityId")
   @UsePipes(new ZodPipe(apiAct014))
-  async getExcutiveActivity(
+  async getExecutiveActivity(
     @Param() param: ApiAct014RequestParam,
   ): Promise<ApiAct014ResponseOk> {
     const result = await this.activityService.getExecutiveActivity(
@@ -277,6 +286,20 @@ export default class ActivityController {
       param.activityId,
     );
 
+    return result;
+  }
+
+  @Executive()
+  @Patch("/executive/activities/activity/:activityId/approval")
+  @UsePipes(new ZodPipe(apiAct016))
+  async patchExecutiveActivityApproval(
+    @GetExecutive() user: GetExecutive,
+    @Param() param: ApiAct016RequestParam,
+  ): Promise<ApiAct016ResponseOk> {
+    const result = await this.activityService.patchExecutiveActivityApproval({
+      executiveId: user.executiveId,
+      param,
+    });
     return result;
   }
 }
