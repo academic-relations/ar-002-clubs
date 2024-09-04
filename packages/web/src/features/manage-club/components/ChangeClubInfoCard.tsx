@@ -28,6 +28,8 @@ const ChangeClubInfoCard = () => {
   const { data, isLoading, isError, refetch } = useGetClubInfo({
     clubId,
   });
+
+  // TODO: react hook form으로 변경
   const [description, setDescription] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorDescription, setErrorDescription] = useState<string>("");
@@ -37,9 +39,9 @@ const ChangeClubInfoCard = () => {
   useEffect(() => {
     if (!idIsLoading && idData && Object.keys(idData).length > 0) {
       setClubId(idData.clubId);
-      if (clubId && !isLoading && data?.description && data?.roomPassword) {
-        setDescription(data.description);
-        setPassword(data.roomPassword);
+      if (clubId && !isLoading && data) {
+        if (data.description) setDescription(data.description);
+        if (data.roomPassword) setPassword(data.roomPassword);
       }
     }
   }, [
@@ -61,7 +63,7 @@ const ChangeClubInfoCard = () => {
 
   useEffect(() => {
     if (clubId && password === "") {
-      setErrorPassword("동아리방 비밀번호를 입력하세요");
+      // setErrorPassword("동아리방 비밀번호를 입력하세요");
     } else {
       setErrorPassword("");
     }
@@ -70,9 +72,9 @@ const ChangeClubInfoCard = () => {
 
   const buttonType =
     (description === data?.description && password === data?.roomPassword) ||
-    errorDescription !== "" ||
-    errorPassword !== ""
-      ? "disabled"
+    errorDescription !== ""
+      ? // || errorPassword !== ""
+        "disabled"
       : "default";
 
   const handleSave = useCallback(() => {

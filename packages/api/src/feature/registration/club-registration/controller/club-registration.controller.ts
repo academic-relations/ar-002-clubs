@@ -54,19 +54,35 @@ import apiReg017, {
 import apiReg018, {
   ApiReg018ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg018";
+import apiReg022 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg022";
+import apiReg023 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg023";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import {
   Executive,
+  Professor,
   Student,
 } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 
 import {
   GetExecutive,
+  GetProfessor,
   GetStudent,
 } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
+import logger from "@sparcs-clubs/api/common/util/logger";
+
 import { ClubRegistrationService } from "../service/club-registration.service";
+
+import type { ApiReg021ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg021";
+import type {
+  ApiReg022RequestParam,
+  ApiReg022ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg022";
+import type {
+  ApiReg023RequestParam,
+  ApiReg023ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg023";
 
 @Controller()
 export class ClubRegistrationController {
@@ -135,7 +151,7 @@ export class ClubRegistrationController {
   }
 
   @Student()
-  @Put("/student/registrations/club-registrations/club-registration/:id")
+  @Put("/student/registrations/club-registrations/club-registration/:applyId")
   @UsePipes(new ZodPipe(apiReg009))
   async putStudentRegistrationsClubRegistration(
     @GetStudent() user: GetStudent,
@@ -152,7 +168,9 @@ export class ClubRegistrationController {
   }
 
   @Student()
-  @Delete("/student/registrations/club-registration/:applyId")
+  @Delete(
+    "/student/registrations/club-registrations/club-registration/:applyId",
+  )
   @UsePipes(new ZodPipe(apiReg010))
   async deleteStudentRegistrationsClubRegistration(
     @GetStudent() user: GetStudent,
@@ -253,6 +271,59 @@ export class ClubRegistrationController {
         applyId,
         user.executiveId,
         body.comment,
+      );
+    return result;
+  }
+
+  @Professor()
+  @Get("/professor/registrations/club-registrations/brief")
+  async getProfessorRegistrationsClubRegistrationsBrief(
+    @GetProfessor() user: GetProfessor,
+  ): Promise<ApiReg021ResponseOk> {
+    logger.debug(
+      `[getProfessorRegistrationsClubRegistrationsBrief] log-inned by name: ${user.name} professorId: ${user.id}`,
+    );
+
+    const result =
+      await this.clubRegistrationService.getProfessorRegistrationsClubRegistrationsBrief(
+        { professorId: user.professorId },
+      );
+
+    return result;
+  }
+
+  @Professor()
+  @Get("/professor/registrations/club-registrations/club-registration/:applyId")
+  @UsePipes(new ZodPipe(apiReg022))
+  async getProfessorRegistrationsClubRegistration(
+    @Param() param: ApiReg022RequestParam,
+    @GetProfessor() user: GetProfessor,
+  ): Promise<ApiReg022ResponseOk> {
+    logger.debug(
+      `[getProfessorRegistrationsClubRegistration] log-inned by name: ${user.name} professorId: ${user.professorId}`,
+    );
+    const result =
+      await this.clubRegistrationService.getProfessorRegistrationsClubRegistration(
+        { registrationId: param.applyId, professorId: user.professorId },
+      );
+    return result;
+  }
+
+  @Professor()
+  @Patch(
+    "/professor/registrations/club-registrations/club-registration/:applyId/approval",
+  )
+  @UsePipes(new ZodPipe(apiReg023))
+  async getProfessorRegistrationsClubRegistrationApproval(
+    @GetProfessor() user: GetProfessor,
+    @Param() param: ApiReg023RequestParam,
+  ): Promise<ApiReg023ResponseOk> {
+    const result =
+      await this.clubRegistrationService.getProfessorRegistrationsClubRegistrationApproval(
+        {
+          professorId: user.professorId,
+          param,
+        },
       );
     return result;
   }

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import apiAct003 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
+import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { isValid, parse } from "date-fns";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
@@ -17,7 +18,6 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
-import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
@@ -51,7 +51,11 @@ const ButtonPlaceRight = styled.div`
 
 type PutActivityReportBody = z.infer<typeof apiAct003.requestBody>;
 const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
-  const { data, isLoading, isError } = useGetActivityReport(Number(id));
+  // TODO: 실제 프로필 사용
+  const { data, isLoading, isError } = useGetActivityReport(
+    "undergraduate",
+    Number(id),
+  );
   const { mutate } = usePutActivityReport();
   const [formData, setFormData] = useState<PutActivityReportBody>();
   const [duration, setDuration] = useState<[string, string]>(["", ""]);
@@ -129,17 +133,17 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
                 label="활동 분류"
                 items={[
                   {
-                    value: ActivityTypeEnum.FitInside.toString(),
+                    value: ActivityTypeEnum.matchedInternalActivity.toString(),
                     label: "동아리 성격에 합치하는 내부 활동",
                     selectable: true,
                   },
                   {
-                    value: ActivityTypeEnum.FitOutside.toString(),
+                    value: ActivityTypeEnum.matchedExternalActivity.toString(),
                     label: "동아리 성격에 합치하는 외부 활동",
                     selectable: true,
                   },
                   {
-                    value: ActivityTypeEnum.NotFit.toString(),
+                    value: ActivityTypeEnum.notMatchedActivity.toString(),
                     label: "동아리 성격에 합치하지 않는 활동",
                     selectable: true,
                   },

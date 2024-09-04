@@ -32,7 +32,7 @@ interface VoteResult {
 // TODO:   ===>( 아니면 이런게 가능한지 찾아보기?) ㅣ 저장해 놓고 나중에 한꺼번에 insert
 // TODO:  소켓 auth 구현하기
 // TODO:  payload 에서 보내주는 userId 를  client.handshake.query.userId 에서 꺼내도록 수정해야함.
-const corsOrigin = env.NODE_ENV === "development" ? "*" : ["*"]; // TODO: production일 경우에 도메인 제한 필요함.
+const corsOrigin = env.NODE_ENV === "local" ? "*" : ["*"]; // TODO: production일 경우에 도메인 제한 필요함.
 @WebSocketGateway({ namespace: "meeting", cors: corsOrigin })
 export class MeetingGateway {
   @WebSocketServer()

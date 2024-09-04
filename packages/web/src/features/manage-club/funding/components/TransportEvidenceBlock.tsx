@@ -70,7 +70,7 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
     setParticipants(
       funding.transportationPassengers.reduce((acc, participant) => {
         const index = mockParticipantData.findIndex(
-          data => data.studentId === participant.studentNumber,
+          data => data.studentNumber.toString() === participant.studentNumber,
         );
         return { ...acc, [index]: true };
       }, {}),
@@ -83,7 +83,7 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
       transportationPassengers: mockParticipantData
         .filter((_, i) => participants[i])
         .map(participant => ({
-          studentNumber: participant.studentId,
+          studentNumber: participant.studentNumber.toString(),
           name: participant.name,
         })),
     });

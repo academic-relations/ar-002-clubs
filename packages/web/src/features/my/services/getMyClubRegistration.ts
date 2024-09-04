@@ -24,7 +24,7 @@ export const useGetMyClubRegistration = () =>
 
       switch (status) {
         case 200:
-          return apiReg012.responseBodyMap[200].parse(data);
+          return data;
         case 204:
           return { registrations: [] };
         default:

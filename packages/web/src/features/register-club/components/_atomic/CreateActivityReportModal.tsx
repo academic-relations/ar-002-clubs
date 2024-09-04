@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import { ApiAct007RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
+import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 
@@ -12,14 +13,17 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { mockParticipantData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
-import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
-import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 import usePostActivityReportForNewClub from "@sparcs-clubs/web/features/register-club/services/usePostActivityReportForNewClub";
 
+import SelectActivityTerm from "../SelectActivityTerm";
+
+import ParticipantSection from "./ParticipantSection";
+
 interface CreateActivityReportModalProps {
+  clubId: number;
   isOpen: boolean;
   close: VoidFunction;
+  refetch?: () => void;
 }
 
 const HorizontalPlacer = styled.div`
@@ -34,20 +38,39 @@ const ButtonWrapper = styled.div`
 
 // TODO. 활동기간 리스트 추가, 파일업로드 추가
 const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
+  clubId,
   isOpen,
   close,
+  refetch = () => {},
 }) => {
   const formCtx = useForm<ApiAct007RequestBody>({ mode: "all" });
 
   const {
     control,
+    watch,
     handleSubmit,
+    setValue,
     formState: { isValid },
   } = formCtx;
 
+  const durations = watch("durations");
+
+  /* TODO: (@dora) refactor !!!!! */
+  type FileIdType = "evidenceFiles";
+  const updateMultipleFile = (
+    fileId: FileIdType,
+    data: { fileId: string }[],
+  ) => {
+    setValue(fileId, data, { shouldValidate: true });
+  };
+
+  useEffect(() => {
+    if (clubId) setValue("clubId", clubId, { shouldValidate: true });
+  }, [clubId]);
+
   const { mutate } = usePostActivityReportForNewClub();
 
-  const [participants, setParticipants] = useState<{ studentId: number }[]>([]);
+  const participants = watch("participants");
 
   const submitHandler = useCallback(
     (data: ApiAct007RequestBody) => {
@@ -57,6 +80,7 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
           onSuccess: close,
         },
       );
+      refetch();
     },
     [close, mutate, participants],
   );
@@ -64,7 +88,7 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
   return (
     <FormProvider {...formCtx}>
       <form onSubmit={handleSubmit(submitHandler)}>
-        <Modal isOpen={isOpen}>
+        <Modal isOpen={isOpen} width="full">
           <FlexWrapper direction="column" gap={32}>
             <FormController
               name="name"
@@ -90,17 +114,17 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
                     label="활동 분류"
                     items={[
                       {
-                        value: ActivityTypeEnum.FitInside.toString(),
+                        value: ActivityTypeEnum.matchedInternalActivity,
                         label: "동아리 성격에 합치하는 내부 활동",
                         selectable: true,
                       },
                       {
-                        value: ActivityTypeEnum.FitOutside.toString(),
+                        value: ActivityTypeEnum.matchedExternalActivity,
                         label: "동아리 성격에 합치하는 외부 활동",
                         selectable: true,
                       },
                       {
-                        value: ActivityTypeEnum.NotFit.toString(),
+                        value: ActivityTypeEnum.notMatchedActivity,
                         label: "동아리 성격에 합치하지 않는 활동",
                         selectable: true,
                       },
@@ -109,7 +133,26 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
                 )}
               />
 
-              {/* <DateRangeInput label="활동 기간" /> */}
+              <FormController
+                name="activityTypeEnumId"
+                required
+                control={control}
+                renderItem={() => (
+                  <SelectActivityTerm
+                    onChange={terms => {
+                      const processedTerms = terms.map(term => ({
+                        startTerm: new Date(
+                          `${term.startDate.replace(".", "-")}`,
+                        ),
+                        endTerm: new Date(`${term.endDate.replace(".", "-")}`),
+                      }));
+                      setValue("durations", processedTerms, {
+                        shouldValidate: true,
+                      });
+                    }}
+                  />
+                )}
+              />
             </HorizontalPlacer>
             <FormController
               name="location"
@@ -148,20 +191,14 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
                 />
               )}
             />
-            <FlexWrapper direction="column" gap={4}>
-              <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
-                활동 인원
-              </Typography>
-              <SelectParticipant
-                data={mockParticipantData}
-                onSelected={selectList => {
-                  const participantIds = selectList.map(data => ({
-                    studentId: +data.studentId,
-                  }));
-                  setParticipants(participantIds);
-                }}
-              />
-            </FlexWrapper>
+            {durations && (
+              <FlexWrapper direction="column" gap={4}>
+                <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
+                  활동 인원
+                </Typography>
+                <ParticipantSection clubId={clubId} />
+              </FlexWrapper>
+            )}
             <FlexWrapper direction="column" gap={4}>
               <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
                 활동 증빙
@@ -177,7 +214,24 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
                   />
                 )}
               />
-              <FileUpload />
+              <FormController
+                name="evidenceFiles"
+                control={control}
+                renderItem={props => (
+                  <FileUpload
+                    {...props}
+                    multiple
+                    onChange={data => {
+                      updateMultipleFile(
+                        "evidenceFiles",
+                        data.map(d => ({
+                          fileId: d,
+                        })),
+                      );
+                    }}
+                  />
+                )}
+              />
             </FlexWrapper>
             <ButtonWrapper>
               <Button type="outlined" onClick={close}>

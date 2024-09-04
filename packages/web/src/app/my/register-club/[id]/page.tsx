@@ -8,7 +8,8 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import NotForExecutive from "@sparcs-clubs/web/common/frames/NotForExecutive";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
-import MyRegisterClubDetailFrame from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubDetailFrame";
+import ProfessorRegisterClubDetailFrame from "@sparcs-clubs/web/features/my/register-club/frames/ProfessorRegisterClubDetailFrame";
+import StudentRegisterClubDetailFrame from "@sparcs-clubs/web/features/my/register-club/frames/StudentRegisterClubDetailFrame";
 
 const MyRegisterClubDetail = () => {
   const { isLoggedIn, login, profile } = useAuth();
@@ -28,7 +29,7 @@ const MyRegisterClubDetail = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile === "executive") {
+  if (profile?.type === "executive") {
     return <NotForExecutive />;
   }
 
@@ -36,6 +37,10 @@ const MyRegisterClubDetail = () => {
     return <NotFound />;
   }
 
-  return <MyRegisterClubDetailFrame profile={profile} />;
+  return profile?.type === "professor" ? (
+    <ProfessorRegisterClubDetailFrame profile={profile.type} />
+  ) : (
+    <StudentRegisterClubDetailFrame profile={profile.type} />
+  );
 };
 export default MyRegisterClubDetail;

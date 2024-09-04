@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
+import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { useFormContext } from "react-hook-form";
 
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
@@ -12,14 +13,25 @@ import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import { ClubRegistrationInfo } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 
 interface ClubNameFieldProps {
+  type: RegistrationTypeEnum;
   clubList?: ClubRegistrationInfo[];
+  editMode?: boolean;
 }
 
-const ClubNameField: React.FC<ClubNameFieldProps> = ({ clubList = [] }) => {
-  const { control, resetField, setValue } =
+const ClubNameField: React.FC<ClubNameFieldProps> = ({
+  type,
+  clubList = [],
+  editMode = false,
+}) => {
+  const { control, resetField, setValue, getValues, watch } =
     useFormContext<ApiReg001RequestBody>();
 
-  const [isCheckedClubName, setIsCheckedClubName] = useState(false);
+  const krName = watch("clubNameKr");
+  const enName = watch("clubNameEn");
+
+  const [isCheckedClubName, setIsCheckedClubName] = useState(
+    getValues("clubNameKr") !== "",
+  );
 
   const clubOptions = useCallback(
     () =>
@@ -37,12 +49,12 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({ clubList = [] }) => {
     if (clubList.length > 0 && !isCheckedClubName) {
       resetField("clubNameKr", { keepError: false });
       resetField("clubNameEn", { keepError: false });
-      setValue("clubNameKr", "");
-      setValue("clubNameEn", "");
+      setValue("clubNameKr", "", { shouldValidate: true });
+      setValue("clubNameEn", "", { shouldValidate: true });
     }
   }, [clubList.length, isCheckedClubName, resetField, setValue]);
 
-  if (clubList.length === 0) {
+  if (type === RegistrationTypeEnum.NewProvisional) {
     return (
       <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
         <FormController
@@ -52,6 +64,7 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({ clubList = [] }) => {
           renderItem={props => (
             <TextInput
               {...props}
+              value={krName}
               label="동아리명 (국문)"
               placeholder="국문 동아리명을 입력해주세요"
             />
@@ -64,6 +77,7 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({ clubList = [] }) => {
           renderItem={props => (
             <TextInput
               {...props}
+              value={enName}
               label="동아리명 (영문)"
               placeholder="영문 동아리명을 입력해주세요"
             />
@@ -85,6 +99,7 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({ clubList = [] }) => {
             label="동아리명 (국문)"
             placeholder="동아리명을 선택해주세요"
             items={clubOptions()}
+            disabled={editMode}
           />
         )}
       />

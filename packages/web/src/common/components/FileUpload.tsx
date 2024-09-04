@@ -9,6 +9,7 @@ import useFileUpload from "../services/postFileUpload";
 
 import usePutFileS3 from "../services/putFileS3";
 
+import Attachment from "./File/attachment";
 import ThumbnailPreviewList from "./File/ThumbnailPreviewList";
 import FlexWrapper from "./FlexWrapper";
 import Typography from "./Typography";
@@ -16,9 +17,14 @@ import Typography from "./Typography";
 interface FileUploadProps {
   fileId?: string;
   placeholder?: string;
+  initialFiles?: {
+    file: File;
+    fileId?: string;
+  }[];
   onChange?: (string: string[]) => void;
   allowedTypes?: string[];
   multiple?: boolean;
+  disabled?: boolean;
 }
 
 const FileUploadInner = styled.div`
@@ -87,24 +93,43 @@ const HiddenInput = styled.input`
   display: none;
 `;
 
+const FlexExpand = styled.div`
+  flex: 1;
+`;
+
 const FileUpload: React.FC<FileUploadProps> = ({
   fileId = "file-upload-input",
   placeholder = "파일을 선택해주세요",
+  initialFiles = [],
   onChange = () => {},
   allowedTypes = [],
   multiple = false,
+  disabled = false,
 }) => {
   const { mutate: uploadFileMutation } = useFileUpload();
   const { mutate: putFileS3Mutation } = usePutFileS3();
 
-  const [files, setFiles] = useState<{ file: File; fileId?: string }[]>([]);
+  const [files, setFiles] =
+    useState<{ file: File; fileId?: string }[]>(initialFiles);
 
+  /* NOTE: (@dora) must remove to prevent infinite loop ???????? */
   useEffect(() => {
-    if (files.length === 0) {
+    if (initialFiles.length === 0) return;
+    setFiles(initialFiles);
+  }, [initialFiles]);
+
+  /* TODO: (@dora) refactor !!!!!!! */
+  interface FinalFile {
+    file: File;
+    fileId?: string;
+  }
+
+  const onSubmit = (_files: FinalFile[]) => {
+    if (_files.length === 0) {
       return;
     }
 
-    const notUploadedFiles = files.filter(file => !file.fileId);
+    const notUploadedFiles = _files.filter(file => !file.fileId);
 
     const info: ApiFil001RequestBody = {
       metadata: notUploadedFiles.map(file => ({
@@ -120,7 +145,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
         onSuccess: data => {
           putFileS3Mutation(
             {
-              files: files.map(file => file.file),
+              files: _files.map(file => file.file),
               uploadUrls: data.urls.map(url => url.uploadUrl),
             },
             {
@@ -132,10 +157,30 @@ const FileUpload: React.FC<FileUploadProps> = ({
         },
       },
     );
-  }, [files, putFileS3Mutation, uploadFileMutation, onChange]);
+  };
+
+  const updateFiles = (_files: Attachment[]) => {
+    const updatedFiles = files.filter(f =>
+      _files.map(_file => _file.name).includes(f.file.name),
+    );
+    setFiles(updatedFiles);
+    onChange(updatedFiles.map(file => file.fileId!));
+    onSubmit(updatedFiles);
+  };
+  const removeFile = (_file: FinalFile) => {
+    const updatedFiles = files.filter(file => file.fileId !== _file.fileId);
+    setFiles(updatedFiles);
+    onChange(updatedFiles.map(file => file.fileId!));
+    onSubmit(updatedFiles);
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFiles(Array.from(event.target.files ?? []).map(file => ({ file })));
+    const newFiles = Array.from(event.target.files ?? []).map(file => ({
+      file,
+    }));
+    const updatedFiles = multiple ? [...files, ...newFiles] : newFiles;
+    setFiles(updatedFiles);
+    onSubmit(updatedFiles);
   };
 
   const handleClick = () => {
@@ -179,12 +224,35 @@ const FileUpload: React.FC<FileUploadProps> = ({
         />
       </FileUploadInner>
       <FlexWrapper direction="column" gap={8} padding="0 4px">
-        <ThumbnailPreviewList
-          fileList={files.map(file => ({
-            name: file.file.name,
-            src: URL.createObjectURL(file.file),
-          }))}
-        />
+        {multiple && (
+          <ThumbnailPreviewList
+            fileList={files.map(file => ({
+              name: file.file.name,
+              src: URL.createObjectURL(file.file),
+            }))}
+            onChange={_files => updateFiles(_files)}
+            disabled={disabled}
+          />
+        )}
+        {!multiple && files.length > 0 && (
+          <FlexWrapper direction="row" gap={8} key={files[0].file.name}>
+            <Icon type="description_outlined" size={16} color="BLACK" />
+            <FlexExpand>
+              <Typography color="BLACK" fs={14} lh={16} fw="REGULAR">
+                {files[0].file.name}
+              </Typography>
+            </FlexExpand>
+
+            {!disabled && (
+              <Icon
+                type="close_outlined"
+                size={16}
+                color="BLACK"
+                onClick={() => removeFile(files[0])}
+              />
+            )}
+          </FlexWrapper>
+        )}
       </FlexWrapper>
     </FlexWrapper>
   );

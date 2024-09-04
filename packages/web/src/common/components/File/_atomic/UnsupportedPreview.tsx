@@ -1,3 +1,5 @@
+import React from "react";
+
 import styled from "styled-components";
 
 import noPreview from "@sparcs-clubs/web/assets/no-preview.png";
@@ -6,6 +8,10 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 import Attachment from "../attachment";
+
+interface UnsupportedPreviewProps {
+  file: Attachment;
+}
 
 const UnsupportedPreviewWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.GRAY[100]};
@@ -21,7 +27,7 @@ const UnsupportedPreviewWrapper = styled.div`
   gap: 8px;
 `;
 
-const UnsupportedPreview = ({ file }: { file: Attachment }) => (
+const UnsupportedPreview: React.FC<UnsupportedPreviewProps> = ({ file }) => (
   <UnsupportedPreviewWrapper>
     <Icon type="insert_drive_file" size={24} color={colors.GRAY[300]} />
     <Typography fs={14} lh={16} color="GRAY.300">

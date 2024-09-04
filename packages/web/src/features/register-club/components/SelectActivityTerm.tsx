@@ -10,6 +10,11 @@ import EditActivityTermModal, {
   ActivityTermProps,
 } from "./_atomic/EditActivityTermModal";
 
+interface SelectActivityTermProps {
+  initialData?: ActivityTermProps[];
+  onChange?: (data: ActivityTermProps[]) => void;
+}
+
 const ActivityTermArea = styled.div`
   display: flex;
   flex-direction: row;
@@ -40,15 +45,18 @@ const ActivityTermContent = styled.div`
   flex-grow: 1;
 `;
 
-const SelectActivityTerm = () => {
-  const [activityTermList, setActivityTermList] = useState<ActivityTermProps[]>(
-    [],
-  );
+const SelectActivityTerm: React.FC<SelectActivityTermProps> = ({
+  initialData = [],
+  onChange = () => {},
+}) => {
+  const [activityTermList, setActivityTermList] =
+    useState<ActivityTermProps[]>(initialData);
 
   const handleTerm = () => {
     overlay.open(({ isOpen, close }) => {
       const handleConfirm = (terms: ActivityTermProps[]) => {
         setActivityTermList(terms);
+        onChange(terms);
         close();
       };
 

@@ -2,6 +2,9 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, gte, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
+import logger from "@sparcs-clubs/api/common/util/logger";
+import { takeUnique } from "@sparcs-clubs/api/common/util/util";
+
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
   Department,
@@ -18,6 +21,7 @@ export default class UserRepository {
     const crt = new Date();
     const user = await this.db
       .select({
+        id: Student.id,
         name: Student.name,
         email: Student.email,
         department: Department.name,
@@ -53,5 +57,30 @@ export default class UserRepository {
       .from(User)
       .where(eq(User.id, userId));
     return userName;
+  }
+
+  async getPhoneNumber(userId: number) {
+    const phoneNumber = await this.db
+      .select({ phoneNumber: User.phoneNumber })
+      .from(User)
+      .where(and(eq(User.id, userId), isNull(User.deletedAt)))
+      .then(takeUnique);
+    return phoneNumber;
+  }
+
+  async updatePhoneNumber(userId: number, phoneNumber: string) {
+    const isUpdateSucceed = await this.db.transaction(async tx => {
+      const [result] = await tx
+        .update(User)
+        .set({ phoneNumber })
+        .where(and(eq(User.id, userId), isNull(User.deletedAt)));
+      if (result.affectedRows !== 1) {
+        logger.debug("[updatePhoneNumber] rollback occurs");
+        tx.rollback();
+        return false;
+      }
+      return true;
+    });
+    return isUpdateSucceed;
   }
 }

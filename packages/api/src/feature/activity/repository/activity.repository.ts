@@ -1,9 +1,9 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import {
   ActivityStatusEnum,
   ActivityTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { and, eq, gt, isNull, lte } from "drizzle-orm";
+import { and, asc, eq, gt, isNull, lte, not } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -17,6 +17,7 @@ import {
   ActivityT,
   ProfessorSignStatus,
 } from "@sparcs-clubs/api/drizzle/schema/activity.schema";
+import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 @Injectable()
 export default class ActivityRepository {
@@ -242,6 +243,22 @@ export default class ActivityRepository {
     return result;
   }
 
+  /**
+   * @param clubId 동아리 ID
+   * @description 가동아리 활보 작성은 하나의 기간만 존재하기에
+   * clubId기준으로 한번에 가져오기 위한 쿼리입니다.
+   * @returns 해당 동아리가 적은 삭제되지 않은 모든 활동을 가져옵니다.
+   */
+  async selectActivityByClubId(param: { clubId: number }) {
+    const result = await this.db
+      .select()
+      .from(Activity)
+      .where(
+        and(eq(Activity.clubId, param.clubId), isNull(Activity.deletedAt)),
+      );
+    return result;
+  }
+
   async selectActivityByClubIdAndActivityDId(
     clubId: number,
     activityDId: number,
@@ -292,15 +309,21 @@ export default class ActivityRepository {
       .from(ActivityT)
       .where(
         and(eq(ActivityT.activityId, activityId), isNull(ActivityT.deletedAt)),
-      );
+      )
+      .orderBy(asc(ActivityT.startTerm), asc(ActivityT.endTerm));
 
     return result;
   }
 
   async selectParticipantByActivityId(activityId: number) {
     const result = await this.db
-      .select()
+      .select({
+        studentId: ActivityParticipant.studentId,
+        studentNumber: Student.number,
+        name: Student.name,
+      })
       .from(ActivityParticipant)
+      .leftJoin(Student, eq(ActivityParticipant.studentId, Student.id))
       .where(
         and(
           eq(ActivityParticipant.activityId, activityId),
@@ -474,5 +497,39 @@ export default class ActivityRepository {
       .from(Activity)
       .where(eq(Activity.id, id));
     return result;
+  }
+
+  /**
+   * @param activityId 활동 Id
+   * @description 해당 활동의 승인 상태(ActivityStatusEnumId)를 변경합니다.
+   * 해당 활동의 상태가 이미 승인인 경우 예외(Bad Request)를 발생시킵니다.
+   * @returns update에 성공했는지 성공여부를 리턴합니다.
+   * 실패시 예외가 발생하여 항상 true를 리턴해야 합니다.
+   */
+  async updateActivityStatusEnumId(param: {
+    activityId: number;
+    activityStatusEnumId: ActivityStatusEnum;
+  }): Promise<boolean> {
+    const isUpdateSucceed = await this.db.transaction(async tx => {
+      const [updateResult] = await tx
+        .update(Activity)
+        .set({
+          activityStatusEnumId: param.activityStatusEnumId,
+        })
+        .where(
+          and(
+            eq(Activity.id, param.activityId),
+            not(eq(Activity.activityStatusEnumId, ActivityStatusEnum.Approved)),
+            isNull(Activity.deletedAt),
+          ),
+        );
+      if (updateResult.affectedRows !== 1)
+        throw new HttpException(
+          "failed to update activityStatusEnumId",
+          HttpStatus.BAD_REQUEST,
+        );
+      return true;
+    });
+    return isUpdateSucceed;
   }
 }
