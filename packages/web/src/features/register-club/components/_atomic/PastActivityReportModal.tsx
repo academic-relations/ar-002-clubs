@@ -13,6 +13,7 @@ import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/Confi
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { patchActivityExecutive } from "@sparcs-clubs/web/features/executive/register-club/services/patchActivityExecutive";
+import { patchActivityExecutiveSendBack } from "@sparcs-clubs/web/features/executive/register-club/services/patchActivityExecutiveSendBack";
 import { useDeleteActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useDeleteActivityReport";
 import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
 import { getActivityTypeTagLabel } from "@sparcs-clubs/web/features/register-club/utils/activityType";
@@ -101,6 +102,15 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
 
   const handleApprove = async () => {
     await patchActivityExecutive({ activityId });
+    close();
+  };
+
+  const handleReject = async () => {
+    await patchActivityExecutiveSendBack(
+      { activityId },
+      { comment: rejectionDetail },
+    );
+    setRejectionDetail("");
     close();
   };
 
@@ -213,7 +223,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
                 </Button>
                 {/* TODO: 반려 연결 */}
                 <Button
-                  onClick={isExecutive ? () => {} : handleEdit}
+                  onClick={isExecutive ? handleReject : handleEdit}
                   type={
                     isExecutive && rejectionDetail === ""
                       ? "disabled"
