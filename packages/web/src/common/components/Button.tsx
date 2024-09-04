@@ -65,6 +65,7 @@ const Button = ({
     <ButtonChosenInner
       {...divProps}
       type={buttonType}
+      disabled={type === "disabled"}
       onClick={type === "disabled" ? undefined : divProps.onClick}
     >
       {children}

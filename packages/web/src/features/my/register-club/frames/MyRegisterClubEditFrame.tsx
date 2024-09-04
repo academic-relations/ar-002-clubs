@@ -1,9 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { ApiReg009RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg009";
-import apiReg011, {
-  ApiReg011ResponseOk,
-} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
+import apiReg011 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import {
   RegistrationDeadlineEnum,
   RegistrationTypeEnum,
@@ -83,6 +81,10 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
     }
   }, [termData]);
 
+  const formCtx = useForm<ApiReg009RequestBody>({
+    mode: "all",
+  });
+
   const {
     data: detail,
     isLoading,
@@ -91,49 +93,28 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
     applyId: +applyId,
   });
 
-  const initialData = useMemo(() => {
-    const {
-      registrationTypeEnumId,
-      clubId,
-      clubNameKr,
-      clubNameEn,
-      representative,
-      foundedAt,
-      divisionId,
-      activityFieldKr,
-      activityFieldEn,
-      professor,
-      divisionConsistency,
-      foundationPurpose,
-      activityPlan,
-      activityPlanFile,
-      clubRuleFile,
-      externalInstructionFile,
-    } = detail ?? ({} as ApiReg011ResponseOk);
-    return {
-      registrationTypeEnumId,
-      clubId,
-      clubNameKr,
-      clubNameEn,
-      phoneNumber: representative?.phoneNumber,
-      foundedAt,
-      divisionId,
-      activityFieldKr,
-      activityFieldEn,
-      professor,
-      divisionConsistency,
-      foundationPurpose,
-      activityPlan,
-      activityPlanFileId: activityPlanFile?.id,
-      clubRuleFileId: clubRuleFile?.id,
-      externalInstructionFileId: externalInstructionFile?.id,
-    };
-  }, [detail]);
-
-  const formCtx = useForm<ApiReg009RequestBody>({
-    mode: "all",
-    defaultValues: initialData,
-  });
+  useEffect(() => {
+    if (detail) {
+      formCtx.reset({
+        registrationTypeEnumId: detail.registrationTypeEnumId,
+        clubId: detail.clubId,
+        clubNameKr: detail.clubNameKr,
+        clubNameEn: detail.clubNameEn,
+        phoneNumber: detail.representative?.phoneNumber,
+        foundedAt: detail.foundedAt,
+        divisionId: detail.divisionId,
+        activityFieldKr: detail.activityFieldKr,
+        activityFieldEn: detail.activityFieldEn,
+        professor: detail.professor,
+        divisionConsistency: detail.divisionConsistency,
+        foundationPurpose: detail.foundationPurpose,
+        activityPlan: detail.activityPlan,
+        activityPlanFileId: detail.activityPlanFile?.id,
+        clubRuleFileId: detail.clubRuleFile?.id,
+        externalInstructionFileId: detail.externalInstructionFile?.id,
+      });
+    }
+  }, [detail, formCtx]);
 
   const {
     watch,

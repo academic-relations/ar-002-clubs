@@ -34,7 +34,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   close,
   viewOnly = false,
 }) => {
-  const { data, isLoading, isError } = useGetActivityReport(
+  const { data, isLoading, isError, refetch } = useGetActivityReport(
     profile,
     activityId,
   );
@@ -56,7 +56,10 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
           profile={profile}
           activityId={activityId}
           isOpen={isOpenEditActivityModal}
-          close={closeEditActivityModal}
+          close={() => {
+            closeEditActivityModal();
+            refetch();
+          }}
         />
       ),
     );

@@ -91,9 +91,11 @@ const containsTextFilter: FilterFn<Participant> = (
   filterValue: string,
 ) => {
   const name = row.getValue<string>("name").toLowerCase();
-  const studentId = row.getValue<string>("studentId").toLowerCase();
+  const studentNumber = row.getValue<string>("studentNumber").toLowerCase();
   const filterText = filterValue.toLowerCase();
-  return hangulIncludes(name, filterText) || studentId.startsWith(filterText);
+  return (
+    hangulIncludes(name, filterText) || studentNumber.startsWith(filterText)
+  );
 };
 
 const SelectParticipant: React.FC<SelectParticipantProps> = ({
@@ -108,14 +110,16 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
   const [selected, setSelected] = useState<Participant[]>([]);
 
   useEffect(() => {
-    const res = value
-      ? data.filter((_, i) => value?.[i])
-      : data.filter((_, i) => rowValues?.[i]);
-    setSelected(res);
-    if (onSelected != null) {
-      onSelected(res);
+    if (data) {
+      const res = value
+        ? data.filter((_, i) => value?.[i])
+        : data.filter((_, i) => rowValues?.[i]);
+      setSelected(res);
+      if (onSelected != null) {
+        onSelected(res);
+      }
     }
-  }, [rowValues, value, data]);
+  }, [data]);
 
   const table = useReactTable({
     columns,
@@ -138,7 +142,7 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
     initialState: {
       sorting: [
         {
-          id: "studentId",
+          id: "studentNumber",
           desc: true,
         },
       ],
