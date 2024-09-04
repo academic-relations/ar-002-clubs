@@ -1,9 +1,9 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import {
   ActivityStatusEnum,
   ActivityTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { and, asc, eq, gt, isNull, lte } from "drizzle-orm";
+import { and, asc, eq, gt, isNull, lte, not } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -497,5 +497,39 @@ export default class ActivityRepository {
       .from(Activity)
       .where(eq(Activity.id, id));
     return result;
+  }
+
+  /**
+   * @param activityId 활동 Id
+   * @description 해당 활동의 승인 상태(ActivityStatusEnumId)를 변경합니다.
+   * 해당 활동의 상태가 이미 승인인 경우 예외(Bad Request)를 발생시킵니다.
+   * @returns update에 성공했는지 성공여부를 리턴합니다.
+   * 실패시 예외가 발생하여 항상 true를 리턴해야 합니다.
+   */
+  async updateActivityStatusEnumId(param: {
+    activityId: number;
+    activityStatusEnumId: ActivityStatusEnum;
+  }): Promise<boolean> {
+    const isUpdateSucceed = await this.db.transaction(async tx => {
+      const [updateResult] = await tx
+        .update(Activity)
+        .set({
+          activityStatusEnumId: param.activityStatusEnumId,
+        })
+        .where(
+          and(
+            eq(Activity.id, param.activityId),
+            not(eq(Activity.activityStatusEnumId, ActivityStatusEnum.Approved)),
+            isNull(Activity.deletedAt),
+          ),
+        );
+      if (updateResult.affectedRows !== 1)
+        throw new HttpException(
+          "failed to update activityStatusEnumId",
+          HttpStatus.BAD_REQUEST,
+        );
+      return true;
+    });
+    return isUpdateSucceed;
   }
 }
