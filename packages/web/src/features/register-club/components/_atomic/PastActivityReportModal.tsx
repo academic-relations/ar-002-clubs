@@ -92,7 +92,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   }, [isDeleteSuccess, isDeleteError]);
 
   return (
-    <Modal isOpen={isOpen}>
+    <Modal isOpen={isOpen} width="100%">
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         <FlexWrapper gap={20} direction="column">
           <FlexWrapper gap={16} direction="column">
