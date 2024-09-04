@@ -29,13 +29,24 @@ const OptionOuter = styled.div`
   align-self: stretch;
 `;
 
+const StyledCard = styled(Card)`
+  margin-left: 20px;
+  overflow: hidden;
+  -ms-overflow-style: none;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
 const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
   clubId,
 }) => {
   const { profile } = useAuth();
-  const { data, isLoading, isError } = useGetActivityReportsForPromotional({
-    clubId,
-  });
+  const { data, isLoading, isError, refetch } =
+    useGetActivityReportsForPromotional({
+      clubId,
+    });
 
   const openCreateActivityReportModal = () => {
     overlay.open(({ isOpen, close }) => (
@@ -43,6 +54,7 @@ const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
         clubId={clubId}
         isOpen={isOpen}
         close={close}
+        refetch={refetch}
       />
     ));
   };
@@ -51,7 +63,7 @@ const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <FlexWrapper direction="column" gap={40}>
         <SectionTitle>가등록 / 등록 취소 기간 활동 보고서</SectionTitle>
-        <Card outline gap={32} style={{ marginLeft: 20 }}>
+         <StyledCard outline gap={32}>
           <OptionOuter>
             <Typography
               fs={14}
@@ -74,7 +86,7 @@ const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
             data={data?.activities ?? []}
             profile={profile?.type ?? ""}
           />
-        </Card>
+        </StyledCard>
       </FlexWrapper>
     </AsyncBoundary>
   );

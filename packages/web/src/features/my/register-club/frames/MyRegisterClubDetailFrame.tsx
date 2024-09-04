@@ -32,7 +32,7 @@ import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 import { professorEnumToText } from "@sparcs-clubs/web/utils/getUserType";
 
-import MyRegisterClubAcfFrame from "./MyRegisterClubAcfFrame";
+import MyRegisterClubActFrame from "./MyRegisterClubActFrame";
 
 const FilePreviewContainerWrapper = styled(FlexWrapper)`
   padding-left: 24px;
@@ -78,7 +78,7 @@ const MyRegisterClubDetailFrame: React.FC<{
           onConfirm={async () => {
             await deleteMyClubRegistration({ applyId: +id });
             close();
-            router.push("/my");
+            window.location.href = "/my";
           }}
           onClose={close}
           confirmButtonText="삭제"
@@ -308,7 +308,7 @@ const MyRegisterClubDetailFrame: React.FC<{
         </FlexWrapper>
         {clubDetail.registrationTypeEnumId !== RegistrationTypeEnum.Renewal &&
           clubDetail.clubId && (
-            <MyRegisterClubAcfFrame
+            <MyRegisterClubActFrame
               profile={profile}
               clubId={clubDetail.clubId}
             />

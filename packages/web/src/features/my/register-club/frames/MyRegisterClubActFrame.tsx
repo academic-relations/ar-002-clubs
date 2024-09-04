@@ -5,14 +5,14 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useProvisionalActivities from "@sparcs-clubs/web/features/register-club/services/getProvisionalActivities";
 
-import MyRegisterClubAcfTable from "../components/MyRegisterClubAcfTable";
+import MyRegisterClubActTable from "../components/MyRegisterClubActTable";
 
-interface MyRegisterClubAcfFrameProps {
+interface MyRegisterClubActFrameProps {
   profile: string;
   clubId: number;
 }
 
-const MyRegisterClubAcfFrame: React.FC<MyRegisterClubAcfFrameProps> = ({
+const MyRegisterClubActFrame: React.FC<MyRegisterClubActFrameProps> = ({
   profile,
   clubId,
 }) => {
@@ -27,8 +27,8 @@ const MyRegisterClubAcfFrame: React.FC<MyRegisterClubAcfFrameProps> = ({
           {data ? data.activities.length : 0}개)
         </Typography>
         {data && (
-          <MyRegisterClubAcfTable
-            clubRegisterAcfList={data}
+          <MyRegisterClubActTable
+            clubRegisterActList={data}
             profile={profile}
           />
         )}
@@ -37,4 +37,4 @@ const MyRegisterClubAcfFrame: React.FC<MyRegisterClubAcfFrameProps> = ({
   );
 };
 
-export default MyRegisterClubAcfFrame;
+export default MyRegisterClubActFrame;

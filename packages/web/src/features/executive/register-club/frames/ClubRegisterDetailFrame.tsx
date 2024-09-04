@@ -15,7 +15,7 @@ import {
   ProfessorIsApprovedTagList,
   RegistrationTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
-import MyRegisterClubAcfFrame from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubAcfFrame";
+import MyRegisterClubActFrame from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubActFrame";
 import { FilePreviewContainer } from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubDetailFrame";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
 import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
@@ -187,7 +187,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
         {data &&
           data.registrationTypeEnumId !== RegistrationTypeEnum.Renewal &&
           data.clubId && (
-            <MyRegisterClubAcfFrame profile="executive" clubId={data.clubId} />
+            <MyRegisterClubActFrame profile="executive" clubId={data.clubId} />
           )}
         {data?.professor && (
           <FlexWrapper gap={20} direction="row">

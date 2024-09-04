@@ -5,7 +5,10 @@ import {
   ApiAct008RequestBody,
   ApiAct008RequestParam,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
-import { ActivityDeadlineEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
+import {
+  ActivityDeadlineEnum,
+  ActivityStatusEnum,
+} from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
@@ -37,6 +40,10 @@ import type {
   ApiAct013RequestQuery,
   ApiAct013ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct013";
+import type {
+  ApiAct016RequestParam,
+  ApiAct016ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct016";
 
 @Injectable()
 export default class ActivityService {
@@ -258,6 +265,16 @@ export default class ActivityService {
       activity.id,
     );
 
+    const evidenceFiles = await Promise.all(
+      evidence.map(async e => ({
+        fileId: e.fileId,
+        name: await this.filePublicService
+          .getFileInfoById(e.fileId)
+          .then(f => f.name),
+        url: await this.filePublicService.getFileUrl(e.fileId),
+      })),
+    );
+
     return {
       clubId: activity.clubId,
       name: activity.name,
@@ -267,12 +284,10 @@ export default class ActivityService {
       purpose: activity.purpose,
       detail: activity.detail,
       evidence: activity.evidence,
-      evidenceFiles: evidence.map(e => ({
-        fileId: e.fileId,
-      })),
+      evidenceFiles,
       participants: participants.map(e => ({
         studentId: e.studentId,
-        studnetNumber: e.studentNumber,
+        studentNumber: e.studentNumber,
         name: e.name,
       })),
       durations: duration.map(e => ({
@@ -637,6 +652,16 @@ export default class ActivityService {
       activity.id,
     );
 
+    const evidenceFiles = await Promise.all(
+      evidence.map(async e => ({
+        fileId: e.fileId,
+        name: await this.filePublicService
+          .getFileInfoById(e.fileId)
+          .then(f => f.name),
+        url: await this.filePublicService.getFileUrl(e.fileId),
+      })),
+    );
+
     return {
       clubId: activity.clubId,
       name: activity.name,
@@ -646,12 +671,10 @@ export default class ActivityService {
       purpose: activity.purpose,
       detail: activity.detail,
       evidence: activity.evidence,
-      evidenceFiles: evidence.map(e => ({
-        fileId: e.fileId,
-      })),
+      evidenceFiles,
       participants: participants.map(e => ({
         studentId: e.studentId,
-        studnetNumber: e.studentNumber,
+        studentNumber: e.studentNumber,
         name: e.name,
       })),
       durations: duration.map(e => ({
@@ -673,6 +696,16 @@ export default class ActivityService {
       activity.id,
     );
 
+    const evidenceFiles = await Promise.all(
+      evidence.map(async e => ({
+        fileId: e.fileId,
+        name: await this.filePublicService
+          .getFileInfoById(e.fileId)
+          .then(f => f.name),
+        url: await this.filePublicService.getFileUrl(e.fileId),
+      })),
+    );
+
     return {
       clubId: activity.clubId,
       name: activity.name,
@@ -682,12 +715,10 @@ export default class ActivityService {
       purpose: activity.purpose,
       detail: activity.detail,
       evidence: activity.evidence,
-      evidenceFiles: evidence.map(e => ({
-        fileId: e.fileId,
-      })),
+      evidenceFiles,
       participants: participants.map(e => ({
         studentId: e.studentId,
-        studnetNumber: e.studentNumber,
+        studentNumber: e.studentNumber,
         name: e.name,
       })),
       durations: duration.map(e => ({
@@ -695,5 +726,22 @@ export default class ActivityService {
         endTerm: e.endTerm,
       })),
     };
+  }
+
+  /**
+   * @description patchExecutiveActivityApproval의 서비스 진입점입니다.
+   */
+  async patchExecutiveActivityApproval(param: {
+    executiveId: number;
+    param: ApiAct016RequestParam;
+  }): Promise<ApiAct016ResponseOk> {
+    const isApprovalSucceed =
+      await this.activityRepository.updateActivityStatusEnumId({
+        activityId: param.param.activityId,
+        activityStatusEnumId: ActivityStatusEnum.Approved,
+      });
+    if (!isApprovalSucceed)
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+    return {};
   }
 }

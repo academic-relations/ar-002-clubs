@@ -156,7 +156,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   ChannelService.loadScript();
   ChannelService.boot({
     pluginKey: "f9e90cc5-6304-4987-8a60-5332d572c332",
-    memberId: profile?.id.toString(),
+    memberId: profile?.id ? profile?.id.toString() : undefined,
     profile:
       profile !== undefined
         ? {

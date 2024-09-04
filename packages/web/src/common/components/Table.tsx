@@ -25,6 +25,7 @@ const TableInnerWrapper = styled.div`
   padding: 0 calc((100vw - 100%) / 2);
   overflow-x: auto;
 `;
+
 const TableInner = styled.table.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<{ height?: number; minWidth: number }>`

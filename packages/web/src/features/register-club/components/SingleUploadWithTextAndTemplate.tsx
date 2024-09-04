@@ -11,7 +11,8 @@ interface SingleUploadWithTextAndTemplateProps {
   fileId: string;
   title: string;
   content?: string;
-  onFormatDownload?: VoidFunction;
+  downloadUrl: string;
+  downloadFileName: string;
   initialFile?: {
     id: string;
     name: string;
@@ -35,7 +36,8 @@ const SingleUploadWithTextAndTemplate: React.FC<
   fileId,
   title,
   content = undefined,
-  onFormatDownload = () => {},
+  downloadUrl,
+  downloadFileName,
   initialFile = undefined,
   onChange = () => {},
 }) => {
@@ -53,6 +55,13 @@ const SingleUploadWithTextAndTemplate: React.FC<
     }
   }, [initialFile, setFiles]);
 
+  const onDownload = () => {
+    const a = document.createElement("a");
+    a.href = downloadUrl;
+    a.download = downloadFileName;
+    a.click();
+  };
+
   return (
     <SingleUploadWithTextAndTemplateInner>
       <Typography ff="PRETENDARD" fw="MEDIUM" fs={16} lh={20} color="BLACK">
@@ -68,11 +77,12 @@ const SingleUploadWithTextAndTemplate: React.FC<
         style={{ marginTop: 4 }}
         type="default"
         icon="save_alt"
-        onClick={onFormatDownload}
+        onClick={onDownload}
       >
         양식 다운로드
       </IconButton>
     </SingleUploadWithTextAndTemplateInner>
   );
 };
+
 export default SingleUploadWithTextAndTemplate;
