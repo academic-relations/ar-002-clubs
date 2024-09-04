@@ -1,5 +1,7 @@
 import React from "react";
 
+import { ApiReg019ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg019";
+
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -16,32 +18,34 @@ import {
 } from "@sparcs-clubs/web/types/clubdetail.types";
 
 interface RegisterMemberTableProps {
-  registerMemberList: typeof mockupRegistrationMember;
+  isPermanent: boolean;
+  registerMemberList: ApiReg019ResponseOk;
 }
 
 const columnHelper =
   createColumnHelper<(typeof mockupRegistrationMember)["items"][number]>();
 
-const columns = [
-  columnHelper.accessor("type", {
+const columnsFunction = (isPermanent: boolean) => [
+  // 만약 isPermanent 까지 받는다면 isPermanent => info.row.original.isPermanent, 함수 형태 없애기
+  columnHelper.accessor("clubTypeEnumId", {
     id: "type",
     header: "구분",
     cell: info => {
       const tagColor = getTagColorFromClubType(
-        info.row.original.type,
-        info.row.original.isPermanent,
+        info.row.original.clubTypeEnumId,
+        isPermanent,
       );
       const tagContents = getTagContentFromClubType(
-        info.row.original.type,
-        info.row.original.isPermanent,
+        info.row.original.clubTypeEnumId,
+        isPermanent,
       );
 
       return <Tag color={tagColor}>{tagContents}</Tag>;
     },
     size: 125,
   }),
-  columnHelper.accessor("division", {
-    id: "division",
+  columnHelper.accessor("division.name", {
+    id: "division.name",
     header: "분과",
     cell: info => {
       const tagColor = getTagColorFromDivision(`${info.getValue()}`);
@@ -56,27 +60,28 @@ const columns = [
     cell: info => info.getValue(),
     size: 291.67,
   }),
-  columnHelper.accessor("registeredAll", {
+  columnHelper.accessor("totalRegistrations", {
     id: "registeredAll",
     header: "신청 (전체 / 정회원)",
     cell: info =>
-      `${info.row.original.registeredAll}명 / ${info.row.original.registeredRegular}명`,
+      `${info.row.original.totalRegistrations}명 / ${info.row.original.regularMemberRegistrations}명`,
     size: 291.67,
   }),
-  columnHelper.accessor("approvedAll", {
+  columnHelper.accessor("totalApprovals", {
     id: "approvedAll",
     header: "승인 (전체 / 정회원)",
     cell: info =>
-      `${info.row.original.approvedAll}명 / ${info.row.original.approvedRegular}명`,
+      `${info.row.original.totalApprovals}명 / ${info.row.original.regularMemberApprovals}명`,
     size: 291.67,
   }),
 ];
 
 const RegistrationMemberTable: React.FC<RegisterMemberTableProps> = ({
+  isPermanent,
   registerMemberList,
 }) => {
   const table = useReactTable({
-    columns,
+    columns: columnsFunction(isPermanent),
     data: registerMemberList.items,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
@@ -86,7 +91,7 @@ const RegistrationMemberTable: React.FC<RegisterMemberTableProps> = ({
     <Table
       table={table}
       count={registerMemberList.total}
-      rowLink={row => `/executive/register-member/${row.id}`}
+      rowLink={row => `/executive/register-member/${row.clubId}`}
     />
   );
 };

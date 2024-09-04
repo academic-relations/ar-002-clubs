@@ -19,23 +19,24 @@ const divisionType = [
 
 const clubType = [ClubTypeEnum.Provisional, ClubTypeEnum.Regular];
 
-const isClubPermanent = [true, false];
 const items = Array.from({ length: 120 }, (_, index) => ({
-  division: divisionType[index % divisionType.length], // 랜덤 상태 선택
-  id: index + 1,
-  type: clubType[index % clubType.length],
-  approvedAll: 120,
-  approvedRegular: 90,
-  registeredAll: 200,
-  registeredRegular: 100,
+  clubId: index + 1,
+  clubTypeEnumId: (index % clubType.length) + 1,
+  division: {
+    id: (index % divisionType.length) + 1,
+    name: "분과명",
+  }, // 랜덤 상태 선택
   clubName: "술박스",
-  isPermanent: isClubPermanent[index % isClubPermanent.length],
+  totalRegistrations: 200,
+  regularMemberRegistrations: 100,
+  totalApprovals: 120,
+  regularMemberApprovals: 90,
 }));
 
 const mockupRegistrationMember = {
-  total: items.length,
   items,
-  offset: 0,
+  total: items.length,
+  offset: 1,
 };
 
 export default mockupRegistrationMember;
