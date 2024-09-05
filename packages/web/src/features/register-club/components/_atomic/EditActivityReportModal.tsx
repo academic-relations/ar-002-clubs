@@ -57,12 +57,15 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
   const submitHandler = useCallback(
     (_data: ApiAct008RequestBody, e: React.BaseSyntheticEvent) => {
       e.preventDefault();
-      console.log("debug", "submitHandler", _data);
       mutate(
         {
           params: { activityId },
           body: {
             ..._data,
+            durations: _data.durations.map(({ startTerm, endTerm }) => ({
+              startTerm,
+              endTerm,
+            })),
             participants: _data.participants.map(({ studentId }) => ({
               studentId,
             })),

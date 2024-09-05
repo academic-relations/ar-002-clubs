@@ -24,9 +24,8 @@ import { type Participant } from "../types/activityReport";
 
 interface SelectParticipantProps {
   data: Participant[];
-  onSelected?: (value: Participant[]) => void;
-  onChange?: React.Dispatch<React.SetStateAction<RowSelectionState>>;
-  value?: RowSelectionState;
+  value?: Participant[];
+  onChange?: (value: Participant[]) => void;
 }
 
 const SelectParticipantInner = styled.div`
@@ -75,14 +74,6 @@ const columns = [
     cell: info => info.getValue(),
     enableGlobalFilter: true,
   }),
-  // columnHelper.accessor("phoneNumber", {
-  //   header: "전화번호",
-  //   cell: info => info.getValue(),
-  // }),
-  // columnHelper.accessor("email", {
-  //   header: "이메일",
-  //   cell: info => info.getValue(),
-  // }),
 ];
 
 const containsTextFilter: FilterFn<Participant> = (
@@ -100,26 +91,33 @@ const containsTextFilter: FilterFn<Participant> = (
 
 const SelectParticipant: React.FC<SelectParticipantProps> = ({
   data,
-  onSelected = null,
+  value = [],
   onChange = null,
-  value = null,
 }) => {
-  const [rowValues, setRowValues] = useState<RowSelectionState>(value ?? {});
   const [searchText, setSearchText] = useState<string>("");
 
-  const [selected, setSelected] = useState<Participant[]>([]);
+  const [selected, setSelected] = useState<Participant[]>(value);
+
+  const initialRowValues = value.reduce((acc, participant) => {
+    const index = data.findIndex(_data => _data.id === participant.id);
+    return { ...acc, [index]: true };
+  }, {});
+  const [rowValues, setRowValues] =
+    useState<RowSelectionState>(initialRowValues);
 
   useEffect(() => {
-    if (data) {
-      const res = value
-        ? data.filter((_, i) => value?.[i])
-        : data.filter((_, i) => rowValues?.[i]);
-      setSelected(res);
-      if (onSelected != null) {
-        onSelected(res);
-      }
+    setSelected(data.filter((_, i) => rowValues?.[i]));
+  }, [rowValues, data]);
+
+  const handleRowClick = (rowState: RowSelectionState) => {
+    setRowValues(rowState);
+
+    const newSelected = data.filter((_, i) => rowState?.[i]);
+    setSelected(newSelected);
+    if (onChange) {
+      onChange(newSelected);
     }
-  }, [data]);
+  };
 
   const table = useReactTable({
     columns,
@@ -128,14 +126,14 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     state: {
-      rowSelection: value ?? rowValues,
+      rowSelection: rowValues,
       globalFilter: searchText,
     },
-    onRowSelectionChange: v => {
-      if (onChange) {
-        onChange(v);
+    onRowSelectionChange: updaterOrValue => {
+      if (typeof updaterOrValue === "function") {
+        handleRowClick(updaterOrValue(rowValues));
       } else {
-        setRowValues(v);
+        handleRowClick(updaterOrValue);
       }
     },
     globalFilterFn: containsTextFilter,
