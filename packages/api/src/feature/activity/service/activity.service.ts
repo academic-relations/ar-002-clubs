@@ -13,6 +13,7 @@ import {
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
+import { ClubRegistrationPublicService } from "@sparcs-clubs/api/feature/registration/club-registration/service/club-registration.public.service";
 
 import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
 import ActivityRepository from "../repository/activity.repository";
@@ -57,6 +58,7 @@ export default class ActivityService {
     private activityActivityTermRepository: ActivityActivityTermRepository,
     private clubPublicService: ClubPublicService,
     private filePublicService: FilePublicService,
+    private clubRegistrationPublicService: ClubRegistrationPublicService,
   ) {}
 
   /**
@@ -487,6 +489,10 @@ export default class ActivityService {
         "Failed to insert",
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+
+    this.clubRegistrationPublicService.resetClubRegistrationStatusEnum(
+      body.clubId,
+    );
   }
 
   async putStudentActivityProvisional(
@@ -552,6 +558,10 @@ export default class ActivityService {
         "Failed to update",
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+
+    this.clubRegistrationPublicService.resetClubRegistrationStatusEnum(
+      activity.clubId,
+    );
   }
 
   /**

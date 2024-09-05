@@ -236,7 +236,7 @@ export class ClubRegistrationRepository {
         .where(
           and(
             eq(Registration.id, applyId),
-            body.clubId === undefined
+            body.clubId === undefined || body.clubId === null
               ? undefined
               : eq(Registration.clubId, body.clubId),
             eq(
@@ -323,6 +323,7 @@ export class ClubRegistrationRepository {
           registrationClubRuleFileId: body.clubRuleFileId,
           registrationExternalInstructionFileId: body.externalInstructionFileId,
           registrationApplicationStatusEnumId: RegistrationStatusEnum.Pending,
+          professorApprovedAt: null,
         })
         .where(
           and(
@@ -1029,5 +1030,19 @@ export class ClubRegistrationRepository {
       );
 
     return { ...result, comments };
+  }
+
+  async resetClubRegistrationStatusEnum(clubId: number) {
+    await this.db.transaction(async tx => {
+      await tx
+        .update(Registration)
+        .set({
+          registrationApplicationStatusEnumId: RegistrationStatusEnum.Pending,
+          professorApprovedAt: null,
+        })
+        .where(
+          and(eq(Registration.clubId, clubId), isNull(Registration.deletedAt)),
+        );
+    });
   }
 }

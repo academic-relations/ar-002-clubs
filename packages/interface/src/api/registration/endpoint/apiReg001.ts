@@ -24,7 +24,7 @@ const requestQuery = z.object({});
 
 const requestBody = z
   .object({
-    clubId: z.coerce.number().int().min(1).optional(),
+    clubId: z.coerce.number().int().min(1).nullable().optional(),
     registrationTypeEnumId: z.nativeEnum(RegistrationTypeEnum),
     clubNameKr: zClubName,
     clubNameEn: zClubName,
@@ -52,6 +52,7 @@ const requestBody = z
           }),
         professorEnumId: z.nativeEnum(ProfessorEnum),
       })
+      .nullable()
       .optional(),
     divisionConsistency: z.coerce.string(),
     foundationPurpose: z.coerce.string(),

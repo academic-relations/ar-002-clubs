@@ -30,4 +30,15 @@ export class ClubRegistrationPublicService {
         return arr[0];
       });
   }
+
+  /**
+   * @param clubId
+   * @returns void
+   * @description clubId에 해당하는 동아리의 신청 상태를 초기화합니다.
+   */
+  async resetClubRegistrationStatusEnum(clubId: number) {
+    await this.clubRegistrationRepository.resetClubRegistrationStatusEnum(
+      clubId,
+    );
+  }
 }
