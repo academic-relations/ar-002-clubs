@@ -210,6 +210,20 @@ export default class ActivityController {
   }
 
   @Student()
+  @Delete("/student/activities/activity/:activityId/provisional")
+  @UsePipes(new ZodPipe(apiAct004))
+  async deleteStudentActivityProvisional(
+    @GetStudent() user: GetStudent,
+    @Param() param: ApiAct004RequestParam,
+  ): Promise<ApiAct004ResponseOk> {
+    await this.activityService.deleteStudentActivityProvisional(
+      param.activityId,
+      user.studentId,
+    );
+    return {};
+  }
+
+  @Student()
   @Get("/student/activities/available-members")
   @UsePipes(new ZodPipe(apiAct010))
   async getStudentActivitiesAvailableMembers(
