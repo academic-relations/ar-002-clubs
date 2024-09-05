@@ -31,7 +31,11 @@ import {
 import { deleteMyClubRegistration } from "@sparcs-clubs/web/features/my/services/deleteMyClubRegistration";
 import patchClubRegProfessorApprove from "@sparcs-clubs/web/features/my/services/patchClubRegProfessorApprove";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
-import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
+import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
+import {
+  getActualMonth,
+  getActualYear,
+} from "@sparcs-clubs/web/utils/Date/extractDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 import { professorEnumToText } from "@sparcs-clubs/web/utils/getUserType";
 
@@ -220,9 +224,17 @@ const MyRegisterClubDetailFrame: React.FC<{
             <ListItem>
               대표자 전화번호: {clubDetail.representative?.phoneNumber}
             </ListItem>
-            <ListItem>
-              설립 연도: {clubDetail && getActualYear(clubDetail.foundedAt)}
-            </ListItem>
+            {clubDetail &&
+              (isProvisional(clubDetail.registrationTypeEnumId) ? (
+                <ListItem>
+                  설립 연월: {getActualYear(clubDetail.foundedAt)}년{" "}
+                  {getActualMonth(clubDetail?.foundedAt)}월
+                </ListItem>
+              ) : (
+                <ListItem>
+                  설립 연도: {getActualYear(clubDetail.foundedAt)}
+                </ListItem>
+              ))}
             <ListItem>
               소속 분과:{" "}
               {clubDetail &&

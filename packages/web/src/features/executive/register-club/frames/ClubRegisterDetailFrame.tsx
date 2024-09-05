@@ -21,7 +21,11 @@ import {
 import MyRegisterClubActFrame from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubActFrame";
 import { FilePreviewContainer } from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubDetailFrame";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
-import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
+import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
+import {
+  getActualMonth,
+  getActualYear,
+} from "@sparcs-clubs/web/utils/Date/extractDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 import { professorEnumToText } from "@sparcs-clubs/web/utils/getUserType";
 
@@ -102,6 +106,15 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
             <ListItem>
               {`설립 연도: ${data && getActualYear(data?.foundedAt)}`}
             </ListItem>
+            {data &&
+              (isProvisional(data.registrationTypeEnumId) ? (
+                <ListItem>
+                  설립 연월: {getActualYear(data.foundedAt)}년{" "}
+                  {getActualMonth(data.foundedAt)}월
+                </ListItem>
+              ) : (
+                <ListItem>설립 연도: {getActualYear(data.foundedAt)}</ListItem>
+              ))}
             <ListItem>
               {`소속 분과: ${data && getTagDetail(data?.divisionId, DivisionTypeTagList).text}`}
             </ListItem>
