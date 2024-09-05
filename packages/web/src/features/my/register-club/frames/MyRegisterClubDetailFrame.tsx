@@ -348,8 +348,9 @@ const MyRegisterClubDetailFrame: React.FC<{
             <Button
               style={{ width: "max-content" }}
               onClick={professorApproveHandler}
+              type={clubDetail.isProfessorSigned ? "disabled" : "default"}
             >
-              승인
+              {clubDetail.isProfessorSigned ? "승인 완료" : "승인"}
             </Button>
           </FlexWrapper>
         ) : (
