@@ -379,6 +379,7 @@ export default class ActivityRepository {
     evidenceFileIds: Array<string>;
     participantIds: Array<number>;
     activityDId: number;
+    activityStatusEnumId: ActivityStatusEnum;
   }) {
     const isUpdateSucceed = await this.db.transaction(async tx => {
       const deletedAt = new Date();
@@ -387,12 +388,13 @@ export default class ActivityRepository {
         .update(Activity)
         .set({
           name: param.name,
-          activityStatusEnumId: Number(param.activityTypeEnumId),
+          activityTypeEnumId: Number(param.activityTypeEnumId),
           location: param.location,
           purpose: param.purpose,
           detail: param.detail,
           evidence: param.evidence,
           activityDId: param.activityDId,
+          activityStatusEnumId: Number(param.activityStatusEnumId),
         })
         .where(eq(Activity.id, param.activityId));
       if (activitySetResult.affectedRows !== 1) {
