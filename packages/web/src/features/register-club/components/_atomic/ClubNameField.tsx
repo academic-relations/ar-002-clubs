@@ -23,14 +23,14 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({
   clubList = [],
   editMode = false,
 }) => {
-  const { control, resetField, setValue, getValues, watch } =
+  const { control, resetField, setValue, watch } =
     useFormContext<ApiReg001RequestBody>();
 
   const krName = watch("clubNameKr");
   const enName = watch("clubNameEn");
 
   const [isCheckedClubName, setIsCheckedClubName] = useState(
-    getValues("clubNameKr") !== "",
+    !(krName === undefined || krName === ""),
   );
 
   const clubOptions = useCallback(
