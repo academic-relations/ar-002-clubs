@@ -6,7 +6,10 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import { ListItem } from "@sparcs-clubs/web/common/components/ListItem";
+import {
+  IndentedItem,
+  ListItem,
+} from "@sparcs-clubs/web/common/components/ListItem";
 import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
@@ -125,9 +128,12 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
             동아리 정보
           </Typography>
           <FlexWrapper gap={12} direction="column">
-            <ListItem>{`분과 정합성: ${data?.divisionConsistency}`}</ListItem>
-            <ListItem>{`설립 목적: ${data?.foundationPurpose}`}</ListItem>
-            <ListItem>{`주요 활동 계획: ${data?.activityPlan}`}</ListItem>
+            <ListItem>분과 정합성:</ListItem>
+            <IndentedItem>{data?.divisionConsistency}</IndentedItem>
+            <ListItem>설립 목적:</ListItem>
+            <IndentedItem>{data?.foundationPurpose}</IndentedItem>
+            <ListItem>주요 활동 계획:</ListItem>
+            <IndentedItem>{data?.activityPlan}</IndentedItem>
             {data?.activityPlanFile && (
               <>
                 <ListItem>활동계획서</ListItem>
