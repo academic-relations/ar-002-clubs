@@ -191,7 +191,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
           )}
         </FlexWrapper>
         {data &&
-          data.registrationTypeEnumId !== RegistrationTypeEnum.Renewal &&
+          data.registrationTypeEnumId === RegistrationTypeEnum.Promotional &&
           data.clubId && (
             <MyRegisterClubActFrame profile="executive" clubId={data.clubId} />
           )}

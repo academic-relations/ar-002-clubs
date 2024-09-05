@@ -312,7 +312,8 @@ const MyRegisterClubDetailFrame: React.FC<{
             )}
           </FlexWrapper>
         </FlexWrapper>
-        {clubDetail.registrationTypeEnumId !== RegistrationTypeEnum.Renewal &&
+        {clubDetail.registrationTypeEnumId ===
+          RegistrationTypeEnum.Promotional &&
           clubDetail.clubId && (
             <MyRegisterClubActFrame
               profile={profile}
