@@ -32,7 +32,7 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
 
   const [isCheckedProfessor, setIsCheckedProfessor] = useState(false);
   const [registrationType, setRegistrationType] =
-    useState<RegistrationTypeEnum | null>(null);
+    useState<RegistrationTypeEnum>(RegistrationTypeEnum.NewProvisional);
 
   const updateRegistrationType = (type: RegistrationTypeEnum) => {
     setRegistrationType(type);
