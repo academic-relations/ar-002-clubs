@@ -1,9 +1,11 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { queryOptions, useSuspenseQueries } from "@tanstack/react-query";
+import { addHours } from "date-fns";
 import { FormProvider, useForm } from "react-hook-form";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import { getFileFromUrl } from "@sparcs-clubs/web/common/components/File/attachment";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
@@ -12,12 +14,13 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import useGetParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetParticipants";
+import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
+import { Participant } from "@sparcs-clubs/web/features/manage-club/activity-report/types/activityReport";
 import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import SelectActivityTerm from "../SelectActivityTerm";
-
-import ParticipantSection from "./ParticipantSection";
 
 interface ActivityReportFormProps {
   clubId: number;
@@ -50,7 +53,6 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   } = formCtx;
 
   const durations: Duration[] = watch("durations");
-  const participants: { studentId: number }[] = watch("participants");
   const evidenceFiles: { id: string; name: string; url: string }[] =
     watch("evidenceFiles") ?? [];
 
@@ -63,6 +65,33 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
           }))
         : [],
     [durations],
+  );
+
+  const [startTerm, setStartTerm] = useState<Date>(
+    durations?.map(d => d.startTerm).reduce((a, b) => (a < b ? a : b)),
+  );
+  const [endTerm, setEndTerm] = useState<Date>(
+    durations?.map(d => d.endTerm).reduce((a, b) => (a > b ? a : b)),
+  );
+
+  const {
+    data: participantData,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetParticipants({
+    clubId,
+    startTerm: addHours(startTerm, 9),
+    endTerm: addHours(endTerm, 9),
+  });
+  const initialParticipants: { studentId: number }[] =
+    watch("participants") ?? [];
+  const [participants, setParticipants] = useState<Participant[]>(
+    participantData?.students.filter(student =>
+      initialParticipants.some(
+        participant => participant.studentId === student.id,
+      ),
+    ) ?? [],
   );
 
   const data = useSuspenseQueries({
@@ -141,7 +170,21 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
                 setValue("durations", processedTerms, {
                   shouldValidate: true,
                 });
+                setStartTerm(
+                  processedTerms
+                    .map(d => d.startTerm)
+                    .reduce((a, b) => (a < b ? a : b)),
+                );
+                setEndTerm(
+                  processedTerms
+                    .map(d => d.endTerm)
+                    .reduce((a, b) => (a > b ? a : b)),
+                );
                 formCtx.trigger("durations");
+
+                // TODO: (@dora) refetch participants one step late
+                refetch();
+                setParticipants([]);
               }}
             />
           </FlexWrapper>
@@ -187,7 +230,21 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
               <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
                 활동 인원
               </Typography>
-              <ParticipantSection clubId={clubId} formCtx={formCtx} />
+              <AsyncBoundary isLoading={isLoading} isError={isError}>
+                <SelectParticipant
+                  data={participantData?.students ?? []}
+                  value={participants}
+                  onChange={v => {
+                    setParticipants(v);
+
+                    const participantIds = v.map(_data => ({
+                      studentId: +_data.id,
+                    }));
+                    formCtx.setValue("participants", participantIds);
+                    formCtx.trigger("participants");
+                  }}
+                />
+              </AsyncBoundary>
             </FlexWrapper>
           )}
           <FlexWrapper direction="column" gap={4}>

@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 
 import { ApiAct007RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
 
+import { addHours } from "date-fns";
 import { useForm } from "react-hook-form";
 
 import Modal from "@sparcs-clubs/web/common/components/Modal";
@@ -36,6 +37,11 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
           body: {
             ..._data,
             clubId,
+            durations: _data.durations.map(({ startTerm, endTerm }) => ({
+              startTerm: addHours(startTerm, 9),
+              endTerm: addHours(endTerm, 9),
+            })),
+            evidence: _data.evidence ?? "", // NOTE: (@dora) evidence is optional
             participants: _data.participants.map(({ studentId }) => ({
               studentId,
             })),

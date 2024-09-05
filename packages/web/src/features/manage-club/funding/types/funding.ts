@@ -1,3 +1,5 @@
+import { Participant } from "@sparcs-clubs/web/features/manage-club/activity-report/types/activityReport";
+
 export interface FundingInterface {
   // TODO: files 관련 추가
   purposeId?: string;
@@ -32,7 +34,7 @@ export interface FundingInterface {
   destination?: string;
   purposeOfTransportation?: string;
   placeValidity?: string;
-  transportationPassengers: { studentNumber: string; name: string }[];
+  transportationPassengers: Participant[];
 
   isNonCorporateTransaction: boolean;
   traderName?: string;
