@@ -559,7 +559,9 @@ export class ClubRegistrationRepository {
         registrationTypeEnumId: Registration.registrationApplicationTypeEnumId,
         divisionName: Division.name,
         clubNameKr: Club.name_kr,
+        clubNameEn: Club.name_en,
         newClubNameKr: Registration.clubNameKr,
+        newClubNameEn: Registration.clubNameEn,
         clubId: Registration.clubId,
         activityFieldKr: Registration.activityFieldKr,
         activityFieldEn: Registration.activityFieldEn,
@@ -615,14 +617,20 @@ export class ClubRegistrationRepository {
         registrationStatusEnumId:
           Registration.registrationApplicationStatusEnumId,
         divisionId: Registration.divisionId,
-        clubNameKr: Registration.clubNameKr,
-        clubNameEn: Registration.clubNameEn,
+        clubNameKr: Club.name_kr,
+        clubNameEn: Club.name_en,
+        newClubNameKr: Registration.clubNameKr,
+        newClubNameEn: Registration.clubNameEn,
         representativeName: Student.name,
         activityFieldKr: Registration.activityFieldKr,
         activityFieldEn: Registration.activityFieldEn,
         professorName: Professor.name,
       })
       .from(Registration)
+      .leftJoin(
+        Club,
+        and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
+      )
       .innerJoin(
         Student,
         and(eq(Registration.studentId, Student.id), isNull(Student.deletedAt)),
@@ -910,6 +918,10 @@ export class ClubRegistrationRepository {
           eq(Registration.professorId, param.professorId),
           isNull(Registration.deletedAt),
         ),
+      )
+      .leftJoin(
+        Club,
+        and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
       )
       .innerJoin(Student, eq(Registration.studentId, Student.id))
       .innerJoin(

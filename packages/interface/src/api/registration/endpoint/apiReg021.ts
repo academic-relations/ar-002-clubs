@@ -36,7 +36,10 @@ const responseBodyMap = {
           id: z.coerce.number().int().min(1),
           name: zUserName,
         }),
-        clubName: zClubName,
+        clubNameKr: zClubName.optional(),
+        newClubNameKr: zClubName,
+        clubNameEm: zClubName.optional(),
+        newClubNameEn: zClubName,
         student: z.object({
           id: z.coerce.number().int().min(1),
           studentNumber: z.coerce.number().int().min(1),
