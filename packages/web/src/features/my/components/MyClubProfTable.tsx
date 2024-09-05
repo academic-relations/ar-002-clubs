@@ -40,8 +40,8 @@ const columns = [
     ),
     size: 10,
   }),
-  columnHelper.accessor("clubName", {
-    id: "clubName",
+  columnHelper.accessor("clubNameKr", {
+    id: "clubNameKr",
     header: "동아리",
     cell: info => info.getValue(),
     size: 128,

@@ -13,7 +13,10 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import { ListItem } from "@sparcs-clubs/web/common/components/ListItem";
+import {
+  IndentedItem,
+  ListItem,
+} from "@sparcs-clubs/web/common/components/ListItem";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
@@ -28,7 +31,11 @@ import {
 import { deleteMyClubRegistration } from "@sparcs-clubs/web/features/my/services/deleteMyClubRegistration";
 import patchClubRegProfessorApprove from "@sparcs-clubs/web/features/my/services/patchClubRegProfessorApprove";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
-import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
+import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
+import {
+  getActualMonth,
+  getActualYear,
+} from "@sparcs-clubs/web/utils/Date/extractDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 import { professorEnumToText } from "@sparcs-clubs/web/utils/getUserType";
 
@@ -217,9 +224,17 @@ const MyRegisterClubDetailFrame: React.FC<{
             <ListItem>
               대표자 전화번호: {clubDetail.representative?.phoneNumber}
             </ListItem>
-            <ListItem>
-              설립 연도: {clubDetail && getActualYear(clubDetail.foundedAt)}
-            </ListItem>
+            {clubDetail &&
+              (isProvisional(clubDetail.registrationTypeEnumId) ? (
+                <ListItem>
+                  설립 연월: {getActualYear(clubDetail.foundedAt)}년{" "}
+                  {getActualMonth(clubDetail?.foundedAt)}월
+                </ListItem>
+              ) : (
+                <ListItem>
+                  설립 연도: {getActualYear(clubDetail.foundedAt)}
+                </ListItem>
+              ))}
             <ListItem>
               소속 분과:{" "}
               {clubDetail &&
@@ -249,9 +264,12 @@ const MyRegisterClubDetailFrame: React.FC<{
             동아리 정보
           </Typography>
           <FlexWrapper gap={12} direction="column">
-            <ListItem>분과 정합성: {clubDetail.divisionConsistency}</ListItem>
-            <ListItem>설립 목적: {clubDetail.foundationPurpose}</ListItem>
-            <ListItem>주요 활동 계획: {clubDetail.activityPlan}</ListItem>
+            <ListItem>분과 정합성:</ListItem>
+            <IndentedItem>{clubDetail.divisionConsistency}</IndentedItem>
+            <ListItem>설립 목적:</ListItem>
+            <IndentedItem>{clubDetail.foundationPurpose}</IndentedItem>
+            <ListItem>주요 활동 계획:</ListItem>
+            <IndentedItem>{clubDetail.activityPlan}</IndentedItem>
             {clubDetail.activityPlanFile && (
               <>
                 <ListItem>활동계획서</ListItem>
@@ -306,7 +324,8 @@ const MyRegisterClubDetailFrame: React.FC<{
             )}
           </FlexWrapper>
         </FlexWrapper>
-        {clubDetail.registrationTypeEnumId !== RegistrationTypeEnum.Renewal &&
+        {clubDetail.registrationTypeEnumId ===
+          RegistrationTypeEnum.Promotional &&
           clubDetail.clubId && (
             <MyRegisterClubActFrame
               profile={profile}
@@ -341,8 +360,9 @@ const MyRegisterClubDetailFrame: React.FC<{
             <Button
               style={{ width: "max-content" }}
               onClick={professorApproveHandler}
+              type={clubDetail.isProfessorSigned ? "disabled" : "default"}
             >
-              승인
+              {clubDetail.isProfessorSigned ? "승인 완료" : "승인"}
             </Button>
           </FlexWrapper>
         ) : (

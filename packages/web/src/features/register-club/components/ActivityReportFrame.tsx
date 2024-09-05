@@ -63,7 +63,7 @@ const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <FlexWrapper direction="column" gap={40}>
         <SectionTitle>가등록 / 등록 취소 기간 활동 보고서</SectionTitle>
-         <StyledCard outline gap={32}>
+        <StyledCard outline gap={32}>
           <OptionOuter>
             <Typography
               fs={14}

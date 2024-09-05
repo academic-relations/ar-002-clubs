@@ -24,18 +24,24 @@ const ClubRegisterApproveFrame = ({ applyId }: { applyId: number }) => {
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <Card gap={20} outline>
-        <FlexWrapper direction="column" gap={8}>
-          {data?.comments.map((comment, index) => (
-            <FlexWrapper direction="column" gap={4} key={`${index.toString()}`}>
-              <Typography fs={14} lh={16} color="GRAY.600">
-                {formatSlashDateTime(comment.createdAt)}
-              </Typography>
-              <Typography fs={16} lh={24}>
-                {comment.content}
-              </Typography>
-            </FlexWrapper>
-          ))}
-        </FlexWrapper>
+        {data && data.comments.length > 0 && (
+          <FlexWrapper direction="column" gap={8}>
+            {data.comments.map((comment, index) => (
+              <FlexWrapper
+                direction="column"
+                gap={4}
+                key={`${index.toString()}`}
+              >
+                <Typography fs={14} lh={16} color="GRAY.600">
+                  {formatSlashDateTime(comment.createdAt)}
+                </Typography>
+                <Typography fs={16} lh={24}>
+                  {comment.content}
+                </Typography>
+              </FlexWrapper>
+            ))}
+          </FlexWrapper>
+        )}
         <FlexWrapper gap={4} direction="column">
           <Typography
             fs={16}
@@ -43,7 +49,7 @@ const ClubRegisterApproveFrame = ({ applyId }: { applyId: number }) => {
             fw="MEDIUM"
             style={{ marginLeft: 2, marginRight: 2 }}
           >
-            반려 사유
+            반려 사유 (반려 시에만 입력)
           </Typography>
           <TextInput
             value={rejectionDetail}

@@ -1,4 +1,4 @@
-import React, { BaseSyntheticEvent, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 
 import { ApiAct008RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
 
@@ -45,12 +45,7 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
         detail: data.detail,
         evidence: data.evidence,
         evidenceFiles: data.evidenceFiles,
-        /* TODO: (@dora) connect actual participant info */
-        participants: [
-          {
-            studentId: 20200510,
-          },
-        ],
+        participants: data.participants,
       });
       /* TODO: (@dora) refactor to use lodash */
       // formCtx.reset(_.omit(activityReportData, "clubId"));
@@ -65,8 +60,16 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
       mutate(
         {
           params: { activityId },
-          /* TODO: (@dora) connect actual participants */
-          body: { ..._data, participants: [{ studentId: 20200510 }] },
+          body: {
+            ..._data,
+            durations: _data.durations.map(({ startTerm, endTerm }) => ({
+              startTerm,
+              endTerm,
+            })),
+            participants: _data.participants.map(({ studentId }) => ({
+              studentId,
+            })),
+          },
         },
         { onSuccess: close },
       );
@@ -78,15 +81,16 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
     close();
   };
 
-  const handleSubmit = (e: BaseSyntheticEvent) => {
+  const handleSubmit = (e: React.BaseSyntheticEvent) => {
     formCtx.handleSubmit(_data => submitHandler(_data, e))();
   };
 
   return (
-    <Modal isOpen={isOpen}>
+    <Modal isOpen={isOpen} width="full">
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         <ActivityReportForm
           /* eslint-disable  @typescript-eslint/no-explicit-any */
+          clubId={data!.clubId}
           formCtx={formCtx as any}
           onCancel={handleCancel}
           onSubmit={handleSubmit}

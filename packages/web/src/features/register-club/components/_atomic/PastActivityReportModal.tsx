@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { overlay } from "overlay-kit";
 
@@ -6,11 +6,14 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import { ListItem } from "@sparcs-clubs/web/common/components/ListItem";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import { patchActivityExecutive } from "@sparcs-clubs/web/features/executive/register-club/services/patchActivityExecutive";
+import { patchActivityExecutiveSendBack } from "@sparcs-clubs/web/features/executive/register-club/services/patchActivityExecutiveSendBack";
 import { useDeleteActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useDeleteActivityReport";
 import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
 import { getActivityTypeTagLabel } from "@sparcs-clubs/web/features/register-club/utils/activityType";
@@ -34,7 +37,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   close,
   viewOnly = false,
 }) => {
-  const { data, isLoading, isError } = useGetActivityReport(
+  const { data, isLoading, isError, refetch } = useGetActivityReport(
     profile,
     activityId,
   );
@@ -43,6 +46,9 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
     isSuccess: isDeleteSuccess,
     isError: isDeleteError,
   } = useDeleteActivityReport();
+
+  const isExecutive = profile === "executive";
+  const [rejectionDetail, setRejectionDetail] = useState("");
 
   const handleDelete = () => {
     deleteActivityReport({ requestParam: { activityId } });
@@ -56,7 +62,10 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
           profile={profile}
           activityId={activityId}
           isOpen={isOpenEditActivityModal}
-          close={closeEditActivityModal}
+          close={() => {
+            closeEditActivityModal();
+            refetch();
+          }}
         />
       ),
     );
@@ -90,6 +99,20 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
       );
     }
   }, [isDeleteSuccess, isDeleteError]);
+
+  const handleApprove = async () => {
+    await patchActivityExecutive({ activityId });
+    close();
+  };
+
+  const handleReject = async () => {
+    await patchActivityExecutiveSendBack(
+      { activityId },
+      { comment: rejectionDetail },
+    );
+    setRejectionDetail("");
+    close();
+  };
 
   return (
     <Modal isOpen={isOpen} width="full">
@@ -162,7 +185,20 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
               <ListItem>부가 설명: {data?.evidence}</ListItem>
             </FlexWrapper>
           </FlexWrapper>
-          {viewOnly ? (
+          {isExecutive && (
+            <FlexWrapper gap={16} direction="column">
+              <Typography fw="MEDIUM" fs={16} lh={20}>
+                반려 사유 (반려 시에만 입력)
+              </Typography>
+              <TextInput
+                value={rejectionDetail}
+                handleChange={setRejectionDetail}
+                placeholder="내용"
+                area
+              />
+            </FlexWrapper>
+          )}
+          {!isExecutive && viewOnly ? (
             <FlexWrapper direction="row" gap={12}>
               <Button type="outlined" onClick={close}>
                 닫기
@@ -182,8 +218,20 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
                 취소
               </Button>
               <FlexWrapper direction="row" gap={12}>
-                <Button onClick={handleDelete}>삭제</Button>
-                <Button onClick={handleEdit}>수정</Button>
+                <Button onClick={isExecutive ? handleApprove : handleDelete}>
+                  {isExecutive ? "신청 승인" : "삭제"}
+                </Button>
+                {/* TODO: 반려 연결 */}
+                <Button
+                  onClick={isExecutive ? handleReject : handleEdit}
+                  type={
+                    isExecutive && rejectionDetail === ""
+                      ? "disabled"
+                      : "default"
+                  }
+                >
+                  {isExecutive ? "신청 반려" : "수정"}
+                </Button>
               </FlexWrapper>
             </FlexWrapper>
           )}

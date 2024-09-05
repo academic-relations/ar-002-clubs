@@ -513,7 +513,10 @@ export class ClubRegistrationService {
           id: e.registration.divisionId,
           name: e.division.name,
         },
-        clubName: e.registration.clubNameKr,
+        clubNameKr: e.club.name_kr,
+        newClubNameKr: e.registration.clubNameKr,
+        clubNameEn: e.club.name_en,
+        newClubNameEn: e.registration.clubNameEn,
         student: {
           id: e.student.id,
           studentNumber: e.student.number,

@@ -25,7 +25,8 @@ export const useGetRegisterClub = (requestQuery: ApiReg014RequestQuery) =>
           if (data.total === 0 && data.items.length === 0 && data.offset)
             // items = []일 때 isError = true 방지
             return data;
-          return apiReg014.responseBodyMap[200].parse(data);
+          return data;
+          // return apiReg014.responseBodyMap[200].parse(data);
         }
 
         default:

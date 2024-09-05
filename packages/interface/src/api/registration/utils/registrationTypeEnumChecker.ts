@@ -5,28 +5,28 @@ import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/regist
  */
 const registrationTypeEnumChecker = (param: {
   registrationTypeEnumId: RegistrationTypeEnum;
-  clubId?: number;
+  clubId?: number | null;
   activityPlanFileId?: string;
   clubRuleFileId?: string;
 }): boolean => {
   switch (param.registrationTypeEnumId) {
     case RegistrationTypeEnum.NewProvisional:
-      if (param.clubId !== undefined) return false;
-      if (param.activityPlanFileId === undefined) return false;
-      if (param.clubRuleFileId !== undefined) return false;
+      if (param.clubId !== null) return false; // clubId는 null이어야 한다
+      if (!param.activityPlanFileId) return false; // activityPlanFileId는 반드시 있어야 한다
+      if (param.clubRuleFileId !== undefined) return false; // clubRuleFileId는 없어야 한다
       break;
     case RegistrationTypeEnum.ReProvisional:
-      if (param.clubId === undefined) return false;
+      if (param.clubId === undefined || param.clubId === null) return false;
       if (param.activityPlanFileId === undefined) return false;
       if (param.clubRuleFileId !== undefined) return false;
       break;
     case RegistrationTypeEnum.Promotional:
-      if (param.clubId === undefined) return false;
+      if (param.clubId === undefined || param.clubId === null) return false;
       if (param.activityPlanFileId === undefined) return false;
       if (param.clubRuleFileId === undefined) return false;
       break;
     case RegistrationTypeEnum.Renewal:
-      if (param.clubId === undefined) return false;
+      if (param.clubId === undefined || param.clubId === null) return false;
       if (param.activityPlanFileId !== undefined) return false;
       if (param.clubRuleFileId !== undefined) return false;
       break;

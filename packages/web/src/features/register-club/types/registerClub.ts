@@ -19,3 +19,8 @@ export interface ProfessorInfo {
   email: string;
   professorEnumId: ProfessorEnum;
 }
+
+export interface Duration {
+  startTerm: Date;
+  endTerm: Date;
+}

@@ -1,47 +1,117 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
+import { queryOptions, useSuspenseQueries } from "@tanstack/react-query";
+import { addHours } from "date-fns";
 import { FormProvider, useForm } from "react-hook-form";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
+import { getFileFromUrl } from "@sparcs-clubs/web/common/components/File/attachment";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { mockParticipantData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
+import useGetParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetParticipants";
 import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
+import { Participant } from "@sparcs-clubs/web/features/manage-club/activity-report/types/activityReport";
+import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
+import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import SelectActivityTerm from "../SelectActivityTerm";
 
 interface ActivityReportFormProps {
+  clubId: number;
   formCtx: ReturnType<typeof useForm>;
   onCancel: () => void;
   onSubmit: (e: React.BaseSyntheticEvent) => void;
 }
 
+type File = { id: string; name: string; url: string };
+const fileQuery = (file: File) =>
+  queryOptions({
+    queryKey: ["file", file.id],
+    queryFn: async () => ({
+      fileId: file.id,
+      file: await getFileFromUrl(file.url, file.name),
+    }),
+  });
+
 const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
+  clubId,
   formCtx,
   onCancel,
   onSubmit,
 }) => {
   const {
     control,
+    watch,
     setValue,
     formState: { isValid },
   } = formCtx;
 
-  //   const [participants, setParticipants] = useState<{ studentId: number }[]>([]);
+  const durations: Duration[] = watch("durations");
+  const evidenceFiles: { id: string; name: string; url: string }[] =
+    watch("evidenceFiles") ?? [];
+
+  const initialDurations = useMemo(
+    () =>
+      durations
+        ? durations.map(d => ({
+            startDate: formatDotDate(d.startTerm),
+            endDate: formatDotDate(d.endTerm),
+          }))
+        : [],
+    [durations],
+  );
+
+  const [startTerm, setStartTerm] = useState<Date>(
+    durations?.map(d => d.startTerm).reduce((a, b) => (a < b ? a : b)),
+  );
+  const [endTerm, setEndTerm] = useState<Date>(
+    durations?.map(d => d.endTerm).reduce((a, b) => (a > b ? a : b)),
+  );
+
+  const {
+    data: participantData,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetParticipants({
+    clubId,
+    startTerm: addHours(startTerm, 9),
+    endTerm: addHours(endTerm, 9),
+  });
+  const initialParticipants: { studentId: number }[] =
+    watch("participants") ?? [];
+  const [participants, setParticipants] = useState<Participant[]>(
+    participantData?.students.filter(student =>
+      initialParticipants.some(
+        participant => participant.studentId === student.id,
+      ),
+    ) ?? [],
+  );
+
+  const data = useSuspenseQueries({
+    queries: evidenceFiles.map(file => fileQuery(file)),
+  });
 
   /* TODO: (@dora) refactor !!!!! */
   type FileIdType = "evidenceFiles";
   const updateMultipleFile = (
     fileId: FileIdType,
-    data: { fileId: string }[],
+    _data: { fileId: string }[],
   ) => {
-    setValue(fileId, data, { shouldValidate: true });
+    formCtx.setValue(fileId, _data, { shouldValidate: true });
+    formCtx.trigger(fileId);
   };
+
+  const validInput = useMemo(
+    () => isValid && durations && participants && evidenceFiles,
+    [durations, participants, evidenceFiles, isValid],
+  );
 
   return (
     <FormProvider {...formCtx}>
@@ -90,25 +160,32 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
               )}
             />
 
-            <FormController
-              name="durations"
-              required
-              control={control}
-              renderItem={() => (
-                <SelectActivityTerm
-                  onChange={terms => {
-                    const processedTerms = terms.map(term => ({
-                      startTerm: new Date(
-                        `${term.startDate.replace(".", "-")}`,
-                      ),
-                      endTerm: new Date(`${term.endDate.replace(".", "-")}`),
-                    }));
-                    setValue("durations", processedTerms, {
-                      shouldValidate: true,
-                    });
-                  }}
-                />
-              )}
+            <SelectActivityTerm
+              initialData={initialDurations}
+              onChange={terms => {
+                const processedTerms = terms.map(term => ({
+                  startTerm: new Date(`${term.startDate.replace(".", "-")}`),
+                  endTerm: new Date(`${term.endDate.replace(".", "-")}`),
+                }));
+                setValue("durations", processedTerms, {
+                  shouldValidate: true,
+                });
+                setStartTerm(
+                  processedTerms
+                    .map(d => d.startTerm)
+                    .reduce((a, b) => (a < b ? a : b)),
+                );
+                setEndTerm(
+                  processedTerms
+                    .map(d => d.endTerm)
+                    .reduce((a, b) => (a > b ? a : b)),
+                );
+                formCtx.trigger("durations");
+
+                // TODO: (@dora) refetch participants one step late
+                refetch();
+                setParticipants([]);
+              }}
             />
           </FlexWrapper>
           <FormController
@@ -148,22 +225,28 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
               />
             )}
           />
-          <FlexWrapper direction="column" gap={4}>
-            <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
-              활동 인원
-            </Typography>
-            <SelectParticipant
-              data={mockParticipantData}
-              onSelected={() => {}}
-              /* TODO: (@dora) connect participant select */
-              // onSelected={selectList => {
-              //   const participantIds = selectList.map(data => ({
-              //     studentId: +data.studentId,
-              //   }));
-              //   setParticipants(participantIds);
-              // }}
-            />
-          </FlexWrapper>
+          {durations && (
+            <FlexWrapper direction="column" gap={4}>
+              <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
+                활동 인원
+              </Typography>
+              <AsyncBoundary isLoading={isLoading} isError={isError}>
+                <SelectParticipant
+                  data={participantData?.students ?? []}
+                  value={participants}
+                  onChange={v => {
+                    setParticipants(v);
+
+                    const participantIds = v.map(_data => ({
+                      studentId: +_data.id,
+                    }));
+                    formCtx.setValue("participants", participantIds);
+                    formCtx.trigger("participants");
+                  }}
+                />
+              </AsyncBoundary>
+            </FlexWrapper>
+          )}
           <FlexWrapper direction="column" gap={4}>
             <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
               활동 증빙
@@ -181,15 +264,17 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
             />
             <FormController
               name="evidenceFiles"
+              required
               control={control}
               renderItem={props => (
                 <FileUpload
                   {...props}
                   multiple
-                  onChange={data => {
+                  initialFiles={data?.map(_data => _data.data)}
+                  onChange={_data => {
                     updateMultipleFile(
                       "evidenceFiles",
-                      data.map(d => ({
+                      _data.map(d => ({
                         fileId: d,
                       })),
                     );
@@ -206,7 +291,10 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
             <Button type="outlined" onClick={onCancel}>
               취소
             </Button>
-            <Button buttonType="submit" type={isValid ? "default" : "disabled"}>
+            <Button
+              buttonType="submit"
+              type={validInput ? "default" : "disabled"}
+            >
               저장
             </Button>
           </FlexWrapper>

@@ -141,23 +141,13 @@ export class ClubRegistrationRepository {
         }
       }
 
-      let professorId;
+      let professor;
       if (body.professor) {
-        professorId = await tx
+        professor = await tx
           .select({
-            professorId: Professor.id,
+            id: Professor.id,
           })
           .from(Professor)
-          .leftJoin(
-            ProfessorT,
-            and(
-              eq(Professor.id, ProfessorT.professorId),
-              eq(ProfessorT.professorEnum, body.professor.professorEnumId),
-              isNull(ProfessorT.deletedAt),
-              lte(ProfessorT.startTerm, cur),
-              or(isNull(ProfessorT.endTerm), gt(ProfessorT.endTerm, cur)),
-            ),
-          )
           .where(
             and(
               eq(Professor.email, body.professor.email),
@@ -167,11 +157,33 @@ export class ClubRegistrationRepository {
           )
           .for("share")
           .then(takeUnique);
-        if (!professorId) {
-          throw new HttpException(
-            "Professor Not Found",
-            HttpStatus.BAD_REQUEST,
-          );
+        if (!professor) {
+          professor = await tx.insert(Professor).values({
+            email: body.professor.email,
+            name: body.professor.name,
+          });
+          professor = await tx
+            .select({
+              id: Professor.id,
+            })
+            .from(Professor)
+            .where(
+              and(
+                eq(Professor.email, body.professor.email),
+                eq(Professor.name, body.professor.name),
+                isNull(Professor.deletedAt),
+              ),
+            )
+            .for("share")
+            .then(takeUnique);
+
+          logger.debug(professor);
+
+          await tx.insert(ProfessorT).values({
+            professorId: professor.id,
+            professorEnum: body.professor.professorEnumId,
+            startTerm: cur,
+          });
         }
       }
 
@@ -187,7 +199,7 @@ export class ClubRegistrationRepository {
         divisionId: body.divisionId,
         activityFieldKr: body.activityFieldKr,
         activityFieldEn: body.activityFieldEn,
-        professorId: professorId.professorId ?? null,
+        professorId: professor?.id ?? null,
         divisionConsistency: body.divisionConsistency,
         foundationPurpose: body.foundationPurpose,
         activityPlan: body.activityPlan,
@@ -224,7 +236,7 @@ export class ClubRegistrationRepository {
         .where(
           and(
             eq(Registration.id, applyId),
-            body.clubId === undefined
+            body.clubId === undefined || body.clubId === null
               ? undefined
               : eq(Registration.clubId, body.clubId),
             eq(
@@ -246,23 +258,14 @@ export class ClubRegistrationRepository {
           HttpStatus.BAD_REQUEST,
         );
       }
-      let professorId;
+
+      let professor;
       if (body.professor) {
-        professorId = await tx
+        professor = await tx
           .select({
-            professorId: Professor.id,
+            id: Professor.id,
           })
           .from(Professor)
-          .leftJoin(
-            ProfessorT,
-            and(
-              eq(Professor.id, ProfessorT.professorId),
-              eq(ProfessorT.professorEnum, body.professor.professorEnumId),
-              isNull(ProfessorT.deletedAt),
-              lte(ProfessorT.startTerm, cur),
-              or(isNull(ProfessorT.endTerm), gt(ProfessorT.endTerm, cur)),
-            ),
-          )
           .where(
             and(
               eq(Professor.email, body.professor.email),
@@ -272,14 +275,36 @@ export class ClubRegistrationRepository {
           )
           .for("share")
           .then(takeUnique);
-        logger.debug(professorId);
-        if (!professorId) {
-          throw new HttpException(
-            "Professor Not Found",
-            HttpStatus.BAD_REQUEST,
-          );
+        if (!professor) {
+          professor = await tx.insert(Professor).values({
+            email: body.professor.email,
+            name: body.professor.name,
+          });
+          professor = await tx
+            .select({
+              id: Professor.id,
+            })
+            .from(Professor)
+            .where(
+              and(
+                eq(Professor.email, body.professor.email),
+                eq(Professor.name, body.professor.name),
+                isNull(Professor.deletedAt),
+              ),
+            )
+            .for("share")
+            .then(takeUnique);
+
+          logger.debug(professor);
+
+          await tx.insert(ProfessorT).values({
+            professorId: professor.id,
+            professorEnum: body.professor.professorEnumId,
+            startTerm: cur,
+          });
         }
       }
+
       const [result] = await tx
         .update(Registration)
         .set({
@@ -290,13 +315,15 @@ export class ClubRegistrationRepository {
           divisionId: body.divisionId,
           activityFieldKr: body.activityFieldKr,
           activityFieldEn: body.activityFieldEn,
-          professorId: professorId.professorId ?? null,
+          professorId: professor?.id ?? null,
           divisionConsistency: body.divisionConsistency,
           foundationPurpose: body.foundationPurpose,
           activityPlan: body.activityPlan,
           registrationActivityPlanFileId: body.activityPlanFileId,
           registrationClubRuleFileId: body.clubRuleFileId,
           registrationExternalInstructionFileId: body.externalInstructionFileId,
+          registrationApplicationStatusEnumId: RegistrationStatusEnum.Pending,
+          professorApprovedAt: null,
         })
         .where(
           and(
@@ -532,7 +559,9 @@ export class ClubRegistrationRepository {
         registrationTypeEnumId: Registration.registrationApplicationTypeEnumId,
         divisionName: Division.name,
         clubNameKr: Club.name_kr,
+        clubNameEn: Club.name_en,
         newClubNameKr: Registration.clubNameKr,
+        newClubNameEn: Registration.clubNameEn,
         clubId: Registration.clubId,
         activityFieldKr: Registration.activityFieldKr,
         activityFieldEn: Registration.activityFieldEn,
@@ -588,14 +617,20 @@ export class ClubRegistrationRepository {
         registrationStatusEnumId:
           Registration.registrationApplicationStatusEnumId,
         divisionId: Registration.divisionId,
-        clubNameKr: Registration.clubNameKr,
-        clubNameEn: Registration.clubNameEn,
+        clubNameKr: Club.name_kr,
+        clubNameEn: Club.name_en,
+        newClubNameKr: Registration.clubNameKr,
+        newClubNameEn: Registration.clubNameEn,
         representativeName: Student.name,
         activityFieldKr: Registration.activityFieldKr,
         activityFieldEn: Registration.activityFieldEn,
         professorName: Professor.name,
       })
       .from(Registration)
+      .leftJoin(
+        Club,
+        and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
+      )
       .innerJoin(
         Student,
         and(eq(Registration.studentId, Student.id), isNull(Student.deletedAt)),
@@ -884,6 +919,10 @@ export class ClubRegistrationRepository {
           isNull(Registration.deletedAt),
         ),
       )
+      .leftJoin(
+        Club,
+        and(eq(Registration.clubId, Club.id), isNull(Club.deletedAt)),
+      )
       .innerJoin(Student, eq(Registration.studentId, Student.id))
       .innerJoin(
         Division,
@@ -1003,5 +1042,19 @@ export class ClubRegistrationRepository {
       );
 
     return { ...result, comments };
+  }
+
+  async resetClubRegistrationStatusEnum(clubId: number) {
+    await this.db.transaction(async tx => {
+      await tx
+        .update(Registration)
+        .set({
+          registrationApplicationStatusEnumId: RegistrationStatusEnum.Pending,
+          professorApprovedAt: null,
+        })
+        .where(
+          and(eq(Registration.clubId, clubId), isNull(Registration.deletedAt)),
+        );
+    });
   }
 }

@@ -6,7 +6,10 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import { ListItem } from "@sparcs-clubs/web/common/components/ListItem";
+import {
+  IndentedItem,
+  ListItem,
+} from "@sparcs-clubs/web/common/components/ListItem";
 import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
@@ -18,7 +21,11 @@ import {
 import MyRegisterClubActFrame from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubActFrame";
 import { FilePreviewContainer } from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubDetailFrame";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
-import { getActualYear } from "@sparcs-clubs/web/utils/Date/extractDate";
+import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
+import {
+  getActualMonth,
+  getActualYear,
+} from "@sparcs-clubs/web/utils/Date/extractDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 import { professorEnumToText } from "@sparcs-clubs/web/utils/getUserType";
 
@@ -99,6 +106,15 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
             <ListItem>
               {`설립 연도: ${data && getActualYear(data?.foundedAt)}`}
             </ListItem>
+            {data &&
+              (isProvisional(data.registrationTypeEnumId) ? (
+                <ListItem>
+                  설립 연월: {getActualYear(data.foundedAt)}년{" "}
+                  {getActualMonth(data.foundedAt)}월
+                </ListItem>
+              ) : (
+                <ListItem>설립 연도: {getActualYear(data.foundedAt)}</ListItem>
+              ))}
             <ListItem>
               {`소속 분과: ${data && getTagDetail(data?.divisionId, DivisionTypeTagList).text}`}
             </ListItem>
@@ -125,9 +141,12 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
             동아리 정보
           </Typography>
           <FlexWrapper gap={12} direction="column">
-            <ListItem>{`분과 정합성: ${data?.divisionConsistency}`}</ListItem>
-            <ListItem>{`설립 목적: ${data?.foundationPurpose}`}</ListItem>
-            <ListItem>{`주요 활동 계획: ${data?.activityPlan}`}</ListItem>
+            <ListItem>분과 정합성:</ListItem>
+            <IndentedItem>{data?.divisionConsistency}</IndentedItem>
+            <ListItem>설립 목적:</ListItem>
+            <IndentedItem>{data?.foundationPurpose}</IndentedItem>
+            <ListItem>주요 활동 계획:</ListItem>
+            <IndentedItem>{data?.activityPlan}</IndentedItem>
             {data?.activityPlanFile && (
               <>
                 <ListItem>활동계획서</ListItem>
@@ -185,7 +204,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
           )}
         </FlexWrapper>
         {data &&
-          data.registrationTypeEnumId !== RegistrationTypeEnum.Renewal &&
+          data.registrationTypeEnumId === RegistrationTypeEnum.Promotional &&
           data.clubId && (
             <MyRegisterClubActFrame profile="executive" clubId={data.clubId} />
           )}
