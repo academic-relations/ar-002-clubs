@@ -593,6 +593,7 @@ export default class ActivityService {
           id: activity.id,
           name: activity.name,
           activityTypeEnumId: activity.activityTypeEnumId,
+          activityStatusEnumId: activity.activityStatusEnumId,
           durations,
           earliestStartTerm, // 추후 정렬을 위해 추가
           latestEndTerm, // 추후 정렬을 위해 추가
@@ -613,6 +614,7 @@ export default class ActivityService {
       id: activity.id,
       name: activity.name,
       activityTypeEnumId: activity.activityTypeEnumId,
+      activityStatusEnumId: activity.activityStatusEnumId,
       durations: activity.durations,
     }));
   }

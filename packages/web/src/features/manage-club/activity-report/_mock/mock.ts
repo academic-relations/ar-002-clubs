@@ -92,6 +92,7 @@ export const mockPastActivityData: ApiAct011ResponseOk = {
       id: 1,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 1,
+      activityStatusEnumId: ActivityStatusEnum.Applied,
       durations: [
         {
           startTerm: new Date("2024-03-11"),
@@ -103,6 +104,7 @@ export const mockPastActivityData: ApiAct011ResponseOk = {
       id: 2,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 1,
+      activityStatusEnumId: ActivityStatusEnum.Applied,
       durations: [
         {
           startTerm: new Date("2024-03-11"),
@@ -114,6 +116,7 @@ export const mockPastActivityData: ApiAct011ResponseOk = {
       id: 3,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 2,
+      activityStatusEnumId: ActivityStatusEnum.Applied,
       durations: [
         {
           startTerm: new Date("2024-03-11"),
@@ -129,6 +132,7 @@ export const mockPastActivityData: ApiAct011ResponseOk = {
       id: 4,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 2,
+      activityStatusEnumId: ActivityStatusEnum.Applied,
       durations: [
         {
           startTerm: new Date("2024-03-11"),
@@ -148,6 +152,7 @@ export const mockPastActivityData: ApiAct011ResponseOk = {
       id: 5,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 3,
+      activityStatusEnumId: ActivityStatusEnum.Applied,
       durations: [
         {
           startTerm: new Date("2024-03-11"),
@@ -159,6 +164,7 @@ export const mockPastActivityData: ApiAct011ResponseOk = {
       id: 6,
       name: "개발개발한 어떠한 활동",
       activityTypeEnumId: 3,
+      activityStatusEnumId: ActivityStatusEnum.Applied,
       durations: [
         {
           startTerm: new Date("2024-03-11"),
