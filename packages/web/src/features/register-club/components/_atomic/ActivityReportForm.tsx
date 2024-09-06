@@ -109,7 +109,7 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   };
 
   const validInput = useMemo(
-    () => isValid && durations && participants && evidenceFiles,
+    () => isValid && durations && participants.length > 0 && evidenceFiles,
     [durations, participants, evidenceFiles, isValid],
   );
 

@@ -26,6 +26,7 @@ interface ActivityReportListProps {
   data: PastActivityReport[];
   profile: string;
   showItemCount?: boolean;
+  refetch?: () => void;
 }
 
 const columnHelper = createColumnHelper<PastActivityReport>();
@@ -69,6 +70,7 @@ const PastActivityReportList: React.FC<ActivityReportListProps> = ({
   data,
   profile,
   showItemCount = true,
+  refetch = () => {},
 }) => {
   const table = useReactTable({
     columns,
@@ -83,7 +85,10 @@ const PastActivityReportList: React.FC<ActivityReportListProps> = ({
         profile={profile}
         activityId={activityId}
         isOpen={isOpen}
-        close={close}
+        close={() => {
+          close();
+          refetch();
+        }}
       />
     ));
   };
