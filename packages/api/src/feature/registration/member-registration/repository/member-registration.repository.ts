@@ -20,7 +20,6 @@ import {
   lt,
   lte,
   or,
-  sql,
 } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -139,7 +138,7 @@ export class MemberRegistrationRepository {
         clubId: RegistrationApplicationStudent.clubId,
         clubNameKr: Club.name_kr,
         type: ClubT.clubStatusEnumId,
-        isPermanent: sql<boolean>`COALESCE(MAX(CASE WHEN ${DivisionPermanentClubD.id} IS NOT NULL THEN TRUE ELSE FALSE END), FALSE)`,
+        isPermanent: DivisionPermanentClubD.id,
         divisionName: Division.name,
         applyStatusEnumId:
           RegistrationApplicationStudent.registrationApplicationStudentEnumId,
@@ -159,7 +158,14 @@ export class MemberRegistrationRepository {
       )
       .leftJoin(
         DivisionPermanentClubD,
-        eq(Club.id, DivisionPermanentClubD.clubId),
+        and(
+          eq(DivisionPermanentClubD.clubId, Club.id),
+          lte(DivisionPermanentClubD.startTerm, crt),
+          or(
+            gte(DivisionPermanentClubD.endTerm, crt),
+            isNull(DivisionPermanentClubD.endTerm),
+          ),
+        ),
       )
       .leftJoin(Division, eq(Division.id, Club.divisionId))
       .where(
@@ -178,7 +184,13 @@ export class MemberRegistrationRepository {
           isNull(RegistrationApplicationStudent.deletedAt),
         ),
       );
-    return { applies: result };
+
+    return {
+      applies: result.map(item => ({
+        ...item,
+        isPermanent: item.isPermanent !== null,
+      })),
+    };
   }
 
   async deleteMemberRegistration(

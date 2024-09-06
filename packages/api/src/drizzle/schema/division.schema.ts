@@ -3,6 +3,7 @@ import {
   int,
   mysqlTable,
   timestamp,
+  unique,
   varchar,
 } from "drizzle-orm/mysql-core";
 
@@ -44,14 +45,21 @@ export const DivisionPresidentD = mysqlTable("division_president_d", {
   deletedAt: timestamp("deleted_at"),
 });
 
-export const DivisionPermanentClubD = mysqlTable("division_permanent_club_d", {
-  id: int("id").autoincrement().primaryKey(),
-  clubId: int("club_id")
-    .unique()
-    .notNull()
-    .references(() => Club.id), // Assuming Club table exists
-  startTerm: date("start_term").notNull(),
-  endTerm: date("end_term"),
-  createdAt: timestamp("created_at").defaultNow(),
-  deletedAt: timestamp("deleted_at"),
-});
+export const DivisionPermanentClubD = mysqlTable(
+  "division_permanent_club_d",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    clubId: int("club_id")
+      .notNull()
+      .references(() => Club.id), // Assuming Club table exists
+    startTerm: date("start_term").notNull(),
+    endTerm: date("end_term"),
+    createdAt: timestamp("created_at").defaultNow(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    DivisionPermanentClubDClubIdFk: unique(
+      "division_permanent_club_d_club_id_start_term_unique",
+    ).on(table.clubId, table.startTerm),
+  }),
+);
