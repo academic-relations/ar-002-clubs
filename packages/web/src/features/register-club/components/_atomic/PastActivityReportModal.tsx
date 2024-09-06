@@ -14,7 +14,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { patchActivityExecutive } from "@sparcs-clubs/web/features/executive/register-club/services/patchActivityExecutive";
 import { patchActivityExecutiveSendBack } from "@sparcs-clubs/web/features/executive/register-club/services/patchActivityExecutiveSendBack";
-import { useDeleteActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useDeleteActivityReport";
+import { useDeleteActivityReportProvisional } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useDeleteActivityReportProvisional";
 import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
 import { getActivityTypeTagLabel } from "@sparcs-clubs/web/features/register-club/utils/activityType";
 
@@ -45,14 +45,20 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
     mutate: deleteActivityReport,
     isSuccess: isDeleteSuccess,
     isError: isDeleteError,
-  } = useDeleteActivityReport();
+  } = useDeleteActivityReportProvisional();
 
   const isExecutive = profile === "executive";
   const [rejectionDetail, setRejectionDetail] = useState("");
 
   const handleDelete = () => {
-    deleteActivityReport({ requestParam: { activityId } });
-    close();
+    deleteActivityReport(
+      { requestParam: { activityId } },
+      {
+        onSuccess: () => {
+          close();
+        },
+      },
+    );
   };
 
   const handleEdit = () => {

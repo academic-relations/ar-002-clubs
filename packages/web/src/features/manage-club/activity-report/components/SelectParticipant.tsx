@@ -2,15 +2,12 @@ import React, { useEffect, useState } from "react";
 
 import {
   createColumnHelper,
-  FilterFn,
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
-  Row,
   RowSelectionState,
   useReactTable,
 } from "@tanstack/react-table";
-import { hangulIncludes } from "es-hangul";
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -76,19 +73,7 @@ const columns = [
   }),
 ];
 
-const containsTextFilter: FilterFn<Participant> = (
-  row: Row<Participant>,
-  _: string,
-  filterValue: string,
-) => {
-  const name = row.getValue<string>("name").toLowerCase();
-  const studentNumber = row.getValue<string>("studentNumber").toLowerCase();
-  const filterText = filterValue.toLowerCase();
-  return (
-    hangulIncludes(name, filterText) || studentNumber.startsWith(filterText)
-  );
-};
-
+// TODO: es hangul 검색 달기
 const SelectParticipant: React.FC<SelectParticipantProps> = ({
   data,
   value = [],
@@ -136,7 +121,6 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
         handleRowClick(updaterOrValue);
       }
     },
-    globalFilterFn: containsTextFilter,
     initialState: {
       sorting: [
         {

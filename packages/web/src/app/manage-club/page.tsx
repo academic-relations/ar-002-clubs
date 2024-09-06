@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
+import NoManageClubForProfessor from "@sparcs-clubs/web/common/frames/NoManageClubForProfessor";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import ManageClubFrame from "@sparcs-clubs/web/features/manage-club/frames/ManageClubFrame";
 
@@ -24,6 +25,10 @@ const ManageClub: React.FC = () => {
 
   if (!isLoggedIn) {
     return <LoginRequired login={login} />;
+  }
+
+  if (profile?.type === "professor") {
+    return <NoManageClubForProfessor />;
   }
 
   if (profile?.type !== "undergraduate") {

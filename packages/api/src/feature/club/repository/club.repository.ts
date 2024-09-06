@@ -104,7 +104,7 @@ export default class ClubRepository {
           id: Club.id,
           name_kr: Club.name_kr,
           name_en: Club.name_en,
-          isPermanent: sql`COALESCE(MAX(CASE WHEN ${DivisionPermanentClubD.id} IS NOT NULL THEN TRUE ELSE FALSE END), FALSE)`,
+          isPermanent: DivisionPermanentClubD.id,
           characteristic: ClubT.characteristicKr,
           representative: Student.name,
           advisor: Professor.name,
@@ -143,7 +143,14 @@ export default class ClubRepository {
       .leftJoin(Student, eq(ClubDelegateD.studentId, Student.id))
       .leftJoin(
         DivisionPermanentClubD,
-        eq(Club.id, DivisionPermanentClubD.clubId),
+        and(
+          eq(DivisionPermanentClubD.clubId, Club.id),
+          lte(DivisionPermanentClubD.startTerm, crt),
+          or(
+            gte(DivisionPermanentClubD.endTerm, crt),
+            isNull(DivisionPermanentClubD.endTerm),
+          ),
+        ),
       )
       .groupBy(
         Division.id,
@@ -155,6 +162,7 @@ export default class ClubRepository {
         ClubT.characteristicKr,
         Student.name,
         Professor.name,
+        DivisionPermanentClubD.id,
       );
     const record = rows.reduce<Record<number, IClubs>>((acc, row) => {
       const divId = row.id;
@@ -167,7 +175,10 @@ export default class ClubRepository {
       }
 
       if (club) {
-        acc[divId].clubs.push({ ...club, isPermanent: club.isPermanent === 1 });
+        acc[divId].clubs.push({
+          ...club,
+          isPermanent: club.isPermanent !== null,
+        });
       }
       return acc;
     }, {});

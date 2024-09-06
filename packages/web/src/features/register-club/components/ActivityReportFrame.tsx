@@ -85,6 +85,7 @@ const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
           <PastActivityReportList
             data={data?.activities ?? []}
             profile={profile?.type ?? ""}
+            refetch={refetch}
           />
         </StyledCard>
       </FlexWrapper>
