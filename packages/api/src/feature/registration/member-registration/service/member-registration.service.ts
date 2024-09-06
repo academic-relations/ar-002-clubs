@@ -11,11 +11,17 @@ import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/en
 import { ApiReg013ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg013";
 import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
+import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import { MemberRegistrationRepository } from "../repository/member-registration.repository";
+
+import type {
+  ApiReg019RequestQuery,
+  ApiReg019ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg019";
 
 interface ApiReg006ResponseType {
   status: number;
@@ -206,5 +212,67 @@ export class MemberRegistrationService {
     const result =
       await this.memberRegistrationRepository.getMemberRegistrationClub(clubId);
     return result;
+  }
+
+  /**
+   * @description getExecutiveRegistrationsMemberRegistrations의
+   * 서비스 진입점입니다.
+   * 굉장히 못짠 코드이니 언젠가 누군가 고쳐주세요... 참고하지 말아주세요...
+   */
+  async getExecutiveRegistrationsMemberRegistrations(param: {
+    executiveId: number;
+    query: ApiReg019RequestQuery;
+  }): Promise<ApiReg019ResponseOk> {
+    const semesterId =
+      await this.clubPublicService.dateToSemesterId(getKSTDate());
+    logger.debug(semesterId);
+    const memberRegistrations =
+      await this.memberRegistrationRepository.getExecutiveRegistrationsMemberRegistrations(
+        {
+          pageOffset: param.query.pageOffset,
+          itemCount: param.query.itemCount,
+          semesterId,
+        },
+      );
+    logger.debug(memberRegistrations);
+    const clubs = memberRegistrations
+      .filter((item, pos) => memberRegistrations.indexOf(item) === pos)
+      .map(e => ({
+        clubId: e.clubId,
+        clubName: e.clubName,
+        clubTypeEnumId: e.clubTypeEnumId,
+        isPermanent: e.permanent !== null,
+        division: e.division,
+      }));
+
+    const totalItems = clubs.map(e => ({
+      ...e,
+      totalRegistrations: memberRegistrations.filter(
+        e2 => e2.clubId === e.clubId,
+      ).length,
+      // 정회원의 enum이 1이라고 가정
+      regularMemberRegistrations: memberRegistrations.filter(
+        e2 => e2.student.StudentEnumId === 1 && e2.clubId === e.clubId,
+      ).length,
+      totalApprovals: memberRegistrations.filter(
+        e2 =>
+          e2.clubId === e.clubId &&
+          e2.registrationApplicationStudentEnumId ===
+            RegistrationApplicationStudentStatusEnum.Approved,
+      ).length,
+      regularMemberApprovals: memberRegistrations.filter(
+        e2 =>
+          e2.student.StudentEnumId === 1 &&
+          e2.clubId === e.clubId &&
+          e2.registrationApplicationStudentEnumId ===
+            RegistrationApplicationStudentStatusEnum.Approved,
+      ).length,
+    }));
+
+    return {
+      total: totalItems.length,
+      items: totalItems,
+      offset: param.query.pageOffset,
+    };
   }
 }

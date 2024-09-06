@@ -78,21 +78,6 @@ export default class ClubDelegateController {
   }
 
   @Student()
-  @Get("/student/clubs/delegates/delegate/my")
-  @UsePipes(new ZodPipe(apiClb015))
-  async getStudentClubDelegate(
-    @GetStudent() user: GetStudent,
-    @Res({ passthrough: true }) res: Response,
-  ): Promise<ApiClb015ResponseOk | ApiClb015ResponseNoContent> {
-    const result = await this.clubDelegateService.getStudentClubDelegate(
-      user.studentId,
-    );
-
-    res.status(result.status);
-    return result.data;
-  }
-
-  @Student()
   @Get(
     "/student/clubs/club/:clubId/delegates/delegate/:delegateEnumId/candidates",
   )
@@ -108,5 +93,20 @@ export default class ClubDelegateController {
       });
 
     return result;
+  }
+
+  @Student()
+  @Get("/student/clubs/delegates/delegate/my")
+  @UsePipes(new ZodPipe(apiClb015))
+  async getStudentClubDelegate(
+    @GetStudent() user: GetStudent,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<ApiClb015ResponseOk | ApiClb015ResponseNoContent> {
+    const result = await this.clubDelegateService.getStudentClubDelegate(
+      user.studentId,
+    );
+
+    res.status(result.status);
+    return result.data;
   }
 }
