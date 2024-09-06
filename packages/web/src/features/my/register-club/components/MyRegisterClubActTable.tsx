@@ -11,7 +11,10 @@ import styled from "styled-components";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import { ActTypeTagList } from "@sparcs-clubs/web/constants/tableTagList";
+import {
+  ActStatusTagList,
+  ActTypeTagList,
+} from "@sparcs-clubs/web/constants/tableTagList";
 import PastActivityReportModal from "@sparcs-clubs/web/features/register-club/components/_atomic/PastActivityReportModal";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
@@ -34,6 +37,15 @@ const columnHelper =
   createColumnHelper<ApiAct011ResponseOk["activities"][number]>();
 
 const columns = [
+  columnHelper.accessor("activityStatusEnumId", {
+    id: "activityStatusEnumId",
+    header: "상태",
+    cell: info => {
+      const { color, text } = getTagDetail(info.getValue(), ActStatusTagList);
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 64,
+  }),
   columnHelper.accessor("name", {
     id: "activityName",
     header: "활동명",

@@ -1,4 +1,7 @@
-import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
+import {
+  ActivityStatusEnum,
+  ActivityTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
 import { PromotionalPrintingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
@@ -13,7 +16,6 @@ import { DivisionType } from "@sparcs-clubs/web/types/divisions.types";
 import { TagColor } from "../common/components/Tag";
 import {
   ActivityProfessorApprovalEnum,
-  ActivityStatusEnum,
   FundingStatusEnum,
   MemberStatusEnum,
 } from "../features/manage-club/services/_mock/mockManageClub";
@@ -98,10 +100,11 @@ const FundingTagList: {
   [FundingStatusEnum.Rejected]: { text: "반려", color: "RED" },
 };
 
+// TODO: interface enum 사용
 const ApplyTagList: {
   [key in ActivityStatusEnum]: StatusDetail;
 } = {
-  [ActivityStatusEnum.Committee]: { text: "운위", color: "ORANGE" },
+  // [ActivityStatusEnum.Committee]: { text: "운위", color: "ORANGE" },
   [ActivityStatusEnum.Applied]: { text: "신청", color: "BLUE" },
   [ActivityStatusEnum.Approved]: { text: "승인", color: "GREEN" },
   [ActivityStatusEnum.Rejected]: { text: "반려", color: "RED" },
@@ -139,6 +142,15 @@ const ActTypeTagList: {
     color: "PURPLE",
   },
 };
+
+const ActStatusTagList: {
+  [key in ActivityStatusEnum]: StatusDetail;
+} = {
+  [ActivityStatusEnum.Applied]: { text: "대기", color: "GRAY" },
+  [ActivityStatusEnum.Approved]: { text: "승인", color: "GREEN" },
+  [ActivityStatusEnum.Rejected]: { text: "반려", color: "RED" },
+};
+
 const RegistrationStatusTagList: {
   [key in RegistrationStatusEnum]: StatusDetail;
 } = {
@@ -180,6 +192,7 @@ export {
   RntTagList,
   MemTagList,
   ApplyTagList,
+  ActStatusTagList,
   ProfessorApprovalTagList,
   ProfessorIsApprovedTagList,
   ActTypeTagList,
