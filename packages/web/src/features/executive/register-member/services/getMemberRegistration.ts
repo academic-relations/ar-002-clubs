@@ -19,7 +19,6 @@ export const useGetMemberRegistration = (requestQuery: ApiReg019RequestQuery) =>
     queryKey: [apiReg019.url(), requestQuery],
     queryFn: async (): Promise<ApiReg019ResponseOk> => {
       const { data, status } = await axiosClientWithAuth.get(apiReg019.url());
-      // console.log(data);
       switch (status) {
         case 200:
           return apiReg019.responseBodyMap[200].parse(data);

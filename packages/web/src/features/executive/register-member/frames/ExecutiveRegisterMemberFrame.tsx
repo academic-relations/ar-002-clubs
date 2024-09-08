@@ -14,7 +14,7 @@ export const ExecutiveRegisterMember = () => {
   const limit = 10;
   const { data, isLoading, isError } = useGetMemberRegistration({
     pageOffset: currentPage,
-    itemCount: 10,
+    itemCount: limit,
   });
 
   const paginatedData = data && {
