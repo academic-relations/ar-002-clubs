@@ -1,5 +1,7 @@
 import React from "react";
 
+import { ApiReg019ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg019";
+
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -16,23 +18,23 @@ import {
 } from "@sparcs-clubs/web/types/clubdetail.types";
 
 interface RegisterMemberTableProps {
-  registerMemberList: typeof mockupRegistrationMember;
+  registerMemberList: ApiReg019ResponseOk;
 }
 
 const columnHelper =
   createColumnHelper<(typeof mockupRegistrationMember)["items"][number]>();
 
 const columns = [
-  columnHelper.accessor("type", {
+  columnHelper.accessor("clubTypeEnumId", {
     id: "type",
     header: "구분",
     cell: info => {
       const tagColor = getTagColorFromClubType(
-        info.row.original.type,
+        info.row.original.clubTypeEnumId,
         info.row.original.isPermanent,
       );
       const tagContents = getTagContentFromClubType(
-        info.row.original.type,
+        info.row.original.clubTypeEnumId,
         info.row.original.isPermanent,
       );
 
@@ -40,8 +42,8 @@ const columns = [
     },
     size: 125,
   }),
-  columnHelper.accessor("division", {
-    id: "division",
+  columnHelper.accessor("division.name", {
+    id: "division.name",
     header: "분과",
     cell: info => {
       const tagColor = getTagColorFromDivision(`${info.getValue()}`);
@@ -56,18 +58,18 @@ const columns = [
     cell: info => info.getValue(),
     size: 291.67,
   }),
-  columnHelper.accessor("registeredAll", {
+  columnHelper.accessor("totalRegistrations", {
     id: "registeredAll",
     header: "신청 (전체 / 정회원)",
     cell: info =>
-      `${info.row.original.registeredAll}명 / ${info.row.original.registeredRegular}명`,
+      `${info.row.original.totalRegistrations}명 / ${info.row.original.regularMemberRegistrations}명`,
     size: 291.67,
   }),
-  columnHelper.accessor("approvedAll", {
+  columnHelper.accessor("totalApprovals", {
     id: "approvedAll",
     header: "승인 (전체 / 정회원)",
     cell: info =>
-      `${info.row.original.approvedAll}명 / ${info.row.original.approvedRegular}명`,
+      `${info.row.original.totalApprovals}명 / ${info.row.original.regularMemberApprovals}명`,
     size: 291.67,
   }),
 ];
@@ -86,7 +88,7 @@ const RegistrationMemberTable: React.FC<RegisterMemberTableProps> = ({
     <Table
       table={table}
       count={registerMemberList.total}
-      rowLink={row => `/executive/register-member/${row.id}`}
+      rowLink={row => `/executive/register-member/${row.clubId}`}
     />
   );
 };
