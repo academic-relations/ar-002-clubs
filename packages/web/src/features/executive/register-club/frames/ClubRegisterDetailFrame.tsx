@@ -103,9 +103,6 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
             <ListItem>
               {`대표자 전화번호: ${data?.representative.phoneNumber}`}
             </ListItem>
-            <ListItem>
-              {`설립 연도: ${data && getActualYear(data?.foundedAt)}`}
-            </ListItem>
             {data &&
               (isProvisional(data.registrationTypeEnumId) ? (
                 <ListItem>
