@@ -13,7 +13,7 @@ const StatusWrapper = styled.div`
   padding-left: 28px;
 `;
 
-const TotalCountContationer = styled.div`
+const TotalCountContainer = styled.div`
   width: 120px;
   height: 24px;
   justify-content: space-between;
@@ -22,7 +22,7 @@ const TotalCountContationer = styled.div`
   flex-direction: row;
 `;
 
-const StatusCountContationer = styled.div`
+const StatusCountContainer = styled.div`
   width: 160px;
   height: 24px;
   justify-content: space-between;
@@ -31,7 +31,7 @@ const StatusCountContationer = styled.div`
   flex-direction: row;
 `;
 
-const StatusContentsContationer = styled.div`
+const StatusContentsContainer = styled.div`
   width: 60px;
   height: 24px;
   justify-content: center;
@@ -42,7 +42,7 @@ const StatusContentsContationer = styled.div`
   line-height: 20px;
 `;
 
-const TotalContentsContationer = styled.div`
+const TotalContentsContainer = styled.div`
   width: 40px;
   height: 24px;
   justify-content: center;
@@ -53,7 +53,7 @@ const TotalContentsContationer = styled.div`
   line-height: 20px;
 `;
 
-const TotalTitleContatiner = styled.div`
+const TotalTitleContainer = styled.div`
   width: fit-content;
   padding: 4px 12px;
   height: 24px;
@@ -68,24 +68,22 @@ const TotalTitleContatiner = styled.div`
 const TotalInfoFrame: React.FC<StatusInfoFrameProps> = ({ statusInfo }) => (
   <StatusWrapper>
     <FlexWrapper gap={40} direction="row">
-      <TotalCountContationer>
-        <TotalTitleContatiner>전체</TotalTitleContatiner>
-        <TotalContentsContationer>
-          {statusInfo.Total}명
-        </TotalContentsContationer>
-      </TotalCountContationer>
-      <StatusCountContationer>
+      <TotalCountContainer>
+        <TotalTitleContainer>전체</TotalTitleContainer>
+        <TotalContentsContainer>{statusInfo.Total}명</TotalContentsContainer>
+      </TotalCountContainer>
+      <StatusCountContainer>
         <Tag color="BLUE">정회원</Tag>
-        <StatusContentsContationer>
+        <StatusContentsContainer>
           {statusInfo.Regular}명
-        </StatusContentsContationer>
-      </StatusCountContationer>
-      <StatusCountContationer>
+        </StatusContentsContainer>
+      </StatusCountContainer>
+      <StatusCountContainer>
         <Tag color="GRAY">준회원</Tag>
-        <StatusContentsContationer>
+        <StatusContentsContainer>
           {statusInfo.NonRegular}명
-        </StatusContentsContationer>
-      </StatusCountContationer>
+        </StatusContentsContainer>
+      </StatusCountContainer>
     </FlexWrapper>
   </StatusWrapper>
 );

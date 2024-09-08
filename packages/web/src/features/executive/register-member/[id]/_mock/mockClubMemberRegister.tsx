@@ -1,9 +1,9 @@
-import { MemberStatusEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 const registerState = [
-  MemberStatusEnum.Approved,
-  MemberStatusEnum.Applied,
-  MemberStatusEnum.Rejected,
+  RegistrationApplicationStudentStatusEnum.Approved,
+  RegistrationApplicationStudentStatusEnum.Pending,
+  RegistrationApplicationStudentStatusEnum.Rejected,
 ];
 
 const studentIDList = [
@@ -14,19 +14,33 @@ const studentIDList = [
   20245642, // 2
 ];
 
-const applies = Array.from({ length: 100 }, (_, index) => ({
-  registrationStatus: registerState[index % registerState.length],
-  id: index + 1,
-  studentID: studentIDList[index % studentIDList.length],
-  studentName: "임가은",
-  studentEmail: "casio@sparcs.org",
-  studentPhoneNumber: "010-xxxx-xxxx",
+const regularMemberState = [true, false];
+
+const items = Array.from({ length: 100 }, (_, index) => ({
+  memberRegistrationId: index + 1,
+  RegistrationApplicationStudentStatusEnumId:
+    registerState[index % registerState.length],
+  isRegularMemberRegistration:
+    regularMemberState[index % regularMemberState.length],
+  student: {
+    id: 1,
+    studentNumber: studentIDList[index % studentIDList.length],
+    name: "임가은",
+    phoneNumber: "010-1234-5678",
+    email: "casio@sparcs.org",
+  },
 }));
 
-const mockupClubMemberRegister = {
-  total: applies.length,
-  applies,
-  offset: 0,
+export const mockupClubMemberRegister = {
+  totalRegistrations: 100,
+  totalWaitings: 20,
+  totalApprovals: 70,
+  totalRejections: 10,
+  regularMemberRegistrations: 50,
+  regularMemberWaitings: 10,
+  regularMemberApprovals: 35,
+  regularMemberRejections: 5,
+  items,
+  total: items.length,
+  offset: 1,
 };
-
-export default mockupClubMemberRegister;
