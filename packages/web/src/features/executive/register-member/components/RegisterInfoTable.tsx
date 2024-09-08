@@ -79,7 +79,7 @@ const columns = [
   }),
   columnHelper.accessor("RegistrationApplicationStudentStatusEnumId", {
     id: "RegistrationApplicationStudentStatusEnumId",
-    header: "이메일",
+    header: "비고",
     cell: info => {
       if (
         info.row.original.RegistrationApplicationStudentStatusEnumId ===
