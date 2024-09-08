@@ -38,7 +38,7 @@ const responseBodyMap = {
           .number()
           .int()
           .min(1),
-        isRegularMemberRegistration: z.boolean(),
+        isRegularMemberRegistration: z.coerce.boolean(),
         student: z.object({
           id: z.coerce.number().int().min(1),
           studentNumber: z.coerce.number().int().min(1),

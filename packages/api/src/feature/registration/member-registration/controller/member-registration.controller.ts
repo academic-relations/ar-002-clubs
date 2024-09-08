@@ -34,6 +34,7 @@ import apiReg013, {
   ApiReg013ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg013";
 import apiReg019 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg019";
+import apiReg020 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg020";
 
 import { Response } from "express";
 
@@ -53,6 +54,10 @@ import type {
   ApiReg019RequestQuery,
   ApiReg019ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg019";
+import type {
+  ApiReg020RequestQuery,
+  ApiReg020ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg020";
 
 @Controller()
 export class MemberRegistrationController {
@@ -145,10 +150,27 @@ export class MemberRegistrationController {
   @Executive()
   @Get("/executive/registrations/member-registrations/brief")
   @UsePipes(new ZodPipe(apiReg019))
-  async getExecutiveRegistrationsMemberRegistrations(
+  async getExecutiveRegistrationsMemberRegistrationsBrief(
     @GetExecutive() user: GetExecutive,
     @Query() query: ApiReg019RequestQuery,
   ): Promise<ApiReg019ResponseOk> {
+    const result =
+      await this.memberRegistrationService.getExecutiveRegistrationsMemberRegistrationsBrief(
+        {
+          executiveId: user.executiveId,
+          query,
+        },
+      );
+    return result;
+  }
+
+  @Executive()
+  @Get("/executive/registrations/member-registrations")
+  @UsePipes(new ZodPipe(apiReg020))
+  async getExecutiveRegistrationsMemberRegistrations(
+    @GetExecutive() user: GetExecutive,
+    @Query() query: ApiReg020RequestQuery,
+  ): Promise<ApiReg020ResponseOk> {
     const result =
       await this.memberRegistrationService.getExecutiveRegistrationsMemberRegistrations(
         {
@@ -156,6 +178,7 @@ export class MemberRegistrationController {
           query,
         },
       );
+
     return result;
   }
 }
