@@ -26,8 +26,8 @@ export const useGetRegisterMemberDetail = (
 
       switch (status) {
         case 200: {
-          return apiReg020.responseBodyMap[200].parse(data);
-          // return data;
+          // return apiReg020.responseBodyMap[200].parse(data); TODO: check this again
+          return data;
         }
 
         default:
