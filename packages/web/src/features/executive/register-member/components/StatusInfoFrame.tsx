@@ -1,16 +1,17 @@
 import React from "react";
 
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
 import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { MemTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import { MemberStatusEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface StatusInfoFrameProps {
   statusInfo: { Regular: number; NonRegular: number; Total: number };
-  status: MemberStatusEnum;
+  status: RegistrationApplicationStudentStatusEnum;
 }
 
 const StatusWrapper = styled.div`

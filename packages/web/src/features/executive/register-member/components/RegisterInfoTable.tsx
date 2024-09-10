@@ -1,5 +1,9 @@
 import React from "react";
 
+import { ApiReg020ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg020";
+
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -13,13 +17,11 @@ import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { MemTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import { MemberStatusEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
+
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-import mockupClubMemberRegister from "../[id]/_mock/mockClubMemberRegister";
-
 interface RegisterInfoTableProps {
-  memberRegisterInfoList: typeof mockupClubMemberRegister;
+  memberRegisterInfoList: ApiReg020ResponseOk;
 }
 
 const ToggleWrapper = styled.div`
@@ -29,11 +31,10 @@ const ToggleWrapper = styled.div`
   direction: row;
   display: flex;
 `;
-const columnHelper =
-  createColumnHelper<(typeof mockupClubMemberRegister)["applies"][number]>();
+const columnHelper = createColumnHelper<ApiReg020ResponseOk["items"][number]>();
 
 const columns = [
-  columnHelper.accessor("registrationStatus", {
+  columnHelper.accessor("RegistrationApplicationStudentStatusEnumId", {
     id: "registrationStatus",
     header: "상태",
     cell: info => {
@@ -42,50 +43,48 @@ const columns = [
     },
     size: 90,
   }),
-  columnHelper.accessor("studentID", {
-    id: "studentID",
+  columnHelper.accessor("isRegularMemberRegistration", {
+    id: "isRegularMemberRegistration",
     header: "구분",
     cell: info => {
-      if (
-        parseInt(info.getValue().toString().slice(-4)) < 2000 ||
-        (parseInt(info.getValue().toString().slice(-4)) < 7000 &&
-          parseInt(info.getValue().toString().slice(-4)) > 6000)
-      ) {
-        return <Tag color="BLUE">정회원</Tag>;
-      }
+      if (info.getValue()) return <Tag color="BLUE">정회원</Tag>;
+
       return <Tag color="GRAY">준회원</Tag>;
     },
     size: 220,
   }),
-  columnHelper.accessor("studentID", {
-    id: "studentID",
+  columnHelper.accessor("student.studentNumber", {
+    id: "student.studentNumber",
     header: "학번",
     cell: info => info.getValue(),
     size: 100,
   }),
-  columnHelper.accessor("studentName", {
-    id: "studentName",
+  columnHelper.accessor("student.name", {
+    id: "student.name",
     header: "신청자",
     cell: info => info.getValue(),
     size: 120,
   }),
-  columnHelper.accessor("studentPhoneNumber", {
-    id: "studentPhoneNumber",
+  columnHelper.accessor("student.phoneNumber", {
+    id: "student.phoneNumber",
     header: "전화번호",
     cell: info => info.getValue(),
     size: 160,
   }),
-  columnHelper.accessor("studentEmail", {
-    id: "studentEmail",
+  columnHelper.accessor("student.email", {
+    id: "student.email",
     header: "이메일",
     cell: info => info.getValue(),
     size: 240,
   }),
-  columnHelper.accessor("registrationStatus", {
-    id: "registrationStatus",
-    header: "이메일",
+  columnHelper.accessor("RegistrationApplicationStudentStatusEnumId", {
+    id: "RegistrationApplicationStudentStatusEnumId",
+    header: "비고",
     cell: info => {
-      if (info.row.original.registrationStatus === MemberStatusEnum.Approved) {
+      if (
+        info.row.original.RegistrationApplicationStudentStatusEnumId ===
+        RegistrationApplicationStudentStatusEnum.Approved
+      ) {
         return (
           <ToggleWrapper>
             <TextButton text="승인" disabled />
@@ -94,7 +93,10 @@ const columns = [
           </ToggleWrapper>
         );
       }
-      if (info.row.original.registrationStatus === MemberStatusEnum.Applied) {
+      if (
+        info.row.original.RegistrationApplicationStudentStatusEnumId ===
+        RegistrationApplicationStudentStatusEnum.Pending
+      ) {
         return (
           <ToggleWrapper>
             <TextButton text="승인" />
@@ -120,7 +122,7 @@ const RegisterInfoTable: React.FC<RegisterInfoTableProps> = ({
 }) => {
   const table = useReactTable({
     columns,
-    data: mrInfoList.applies,
+    data: mrInfoList.items,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
