@@ -1,6 +1,6 @@
-import { MemberStatusEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
-import mockupClubMemberRegister from "../_mock/mockClubMemberRegister";
+import { mockupClubMemberRegister } from "@sparcs-clubs/web/features/executive/register-member/[id]/_mock/mockClubMemberRegister";
 
 const calcStudentStatus = (studentID: number) => {
   if (
@@ -16,21 +16,31 @@ const calcStudentStatus = (studentID: number) => {
 const calcRegisterInfo = (data: typeof mockupClubMemberRegister) => {
   // Map 생성 및 초기화
   const result: Map<
-    MemberStatusEnum | string,
+    RegistrationApplicationStudentStatusEnum | string,
     { Regular: number; NonRegular: number; Total: number }
   > = new Map<
-    MemberStatusEnum | string,
+    RegistrationApplicationStudentStatusEnum | string,
     { Regular: number; NonRegular: number; Total: number }
   >([
-    [MemberStatusEnum.Applied, { Regular: 0, NonRegular: 0, Total: 0 }],
-    [MemberStatusEnum.Approved, { Regular: 0, NonRegular: 0, Total: 0 }],
-    [MemberStatusEnum.Rejected, { Regular: 0, NonRegular: 0, Total: 0 }],
+    [
+      RegistrationApplicationStudentStatusEnum.Pending,
+      { Regular: 0, NonRegular: 0, Total: 0 },
+    ],
+    [
+      RegistrationApplicationStudentStatusEnum.Approved,
+      { Regular: 0, NonRegular: 0, Total: 0 },
+    ],
+    [
+      RegistrationApplicationStudentStatusEnum.Rejected,
+      { Regular: 0, NonRegular: 0, Total: 0 },
+    ],
     ["Total", { Regular: 0, NonRegular: 0, Total: 0 }],
   ]);
 
-  data.applies.forEach(apply => {
-    const status = apply.registrationStatus as MemberStatusEnum;
-    const studentStatus = calcStudentStatus(apply.studentID);
+  data.items.forEach(item => {
+    const status =
+      item.RegistrationApplicationStudentStatusEnumId as RegistrationApplicationStudentStatusEnum;
+    const studentStatus = calcStudentStatus(item.student.studentNumber);
 
     if (result.has(status)) {
       const statusInfo = result.get(status)!;

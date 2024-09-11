@@ -5,10 +5,11 @@ import {
   zClubName,
   zUserName,
 } from "@sparcs-clubs/interface/common/commonString";
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 /**
  * @version v0.1
- * @description 동아리별 가입 신청의 간략한 상태를 확인합니다.
+ * @description 동아리별 회원 등록 신청의 간략한 상태를 확인합니다.
  */
 
 const url = () => `/executive/registrations/member-registrations/brief`;
@@ -27,8 +28,8 @@ const responseBodyMap = {
     items: z.array(
       z.object({
         clubId: z.coerce.number().int().min(1),
-        clubTypeEnumId: z.coerce.number().int().min(1),
-        isPermanent: z.boolean(),
+        clubTypeEnumId: z.nativeEnum(ClubTypeEnum),
+        isPermanent: z.coerce.boolean(),
         division: z.object({
           id: z.coerce.number().int().min(1),
           name: zUserName,

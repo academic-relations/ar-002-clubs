@@ -18,6 +18,7 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
@@ -27,6 +28,7 @@ import BasicInformFrame from "../components/BasicInformFrame";
 import ClubRulesFrame from "../components/ClubRulesFrame";
 import ProvisionalBasicInformFrame from "../components/ProvisionalBasicInformFrame";
 import useRegisterClub from "../services/useRegisterClub";
+import { isProvisional } from "../utils/registrationType";
 
 interface RegisterClubMainFrameProps {
   type: RegistrationTypeEnum;
@@ -87,6 +89,36 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   } = formCtx;
 
   const clubId = watch("clubId");
+
+  const activityPlanFileId = watch("activityPlanFileId");
+  const clubRuleFileId = watch("clubRuleFileId");
+  const formIsValid = useMemo(() => {
+    if (type === RegistrationTypeEnum.Renewal) {
+      return isValid;
+    }
+
+    if (type === RegistrationTypeEnum.Promotional) {
+      return isValid && activityPlanFileId && clubRuleFileId;
+    }
+
+    if (isProvisional(type)) {
+      return isValid && activityPlanFileId;
+    }
+
+    return false;
+  }, [isValid, type, activityPlanFileId, clubRuleFileId]);
+
+  const errorMessage = useMemo(() => {
+    if (type !== RegistrationTypeEnum.Renewal) {
+      // 활동 계획서는 신규 등록, 가등록에서만 받음
+      if (!activityPlanFileId) return "활동 계획서 파일을 업로드해주세요";
+    }
+    if (type === RegistrationTypeEnum.Promotional) {
+      // 동아리 회칙은 신규 등록에서만 받음
+      if (!clubRuleFileId) return "동아리 회칙 파일을 업로드해주세요";
+    }
+    return "";
+  }, [type, activityPlanFileId, clubRuleFileId]);
 
   const {
     data: registrationData,
@@ -199,6 +231,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
             isAgreed={isAgreed}
             setIsAgreed={setIsAgreed}
           />
+
           <ButtonWrapper>
             <Button
               type="outlined"
@@ -206,12 +239,24 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
             >
               취소
             </Button>
-            <Button
-              buttonType="submit"
-              type={isValid && isAgreed ? "default" : "disabled"}
+
+            <FlexWrapper
+              direction="row"
+              gap={16}
+              style={{ alignItems: "center" }}
             >
-              신청
-            </Button>
+              {errorMessage && (
+                <Typography color="RED.600" fs={12} lh={16}>
+                  {errorMessage}
+                </Typography>
+              )}
+              <Button
+                buttonType="submit"
+                type={formIsValid && isAgreed ? "default" : "disabled"}
+              >
+                신청
+              </Button>
+            </FlexWrapper>
           </ButtonWrapper>
         </FlexWrapper>
       </form>

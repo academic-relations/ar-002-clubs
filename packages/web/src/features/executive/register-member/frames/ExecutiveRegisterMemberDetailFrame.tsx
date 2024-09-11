@@ -4,6 +4,8 @@ import React, { useState } from "react";
 
 import { Divider } from "@mui/material";
 
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
 import { useParams } from "next/navigation";
 import styled from "styled-components";
 
@@ -16,39 +18,76 @@ import Toggle from "@sparcs-clubs/web/common/components/Toggle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
 
-import mockupClubMemberRegister from "@sparcs-clubs/web/features/executive/register-member/[id]/_mock/mockClubMemberRegister";
-import calcRegisterInfo from "@sparcs-clubs/web/features/executive/register-member/[id]/services/calcRegisterInfo";
+import { mockupClubMemberRegister } from "@sparcs-clubs/web/features/executive/register-member/[id]/_mock/mockClubMemberRegister";
+import { useGetRegisterMemberDetail } from "@sparcs-clubs/web/features/executive/register-member/[id]/services/getRegisterMemberDetail";
 import RegisterInfoTable from "@sparcs-clubs/web/features/executive/register-member/components/RegisterInfoTable";
 import StatusInfoFrame from "@sparcs-clubs/web/features/executive/register-member/components/StatusInfoFrame";
 
 import TotalInfoFrame from "@sparcs-clubs/web/features/executive/register-member/components/TotalInfoFrame";
-import { MemberStatusEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 const ExecutiveRegisterMemberDetail = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
 
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
+  const clubId = parseInt(id);
 
-  const DividerContatiner = styled.div`
+  const DividerContainer = styled.div`
     padding-left: 28px;
   `;
 
-  /* TODO : API로 데이터 받아오기 */
-  const paginatedData = {
-    total: mockupClubMemberRegister.total,
-    applies: mockupClubMemberRegister.applies.slice(
-      (currentPage - 1) * limit,
-      currentPage * limit,
-    ),
+  const { data, isLoading, isError } = useGetRegisterMemberDetail({
+    clubId,
+    pageOffset: currentPage,
+    itemCount: limit,
+  });
+
+  const paginatedData = data && {
+    totalRegistrations: data.totalRegistrations,
+    totalWaitings: data.totalWaitings,
+    totalApprovals: data.totalApprovals,
+    totalRejections: data.totalRejections,
+    regularMemberRegistrations: data.regularMemberRegistrations,
+    regularMemberWaitings: data.regularMemberWaitings,
+    regularMemberApprovals: data.regularMemberApprovals,
+    regularMemberRejections: data.regularMemberRejections,
+    total: data.total,
+    items: data.items.slice((currentPage - 1) * limit, currentPage * limit),
     offset: (currentPage - 1) * limit,
+  };
+
+  const pendingInfo = paginatedData && {
+    Regular: paginatedData.regularMemberWaitings,
+    NonRegular:
+      paginatedData.totalWaitings - paginatedData.regularMemberWaitings,
+    Total: paginatedData.totalWaitings,
+  };
+
+  const approvalInfo = paginatedData && {
+    Regular: paginatedData.regularMemberApprovals,
+    NonRegular:
+      paginatedData.totalApprovals - paginatedData.regularMemberApprovals,
+    Total: paginatedData.totalApprovals,
+  };
+
+  const rejectionInfo = paginatedData && {
+    Regular: paginatedData.regularMemberRejections,
+    NonRegular:
+      paginatedData.totalRejections - paginatedData.regularMemberRejections,
+    Total: paginatedData.totalRejections,
+  };
+
+  const totalInfo = paginatedData && {
+    Regular: paginatedData.regularMemberRegistrations,
+    NonRegular:
+      paginatedData.totalRegistrations -
+      paginatedData.regularMemberRegistrations,
+    Total: paginatedData.totalRegistrations,
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
-  const calcRegister = calcRegisterInfo(mockupClubMemberRegister);
 
   const defaultStatusInfo = { Regular: 0, NonRegular: 0, Total: 0 };
 
@@ -57,7 +96,10 @@ const ExecutiveRegisterMemberDetail = () => {
   const GetPageTitle = () => `회원 등록 신청 내역 (${club.data?.name_kr})`;
 
   return (
-    <AsyncBoundary isLoading={club.isLoading} isError={club.isError}>
+    <AsyncBoundary
+      isLoading={club.isLoading || isLoading}
+      isError={club.isError || isError}
+    >
       <FlexWrapper direction="column" gap={20}>
         <PageHead
           items={[
@@ -70,35 +112,28 @@ const ExecutiveRegisterMemberDetail = () => {
         <Card gap={16} padding="16px">
           <Toggle label={<Typography>회원 등록 신청 통계</Typography>}>
             <StatusInfoFrame
-              statusInfo={
-                calcRegister.get(MemberStatusEnum.Applied) || defaultStatusInfo
-              }
-              status={MemberStatusEnum.Applied}
+              statusInfo={pendingInfo || defaultStatusInfo}
+              status={RegistrationApplicationStudentStatusEnum.Pending}
             />
             <StatusInfoFrame
-              statusInfo={
-                calcRegister.get(MemberStatusEnum.Approved) || defaultStatusInfo
-              }
-              status={MemberStatusEnum.Approved}
+              statusInfo={approvalInfo || defaultStatusInfo}
+              status={RegistrationApplicationStudentStatusEnum.Approved}
             />
             <FlexWrapper gap={8} direction="column">
               <StatusInfoFrame
-                statusInfo={
-                  calcRegister.get(MemberStatusEnum.Rejected) ||
-                  defaultStatusInfo
-                }
-                status={MemberStatusEnum.Rejected}
+                statusInfo={rejectionInfo || defaultStatusInfo}
+                status={RegistrationApplicationStudentStatusEnum.Rejected}
               />
-              <DividerContatiner>
+              <DividerContainer>
                 <Divider />
-              </DividerContatiner>
-              <TotalInfoFrame
-                statusInfo={calcRegister.get("Total") || defaultStatusInfo}
-              />
+              </DividerContainer>
+              <TotalInfoFrame statusInfo={totalInfo || defaultStatusInfo} />
             </FlexWrapper>
           </Toggle>
         </Card>
-        <RegisterInfoTable memberRegisterInfoList={paginatedData} />
+        {data && paginatedData && (
+          <RegisterInfoTable memberRegisterInfoList={paginatedData} />
+        )}
         <FlexWrapper direction="row" gap={16} justify="center">
           <Pagination
             totalPage={Math.ceil(mockupClubMemberRegister.total / limit)}

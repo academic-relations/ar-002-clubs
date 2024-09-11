@@ -23,6 +23,7 @@ import {
 } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
+import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import { Club, ClubT } from "@sparcs-clubs/api/drizzle/schema/club.schema";
@@ -34,7 +35,10 @@ import {
   RegistrationApplicationStudent,
   RegistrationDeadlineD,
 } from "@sparcs-clubs/api/drizzle/schema/registration.schema";
-import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+import {
+  Student,
+  StudentT,
+} from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 interface IRegistrationApplicationStudent {
   id: number;
@@ -291,5 +295,168 @@ export class MemberRegistrationRepository {
       .execute();
 
     return result.length > 0 ? result[0] : null;
+  }
+
+  /**
+   * @description getExecutiveRegistrationsMemberRegistrations 서비스를 위한
+   * 전용 쿼리입니다.
+   */
+  async getExecutiveRegistrationsMemberRegistrations(param: {
+    clubId: number;
+    pageOffset: number;
+    itemCount: number;
+    semesterId: number;
+  }) {
+    const today = getKSTDate();
+    const result = await this.db
+      .select({
+        id: RegistrationApplicationStudent.id,
+        clubId: RegistrationApplicationStudent.clubId,
+        clubName: Club.name_kr,
+        clubTypeEnumId: ClubT.clubStatusEnumId,
+        division: {
+          id: Division.id,
+          name: Division.name,
+        },
+        student: {
+          id: StudentT.id,
+          studentNumber: Student.number,
+          StudentEnumId: StudentT.studentEnum,
+          StudentStatusEnumId: StudentT.studentStatusEnum,
+          name: Student.name,
+          phoneNumber: Student.phoneNumber,
+          email: Student.email,
+        },
+        registrationApplicationStudentEnumId:
+          RegistrationApplicationStudent.registrationApplicationStudentEnumId,
+        permanent: DivisionPermanentClubD,
+      })
+      .from(RegistrationApplicationStudent)
+      .innerJoin(
+        Club,
+        and(
+          eq(RegistrationApplicationStudent.clubId, Club.id),
+          isNull(Club.deletedAt),
+        ),
+      )
+      .innerJoin(
+        ClubT,
+        and(
+          eq(RegistrationApplicationStudent.clubId, ClubT.clubId),
+          eq(ClubT.semesterId, param.semesterId),
+          isNull(ClubT.deletedAt),
+        ),
+      )
+      .innerJoin(
+        Division,
+        and(eq(Club.divisionId, Division.id), isNull(Division.deletedAt)),
+      )
+      .innerJoin(
+        StudentT,
+        and(
+          eq(StudentT.studentId, RegistrationApplicationStudent.studentId),
+          eq(StudentT.semesterId, param.semesterId),
+          isNull(StudentT.deletedAt),
+        ),
+      )
+      .innerJoin(
+        Student,
+        and(
+          eq(RegistrationApplicationStudent.studentId, Student.id),
+          isNull(Student.deletedAt),
+        ),
+      )
+      .leftJoin(
+        DivisionPermanentClubD,
+        and(
+          isNull(DivisionPermanentClubD.deletedAt),
+          eq(Club.id, DivisionPermanentClubD.clubId),
+          lte(DivisionPermanentClubD.startTerm, today),
+          or(
+            isNull(DivisionPermanentClubD.endTerm),
+            gte(DivisionPermanentClubD.endTerm, today),
+          ),
+        ),
+      )
+      .where(
+        and(
+          eq(RegistrationApplicationStudent.clubId, param.clubId),
+          isNull(RegistrationApplicationStudent.deletedAt),
+        ),
+      );
+    logger.debug(result.length);
+    return result;
+  }
+
+  /**
+   * @description getExecutiveRegistrationsMemberRegistrationsBrief 서비스를 위한
+   * 전용 쿼리입니다.
+   */
+  async getExecutiveRegistrationsMemberRegistrationsBrief(param: {
+    pageOffset: number;
+    itemCount: number;
+    semesterId: number;
+  }) {
+    const today = getKSTDate();
+    const result = await this.db
+      .select({
+        clubId: RegistrationApplicationStudent.clubId,
+        clubName: Club.name_kr,
+        clubTypeEnumId: ClubT.clubStatusEnumId,
+        division: {
+          id: Division.id,
+          name: Division.name,
+        },
+        student: {
+          StudentEnumId: StudentT.studentEnum,
+          StudentStatusEnumId: StudentT.studentStatusEnum,
+        },
+        registrationApplicationStudentEnumId:
+          RegistrationApplicationStudent.registrationApplicationStudentEnumId,
+        permanent: DivisionPermanentClubD,
+      })
+      .from(RegistrationApplicationStudent)
+      .innerJoin(
+        Club,
+        and(
+          eq(RegistrationApplicationStudent.clubId, Club.id),
+          isNull(Club.deletedAt),
+        ),
+      )
+      .innerJoin(
+        ClubT,
+        and(
+          eq(RegistrationApplicationStudent.clubId, ClubT.clubId),
+          eq(ClubT.semesterId, param.semesterId),
+          isNull(ClubT.deletedAt),
+        ),
+      )
+      .innerJoin(
+        Division,
+        and(eq(Club.divisionId, Division.id), isNull(Division.deletedAt)),
+      )
+      .innerJoin(
+        StudentT,
+        and(
+          eq(StudentT.studentId, RegistrationApplicationStudent.studentId),
+          eq(StudentT.semesterId, param.semesterId),
+          isNull(StudentT.deletedAt),
+        ),
+      )
+      .leftJoin(
+        DivisionPermanentClubD,
+        and(
+          isNull(DivisionPermanentClubD.deletedAt),
+          eq(Club.id, DivisionPermanentClubD.clubId),
+          lte(DivisionPermanentClubD.startTerm, today),
+          or(
+            isNull(DivisionPermanentClubD.endTerm),
+            gte(DivisionPermanentClubD.endTerm, today),
+          ),
+        ),
+      )
+      .where(and(isNull(RegistrationApplicationStudent.deletedAt)));
+    logger.debug(result.length);
+    return result;
   }
 }

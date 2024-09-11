@@ -11,11 +11,21 @@ import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/en
 import { ApiReg013ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg013";
 import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
+import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import { MemberRegistrationRepository } from "../repository/member-registration.repository";
+
+import type {
+  ApiReg019RequestQuery,
+  ApiReg019ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg019";
+import type {
+  ApiReg020RequestQuery,
+  ApiReg020ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg020";
 
 interface ApiReg006ResponseType {
   status: number;
@@ -206,5 +216,140 @@ export class MemberRegistrationService {
     const result =
       await this.memberRegistrationRepository.getMemberRegistrationClub(clubId);
     return result;
+  }
+
+  async getExecutiveRegistrationsMemberRegistrations(param: {
+    executiveId: number;
+    query: ApiReg020RequestQuery;
+  }): Promise<ApiReg020ResponseOk> {
+    const semesterId =
+      await this.clubPublicService.dateToSemesterId(getKSTDate());
+    logger.debug(semesterId);
+    const memberRegistrations =
+      await this.memberRegistrationRepository.getExecutiveRegistrationsMemberRegistrations(
+        {
+          clubId: param.query.clubId,
+          pageOffset: param.query.pageOffset,
+          itemCount: param.query.itemCount,
+          semesterId,
+        },
+      );
+    return {
+      totalRegistrations: memberRegistrations.length,
+      totalWaitings: memberRegistrations.filter(
+        e =>
+          e.registrationApplicationStudentEnumId ===
+          RegistrationApplicationStudentStatusEnum.Pending,
+      ).length,
+      totalApprovals: memberRegistrations.filter(
+        e =>
+          e.registrationApplicationStudentEnumId ===
+          RegistrationApplicationStudentStatusEnum.Approved,
+      ).length,
+      totalRejections: memberRegistrations.filter(
+        e =>
+          e.registrationApplicationStudentEnumId ===
+          RegistrationApplicationStudentStatusEnum.Rejected,
+      ).length,
+      regularMemberRegistrations: memberRegistrations.filter(
+        e => e.student.StudentEnumId === 1,
+      ).length,
+      regularMemberApprovals: memberRegistrations.filter(
+        e =>
+          e.student.StudentEnumId === 1 &&
+          e.registrationApplicationStudentEnumId ===
+            RegistrationApplicationStudentStatusEnum.Approved,
+      ).length,
+      regularMemberWaitings: memberRegistrations.filter(
+        e =>
+          e.student.StudentEnumId === 1 &&
+          e.registrationApplicationStudentEnumId ===
+            RegistrationApplicationStudentStatusEnum.Pending,
+      ).length,
+      regularMemberRejections: memberRegistrations.filter(
+        e =>
+          e.student.StudentEnumId === 1 &&
+          e.registrationApplicationStudentEnumId ===
+            RegistrationApplicationStudentStatusEnum.Rejected,
+      ).length,
+      items: memberRegistrations.map(e => ({
+        memberRegistrationId: e.id,
+        RegistrationApplicationStudentStatusEnumId:
+          e.registrationApplicationStudentEnumId,
+        isRegularMemberRegistration: e.student.StudentEnumId === 1,
+        student: {
+          id: e.student.id,
+          studentNumber: e.student.studentNumber,
+          name: e.student.name,
+          phoneNumber:
+            e.student.phoneNumber === null ? undefined : e.student.phoneNumber,
+          email: e.student.email,
+        },
+      })),
+      total: memberRegistrations.length,
+      offset: param.query.pageOffset,
+    };
+  }
+
+  /**
+   * @description getExecutiveRegistrationsMemberRegistrations의
+   * 서비스 진입점입니다.
+   * 굉장히 못짠 코드이니 언젠가 누군가 고쳐주세요... 참고하지 말아주세요...
+   */
+  async getExecutiveRegistrationsMemberRegistrationsBrief(param: {
+    executiveId: number;
+    query: ApiReg019RequestQuery;
+  }): Promise<ApiReg019ResponseOk> {
+    const semesterId =
+      await this.clubPublicService.dateToSemesterId(getKSTDate());
+    logger.debug(semesterId);
+    const memberRegistrations =
+      await this.memberRegistrationRepository.getExecutiveRegistrationsMemberRegistrationsBrief(
+        {
+          pageOffset: param.query.pageOffset,
+          itemCount: param.query.itemCount,
+          semesterId,
+        },
+      );
+    logger.debug(memberRegistrations);
+    const clubs = memberRegistrations
+      .filter((item, pos) => memberRegistrations.indexOf(item) === pos)
+      .map(e => ({
+        clubId: e.clubId,
+        clubName: e.clubName,
+        clubTypeEnumId: e.clubTypeEnumId,
+        isPermanent: e.permanent !== null,
+        division: e.division,
+      }));
+
+    const totalItems = clubs.map(e => ({
+      ...e,
+      totalRegistrations: memberRegistrations.filter(
+        e2 => e2.clubId === e.clubId,
+      ).length,
+      // 정회원의 enum이 1이라고 가정
+      regularMemberRegistrations: memberRegistrations.filter(
+        e2 => e2.student.StudentEnumId === 1 && e2.clubId === e.clubId,
+      ).length,
+      totalApprovals: memberRegistrations.filter(
+        e2 =>
+          e2.clubId === e.clubId &&
+          e2.registrationApplicationStudentEnumId ===
+            RegistrationApplicationStudentStatusEnum.Approved,
+      ).length,
+      regularMemberApprovals: memberRegistrations.filter(
+        e2 =>
+          e2.student.StudentEnumId === 1 &&
+          e2.clubId === e.clubId &&
+          e2.registrationApplicationStudentEnumId ===
+            RegistrationApplicationStudentStatusEnum.Approved,
+      ).length,
+    }));
+
+    return {
+      total: totalItems.length,
+      items: totalItems,
+      offset: param.query.pageOffset,
+    };
   }
 }

@@ -97,6 +97,8 @@ const FlexExpand = styled.div`
   flex: 1;
 `;
 
+const fileDebug = false;
+
 const FileUpload: React.FC<FileUploadProps> = ({
   fileId = "file-upload-input",
   placeholder = "파일을 선택해주세요",
@@ -150,6 +152,8 @@ const FileUpload: React.FC<FileUploadProps> = ({
             },
             {
               onSuccess: () => {
+                if (fileDebug)
+                  console.log("debug", "upload success", data.urls);
                 onChange(data.urls.map(url => url.fileId));
               },
             },
@@ -160,6 +164,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   const updateFiles = (_files: Attachment[]) => {
+    if (fileDebug) console.log("debug", "updateFiles", _files);
     const updatedFiles = files.filter(f =>
       _files.map(_file => _file.name).includes(f.file.name),
     );
@@ -168,6 +173,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
     onSubmit(updatedFiles);
   };
   const removeFile = (_file: FinalFile) => {
+    if (fileDebug) console.log("debug", "removeFiles", _file);
     const updatedFiles = files.filter(file => file.fileId !== _file.fileId);
     setFiles(updatedFiles);
     onChange(updatedFiles.map(file => file.fileId!));
@@ -175,6 +181,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (fileDebug) console.log("debug", "handleFileChange", event);
     const newFiles = Array.from(event.target.files ?? []).map(file => ({
       file,
     }));
@@ -186,6 +193,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
       return [...acc, file];
     }, [] as FinalFile[]);
     setFiles(filteredFiles);
+    onChange(filteredFiles.map(file => file.fileId!));
     onSubmit(filteredFiles);
   };
 
