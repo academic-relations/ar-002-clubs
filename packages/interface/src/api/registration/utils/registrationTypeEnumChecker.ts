@@ -11,8 +11,8 @@ const registrationTypeEnumChecker = (param: {
 }): boolean => {
   switch (param.registrationTypeEnumId) {
     case RegistrationTypeEnum.NewProvisional:
-      if (param.clubId !== null) return false; // clubId는 null이어야 한다
-      if (!param.activityPlanFileId) return false; // activityPlanFileId는 반드시 있어야 한다
+      if (param.clubId !== null && param.clubId !== undefined) return false; // clubId는 null이어야 한다
+      if (param.activityPlanFileId === undefined) return false; // activityPlanFileId는 반드시 있어야 한다
       if (param.clubRuleFileId !== undefined) return false; // clubRuleFileId는 없어야 한다
       break;
     case RegistrationTypeEnum.ReProvisional:
