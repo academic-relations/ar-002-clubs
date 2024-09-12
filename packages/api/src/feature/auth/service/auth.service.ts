@@ -49,15 +49,12 @@ export class AuthService {
 
     const ssoProfile: SSOUser = await this.ssoClient.get_user_info(query.code);
 
-    let studentNumber =
-      ssoProfile.kaist_info.ku_std_no || process.env.USER_KU_STD_NO;
-    let email = ssoProfile.email || process.env.USER_MAIL;
-    let sid = ssoProfile.sid || process.env.USER_SID;
-    let name = ssoProfile.kaist_info.ku_kname || process.env.USER_KU_KNAME;
-    let type =
-      ssoProfile.kaist_info.ku_person_type || process.env.USER_KU_PERSON_TYPE;
-    let department =
-      ssoProfile.kaist_info.ku_kaist_org_id || process.env.USER_KU_KAIST_ORG_ID;
+    let studentNumber = ssoProfile.kaist_info.ku_std_no || "00000000";
+    let email = ssoProfile.email || "unknown@kaist.ac.kr";
+    let sid = ssoProfile.sid || "00000000";
+    let name = ssoProfile.kaist_info.ku_kname || "unknown";
+    let type = ssoProfile.kaist_info.ku_person_type || "Student";
+    let department = ssoProfile.kaist_info.ku_kaist_org_id || "4421";
 
     if (process.env.NODE_ENV === "local") {
       studentNumber = process.env.USER_KU_STD_NO;
@@ -66,10 +63,6 @@ export class AuthService {
       name = process.env.USER_KU_KNAME;
       type = process.env.USER_KU_PERSON_TYPE;
       department = process.env.USER_KU_KAIST_ORG_ID;
-    }
-
-    if (!studentNumber || !email || !sid || !name || !type || !department) {
-      throw new HttpException("Invalid SSO Profile", 403);
     }
 
     const user = await this.authRepository.findOrCreateUser(

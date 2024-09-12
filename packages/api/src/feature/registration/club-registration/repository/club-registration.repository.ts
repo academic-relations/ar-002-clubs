@@ -158,10 +158,15 @@ export class ClubRegistrationRepository {
           .for("share")
           .then(takeUnique);
         if (!professor) {
-          professor = await tx.insert(Professor).values({
-            email: body.professor.email,
-            name: body.professor.name,
-          });
+          professor = await tx
+            .insert(Professor)
+            .values({
+              email: body.professor.email,
+              name: body.professor.name,
+            })
+            .onDuplicateKeyUpdate({
+              set: { name: body.professor.name },
+            });
           professor = await tx
             .select({
               id: Professor.id,
@@ -179,11 +184,16 @@ export class ClubRegistrationRepository {
 
           logger.debug(professor);
 
-          await tx.insert(ProfessorT).values({
-            professorId: professor.id,
-            professorEnum: body.professor.professorEnumId,
-            startTerm: cur,
-          });
+          await tx
+            .insert(ProfessorT)
+            .values({
+              professorId: professor.id,
+              professorEnum: body.professor.professorEnumId,
+              startTerm: cur,
+            })
+            .onDuplicateKeyUpdate({
+              set: { professorEnum: body.professor.professorEnumId },
+            });
         }
       }
 
@@ -276,10 +286,15 @@ export class ClubRegistrationRepository {
           .for("share")
           .then(takeUnique);
         if (!professor) {
-          professor = await tx.insert(Professor).values({
-            email: body.professor.email,
-            name: body.professor.name,
-          });
+          professor = await tx
+            .insert(Professor)
+            .values({
+              email: body.professor.email,
+              name: body.professor.name,
+            })
+            .onDuplicateKeyUpdate({
+              set: { name: body.professor.name },
+            });
           professor = await tx
             .select({
               id: Professor.id,
@@ -297,11 +312,16 @@ export class ClubRegistrationRepository {
 
           logger.debug(professor);
 
-          await tx.insert(ProfessorT).values({
-            professorId: professor.id,
-            professorEnum: body.professor.professorEnumId,
-            startTerm: cur,
-          });
+          await tx
+            .insert(ProfessorT)
+            .values({
+              professorId: professor.id,
+              professorEnum: body.professor.professorEnumId,
+              startTerm: cur,
+            })
+            .onDuplicateKeyUpdate({
+              set: { professorEnum: body.professor.professorEnumId },
+            });
         }
       }
 
@@ -406,7 +426,7 @@ export class ClubRegistrationRepository {
           and(
             eq(Student.id, StudentT.studentId),
             lte(StudentT.startTerm, cur),
-            or(gt(StudentT.endTerm, cur), isNull(StudentT.endTerm)),
+            or(gte(StudentT.endTerm, cur), isNull(StudentT.endTerm)),
             isNull(StudentT.deletedAt),
           ),
         )
@@ -494,11 +514,7 @@ export class ClubRegistrationRepository {
           ),
         )
         .where(
-          and(
-            eq(Registration.id, applyId),
-            eq(Registration.studentId, studentId),
-            isNull(Registration.deletedAt),
-          ),
+          and(eq(Registration.id, applyId), isNull(Registration.deletedAt)),
         )
         .for("share")
         .then(takeUnique);
