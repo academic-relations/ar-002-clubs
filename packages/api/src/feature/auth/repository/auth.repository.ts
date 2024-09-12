@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, eq, gte, lte } from "drizzle-orm";
+import { and, eq, gte, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
@@ -166,7 +166,13 @@ export class AuthRepository {
           startTerm: semester.startTerm,
           endTerm: semester.endTerm,
         })
-        .onDuplicateKeyUpdate({ set: { department: parseInt(department) } });
+        .onDuplicateKeyUpdate({
+          set: {
+            studentEnum,
+            studentStatusEnum,
+            department: parseInt(department),
+          },
+        });
 
       // type이 "Student"인 경우 executive table에서 해당 studentNumber이 있는지 확인
       // 있으면 해당 칼럼의 user_id를 업데이트
@@ -183,8 +189,11 @@ export class AuthRepository {
           ExecutiveT,
           and(
             eq(ExecutiveT.executiveId, Executive.id),
-            gte(ExecutiveT.endTerm, currentDate),
             lte(ExecutiveT.startTerm, currentDate),
+            or(
+              gte(ExecutiveT.endTerm, currentDate),
+              isNull(ExecutiveT.endTerm),
+            ),
           ),
         )
         .where(eq(Executive.studentId, student.id))
@@ -196,11 +205,7 @@ export class AuthRepository {
         };
       }
     }
-    // TODO
-    // type이 "Teacher"를 포함하는 경우 professor table에서 해당 email이 있는지 확인 후 upsert
-    // professor_t에서 해당 professor_id이 있는지 확인 후 upsert
-    // type이 "Employee"를 포함하는 경우 Employee table에서 해당 email이 있는지 확인 후 upsert
-    // employee_t에서 해당 employee_id이 있는지 확인 후 upsert
+
     if (type.includes("Teacher")) {
       await this.db
         .insert(Professor)
@@ -216,17 +221,14 @@ export class AuthRepository {
         .values({
           department: parseInt(department),
           professorId: professor.id,
-          professorEnum: 1,
+          professorEnum: 3,
           startTerm: semester.startTerm,
-          endTerm: semester.endTerm,
         })
         .onDuplicateKeyUpdate({
           set: {
             department: parseInt(department),
             professorId: professor.id,
-            professorEnum: 1,
             startTerm: semester.startTerm,
-            endTerm: semester.endTerm,
           },
         });
       result.professor = {
@@ -259,13 +261,11 @@ export class AuthRepository {
         .values({
           employeeId: employee.id,
           startTerm: semester.startTerm,
-          endTerm: semester.endTerm,
         })
         .onDuplicateKeyUpdate({
           set: {
             employeeId: employee.id,
             startTerm: semester.startTerm,
-            endTerm: semester.endTerm,
           },
         });
       result.employee = {
