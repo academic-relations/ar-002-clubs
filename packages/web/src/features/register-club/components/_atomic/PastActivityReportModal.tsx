@@ -69,6 +69,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
           activityId={activityId}
           isOpen={isOpenEditActivityModal}
           close={() => {
+            refetch();
             closeEditActivityModal();
             refetch();
           }}
@@ -120,6 +121,8 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
     close();
   };
 
+  if (!data) return null;
+
   return (
     <Modal isOpen={isOpen} width="full">
       <AsyncBoundary isLoading={isLoading} isError={isError}>
@@ -129,10 +132,9 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
               활동 정보
             </Typography>
             <FlexWrapper gap={12} direction="column">
-              <ListItem>활동명: {data?.name}</ListItem>
+              <ListItem>활동명: {data.name}</ListItem>
               <ListItem>
-                활동 분류:{" "}
-                {data ? getActivityTypeTagLabel(data.activityTypeEnumId) : "-"}
+                활동 분류: {getActivityTypeTagLabel(data.activityTypeEnumId)}
               </ListItem>
               <ListItem>활동 기간: </ListItem>
               <FlexWrapper
@@ -140,23 +142,23 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
                 gap={12}
                 style={{ paddingLeft: 24 }}
               >
-                {data?.durations.map((duration, index) => (
+                {data.durations.map((duration, index) => (
                   <Typography key={index}>
                     {`${formatDate(duration.startTerm)} ~ ${formatDate(duration.endTerm)}`}
                   </Typography>
                 ))}
               </FlexWrapper>
-              <ListItem>활동 장소: {data?.location}</ListItem>
-              <ListItem>활동 목적: {data?.purpose}</ListItem>
-              <ListItem>활동 내용: {data?.detail}</ListItem>
+              <ListItem>활동 장소: {data.location}</ListItem>
+              <ListItem>활동 목적: {data.purpose}</ListItem>
+              <ListItem>활동 내용: {data.detail}</ListItem>
             </FlexWrapper>
           </FlexWrapper>
           <FlexWrapper gap={16} direction="column">
             <Typography fw="MEDIUM" fs={16} lh={20}>
-              활동 인원({data?.participants.length ?? 0}명)
+              활동 인원({data.participants.length ?? 0}명)
             </Typography>
 
-            {data?.participants.map((participant, index) => (
+            {data.participants.map((participant, index) => (
               <ListItem key={index}>
                 {participant.studentNumber} {participant.name}
               </ListItem>
@@ -168,27 +170,25 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
             </Typography>
             <FlexWrapper gap={12} direction="column">
               <ListItem>
-                첨부 파일 ({data?.evidenceFiles.length ?? 0}개)
+                첨부 파일 ({data.evidenceFiles.length ?? 0}개)
               </ListItem>
-              {data && data.evidenceFiles.length > 0 && (
+              {data.evidenceFiles.length > 0 && (
                 <FlexWrapper
                   direction="column"
                   gap={0}
                   style={{ paddingLeft: 16 }}
                 >
                   <ThumbnailPreviewList
-                    fileList={
-                      data.evidenceFiles.map(file => ({
-                        id: file.fileId,
-                        name: file.name,
-                        src: file.url,
-                      })) ?? []
-                    }
+                    fileList={data.evidenceFiles.map(_file => ({
+                      id: _file.fileId,
+                      name: _file.name,
+                      url: _file.url,
+                    }))}
                     disabled
                   />
                 </FlexWrapper>
               )}
-              <ListItem>부가 설명: {data?.evidence}</ListItem>
+              <ListItem>부가 설명: {data.evidence}</ListItem>
             </FlexWrapper>
           </FlexWrapper>
           {isExecutive && (

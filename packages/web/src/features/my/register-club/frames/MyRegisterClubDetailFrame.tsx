@@ -276,12 +276,7 @@ const MyRegisterClubDetailFrame: React.FC<{
                 {clubDetail.activityPlanFile && (
                   <FilePreviewContainer>
                     <ThumbnailPreviewList
-                      fileList={[
-                        {
-                          src: clubDetail.activityPlanFile?.url,
-                          name: clubDetail.activityPlanFile?.name,
-                        },
-                      ]}
+                      fileList={[clubDetail.activityPlanFile]}
                       disabled
                     />
                   </FilePreviewContainer>
@@ -294,29 +289,19 @@ const MyRegisterClubDetailFrame: React.FC<{
                 {clubDetail.clubRuleFile && (
                   <FilePreviewContainer>
                     <ThumbnailPreviewList
-                      fileList={[
-                        {
-                          src: clubDetail.clubRuleFile?.url,
-                          name: clubDetail.clubRuleFile?.name,
-                        },
-                      ]}
+                      fileList={[clubDetail.clubRuleFile]}
                       disabled
                     />
                   </FilePreviewContainer>
                 )}
               </>
             )}
-            {clubDetail.externalInstructionFile?.id && (
+            {clubDetail.externalInstructionFile && (
               <>
                 <ListItem>(선택) 외부 강사 지도 계획서</ListItem>
                 <FilePreviewContainer>
                   <ThumbnailPreviewList
-                    fileList={[
-                      {
-                        src: clubDetail.externalInstructionFile.url,
-                        name: clubDetail.externalInstructionFile.name,
-                      },
-                    ]}
+                    fileList={[clubDetail.externalInstructionFile]}
                     disabled
                   />
                 </FilePreviewContainer>

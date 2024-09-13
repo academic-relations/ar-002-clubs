@@ -67,12 +67,14 @@ const FixtureEvidenceList: React.FC<FixtureEvidenceListProps> = ({
         <ThumbnailPreviewList
           fileList={[
             {
+              id: "1",
               name: "something.pdf",
-              src: "https://pdfobject.com/pdf/sample.pdf",
+              url: "https://pdfobject.com/pdf/sample.pdf",
             },
             {
+              id: "2",
               name: "something.pdf",
-              src: "https://pdfobject.com/pdf/sample.pdf",
+              url: "https://pdfobject.com/pdf/sample.pdf",
             },
           ]}
         />
