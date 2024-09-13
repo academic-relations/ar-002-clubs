@@ -29,6 +29,8 @@ import AdvancedInformFrame from "@sparcs-clubs/web/features/register-club/compon
 import BasicInformFrame from "@sparcs-clubs/web/features/register-club/components/BasicInformFrame";
 import ClubRulesFrame from "@sparcs-clubs/web/features/register-club/components/ClubRulesFrame";
 import ProvisionalBasicInformFrame from "@sparcs-clubs/web/features/register-club/components/ProvisionalBasicInformFrame";
+import computeErrorMessage from "@sparcs-clubs/web/features/register-club/utils/computeErrorMessage";
+import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 interface RegisterClubMainFrameProps {
@@ -119,10 +121,91 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
   const {
     watch,
     handleSubmit,
-    formState: { isValid },
+    // formState: { isValid },
   } = formCtx;
 
   const clubId = watch("clubId");
+  const registrationTypeEnumId = watch("registrationTypeEnumId");
+  const phoneNumber = watch("phoneNumber");
+  const foundedAt = watch("foundedAt");
+  const divisionId = watch("divisionId");
+  const activityFieldKr = watch("activityFieldKr");
+  const activityFieldEn = watch("activityFieldEn");
+  const divisionConsistency = watch("divisionConsistency");
+  const foundationPurpose = watch("foundationPurpose");
+  const activityPlan = watch("activityPlan");
+  const activityPlanFileId = watch("activityPlanFileId");
+  const clubRuleFileId = watch("clubRuleFileId");
+  const formIsValid = useMemo(() => {
+    const isValid =
+      registrationTypeEnumId &&
+      phoneNumber &&
+      foundedAt &&
+      divisionId &&
+      activityFieldKr &&
+      activityFieldEn &&
+      divisionConsistency &&
+      foundationPurpose &&
+      activityPlan;
+
+    if (registrationTypeEnumId === RegistrationTypeEnum.Renewal) {
+      return isValid;
+    }
+
+    if (registrationTypeEnumId === RegistrationTypeEnum.Promotional) {
+      return isValid && activityPlanFileId && clubRuleFileId;
+    }
+
+    if (isProvisional(registrationTypeEnumId)) {
+      return isValid && activityPlanFileId;
+    }
+
+    return false;
+  }, [
+    registrationTypeEnumId,
+    phoneNumber,
+    foundedAt,
+    divisionId,
+    activityFieldKr,
+    activityFieldEn,
+    divisionConsistency,
+    foundationPurpose,
+    activityPlan,
+    activityPlanFileId,
+    clubRuleFileId,
+  ]);
+
+  const errorMessage = useMemo(
+    () =>
+      computeErrorMessage({
+        registrationTypeEnumId,
+        phoneNumber,
+        activityFieldKr,
+        activityFieldEn,
+        foundedAt,
+        divisionId,
+        divisionConsistency,
+        foundationPurpose,
+        activityPlan,
+        activityPlanFileId,
+        clubRuleFileId,
+        isAgreed,
+      }),
+    [
+      registrationTypeEnumId,
+      phoneNumber,
+      activityFieldKr,
+      activityFieldEn,
+      foundedAt,
+      divisionId,
+      divisionConsistency,
+      foundationPurpose,
+      activityPlan,
+      activityPlanFileId,
+      clubRuleFileId,
+      isAgreed,
+    ],
+  );
 
   const { mutate, isSuccess } = usePutClubRegistration();
 
@@ -223,12 +306,24 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
               >
                 취소
               </Button>
-              <Button
-                buttonType="submit"
-                type={isValid && isAgreed ? "default" : "disabled"}
+
+              <FlexWrapper
+                direction="row"
+                gap={16}
+                style={{ alignItems: "center" }}
               >
-                저장
-              </Button>
+                {errorMessage && (
+                  <Typography color="RED.600" fs={12} lh={16}>
+                    {errorMessage}
+                  </Typography>
+                )}
+                <Button
+                  buttonType="submit"
+                  type={formIsValid && isAgreed ? "default" : "disabled"}
+                >
+                  저장
+                </Button>
+              </FlexWrapper>
             </ButtonWrapper>
           </FlexWrapper>
         </form>
