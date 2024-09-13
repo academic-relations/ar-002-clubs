@@ -319,7 +319,11 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
                 )}
                 <Button
                   buttonType="submit"
-                  type={formIsValid && isAgreed ? "default" : "disabled"}
+                  type={
+                    formIsValid && isAgreed && errorMessage === ""
+                      ? "default"
+                      : "disabled"
+                  }
                 >
                   저장
                 </Button>
