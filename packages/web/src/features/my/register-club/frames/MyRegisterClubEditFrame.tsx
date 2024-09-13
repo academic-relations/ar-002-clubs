@@ -138,26 +138,30 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
   const clubRuleFileId = watch("clubRuleFileId");
   const formIsValid = useMemo(() => {
     const isValid =
-      registrationTypeEnumId &&
-      phoneNumber &&
-      foundedAt &&
-      divisionId &&
-      activityFieldKr &&
-      activityFieldEn &&
-      divisionConsistency &&
-      foundationPurpose &&
-      activityPlan;
+      registrationTypeEnumId !== undefined &&
+      phoneNumber !== "" &&
+      foundedAt !== undefined &&
+      divisionId !== undefined &&
+      activityFieldKr !== "" &&
+      activityFieldEn !== "" &&
+      divisionConsistency !== "" &&
+      foundationPurpose !== "" &&
+      activityPlan !== "";
 
     if (registrationTypeEnumId === RegistrationTypeEnum.Renewal) {
       return isValid;
     }
 
     if (registrationTypeEnumId === RegistrationTypeEnum.Promotional) {
-      return isValid && activityPlanFileId && clubRuleFileId;
+      return (
+        isValid &&
+        activityPlanFileId !== undefined &&
+        clubRuleFileId !== undefined
+      );
     }
 
     if (isProvisional(registrationTypeEnumId)) {
-      return isValid && activityPlanFileId;
+      return isValid && activityPlanFileId !== undefined;
     }
 
     return false;
@@ -229,6 +233,7 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   const submitHandler = useCallback(
     (data: ApiReg009RequestBody) => {
+      // console.log("debug", data);
       mutate({ requestParam: { applyId }, body: data });
     },
     [mutate, applyId],
@@ -242,6 +247,8 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
       });
     }
   }, [isSuccess, router, applyId, queryClient]);
+
+  if (!detail) return null;
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>

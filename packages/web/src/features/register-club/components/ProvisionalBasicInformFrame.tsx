@@ -30,7 +30,6 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
 }) => {
   const { control, resetField, setValue, watch } = useFormContext();
 
-  const [isCheckedProfessor, setIsCheckedProfessor] = useState(false);
   const [registrationType, setRegistrationType] =
     useState<RegistrationTypeEnum>(RegistrationTypeEnum.NewProvisional);
 
@@ -50,6 +49,8 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
     isLoading: isLoadingProfile,
     isError: isErrorProfile,
   } = useGetUserProfile();
+
+  const [isCheckedProfessor, setIsCheckedProfessor] = useState(false);
 
   useEffect(() => {
     if (!isCheckedProfessor) {
