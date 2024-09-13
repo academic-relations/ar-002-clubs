@@ -7,10 +7,10 @@ import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
-import Attachment from "../attachment";
+import { FileDetail } from "../attachment";
 
 interface UnsupportedPreviewProps {
-  file: Attachment;
+  file: FileDetail;
 }
 
 const UnsupportedPreviewWrapper = styled.div`
