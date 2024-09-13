@@ -28,6 +28,7 @@ import BasicInformFrame from "../components/BasicInformFrame";
 import ClubRulesFrame from "../components/ClubRulesFrame";
 import ProvisionalBasicInformFrame from "../components/ProvisionalBasicInformFrame";
 import useRegisterClub from "../services/useRegisterClub";
+import computeErrorMessage from "../utils/computeErrorMessage";
 import { isProvisional } from "../utils/registrationType";
 
 interface RegisterClubMainFrameProps {
@@ -85,14 +86,33 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   const {
     watch,
     handleSubmit,
-    formState: { isValid },
+    // formState: { isValid },
   } = formCtx;
 
   const clubId = watch("clubId");
-
+  const registrationTypeEnumId = watch("registrationTypeEnumId");
+  const phoneNumber = watch("phoneNumber");
+  const foundedAt = watch("foundedAt");
+  const divisionId = watch("divisionId");
+  const activityFieldKr = watch("activityFieldKr");
+  const activityFieldEn = watch("activityFieldEn");
+  const divisionConsistency = watch("divisionConsistency");
+  const foundationPurpose = watch("foundationPurpose");
+  const activityPlan = watch("activityPlan");
   const activityPlanFileId = watch("activityPlanFileId");
   const clubRuleFileId = watch("clubRuleFileId");
   const formIsValid = useMemo(() => {
+    const isValid =
+      registrationTypeEnumId &&
+      phoneNumber &&
+      foundedAt &&
+      divisionId &&
+      activityFieldKr &&
+      activityFieldEn &&
+      divisionConsistency &&
+      foundationPurpose &&
+      activityPlan;
+
     if (type === RegistrationTypeEnum.Renewal) {
       return isValid;
     }
@@ -106,19 +126,52 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
     }
 
     return false;
-  }, [isValid, type, activityPlanFileId, clubRuleFileId]);
+  }, [
+    type,
+    registrationTypeEnumId,
+    phoneNumber,
+    foundedAt,
+    divisionId,
+    activityFieldKr,
+    activityFieldEn,
+    divisionConsistency,
+    foundationPurpose,
+    activityPlan,
+    activityPlanFileId,
+    clubRuleFileId,
+  ]);
 
-  const errorMessage = useMemo(() => {
-    if (type !== RegistrationTypeEnum.Renewal) {
-      // 활동 계획서는 신규 등록, 가등록에서만 받음
-      if (!activityPlanFileId) return "활동 계획서 파일을 업로드해주세요";
-    }
-    if (type === RegistrationTypeEnum.Promotional) {
-      // 동아리 회칙은 신규 등록에서만 받음
-      if (!clubRuleFileId) return "동아리 회칙 파일을 업로드해주세요";
-    }
-    return "";
-  }, [type, activityPlanFileId, clubRuleFileId]);
+  const errorMessage = useMemo(
+    () =>
+      computeErrorMessage({
+        registrationTypeEnumId: type,
+        phoneNumber,
+        activityFieldKr,
+        activityFieldEn,
+        foundedAt,
+        divisionId,
+        divisionConsistency,
+        foundationPurpose,
+        activityPlan,
+        activityPlanFileId,
+        clubRuleFileId,
+        isAgreed,
+      }),
+    [
+      type,
+      phoneNumber,
+      activityFieldKr,
+      activityFieldEn,
+      foundedAt,
+      divisionId,
+      divisionConsistency,
+      foundationPurpose,
+      activityPlan,
+      activityPlanFileId,
+      clubRuleFileId,
+      isAgreed,
+    ],
+  );
 
   const {
     data: registrationData,
@@ -146,6 +199,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   const submitHandler = useCallback(
     (data: ApiReg001RequestBody) => {
+      // console.log("debug", "submit", data);
       registerClubApi({
         body: data,
       });

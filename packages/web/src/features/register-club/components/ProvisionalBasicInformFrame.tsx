@@ -28,11 +28,16 @@ import ProfessorInformFrame from "./ProfessorInformFrame";
 const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
   editMode = false,
 }) => {
-  const { control, resetField, setValue } = useFormContext();
+  const { control, resetField, setValue, watch } = useFormContext();
 
   const [isCheckedProfessor, setIsCheckedProfessor] = useState(false);
   const [registrationType, setRegistrationType] =
     useState<RegistrationTypeEnum>(RegistrationTypeEnum.NewProvisional);
+
+  const registrationTypeEnumId = watch("registrationTypeEnumId");
+  useEffect(() => {
+    if (registrationTypeEnumId) setRegistrationType(registrationTypeEnumId);
+  }, [registrationTypeEnumId]);
 
   const updateRegistrationType = (type: RegistrationTypeEnum) => {
     setRegistrationType(type);
