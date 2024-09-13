@@ -103,26 +103,30 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   const clubRuleFileId = watch("clubRuleFileId");
   const formIsValid = useMemo(() => {
     const isValid =
-      registrationTypeEnumId &&
-      phoneNumber &&
-      foundedAt &&
-      divisionId &&
-      activityFieldKr &&
-      activityFieldEn &&
-      divisionConsistency &&
-      foundationPurpose &&
-      activityPlan;
+      registrationTypeEnumId !== undefined &&
+      phoneNumber !== "" &&
+      foundedAt !== undefined &&
+      divisionId !== undefined &&
+      activityFieldKr !== "" &&
+      activityFieldEn !== "" &&
+      divisionConsistency !== "" &&
+      foundationPurpose !== "" &&
+      activityPlan !== "";
 
     if (type === RegistrationTypeEnum.Renewal) {
       return isValid;
     }
 
-    if (type === RegistrationTypeEnum.Promotional) {
-      return isValid && activityPlanFileId && clubRuleFileId;
+    if (registrationTypeEnumId === RegistrationTypeEnum.Promotional) {
+      return (
+        isValid &&
+        activityPlanFileId !== undefined &&
+        clubRuleFileId !== undefined
+      );
     }
 
-    if (isProvisional(type)) {
-      return isValid && activityPlanFileId;
+    if (isProvisional(registrationTypeEnumId)) {
+      return isValid && activityPlanFileId !== undefined;
     }
 
     return false;
@@ -240,9 +244,11 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
               close();
             }}
           >
-            해당 동아리에 대한 등록 신청이 이미 존재하거나
+            해당 동아리에 대한 등록 신청이 이미 존재하거나,
             <br />
-            이미 등록 신청 기록이 있어
+            이미 등록 신청 기록이 있거나,
+            <br />
+            지도교수를 입력하지 않아
             <br />
             등록 신청을 할 수 없습니다.
           </ConfirmModalContent>
