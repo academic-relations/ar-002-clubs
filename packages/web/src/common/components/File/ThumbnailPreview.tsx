@@ -9,12 +9,12 @@ import Typography from "../Typography";
 
 import ImagePreview from "./_atomic/ImagePreview";
 import UnsupportedPreview from "./_atomic/UnsupportedPreview";
-import Attachment, { isPreviewSupported } from "./attachment";
+import { FileDetail, isPreviewSupported } from "./attachment";
 
 interface ThumbnailPreviewProps {
-  file: Attachment;
+  file: FileDetail;
   onClick: () => void;
-  onDelete?: (file: Attachment) => void;
+  onDelete?: (file: FileDetail) => void;
   disabled?: boolean;
 }
 
@@ -44,7 +44,7 @@ const ThumbnailPreview: React.FC<ThumbnailPreviewProps> = ({
       onClick={onClick}
     >
       {isPreviewSupported(file) ? (
-        <ImagePreview src={file.src} alt={file.name} />
+        <ImagePreview src={file.url} alt={file.name} />
       ) : (
         <UnsupportedPreview file={file} />
       )}

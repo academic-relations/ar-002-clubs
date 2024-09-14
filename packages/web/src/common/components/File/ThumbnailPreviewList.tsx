@@ -4,14 +4,14 @@ import Viewer from "viewerjs";
 
 import FlexWrapper from "../FlexWrapper";
 
-import Attachment from "./attachment";
+import { FileDetail } from "./attachment";
 import ThumbnailPreview from "./ThumbnailPreview";
 
 import "viewerjs/dist/viewer.css";
 
 interface ThumbnailPreviewListProps {
-  fileList: Attachment[];
-  onChange?: (files: Attachment[]) => void;
+  fileList: FileDetail[];
+  onChange?: (files: FileDetail[]) => void;
   disabled?: boolean;
 }
 
@@ -43,7 +43,7 @@ const ThumbnailPreviewList: React.FC<ThumbnailPreviewListProps> = ({
           viewer.next(true);
         },
         download: () => {
-          const fileSrc = fileList[viewer.index].src;
+          const fileSrc = fileList[viewer.index].url;
 
           fetch(fileSrc)
             .then(response => response.blob())
@@ -66,7 +66,7 @@ const ThumbnailPreviewList: React.FC<ThumbnailPreviewListProps> = ({
     viewer.show();
   };
 
-  const onDelete = (file: Attachment) => {
+  const onDelete = (file: FileDetail) => {
     const newFileList = fileList.filter(f => f !== file);
     onChange(newFileList);
   };

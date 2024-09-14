@@ -59,7 +59,7 @@ function FormController<
   const patternMessage = "정해진 형식에 맞지 않습니다.";
 
   const isValidLength = (length: number | undefined) =>
-    length != null && length > 0;
+    length !== undefined && length > 0;
 
   const {
     field: { onChange, onBlur, value },
@@ -86,7 +86,7 @@ function FormController<
           }
         : undefined,
       pattern:
-        props.pattern != null
+        props.pattern !== undefined
           ? { value: props.pattern, message: patternMessage }
           : undefined,
     },

@@ -1,13 +1,12 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { queryOptions, useSuspenseQueries } from "@tanstack/react-query";
 import { addHours } from "date-fns";
 import { FormProvider, useForm } from "react-hook-form";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
-import { getFileFromUrl } from "@sparcs-clubs/web/common/components/File/attachment";
+import { FileDetail } from "@sparcs-clubs/web/common/components/File/attachment";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
@@ -29,16 +28,6 @@ interface ActivityReportFormProps {
   onSubmit: (e: React.BaseSyntheticEvent) => void;
 }
 
-type File = { id: string; name: string; url: string };
-const fileQuery = (file: File) =>
-  queryOptions({
-    queryKey: ["file", file.id],
-    queryFn: async () => ({
-      fileId: file.id,
-      file: await getFileFromUrl(file.url, file.name),
-    }),
-  });
-
 const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   clubId,
   formCtx,
@@ -53,8 +42,20 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   } = formCtx;
 
   const durations: Duration[] = watch("durations");
-  const evidenceFiles: { id: string; name: string; url: string }[] =
-    watch("evidenceFiles") ?? [];
+  // TODO: (@dora) use type FileDetail
+  const rawEvidenceFiles: { fileId: string; name: string; url: string }[] =
+    watch("evidenceFiles");
+  const evidenceFiles: FileDetail[] = useMemo(
+    () =>
+      rawEvidenceFiles
+        ? rawEvidenceFiles.map(file => ({
+            id: file.fileId,
+            name: file.name,
+            url: file.url,
+          }))
+        : [],
+    [rawEvidenceFiles],
+  );
 
   const initialDurations = useMemo(
     () =>
@@ -68,10 +69,14 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   );
 
   const [startTerm, setStartTerm] = useState<Date>(
-    durations?.map(d => d.startTerm).reduce((a, b) => (a < b ? a : b)),
+    durations
+      ?.map(d => d.startTerm)
+      .reduce((a, b) => (a < b ? a : b), new Date()),
   );
   const [endTerm, setEndTerm] = useState<Date>(
-    durations?.map(d => d.endTerm).reduce((a, b) => (a > b ? a : b)),
+    durations
+      ?.map(d => d.endTerm)
+      .reduce((a, b) => (a > b ? a : b), new Date()),
   );
 
   const {
@@ -84,19 +89,20 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
     startTerm: addHours(startTerm, 9),
     endTerm: addHours(endTerm, 9),
   });
-  const initialParticipants: { studentId: number }[] =
-    watch("participants") ?? [];
-  const [participants, setParticipants] = useState<Participant[]>(
-    participantData?.students.filter(student =>
-      initialParticipants.some(
-        participant => participant.studentId === student.id,
-      ),
-    ) ?? [],
-  );
+  const initialParticipants: { studentId: number }[] = watch("participants");
+  const [participants, setParticipants] = useState<Participant[]>([]);
 
-  const data = useSuspenseQueries({
-    queries: evidenceFiles.map(file => fileQuery(file)),
-  });
+  useEffect(() => {
+    if (initialParticipants && participantData) {
+      setParticipants(
+        participantData.students.filter(student =>
+          initialParticipants.some(
+            participant => participant.studentId === student.id,
+          ),
+        ),
+      );
+    }
+  }, [initialParticipants, participantData]);
 
   /* TODO: (@dora) refactor !!!!! */
   type FileIdType = "evidenceFiles";
@@ -262,26 +268,28 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
                 />
               )}
             />
-            <FormController
-              name="evidenceFiles"
-              required
-              control={control}
-              renderItem={props => (
-                <FileUpload
-                  {...props}
-                  multiple
-                  initialFiles={data?.map(_data => _data.data)}
-                  onChange={_data => {
-                    updateMultipleFile(
-                      "evidenceFiles",
-                      _data.map(d => ({
-                        fileId: d,
-                      })),
-                    );
-                  }}
-                />
-              )}
-            />
+            {evidenceFiles && (
+              <FormController
+                name="evidenceFiles"
+                required
+                control={control}
+                renderItem={props => (
+                  <FileUpload
+                    {...props}
+                    multiple
+                    initialFiles={evidenceFiles}
+                    onChange={_data => {
+                      updateMultipleFile(
+                        "evidenceFiles",
+                        _data.map(d => ({
+                          fileId: d,
+                        })),
+                      );
+                    }}
+                  />
+                )}
+              />
+            )}
           </FlexWrapper>
           <FlexWrapper
             direction="row"

@@ -24,8 +24,9 @@ const BasicEvidenceList = () => (
       <ThumbnailPreviewList
         fileList={[
           {
+            id: "1",
             name: "거래 사실 증빙.pdf",
-            src: "https://pdfobject.com/pdf/sample.pdf",
+            url: "https://pdfobject.com/pdf/sample.pdf",
           },
         ]}
       />
@@ -35,8 +36,9 @@ const BasicEvidenceList = () => (
       <ThumbnailPreviewList
         fileList={[
           {
+            id: "1",
             name: "거래 세부항목 증빙.pdf",
-            src: "https://pdfobject.com/pdf/sample.pdf",
+            url: "https://pdfobject.com/pdf/sample.pdf",
           },
         ]}
       />
