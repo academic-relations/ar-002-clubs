@@ -80,6 +80,7 @@ export type PastActivityReport = {
   id: number;
   name: string;
   activityTypeEnumId: number;
+  activityStatusEnumId: ActivityStatusEnum;
   durations: {
     startTerm: Date;
     endTerm: Date;
