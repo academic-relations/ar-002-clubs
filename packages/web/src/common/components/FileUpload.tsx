@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 
 import { ApiFil001RequestBody } from "@sparcs-clubs/interface/api/file/apiFil001";
+import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
@@ -12,6 +13,8 @@ import usePutFileS3 from "../services/putFileS3";
 import { FileDetail } from "./File/attachment";
 import ThumbnailPreviewList from "./File/ThumbnailPreviewList";
 import FlexWrapper from "./FlexWrapper";
+import Modal from "./Modal";
+import ConfirmModalContent from "./Modal/ConfirmModalContent";
 import Typography from "./Typography";
 
 type FileWithId = {
@@ -178,6 +181,22 @@ const FileUpload: React.FC<FileUploadProps> = ({
               },
             },
           );
+        },
+        onError: error => {
+          overlay.open(({ isOpen, close }) => (
+            <Modal isOpen={isOpen}>
+              <ConfirmModalContent
+                onConfirm={() => {
+                  close();
+                }}
+              >
+                파일 업로드에 실패했습니다.
+                <Typography color="GRAY.300" fs={12} lh={16} fw="REGULAR">
+                  {error.message}
+                </Typography>
+              </ConfirmModalContent>
+            </Modal>
+          ));
         },
       },
     );
