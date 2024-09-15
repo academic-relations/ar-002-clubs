@@ -306,6 +306,24 @@ export default class ActivityRepository {
     return result;
   }
 
+  /**
+   * @param param
+   * @returns activityId를 기준으로 반려 피드백 리스트를 리턴합니다.
+   * 급하게 짜서 오류있는지 점검필요 으어ㅏ
+   */
+  async selectActivityFeedbackByActivityId(param: { activityId: number }) {
+    const result = await this.db
+      .select()
+      .from(ActivityFeedback)
+      .where(
+        and(
+          eq(ActivityFeedback.id, param.activityId),
+          isNull(ActivityFeedback.deletedAt),
+        ),
+      );
+    return result;
+  }
+
   async selectDeadlineByDate(date: Date) {
     const result = await this.db
       .select()

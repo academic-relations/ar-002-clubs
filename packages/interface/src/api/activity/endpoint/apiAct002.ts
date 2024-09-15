@@ -52,6 +52,12 @@ const responseBodyMap = {
         name: z.string().max(255),
       }),
     ),
+    comments: z.array(
+      z.object({
+        content: z.string(),
+        createdAt: z.coerce.date(),
+      }),
+    ),
   }),
 };
 
