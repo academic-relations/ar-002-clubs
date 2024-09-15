@@ -313,11 +313,14 @@ export default class ActivityRepository {
    */
   async selectActivityFeedbackByActivityId(param: { activityId: number }) {
     const result = await this.db
-      .select()
+      .select({
+        comment: ActivityFeedback.comment,
+        createdAt: ActivityFeedback.createdAt,
+      })
       .from(ActivityFeedback)
       .where(
         and(
-          eq(ActivityFeedback.id, param.activityId),
+          eq(ActivityFeedback.activityId, param.activityId),
           isNull(ActivityFeedback.deletedAt),
         ),
       );

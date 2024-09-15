@@ -22,7 +22,7 @@ interface RejectReasonToastProps {
 
 const ForceBorderRadius = styled.div`
   position: sticky;
-  top: 100px;
+  top: 0px;
   border-radius: 8px;
   width: 100%;
   overflow: hidden;
