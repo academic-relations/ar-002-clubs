@@ -272,5 +272,11 @@ export const mockActivityDetailData: ApiAct002ResponseOkTemp = {
       name: "스팍스",
     },
   ],
+  comments: [
+    {
+      content: "그냥 맘에 안듬",
+      createdAt: new Date(),
+    },
+  ],
   advisorProfessorApproval: ActivityProfessorApprovalEnum.Requested,
 };

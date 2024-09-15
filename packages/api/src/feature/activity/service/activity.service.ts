@@ -282,6 +282,11 @@ export default class ActivityService {
       })),
     );
 
+    const comments =
+      await this.activityRepository.selectActivityFeedbackByActivityId({
+        activityId: activity.id,
+      });
+
     return {
       clubId: activity.clubId,
       name: activity.name,
@@ -300,6 +305,11 @@ export default class ActivityService {
       durations: duration.map(e => ({
         startTerm: e.startTerm,
         endTerm: e.endTerm,
+      })),
+      activityStatusEnumId: activity.activityStatusEnumId,
+      comments: comments.map(e => ({
+        content: e.comment,
+        createdAt: e.createdAt,
       })),
     };
   }
@@ -700,6 +710,11 @@ export default class ActivityService {
       })),
     );
 
+    const comments =
+      await this.activityRepository.selectActivityFeedbackByActivityId({
+        activityId: activity.id,
+      });
+
     return {
       clubId: activity.clubId,
       name: activity.name,
@@ -718,6 +733,11 @@ export default class ActivityService {
       durations: duration.map(e => ({
         startTerm: e.startTerm,
         endTerm: e.endTerm,
+      })),
+      activityStatusEnumId: activity.activityStatusEnumId,
+      comments: comments.map(e => ({
+        content: e.comment,
+        createdAt: e.createdAt,
       })),
     };
   }
@@ -744,6 +764,11 @@ export default class ActivityService {
       })),
     );
 
+    const comments =
+      await this.activityRepository.selectActivityFeedbackByActivityId({
+        activityId: activity.id,
+      });
+
     return {
       clubId: activity.clubId,
       name: activity.name,
@@ -762,6 +787,11 @@ export default class ActivityService {
       durations: duration.map(e => ({
         startTerm: e.startTerm,
         endTerm: e.endTerm,
+      })),
+      activityStatusEnumId: activity.activityStatusEnumId,
+      comments: comments.map(e => ({
+        content: e.comment,
+        createdAt: e.createdAt,
       })),
     };
   }
