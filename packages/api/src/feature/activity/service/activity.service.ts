@@ -306,6 +306,7 @@ export default class ActivityService {
         startTerm: e.startTerm,
         endTerm: e.endTerm,
       })),
+      activityStatusEnumId: activity.activityStatusEnumId,
       comments: comments.map(e => ({
         content: e.comment,
         createdAt: e.createdAt,
@@ -733,6 +734,7 @@ export default class ActivityService {
         startTerm: e.startTerm,
         endTerm: e.endTerm,
       })),
+      activityStatusEnumId: activity.activityStatusEnumId,
       comments: comments.map(e => ({
         content: e.comment,
         createdAt: e.createdAt,
@@ -786,6 +788,7 @@ export default class ActivityService {
         startTerm: e.startTerm,
         endTerm: e.endTerm,
       })),
+      activityStatusEnumId: activity.activityStatusEnumId,
       comments: comments.map(e => ({
         content: e.comment,
         createdAt: e.createdAt,
