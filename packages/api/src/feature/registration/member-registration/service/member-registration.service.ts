@@ -66,6 +66,27 @@ export class MemberRegistrationService {
         "Not a member registration available",
         HttpStatus.BAD_REQUEST,
       );
+
+    // 해당 동아리가 존재하는지 확인
+    const club = await this.clubPublicService.getClubByClubId({ clubId });
+    if (club.length === 0) {
+      throw new HttpException("The club does not exist.", HttpStatus.NOT_FOUND);
+    }
+
+    // 해당 동아리가 이번 학기에 활동중이어서 신청이 가능한 지 확인
+    const clubExistedSemesters =
+      await this.clubPublicService.getClubsExistedSemesters({ clubId });
+    const isClubOperatingThisSemester = clubExistedSemesters.some(
+      semester => semester.id === semesterId,
+    );
+
+    if (!isClubOperatingThisSemester) {
+      throw new HttpException(
+        "The club is not operating in the current semester.",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     // 이미 해당 동아리에 해당 학생의 반려되지 않은 신청이 존재하는지 확인하기
     const isAlreadyApplied =
       await this.memberRegistrationRepository.getMemberClubRegistrationExceptRejected(
