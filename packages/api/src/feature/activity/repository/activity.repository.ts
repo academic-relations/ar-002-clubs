@@ -144,7 +144,7 @@ export default class ActivityRepository {
         name: contents.name,
         activityStatusEnumId: Number(contents.activityTypeEnumId),
         location: contents.location,
-        purpose: contents.location,
+        purpose: contents.purpose,
         detail: contents.detail,
         evidence: contents.evidence,
         activityDId: contents.activityDId,
