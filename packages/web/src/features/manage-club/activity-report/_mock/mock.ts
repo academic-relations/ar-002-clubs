@@ -80,6 +80,7 @@ export type PastActivityReport = {
   id: number;
   name: string;
   activityTypeEnumId: number;
+  activityStatusEnumId: ActivityStatusEnum;
   durations: {
     startTerm: Date;
     endTerm: Date;
@@ -270,6 +271,12 @@ export const mockActivityDetailData: ApiAct002ResponseOkTemp = {
       id: 4,
       studentNumber: 20240510,
       name: "스팍스",
+    },
+  ],
+  comments: [
+    {
+      content: "그냥 맘에 안듬",
+      createdAt: new Date(),
     },
   ],
   advisorProfessorApproval: ActivityProfessorApprovalEnum.Requested,
