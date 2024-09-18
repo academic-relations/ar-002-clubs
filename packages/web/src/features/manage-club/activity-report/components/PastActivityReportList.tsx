@@ -1,5 +1,6 @@
 import React from "react";
 
+import { ApiAct011ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -12,6 +13,7 @@ import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import { ActStatusTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import PastActivityReportModal from "@sparcs-clubs/web/features/register-club/components/_atomic/PastActivityReportModal";
 
 import {
@@ -19,6 +21,7 @@ import {
   getActivityTypeTagLabel,
 } from "@sparcs-clubs/web/features/register-club/utils/activityType";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import { PastActivityReport } from "../_mock/mock";
 
@@ -29,13 +32,23 @@ interface ActivityReportListProps {
   refetch?: () => void;
 }
 
-const columnHelper = createColumnHelper<PastActivityReport>();
+const columnHelper =
+  createColumnHelper<ApiAct011ResponseOk["activities"][number]>();
 
 const columns = [
+  columnHelper.accessor("activityStatusEnumId", {
+    id: "activityStatusEnumId",
+    header: "상태",
+    cell: info => {
+      const { color, text } = getTagDetail(info.getValue(), ActStatusTagList);
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 64,
+  }),
   columnHelper.accessor("name", {
     header: "활동명",
     cell: info => info.getValue(),
-    size: 35,
+    size: 128,
   }),
   columnHelper.accessor("activityTypeEnumId", {
     header: "활동 분류",
@@ -44,7 +57,7 @@ const columns = [
         {getActivityTypeTagLabel(info.getValue())}
       </Tag>
     ),
-    size: 30,
+    size: 128,
   }),
   columnHelper.accessor(
     row =>
@@ -52,7 +65,7 @@ const columns = [
     {
       header: "활동 기간",
       cell: info => info.getValue(),
-      size: 40,
+      size: 255,
     },
   ),
 ];

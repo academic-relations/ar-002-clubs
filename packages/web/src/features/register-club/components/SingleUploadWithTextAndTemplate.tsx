@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import styled from "styled-components";
 
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
-import { getFileFromUrl } from "@sparcs-clubs/web/common/components/File/attachment";
+import { FileDetail } from "@sparcs-clubs/web/common/components/File/attachment";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -13,11 +13,7 @@ interface SingleUploadWithTextAndTemplateProps {
   content?: string;
   downloadUrl: string;
   downloadFileName: string;
-  initialFile?: {
-    id: string;
-    name: string;
-    url: string;
-  };
+  initialFile?: FileDetail;
   onChange?: (string: string[]) => void;
 }
 
@@ -41,20 +37,6 @@ const SingleUploadWithTextAndTemplate: React.FC<
   initialFile = undefined,
   onChange = () => {},
 }) => {
-  const [files, setFiles] = useState<{ file: File; fileId?: string }[]>([]);
-  useEffect(() => {
-    if (initialFile) {
-      getFileFromUrl(initialFile.url, initialFile.name).then(file =>
-        setFiles([
-          {
-            file,
-            fileId: initialFile.id,
-          },
-        ]),
-      );
-    }
-  }, [initialFile, setFiles]);
-
   const onDownload = () => {
     const a = document.createElement("a");
     a.href = downloadUrl;
@@ -72,7 +54,11 @@ const SingleUploadWithTextAndTemplate: React.FC<
           {content}
         </Typography>
       )}
-      <FileUpload fileId={fileId} initialFiles={files} onChange={onChange} />
+      <FileUpload
+        fileId={fileId}
+        initialFiles={initialFile ? [initialFile] : []}
+        onChange={onChange}
+      />
       <IconButton
         style={{ marginTop: 4 }}
         type="default"

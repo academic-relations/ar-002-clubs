@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
+
 import { overlay } from "overlay-kit";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -10,6 +12,7 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import { ListItem } from "@sparcs-clubs/web/common/components/ListItem";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
+import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { patchActivityExecutive } from "@sparcs-clubs/web/features/executive/register-club/services/patchActivityExecutive";
@@ -18,7 +21,10 @@ import { useDeleteActivityReportProvisional } from "@sparcs-clubs/web/features/m
 import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
 import { getActivityTypeTagLabel } from "@sparcs-clubs/web/features/register-club/utils/activityType";
 
-import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+import {
+  formatDate,
+  formatSlashDateTime,
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import EditActivityReportModal from "./EditActivityReportModal";
 
@@ -117,22 +123,36 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
       { comment: rejectionDetail },
     );
     setRejectionDetail("");
+    refetch();
     close();
   };
+
+  if (!data) return null;
 
   return (
     <Modal isOpen={isOpen} width="full">
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         <FlexWrapper gap={20} direction="column">
+          {!isExecutive &&
+            data.activityStatusEnumId === ActivityStatusEnum.Rejected &&
+            data.comments.length > 0 && (
+              <RejectReasonToast
+                title="반려 사유"
+                reasons={data.comments.map(comment => ({
+                  datetime: comment.createdAt,
+                  reason: comment.content,
+                }))}
+              />
+            )}
+
           <FlexWrapper gap={16} direction="column">
             <Typography fw="MEDIUM" fs={16} lh={20}>
               활동 정보
             </Typography>
             <FlexWrapper gap={12} direction="column">
-              <ListItem>활동명: {data?.name}</ListItem>
+              <ListItem>활동명: {data.name}</ListItem>
               <ListItem>
-                활동 분류:{" "}
-                {data ? getActivityTypeTagLabel(data.activityTypeEnumId) : "-"}
+                활동 분류: {getActivityTypeTagLabel(data.activityTypeEnumId)}
               </ListItem>
               <ListItem>활동 기간: </ListItem>
               <FlexWrapper
@@ -140,24 +160,24 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
                 gap={12}
                 style={{ paddingLeft: 24 }}
               >
-                {data?.durations.map((duration, index) => (
+                {data.durations.map((duration, index) => (
                   <Typography key={index}>
                     {`${formatDate(duration.startTerm)} ~ ${formatDate(duration.endTerm)}`}
                   </Typography>
                 ))}
               </FlexWrapper>
-              <ListItem>활동 장소: {data?.location}</ListItem>
-              <ListItem>활동 목적: {data?.purpose}</ListItem>
-              <ListItem>활동 내용: {data?.detail}</ListItem>
+              <ListItem>활동 장소: {data.location}</ListItem>
+              <ListItem>활동 목적: {data.purpose}</ListItem>
+              <ListItem>활동 내용: {data.detail}</ListItem>
             </FlexWrapper>
           </FlexWrapper>
           <FlexWrapper gap={16} direction="column">
             <Typography fw="MEDIUM" fs={16} lh={20}>
-              활동 인원({data?.participants.length ?? 0}명)
+              활동 인원({data.participants.length ?? 0}명)
             </Typography>
 
-            {data?.participants.map((participant, index) => (
-              <ListItem key={index}>
+            {data.participants.map(participant => (
+              <ListItem key={participant.studentId}>
                 {participant.studentNumber} {participant.name}
               </ListItem>
             ))}
@@ -168,41 +188,59 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
             </Typography>
             <FlexWrapper gap={12} direction="column">
               <ListItem>
-                첨부 파일 ({data?.evidenceFiles.length ?? 0}개)
+                첨부 파일 ({data.evidenceFiles.length ?? 0}개)
               </ListItem>
-              {data && data.evidenceFiles.length > 0 && (
+              {data.evidenceFiles.length > 0 && (
                 <FlexWrapper
                   direction="column"
                   gap={0}
                   style={{ paddingLeft: 16 }}
                 >
                   <ThumbnailPreviewList
-                    fileList={
-                      data.evidenceFiles.map(file => ({
-                        id: file.fileId,
-                        name: file.name,
-                        src: file.url,
-                      })) ?? []
-                    }
+                    fileList={data.evidenceFiles.map(_file => ({
+                      id: _file.fileId,
+                      name: _file.name,
+                      url: _file.url,
+                    }))}
                     disabled
                   />
                 </FlexWrapper>
               )}
-              <ListItem>부가 설명: {data?.evidence}</ListItem>
+              <ListItem>부가 설명: {data.evidence}</ListItem>
             </FlexWrapper>
           </FlexWrapper>
           {isExecutive && (
-            <FlexWrapper gap={16} direction="column">
-              <Typography fw="MEDIUM" fs={16} lh={20}>
-                반려 사유 (반려 시에만 입력)
-              </Typography>
-              <TextInput
-                value={rejectionDetail}
-                handleChange={setRejectionDetail}
-                placeholder="내용"
-                area
-              />
-            </FlexWrapper>
+            <>
+              {data.comments.length > 0 && (
+                <FlexWrapper direction="column" gap={8}>
+                  {data.comments.map((comment, index) => (
+                    <FlexWrapper
+                      direction="column"
+                      gap={4}
+                      key={`${index.toString()}`}
+                    >
+                      <Typography fs={14} lh={16} color="GRAY.600">
+                        {formatSlashDateTime(comment.createdAt)} ㅁㄴㅇㅁㄴㅇ
+                      </Typography>
+                      <Typography fs={16} lh={24}>
+                        {comment.content}
+                      </Typography>
+                    </FlexWrapper>
+                  ))}
+                </FlexWrapper>
+              )}
+              <FlexWrapper gap={16} direction="column">
+                <Typography fw="MEDIUM" fs={16} lh={20}>
+                  반려 사유 (반려 시에만 입력)
+                </Typography>
+                <TextInput
+                  value={rejectionDetail}
+                  handleChange={setRejectionDetail}
+                  placeholder="내용"
+                  area
+                />
+              </FlexWrapper>
+            </>
           )}
           {!isExecutive && viewOnly ? (
             <FlexWrapper direction="row" gap={12}>

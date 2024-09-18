@@ -35,8 +35,6 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
 }) => {
   const isRenewal = type === RegistrationTypeEnum.Renewal;
 
-  const [isCheckedProfessor, setIsCheckedProfessor] = useState(true);
-
   const { watch, control, resetField, setValue } =
     useFormContext<ApiReg001RequestBody>();
   const clubId = watch("clubId");
@@ -62,12 +60,13 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
   const clubList = isRenewal ? renewalList : promotionalList;
 
   const professorInfo = useMemo(() => {
-    if (clubId == null) return undefined;
+    if (clubId === null) return undefined;
     return clubList?.clubs.find(club => club.id === clubId)?.professor;
   }, [clubId, clubList]);
+  const [isCheckedProfessor, setIsCheckedProfessor] = useState(true);
 
   useEffect(() => {
-    if (professorInfo == null || !isCheckedProfessor) {
+    if (professorInfo === undefined || !isCheckedProfessor) {
       resetField("professor.email");
       resetField("professor.name");
       resetField("professor.professorEnumId");
@@ -144,17 +143,20 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
             )}
           />
 
-          {isRenewal && clubId != null && professorInfo == null && (
-            <CheckboxOption
-              optionText="지도교수를 신청하겠습니다"
-              checked={isCheckedProfessor}
-              onClick={() => {
-                setIsCheckedProfessor(!isCheckedProfessor);
-              }}
-            />
-          )}
+          {isRenewal &&
+            clubId !== null &&
+            clubId !== undefined &&
+            professorInfo === null && (
+              <CheckboxOption
+                optionText="지도교수를 신청하겠습니다"
+                checked={isCheckedProfessor}
+                onClick={() => {
+                  setIsCheckedProfessor(!isCheckedProfessor);
+                }}
+              />
+            )}
         </Card>
-        {(!isRenewal || (isCheckedProfessor && clubId != null)) && (
+        {(!isRenewal || (isCheckedProfessor && clubId !== null)) && (
           <ProfessorInformFrame />
         )}
       </FlexWrapper>

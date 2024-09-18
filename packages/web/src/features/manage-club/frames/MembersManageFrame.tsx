@@ -68,8 +68,8 @@ const MembersManageFrame: React.FC = () => {
     ).length;
   const totalCount = memberData && memberData.applies.length;
 
-  const title = `2024년 봄학기 (신청 ${appliedCount}명, 승인 ${approvedCount}명, 반려 ${rejectedCount}명 / 총 ${totalCount}명)`;
-  const mobileTitle = `2024년 봄학기`;
+  const title = `2024년 가을학기 (신청 ${appliedCount}명, 승인 ${approvedCount}명, 반려 ${rejectedCount}명 / 총 ${totalCount}명)`;
+  const mobileTitle = `2024년 가을학기`;
   // TODO: 학기 받아올 수 있도록 수정
 
   const theme = useTheme();

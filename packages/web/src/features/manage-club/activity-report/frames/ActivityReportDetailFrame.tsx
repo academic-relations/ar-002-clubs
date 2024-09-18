@@ -150,16 +150,19 @@ const ActivityReportDetailFrame: React.FC = () => {
                 <ThumbnailPreviewList
                   fileList={[
                     {
+                      id: "1",
                       name: "bamseam.pdf",
-                      src: "https://pdfobject.com/pdf/sample.pdf",
+                      url: "https://pdfobject.com/pdf/sample.pdf",
                     },
                     {
+                      id: "2",
                       name: "coffee.pdf",
-                      src: "https://pdfobject.com/pdf/sample.pdf",
+                      url: "https://pdfobject.com/pdf/sample.pdf",
                     },
                     {
+                      id: "3",
                       name: "gaebal.pdf",
-                      src: "https://pdfobject.com/pdf/sample.pdf",
+                      url: "https://pdfobject.com/pdf/sample.pdf",
                     },
                   ]}
                 />

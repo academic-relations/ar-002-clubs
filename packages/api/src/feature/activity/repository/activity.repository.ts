@@ -144,7 +144,7 @@ export default class ActivityRepository {
         name: contents.name,
         activityStatusEnumId: Number(contents.activityTypeEnumId),
         location: contents.location,
-        purpose: contents.location,
+        purpose: contents.purpose,
         detail: contents.detail,
         evidence: contents.evidence,
         activityDId: contents.activityDId,
@@ -301,6 +301,27 @@ export default class ActivityRepository {
           eq(Activity.clubId, clubId),
           eq(Activity.activityDId, activityDId),
           isNull(Activity.deletedAt),
+        ),
+      );
+    return result;
+  }
+
+  /**
+   * @param param
+   * @returns activityId를 기준으로 반려 피드백 리스트를 리턴합니다.
+   * 급하게 짜서 오류있는지 점검필요 으어ㅏ
+   */
+  async selectActivityFeedbackByActivityId(param: { activityId: number }) {
+    const result = await this.db
+      .select({
+        comment: ActivityFeedback.comment,
+        createdAt: ActivityFeedback.createdAt,
+      })
+      .from(ActivityFeedback)
+      .where(
+        and(
+          eq(ActivityFeedback.activityId, param.activityId),
+          isNull(ActivityFeedback.deletedAt),
         ),
       );
     return result;

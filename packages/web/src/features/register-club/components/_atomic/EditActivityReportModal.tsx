@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect } from "react";
 
 import { ApiAct008RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
+import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import { useForm } from "react-hook-form";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
+import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
 
 import usePutActivityReportForNewClub from "@sparcs-clubs/web/features/register-club/services/usePutActivityReportForNewClub";
@@ -85,16 +88,31 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
     formCtx.handleSubmit(_data => submitHandler(_data, e))();
   };
 
+  if (!data) return null;
+
   return (
     <Modal isOpen={isOpen} width="full">
       <AsyncBoundary isLoading={isLoading} isError={isError}>
-        <ActivityReportForm
-          /* eslint-disable  @typescript-eslint/no-explicit-any */
-          clubId={data!.clubId}
-          formCtx={formCtx as any}
-          onCancel={handleCancel}
-          onSubmit={handleSubmit}
-        />
+        <FlexWrapper gap={20} direction="column">
+          {data.activityStatusEnumId === ActivityStatusEnum.Rejected &&
+            data.comments.length > 0 && (
+              <RejectReasonToast
+                title="반려 사유"
+                reasons={data.comments.map(comment => ({
+                  datetime: comment.createdAt,
+                  reason: comment.content,
+                }))}
+              />
+            )}
+
+          <ActivityReportForm
+            /* eslint-disable  @typescript-eslint/no-explicit-any */
+            clubId={data.clubId}
+            formCtx={formCtx as any}
+            onCancel={handleCancel}
+            onSubmit={handleSubmit}
+          />
+        </FlexWrapper>
       </AsyncBoundary>
     </Modal>
   );

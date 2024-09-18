@@ -152,8 +152,9 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                     <ThumbnailPreviewList
                       fileList={[
                         {
-                          src: data?.activityPlanFile?.url,
+                          id: "1",
                           name: data?.activityPlanFile?.name,
+                          url: data?.activityPlanFile?.url,
                         },
                       ]}
                       disabled
@@ -171,8 +172,9 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                   <ThumbnailPreviewList
                     fileList={[
                       {
-                        src: data?.clubRuleFile?.url,
+                        id: "1",
                         name: data?.clubRuleFile?.name,
+                        url: data?.clubRuleFile?.url,
                       },
                     ]}
                     disabled
@@ -189,8 +191,9 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                   <ThumbnailPreviewList
                     fileList={[
                       {
-                        src: data?.externalInstructionFile?.url,
+                        id: "1",
                         name: data?.externalInstructionFile?.name,
+                        url: data?.externalInstructionFile?.url,
                       },
                     ]}
                     disabled

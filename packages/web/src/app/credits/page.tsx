@@ -21,7 +21,6 @@ const CreditCardsFlexWrapper = styled(FlexWrapper)`
 `;
 
 const ResponsiveMemberCardSectionWrapper = styled.div`
-  margin-left: 24px;
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
     margin-left: 16px;
@@ -40,7 +39,7 @@ const Credits: React.FC = () => (
           <>
             <SectionTitle size="lg">{credit.semester}</SectionTitle>
             <ResponsiveMemberCardSectionWrapper>
-              <MemberCardSection semesterCredit={credit} leftMargin={0} />
+              <MemberCardSection semesterCredit={credit} leftMargin={24} />
             </ResponsiveMemberCardSectionWrapper>
           </>
         ) : (

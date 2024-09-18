@@ -25,7 +25,7 @@ export class EmailValidator {
       return this.errorMessage;
     }
 
-    if (regex != null && !regex.test(value)) {
+    if (regex !== undefined && !regex.test(value)) {
       return this.errorMessage;
     }
     return null;

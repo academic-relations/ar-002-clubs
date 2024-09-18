@@ -2,13 +2,13 @@ import apiReg006 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg0
 
 import { useQuery } from "@tanstack/react-query";
 
+import { mockMemberRegister } from "@sparcs-clubs/web/features/my/services/_mock/mockMyRegister";
+
 import {
   axiosClientWithAuth,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
-
-import mockupRegistraion from "./_mock/mockupRegistraion";
 
 import type { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 
@@ -32,5 +32,5 @@ export const useGetMyMemberRegistration = () =>
   });
 
 defineAxiosMock(mock => {
-  mock.onGet(apiReg006.url()).reply(() => [200, mockupRegistraion]);
+  mock.onGet(apiReg006.url()).reply(() => [200, mockMemberRegister]);
 });
