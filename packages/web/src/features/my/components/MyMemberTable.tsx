@@ -1,5 +1,7 @@
 import React from "react";
 
+import { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
+
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -18,15 +20,15 @@ import {
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface MyMemberTableProps {
-  memberRegisterList: typeof mockMemberRegister;
+  memberRegisterList: ApiReg006ResponseOk;
 }
 
 const columnHelper =
   createColumnHelper<(typeof mockMemberRegister)["applies"][number]>();
 
 const columns = [
-  columnHelper.accessor("applyStatusEnum", {
-    id: "applyStatusEnum",
+  columnHelper.accessor("applyStatusEnumId", {
+    id: "applyStatusEnumId",
     header: "상태",
     cell: info => {
       const { color, text } = getTagDetail(
@@ -37,26 +39,26 @@ const columns = [
     },
     size: 10,
   }),
-  columnHelper.accessor("clubType", {
-    id: "clubType",
+  columnHelper.accessor("type", {
+    id: "type",
     header: "구분",
     cell: info => (
       <Tag
         color={getTagColorFromClubType(
-          info.getValue().type,
-          info.getValue().isPermanent,
+          info.row.original.type,
+          info.row.original.isPermanent,
         )}
       >
         {getTagContentFromClubType(
-          info.getValue().type,
-          info.getValue().isPermanent,
+          info.row.original.type,
+          info.row.original.isPermanent,
         )}
       </Tag>
     ),
     size: 10,
   }),
-  columnHelper.accessor("clubDivision", {
-    id: "clubDivision",
+  columnHelper.accessor("divisionName", {
+    id: "divisionName",
     header: "분과",
     cell: info => (
       <Tag color={getTagColorFromDivision(info.getValue())}>
