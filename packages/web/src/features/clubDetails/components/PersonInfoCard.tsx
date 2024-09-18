@@ -18,7 +18,6 @@ interface PersonInfoCardProps {
 
 const StyledCard = styled(Card)`
   width: fit-content;
-  min-width: 250px;
   max-width: 100%;
   padding: 16px 20px !important;
   gap: 40px;
