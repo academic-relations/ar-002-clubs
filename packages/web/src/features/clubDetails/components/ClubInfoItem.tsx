@@ -28,6 +28,7 @@ const ClubInfoTitle = styled(ClubInfoItemInner)`
     font-size: 14px;
     line-height: 20px;
   }
+  white-space: nowrap;
   justify-content: center;
 `;
 
