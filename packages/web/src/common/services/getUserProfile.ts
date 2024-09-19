@@ -24,7 +24,8 @@ const useGetUserProfile = () =>
       switch (status) {
         case 200:
         case 304:
-          return apiUsr001.responseBodyMap[200].parse(data);
+          // return apiUsr001.responseBodyMap[200].parse(data);
+          return data;
         default:
           throw new UnexpectedAPIResponseError();
       }
