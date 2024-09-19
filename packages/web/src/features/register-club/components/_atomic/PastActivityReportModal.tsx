@@ -220,7 +220,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
                       key={`${index.toString()}`}
                     >
                       <Typography fs={14} lh={16} color="GRAY.600">
-                        {formatSlashDateTime(comment.createdAt)} ㅁㄴㅇㅁㄴㅇ
+                        {formatSlashDateTime(comment.createdAt)}
                       </Typography>
                       <Typography fs={16} lh={24}>
                         {comment.content}
