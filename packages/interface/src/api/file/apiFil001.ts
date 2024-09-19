@@ -21,7 +21,7 @@ const requestBody = z.object({
   metadata: z.array(
     z.object({
       name: zFileName,
-      type: z.coerce.string().max(30),
+      type: z.coerce.string().max(256),
       size: z.coerce.number().int().min(1),
     }),
   ),

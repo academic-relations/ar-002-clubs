@@ -144,6 +144,15 @@ export class ClubRegistrationRepository {
       let professor;
       if (body.professor) {
         professor = await tx
+          .insert(Professor)
+          .values({
+            email: body.professor.email,
+            name: body.professor.name,
+          })
+          .onDuplicateKeyUpdate({
+            set: { name: body.professor.name },
+          });
+        professor = await tx
           .select({
             id: Professor.id,
           })
@@ -157,44 +166,19 @@ export class ClubRegistrationRepository {
           )
           .for("share")
           .then(takeUnique);
-        if (!professor) {
-          professor = await tx
-            .insert(Professor)
-            .values({
-              email: body.professor.email,
-              name: body.professor.name,
-            })
-            .onDuplicateKeyUpdate({
-              set: { name: body.professor.name },
-            });
-          professor = await tx
-            .select({
-              id: Professor.id,
-            })
-            .from(Professor)
-            .where(
-              and(
-                eq(Professor.email, body.professor.email),
-                eq(Professor.name, body.professor.name),
-                isNull(Professor.deletedAt),
-              ),
-            )
-            .for("share")
-            .then(takeUnique);
 
-          logger.debug(professor);
+        logger.debug(professor);
 
-          await tx
-            .insert(ProfessorT)
-            .values({
-              professorId: professor.id,
-              professorEnum: body.professor.professorEnumId,
-              startTerm: cur,
-            })
-            .onDuplicateKeyUpdate({
-              set: { professorEnum: body.professor.professorEnumId },
-            });
-        }
+        await tx
+          .insert(ProfessorT)
+          .values({
+            professorId: professor.id,
+            professorEnum: body.professor.professorEnumId,
+            startTerm: cur,
+          })
+          .onDuplicateKeyUpdate({
+            set: { professorEnum: body.professor.professorEnumId },
+          });
       }
 
       // registration insert 후 id 가져오기
@@ -272,6 +256,15 @@ export class ClubRegistrationRepository {
       let professor;
       if (body.professor) {
         professor = await tx
+          .insert(Professor)
+          .values({
+            email: body.professor.email,
+            name: body.professor.name,
+          })
+          .onDuplicateKeyUpdate({
+            set: { name: body.professor.name },
+          });
+        professor = await tx
           .select({
             id: Professor.id,
           })
@@ -285,44 +278,19 @@ export class ClubRegistrationRepository {
           )
           .for("share")
           .then(takeUnique);
-        if (!professor) {
-          professor = await tx
-            .insert(Professor)
-            .values({
-              email: body.professor.email,
-              name: body.professor.name,
-            })
-            .onDuplicateKeyUpdate({
-              set: { name: body.professor.name },
-            });
-          professor = await tx
-            .select({
-              id: Professor.id,
-            })
-            .from(Professor)
-            .where(
-              and(
-                eq(Professor.email, body.professor.email),
-                eq(Professor.name, body.professor.name),
-                isNull(Professor.deletedAt),
-              ),
-            )
-            .for("share")
-            .then(takeUnique);
 
-          logger.debug(professor);
+        logger.debug(professor);
 
-          await tx
-            .insert(ProfessorT)
-            .values({
-              professorId: professor.id,
-              professorEnum: body.professor.professorEnumId,
-              startTerm: cur,
-            })
-            .onDuplicateKeyUpdate({
-              set: { professorEnum: body.professor.professorEnumId },
-            });
-        }
+        await tx
+          .insert(ProfessorT)
+          .values({
+            professorId: professor.id,
+            professorEnum: body.professor.professorEnumId,
+            startTerm: cur,
+          })
+          .onDuplicateKeyUpdate({
+            set: { professorEnum: body.professor.professorEnumId },
+          });
       }
 
       const [result] = await tx
@@ -343,7 +311,6 @@ export class ClubRegistrationRepository {
           registrationClubRuleFileId: body.clubRuleFileId,
           registrationExternalInstructionFileId: body.externalInstructionFileId,
           registrationApplicationStatusEnumId: RegistrationStatusEnum.Pending,
-          professorApprovedAt: null,
         })
         .where(
           and(
