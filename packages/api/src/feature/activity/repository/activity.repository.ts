@@ -142,13 +142,13 @@ export default class ActivityRepository {
         clubId: contents.clubId,
         originalName: contents.name,
         name: contents.name,
-        activityStatusEnumId: Number(contents.activityTypeEnumId),
+        activityStatusEnumId: Number(ActivityStatusEnum.Applied),
         location: contents.location,
         purpose: contents.purpose,
         detail: contents.detail,
         evidence: contents.evidence,
         activityDId: contents.activityDId,
-        activityTypeEnumId: Number(ActivityStatusEnum.Applied),
+        activityTypeEnumId: Number(contents.activityTypeEnumId),
       });
       if (activityInsertResult.affectedRows !== 1) {
         logger.debug("[insertActivity] rollback occurs");
