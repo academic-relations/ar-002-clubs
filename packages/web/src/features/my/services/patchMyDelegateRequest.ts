@@ -1,7 +1,7 @@
 import apiClb014 from "@sparcs-clubs/interface/api/club/endpoint/apiClb014";
 
 import {
-  axiosClient,
+  axiosClientWithAuth,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
@@ -15,7 +15,7 @@ export const patchMyDelegateRequest = async (
   requestParam: ApiClb014RequestParam,
   requestBody: ApiClb014RequestBody,
 ) => {
-  const { data, status } = await axiosClient.patch(
+  const { data, status } = await axiosClientWithAuth.patch(
     apiClb014.url(requestParam.requestId),
     requestBody,
   );

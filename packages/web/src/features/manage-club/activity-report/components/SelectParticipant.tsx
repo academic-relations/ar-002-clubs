@@ -2,15 +2,12 @@ import React, { useEffect, useState } from "react";
 
 import {
   createColumnHelper,
-  FilterFn,
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
-  Row,
   RowSelectionState,
   useReactTable,
 } from "@tanstack/react-table";
-import { hangulIncludes } from "es-hangul";
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -24,8 +21,8 @@ import { type Participant } from "../types/activityReport";
 
 interface SelectParticipantProps {
   data: Participant[];
-  onChange?: React.Dispatch<React.SetStateAction<RowSelectionState>>;
-  value?: RowSelectionState;
+  value?: Participant[];
+  onChange?: (value: Participant[]) => void;
 }
 
 const SelectParticipantInner = styled.div`
@@ -64,7 +61,7 @@ const columns = [
       </CheckboxCenterPlacer>
     ),
   }),
-  columnHelper.accessor("studentId", {
+  columnHelper.accessor("studentNumber", {
     header: "학번",
     cell: info => info.getValue(),
     enableGlobalFilter: true,
@@ -74,43 +71,38 @@ const columns = [
     cell: info => info.getValue(),
     enableGlobalFilter: true,
   }),
-  columnHelper.accessor("phoneNumber", {
-    header: "전화번호",
-    cell: info => info.getValue(),
-  }),
-  columnHelper.accessor("email", {
-    header: "이메일",
-    cell: info => info.getValue(),
-  }),
 ];
 
-const containsTextFilter: FilterFn<Participant> = (
-  row: Row<Participant>,
-  _: string,
-  filterValue: string,
-) => {
-  const name = row.getValue<string>("name").toLowerCase();
-  const studentId = row.getValue<string>("studentId").toLowerCase();
-  const filterText = filterValue.toLowerCase();
-  return hangulIncludes(name, filterText) || studentId.startsWith(filterText);
-};
-
+// TODO: es hangul 검색 달기
 const SelectParticipant: React.FC<SelectParticipantProps> = ({
   data,
+  value = [],
   onChange = null,
-  value = null,
 }) => {
-  const [rowValues, setRowValues] = useState<RowSelectionState>(value ?? {});
   const [searchText, setSearchText] = useState<string>("");
 
-  const [selected, setSelected] = useState<Participant[]>([]);
+  const [selected, setSelected] = useState<Participant[]>(value);
+
+  const initialRowValues = value.reduce((acc, participant) => {
+    const index = data.findIndex(_data => _data.id === participant.id);
+    return { ...acc, [index]: true };
+  }, {});
+  const [rowValues, setRowValues] =
+    useState<RowSelectionState>(initialRowValues);
 
   useEffect(() => {
-    const res = value
-      ? data.filter((_, i) => value?.[i])
-      : data.filter((_, i) => rowValues?.[i]);
-    setSelected(res);
-  }, [rowValues, value, data]);
+    setSelected(data.filter((_, i) => rowValues?.[i]));
+  }, [rowValues, data]);
+
+  const handleRowClick = (rowState: RowSelectionState) => {
+    setRowValues(rowState);
+
+    const newSelected = data.filter((_, i) => rowState?.[i]);
+    setSelected(newSelected);
+    if (onChange) {
+      onChange(newSelected);
+    }
+  };
 
   const table = useReactTable({
     columns,
@@ -119,21 +111,20 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     state: {
-      rowSelection: value ?? rowValues,
+      rowSelection: rowValues,
       globalFilter: searchText,
     },
-    onRowSelectionChange: v => {
-      if (onChange) {
-        onChange(v);
+    onRowSelectionChange: updaterOrValue => {
+      if (typeof updaterOrValue === "function") {
+        handleRowClick(updaterOrValue(rowValues));
       } else {
-        setRowValues(v);
+        handleRowClick(updaterOrValue);
       }
     },
-    globalFilterFn: containsTextFilter,
     initialState: {
       sorting: [
         {
-          id: "studentId",
+          id: "studentNumber",
           desc: true,
         },
       ],
@@ -167,9 +158,9 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
         }
       >
         {selected.length ? (
-          selected.map((participant, i) => (
-            <Typography key={i} fs={16} lh={20} fw="REGULAR">
-              {participant.studentId} {participant.name}
+          selected.map(participant => (
+            <Typography key={participant.id} fs={16} lh={20} fw="REGULAR">
+              {participant.studentNumber} {participant.name}
             </Typography>
           ))
         ) : (

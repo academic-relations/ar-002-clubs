@@ -1,102 +1,82 @@
-import React from "react";
+import React, { useCallback } from "react";
 
-import styled from "styled-components";
+import { ApiAct007RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
-import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
+import { addHours } from "date-fns";
+import { useForm } from "react-hook-form";
+
 import Modal from "@sparcs-clubs/web/common/components/Modal";
-import Select from "@sparcs-clubs/web/common/components/Select";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { mockParticipantData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
-import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
-import { ActivityTypeEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
+
+import usePostActivityReportForNewClub from "@sparcs-clubs/web/features/register-club/services/usePostActivityReportForNewClub";
+
+import ActivityReportForm from "./ActivityReportForm";
 
 interface CreateActivityReportModalProps {
+  clubId: number;
   isOpen: boolean;
   close: VoidFunction;
+  refetch: () => void;
 }
 
-const HorizontalPlacer = styled.div`
-  display: flex;
-  gap: 32px;
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
+// TODO. 활동기간 리스트 추가, 파일업로드 추가
 const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
+  clubId,
   isOpen,
   close,
-}) => (
-  <Modal isOpen={isOpen}>
-    <FlexWrapper direction="column" gap={32}>
-      <TextInput label="활동명" placeholder="활동명을 입력해주세요" />
-      <HorizontalPlacer>
-        <Select
-          label="활동 분류"
-          items={[
-            {
-              value: ActivityTypeEnum.FitInside.toString(),
-              label: "동아리 성격에 합치하는 내부 활동",
-              selectable: true,
-            },
-            {
-              value: ActivityTypeEnum.FitOutside.toString(),
-              label: "동아리 성격에 합치하는 외부 활동",
-              selectable: true,
-            },
-            {
-              value: ActivityTypeEnum.NotFit.toString(),
-              label: "동아리 성격에 합치하지 않는 활동",
-              selectable: true,
-            },
-          ]}
-          value=""
-        />
-        {/* <DateRangeInput label="활동 기간" /> */}
-      </HorizontalPlacer>
-      <TextInput label="활동 장소" placeholder="활동 장소를 입력해주세요" />
-      <TextInput label="활동 목적" placeholder="활동 목적을 입력해주세요" />
-      <TextInput
-        area
-        label="활동 내용"
-        placeholder="활동 내용을 입력해주세요"
-      />
-      <FlexWrapper direction="column" gap={4}>
-        <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
-          활동 인원
-        </Typography>
-        <SelectParticipant data={mockParticipantData} />
-      </FlexWrapper>
-      <FlexWrapper direction="column" gap={4}>
-        <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
-          활동 증빙
-        </Typography>
-        <TextInput
-          area
-          placeholder="(선택) 활동 증빙에 대해서 작성하고 싶은 것이 있다면 입력해주세요"
-        />
-        <FileUpload />
-      </FlexWrapper>
-      <ButtonWrapper>
-        <Button type="outlined" onClick={close}>
-          취소
-        </Button>
-        <Button
-          onClick={() => {
-            // TODO. 저장 로직 추가
+  refetch,
+}) => {
+  const formCtx = useForm<ApiAct007RequestBody>({ mode: "all" });
+
+  const { mutate } = usePostActivityReportForNewClub();
+
+  const submitHandler = useCallback(
+    (_data: ApiAct007RequestBody, e: React.BaseSyntheticEvent) => {
+      e.preventDefault();
+      mutate(
+        {
+          body: {
+            ..._data,
+            clubId,
+            durations: _data.durations.map(({ startTerm, endTerm }) => ({
+              startTerm: addHours(startTerm, 9),
+              endTerm: addHours(endTerm, 9),
+            })),
+            evidence: _data.evidence ?? "", // NOTE: (@dora) evidence is optional
+            participants: _data.participants.map(({ studentId }) => ({
+              studentId,
+            })),
+          },
+        },
+        {
+          onSuccess: () => {
             close();
-          }}
-        >
-          저장
-        </Button>
-      </ButtonWrapper>
-    </FlexWrapper>
-  </Modal>
-);
+            refetch();
+          },
+        },
+      );
+    },
+    [close, mutate],
+  );
+
+  const handleCancel = () => {
+    close();
+  };
+
+  const handleSubmit = (e: React.BaseSyntheticEvent) => {
+    formCtx.handleSubmit(_data => submitHandler(_data, e))();
+  };
+
+  return (
+    <Modal isOpen={isOpen} width="full">
+      <ActivityReportForm
+        /* eslint-disable  @typescript-eslint/no-explicit-any */
+        clubId={clubId}
+        formCtx={formCtx as any}
+        onCancel={handleCancel}
+        onSubmit={handleSubmit}
+      />
+    </Modal>
+  );
+};
 
 export default CreateActivityReportModal;

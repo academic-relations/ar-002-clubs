@@ -1,8 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, count, desc, eq, gte, isNull, lte, or } from "drizzle-orm";
+import {
+  and,
+  count,
+  desc,
+  eq,
+  gte,
+  inArray,
+  isNotNull,
+  isNull,
+  lte,
+  not,
+  or,
+} from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
-import { takeUnique } from "@sparcs-clubs/api/common/util/util";
+import logger from "@sparcs-clubs/api/common/util/logger";
+import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
@@ -118,7 +131,8 @@ export default class ClubStudentTRepository {
     const clubs = await this.db
       .select({
         id: ClubStudentT.clubId,
-        name: Club.name,
+        name_kr: Club.name_kr,
+        name_en: Club.name_en,
       })
       .from(ClubStudentT)
       .leftJoin(Club, eq(Club.id, ClubStudentT.clubId))
@@ -130,5 +144,81 @@ export default class ClubStudentTRepository {
         ),
       );
     return clubs;
+  }
+
+  async addStudentToClub(
+    studentId: number,
+    clubId: number,
+    semesterId: number,
+  ): Promise<void> {
+    const cur = getKSTDate();
+    await this.db
+      .insert(ClubStudentT)
+      .values({
+        studentId,
+        clubId,
+        semesterId,
+        startTerm: cur,
+      })
+      .execute();
+  }
+
+  async removeStudentFromClub(
+    studentId: number,
+    clubId: number,
+    semesterId: number,
+  ): Promise<void> {
+    await this.db
+      .delete(ClubStudentT)
+      .where(
+        and(
+          eq(ClubStudentT.studentId, studentId),
+          eq(ClubStudentT.clubId, clubId),
+          eq(ClubStudentT.semesterId, semesterId),
+          isNull(ClubStudentT.deletedAt),
+        ),
+      )
+      .execute();
+  }
+
+  /**
+   * @param param
+   * @returns 어떤 동아리에 해당 기간동안 활동한 학생 목록을 가져옵니다.
+   * @description 동아리 회원이 변경되는 기간이 매우 한정적이기에 동시성을 지원하지 않습니다.
+   */
+  async selectStudentByClubIdAndDuration(param: {
+    clubId: number;
+    duration: {
+      startTerm: Date;
+      endTerm: Date;
+    };
+  }) {
+    const studentIds = await this.db
+      .select()
+      .from(ClubStudentT)
+      .where(
+        and(
+          eq(ClubStudentT.clubId, param.clubId),
+          not(
+            or(
+              gte(ClubStudentT.startTerm, param.duration.endTerm),
+              and(
+                isNotNull(ClubStudentT.endTerm),
+                lte(ClubStudentT.endTerm, param.duration.startTerm),
+              ),
+            ),
+          ),
+          isNull(ClubStudentT.deletedAt),
+        ),
+      )
+      .then(arr => arr.map(e => e.studentId));
+    logger.debug(studentIds);
+    if (studentIds.length === 0) return [];
+    const result = await this.db
+      .select()
+      .from(Student)
+      .where(and(inArray(Student.id, studentIds), isNull(Student.deletedAt)));
+
+    return result;
   }
 }

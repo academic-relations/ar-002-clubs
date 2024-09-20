@@ -1,6 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { zClubName } from "@sparcs-clubs/interface/common/commonString";
+
 /**
  * @version v0.1
  * @description 활동확인서 발급을 위한 동아리 활동 내역을 반환합니다.
@@ -20,7 +22,8 @@ const responseBodyMap = {
     clubs: z.array(
       z.object({
         id: z.number().int(),
-        name: z.string().max(30),
+        name_kr: zClubName,
+        name_en: zClubName,
         startMonth: z.date(),
         endMonth: z.date(),
       }),

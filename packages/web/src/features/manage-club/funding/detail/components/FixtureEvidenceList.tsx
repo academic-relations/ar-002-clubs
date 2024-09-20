@@ -1,6 +1,6 @@
 import React from "react";
 
-import FilePreview from "@sparcs-clubs/web/common/components/FilePreview";
+import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -64,8 +64,20 @@ const FixtureEvidenceList: React.FC<FixtureEvidenceListProps> = ({
             ? mockFundingDetail.fixturePurpose
             : mockFundingDetail.clubSuppliesPurpose}
         </Typography>
-        <FilePreview fileName="something.pdf" />
-        <FilePreview fileName="something.pdf" />
+        <ThumbnailPreviewList
+          fileList={[
+            {
+              id: "1",
+              name: "something.pdf",
+              url: "https://pdfobject.com/pdf/sample.pdf",
+            },
+            {
+              id: "2",
+              name: "something.pdf",
+              url: "https://pdfobject.com/pdf/sample.pdf",
+            },
+          ]}
+        />
       </FlexWrapper>
     </FlexWrapper>
   );

@@ -7,10 +7,10 @@ import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import FilePreview from "@sparcs-clubs/web/common/components/FilePreview";
+import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import { Status } from "@sparcs-clubs/web/common/components/ProgressCheckSection/_atomic/ProgressDot";
+import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -46,11 +46,11 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
 // label prop으로 이름을 넣고, children으로 ActivityDetail들을 넣어 주세요.
 
 const FlexTypography = styled(Typography)`
-display: flex;
-fiex-direction: column;
-gap: 12px;
-align-items: flex-start;
-align-self; stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  align-self: stretch;
 `;
 
 const ActivityDetail: React.FC<{ children: string | ReactNode }> = ({
@@ -112,8 +112,14 @@ const ActivityReportDetailFrame: React.FC = () => {
           <ProgressStatus
             labels={["신청 완료", "동아리 연합회 신청 반려"]}
             progress={[
-              { status: Status.Approved, date: new Date("2024-03-11 21:00") },
-              { status: Status.Canceled, date: new Date("2024-03-11 21:00") },
+              {
+                status: ProgressCheckSectionStatusEnum.Approved,
+                date: new Date("2024-03-11 21:00"),
+              },
+              {
+                status: ProgressCheckSectionStatusEnum.Canceled,
+                date: new Date("2024-03-11 21:00"),
+              },
             ]}
           />
           <ActivitySection label="활동 정보">
@@ -141,9 +147,25 @@ const ActivityReportDetailFrame: React.FC = () => {
             <ActivityDetail>첨부 파일</ActivityDetail>
             <ActivityDetail>
               <FilePreviewContainer>
-                <FilePreview fileName="bamsaem.pdf" />
-                <FilePreview fileName="coffee.pdf" />
-                <FilePreview fileName="gaebal.pdf" />
+                <ThumbnailPreviewList
+                  fileList={[
+                    {
+                      id: "1",
+                      name: "bamseam.pdf",
+                      url: "https://pdfobject.com/pdf/sample.pdf",
+                    },
+                    {
+                      id: "2",
+                      name: "coffee.pdf",
+                      url: "https://pdfobject.com/pdf/sample.pdf",
+                    },
+                    {
+                      id: "3",
+                      name: "gaebal.pdf",
+                      url: "https://pdfobject.com/pdf/sample.pdf",
+                    },
+                  ]}
+                />
               </FilePreviewContainer>
             </ActivityDetail>
             <ActivityDetail>

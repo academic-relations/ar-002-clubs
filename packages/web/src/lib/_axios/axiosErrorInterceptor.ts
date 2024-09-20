@@ -1,10 +1,15 @@
-import { AxiosError, HttpStatusCode, InternalAxiosRequestConfig } from "axios";
+import { AxiosError, AxiosResponse, HttpStatusCode } from "axios";
+
+import {
+  removeLocalStorageItem,
+  setLocalStorageItem,
+} from "@sparcs-clubs/web/utils/localStorage";
 
 import postRefresh from "./postRefresh";
 
 const errorInterceptor = {
-  onFulfilled(config: InternalAxiosRequestConfig) {
-    return config;
+  onFulfilled(values: AxiosResponse) {
+    return values;
   },
   async onRejected(error: AxiosError) {
     switch (error.response?.status) {
@@ -12,17 +17,17 @@ const errorInterceptor = {
         try {
           const response = await postRefresh();
           // TODO: 로그인시 기본 프로필 선택
-          localStorage.setItem(
+          setLocalStorageItem(
             "responseToken",
             JSON.stringify(response.accessToken),
           );
           if (response.accessToken) {
-            localStorage.setItem(
+            setLocalStorageItem(
               "accessToken",
-              response.accessToken.undergraduate ??
-                response.accessToken.master ??
+              response.accessToken.professor ??
                 response.accessToken.doctor ??
-                response.accessToken.professor ??
+                response.accessToken.master ??
+                response.accessToken.undergraduate ??
                 response.accessToken.employee ??
                 response.accessToken.executive ??
                 "",
@@ -31,11 +36,21 @@ const errorInterceptor = {
           }
         } catch (refreshError) {
           console.error("Login failed", refreshError);
+          removeLocalStorageItem("accessToken");
+          removeLocalStorageItem("responseToken");
+          window.location.href = "/";
         }
         return Promise.reject(error);
       }
       case HttpStatusCode.Forbidden: {
-        // TODO: handle forbidden error
+        const previousPage = document.referrer;
+
+        if (previousPage.startsWith(window.location.origin)) {
+          window.history.back();
+        } else {
+          window.location.href = "/";
+        }
+
         return Promise.reject(error);
       }
       default: {

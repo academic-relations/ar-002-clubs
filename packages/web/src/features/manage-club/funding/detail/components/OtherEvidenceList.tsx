@@ -1,6 +1,6 @@
 import React from "react";
 
-import FilePreview from "@sparcs-clubs/web/common/components/FilePreview";
+import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -33,8 +33,20 @@ const OtherEvidenceList: React.FC<OtherEvidenceListProps> = ({
     </ListItem>
     {/* TODO: file 연결 */}
     <FlexWrapper direction="column" gap={12} style={{ paddingLeft: 24 }}>
-      <FilePreview fileName="something.pdf" />
-      <FilePreview fileName="something.pdf" />
+      <ThumbnailPreviewList
+        fileList={[
+          {
+            id: "1",
+            name: "something.pdf",
+            url: "https://pdfobject.com/pdf/sample.pdf",
+          },
+          {
+            id: "2",
+            name: "something.pdf",
+            url: "https://pdfobject.com/pdf/sample.pdf",
+          },
+        ]}
+      />
     </FlexWrapper>
   </FlexWrapper>
 );

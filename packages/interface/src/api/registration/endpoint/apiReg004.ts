@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { RegistrationEventEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 /**
  * @version v0.1
@@ -22,7 +22,7 @@ const responseBodyMap = {
     events: z.array(
       z.object({
         id: z.coerce.number().int().min(1),
-        registrationEventEnumId: z.nativeEnum(RegistrationEventEnum),
+        registrationEventEnumId: z.nativeEnum(RegistrationDeadlineEnum),
         startTerm: z.coerce.date(),
         endTerm: z.coerce.date(),
       }),

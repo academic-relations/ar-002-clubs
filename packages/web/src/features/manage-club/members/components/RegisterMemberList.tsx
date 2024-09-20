@@ -1,112 +1,79 @@
 import React, { useState } from "react";
 
+import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
+import { ApiClb015ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
+import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
+
 import styled from "styled-components";
 
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
-import TableButtonCell from "@sparcs-clubs/web/common/components/Table/TableButtonCell";
-import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
-import Tag from "@sparcs-clubs/web/common/components/Tag";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
+import MembersTable from "@sparcs-clubs/web/features/manage-club/components/MembersTable";
+import { useGetMemberRegistration } from "@sparcs-clubs/web/features/manage-club/members/services/getClubMemberRegistration";
+import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 
-const TableWithPaginationWrapper = styled.div`
+const TableWithPagination = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
   align-items: center;
-`;
-
-const TableWithCount = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
   gap: 8px;
-  width: 100%;
-`;
-
-const TableWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
-  border-radius: 8px;
-  width: 100%;
-  overflow: hidden;
-  border: 1px solid ${({ theme }) => theme.colors.GRAY[300]};
+  align-self: stretch;
 `;
 
 const RegisterMemberList = () => {
   const [page, setPage] = useState<number>(1);
 
+  const { data: idData } = useGetMyManageClub() as {
+    data: ApiClb015ResponseOk;
+    isLoading: boolean;
+  };
+
+  const {
+    data: clubData,
+    isLoading: clubIsLoading,
+    isError: clubIsError,
+  } = useGetClubDetail(idData.clubId.toString()) as {
+    data: ApiClb002ResponseOK;
+    isLoading: boolean;
+    isError: boolean;
+  };
+
+  const {
+    data: memberData,
+    isLoading: memberIsLoading,
+    isError: memberIsError,
+  } = useGetMemberRegistration({ clubId: idData.clubId }) as {
+    data: ApiReg008ResponseOk;
+    isLoading: boolean;
+    isError: boolean;
+  };
+
+  const totalPage = memberData && Math.ceil(memberData.applies.length / 10);
+
   return (
-    <TableWithPaginationWrapper>
-      <TableWithCount>
-        <Typography
-          fs={16}
-          fw="REGULAR"
-          lh={20}
-          ff="PRETENDARD"
-          color="GRAY.600"
-        >
-          총 00명
-        </Typography>
-        <TableWrapper>
-          <FlexWrapper direction="row" gap={0}>
-            <TableCell type="HeaderSort" width="10%">
-              상태
-            </TableCell>
-            <TableCell type="HeaderSort" width="20%">
-              신청일시
-            </TableCell>
-            <TableCell type="HeaderSort" width="10%">
-              학번
-            </TableCell>
-            <TableCell type="HeaderSort" width="10%">
-              신청자
-            </TableCell>
-            <TableCell type="Header" width="15%">
-              전화번호
-            </TableCell>
-            <TableCell type="Header" width="20%">
-              이메일
-            </TableCell>
-            <TableCell type="Header" width="15%">
-              비고
-            </TableCell>
-          </FlexWrapper>
-          <FlexWrapper direction="row" gap={0}>
-            <TableCell type="Tag" width="10%">
-              <Tag>신청</Tag>
-            </TableCell>
-            <TableCell type="Default" width="20%">
-              신청일시
-            </TableCell>
-            <TableCell type="Default" width="10%">
-              학번
-            </TableCell>
-            <TableCell type="Default" width="10%">
-              신청자
-            </TableCell>
-            <TableCell type="Default" width="15%">
-              전화번호
-            </TableCell>
-            <TableCell type="Default" width="20%">
-              이메일
-            </TableCell>
-            <TableButtonCell
-              text={["승인", "반려"]}
-              onClick={[() => {}, () => {}]}
-              // TODO: 승인 반려 onClick 기능 넣기
-            />
-          </FlexWrapper>
-        </TableWrapper>
-      </TableWithCount>
-      <Pagination
-        totalPage={10}
-        currentPage={page}
-        limit={10}
-        setPage={setPage}
-      />
-    </TableWithPaginationWrapper>
+    <TableWithPagination>
+      <AsyncBoundary
+        isLoading={clubIsLoading && memberIsLoading}
+        isError={clubIsError && memberIsError}
+      >
+        {clubData && memberData && (
+          <MembersTable
+            memberList={memberData.applies}
+            clubName={clubData.name_kr}
+            clubId={idData.clubId}
+          />
+        )}
+        {totalPage !== 1 && (
+          <Pagination
+            totalPage={totalPage}
+            currentPage={page}
+            limit={10}
+            setPage={setPage}
+          />
+        )}
+      </AsyncBoundary>
+    </TableWithPagination>
   );
 };
 

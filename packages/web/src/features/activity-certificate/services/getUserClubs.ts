@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
 import {
-  axiosClient,
+  axiosClientWithAuth,
   defineAxiosMock,
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
@@ -16,12 +16,15 @@ export const useGetUserClubs = () =>
   useQuery<ISuccessResponseType, Error>({
     queryKey: [apiAcf002.url()],
     queryFn: async (): Promise<ISuccessResponseType> => {
-      const { data, status } = await axiosClient.get(apiAcf002.url(), {});
-      console.log(data);
+      const { data, status } = await axiosClientWithAuth.get(
+        apiAcf002.url(),
+        {},
+      );
 
       // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
       switch (status) {
         case 200:
+        case 304:
           return apiAcf002.responseBodyMap[200].parse(data);
         default:
           throw new UnexpectedAPIResponseError();

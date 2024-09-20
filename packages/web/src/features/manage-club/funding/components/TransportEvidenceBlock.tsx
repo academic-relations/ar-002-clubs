@@ -11,6 +11,7 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { mockParticipantData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
 import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
+import { Participant } from "@sparcs-clubs/web/features/manage-club/activity-report/types/activityReport";
 
 import {
   isParticipantsRequired,
@@ -64,17 +65,10 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
     setFunding({ ...funding, [key]: value });
   };
 
-  const [participants, setParticipants] = useState<Record<number, boolean>>({});
+  const [participants, setParticipants] = useState<Participant[]>([]);
 
   useEffect(() => {
-    setParticipants(
-      funding.transportationPassengers.reduce((acc, participant) => {
-        const index = mockParticipantData.findIndex(
-          data => data.studentId === participant.studentNumber,
-        );
-        return { ...acc, [index]: true };
-      }, {}),
-    );
+    setParticipants(funding.transportationPassengers);
   }, []);
 
   useEffect(() => {
@@ -83,7 +77,8 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
       transportationPassengers: mockParticipantData
         .filter((_, i) => participants[i])
         .map(participant => ({
-          studentNumber: participant.studentId,
+          id: participant.id,
+          studentNumber: participant.studentNumber,
           name: participant.name,
         })),
     });

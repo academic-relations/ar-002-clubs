@@ -1,6 +1,6 @@
-import { ApiAut001ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut001";
+// import { ApiAut001ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut001";
 
-const mockAccessToken: ApiAut001ResponseOk = {
+const mockAccessToken = {
   accessToken: {
     undergraduate:
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoi64SZ7KO97J20IiwiZW1haWwiOiJuZW9wanVrQGthaXN0LmFjLmtyIiwidHlwZSI6InVuZGVyZ3JhZHVhdGUiLCJzdHVkZW50SWQiOjk5OTk5OSwic3R1ZGVudE51bWJlciI6MjAyNDAwMDAsImlhdCI6MTcyMTMwNzA5MiwiZXhwIjoxOTAwMTMxMDY5Mn0.lWHONCmVUoKMhY8rDGXpPqxsmC6S3KpCiut0qeB7Qto",

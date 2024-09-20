@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 
 :root {
   background: linear-gradient(180deg, #eafafc 0px, #ffffff 339.67px);
@@ -35,4 +36,26 @@ a {
   display: flex;
   text-decoration: none;
   color: inherit;
+}
+
+main {
+  overflow-x: hidden;
+  min-width: 320px;
+}
+
+.viewer-download {
+  color: #fff;
+  font-family: FontAwesome, serif;
+  font-size: 0.75rem;
+  line-height: 1.5rem;
+  text-align: center;
+}
+
+.viewer-download::before {
+  content: "\f019";
+}
+
+.viewer-toolbar > ul > li {
+  margin-left: 5px;
+  margin-right: 5px;
 }

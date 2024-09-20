@@ -1,84 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
-import Card from "@sparcs-clubs/web/common/components/Card";
+import styled from "styled-components";
+
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
-import ChangeRepresentativeCard from "@sparcs-clubs/web/features/manage-club/components/ChangeRepresentativeCard";
-import { mockClubDescription } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
+import ChangeClubInfoCard from "@sparcs-clubs/web/features/manage-club/components/ChangeClubInfoCard";
+// import ChangeRepresentativeCard from "@sparcs-clubs/web/features/manage-club/components/ChangeRepresentativeCard";
 
-const InfoManageFrame: React.FC = () => {
-  const [description, setDescription] = useState<string>(
-    mockClubDescription.description,
-  );
-  const [password, setPassword] = useState<string>(
-    mockClubDescription.roomPassword,
-  );
-  const [errorDescription, setErrorDescription] = useState<string>("");
-  const [errorPassword, setErrorPassword] = useState<string>("");
+const InfoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  gap: 20px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    flex-direction: column;
+  }
+`;
 
-  const buttonType =
-    (description === mockClubDescription.description &&
-      password === mockClubDescription.roomPassword) ||
-    errorDescription !== "" ||
-    errorPassword !== ""
-      ? "disabled"
-      : "default";
-
-  useEffect(() => {
-    if (description === "") {
-      setErrorDescription("동아리 설명을 입력하세요");
-    } else {
-      setErrorDescription("");
-    }
-  }, [description, setErrorDescription]);
-
-  useEffect(() => {
-    if (password === "") {
-      setErrorPassword("동아리방 비밀번호를 입력하세요");
-    } else {
-      setErrorPassword("");
-    }
-  }, [password, setErrorPassword]);
-  // TODO: 동방 없는 곳은 비밀번호 입력 안 해도 에러 안 뜨게 수정
-
-  return (
-    <FlexWrapper direction="column" gap={40}>
-      <FoldableSectionTitle title="동아리 정보">
-        <FlexWrapper direction="row" gap={20}>
-          <Card outline gap={32} style={{ flex: 1, height: "fit-content" }}>
-            <Typography fw="MEDIUM" fs={20} lh={24}>
-              기본 정보
-            </Typography>
-            <TextInput
-              label="동아리 설명"
-              placeholder="동아리 설명을 입력하세요"
-              area
-              value={description}
-              handleChange={setDescription}
-              errorMessage={errorDescription}
-            />
-            <TextInput
-              label="동아리방 비밀번호"
-              placeholder="동아리방 비밀번호를 입력하세요"
-              value={password}
-              handleChange={setPassword}
-              errorMessage={errorPassword}
-            />
-            <Button
-              type={buttonType}
-              style={{ width: "max-content", alignSelf: "flex-end" }}
-            >
-              저장
-            </Button>
-          </Card>
-          <ChangeRepresentativeCard />
-        </FlexWrapper>
-      </FoldableSectionTitle>
-    </FlexWrapper>
-  );
-};
+const InfoManageFrame: React.FC<{
+  isRepresentative: boolean;
+  // TODO: 대표자 변경 기능 추가
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+}> = ({ isRepresentative }) => (
+  <FlexWrapper direction="column" gap={40}>
+    <FoldableSectionTitle title="동아리 정보">
+      <InfoWrapper>
+        <ChangeClubInfoCard />
+        {/* {isRepresentative && <ChangeRepresentativeCard />} */}
+      </InfoWrapper>
+    </FoldableSectionTitle>
+  </FlexWrapper>
+);
 
 export default InfoManageFrame;

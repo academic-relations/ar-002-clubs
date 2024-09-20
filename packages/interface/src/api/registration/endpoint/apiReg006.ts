@@ -1,7 +1,9 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { RegistrationStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { zClubName } from "@sparcs-clubs/interface/common/commonString";
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 /**
  * @version v0.1
@@ -23,7 +25,28 @@ const responseBodyMap = {
       z.object({
         id: z.coerce.number().int().min(1),
         clubId: z.coerce.number().int().min(1),
-        applyStatusEnumId: z.nativeEnum(RegistrationStatusEnum),
+        clubNameKr: zClubName,
+        type: z.nativeEnum(ClubTypeEnum), // 동아리 유형(정동아리 | 가동아리)
+        isPermanent: z.coerce.boolean(), // 상임동아리 여부
+        divisionName: z.string().max(128),
+        applyStatusEnumId: z.nativeEnum(
+          RegistrationApplicationStudentStatusEnum,
+        ),
+      }),
+    ),
+  }),
+  [HttpStatusCode.NoContent]: z.object({
+    applies: z.array(
+      z.object({
+        id: z.coerce.number().int().min(1),
+        clubId: z.coerce.number().int().min(1),
+        clubNameKr: zClubName,
+        type: z.nativeEnum(ClubTypeEnum), // 동아리 유형(정동아리 | 가동아리)
+        isPermanent: z.coerce.boolean(), // 상임동아리 여부
+        divisionName: z.string().max(128),
+        applyStatusEnumId: z.nativeEnum(
+          RegistrationApplicationStudentStatusEnum,
+        ),
       }),
     ),
   }),
@@ -45,6 +68,9 @@ type ApiReg006RequestParam = z.infer<typeof apiReg006.requestParam>;
 type ApiReg006RequestQuery = z.infer<typeof apiReg006.requestQuery>;
 type ApiReg006RequestBody = z.infer<typeof apiReg006.requestBody>;
 type ApiReg006ResponseOk = z.infer<(typeof apiReg006.responseBodyMap)[200]>;
+type ApiReg006ResponseNoContent = z.infer<
+  (typeof apiReg006.responseBodyMap)[204]
+>;
 
 export default apiReg006;
 
@@ -53,4 +79,5 @@ export type {
   ApiReg006RequestQuery,
   ApiReg006RequestBody,
   ApiReg006ResponseOk,
+  ApiReg006ResponseNoContent,
 };

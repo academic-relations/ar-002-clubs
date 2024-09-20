@@ -1,10 +1,14 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   Param,
   Patch,
   Post,
+  Query,
+  Res,
   UsePipes,
 } from "@nestjs/common";
 
@@ -12,7 +16,10 @@ import apiReg005, {
   ApiReg005RequestBody,
   ApiReg005ResponseCreated,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg005";
-import { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
+import {
+  ApiReg006ResponseNoContent,
+  ApiReg006ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 import apiReg007, {
   ApiReg007RequestBody,
   ApiReg007RequestParam,
@@ -22,12 +29,35 @@ import apiReg008, {
   ApiReg008RequestParam,
   ApiReg008ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
+import apiReg013, {
+  ApiReg013RequestParam,
+  ApiReg013ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg013";
+import apiReg019 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg019";
+import apiReg020 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg020";
+
+import { Response } from "express";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
-import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
-import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
+import {
+  Executive,
+  Student,
+} from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import {
+  GetExecutive,
+  GetStudent,
+} from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
 import { MemberRegistrationService } from "../service/member-registration.service";
+
+import type {
+  ApiReg019RequestQuery,
+  ApiReg019ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg019";
+import type {
+  ApiReg020RequestQuery,
+  ApiReg020ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg020";
 
 @Controller()
 export class MemberRegistrationController {
@@ -54,10 +84,29 @@ export class MemberRegistrationController {
   @Get("/student/registrations/member-registrations/my")
   async getStudentRegistrationsMemberRegistrationsMy(
     @GetStudent() user: GetStudent,
-  ): Promise<ApiReg006ResponseOk> {
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<ApiReg006ResponseOk | ApiReg006ResponseNoContent> {
     const result =
       await this.memberRegistrationService.getStudentRegistrationsMemberRegistrationsMy(
         user.studentId,
+      );
+    res.status(result.status);
+    return result.data;
+  }
+
+  @Student()
+  @Delete(
+    "/student/registrations/member-registrations/member-registration/:applyId",
+  )
+  @UsePipes(new ZodPipe(apiReg013))
+  async deleteStudentRegistrationsMemberRegistration(
+    @GetStudent() user: GetStudent,
+    @Param() { applyId }: ApiReg013RequestParam,
+  ): Promise<ApiReg013ResponseOk> {
+    const result =
+      await this.memberRegistrationService.deleteStudentRegistrationsMemberRegistration(
+        user.studentId,
+        applyId,
       );
     return result;
   }
@@ -66,6 +115,7 @@ export class MemberRegistrationController {
   @Patch(
     "/student/registrations/member-registrations/member-registration/:applyId",
   )
+  @HttpCode(204)
   @UsePipes(new ZodPipe(apiReg007))
   async patchStudentRegistrationsMemberRegistration(
     @GetStudent() user: GetStudent,
@@ -94,6 +144,41 @@ export class MemberRegistrationController {
         user.studentId,
         clubId,
       );
+    return result;
+  }
+
+  @Executive()
+  @Get("/executive/registrations/member-registrations/brief")
+  @UsePipes(new ZodPipe(apiReg019))
+  async getExecutiveRegistrationsMemberRegistrationsBrief(
+    @GetExecutive() user: GetExecutive,
+    @Query() query: ApiReg019RequestQuery,
+  ): Promise<ApiReg019ResponseOk> {
+    const result =
+      await this.memberRegistrationService.getExecutiveRegistrationsMemberRegistrationsBrief(
+        {
+          executiveId: user.executiveId,
+          query,
+        },
+      );
+    return result;
+  }
+
+  @Executive()
+  @Get("/executive/registrations/member-registrations")
+  @UsePipes(new ZodPipe(apiReg020))
+  async getExecutiveRegistrationsMemberRegistrations(
+    @GetExecutive() user: GetExecutive,
+    @Query() query: ApiReg020RequestQuery,
+  ): Promise<ApiReg020ResponseOk> {
+    const result =
+      await this.memberRegistrationService.getExecutiveRegistrationsMemberRegistrations(
+        {
+          executiveId: user.executiveId,
+          query,
+        },
+      );
+
     return result;
   }
 }

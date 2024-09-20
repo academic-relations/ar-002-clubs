@@ -1,3 +1,5 @@
+import { Request as _Request } from "express";
+
 interface User {
   id: number;
   sid: string;
@@ -14,4 +16,12 @@ export interface UserRefreshTokenPayload {
 
 export interface UserAccessTokenPayload {
   user: User;
+}
+
+export type Request = _Request & RequestExtra;
+export interface RequestExtra {
+  session: {
+    next: string;
+    ssoState: string;
+  };
 }

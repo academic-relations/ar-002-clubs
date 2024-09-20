@@ -15,7 +15,10 @@ const method = "GET";
 
 const requestParam = z.object({
   clubId: z.coerce.number().int(),
-  delegateEnumId: z.nativeEnum(ClubDelegateEnum),
+  delegateEnumId: z.preprocess(
+    val => z.coerce.number().int().parse(val),
+    z.nativeEnum(ClubDelegateEnum),
+  ),
 });
 
 const requestQuery = z.object({});

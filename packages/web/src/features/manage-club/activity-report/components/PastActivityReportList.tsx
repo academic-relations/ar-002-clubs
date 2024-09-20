@@ -1,58 +1,71 @@
 import React from "react";
 
+import { ApiAct011ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
-import Tag, { type TagColor } from "@sparcs-clubs/web/common/components/Tag";
+import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+import { ActStatusTagList } from "@sparcs-clubs/web/constants/tableTagList";
+import PastActivityReportModal from "@sparcs-clubs/web/features/register-club/components/_atomic/PastActivityReportModal";
 
-import { type PastActivityReport } from "../types/activityReport";
+import {
+  getActivityTypeTagColor,
+  getActivityTypeTagLabel,
+} from "@sparcs-clubs/web/features/register-club/utils/activityType";
+import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
+import { PastActivityReport } from "../_mock/mock";
 
 interface ActivityReportListProps {
   data: PastActivityReport[];
+  profile: string;
+  showItemCount?: boolean;
+  refetch?: () => void;
 }
 
-const columnHelper = createColumnHelper<PastActivityReport>();
-
-const getCategoryTagColor = (category: string): TagColor => {
-  switch (category) {
-    case "동아리 성격에 합치하는 내부 활동":
-      return "ORANGE";
-    case "동아리 성격에 합치하는 외부 활동":
-      return "BLUE";
-    case "동아리 성격에 합치하지 않는 활동":
-      return "PURPLE";
-    default:
-      return "GRAY";
-  }
-};
+const columnHelper =
+  createColumnHelper<ApiAct011ResponseOk["activities"][number]>();
 
 const columns = [
-  columnHelper.accessor("activity", {
+  columnHelper.accessor("activityStatusEnumId", {
+    id: "activityStatusEnumId",
+    header: "상태",
+    cell: info => {
+      const { color, text } = getTagDetail(info.getValue(), ActStatusTagList);
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 64,
+  }),
+  columnHelper.accessor("name", {
     header: "활동명",
     cell: info => info.getValue(),
-    size: 35,
+    size: 128,
   }),
-  columnHelper.accessor("category", {
+  columnHelper.accessor("activityTypeEnumId", {
     header: "활동 분류",
     cell: info => (
-      <Tag color={getCategoryTagColor(info.getValue())}>{info.getValue()}</Tag>
+      <Tag color={getActivityTypeTagColor(info.getValue())}>
+        {getActivityTypeTagLabel(info.getValue())}
+      </Tag>
     ),
-    size: 30,
+    size: 128,
   }),
   columnHelper.accessor(
-    row => `${formatDate(row.startDate)} ~ ${formatDate(row.endDate)}`,
+    row =>
+      `${formatDate(row.durations[0].startTerm)} ~ ${formatDate(row.durations[0].endTerm)}${row.durations.length > 1 ? ` 외 ${row.durations.length - 1}개` : ""}`,
     {
       header: "활동 기간",
       cell: info => info.getValue(),
-      size: 40,
+      size: 255,
     },
   ),
 ];
@@ -68,6 +81,9 @@ const TableOuter = styled.div`
 
 const PastActivityReportList: React.FC<ActivityReportListProps> = ({
   data,
+  profile,
+  showItemCount = true,
+  refetch = () => {},
 }) => {
   const table = useReactTable({
     columns,
@@ -75,12 +91,38 @@ const PastActivityReportList: React.FC<ActivityReportListProps> = ({
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
+
+  const openPastActivityReportModal = (activityId: number) => {
+    overlay.open(({ isOpen, close }) => (
+      <PastActivityReportModal
+        profile={profile}
+        activityId={activityId}
+        isOpen={isOpen}
+        close={() => {
+          close();
+          refetch();
+        }}
+      />
+    ));
+  };
+
   return (
     <TableOuter>
-      <Typography fs={14} fw="REGULAR" lh={20} ff="PRETENDARD" color="GRAY.600">
-        총 {data.length}개
-      </Typography>
-      <Table table={table} />
+      {showItemCount && (
+        <Typography
+          fs={14}
+          fw="REGULAR"
+          lh={20}
+          ff="PRETENDARD"
+          color="GRAY.600"
+        >
+          총 {data.length}개
+        </Typography>
+      )}
+      <Table
+        table={table}
+        onClick={row => openPastActivityReportModal(row.id)}
+      />
     </TableOuter>
   );
 };

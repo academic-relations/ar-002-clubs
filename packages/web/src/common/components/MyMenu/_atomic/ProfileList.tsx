@@ -4,6 +4,7 @@ import { jwtDecode, JwtPayload } from "jwt-decode";
 import styled from "styled-components";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { setLocalStorageItem } from "@sparcs-clubs/web/utils/localStorage";
 
 import Profile from "./Profile";
 
@@ -40,8 +41,9 @@ const ProfileList: React.FC<ProfileListProps> = ({
     token: string;
   }) => {
     setSelectedToken(profile.token);
-    localStorage.setItem("accessToken", profile.token);
+    setLocalStorageItem("accessToken", profile.token);
     setIsMenuOpen(false);
+    window.location.href = "/";
   };
 
   return (

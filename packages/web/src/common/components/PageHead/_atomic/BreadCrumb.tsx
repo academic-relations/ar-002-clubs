@@ -1,6 +1,6 @@
 import React from "react";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
@@ -22,6 +22,9 @@ const BreadCrumbContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    gap: 8px;
+  }
 `;
 
 const BreadCrumb: React.FC<BreadCrumbProps> = ({
@@ -29,19 +32,19 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({
   enableLast = false,
 }) => {
   const itemsWithMain = [{ name: "메인", path: "/" }, ...items];
+  const router = useRouter();
 
   return (
     <BreadCrumbContainer>
       {itemsWithMain.map((item, index) => (
         <React.Fragment key={item.name}>
-          <Link href={item.path} passHref>
-            <BreadCrumbItem
-              text={item.name}
-              disabled={
-                index === itemsWithMain.length - 1 ? !enableLast : false
-              }
-            />
-          </Link>
+          <BreadCrumbItem
+            text={item.name}
+            disabled={index === itemsWithMain.length - 1 ? !enableLast : false}
+            onClick={() => {
+              router.push(item.path);
+            }}
+          />
           {index < itemsWithMain.length - 1 && (
             <Icon type="chevron_right" size={20} color={colors.PRIMARY} />
           )}

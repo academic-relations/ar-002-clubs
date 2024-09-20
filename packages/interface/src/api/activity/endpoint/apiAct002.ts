@@ -1,7 +1,10 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
+import {
+  ActivityStatusEnum,
+  ActivityTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 /**
  * @version v0.1
@@ -40,12 +43,23 @@ const responseBodyMap = {
     evidence: z.string(),
     evidenceFiles: z.array(
       z.object({
-        uuid: z.string().max(255),
+        fileId: z.string().max(255),
+        name: z.string().max(255),
+        url: z.string().max(255),
       }),
     ),
     participants: z.array(
       z.object({
         studentId: z.coerce.number().int().min(1),
+        studentNumber: z.coerce.number().int().min(20000000),
+        name: z.string().max(255),
+      }),
+    ),
+    activityStatusEnumId: z.nativeEnum(ActivityStatusEnum),
+    comments: z.array(
+      z.object({
+        content: z.string(),
+        createdAt: z.coerce.date(),
       }),
     ),
   }),
