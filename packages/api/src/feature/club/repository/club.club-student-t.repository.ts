@@ -155,6 +155,8 @@ export default class ClubStudentTRepository {
       .execute();
   }
 
+  // ** 주의: delegate 또는 일반 부원을 제거합니다.
+  // ** 제거 시 hard deletion이 이루어집니다.
   async removeStudentFromClub(
     studentId: number,
     clubId: number,
