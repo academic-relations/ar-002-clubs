@@ -48,7 +48,8 @@ const ResponsiveTypography = styled(Typography)`
 `;
 
 const StyledOl = styled.ol`
-  margin-top: 0px;
+  margin: 0px;
+  margin-top: 8px;
   padding-left: 16px;
 `;
 const AgreementModal: React.FC<AgreementModalProps> = ({
@@ -103,12 +104,12 @@ const AgreementModal: React.FC<AgreementModalProps> = ({
                 </li>
                 <li>
                   수집하려는 개인정보의 항목 : 성명, KAIST 학번, 소속 학과, 소속
-                  동아리
+                  동아리, KAIST 이메일 주소
                 </li>
                 <li>
                   개인정보의 보유 및 이용 기간 : 영구 (KAIST 학부 동아리연합회
                   회원인 기간 및 활동확인서 발급에 필요한 기초 기록의 보유를
-                  위함입니다.)
+                  위한 기간)
                 </li>
                 <li>
                   귀하는 개인정보의 수집,이용의 동의를 거부할 수 있으며, 동의를
@@ -122,12 +123,35 @@ const AgreementModal: React.FC<AgreementModalProps> = ({
         <Card gap={16} padding="16px" outline>
           <Toggle
             label={
-              <Typography fs={isMobile ? 14 : 16}>제3자 이용 약관 </Typography>
+              <Typography fs={isMobile ? 14 : 16}>
+                개인정보 제3자 제공 약관
+              </Typography>
             }
           >
             <Typography fs={isMobile ? 14 : 16} lh={isMobile ? 24 : 28}>
               KAIST 학부 동아리연합회는 개인정보보호법 제17조의 규정에 따라
               개인정보를 제3자에게 제공합니다.
+              <StyledOl>
+                <li>개인정보를 제공받는 자 : SPARCS</li>
+                <li>
+                  개인정보를 제공받는 자의 개인정보 이용 목적 : KAIST 학부
+                  동아리연합회 전산화 홈페이지의 운용 및 관리
+                </li>
+                <li>
+                  제공하는 개인정보의 항목 : 성명, KAIST 학번, 소속 학과, 소속
+                  동아리, KAIST 이메일 주소
+                </li>
+                <li>
+                  개인정보를 제공받는 자의 개인정보 보유 및 이용 기간 : 영구
+                  (KAIST 학부 동아리연합회 회원인 기간 및 활동확인서 발급에
+                  필요한 기초 기록의 보유를 위함입니다.)
+                </li>
+                <li>
+                  귀하는 개인정보의 제3자 제공의 동의를 거부할 수 있으며, 동의를
+                  거부하는 경우 KAIST 학부 동아리연합회의 회원이 되실 수
+                  없습니다.
+                </li>
+              </StyledOl>
               <StyledOl>
                 <li>
                   개인정보를 제공받는 자 : KAIST 학부 총학생회 및
