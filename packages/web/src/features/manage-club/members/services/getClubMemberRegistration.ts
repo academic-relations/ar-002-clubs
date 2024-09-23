@@ -26,7 +26,7 @@ export const useGetMemberRegistration = (requestParam: ApiReg008RequestParam) =>
           if (data.applies.length === 0) return data;
           // console.log(data);
           return apiReg008.responseBodyMap[200].parse(data);
-          return data;
+          // return data;
         }
         default:
           throw new UnexpectedAPIResponseError();
