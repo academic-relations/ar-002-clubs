@@ -1,3 +1,5 @@
+import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
+
 import { getFullSemester } from "@sparcs-clubs/web/utils/getSemester";
 
 import { CreateMeetingModel } from "../types/meeting";
@@ -20,12 +22,12 @@ export class MeetingTemplate {
     const now = new Date();
 
     if (
-      data.meetingType === "확대운영위원회" ||
-      data.meetingType === "운영위원회"
+      +data.meetingEnumId === MeetingEnum.expansiveOperativeCommittee ||
+      +data.meetingEnumId === MeetingEnum.operativeCommittee
     ) {
       return `안녕하세요, 동아리연합회 부회장입니다.
         
-본회 회칙 제${data.meetingType === "확대운영위원회" ? 35 : 40}조에 따라, 제${data.count ?? "X"}차 ${meetingType} (${now.getMonth() + 1}월, ${isRegular})를 아래와 같이 진행합니다.
+본회 회칙 제${+data.meetingEnumId === MeetingEnum.expansiveOperativeCommittee ? 35 : 40}조에 따라, 제${data.count ?? "X"}차 ${meetingType} (${now.getMonth() + 1}월, ${isRegular})를 아래와 같이 진행합니다.
 
 일시 : ${dateTime}
 장소 : ${location}
@@ -33,8 +35,7 @@ export class MeetingTemplate {
 감사합니다.`;
     }
 
-    // TODO. 장소 영어로 변경?
-    if (data.meetingType === "전체동아리대표자회의") {
+    if (+data.meetingEnumId === MeetingEnum.clubRepresentativesCouncilMeeting) {
       return `(English Notice on the bottom)
 
 안녕하세요, 학부 동아리연합회 부회장입니다.
@@ -77,7 +78,7 @@ Thank you.`;
     };
   }
 
-  static SubcommitteeMeetingTemplate(): TemplateType {
+  static divisionMeetingTemplate(): TemplateType {
     const now = new Date();
 
     return {

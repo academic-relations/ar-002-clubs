@@ -3,8 +3,8 @@ import { MeetingDetail } from "@sparcs-clubs/web/features/meeting/types/meeting"
 // TODO. mock data api에 맞게 수정
 export const mockupData: MeetingDetail = {
   id: 1,
-  title: "2024년 3월 제1차 정기 전체동아리대표자회의 공고",
-  content: `(English Notice on the bottom)
+  announcementTitle: "2024년 3월 제1차 정기 전체동아리대표자회의 공고",
+  announcementContent: `(English Notice on the bottom)
   
   안녕하세요, 학부 동아리연합회 부회장입니다.
   
@@ -35,6 +35,8 @@ export const mockupData: MeetingDetail = {
   Thank you.`,
   count: 1,
   isRegular: false,
-  meetingType: "분과회의",
+  meetingEnumId: 4,
   startDate: new Date(),
+  location: "장소",
+  locationEn: "location",
 };
