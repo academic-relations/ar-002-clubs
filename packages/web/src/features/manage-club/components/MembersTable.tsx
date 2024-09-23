@@ -139,17 +139,31 @@ const columnsFunction = (clubName: string, clubId: number) => [
     header: "비고",
     cell: info => {
       const member = info.row.original;
-      return member.applyStatusEnumId ===
-        RegistrationApplicationStudentStatusEnum.Pending ? (
-        <TableButton
-          text={["승인", "반려"]}
-          onClick={[
-            () => openApproveModal(member, clubName, clubId),
-            () => openRejectModal(member, clubName, clubId),
-          ]}
-        />
-      ) : (
-        " "
+      return (
+        (member.applyStatusEnumId ===
+          RegistrationApplicationStudentStatusEnum.Pending && (
+          <TableButton
+            text={["승인", "반려"]}
+            onClick={[
+              () => openApproveModal(member, clubName, clubId),
+              () => openRejectModal(member, clubName, clubId),
+            ]}
+          />
+        )) ||
+        (member.applyStatusEnumId ===
+          RegistrationApplicationStudentStatusEnum.Approved && (
+          <TableButton
+            text={["반려"]}
+            onClick={[() => openRejectModal(member, clubName, clubId)]}
+          />
+        )) ||
+        (member.applyStatusEnumId ===
+          RegistrationApplicationStudentStatusEnum.Rejected && (
+          <TableButton
+            text={["승인"]}
+            onClick={[() => openApproveModal(member, clubName, clubId)]}
+          />
+        ))
       );
     },
     size: 15,
