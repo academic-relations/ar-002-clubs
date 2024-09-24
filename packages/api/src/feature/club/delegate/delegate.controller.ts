@@ -20,7 +20,7 @@ import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
-import ClubDelegateService from "../service/club-delegate.service";
+import ClubDelegateService from "./delegate.service";
 
 import type {
   ApiClb006RequestParam,
