@@ -28,12 +28,14 @@ interface MembersTableProps {
   memberList: ApiReg008ResponseOk["applies"];
   clubName: string;
   clubId: number;
+  refetch: () => void;
 }
 
 const openApproveModal = (
   member: ApiReg008ResponseOk["applies"][0],
   clubName: string,
   clubId: number,
+  refetch: () => void,
 ) => {
   overlay.open(({ isOpen, close }) => (
     <Modal isOpen={isOpen}>
@@ -49,6 +51,7 @@ const openApproveModal = (
             },
           );
           close();
+          refetch();
         }}
         onClose={() => {
           close();
@@ -68,6 +71,7 @@ const openRejectModal = (
   member: ApiReg008ResponseOk["applies"][0],
   clubName: string,
   clubId: number,
+  refetch: () => void,
 ) => {
   overlay.open(({ isOpen, close }) => (
     <Modal isOpen={isOpen}>
@@ -83,6 +87,7 @@ const openRejectModal = (
             },
           );
           close();
+          refetch();
         }}
         onClose={() => {
           close();
@@ -100,7 +105,11 @@ const openRejectModal = (
 
 const columnHelper = createColumnHelper<ApiReg008ResponseOk["applies"][0]>();
 
-const columnsFunction = (clubName: string, clubId: number) => [
+const columnsFunction = (
+  clubName: string,
+  clubId: number,
+  refetch: () => void,
+) => [
   columnHelper.accessor("applyStatusEnumId", {
     header: "상태",
     cell: info => {
@@ -139,17 +148,33 @@ const columnsFunction = (clubName: string, clubId: number) => [
     header: "비고",
     cell: info => {
       const member = info.row.original;
-      return member.applyStatusEnumId ===
-        RegistrationApplicationStudentStatusEnum.Pending ? (
-        <TableButton
-          text={["승인", "반려"]}
-          onClick={[
-            () => openApproveModal(member, clubName, clubId),
-            () => openRejectModal(member, clubName, clubId),
-          ]}
-        />
-      ) : (
-        " "
+      return (
+        (member.applyStatusEnumId ===
+          RegistrationApplicationStudentStatusEnum.Pending && (
+          <TableButton
+            text={["승인", "반려"]}
+            onClick={[
+              () => openApproveModal(member, clubName, clubId, refetch),
+              () => openRejectModal(member, clubName, clubId, refetch),
+            ]}
+          />
+        )) ||
+        (member.applyStatusEnumId ===
+          RegistrationApplicationStudentStatusEnum.Approved && (
+          <TableButton
+            text={["반려"]}
+            onClick={[() => openRejectModal(member, clubName, clubId, refetch)]}
+          />
+        )) ||
+        (member.applyStatusEnumId ===
+          RegistrationApplicationStudentStatusEnum.Rejected && (
+          <TableButton
+            text={["승인"]}
+            onClick={[
+              () => openApproveModal(member, clubName, clubId, refetch),
+            ]}
+          />
+        ))
       );
     },
     size: 15,
@@ -160,8 +185,9 @@ const MembersTable: React.FC<MembersTableProps> = ({
   memberList,
   clubName,
   clubId,
+  refetch,
 }) => {
-  const columns = columnsFunction(clubName, clubId);
+  const columns = columnsFunction(clubName, clubId, refetch);
   const table = useReactTable({
     columns,
     data: memberList,
