@@ -43,11 +43,11 @@ export class AuthController {
   @Public()
   @Get("/auth/sign-in")
   @UsePipes(new ZodPipe(apiAut001))
-  async getAuthSignin(
+  async getAuthSignIn(
     @Req() req: Request,
     @Query() query: ApiAut001RequestQuery,
   ): Promise<ApiAut001ResponseOk> {
-    const url = await this.authService.getAuthSignin(query, req);
+    const url = await this.authService.getAuthSignIn(query, req);
     return { url };
   }
 
@@ -59,7 +59,7 @@ export class AuthController {
     @Query() query: ApiAut004RequestQuery,
     @Session() session: Request["session"],
   ) {
-    const { next, token } = await this.authService.getAuthSigninCallback(
+    const { next, token } = await this.authService.getAuthSignInCallback(
       query,
       session,
     );

@@ -25,7 +25,13 @@ export class AuthService {
     this.ssoClient = ssoClient;
   }
 
-  public async getAuthSignin(query: ApiAut001RequestQuery, req: Request) {
+  /**
+   * @param query
+   * @param req
+   * @description getAuthSignIn의 서비스 진입점입니다.
+   * @returns SPRACS SSO의 로그인 url을 리턴합니다.
+   */
+  public async getAuthSignIn(query: ApiAut001RequestQuery, req: Request) {
     // eslint-disable-next-line no-param-reassign
     req.session.next = query.next ?? "/";
     const { url, state } = this.ssoClient.get_login_params();
@@ -34,7 +40,13 @@ export class AuthService {
     return url;
   }
 
-  public async getAuthSigninCallback(
+  /**
+   * @param query
+   * @param session
+   * @description getAuthSignInCallback의 서비스 진입점입니다.
+   * @returns
+   */
+  public async getAuthSignInCallback(
     query: ApiAut004RequestQuery,
     session: Request["session"],
   ) {
