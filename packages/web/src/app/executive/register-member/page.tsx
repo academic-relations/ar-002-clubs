@@ -27,9 +27,6 @@ const RegisterMember = () => {
   } = useGetRegistrationTerm();
 
   const [isRegistrationPeriod, setIsRegistrationPeriod] = useState<boolean>();
-  // useEffect(() => {
-  // setIsRegistrationPeriod(false);
-  // }, []);
 
   useEffect(() => {
     if (termData) {
