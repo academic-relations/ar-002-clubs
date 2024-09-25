@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
+import { ApiClb006ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb006";
 import { ApiClb008ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb008";
 import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import styled from "styled-components";
 
-import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -12,7 +12,6 @@ import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { mockClubDelegateCandidates } from "../services/_mock/mockDelegate";
-import { useGetClubDelegate } from "../services/getClubDelegate";
 import { updateClubDelegates } from "../services/updateClubDelegate";
 
 const LabelWrapper = styled.div`
@@ -23,15 +22,12 @@ const LabelWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const ChangeRepresentativeCardV1: React.FC<{ clubId: number }> = ({
-  clubId,
-}) => {
-  const {
-    data: delegatesNow,
-    isLoading,
-    isError,
-  } = useGetClubDelegate({ clubId });
-
+const ChangeRepresentativeCardV1: React.FC<{
+  clubId: number;
+  delegatesNow: ApiClb006ResponseOK | undefined;
+  delegate1Candidates: ApiClb008ResponseOk | undefined;
+  delegate2Candidates: ApiClb008ResponseOk | undefined;
+}> = ({ clubId, delegatesNow, delegate1Candidates, delegate2Candidates }) => {
   const [representative, setRepresentative] = useState<string>("");
   const [delegate1, setDelegate1] = useState<string>("");
   const [delegate2, setDelegate2] = useState<string>("");
@@ -45,10 +41,8 @@ const ChangeRepresentativeCardV1: React.FC<{ clubId: number }> = ({
       selectable: true,
     })) ?? [];
 
-  // TODO: 실제 API로 대표자 및 대의원 후보 목록 가져오기
+  // TODO: 실제 API로 대표자 및 대의원 후보 목록 가져오기 (RepresentativeLoadFrame 이용)
   const representativeCandidates = mockClubDelegateCandidates;
-  const delegate1Candidates = mockClubDelegateCandidates;
-  const delegate2Candidates = mockClubDelegateCandidates;
 
   useEffect(() => {
     setRepresentative(delegatesNow?.delegates[0].studentId?.toString() ?? "");
@@ -58,7 +52,7 @@ const ChangeRepresentativeCardV1: React.FC<{ clubId: number }> = ({
 
   useEffect(() => {
     if (
-      delegate1 !== delegatesNow?.delegates[1].studentId?.toString() &&
+      delegate1 !== delegatesNow?.delegates[1]?.studentId?.toString() &&
       delegate1 !== ""
     ) {
       updateClubDelegates(
@@ -73,7 +67,7 @@ const ChangeRepresentativeCardV1: React.FC<{ clubId: number }> = ({
 
   useEffect(() => {
     if (
-      delegate2 !== delegatesNow?.delegates[2].studentId?.toString() &&
+      delegate2 !== delegatesNow?.delegates[2]?.studentId?.toString() &&
       delegate2 !== ""
     ) {
       updateClubDelegates(
@@ -91,47 +85,45 @@ const ChangeRepresentativeCardV1: React.FC<{ clubId: number }> = ({
       <Typography fw="MEDIUM" fs={20} lh={24}>
         대표자 및 대의원
       </Typography>
-      <AsyncBoundary isLoading={isLoading} isError={isError}>
-        <FlexWrapper direction="column" gap={4}>
-          <LabelWrapper>
-            <Typography fw="MEDIUM" fs={16} lh={20}>
-              대표자
-            </Typography>
-          </LabelWrapper>
-          <Select
-            items={getSelectItems(representativeCandidates)}
-            value={representative}
-            onChange={setRepresentative}
-            disabled
-          />
-        </FlexWrapper>
-        <FlexWrapper direction="column" gap={4}>
-          <LabelWrapper>
-            <Typography fw="MEDIUM" fs={16} lh={20}>
-              대의원 1
-            </Typography>
-            <TextButton text="대표자로 지정" />
-          </LabelWrapper>
-          <Select
-            items={getSelectItems(delegate1Candidates)}
-            value={delegate1}
-            onChange={setDelegate1}
-          />
-        </FlexWrapper>
-        <FlexWrapper direction="column" gap={4}>
-          <LabelWrapper>
-            <Typography fw="MEDIUM" fs={16} lh={20}>
-              대의원 2
-            </Typography>
-            <TextButton text="대표자로 지정" />
-          </LabelWrapper>
-          <Select
-            items={getSelectItems(delegate2Candidates)}
-            value={delegate2}
-            onChange={setDelegate2}
-          />
-        </FlexWrapper>
-      </AsyncBoundary>
+      <FlexWrapper direction="column" gap={4}>
+        <LabelWrapper>
+          <Typography fw="MEDIUM" fs={16} lh={20}>
+            대표자
+          </Typography>
+        </LabelWrapper>
+        <Select
+          items={getSelectItems(representativeCandidates)}
+          value={representative}
+          onChange={setRepresentative}
+          disabled
+        />
+      </FlexWrapper>
+      <FlexWrapper direction="column" gap={4}>
+        <LabelWrapper>
+          <Typography fw="MEDIUM" fs={16} lh={20}>
+            대의원 1
+          </Typography>
+          <TextButton text="대의원1 삭제" />
+        </LabelWrapper>
+        <Select
+          items={getSelectItems(delegate1Candidates)}
+          value={delegate1}
+          onChange={setDelegate1}
+        />
+      </FlexWrapper>
+      <FlexWrapper direction="column" gap={4}>
+        <LabelWrapper>
+          <Typography fw="MEDIUM" fs={16} lh={20}>
+            대의원 2
+          </Typography>
+          <TextButton text="대의원2 삭제" />
+        </LabelWrapper>
+        <Select
+          items={getSelectItems(delegate2Candidates)}
+          value={delegate2}
+          onChange={setDelegate2}
+        />
+      </FlexWrapper>
     </Card>
   );
 };

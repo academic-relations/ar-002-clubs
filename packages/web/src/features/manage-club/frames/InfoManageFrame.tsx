@@ -5,7 +5,8 @@ import styled from "styled-components";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import ChangeClubInfoCard from "@sparcs-clubs/web/features/manage-club/components/ChangeClubInfoCard";
-import ChangeRepresentativeCardV1 from "@sparcs-clubs/web/features/manage-club/components/ChangeRepresentativeCardV1";
+
+import RepresentativeLoadFrame from "./_atomic/RepresentativeLoadFrame";
 
 const InfoWrapper = styled.div`
   display: flex;
@@ -25,8 +26,7 @@ const InfoManageFrame: React.FC<{
     <FoldableSectionTitle title="동아리 정보">
       <InfoWrapper>
         <ChangeClubInfoCard />
-        {/* TODO: ChangeRepresentativeCard로 변경 */}
-        {isRepresentative && <ChangeRepresentativeCardV1 clubId={clubId} />}
+        {isRepresentative && <RepresentativeLoadFrame clubId={clubId} />}
       </InfoWrapper>
     </FoldableSectionTitle>
   </FlexWrapper>
