@@ -23,7 +23,8 @@ export const useGetMemberRegistration = (requestQuery: ApiReg019RequestQuery) =>
       });
       switch (status) {
         case 200:
-          return apiReg019.responseBodyMap[200].parse(data);
+          // return apiReg019.responseBodyMap[200].parse(data);
+          return data;
         default:
           throw new UnexpectedAPIResponseError();
       }
