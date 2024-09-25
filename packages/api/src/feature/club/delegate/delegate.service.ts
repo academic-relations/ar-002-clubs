@@ -187,7 +187,7 @@ export default class ClubDelegateService {
           !this.clubDelegateDRepository.updateDelegate({
             clubId: param.clubId,
             clubDelegateEnumId: param.clubDelegateEnumId,
-            studentId: param.studentId,
+            studentId: param.targetStudentId,
           })
         )
           throw new HttpException(

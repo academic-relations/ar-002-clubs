@@ -19,7 +19,7 @@ const requestParam = z.object({
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  studentId: z.coerce.number().int().min(1),
+  studentId: z.coerce.number().int().min(1).or(z.undefined()),
   delegateEnumId: z.nativeEnum(ClubDelegateEnum),
 });
 
