@@ -334,7 +334,11 @@ export class MemberRegistrationService {
       );
     logger.debug(memberRegistrations);
     const clubs = memberRegistrations
-      .filter((item, pos) => memberRegistrations.indexOf(item) === pos)
+      .filter(
+        (item, pos) =>
+          memberRegistrations.findIndex(e2 => e2.clubId === item.clubId) ===
+          pos,
+      )
       .map(e => ({
         clubId: e.clubId,
         clubName: e.clubName,
