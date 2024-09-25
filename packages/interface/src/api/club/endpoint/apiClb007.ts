@@ -9,7 +9,7 @@ import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum"
  */
 
 const url = (clubId: number) =>
-  `/student/clubs/club/${clubId}/delegates/delegate/`;
+  `/student/clubs/club/${clubId}/delegates/delegate`;
 const method = "PUT";
 
 const requestParam = z.object({
