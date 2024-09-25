@@ -18,7 +18,7 @@ import MembersManageFrame from "@sparcs-clubs/web/features/manage-club/frames/Me
 import { useCheckManageClub } from "@sparcs-clubs/web/hooks/checkManageClub";
 
 const ManageClubFrame: React.FC = () => {
-  const { delegate, isLoading } = useCheckManageClub();
+  const { delegate, clubId, isLoading } = useCheckManageClub();
 
   const { data, isLoading: termIsLoading } = useGetRegistrationTerm();
   const [isRegistrationPeriod, setIsRegistrationPeriod] =
@@ -63,6 +63,7 @@ const ManageClubFrame: React.FC = () => {
       />
       <InfoManageFrame
         isRepresentative={delegate === ClubDelegateEnum.Representative}
+        clubId={clubId || 0}
       />
       {/* <ActivityManageFrame /> */}
       {isRegistrationPeriod && <MembersManageFrame />}
