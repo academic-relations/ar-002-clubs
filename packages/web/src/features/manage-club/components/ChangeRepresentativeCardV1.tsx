@@ -27,7 +27,16 @@ const ChangeRepresentativeCardV1: React.FC<{
   delegatesNow: ApiClb006ResponseOK | undefined;
   delegate1Candidates: ApiClb008ResponseOk | undefined;
   delegate2Candidates: ApiClb008ResponseOk | undefined;
-}> = ({ clubId, delegatesNow, delegate1Candidates, delegate2Candidates }) => {
+  refetchDelegate1: () => void;
+  refetchDelegate2: () => void;
+}> = ({
+  clubId,
+  delegatesNow,
+  delegate1Candidates,
+  delegate2Candidates,
+  refetchDelegate1,
+  refetchDelegate2,
+}) => {
   const [representative, setRepresentative] = useState<string>("");
   const [delegate1, setDelegate1] = useState<string>("");
   const [delegate2, setDelegate2] = useState<string>("");
@@ -55,6 +64,7 @@ const ChangeRepresentativeCardV1: React.FC<{
       delegate1 !== delegatesNow?.delegates[1]?.studentId?.toString() &&
       delegate1 !== ""
     ) {
+      console.log(delegate1);
       updateClubDelegates(
         { clubId },
         {
@@ -62,6 +72,7 @@ const ChangeRepresentativeCardV1: React.FC<{
           studentId: Number(delegate1),
         },
       );
+      refetchDelegate1();
     }
   }, [delegate1]);
 
@@ -70,6 +81,7 @@ const ChangeRepresentativeCardV1: React.FC<{
       delegate2 !== delegatesNow?.delegates[2]?.studentId?.toString() &&
       delegate2 !== ""
     ) {
+      console.log(delegate2);
       updateClubDelegates(
         { clubId },
         {
@@ -77,8 +89,24 @@ const ChangeRepresentativeCardV1: React.FC<{
           studentId: Number(delegate2),
         },
       );
+      refetchDelegate2();
     }
   }, [delegate2]);
+
+  const deleteDelegate = async (delegateEnumId: ClubDelegateEnum) => {
+    await updateClubDelegates(
+      { clubId },
+      { delegateEnumId, studentId: undefined },
+    );
+    if (delegateEnumId === ClubDelegateEnum.Delegate1) {
+      setDelegate1("");
+      refetchDelegate1();
+    }
+    if (delegateEnumId === ClubDelegateEnum.Delegate2) {
+      setDelegate2("");
+      refetchDelegate2();
+    }
+  };
 
   return (
     <Card outline gap={32} style={{ flex: 1 }}>
@@ -103,12 +131,16 @@ const ChangeRepresentativeCardV1: React.FC<{
           <Typography fw="MEDIUM" fs={16} lh={20}>
             대의원 1
           </Typography>
-          <TextButton text="대의원1 삭제" />
+          <TextButton
+            text="대의원1 삭제"
+            onClick={() => deleteDelegate(ClubDelegateEnum.Delegate1)}
+          />
         </LabelWrapper>
         <Select
           items={getSelectItems(delegate1Candidates)}
           value={delegate1}
           onChange={setDelegate1}
+          isRequired={false}
         />
       </FlexWrapper>
       <FlexWrapper direction="column" gap={4}>
@@ -116,12 +148,16 @@ const ChangeRepresentativeCardV1: React.FC<{
           <Typography fw="MEDIUM" fs={16} lh={20}>
             대의원 2
           </Typography>
-          <TextButton text="대의원2 삭제" />
+          <TextButton
+            text="대의원2 삭제"
+            onClick={() => deleteDelegate(ClubDelegateEnum.Delegate2)}
+          />
         </LabelWrapper>
         <Select
           items={getSelectItems(delegate2Candidates)}
           value={delegate2}
           onChange={setDelegate2}
+          isRequired={false}
         />
       </FlexWrapper>
     </Card>

@@ -18,12 +18,14 @@ const RepresentativeLoadFrame: React.FC<{
     data: delegate1Candidates,
     isLoading: delegate1IsLoading,
     isError: delegate1IsError,
+    refetch: delegate1Refetch,
   } = useGetDelegateCandidates({ clubId, delegateEnumId: 2 });
 
   const {
     data: delegate2Candidates,
     isLoading: delegate2IsLoading,
     isError: delegate2IsError,
+    refetch: delegate2Refetch,
   } = useGetDelegateCandidates({ clubId, delegateEnumId: 3 });
 
   return (
@@ -37,6 +39,8 @@ const RepresentativeLoadFrame: React.FC<{
         delegatesNow={delegatesNow}
         delegate1Candidates={delegate1Candidates}
         delegate2Candidates={delegate2Candidates}
+        refetchDelegate1={delegate1Refetch}
+        refetchDelegate2={delegate2Refetch}
       />
     </AsyncBoundary>
   );
