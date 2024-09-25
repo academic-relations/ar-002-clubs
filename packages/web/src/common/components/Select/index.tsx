@@ -26,6 +26,7 @@ interface SelectProps<T> {
   onChange?: (value: T) => void;
   setErrorStatus?: (hasError: boolean) => void;
   placeholder?: string;
+  isRequired?: boolean;
 }
 
 const SelectInner = styled.div`
@@ -114,6 +115,7 @@ const Select = <T,>({
   onChange = () => {},
   setErrorStatus = () => {},
   placeholder = "항목을 선택해주세요",
+  isRequired = true,
 }: SelectProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
@@ -165,7 +167,13 @@ const Select = <T,>({
       <SelectWrapper>
         <SelectInner ref={containerRef}>
           <StyledSelect
-            hasError={hasOpenedOnce && !value && items.length > 0 && !isOpen}
+            hasError={
+              isRequired &&
+              hasOpenedOnce &&
+              !value &&
+              items.length > 0 &&
+              !isOpen
+            }
             disabled={disabled}
             onClick={handleSelectClick}
             isOpen={isOpen}
@@ -201,7 +209,7 @@ const Select = <T,>({
             </Dropdown>
           )}
         </SelectInner>
-        {hasOpenedOnce && !value && items.length > 0 && (
+        {isRequired && hasOpenedOnce && !value && items.length > 0 && (
           <FormError>
             {errorMessage || "필수로 선택해야 하는 항목입니다"}
           </FormError>
