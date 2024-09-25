@@ -39,10 +39,12 @@ const MembersManageFrame: React.FC = () => {
     data: memberData,
     isLoading: memberIsLoading,
     isError: memberIsError,
+    refetch: memberRefetch,
   } = useGetMemberRegistration({ clubId: idData.clubId }) as {
     data: ApiReg008ResponseOk;
     isLoading: boolean;
     isError: boolean;
+    refetch: () => void;
   };
 
   const appliedCount =
@@ -91,8 +93,8 @@ const MembersManageFrame: React.FC = () => {
   return (
     <FoldableSectionTitle title="회원 명단">
       <AsyncBoundary
-        isLoading={memberIsLoading && clubIsLoading}
-        isError={memberIsError && clubIsError}
+        isLoading={memberIsLoading || clubIsLoading}
+        isError={memberIsError || clubIsError}
       >
         <FlexWrapper direction="column" gap={20}>
           {memberData && clubData && (
@@ -107,6 +109,7 @@ const MembersManageFrame: React.FC = () => {
                 memberList={memberData.applies}
                 clubName={clubData.name_kr}
                 clubId={idData.clubId}
+                refetch={memberRefetch}
               />
             </>
           )}

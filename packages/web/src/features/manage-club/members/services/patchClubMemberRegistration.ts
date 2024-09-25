@@ -22,7 +22,8 @@ export const patchClubMemberRegistration = async (
 
   switch (status) {
     case 204: {
-      return apiReg007.responseBodyMap[204].parse(data);
+      return data;
+      // return apiReg007.responseBodyMap[204].parse(data);
     }
     default:
       throw new UnexpectedAPIResponseError();
