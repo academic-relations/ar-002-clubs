@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { ApiClb008ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb008";
-import {
-  ClubDelegateChangeRequestStatusEnum,
-  ClubDelegateEnum,
-} from "@sparcs-clubs/interface/common/enum/club.enum";
+import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -15,13 +12,8 @@ import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { mockClubDelegateCandidates } from "../services/_mock/mockDelegate";
-import { deleteChangeDelegateRequest } from "../services/deleteChangeDelegateRequest";
-import { useGetChangeDelegateRequests } from "../services/getChangeDelegateRequests";
 import { useGetClubDelegate } from "../services/getClubDelegate";
-
 import { updateClubDelegates } from "../services/updateClubDelegate";
-
-import ChangeRepresentative from "./ChangeRepresentative";
 
 const LabelWrapper = styled.div`
   display: flex;
@@ -41,40 +33,8 @@ const ChangeRepresentativeCardV1: React.FC<{ clubId: number }> = ({
   } = useGetClubDelegate({ clubId });
 
   const [representative, setRepresentative] = useState<string>("");
-  const [representativeName, setRepresentativeName] = useState<string>("");
   const [delegate1, setDelegate1] = useState<string>("");
   const [delegate2, setDelegate2] = useState<string>("");
-  // TODO: 중복 선택 막는 로직 추가
-
-  const [type, setType] = useState<
-    "Default" | "Applied" | "Rejected" | "Canceled"
-  >("Default");
-
-  const { data: requestStatus, refetch } = useGetChangeDelegateRequests({
-    clubId,
-  });
-
-  useEffect(() => {
-    switch (requestStatus?.requests[0].clubDelegateChangeRequestStatusEnumId) {
-      case ClubDelegateChangeRequestStatusEnum.Applied:
-        setType("Applied");
-        break;
-      case ClubDelegateChangeRequestStatusEnum.Approved:
-        setType("Default");
-        break;
-      case ClubDelegateChangeRequestStatusEnum.Rejected:
-        setType("Rejected");
-        break;
-      default:
-        setType("Default");
-    }
-  }, [requestStatus]);
-
-  const cancelRequest = () => {
-    setType("Canceled");
-    deleteChangeDelegateRequest({ clubId });
-    refetch();
-  };
 
   const getSelectItems = (
     members: ApiClb008ResponseOk | undefined,
@@ -89,25 +49,12 @@ const ChangeRepresentativeCardV1: React.FC<{ clubId: number }> = ({
   const representativeCandidates = mockClubDelegateCandidates;
   const delegate1Candidates = mockClubDelegateCandidates;
   const delegate2Candidates = mockClubDelegateCandidates;
-  console.log(delegatesNow);
 
   useEffect(() => {
     setRepresentative(delegatesNow?.delegates[0].studentId?.toString() ?? "");
-    const representativeCandidate = representativeCandidates?.students.find(
-      member => member.id.toString() === representative,
-    );
-    setRepresentativeName(representativeCandidate?.name ?? "");
-    setDelegate1(delegatesNow?.delegates[1].studentId?.toString() ?? "");
-    setDelegate2(delegatesNow?.delegates[2].studentId?.toString() ?? "");
-  }, [delegatesNow]);
-
-  const changeRepresentative = (studentId: number) => {
-    updateClubDelegates(
-      { clubId },
-      { delegateEnumId: ClubDelegateEnum.Representative, studentId },
-    );
-    refetch();
-  };
+    setDelegate1(delegatesNow?.delegates[1]?.studentId?.toString() ?? "");
+    setDelegate2(delegatesNow?.delegates[2]?.studentId?.toString() ?? "");
+  }, [delegatesNow, representative, representativeCandidates?.students]);
 
   useEffect(() => {
     if (
@@ -145,31 +92,17 @@ const ChangeRepresentativeCardV1: React.FC<{ clubId: number }> = ({
         대표자 및 대의원
       </Typography>
       <AsyncBoundary isLoading={isLoading} isError={isError}>
-        {type !== "Default" && (
-          <ChangeRepresentative
-            type={type}
-            clubName="술박스"
-            prevRepresentative={`${representative} ${representativeName}`}
-            newRepresentative={`${requestStatus?.requests[0].studentId} ${requestStatus?.requests[0].studentName}`}
-          />
-        )}
         <FlexWrapper direction="column" gap={4}>
           <LabelWrapper>
             <Typography fw="MEDIUM" fs={16} lh={20}>
               대표자
             </Typography>
-            {type === "Applied" && (
-              <TextButton
-                text="대표자 변경 요청 취소"
-                onClick={cancelRequest}
-              />
-            )}
           </LabelWrapper>
           <Select
             items={getSelectItems(representativeCandidates)}
             value={representative}
             onChange={setRepresentative}
-            disabled={type === "Applied"}
+            disabled
           />
         </FlexWrapper>
         <FlexWrapper direction="column" gap={4}>
@@ -177,17 +110,12 @@ const ChangeRepresentativeCardV1: React.FC<{ clubId: number }> = ({
             <Typography fw="MEDIUM" fs={16} lh={20}>
               대의원 1
             </Typography>
-            <TextButton
-              text="대표자로 지정"
-              disabled={type === "Applied"}
-              onClick={() => changeRepresentative(Number(delegate1))}
-            />
+            <TextButton text="대표자로 지정" />
           </LabelWrapper>
           <Select
             items={getSelectItems(delegate1Candidates)}
             value={delegate1}
             onChange={setDelegate1}
-            disabled={type === "Applied"}
           />
         </FlexWrapper>
         <FlexWrapper direction="column" gap={4}>
@@ -195,17 +123,12 @@ const ChangeRepresentativeCardV1: React.FC<{ clubId: number }> = ({
             <Typography fw="MEDIUM" fs={16} lh={20}>
               대의원 2
             </Typography>
-            <TextButton
-              text="대표자로 지정"
-              disabled={type === "Applied"}
-              onClick={() => changeRepresentative(Number(delegate2))}
-            />
+            <TextButton text="대표자로 지정" />
           </LabelWrapper>
           <Select
             items={getSelectItems(delegate2Candidates)}
             value={delegate2}
             onChange={setDelegate2}
-            disabled={type === "Applied"}
           />
         </FlexWrapper>
       </AsyncBoundary>
