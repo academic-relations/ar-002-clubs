@@ -59,7 +59,7 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
   const [time, setTime] = useState<string>("");
 
   const hasValue = meetingEnumId != null && isRegular != null;
-  const isDivisionMeeting = +meetingEnumId === MeetingEnum.divisionMeeting;
+  const isDivisionMeeting = meetingEnumId === MeetingEnum.divisionMeeting;
 
   const timePattern = /^(0?[0-9]|1[0-9]|2[0-3]):([0-5]?[0-9])$/;
 
@@ -99,7 +99,10 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
                 placeholder="회의체 종류를 선택해주세요"
                 items={Object.keys(MeetingEnum)
                   .slice(0, 4)
-                  .map(value => ({ label: meetingEnumToText(value), value }))}
+                  .map(value => ({
+                    label: meetingEnumToText(value),
+                    value: +value,
+                  }))}
               />
             )}
           />

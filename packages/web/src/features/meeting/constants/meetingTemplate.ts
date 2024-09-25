@@ -22,12 +22,12 @@ export class MeetingTemplate {
     const now = new Date();
 
     if (
-      +data.meetingEnumId === MeetingEnum.expansiveOperativeCommittee ||
-      +data.meetingEnumId === MeetingEnum.operativeCommittee
+      data.meetingEnumId === MeetingEnum.expansiveOperativeCommittee ||
+      data.meetingEnumId === MeetingEnum.operativeCommittee
     ) {
       return `안녕하세요, 동아리연합회 부회장입니다.
         
-본회 회칙 제${+data.meetingEnumId === MeetingEnum.expansiveOperativeCommittee ? 35 : 40}조에 따라, 제${data.count ?? "X"}차 ${meetingType} (${now.getMonth() + 1}월, ${isRegular})를 아래와 같이 진행합니다.
+본회 회칙 제${data.meetingEnumId === MeetingEnum.expansiveOperativeCommittee ? 35 : 40}조에 따라, 제${data.count ?? "X"}차 ${meetingType} (${now.getMonth() + 1}월, ${isRegular})를 아래와 같이 진행합니다.
 
 일시 : ${dateTime}
 장소 : ${location}
@@ -35,7 +35,7 @@ export class MeetingTemplate {
 감사합니다.`;
     }
 
-    if (+data.meetingEnumId === MeetingEnum.clubRepresentativesCouncilMeeting) {
+    if (data.meetingEnumId === MeetingEnum.clubRepresentativesCouncilMeeting) {
       return `(English Notice on the bottom)
 
 안녕하세요, 학부 동아리연합회 부회장입니다.

@@ -1,3 +1,5 @@
+import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
+
 import { MeetingDetail } from "@sparcs-clubs/web/features/meeting/types/meeting";
 
 // TODO. mock data api에 맞게 수정
@@ -35,7 +37,7 @@ export const mockupData: MeetingDetail = {
   Thank you.`,
   count: 1,
   isRegular: false,
-  meetingEnumId: 4,
+  meetingEnumId: MeetingEnum.divisionMeeting,
   startDate: new Date(),
   location: "장소",
   locationEn: "location",

@@ -42,7 +42,7 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
   const template = useMemo(() => {
     if (meetingEnumId == null) return null;
 
-    if (Number(meetingEnumId) === MeetingEnum.divisionMeeting) {
+    if (meetingEnumId === MeetingEnum.divisionMeeting) {
       return MeetingTemplate.divisionMeetingTemplate();
     }
     return MeetingTemplate.defaultTemplate({ ...getValues(), count: 1 });
