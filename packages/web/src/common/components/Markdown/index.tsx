@@ -4,6 +4,7 @@ import React from "react";
 
 import Bold from "@tiptap/extension-bold";
 import Document from "@tiptap/extension-document";
+// import Dropcursor from "@tiptap/extension-dropcursor";
 import Italic from "@tiptap/extension-italic";
 import Paragraph from "@tiptap/extension-paragraph";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -61,9 +62,7 @@ const Markdown = () => {
       TableRow,
       TableHeader,
     ],
-    content: `
-       
-      `,
+    content: ``,
   });
 
   if (!editor) {
@@ -149,6 +148,7 @@ const Markdown = () => {
           </Button>
         </ButtonWrapper>
       </FlexWrapper>
+      <div className="divider" />
       <EditorContent editor={editor} />
     </FlexWrapper>
   );

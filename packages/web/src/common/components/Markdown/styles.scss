@@ -22,8 +22,8 @@ p {
 .tiptap {
   border: 1px solid #eeeeee;
   border-radius: 8px;
-  padding: 1.5%;
-  height: 200px;
+  padding: 16px;
+  min-height: 160px;
 
   table {
     border-collapse: collapse;
@@ -73,6 +73,10 @@ p {
     }
   }
 
+  table:hover {
+    cursor: pointer;
+  }
+
   .tableWrapper {
     margin: 1.5rem 0;
     overflow-x: auto;
@@ -83,13 +87,21 @@ p {
     cursor: col-resize;
   }
 
-  p.is-editor-empty:first-child::before {
+  .is-editor-empty:first-child::before {
     color: #dddddd;
     content: attr(data-placeholder);
     float: left;
     height: 0;
-    pointer-events: none;
+    pointer-events: none; // QA: 테이블이 있고, 위의 빈 한 줄이 있으면 플레이스 홀더가 계속 뜸. / 테이블 안에 아무것도 안 쓰면 플홀 뜸.
   }
+
+  // .is-editor-empty::before {
+  //   color: #dddddd;
+  //   content: attr(data-placeholder);
+  //   float: left;
+  //   height: 0;
+  //   pointer-events: none;
+  // }
 }
 
 .ProseMirror:focus {
@@ -98,4 +110,8 @@ p {
 
 .tiptap:focus {
   border: 1px solid #0099ad;
+}
+
+.divider {
+  border: 0.5px solid #eeeeee;
 }
