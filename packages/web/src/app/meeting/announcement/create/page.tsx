@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { ApiMee001RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee001";
 import Link from "next/link";
@@ -31,10 +31,19 @@ const CreateMeetingPage: React.FC = () => {
     resetField,
     // getValues,
     handleSubmit,
+    watch,
     formState: { isValid },
   } = formCtx;
 
+  const announcementTitle = watch("announcementTitle");
+  const announcementContent = watch("announcementContent");
+
   const [isTemplateVisible, setIsTemplateVisible] = useState(false);
+
+  const isFormValid = useMemo(
+    () => isValid && announcementTitle != null && announcementContent != null,
+    [announcementContent, announcementTitle, isValid],
+  );
 
   const submitHandler = () => {
     // TODO. api 연결
@@ -75,7 +84,10 @@ const CreateMeetingPage: React.FC = () => {
             <Link href="/meeting">
               <Button type="outlined">취소</Button>
             </Link>
-            <Button buttonType="submit" type={isValid ? "default" : "disabled"}>
+            <Button
+              buttonType="submit"
+              type={isFormValid ? "default" : "disabled"}
+            >
               저장
             </Button>
           </ButtonWrapper>

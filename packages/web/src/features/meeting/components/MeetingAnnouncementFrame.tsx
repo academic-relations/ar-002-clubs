@@ -35,7 +35,7 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
   onReset = _ => {},
 }) => {
   const formCtx = useFormContext<ApiMee001RequestBody>();
-  const { getValues, control, watch, resetField } = formCtx;
+  const { getValues, control, watch, setValue } = formCtx;
 
   const meetingEnumId = watch("meetingEnumId");
 
@@ -70,10 +70,12 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
 
   useEffect(() => {
     if (template != null) {
-      resetField("announcementTitle", { defaultValue: template.title });
-      resetField("announcementContent", { defaultValue: template.content });
+      setValue("announcementTitle", template.title, { shouldValidate: true });
+      setValue("announcementContent", template.content, {
+        shouldValidate: true,
+      });
     }
-  }, [resetField, template]);
+  }, [setValue, template]);
 
   return (
     <FlexWrapper direction="column" gap={40}>

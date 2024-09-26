@@ -73,6 +73,12 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
   }, [isDivisionMeeting, time]);
 
   useEffect(() => {
+    if (isDivisionMeeting) {
+      setValue("isRegular", true, { shouldValidate: true });
+    }
+  }, [isDivisionMeeting, setValue]);
+
+  useEffect(() => {
     if (!isDivisionMeeting && timePattern.test(time)) {
       const [hour, minute] = time.split(":").map(part => +part);
       const newDate = new Date();
@@ -108,17 +114,20 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
           />
           <FormController
             name="isRegular"
-            required
             control={control}
+            rules={{
+              validate: value => typeof value === "boolean",
+            }}
             renderItem={props => (
               <Select
                 {...props}
                 label="정기회의 여부"
                 placeholder="정기회의 여부를 선택해주세요"
                 items={[
-                  { label: "정기회의", value: "true" },
-                  { label: "비정기회의", value: "false" },
+                  { label: "정기회의", value: true },
+                  { label: "비정기회의", value: false },
                 ]}
+                disabled={isDivisionMeeting}
               />
             )}
           />
