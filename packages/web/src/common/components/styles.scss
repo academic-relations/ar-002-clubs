@@ -20,7 +20,10 @@ p {
 }
 
 .tiptap {
+  border: 2px solid #0099ad;
+  border-radius: 8px;
   padding: 1.5%;
+  height: 200px;
 
   table {
     border-collapse: collapse;
@@ -78,5 +81,13 @@ p {
   &.resize-cursor {
     cursor: ew-resize;
     cursor: col-resize;
+  }
+
+  p.is-editor-empty:first-child::before {
+    color: #dddddd;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
   }
 }
