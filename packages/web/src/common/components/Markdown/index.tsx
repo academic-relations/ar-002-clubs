@@ -90,7 +90,6 @@ const Markdown = () => {
             }
           >
             표 추가
-            {/* <Icon type="grid-on" size={20} /> */}
           </Button>
           <Button
             onClick={() => editor.chain().focus().deleteTable().run()}
@@ -102,7 +101,7 @@ const Markdown = () => {
             onClick={() => editor.chain().focus().mergeCells().run()}
             type={!editor.can().mergeCells() ? "disabled" : "default"}
           >
-            {/* <Icon type="merge" size={20} /> */}셀 병합
+            셀 병합
           </Button>
           <Button
             onClick={() => editor.chain().focus().splitCell().run()}
