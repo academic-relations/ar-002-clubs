@@ -87,21 +87,20 @@ p {
     cursor: col-resize;
   }
 
-  .is-editor-empty:first-child::before {
+  .is-editor-empty:not(:has(table)):first-child::before {
     color: #dddddd;
     content: attr(data-placeholder);
     float: left;
     height: 0;
-    pointer-events: none; // QA: 테이블이 있고, 위의 빈 한 줄이 있으면 플레이스 홀더가 계속 뜸. / 테이블 안에 아무것도 안 쓰면 플홀 뜸.
+    pointer-events: none;
   }
 
-  // .is-editor-empty::before {
-  //   color: #dddddd;
-  //   content: attr(data-placeholder);
-  //   float: left;
-  //   height: 0;
-  //   pointer-events: none;
-  // }
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
 }
 
 .ProseMirror:focus {

@@ -265,6 +265,12 @@ importers:
       '@tiptap/extension-document':
         specifier: ^2.7.2
         version: 2.7.2(@tiptap/core@2.7.2)
+      '@tiptap/extension-dropcursor':
+        specifier: ^2.7.4
+        version: 2.7.4(@tiptap/core@2.7.2)(@tiptap/pm@2.7.2)
+      '@tiptap/extension-image':
+        specifier: ^2.7.4
+        version: 2.7.4(@tiptap/core@2.7.2)
       '@tiptap/extension-italic':
         specifier: ^2.7.2
         version: 2.7.2(@tiptap/core@2.7.2)
@@ -3761,8 +3767,8 @@ packages:
       '@tiptap/core': 2.7.2(@tiptap/pm@2.7.2)
     dev: false
 
-  /@tiptap/extension-dropcursor@2.7.2(@tiptap/core@2.7.2)(@tiptap/pm@2.7.2):
-    resolution: {integrity: sha512-hZCIl5C/8m+4yIXa39+qFmUyH1/pPlnxu3OAgSxwxpA2NIM7DUMJnFZFt+4pEkmGD/5XEGKlLuBqvYzHC3OUBg==}
+  /@tiptap/extension-dropcursor@2.7.4(@tiptap/core@2.7.2)(@tiptap/pm@2.7.2):
+    resolution: {integrity: sha512-hhE0RTluEEFxfqh8/jpmQRgy5AipTcd+WMK5cBw2zCa9If/qhY0EvysydEPwDU7yDEa13NDqV63x5oN9GKv2pg==}
     peerDependencies:
       '@tiptap/core': ^2.7.0
       '@tiptap/pm': ^2.7.0
@@ -3826,6 +3832,14 @@ packages:
     dependencies:
       '@tiptap/core': 2.7.2(@tiptap/pm@2.7.2)
       '@tiptap/pm': 2.7.2
+    dev: false
+
+  /@tiptap/extension-image@2.7.4(@tiptap/core@2.7.2):
+    resolution: {integrity: sha512-hUBN8q42pxrKR0erLTl5N0mq4HYP0aKIbZaxBui9DdlMaE1qkrm4bJ+Ori+OabUvhEbnky1HYhmrYaUDEPTfdQ==}
+    peerDependencies:
+      '@tiptap/core': ^2.7.0
+    dependencies:
+      '@tiptap/core': 2.7.2(@tiptap/pm@2.7.2)
     dev: false
 
   /@tiptap/extension-italic@2.7.2(@tiptap/core@2.7.2):
@@ -3980,7 +3994,7 @@ packages:
       '@tiptap/extension-code': 2.7.2(@tiptap/core@2.7.2)
       '@tiptap/extension-code-block': 2.7.2(@tiptap/core@2.7.2)(@tiptap/pm@2.7.2)
       '@tiptap/extension-document': 2.7.2(@tiptap/core@2.7.2)
-      '@tiptap/extension-dropcursor': 2.7.2(@tiptap/core@2.7.2)(@tiptap/pm@2.7.2)
+      '@tiptap/extension-dropcursor': 2.7.4(@tiptap/core@2.7.2)(@tiptap/pm@2.7.2)
       '@tiptap/extension-gapcursor': 2.7.2(@tiptap/core@2.7.2)(@tiptap/pm@2.7.2)
       '@tiptap/extension-hard-break': 2.7.2(@tiptap/core@2.7.2)
       '@tiptap/extension-heading': 2.7.2(@tiptap/core@2.7.2)

@@ -1,10 +1,11 @@
 import "./styles.scss";
 
-import React from "react";
+import React, { useCallback } from "react";
 
 import Bold from "@tiptap/extension-bold";
 import Document from "@tiptap/extension-document";
-// import Dropcursor from "@tiptap/extension-dropcursor";
+import Dropcursor from "@tiptap/extension-dropcursor";
+import Image from "@tiptap/extension-image";
 import Italic from "@tiptap/extension-italic";
 import Paragraph from "@tiptap/extension-paragraph";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -44,6 +45,13 @@ const Markdown = () => {
           class: "bold-text",
         },
       }),
+      Dropcursor,
+      Image.configure({
+        inline: true, // Allow the image to be inline
+        HTMLAttributes: {
+          class: "tiptap-image",
+        },
+      }),
       Italic.configure({
         HTMLAttributes: {
           class: "italic-text",
@@ -61,9 +69,18 @@ const Markdown = () => {
       TableCell,
       TableRow,
       TableHeader,
+      Text,
     ],
     content: ``,
   });
+
+  const addImage = useCallback(() => {
+    const url = window.prompt("URL");
+
+    if (editor && url) {
+      editor.chain().focus().setImage({ src: url }).run();
+    }
+  }, [editor]);
 
   if (!editor) {
     return null;
@@ -80,13 +97,13 @@ const Markdown = () => {
             진하게
           </Button>
           <Button
-            onClick={() =>
+            onClick={() => {
               editor
                 .chain()
                 .focus()
-                .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-                .run()
-            }
+                .insertTable({ rows: 2, cols: 2, withHeaderRow: true })
+                .run();
+            }}
           >
             표 추가
           </Button>
@@ -146,6 +163,7 @@ const Markdown = () => {
           >
             행 삭제
           </Button>
+          <Button onClick={addImage}>Set image</Button>
         </ButtonWrapper>
       </FlexWrapper>
       <div className="divider" />

@@ -27,6 +27,8 @@
     "@tiptap/extension-bold": "^2.7.2",
     "@tiptap/extension-color": "^2.7.2",
     "@tiptap/extension-document": "^2.7.2",
+    "@tiptap/extension-dropcursor": "^2.7.4",
+    "@tiptap/extension-image": "^2.7.4",
     "@tiptap/extension-italic": "^2.7.2",
     "@tiptap/extension-list-item": "^2.7.2",
     "@tiptap/extension-paragraph": "^2.7.2",
