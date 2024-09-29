@@ -2,8 +2,6 @@ import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
 
 import { getFullSemester } from "@sparcs-clubs/web/utils/getSemester";
 
-import { CreateMeetingModel } from "../types/meeting";
-
 export type TemplateType = {
   title: string;
   content: string;
@@ -18,16 +16,16 @@ export const location = "[[[LOCATION_KR]]]";
 export const locationEn = "[[[LOCATION_EN]]]";
 
 export class MeetingTemplate {
-  static getContent(data: CreateMeetingModel) {
+  static getContent(type: MeetingEnum, count?: number) {
     const now = new Date();
 
     if (
-      data.meetingEnumId === MeetingEnum.expansiveOperativeCommittee ||
-      data.meetingEnumId === MeetingEnum.operativeCommittee
+      type === MeetingEnum.expansiveOperativeCommittee ||
+      type === MeetingEnum.operativeCommittee
     ) {
       return `안녕하세요, 동아리연합회 부회장입니다.
         
-본회 회칙 제${data.meetingEnumId === MeetingEnum.expansiveOperativeCommittee ? 35 : 40}조에 따라, 제${data.count ?? "X"}차 ${meetingType} (${now.getMonth() + 1}월, ${isRegular})를 아래와 같이 진행합니다.
+본회 회칙 제${type === MeetingEnum.expansiveOperativeCommittee ? 35 : 40}조에 따라, 제${count ?? "X"}차 ${meetingType} (${now.getMonth() + 1}월, ${isRegular})를 아래와 같이 진행합니다.
 
 일시 : ${dateTime}
 장소 : ${location}
@@ -35,7 +33,7 @@ export class MeetingTemplate {
 감사합니다.`;
     }
 
-    if (data.meetingEnumId === MeetingEnum.clubRepresentativesCouncilMeeting) {
+    if (type === MeetingEnum.clubRepresentativesCouncilMeeting) {
       return `(English Notice on the bottom)
 
 안녕하세요, 학부 동아리연합회 부회장입니다.
@@ -69,12 +67,12 @@ Thank you.`;
     return "";
   }
 
-  static defaultTemplate(data: CreateMeetingModel): TemplateType {
+  static defaultTemplate(type: MeetingEnum, count?: number): TemplateType {
     const now = new Date();
 
     return {
-      title: `${now.getFullYear()}년 제${data.count ?? "X"}차 ${meetingType} (${now.getMonth() + 1}월, ${isRegular})`,
-      content: this.getContent(data),
+      title: `${now.getFullYear()}년 제${count ?? "X"}차 ${meetingType} (${now.getMonth() + 1}월, ${isRegular})`,
+      content: this.getContent(type, count),
     };
   }
 
@@ -85,7 +83,7 @@ Thank you.`;
       title: `${now.getMonth()}월 ${meetingType} 기간 공고`,
       content: `안녕하세요, 부회장입니다.
 
-7월 분과회의 기간을 다음과 같이 공고합니다.
+${now.getMonth()}월 분과회의 기간을 다음과 같이 공고합니다.
 ${startDate} ~ ${endDate}
 
 감사합니다.`,
