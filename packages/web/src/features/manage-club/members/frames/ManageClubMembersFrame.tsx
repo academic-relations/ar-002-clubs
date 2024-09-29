@@ -31,7 +31,6 @@ const ManageClubMembers = () => {
         title="회원 명단"
       />
       <RegisterMemberListFrame />
-      {/* TODO: registereMember는 신청 시기에만 나오도록 */}
       {/* <AllMemberListFrame /> */}
     </FlexWrapper>
   );
