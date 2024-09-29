@@ -5,6 +5,11 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 
+import {
+  ApiClb009RequestParam,
+  ApiClb009ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb009";
+
 import { ClubDelegateDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-delegate-d.repository";
 import { ClubRoomTRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-room-t.repository";
 
@@ -219,6 +224,30 @@ export class ClubService {
       );
     // result가 null인지 확인해서 null인 경우 에러?
     return {};
+  }
+
+  async getStudentClubSemesters(
+    studentId: number,
+    param: ApiClb009RequestParam,
+  ): Promise<ApiClb009ResponseOk> {
+    /**
+     * @dora 질문
+     * - 대표자 / 대의원 여부는 이렇게 확인하는게 맞는지?
+     */
+    const { clubId } = param;
+    const isAvailableRepresentative =
+      await this.clubDelegateDRepository.findRepresentativeByClubIdAndStudentId(
+        studentId,
+        clubId,
+      );
+    if (!isAvailableRepresentative) {
+      throw new HttpException(
+        "Representative not available",
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    const result = await this.clubTRepository.findSemesterByClubId(clubId);
+    return { semesters: result };
   }
 
   async getProfessorClubsMy(professorId: number): Promise<ApiClb016ResponseOk> {
