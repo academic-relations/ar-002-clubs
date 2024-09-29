@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 
 import Link from "next/link";
 
@@ -27,6 +27,7 @@ import {
   meetingType,
   startDate,
 } from "@sparcs-clubs/web/features/meeting/constants/meetingTemplate";
+import useDeleteMeeting from "@sparcs-clubs/web/features/meeting/services/useDeleteMeeting";
 import useGetMeetingDetail from "@sparcs-clubs/web/features/meeting/services/useGetMeetingDetail";
 import {
   formatDateTime,
@@ -45,15 +46,22 @@ const MeetingDetailFrame: React.FC = () => {
   const { id } = useParams();
 
   const { data, isLoading, isError } = useGetMeetingDetail(+id);
+  const { mutate, isPending: isDeleteLoading } = useDeleteMeeting();
 
-  const deleteHandler = () => {
+  const deleteHandler = useCallback(() => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <CancellableModalContent
           onConfirm={() => {
-            // TODO. 삭제 요청 api 연결
+            mutate(
+              { param: { announcementId: +id } },
+              {
+                onSuccess: () => {
+                  router.replace("/meeting");
+                },
+              },
+            );
             close();
-            router.replace("/meeting");
           }}
           onClose={close}
         >
@@ -63,7 +71,7 @@ const MeetingDetailFrame: React.FC = () => {
         </CancellableModalContent>
       </Modal>
     ));
-  };
+  }, [id, mutate, router]);
 
   const announcementTitle = useMemo(() => {
     if (data == null) return "";
@@ -115,11 +123,16 @@ const MeetingDetailFrame: React.FC = () => {
             <Button type="default">목록으로 돌아가기</Button>
           </Link>
           <FlexWrapper direction="row" gap={10}>
-            <Button type="default" onClick={deleteHandler}>
+            <Button
+              type={isDeleteLoading ? "disabled" : "default"}
+              onClick={deleteHandler}
+            >
               삭제
             </Button>
             <Link href={`/meeting/${id}/edit`}>
-              <Button type="default">수정</Button>
+              <Button type={isDeleteLoading ? "disabled" : "default"}>
+                수정
+              </Button>
             </Link>
           </FlexWrapper>
         </RowStretchWrapper>
