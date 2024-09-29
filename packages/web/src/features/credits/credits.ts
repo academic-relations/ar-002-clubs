@@ -30,6 +30,13 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.intern,
         comment: "ㅇㅅㅇ",
       },
+      {
+        nickname: "default",
+        name: "김현수",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "https://skykhs3.github.io",
+      },
     ],
   },
   {
