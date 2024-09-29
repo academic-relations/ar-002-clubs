@@ -41,7 +41,8 @@ const CreateMeetingPage: React.FC = () => {
 
   const [isTemplateVisible, setIsTemplateVisible] = useState(false);
 
-  const { mutate: createMeeting } = useCreateMeeting();
+  const { mutate: createMeeting, isPending: isCreateLoading } =
+    useCreateMeeting();
 
   const isFormValid = useMemo(
     () => isValid && announcementTitle != null && announcementContent != null,
@@ -89,11 +90,13 @@ const CreateMeetingPage: React.FC = () => {
           />
           <ButtonWrapper>
             <Link href="/meeting">
-              <Button type="outlined">취소</Button>
+              <Button type={isCreateLoading ? "disabled" : "outlined"}>
+                취소
+              </Button>
             </Link>
             <Button
               buttonType="submit"
-              type={isFormValid ? "default" : "disabled"}
+              type={isFormValid && !isCreateLoading ? "default" : "disabled"}
             >
               저장
             </Button>
