@@ -31,6 +31,13 @@ export default class FilePublicService {
     return fileUrl;
   }
 
+  /**
+   * fileId에 해당하는 파일의 정보를 가져옵니다.
+   * @param fileId 파일의 id
+   * @returns 파일의 정보
+   * @throws NotFoundException 파일이 존재하지 않을 경우
+   * @throws NotFoundException 파일 URL이 존재하지 않을 경우
+   * */
   async getFileInfoById(
     fileId: string,
   ): Promise<{ id: string; link: string; name: string }> {

@@ -11,29 +11,29 @@ import {
 import apiFnd001, {
   ApiFnd001RequestBody,
   ApiFnd001ResponseCreated,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd001";
+} from "@sparcs-clubs/interface/api/funding/apiFnd001";
 import apiFnd002, {
   ApiFnd002RequestParam,
   ApiFnd002ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
+} from "@sparcs-clubs/interface/api/funding/apiFnd002";
 import apiFnd003, {
   ApiFnd003RequestBody,
   ApiFnd003RequestParam,
   ApiFnd003ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd003";
+} from "@sparcs-clubs/interface/api/funding/apiFnd003";
 import apiFnd004, {
   ApiFnd004RequestParam,
   ApiFnd004ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd004";
+} from "@sparcs-clubs/interface/api/funding/apiFnd004";
 import apiFnd005, {
   ApiFnd005RequestBody,
   ApiFnd005ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
+} from "@sparcs-clubs/interface/api/funding/apiFnd005";
 import apiFnd006, {
   ApiFnd006RequestBody,
   ApiFnd006RequestParam,
   ApiFnd006ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
+} from "@sparcs-clubs/interface/api/funding/apiFnd006";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -46,7 +46,6 @@ import FundingService from "./funding.service";
 export default class FundingController {
   constructor(private fundingService: FundingService) {}
 
-  // TODO: Authentication 필요
   @Student()
   @Post("student/fundings/funding")
   @UsePipes(new ZodPipe(apiFnd001))
@@ -58,7 +57,6 @@ export default class FundingController {
     return {};
   }
 
-  // TODO: Authentication 필요
   @Student()
   @Get("student/fundings/funding/:id")
   @UsePipes(new ZodPipe(apiFnd002))
@@ -73,7 +71,6 @@ export default class FundingController {
     return result;
   }
 
-  // TODO: Authentication 필요
   @Student()
   @Put("student/fundings/funding/:id")
   @UsePipes(new ZodPipe(apiFnd003))

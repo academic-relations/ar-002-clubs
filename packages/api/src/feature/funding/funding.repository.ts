@@ -34,115 +34,117 @@ import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 export default class FundingRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  async insertFunding(contents: {
-    clubId: number;
-    purposeId?: number;
-    name: string;
-    expenditureDate: Date;
-    expenditureAmount: number;
+  async insertFunding(
+    contents: {
+      clubId: number;
+      purposeId?: number;
+      name: string;
+      expenditureDate: Date;
+      expenditureAmount: number;
 
-    tradeEvidenceFiles: Array<{ fileId: string }>;
-    tradeDetailFiles: Array<{ fileId: string }>;
-    tradeDetailExplanation: string;
+      tradeEvidenceFiles: Array<{ fileId: string }>;
+      tradeDetailFiles: Array<{ fileId: string }>;
+      tradeDetailExplanation: string;
 
-    clubSuppliesName?: string;
-    clubSuppliesEvidenceEnumId?: number;
-    clubSuppliesClassEnumId?: number;
-    clubSuppliesPurpose?: string;
-    clubSuppliesImageFiles?: Array<{ fileId: string }>;
-    clubSuppliesSoftwareEvidence?: string;
-    clubSuppliesSoftwareEvidenceFiles?: Array<{ fileId: string }>;
-    numberOfClubSupplies?: number;
-    priceOfClubSupplies?: number;
+      clubSuppliesName?: string;
+      clubSuppliesEvidenceEnumId?: number;
+      clubSuppliesClassEnumId?: number;
+      clubSuppliesPurpose?: string;
+      clubSuppliesImageFiles?: Array<{ fileId: string }>;
+      clubSuppliesSoftwareEvidence?: string;
+      clubSuppliesSoftwareEvidenceFiles?: Array<{ fileId: string }>;
+      numberOfClubSupplies?: number;
+      priceOfClubSupplies?: number;
 
-    isFixture: boolean;
-    fixtureName?: string;
-    fixtureEvidenceEnumId?: number;
-    fixtureClassEnumId?: number;
-    fixturePurpose?: string;
-    fixtureImageFiles: Array<{ fileId: string }>;
-    fixtureSoftwareEvidence?: string;
-    fixtureSoftwareEvidenceFiles: Array<{ fileId: string }>;
-    numberOfFixture?: number;
-    priceOfFixture?: number;
+      isFixture: boolean;
+      fixtureName?: string;
+      fixtureEvidenceEnumId?: number;
+      fixtureClassEnumId?: number;
+      fixturePurpose?: string;
+      fixtureImageFiles: Array<{ fileId: string }>;
+      fixtureSoftwareEvidence?: string;
+      fixtureSoftwareEvidenceFiles: Array<{ fileId: string }>;
+      numberOfFixture?: number;
+      priceOfFixture?: number;
 
-    isTransportation: boolean;
-    transportationEnumId?: number;
-    origin?: string;
-    destination?: string;
-    purposeOfTransportation?: string;
-    placeValidity?: string;
-    transportationPassengers: Array<{ studentNumber: string }>;
+      isTransportation: boolean;
+      transportationEnumId?: number;
+      origin?: string;
+      destination?: string;
+      purposeOfTransportation?: string;
+      placeValidity?: string;
+      transportationPassengers: Array<{ studentNumber: string }>;
 
-    isNonCorporateTransaction: boolean;
-    traderName?: string;
-    traderAccountNumber?: string;
-    wasteExplanation?: string;
+      isNonCorporateTransaction: boolean;
+      traderName?: string;
+      traderAccountNumber?: string;
+      wasteExplanation?: string;
 
-    isFoodExpense: boolean;
-    foodExpenseExplanation?: string;
-    foodExpenseFiles: Array<{ fileId: string }>;
+      isFoodExpense: boolean;
+      foodExpenseExplanation?: string;
+      foodExpenseFiles: Array<{ fileId: string }>;
 
-    isLaborContract: boolean;
-    laborContractExplanation?: string;
-    laborContractFiles: Array<{ fileId: string }>;
+      isLaborContract: boolean;
+      laborContractExplanation?: string;
+      laborContractFiles: Array<{ fileId: string }>;
 
-    isExternalEventParticipationFee: boolean;
-    externalEventParticipationFeeExplanation?: string;
-    externalEventParticipationFeeFiles: Array<{ fileId: string }>;
+      isExternalEventParticipationFee: boolean;
+      externalEventParticipationFeeExplanation?: string;
+      externalEventParticipationFeeFiles: Array<{ fileId: string }>;
 
-    isPublication: boolean;
-    publicationExplanation?: string;
-    publicationFiles: Array<{ fileId: string }>;
+      isPublication: boolean;
+      publicationExplanation?: string;
+      publicationFiles: Array<{ fileId: string }>;
 
-    isProfitMakingActivity: boolean;
-    profitMakingActivityExplanation?: string;
-    profitMakingActivityFiles: Array<{ fileId: string }>;
+      isProfitMakingActivity: boolean;
+      profitMakingActivityExplanation?: string;
+      profitMakingActivityFiles: Array<{ fileId: string }>;
 
-    isJointExpense: boolean;
-    jointExpenseExplanation?: string;
-    jointExpenseFiles: Array<{ fileId: string }>;
+      isJointExpense: boolean;
+      jointExpenseExplanation?: string;
+      jointExpenseFiles: Array<{ fileId: string }>;
 
-    isEtcExpense: boolean;
-    etcExpenseExplanation?: string;
-    etcExpenseFiles: Array<{ fileId: string }>;
-  }): Promise<boolean> {
+      isEtcExpense: boolean;
+      etcExpenseExplanation?: string;
+      etcExpenseFiles: Array<{ fileId: string }>;
+    },
+    semesterId: number,
+  ): Promise<boolean> {
     const isInsertionSucceed = await this.db.transaction(async tx => {
       const [fundingInsertResult] = await tx.insert(FundingOrder).values({
         clubId: contents.clubId,
         purposeId: contents.purposeId,
-        // TODO: semesterId 받아오기
-        semesterId: 1,
+        semesterId,
         fundingOrderStatusEnumId: Number(FundingOrderStatusEnum.Applied),
         name: contents.name,
         expenditureDate: contents.expenditureDate,
         expenditureAmount: contents.expenditureAmount,
         tradeDetailExplanation: contents.tradeDetailExplanation,
         clubSuppliesName:
-          contents.purposeId !== undefined ? contents.clubSuppliesName : null,
+          contents.purposeId === undefined ? contents.clubSuppliesName : null,
         clubSuppliesEvidenceEnumId:
-          contents.purposeId !== undefined
+          contents.purposeId === undefined
             ? contents.clubSuppliesEvidenceEnumId
             : null,
         clubSuppliesClassEnumId:
-          contents.purposeId !== undefined
+          contents.purposeId === undefined
             ? contents.clubSuppliesClassEnumId
             : null,
         clubSuppliesPurpose:
-          contents.purposeId !== undefined
+          contents.purposeId === undefined
             ? contents.clubSuppliesPurpose
             : null,
         clubSuppliesSoftwareEvidence:
-          contents.purposeId !== undefined &&
+          contents.purposeId === undefined &&
           contents.clubSuppliesClassEnumId === FixtureClassEnum.Software
             ? contents.clubSuppliesSoftwareEvidence
             : null,
         numberOfClubSupplies:
-          contents.purposeId !== undefined
+          contents.purposeId === undefined
             ? contents.numberOfClubSupplies
             : null,
         priceOfClubSupplies:
-          contents.purposeId !== undefined
+          contents.purposeId === undefined
             ? contents.priceOfClubSupplies
             : null,
         isFixture: contents.isFixture,
@@ -257,6 +259,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] passenger inserted: ${passenger.studentNumber}`,
+            );
             return {};
           }),
         );
@@ -277,6 +282,9 @@ export default class FundingRepository {
             tx.rollback();
             return false;
           }
+          logger.debug(
+            `[insertFunding] tradeEvidenceFile inserted: ${file.fileId}`,
+          );
           return {};
         }),
       );
@@ -296,11 +304,14 @@ export default class FundingRepository {
             tx.rollback();
             return false;
           }
+          logger.debug(
+            `[insertFunding] tradeDetailFile inserted: ${file.fileId}`,
+          );
           return {};
         }),
       );
 
-      if (contents.purposeId !== undefined) {
+      if (contents.purposeId === undefined) {
         await Promise.all(
           contents.clubSuppliesImageFiles.map(async file => {
             const [clubSuppliesImageFileInsertResult] = await tx
@@ -316,13 +327,16 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] clubSuppliesImageFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
       }
 
       if (
-        contents.purposeId !== undefined &&
+        contents.purposeId === undefined &&
         contents.clubSuppliesClassEnumId === FixtureClassEnum.Software
       ) {
         await Promise.all(
@@ -342,6 +356,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] clubSuppliesSoftwareEvidenceFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -363,6 +380,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] fixtureImageFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -387,6 +407,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] fixtureSoftwareEvidenceFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -408,6 +431,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] foodExpenseFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -429,6 +455,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] laborContractFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -452,6 +481,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] externalEventParticipationFeeFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -473,6 +505,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] publicationFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -494,6 +529,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] profitMakingActivityFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -515,6 +553,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] jointExpenseFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
@@ -536,11 +577,13 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[insertFunding] etcExpenseFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
       }
-
       return true;
     });
     return isInsertionSucceed;
@@ -909,6 +952,7 @@ export default class FundingRepository {
       etcExpenseFiles: Array<{ fileId: string }>;
     },
     fundingId: number,
+    semesterId: number,
   ): Promise<boolean> {
     const isUpdateSucceed = await this.db.transaction(async tx => {
       const deletedAt = new Date();
@@ -917,38 +961,37 @@ export default class FundingRepository {
         .set({
           clubId: contents.clubId,
           purposeId: contents.purposeId,
-          // TODO: semesterId 받아오기
-          semesterId: 1,
+          semesterId,
           fundingOrderStatusEnumId: Number(FundingOrderStatusEnum.Applied),
           name: contents.name,
           expenditureDate: contents.expenditureDate,
           expenditureAmount: contents.expenditureAmount,
           tradeDetailExplanation: contents.tradeDetailExplanation,
           clubSuppliesName:
-            contents.purposeId !== undefined ? contents.clubSuppliesName : null,
+            contents.purposeId === undefined ? contents.clubSuppliesName : null,
           clubSuppliesEvidenceEnumId:
-            contents.purposeId !== undefined
+            contents.purposeId === undefined
               ? contents.clubSuppliesEvidenceEnumId
               : null,
           clubSuppliesClassEnumId:
-            contents.purposeId !== undefined
+            contents.purposeId === undefined
               ? contents.clubSuppliesClassEnumId
               : null,
           clubSuppliesPurpose:
-            contents.purposeId !== undefined
+            contents.purposeId === undefined
               ? contents.clubSuppliesPurpose
               : null,
           clubSuppliesSoftwareEvidence:
-            contents.purposeId !== undefined &&
+            contents.purposeId === undefined &&
             contents.clubSuppliesClassEnumId === FixtureClassEnum.Software
               ? contents.clubSuppliesSoftwareEvidence
               : null,
           numberOfClubSupplies:
-            contents.purposeId !== undefined
+            contents.purposeId === undefined
               ? contents.numberOfClubSupplies
               : null,
           priceOfClubSupplies:
-            contents.purposeId !== undefined
+            contents.purposeId === undefined
               ? contents.priceOfClubSupplies
               : null,
           isFixture: contents.isFixture,
@@ -1038,7 +1081,8 @@ export default class FundingRepository {
       }
 
       // 탑승자 전체 삭제 및 재생성
-      const [passengerDeletionResult] = await tx
+      // const [passengerDeletionResult] =
+      await tx
         .update(TransportationPassenger)
         .set({ deletedAt })
         .where(
@@ -1047,13 +1091,13 @@ export default class FundingRepository {
             isNull(TransportationPassenger.deletedAt),
           ),
         );
-      if (passengerDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] passenger deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (passengerDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] passenger deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (
         contents.isTransportation &&
         contents.transportationEnumId ===
@@ -1080,13 +1124,17 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] passenger inserted: ${passenger.studentNumber}`,
+            );
             return {};
           }),
         );
       }
 
       // 파일 전체 삭제 및 재생성
-      const [tradeEvidenceFileDeletionResult] = await tx
+      // const [tradeEvidenceFileDeletionResult] =
+      await tx
         .update(TradeEvidenceFile)
         .set({ deletedAt })
         .where(
@@ -1095,13 +1143,13 @@ export default class FundingRepository {
             isNull(TradeEvidenceFile.deletedAt),
           ),
         );
-      if (tradeEvidenceFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] tradeEvidenceFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (tradeEvidenceFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] tradeEvidenceFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       await Promise.all(
         contents.tradeEvidenceFiles.map(async file => {
           const [tradeEvidenceFileInsertResult] = await tx
@@ -1117,11 +1165,15 @@ export default class FundingRepository {
             tx.rollback();
             return false;
           }
+          logger.debug(
+            `[putStudentFunding] tradeEvidenceFile inserted: ${file.fileId}`,
+          );
           return {};
         }),
       );
 
-      const [tradeDetailFileDeletionResult] = await tx
+      // const [tradeDetailFileDeletionResult] =
+      await tx
         .update(TradeDetailFile)
         .set({ deletedAt })
         .where(
@@ -1130,13 +1182,13 @@ export default class FundingRepository {
             isNull(TradeDetailFile.deletedAt),
           ),
         );
-      if (tradeDetailFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] tradeDetailFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (tradeDetailFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] tradeDetailFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       await Promise.all(
         contents.tradeDetailFiles.map(async file => {
           const [tradeDetailFileInsertResult] = await tx
@@ -1152,11 +1204,15 @@ export default class FundingRepository {
             tx.rollback();
             return false;
           }
+          logger.debug(
+            `[putStudentFunding] tradeDetailFile inserted: ${file.fileId}`,
+          );
           return {};
         }),
       );
 
-      const [clubSuppliesImageFileDeletionResult] = await tx
+      // const [clubSuppliesImageFileDeletionResult] =
+      await tx
         .update(ClubSuppliesImageFile)
         .set({ deletedAt })
         .where(
@@ -1165,14 +1221,14 @@ export default class FundingRepository {
             isNull(ClubSuppliesImageFile.deletedAt),
           ),
         );
-      if (clubSuppliesImageFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] clubSuppliesImageFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
-      if (contents.purposeId !== undefined) {
+      // if (clubSuppliesImageFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] clubSuppliesImageFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
+      if (contents.purposeId === undefined) {
         await Promise.all(
           contents.clubSuppliesImageFiles.map(async file => {
             const [clubSuppliesImageFileInsertResult] = await tx
@@ -1188,12 +1244,16 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] clubSuppliesImageFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
       }
 
-      const [clubSuppliesSoftwareEvidenceFileDeletionResult] = await tx
+      // const [clubSuppliesSoftwareEvidenceFileDeletionResult] =
+      await tx
         .update(ClubSuppliesSoftwareEvidenceFile)
         .set({ deletedAt })
         .where(
@@ -1202,15 +1262,15 @@ export default class FundingRepository {
             isNull(ClubSuppliesSoftwareEvidenceFile.deletedAt),
           ),
         );
-      if (clubSuppliesSoftwareEvidenceFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] clubSuppliesSoftwareEvidenceFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (clubSuppliesSoftwareEvidenceFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] clubSuppliesSoftwareEvidenceFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (
-        contents.purposeId !== undefined &&
+        contents.purposeId === undefined &&
         contents.clubSuppliesClassEnumId === FixtureClassEnum.Software
       ) {
         await Promise.all(
@@ -1230,12 +1290,16 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] clubSuppliesSoftwareEvidenceFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
       }
 
-      const [fixtureImageFileDeletionResult] = await tx
+      // const [fixtureImageFileDeletionResult] =
+      await tx
         .update(FixtureImageFile)
         .set({ deletedAt })
         .where(
@@ -1244,13 +1308,13 @@ export default class FundingRepository {
             isNull(FixtureImageFile.deletedAt),
           ),
         );
-      if (fixtureImageFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] fixtureImageFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (fixtureImageFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] fixtureImageFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isFixture) {
         await Promise.all(
           contents.fixtureImageFiles.map(async file => {
@@ -1267,12 +1331,16 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] fixtureImageFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
       }
 
-      const [fixtureSoftwareEvidenceFileDeletionResult] = await tx
+      // const [fixtureSoftwareEvidenceFileDeletionResult] =
+      await tx
         .update(FixtureSoftwareEvidenceFile)
         .set({ deletedAt })
         .where(
@@ -1281,13 +1349,13 @@ export default class FundingRepository {
             isNull(FixtureSoftwareEvidenceFile.deletedAt),
           ),
         );
-      if (fixtureSoftwareEvidenceFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] fixtureSoftwareEvidenceFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (fixtureSoftwareEvidenceFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] fixtureSoftwareEvidenceFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (
         contents.isFixture &&
         contents.fixtureClassEnumId === FixtureClassEnum.Software
@@ -1307,12 +1375,16 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] fixtureSoftwareEvidenceFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
       }
 
-      const [foodExpenseFileDeletionResult] = await tx
+      // const [foodExpenseFileDeletionResult] =
+      await tx
         .update(FoodExpenseFile)
         .set({ deletedAt })
         .where(
@@ -1321,13 +1393,13 @@ export default class FundingRepository {
             isNull(FoodExpenseFile.deletedAt),
           ),
         );
-      if (foodExpenseFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] foodExpenseFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (foodExpenseFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] foodExpenseFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isFoodExpense) {
         await Promise.all(
           contents.foodExpenseFiles.map(async file => {
@@ -1344,12 +1416,16 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] foodExpenseFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
       }
 
-      const [laborContractFileDeletionResult] = await tx
+      // const [laborContractFileDeletionResult] =
+      await tx
         .update(LaborContractFile)
         .set({ deletedAt })
         .where(
@@ -1358,13 +1434,13 @@ export default class FundingRepository {
             isNull(LaborContractFile.deletedAt),
           ),
         );
-      if (laborContractFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] laborContractFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (laborContractFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] laborContractFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isLaborContract) {
         await Promise.all(
           contents.laborContractFiles.map(async file => {
@@ -1381,12 +1457,16 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] laborContractFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
       }
 
-      const [externalEventParticipationFeeFileDeletionResult] = await tx
+      // const [externalEventParticipationFeeFileDeletionResult] =
+      await tx
         .update(ExternalEventParticipationFeeFile)
         .set({ deletedAt })
         .where(
@@ -1395,13 +1475,13 @@ export default class FundingRepository {
             isNull(ExternalEventParticipationFeeFile.deletedAt),
           ),
         );
-      if (externalEventParticipationFeeFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] externalEventParticipationFeeFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (externalEventParticipationFeeFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] externalEventParticipationFeeFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isExternalEventParticipationFee) {
         await Promise.all(
           contents.externalEventParticipationFeeFiles.map(async file => {
@@ -1420,12 +1500,16 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] externalEventParticipationFeeFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
       }
 
-      const [publicationFileDeletionResult] = await tx
+      // const [publicationFileDeletionResult] =
+      await tx
         .update(PublicationFile)
         .set({ deletedAt })
         .where(
@@ -1434,13 +1518,13 @@ export default class FundingRepository {
             isNull(PublicationFile.deletedAt),
           ),
         );
-      if (publicationFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] publicationFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (publicationFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] publicationFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isPublication) {
         await Promise.all(
           contents.publicationFiles.map(async file => {
@@ -1457,12 +1541,16 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] publicationFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
       }
 
-      const [profitMakingActivityFileDeletionResult] = await tx
+      // const [profitMakingActivityFileDeletionResult] =
+      await tx
         .update(ProfitMakingActivityFile)
         .set({ deletedAt })
         .where(
@@ -1471,13 +1559,13 @@ export default class FundingRepository {
             isNull(ProfitMakingActivityFile.deletedAt),
           ),
         );
-      if (profitMakingActivityFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] profitMakingActivityFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (profitMakingActivityFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] profitMakingActivityFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isProfitMakingActivity) {
         await Promise.all(
           contents.profitMakingActivityFiles.map(async file => {
@@ -1494,12 +1582,16 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] profitMakingActivityFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
       }
 
-      const [jointExpenseFileDeletionResult] = await tx
+      // const [jointExpenseFileDeletionResult] =
+      await tx
         .update(JointExpenseFile)
         .set({ deletedAt })
         .where(
@@ -1509,13 +1601,13 @@ export default class FundingRepository {
           ),
         );
 
-      if (jointExpenseFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] jointExpenseFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (jointExpenseFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] jointExpenseFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isJointExpense) {
         await Promise.all(
           contents.jointExpenseFiles.map(async file => {
@@ -1532,12 +1624,16 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] jointExpenseFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
       }
 
-      const [etcExpenseFileDeletionResult] = await tx
+      // const [etcExpenseFileDeletionResult] =
+      await tx
         .update(EtcExpenseFile)
         .set({ deletedAt })
         .where(
@@ -1546,13 +1642,13 @@ export default class FundingRepository {
             isNull(EtcExpenseFile.deletedAt),
           ),
         );
-      if (etcExpenseFileDeletionResult.affectedRows < 1) {
-        logger.debug(
-          "[deleteFunding] etcExpenseFile deletion failed. Rollback occurs",
-        );
-        tx.rollback();
-        return false;
-      }
+      // if (etcExpenseFileDeletionResult.affectedRows < 1) {
+      //   logger.debug(
+      //     "[deleteFunding] etcExpenseFile deletion failed. Rollback occurs",
+      //   );
+      //   tx.rollback();
+      //   return false;
+      // }
       if (contents.isEtcExpense) {
         await Promise.all(
           contents.etcExpenseFiles.map(async file => {
@@ -1569,6 +1665,9 @@ export default class FundingRepository {
               tx.rollback();
               return false;
             }
+            logger.debug(
+              `[putStudentFunding] etcExpenseFile inserted: ${file.fileId}`,
+            );
             return {};
           }),
         );
