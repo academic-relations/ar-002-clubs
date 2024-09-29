@@ -40,6 +40,8 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
   const { control, watch, setValue } = formCtx;
 
   const meetingEnumId = watch("meetingEnumId");
+  const announcementTitle = watch("announcementTitle");
+  const announcementContent = watch("announcementContent");
 
   const { data, isLoading, isError } = useGetMeetingDegree({ meetingEnumId });
 
@@ -51,8 +53,6 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
     }
     return MeetingTemplate.defaultTemplate(meetingEnumId, data?.degree);
   }, [data, meetingEnumId]);
-
-  const contentLength = template?.content.split(/\r\n|\r|\n/).length;
 
   const openResetModal = () => {
     overlay.open(({ isOpen, close }) => (
@@ -73,13 +73,19 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
   };
 
   useEffect(() => {
-    if (template != null) {
+    if (
+      template != null &&
+      announcementTitle == null &&
+      announcementContent == null
+    ) {
       setValue("announcementTitle", template.title, { shouldValidate: true });
       setValue("announcementContent", template.content, {
         shouldValidate: true,
       });
     }
-  }, [setValue, template]);
+  }, [announcementContent, announcementTitle, setValue, template]);
+
+  const contentLength = announcementContent?.split(/\r\n|\r|\n/).length;
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>

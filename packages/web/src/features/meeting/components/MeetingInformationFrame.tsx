@@ -43,7 +43,7 @@ const AlignEnd = styled.div`
 `;
 
 const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
-  onCreateTemplate = () => {},
+  onCreateTemplate = undefined,
 }) => {
   const {
     watch,
@@ -109,6 +109,7 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
                     label: meetingEnumToText(value),
                     value: +value,
                   }))}
+                disabled={onCreateTemplate == null}
               />
             )}
           />
@@ -197,13 +198,15 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
               />
             </RowFlexWrapper>
           ))}
-        <AlignEnd>
-          <TextButton
-            text="공고 템플릿 생성"
-            disabled={!isValid || !isStartDateValid}
-            onClick={onCreateTemplate}
-          />
-        </AlignEnd>
+        {onCreateTemplate && (
+          <AlignEnd>
+            <TextButton
+              text="공고 템플릿 생성"
+              disabled={!isValid || !isStartDateValid}
+              onClick={onCreateTemplate}
+            />
+          </AlignEnd>
+        )}
       </Card>
     </FlexWrapper>
   );

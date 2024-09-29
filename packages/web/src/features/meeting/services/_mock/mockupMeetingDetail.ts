@@ -11,8 +11,8 @@ const mockupMeetingTemplate =
     : MeetingTemplate.defaultTemplate(meetingType, 100);
 
 export const mockupMeetingDetail: ApiMee002ResponseOk = {
-  announcementTitle: mockupMeetingTemplate.title,
-  announcementContent: mockupMeetingTemplate.content,
+  announcementTitle: `${mockupMeetingTemplate.title} 수정수정수정함`,
+  announcementContent: `${mockupMeetingTemplate.content} 수정수정수정함`,
   isRegular: false,
   meetingEnumId: meetingType,
   startDate: new Date(),
