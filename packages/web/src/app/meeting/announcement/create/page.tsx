@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import { ApiMee001RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee001";
 import Link from "next/link";
@@ -15,6 +15,7 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 import MeetingAnnouncementFrame from "@sparcs-clubs/web/features/meeting/components/MeetingAnnouncementFrame";
 import MeetingInformationFrame from "@sparcs-clubs/web/features/meeting/components/MeetingInformationFrame";
+import useCreateMeeting from "@sparcs-clubs/web/features/meeting/services/useCreateMeeting";
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -29,7 +30,7 @@ const CreateMeetingPage: React.FC = () => {
 
   const {
     resetField,
-    // getValues,
+    getValues,
     handleSubmit,
     watch,
     formState: { isValid },
@@ -40,17 +41,23 @@ const CreateMeetingPage: React.FC = () => {
 
   const [isTemplateVisible, setIsTemplateVisible] = useState(false);
 
+  const { mutate: createMeeting } = useCreateMeeting();
+
   const isFormValid = useMemo(
     () => isValid && announcementTitle != null && announcementContent != null,
     [announcementContent, announcementTitle, isValid],
   );
 
-  const submitHandler = () => {
-    // TODO. api 연결
-
-    // console.log("values: ", getValues());
-    router.replace("/meeting");
-  };
+  const submitHandler = useCallback(() => {
+    createMeeting(
+      { body: { ...getValues() } },
+      {
+        onSuccess: () => {
+          router.replace("/meeting");
+        },
+      },
+    );
+  }, [createMeeting, getValues, router]);
 
   return (
     <FormProvider {...formCtx}>
