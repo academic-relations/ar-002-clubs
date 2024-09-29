@@ -21,7 +21,7 @@ const useUpdateMeeting = () =>
       requestParam,
       body,
     }): Promise<ApiMee003ResponseCreated> => {
-      const { data, status } = await axiosClientWithAuth.post(
+      const { data, status } = await axiosClientWithAuth.patch(
         apiMee003.url(requestParam.announcementId),
         body,
       );
@@ -38,5 +38,5 @@ const useUpdateMeeting = () =>
 export default useUpdateMeeting;
 
 defineAxiosMock(mock => {
-  mock.onPost(apiMee003.url(1)).reply(() => [201, {}]);
+  mock.onPatch(apiMee003.url(1)).reply(() => [201, {}]);
 });
