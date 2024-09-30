@@ -7,6 +7,7 @@ import { overlay } from "overlay-kit";
 import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -19,6 +20,7 @@ import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { MeetingTemplate } from "../constants/meetingTemplate";
+import useGetMeetingDegree from "../services/useGetMeetingDegree";
 
 interface MeetingAnnouncementFrameProps {
   isTemplateVisible: boolean;
@@ -35,9 +37,11 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
   onReset = _ => {},
 }) => {
   const formCtx = useFormContext<ApiMee001RequestBody>();
-  const { getValues, control, watch, setValue } = formCtx;
+  const { control, watch, setValue } = formCtx;
 
   const meetingEnumId = watch("meetingEnumId");
+
+  const { data, isLoading, isError } = useGetMeetingDegree({ meetingEnumId });
 
   const template = useMemo(() => {
     if (meetingEnumId == null) return null;
@@ -45,8 +49,8 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
     if (meetingEnumId === MeetingEnum.divisionMeeting) {
       return MeetingTemplate.divisionMeetingTemplate();
     }
-    return MeetingTemplate.defaultTemplate({ ...getValues(), count: 1 });
-  }, [getValues, meetingEnumId]);
+    return MeetingTemplate.defaultTemplate(meetingEnumId, data?.degree);
+  }, [data, meetingEnumId]);
 
   const contentLength = template?.content.split(/\r\n|\r|\n/).length;
 
@@ -78,55 +82,57 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
   }, [setValue, template]);
 
   return (
-    <FlexWrapper direction="column" gap={40}>
-      <SectionTitle>최종 공고</SectionTitle>
-      <Card outline gap={32} style={{ marginLeft: 24 }}>
-        {!isTemplateVisible || template == null ? (
-          <Typography
-            fs={16}
-            lh={24}
-            fw="REGULAR"
-            color="GRAY.300"
-            style={{ textAlign: "center" }}
-          >
-            공고 템플릿을 생성해주세요
-          </Typography>
-        ) : (
-          <>
-            <FormController
-              name="announcementTitle"
-              required
-              control={control}
-              defaultValue={template?.title}
-              renderItem={props => (
-                <TextInput {...props} label="제목" placeholder="" />
-              )}
-            />
-            <FormController
-              name="announcementContent"
-              required
-              control={control}
-              defaultValue={template?.content}
-              renderItem={props => (
-                <TextInput
-                  {...props}
-                  label="본문"
-                  placeholder=""
-                  area
-                  style={{
-                    height: contentLength ? contentLength * 25 : 100,
-                    whiteSpace: "pre-line",
-                  }}
-                />
-              )}
-            />
-            <AlignEnd>
-              <TextButton text="초기화" onClick={openResetModal} />
-            </AlignEnd>
-          </>
-        )}
-      </Card>
-    </FlexWrapper>
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <FlexWrapper direction="column" gap={40}>
+        <SectionTitle>최종 공고</SectionTitle>
+        <Card outline gap={32} style={{ marginLeft: 24 }}>
+          {!isTemplateVisible || template == null ? (
+            <Typography
+              fs={16}
+              lh={24}
+              fw="REGULAR"
+              color="GRAY.300"
+              style={{ textAlign: "center" }}
+            >
+              공고 템플릿을 생성해주세요
+            </Typography>
+          ) : (
+            <>
+              <FormController
+                name="announcementTitle"
+                required
+                control={control}
+                defaultValue={template?.title}
+                renderItem={props => (
+                  <TextInput {...props} label="제목" placeholder="" />
+                )}
+              />
+              <FormController
+                name="announcementContent"
+                required
+                control={control}
+                defaultValue={template?.content}
+                renderItem={props => (
+                  <TextInput
+                    {...props}
+                    label="본문"
+                    placeholder=""
+                    area
+                    style={{
+                      height: contentLength ? contentLength * 25 : 100,
+                      whiteSpace: "pre-line",
+                    }}
+                  />
+                )}
+              />
+              <AlignEnd>
+                <TextButton text="초기화" onClick={openResetModal} />
+              </AlignEnd>
+            </>
+          )}
+        </Card>
+      </FlexWrapper>
+    </AsyncBoundary>
   );
 };
 

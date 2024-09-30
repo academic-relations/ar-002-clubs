@@ -21,6 +21,9 @@ const formatSlashDate = (date: Date) =>
 const formatDateTime = (date: Date) =>
   format(formatKST(date), "yyyy년 M월 d일 (iii) HH:mm", { locale: ko });
 
+const formatDateTimeEn = (date: Date) =>
+  format(formatKST(date), "MMM dd, yyyy (iii) HH:mm");
+
 const formatTime = (date: Date) =>
   format(formatKST(date), "HH:mm", { locale: ko });
 
@@ -38,13 +41,14 @@ const formatDotDetailDate = (date: Date) =>
 
 export {
   formatDate,
-  formatDotSimpleDate,
   formatDateTime,
+  formatDateTimeEn,
   formatDotDate,
   formatDotDetailDate,
+  formatDotSimpleDate,
   formatMonth,
-  formatSimpleSlashDate,
   formatSimplerSlashDate,
+  formatSimpleSlashDate,
   formatSlashDate,
   formatSlashDateTime,
   formatTime,
