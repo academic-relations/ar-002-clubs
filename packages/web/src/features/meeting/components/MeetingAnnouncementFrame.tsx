@@ -88,57 +88,55 @@ const MeetingAnnouncementFrame: React.FC<MeetingAnnouncementFrameProps> = ({
   const contentLength = announcementContent?.split(/\r\n|\r|\n/).length;
 
   return (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <FlexWrapper direction="column" gap={40}>
-        <SectionTitle>최종 공고</SectionTitle>
-        <Card outline gap={32} style={{ marginLeft: 24 }}>
-          {!isTemplateVisible || template == null ? (
-            <Typography
-              fs={16}
-              lh={24}
-              fw="REGULAR"
-              color="GRAY.300"
-              style={{ textAlign: "center" }}
-            >
-              공고 템플릿을 생성해주세요
-            </Typography>
-          ) : (
-            <>
-              <FormController
-                name="announcementTitle"
-                required
-                control={control}
-                defaultValue={template?.title}
-                renderItem={props => (
-                  <TextInput {...props} label="제목" placeholder="" />
-                )}
-              />
-              <FormController
-                name="announcementContent"
-                required
-                control={control}
-                defaultValue={template?.content}
-                renderItem={props => (
-                  <TextInput
-                    {...props}
-                    label="본문"
-                    placeholder=""
-                    area
-                    style={{
-                      height: contentLength ? contentLength * 25 : 100,
-                      whiteSpace: "pre-line",
-                    }}
-                  />
-                )}
-              />
-              <AlignEnd>
-                <TextButton text="초기화" onClick={openResetModal} />
-              </AlignEnd>
-            </>
-          )}
-        </Card>
-      </FlexWrapper>
-    </AsyncBoundary>
+    <FlexWrapper direction="column" gap={40}>
+      <SectionTitle>최종 공고</SectionTitle>
+      <Card outline gap={32} style={{ marginLeft: 24 }}>
+        {!isTemplateVisible || template == null ? (
+          <Typography
+            fs={16}
+            lh={24}
+            fw="REGULAR"
+            color="GRAY.300"
+            style={{ textAlign: "center" }}
+          >
+            공고 템플릿을 생성해주세요
+          </Typography>
+        ) : (
+          <AsyncBoundary isLoading={isLoading} isError={isError}>
+            <FormController
+              name="announcementTitle"
+              required
+              control={control}
+              defaultValue={template?.title}
+              renderItem={props => (
+                <TextInput {...props} label="제목" placeholder="" />
+              )}
+            />
+            <FormController
+              name="announcementContent"
+              required
+              control={control}
+              defaultValue={template?.content}
+              renderItem={props => (
+                <TextInput
+                  {...props}
+                  label="본문"
+                  placeholder=""
+                  area
+                  style={{
+                    height: contentLength ? contentLength * 25 : 100,
+                    whiteSpace: "pre-line",
+                  }}
+                />
+              )}
+            />
+            <AlignEnd>
+              <TextButton text="초기화" onClick={openResetModal} />
+            </AlignEnd>
+          </AsyncBoundary>
+        )}
+      </Card>
+    </FlexWrapper>
   );
 };
 
