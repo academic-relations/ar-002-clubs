@@ -673,8 +673,8 @@ export class ClubRegistrationRepository {
           StudentT,
           and(
             eq(Student.id, StudentT.studentId),
-            lte(StudentT.startTerm, cur),
-            or(gt(StudentT.endTerm, cur), isNull(StudentT.endTerm)),
+            // lte(StudentT.startTerm, cur),
+            // or(gt(StudentT.endTerm, cur), isNull(StudentT.endTerm)),
             isNull(StudentT.deletedAt),
           ),
         )

@@ -23,7 +23,8 @@ export const useGetClubDetail = (club_id: string) =>
       switch (status) {
         case 200:
         case 304:
-          return apiClb002.responseBodyMap[200].parse(data);
+          // return apiClb002.responseBodyMap[200].parse(data);
+          return data;
         default:
           throw new UnexpectedAPIResponseError();
       }

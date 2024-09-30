@@ -2,7 +2,7 @@ import React from "react";
 
 import { ApiReg020ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg020";
 
-import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+// import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import {
   createColumnHelper,
@@ -10,12 +10,12 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import styled from "styled-components";
+// import styled from "styled-components";
 
-import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
+// import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
+// import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { MemTagList } from "@sparcs-clubs/web/constants/tableTagList";
 
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
@@ -24,13 +24,13 @@ interface RegisterInfoTableProps {
   memberRegisterInfoList: ApiReg020ResponseOk;
 }
 
-const ToggleWrapper = styled.div`
-  gap: 12px;
-  justify-content: center;
-  align-items: center;
-  direction: row;
-  display: flex;
-`;
+// const ToggleWrapper = styled.div`
+//   gap: 12px;
+//   justify-content: center;
+//   align-items: center;
+//   direction: row;
+//   display: flex;
+// `;
 const columnHelper = createColumnHelper<ApiReg020ResponseOk["items"][number]>();
 
 const columns = [
@@ -77,44 +77,49 @@ const columns = [
     cell: info => info.getValue(),
     size: 240,
   }),
-  columnHelper.accessor("RegistrationApplicationStudentStatusEnumId", {
-    id: "RegistrationApplicationStudentStatusEnumId",
-    header: "비고",
-    cell: info => {
-      if (
-        info.row.original.RegistrationApplicationStudentStatusEnumId ===
-        RegistrationApplicationStudentStatusEnum.Approved
-      ) {
-        return (
-          <ToggleWrapper>
-            <TextButton text="승인" disabled />
-            <Typography>/</Typography>
-            <TextButton text="반려" />
-          </ToggleWrapper>
-        );
-      }
-      if (
-        info.row.original.RegistrationApplicationStudentStatusEnumId ===
-        RegistrationApplicationStudentStatusEnum.Pending
-      ) {
-        return (
-          <ToggleWrapper>
-            <TextButton text="승인" />
-            <Typography>/</Typography>
-            <TextButton text="반려" />
-          </ToggleWrapper>
-        );
-      }
-      return (
-        <ToggleWrapper>
-          <TextButton text="승인" />
-          <Typography>/</Typography>
-          <TextButton text="반려" disabled />
-        </ToggleWrapper>
-      );
-    },
-    size: 290,
-  }),
+  /** NOTE: (@dora)
+   * - 집행부원이 회원 등록 신청을 승인 / 반려하는 API가 존재하지 않음
+   * - 당장 필요하지 않다고 하여
+   * 해당 코드 일단 추석 처리합니다
+   */
+  // columnHelper.accessor("RegistrationApplicationStudentStatusEnumId", {
+  //   id: "RegistrationApplicationStudentStatusEnumId",
+  //   header: "비고",
+  //   cell: info => {
+  //     if (
+  //       info.row.original.RegistrationApplicationStudentStatusEnumId ===
+  //       RegistrationApplicationStudentStatusEnum.Approved
+  //     ) {
+  //       return (
+  //         <ToggleWrapper>
+  //           <TextButton text="승인" disabled />
+  //           <Typography>/</Typography>
+  //           <TextButton text="반려" />
+  //         </ToggleWrapper>
+  //       );
+  //     }
+  //     if (
+  //       info.row.original.RegistrationApplicationStudentStatusEnumId ===
+  //       RegistrationApplicationStudentStatusEnum.Pending
+  //     ) {
+  //       return (
+  //         <ToggleWrapper>
+  //           <TextButton text="승인" />
+  //           <Typography>/</Typography>
+  //           <TextButton text="반려" />
+  //         </ToggleWrapper>
+  //       );
+  //     }
+  //     return (
+  //       <ToggleWrapper>
+  //         <TextButton text="승인" />
+  //         <Typography>/</Typography>
+  //         <TextButton text="반려" disabled />
+  //       </ToggleWrapper>
+  //     );
+  //   },
+  //   size: 290,
+  // }),
 ];
 
 const RegisterInfoTable: React.FC<RegisterInfoTableProps> = ({

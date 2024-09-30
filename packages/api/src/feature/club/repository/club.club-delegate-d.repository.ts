@@ -279,7 +279,7 @@ export class ClubDelegateDRepository {
   /**
    * @param clubId 동아리 id
    * @param clubDelegateEnumId 대표자 분류 id
-   * @param studentId 지정할 학생 id
+   * @param studentId 지정할 학생 id. undefined인 경우 지위만 해제시킵니다.
    *
    * @description 해당 학생을 동아리의 대표자로 지정합니다.
    * 기존에 해당 지위로 지정되었던 학생이 존재할 경우 지위가 해제됩니다.
@@ -289,7 +289,7 @@ export class ClubDelegateDRepository {
   async updateDelegate(param: {
     clubId: number;
     clubDelegateEnumId: number;
-    studentId: number;
+    studentId?: number;
   }): Promise<boolean> {
     const now = getKSTDate();
 

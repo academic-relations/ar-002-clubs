@@ -43,10 +43,12 @@ const RegisterMemberList = () => {
     data: memberData,
     isLoading: memberIsLoading,
     isError: memberIsError,
+    refetch: memberRefetch,
   } = useGetMemberRegistration({ clubId: idData.clubId }) as {
     data: ApiReg008ResponseOk;
     isLoading: boolean;
     isError: boolean;
+    refetch: () => void;
   };
 
   const totalPage = memberData && Math.ceil(memberData.applies.length / 10);
@@ -54,14 +56,15 @@ const RegisterMemberList = () => {
   return (
     <TableWithPagination>
       <AsyncBoundary
-        isLoading={clubIsLoading && memberIsLoading}
-        isError={clubIsError && memberIsError}
+        isLoading={clubIsLoading || memberIsLoading}
+        isError={clubIsError || memberIsError}
       >
-        {clubData && memberData && (
+        {memberData && (
           <MembersTable
             memberList={memberData.applies}
             clubName={clubData.name_kr}
             clubId={idData.clubId}
+            refetch={memberRefetch}
           />
         )}
         {totalPage !== 1 && (

@@ -22,10 +22,11 @@ export const useGetMemberRegistration = (requestParam: ApiReg008RequestParam) =>
         apiReg008.url(requestParam.clubId.toString()),
       );
       switch (status) {
-        case 200: {
+        case 200:
+        case 304:
           if (data.applies.length === 0) return data;
-          return apiReg008.responseBodyMap[200].parse(data);
-        }
+          // return apiReg008.responseBodyMap[200].parse(data);
+          return data;
         default:
           throw new UnexpectedAPIResponseError();
       }
