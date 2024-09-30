@@ -41,11 +41,11 @@ export {
   formatDotSimpleDate,
   formatDateTime,
   formatDotDate,
+  formatDotDetailDate,
   formatMonth,
   formatSimpleSlashDate,
   formatSimplerSlashDate,
   formatSlashDate,
   formatSlashDateTime,
   formatTime,
-  formatDotDetailDate,
 };

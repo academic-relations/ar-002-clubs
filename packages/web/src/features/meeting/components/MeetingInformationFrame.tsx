@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
+import { ApiMee001RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee001";
+import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
+import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
@@ -10,6 +13,9 @@ import DateInput from "@sparcs-clubs/web/common/components/Forms/DateInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
+
+import { meetingEnumToText } from "../constants/getEnumType";
+import { startDate } from "../constants/meetingTemplate";
 
 interface MeetingInformationFrameProps {
   onCreateTemplate?: VoidFunction;
@@ -24,105 +30,167 @@ const RowFlexWrapper = styled.div`
     flex: 1;
   }
 `;
+
+const GridView = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 32px;
+`;
 const AlignEnd = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
 
 const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
-  onCreateTemplate = undefined,
+  onCreateTemplate = () => {},
 }) => {
-  // TODO. react-hook form 사용
-  const hasValue = true;
-  const isValid = true;
-  const isSubcommitteeMeeting = false;
+  const {
+    watch,
+    control,
+    resetField,
+    setValue,
+    formState: { isValid },
+  } = useFormContext<ApiMee001RequestBody>();
+
+  const isRegular = watch("isRegular");
+  const meetingEnumId = watch("meetingEnumId");
+
+  const [time, setTime] = useState<string>("");
+
+  const hasValue = meetingEnumId != null && isRegular != null;
+  const isDivisionMeeting = meetingEnumId === MeetingEnum.divisionMeeting;
+
+  const timePattern = /^(0?[0-9]|1[0-9]|2[0-3]):([0-5]?[0-9])$/;
+
+  const isStartDateValid = useMemo(() => {
+    if (startDate == null) return false;
+
+    if (isDivisionMeeting || (!isDivisionMeeting && timePattern.test(time))) {
+      return true;
+    }
+    return false;
+  }, [isDivisionMeeting, time]);
+
+  useEffect(() => {
+    if (isDivisionMeeting) {
+      setValue("isRegular", true, { shouldValidate: true });
+    }
+  }, [isDivisionMeeting, setValue]);
+
+  useEffect(() => {
+    if (!isDivisionMeeting && timePattern.test(time)) {
+      const [hour, minute] = time.split(":").map(part => +part);
+      const newDate = new Date();
+      newDate.setHours(hour);
+      newDate.setMinutes(minute);
+
+      setValue("startDate", newDate);
+    }
+  }, [isDivisionMeeting, resetField, time]);
 
   return (
     <FlexWrapper direction="column" gap={40}>
       <SectionTitle>회의 정보</SectionTitle>
       <Card outline gap={24} style={{ marginLeft: 24 }}>
         <FlexWrapper direction="row" gap={32}>
-          {/* // TODO. interface 나오면 enum으로 변경 */}
           <FormController
-            name="meetingType"
+            name="meetingEnumId"
             required
+            control={control}
             renderItem={props => (
               <Select
                 {...props}
                 label="회의체 종류"
                 placeholder="회의체 종류를 선택해주세요"
-                items={[
-                  {
-                    label: "전체동아리대표자회의",
-                    value: "1",
-                  },
-                  { label: "확대운영위원회", value: "2" },
-                  { label: "운영위원회", value: "3" },
-                  { label: "분과회의", value: "4" },
-                ]}
+                items={Object.keys(MeetingEnum)
+                  .slice(0, 4)
+                  .map(value => ({
+                    label: meetingEnumToText(value),
+                    value: +value,
+                  }))}
               />
             )}
           />
-
-          {/* // TODO. interface 나오면 enum으로 변경 */}
           <FormController
-            name="isRegularMeeting"
-            required
+            name="isRegular"
+            control={control}
+            rules={{
+              validate: value => typeof value === "boolean",
+            }}
             renderItem={props => (
               <Select
                 {...props}
                 label="정기회의 여부"
                 placeholder="정기회의 여부를 선택해주세요"
                 items={[
-                  { label: "정기회의", value: "1" },
-                  { label: "비정기회의", value: "2" },
+                  { label: "정기회의", value: true },
+                  { label: "비정기회의", value: false },
                 ]}
+                disabled={isDivisionMeeting}
               />
             )}
           />
         </FlexWrapper>
         {hasValue &&
-          (!isSubcommitteeMeeting ? (
-            <RowFlexWrapper>
+          (!isDivisionMeeting ? (
+            <GridView>
               <FormController
-                name="date"
-                required={!isSubcommitteeMeeting}
+                name="startDate"
+                required={!isDivisionMeeting}
+                control={control}
+                defaultValue={new Date()}
                 renderItem={props => (
                   <DateInput {...props} date={new Date()} label="일자" />
                 )}
               />
-              <FormController
-                name="time"
-                required={!isSubcommitteeMeeting}
-                pattern={/^([01]\d|2[0-3]):[0-5]\d$/}
-                renderItem={props => (
-                  <TextInput {...props} label="시간" placeholder="XX:XX" />
-                )}
+              <TextInput
+                label="시간"
+                placeholder="XX:XX"
+                value={time}
+                handleChange={value => setTime(value)}
               />
               <FormController
                 name="location"
-                required={!isSubcommitteeMeeting}
+                required={!isDivisionMeeting}
+                control={control}
                 renderItem={props => (
                   <TextInput
                     {...props}
-                    label="장소"
+                    label="장소 (국문)"
                     placeholder="장소를 입력해주세요"
                   />
                 )}
               />
-            </RowFlexWrapper>
+              <FormController
+                name="locationEn"
+                required={!isDivisionMeeting}
+                control={control}
+                renderItem={props => (
+                  <TextInput
+                    {...props}
+                    label="장소 (영문)"
+                    placeholder="장소를 입력해주세요"
+                  />
+                )}
+              />
+            </GridView>
           ) : (
             <RowFlexWrapper>
               <FormController
                 name="startDate"
-                required={isSubcommitteeMeeting}
+                required={isDivisionMeeting}
+                control={control}
+                defaultValue={new Date()}
                 renderItem={props => (
                   <DateInput {...props} date={new Date()} label="시작일" />
                 )}
               />
               <FormController
                 name="endDate"
-                required={isSubcommitteeMeeting}
+                required={isDivisionMeeting}
+                control={control}
+                defaultValue={new Date()}
                 renderItem={props => (
                   <DateInput {...props} date={new Date()} label="종료일" />
                 )}
@@ -132,7 +200,7 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
         <AlignEnd>
           <TextButton
             text="공고 템플릿 생성"
-            disabled={onCreateTemplate === undefined || !isValid}
+            disabled={!isValid || !isStartDateValid}
             onClick={onCreateTemplate}
           />
         </AlignEnd>

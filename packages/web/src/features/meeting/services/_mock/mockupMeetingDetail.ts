@@ -1,10 +1,12 @@
+import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
+
 import { MeetingDetail } from "@sparcs-clubs/web/features/meeting/types/meeting";
 
 // TODO. mock data api에 맞게 수정
 export const mockupData: MeetingDetail = {
   id: 1,
-  title: "2024년 3월 제1차 정기 전체동아리대표자회의 공고",
-  content: `(English Notice on the bottom)
+  announcementTitle: "2024년 3월 제1차 정기 전체동아리대표자회의 공고",
+  announcementContent: `(English Notice on the bottom)
   
   안녕하세요, 학부 동아리연합회 부회장입니다.
   
@@ -33,4 +35,10 @@ export const mockupData: MeetingDetail = {
   If the club representative is unable to attend, another delegate (with voting right) or deputy (without voting right) can also be admitted.
   
   Thank you.`,
+  count: 1,
+  isRegular: false,
+  meetingEnumId: MeetingEnum.divisionMeeting,
+  startDate: new Date(),
+  location: "장소",
+  locationEn: "location",
 };

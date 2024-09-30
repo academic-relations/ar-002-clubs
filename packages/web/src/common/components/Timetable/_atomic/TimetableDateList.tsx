@@ -51,7 +51,7 @@ const TimetableDateListInner = styled.div.withConfig({
   }
 `;
 
-const TimtableDate = styled.div`
+const TimetableDate = styled.div`
   display: flex;
   height: 24px;
   justify-content: center;
@@ -68,15 +68,15 @@ const TimetableDateList: React.FC<TimetableDateListProps> = ({
   paddingLeft = "0",
 }) => (
   <TimetableDateListInner paddingLeft={paddingLeft}>
-    {[...Array(7)].map((_, i) => (
-      <TimtableDate key={i}>
+    {[...Array(7)].map((value, i) => (
+      <TimetableDate key={value}>
         <span className="desktop">
           {formatSlashDate(addDays(startDate, i))}
         </span>
         <span className="mobile">
           {formatSimplerSlashDate(addDays(startDate, i))}
         </span>
-      </TimtableDate>
+      </TimetableDate>
     ))}
   </TimetableDateListInner>
 );
