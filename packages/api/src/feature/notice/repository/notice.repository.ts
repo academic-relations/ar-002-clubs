@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { count, desc } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -33,5 +33,28 @@ export class NoticeRepository {
       total: numberOfNotices,
       offset: pageOffset,
     };
+  }
+
+  async insertNotices(
+    params: {
+      title: string;
+      author: string;
+      date: Date;
+      link: string;
+    }[],
+  ): Promise<boolean> {
+    const isInsertionSucceed = await this.db.transaction(async tx => {
+      const [insertionResult] = await tx.insert(Notice).values(params);
+      if (insertionResult.affectedRows > 1)
+        throw new HttpException(
+          "unreachable",
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      if (insertionResult.affectedRows === 0) return false;
+
+      return true;
+    });
+
+    return isInsertionSucceed;
   }
 }
