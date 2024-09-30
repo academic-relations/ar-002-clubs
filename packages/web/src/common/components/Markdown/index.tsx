@@ -82,6 +82,18 @@ const Markdown = () => {
     }
   }, [editor]);
 
+  const insertTableAndMoveCursor = useCallback(() => {
+    if (editor) {
+      editor.chain().focus().insertContent("<p></p><p></p>").run();
+      editor.commands.setTextSelection(editor.state.selection.$anchor.pos - 1);
+      editor
+        .chain()
+        .focus()
+        .insertTable({ rows: 2, cols: 2, withHeaderRow: true })
+        .run();
+    }
+  }, [editor]);
+
   if (!editor) {
     return null;
   }
@@ -96,17 +108,7 @@ const Markdown = () => {
           >
             진하게
           </Button>
-          <Button
-            onClick={() => {
-              editor
-                .chain()
-                .focus()
-                .insertTable({ rows: 2, cols: 2, withHeaderRow: true })
-                .run();
-            }}
-          >
-            표 추가
-          </Button>
+          <Button onClick={insertTableAndMoveCursor}>표 추가</Button>
           <Button
             onClick={() => editor.chain().focus().deleteTable().run()}
             type={!editor.can().deleteTable() ? "disabled" : "default"}
