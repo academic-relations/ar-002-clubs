@@ -87,7 +87,7 @@ p {
     cursor: col-resize;
   }
 
-  .is-editor-empty:not(:has(table)):first-child::before {
+  .is-editor-empty:has(:not(p, table, img)):first-child::before {
     color: #dddddd;
     content: attr(data-placeholder);
     float: left;
