@@ -93,12 +93,22 @@ const MeetingDetailFrame: React.FC = () => {
     if (data == null) return "";
     let content = data.announcementContent;
 
+    content = content.replace(
+      meetingType,
+      meetingEnumToText(data.meetingEnumId.toString()),
+    );
+    content = content.replace(
+      isRegular,
+      data.isRegular ? "정기회의" : "비정기회의",
+    );
+
     content = content.replace(dateTime, formatDateTime(data.startDate));
     content = content.replace(dateTime, formatDateTimeEn(data.startDate));
     content = content.replace(startDate, formatDateTime(data.startDate));
     if (data.endDate != null) {
       content = content.replace(endDate, formatDateTime(data.endDate));
     }
+
     content = content.replace(location, data.location);
     content = content.replace(locationEn, data.locationEn);
 
