@@ -5,7 +5,7 @@ import React, { useCallback } from "react";
 import Bold from "@tiptap/extension-bold";
 import Document from "@tiptap/extension-document";
 import Dropcursor from "@tiptap/extension-dropcursor";
-import Image from "@tiptap/extension-image";
+import TiptapImage from "@tiptap/extension-image";
 import Italic from "@tiptap/extension-italic";
 import Paragraph from "@tiptap/extension-paragraph";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -17,11 +17,31 @@ import Text from "@tiptap/extension-text";
 
 import { EditorContent, useEditor } from "@tiptap/react";
 
+import Image from "next/image";
+
 import styled from "styled-components";
 
+// TODO: refactor chacha!!!!
+import tableColumnPlusAfterDisabledSvg from "@sparcs-clubs/web/assets/table-column-plus-after-disabled.svg";
+import tableColumnPlusAfterSvg from "@sparcs-clubs/web/assets/table-column-plus-after.svg";
+import tableColumnPlusBeforeDisabledSvg from "@sparcs-clubs/web/assets/table-column-plus-before-disabled.svg";
+import tableColumnPlusBeforeSvg from "@sparcs-clubs/web/assets/table-column-plus-before.svg";
+import tableColumnRemoveDisabledSvg from "@sparcs-clubs/web/assets/table-column-remove-disabled.svg";
+import tableColumnRemoveSvg from "@sparcs-clubs/web/assets/table-column-remove.svg";
+import tableMergeCellsDisabledSvg from "@sparcs-clubs/web/assets/table-merge-cells-disabled.svg";
+import tableMergeCellsSvg from "@sparcs-clubs/web/assets/table-merge-cells.svg";
+import tableRowPlusAfterDisabledSvg from "@sparcs-clubs/web/assets/table-row-plus-after-disabled.svg";
+import tableRowPlusAfterSvg from "@sparcs-clubs/web/assets/table-row-plus-after.svg";
+import tableRowPlusBeforeDisabledSvg from "@sparcs-clubs/web/assets/table-row-plus-before-disabled.svg";
+import tableRowPlusBeforeSvg from "@sparcs-clubs/web/assets/table-row-plus-before.svg";
+import tableRowRemoveDisabledSvg from "@sparcs-clubs/web/assets/table-row-remove-disabled.svg";
+import tableRowRemoveSvg from "@sparcs-clubs/web/assets/table-row-remove.svg";
+import tableSplitCellDisabledSvg from "@sparcs-clubs/web/assets/table-split-cell-disabled.svg";
+import tableSplitCellSvg from "@sparcs-clubs/web/assets/table-split-cell.svg";
+
 import Button from "@sparcs-clubs/web/common/components/Button";
+import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-// import Icon from "@sparcs-clubs/web/common/components/Icon";
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -46,8 +66,8 @@ const Markdown = () => {
         },
       }),
       Dropcursor,
-      Image.configure({
-        inline: true, // Allow the image to be inline
+      TiptapImage.configure({
+        inline: true,
         HTMLAttributes: {
           class: "tiptap-image",
         },
@@ -74,14 +94,6 @@ const Markdown = () => {
     content: ``,
   });
 
-  const addImage = useCallback(() => {
-    const url = window.prompt("URL");
-
-    if (editor && url) {
-      editor.chain().focus().setImage({ src: url }).run();
-    }
-  }, [editor]);
-
   const insertTableAndMoveCursor = useCallback(() => {
     if (editor) {
       editor.chain().focus().insertContent("<p></p><p></p>").run();
@@ -89,10 +101,38 @@ const Markdown = () => {
       editor
         .chain()
         .focus()
-        .insertTable({ rows: 2, cols: 2, withHeaderRow: true })
+        .insertTable({ rows: 2, cols: 2, withHeaderRow: false })
         .run();
     }
   }, [editor]);
+
+  const handleDrop = useCallback(
+    (event: React.DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+
+      const { files } = event.dataTransfer;
+      if (files.length === 0) {
+        return;
+      }
+
+      const file = files[0];
+      if (!file.type.startsWith("image/")) {
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (editor && reader.result)
+          editor
+            .chain()
+            .focus()
+            .setImage({ src: reader.result.toString() })
+            .run();
+      };
+      reader.readAsDataURL(file);
+    },
+    [editor],
+  );
 
   if (!editor) {
     return null;
@@ -102,74 +142,141 @@ const Markdown = () => {
     <FlexWrapper direction="column" gap={12}>
       <FlexWrapper direction="column" gap={12}>
         <ButtonWrapper>
-          <Button
+          <IconButton
             onClick={() => editor.chain().focus().toggleBold().run()}
-            className={editor.isActive("bold") ? "is-active" : ""}
-          >
-            진하게
-          </Button>
-          <Button onClick={insertTableAndMoveCursor}>표 추가</Button>
-          <Button
+            icon="format_bold"
+            size={20}
+          />
+          <div className="vertical-divider" />
+          <IconButton
+            onClick={insertTableAndMoveCursor}
+            icon="grid_on"
+            size={20}
+          />
+          <IconButton
             onClick={() => editor.chain().focus().deleteTable().run()}
             type={!editor.can().deleteTable() ? "disabled" : "default"}
-          >
-            표 삭제
-          </Button>
+            icon="grid_off"
+            size={20}
+          />
           <Button
             onClick={() => editor.chain().focus().mergeCells().run()}
             type={!editor.can().mergeCells() ? "disabled" : "default"}
           >
-            셀 병합
+            {!editor.can().mergeCells() ? (
+              <Image src={tableMergeCellsDisabledSvg} alt="table-merge-cells" />
+            ) : (
+              <Image src={tableMergeCellsSvg} alt="table-merge-cells" />
+            )}
           </Button>
           <Button
             onClick={() => editor.chain().focus().splitCell().run()}
             type={!editor.can().splitCell() ? "disabled" : "default"}
           >
-            셀 분리
+            {!editor.can().splitCell() ? (
+              <Image
+                src={tableSplitCellDisabledSvg}
+                alt="table-split-cell-disabled"
+              />
+            ) : (
+              <Image src={tableSplitCellSvg} alt="table-split-cell" />
+            )}
           </Button>
-        </ButtonWrapper>
-        <ButtonWrapper>
           <Button
             onClick={() => editor.chain().focus().addColumnBefore().run()}
             type={!editor.can().addColumnBefore() ? "disabled" : "default"}
           >
-            왼쪽에 열 추가
+            {!editor.can().addColumnBefore() ? (
+              <Image
+                src={tableColumnPlusBeforeDisabledSvg}
+                alt="table-column-plus-before-disabled"
+              />
+            ) : (
+              <Image
+                src={tableColumnPlusBeforeSvg}
+                alt="table-column-plus-before"
+              />
+            )}
           </Button>
           <Button
             onClick={() => editor.chain().focus().addColumnAfter().run()}
             type={!editor.can().addColumnAfter() ? "disabled" : "default"}
           >
-            오른쪽에 열 추가
+            {!editor.can().addColumnAfter() ? (
+              <Image
+                src={tableColumnPlusAfterDisabledSvg}
+                alt="table-column-plus-after-disabled"
+              />
+            ) : (
+              <Image
+                src={tableColumnPlusAfterSvg}
+                alt="table-column-plus-after"
+              />
+            )}
           </Button>
           <Button
             onClick={() => editor.chain().focus().deleteColumn().run()}
             type={!editor.can().deleteColumn() ? "disabled" : "default"}
           >
-            열 삭제
+            {!editor.can().deleteColumn() ? (
+              <Image
+                src={tableColumnRemoveDisabledSvg}
+                alt="table-column-remove-disabled"
+              />
+            ) : (
+              <Image src={tableColumnRemoveSvg} alt="table-column-remove" />
+            )}
           </Button>
           <Button
             onClick={() => editor.chain().focus().addRowBefore().run()}
             type={!editor.can().addRowBefore() ? "disabled" : "default"}
           >
-            위에 행 추가
+            {!editor.can().addRowBefore() ? (
+              <Image
+                src={tableRowPlusBeforeDisabledSvg}
+                alt="table-row-plus-before-disabled"
+              />
+            ) : (
+              <Image src={tableRowPlusBeforeSvg} alt="table-row-plus-before" />
+            )}
           </Button>
           <Button
             onClick={() => editor.chain().focus().addRowAfter().run()}
             type={!editor.can().addRowAfter() ? "disabled" : "default"}
           >
-            아래에 행 추가
+            {!editor.can().addRowAfter() ? (
+              <Image
+                src={tableRowPlusAfterDisabledSvg}
+                alt="table-row-plus-after-disabled"
+              />
+            ) : (
+              <Image src={tableRowPlusAfterSvg} alt="table-row-plus-after" />
+            )}
           </Button>
           <Button
             onClick={() => editor.chain().focus().deleteRow().run()}
             type={!editor.can().deleteRow() ? "disabled" : "default"}
           >
-            행 삭제
+            {!editor.can().deleteRow() ? (
+              <Image
+                src={tableRowRemoveDisabledSvg}
+                alt="table-row-remove-disabled"
+                className="button-icon"
+              />
+            ) : (
+              <Image
+                src={tableRowRemoveSvg}
+                alt="table-row-remove"
+                className="button-icon"
+              />
+            )}
           </Button>
-          <Button onClick={addImage}>Set image</Button>
         </ButtonWrapper>
       </FlexWrapper>
-      <div className="divider" />
-      <EditorContent editor={editor} />
+      <div className="horizontal-divider" />
+      <div onDrop={handleDrop}>
+        <EditorContent editor={editor} />
+      </div>
     </FlexWrapper>
   );
 };

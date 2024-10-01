@@ -51,7 +51,8 @@ p {
     }
 
     .selectedCell:after {
-      background: #ccc;
+      background-color: #eeeeee;
+      opacity: 50%;
       content: "";
       left: 0;
       right: 0;
@@ -59,7 +60,7 @@ p {
       bottom: 0;
       pointer-events: none;
       position: absolute;
-      z-index: 2;
+      z-index: -1;
     }
 
     .column-resize-handle {
@@ -111,6 +112,10 @@ p {
   border: 1px solid #0099ad;
 }
 
-.divider {
+.horizontal-divider {
+  border: 0.5px solid #eeeeee;
+}
+
+.vertical-divider {
   border: 0.5px solid #eeeeee;
 }
