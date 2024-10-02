@@ -19,7 +19,7 @@ const requestParam = z.object({
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  studentId: z.coerce.number().int().min(1),
+  studentId: z.coerce.number().int().min(0), // studentId로 0이 넘어오면 해당 지위를 비워둡니다.
   delegateEnumId: z.nativeEnum(ClubDelegateEnum),
 });
 

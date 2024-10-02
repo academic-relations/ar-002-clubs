@@ -30,6 +30,7 @@ const responseBodyMap = {
     students: z.array(
       z.object({
         id: z.coerce.number().int(),
+        studentNumber: z.coerce.number().int(),
         name: z.coerce.string().max(20),
         phoneNumber: zKrPhoneNumber,
       }),
