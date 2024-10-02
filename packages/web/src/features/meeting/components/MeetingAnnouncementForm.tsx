@@ -29,7 +29,9 @@ const MeetingAnnouncementForm: React.FC = () => {
   const meetingEnumId = watch("meetingEnumId");
   const announcementContent = watch("announcementContent");
 
-  const { data, isLoading, isError } = useGetMeetingDegree({ meetingEnumId });
+  const { data, isLoading, isError, refetch } = useGetMeetingDegree({
+    meetingEnumId,
+  });
 
   const openResetModal = () => {
     overlay.open(({ isOpen, close }) => (
@@ -66,6 +68,12 @@ const MeetingAnnouncementForm: React.FC = () => {
       resetField("announcementContent", { defaultValue: template.content });
     }
   }, [meetingEnumId, data, resetField]);
+
+  useEffect(() => {
+    if (meetingEnumId !== MeetingEnum.divisionMeeting) {
+      refetch();
+    }
+  }, [meetingEnumId, refetch]);
 
   const contentLength = announcementContent?.split(/\r\n|\r|\n/).length;
 
