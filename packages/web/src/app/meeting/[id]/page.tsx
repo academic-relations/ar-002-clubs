@@ -1,90 +1,154 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 
-// 배포용 not found 페이지 (시작)
-import NotFound from "@sparcs-clubs/web/app/not-found";
+import Link from "next/link";
 
-const TemporaryNotFound = () => <NotFound />;
+import { useParams, useRouter } from "next/navigation";
+import { overlay } from "overlay-kit";
+import styled from "styled-components";
 
-export default TemporaryNotFound;
-// 배포용 not found 페이지 (끝)
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import Button from "@sparcs-clubs/web/common/components/Button";
+import Card from "@sparcs-clubs/web/common/components/Card";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
-// import Link from "next/link";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { meetingEnumToText } from "@sparcs-clubs/web/features/meeting/constants/getEnumType";
+import {
+  dateTime,
+  endDate,
+  isRegular,
+  location,
+  locationEn,
+  meetingType,
+  startDate,
+} from "@sparcs-clubs/web/features/meeting/constants/meetingTemplate";
+import useDeleteMeeting from "@sparcs-clubs/web/features/meeting/services/useDeleteMeeting";
+import useGetMeetingDetail from "@sparcs-clubs/web/features/meeting/services/useGetMeetingDetail";
+import {
+  formatDateTime,
+  formatDateTimeEn,
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 
-// import { useRouter } from "next/navigation";
-// import { overlay } from "overlay-kit";
-// import styled from "styled-components";
+const RowStretchWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+`;
 
-// import Button from "@sparcs-clubs/web/common/components/Button";
-// import Card from "@sparcs-clubs/web/common/components/Card";
-// import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-// import Modal from "@sparcs-clubs/web/common/components/Modal";
-// import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
-// import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+const MeetingDetailFrame: React.FC = () => {
+  const router = useRouter();
+  const { id } = useParams();
 
-// import Typography from "@sparcs-clubs/web/common/components/Typography";
-// import { mockupData } from "@sparcs-clubs/web/features/meeting/services/_mock/mockupMeetingDetail";
+  const { data, isLoading, isError } = useGetMeetingDetail(+id);
+  const { mutate, isPending: isDeleteLoading } = useDeleteMeeting();
 
-// const RowStretchWrapper = styled.div`
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   align-self: stretch;
-// `;
+  const deleteHandler = useCallback(() => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <CancellableModalContent
+          onConfirm={() => {
+            mutate(
+              { param: { announcementId: +id } },
+              {
+                onSuccess: () => {
+                  router.replace("/meeting");
+                },
+              },
+            );
+            close();
+          }}
+          onClose={close}
+        >
+          공고를 삭제하면 복구할 수 없습니다.
+          <br />
+          ㄱㅊ?
+        </CancellableModalContent>
+      </Modal>
+    ));
+  }, [id, mutate, router]);
 
-// const MeetingDetailFrame: React.FC = () => {
-//   const router = useRouter();
+  const announcementTitle = useMemo(() => {
+    if (data == null) return "";
+    let title = data.announcementTitle;
 
-//   const deleteHandler = () => {
-//     overlay.open(({ isOpen, close }) => (
-//       <Modal isOpen={isOpen}>
-//         <CancellableModalContent
-//           onConfirm={() => {
-//             // TODO. 삭제 요청 api 연결
-//             close();
-//             router.replace("/meeting");
-//           }}
-//           onClose={close}
-//         >
-//           공고를 삭제하면 복구할 수 없습니다.
-//           <br />
-//           ㄱㅊ?
-//         </CancellableModalContent>
-//       </Modal>
-//     ));
-//   };
+    title = title.replace(
+      meetingType,
+      meetingEnumToText(data.meetingEnumId.toString()),
+    );
+    title = title.replace(
+      isRegular,
+      data.isRegular ? "정기회의" : "비정기회의",
+    );
 
-//   // TODO. 공고 상세조회 api 연결
-//   const data = mockupData;
+    return title;
+  }, [data]);
 
-//   return (
-//     <FlexWrapper direction="column" gap={60}>
-//       <PageHead
-//         items={[{ name: "의결기구", path: `/meeting` }]}
-//         title={data.title}
-//         enableLast
-//       />
-//       <Card outline>
-//         <Typography fs={16} lh={20} style={{ whiteSpace: "pre-line" }}>
-//           {data.content}
-//         </Typography>
-//       </Card>
-//       <RowStretchWrapper>
-//         <Link href="/meeting">
-//           <Button type="default">목록으로 돌아가기</Button>
-//         </Link>
-//         <FlexWrapper direction="row" gap={10}>
-//           <Button type="default" onClick={deleteHandler}>
-//             삭제
-//           </Button>
-//           <Link href={`/meeting/${data.id}/edit`}>
-//             <Button type="default">수정</Button>
-//           </Link>
-//         </FlexWrapper>
-//       </RowStretchWrapper>
-//     </FlexWrapper>
-//   );
-// };
+  const announcementContent = useMemo(() => {
+    if (data == null) return "";
+    let content = data.announcementContent;
 
-// export default MeetingDetailFrame;
+    content = content.replace(
+      meetingType,
+      meetingEnumToText(data.meetingEnumId.toString()),
+    );
+    content = content.replace(
+      isRegular,
+      data.isRegular ? "정기회의" : "비정기회의",
+    );
+
+    content = content.replace(dateTime, formatDateTime(data.startDate));
+    content = content.replace(dateTime, formatDateTimeEn(data.startDate));
+    content = content.replace(startDate, formatDateTime(data.startDate));
+    if (data.endDate != null) {
+      content = content.replace(endDate, formatDateTime(data.endDate));
+    }
+
+    content = content.replace(location, data.location);
+    content = content.replace(locationEn, data.locationEn);
+
+    return content;
+  }, [data]);
+
+  return (
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <FlexWrapper direction="column" gap={60}>
+        <PageHead
+          items={[{ name: "의결기구", path: `/meeting` }]}
+          title={announcementTitle}
+          enableLast
+        />
+        <Card outline>
+          <Typography fs={16} lh={20} style={{ whiteSpace: "pre-line" }}>
+            {announcementContent}
+          </Typography>
+        </Card>
+        <RowStretchWrapper>
+          <Link href="/meeting">
+            <Button type="default">목록으로 돌아가기</Button>
+          </Link>
+          <FlexWrapper direction="row" gap={10}>
+            <Button
+              type={isDeleteLoading ? "disabled" : "default"}
+              onClick={deleteHandler}
+            >
+              삭제
+            </Button>
+            <Link href={`/meeting/${id}/edit`}>
+              <Button type={isDeleteLoading ? "disabled" : "default"}>
+                수정
+              </Button>
+            </Link>
+          </FlexWrapper>
+        </RowStretchWrapper>
+      </FlexWrapper>
+    </AsyncBoundary>
+  );
+};
+
+export default MeetingDetailFrame;

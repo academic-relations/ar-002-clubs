@@ -15,6 +15,7 @@ import {
 } from "@sparcs-clubs/web/styles/fonts/googleFonts";
 
 import DebugBadge from "../common/components/DebugBadge";
+import PageContent from "../common/components/PageContent";
 import { AuthProvider } from "../common/providers/AuthContext";
 
 import type { Metadata } from "next";
@@ -41,7 +42,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => (
             <AuthProvider>
               <DebugBadge />
               <Header />
-              <ResponsiveContent>{children}</ResponsiveContent>
+              <ResponsiveContent>
+                <PageContent>{children}</PageContent>
+              </ResponsiveContent>
               <Footer />
             </AuthProvider>
           </UseClientProvider>
