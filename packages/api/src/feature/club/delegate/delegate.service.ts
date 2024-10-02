@@ -268,12 +268,17 @@ export default class ClubDelegateService {
         filterClubDelegateEnum:
           param.param.delegateEnumId === ClubDelegateEnum.Representative
             ? [ClubDelegateEnum.Representative]
-            : [ClubDelegateEnum.Delegate1, ClubDelegateEnum.Delegate2],
+            : [
+                ClubDelegateEnum.Representative,
+                ClubDelegateEnum.Delegate1,
+                ClubDelegateEnum.Delegate2,
+              ],
       });
 
     const response = {
       students: result.map(e => ({
         id: e.student.id,
+        studentNumber: String(e.student.number),
         name: e.student.name,
         phoneNumber: e.student.phoneNumber,
       })),
