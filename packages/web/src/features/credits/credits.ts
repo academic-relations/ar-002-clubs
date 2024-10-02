@@ -31,6 +31,13 @@ const credits: SemesterCredit[] = [
         comment: "ㅇㅅㅇ",
       },
       {
+        nickname: "daystar",
+        name: "권진현",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "가을은 코딩하기 좋은 계절",
+      },
+      {
         nickname: "default",
         name: "김현수",
         role: "BE",
