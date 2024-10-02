@@ -35,7 +35,6 @@ const EditMeetingPage: React.FC = () => {
   });
 
   const {
-    resetField,
     getValues,
     handleSubmit,
     watch,
@@ -97,14 +96,7 @@ const EditMeetingPage: React.FC = () => {
               title="공고 수정"
             />
             <MeetingInformationFrame />
-            <MeetingAnnouncementFrame
-              isTemplateVisible
-              onReset={() => {
-                resetField("announcementContent", {
-                  defaultValue: data?.announcementContent,
-                });
-              }}
-            />
+            <MeetingAnnouncementFrame isTemplateVisible />
             <ButtonWrapper>
               <Button
                 type={isUpdateLoading ? "disabled" : "default"}
