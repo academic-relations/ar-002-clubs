@@ -132,9 +132,11 @@ export default class ClubDelegateService {
 
     // targetStudent가 현재 대표자로 활동 중인지 검사합니다.
     const targetStatus =
-      await this.clubDelegateDRepository.findDelegateByStudentId(
-        param.targetStudentId,
-      );
+      param.targetStudentId !== 0
+        ? await this.clubDelegateDRepository.findDelegateByStudentId(
+            param.targetStudentId,
+          )
+        : [];
     if (targetStatus.length > 1)
       throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
     if (targetStatus.length === 1)
@@ -145,9 +147,13 @@ export default class ClubDelegateService {
 
     // targetStudent가 이미 다른 요청을 받은 상태인지 검사합니다.
     const targetRequests =
-      await this.clubDelegateDRepository.findDelegateChangeRequestByStudentId({
-        studentId: param.targetStudentId,
-      });
+      param.targetStudentId !== 0
+        ? await this.clubDelegateDRepository.findDelegateChangeRequestByStudentId(
+            {
+              studentId: param.targetStudentId,
+            },
+          )
+        : [];
     if (targetRequests.length > 1)
       throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
     if (targetRequests.length === 1)
@@ -156,10 +162,10 @@ export default class ClubDelegateService {
         HttpStatus.BAD_REQUEST,
       );
 
-    // 대표자 변경 신청의 경우 targetStudentId가 undefined인지 검사합니다.
+    // 대표자 변경 신청의 경우 targetStudentId가 0인지 검사합니다.
     if (
       param.clubDelegateEnumId === ClubDelegateEnum.Representative &&
-      param.targetStudentId === undefined
+      param.targetStudentId === 0
     )
       throw new HttpException(
         "representative can;t be empty",
