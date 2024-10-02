@@ -13,6 +13,7 @@ import styled from "styled-components";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorModal";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 import MeetingAnnouncementFrame from "@sparcs-clubs/web/features/meeting/components/MeetingAnnouncementFrame";
@@ -67,6 +68,7 @@ const EditMeetingPage: React.FC = () => {
           queryClient.invalidateQueries({ queryKey: [apiMee002.url(+id)] });
           router.replace(`/meeting/${id}`);
         },
+        onError: () => errorHandler("수정에 실패하였습니다"),
       },
     );
   };

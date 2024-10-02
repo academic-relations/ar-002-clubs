@@ -11,6 +11,7 @@ import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorModal";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 import MeetingAnnouncementFrame from "@sparcs-clubs/web/features/meeting/components/MeetingAnnouncementFrame";
@@ -52,6 +53,7 @@ const CreateMeetingPage: React.FC = () => {
         onSuccess: () => {
           router.replace("/meeting");
         },
+        onError: () => errorHandler("생성에 실패하였습니다"),
       },
     );
   }, [createMeeting, getValues, router]);
