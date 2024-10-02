@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { ApiMee001RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee001";
 import Link from "next/link";
@@ -26,28 +26,24 @@ const CreateMeetingPage: React.FC = () => {
   const router = useRouter();
   const formCtx = useForm<ApiMee001RequestBody>({
     mode: "all",
+    defaultValues: {
+      announcementTitle: "",
+      announcementContent: "",
+    },
   });
 
   const {
-    resetField,
+    watch,
     getValues,
     handleSubmit,
-    watch,
     formState: { isValid },
   } = formCtx;
 
-  const announcementTitle = watch("announcementTitle");
-  const announcementContent = watch("announcementContent");
+  const meetingEnumId = watch("meetingEnumId");
 
   const [isTemplateVisible, setIsTemplateVisible] = useState(false);
-
   const { mutate: createMeeting, isPending: isCreateLoading } =
     useCreateMeeting();
-
-  const isFormValid = useMemo(
-    () => isValid && announcementTitle != null && announcementContent != null,
-    [announcementContent, announcementTitle, isValid],
-  );
 
   const submitHandler = useCallback(() => {
     createMeeting(
@@ -59,6 +55,12 @@ const CreateMeetingPage: React.FC = () => {
       },
     );
   }, [createMeeting, getValues, router]);
+
+  useEffect(() => {
+    if (meetingEnumId != null) {
+      setIsTemplateVisible(false);
+    }
+  }, [meetingEnumId]);
 
   return (
     <FormProvider {...formCtx}>
@@ -82,12 +84,7 @@ const CreateMeetingPage: React.FC = () => {
               setIsTemplateVisible(true);
             }}
           />
-          <MeetingAnnouncementFrame
-            isTemplateVisible={isTemplateVisible}
-            onReset={defaultValue => {
-              resetField("announcementContent", { defaultValue });
-            }}
-          />
+          <MeetingAnnouncementFrame isTemplateVisible={isTemplateVisible} />
           <ButtonWrapper>
             <Link href="/meeting">
               <Button type={isCreateLoading ? "disabled" : "outlined"}>
@@ -96,7 +93,11 @@ const CreateMeetingPage: React.FC = () => {
             </Link>
             <Button
               buttonType="submit"
-              type={isFormValid && !isCreateLoading ? "default" : "disabled"}
+              type={
+                isValid && !isCreateLoading && isTemplateVisible
+                  ? "default"
+                  : "disabled"
+              }
             >
               저장
             </Button>
