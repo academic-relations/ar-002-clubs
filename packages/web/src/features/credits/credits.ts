@@ -37,6 +37,13 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.member,
         comment: "https://skykhs3.github.io",
       },
+      {
+        nickname: "chacha",
+        name: "안채연",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "클럽수수수수퍼노바",
+      },
     ],
   },
   {
