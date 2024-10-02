@@ -71,11 +71,6 @@ const Markdown = () => {
           class: "tiptap-image",
         },
       }),
-      Italic.configure({
-        HTMLAttributes: {
-          class: "italic-text",
-        },
-      }),
       Placeholder.configure({
         placeholder: "내용을 입력하세요.",
       }),
