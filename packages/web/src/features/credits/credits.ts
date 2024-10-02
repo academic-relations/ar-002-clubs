@@ -37,6 +37,20 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.member,
         comment: "가을은 코딩하기 좋은 계절",
       },
+      {
+        nickname: "default",
+        name: "김현수",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "https://skykhs3.github.io",
+      },
+      {
+        nickname: "chacha",
+        name: "안채연",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "클럽수수수수퍼노바",
+      },
     ],
   },
   {

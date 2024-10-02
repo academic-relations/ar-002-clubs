@@ -21,7 +21,6 @@ const CreditCardsFlexWrapper = styled(FlexWrapper)`
 `;
 
 const ResponsiveMemberCardSectionWrapper = styled.div`
-
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
     margin-left: 16px;
   }

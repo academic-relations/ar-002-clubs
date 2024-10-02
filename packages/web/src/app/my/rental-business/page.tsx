@@ -1,116 +1,108 @@
 "use client";
 
-// 배포용 not found 페이지 (시작)
-import NotFound from "@sparcs-clubs/web/app/not-found";
+import React, { useMemo } from "react";
 
-const TemporaryNotFound = () => <NotFound />;
+import {
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 
-export default TemporaryNotFound;
-// 배포용 not found 페이지 (끝)
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import Table from "@sparcs-clubs/web/common/components/Table";
+import Tag from "@sparcs-clubs/web/common/components/Tag";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { RntTagList } from "@sparcs-clubs/web/constants/tableTagList";
+import { mockupMyRental } from "@sparcs-clubs/web/features/my/services/_mock/mockMyClub";
+import {
+  formatDate,
+  formatDateTime,
+} from "@sparcs-clubs/web/utils/Date/formatDate";
+import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-// import React, { useMemo } from "react";
+const columnHelper =
+  createColumnHelper<(typeof mockupMyRental.items)[number]>();
 
-// import {
-//   createColumnHelper,
-//   getCoreRowModel,
-//   useReactTable,
-// } from "@tanstack/react-table";
+const columns = [
+  columnHelper.accessor("statusEnum", {
+    id: "status",
+    header: "상태",
+    cell: info => {
+      const { color, text } = getTagDetail(info.getValue(), RntTagList);
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 10,
+  }),
+  columnHelper.accessor("createdAt", {
+    id: "createdAt",
+    header: "신청 일시",
+    cell: info => formatDateTime(info.getValue()),
+    size: 20,
+  }),
+  columnHelper.accessor("studentName", {
+    id: "studentName",
+    header: "동아리",
+    cell: info => info.getValue(),
+    size: 10,
+  }),
+  columnHelper.accessor("desiredStart", {
+    id: "desiredStart",
+    header: "대여 일자",
+    cell: info => formatDate(info.getValue()),
+    size: 20,
+  }),
+  columnHelper.accessor("desiredEnd", {
+    id: "desiredEnd",
+    header: "반납 일자",
+    cell: info => formatDate(info.getValue()),
+    size: 20,
+  }),
+  columnHelper.accessor(
+    row =>
+      `${row.objects[0].name} ${row.objects[0].number}개 외 ${row.objects.length}항목`,
+    {
+      id: "rentalObjects",
+      header: "대여 물품",
+      cell: info => info.getValue(),
+      size: 20,
+    },
+  ),
+];
 
-// import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-// import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-// import Table from "@sparcs-clubs/web/common/components/Table";
-// import Tag from "@sparcs-clubs/web/common/components/Tag";
-// import Typography from "@sparcs-clubs/web/common/components/Typography";
-// import { RntTagList } from "@sparcs-clubs/web/constants/tableTagList";
-// import { mockupMyRental } from "@sparcs-clubs/web/features/my/services/_mock/mockMyClub";
-// import {
-//   formatDate,
-//   formatDateTime,
-// } from "@sparcs-clubs/web/utils/Date/formatDate";
-// import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+const MyRentalBusiness = () => {
+  const data = useMemo(() => mockupMyRental.items, []);
 
-// const columnHelper =
-//   createColumnHelper<(typeof mockupMyRental.items)[number]>();
+  const table = useReactTable({
+    columns,
+    data,
+    getCoreRowModel: getCoreRowModel(),
+    enableSorting: false,
+  });
 
-// const columns = [
-//   columnHelper.accessor("statusEnum", {
-//     id: "status",
-//     header: "상태",
-//     cell: info => {
-//       const { color, text } = getTagDetail(info.getValue(), RntTagList);
-//       return <Tag color={color}>{text}</Tag>;
-//     },
-//     size: 10,
-//   }),
-//   columnHelper.accessor("createdAt", {
-//     id: "createdAt",
-//     header: "신청 일시",
-//     cell: info => formatDateTime(info.getValue()),
-//     size: 20,
-//   }),
-//   columnHelper.accessor("studentName", {
-//     id: "studentName",
-//     header: "동아리",
-//     cell: info => info.getValue(),
-//     size: 10,
-//   }),
-//   columnHelper.accessor("desiredStart", {
-//     id: "desiredStart",
-//     header: "대여 일자",
-//     cell: info => formatDate(info.getValue()),
-//     size: 20,
-//   }),
-//   columnHelper.accessor("desiredEnd", {
-//     id: "desiredEnd",
-//     header: "반납 일자",
-//     cell: info => formatDate(info.getValue()),
-//     size: 20,
-//   }),
-//   columnHelper.accessor(
-//     row =>
-//       `${row.objects[0].name} ${row.objects[0].number}개 외 ${row.objects.length}항목`,
-//     {
-//       id: "rentalObjects",
-//       header: "대여 물품",
-//       cell: info => info.getValue(),
-//       size: 20,
-//     },
-//   ),
-// ];
+  return (
+    <FlexWrapper direction="column" gap={20}>
+      <PageHead
+        items={[
+          { name: "마이페이지", path: "/my" },
+          { name: "대여 사업 신청 내역", path: "/my/rental-business" },
+        ]}
+        title="대여 사업 신청 내역"
+      />
+      <FlexWrapper direction="row" gap={0} justify="flex-end">
+        <Typography
+          fw="REGULAR"
+          fs={16}
+          lh={20}
+          ff="PRETENDARD"
+          color="GRAY.600"
+        >
+          총 {data.length}개
+        </Typography>
+      </FlexWrapper>
+      <Table table={table} />
+    </FlexWrapper>
+  );
+};
 
-// const MyRentalBusiness = () => {
-//   const data = useMemo(() => mockupMyRental.items, []);
-
-//   const table = useReactTable({
-//     columns,
-//     data,
-//     getCoreRowModel: getCoreRowModel(),
-//     enableSorting: false,
-//   });
-
-//   return (
-//     <FlexWrapper direction="column" gap={20}>
-//       <PageHead
-//         items={[
-//           { name: "마이페이지", path: "/my" },
-//           { name: "대여 사업 신청 내역", path: "/my/rental-business" },
-//         ]}
-//         title="대여 사업 신청 내역"
-//       />
-//       <FlexWrapper direction="row" gap={0} justify="flex-end">
-//         <Typography
-//           fw="REGULAR"
-//           fs={16}
-//           lh={20}
-//           ff="PRETENDARD"
-//           color="GRAY.600"
-//         >
-//           총 {data.length}개
-//         </Typography>
-//       </FlexWrapper>
-//       <Table table={table} />
-//     </FlexWrapper>
-//   );
-// };
-
-// export default MyRentalBusiness;
+export default MyRentalBusiness;

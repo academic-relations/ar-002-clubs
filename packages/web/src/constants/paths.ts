@@ -18,6 +18,30 @@ const externalLinks = {
     "https://cafe.naver.com/ArticleList.nhn?search.clubid=26985838&search.menuid=19&search.boardtype=L",
 };
 
+/**
+ * NOTE: (@dora)
+ * - production 배포 준비된 페이지들을 따로 관리
+ * - 여기 없는 페이지들은 dev mode에서만 접근 가능
+ * */
+export const productionReadyPaths = [
+  // 공통
+  "/",
+  "/clubs",
+  "/notice",
+  "/credits",
+  // 마이페이지
+  "/my",
+  "/my/clubs",
+  // 대표 동아리 관리
+  "/manage-club",
+  "/manage-club/members",
+  // 동아리 / 회원 등록
+  "/register-club",
+  "/my/register-club",
+  "/executive/register-club",
+  "/executive/register-member",
+];
+
 // authority가 "all"을 포함하면 권한 상관 없이 보이는 메뉴
 const paths = {
   HOME: { name: "홈", path: "/", featureFlag: "DEFAULT", authority: ["all"] },
@@ -45,7 +69,7 @@ const paths = {
       },
       {
         name: "동아리 등록 신청",
-        path: "/register-club", // TODO: 임시 링크
+        path: "/register-club",
         authority: ["all"],
         featureFlag: "REGISTER_CLUB",
       },
