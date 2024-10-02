@@ -44,31 +44,37 @@ export const mockClubDelegateCandidates: ApiClb008ResponseOk = {
   students: [
     {
       id: 20200510,
+      studentNumber: "20200510",
       name: "이지윤",
       phoneNumber: "010-1234-5678",
     },
     {
       id: 20200511,
+      studentNumber: "20200511",
       name: "박지호",
       phoneNumber: "010-1234-5678",
     },
     {
       id: 20200512,
+      studentNumber: "20200512",
       name: "박병찬",
       phoneNumber: "010-1234-5678",
     },
     {
       id: 20200513,
+      studentNumber: "20200513",
       name: "이도라",
       phoneNumber: "010-1234-5678",
     },
     {
       id: 20200514,
+      studentNumber: "20200514",
       name: "삼도라",
       phoneNumber: "010-1234-5678",
     },
     {
       id: 20200515,
+      studentNumber: "20200515",
       name: "사도라",
       phoneNumber: "010-1234-5678",
     },

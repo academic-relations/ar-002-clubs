@@ -1,14 +1,9 @@
-export interface MeetingDetail {
-  id: number;
-  title: string;
-  content: string;
+import { ApiMee001RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee001";
+
+export interface CreateMeetingModel extends ApiMee001RequestBody {
+  count: number;
 }
 
-export interface MeetingTemplateInfo {
-  count: number;
-  meetingType: string; // TODO. interface enum으로 변경
-  startDate: Date;
-  endDate?: Date;
-  location?: string;
-  isRegular: boolean;
+export interface MeetingDetail extends CreateMeetingModel {
+  id: number;
 }

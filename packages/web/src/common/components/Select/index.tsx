@@ -120,7 +120,7 @@ const Select = <T,>({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setErrorStatus(!!errorMessage || (!value && items.length > 0));
+    setErrorStatus(!!errorMessage || (value == null && items.length > 0));
   }, [errorMessage, value, items.length, setErrorStatus]);
 
   useEffect(() => {
@@ -131,7 +131,7 @@ const Select = <T,>({
       ) {
         if (isOpen) {
           setIsOpen(false);
-          if (items.length > 0 && !value) {
+          if (items.length > 0 && value == null) {
             setHasOpenedOnce(true);
           }
         }
@@ -165,12 +165,14 @@ const Select = <T,>({
       <SelectWrapper>
         <SelectInner ref={containerRef}>
           <StyledSelect
-            hasError={hasOpenedOnce && !value && items.length > 0 && !isOpen}
+            hasError={
+              hasOpenedOnce && value == null && items.length > 0 && !isOpen
+            }
             disabled={disabled}
             onClick={handleSelectClick}
             isOpen={isOpen}
           >
-            <SelectValue isSelected={!!value} disabled={disabled}>
+            <SelectValue isSelected={value != null} disabled={disabled}>
               {selectedLabel}
             </SelectValue>
             <IconWrapper>
@@ -201,7 +203,7 @@ const Select = <T,>({
             </Dropdown>
           )}
         </SelectInner>
-        {hasOpenedOnce && !value && items.length > 0 && (
+        {hasOpenedOnce && value == null && items.length > 0 && (
           <FormError>
             {errorMessage || "필수로 선택해야 하는 항목입니다"}
           </FormError>
