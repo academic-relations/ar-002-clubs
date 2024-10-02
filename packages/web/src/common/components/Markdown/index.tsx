@@ -6,7 +6,6 @@ import Bold from "@tiptap/extension-bold";
 import Document from "@tiptap/extension-document";
 import Dropcursor from "@tiptap/extension-dropcursor";
 import TiptapImage from "@tiptap/extension-image";
-import Italic from "@tiptap/extension-italic";
 import Paragraph from "@tiptap/extension-paragraph";
 import Placeholder from "@tiptap/extension-placeholder";
 import Table from "@tiptap/extension-table";
