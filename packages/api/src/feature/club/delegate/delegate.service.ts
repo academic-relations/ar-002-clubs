@@ -278,7 +278,7 @@ export default class ClubDelegateService {
     const response = {
       students: result.map(e => ({
         id: e.student.id,
-        studentNumber: e.student.number,
+        studentNumber: String(e.student.number),
         name: e.student.name,
         phoneNumber: e.student.phoneNumber,
       })),
