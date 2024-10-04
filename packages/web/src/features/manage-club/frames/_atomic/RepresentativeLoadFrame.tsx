@@ -36,9 +36,9 @@ const RepresentativeLoadFrame: React.FC<{
     >
       <ChangeRepresentativeCardV1
         clubId={clubId}
-        delegatesNow={delegatesNow}
-        delegate1Candidates={delegate1Candidates}
-        delegate2Candidates={delegate2Candidates}
+        delegatesNow={delegatesNow || { delegates: [] }}
+        delegate1Candidates={delegate1Candidates || { students: [] }}
+        delegate2Candidates={delegate2Candidates || { students: [] }}
         refetchDelegate1={delegate1Refetch}
         refetchDelegate2={delegate2Refetch}
       />

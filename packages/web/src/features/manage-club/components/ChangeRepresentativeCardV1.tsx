@@ -24,9 +24,9 @@ const LabelWrapper = styled.div`
 
 const ChangeRepresentativeCardV1: React.FC<{
   clubId: number;
-  delegatesNow: ApiClb006ResponseOK | undefined;
-  delegate1Candidates: ApiClb008ResponseOk | undefined;
-  delegate2Candidates: ApiClb008ResponseOk | undefined;
+  delegatesNow: ApiClb006ResponseOK;
+  delegate1Candidates: ApiClb008ResponseOk;
+  delegate2Candidates: ApiClb008ResponseOk;
   refetchDelegate1: () => void;
   refetchDelegate2: () => void;
 }> = ({
@@ -50,7 +50,7 @@ const ChangeRepresentativeCardV1: React.FC<{
       selectable: true,
     })) ?? [];
 
-  // TODO: 실제 API로 대표자 및 대의원 후보 목록 가져오기 (RepresentativeLoadFrame 이용)
+  // TODO: 실제 API로 대표자 후보 목록 가져오기 (RepresentativeLoadFrame 이용)
   const representativeCandidates = mockClubDelegateCandidates;
 
   useEffect(() => {
@@ -94,10 +94,7 @@ const ChangeRepresentativeCardV1: React.FC<{
   }, [delegate2]);
 
   const deleteDelegate = async (delegateEnumId: ClubDelegateEnum) => {
-    await updateClubDelegates(
-      { clubId },
-      { delegateEnumId, studentId: undefined },
-    );
+    await updateClubDelegates({ clubId }, { delegateEnumId, studentId: 0 });
     if (delegateEnumId === ClubDelegateEnum.Delegate1) {
       setDelegate1("");
       refetchDelegate1();
