@@ -178,7 +178,10 @@ const Select = <T,>({
             onClick={handleSelectClick}
             isOpen={isOpen}
           >
-            <SelectValue isSelected={value != null} disabled={disabled}>
+            <SelectValue
+              isSelected={value != null && value !== ""}
+              disabled={disabled}
+            >
               {selectedLabel}
             </SelectValue>
             <IconWrapper>
