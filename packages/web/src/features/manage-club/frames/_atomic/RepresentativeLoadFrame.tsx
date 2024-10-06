@@ -12,6 +12,7 @@ const RepresentativeLoadFrame: React.FC<{
     data: delegatesNow,
     isLoading,
     isError,
+    refetch: delegatesNowRefetch,
   } = useGetClubDelegate({ clubId });
 
   const {
@@ -39,6 +40,7 @@ const RepresentativeLoadFrame: React.FC<{
         delegatesNow={delegatesNow || { delegates: [] }}
         delegate1Candidates={delegate1Candidates || { students: [] }}
         delegate2Candidates={delegate2Candidates || { students: [] }}
+        refetchDelegateNow={delegatesNowRefetch}
         refetchDelegate1={delegate1Refetch}
         refetchDelegate2={delegate2Refetch}
       />
