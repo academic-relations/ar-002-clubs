@@ -12,7 +12,7 @@ const PageContent = ({ children }: { children: React.ReactNode }) => {
 
   const isDevelopment = process.env.NEXT_PUBLIC_APP_MODE === "dev";
   const productionReady = productionReadyPaths
-    .map(p => path.startsWith(p))
+    .map(p => p.startsWith(path))
     .some(p => p);
 
   if (!isDevelopment && !productionReady) {
