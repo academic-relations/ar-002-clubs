@@ -85,9 +85,6 @@ const ClubCard: React.FC<
     } else {
       isRegistered = false;
     }
-  } else {
-    isRegistered = false;
-    isInclub = false;
   }
 
   return (
