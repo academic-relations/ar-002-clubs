@@ -2,6 +2,7 @@ import "./styles.scss";
 
 import React, { useCallback } from "react";
 
+import { Node } from "@tiptap/core";
 import Bold from "@tiptap/extension-bold";
 import Document from "@tiptap/extension-document";
 import Dropcursor from "@tiptap/extension-dropcursor";
@@ -49,6 +50,22 @@ const ButtonWrapper = styled.div`
   gap: 12px;
 `;
 
+const ProtectedParagraph = Node.create({
+  name: "protectedParagraph",
+
+  group: "block",
+
+  content: "text*",
+
+  parseHTML() {
+    return [{ tag: "p" }];
+  },
+
+  renderHTML() {
+    return ["p", { class: "protected" }, 0];
+  },
+});
+
 const Markdown = () => {
   const editor = useEditor({
     extensions: [
@@ -74,6 +91,7 @@ const Markdown = () => {
       Placeholder.configure({
         placeholder: "내용을 입력하세요.",
       }),
+      ProtectedParagraph,
       Table.configure({
         resizable: true,
         HTMLAttributes: {
@@ -90,7 +108,30 @@ const Markdown = () => {
 
   const insertTableAndMoveCursor = useCallback(() => {
     if (editor) {
-      editor.chain().focus().insertContent("<p></p><p></p>").run();
+      editor
+        .chain()
+        .focus()
+        .insertContent([
+          {
+            type: "protectedParagraph",
+            content: [
+              {
+                type: "text",
+                text: " ",
+              },
+            ],
+          },
+          {
+            type: "protectedParagraph",
+            content: [
+              {
+                type: "text",
+                text: " ",
+              },
+            ],
+          },
+        ])
+        .run();
       editor.commands.setTextSelection(editor.state.selection.$anchor.pos - 1);
       editor
         .chain()
@@ -127,6 +168,32 @@ const Markdown = () => {
     },
     [editor],
   );
+
+  const handleBackspace = useCallback(() => {
+    if (editor) {
+      const { state, view } = editor;
+      const { from } = state.selection;
+      const resolvedPos = state.doc.resolve(from - 1);
+      const { nodeBefore, parent } = resolvedPos;
+
+      if (nodeBefore && nodeBefore.type.name === "protectedParagraph") {
+        const content = nodeBefore.textContent;
+        if (content === " ") {
+          return;
+        }
+      }
+      if (parent && parent.type.name === "protectedParagraph") {
+        const content = parent.textContent;
+        if (content === " ") {
+          return;
+        }
+      }
+
+      view.dispatch(
+        state.tr.deleteRange(from - 1, from), // 커서 앞의 한 글자를 삭제
+      );
+    }
+  }, [editor]);
 
   if (!editor) {
     return null;
@@ -268,7 +335,18 @@ const Markdown = () => {
         </ButtonWrapper>
       </FlexWrapper>
       <div className="horizontal-divider" />
-      <div onDrop={handleDrop}>
+      <div
+        onDrop={handleDrop}
+        onKeyDown={event => {
+          if (event.key === "Backspace") {
+            event.preventDefault();
+            handleBackspace();
+          }
+        }}
+        tabIndex={0}
+        role="button"
+        aria-label="에디터를 클릭하여 편집하세요"
+      >
         <EditorContent editor={editor} />
       </div>
     </FlexWrapper>
