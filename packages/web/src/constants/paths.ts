@@ -50,6 +50,8 @@ export const productionReadyPaths: {
     "/my/register-club",
     "/executive/register-club",
     "/executive/register-member",
+    // 상임동아리 대표자 대시보드
+    "/manage-club/permanent",
   ],
   exclude: [],
 };
