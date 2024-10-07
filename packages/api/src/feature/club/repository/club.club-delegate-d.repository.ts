@@ -289,7 +289,7 @@ export class ClubDelegateDRepository {
   async updateDelegate(param: {
     clubId: number;
     clubDelegateEnumId: number;
-    studentId?: number;
+    studentId: number;
   }): Promise<boolean> {
     const now = getKSTDate();
 
@@ -314,6 +314,8 @@ export class ClubDelegateDRepository {
         tx.rollback();
         return false;
       }
+
+      if (param.studentId === 0) return true;
 
       const [delegateInsertResult] = await tx.insert(ClubDelegateD).values({
         clubId: param.clubId,

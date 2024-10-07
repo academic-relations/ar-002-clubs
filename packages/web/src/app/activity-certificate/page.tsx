@@ -2,16 +2,8 @@
 
 import React from "react";
 
-// 배포용 not found 페이지 (시작)
-import NotFound from "../not-found";
+import ActivityCertificateMainFrame from "@sparcs-clubs/web/features/activity-certificate/frames/ActivityCertificateMainFrame";
 
-const TemporaryNotFound = () => <NotFound />;
+const ActivityCertificate = () => <ActivityCertificateMainFrame />;
 
-export default TemporaryNotFound;
-// 배포용 not found 페이지 (끝)
-
-// import ActivityCertificateMainFrame from "@sparcs-clubs/web/features/activity-certificate/frames/ActivityCertificateMainFrame";
-
-// const Clubs = () => <ActivityCertificateMainFrame />;
-
-// export default Clubs;
+export default ActivityCertificate;

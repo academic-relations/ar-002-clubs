@@ -256,12 +256,12 @@ export default class ActivityService {
 
   async getStudentActivity(
     activityId: number,
-    studentId: number,
+    // studentId: number,
   ): Promise<ApiAct002ResponseOk> {
     const activity = await this.getActivity({ activityId });
 
     // 학생이 동아리 대표자 또는 대의원이 맞는지 확인합니다.
-    await this.checkIsStudentDelegate({ studentId, clubId: activity.clubId });
+    // await this.checkIsStudentDelegate({ studentId, clubId: activity.clubId });
 
     const evidence = await this.activityRepository.selectFileByActivityId(
       activity.id,
@@ -654,10 +654,10 @@ export default class ActivityService {
     query: ApiAct011RequestQuery;
   }): Promise<ApiAct011ResponseOk> {
     // 해당 학생이 동아리 대표자가 맞는지 검사합니다.
-    await this.checkIsStudentDelegate({
-      studentId: param.studentId,
-      clubId: param.query.clubId,
-    });
+    // await this.checkIsStudentDelegate({
+    //   studentId: param.studentId,
+    //   clubId: param.query.clubId,
+    // });
     const activities = await this.getProvisionalActivities({
       clubId: param.query.clubId,
     });

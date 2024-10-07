@@ -2,14 +2,17 @@
 
 import React from "react";
 
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import { useGetMyMemberRegistration } from "@sparcs-clubs/web/features/clubDetails/services/getMyMemberRegistration";
 import {
   getClubType,
   getTagColorFromClubType,
@@ -56,36 +59,72 @@ const ClubCard: React.FC<
   ClubCardProps & { isRegistrationPeriod?: boolean }
 > = ({ club, isRegistrationPeriod = false }) => {
   const { isLoggedIn } = useAuth();
+
+  const {
+    data: myRegistrationList,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetMyMemberRegistration();
+
+  let isInclub = false;
+  let isRegistered = false;
+
+  if (myRegistrationList && myRegistrationList.applies.length > 0) {
+    const thisRegistration = myRegistrationList.applies.find(
+      apply => apply.clubId === club.id,
+    );
+    if (thisRegistration) {
+      if (
+        thisRegistration.applyStatusEnumId ===
+        RegistrationApplicationStudentStatusEnum.Approved
+      ) {
+        isInclub = true;
+      }
+      isRegistered = true;
+    } else {
+      isRegistered = false;
+    }
+  }
+
   return (
-    <Card gap={16} padding="16px 20px">
-      <ClubCardNameRow>
-        <ClubName>{club.name_kr}</ClubName>
-        <FlexWrapper direction="row" gap={4}>
-          <Icon type="person" size={16} />
-          <Typography fs={14} lh={16}>
-            {club.totalMemberCnt}
-          </Typography>
-        </FlexWrapper>
-      </ClubCardNameRow>
-      <ClubCardRow>
-        {club.advisor === "null" ||
-        club.advisor === "undefined" ||
-        club.advisor === undefined ||
-        club.advisor === null ||
-        club.advisor === ""
-          ? `회장 ${club.representative}`
-          : `회장 ${club.representative} | 지도교수 ${club.advisor}`}
-      </ClubCardRow>
-      <ClubCardRow>{club.characteristic}</ClubCardRow>
-      <ClubCardTagRow>
-        <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
-          {getClubType(club)}
-        </Tag>
-        {isRegistrationPeriod && isLoggedIn && (
-          <ClubRegistrationButton club={club} />
-        )}
-      </ClubCardTagRow>
-    </Card>
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <Card gap={16} padding="16px 20px">
+        <ClubCardNameRow>
+          <ClubName>{club.name_kr}</ClubName>
+          <FlexWrapper direction="row" gap={4}>
+            <Icon type="person" size={16} />
+            <Typography fs={14} lh={16}>
+              {club.totalMemberCnt}
+            </Typography>
+          </FlexWrapper>
+        </ClubCardNameRow>
+        <ClubCardRow>
+          {club.advisor === "null" ||
+          club.advisor === "undefined" ||
+          club.advisor === undefined ||
+          club.advisor === null ||
+          club.advisor === ""
+            ? `회장 ${club.representative}`
+            : `회장 ${club.representative} | 지도교수 ${club.advisor}`}
+        </ClubCardRow>
+        <ClubCardRow>{club.characteristic}</ClubCardRow>
+        <ClubCardTagRow>
+          <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
+            {getClubType(club)}
+          </Tag>
+          {isRegistrationPeriod && isLoggedIn && (
+            <ClubRegistrationButton
+              club={club}
+              refetch={refetch}
+              isInClub={isInclub}
+              isRegistered={isRegistered}
+              myRegistrationList={myRegistrationList ?? { applies: [] }}
+            />
+          )}
+        </ClubCardTagRow>
+      </Card>
+    </AsyncBoundary>
   );
 };
 export default ClubCard;
