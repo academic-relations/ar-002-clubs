@@ -2,14 +2,17 @@
 
 import React from "react";
 
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import { useGetMyMemberRegistration } from "@sparcs-clubs/web/features/clubDetails/services/getMyMemberRegistration";
 import {
   getShortClubType,
   getTagColorFromClubType,
@@ -74,29 +77,65 @@ const MobileClubCard: React.FC<
 > = ({ club, isRegistrationPeriod = false }) => {
   const { isLoggedIn } = useAuth();
 
+  const {
+    data: myRegistrationList,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetMyMemberRegistration();
+
+  let isInclub = false;
+  let isRegistered = false;
+
+  if (myRegistrationList && myRegistrationList.applies.length > 0) {
+    const thisRegistration = myRegistrationList.applies.find(
+      apply => apply.clubId === club.id,
+    );
+    if (thisRegistration) {
+      if (
+        thisRegistration.applyStatusEnumId ===
+        RegistrationApplicationStudentStatusEnum.Approved
+      ) {
+        isInclub = true;
+      }
+      isRegistered = true;
+    } else {
+      isRegistered = false;
+    }
+  }
+
   return (
-    <Card gap={12} padding="16px 20px">
-      <ClubCardNameRow>
-        <ClubCardNameWithTag>
-          <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
-            {getShortClubType(club)}
-          </Tag>
-          <ClubName>{club.name_kr}</ClubName>
-        </ClubCardNameWithTag>
-        <FlexWrapper direction="row" gap={4}>
-          <Icon type="person" size={16} />
-          <Typography fs={14} lh={16}>
-            {club.totalMemberCnt}
-          </Typography>
-        </FlexWrapper>
-      </ClubCardNameRow>
-      <ClubCardRow>
-        <ClubCharacteristic>{club.characteristic}</ClubCharacteristic>
-        {isRegistrationPeriod && isLoggedIn && (
-          <ClubRegistrationButton club={club} isMobile />
-        )}
-      </ClubCardRow>
-    </Card>
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <Card gap={12} padding="16px 20px">
+        <ClubCardNameRow>
+          <ClubCardNameWithTag>
+            <Tag color={getTagColorFromClubType(club.type, club.isPermanent)}>
+              {getShortClubType(club)}
+            </Tag>
+            <ClubName>{club.name_kr}</ClubName>
+          </ClubCardNameWithTag>
+          <FlexWrapper direction="row" gap={4}>
+            <Icon type="person" size={16} />
+            <Typography fs={14} lh={16}>
+              {club.totalMemberCnt}
+            </Typography>
+          </FlexWrapper>
+        </ClubCardNameRow>
+        <ClubCardRow>
+          <ClubCharacteristic>{club.characteristic}</ClubCharacteristic>
+          {isRegistrationPeriod && isLoggedIn && (
+            <ClubRegistrationButton
+              club={club}
+              isMobile
+              refetch={refetch}
+              isInClub={isInclub}
+              isRegistered={isRegistered}
+              myRegistrationList={myRegistrationList ?? { applies: [] }}
+            />
+          )}
+        </ClubCardRow>
+      </Card>
+    </AsyncBoundary>
   );
 };
 
