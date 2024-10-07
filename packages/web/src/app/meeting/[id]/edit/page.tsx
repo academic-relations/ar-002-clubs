@@ -16,6 +16,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorModal";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
+import { withAuthorization } from "@sparcs-clubs/web/common/components/withAuthorization";
 import MeetingAnnouncementFrame from "@sparcs-clubs/web/features/meeting/components/MeetingAnnouncementFrame";
 import MeetingInformationFrame from "@sparcs-clubs/web/features/meeting/components/MeetingInformationFrame";
 import useGetMeetingDetail from "@sparcs-clubs/web/features/meeting/services/useGetMeetingDetail";
@@ -124,4 +125,4 @@ const EditMeetingPage: React.FC = () => {
   );
 };
 
-export default EditMeetingPage;
+export default withAuthorization(EditMeetingPage, ["executive"], -1);
