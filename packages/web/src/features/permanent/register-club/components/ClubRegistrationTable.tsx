@@ -106,7 +106,7 @@ const ClubRegistrationTable: React.FC<ApiReg014ResponseOk> = ({
       table={table}
       count={total}
       emptyMessage="동아리 등록 신청 내역이 없습니다."
-      rowLink={row => `/permanent/register-club/${row.id}`}
+      rowLink={row => `/manage-club/permanent/register-club/${row.id}`}
     />
   );
 };

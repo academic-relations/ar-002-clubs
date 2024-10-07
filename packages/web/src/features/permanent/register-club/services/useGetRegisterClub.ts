@@ -1,7 +1,7 @@
-import apiReg014, {
-  ApiReg014RequestQuery,
-  ApiReg014ResponseOk,
-} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg014";
+import apiReg024, {
+  ApiReg024RequestQuery,
+  ApiReg024ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg024";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -10,12 +10,11 @@ import {
   UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
-// TODO: change to apiReg024
-export const useGetRegisterClub = (requestQuery: ApiReg014RequestQuery) =>
-  useQuery<ApiReg014ResponseOk, Error>({
-    queryKey: [apiReg014.url(), requestQuery],
-    queryFn: async (): Promise<ApiReg014ResponseOk> => {
-      const { data, status } = await axiosClientWithAuth.get(apiReg014.url(), {
+export const useGetRegisterClub = (requestQuery: ApiReg024RequestQuery) =>
+  useQuery<ApiReg024ResponseOk, Error>({
+    queryKey: [apiReg024.url(), requestQuery],
+    queryFn: async (): Promise<ApiReg024ResponseOk> => {
+      const { data, status } = await axiosClientWithAuth.get(apiReg024.url(), {
         params: requestQuery,
       });
 
@@ -26,7 +25,7 @@ export const useGetRegisterClub = (requestQuery: ApiReg014RequestQuery) =>
             // items = []일 때 isError = true 방지
             return data;
           return data;
-          // return apiReg014.responseBodyMap[200].parse(data);
+          // return apiReg024.responseBodyMap[200].parse(data);
         }
 
         default:
@@ -36,5 +35,5 @@ export const useGetRegisterClub = (requestQuery: ApiReg014RequestQuery) =>
   });
 
 defineAxiosMock(mock => {
-  mock.onGet(apiReg014.url()).reply(() => [200, {}]);
+  mock.onGet(apiReg024.url()).reply(() => [200, {}]);
 });
