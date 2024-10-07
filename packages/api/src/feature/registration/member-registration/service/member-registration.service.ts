@@ -107,10 +107,10 @@ export class MemberRegistrationService {
   async getStudentRegistrationsMemberRegistrationsMy(
     studentId: number,
   ): Promise<ApiReg006ResponseType> {
-    const ismemberRegistrationEvent =
-      await this.memberRegistrationRepository.isMemberRegistrationEvent();
-    if (!ismemberRegistrationEvent)
-      return { status: HttpStatus.NO_CONTENT, data: { applies: [] } };
+    // const ismemberRegistrationEvent =
+    //   await this.memberRegistrationRepository.isMemberRegistrationEvent();
+    // if (!ismemberRegistrationEvent)
+    //   return { status: HttpStatus.NO_CONTENT, data: { applies: [] } };
     const result =
       await this.memberRegistrationRepository.getStudentRegistrationsMemberRegistrationsMy(
         studentId,

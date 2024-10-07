@@ -56,6 +56,10 @@ import apiReg018, {
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg018";
 import apiReg022 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg022";
 import apiReg023 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg023";
+import apiReg024, {
+  ApiReg024RequestQuery,
+  ApiReg024ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg024";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import {
@@ -324,6 +328,20 @@ export class ClubRegistrationController {
           professorId: user.professorId,
           param,
         },
+      );
+    return result;
+  }
+
+  @Student()
+  @Get("/student/registrations/club-registrations")
+  @UsePipes(new ZodPipe(apiReg024))
+  async getStudentRegistrationsClubRegistrations(
+    @Query() query: ApiReg024RequestQuery,
+  ): Promise<ApiReg024ResponseOk> {
+    const result =
+      await this.clubRegistrationService.getStudentRegistrationsClubRegistrations(
+        query.pageOffset,
+        query.itemCount,
       );
     return result;
   }

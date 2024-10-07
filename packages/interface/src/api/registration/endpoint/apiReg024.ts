@@ -50,7 +50,7 @@ const responseBodyMap = {
 
 const responseErrorMap = {};
 
-const apiReg014 = {
+const apiReg024 = {
   url,
   method,
   requestParam,
@@ -60,16 +60,16 @@ const apiReg014 = {
   responseErrorMap,
 };
 
-type ApiReg014RequestParam = z.infer<typeof apiReg014.requestParam>;
-type ApiReg014RequestQuery = z.infer<typeof apiReg014.requestQuery>;
-type ApiReg014RequestBody = z.infer<typeof apiReg014.requestBody>;
-type ApiReg014ResponseOk = z.infer<(typeof apiReg014.responseBodyMap)[200]>;
+type ApiReg024RequestParam = z.infer<typeof apiReg024.requestParam>;
+type ApiReg024RequestQuery = z.infer<typeof apiReg024.requestQuery>;
+type ApiReg024RequestBody = z.infer<typeof apiReg024.requestBody>;
+type ApiReg024ResponseOk = z.infer<(typeof apiReg024.responseBodyMap)[200]>;
 
-export default apiReg014;
+export default apiReg024;
 
 export type {
-  ApiReg014RequestParam,
-  ApiReg014RequestQuery,
-  ApiReg014RequestBody,
-  ApiReg014ResponseOk,
+  ApiReg024RequestParam,
+  ApiReg024RequestQuery,
+  ApiReg024RequestBody,
+  ApiReg024ResponseOk,
 };
