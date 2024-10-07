@@ -54,6 +54,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   } = useDeleteActivityReportProvisional();
 
   const isExecutive = profile === "executive";
+
   const [rejectionDetail, setRejectionDetail] = useState("");
 
   const handleDelete = () => {

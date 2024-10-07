@@ -148,7 +148,7 @@ export default class ActivityController {
   ): Promise<ApiAct002ResponseOk> {
     const result = await this.activityService.getStudentActivity(
       param.activityId,
-      user.studentId,
+      // user.studentId,
     );
 
     return result;
