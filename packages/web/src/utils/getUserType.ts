@@ -1,5 +1,13 @@
 import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
+export type UserType =
+  | "undergraduate"
+  | "master"
+  | "doctor"
+  | "executive"
+  | "professor"
+  | "employee";
+
 export const getUserType = (type: string) => {
   switch (type) {
     case "undergraduate":
