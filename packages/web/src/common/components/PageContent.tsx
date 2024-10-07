@@ -11,9 +11,10 @@ const PageContent = ({ children }: { children: React.ReactNode }) => {
   const path = usePathname();
 
   const isDevelopment = process.env.NEXT_PUBLIC_APP_MODE === "dev";
-  const productionReady = productionReadyPaths
-    .map(p => p.startsWith(path))
-    .some(p => p);
+  const productionReady =
+    (path in productionReadyPaths.exact ||
+      productionReadyPaths.startsWith.some(p => path.startsWith(p))) &&
+    !productionReadyPaths.exclude.includes(path);
 
   if (!isDevelopment && !productionReady) {
     return <NotFound />;
