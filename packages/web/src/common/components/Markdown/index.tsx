@@ -50,6 +50,7 @@ const ButtonWrapper = styled.div`
   gap: 12px;
 `;
 
+// 테이블 이후의 삭제 불가능한 텍스트 노드
 const ProtectedParagraph = Node.create({
   name: "protectedParagraph",
 
@@ -106,21 +107,13 @@ const Markdown = () => {
     content: ``,
   });
 
+  // 테이블 삽입, 이후 삭제 방지된 텍스트 노드 삽입
   const insertTableAndMoveCursor = useCallback(() => {
     if (editor) {
       editor
         .chain()
         .focus()
         .insertContent([
-          {
-            type: "protectedParagraph",
-            content: [
-              {
-                type: "text",
-                text: " ",
-              },
-            ],
-          },
           {
             type: "protectedParagraph",
             content: [
@@ -141,7 +134,8 @@ const Markdown = () => {
     }
   }, [editor]);
 
-  const handleDrop = useCallback(
+  // 사진 삽입
+  const handleImageDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
 
@@ -215,7 +209,10 @@ const Markdown = () => {
             size={20}
           />
           <IconButton
-            onClick={() => editor.chain().focus().deleteTable().run()}
+            onClick={() => {
+              editor.chain().focus().deleteTable().run();
+              editor.chain().focus().deleteNode("protectedParagraph").run();
+            }}
             type={!editor.can().deleteTable() ? "disabled" : "default"}
             icon="grid_off"
             size={20}
@@ -336,7 +333,7 @@ const Markdown = () => {
       </FlexWrapper>
       <div className="horizontal-divider" />
       <div
-        onDrop={handleDrop}
+        onDrop={handleImageDrop}
         onKeyDown={event => {
           if (event.key === "Backspace") {
             event.preventDefault();
