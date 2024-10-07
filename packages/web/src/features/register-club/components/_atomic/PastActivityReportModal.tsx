@@ -53,7 +53,9 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
     isError: isDeleteError,
   } = useDeleteActivityReportProvisional();
 
-  const isExecutive = profile === "executive";
+  const isExecutive = profile === "executive" || profile === "permanent";
+  // TODO: decide what to show for permanent club representatives
+
   const [rejectionDetail, setRejectionDetail] = useState("");
 
   const handleDelete = () => {
