@@ -37,7 +37,7 @@ const ClubRegistrationButton: React.FC<ClubRegistrationButtonProps> = ({
   };
 
   const ToggleUnregistered = async (close: () => void) => {
-    const thisRegis = (
+    const thisRegistration = (
       myRegistrationList as {
         applies: {
           id: number;
@@ -48,7 +48,7 @@ const ClubRegistrationButton: React.FC<ClubRegistrationButtonProps> = ({
     ).applies.find(apply => apply.clubId === club.id);
     await useUnregisterClub({
       applyId: (
-        thisRegis as {
+        thisRegistration as {
           id: number;
           clubId: number;
           applyStatusEnumId: RegistrationApplicationStudentStatusEnum;

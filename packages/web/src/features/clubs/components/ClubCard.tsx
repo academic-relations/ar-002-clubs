@@ -71,12 +71,12 @@ const ClubCard: React.FC<
   let isRegistered = false;
 
   if (myRegistrationList && myRegistrationList.applies.length > 0) {
-    const thisRegis = myRegistrationList.applies.find(
+    const thisRegistration = myRegistrationList.applies.find(
       apply => apply.clubId === club.id,
     );
-    if (thisRegis) {
+    if (thisRegistration) {
       if (
-        thisRegis.applyStatusEnumId ===
+        thisRegistration.applyStatusEnumId ===
         RegistrationApplicationStudentStatusEnum.Approved
       ) {
         isInclub = true;
