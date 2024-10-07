@@ -12,7 +12,7 @@ const PageContent = ({ children }: { children: React.ReactNode }) => {
 
   const isDevelopment = process.env.NEXT_PUBLIC_APP_MODE === "dev";
   const productionReady =
-    (path in productionReadyPaths.exact ||
+    (productionReadyPaths.exact.some(p => p.startsWith(path)) ||
       productionReadyPaths.startsWith.some(p => path.startsWith(p))) &&
     !productionReadyPaths.exclude.includes(path);
 
