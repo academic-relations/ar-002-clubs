@@ -17,12 +17,18 @@ import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/C
 import { MeetingTemplate } from "../constants/meetingTemplate";
 import useGetMeetingDegree from "../services/useGetMeetingDegree";
 
+interface MeetingAnnouncementFormProps {
+  isEditMode?: boolean;
+}
+
 const AlignEnd = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
 
-const MeetingAnnouncementForm: React.FC = () => {
+const MeetingAnnouncementForm: React.FC<MeetingAnnouncementFormProps> = ({
+  isEditMode = false,
+}) => {
   const formCtx = useFormContext<ApiMee001RequestBody>();
   const { control, watch, resetField } = formCtx;
 
@@ -53,6 +59,8 @@ const MeetingAnnouncementForm: React.FC = () => {
   };
 
   useEffect(() => {
+    if (isEditMode) return;
+
     if (meetingEnumId !== MeetingEnum.divisionMeeting && data?.degree != null) {
       const template = MeetingTemplate.defaultTemplate(
         meetingEnumId,
@@ -67,7 +75,7 @@ const MeetingAnnouncementForm: React.FC = () => {
       resetField("announcementTitle", { defaultValue: template.title });
       resetField("announcementContent", { defaultValue: template.content });
     }
-  }, [meetingEnumId, data, resetField]);
+  }, [isEditMode, meetingEnumId, data, resetField]);
 
   useEffect(() => {
     if (meetingEnumId !== MeetingEnum.divisionMeeting) {

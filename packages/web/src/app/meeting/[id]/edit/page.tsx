@@ -98,7 +98,7 @@ const EditMeetingPage: React.FC = () => {
               title="공고 수정"
             />
             <MeetingInformationFrame />
-            <MeetingAnnouncementFrame isTemplateVisible />
+            <MeetingAnnouncementFrame isTemplateVisible isEditMode />
             <ButtonWrapper>
               <Button
                 type={isUpdateLoading ? "disabled" : "default"}
