@@ -167,7 +167,7 @@ const Markdown = () => {
     if (editor) {
       const { state, view } = editor;
       const { from } = state.selection;
-      const resolvedPos = state.doc.resolve(from - 1);
+      const resolvedPos = state.doc.resolve(from);
       const { nodeBefore, parent } = resolvedPos;
 
       if (nodeBefore && nodeBefore.type.name === "protectedParagraph") {
