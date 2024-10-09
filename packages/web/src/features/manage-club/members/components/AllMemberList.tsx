@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { ApiClb010ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
 import {
@@ -90,11 +90,17 @@ const AllMemberList: React.FC<AllMemberListProps> = ({
     semesterId: semester.id,
   });
 
-  const searchedMembers = members.members.filter(member =>
-    member.name.startsWith(searchText),
+  const [searchedMembers, setSearchedMembers] = useState(
+    members.members.filter(member => member.name.startsWith(searchText)),
   );
 
   const memberCount = searchedMembers.length;
+
+  useEffect(() => {
+    setSearchedMembers(
+      members.members.filter(member => member.name.startsWith(searchText)),
+    );
+  }, [members.members, searchText]);
 
   const table = useReactTable({
     columns,
