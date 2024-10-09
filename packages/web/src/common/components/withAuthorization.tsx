@@ -1,12 +1,12 @@
 import { ComponentType } from "react";
 
+import { UserType } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { jwtDecode } from "jwt-decode";
 
 import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import { UserType } from "@sparcs-clubs/web/utils/getUserType";
 import { getLocalStorageItem } from "@sparcs-clubs/web/utils/localStorage";
 
 import ErrorPageTemplate from "../frames/ErrorPageTemplate";

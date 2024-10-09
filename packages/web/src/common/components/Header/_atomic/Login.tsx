@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 
+import { UserType } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { jwtDecode } from "jwt-decode";
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import MyMenu from "@sparcs-clubs/web/common/components/MyMenu";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
-import { getUserType, UserType } from "@sparcs-clubs/web/utils/getUserType";
+import { getUserType } from "@sparcs-clubs/web/utils/getUserType";
 import { getLocalStorageItem } from "@sparcs-clubs/web/utils/localStorage";
 
 const LoginInner = styled.div`

@@ -1,13 +1,7 @@
-import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
-
-export enum UserType {
-  undergraduate,
-  master,
-  doctor,
-  executive,
-  professor,
-  employee,
-}
+import {
+  ProfessorEnum,
+  UserType,
+} from "@sparcs-clubs/interface/common/enum/user.enum";
 
 export const getUserType = (type: UserType) => {
   switch (type) {

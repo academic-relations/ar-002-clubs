@@ -5,6 +5,7 @@ import React, { useEffect, useMemo } from "react";
 import apiMee002 from "@sparcs-clubs/interface/api/meeting/apiMee002";
 import { ApiMee003RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee003";
 
+import { UserType } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
@@ -21,7 +22,6 @@ import MeetingAnnouncementFrame from "@sparcs-clubs/web/features/meeting/compone
 import MeetingInformationFrame from "@sparcs-clubs/web/features/meeting/components/MeetingInformationFrame";
 import useGetMeetingDetail from "@sparcs-clubs/web/features/meeting/services/useGetMeetingDetail";
 import useUpdateMeeting from "@sparcs-clubs/web/features/meeting/services/useUpdateMeeting";
-import { UserType } from "@sparcs-clubs/web/utils/getUserType";
 
 const ButtonWrapper = styled.div`
   display: flex;

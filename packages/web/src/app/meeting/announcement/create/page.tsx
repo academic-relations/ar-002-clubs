@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { ApiMee001RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee001";
+import { UserType } from "@sparcs-clubs/interface/common/enum/user.enum";
 import Link from "next/link";
 
 import { useRouter } from "next/navigation";
@@ -18,7 +19,6 @@ import { withAuthorization } from "@sparcs-clubs/web/common/components/withAutho
 import MeetingAnnouncementFrame from "@sparcs-clubs/web/features/meeting/components/MeetingAnnouncementFrame";
 import MeetingInformationFrame from "@sparcs-clubs/web/features/meeting/components/MeetingInformationFrame";
 import useCreateMeeting from "@sparcs-clubs/web/features/meeting/services/useCreateMeeting";
-import { UserType } from "@sparcs-clubs/web/utils/getUserType";
 
 const ButtonWrapper = styled.div`
   display: flex;
