@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect } from "react";
 
 import { ApiMee001RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee001";
 import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
@@ -15,7 +15,6 @@ import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
 
 import { meetingEnumToText } from "../constants/getEnumType";
-import { startDate } from "../constants/meetingTemplate";
 
 interface MeetingInformationFrameProps {
   onCreateTemplate?: VoidFunction;
@@ -24,7 +23,7 @@ interface MeetingInformationFrameProps {
 const RowFlexWrapper = styled.div`
   display: flex;
   direction: row;
-  gap: 32px;
+  gap: 24px;
 
   & > * {
     flex: 1;
@@ -35,7 +34,7 @@ const GridView = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  gap: 32px;
+  gap: 24px;
 `;
 const AlignEnd = styled.div`
   display: flex;
@@ -48,7 +47,6 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
   const {
     watch,
     control,
-    resetField,
     setValue,
     formState: { isValid },
   } = useFormContext<ApiMee001RequestBody>();
@@ -56,21 +54,8 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
   const isRegular = watch("isRegular");
   const meetingEnumId = watch("meetingEnumId");
 
-  const [time, setTime] = useState<string>("");
-
   const hasValue = meetingEnumId != null && isRegular != null;
   const isDivisionMeeting = meetingEnumId === MeetingEnum.divisionMeeting;
-
-  const timePattern = /^(0?[0-9]|1[0-9]|2[0-3]):([0-5]?[0-9])$/;
-
-  const isStartDateValid = useMemo(() => {
-    if (startDate == null) return false;
-
-    if (isDivisionMeeting || (!isDivisionMeeting && timePattern.test(time))) {
-      return true;
-    }
-    return false;
-  }, [isDivisionMeeting, time]);
 
   useEffect(() => {
     if (isDivisionMeeting) {
@@ -78,22 +63,11 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
     }
   }, [isDivisionMeeting, setValue]);
 
-  useEffect(() => {
-    if (!isDivisionMeeting && timePattern.test(time)) {
-      const [hour, minute] = time.split(":").map(part => +part);
-      const newDate = new Date();
-      newDate.setUTCHours(hour);
-      newDate.setUTCMinutes(minute);
-
-      setValue("startDate", newDate);
-    }
-  }, [isDivisionMeeting, resetField, time]);
-
   return (
     <FlexWrapper direction="column" gap={40}>
       <SectionTitle>회의 정보</SectionTitle>
       <Card outline gap={24} style={{ marginLeft: 24 }}>
-        <FlexWrapper direction="row" gap={32}>
+        <FlexWrapper direction="row" gap={24}>
           <FormController
             name="meetingEnumId"
             required
@@ -137,21 +111,6 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
           (!isDivisionMeeting ? (
             <GridView>
               <FormController
-                name="startDate"
-                required={!isDivisionMeeting}
-                control={control}
-                defaultValue={new Date()}
-                renderItem={props => (
-                  <DateInput {...props} date={new Date()} label="일자" />
-                )}
-              />
-              <TextInput
-                label="시간"
-                placeholder="XX:XX"
-                value={time}
-                handleChange={value => setTime(value)}
-              />
-              <FormController
                 name="location"
                 required={!isDivisionMeeting}
                 control={control}
@@ -175,6 +134,22 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
                   />
                 )}
               />
+              <FormController
+                name="startDate"
+                required={!isDivisionMeeting}
+                control={control}
+                renderItem={({ value, onChange }) => (
+                  <DateInput
+                    label="일자"
+                    showTimeInput
+                    dateFormat="yyyy.MM.dd HH:mm"
+                    selected={value}
+                    onChange={(data: Date | null) => {
+                      onChange(data);
+                    }}
+                  />
+                )}
+              />
             </GridView>
           ) : (
             <RowFlexWrapper>
@@ -183,8 +158,12 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
                 required={isDivisionMeeting}
                 control={control}
                 defaultValue={new Date()}
-                renderItem={props => (
-                  <DateInput {...props} date={new Date()} label="시작일" />
+                renderItem={({ value, onChange }) => (
+                  <DateInput
+                    label="시작일"
+                    selected={value}
+                    onChange={(data: Date | null) => onChange(data)}
+                  />
                 )}
               />
               <FormController
@@ -192,8 +171,12 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
                 required={isDivisionMeeting}
                 control={control}
                 defaultValue={new Date()}
-                renderItem={props => (
-                  <DateInput {...props} date={new Date()} label="종료일" />
+                renderItem={({ value, onChange }) => (
+                  <DateInput
+                    label="종료일"
+                    selected={value}
+                    onChange={(data: Date | null) => onChange(data)}
+                  />
                 )}
               />
             </RowFlexWrapper>
@@ -202,7 +185,7 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
           <AlignEnd>
             <TextButton
               text="공고 템플릿 생성"
-              disabled={!isValid || !isStartDateValid}
+              disabled={!isValid}
               onClick={onCreateTemplate}
             />
           </AlignEnd>
