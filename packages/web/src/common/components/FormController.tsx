@@ -27,6 +27,7 @@ interface FormControllerProps<
         | number
         | Date
         | FieldPathValue<TFieldValues, TName>
+        | null
         | undefined,
     ) => void;
     onBlur: () => void;

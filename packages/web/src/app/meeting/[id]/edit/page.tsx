@@ -38,7 +38,6 @@ const EditMeetingPage: React.FC = () => {
 
   const {
     getValues,
-    handleSubmit,
     watch,
     reset,
     formState: { isValid },
@@ -83,7 +82,7 @@ const EditMeetingPage: React.FC = () => {
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <FormProvider {...formCtx}>
-        <form onSubmit={handleSubmit(submitHandler)}>
+        <form>
           <FlexWrapper direction="column" gap={60}>
             <PageHead
               items={[
@@ -108,12 +107,13 @@ const EditMeetingPage: React.FC = () => {
                 취소
               </Button>
               <Button
-                buttonType="submit"
                 type={
                   isFormValid && !isLoading && !isUpdateLoading
                     ? "default"
                     : "disabled"
                 }
+                // submit 재확인 모달 추가되면 form handleSubmit으로 관리
+                onClick={submitHandler}
               >
                 저장
               </Button>
