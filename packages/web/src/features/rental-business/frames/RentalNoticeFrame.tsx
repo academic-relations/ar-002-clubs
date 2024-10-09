@@ -42,10 +42,11 @@ const StyledBottom = styled.div`
 const RentalNoticeFrame: React.FC<RentalFrameProps> = ({ formCtx }) => {
   // TODO: 다음 페이지 다녀오면 초기에 체크되어있는 상태로 만들기
   const [checked, setChecked] = useState(
-    formCtx.getFieldState("info.phoneNumber") != null,
+    formCtx.getValues("info.phoneNumber") != null,
   );
   const handleNextClick = () => {
     formCtx.setValue("agreement", checked);
+    console.log(formCtx.getValues("agreement"));
   };
 
   return (

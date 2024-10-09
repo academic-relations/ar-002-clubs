@@ -16,7 +16,7 @@ import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 const RentalInfoFirstFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
-> = ({ setNextEnabled, rental, setRental }) => {
+> = ({ setNextEnabled }) => {
   const { data, isLoading, isError } = useGetUserProfile();
 
   const [clubList, setClubList] = useState<SelectItem<string>[]>([]);
@@ -33,26 +33,26 @@ const RentalInfoFirstFrame: React.FC<
         })),
       );
       setUserName(data.name);
-      setUserPhone(rental.info?.phone ?? data.phoneNumber);
+      // setUserPhone(rental.info?.phoneNumber ?? data.phoneNumber);
     }
-  }, [data, rental.info?.phone, setClubList, setUserName, setUserPhone]);
+  }, [data, setClubList, setUserName, setUserPhone]);
 
-  const [phone, setPhone] = useState(rental.info?.phone ?? userPhone);
+  const [phone, setPhone] = useState(userPhone);
   const [hasPhoneError, setHasPhoneError] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(rental.info?.clubId ?? "");
+  const [selectedValue, setSelectedValue] = useState("");
   const [hasSelectError, setHasSelectError] = useState(false);
 
-  useEffect(() => {
-    if (phone != null && phone.length > 0) {
-      setRental({
-        ...rental,
-        info: {
-          ...rental.info,
-          phone,
-        },
-      });
-    }
-  }, [phone, setRental]);
+  // useEffect(() => {
+  //   if (phone != null && phone.length > 0) {
+  //     setRental({
+  //       ...rental,
+  //       info: {
+  //         ...rental.info,
+  //         phone,
+  //       },
+  //     });
+  //   }
+  // }, [phone, setRental]);
 
   useEffect(() => {
     const allConditionsMet =
@@ -63,23 +63,23 @@ const RentalInfoFirstFrame: React.FC<
     setNextEnabled(allConditionsMet);
   }, [selectedValue, phone, hasPhoneError, hasSelectError, setNextEnabled]);
 
-  useEffect(() => {
-    if (selectedValue !== "") {
-      const selectClub = clubList.find(club => club.value === selectedValue);
-      if (!selectClub) {
-        return;
-      }
-      setRental({
-        ...rental,
-        info: {
-          clubId: Number(selectedValue),
-          clubName: selectClub?.label,
-          applicant: userName,
-          phone: phone ?? "",
-        },
-      });
-    }
-  }, [selectedValue, phone, setRental]);
+  // useEffect(() => {
+  //   if (selectedValue !== "") {
+  //     const selectClub = clubList.find(club => club.value === selectedValue);
+  //     if (!selectClub) {
+  //       return;
+  //     }
+  //     setRental({
+  //       ...rental,
+  //       info: {
+  //         clubId: Number(selectedValue),
+  //         clubName: selectClub?.label,
+  //         applicant: userName,
+  //         phone: phone ?? "",
+  //       },
+  //     });
+  //   }
+  // }, [selectedValue, phone, setRental]);
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>

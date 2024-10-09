@@ -20,7 +20,7 @@ const RentalBusiness: React.FC = () => {
         items={[{ name: "대여 사업", path: "/rental-business" }]}
         title="대여 사업"
       />
-      {formCtx.getFieldState("agreement") ? (
+      {formCtx.watch("agreement") ? (
         <RentalInfoFrame formCtx={formCtx} />
       ) : (
         <RentalNoticeFrame formCtx={formCtx} />
