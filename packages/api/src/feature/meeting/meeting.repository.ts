@@ -63,9 +63,9 @@ export class MeetingRepository {
     isRegular: boolean;
     location: string;
     locationEn: string;
-  }): Promise<boolean> {
+  }): Promise<number | undefined> {
     // TODO: string인 필수 field validation
-    const isInsertionSucceed = await this.db.transaction(async tx => {
+    const insertedAnnouncementId = await this.db.transaction(async tx => {
       const [announcementInsertResult] = await tx
         .insert(MeetingAnnouncement)
         .values({
@@ -76,10 +76,12 @@ export class MeetingRepository {
       if (announcementInsertResult.affectedRows !== 1) {
         logger.debug("[MeetingRepository] Failed to insert announcement");
         tx.rollback();
-        return false;
+        return undefined;
       }
+
+      const announcementId = announcementInsertResult.insertId;
       logger.debug(
-        `[MeetingRepository] Inserted announcement: ${announcementInsertResult.insertId}`,
+        `[MeetingRepository] Inserted announcement: ${announcementId}`,
       );
 
       const [meetingInsertResult] = await tx.insert(Meeting).values({
@@ -94,14 +96,15 @@ export class MeetingRepository {
       if (meetingInsertResult.affectedRows !== 1) {
         logger.debug("[MeetingRepository] Failed to insert meeting");
         tx.rollback();
-        return false;
+        return undefined;
       }
       logger.debug(
         `[MeetingRepository] Inserted meeting: ${meetingInsertResult.insertId}`,
       );
-      return true;
+
+      return announcementId;
     });
-    return isInsertionSucceed;
+    return insertedAnnouncementId;
   }
 
   async selectMeetingAnnouncementById(announcementId: number) {
