@@ -14,8 +14,6 @@ import MemberSearchAndFilter from "../components/MemberSearchAndFilter";
 import { useGetClubSemesters } from "../services/getClubSemesters";
 import { SemesterProps } from "../types/semesterList";
 
-import { mockSemesterMembers } from "./_mock/mockMembers";
-
 interface AllMemberListFrameProps {
   clubId: number;
 }
@@ -86,17 +84,14 @@ const AllMemberListFrame: React.FC<AllMemberListFrameProps> = ({ clubId }) => {
           ) : (
             selectedSemesters
               .sort((a, b) => b.id - a.id) // 최신 학기부터 정렬(ID가 클수록 최신 학기라고 가정)
-              .map(
-                semester =>
-                  mockSemesterMembers.members.length > 0 && (
-                    <AllMemberList
-                      key={semester.id}
-                      semester={semester}
-                      clubId={clubId}
-                      searchText={searchText}
-                    />
-                  ),
-              )
+              .map(semester => (
+                <AllMemberList
+                  key={semester.id}
+                  semester={semester}
+                  clubId={clubId}
+                  searchText={searchText}
+                />
+              ))
           )}
         </AllMemberListWrapper>
       </AsyncBoundary>
