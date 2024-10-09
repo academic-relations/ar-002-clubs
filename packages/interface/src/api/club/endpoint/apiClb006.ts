@@ -28,6 +28,7 @@ const responseBodyMap = {
       z.object({
         delegateEnumId: z.nativeEnum(ClubDelegateEnum),
         studentId: z.coerce.number().int().min(1),
+        studentNumber: z.coerce.number().int().min(1),
         name: zUserName,
         phoneNumber: zKrPhoneNumber,
       }),

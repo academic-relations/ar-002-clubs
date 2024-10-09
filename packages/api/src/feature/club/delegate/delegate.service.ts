@@ -66,6 +66,7 @@ export default class ClubDelegateService {
           name: student.name,
           studentId: student.id,
           delegateEnumId: e.ClubDelegateEnumId,
+          studentNumber: student.number,
           phoneNumber:
             student.phoneNumber === null
               ? "010-0000-0000"
