@@ -39,44 +39,31 @@ const MultiFilterButton: React.FC<CategoriesListProps> = ({
   categories,
 }) => {
   const changeOpen = () => setIsOpen(!isOpen);
+
   return (
     <FilterButtonWrapper isOpen={isOpen} onClick={changeOpen}>
-      {categories.length > 1 ? ( // 카테고리 자체의 개수가 1보다 커? 그러면 앞에 두 개만 보여줘 예: 분과, 동아리 구분, ...
+      {categories[0].selectedContent.length === 0 ? (
+        <Typography fs={16} lh={20} fw="REGULAR">
+          미선택,
+        </Typography>
+      ) : (
+        <Typography fs={16} lh={20} fw="REGULAR">
+          {categories[0].selectedContent.length > 1
+            ? `${categories[0].selectedContent[0]} 외 ${categories[0].selectedContent.length - 1}개,`
+            : `${categories[0].selectedContent[0]},`}
+        </Typography>
+      )}
+      {categories.length > 1 && (
         <>
-          {categories[0].selectedContent.length === 0 ? (
-            <Typography fs={16} lh={20} fw="REGULAR">
-              미선택,
-            </Typography>
-          ) : (
-            <Typography fs={16} lh={20} fw="REGULAR">
-              {categories[0].selectedContent.length > 1
-                ? `${categories[0].selectedContent[0]} 외 ${categories[0].selectedContent.length - 1}개,`
-                : `${categories[0].selectedContent[0]},`}
-            </Typography>
-          )}
           {categories[1].selectedContent.length === 0 ? (
             <Typography fs={16} lh={20} fw="REGULAR">
-              미선택
+              {`미선택${categories.length > 2 ? "..." : ""}`}
             </Typography>
           ) : (
             <Typography fs={16} lh={20} fw="REGULAR">
               {categories[1].selectedContent.length > 1
-                ? `${categories[1].selectedContent[0]} 외 ${categories[1].selectedContent.length - 1}개`
-                : `${categories[1].selectedContent[0]}`}
-            </Typography>
-          )}
-        </>
-      ) : (
-        <>
-          {categories[0].selectedContent.length === 0 ? (
-            <Typography fs={16} lh={20} fw="REGULAR">
-              미선택
-            </Typography>
-          ) : (
-            <Typography fs={16} lh={20} fw="REGULAR">
-              {categories[0].selectedContent.length > 1
-                ? `${categories[0].selectedContent[0]} 외 ${categories[0].selectedContent.length - 1}개`
-                : `${categories[0].selectedContent[0]}`}
+                ? `${categories[1].selectedContent[0]} 외 ${categories[1].selectedContent.length - 1}개${categories.length > 2 ? "..." : ""}`
+                : `${categories[1].selectedContent[0]}${categories.length > 2 ? "..." : ""}`}
             </Typography>
           )}
         </>
