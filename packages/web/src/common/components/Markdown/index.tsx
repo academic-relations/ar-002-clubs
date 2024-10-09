@@ -17,8 +17,6 @@ import Text from "@tiptap/extension-text";
 
 import { EditorContent, useEditor } from "@tiptap/react";
 
-import Image from "next/image";
-
 import styled from "styled-components";
 
 // TODO: refactor chacha!!!!
@@ -39,7 +37,6 @@ import tableRowRemoveSvg from "@sparcs-clubs/web/assets/table-row-remove.svg";
 import tableSplitCellDisabledSvg from "@sparcs-clubs/web/assets/table-split-cell-disabled.svg";
 import tableSplitCellSvg from "@sparcs-clubs/web/assets/table-split-cell.svg";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
@@ -217,118 +214,120 @@ const Markdown = () => {
             icon="grid_off"
             size={20}
           />
-          <Button
+          <IconButton
             onClick={() => editor.chain().focus().mergeCells().run()}
             type={!editor.can().mergeCells() ? "disabled" : "default"}
-          >
-            {!editor.can().mergeCells() ? (
-              <Image src={tableMergeCellsDisabledSvg} alt="table-merge-cells" />
-            ) : (
-              <Image src={tableMergeCellsSvg} alt="table-merge-cells" />
-            )}
-          </Button>
-          <Button
+            svg={
+              !editor.can().mergeCells()
+                ? {
+                    name: tableMergeCellsDisabledSvg,
+                    alt: "table-merge-cells-disabled",
+                  }
+                : { name: tableMergeCellsSvg, alt: "table-merge-cells" }
+            }
+          />
+          <IconButton
             onClick={() => editor.chain().focus().splitCell().run()}
             type={!editor.can().splitCell() ? "disabled" : "default"}
-          >
-            {!editor.can().splitCell() ? (
-              <Image
-                src={tableSplitCellDisabledSvg}
-                alt="table-split-cell-disabled"
-              />
-            ) : (
-              <Image src={tableSplitCellSvg} alt="table-split-cell" />
-            )}
-          </Button>
-          <Button
+            svg={
+              !editor.can().splitCell()
+                ? {
+                    name: tableSplitCellDisabledSvg,
+                    alt: "table-split-cell-disabled",
+                  }
+                : { name: tableSplitCellSvg, alt: "table-split-cell" }
+            }
+          />
+          <IconButton
             onClick={() => editor.chain().focus().addColumnBefore().run()}
             type={!editor.can().addColumnBefore() ? "disabled" : "default"}
-          >
-            {!editor.can().addColumnBefore() ? (
-              <Image
-                src={tableColumnPlusBeforeDisabledSvg}
-                alt="table-column-plus-before-disabled"
-              />
-            ) : (
-              <Image
-                src={tableColumnPlusBeforeSvg}
-                alt="table-column-plus-before"
-              />
-            )}
-          </Button>
-          <Button
+            svg={
+              !editor.can().addColumnBefore()
+                ? {
+                    name: tableColumnPlusBeforeDisabledSvg,
+                    alt: "table-column-plus-before-disabled",
+                  }
+                : {
+                    name: tableColumnPlusBeforeSvg,
+                    alt: "table-column-plus-before",
+                  }
+            }
+          />
+          <IconButton
             onClick={() => editor.chain().focus().addColumnAfter().run()}
             type={!editor.can().addColumnAfter() ? "disabled" : "default"}
-          >
-            {!editor.can().addColumnAfter() ? (
-              <Image
-                src={tableColumnPlusAfterDisabledSvg}
-                alt="table-column-plus-after-disabled"
-              />
-            ) : (
-              <Image
-                src={tableColumnPlusAfterSvg}
-                alt="table-column-plus-after"
-              />
-            )}
-          </Button>
-          <Button
+            svg={
+              !editor.can().addColumnAfter()
+                ? {
+                    name: tableColumnPlusAfterDisabledSvg,
+                    alt: "table-column-plus-after-disabled",
+                  }
+                : {
+                    name: tableColumnPlusAfterSvg,
+                    alt: "table-column-plus-after",
+                  }
+            }
+          />
+          <IconButton
             onClick={() => editor.chain().focus().deleteColumn().run()}
             type={!editor.can().deleteColumn() ? "disabled" : "default"}
-          >
-            {!editor.can().deleteColumn() ? (
-              <Image
-                src={tableColumnRemoveDisabledSvg}
-                alt="table-column-remove-disabled"
-              />
-            ) : (
-              <Image src={tableColumnRemoveSvg} alt="table-column-remove" />
-            )}
-          </Button>
-          <Button
+            svg={
+              !editor.can().deleteColumn()
+                ? {
+                    name: tableColumnRemoveDisabledSvg,
+                    alt: "table-column-remove-disabled",
+                  }
+                : {
+                    name: tableColumnRemoveSvg,
+                    alt: "table-column-remove",
+                  }
+            }
+          />
+          <IconButton
             onClick={() => editor.chain().focus().addRowBefore().run()}
             type={!editor.can().addRowBefore() ? "disabled" : "default"}
-          >
-            {!editor.can().addRowBefore() ? (
-              <Image
-                src={tableRowPlusBeforeDisabledSvg}
-                alt="table-row-plus-before-disabled"
-              />
-            ) : (
-              <Image src={tableRowPlusBeforeSvg} alt="table-row-plus-before" />
-            )}
-          </Button>
-          <Button
+            svg={
+              !editor.can().addRowBefore()
+                ? {
+                    name: tableRowPlusBeforeDisabledSvg,
+                    alt: "table-row-plus-before-disabled",
+                  }
+                : {
+                    name: tableRowPlusBeforeSvg,
+                    alt: "table-row-plus-before",
+                  }
+            }
+          />
+          <IconButton
             onClick={() => editor.chain().focus().addRowAfter().run()}
             type={!editor.can().addRowAfter() ? "disabled" : "default"}
-          >
-            {!editor.can().addRowAfter() ? (
-              <Image
-                src={tableRowPlusAfterDisabledSvg}
-                alt="table-row-plus-after-disabled"
-              />
-            ) : (
-              <Image src={tableRowPlusAfterSvg} alt="table-row-plus-after" />
-            )}
-          </Button>
-          <Button
+            svg={
+              !editor.can().addRowAfter()
+                ? {
+                    name: tableRowPlusAfterDisabledSvg,
+                    alt: "table-row-plus-after-disabled",
+                  }
+                : {
+                    name: tableRowPlusAfterSvg,
+                    alt: "table-row-plus-after",
+                  }
+            }
+          />
+          <IconButton
             onClick={() => editor.chain().focus().deleteRow().run()}
             type={!editor.can().deleteRow() ? "disabled" : "default"}
-          >
-            {!editor.can().deleteRow() ? (
-              <Image
-                src={tableRowRemoveDisabledSvg}
-                alt="table-row-remove-disabled"
-                className="button-icon"
-              />
-            ) : (
-              <Image
-                src={tableRowRemoveSvg}
-                alt="table-row-remove"
-                className="button-icon"
-              />
-            )}
-          </Button>
+            svg={
+              !editor.can().deleteRow()
+                ? {
+                    name: tableRowRemoveDisabledSvg,
+                    alt: "table-row-remove-disabled",
+                  }
+                : {
+                    name: tableRowRemoveSvg,
+                    alt: "table-row-remove",
+                  }
+            }
+          />
         </ButtonWrapper>
       </FlexWrapper>
       <div className="horizontal-divider" />

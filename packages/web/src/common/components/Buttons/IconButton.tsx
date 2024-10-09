@@ -2,13 +2,19 @@ import React from "react";
 
 import isPropValid from "@emotion/is-prop-valid";
 
+import Image from "next/image";
+
 import styled from "styled-components";
 
 import Icon from "../Icon";
 
 interface IconButtonProps {
   type?: keyof typeof IconButtonTypeInner;
-  icon: string;
+  icon?: string;
+  svg?: {
+    name: string;
+    alt: string;
+  };
   size?: number;
   onClick: () => void;
   children?: React.ReactNode;
@@ -63,7 +69,8 @@ const IconButtonTypeInner = {
 
 const IconButton = ({
   type = "default",
-  icon,
+  icon = "",
+  svg = undefined,
   onClick,
   size = 16,
   children = null,
@@ -80,7 +87,11 @@ const IconButton = ({
       style={style}
       {...props}
     >
-      <Icon type={icon} size={size} color="inherit" />
+      {svg ? (
+        <Image src={svg.name} alt={svg.alt} />
+      ) : (
+        <Icon type={icon} size={size} color="inherit" />
+      )}
       {children}
     </IconButtonChosenInner>
   );
