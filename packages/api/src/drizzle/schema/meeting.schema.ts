@@ -50,15 +50,16 @@ export const Meeting = mysqlTable(
   "meeting",
   {
     id: int("id").autoincrement().primaryKey(),
-    announcementId: int("announcement_id")
+    announcementId: int("meeting_announcement_id")
       .references(() => MeetingAnnouncement.id)
       .notNull(),
-    meetingEnumId: int("meeting_enum_id"),
-    isRegular: boolean("is_regular").notNull(),
-    location: varchar("location", { length: 255 }),
+    meetingEnumId: int("enum"),
+    isRegular: boolean("is_regular_meeting").notNull(),
+    location: varchar("location_kr", { length: 255 }),
     locationEn: varchar("location_en", { length: 255 }),
-    startDate: datetime("start_date").notNull(),
-    endDate: datetime("end_date"),
+    startDate: datetime("start_datetime").notNull(),
+    endDate: datetime("end_datetime"),
+    tag: varchar("tag", { length: 255 }).notNull().unique(),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at"),
     deletedAt: timestamp("deleted_at"),

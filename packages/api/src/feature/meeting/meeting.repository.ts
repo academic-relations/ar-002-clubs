@@ -63,6 +63,7 @@ export class MeetingRepository {
     isRegular: boolean;
     location: string;
     locationEn: string;
+    tag: number;
   }): Promise<number | undefined> {
     // TODO: string인 필수 field validation
     const insertedAnnouncementId = await this.db.transaction(async tx => {
@@ -92,6 +93,7 @@ export class MeetingRepository {
         isRegular: contents.isRegular,
         location: contents.location,
         locationEn: contents.locationEn,
+        tag: contents.tag,
       });
       if (meetingInsertResult.affectedRows !== 1) {
         logger.debug("[MeetingRepository] Failed to insert meeting");

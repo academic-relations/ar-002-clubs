@@ -22,8 +22,9 @@ const requestBody = z.object({
   startDate: z.coerce.date(),
   endDate: z.coerce.date().optional(),
   isRegular: z.coerce.boolean(),
-  location: z.string().min(1),
-  locationEn: z.string().min(1),
+  location: z.string().min(1).optional(),
+  locationEn: z.string().min(1).optional(),
+  tag: z.string().min(1),
 });
 
 const responseBodyMap = {

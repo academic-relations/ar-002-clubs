@@ -56,6 +56,7 @@ export class MeetingService {
     body: ApiMee001RequestBody,
     executiveId: number,
   ): Promise<ApiMee001ResponseCreated> {
+    // TODO: Executive 중에서도 국장단이어야 함. 이 부분 로직 추가가 필요합니다.
     const user = await this.userPublicService.getExecutiveById({
       id: executiveId,
     });
