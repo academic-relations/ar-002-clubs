@@ -37,7 +37,7 @@ const DetailFilterDropdown: React.FC<DetailFilterDropdownProps> = ({
       );
       setSelectedContents(updatedSelectedContent);
     } else {
-      const updatedSelectedContent = [...selectedContents, content]; // 여기서 냅다 추가해서 소팅이 안 됨
+      const updatedSelectedContent = [...selectedContents, content];
       setSelectedContents(updatedSelectedContent);
     }
   };
