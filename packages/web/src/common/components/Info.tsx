@@ -17,6 +17,13 @@ const InfoTextWrapper = styled.div`
   gap: 8px;
 `;
 
+const InfoChildWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  margin-left: 28px;
+`;
+
 const InfoInner = styled.div`
   display: flex;
   flex-direction: column;
@@ -56,17 +63,24 @@ const IconWrapper = styled.div`
   align-items: center;
 `;
 
-const Info: React.FC<InfoProps> = ({ text, children = null }) => (
-  <InfoInner>
-    <InfoTextWrapper>
-      <IconWrapper>
-        <ResponsiveIcon type="info_outlined" size={20} />
-      </IconWrapper>
-      <ResponsiveTypography fw="REGULAR">{text}</ResponsiveTypography>
-    </InfoTextWrapper>
-
-    {children}
-  </InfoInner>
-);
+const Info: React.FC<InfoProps> = ({ text, children = null }) => {
+  const transformedChildren = React.Children.map(children, child => {
+    if (React.isValidElement(child) && child.type === Typography) {
+      return <ResponsiveTypography {...child.props} />;
+    }
+    return child;
+  });
+  return (
+    <InfoInner>
+      <InfoTextWrapper>
+        <IconWrapper>
+          <ResponsiveIcon type="info_outlined" size={20} />
+        </IconWrapper>
+        <ResponsiveTypography>{text}</ResponsiveTypography>
+      </InfoTextWrapper>
+      <InfoChildWrapper>{transformedChildren}</InfoChildWrapper>
+    </InfoInner>
+  );
+};
 
 export default Info;
