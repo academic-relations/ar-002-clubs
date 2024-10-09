@@ -142,7 +142,6 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
                   <DateInput
                     label="일자"
                     showTimeInput
-                    dateFormat="yyyy.MM.dd HH:mm"
                     selected={value}
                     onChange={(data: Date | null) => {
                       onChange(data);
@@ -157,7 +156,6 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
                 name="startDate"
                 required={isDivisionMeeting}
                 control={control}
-                defaultValue={new Date()}
                 renderItem={({ value, onChange }) => (
                   <DateInput
                     label="시작일"
@@ -170,7 +168,6 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
                 name="endDate"
                 required={isDivisionMeeting}
                 control={control}
-                defaultValue={new Date()}
                 renderItem={({ value, onChange }) => (
                   <DateInput
                     label="종료일"
