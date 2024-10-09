@@ -5,21 +5,12 @@ import apiUsr003, {
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 const usePatchClubRegistration = async (body: ApiUsr003RequestBody) => {
-  const { data, status } = await axiosClientWithAuth.patch(
-    apiUsr003.url(),
-    body,
-  );
+  const { data } = await axiosClientWithAuth.patch(apiUsr003.url(), body);
 
-  switch (status) {
-    case 200:
-      return apiUsr003.responseBodyMap[200].parse(data);
-    default:
-      throw new UnexpectedAPIResponseError();
-  }
+  return apiUsr003.responseBodyMap[200].parse(data);
 };
 
 export default usePatchClubRegistration;

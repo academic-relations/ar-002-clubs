@@ -6,7 +6,6 @@ import mockupRegistrationMember from "@sparcs-clubs/web/features/executive/regis
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import type {
@@ -18,17 +17,12 @@ export const useGetMemberRegistration = (requestQuery: ApiReg019RequestQuery) =>
   useQuery<ApiReg019ResponseOk, Error>({
     queryKey: [apiReg019.url(), requestQuery],
     queryFn: async (): Promise<ApiReg019ResponseOk> => {
-      const { data, status } = await axiosClientWithAuth.get(apiReg019.url(), {
+      const { data } = await axiosClientWithAuth.get(apiReg019.url(), {
         params: requestQuery,
       });
-      switch (status) {
-        case 200:
-        case 304:
-          // return apiReg019.responseBodyMap[200].parse(data);
-          return data;
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+
+      // return apiReg019.responseBodyMap[200].parse(data);
+      return data;
     },
   });
 

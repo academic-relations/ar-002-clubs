@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import type {
@@ -19,15 +18,12 @@ export const useGetMyManageClub = () =>
       ApiClb015ResponseOk | ApiClb015ResponseNoContent
     > => {
       const { data, status } = await axiosClientWithAuth.get(apiClb015.url());
-      switch (status) {
-        case 200:
-        case 304:
-          return apiClb015.responseBodyMap[200].parse(data);
-        case 204:
-          return {};
-        default:
-          throw new UnexpectedAPIResponseError();
+
+      if (status === 204) {
+        return {};
       }
+
+      return apiClb015.responseBodyMap[200].parse(data);
     },
   });
 

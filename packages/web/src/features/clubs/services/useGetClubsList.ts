@@ -3,11 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
 import mockupData from "@sparcs-clubs/web/features/clubs/services/_mock/mockupClubData";
-import {
-  axiosClient,
-  defineAxiosMock,
-  UnexpectedAPIResponseError,
-} from "@sparcs-clubs/web/lib/axios";
+import { axiosClient, defineAxiosMock } from "@sparcs-clubs/web/lib/axios";
 
 // ISuccessResponseType.clubs는 clubs.types.ts의 ClubInfo와 대응됩니다.
 type ISuccessResponseType = z.infer<(typeof apiClb001.responseBodyMap)[200]>;
@@ -16,17 +12,10 @@ export const useGetClubsList = () =>
   useQuery<ISuccessResponseType, Error>({
     queryKey: [apiClb001.url()],
     queryFn: async (): Promise<ISuccessResponseType> => {
-      const { data, status } = await axiosClient.get(apiClb001.url(), {});
+      const { data } = await axiosClient.get(apiClb001.url(), {});
 
-      // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
-      switch (status) {
-        case 200:
-        case 304:
-          // return apiClb001.responseBodyMap[200].parse(data);
-          return data;
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      // return apiClb001.responseBodyMap[200].parse(data);
+      return data;
     },
   });
 

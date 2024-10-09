@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import mockMyClubList from "./_mock/mockMyClubList";
@@ -15,19 +14,9 @@ const useGetMyClubProfessor = () =>
   useQuery<ApiClb016ResponseOk, Error>({
     queryKey: [apiClb016.url()],
     queryFn: async (): Promise<ApiClb016ResponseOk> => {
-      const { data, status } = await axiosClientWithAuth.get(
-        apiClb016.url(),
-        {},
-      );
+      const { data } = await axiosClientWithAuth.get(apiClb016.url(), {});
 
-      // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
-      switch (status) {
-        case 200:
-        case 304:
-          return apiClb016.responseBodyMap[200].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiClb016.responseBodyMap[200].parse(data);
     },
   });
 

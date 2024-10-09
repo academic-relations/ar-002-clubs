@@ -4,7 +4,6 @@ import { useMutation } from "@tanstack/react-query";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import type {
@@ -26,17 +25,12 @@ export const usePutClubInfo = () =>
       requestParam,
       body,
     }): Promise<ApiClb005ResponseOk> => {
-      const { data, status } = await axiosClientWithAuth.put(
+      const { data } = await axiosClientWithAuth.put(
         apiClb005.url(requestParam.clubId),
         body,
       );
 
-      switch (status) {
-        case 200:
-          return apiClb005.responseBodyMap[200].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiClb005.responseBodyMap[200].parse(data);
     },
   });
 

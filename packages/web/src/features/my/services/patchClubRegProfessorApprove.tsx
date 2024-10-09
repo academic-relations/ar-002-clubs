@@ -5,20 +5,14 @@ import apiReg023, {
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 const patchClubRegProfessorApprove = async (param: ApiReg023RequestParam) => {
-  const { data, status } = await axiosClientWithAuth.patch(
+  const { data } = await axiosClientWithAuth.patch(
     apiReg023.url(param.applyId),
   );
 
-  switch (status) {
-    case 200:
-      return apiReg023.responseBodyMap[200].parse(data);
-    default:
-      throw new UnexpectedAPIResponseError();
-  }
+  return apiReg023.responseBodyMap[200].parse(data);
 };
 
 export default patchClubRegProfessorApprove;
