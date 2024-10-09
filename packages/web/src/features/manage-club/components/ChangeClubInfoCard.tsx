@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { overlay } from "overlay-kit";
+import { FormProvider, useForm } from "react-hook-form";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
@@ -19,6 +21,11 @@ interface MyManageClubData {
   delegateEnumId: number;
 }
 
+interface ClubInfoInput {
+  description: string;
+  password: string;
+}
+
 const ChangeClubInfoCard = () => {
   const { data: idData, isLoading: idIsLoading } = useGetMyManageClub() as {
     data: MyManageClubData;
@@ -29,53 +36,34 @@ const ChangeClubInfoCard = () => {
     clubId,
   });
 
-  // TODO: react hook form으로 변경
-  const [description, setDescription] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [errorDescription, setErrorDescription] = useState<string>("");
-  const [errorPassword, setErrorPassword] = useState<string>("");
+  const isPasswordRequired = true; // TODO: 동방 없는 곳은 비밀번호 입력 안 해도 에러 안 뜨게 수정
+
+  const formCtx = useForm<ClubInfoInput>({
+    mode: "all",
+  });
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { isValid },
+  } = formCtx;
+
   const { mutate: updateClubInfo } = usePutClubInfo();
+
+  const description = watch("description");
+  const password = watch("password");
 
   useEffect(() => {
     if (!idIsLoading && idData && Object.keys(idData).length > 0) {
       setClubId(idData.clubId);
       if (clubId && !isLoading && data) {
-        if (data.description) setDescription(data.description);
-        if (data.roomPassword) setPassword(data.roomPassword);
+        if (data.description) setValue("description", data.description);
+        if (data.roomPassword) setValue("password", data.roomPassword);
       }
     }
-  }, [
-    idIsLoading,
-    idData,
-    isLoading,
-    clubId,
-    data?.description,
-    data?.roomPassword,
-  ]);
-
-  useEffect(() => {
-    if (clubId && description === "") {
-      setErrorDescription("동아리 설명을 입력하세요");
-    } else {
-      setErrorDescription("");
-    }
-  }, [clubId, description, setErrorDescription]);
-
-  useEffect(() => {
-    if (clubId && password === "") {
-      // setErrorPassword("동아리방 비밀번호를 입력하세요");
-    } else {
-      setErrorPassword("");
-    }
-  }, [clubId, password, setErrorPassword]);
-  // TODO: 동방 없는 곳은 비밀번호 입력 안 해도 에러 안 뜨게 수정
-
-  const buttonType =
-    (description === data?.description && password === data?.roomPassword) ||
-    errorDescription !== ""
-      ? // || errorPassword !== ""
-        "disabled"
-      : "default";
+  }, [idIsLoading, idData, isLoading, clubId, data, setValue]);
 
   const handleSave = useCallback(() => {
     updateClubInfo(
@@ -103,38 +91,58 @@ const ChangeClubInfoCard = () => {
         },
       },
     );
-  }, [clubId, description, password, updateClubInfo, refetch]);
+  }, [clubId, description, password, refetch, updateClubInfo]);
 
   return (
-    <Card outline gap={32} style={{ flex: 1, height: "fit-content" }}>
-      <Typography fw="MEDIUM" fs={20} lh={24}>
-        기본 정보
-      </Typography>
-      <AsyncBoundary isLoading={isLoading} isError={isError}>
-        <TextInput
-          label="동아리 설명"
-          placeholder="동아리 설명을 입력하세요"
-          area
-          value={description}
-          handleChange={setDescription}
-          errorMessage={errorDescription}
-        />
-        <TextInput
-          label="동아리방 비밀번호"
-          placeholder="동아리방 비밀번호를 입력하세요"
-          value={password}
-          handleChange={setPassword}
-          errorMessage={errorPassword}
-        />
-      </AsyncBoundary>
-      <Button
-        type={buttonType}
-        style={{ width: "max-content", alignSelf: "flex-end" }}
-        onClick={handleSave}
-      >
-        저장
-      </Button>
-    </Card>
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <FormProvider {...formCtx}>
+        <form onSubmit={handleSubmit(handleSave)} style={{ width: "100%" }}>
+          <Card
+            outline
+            gap={32}
+            style={{ flex: 1, height: "fit-content", width: "100%" }}
+          >
+            <Typography fw="MEDIUM" fs={20} lh={24}>
+              기본 정보
+            </Typography>
+            <FormController
+              name="description"
+              required
+              control={control}
+              requiredMessage="동아리 설명을 입력하세요"
+              renderItem={props => (
+                <TextInput
+                  {...props}
+                  label="동아리 설명"
+                  placeholder="동아리 설명을 입력하세요"
+                  area
+                />
+              )}
+            />
+            <FormController
+              name="password"
+              required={isPasswordRequired}
+              control={control}
+              requiredMessage="동아리방 비밀번호를 입력하세요"
+              renderItem={props => (
+                <TextInput
+                  {...props}
+                  label="동아리방 비밀번호"
+                  placeholder="동아리방 비밀번호를 입력하세요"
+                />
+              )}
+            />
+            <Button
+              buttonType="submit"
+              type={isValid ? "default" : "disabled"}
+              onClick={handleSave}
+            >
+              저장
+            </Button>
+          </Card>
+        </form>
+      </FormProvider>
+    </AsyncBoundary>
   );
 };
 
