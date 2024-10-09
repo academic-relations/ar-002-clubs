@@ -9,6 +9,10 @@ import {
   ApiClb009RequestParam,
   ApiClb009ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb009";
+import {
+  ApiClb010RequestParam,
+  ApiClb010ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
 
 import { ClubDelegateDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-delegate-d.repository";
 import { ClubRoomTRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-room-t.repository";
@@ -243,6 +247,26 @@ export class ClubService {
     }
     const result = await this.clubTRepository.findSemesterByClubId(clubId);
     return { semesters: result };
+  }
+
+  async getStudentClubMembers(
+    studentId: number,
+    param: ApiClb010RequestParam,
+  ): Promise<ApiClb010ResponseOk> {
+    const { clubId, semesterId } = param;
+    const isAvailableDelegate = await this.clubPublicService.isStudentDelegate(
+      studentId,
+      clubId,
+    );
+    if (!isAvailableDelegate) {
+      throw new HttpException("Delegate not available", HttpStatus.FORBIDDEN);
+    }
+    const result =
+      await this.clubStudentTRepository.selectMemberByClubIdAndSemesterId(
+        clubId,
+        semesterId,
+      );
+    return { members: result };
   }
 
   async getProfessorClubsMy(professorId: number): Promise<ApiClb016ResponseOk> {
