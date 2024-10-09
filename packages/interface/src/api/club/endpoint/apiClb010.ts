@@ -24,10 +24,11 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     members: z
       .object({
-        studentNumber: z.coerce.number().int().min(20000000).max(30000000),
         name: z.coerce.string().max(30),
+        studentId: z.coerce.number().int().min(1),
+        studentNumber: z.coerce.number().int().min(20000000).max(30000000),
         email: z.coerce.string().max(50),
-        krPhoneNumber: zKrPhoneNumber.optional(),
+        phoneNumber: zKrPhoneNumber.optional(),
       })
       .array(),
   }),

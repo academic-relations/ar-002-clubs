@@ -91,8 +91,8 @@ const AllMemberListFrame: React.FC<AllMemberListFrameProps> = ({ clubId }) => {
                   mockSemesterMembers.members.length > 0 && (
                     <AllMemberList
                       key={semester.id}
-                      semester={`${semester.year}년 ${semester.name}학기`}
-                      members={mockSemesterMembers.members} // TODO: 지금은 학기 상관없이 다 똑같은 멤버 불러오고 있음. 실제 API 연결하면 수정해야함
+                      semester={semester}
+                      clubId={clubId}
                       searchText={searchText}
                     />
                   ),

@@ -240,4 +240,24 @@ export default class ClubStudentTRepository {
 
     return result;
   }
+
+  async selectMemberByClubIdAndSemesterId(clubId: number, semesterId: number) {
+    return this.db
+      .select({
+        name: Student.name,
+        studentId: Student.id,
+        studentNumber: Student.number,
+        email: Student.email,
+        phoneNumber: Student.phoneNumber,
+      })
+      .from(ClubStudentT)
+      .innerJoin(Student, eq(Student.id, ClubStudentT.studentId))
+      .where(
+        and(
+          eq(ClubStudentT.clubId, clubId),
+          eq(ClubStudentT.semesterId, semesterId),
+          isNull(ClubStudentT.deletedAt),
+        ),
+      );
+  }
 }
