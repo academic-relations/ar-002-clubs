@@ -5,12 +5,13 @@ import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { SemesterProps } from "@sparcs-clubs/web/features/manage-club/members/types/semesterList";
 
 interface FilterButtonProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  itemList: string[];
-  selectedList: string[];
+  semesters: SemesterProps[];
+  selectedSemesters: SemesterProps[];
 }
 
 const FilterButtonWrapper = styled.div.withConfig({
@@ -35,22 +36,22 @@ const FilterButtonWrapper = styled.div.withConfig({
 const FilterButton: React.FC<FilterButtonProps> = ({
   isOpen,
   setIsOpen,
-  itemList,
-  selectedList,
+  semesters,
+  selectedSemesters,
 }) => {
   const changeOpen = () => setIsOpen(!isOpen);
   return (
     <FilterButtonWrapper isOpen={isOpen} onClick={changeOpen}>
-      {selectedList.length > 0 &&
-        (selectedList.length !== itemList.length ? (
+      {selectedSemesters.length > 0 &&
+        (selectedSemesters.length !== semesters.length ? (
           <Typography fs={16} lh={20} fw="REGULAR">
-            {selectedList.length > 1
-              ? `${selectedList[0]} 외 ${selectedList.length - 1}개`
-              : `${selectedList[0]}`}
+            {selectedSemesters.length > 1
+              ? `${selectedSemesters[0].year}년 ${selectedSemesters[0].name}학기 외 ${selectedSemesters.length - 1}개`
+              : `${selectedSemesters[0].year}년 ${selectedSemesters[0].name}학기`}
           </Typography>
         ) : (
           <Typography fs={16} lh={20} fw="REGULAR">
-            모두 선택
+            모든 학기 선택
           </Typography>
         ))}
       <Icon type="filter_list" size={20} />
