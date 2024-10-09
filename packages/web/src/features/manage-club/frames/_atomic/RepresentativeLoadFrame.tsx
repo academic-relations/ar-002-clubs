@@ -12,54 +12,24 @@ const RepresentativeLoadFrame: React.FC<{
     data: delegatesNow,
     isLoading,
     isError,
-    refetch: delegatesNowRefetch,
   } = useGetClubDelegate({ clubId });
 
   const {
-    data: representativeCandidates,
-    isLoading: representativeCandidatesIsLoading,
-    isError: representativeCandidatesIsError,
+    data: clubMembers,
+    isLoading: clubMembersIsLoading,
+    isError: clubMembersIsError,
   } = useGetDelegateCandidates({ clubId, delegateEnumId: 1 });
-
-  const {
-    data: delegate1Candidates,
-    isLoading: delegate1IsLoading,
-    isError: delegate1IsError,
-    refetch: delegate1Refetch,
-  } = useGetDelegateCandidates({ clubId, delegateEnumId: 2 });
-
-  const {
-    data: delegate2Candidates,
-    isLoading: delegate2IsLoading,
-    isError: delegate2IsError,
-    refetch: delegate2Refetch,
-  } = useGetDelegateCandidates({ clubId, delegateEnumId: 3 });
 
   return (
     // TODO: ChangeRepresentativeCard로 변경
     <AsyncBoundary
-      isLoading={
-        isLoading ||
-        delegate1IsLoading ||
-        delegate2IsLoading ||
-        representativeCandidatesIsLoading
-      }
-      isError={
-        isError ||
-        delegate1IsError ||
-        delegate2IsError ||
-        representativeCandidatesIsError
-      }
+      isLoading={isLoading || clubMembersIsLoading}
+      isError={isError || clubMembersIsError}
     >
       <ChangeRepresentativeCardV1
         clubId={clubId}
         delegatesNow={delegatesNow || { delegates: [] }}
-        representativeCandidates={representativeCandidates || { students: [] }}
-        delegate1Candidates={delegate1Candidates || { students: [] }}
-        delegate2Candidates={delegate2Candidates || { students: [] }}
-        refetchDelegateNow={delegatesNowRefetch}
-        refetchDelegate1={delegate1Refetch}
-        refetchDelegate2={delegate2Refetch}
+        clubMembers={clubMembers || { students: [] }}
       />
     </AsyncBoundary>
   );

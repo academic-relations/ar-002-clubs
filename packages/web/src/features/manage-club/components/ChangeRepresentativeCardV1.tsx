@@ -24,22 +24,8 @@ const LabelWrapper = styled.div`
 const ChangeRepresentativeCardV1: React.FC<{
   clubId: number;
   delegatesNow: ApiClb006ResponseOK;
-  representativeCandidates: ApiClb008ResponseOk;
-  delegate1Candidates: ApiClb008ResponseOk;
-  delegate2Candidates: ApiClb008ResponseOk;
-  refetchDelegateNow: () => void;
-  refetchDelegate1: () => void;
-  refetchDelegate2: () => void;
-}> = ({
-  clubId,
-  delegatesNow,
-  representativeCandidates,
-  delegate1Candidates,
-  delegate2Candidates,
-  refetchDelegateNow,
-  refetchDelegate1,
-  refetchDelegate2,
-}) => {
+  clubMembers: ApiClb008ResponseOk;
+}> = ({ clubId, delegatesNow, clubMembers }) => {
   const getSelectItems = (members: ApiClb008ResponseOk): SelectItem<string>[] =>
     members?.students.map(member => ({
       label: `${member.studentNumber} ${member.name}${
@@ -51,23 +37,28 @@ const ChangeRepresentativeCardV1: React.FC<{
       ),
     })) ?? [];
 
+  // TODO: 대표자 items 필터링
   const [representativeItems, setRepresentativeItems] = useState<
     SelectItem<string>[]
-  >(getSelectItems(representativeCandidates));
+  >(getSelectItems(clubMembers));
   const [delegate1Items, setDelegate1Items] = useState<SelectItem<string>[]>(
-    getSelectItems(delegate1Candidates),
+    getSelectItems(clubMembers).filter(
+      item =>
+        item.value !==
+        delegatesNow?.delegates
+          .find(delegate => delegate.delegateEnumId === 1)
+          ?.studentId?.toString(),
+    ),
   );
   const [delegate2Items, setDelegate2Items] = useState<SelectItem<string>[]>(
-    getSelectItems(delegate2Candidates),
+    getSelectItems(clubMembers).filter(
+      item =>
+        item.value !==
+        delegatesNow?.delegates
+          .find(delegate => delegate.delegateEnumId === 1)
+          ?.studentId?.toString(),
+    ),
   );
-
-  const [refresh, setRefresh] = useState<boolean>(false);
-
-  useEffect(() => {
-    setRepresentativeItems(getSelectItems(representativeCandidates));
-    setDelegate1Items(getSelectItems(delegate1Candidates));
-    setDelegate2Items(getSelectItems(delegate2Candidates));
-  }, [refresh]);
 
   const [representative, setRepresentative] = useState<string>(
     delegatesNow?.delegates
@@ -91,6 +82,28 @@ const ChangeRepresentativeCardV1: React.FC<{
           ?.studentId.toString() ?? "",
   );
 
+  const updateCandidateItems = () => {
+    setRepresentativeItems(getSelectItems(clubMembers));
+    setDelegate1Items(prevItems =>
+      prevItems.map(item =>
+        item.value === delegate1 ||
+        item.value === delegate2 ||
+        item.value === representative
+          ? { ...item, selectable: false }
+          : { ...item, selectable: true },
+      ),
+    );
+    setDelegate2Items(prevItems =>
+      prevItems.map(item =>
+        item.value === delegate1 ||
+        item.value === delegate2 ||
+        item.value === representative
+          ? { ...item, selectable: false }
+          : { ...item, selectable: true },
+      ),
+    );
+  };
+
   useEffect(() => {
     if (
       delegate1 !==
@@ -105,17 +118,10 @@ const ChangeRepresentativeCardV1: React.FC<{
           delegateEnumId: ClubDelegateEnum.Delegate1,
           studentId: Number(delegate1),
         },
-      )
-        .then(async () => {
-          await refetchDelegate1();
-          await refetchDelegate2();
-          await refetchDelegateNow();
-        })
-        .then(() => {
-          setRefresh(!refresh);
-        });
+      );
+      updateCandidateItems();
     }
-  }, [delegate1, refetchDelegate1, refetchDelegate2, refetchDelegateNow]);
+  }, [delegate1, delegatesNow]);
 
   useEffect(() => {
     if (
@@ -131,32 +137,31 @@ const ChangeRepresentativeCardV1: React.FC<{
           delegateEnumId: ClubDelegateEnum.Delegate2,
           studentId: Number(delegate2),
         },
-      )
-        .then(async () => {
-          await refetchDelegate1();
-          await refetchDelegate2();
-          await refetchDelegateNow();
-        })
-        .then(() => {
-          setRefresh(!refresh);
-        });
+      );
+      updateCandidateItems();
     }
-  }, [delegate2, refetchDelegate1, refetchDelegate2, refetchDelegateNow]);
+  }, [delegate2, delegatesNow]);
 
-  const deleteDelegate = async (delegateEnumId: ClubDelegateEnum) => {
+  const deleteDelegate = async (
+    delegateEnumId: ClubDelegateEnum,
+    studentId: string,
+  ) => {
     await updateClubDelegates({ clubId }, { delegateEnumId, studentId: 0 });
     if (delegateEnumId === ClubDelegateEnum.Delegate1) {
       setDelegate1("");
     } else if (delegateEnumId === ClubDelegateEnum.Delegate2) {
       setDelegate2("");
     }
-    Promise.all([
-      refetchDelegate1(),
-      refetchDelegate2(),
-      refetchDelegateNow(),
-    ]).then(() => {
-      setRefresh(!refresh);
-    });
+    setDelegate1Items(prevItems =>
+      prevItems.map(item =>
+        item.value === studentId ? { ...item, selectable: true } : item,
+      ),
+    );
+    setDelegate2Items(prevItems =>
+      prevItems.map(item =>
+        item.value === studentId ? { ...item, selectable: true } : item,
+      ),
+    );
   };
 
   return (
@@ -184,7 +189,9 @@ const ChangeRepresentativeCardV1: React.FC<{
           </Typography>
           <TextButton
             text="대의원1 삭제"
-            onClick={() => deleteDelegate(ClubDelegateEnum.Delegate1)}
+            onClick={() =>
+              deleteDelegate(ClubDelegateEnum.Delegate1, delegate1)
+            }
             disabled={
               delegatesNow?.delegates.find(
                 delegate => delegate.delegateEnumId === 2,
@@ -206,7 +213,9 @@ const ChangeRepresentativeCardV1: React.FC<{
           </Typography>
           <TextButton
             text="대의원2 삭제"
-            onClick={() => deleteDelegate(ClubDelegateEnum.Delegate2)}
+            onClick={() =>
+              deleteDelegate(ClubDelegateEnum.Delegate2, delegate2)
+            }
             disabled={
               delegatesNow?.delegates.find(
                 delegate => delegate.delegateEnumId === 3,
