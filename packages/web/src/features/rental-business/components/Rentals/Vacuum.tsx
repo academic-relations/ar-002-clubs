@@ -2,7 +2,6 @@ import React from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Radio from "@sparcs-clubs/web/common/components/Radio";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   RentalFrameProps,
   RentalLimitProps,
@@ -26,10 +25,8 @@ const Vacuum: React.FC<RentalLimitProps> = ({
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <Typography fs={16} lh={20} fw="MEDIUM">
-        청소기 종류
-      </Typography>
       <Radio
+        label="청소기 종류"
         value={rental?.vacuum as string}
         onChange={value =>
           setRental({
