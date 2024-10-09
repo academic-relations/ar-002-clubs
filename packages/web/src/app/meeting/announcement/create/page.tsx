@@ -37,7 +37,6 @@ const CreateMeetingPage: React.FC = () => {
   const {
     watch,
     getValues,
-    handleSubmit,
     formState: { isValid },
   } = formCtx;
 
@@ -67,7 +66,7 @@ const CreateMeetingPage: React.FC = () => {
 
   return (
     <FormProvider {...formCtx}>
-      <form onSubmit={handleSubmit(submitHandler)}>
+      <form>
         <FlexWrapper direction="column" gap={60}>
           <PageHead
             items={[
@@ -95,12 +94,13 @@ const CreateMeetingPage: React.FC = () => {
               </Button>
             </Link>
             <Button
-              buttonType="submit"
               type={
                 isValid && !isCreateLoading && isTemplateVisible
                   ? "default"
                   : "disabled"
               }
+              // submit 재확인 모달 추가되면 form handleSubmit으로 관리
+              onClick={submitHandler}
             >
               저장
             </Button>
