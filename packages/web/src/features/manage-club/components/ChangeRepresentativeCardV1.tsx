@@ -40,6 +40,35 @@ const ChangeRepresentativeCardV1: React.FC<{
   refetchDelegate1,
   refetchDelegate2,
 }) => {
+  const getSelectItems = (members: ApiClb008ResponseOk): SelectItem<string>[] =>
+    members?.students.map(member => ({
+      label: `${member.studentNumber} ${member.name}${
+        member.phoneNumber ? ` (${member.phoneNumber})` : ""
+      }`,
+      value: member.id.toString(),
+      selectable: !delegatesNow.delegates.some(
+        delegate => delegate.studentId === member.id,
+      ),
+    })) ?? [];
+
+  const [representativeItems, setRepresentativeItems] = useState<
+    SelectItem<string>[]
+  >(getSelectItems(representativeCandidates));
+  const [delegate1Items, setDelegate1Items] = useState<SelectItem<string>[]>(
+    getSelectItems(delegate1Candidates),
+  );
+  const [delegate2Items, setDelegate2Items] = useState<SelectItem<string>[]>(
+    getSelectItems(delegate2Candidates),
+  );
+
+  const [refresh, setRefresh] = useState<boolean>(false);
+
+  useEffect(() => {
+    setRepresentativeItems(getSelectItems(representativeCandidates));
+    setDelegate1Items(getSelectItems(delegate1Candidates));
+    setDelegate2Items(getSelectItems(delegate2Candidates));
+  }, [refresh]);
+
   const [representative, setRepresentative] = useState<string>(
     delegatesNow?.delegates
       .find(delegate => delegate.delegateEnumId === 1)
@@ -61,16 +90,6 @@ const ChangeRepresentativeCardV1: React.FC<{
           .find(delegate => delegate.delegateEnumId === 3)
           ?.studentId.toString() ?? "",
   );
-  const getSelectItems = (members: ApiClb008ResponseOk): SelectItem<string>[] =>
-    members?.students.map(member => ({
-      label: `${member.studentNumber} ${member.name}${
-        member.phoneNumber ? ` (${member.phoneNumber})` : ""
-      }`,
-      value: member.id.toString(),
-      selectable: !delegatesNow.delegates.some(
-        delegate => delegate.studentId === member.id,
-      ),
-    })) ?? [];
 
   useEffect(() => {
     if (
@@ -86,11 +105,15 @@ const ChangeRepresentativeCardV1: React.FC<{
           delegateEnumId: ClubDelegateEnum.Delegate1,
           studentId: Number(delegate1),
         },
-      ).then(() => {
-        refetchDelegate1();
-        refetchDelegate2();
-        refetchDelegateNow();
-      });
+      )
+        .then(async () => {
+          await refetchDelegate1();
+          await refetchDelegate2();
+          await refetchDelegateNow();
+        })
+        .then(() => {
+          setRefresh(!refresh);
+        });
     }
   }, [delegate1, refetchDelegate1, refetchDelegate2, refetchDelegateNow]);
 
@@ -108,11 +131,15 @@ const ChangeRepresentativeCardV1: React.FC<{
           delegateEnumId: ClubDelegateEnum.Delegate2,
           studentId: Number(delegate2),
         },
-      ).then(() => {
-        refetchDelegate1();
-        refetchDelegate2();
-        refetchDelegateNow();
-      });
+      )
+        .then(async () => {
+          await refetchDelegate1();
+          await refetchDelegate2();
+          await refetchDelegateNow();
+        })
+        .then(() => {
+          setRefresh(!refresh);
+        });
     }
   }, [delegate2, refetchDelegate1, refetchDelegate2, refetchDelegateNow]);
 
@@ -123,9 +150,13 @@ const ChangeRepresentativeCardV1: React.FC<{
     } else if (delegateEnumId === ClubDelegateEnum.Delegate2) {
       setDelegate2("");
     }
-    await refetchDelegate1();
-    await refetchDelegate2();
-    await refetchDelegateNow();
+    Promise.all([
+      refetchDelegate1(),
+      refetchDelegate2(),
+      refetchDelegateNow(),
+    ]).then(() => {
+      setRefresh(!refresh);
+    });
   };
 
   return (
@@ -140,7 +171,7 @@ const ChangeRepresentativeCardV1: React.FC<{
           </Typography>
         </LabelWrapper>
         <Select
-          items={getSelectItems(representativeCandidates)}
+          items={representativeItems}
           value={representative}
           onChange={setRepresentative}
           disabled
@@ -162,7 +193,7 @@ const ChangeRepresentativeCardV1: React.FC<{
           />
         </LabelWrapper>
         <Select
-          items={getSelectItems(delegate1Candidates)}
+          items={delegate1Items}
           value={delegate1}
           onChange={setDelegate1}
           isRequired={false}
@@ -184,7 +215,7 @@ const ChangeRepresentativeCardV1: React.FC<{
           />
         </LabelWrapper>
         <Select
-          items={getSelectItems(delegate2Candidates)}
+          items={delegate2Items}
           value={delegate2}
           onChange={setDelegate2}
           isRequired={false}
