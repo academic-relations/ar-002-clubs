@@ -4,7 +4,18 @@ import {
   ClubDelegateEnum,
 } from "@sparcs-clubs/interface/common/enum/club.enum";
 
-import { and, count, eq, gte, isNull, lte, notInArray, or } from "drizzle-orm";
+import {
+  and,
+  count,
+  eq,
+  gte,
+  isNotNull,
+  isNull,
+  lte,
+  not,
+  notInArray,
+  or,
+} from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -229,6 +240,12 @@ export class ClubDelegateDRepository {
                 isNull(ClubDelegateD.ClubDelegateEnumId),
               )
             : undefined,
+          not(
+            and(
+              not(eq(ClubDelegateD.clubId, param.clubId)),
+              isNotNull(ClubDelegateD.id),
+            ),
+          ),
           isNull(Club.deletedAt),
         ),
       );
