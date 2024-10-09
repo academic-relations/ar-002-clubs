@@ -2,36 +2,38 @@ import React from "react";
 
 import Dropdown from "@sparcs-clubs/web/common/components/Select/Dropdown";
 import SelectedItem from "@sparcs-clubs/web/common/components/SelectedItem";
-import {
-  SemesterListProps,
-  SemesterProps,
-} from "@sparcs-clubs/web/features/manage-club/members/types/semesterList";
 
-const FilterDropdown: React.FC<SemesterListProps> = ({
-  semesters,
-  selectedSemesters,
-  setSelectedSemesters,
+export interface FilterProps {
+  itemList: string[];
+  selectedList: string[];
+  setSelectedList: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+const FilterDropdown: React.FC<FilterProps> = ({
+  itemList,
+  selectedList,
+  setSelectedList,
 }) => {
-  const handleSelect = (semester: SemesterProps) => {
-    if (selectedSemesters.includes(semester)) {
-      const updatedSelectedSemesters = selectedSemesters.filter(
-        selectedSemester => selectedSemester !== semester,
+  const handleSelect = (selectedItem: string) => {
+    if (selectedList.includes(selectedItem)) {
+      const updatedSelectedList = selectedList.filter(
+        item => item !== selectedItem,
       );
-      setSelectedSemesters(updatedSelectedSemesters);
+      setSelectedList(updatedSelectedList);
     } else {
-      const updatedSelectedSemesters = [...selectedSemesters, semester];
-      setSelectedSemesters(updatedSelectedSemesters);
+      const updatedSelectedList = [...selectedList, selectedItem];
+      setSelectedList(updatedSelectedList);
     }
   };
 
   return (
-    <Dropdown marginTop={40} maxContent>
-      {semesters.map(semester => (
+    <Dropdown marginTop={40} maxContent style={{ justifyContent: "right" }}>
+      {itemList.map(item => (
         <SelectedItem
-          key={semester.id}
-          text={`${semester.year}년 ${semester.name}학기`}
-          isSelected={selectedSemesters.includes(semester)}
-          onClick={() => handleSelect(semester)}
+          key={item}
+          text={item}
+          isSelected={selectedList.includes(item)}
+          onClick={() => handleSelect(item)}
         />
       ))}
     </Dropdown>
