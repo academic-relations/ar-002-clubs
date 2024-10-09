@@ -1,3 +1,4 @@
+/* scss is only used for extra cases. (e.g. this case, using Tiptap editor) */
 import "./styles.scss";
 
 import React, { useCallback } from "react";
@@ -19,7 +20,6 @@ import { EditorContent, useEditor } from "@tiptap/react";
 
 import styled from "styled-components";
 
-// TODO: refactor chacha!!!!
 import tableColumnPlusAfterDisabledSvg from "@sparcs-clubs/web/assets/table-column-plus-after-disabled.svg";
 import tableColumnPlusAfterSvg from "@sparcs-clubs/web/assets/table-column-plus-after.svg";
 import tableColumnPlusBeforeDisabledSvg from "@sparcs-clubs/web/assets/table-column-plus-before-disabled.svg";
