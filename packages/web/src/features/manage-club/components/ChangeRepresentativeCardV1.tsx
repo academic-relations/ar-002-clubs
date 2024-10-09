@@ -21,6 +21,7 @@ const LabelWrapper = styled.div`
   justify-content: space-between;
 `;
 
+// ChangeRepresentativeCardV1은 대표자 변경 기능 제외하고 대의원 변경 기능만 구현한 버젼
 const ChangeRepresentativeCardV1: React.FC<{
   clubId: number;
   delegatesNow: ApiClb006ResponseOK;
