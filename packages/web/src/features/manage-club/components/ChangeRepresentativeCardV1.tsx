@@ -11,7 +11,6 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { mockClubDelegateCandidates } from "../services/_mock/mockDelegate";
 import { updateClubDelegates } from "../services/updateClubDelegate";
 
 const LabelWrapper = styled.div`
@@ -25,6 +24,7 @@ const LabelWrapper = styled.div`
 const ChangeRepresentativeCardV1: React.FC<{
   clubId: number;
   delegatesNow: ApiClb006ResponseOK;
+  representativeCandidates: ApiClb008ResponseOk;
   delegate1Candidates: ApiClb008ResponseOk;
   delegate2Candidates: ApiClb008ResponseOk;
   refetchDelegateNow: () => void;
@@ -33,6 +33,7 @@ const ChangeRepresentativeCardV1: React.FC<{
 }> = ({
   clubId,
   delegatesNow,
+  representativeCandidates,
   delegate1Candidates,
   delegate2Candidates,
   refetchDelegateNow,
@@ -40,31 +41,41 @@ const ChangeRepresentativeCardV1: React.FC<{
   refetchDelegate2,
 }) => {
   const [representative, setRepresentative] = useState<string>(
-    delegatesNow?.delegates[0].studentId?.toString() ?? "",
+    delegatesNow?.delegates
+      .find(delegate => delegate.delegateEnumId === 1)
+      ?.studentId?.toString() ?? "",
   );
   const [delegate1, setDelegate1] = useState<string>(
-    delegatesNow?.delegates[1]?.studentId === 0
+    delegatesNow?.delegates.find(delegate => delegate.delegateEnumId === 2)
+      ?.studentId === 0
       ? ""
-      : delegatesNow?.delegates[1]?.studentId.toString() ?? "",
+      : delegatesNow?.delegates
+          .find(delegate => delegate.delegateEnumId === 2)
+          ?.studentId.toString() ?? "",
   );
   const [delegate2, setDelegate2] = useState<string>(
-    delegatesNow?.delegates[2]?.studentId === 0
+    delegatesNow?.delegates.find(delegate => delegate.delegateEnumId === 3)
+      ?.studentId === 0
       ? ""
-      : delegatesNow?.delegates[2]?.studentId.toString() ?? "",
+      : delegatesNow?.delegates
+          .find(delegate => delegate.delegateEnumId === 3)
+          ?.studentId.toString() ?? "",
   );
-
   const getSelectItems = (members: ApiClb008ResponseOk): SelectItem<string>[] =>
     members?.students.map(member => ({
       label: `${member.studentNumber} ${member.name} (${member.phoneNumber})`,
       value: member.id.toString(),
-      selectable: true,
+      selectable: !delegatesNow.delegates.some(
+        delegate => delegate.studentId === member.id,
+      ),
     })) ?? [];
-
-  const representativeCandidates = mockClubDelegateCandidates;
 
   useEffect(() => {
     if (
-      delegate1 !== delegatesNow?.delegates[1]?.studentId?.toString() &&
+      delegate1 !==
+        delegatesNow?.delegates
+          .find(delegate => delegate.delegateEnumId === 2)
+          ?.studentId?.toString() &&
       delegate1 !== ""
     ) {
       updateClubDelegates(
@@ -83,7 +94,10 @@ const ChangeRepresentativeCardV1: React.FC<{
 
   useEffect(() => {
     if (
-      delegate2 !== delegatesNow?.delegates[2]?.studentId?.toString() &&
+      delegate2 !==
+        delegatesNow?.delegates
+          .find(delegate => delegate.delegateEnumId === 3)
+          ?.studentId?.toString() &&
       delegate2 !== ""
     ) {
       updateClubDelegates(
