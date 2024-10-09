@@ -1,6 +1,6 @@
 // TODO: figma 맞춰서
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import AgendaContent from "@sparcs-clubs/web/features/meeting/agenda/constants/agendaContent";
 
@@ -21,18 +21,16 @@ const NewAgendaFrame: React.FC = () => {
     [AgendaTypeEnum.Special]: 0,
   };
 
-  const refs = mockNewAgendaList.map(() => React.createRef<HTMLDivElement>());
+  const refs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const groupedAgendas: Record<AgendaTypeEnum, AgendaContent[]> = {} as Record<
-    AgendaTypeEnum,
-    AgendaContent[]
-  >; // 종류별로 숫자를 매기기 위함
+  useEffect(() => {
+    refs.current = refs.current.slice(0, mockNewAgendaList.length);
+    mockNewAgendaList.forEach((_, index) => {
+      if (!refs.current[index]) refs.current[index] = null;
+    });
+  }, [mockNewAgendaList]);
 
-  const updateAgendaOrder = (
-    index1: number,
-    index2: number,
-    ref: React.RefObject<HTMLDivElement>,
-  ) => {
+  const updateAgendaOrder = (index1: number, index2: number) => {
     if (index1 < 0 || index2 < 0) return;
     if (
       index1 >= mockNewAgendaList.length ||
@@ -45,7 +43,10 @@ const NewAgendaFrame: React.FC = () => {
     mockNewAgendaList[index2] = temp;
     setMockNewAgendaList([...mockNewAgendaList]);
 
-    ref.current?.scrollIntoView({ behavior: "instant", block: "center" });
+    refs.current[index2]?.scrollIntoView({
+      behavior: "instant",
+      block: "center",
+    });
   };
 
   const deleteAgenda = (index: number) => {
@@ -58,11 +59,6 @@ const NewAgendaFrame: React.FC = () => {
     setMockNewAgendaList([...mockNewAgendaList]);
   };
 
-  mockNewAgendaList.forEach(agenda => {
-    groupedAgendas[agenda.type] = groupedAgendas[agenda.type] || [];
-    groupedAgendas[agenda.type].push(agenda);
-  });
-
   return (
     mockNewAgendaList.length > 0 &&
     mockNewAgendaList.map((agenda, index) => {
@@ -74,10 +70,10 @@ const NewAgendaFrame: React.FC = () => {
           index={index}
           agenda={agenda}
           goUp={() => {
-            updateAgendaOrder(index, index - 1, refs[index - 1]);
+            updateAgendaOrder(index, index - 1);
           }}
           goDown={() => {
-            updateAgendaOrder(index, index + 1, refs[index + 1]);
+            updateAgendaOrder(index, index + 1);
           }}
           deleteAgenda={() => {
             deleteAgenda(index);
