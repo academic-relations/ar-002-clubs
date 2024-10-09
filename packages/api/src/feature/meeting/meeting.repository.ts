@@ -137,6 +137,7 @@ export class MeetingRepository {
         isRegular: Meeting.isRegular,
         location: Meeting.location,
         locationEn: Meeting.locationEn,
+        tag: Meeting.tag,
       })
       .from(Meeting)
       .where(eq(Meeting.announcementId, announcementId))
@@ -162,6 +163,7 @@ export class MeetingRepository {
       isRegular?: boolean;
       location?: string;
       locationEn?: string;
+      tag?: string;
     },
   ) {
     const isUpdateSucceed = await this.db.transaction(async tx => {
@@ -199,6 +201,7 @@ export class MeetingRepository {
         isRegular?: boolean;
         location?: string;
         locationEn?: string;
+        tag?: string;
       } = {};
       if (body.meetingEnumId !== undefined) {
         meetingUpdates.meetingEnumId = body.meetingEnumId;
@@ -217,6 +220,9 @@ export class MeetingRepository {
       }
       if (body.locationEn !== undefined) {
         meetingUpdates.locationEn = body.locationEn;
+      }
+      if (body.tag !== undefined) {
+        meetingUpdates.tag = body.tag;
       }
 
       if (Object.keys(meetingUpdates).length > 0) {

@@ -89,6 +89,7 @@ export class MeetingService {
       isRegular: meeting.isRegular,
       location: meeting.location,
       locationEn: meeting.locationEn,
+      tag: meeting.tag,
     };
   }
 
