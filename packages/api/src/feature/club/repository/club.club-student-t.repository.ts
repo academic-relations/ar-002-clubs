@@ -240,4 +240,29 @@ export default class ClubStudentTRepository {
 
     return result;
   }
+
+  /** NOTE: (@dora)
+   * 말 그대로 semesterId 기준, 즉 해당 학기에 활동을 했느냐 기준으로 회원 목록을 반환하는 것이므로
+   * 해당 학기의 활동 기간을 다 채우지 못한 회원에 대해서 (예를 들어 중간 탈퇴) 고려하고 있지 않음.
+   * 만약 이런 회원들에 대한 처리가 필요해지면 endTerm을 고려하여 로직 수정 필요
+   */
+  async selectMemberByClubIdAndSemesterId(clubId: number, semesterId: number) {
+    return this.db
+      .select({
+        name: Student.name,
+        studentId: Student.id,
+        studentNumber: Student.number,
+        email: Student.email,
+        phoneNumber: Student.phoneNumber,
+      })
+      .from(ClubStudentT)
+      .innerJoin(Student, eq(Student.id, ClubStudentT.studentId))
+      .where(
+        and(
+          eq(ClubStudentT.clubId, clubId),
+          eq(ClubStudentT.semesterId, semesterId),
+          isNull(ClubStudentT.deletedAt),
+        ),
+      );
+  }
 }

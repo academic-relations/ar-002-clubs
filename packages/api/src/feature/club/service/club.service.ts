@@ -5,6 +5,15 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 
+import {
+  ApiClb009RequestParam,
+  ApiClb009ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb009";
+import {
+  ApiClb010RequestParam,
+  ApiClb010ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
+
 import { ClubDelegateDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-delegate-d.repository";
 import { ClubRoomTRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-room-t.repository";
 
@@ -14,6 +23,8 @@ import { DivisionPermanentClubDRepository } from "../repository/club.division-pe
 import { ClubGetStudentClubBrief } from "../repository/club.get-student-club-brief";
 import { ClubPutStudentClubBrief } from "../repository/club.put-student-club-brief";
 import ClubRepository from "../repository/club.repository";
+
+import ClubPublicService from "./club.public.service";
 
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 import type {
@@ -43,6 +54,7 @@ export class ClubService {
     private divisionPermanentClubDRepository: DivisionPermanentClubDRepository,
     private clubGetStudentClubBrief: ClubGetStudentClubBrief,
     private clubPutStudentClubBrief: ClubPutStudentClubBrief,
+    private clubPublicService: ClubPublicService,
   ) {}
 
   async getClubs(): Promise<ApiClb001ResponseOK> {
@@ -219,6 +231,42 @@ export class ClubService {
       );
     // result가 null인지 확인해서 null인 경우 에러?
     return {};
+  }
+
+  async getStudentClubSemesters(
+    studentId: number,
+    param: ApiClb009RequestParam,
+  ): Promise<ApiClb009ResponseOk> {
+    const { clubId } = param;
+    const isAvailableDelegate = await this.clubPublicService.isStudentDelegate(
+      studentId,
+      clubId,
+    );
+    if (!isAvailableDelegate) {
+      throw new HttpException("Delegate not available", HttpStatus.FORBIDDEN);
+    }
+    const result = await this.clubTRepository.findSemesterByClubId(clubId);
+    return { semesters: result };
+  }
+
+  async getStudentClubMembers(
+    studentId: number,
+    param: ApiClb010RequestParam,
+  ): Promise<ApiClb010ResponseOk> {
+    const { clubId, semesterId } = param;
+    const isAvailableDelegate = await this.clubPublicService.isStudentDelegate(
+      studentId,
+      clubId,
+    );
+    if (!isAvailableDelegate) {
+      throw new HttpException("Delegate not available", HttpStatus.FORBIDDEN);
+    }
+    const result =
+      await this.clubStudentTRepository.selectMemberByClubIdAndSemesterId(
+        clubId,
+        semesterId,
+      );
+    return { members: result };
   }
 
   async getProfessorClubsMy(professorId: number): Promise<ApiClb016ResponseOk> {
