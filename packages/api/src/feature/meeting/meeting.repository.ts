@@ -61,8 +61,8 @@ export class MeetingRepository {
     startDate: Date;
     endDate?: Date;
     isRegular: boolean;
-    location: string;
-    locationEn: string;
+    location?: string;
+    locationEn?: string;
     tag: string;
   }): Promise<number | undefined> {
     // TODO: string인 필수 field validation
