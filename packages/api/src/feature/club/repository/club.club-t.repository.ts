@@ -51,6 +51,26 @@ export default class ClubTRepository {
     return result;
   }
 
+  async findSemesterByClubId(clubId: number) {
+    return this.db
+      .select({
+        id: SemesterD.id,
+        name: SemesterD.name,
+        year: SemesterD.year,
+      })
+      .from(SemesterD)
+      .innerJoin(ClubT, eq(SemesterD.id, ClubT.semesterId))
+      .where(and(eq(ClubT.clubId, clubId), isNull(ClubT.deletedAt)))
+      .orderBy(desc(SemesterD.id))
+      .then(result =>
+        result.map(row => ({
+          id: row.id,
+          year: row.year,
+          name: row.name,
+        })),
+      );
+  }
+
   async findProfessorSemester(professorId: number) {
     return this.db
       .select({

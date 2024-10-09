@@ -52,6 +52,8 @@ const RegisterMemberListFrame = () => {
     }
   }, [termData]);
 
+  if (!isRegistrationPeriod) return null;
+
   return (
     <FoldableSectionTitle title="신청 회원 명단" childrenMargin="20px">
       <RegisterMemberListWrapper>

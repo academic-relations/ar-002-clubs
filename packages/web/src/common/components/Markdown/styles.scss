@@ -1,0 +1,121 @@
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+p {
+  font-family: "Pretendard-Regular";
+  font-size: 16px;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.italic-text {
+  font-style: italic;
+}
+
+.tiptap {
+  border: 1px solid #eeeeee;
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 160px;
+
+  table {
+    border-collapse: collapse;
+    overflow: hidden;
+    width: 50%;
+
+    td,
+    th {
+      border: 1px solid black;
+      box-sizing: border-box;
+      min-width: 1em;
+      padding: 6px 8px;
+      position: relative;
+      vertical-align: top;
+
+      > * {
+        margin-bottom: 0;
+      }
+    }
+
+    th {
+      background-color: #ffffff;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    .selectedCell:after {
+      background-color: #eeeeee;
+      opacity: 50%;
+      content: "";
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      pointer-events: none;
+      position: absolute;
+      z-index: -1;
+    }
+
+    .column-resize-handle {
+      background-color: #ccc;
+      bottom: -2px;
+      pointer-events: none;
+      position: absolute;
+      right: -2px;
+      top: 0;
+      width: 4px;
+    }
+  }
+
+  table:hover {
+    cursor: pointer;
+  }
+
+  .tableWrapper {
+    margin: 0.5rem 0;
+    overflow-x: auto;
+  }
+
+  &.resize-cursor {
+    cursor: ew-resize;
+    cursor: col-resize;
+  }
+
+  .is-editor-empty::before {
+    color: #dddddd;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+.ProseMirror:focus {
+  outline: none;
+}
+
+.tiptap:focus {
+  border: 1px solid #0099ad;
+}
+
+.horizontal-divider {
+  border: 0.5px solid #eeeeee;
+}
+
+.vertical-divider {
+  border: 0.5px solid #eeeeee;
+}
