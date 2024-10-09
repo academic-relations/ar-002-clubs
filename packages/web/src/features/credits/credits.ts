@@ -59,6 +59,13 @@ const credits: SemesterCredit[] = [
         comment: "일이 복사돼요!",
       },
       {
+        nickname: "ava",
+        name: "주영미",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "가을이다~",
+      },
+      {
         nickname: "somato",
         name: "장성원",
         role: "Designer",
