@@ -52,11 +52,6 @@ export default class ClubTRepository {
   }
 
   async findSemesterByClubId(clubId: number) {
-    /**
-     * (@dora) 질문
-     * - deleted_at는 따로 고려할 필요가 없는지?
-     * - 이렇게 하는 게 맞는지?
-     */
     return this.db
       .select({
         id: SemesterD.id,
@@ -64,8 +59,8 @@ export default class ClubTRepository {
         year: SemesterD.year,
       })
       .from(SemesterD)
-      .leftJoin(ClubT, eq(SemesterD.id, ClubT.semesterId))
-      .where(eq(ClubT.clubId, clubId))
+      .innerJoin(ClubT, eq(SemesterD.id, ClubT.semesterId))
+      .where(and(eq(ClubT.clubId, clubId), isNull(ClubT.deletedAt)))
       .orderBy(desc(SemesterD.id))
       .then(result =>
         result.map(row => ({

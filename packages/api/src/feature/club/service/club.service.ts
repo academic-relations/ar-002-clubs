@@ -20,6 +20,8 @@ import { ClubGetStudentClubBrief } from "../repository/club.get-student-club-bri
 import { ClubPutStudentClubBrief } from "../repository/club.put-student-club-brief";
 import ClubRepository from "../repository/club.repository";
 
+import ClubPublicService from "./club.public.service";
+
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 import type {
   ApiClb002RequestParam,
@@ -48,6 +50,7 @@ export class ClubService {
     private divisionPermanentClubDRepository: DivisionPermanentClubDRepository,
     private clubGetStudentClubBrief: ClubGetStudentClubBrief,
     private clubPutStudentClubBrief: ClubPutStudentClubBrief,
+    private clubPublicService: ClubPublicService,
   ) {}
 
   async getClubs(): Promise<ApiClb001ResponseOK> {
@@ -230,21 +233,13 @@ export class ClubService {
     studentId: number,
     param: ApiClb009RequestParam,
   ): Promise<ApiClb009ResponseOk> {
-    /**
-     * @dora 질문
-     * - 대표자 / 대의원 여부는 이렇게 확인하는게 맞는지?
-     */
     const { clubId } = param;
-    const isAvailableRepresentative =
-      await this.clubDelegateDRepository.findRepresentativeByClubIdAndStudentId(
-        studentId,
-        clubId,
-      );
-    if (!isAvailableRepresentative) {
-      throw new HttpException(
-        "Representative not available",
-        HttpStatus.FORBIDDEN,
-      );
+    const isAvailableDelegate = await this.clubPublicService.isStudentDelegate(
+      studentId,
+      clubId,
+    );
+    if (!isAvailableDelegate) {
+      throw new HttpException("Delegate not available", HttpStatus.FORBIDDEN);
     }
     const result = await this.clubTRepository.findSemesterByClubId(clubId);
     return { semesters: result };
