@@ -38,7 +38,6 @@ const MeetingNoticeHeader = styled.div`
   align-items: center;
   gap: 12px;
   flex: 1 0 0;
-  opacity: 0.84;
 `;
 
 const MeetingNoticeStatusHeader = styled.div`
