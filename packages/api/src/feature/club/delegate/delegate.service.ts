@@ -280,8 +280,8 @@ export default class ClubDelegateService {
                 // ClubDelegateEnum.Delegate1,
                 // ClubDelegateEnum.Delegate2,
                 param.param.delegateEnumId === ClubDelegateEnum.Delegate1
-                  ? ClubDelegateEnum.Delegate1
-                  : ClubDelegateEnum.Delegate2,
+                  ? ClubDelegateEnum.Delegate2
+                  : ClubDelegateEnum.Delegate1,
               ],
       });
 
