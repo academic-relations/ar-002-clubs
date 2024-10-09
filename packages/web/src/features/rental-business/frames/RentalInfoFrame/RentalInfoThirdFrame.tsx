@@ -1,18 +1,19 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 
+import { FormProvider } from "react-hook-form";
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import {
   ListContainer,
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
@@ -31,72 +32,49 @@ const RentalPeriodInner = styled.div`
 
 const RentalInfoThirdFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
-> = ({ rental, setRental, setNextEnabled }) => {
-  const [purpose, setPurpose] = useState(rental.purpose || "");
-  const [noPurposeError, setNoPurposeError] = useState("");
-  const [purposeTouched, setPurposeTouched] = useState(false);
-
-  const handlePurposeTouched = () => {
-    if (!purposeTouched) {
-      setPurposeTouched(true);
-    }
-  };
-
-  useEffect(() => {
-    if (purpose.length > 0) {
-      setRental({
-        ...rental,
-        purpose,
-      });
-    }
-  }, [purpose]);
-
-  useEffect(() => {
-    const enableNext = !!rental.purpose;
-    if (enableNext || !purposeTouched) {
-      setNoPurposeError("");
-    } else {
-      setNoPurposeError("대여 목적을 입력하세요");
-    }
-    setNextEnabled(enableNext);
-  }, [rental, purposeTouched, setNextEnabled, setNoPurposeError]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+> = ({ formCtx, setNextEnabled }) => {
+  const { control } = formCtx;
 
   return (
-    <Card outline gap={20}>
-      <CardInner>
-        <Typography fs={16} lh={20} fw="MEDIUM">
-          신청자 정보
-        </Typography>
-        <ListContainer>
-          <ListItem>동아리: {rental.info?.clubName}</ListItem>
-          <ListItem>담당자: {rental.info?.applicant}</ListItem>
-          <ListItem>연락처: {rental.info?.phone}</ListItem>
-        </ListContainer>
-        <FlexWrapper direction="row" gap={16}>
+    <FormProvider {...formCtx}>
+      <Card outline gap={20}>
+        <CardInner>
           <Typography fs={16} lh={20} fw="MEDIUM">
-            대여 기간
+            신청자 정보
           </Typography>
-          <RentalPeriodInner>
-            {formatDate(rental.date?.start || new Date())} ~
-            {formatDate(rental.date?.end || new Date())}
-            {/* new Date() 넣어도 되는 이유: thirdFrame에서는 rental date가 둘 다 not null인 상태로 넘어옴 */}
-          </RentalPeriodInner>
-        </FlexWrapper>
-        <Typography fs={16} lh={20} fw="MEDIUM">
-          대여 물품
-        </Typography>
-        <RentalList rental={rental} />
-      </CardInner>
-      <TextInput
-        placeholder="내용"
-        area
-        label="대여 목적"
-        value={purpose}
-        handleChange={setPurpose}
-        errorMessage={noPurposeError}
-        onBlur={handlePurposeTouched}
-      />
-    </Card>
+          <ListContainer>
+            <ListItem>동아리: {formCtx.getValues("info.clubName")}</ListItem>
+            <ListItem>담당자: {formCtx.getValues("info.applicant")}</ListItem>
+            <ListItem>연락처: {formCtx.getValues("info.phoneNumber")}</ListItem>
+          </ListContainer>
+          <FlexWrapper direction="row" gap={16}>
+            <Typography fs={16} lh={20} fw="MEDIUM">
+              대여 기간
+            </Typography>
+            <RentalPeriodInner>
+              {formatDate(formCtx.getValues("date.start") || new Date())} ~
+              {formatDate(formCtx.getValues("date.end") || new Date())}
+              {/* new Date() 넣어도 되는 이유: thirdFrame에서는 rental date가 둘 다 not null인 상태로 넘어옴 */}
+            </RentalPeriodInner>
+          </FlexWrapper>
+          <Typography fs={16} lh={20} fw="MEDIUM">
+            대여 물품
+          </Typography>
+          {/* TODO: RentalList formCtx 사용해서 수정 */}
+          {/* <RentalList rental={rental} /> */}
+        </CardInner>
+        {/* TODO: 조건 채우기 */}
+        <FormController
+          name="purpose"
+          required
+          control={control}
+          renderItem={props => (
+            <TextInput {...props} placeholder="내용" area label="대여 목적" />
+          )}
+        />
+      </Card>
+    </FormProvider>
   );
 };
 

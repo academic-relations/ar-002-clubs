@@ -4,7 +4,7 @@ export interface RentalInterface {
     clubId?: number;
     clubName?: string;
     applicant?: string;
-    phone?: string;
+    phoneNumber?: string;
   };
   date?: {
     start?: Date;

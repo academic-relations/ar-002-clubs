@@ -10,8 +10,6 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
-import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
-import postRentalOrder from "@sparcs-clubs/web/features/rental-business/service/postRentalOrder";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
@@ -55,19 +53,11 @@ const steps = [
   },
 ];
 
-const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
+const RentalInfoFrame: React.FC<RentalFrameProps> = ({ formCtx }) => {
   const router = useRouter();
-  const props = { rental, setRental };
   const [step, setStep] = useState(0);
   const [nextEnabled, setNextEnabled] = useState(true);
   const CurrentFrame = frames[step];
-
-  const isRentalListEmpty = () =>
-    !rental.easel &&
-    !rental.vacuum &&
-    (!rental.handCart || Object.values(rental.handCart).every(val => !val)) &&
-    !rental.mat &&
-    (!rental.tool || Object.values(rental.tool).every(val => !val));
 
   const openReturnModal = () => {
     overlay.open(({ isOpen, close }) => (
@@ -75,7 +65,6 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
         <CancellableModalContent
           onConfirm={() => {
             close();
-            setRental({ agreement: true, info: rental.info });
             setStep(step - 1);
           }}
           onClose={close}
@@ -106,81 +95,24 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ rental, setRental }) => {
   };
 
   const onPrev = useCallback(() => {
-    // TODO: step 0으로 돌아갈 때 agreement true로 두기
-    if (step === 0) {
-      setRental({ agreement: false, info: rental.info });
-    }
-    if (step === 1) {
-      if (!isRentalListEmpty()) {
-        openReturnModal();
-        return;
-      }
-      if (rental.date?.start !== undefined) {
-        openReturnModal();
-        return;
-      }
-    }
     setStep(step - 1);
-  }, [step, setStep, rental, setRental]);
-
-  const { data } = useGetAvailableRentals(
-    rental.date?.start ?? new Date(),
-    rental.date?.end ?? new Date(),
-  );
-  // TODO: 임시로 달아둠, 고쳐야 함
-  const objectsWithQuantity = [
-    { name: "Easel", quantity: rental.easel || 0 },
-    { name: "Vacuum Corded", quantity: rental.vacuum === "corded" ? 1 : 0 },
-    {
-      name: "Hand Cart Rolltainer",
-      quantity: rental.handCart?.rolltainer || 0,
-    },
-    { name: "Hand Cart Large", quantity: rental.handCart?.large || 0 },
-    { name: "Hand Cart Medium", quantity: rental.handCart?.medium || 0 },
-    { name: "Hand Cart Small", quantity: rental.handCart?.small || 0 },
-    { name: "Mat", quantity: rental.mat || 0 },
-    { name: "Power Drill Set", quantity: rental.tool?.powerDrill || 0 },
-    { name: "Driver Set", quantity: rental.tool?.driver || 0 },
-    { name: "Super Glue", quantity: rental.tool?.superGlue || 0 },
-    { name: "Nipper", quantity: rental.tool?.nipper || 0 },
-    { name: "Plier", quantity: rental.tool?.plier || 0 },
-    { name: "Long Nose Plier", quantity: rental.tool?.longNosePlier || 0 },
-  ];
-
-  const objectsWithId = objectsWithQuantity.map(item => {
-    const { id } = data?.objects.find(obj => obj.name === item.name) || {
-      id: -1,
-    };
-    return { id, number: item.quantity };
-  });
-
-  const filteredObjectsWithId = objectsWithId.filter(item => item.number !== 0);
+    openReturnModal();
+  }, [step, setStep]);
 
   const onNext = useCallback(() => {
-    if (nextEnabled && step < frames.length - 1) {
+    if (step < frames.length - 1) {
       setStep(step + 1);
     }
     if (step === frames.length - 1) {
-      // TODO?: 신청 제대로 안 됐을 때 modal?
-      postRentalOrder(
-        // TODO: 임시로 달아둠, 고쳐야 함
-        { clubId: rental.info?.clubId ?? 1 },
-        {
-          studentPhoneNumber: rental.info?.phone ?? "",
-          objects: filteredObjectsWithId,
-          purpose: rental.purpose ?? "",
-          desiredStart: rental.date?.start ?? new Date(),
-          desiredEnd: rental.date?.end ?? new Date(),
-        },
-      ).then(() => openAssignModal());
+      openAssignModal();
     }
-  }, [nextEnabled, step, setStep]);
+  }, [step, setStep]);
 
   return (
     <FlexWrapper direction="column" gap={60}>
       <StepProcess steps={steps} activeStepIndex={step + 1} />
       <RentalNoticeFrameInner>
-        <CurrentFrame {...props} setNextEnabled={setNextEnabled} />
+        <CurrentFrame formCtx={formCtx} setNextEnabled={setNextEnabled} />
       </RentalNoticeFrameInner>
       <StyledBottom>
         <Button onClick={onPrev}>이전</Button>
