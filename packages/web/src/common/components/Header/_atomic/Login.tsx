@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { jwtDecode } from "jwt-decode";
 import styled from "styled-components";
@@ -8,7 +8,7 @@ import styled from "styled-components";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import MyMenu from "@sparcs-clubs/web/common/components/MyMenu";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
-import { getUserType } from "@sparcs-clubs/web/utils/getUserType";
+import { getUserType, UserType } from "@sparcs-clubs/web/utils/getUserType";
 import { getLocalStorageItem } from "@sparcs-clubs/web/utils/localStorage";
 
 const LoginInner = styled.div`
@@ -54,7 +54,7 @@ const Login = () => {
       {isLoggedIn ? (
         <LoginInner onClick={() => setIsMenuOpen(!isMenuOpen)}>
           <Icon type="person" size={16} />
-          {userName} ({getUserType(type)})
+          {userName} ({getUserType(UserType[type as keyof typeof UserType])})
         </LoginInner>
       ) : (
         <LoginInner onClick={login}>

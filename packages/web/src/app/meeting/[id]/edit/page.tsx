@@ -21,6 +21,7 @@ import MeetingAnnouncementFrame from "@sparcs-clubs/web/features/meeting/compone
 import MeetingInformationFrame from "@sparcs-clubs/web/features/meeting/components/MeetingInformationFrame";
 import useGetMeetingDetail from "@sparcs-clubs/web/features/meeting/services/useGetMeetingDetail";
 import useUpdateMeeting from "@sparcs-clubs/web/features/meeting/services/useUpdateMeeting";
+import { UserType } from "@sparcs-clubs/web/utils/getUserType";
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -125,4 +126,4 @@ const EditMeetingPage: React.FC = () => {
   );
 };
 
-export default withAuthorization(EditMeetingPage, ["executive"], -1);
+export default withAuthorization(EditMeetingPage, [UserType.executive], -1);

@@ -18,6 +18,7 @@ import { withAuthorization } from "@sparcs-clubs/web/common/components/withAutho
 import MeetingAnnouncementFrame from "@sparcs-clubs/web/features/meeting/components/MeetingAnnouncementFrame";
 import MeetingInformationFrame from "@sparcs-clubs/web/features/meeting/components/MeetingInformationFrame";
 import useCreateMeeting from "@sparcs-clubs/web/features/meeting/services/useCreateMeeting";
+import { UserType } from "@sparcs-clubs/web/utils/getUserType";
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -111,4 +112,4 @@ const CreateMeetingPage: React.FC = () => {
   );
 };
 
-export default withAuthorization(CreateMeetingPage, ["executive"]);
+export default withAuthorization(CreateMeetingPage, [UserType.executive]);

@@ -54,7 +54,7 @@ export const withAuthorization = <P extends object>(
     }
 
     const decoded: { name?: string; type?: string } = jwtDecode(token);
-    const userType = decoded.type as UserType;
+    const userType = UserType[decoded.type as keyof typeof UserType];
 
     if (!acceptedAuthorization.includes(userType)) {
       return (
