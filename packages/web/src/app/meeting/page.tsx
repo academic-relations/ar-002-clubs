@@ -7,6 +7,7 @@ import styled from "styled-components";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   MeetingNoticeItem,
   MeetingNoticeTypeEnum,
@@ -18,7 +19,47 @@ const MeetingNoticeListWrapper = styled.div`
   flex-direction: column;
   flex: 1;
   align-self: stretch;
-  border-top: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+`;
+
+const MeetingNoticeHeaderWrapper = styled.div`
+  display: flex;
+  padding: 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  align-self: stretch;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+`;
+
+const MeetingNoticeHeader = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex: 1 0 0;
+  opacity: 0.84;
+`;
+
+const MeetingNoticeStatusHeader = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+`;
+
+const MeetingNoticeContentHeader = styled.div`
+  display: flex;
+  flex: 1 0 0;
+  justify-content: center;
+  align-items: center;
+`;
+
+const MeetingNoticeDateHeader = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 84px;
 `;
 
 const ListWithPaginationWrapper = styled.div`
@@ -56,6 +97,19 @@ const MeetingMainFrame: React.FC = () => {
       />
       <ListWithPaginationWrapper>
         <MeetingNoticeListWrapper>
+          <MeetingNoticeHeaderWrapper>
+            <MeetingNoticeHeader>
+              <MeetingNoticeStatusHeader>
+                <Typography fw="REGULAR">상태</Typography>
+              </MeetingNoticeStatusHeader>
+              <MeetingNoticeContentHeader>
+                <Typography fw="REGULAR">회의</Typography>
+              </MeetingNoticeContentHeader>
+              <MeetingNoticeDateHeader>
+                <Typography fw="REGULAR">회의 일자</Typography>
+              </MeetingNoticeDateHeader>
+            </MeetingNoticeHeader>
+          </MeetingNoticeHeaderWrapper>
           {mockUpData.map(e => (
             <MeetingNoticeItem
               key={e.id}

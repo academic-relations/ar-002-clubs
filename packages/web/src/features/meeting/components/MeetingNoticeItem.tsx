@@ -1,11 +1,7 @@
 import React from "react";
 
-import Image from "next/image";
-
 import styled from "styled-components";
 
-import logoSvg from "@sparcs-clubs/web/assets/logo-icon.svg";
-import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
@@ -40,23 +36,6 @@ const TagWithTitleWrapper = styled.div`
   flex: 1;
 `;
 
-const ClubsLogoWrapper = styled.div`
-  display: flex;
-  width: 32px;
-  height: 32px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-`;
-
-const ArrowLogoWrapper = styled.div`
-  display: flex;
-  width: 32px;
-  height: 32px;
-  padding-top: 4px;
-  justify-content: flex-end;
-`;
-
 const LogoWithTagAndTitleWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -73,9 +52,9 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
   const tagColor = () => {
     switch (tag) {
       case MeetingNoticeTypeEnum.Agenda:
-        return "GREEN";
-      case MeetingNoticeTypeEnum.Meeting:
         return "BLUE";
+      case MeetingNoticeTypeEnum.Meeting:
+        return "GRAY";
       default:
         return "YELLOW";
     }
@@ -84,26 +63,17 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
   const tagText = () => {
     switch (tag) {
       case MeetingNoticeTypeEnum.Agenda:
-        return "안건";
+        return "안건 공개";
       case MeetingNoticeTypeEnum.Meeting:
-        return "회의";
+        return "회의 종료";
       default:
-        return "공고";
+        return "공고 게시";
     }
   };
 
   return (
     <MeetingNoticeItemWrapper>
       <LogoWithTagAndTitleWrapper>
-        {tag === MeetingNoticeTypeEnum.Notice ? (
-          <ClubsLogoWrapper>
-            <Image src={logoSvg} alt="clubs-logo" />
-          </ClubsLogoWrapper>
-        ) : (
-          <ArrowLogoWrapper>
-            <Icon type="subdirectory_arrow_right" size={20} />
-          </ArrowLogoWrapper>
-        )}
         <TagWithTitleWrapper>
           <Tag color={tagColor()}>{tagText()}</Tag>
           <Typography
