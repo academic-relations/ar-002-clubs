@@ -63,7 +63,9 @@ const ChangeRepresentativeCardV1: React.FC<{
   );
   const getSelectItems = (members: ApiClb008ResponseOk): SelectItem<string>[] =>
     members?.students.map(member => ({
-      label: `${member.studentNumber} ${member.name} (${member.phoneNumber})`,
+      label: `${member.studentNumber} ${member.name}${
+        member.phoneNumber ? ` (${member.phoneNumber})` : ""
+      }`,
       value: member.id.toString(),
       selectable: !delegatesNow.delegates.some(
         delegate => delegate.studentId === member.id,
@@ -153,7 +155,9 @@ const ChangeRepresentativeCardV1: React.FC<{
             text="대의원1 삭제"
             onClick={() => deleteDelegate(ClubDelegateEnum.Delegate1)}
             disabled={
-              delegatesNow?.delegates[1]?.studentId === 0 || delegate1 === ""
+              delegatesNow?.delegates.find(
+                delegate => delegate.delegateEnumId === 2,
+              )?.studentId === 0 || delegate1 === ""
             }
           />
         </LabelWrapper>
@@ -173,7 +177,9 @@ const ChangeRepresentativeCardV1: React.FC<{
             text="대의원2 삭제"
             onClick={() => deleteDelegate(ClubDelegateEnum.Delegate2)}
             disabled={
-              delegatesNow?.delegates[2]?.studentId === 0 || delegate2 === ""
+              delegatesNow?.delegates.find(
+                delegate => delegate.delegateEnumId === 3,
+              )?.studentId === 0 || delegate2 === ""
             }
           />
         </LabelWrapper>
