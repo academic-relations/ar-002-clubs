@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { ApiMee001RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee001";
 import Link from "next/link";
@@ -11,10 +11,13 @@ import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorModal";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
+import { withAuthorization } from "@sparcs-clubs/web/common/components/withAuthorization";
 import MeetingAnnouncementFrame from "@sparcs-clubs/web/features/meeting/components/MeetingAnnouncementFrame";
 import MeetingInformationFrame from "@sparcs-clubs/web/features/meeting/components/MeetingInformationFrame";
+import useCreateMeeting from "@sparcs-clubs/web/features/meeting/services/useCreateMeeting";
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -25,32 +28,42 @@ const CreateMeetingPage: React.FC = () => {
   const router = useRouter();
   const formCtx = useForm<ApiMee001RequestBody>({
     mode: "all",
+    defaultValues: {
+      announcementTitle: "",
+      announcementContent: "",
+    },
   });
 
   const {
-    resetField,
-    // getValues,
-    handleSubmit,
     watch,
+    getValues,
+    handleSubmit,
     formState: { isValid },
   } = formCtx;
 
-  const announcementTitle = watch("announcementTitle");
-  const announcementContent = watch("announcementContent");
+  const meetingEnumId = watch("meetingEnumId");
 
   const [isTemplateVisible, setIsTemplateVisible] = useState(false);
+  const { mutate: createMeeting, isPending: isCreateLoading } =
+    useCreateMeeting();
 
-  const isFormValid = useMemo(
-    () => isValid && announcementTitle != null && announcementContent != null,
-    [announcementContent, announcementTitle, isValid],
-  );
+  const submitHandler = useCallback(() => {
+    createMeeting(
+      { body: { ...getValues() } },
+      {
+        onSuccess: () => {
+          router.replace("/meeting");
+        },
+        onError: () => errorHandler("생성에 실패하였습니다"),
+      },
+    );
+  }, [createMeeting, getValues, router]);
 
-  const submitHandler = () => {
-    // TODO. api 연결
-
-    // console.log("values: ", getValues());
-    router.replace("/meeting");
-  };
+  useEffect(() => {
+    if (meetingEnumId != null) {
+      setIsTemplateVisible(false);
+    }
+  }, [meetingEnumId]);
 
   return (
     <FormProvider {...formCtx}>
@@ -74,19 +87,20 @@ const CreateMeetingPage: React.FC = () => {
               setIsTemplateVisible(true);
             }}
           />
-          <MeetingAnnouncementFrame
-            isTemplateVisible={isTemplateVisible}
-            onReset={defaultValue => {
-              resetField("announcementContent", { defaultValue });
-            }}
-          />
+          <MeetingAnnouncementFrame isTemplateVisible={isTemplateVisible} />
           <ButtonWrapper>
             <Link href="/meeting">
-              <Button type="outlined">취소</Button>
+              <Button type={isCreateLoading ? "disabled" : "outlined"}>
+                취소
+              </Button>
             </Link>
             <Button
               buttonType="submit"
-              type={isFormValid ? "default" : "disabled"}
+              type={
+                isValid && !isCreateLoading && isTemplateVisible
+                  ? "default"
+                  : "disabled"
+              }
             >
               저장
             </Button>
@@ -97,4 +111,4 @@ const CreateMeetingPage: React.FC = () => {
   );
 };
 
-export default CreateMeetingPage;
+export default withAuthorization(CreateMeetingPage, ["executive"]);

@@ -82,8 +82,8 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
     if (!isDivisionMeeting && timePattern.test(time)) {
       const [hour, minute] = time.split(":").map(part => +part);
       const newDate = new Date();
-      newDate.setHours(hour);
-      newDate.setMinutes(minute);
+      newDate.setUTCHours(hour);
+      newDate.setUTCMinutes(minute);
 
       setValue("startDate", newDate);
     }

@@ -14,6 +14,7 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
+import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorModal";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";
@@ -59,6 +60,7 @@ const MeetingDetailFrame: React.FC = () => {
                 onSuccess: () => {
                   router.replace("/meeting");
                 },
+                onError: () => errorHandler("삭제에 실패하였습니다"),
               },
             );
             close();
