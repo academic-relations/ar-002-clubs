@@ -39,8 +39,8 @@ export const MeetingRoleEnum = mysqlTable("meeting_role_enum", {
 
 export const MeetingAnnouncement = mysqlTable("meeting_announcement", {
   id: int("id").autoincrement().primaryKey(),
-  announcementTitle: varchar("announcement_title", { length: 255 }).notNull(),
-  announcementContent: text("announcement_content").notNull(),
+  announcementTitle: varchar("title", { length: 255 }).notNull(),
+  announcementContent: text("content").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
   deletedAt: timestamp("deleted_at"),

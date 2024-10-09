@@ -56,7 +56,6 @@ export class MeetingService {
     body: ApiMee001RequestBody,
     executiveId: number,
   ): Promise<ApiMee001ResponseCreated> {
-    // TODO: 국장단 여부 확인
     const user = await this.userPublicService.getExecutiveById({
       id: executiveId,
     });
