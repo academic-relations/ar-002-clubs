@@ -63,7 +63,7 @@ export class MeetingRepository {
     isRegular: boolean;
     location: string;
     locationEn: string;
-    tag: number;
+    tag: string;
   }): Promise<number | undefined> {
     // TODO: string인 필수 field validation
     const insertedAnnouncementId = await this.db.transaction(async tx => {
