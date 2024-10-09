@@ -20,6 +20,8 @@ export const updateClubDelegates = async (
     requestBody,
   );
   switch (status) {
+    // TODO: 200이 맞는지 확인(?)
+    case 200:
     case 201:
       return apiClb007.responseBodyMap[201].parse(data);
     default:

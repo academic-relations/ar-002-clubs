@@ -27,6 +27,7 @@ const useUpdateMeeting = () =>
       );
 
       switch (status) {
+        case 200:
         case 201:
           return apiMee003.responseBodyMap[201].parse(data);
         default:

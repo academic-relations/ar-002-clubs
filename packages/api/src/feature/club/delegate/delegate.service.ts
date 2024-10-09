@@ -66,6 +66,7 @@ export default class ClubDelegateService {
           name: student.name,
           studentId: student.id,
           delegateEnumId: e.ClubDelegateEnumId,
+          studentNumber: student.number,
           phoneNumber:
             student.phoneNumber === null
               ? "010-0000-0000"
@@ -193,7 +194,7 @@ export default class ClubDelegateService {
           !this.clubDelegateDRepository.updateDelegate({
             clubId: param.clubId,
             clubDelegateEnumId: param.clubDelegateEnumId,
-            studentId: param.studentId,
+            studentId: param.targetStudentId,
           })
         )
           throw new HttpException(
@@ -273,11 +274,14 @@ export default class ClubDelegateService {
         semesterId,
         filterClubDelegateEnum:
           param.param.delegateEnumId === ClubDelegateEnum.Representative
-            ? [ClubDelegateEnum.Representative]
+            ? []
             : [
                 ClubDelegateEnum.Representative,
-                ClubDelegateEnum.Delegate1,
-                ClubDelegateEnum.Delegate2,
+                // ClubDelegateEnum.Delegate1,
+                // ClubDelegateEnum.Delegate2,
+                param.param.delegateEnumId === ClubDelegateEnum.Delegate1
+                  ? ClubDelegateEnum.Delegate2
+                  : ClubDelegateEnum.Delegate1,
               ],
       });
 

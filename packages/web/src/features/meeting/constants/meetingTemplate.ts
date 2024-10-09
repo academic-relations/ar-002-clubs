@@ -59,7 +59,7 @@ Date & Time : ${dateTime}
 Location : ${locationEn}
 
 - Precautions Related to Attendance -
-The students who is obligated to attend in this legislative is based on the registration of ${getFullSemester(now)} semester.
+The students who is obligated to attend in this legislative is based on the registration of ${getFullSemester(now, true)} semester.
 If the club representative is unable to attend, another delegate (with voting right) or deputy (without voting right) can also be admitted.
 
 Thank you.`;

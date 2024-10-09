@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
+import { ApiClb010ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -7,19 +8,18 @@ import {
 } from "@tanstack/react-table";
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FoldUnfoldButton from "@sparcs-clubs/web/common/components/Buttons/FoldUnfoldButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import { useGetClubMembers } from "../services/getClubMembers";
+import { SemesterProps } from "../types/semesterList";
+
 interface AllMemberListProps {
-  semester: string;
-  members: {
-    studentNumber: number;
-    name: string;
-    email: string;
-    phoneNumber?: string;
-  }[];
+  semester: SemesterProps;
+  clubId: number;
   searchText?: string;
 }
 
@@ -36,7 +36,7 @@ const TableWithCount = styled.div`
 `;
 
 const columnHelper =
-  createColumnHelper<AllMemberListProps["members"][number]>();
+  createColumnHelper<ApiClb010ResponseOk["members"][number]>();
 
 const columns = [
   columnHelper.accessor("studentNumber", {
@@ -76,15 +76,31 @@ const columns = [
 
 const AllMemberList: React.FC<AllMemberListProps> = ({
   semester,
-  members,
+  clubId,
   searchText = "",
 }) => {
   const [folded, setFolded] = useState<boolean>(false);
-  const searchedMembers = members.filter(member =>
-    member.name.startsWith(searchText),
+
+  const {
+    data: members,
+    isLoading,
+    isError,
+  } = useGetClubMembers({
+    clubId,
+    semesterId: semester.id,
+  });
+
+  const [searchedMembers, setSearchedMembers] = useState(
+    members.members.filter(member => member.name.startsWith(searchText)),
   );
 
   const memberCount = searchedMembers.length;
+
+  useEffect(() => {
+    setSearchedMembers(
+      members.members.filter(member => member.name.startsWith(searchText)),
+    );
+  }, [members.members, searchText]);
 
   const table = useReactTable({
     columns,
@@ -103,24 +119,27 @@ const AllMemberList: React.FC<AllMemberListProps> = ({
           color="BLACK"
           style={{ flex: 1 }}
         >
-          {semester} (총 {memberCount}명)
+          {`${semester.year}년 ${semester.name}학기 (총 ${memberCount}명)`}
         </Typography>
         <FoldUnfoldButton folded={folded} setFolded={setFolded} />
       </AllMemberListTitle>
-      {!folded && (
-        <TableWithCount>
-          <Typography
-            fw="REGULAR"
-            fs={16}
-            lh={20}
-            ff="PRETENDARD"
-            color="GRAY.600"
-          >
-            총 {memberCount}명
-          </Typography>
-          <Table table={table} />
-        </TableWithCount>
-      )}
+
+      <AsyncBoundary isLoading={isLoading} isError={isError}>
+        {!folded && (
+          <TableWithCount>
+            <Typography
+              fw="REGULAR"
+              fs={16}
+              lh={20}
+              ff="PRETENDARD"
+              color="GRAY.600"
+            >
+              총 {memberCount}명
+            </Typography>
+            <Table table={table} />
+          </TableWithCount>
+        )}
+      </AsyncBoundary>
     </FlexWrapper>
   );
 };

@@ -13,8 +13,10 @@ import styled from "styled-components";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorModal";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
+import { withAuthorization } from "@sparcs-clubs/web/common/components/withAuthorization";
 import MeetingAnnouncementFrame from "@sparcs-clubs/web/features/meeting/components/MeetingAnnouncementFrame";
 import MeetingInformationFrame from "@sparcs-clubs/web/features/meeting/components/MeetingInformationFrame";
 import useGetMeetingDetail from "@sparcs-clubs/web/features/meeting/services/useGetMeetingDetail";
@@ -35,9 +37,7 @@ const EditMeetingPage: React.FC = () => {
   });
 
   const {
-    resetField,
     getValues,
-    handleSubmit,
     watch,
     reset,
     formState: { isValid },
@@ -68,6 +68,7 @@ const EditMeetingPage: React.FC = () => {
           queryClient.invalidateQueries({ queryKey: [apiMee002.url(+id)] });
           router.replace(`/meeting/${id}`);
         },
+        onError: () => errorHandler("수정에 실패하였습니다"),
       },
     );
   };
@@ -81,7 +82,7 @@ const EditMeetingPage: React.FC = () => {
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <FormProvider {...formCtx}>
-        <form onSubmit={handleSubmit(submitHandler)}>
+        <form>
           <FlexWrapper direction="column" gap={60}>
             <PageHead
               items={[
@@ -97,14 +98,7 @@ const EditMeetingPage: React.FC = () => {
               title="공고 수정"
             />
             <MeetingInformationFrame />
-            <MeetingAnnouncementFrame
-              isTemplateVisible
-              onReset={() => {
-                resetField("announcementContent", {
-                  defaultValue: data?.announcementContent,
-                });
-              }}
-            />
+            <MeetingAnnouncementFrame isTemplateVisible isEditMode />
             <ButtonWrapper>
               <Button
                 type={isUpdateLoading ? "disabled" : "default"}
@@ -113,12 +107,13 @@ const EditMeetingPage: React.FC = () => {
                 취소
               </Button>
               <Button
-                buttonType="submit"
                 type={
                   isFormValid && !isLoading && !isUpdateLoading
                     ? "default"
                     : "disabled"
                 }
+                // submit 재확인 모달 추가되면 form handleSubmit으로 관리
+                onClick={submitHandler}
               >
                 저장
               </Button>
@@ -130,4 +125,4 @@ const EditMeetingPage: React.FC = () => {
   );
 };
 
-export default EditMeetingPage;
+export default withAuthorization(EditMeetingPage, ["executive"], -1);

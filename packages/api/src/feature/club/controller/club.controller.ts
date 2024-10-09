@@ -18,6 +18,14 @@ import apiClb005, {
   ApiClb005RequestParam,
   ApiClb005ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb005";
+import apiClb009, {
+  ApiClb009RequestParam,
+  ApiClb009ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb009";
+import apiClb010, {
+  ApiClb010RequestParam,
+  ApiClb010ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
 import apiClb016, {
   ApiClb016ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb016";
@@ -95,6 +103,34 @@ export class ClubController {
       user.studentId,
       param,
       body,
+    );
+    return result;
+  }
+
+  @Student()
+  @Get("/student/clubs/club/:clubId/members/semesters")
+  @UsePipes(new ZodPipe(apiClb009))
+  async getStudentClubSemesters(
+    @GetStudent() user: GetStudent,
+    @Param() param: ApiClb009RequestParam,
+  ): Promise<ApiClb009ResponseOk> {
+    const result = await this.clubService.getStudentClubSemesters(
+      user.studentId,
+      param,
+    );
+    return result;
+  }
+
+  @Student()
+  @Get("student/clubs/club/:clubId/members/semesters/semester/:semesterId")
+  @UsePipes(new ZodPipe(apiClb010))
+  async getStudentClubMembers(
+    @GetStudent() user: GetStudent,
+    @Param() param: ApiClb010RequestParam,
+  ): Promise<ApiClb010ResponseOk> {
+    const result = await this.clubService.getStudentClubMembers(
+      user.studentId,
+      param,
     );
     return result;
   }

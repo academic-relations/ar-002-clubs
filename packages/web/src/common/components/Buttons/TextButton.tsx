@@ -71,6 +71,7 @@ const TextButton: React.FC<TextButtonProps> = ({
       color={textColor}
       fs={fs}
       fw={fw}
+      type="button"
     >
       {text}
     </StyledTextButton>
