@@ -39,6 +39,10 @@ interface FormControllerProps<
   maxLength?: number;
   minLength?: number;
   pattern?: RegExp;
+  requiredMessage?: string;
+  maxLengthMessage?: string;
+  minLengthMessage?: string;
+  patternMessage?: string;
 }
 
 // TODO. maxLength rule 추가,
@@ -71,23 +75,26 @@ function FormController<
       ...rules,
       required: {
         value: props.required ?? false,
-        message: requiredMessage,
+        message: props.requiredMessage ?? requiredMessage,
       },
       maxLength: isValidLength(props.maxLength)
         ? {
             value: props.maxLength as number,
-            message: maxLengthMessage,
+            message: props.maxLengthMessage ?? maxLengthMessage,
           }
         : undefined,
       minLength: isValidLength(props.minLength)
         ? {
             value: props.minLength as number,
-            message: minLengthMessage,
+            message: props.minLengthMessage ?? minLengthMessage,
           }
         : undefined,
       pattern:
         props.pattern !== undefined
-          ? { value: props.pattern, message: patternMessage }
+          ? {
+              value: props.pattern,
+              message: props.patternMessage ?? patternMessage,
+            }
           : undefined,
     },
     defaultValue,
