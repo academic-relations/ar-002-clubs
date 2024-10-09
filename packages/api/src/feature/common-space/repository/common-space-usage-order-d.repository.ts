@@ -4,7 +4,11 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
-import { CommonSpaceUsageOrderD } from "@sparcs-clubs/api/drizzle/schema/common-space.schema";
+import {
+  CommonSpace,
+  CommonSpaceUsageOrderD,
+} from "@sparcs-clubs/api/drizzle/schema/common-space.schema";
+import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 import { TermList } from "../dto/common-space.dto";
 
@@ -81,6 +85,28 @@ export class CommonSpaceUsageOrderDRepository {
           isNull(CommonSpaceUsageOrderD.deletedAt),
         ),
       )
+      .then(takeUnique);
+    return result;
+  }
+
+  async findCommonSpaceUsageOrderById(orderId: number) {
+    const result = await this.db
+      .select({
+        orderId: CommonSpaceUsageOrderD.id,
+        statusEnum: CommonSpace.commonSpaceEnum,
+        spaceName: CommonSpace.spaceName,
+        chargeStudentName: Student.name,
+        startTerm: CommonSpaceUsageOrderD.startTerm,
+        endTerm: CommonSpaceUsageOrderD.endTerm,
+        createdAt: CommonSpaceUsageOrderD.createdAt,
+      })
+      .from(CommonSpaceUsageOrderD)
+      .leftJoin(
+        CommonSpace,
+        eq(CommonSpaceUsageOrderD.commonSpaceId, CommonSpace.id),
+      )
+      .leftJoin(Student, eq(CommonSpaceUsageOrderD.chargeStudentId, Student.id))
+      .where(and(eq(CommonSpaceUsageOrderD.id, orderId)))
       .then(takeUnique);
     return result;
   }
