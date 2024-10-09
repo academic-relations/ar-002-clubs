@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 
+import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -12,8 +13,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import type { RentalInterface } from "../types/rental";
 
 export interface RentalFrameProps {
-  rental: RentalInterface;
-  setRental: React.Dispatch<React.SetStateAction<RentalInterface>>;
+  formCtx: ReturnType<typeof useFormContext<RentalInterface>>;
 }
 
 export interface RentalLimitProps {
@@ -39,16 +39,13 @@ const StyledBottom = styled.div`
   align-self: stretch;
 `;
 
-const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
-  rental,
-  setRental,
-}) => {
-  const [checked, setChecked] = useState(false);
-  // TODO: 동의하고 돌아왔을 때 체크된 상태로 두기
+const RentalNoticeFrame: React.FC<RentalFrameProps> = ({ formCtx }) => {
+  // TODO: 다음 페이지 다녀오면 초기에 체크되어있는 상태로 만들기
+  const [checked, setChecked] = useState(
+    formCtx.getFieldState("info.phoneNumber") != null,
+  );
   const handleNextClick = () => {
-    if (checked) {
-      setRental({ ...rental, agreement: true });
-    }
+    formCtx.setValue("agreement", checked);
   };
 
   return (
