@@ -9,6 +9,7 @@ interface SelectedItemProps {
   isDisabled?: boolean;
   isSelected?: boolean;
   onClick?: () => void;
+  width?: string;
 }
 
 const SelectedItem: React.FC<SelectedItemProps> = ({
@@ -16,11 +17,17 @@ const SelectedItem: React.FC<SelectedItemProps> = ({
   isDisabled = false,
   isSelected = false,
   onClick = () => {},
+  width = "",
 }) => (
   <SelectOption
     onClick={onClick}
     selectable={!isDisabled}
-    style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+    style={{
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      width,
+    }}
   >
     {/* // TODO: 글자 위아래 정렬 안 맞는 문제 해결 */}
     <Typography

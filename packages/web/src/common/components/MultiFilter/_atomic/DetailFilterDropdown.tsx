@@ -1,5 +1,7 @@
 import React from "react";
 
+import styled from "styled-components";
+
 import Dropdown from "@sparcs-clubs/web/common/components/Select/Dropdown";
 import SelectedItem from "@sparcs-clubs/web/common/components/SelectedItem";
 
@@ -12,6 +14,18 @@ interface DetailFilterDropdownProps {
   >;
 }
 
+const DetailFilterDropdownWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-height: 280px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+  align-self: stretch;
+  width: 100%;
+`;
+
 const DetailFilterDropdown: React.FC<DetailFilterDropdownProps> = ({
   category,
   setSelectedContents,
@@ -23,21 +37,24 @@ const DetailFilterDropdown: React.FC<DetailFilterDropdownProps> = ({
       );
       setSelectedContents(updatedSelectedContent);
     } else {
-      const updatedSelectedContent = [...selectedContents, content];
+      const updatedSelectedContent = [...selectedContents, content]; // 여기서 냅다 추가해서 소팅이 안 됨
       setSelectedContents(updatedSelectedContent);
     }
   };
 
   return (
-    <Dropdown marginTop={40} maxContent>
-      {category.content.map(element => (
-        <SelectedItem
-          key={element}
-          text={element}
-          isSelected={category.selectedContent.includes(element)}
-          onClick={() => handleSelect(element, category.selectedContent)}
-        />
-      ))}
+    <Dropdown marginTop={4} maxContent={false} position="relative">
+      <DetailFilterDropdownWrapper>
+        {category.content.map(element => (
+          <SelectedItem
+            key={element}
+            text={element}
+            isSelected={category.selectedContent.includes(element)}
+            onClick={() => handleSelect(element, category.selectedContent)}
+            width="100%"
+          />
+        ))}
+      </DetailFilterDropdownWrapper>
     </Dropdown>
   );
 };

@@ -17,7 +17,7 @@ interface CategoryListProps {
 const DetailFilterButtonWrapper = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<{ isOpen: boolean }>`
-  width: 100%; // CHACHA: 뭔가 고정 값이어야 MultiFilterDropdown이 디자인대로 되지 않을까요? (모든 필터 버튼의 너비가 같음)
+  width: 100%;
   display: flex;
   height: 36px;
   flex-direction: row;
