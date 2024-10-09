@@ -86,7 +86,7 @@ export class MeetingRepository {
       );
 
       const [meetingInsertResult] = await tx.insert(Meeting).values({
-        announcementId: announcementInsertResult.insertId,
+        announcementId,
         meetingEnumId: contents.meetingEnumId,
         startDate: contents.startDate,
         endDate: contents.endDate,

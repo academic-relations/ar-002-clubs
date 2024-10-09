@@ -65,10 +65,10 @@ export class MeetingService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result =
+    const announcementId =
       await this.meetingRepository.postExecutiveMeetingAnnouncement(body);
 
-    return result;
+    return { id: announcementId };
   }
 
   async getMeetingAnnouncement(param: ApiMee002RequestParam) {
