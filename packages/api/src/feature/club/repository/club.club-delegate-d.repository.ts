@@ -220,13 +220,15 @@ export class ClubDelegateDRepository {
         and(
           eq(Club.id, param.clubId),
           eq(ClubStudentT.semesterId, param.semesterId),
-          or(
-            notInArray(
-              ClubDelegateD.ClubDelegateEnumId,
-              param.filterClubDelegateEnum,
-            ),
-            isNull(ClubDelegateD.ClubDelegateEnumId),
-          ),
+          param.filterClubDelegateEnum.length !== 0
+            ? or(
+                notInArray(
+                  ClubDelegateD.ClubDelegateEnumId,
+                  param.filterClubDelegateEnum,
+                ),
+                isNull(ClubDelegateD.ClubDelegateEnumId),
+              )
+            : undefined,
           isNull(Club.deletedAt),
         ),
       );
