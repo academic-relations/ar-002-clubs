@@ -79,7 +79,7 @@ p {
   }
 
   .tableWrapper {
-    margin: 1.5rem 0;
+    margin: 0.5rem 0;
     overflow-x: auto;
   }
 
@@ -88,7 +88,7 @@ p {
     cursor: col-resize;
   }
 
-  .is-editor-empty:has(:not(p, table, img)):first-child::before {
+  .is-editor-empty::before {
     color: #dddddd;
     content: attr(data-placeholder);
     float: left;

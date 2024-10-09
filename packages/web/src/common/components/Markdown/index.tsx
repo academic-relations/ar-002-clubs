@@ -40,6 +40,10 @@ import tableSplitCellSvg from "@sparcs-clubs/web/assets/table-split-cell.svg";
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
+interface MarkdownProps {
+  placeholder?: string;
+}
+
 const ButtonWrapper = styled.div`
   display: flex;
   position: relative;
@@ -64,7 +68,7 @@ const ProtectedParagraph = Node.create({
   },
 });
 
-const Markdown = () => {
+const Markdown = ({ placeholder = "" }: MarkdownProps) => {
   const editor = useEditor({
     extensions: [
       Document,
@@ -87,7 +91,7 @@ const Markdown = () => {
         },
       }),
       Placeholder.configure({
-        placeholder: "내용을 입력하세요.",
+        placeholder,
       }),
       ProtectedParagraph,
       Table.configure({
@@ -163,7 +167,7 @@ const Markdown = () => {
   const handleBackspace = useCallback(() => {
     if (editor) {
       const { state, view } = editor;
-      const { from } = state.selection;
+      const { from, to } = state.selection;
       const resolvedPos = state.doc.resolve(from);
       const { nodeBefore, parent } = resolvedPos;
 
@@ -173,6 +177,7 @@ const Markdown = () => {
           return;
         }
       }
+
       if (parent && parent.type.name === "protectedParagraph") {
         const content = parent.textContent;
         if (content === " ") {
@@ -180,9 +185,13 @@ const Markdown = () => {
         }
       }
 
-      view.dispatch(
-        state.tr.deleteRange(from - 1, from), // 커서 앞의 한 글자를 삭제
-      );
+      editor.state.doc.nodesBetween(from, to, node => {
+        if (node.type.name === "table") {
+          editor.chain().focus().deleteTable().run();
+        }
+      });
+
+      if (!editor.isEmpty) view.dispatch(state.tr.deleteRange(from - 1, from));
     }
   }, [editor]);
 
