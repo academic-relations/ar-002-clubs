@@ -77,8 +77,10 @@ const DateInput: React.FC<DateInputProps & DatePickerProps> = ({
         <DatePicker
           ref={datePickerRef}
           disabled={disabled}
-          dateFormat="yyyy.MM.dd"
-          placeholderText="20XX.XX.XX XX:XX"
+          dateFormat={props.showTimeInput ? "yyyy.MM.dd HH:mm" : "yyyy.MM.dd"}
+          placeholderText={
+            props.showTimeInput ? "20XX.XX.XX XX:XX" : "20XX.XX.XX"
+          }
           {...props}
         />
         <Icon type="event" size={20} color={disabled ? "#DDDDDD" : "BLACK"} />
