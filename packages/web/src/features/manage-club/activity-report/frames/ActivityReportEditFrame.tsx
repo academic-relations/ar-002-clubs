@@ -81,7 +81,7 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
         { startTerm: parsedStartDate, endTerm: parsedEndDate },
       ]);
     }
-  }, [duration, handleFormChange]);
+  }, [duration]);
 
   useEffect(() => {
     if (data) {
