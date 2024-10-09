@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import { mockupMyCms } from "./_mock/mockMyClub";
@@ -30,16 +29,11 @@ export const useGetMyCommonSpace = (
   return useQuery<ApiCms007ResponseOk, Error>({
     queryKey: [apiCms007.url(), requestQuery],
     queryFn: async (): Promise<ApiCms007ResponseOk> => {
-      const { data, status } = await axiosClientWithAuth.get(apiCms007.url(), {
+      const { data } = await axiosClientWithAuth.get(apiCms007.url(), {
         params: requestQuery,
       });
 
-      switch (status) {
-        case 200:
-          return apiCms007.responseBodyMap[200].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiCms007.responseBodyMap[200].parse(data);
     },
   });
 };

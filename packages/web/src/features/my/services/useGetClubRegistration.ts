@@ -8,7 +8,6 @@ import { useQuery } from "@tanstack/react-query";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import { mockMyClubRegisterDetail } from "./_mock/mockMyClubRegisterDetail";
@@ -17,18 +16,12 @@ const useGetClubRegistration = (param: ApiReg011RequestParam) =>
   useQuery<ApiReg011ResponseOk, Error>({
     queryKey: [apiReg011.url(param.applyId.toString())],
     queryFn: async (): Promise<ApiReg011ResponseOk> => {
-      const { data, status } = await axiosClientWithAuth.get(
+      const { data } = await axiosClientWithAuth.get(
         apiReg011.url(param.applyId.toString()),
         {},
       );
 
-      switch (status) {
-        case 200:
-        case 304:
-          return data;
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return data;
     },
   });
 

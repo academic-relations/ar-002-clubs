@@ -1,9 +1,6 @@
 import apiRnt002 from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt002";
 
-import {
-  axiosClientWithAuth,
-  UnexpectedAPIResponseError,
-} from "@sparcs-clubs/web/lib/axios";
+import { axiosClientWithAuth } from "@sparcs-clubs/web/lib/axios";
 
 import type {
   ApiRnt002RequestBody,
@@ -15,7 +12,7 @@ const postRentalOrder = async (
   requestQuery: ApiRnt002RequestQuery,
   requestBody: ApiRnt002RequestBody,
 ): Promise<ApiRnt002ResponseOK> => {
-  const { data, status } = await axiosClientWithAuth.post(
+  const { data } = await axiosClientWithAuth.post(
     apiRnt002.url(),
     requestBody,
     {
@@ -23,12 +20,7 @@ const postRentalOrder = async (
     },
   );
 
-  switch (status) {
-    case 201:
-      return apiRnt002.responseBodyMap[201].parse(data);
-    default:
-      throw new UnexpectedAPIResponseError();
-  }
+  return apiRnt002.responseBodyMap[201].parse(data);
 };
 
 export default postRentalOrder;

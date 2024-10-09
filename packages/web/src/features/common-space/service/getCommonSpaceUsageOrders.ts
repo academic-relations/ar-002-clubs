@@ -2,11 +2,7 @@ import apiCms002 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms0
 
 import { useQuery } from "@tanstack/react-query";
 
-import {
-  axiosClient,
-  defineAxiosMock,
-  UnexpectedAPIResponseError,
-} from "@sparcs-clubs/web/lib/axios";
+import { axiosClient, defineAxiosMock } from "@sparcs-clubs/web/lib/axios";
 
 import { mockUsageOrders } from "./_mock/mockupCommonSpaceUsageOrders";
 
@@ -23,17 +19,12 @@ const useGetCommonSpaceUsageOrders = (
   useQuery<ApiCms002ResponseOK, Error>({
     queryKey: [apiCms002.url(requestParam.spaceId), requestQuery],
     queryFn: async (): Promise<ApiCms002ResponseOK> => {
-      const { data, status } = await axiosClient.get(
+      const { data } = await axiosClient.get(
         apiCms002.url(requestParam.spaceId),
         { params: requestQuery },
       );
 
-      switch (status) {
-        case 200:
-          return apiCms002.responseBodyMap[200].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiCms002.responseBodyMap[200].parse(data);
     },
   });
 

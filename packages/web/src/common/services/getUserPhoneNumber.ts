@@ -7,24 +7,17 @@ import { useQuery } from "@tanstack/react-query";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 const useUserPhoneNumber = (requestQuery: ApiUsr002RequestQuery) =>
   useQuery<ApiUsr002ResponseOk, Error>({
     queryKey: [apiUsr002.url(), requestQuery],
     queryFn: async (): Promise<ApiUsr002ResponseOk> => {
-      const { data, status } = await axiosClientWithAuth.get(apiUsr002.url(), {
+      const { data } = await axiosClientWithAuth.get(apiUsr002.url(), {
         params: requestQuery,
       });
 
-      switch (status) {
-        case 200:
-        case 304:
-          return apiUsr002.responseBodyMap[200].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiUsr002.responseBodyMap[200].parse(data);
     },
   });
 

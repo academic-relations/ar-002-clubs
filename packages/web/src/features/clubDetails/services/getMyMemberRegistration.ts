@@ -7,7 +7,6 @@ import { mockMemberRegister } from "@sparcs-clubs/web/features/my/services/_mock
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import type { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
@@ -22,15 +21,11 @@ export const useGetMyMemberRegistration = () =>
         {},
       );
 
-      switch (status) {
-        case 200:
-        case 304:
-          return apiReg006.responseBodyMap[200].parse(data);
-        case 204:
-          return { applies: [] };
-        default:
-          throw new UnexpectedAPIResponseError();
+      if (status === 204) {
+        return { applies: [] };
       }
+
+      return apiReg006.responseBodyMap[200].parse(data);
     },
   });
 

@@ -3,11 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
 import mockupNoticeList from "@sparcs-clubs/web/features/notices/services/_mock/mockupNoticeList";
-import {
-  axiosClient,
-  defineAxiosMock,
-  UnexpectedAPIResponseError,
-} from "@sparcs-clubs/web/lib/axios";
+import { axiosClient, defineAxiosMock } from "@sparcs-clubs/web/lib/axios";
 
 // TODO: This might better work using z.discriminatedUnion
 // 예시는 (typeof apiNtc001.responseBodyMap)[200]의 형태인데, 아래가 맞는 것 같아서 질문 남겨둡니다!
@@ -21,18 +17,11 @@ export const useGetNotice = (pageOffset: number, itemCount: number) => {
   return useQuery<ISuccessResponseType, Error>({
     queryKey: [apiNtc001.url(), requestQuery],
     queryFn: async (): Promise<ISuccessResponseType> => {
-      const { data, status } = await axiosClient.get(apiNtc001.url(), {
+      const { data } = await axiosClient.get(apiNtc001.url(), {
         params: requestQuery,
       });
 
-      // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
-      switch (status) {
-        case 200:
-        case 304:
-          return apiNtc001.responseBodyMap[200].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiNtc001.responseBodyMap[200].parse(data);
     },
   });
 };

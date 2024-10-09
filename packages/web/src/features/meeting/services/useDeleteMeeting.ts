@@ -7,22 +7,14 @@ import { useMutation } from "@tanstack/react-query";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 const useDeleteMeeting = () =>
   useMutation<ApiMee004ResponseOk, Error, { param: ApiMee004RequestParam }>({
     mutationFn: async ({ param }): Promise<ApiMee004ResponseOk> => {
-      const { status } = await axiosClientWithAuth.delete(
-        apiMee004.url(param.announcementId),
-      );
+      await axiosClientWithAuth.delete(apiMee004.url(param.announcementId));
 
-      switch (status) {
-        case 200:
-          return apiMee004.responseBodyMap[200];
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiMee004.responseBodyMap[200];
     },
   });
 

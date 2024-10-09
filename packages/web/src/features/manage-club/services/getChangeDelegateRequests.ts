@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import { mockClubDelegateRequest } from "./_mock/mockDelegate";
@@ -20,16 +19,11 @@ export const useGetChangeDelegateRequests = (
   useQuery<ApiClb011ResponseOk, Error>({
     queryKey: [apiClb011.url(requestParam.clubId)],
     queryFn: async (): Promise<ApiClb011ResponseOk> => {
-      const { data, status } = await axiosClientWithAuth.get(
+      const { data } = await axiosClientWithAuth.get(
         apiClb011.url(requestParam.clubId),
       );
-      switch (status) {
-        case 200:
-        case 304:
-          return data;
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+
+      return data;
     },
   });
 

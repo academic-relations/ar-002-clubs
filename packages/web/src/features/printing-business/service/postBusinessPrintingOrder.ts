@@ -1,9 +1,6 @@
 import apiPrt002 from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt002";
 
-import {
-  axiosClientWithAuth,
-  UnexpectedAPIResponseError,
-} from "@sparcs-clubs/web/lib/axios";
+import { axiosClientWithAuth } from "@sparcs-clubs/web/lib/axios";
 
 import type {
   ApiPrt002RequestBody,
@@ -15,17 +12,12 @@ const postBusinessPrintingOrder = async (
   requestParam: ApiPrt002RequestParam,
   reuestBody: ApiPrt002RequestBody,
 ): Promise<ApiPrt002ResponseCreated> => {
-  const { data, status } = await axiosClientWithAuth.post(
+  const { data } = await axiosClientWithAuth.post(
     apiPrt002.url(requestParam.clubId.toString()),
     reuestBody,
   );
 
-  switch (status) {
-    case 201:
-      return apiPrt002.responseBodyMap[201].parse(data);
-    default:
-      throw new UnexpectedAPIResponseError();
-  }
+  return apiPrt002.responseBodyMap[201].parse(data);
 };
 
 export default postBusinessPrintingOrder;

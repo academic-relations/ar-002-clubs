@@ -7,26 +7,15 @@ import mockupData from "@sparcs-clubs/web/features/clubs/services/_mock/mockupRe
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 export const useGetRegistrationTerm = () =>
   useQuery<ApiReg004ResponseOK, Error>({
     queryKey: [apiReg004.url()],
     queryFn: async (): Promise<ApiReg004ResponseOK> => {
-      const { data, status } = await axiosClientWithAuth.get(
-        apiReg004.url(),
-        {},
-      );
+      const { data } = await axiosClientWithAuth.get(apiReg004.url(), {});
 
-      // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
-      switch (status) {
-        case 200:
-        case 304:
-          return apiReg004.responseBodyMap[200].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiReg004.responseBodyMap[200].parse(data);
     },
   });
 

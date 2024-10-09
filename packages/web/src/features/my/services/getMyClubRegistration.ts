@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import { mockMyClubRegisterList } from "./_mock/mockMyClubRegisterDetail";
@@ -22,14 +21,11 @@ export const useGetMyClubRegistration = () =>
         {},
       );
 
-      switch (status) {
-        case 200:
-          return data;
-        case 204:
-          return { registrations: [] };
-        default:
-          throw new UnexpectedAPIResponseError();
+      if (status === 204) {
+        return { registrations: [] };
       }
+
+      return data;
     },
   });
 

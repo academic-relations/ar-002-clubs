@@ -4,10 +4,7 @@ import apiAct011, {
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
-import {
-  axiosClientWithAuth,
-  UnexpectedAPIResponseError,
-} from "@sparcs-clubs/web/lib/axios";
+import { axiosClientWithAuth } from "@sparcs-clubs/web/lib/axios";
 
 type ISuccessResponseType = z.infer<(typeof apiAct011.responseBodyMap)[200]>;
 export const useGetActivityReportsForPromotional = (
@@ -16,16 +13,10 @@ export const useGetActivityReportsForPromotional = (
   useQuery<ISuccessResponseType, Error>({
     queryKey: [apiAct011.url()],
     queryFn: async (): Promise<ISuccessResponseType> => {
-      const { data, status } = await axiosClientWithAuth.get(apiAct011.url(), {
+      const { data } = await axiosClientWithAuth.get(apiAct011.url(), {
         params: query,
       });
 
-      switch (status) {
-        case 200:
-        case 304:
-          return apiAct011.responseBodyMap[200].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiAct011.responseBodyMap[200].parse(data);
     },
   });

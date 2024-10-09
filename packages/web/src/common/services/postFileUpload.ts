@@ -7,23 +7,14 @@ import { useMutation } from "@tanstack/react-query";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 const useFileUpload = () =>
   useMutation<ApiFil001ResponseCreated, Error, { body: ApiFil001RequestBody }>({
     mutationFn: async ({ body }): Promise<ApiFil001ResponseCreated> => {
-      const { data, status } = await axiosClientWithAuth.post(
-        apiFil001.url(),
-        body,
-      );
+      const { data } = await axiosClientWithAuth.post(apiFil001.url(), body);
 
-      switch (status) {
-        case 201:
-          return apiFil001.responseBodyMap[201].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiFil001.responseBodyMap[201].parse(data);
     },
   });
 

@@ -2,11 +2,7 @@ import { apiTmp000 } from "@sparcs-clubs/interface/api/_example/endpoints/apiTmp
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
-import {
-  axiosClient,
-  defineAxiosMock,
-  UnexpectedAPIResponseError,
-} from "@sparcs-clubs/web/lib/axios";
+import { axiosClient, defineAxiosMock } from "@sparcs-clubs/web/lib/axios";
 
 // TODO: This might better work using z.discriminatedUnion
 type ISuccessResponseType =
@@ -29,15 +25,11 @@ export const useGetTemporaryClubSubfeature = (
         params: requestQuery,
       });
 
-      // Possible exceptions: UnexpectedAPIResponseError, ZodError, LibAxiosError
-      switch (status) {
-        case 200:
-          return apiTmp000.responseBodyMap[200].parse(data);
-        case 201:
-          return apiTmp000.responseBodyMap[201].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
+      if (status === 204) {
+        return apiTmp000.responseBodyMap[204].parse(data);
       }
+
+      return apiTmp000.responseBodyMap[201].parse(data);
     },
   });
 };

@@ -3,7 +3,6 @@ import apiClb012 from "@sparcs-clubs/interface/api/club/endpoint/apiClb012";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import type { ApiClb012RequestParam } from "@sparcs-clubs/interface/api/club/endpoint/apiClb012";
@@ -11,15 +10,11 @@ import type { ApiClb012RequestParam } from "@sparcs-clubs/interface/api/club/end
 export const deleteChangeDelegateRequest = async (
   requestParam: ApiClb012RequestParam,
 ) => {
-  const { data, status } = await axiosClientWithAuth.delete(
+  const { data } = await axiosClientWithAuth.delete(
     apiClb012.url(requestParam.clubId),
   );
-  switch (status) {
-    case 201:
-      return apiClb012.responseBodyMap[201].parse(data);
-    default:
-      throw new UnexpectedAPIResponseError();
-  }
+
+  return apiClb012.responseBodyMap[201].parse(data);
 };
 
 defineAxiosMock(mock => {

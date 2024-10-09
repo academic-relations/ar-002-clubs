@@ -13,7 +13,6 @@ import mockUpUserInfo from "@sparcs-clubs/web/features/activity-certificate/serv
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 type ISuccessResponseType = z.infer<(typeof apiAcf001.responseBodyMap)[201]>;
@@ -22,17 +21,9 @@ export const useGetUserInfo = () =>
   useQuery<ISuccessResponseType, Error>({
     queryKey: [apiAcf001.url()],
     queryFn: async (): Promise<ISuccessResponseType> => {
-      const { data, status } = await axiosClientWithAuth.get(
-        apiAcf001.url(),
-        {},
-      );
+      const { data } = await axiosClientWithAuth.get(apiAcf001.url(), {});
 
-      switch (status) {
-        case 201:
-          return apiAcf001.responseBodyMap[201].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiAcf001.responseBodyMap[201].parse(data);
     },
   });
 

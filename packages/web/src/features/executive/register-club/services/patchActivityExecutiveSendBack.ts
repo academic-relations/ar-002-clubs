@@ -3,7 +3,6 @@ import apiAct017 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct017";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import type {
@@ -15,17 +14,12 @@ export const patchActivityExecutiveSendBack = async (
   requestParam: ApiAct017RequestParam,
   requestBody: ApiAct017RequestBody,
 ) => {
-  const { data, status } = await axiosClientWithAuth.patch(
+  const { data } = await axiosClientWithAuth.patch(
     apiAct017.url(requestParam.activityId),
     requestBody,
   );
 
-  switch (status) {
-    case 200:
-      return apiAct017.responseBodyMap[200].parse(data);
-    default:
-      throw new UnexpectedAPIResponseError();
-  }
+  return apiAct017.responseBodyMap[200].parse(data);
 };
 
 defineAxiosMock(mock => {
