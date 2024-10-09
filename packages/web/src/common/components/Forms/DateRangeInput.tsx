@@ -23,6 +23,7 @@ interface DateRangeInputProps
 }
 
 const DateRangeInputErrorFrameInner = styled.div`
+  min-width: 300px;
   display: flex;
   flex-direction: column;
   flex: 1;

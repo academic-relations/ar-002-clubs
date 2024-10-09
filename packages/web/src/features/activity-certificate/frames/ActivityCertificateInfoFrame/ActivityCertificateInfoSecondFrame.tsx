@@ -60,11 +60,13 @@ const InputFrameInner = styled.div`
 `;
 
 const DescriptionInputFrameInner = styled.div`
-  width: 100%;
+  /* width: 100%; */
   justify-content: flex-start;
   align-items: center;
   gap: 12px;
   display: flex;
+  flex: 1;
+  min-width: 300px;
 `;
 
 const ActivityCertificateInfoSecondFrame: React.FC<
