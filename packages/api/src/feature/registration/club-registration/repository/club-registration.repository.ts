@@ -392,12 +392,12 @@ export class ClubRegistrationRepository {
           StudentT,
           and(
             eq(Student.id, StudentT.studentId),
-            lte(StudentT.startTerm, cur),
-            or(gte(StudentT.endTerm, cur), isNull(StudentT.endTerm)),
+            // lte(StudentT.startTerm, cur),
+            // or(gte(StudentT.endTerm, cur), isNull(StudentT.endTerm)),
             isNull(StudentT.deletedAt),
           ),
         )
-        .where(and(isNull(Student.deletedAt), eq(Student.id, studentId)))
+        .where(isNull(Student.deletedAt))
         .as("representative");
 
       const File1 = alias(File, "File1");
@@ -580,7 +580,7 @@ export class ClubRegistrationRepository {
     return { registrations: result };
   }
 
-  async getExecutiveRegistrationsClubRegistrations(
+  async getRegistrationsClubRegistrations(
     pageOffset: number,
     itemCount: number,
   ): Promise<ApiReg014ResponseOk> {

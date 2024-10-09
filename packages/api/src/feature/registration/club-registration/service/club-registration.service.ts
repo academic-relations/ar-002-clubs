@@ -42,6 +42,7 @@ import type {
   ApiReg023RequestParam,
   ApiReg023ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg023";
+import type { ApiReg024ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg024";
 
 @Injectable()
 export class ClubRegistrationService {
@@ -353,13 +354,13 @@ export class ClubRegistrationService {
     applyId: number,
   ): Promise<ApiReg011ResponseOk> {
     // 동아리 신청, 집행부원 피드백, 동아리 수정 기간인지 확인합니다.
-    await this.clubRegistrationPublicService.checkDeadline({
-      enums: [
-        RegistrationDeadlineEnum.ClubRegistrationApplication,
-        // RegistrationDeadlineEnum.ClubRegistrationModification,
-        // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
-      ],
-    });
+    // await this.clubRegistrationPublicService.checkDeadline({
+    //   enums: [
+    //     RegistrationDeadlineEnum.ClubRegistrationApplication,
+    //     // RegistrationDeadlineEnum.ClubRegistrationModification,
+    //     // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+    //   ],
+    // });
     const result =
       await this.clubRegistrationRepository.getStudentRegistrationsClubRegistration(
         studentId,
@@ -391,13 +392,13 @@ export class ClubRegistrationService {
     studentId: number,
   ): Promise<ApiReg012ResponseOk> {
     // 동아리 신청, 집행부원 피드백, 동아리 수정 기간인지 확인합니다.
-    await this.clubRegistrationPublicService.checkDeadline({
-      enums: [
-        RegistrationDeadlineEnum.ClubRegistrationApplication,
-        // RegistrationDeadlineEnum.ClubRegistrationModification,
-        // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
-      ],
-    });
+    // await this.clubRegistrationPublicService.checkDeadline({
+    //   enums: [
+    //     RegistrationDeadlineEnum.ClubRegistrationApplication,
+    //     // RegistrationDeadlineEnum.ClubRegistrationModification,
+    //     // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
+    //   ],
+    // });
     const result =
       await this.clubRegistrationRepository.getStudentRegistrationsClubRegistrationsMy(
         studentId,
@@ -410,7 +411,19 @@ export class ClubRegistrationService {
     itemCount: number,
   ): Promise<ApiReg014ResponseOk> {
     const result =
-      await this.clubRegistrationRepository.getExecutiveRegistrationsClubRegistrations(
+      await this.clubRegistrationRepository.getRegistrationsClubRegistrations(
+        pageOffset,
+        itemCount,
+      );
+    return result;
+  }
+
+  async getStudentRegistrationsClubRegistrations(
+    pageOffset: number,
+    itemCount: number,
+  ): Promise<ApiReg024ResponseOk> {
+    const result =
+      await this.clubRegistrationRepository.getRegistrationsClubRegistrations(
         pageOffset,
         itemCount,
       );

@@ -26,6 +26,8 @@ export const useGetMyMemberRegistration = () =>
         case 200:
         case 304:
           return apiReg006.responseBodyMap[200].parse(data);
+        case 204:
+          return { applies: [] };
         default:
           throw new UnexpectedAPIResponseError();
       }

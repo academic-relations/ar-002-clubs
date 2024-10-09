@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
+import { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import { overlay } from "overlay-kit";
 
 import styled from "styled-components";
 
-import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { useIsInClub } from "@sparcs-clubs/web/hooks/isInClub";
 
-import { useGetMyMemberRegistration } from "../services/getMyMemberRegistration";
 import { useRegisterClub } from "../services/registerClub";
 import { useUnregisterClub } from "../services/unregisterClub";
 
@@ -21,6 +19,10 @@ import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpo
 
 interface RegisterInfoProps {
   club: ApiClb002ResponseOK;
+  isInClub: RegistrationApplicationStudentStatusEnum;
+  refetch: () => void;
+  isRegistered: boolean;
+  myRegistrationList: ApiReg006ResponseOk;
 }
 const RegisterInfoWrapper = styled.div`
   display: flex;
@@ -30,48 +32,17 @@ const RegisterInfoWrapper = styled.div`
   align-items: center;
 `;
 
-export const RegisterInfo: React.FC<RegisterInfoProps> = ({ club }) => {
-  const [isRegistered, setIsRegistered] = useState(false);
-  const [isInClub, setIsInclub] = useState(
-    RegistrationApplicationStudentStatusEnum.Rejected,
-  );
-  const [isInClubFromHook, clubLoading] = useIsInClub(club.id);
-
-  const {
-    data: myRegistrationList,
-    isLoading,
-    isError,
-    refetch,
-  } = useGetMyMemberRegistration();
-
-  useEffect(() => {
-    if (!myRegistrationList) return;
-    if (myRegistrationList.applies.length > 0) {
-      const thisRegistration = myRegistrationList.applies.find(
-        apply => apply.clubId === club.id,
-      );
-      if (thisRegistration) {
-        setIsInclub(thisRegistration.applyStatusEnumId);
-        setIsRegistered(true);
-      } else {
-        setIsRegistered(false);
-      }
-    }
-  }, [myRegistrationList]);
-
-  useEffect(() => {
-    // 초기값 설정
-    if (!clubLoading) {
-      setIsInclub(isInClubFromHook);
-    }
-  }, [isInClubFromHook, clubLoading]);
-
+export const RegisterInfo: React.FC<RegisterInfoProps> = ({
+  club,
+  isInClub,
+  refetch,
+  isRegistered,
+  myRegistrationList,
+}) => {
   const ToggleRegistered = async (close: () => void) => {
     close();
     await useRegisterClub(club.id);
     await refetch();
-    setIsInclub(RegistrationApplicationStudentStatusEnum.Pending);
-    setIsRegistered(true);
   };
 
   const ToggleUnregistered = async (close: () => void) => {
@@ -94,8 +65,6 @@ export const RegisterInfo: React.FC<RegisterInfoProps> = ({ club }) => {
       ).id,
     });
     await refetch();
-    setIsRegistered(false);
-
     close();
   };
 
@@ -108,35 +77,33 @@ export const RegisterInfo: React.FC<RegisterInfoProps> = ({ club }) => {
 
   const submitHandler = () => {
     overlay.open(({ isOpen, close }) => (
-      <AsyncBoundary isLoading={isLoading} isError={isError}>
-        <Modal isOpen={isOpen} onClose={close}>
-          {isRegistered ? (
-            <CancellableModalContent
-              onClose={close}
-              onConfirm={() => {
-                ToggleUnregistered(close);
-              }}
-            >
-              2024학년도 봄학기
-              <ResponsiveBr /> {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-              {club.name_kr}의<br />
-              회원 등록을 취소합니다.
-            </CancellableModalContent>
-          ) : (
-            <CancellableModalContent
-              onClose={close}
-              onConfirm={() => {
-                ToggleRegistered(close);
-              }}
-            >
-              2024학년도 봄학기
-              <ResponsiveBr /> {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-              {club.name_kr}의<br />
-              회원 등록 신청을 진행합니다.
-            </CancellableModalContent>
-          )}
-        </Modal>
-      </AsyncBoundary>
+      <Modal isOpen={isOpen} onClose={close}>
+        {isRegistered ? (
+          <CancellableModalContent
+            onClose={close}
+            onConfirm={() => {
+              ToggleUnregistered(close);
+            }}
+          >
+            2024학년도 봄학기
+            <ResponsiveBr /> {club.type === 1 ? "정동아리" : "가동아리"}{" "}
+            {club.name_kr}의<br />
+            회원 등록을 취소합니다.
+          </CancellableModalContent>
+        ) : (
+          <CancellableModalContent
+            onClose={close}
+            onConfirm={() => {
+              ToggleRegistered(close);
+            }}
+          >
+            2024학년도 봄학기
+            <ResponsiveBr /> {club.type === 1 ? "정동아리" : "가동아리"}{" "}
+            {club.name_kr}의<br />
+            회원 등록 신청을 진행합니다.
+          </CancellableModalContent>
+        )}
+      </Modal>
     ));
   };
   const renderButton = () => {
