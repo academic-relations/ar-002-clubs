@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 
+import { ApiRnt001ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
 import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
@@ -17,11 +18,8 @@ export interface RentalFrameProps {
 }
 
 export interface RentalLimitProps {
-  rentalDate: Date;
-  returnDate: Date;
-  rental: RentalInterface;
-  setRental: React.Dispatch<React.SetStateAction<RentalInterface>>;
-  setHasError: React.Dispatch<React.SetStateAction<boolean>>;
+  availableRentals: ApiRnt001ResponseOK;
+  formCtx: ReturnType<typeof useFormContext<RentalInterface>>;
 }
 
 const RentalNoticeFrameInner = styled.div`
@@ -46,7 +44,6 @@ const RentalNoticeFrame: React.FC<RentalFrameProps> = ({ formCtx }) => {
   );
   const handleNextClick = () => {
     formCtx.setValue("agreement", checked);
-    console.log(formCtx.getValues("agreement"));
   };
 
   return (

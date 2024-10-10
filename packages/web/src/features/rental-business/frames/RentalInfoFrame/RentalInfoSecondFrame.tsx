@@ -13,12 +13,13 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import Easel from "@sparcs-clubs/web/features/rental-business/components/Rentals/Easel";
-import HandCart from "@sparcs-clubs/web/features/rental-business/components/Rentals/HandCart";
-import Mat from "@sparcs-clubs/web/features/rental-business/components/Rentals/Mat";
-import Tool from "@sparcs-clubs/web/features/rental-business/components/Rentals/Tool";
-import Vacuum from "@sparcs-clubs/web/features/rental-business/components/Rentals/Vacuum";
+// import Easel from "@sparcs-clubs/web/features/rental-business/components/Rentals/Easel";
+// import HandCart from "@sparcs-clubs/web/features/rental-business/components/Rentals/HandCart";
+// import Mat from "@sparcs-clubs/web/features/rental-business/components/Rentals/Mat";
+// import Tool from "@sparcs-clubs/web/features/rental-business/components/Rentals/Tool";
+// import Vacuum from "@sparcs-clubs/web/features/rental-business/components/Rentals/Vacuum";
 import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
+import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
@@ -38,32 +39,32 @@ const FlexGrowTypography = styled.div`
 
 const NoneRental: React.FC<RentalFrameProps> = () => <>none</>;
 
-const rentals = {
-  none: {
-    info: "대충 대여 기간 먼저 선택해야 한다는 안내문구 어딘가에",
-    component: NoneRental,
-  },
-  easel: {
-    info: "대충 이젤에 대한 추가 안내사항",
-    component: Easel,
-  },
-  vacuum: {
-    info: "대충 청소기에 대한 추가 안내사항",
-    component: Vacuum,
-  },
-  handCart: {
-    info: "대충 수레에 대한 추가 안내사항",
-    component: HandCart,
-  },
-  mat: {
-    info: "대충 돗자리에 대한 추가 안내사항",
-    component: Mat,
-  },
-  tool: {
-    info: "대충 공구에 대한 추가 안내사항",
-    component: Tool,
-  },
-};
+// const rentals = {
+//   none: {
+//     info: "대충 대여 기간 먼저 선택해야 한다는 안내문구 어딘가에",
+//     component: NoneRental,
+//   },
+//   easel: {
+//     info: "대충 이젤에 대한 추가 안내사항",
+//     component: Easel,
+//   },
+//   vacuum: {
+//     info: "대충 청소기에 대한 추가 안내사항",
+//     component: Vacuum,
+//   },
+//   handCart: {
+//     info: "대충 수레에 대한 추가 안내사항",
+//     component: HandCart,
+//   },
+//   mat: {
+//     info: "대충 돗자리에 대한 추가 안내사항",
+//     component: Mat,
+//   },
+//   tool: {
+//     info: "대충 공구에 대한 추가 안내사항",
+//     component: Tool,
+//   },
+// };
 const RentalInfoSecondFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -75,6 +76,15 @@ const RentalInfoSecondFrame: React.FC<
   const [rentalDate, setRentalDate] = useState<Date | undefined>();
   const [returnDate, setReturnDate] = useState<Date | undefined>();
   const [pendingDate, setPendingDate] = useState<Date | undefined>();
+
+  const {
+    data: availableRentals,
+    isLoading,
+    isError,
+  } = useGetAvailableRentals(
+    rentalDate || new Date(),
+    returnDate || new Date(),
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const openPeriodModal = (state: "change" | "reset") => {
