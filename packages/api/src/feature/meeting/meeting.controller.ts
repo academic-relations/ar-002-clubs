@@ -49,11 +49,11 @@ export default class MeetingController {
     @GetExecutive() user: GetExecutive,
     @Body() body: ApiMee001RequestBody,
   ): Promise<ApiMee001ResponseCreated> {
-    await this.meetingService.postExecutiveMeetingAnnouncement(
+    const result = await this.meetingService.postExecutiveMeetingAnnouncement(
       body,
       user.executiveId,
     );
-    return {};
+    return result;
   }
 
   @Get("/meetings/announcements/announcement/:announcementId")

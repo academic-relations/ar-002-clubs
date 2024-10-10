@@ -61,11 +61,12 @@ export class MeetingRepository {
     startDate: Date;
     endDate?: Date;
     isRegular: boolean;
-    location: string;
-    locationEn: string;
-  }): Promise<boolean> {
+    location?: string;
+    locationEn?: string;
+    tag: string;
+  }): Promise<number | undefined> {
     // TODO: string인 필수 field validation
-    const isInsertionSucceed = await this.db.transaction(async tx => {
+    const insertedAnnouncementId = await this.db.transaction(async tx => {
       const [announcementInsertResult] = await tx
         .insert(MeetingAnnouncement)
         .values({
@@ -76,32 +77,36 @@ export class MeetingRepository {
       if (announcementInsertResult.affectedRows !== 1) {
         logger.debug("[MeetingRepository] Failed to insert announcement");
         tx.rollback();
-        return false;
+        return undefined;
       }
+
+      const announcementId = announcementInsertResult.insertId;
       logger.debug(
-        `[MeetingRepository] Inserted announcement: ${announcementInsertResult.insertId}`,
+        `[MeetingRepository] Inserted announcement: ${announcementId}`,
       );
 
       const [meetingInsertResult] = await tx.insert(Meeting).values({
-        announcementId: announcementInsertResult.insertId,
+        announcementId,
         meetingEnumId: contents.meetingEnumId,
         startDate: contents.startDate,
         endDate: contents.endDate,
         isRegular: contents.isRegular,
         location: contents.location,
         locationEn: contents.locationEn,
+        tag: contents.tag,
       });
       if (meetingInsertResult.affectedRows !== 1) {
         logger.debug("[MeetingRepository] Failed to insert meeting");
         tx.rollback();
-        return false;
+        return undefined;
       }
       logger.debug(
         `[MeetingRepository] Inserted meeting: ${meetingInsertResult.insertId}`,
       );
-      return true;
+
+      return announcementId;
     });
-    return isInsertionSucceed;
+    return insertedAnnouncementId;
   }
 
   async selectMeetingAnnouncementById(announcementId: number) {
@@ -132,6 +137,7 @@ export class MeetingRepository {
         isRegular: Meeting.isRegular,
         location: Meeting.location,
         locationEn: Meeting.locationEn,
+        tag: Meeting.tag,
       })
       .from(Meeting)
       .where(eq(Meeting.announcementId, announcementId))
@@ -157,6 +163,7 @@ export class MeetingRepository {
       isRegular?: boolean;
       location?: string;
       locationEn?: string;
+      tag?: string;
     },
   ) {
     const isUpdateSucceed = await this.db.transaction(async tx => {
@@ -194,6 +201,7 @@ export class MeetingRepository {
         isRegular?: boolean;
         location?: string;
         locationEn?: string;
+        tag?: string;
       } = {};
       if (body.meetingEnumId !== undefined) {
         meetingUpdates.meetingEnumId = body.meetingEnumId;
@@ -212,6 +220,9 @@ export class MeetingRepository {
       }
       if (body.locationEn !== undefined) {
         meetingUpdates.locationEn = body.locationEn;
+      }
+      if (body.tag !== undefined) {
+        meetingUpdates.tag = body.tag;
       }
 
       if (Object.keys(meetingUpdates).length > 0) {

@@ -19,4 +19,5 @@ export const mockupMeetingDetail: ApiMee002ResponseOk = {
   endDate: new Date(),
   location: "장소",
   locationEn: "location",
+  tag: "tag",
 };

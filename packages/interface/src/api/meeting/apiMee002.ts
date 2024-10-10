@@ -30,6 +30,7 @@ const responseBodyMap = {
     isRegular: z.coerce.boolean(),
     location: z.coerce.string(),
     locationEn: z.coerce.string(),
+    tag: z.coerce.string(),
   }),
 };
 
