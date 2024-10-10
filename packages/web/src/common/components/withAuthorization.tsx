@@ -1,12 +1,12 @@
 import { ComponentType } from "react";
 
+import { UserType } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { jwtDecode } from "jwt-decode";
 
 import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import { UserType } from "@sparcs-clubs/web/utils/getUserType";
 import { getLocalStorageItem } from "@sparcs-clubs/web/utils/localStorage";
 
 import ErrorPageTemplate from "../frames/ErrorPageTemplate";
@@ -54,7 +54,7 @@ export const withAuthorization = <P extends object>(
     }
 
     const decoded: { name?: string; type?: string } = jwtDecode(token);
-    const userType = decoded.type as UserType;
+    const userType = UserType[decoded.type as keyof typeof UserType];
 
     if (!acceptedAuthorization.includes(userType)) {
       return (

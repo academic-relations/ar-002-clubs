@@ -1,10 +1,12 @@
 import React from "react";
 
+import { UserType } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
+
 import { getUserType } from "@sparcs-clubs/web/utils/getUserType";
 
 import Button from "../Button";
@@ -65,7 +67,7 @@ const MyMenu: React.FC<MyMenuProps> = ({
   const parsedToken = JSON.parse(localStorage.getItem("responseToken") || "{}");
 
   const profiles = Object.keys(parsedToken).map(type => ({
-    profileType: getUserType(type),
+    profileType: getUserType(UserType[type as keyof typeof UserType]),
     token: parsedToken[type],
   }));
 
