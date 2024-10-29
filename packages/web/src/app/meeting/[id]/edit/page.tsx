@@ -5,7 +5,7 @@ import React, { useEffect, useMemo } from "react";
 import apiMee002 from "@sparcs-clubs/interface/api/meeting/apiMee002";
 import { ApiMee003RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee003";
 
-import { UserType } from "@sparcs-clubs/interface/common/enum/user.enum";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
@@ -126,4 +126,4 @@ const EditMeetingPage: React.FC = () => {
   );
 };
 
-export default withAuthorization(EditMeetingPage, [UserType.executive], -1);
+export default withAuthorization(EditMeetingPage, [UserTypeEnum.Executive], -1);

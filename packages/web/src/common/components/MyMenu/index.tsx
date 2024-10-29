@@ -1,6 +1,6 @@
 import React from "react";
 
-import { UserType } from "@sparcs-clubs/interface/common/enum/user.enum";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
@@ -67,7 +67,7 @@ const MyMenu: React.FC<MyMenuProps> = ({
   const parsedToken = JSON.parse(localStorage.getItem("responseToken") || "{}");
 
   const profiles = Object.keys(parsedToken).map(type => ({
-    profileType: getUserType(UserType[type as keyof typeof UserType]),
+    profileType: getUserType(UserTypeEnum[type as keyof typeof UserTypeEnum]),
     token: parsedToken[type],
   }));
 

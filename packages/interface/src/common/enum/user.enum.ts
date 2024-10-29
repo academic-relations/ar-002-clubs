@@ -9,11 +9,11 @@ export enum StudentStatusEnum {
   LeaveOfAbsence, // 휴학
 }
 
-export enum UserType {
-  undergraduate,
-  master,
-  doctor,
-  executive,
-  professor,
-  employee,
+export enum UserTypeEnum {
+  Undergraduate = 1,
+  Master,
+  Doctor,
+  Executive,
+  Professor,
+  Employee,
 }

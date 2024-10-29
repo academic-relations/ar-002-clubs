@@ -1,21 +1,21 @@
 import {
   ProfessorEnum,
-  UserType,
+  UserTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/user.enum";
 
-export const getUserType = (type: UserType) => {
+export const getUserType = (type: UserTypeEnum) => {
   switch (type) {
-    case UserType.undergraduate:
+    case UserTypeEnum.Undergraduate:
       return "학부생";
-    case UserType.master:
+    case UserTypeEnum.Master:
       return "석사과정";
-    case UserType.doctor:
+    case UserTypeEnum.Doctor:
       return "박사과정";
-    case UserType.executive:
+    case UserTypeEnum.Executive:
       return "집행부원";
-    case UserType.professor:
+    case UserTypeEnum.Professor:
       return "지도교수";
-    case UserType.employee:
+    case UserTypeEnum.Employee:
       return "교직원";
     default:
       return "None";
