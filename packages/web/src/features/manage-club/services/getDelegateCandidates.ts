@@ -23,7 +23,8 @@ export const useGetDelegateCandidates = (requestParam: ApiClb008RequestParam) =>
       );
       switch (status) {
         case 200:
-          return apiClb008.responseBodyMap[200].parse(data);
+        case 304:
+          return data;
         default:
           throw new UnexpectedAPIResponseError();
       }

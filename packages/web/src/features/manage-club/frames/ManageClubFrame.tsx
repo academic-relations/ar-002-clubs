@@ -13,12 +13,13 @@ import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
 // import ActivityManageFrame from "@sparcs-clubs/web/features/manage-club/frames/ActivityManageFrame";
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 import InfoManageFrame from "@sparcs-clubs/web/features/manage-club/frames/InfoManageFrame";
-import MembersManageFrame from "@sparcs-clubs/web/features/manage-club/frames/MembersManageFrame";
+import MemberManageFrame from "@sparcs-clubs/web/features/manage-club/frames/MemberManageFrame";
 // import ServiceManageFrame from "@sparcs-clubs/web/features/manage-club/frames/ServiceManageFrame";
+import RegistrationManageFrame from "@sparcs-clubs/web/features/manage-club/frames/RegistrationManageFrame";
 import { useCheckManageClub } from "@sparcs-clubs/web/hooks/checkManageClub";
 
 const ManageClubFrame: React.FC = () => {
-  const { delegate, isLoading } = useCheckManageClub();
+  const { delegate, clubId, isLoading } = useCheckManageClub();
 
   const { data, isLoading: termIsLoading } = useGetRegistrationTerm();
   const [isRegistrationPeriod, setIsRegistrationPeriod] =
@@ -63,9 +64,15 @@ const ManageClubFrame: React.FC = () => {
       />
       <InfoManageFrame
         isRepresentative={delegate === ClubDelegateEnum.Representative}
+        clubId={clubId || 0}
       />
       {/* <ActivityManageFrame /> */}
-      {isRegistrationPeriod && <MembersManageFrame />}
+      {isRegistrationPeriod ? (
+        <RegistrationManageFrame />
+      ) : (
+        <MemberManageFrame />
+      )}
+
       {/* <ServiceManageFrame /> */}
     </FlexWrapper>
   );

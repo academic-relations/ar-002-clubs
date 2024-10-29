@@ -18,7 +18,7 @@ import { useGetMemberRegistration } from "@sparcs-clubs/web/features/manage-club
 
 import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 
-const MembersManageFrame: React.FC = () => {
+const RegistrationManageFrame: React.FC = () => {
   // 자신이 대표자인 동아리 clubId 가져오기
   const { data: idData } = useGetMyManageClub() as {
     data: ApiClb015ResponseOk;
@@ -119,4 +119,4 @@ const MembersManageFrame: React.FC = () => {
   );
 };
 
-export default MembersManageFrame;
+export default RegistrationManageFrame;
