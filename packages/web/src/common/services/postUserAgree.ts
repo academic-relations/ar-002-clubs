@@ -5,18 +5,12 @@ import apiUsr004, {
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 const postUserAgree = async (): Promise<ApiUsr004ResponseCreated> => {
-  const { status } = await axiosClientWithAuth.post(apiUsr004.url(), {});
+  await axiosClientWithAuth.post(apiUsr004.url(), {});
 
-  switch (status) {
-    case 201:
-      return apiUsr004.responseBodyMap[201];
-    default:
-      throw new UnexpectedAPIResponseError();
-  }
+  return apiUsr004.responseBodyMap[201];
 };
 
 defineAxiosMock(mock => {

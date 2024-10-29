@@ -3,7 +3,6 @@ import apiReg017 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg0
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import type {
@@ -15,17 +14,12 @@ export const postClubRegistrationSendBack = async (
   requestParam: ApiReg017RequestParam,
   requestBody: ApiReg017RequestBody,
 ) => {
-  const { data, status } = await axiosClientWithAuth.post(
+  const { data } = await axiosClientWithAuth.post(
     apiReg017.url(requestParam.applyId.toString()),
     requestBody,
   );
 
-  switch (status) {
-    case 201:
-      return apiReg017.responseBodyMap[201].parse(data);
-    default:
-      throw new UnexpectedAPIResponseError();
-  }
+  return apiReg017.responseBodyMap[201].parse(data);
 };
 
 defineAxiosMock(mock => {

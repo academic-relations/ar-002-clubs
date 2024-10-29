@@ -9,26 +9,19 @@ import { activityDetailGet } from "@sparcs-clubs/web/features/register-club/serv
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 export const useGetActivityReport = (profile: string, activityId: number) =>
   useQuery<ApiAct002ResponseOk, Error>({
     queryKey: [activityDetailGet(profile, activityId)],
     queryFn: async (): Promise<ApiAct002ResponseOk> => {
-      const { data, status } = await axiosClientWithAuth.get(
+      const { data } = await axiosClientWithAuth.get(
         activityDetailGet(profile, activityId),
         {},
       );
 
-      switch (status) {
-        case 200:
-        case 304:
-          return data;
-        // return apiAct002.responseBodyMap[200].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      // return apiAct002.responseBodyMap[200].parse(data);
+      return data;
     },
   });
 

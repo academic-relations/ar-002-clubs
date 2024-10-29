@@ -1,9 +1,6 @@
 import apiCms003 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms003";
 
-import {
-  axiosClientWithAuth,
-  UnexpectedAPIResponseError,
-} from "@sparcs-clubs/web/lib/axios";
+import { axiosClientWithAuth } from "@sparcs-clubs/web/lib/axios";
 
 import type {
   ApiCms003Error423,
@@ -21,14 +18,11 @@ const postCommonSpaceUsageOrder = async (
     requestBody,
   );
 
-  switch (status) {
-    case 201:
-      return apiCms003.responseBodyMap[201].parse(data);
-    case 423:
-      return apiCms003.responseErrorMap[423].parse(data);
-    default:
-      throw new UnexpectedAPIResponseError();
+  if (status === 423) {
+    return apiCms003.responseErrorMap[423].parse(data);
   }
+
+  return apiCms003.responseBodyMap[201].parse(data);
 };
 
 export default postCommonSpaceUsageOrder;
