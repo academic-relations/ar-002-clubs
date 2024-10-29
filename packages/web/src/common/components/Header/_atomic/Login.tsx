@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { jwtDecode } from "jwt-decode";
 import styled from "styled-components";
 
@@ -54,7 +55,8 @@ const Login = () => {
       {isLoggedIn ? (
         <LoginInner onClick={() => setIsMenuOpen(!isMenuOpen)}>
           <Icon type="person" size={16} />
-          {userName} ({getUserType(type)})
+          {userName} (
+          {getUserType(UserTypeEnum[type as keyof typeof UserTypeEnum])})
         </LoginInner>
       ) : (
         <LoginInner onClick={login}>
