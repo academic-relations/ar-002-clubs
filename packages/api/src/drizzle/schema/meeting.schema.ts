@@ -46,32 +46,22 @@ export const MeetingAnnouncement = mysqlTable("meeting_announcement", {
   deletedAt: timestamp("deleted_at"),
 });
 
-export const Meeting = mysqlTable(
-  "meeting",
-  {
-    id: int("id").autoincrement().primaryKey(),
-    announcementId: int("meeting_announcement_id")
-      .references(() => MeetingAnnouncement.id)
-      .notNull(),
-    meetingEnumId: int("enum"),
-    isRegular: boolean("is_regular_meeting").notNull(),
-    location: varchar("location_kr", { length: 255 }),
-    locationEn: varchar("location_en", { length: 255 }),
-    startDate: datetime("start_datetime").notNull(),
-    endDate: datetime("end_datetime"),
-    tag: varchar("tag", { length: 255 }).notNull().unique(),
-    createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at"),
-    deletedAt: timestamp("deleted_at"),
-  },
-  table => ({
-    meetingEnumForeignKey: foreignKey({
-      name: "meeting_enum_foreign_key",
-      columns: [table.meetingEnumId],
-      foreignColumns: [MeetingEnum.id],
-    }),
-  }),
-);
+export const Meeting = mysqlTable("meeting", {
+  id: int("id").autoincrement().primaryKey(),
+  announcementId: int("meeting_announcement_id")
+    .references(() => MeetingAnnouncement.id)
+    .notNull(),
+  meetingEnumId: int("meeting_type_enum"),
+  isRegular: boolean("is_regular_meeting").notNull(),
+  location: varchar("location_kr", { length: 255 }),
+  locationEn: varchar("location_en", { length: 255 }),
+  startDate: datetime("start_datetime").notNull(),
+  endDate: datetime("end_datetime"),
+  tag: varchar("meeting_group_tag", { length: 255 }).notNull().unique(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at"),
+  deletedAt: timestamp("deleted_at"),
+});
 
 export const MeetingAgenda = mysqlTable(
   "meeting_agenda",
