@@ -63,7 +63,6 @@ export class MeetingRepository {
     isRegular: boolean;
     location?: string;
     locationEn?: string;
-    tag: string;
   }): Promise<number | undefined> {
     // TODO: string인 필수 field validation
     const insertedAnnouncementId = await this.db.transaction(async tx => {
@@ -85,6 +84,10 @@ export class MeetingRepository {
         `[MeetingRepository] Inserted announcement: ${announcementId}`,
       );
 
+      // meetingTag는 같이 묶이는 분과회의를 위한 것으로, 행 생성시 backend에서 임의의 값을 할당하여야합니다.
+      // TODO : 이 부분의 태그를 어떻게 설정할 것인지에 대한 작업이 필요합니다.
+      const meetingTag = "tag";
+
       const [meetingInsertResult] = await tx.insert(Meeting).values({
         announcementId,
         meetingEnumId: contents.meetingEnumId,
@@ -93,7 +96,7 @@ export class MeetingRepository {
         isRegular: contents.isRegular,
         location: contents.location,
         locationEn: contents.locationEn,
-        tag: contents.tag,
+        tag: meetingTag,
       });
       if (meetingInsertResult.affectedRows !== 1) {
         logger.debug("[MeetingRepository] Failed to insert meeting");
