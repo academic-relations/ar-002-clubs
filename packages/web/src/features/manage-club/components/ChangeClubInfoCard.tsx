@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 
+import { ApiClb004ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb004";
 import { overlay } from "overlay-kit";
 import { FormProvider, useForm } from "react-hook-form";
 
@@ -21,11 +22,6 @@ interface MyManageClubData {
   delegateEnumId: number;
 }
 
-interface ClubInfoInput {
-  description: string;
-  password: string;
-}
-
 const ChangeClubInfoCard = () => {
   const { data: idData, isLoading: idIsLoading } = useGetMyManageClub() as {
     data: MyManageClubData;
@@ -36,9 +32,9 @@ const ChangeClubInfoCard = () => {
     clubId,
   });
 
-  const isPasswordRequired = true; // TODO: 동방 없는 곳은 비밀번호 입력 안 해도 에러 안 뜨게 수정
+  const isroomPasswordRequired = true; // TODO: 동방 없는 곳은 비밀번호 입력 안 해도 에러 안 뜨게 수정
 
-  const formCtx = useForm<ClubInfoInput>({
+  const formCtx = useForm<ApiClb004ResponseOK>({
     mode: "all",
   });
 
@@ -53,14 +49,14 @@ const ChangeClubInfoCard = () => {
   const { mutate: updateClubInfo } = usePutClubInfo();
 
   const description = watch("description");
-  const password = watch("password");
+  const roomPassword = watch("roomPassword");
 
   useEffect(() => {
     if (!idIsLoading && idData && Object.keys(idData).length > 0) {
       setClubId(idData.clubId);
       if (clubId && !isLoading && data) {
         if (data.description) setValue("description", data.description);
-        if (data.roomPassword) setValue("password", data.roomPassword);
+        if (data.roomPassword) setValue("roomPassword", data.roomPassword);
       }
     }
   }, [idIsLoading, idData, isLoading, clubId, data, setValue]);
@@ -71,7 +67,7 @@ const ChangeClubInfoCard = () => {
         requestParam: { clubId },
         body: {
           description,
-          roomPassword: password,
+          roomPassword,
         },
       },
       {
@@ -91,7 +87,7 @@ const ChangeClubInfoCard = () => {
         },
       },
     );
-  }, [clubId, description, password, refetch, updateClubInfo]);
+  }, [clubId, description, roomPassword, refetch, updateClubInfo]);
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
@@ -120,8 +116,8 @@ const ChangeClubInfoCard = () => {
               )}
             />
             <FormController
-              name="password"
-              required={isPasswordRequired}
+              name="roomPassword"
+              required={isroomPasswordRequired}
               control={control}
               requiredMessage="동아리방 비밀번호를 입력하세요"
               renderItem={props => (
