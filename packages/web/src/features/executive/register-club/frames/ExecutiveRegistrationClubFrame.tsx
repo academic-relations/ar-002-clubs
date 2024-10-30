@@ -2,13 +2,12 @@
 
 import React, { useMemo, useState } from "react";
 
-// import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-
 import { hangulIncludes } from "es-hangul";
 
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import ExecutiveRegistrationTable from "@sparcs-clubs/web/common/components/ExecutiveRegistrationTable";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import MultiFilter from "@sparcs-clubs/web/common/components/MultiFilter/Index";
@@ -38,6 +37,14 @@ const ClubSearchAndFilter = styled.div`
   align-self: stretch;
 `;
 
+const ResetSearchAndFilterWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+  align-self: stretch;
+`;
+
 const TableWithPaginationWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -49,38 +56,6 @@ const TableWithPaginationWrapper = styled.div`
 export const ExecutiveRegistrationClubFrame = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
-
-  // const data: {
-  // total: number;
-  // items: {
-  //     id: number;
-  //     registrationTypeEnumId: RegistrationTypeEnum;
-  //     divisionId: number;
-  //     activityFieldKr: string;
-  //     activityFieldEn: string;
-  //     registrationStatusEnumId: RegistrationStatusEnum;
-  //     newClubNameKr: string;
-  //     newClubNameEn: string;
-  //     representativeName: string;
-  //     professorName?: string | undefined;
-  // }[];
-  // offset: number;
-  // } | undefined
-
-  // enum DivisionType
-  //   LifeCulture = 1, // 생활문화
-  //   PerformingArts, // 연행예술
-  //   ExhibitionCreation, // 전시창작
-  //   BandMusic, // 밴드음악
-  //   VocalMusic, // 보컬음악
-  //   InstrumentalMusic, // 연주음악
-  //   Society, // 사회
-  //   Religion, // 종교
-  //   BallSports, // 구기체육
-  //   LifeSports, // 생활체육
-  //   ScienceEngineeringAcademics, // 이공학술
-  //   HumanitiesAcademics, // 인문학술
-  // }
 
   const { data, isLoading, isError } = useGetRegisterClub({
     pageOffset: currentPage,
@@ -142,21 +117,22 @@ export const ExecutiveRegistrationClubFrame = () => {
   ]);
 
   useMemo(() => {
-    // selectedContent를 숫자로 바꾸기! 근데 필터 바뀔 때마다 해야 함
-    const result0 = categories[0].selectedContent.map(item => {
-      switch (item) {
-        case "재등록":
-          return 1;
-        case "신규 등록":
-          return 2;
-        case "가등록":
-          return 3;
-        default:
-          return 0;
-      }
-    }) ?? [0];
+    const convertedRegistrationType = categories[0].selectedContent.map(
+      item => {
+        switch (item) {
+          case "재등록":
+            return 1;
+          case "신규 등록":
+            return 2;
+          case "가등록":
+            return 3;
+          default:
+            return 0;
+        }
+      },
+    );
 
-    const result1 = categories[1].selectedContent.map(item => {
+    const convertedDivisionId = categories[1].selectedContent.map(item => {
       switch (item) {
         case "생활문화":
           return 1;
@@ -185,16 +161,16 @@ export const ExecutiveRegistrationClubFrame = () => {
         default:
           return 0;
       }
-    }) ?? [0];
+    });
 
     setConvertedCategories([
       {
         name: "등록 구분",
-        selectedContent: result0,
+        selectedContent: convertedRegistrationType,
       },
       {
         name: "분과",
-        selectedContent: result1,
+        selectedContent: convertedDivisionId,
       },
     ]);
   }, [categories]);
@@ -212,11 +188,15 @@ export const ExecutiveRegistrationClubFrame = () => {
     );
 
     return {
-      total: data?.total ?? 0,
-      items: filteredRowsWithSearch ?? [],
+      total: filteredRowsWithSearch?.length ?? 0,
+      items:
+        filteredRowsWithSearch?.slice(
+          10 * (currentPage - 1),
+          10 * currentPage,
+        ) ?? [],
       offset: data?.offset ?? 0,
     };
-  }, [searchText, convertedCategories, data]);
+  }, [searchText, convertedCategories, currentPage, data]);
 
   const filteredClubsWithoutSearch = useMemo(() => {
     const filteredRowsWithoutSearch = data?.items.filter(
@@ -227,11 +207,15 @@ export const ExecutiveRegistrationClubFrame = () => {
     );
 
     return {
-      total: data?.total ?? 0,
-      items: filteredRowsWithoutSearch ?? [],
+      total: filteredRowsWithoutSearch?.length ?? 0,
+      items:
+        filteredRowsWithoutSearch?.slice(
+          10 * (currentPage - 1),
+          10 * currentPage,
+        ) ?? [],
       offset: data?.offset ?? 0,
     };
-  }, [convertedCategories, data]);
+  }, [convertedCategories, currentPage, data]);
 
   const filteredClubs =
     searchText === "" ? filteredClubsWithoutSearch : filteredClubsWithSearch;
@@ -239,6 +223,7 @@ export const ExecutiveRegistrationClubFrame = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <ClubSearchAndFilterWrapper>
@@ -250,6 +235,52 @@ export const ExecutiveRegistrationClubFrame = () => {
           />
           <MultiFilter categories={categories} setCategories={setCategories} />
         </ClubSearchAndFilter>
+        <ResetSearchAndFilterWrapper>
+          <TextButton
+            text="검색/필터 초기화"
+            onClick={() => {
+              setSearchText("");
+              setCategories([
+                {
+                  name: "등록 구분",
+                  content: ["재등록", "신규 등록", "가등록"],
+                  selectedContent: ["재등록", "신규 등록", "가등록"], // chacha: 가동아리 신규 / 가동아리 재등록 구분해야 하나요?
+                },
+                {
+                  name: "분과",
+                  content: [
+                    "생활문화",
+                    "연행예술",
+                    "전시창작",
+                    "밴드음악",
+                    "보컬음악",
+                    "연주음악",
+                    "사회",
+                    "종교",
+                    "구기체육",
+                    "생활체육",
+                    "이공학술",
+                    "인문학술",
+                  ],
+                  selectedContent: [
+                    "생활문화",
+                    "연행예술",
+                    "전시창작",
+                    "밴드음악",
+                    "보컬음악",
+                    "연주음악",
+                    "사회",
+                    "종교",
+                    "구기체육",
+                    "생활체육",
+                    "이공학술",
+                    "인문학술",
+                  ],
+                },
+              ]);
+            }}
+          />
+        </ResetSearchAndFilterWrapper>
       </ClubSearchAndFilterWrapper>
       <TableWithPaginationWrapper>
         <ExecutiveRegistrationTable
@@ -257,7 +288,7 @@ export const ExecutiveRegistrationClubFrame = () => {
         />
         <FlexWrapper direction="row" gap={16} justify="center">
           <Pagination
-            totalPage={Math.ceil((data?.total ?? 0) / limit)}
+            totalPage={Math.ceil((filteredClubs?.total ?? 0) / limit)}
             currentPage={currentPage}
             limit={limit}
             setPage={handlePageChange}
