@@ -199,8 +199,6 @@ export const ExecutiveRegistrationClubFrame = () => {
     ]);
   }, [categories]);
 
-  console.log(convertedCategories);
-
   const filteredClubsWithSearch = useMemo(() => {
     const filteredRowsWithSearch = data?.items.filter(
       item =>
@@ -237,9 +235,6 @@ export const ExecutiveRegistrationClubFrame = () => {
 
   const filteredClubs =
     searchText === "" ? filteredClubsWithoutSearch : filteredClubsWithSearch;
-
-  console.log(searchText === "");
-  console.log(filteredClubs);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
