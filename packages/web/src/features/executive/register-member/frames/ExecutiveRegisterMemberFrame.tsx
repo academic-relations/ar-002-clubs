@@ -255,8 +255,8 @@ export const ExecutiveRegisterMember = () => {
                   setCategories([
                     {
                       name: "구분",
-                      content: ["정동아리", "가동아리"],
-                      selectedContent: ["정동아리", "가동아리"],
+                      content: ["정동아리", "가동아리", "상임동아리"],
+                      selectedContent: ["정동아리", "가동아리", "상임동아리"],
                     },
                     {
                       name: "분과",
