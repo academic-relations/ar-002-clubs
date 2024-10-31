@@ -1,7 +1,7 @@
 import React from "react";
 
+import { Divider } from "@mui/material";
 import { useFormContext } from "react-hook-form";
-import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -12,18 +12,12 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import { ActivityBasicInfo } from "@sparcs-clubs/web/features/activity-certificate/types/activityCertificate";
 
+import { StyledBottom } from "../_atomic/StyledBottom";
+
 interface ActivityCertificateInfoFirstFrameProps {
   onPrev: VoidFunction;
   onNext: VoidFunction;
 }
-
-const StyledBottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  align-self: stretch;
-  margin-top: 60px;
-`;
 
 const ActivityCertificateInfoFirstFrame: React.FC<
   ActivityCertificateInfoFirstFrameProps
@@ -79,7 +73,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
           )}
         />
 
-        {/* // TODO. divider 추가 */}
+        <Divider />
         <FormController
           name="applicantName"
           control={control}

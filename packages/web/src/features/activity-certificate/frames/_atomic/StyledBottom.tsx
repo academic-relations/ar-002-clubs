@@ -5,5 +5,4 @@ export const StyledBottom = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   align-self: stretch;
-  margin-top: 60px;
 `;
