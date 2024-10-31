@@ -32,7 +32,7 @@ const ChangeClubInfoCard = () => {
     clubId,
   });
 
-  const isroomPasswordRequired = true; // TODO: 동방 없는 곳은 비밀번호 입력 안 해도 에러 안 뜨게 수정
+  const isRoomPasswordRequired = true; // TODO: 동방 없는 곳은 비밀번호 입력 안 해도 에러 안 뜨게 수정
 
   const formCtx = useForm<ApiClb004ResponseOK>({
     mode: "all",
@@ -117,7 +117,7 @@ const ChangeClubInfoCard = () => {
             />
             <FormController
               name="roomPassword"
-              required={isroomPasswordRequired}
+              required={isRoomPasswordRequired}
               control={control}
               requiredMessage="동아리방 비밀번호를 입력하세요"
               renderItem={props => (
