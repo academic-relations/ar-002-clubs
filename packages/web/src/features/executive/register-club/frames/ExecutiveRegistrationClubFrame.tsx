@@ -116,15 +116,15 @@ export const ExecutiveRegistrationClubFrame = () => {
   ]);
 
   useMemo(() => {
-    const convertedRegistrationType = categories[0].selectedContent.map(
+    const convertedRegistrationType = categories[0].selectedContent.flatMap(
       item => {
         switch (item) {
           case "재등록":
-            return 1;
+            return [1];
           case "신규 등록":
-            return 2;
+            return [2];
           case "가등록":
-            return 3;
+            return [3, 4];
           default:
             return 0;
         }
