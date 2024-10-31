@@ -1,19 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
+import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 // import { useGetUserClubs } from "../services/getUserClubs";
 
-import {
-  ActivityCertificateInterface,
-  ActivityCertificateProgress,
-  FirstErrorStatus,
-  SecondErrorStatus,
-} from "../types/activityCertificate";
+import { ActivityCertificateInfo } from "../types/activityCertificate";
 
 import ActivityCertificateInfoFrame from "./ActivityCertificateInfoFrame";
 import ActivityCertificateNoticeFrame from "./ActivityCertificateNoticeFrame";
@@ -32,71 +28,40 @@ const ActivityCertificateMainFrame: React.FC = () => {
   // const { data, isLoading, isError } = useGetUserClubs();
   // console.log(data);
 
-  const [activityCertificateProgress, setActivityCertificateProgress] =
-    useState<ActivityCertificateProgress>({
-      agreement: false,
-      firstFilled: false,
-      firstNoError: false,
-      secondFilled: false,
-      secondNoError: false,
-    });
-  const [activityCertificate, setActivityCertificate] =
-    useState<ActivityCertificateInterface>({
-      clubId: null,
-      applicant: "스팍스",
-      department: "전산학부",
-      studentNumber: "20240000",
-      krPhoneNumber: "000-0000-0000",
-      issuedNumber: null,
-      startMonth: "2023.02",
-      endMonth: "2024.04",
-      detail: [
-        {
-          key: 0,
-          startMonth: "",
-          endMonth: "",
-          description: "",
-        },
-      ],
-    });
-  const [firstErrorStatus, setFirstErrorStatus] = useState<FirstErrorStatus>({
-    hasClubIdError: false,
-    hasIssuedNumberError: false,
-    hasKrPhoneNumberError: false,
-  });
-  const [secondErrorStatus, setSecondErrorStatus] = useState<
-    Array<SecondErrorStatus>
-  >([
-    {
-      key: 0,
-      hasStartEndMonthError: false,
-      hasDescriptionError: false,
+  // TODO. 디폴트 정보 프로필에서 가져오기, 활동기간 api 연결
+  const formCtx = useForm<ActivityCertificateInfo>({
+    mode: "all",
+    defaultValues: {
+      isAgreed: false,
+      issuedNumber: 1,
+      activityDuration: "2021년 9월 ~ 2023년 6월, 2024년 3월 ~",
+      applicantName: "이지윤",
+      applicantDepartment: "전산학부",
+      applicantStudentNumber: "20200510",
+      histories: [],
     },
-  ]);
+  });
 
-  const props = {
-    activityCertificate,
-    setActivityCertificate,
-    activityCertificateProgress,
-    setActivityCertificateProgress,
-    firstErrorStatus,
-    setFirstErrorStatus,
-    secondErrorStatus,
-    setSecondErrorStatus,
-  };
+  const { watch } = formCtx;
+
+  const isAgreed = watch("isAgreed");
 
   return (
-    <ActivityCertificatePageMainFrameInner>
-      <PageHead
-        items={[{ name: "활동확인서 발급", path: "/activity-certificate" }]}
-        title="활동확인서 발급"
-      />
-      {activityCertificateProgress.agreement ? (
-        <ActivityCertificateInfoFrame {...props} />
-      ) : (
-        <ActivityCertificateNoticeFrame {...props} />
-      )}
-    </ActivityCertificatePageMainFrameInner>
+    <FormProvider {...formCtx}>
+      <form>
+        <ActivityCertificatePageMainFrameInner>
+          <PageHead
+            items={[{ name: "활동확인서 발급", path: "/activity-certificate" }]}
+            title="활동확인서 발급"
+          />
+          {isAgreed ? (
+            <ActivityCertificateInfoFrame />
+          ) : (
+            <ActivityCertificateNoticeFrame />
+          )}
+        </ActivityCertificatePageMainFrameInner>
+      </form>
+    </FormProvider>
   );
 };
 

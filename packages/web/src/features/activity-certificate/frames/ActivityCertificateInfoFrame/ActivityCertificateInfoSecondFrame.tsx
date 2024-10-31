@@ -1,17 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
+import { useFieldArray, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
+import Button from "@sparcs-clubs/web/common/components/Button";
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
 import DateRangeInput from "@sparcs-clubs/web/common/components/Forms/DateRangeInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Info from "@sparcs-clubs/web/common/components/Info";
 
-// eslint-disable-next-line no-restricted-imports
-import { ActivityDescription } from "../../types/activityCertificate";
-import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
+import {
+  ActivityCertificateInfo,
+  ActivityHistory,
+} from "@sparcs-clubs/web/features/activity-certificate/types/activityCertificate";
+
+import { StyledBottom } from "../_atomic/StyledBottom";
+
+interface ActivityCertificateInfoSecondFrameProps {
+  onPrev: VoidFunction;
+  onNext: VoidFunction;
+}
 
 const ActivityCertificateSecondFrameInner = styled.div`
   display: flex;
@@ -68,58 +79,30 @@ const DescriptionInputFrameInner = styled.div`
 `;
 
 const ActivityCertificateInfoSecondFrame: React.FC<
-  ActivityCertificateFrameProps
-> = ({
-  activityCertificate,
-  setActivityCertificate,
-  activityCertificateProgress,
-  setActivityCertificateProgress,
-  secondErrorStatus,
-  setSecondErrorStatus,
-}) => {
-  useEffect(() => {
-    let canPass = true;
+  ActivityCertificateInfoSecondFrameProps
+> = ({ onPrev, onNext }) => {
+  const {
+    watch,
+    control,
+    formState: { isValid },
+  } = useFormContext<ActivityCertificateInfo>();
 
-    activityCertificate.detail.forEach(activityDescription => {
-      if (
-        activityDescription.startMonth.length < 7 ||
-        activityDescription.endMonth.length < 7 ||
-        activityDescription.description.length === 0
-      ) {
-        canPass = false;
-      }
-    });
-
-    setActivityCertificateProgress({
-      ...activityCertificateProgress,
-      secondFilled: canPass,
-    });
-  }, [activityCertificate]);
-
-  useEffect(() => {
-    let canPass = true;
-
-    secondErrorStatus.forEach(activityDescriptionErrorStatus => {
-      if (
-        activityDescriptionErrorStatus.hasDescriptionError ||
-        activityDescriptionErrorStatus.hasStartEndMonthError
-      ) {
-        canPass = false;
-      }
-    });
-
-    setActivityCertificateProgress({
-      ...activityCertificateProgress,
-      secondNoError: canPass,
-    });
-  }, [secondErrorStatus]);
+  const { fields, append, replace } = useFieldArray<
+    ActivityCertificateInfo,
+    "histories"
+  >({
+    control,
+    name: "histories",
+  });
 
   const [draggingActivityDescription, setDraggingActivityDescription] =
-    useState<ActivityDescription | null>(null);
+    useState<ActivityHistory | null>(null);
+
+  const activityHistories = watch("histories");
 
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
-    activityDescription: ActivityDescription,
+    activityDescription: ActivityHistory,
   ) => {
     setDraggingActivityDescription(activityDescription);
     e.dataTransfer.setData("text/plain", "");
@@ -135,17 +118,18 @@ const ActivityCertificateInfoSecondFrame: React.FC<
 
   const handleDrop = (
     e: React.DragEvent<HTMLDivElement>,
-    activityDescription: ActivityDescription,
+    activityDescription: ActivityHistory,
   ) => {
     if (!draggingActivityDescription) return;
 
-    const currentIndex = activityCertificate.detail.indexOf(
-      draggingActivityDescription,
+    const currentIndex = fields.findIndex(
+      field => field.key === draggingActivityDescription.key,
     );
-    const targetIndex = activityCertificate.detail.indexOf(activityDescription);
+    const targetIndex = fields.findIndex(
+      field => field.key === activityDescription.key,
+    );
 
-    const tempActivityDescriptions: Array<ActivityDescription> =
-      activityCertificate.detail.slice();
+    const tempActivityDescriptions: Array<ActivityHistory> = fields.slice();
     if (currentIndex !== -1 && targetIndex !== -1) {
       tempActivityDescriptions.splice(currentIndex, 1);
       tempActivityDescriptions.splice(
@@ -154,214 +138,162 @@ const ActivityCertificateInfoSecondFrame: React.FC<
         draggingActivityDescription,
       );
 
-      setActivityCertificate({
-        ...activityCertificate,
-        detail: tempActivityDescriptions,
-      });
+      replace(tempActivityDescriptions);
     }
   };
 
   const handleAddActivityDescription = () => {
-    const maxKey = Math.max(
-      ...activityCertificate.detail.map(({ key }) => key),
-    );
-    if (activityCertificate.detail.length < 5) {
-      setActivityCertificate({
-        ...activityCertificate,
-        detail: [
-          ...activityCertificate.detail,
-          {
-            key: maxKey + 1,
-            startMonth: "",
-            endMonth: "",
-            description: "",
-          },
-        ],
+    const maxKey = Math.max(...fields.map(({ key }) => key));
+
+    if (fields.length === 0) {
+      append({
+        key: 1,
+        startMonth: "",
+        endMonth: "",
+        description: "",
       });
-      setSecondErrorStatus([
-        ...secondErrorStatus,
-        {
-          key: maxKey + 1,
-          hasStartEndMonthError: false,
-          hasDescriptionError: false,
-        },
-      ]);
+    } else if (fields.length < 5) {
+      append({
+        key: maxKey + 1,
+        startMonth: "",
+        endMonth: "",
+        description: "",
+      });
     }
   };
 
   const handleRemoveActivityDescription = (activityDescriptionKey: number) => {
-    if (activityCertificate.detail.length > 1) {
-      setActivityCertificate({
-        ...activityCertificate,
-        detail: activityCertificate.detail.filter(
+    if (fields.length > 1) {
+      replace([
+        ...fields.filter(
           activityDescription =>
             activityDescription.key !== activityDescriptionKey,
         ),
-      });
-      setSecondErrorStatus(
-        secondErrorStatus.filter(
-          activityDescriptionErrorStatus =>
-            activityDescriptionErrorStatus.key !== activityDescriptionKey,
-        ),
-      );
+      ]);
     }
   };
 
   const handleActivityDescriptionChange = (key: number, newValue: string) => {
-    const tempActivityDescriptions = activityCertificate.detail.map(
-      tempActivityDescription => {
-        if (tempActivityDescription.key === key) {
-          return {
-            ...tempActivityDescription,
-            description: newValue,
-          };
-        }
-        return tempActivityDescription;
-      },
-    );
-
-    setActivityCertificate({
-      ...activityCertificate,
-      detail: tempActivityDescriptions,
+    const tempActivityDescriptions = fields.map(tempActivityDescription => {
+      if (tempActivityDescription.key === key) {
+        return {
+          ...tempActivityDescription,
+          description: newValue,
+        };
+      }
+      return tempActivityDescription;
     });
+
+    replace(tempActivityDescriptions);
   };
 
   const handleActivityStartEndMonthChange = (key: number, newValue: string) => {
-    const tempActivityDescriptions = activityCertificate.detail.map(
-      tempActivityDescription => {
-        if (tempActivityDescription.key === key) {
-          return {
-            ...tempActivityDescription,
-            startMonth: newValue.split("|")[0],
-            endMonth: newValue.split("|")[1],
-          };
-        }
-        return tempActivityDescription;
-      },
-    );
-
-    setActivityCertificate({
-      ...activityCertificate,
-      detail: tempActivityDescriptions,
-    });
-  };
-
-  const handleError = (
-    key: number,
-    inputType: "hasStartEndMonthError" | "hasDescriptionError",
-    hasError: boolean,
-  ) => {
-    const tempErrorStatus = secondErrorStatus.map(tempRowErrorStatus => {
-      if (tempRowErrorStatus.key === key) {
+    const tempActivityDescriptions = fields.map(tempActivityDescription => {
+      if (tempActivityDescription.key === key) {
         return {
-          ...tempRowErrorStatus,
-          [inputType]: hasError,
+          ...tempActivityDescription,
+          startMonth: newValue.split("|")[0],
+          endMonth: newValue.split("|")[1],
         };
       }
-      return tempRowErrorStatus;
+      return tempActivityDescription;
     });
 
-    if (JSON.stringify(secondErrorStatus) !== JSON.stringify(tempErrorStatus)) {
-      setSecondErrorStatus(tempErrorStatus);
-    }
+    replace(tempActivityDescriptions);
   };
 
+  // useEffect(() => {
+  //   setValue("histories", histories);
+  // }, [histories, setValue]);
+
   return (
-    <ActivityCertificateSecondFrameInner>
-      <Info text="활동 내역 최대 5개까지 입력 가능, 날짜 포함 => 워딩은 병찬이나 동연에서 고쳐주겟징~~" />
-      <Card outline gap={20}>
-        {activityCertificate.detail.map(activityDescription => (
-          <ActivityCertificateRow
-            key={activityDescription.key}
-            draggable="true"
-            onDragStart={e => handleDragStart(e, activityDescription)}
-            onDragEnd={handleDragEnd}
-            onDragOver={e => handleDragOver(e)}
-            onDrop={e => handleDrop(e, activityDescription)}
-          >
-            <IconOuterFrameInner>
-              <IconInnerFrameInner>
-                <Icon type="menu" size={16} />
-              </IconInnerFrameInner>
-            </IconOuterFrameInner>
-
-            <InputFrameInner>
-              <DescriptionInputFrameInner>
-                <DateRangeInput
-                  setErrorStatus={e =>
-                    handleError(
-                      activityDescription.key,
-                      "hasStartEndMonthError",
-                      e,
-                    )
-                  }
-                  placeholder="20XX.XX"
-                  limitStartValue={activityCertificate.startMonth}
-                  limitEndValue={activityCertificate.endMonth}
-                  startValue={activityDescription.startMonth}
-                  endValue={activityDescription.endMonth}
-                  onChange={e =>
-                    handleActivityStartEndMonthChange(
-                      activityDescription.key,
-                      e,
-                    )
-                  }
-                />
-                <TextInput
-                  setErrorStatus={e =>
-                    handleError(
-                      activityDescription.key,
-                      "hasDescriptionError",
-                      e,
-                    )
-                  }
-                  style={
-                    secondErrorStatus.filter(
-                      activityDescriptionErrorStatus =>
-                        activityDescriptionErrorStatus.key ===
-                        activityDescription.key,
-                    )[0] &&
-                    secondErrorStatus.filter(
-                      activityDescriptionErrorStatus =>
-                        activityDescriptionErrorStatus.key ===
-                        activityDescription.key,
-                    )[0].hasStartEndMonthError
-                      ? { marginBottom: "20px" }
-                      : {}
-                  }
-                  placeholder="활동 내역을 작성해주세요"
-                  value={activityDescription.description}
-                  onChange={e =>
-                    handleActivityDescriptionChange(
-                      activityDescription.key,
-                      e.target.value,
-                    )
-                  }
-                />
-              </DescriptionInputFrameInner>
-            </InputFrameInner>
-
-            <IconOuterFrameInner
-              onClick={_e =>
-                handleRemoveActivityDescription(activityDescription.key)
-              }
+    <>
+      <ActivityCertificateSecondFrameInner>
+        <Info text="활동 내역 최대 5개까지 입력 가능, 날짜 포함 => 워딩은 병찬이나 동연에서 고쳐주겟징~~" />
+        <Card outline gap={20}>
+          {fields.map((field, index) => (
+            <ActivityCertificateRow
+              key={field.key}
+              draggable="true"
+              onDragStart={e => handleDragStart(e, field)}
+              onDragEnd={handleDragEnd}
+              onDragOver={e => handleDragOver(e)}
+              onDrop={e => handleDrop(e, field)}
             >
-              <IconInnerFrameInner>
-                <Icon type="delete" size={16} />
-              </IconInnerFrameInner>
-            </IconOuterFrameInner>
-          </ActivityCertificateRow>
-        ))}
-        <IconButton
-          type={activityCertificate.detail.length < 5 ? "default" : "disabled"}
-          onClick={handleAddActivityDescription}
-          icon="add"
+              <IconOuterFrameInner>
+                <IconInnerFrameInner>
+                  <Icon type="menu" size={16} />
+                </IconInnerFrameInner>
+              </IconOuterFrameInner>
+
+              <InputFrameInner>
+                <DescriptionInputFrameInner>
+                  {/* // TODO. DateInput 수정 */}
+                  <DateRangeInput
+                    placeholder="20XX.XX"
+                    limitStartValue="2023.02"
+                    limitEndValue="2024.04"
+                    startValue={field.startMonth}
+                    endValue={field.endMonth}
+                    onChange={e =>
+                      handleActivityStartEndMonthChange(field.key, e)
+                    }
+                  />
+                  <FormController
+                    name={`histories.${index}.description`}
+                    control={control}
+                    required
+                    renderItem={props => (
+                      <TextInput
+                        {...props}
+                        placeholder="활동 내역을 작성해주세요"
+                        value={field.description}
+                        onChange={e =>
+                          handleActivityDescriptionChange(
+                            field.key,
+                            e.target.value,
+                          )
+                        }
+                      />
+                    )}
+                  />
+                </DescriptionInputFrameInner>
+              </InputFrameInner>
+
+              <IconOuterFrameInner
+                onClick={_e => handleRemoveActivityDescription(field.key)}
+              >
+                <IconInnerFrameInner>
+                  <Icon type="delete" size={16} />
+                </IconInnerFrameInner>
+              </IconOuterFrameInner>
+            </ActivityCertificateRow>
+          ))}
+          <IconButton
+            type={activityHistories.length < 5 ? "default" : "disabled"}
+            onClick={handleAddActivityDescription}
+            icon="add"
+          >
+            활동 내역 추가
+          </IconButton>
+        </Card>
+      </ActivityCertificateSecondFrameInner>
+      <StyledBottom>
+        <Button onClick={onPrev}>이전</Button>
+        <Button
+          onClick={onNext}
+          type={
+            activityHistories.length >= 1 &&
+            activityHistories.length <= 5 &&
+            isValid
+              ? "default"
+              : "disabled"
+          }
         >
-          활동 내역 추가
-        </IconButton>
-      </Card>
-    </ActivityCertificateSecondFrameInner>
+          다음
+        </Button>
+      </StyledBottom>
+    </>
   );
 };
-
 export default ActivityCertificateInfoSecondFrame;

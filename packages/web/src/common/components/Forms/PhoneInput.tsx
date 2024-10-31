@@ -12,7 +12,7 @@ interface PhoneInputProps extends Omit<TextInputProps, "onChange"> {
 const PhoneInput: React.FC<PhoneInputProps> = ({
   label = "",
   value = "",
-  onChange = () => {},
+  onChange,
   ...props
 }) => {
   const [error, setError] = useState("");
