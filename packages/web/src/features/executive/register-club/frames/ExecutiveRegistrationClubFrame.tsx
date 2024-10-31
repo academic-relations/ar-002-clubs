@@ -56,19 +56,18 @@ const TableWithPaginationWrapper = styled.div`
 export const ExecutiveRegistrationClubFrame = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
+  const [searchText, setSearchText] = useState<string>("");
 
   const { data, isLoading, isError } = useGetRegisterClub({
     pageOffset: currentPage,
     itemCount: limit,
   });
 
-  const [searchText, setSearchText] = useState<string>("");
-
   const [categories, setCategories] = useState<CategoryProps[]>([
     {
       name: "등록 구분",
       content: ["재등록", "신규 등록", "가등록"],
-      selectedContent: ["재등록", "신규 등록", "가등록"], // chacha: 가동아리 신규 / 가동아리 재등록 구분해야 하나요?
+      selectedContent: ["재등록", "신규 등록", "가등록"], // chacha: 가동아리 신규등록 / 가동아리 재등록 태그로 구분해야 하나요?
     },
     {
       name: "분과",
@@ -175,7 +174,7 @@ export const ExecutiveRegistrationClubFrame = () => {
     ]);
   }, [categories]);
 
-  const filteredClubsWithSearch = useMemo(() => {
+  const filterClubsWithSearch = useMemo(() => {
     const filteredRowsWithSearch = data?.items.filter(
       item =>
         (item.newClubNameKr.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -198,7 +197,7 @@ export const ExecutiveRegistrationClubFrame = () => {
     };
   }, [searchText, convertedCategories, currentPage, data]);
 
-  const filteredClubsWithoutSearch = useMemo(() => {
+  const filterClubsWithoutSearch = useMemo(() => {
     const filteredRowsWithoutSearch = data?.items.filter(
       item =>
         convertedCategories[0].selectedContent.includes(
@@ -218,7 +217,7 @@ export const ExecutiveRegistrationClubFrame = () => {
   }, [convertedCategories, currentPage, data]);
 
   const filteredClubs =
-    searchText === "" ? filteredClubsWithoutSearch : filteredClubsWithSearch;
+    searchText === "" ? filterClubsWithoutSearch : filterClubsWithSearch;
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -244,7 +243,7 @@ export const ExecutiveRegistrationClubFrame = () => {
                 {
                   name: "등록 구분",
                   content: ["재등록", "신규 등록", "가등록"],
-                  selectedContent: ["재등록", "신규 등록", "가등록"], // chacha: 가동아리 신규 / 가동아리 재등록 구분해야 하나요?
+                  selectedContent: ["재등록", "신규 등록", "가등록"],
                 },
                 {
                   name: "분과",
