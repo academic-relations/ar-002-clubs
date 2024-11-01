@@ -38,6 +38,7 @@ const ActivityCertificateMainFrame: React.FC = () => {
       applicantName: "이지윤",
       applicantDepartment: "전산학부",
       applicantStudentNumber: "20200510",
+      applicantPhoneNumber: "",
       histories: [],
     },
   });

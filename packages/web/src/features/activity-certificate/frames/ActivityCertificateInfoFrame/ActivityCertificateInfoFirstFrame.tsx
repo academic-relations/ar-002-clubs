@@ -34,6 +34,14 @@ const ActivityCertificateInfoFirstFrame: React.FC<
     { label: "안되는동아리", value: "3", selectable: false },
   ];
 
+  const formatPhoneNumber = (value: string) => {
+    const numericValue = value.replace(/[^0-9]/g, "");
+    if (numericValue.length <= 3) return numericValue;
+    if (numericValue.length <= 7)
+      return `${numericValue.slice(0, 3)}-${numericValue.slice(3)}`;
+    return `${numericValue.slice(0, 3)}-${numericValue.slice(3, 7)}-${numericValue.slice(7, 11)}`;
+  };
+
   return (
     <>
       <Card outline gap={40}>
@@ -99,18 +107,21 @@ const ActivityCertificateInfoFirstFrame: React.FC<
             <TextInput {...props} label="신청자 학번" placeholder="" disabled />
           )}
         />
-        {/* TODO. 전화번호 validation 수정 (피그마 코멘트) */}
         <FormController
           name="applicantPhoneNumber"
           control={control}
-          pattern={/^(\d{3}-\d{4}-\d{4}|[\d-]*)$/}
-          minLength={11}
+          minLength={13}
           required
-          renderItem={props => (
+          renderItem={({ value, onChange, errorMessage }) => (
             <TextInput
-              {...props}
               label="신청자 전화번호"
               placeholder="010-XXXX-XXXX"
+              value={formatPhoneNumber(value)}
+              onChange={e => {
+                const formattedValue = formatPhoneNumber(e.target.value);
+                onChange(formattedValue);
+              }}
+              errorMessage={errorMessage}
             />
           )}
         />
