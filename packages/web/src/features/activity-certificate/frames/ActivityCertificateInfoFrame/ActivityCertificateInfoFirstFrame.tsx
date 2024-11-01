@@ -56,8 +56,11 @@ const ActivityCertificateInfoFirstFrame: React.FC<
         <FormController
           name="issuedNumber"
           control={control}
+          rules={{
+            min: { value: 1, message: "1 이상이어야 합니다" },
+          }}
           required
-          renderItem={({ value, onChange }) => (
+          renderItem={({ value, onChange, errorMessage }) => (
             <TextInput
               label="발급 매수"
               placeholder="X개"
@@ -69,6 +72,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
                 );
                 onChange(+extractedValue);
               }}
+              errorMessage={errorMessage}
             />
           )}
         />
