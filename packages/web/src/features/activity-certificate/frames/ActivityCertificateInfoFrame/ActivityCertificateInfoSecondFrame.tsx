@@ -6,12 +6,14 @@ import styled from "styled-components";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
-import DateRangeInput from "@sparcs-clubs/web/common/components/Forms/DateRangeInput";
+import DateInput from "@sparcs-clubs/web/common/components/Forms/DateInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Info from "@sparcs-clubs/web/common/components/Info";
 
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   ActivityCertificateInfo,
   ActivityHistory,
@@ -148,15 +150,11 @@ const ActivityCertificateInfoSecondFrame: React.FC<
     if (fields.length === 0) {
       append({
         key: 1,
-        startMonth: "",
-        endMonth: "",
         description: "",
       });
     } else if (fields.length < 5) {
       append({
         key: maxKey + 1,
-        startMonth: "",
-        endMonth: "",
         description: "",
       });
     }
@@ -187,25 +185,6 @@ const ActivityCertificateInfoSecondFrame: React.FC<
     replace(tempActivityDescriptions);
   };
 
-  const handleActivityStartEndMonthChange = (key: number, newValue: string) => {
-    const tempActivityDescriptions = fields.map(tempActivityDescription => {
-      if (tempActivityDescription.key === key) {
-        return {
-          ...tempActivityDescription,
-          startMonth: newValue.split("|")[0],
-          endMonth: newValue.split("|")[1],
-        };
-      }
-      return tempActivityDescription;
-    });
-
-    replace(tempActivityDescriptions);
-  };
-
-  // useEffect(() => {
-  //   setValue("histories", histories);
-  // }, [histories, setValue]);
-
   return (
     <>
       <ActivityCertificateSecondFrameInner>
@@ -228,17 +207,48 @@ const ActivityCertificateInfoSecondFrame: React.FC<
 
               <InputFrameInner>
                 <DescriptionInputFrameInner>
-                  {/* // TODO. DateInput 수정 */}
-                  <DateRangeInput
-                    placeholder="20XX.XX"
-                    limitStartValue="2023.02"
-                    limitEndValue="2024.04"
-                    startValue={field.startMonth}
-                    endValue={field.endMonth}
-                    onChange={e =>
-                      handleActivityStartEndMonthChange(field.key, e)
-                    }
-                  />
+                  {/* // TODO. DateInput validation 추가 */}
+                  <FlexWrapper
+                    direction="row"
+                    gap={12}
+                    style={{ alignItems: "center" }}
+                  >
+                    <FormController
+                      name={`histories.${index}.startMonth`}
+                      required
+                      control={control}
+                      renderItem={({ value, onChange, ...props }) => (
+                        <DateInput
+                          {...props}
+                          showMonthYearPicker
+                          selected={value}
+                          onChange={(data: Date | null) => {
+                            onChange(data);
+                          }}
+                          dateFormat="yyyy.MM"
+                        />
+                      )}
+                    />
+                    <Typography fs={16} lh={20}>
+                      ~
+                    </Typography>
+                    <FormController
+                      name={`histories.${index}.endMonth`}
+                      required
+                      control={control}
+                      renderItem={({ value, onChange, ...props }) => (
+                        <DateInput
+                          {...props}
+                          showMonthYearPicker
+                          selected={value}
+                          onChange={(data: Date | null) => {
+                            onChange(data);
+                          }}
+                          dateFormat="yyyy.MM"
+                        />
+                      )}
+                    />
+                  </FlexWrapper>
                   <FormController
                     name={`histories.${index}.description`}
                     control={control}

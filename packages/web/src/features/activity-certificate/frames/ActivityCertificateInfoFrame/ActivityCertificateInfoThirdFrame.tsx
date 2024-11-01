@@ -13,6 +13,8 @@ import { ActivityCertificateInfo } from "@sparcs-clubs/web/features/activity-cer
 
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
 
+import { formatMonth } from "@sparcs-clubs/web/utils/Date/formatDate";
+
 import { StyledBottom } from "../_atomic/StyledBottom";
 
 interface ActivityCertificateInfoThirdFrameProps {
@@ -169,10 +171,8 @@ const ActivityCertificateInfoThirdFrame: React.FC<
             <ActivityDescriptionSummaryFrameInner>
               {getValues().histories.map(activityDescription => (
                 <ActivityDescriptionSummaryRow key={activityDescription.key}>
-                  {activityDescription.startMonth.split(".")[0] ===
-                    activityDescription.endMonth.split(".")[0] &&
-                  parseInt(activityDescription.startMonth.split(".")[1]) ===
-                    parseInt(activityDescription.endMonth.split(".")[1]) ? (
+                  {activityDescription.startMonth?.getMonth() ===
+                  activityDescription.endMonth?.getMonth() ? (
                     <Typography
                       key={`${activityDescription.key}_start`}
                       fs={16}
@@ -184,7 +184,7 @@ const ActivityCertificateInfoThirdFrame: React.FC<
                         textAlign: "center",
                       }}
                     >
-                      {`${activityDescription.startMonth.split(".")[0]}년 ${parseInt(activityDescription.startMonth.split(".")[1])}월`}
+                      {formatMonth(activityDescription.startMonth!)}
                     </Typography>
                   ) : (
                     <Typography
@@ -198,7 +198,8 @@ const ActivityCertificateInfoThirdFrame: React.FC<
                         textAlign: "center",
                       }}
                     >
-                      {`${activityDescription.startMonth.split(".")[0]}년 ${parseInt(activityDescription.startMonth.split(".")[1])}월 ~ ${activityDescription.endMonth.split(".")[0]}년 ${parseInt(activityDescription.endMonth.split(".")[1])}월`}
+                      {formatMonth(activityDescription.startMonth!)} ~
+                      {formatMonth(activityDescription.endMonth!)}
                     </Typography>
                   )}
 
