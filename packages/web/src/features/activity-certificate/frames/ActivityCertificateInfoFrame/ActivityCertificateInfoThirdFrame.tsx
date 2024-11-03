@@ -169,54 +169,57 @@ const ActivityCertificateInfoThirdFrame: React.FC<
               {`  •  활동 내역`}
             </Typography>
             <ActivityDescriptionSummaryFrameInner>
-              {getValues().histories.map(activityDescription => (
-                <ActivityDescriptionSummaryRow key={activityDescription.key}>
-                  {activityDescription.startMonth?.getMonth() ===
-                  activityDescription.endMonth?.getMonth() ? (
-                    <Typography
-                      key={`${activityDescription.key}_start`}
-                      fs={16}
-                      lh={20}
-                      fw="REGULAR"
-                      style={{
-                        whiteSpace: "pre-wrap",
-                        width: "200px",
-                        textAlign: "center",
-                      }}
-                    >
-                      {formatMonth(activityDescription.startMonth!)}
-                    </Typography>
-                  ) : (
-                    <Typography
-                      key={`${activityDescription.key}_end`}
-                      fs={16}
-                      lh={20}
-                      fw="REGULAR"
-                      style={{
-                        whiteSpace: "pre-wrap",
-                        width: "200px",
-                        textAlign: "center",
-                      }}
-                    >
-                      {formatMonth(activityDescription.startMonth!)} ~
-                      {formatMonth(activityDescription.endMonth!)}
-                    </Typography>
-                  )}
+              {getValues().histories.map(activityDescription => {
+                const startMonth = activityDescription.dateRange?.[0];
+                const endMonth = activityDescription.dateRange?.[1];
 
-                  <Typography
-                    key={`${activityDescription.key}_description`}
-                    fs={16}
-                    lh={20}
-                    fw="REGULAR"
-                    style={{
-                      whiteSpace: "pre-wrap",
-                      flex: "1 1 0",
-                    }}
-                  >
-                    {activityDescription.description}
-                  </Typography>
-                </ActivityDescriptionSummaryRow>
-              ))}
+                return (
+                  <ActivityDescriptionSummaryRow key={activityDescription.key}>
+                    {startMonth?.getMonth() === endMonth?.getMonth() ? (
+                      <Typography
+                        key={`${activityDescription.key}_start`}
+                        fs={16}
+                        lh={20}
+                        fw="REGULAR"
+                        style={{
+                          whiteSpace: "pre-wrap",
+                          width: "200px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {formatMonth(startMonth!)}
+                      </Typography>
+                    ) : (
+                      <Typography
+                        key={`${activityDescription.key}_end`}
+                        fs={16}
+                        lh={20}
+                        fw="REGULAR"
+                        style={{
+                          whiteSpace: "pre-wrap",
+                          width: "200px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {formatMonth(startMonth!)} ~{formatMonth(endMonth!)}
+                      </Typography>
+                    )}
+
+                    <Typography
+                      key={`${activityDescription.key}_description`}
+                      fs={16}
+                      lh={20}
+                      fw="REGULAR"
+                      style={{
+                        whiteSpace: "pre-wrap",
+                        flex: "1 1 0",
+                      }}
+                    >
+                      {activityDescription.description}
+                    </Typography>
+                  </ActivityDescriptionSummaryRow>
+                );
+              })}
             </ActivityDescriptionSummaryFrameInner>
           </BasicInfoSummaryFrameInner>
         </Card>

@@ -15,8 +15,7 @@ export interface ActivityBasicInfo {
 
 export interface ActivityHistory {
   key: number;
-  startMonth?: Date;
-  endMonth?: Date;
+  dateRange: [Date | null, Date | null];
   description: string;
 }
 

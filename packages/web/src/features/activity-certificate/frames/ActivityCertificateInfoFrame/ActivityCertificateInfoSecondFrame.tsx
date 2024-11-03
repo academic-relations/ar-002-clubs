@@ -66,17 +66,8 @@ const IconInnerFrameInner = styled.div`
 
 const InputFrameInner = styled.div`
   flex: 1 1 0;
-  justify-content: center;
   align-items: flex-start;
   gap: 20px;
-  display: flex;
-`;
-
-const DescriptionInputFrameInner = styled.div`
-  width: 100%;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 12px;
   display: flex;
 `;
 
@@ -86,7 +77,7 @@ const ActivityCertificateInfoSecondFrame: React.FC<
   const {
     watch,
     control,
-    formState: { isValid },
+    formState: { isValid, errors },
   } = useFormContext<ActivityCertificateInfo>();
 
   const { fields, append, replace } = useFieldArray<
@@ -150,11 +141,13 @@ const ActivityCertificateInfoSecondFrame: React.FC<
     if (fields.length === 0) {
       append({
         key: 1,
+        dateRange: [null, null],
         description: "",
       });
     } else if (fields.length < 5) {
       append({
         key: maxKey + 1,
+        dateRange: [null, null],
         description: "",
       });
     }
@@ -171,83 +164,74 @@ const ActivityCertificateInfoSecondFrame: React.FC<
     }
   };
 
-  const handleActivityDescriptionChange = (key: number, newValue: string) => {
-    const tempActivityDescriptions = fields.map(tempActivityDescription => {
-      if (tempActivityDescription.key === key) {
-        return {
-          ...tempActivityDescription,
-          description: newValue,
-        };
-      }
-      return tempActivityDescription;
-    });
-
-    replace(tempActivityDescriptions);
-  };
-
   return (
     <>
       <ActivityCertificateSecondFrameInner>
         <Info text="활동 내역 최대 5개까지 입력 가능, 날짜 포함 => 워딩은 병찬이나 동연에서 고쳐주겟징~~" />
         <Card outline gap={20}>
-          {fields.map((field, index) => (
-            <ActivityCertificateRow
-              key={field.key}
-              draggable="true"
-              onDragStart={e => handleDragStart(e, field)}
-              onDragEnd={handleDragEnd}
-              onDragOver={e => handleDragOver(e)}
-              onDrop={e => handleDrop(e, field)}
-            >
-              <IconOuterFrameInner>
-                <IconInnerFrameInner>
-                  <Icon type="menu" size={16} />
-                </IconInnerFrameInner>
-              </IconOuterFrameInner>
+          {fields.map((field, index) => {
+            const errorMessage =
+              errors.histories?.[index]?.dateRange?.message ?? "";
 
-              <InputFrameInner>
-                <DescriptionInputFrameInner>
-                  {/* // TODO. DateInput validation 추가 */}
+            return (
+              <ActivityCertificateRow
+                key={field.key}
+                draggable="true"
+                onDragStart={e => handleDragStart(e, field)}
+                onDragEnd={handleDragEnd}
+                onDragOver={e => handleDragOver(e)}
+                onDrop={e => handleDrop(e, field)}
+              >
+                <IconOuterFrameInner>
+                  <IconInnerFrameInner>
+                    <Icon type="menu" size={16} />
+                  </IconInnerFrameInner>
+                </IconOuterFrameInner>
+                <InputFrameInner>
                   <FlexWrapper
-                    direction="row"
-                    gap={12}
-                    style={{ alignItems: "center" }}
+                    direction="column"
+                    gap={4}
+                    style={{ minWidth: 165 }}
                   >
                     <FormController
-                      name={`histories.${index}.startMonth`}
-                      required
+                      name={`histories.${index}.dateRange`}
                       control={control}
-                      renderItem={({ value, onChange, ...props }) => (
+                      rules={{
+                        validate: value =>
+                          value?.[1] != null || "끝 기간을 입력하지 않았습니다",
+                      }}
+                      renderItem={({ value, onChange }) => (
                         <DateInput
-                          {...props}
+                          showIcon={false}
+                          selectsRange
                           showMonthYearPicker
-                          selected={value}
-                          onChange={(data: Date | null) => {
-                            onChange(data);
+                          startDate={value?.[0] ?? undefined}
+                          endDate={value?.[1] ?? undefined}
+                          onChange={dates => {
+                            onChange(dates);
                           }}
+                          selectedDates={
+                            value
+                              ? [value[0], value[1]].filter(
+                                  (date): date is Date => date !== undefined,
+                                )
+                              : undefined
+                          }
+                          placeholderText="20XX.XX - 20XX.XX"
                           dateFormat="yyyy.MM"
                         />
                       )}
                     />
-                    <Typography fs={16} lh={20}>
-                      ~
-                    </Typography>
-                    <FormController
-                      name={`histories.${index}.endMonth`}
-                      required
-                      control={control}
-                      renderItem={({ value, onChange, ...props }) => (
-                        <DateInput
-                          {...props}
-                          showMonthYearPicker
-                          selected={value}
-                          onChange={(data: Date | null) => {
-                            onChange(data);
-                          }}
-                          dateFormat="yyyy.MM"
-                        />
-                      )}
-                    />
+                    {errorMessage.length > 0 && (
+                      <Typography
+                        fs={12}
+                        lh={16}
+                        color="RED.600"
+                        style={{ marginLeft: 2 }}
+                      >
+                        {errorMessage}
+                      </Typography>
+                    )}
                   </FlexWrapper>
                   <FormController
                     name={`histories.${index}.description`}
@@ -257,28 +241,21 @@ const ActivityCertificateInfoSecondFrame: React.FC<
                       <TextInput
                         {...props}
                         placeholder="활동 내역을 작성해주세요"
-                        value={field.description}
-                        onChange={e =>
-                          handleActivityDescriptionChange(
-                            field.key,
-                            e.target.value,
-                          )
-                        }
                       />
                     )}
                   />
-                </DescriptionInputFrameInner>
-              </InputFrameInner>
+                </InputFrameInner>
 
-              <IconOuterFrameInner
-                onClick={_e => handleRemoveActivityDescription(field.key)}
-              >
-                <IconInnerFrameInner>
-                  <Icon type="delete" size={16} />
-                </IconInnerFrameInner>
-              </IconOuterFrameInner>
-            </ActivityCertificateRow>
-          ))}
+                <IconOuterFrameInner
+                  onClick={_e => handleRemoveActivityDescription(field.key)}
+                >
+                  <IconInnerFrameInner>
+                    <Icon type="delete" size={16} />
+                  </IconInnerFrameInner>
+                </IconOuterFrameInner>
+              </ActivityCertificateRow>
+            );
+          })}
           <IconButton
             type={activityHistories.length < 5 ? "default" : "disabled"}
             onClick={handleAddActivityDescription}
