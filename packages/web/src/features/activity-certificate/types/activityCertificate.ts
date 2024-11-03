@@ -9,7 +9,7 @@ export interface ActivityBasicInfo {
   issuedNumber: number;
   applicantName: string;
   applicantDepartment: string;
-  applicantStudentNumber: string;
+  applicantStudentNumber: number;
   applicantPhoneNumber: string;
 }
 

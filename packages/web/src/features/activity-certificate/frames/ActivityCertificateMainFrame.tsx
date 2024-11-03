@@ -25,19 +25,12 @@ const ActivityCertificatePageMainFrameInner = styled.div`
 `;
 
 const ActivityCertificateMainFrame: React.FC = () => {
-  // const { data, isLoading, isError } = useGetUserClubs();
-  // console.log(data);
-
-  // TODO. 디폴트 정보 프로필에서 가져오기, 활동기간 api 연결
   const formCtx = useForm<ActivityCertificateInfo>({
     mode: "all",
     defaultValues: {
       isAgreed: false,
       issuedNumber: 1,
       activityDuration: "2021년 9월 ~ 2023년 6월, 2024년 3월 ~",
-      applicantName: "이지윤",
-      applicantDepartment: "전산학부",
-      applicantStudentNumber: "20200510",
       applicantPhoneNumber: "",
       histories: [],
     },

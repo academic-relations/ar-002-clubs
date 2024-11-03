@@ -12,6 +12,7 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
+import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 import { useGetUserClubs } from "@sparcs-clubs/web/features/activity-certificate/services/useGetUserClubs";
 import { ActivityBasicInfo } from "@sparcs-clubs/web/features/activity-certificate/types/activityCertificate";
 
@@ -30,7 +31,17 @@ const ActivityCertificateInfoFirstFrame: React.FC<
     formState: { isValid },
   } = useFormContext<ActivityBasicInfo>();
 
-  const { data: clubData, isLoading, isError } = useGetUserClubs();
+  const {
+    data: clubData,
+    isLoading: isClubLoading,
+    isError: isClubError,
+  } = useGetUserClubs();
+
+  const {
+    data: profile,
+    isLoading: isProfileLoading,
+    isError: isProfileError,
+  } = useGetUserProfile();
 
   const clubList: SelectItem<number>[] =
     clubData?.clubs.map(club => ({
@@ -47,7 +58,10 @@ const ActivityCertificateInfoFirstFrame: React.FC<
   };
 
   return (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
+    <AsyncBoundary
+      isLoading={isClubLoading || isProfileLoading}
+      isError={isClubError || isProfileError}
+    >
       <Card outline gap={40}>
         <FormController
           name="clubId"
@@ -64,7 +78,6 @@ const ActivityCertificateInfoFirstFrame: React.FC<
             <TextInput {...props} label="활동 기간" placeholder="" disabled />
           )}
         />
-        {/* // TODO. 0일 경우 에러 */}
         <FormController
           name="issuedNumber"
           control={control}
@@ -93,6 +106,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
         <FormController
           name="applicantName"
           control={control}
+          defaultValue={profile?.name}
           renderItem={props => (
             <TextInput {...props} label="신청자 이름" placeholder="" disabled />
           )}
@@ -100,6 +114,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
         <FormController
           name="applicantDepartment"
           control={control}
+          defaultValue={profile?.department}
           renderItem={props => (
             <TextInput {...props} label="신청자 학과" placeholder="" disabled />
           )}
@@ -107,6 +122,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
         <FormController
           name="applicantStudentNumber"
           control={control}
+          defaultValue={profile?.studentNumber}
           renderItem={props => (
             <TextInput {...props} label="신청자 학번" placeholder="" disabled />
           )}
