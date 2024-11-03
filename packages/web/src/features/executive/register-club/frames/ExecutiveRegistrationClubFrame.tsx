@@ -2,6 +2,11 @@
 
 import React, { useMemo, useState } from "react";
 
+import {
+  getDisplayName as getDisplayNameRegistration,
+  getEnum as getEnumRegistration,
+} from "@sparcs-clubs/interface/common/enum/registration.enum";
+
 import { hangulIncludes } from "es-hangul";
 
 import styled from "styled-components";
@@ -14,7 +19,15 @@ import MultiFilter from "@sparcs-clubs/web/common/components/MultiFilter/Index";
 import { CategoryProps } from "@sparcs-clubs/web/common/components/MultiFilter/types/FilterCategories";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
+import {
+  DivisionTypeTagList,
+  RegistrationTypeTagList,
+} from "@sparcs-clubs/web/constants/tableTagList";
 import { useGetRegisterClub } from "@sparcs-clubs/web/features/executive/register-club/services/useGetRegisterClub";
+import {
+  getDisplayName as getDisplayNameDivision,
+  getEnum as getEnumDivision,
+} from "@sparcs-clubs/web/types/divisions.types";
 
 interface ConvertedSelectedCategories {
   name: string;
@@ -53,6 +66,14 @@ const TableWithPaginationWrapper = styled.div`
   align-self: stretch;
 `;
 
+const RegistrationTypeList = Object.keys(RegistrationTypeTagList).map(key =>
+  parseInt(key),
+);
+
+const DivisionTypeList = Object.keys(DivisionTypeTagList).map(key =>
+  parseInt(key),
+);
+
 export const ExecutiveRegistrationClubFrame = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
@@ -66,39 +87,23 @@ export const ExecutiveRegistrationClubFrame = () => {
   const [categories, setCategories] = useState<CategoryProps[]>([
     {
       name: "등록 구분",
-      content: ["재등록", "신규 등록", "가등록"],
-      selectedContent: ["재등록", "신규 등록", "가등록"], // chacha: 가동아리 신규등록 / 가동아리 재등록 태그로 구분해야 하나요?
+      content: Array.from(
+        new Set(
+          RegistrationTypeList.map(item => getDisplayNameRegistration(item)),
+        ),
+      ),
+      selectedContent: Array.from(
+        new Set(
+          RegistrationTypeList.map(item => getDisplayNameRegistration(item)),
+        ),
+      ),
     },
     {
       name: "분과",
-      content: [
-        "생활문화",
-        "연행예술",
-        "전시창작",
-        "밴드음악",
-        "보컬음악",
-        "연주음악",
-        "사회",
-        "종교",
-        "구기체육",
-        "생활체육",
-        "이공학술",
-        "인문학술",
-      ],
-      selectedContent: [
-        "생활문화",
-        "연행예술",
-        "전시창작",
-        "밴드음악",
-        "보컬음악",
-        "연주음악",
-        "사회",
-        "종교",
-        "구기체육",
-        "생활체육",
-        "이공학술",
-        "인문학술",
-      ],
+      content: DivisionTypeList.map(item => getDisplayNameDivision(item)),
+      selectedContent: DivisionTypeList.map(item =>
+        getDisplayNameDivision(item),
+      ),
     },
   ]);
 
@@ -107,60 +112,22 @@ export const ExecutiveRegistrationClubFrame = () => {
   >([
     {
       name: "등록 구분",
-      selectedContent: [1, 2, 3],
+      selectedContent: RegistrationTypeList,
     },
     {
       name: "분과",
-      selectedContent: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      selectedContent: DivisionTypeList,
     },
   ]);
 
   useMemo(() => {
     const convertedRegistrationType = categories[0].selectedContent.flatMap(
-      item => {
-        switch (item) {
-          case "재등록":
-            return [1];
-          case "신규 등록":
-            return [2];
-          case "가등록":
-            return [3, 4];
-          default:
-            return 0;
-        }
-      },
+      item => getEnumRegistration(item),
     );
 
-    const convertedDivisionId = categories[1].selectedContent.map(item => {
-      switch (item) {
-        case "생활문화":
-          return 1;
-        case "연행예술":
-          return 2;
-        case "전시창작":
-          return 3;
-        case "밴드음악":
-          return 4;
-        case "보컬음악":
-          return 5;
-        case "연주음악":
-          return 6;
-        case "사회":
-          return 7;
-        case "종교":
-          return 8;
-        case "구기체육":
-          return 9;
-        case "생활체육":
-          return 10;
-        case "이공학술":
-          return 11;
-        case "인문학술":
-          return 12;
-        default:
-          return 0;
-      }
-    });
+    const convertedDivisionId = categories[1].selectedContent.map(item =>
+      getEnumDivision(item),
+    );
 
     setConvertedCategories([
       {
@@ -242,39 +209,29 @@ export const ExecutiveRegistrationClubFrame = () => {
               setCategories([
                 {
                   name: "등록 구분",
-                  content: ["재등록", "신규 등록", "가등록"],
-                  selectedContent: ["재등록", "신규 등록", "가등록"],
+                  content: Array.from(
+                    new Set(
+                      RegistrationTypeList.map(item =>
+                        getDisplayNameRegistration(item),
+                      ),
+                    ),
+                  ),
+                  selectedContent: Array.from(
+                    new Set(
+                      RegistrationTypeList.map(item =>
+                        getDisplayNameRegistration(item),
+                      ),
+                    ),
+                  ),
                 },
                 {
                   name: "분과",
-                  content: [
-                    "생활문화",
-                    "연행예술",
-                    "전시창작",
-                    "밴드음악",
-                    "보컬음악",
-                    "연주음악",
-                    "사회",
-                    "종교",
-                    "구기체육",
-                    "생활체육",
-                    "이공학술",
-                    "인문학술",
-                  ],
-                  selectedContent: [
-                    "생활문화",
-                    "연행예술",
-                    "전시창작",
-                    "밴드음악",
-                    "보컬음악",
-                    "연주음악",
-                    "사회",
-                    "종교",
-                    "구기체육",
-                    "생활체육",
-                    "이공학술",
-                    "인문학술",
-                  ],
+                  content: DivisionTypeList.map(item =>
+                    getDisplayNameDivision(item),
+                  ),
+                  selectedContent: DivisionTypeList.map(item =>
+                    getDisplayNameDivision(item),
+                  ),
                 },
               ]);
             }}
