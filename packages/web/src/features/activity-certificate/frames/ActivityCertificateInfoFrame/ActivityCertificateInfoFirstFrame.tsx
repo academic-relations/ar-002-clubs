@@ -1,8 +1,10 @@
 import React from "react";
 
 import { Divider } from "@mui/material";
+
 import { useFormContext } from "react-hook-form";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
@@ -10,6 +12,7 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
+import { useGetUserClubs } from "@sparcs-clubs/web/features/activity-certificate/services/useGetUserClubs";
 import { ActivityBasicInfo } from "@sparcs-clubs/web/features/activity-certificate/types/activityCertificate";
 
 import { StyledBottom } from "../_atomic/StyledBottom";
@@ -27,12 +30,13 @@ const ActivityCertificateInfoFirstFrame: React.FC<
     formState: { isValid },
   } = useFormContext<ActivityBasicInfo>();
 
-  // TODO: api 연결
-  const mockClubList: SelectItem<string>[] = [
-    { label: "동아리", value: "1", selectable: true },
-    { label: "또다른동아리", value: "2", selectable: true },
-    { label: "안되는동아리", value: "3", selectable: false },
-  ];
+  const { data: clubData, isLoading, isError } = useGetUserClubs();
+
+  const clubList: SelectItem<number>[] =
+    clubData?.clubs.map(club => ({
+      label: club.name_kr,
+      value: club.id,
+    })) ?? [];
 
   const formatPhoneNumber = (value: string) => {
     const numericValue = value.replace(/[^0-9]/g, "");
@@ -43,14 +47,14 @@ const ActivityCertificateInfoFirstFrame: React.FC<
   };
 
   return (
-    <>
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
       <Card outline gap={40}>
         <FormController
           name="clubId"
           control={control}
           required
           renderItem={props => (
-            <Select {...props} label="동아리 이름" items={mockClubList} />
+            <Select {...props} label="동아리 이름" items={clubList} />
           )}
         />
         <FormController
@@ -132,7 +136,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
           다음
         </Button>
       </StyledBottom>
-    </>
+    </AsyncBoundary>
   );
 };
 
