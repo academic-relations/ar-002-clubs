@@ -193,7 +193,7 @@ export default class ClubRepository {
       id: number;
       name_kr: string;
       name_en: string;
-      dateRange: { startMonth: Date; endMonth: Date }[];
+      dateRange: { startMonth: Date; endMonth: Date | null }[];
     }[];
   }> {
     const clubActivities = await this.db
