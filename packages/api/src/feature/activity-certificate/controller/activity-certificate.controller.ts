@@ -48,7 +48,7 @@ export class ActivityCertificateController {
   ): Promise<ApiAcf002ResponseOk> {
     const clubHistory =
       await this.activityCertificateService.getStudentActivityCertificatesClubHistory(
-        { studentId: user.id },
+        { studentId: user.studentId },
       );
     return clubHistory;
   }
