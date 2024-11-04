@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
@@ -7,8 +8,10 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
+import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorModal";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import usePostActivityCertificate from "@sparcs-clubs/web/features/activity-certificate/services/usePostActivityCertificate";
 import { ActivityCertificateInfo } from "@sparcs-clubs/web/features/activity-certificate/types/activityCertificate";
 
 import { formatActivityDuration } from "@sparcs-clubs/web/features/activity-certificate/utils/formatActivityDuration";
@@ -62,6 +65,8 @@ const ActivityDescriptionSummaryRow = styled.div`
 const ActivityCertificateInfoThirdFrame: React.FC<
   ActivityCertificateInfoThirdFrameProps
 > = ({ onPrev }) => {
+  const router = useRouter();
+
   const {
     getValues,
     formState: { isValid },
@@ -72,6 +77,8 @@ const ActivityCertificateInfoThirdFrame: React.FC<
     isLoading,
     isError,
   } = useGetClubDetail(getValues().clubId.toString());
+
+  const { mutate, isPending } = usePostActivityCertificate();
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
@@ -229,9 +236,29 @@ const ActivityCertificateInfoThirdFrame: React.FC<
         <Button onClick={onPrev}>이전</Button>
         <Button
           onClick={() => {
-            // TODO. 신청 api 호출
+            mutate(
+              {
+                body: {
+                  clubId: getValues().clubId,
+                  issuedNumber: getValues().issuedNumber,
+                  studentPhoneNumber:
+                    getValues().applicantPhoneNumber.toString(),
+                  items: getValues().histories.map(value => ({
+                    startMonth: value.dateRange[0]!,
+                    endMonth: value.dateRange[1]!,
+                    detail: value.description,
+                  })),
+                },
+              },
+              {
+                onSuccess: () => {
+                  router.replace("/");
+                },
+                onError: () => errorHandler("생성에 실패하였습니다"),
+              },
+            );
           }}
-          type={isValid ? "default" : "disabled"}
+          type={isValid && !isPending ? "default" : "disabled"}
         >
           신청
         </Button>

@@ -256,6 +256,7 @@ const ActivityCertificateInfoSecondFrame: React.FC<
                     name={`histories.${index}.description`}
                     control={control}
                     required
+                    maxLength={100}
                     renderItem={props => (
                       <TextInput
                         {...props}
