@@ -11,6 +11,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { ActivityCertificateInfo } from "@sparcs-clubs/web/features/activity-certificate/types/activityCertificate";
 
+import { formatActivityDuration } from "@sparcs-clubs/web/features/activity-certificate/utils/formatActivityDuration";
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
 
 import { formatMonth } from "@sparcs-clubs/web/utils/Date/formatDate";
@@ -147,8 +148,7 @@ const ActivityCertificateInfoThirdFrame: React.FC<
               fw="REGULAR"
               style={{ whiteSpace: "pre-wrap" }}
             >
-              {`  •  활동 기간: ${getValues().activityDuration}`}
-              {/* TODO - DB 형식에 의거해서 startMonth endMonth 형식으로 있다면 포맷하고 string이라면 그냥 넣기 */}
+              {`  •  활동 기간: ${formatActivityDuration(getValues().activityDuration)}`}
             </Typography>
             <Typography
               key="orderInfoIssueCount"

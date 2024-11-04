@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { useFieldArray, useFormContext } from "react-hook-form";
 import styled from "styled-components";
@@ -92,6 +92,7 @@ const ActivityCertificateInfoSecondFrame: React.FC<
     useState<ActivityHistory | null>(null);
 
   const activityHistories = watch("histories");
+  const activityDuration = watch("activityDuration");
 
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
@@ -164,6 +165,16 @@ const ActivityCertificateInfoSecondFrame: React.FC<
     }
   };
 
+  const isValidDateRange = useCallback(
+    (targetRange: [Date, Date]) =>
+      activityDuration.some(
+        ({ startMonth, endMonth }) =>
+          targetRange[0] >= new Date(startMonth) &&
+          targetRange[1] <= (endMonth ? new Date(endMonth) : new Date()),
+      ),
+    [activityDuration],
+  );
+
   return (
     <>
       <ActivityCertificateSecondFrameInner>
@@ -197,8 +208,16 @@ const ActivityCertificateInfoSecondFrame: React.FC<
                       name={`histories.${index}.dateRange`}
                       control={control}
                       rules={{
-                        validate: value =>
-                          value?.[1] != null || "끝 기간을 입력하지 않았습니다",
+                        validate: {
+                          endRequired: value =>
+                            value?.[1] != null ||
+                            "끝 기간을 입력하지 않았습니다",
+                          invalidRange: value =>
+                            (value[0] != null &&
+                              value[1] != null &&
+                              isValidDateRange([value[0], value[1]])) ||
+                            "활동 기간에 포함되도록 입력해주세요",
+                        },
                       }}
                       renderItem={({ value, onChange }) => (
                         <DateInput

@@ -15,8 +15,7 @@ import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 import { useGetUserClubs } from "@sparcs-clubs/web/features/activity-certificate/services/useGetUserClubs";
 import { ActivityBasicInfo } from "@sparcs-clubs/web/features/activity-certificate/types/activityCertificate";
-
-import { formatMonth } from "@sparcs-clubs/web/utils/Date/formatDate";
+import { formatActivityDuration } from "@sparcs-clubs/web/features/activity-certificate/utils/formatActivityDuration";
 
 import { StyledBottom } from "../_atomic/StyledBottom";
 
@@ -55,18 +54,19 @@ const ActivityCertificateInfoFirstFrame: React.FC<
       value: club.id,
     })) ?? [];
 
-  const getActivityDuration = useCallback(() => {
-    const selectedClub = clubData?.clubs.find(club => club.id === clubId);
-
-    return selectedClub?.dateRange
-      .map(({ startMonth, endMonth }) => {
-        const start = formatMonth(startMonth);
-        const end = endMonth ? formatMonth(endMonth) : "";
-
-        return `${start} ~ ${end}`;
-      })
-      .join(", ");
-  }, [clubData?.clubs, clubId]);
+  const getActivityDuration = useCallback(
+    () =>
+      clubData?.clubs
+        .find(club => club.id === clubId)
+        ?.dateRange.map(({ startMonth, endMonth }) => ({
+          startMonth: new Date(
+            new Date(startMonth).getFullYear(),
+            new Date(startMonth).getMonth(),
+          ),
+          endMonth: endMonth ? new Date(endMonth) : undefined,
+        })),
+    [clubData?.clubs, clubId],
+  );
 
   const formatPhoneNumber = (value: string) => {
     const numericValue = value.replace(/[^0-9]/g, "");
@@ -78,7 +78,9 @@ const ActivityCertificateInfoFirstFrame: React.FC<
 
   useEffect(() => {
     if (clubId != null) {
-      resetField("activityDuration", { defaultValue: getActivityDuration() });
+      resetField("activityDuration", {
+        defaultValue: getActivityDuration(),
+      });
     }
   }, [clubId, getActivityDuration, resetField]);
 
@@ -101,7 +103,11 @@ const ActivityCertificateInfoFirstFrame: React.FC<
           control={control}
           required
           renderItem={({ value }) => (
-            <TextInput label="활동 기간" placeholder={value} disabled />
+            <TextInput
+              label="활동 기간"
+              placeholder={formatActivityDuration(value ?? [])}
+              disabled
+            />
           )}
         />
         <FormController
