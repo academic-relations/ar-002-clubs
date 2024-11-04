@@ -30,7 +30,6 @@ const ActivityCertificateMainFrame: React.FC = () => {
     defaultValues: {
       isAgreed: false,
       issuedNumber: 1,
-      activityDuration: "2021년 9월 ~ 2023년 6월, 2024년 3월 ~",
       applicantPhoneNumber: "",
       histories: [],
     },

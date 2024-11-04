@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 
 import { Divider } from "@mui/material";
 
@@ -16,6 +16,8 @@ import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile"
 import { useGetUserClubs } from "@sparcs-clubs/web/features/activity-certificate/services/useGetUserClubs";
 import { ActivityBasicInfo } from "@sparcs-clubs/web/features/activity-certificate/types/activityCertificate";
 
+import { formatMonth } from "@sparcs-clubs/web/utils/Date/formatDate";
+
 import { StyledBottom } from "../_atomic/StyledBottom";
 
 interface ActivityCertificateInfoFirstFrameProps {
@@ -27,9 +29,13 @@ const ActivityCertificateInfoFirstFrame: React.FC<
   ActivityCertificateInfoFirstFrameProps
 > = ({ onPrev, onNext }) => {
   const {
+    watch,
     control,
+    resetField,
     formState: { isValid },
   } = useFormContext<ActivityBasicInfo>();
+
+  const clubId = watch("clubId");
 
   const {
     data: clubData,
@@ -49,6 +55,19 @@ const ActivityCertificateInfoFirstFrame: React.FC<
       value: club.id,
     })) ?? [];
 
+  const getActivityDuration = useCallback(() => {
+    const selectedClub = clubData?.clubs.find(club => club.id === clubId);
+
+    return selectedClub?.dateRange
+      .map(({ startMonth, endMonth }) => {
+        const start = formatMonth(startMonth);
+        const end = endMonth ? formatMonth(endMonth) : "";
+
+        return `${start} ~ ${end}`;
+      })
+      .join(", ");
+  }, [clubData?.clubs, clubId]);
+
   const formatPhoneNumber = (value: string) => {
     const numericValue = value.replace(/[^0-9]/g, "");
     if (numericValue.length <= 3) return numericValue;
@@ -56,6 +75,12 @@ const ActivityCertificateInfoFirstFrame: React.FC<
       return `${numericValue.slice(0, 3)}-${numericValue.slice(3)}`;
     return `${numericValue.slice(0, 3)}-${numericValue.slice(3, 7)}-${numericValue.slice(7, 11)}`;
   };
+
+  useEffect(() => {
+    if (clubId != null) {
+      resetField("activityDuration", { defaultValue: getActivityDuration() });
+    }
+  }, [clubId, getActivityDuration, resetField]);
 
   return (
     <AsyncBoundary
@@ -74,8 +99,9 @@ const ActivityCertificateInfoFirstFrame: React.FC<
         <FormController
           name="activityDuration"
           control={control}
-          renderItem={props => (
-            <TextInput {...props} label="활동 기간" placeholder="" disabled />
+          required
+          renderItem={({ value }) => (
+            <TextInput label="활동 기간" placeholder={value} disabled />
           )}
         />
         <FormController
@@ -107,24 +133,28 @@ const ActivityCertificateInfoFirstFrame: React.FC<
           name="applicantName"
           control={control}
           defaultValue={profile?.name}
-          renderItem={props => (
-            <TextInput {...props} label="신청자 이름" placeholder="" disabled />
+          renderItem={({ value }) => (
+            <TextInput label="신청자 이름" placeholder={value} disabled />
           )}
         />
         <FormController
           name="applicantDepartment"
           control={control}
           defaultValue={profile?.department}
-          renderItem={props => (
-            <TextInput {...props} label="신청자 학과" placeholder="" disabled />
+          renderItem={({ value }) => (
+            <TextInput label="신청자 학과" placeholder={value} disabled />
           )}
         />
         <FormController
           name="applicantStudentNumber"
           control={control}
           defaultValue={profile?.studentNumber}
-          renderItem={props => (
-            <TextInput {...props} label="신청자 학번" placeholder="" disabled />
+          renderItem={({ value }) => (
+            <TextInput
+              label="신청자 학번"
+              placeholder={value.toString()}
+              disabled
+            />
           )}
         />
         <FormController
