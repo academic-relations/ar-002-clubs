@@ -24,8 +24,9 @@ const responseBodyMap = {
         id: z.number().int(),
         name_kr: zClubName,
         name_en: zClubName,
-        startMonth: z.date(),
-        endMonth: z.date(),
+        dateRange: z.array(
+          z.object({ startMonth: z.date(), endMonth: z.date().optional() }),
+        ),
       }),
     ),
   }),
@@ -51,8 +52,8 @@ type ApiAcf002ResponseOk = z.infer<(typeof apiAcf002.responseBodyMap)[200]>;
 export default apiAcf002;
 
 export type {
+  ApiAcf002RequestBody,
   ApiAcf002RequestParam,
   ApiAcf002RequestQuery,
-  ApiAcf002RequestBody,
   ApiAcf002ResponseOk,
 };

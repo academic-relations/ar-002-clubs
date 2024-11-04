@@ -193,8 +193,7 @@ export default class ClubRepository {
       id: number;
       name_kr: string;
       name_en: string;
-      startMonth: Date;
-      endMonth: Date;
+      dateRange: { startMonth: Date; endMonth: Date | null }[];
     }[];
   }> {
     const clubActivities = await this.db
@@ -211,7 +210,58 @@ export default class ClubRepository {
           endMonth: row.club_student_t.endTerm,
         })),
       );
-    return { clubs: clubActivities };
+
+    const groupedActivities = clubActivities.reduce(
+      (acc, activity) => {
+        const {
+          id,
+          name_kr: nameKr,
+          name_en: nameEn,
+          startMonth,
+          endMonth,
+        } = activity;
+
+        if (!acc[id]) {
+          Object.assign(acc[id], {
+            id,
+            name_kr: nameKr,
+            name_en: nameEn,
+            dateRange: [],
+          });
+        }
+
+        let updated = false;
+        const { dateRange } = acc[id];
+
+        for (let i = 0; i < dateRange.length; i += 1) {
+          const dates = dateRange[i];
+
+          if (
+            startMonth.getTime() - dates.endMonth.getTime() ===
+            24 * 60 * 60 * 1000
+          ) {
+            dates.endMonth = endMonth;
+            updated = true;
+            break;
+          }
+        }
+
+        if (!updated) {
+          acc[id].dateRange.push({ startMonth, endMonth });
+        }
+
+        return acc;
+      },
+      {} as {
+        [key: number]: {
+          id: number;
+          name_kr: string;
+          name_en: string;
+          dateRange: { startMonth: Date; endMonth: Date | null }[];
+        };
+      },
+    );
+    return { clubs: Object.values(groupedActivities) };
   }
 
   async findClubName(
