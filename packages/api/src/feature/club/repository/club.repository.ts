@@ -20,6 +20,7 @@ import {
   ProfessorT,
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
@@ -193,7 +194,7 @@ export default class ClubRepository {
       id: number;
       name_kr: string;
       name_en: string;
-      dateRange: { startMonth: Date; endMonth: Date | null }[];
+      dateRange: { startMonth: Date; endMonth: Date | undefined }[];
     }[];
   }> {
     const clubActivities = await this.db
@@ -221,13 +222,15 @@ export default class ClubRepository {
           endMonth,
         } = activity;
 
-        if (!acc[id]) {
-          Object.assign(acc[id], {
+        const updatedAcc = { ...acc };
+        if (!updatedAcc[id]) {
+          updatedAcc[id] = {
             id,
             name_kr: nameKr,
             name_en: nameEn,
-            dateRange: [],
-          });
+            dateRange: [{ startMonth, endMonth }],
+          };
+          return updatedAcc;
         }
 
         let updated = false;
@@ -257,7 +260,7 @@ export default class ClubRepository {
           id: number;
           name_kr: string;
           name_en: string;
-          dateRange: { startMonth: Date; endMonth: Date | null }[];
+          dateRange: { startMonth: Date; endMonth: Date | undefined }[];
         };
       },
     );
