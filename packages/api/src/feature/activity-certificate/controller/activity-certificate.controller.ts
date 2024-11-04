@@ -11,6 +11,9 @@ import apiAcf007 from "@sparcs-clubs/interface/api/activity-certificate/endpoint
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
+import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
+
 import { ActivityCertificateService } from "../service/activity-certificate.service";
 
 import type {
@@ -37,11 +40,16 @@ export class ActivityCertificateController {
     return {};
   }
 
+  @Student()
   @Get("/student/activity-certificates/club-history")
   @UsePipes(new ZodPipe(apiAcf002))
-  async getStudentActivityCertificatesClubHistory(): Promise<ApiAcf002ResponseOk> {
+  async getStudentActivityCertificatesClubHistory(
+    @GetStudent() user: GetStudent,
+  ): Promise<ApiAcf002ResponseOk> {
     const clubHistory =
-      await this.activityCertificateService.getStudentActivityCertificatesClubHistory();
+      await this.activityCertificateService.getStudentActivityCertificatesClubHistory(
+        { stduentId: user.id },
+      );
     return clubHistory;
   }
 

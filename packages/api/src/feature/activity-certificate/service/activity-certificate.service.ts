@@ -36,11 +36,11 @@ export class ActivityCertificateService {
     });
   }
 
-  async getStudentActivityCertificatesClubHistory() {
+  async getStudentActivityCertificatesClubHistory(param: {
+    studentId: number;
+  }) {
     const clubHistory =
-      await this.clubPublicService.getClubBelongDurationOfStudent({
-        studentId: 1,
-      }); // TODO: 실제 studentId 적용
+      await this.clubPublicService.getClubBelongDurationOfStudent(param); // TODO: 실제 studentId 적용
     return clubHistory;
   }
 
