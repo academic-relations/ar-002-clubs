@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 
+import { useWatch } from "react-hook-form";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
@@ -18,7 +20,7 @@ import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 const RentalInfoFirstFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
-> = ({ formCtx }) => {
+> = ({ formCtx, setNextEnabled }) => {
   const { data, isLoading, isError } = useGetUserProfile();
   // usr001 수정 후 다시 확인
   const {
@@ -54,14 +56,29 @@ const RentalInfoFirstFrame: React.FC<
     }
   }, [data, clubData, setClubList, setUserName, setUserPhone]);
 
+  const clubId = useWatch({ control: formCtx.control, name: "info.clubId" });
+  const phoneNumber = useWatch({
+    control: formCtx.control,
+    name: "info.phoneNumber",
+  });
+
+  const {
+    formState: { errors },
+  } = formCtx;
+
+  useEffect(() => {
+    const hasNoErrors = !errors.info?.clubId && !errors.info?.phoneNumber;
+    setNextEnabled(!!clubId && !!phoneNumber && hasNoErrors);
+  }, [clubId, phoneNumber, errors, setNextEnabled]);
+
   return (
-    // 나중에 club loading & error 지우기
+    // TODO: club loading & error 지우기
     <AsyncBoundary
       isLoading={isLoading && clubIsLoading}
       isError={isError && clubIsError}
     >
       <Card outline gap={40}>
-        {/* clubName 설정 */}
+        {/* TODO: clubName 설정 */}
         <FormController
           name="info.clubId"
           required
@@ -76,8 +93,9 @@ const RentalInfoFirstFrame: React.FC<
           required
           control={formCtx.control}
           defaultValue={userPhone}
-          minLength={13}
-          pattern={/^010-\d{4}-\d{4}$/}
+          // TODO: phoneInput 조건 달기
+          // minLength={13}
+          // pattern={/^(010-\d{4}-\d{4})$/}
           renderItem={props => (
             <PhoneInput
               {...props}
