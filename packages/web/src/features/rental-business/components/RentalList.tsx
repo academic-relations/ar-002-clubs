@@ -4,11 +4,7 @@ import styled from "styled-components";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { RentalInterface } from "../types/rental";
-
-interface RentalListProps {
-  rental: RentalInterface;
-}
+import { RentalFrameProps } from "../frames/RentalNoticeFrame";
 
 const RentalListContainer = styled.ul`
   list-style: none;
@@ -32,8 +28,9 @@ const RentalListItem = styled.li`
   }
 `;
 
-const RentalList: React.FC<RentalListProps> = ({ rental }) => {
+const RentalList: React.FC<RentalFrameProps> = ({ formCtx }) => {
   const itemList: string[] = [];
+  const rental = formCtx.getValues();
 
   if (rental.easel && rental.easel > 0) {
     itemList.push(`이젤 ${rental.easel}개`);

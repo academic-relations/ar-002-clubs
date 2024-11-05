@@ -48,7 +48,7 @@ const steps = [
     stepIndex: 2,
   },
   {
-    label: "최종확인",
+    label: "최종 확인",
     stepIndex: 3,
   },
 ];
@@ -59,7 +59,9 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ formCtx }) => {
   const [nextEnabled, setNextEnabled] = useState(true);
   const CurrentFrame = frames[step];
 
-  const openReturnModal = () => {
+  console.log(nextEnabled);
+
+  const openReturnModal = useCallback(() => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <CancellableModalContent
@@ -78,7 +80,7 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ formCtx }) => {
         </CancellableModalContent>
       </Modal>
     ));
-  };
+  }, [step, formCtx]);
 
   const openAssignModal = () => {
     overlay.open(({ isOpen, close }) => (
@@ -98,9 +100,8 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ formCtx }) => {
   };
 
   const onPrev = useCallback(() => {
-    setStep(step - 1);
     openReturnModal();
-  }, [step, setStep]);
+  }, [openReturnModal]);
 
   const onNext = useCallback(() => {
     if (step < frames.length - 1) {
