@@ -7,24 +7,17 @@ import { useQuery } from "@tanstack/react-query";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 const useFileMetadata = (body: ApiFil002RequestBody) =>
   useQuery<ApiFil002ResponseOk, Error>({
     queryKey: ["fileMetadata", body],
     queryFn: async (): Promise<ApiFil002ResponseOk> => {
-      const { data, status } = await axiosClientWithAuth.post(apiFil002.url(), {
+      const { data } = await axiosClientWithAuth.post(apiFil002.url(), {
         files: body.files,
       });
 
-      switch (status) {
-        case 200:
-        case 304:
-          return apiFil002.responseBodyMap[200].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiFil002.responseBodyMap[200].parse(data);
     },
     enabled: body.files.length > 0,
   });

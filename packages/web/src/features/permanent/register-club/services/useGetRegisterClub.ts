@@ -7,30 +7,23 @@ import { useQuery } from "@tanstack/react-query";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 export const useGetRegisterClub = (requestQuery: ApiReg024RequestQuery) =>
   useQuery<ApiReg024ResponseOk, Error>({
     queryKey: [apiReg024.url(), requestQuery],
     queryFn: async (): Promise<ApiReg024ResponseOk> => {
-      const { data, status } = await axiosClientWithAuth.get(apiReg024.url(), {
+      const { data } = await axiosClientWithAuth.get(apiReg024.url(), {
         params: requestQuery,
       });
 
-      switch (status) {
-        case 200:
-        case 304: {
-          if (data.total === 0 && data.items.length === 0 && data.offset)
-            // items = []일 때 isError = true 방지
-            return data;
-          return data;
-          // return apiReg024.responseBodyMap[200].parse(data);
-        }
-
-        default:
-          throw new UnexpectedAPIResponseError();
+      if (data.total === 0 && data.items.length === 0 && data.offset) {
+        // items = []일 때 isError = true 방지
+        return data;
       }
+
+      // return apiReg024.responseBodyMap[200].parse(data);
+      return data;
     },
   });
 

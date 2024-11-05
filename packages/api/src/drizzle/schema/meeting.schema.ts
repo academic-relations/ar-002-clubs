@@ -39,38 +39,29 @@ export const MeetingRoleEnum = mysqlTable("meeting_role_enum", {
 
 export const MeetingAnnouncement = mysqlTable("meeting_announcement", {
   id: int("id").autoincrement().primaryKey(),
-  announcementTitle: varchar("announcement_title", { length: 255 }).notNull(),
-  announcementContent: text("announcement_content").notNull(),
+  announcementTitle: varchar("title", { length: 255 }).notNull(),
+  announcementContent: text("content").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
   deletedAt: timestamp("deleted_at"),
 });
 
-export const Meeting = mysqlTable(
-  "meeting",
-  {
-    id: int("id").autoincrement().primaryKey(),
-    announcementId: int("announcement_id")
-      .references(() => MeetingAnnouncement.id)
-      .notNull(),
-    meetingEnumId: int("meeting_enum_id"),
-    isRegular: boolean("is_regular").notNull(),
-    location: varchar("location", { length: 255 }),
-    locationEn: varchar("location_en", { length: 255 }),
-    startDate: datetime("start_date").notNull(),
-    endDate: datetime("end_date"),
-    createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at"),
-    deletedAt: timestamp("deleted_at"),
-  },
-  table => ({
-    meetingEnumForeignKey: foreignKey({
-      name: "meeting_enum_foreign_key",
-      columns: [table.meetingEnumId],
-      foreignColumns: [MeetingEnum.id],
-    }),
-  }),
-);
+export const Meeting = mysqlTable("meeting", {
+  id: int("id").autoincrement().primaryKey(),
+  announcementId: int("meeting_announcement_id")
+    .references(() => MeetingAnnouncement.id)
+    .notNull(),
+  meetingEnumId: int("meeting_type_enum"),
+  isRegular: boolean("is_regular_meeting").notNull(),
+  location: varchar("location_kr", { length: 255 }),
+  locationEn: varchar("location_en", { length: 255 }),
+  startDate: datetime("start_datetime").notNull(),
+  endDate: datetime("end_datetime"),
+  tag: varchar("meeting_group_tag", { length: 255 }).notNull().unique(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at"),
+  deletedAt: timestamp("deleted_at"),
+});
 
 export const MeetingAgenda = mysqlTable(
   "meeting_agenda",

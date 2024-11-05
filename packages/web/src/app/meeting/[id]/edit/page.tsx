@@ -5,6 +5,7 @@ import React, { useEffect, useMemo } from "react";
 import apiMee002 from "@sparcs-clubs/interface/api/meeting/apiMee002";
 import { ApiMee003RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee003";
 
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
@@ -38,7 +39,6 @@ const EditMeetingPage: React.FC = () => {
 
   const {
     getValues,
-    handleSubmit,
     watch,
     reset,
     formState: { isValid },
@@ -83,7 +83,7 @@ const EditMeetingPage: React.FC = () => {
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <FormProvider {...formCtx}>
-        <form onSubmit={handleSubmit(submitHandler)}>
+        <form>
           <FlexWrapper direction="column" gap={60}>
             <PageHead
               items={[
@@ -108,12 +108,13 @@ const EditMeetingPage: React.FC = () => {
                 취소
               </Button>
               <Button
-                buttonType="submit"
                 type={
                   isFormValid && !isLoading && !isUpdateLoading
                     ? "default"
                     : "disabled"
                 }
+                // submit 재확인 모달 추가되면 form handleSubmit으로 관리
+                onClick={submitHandler}
               >
                 저장
               </Button>
@@ -125,4 +126,4 @@ const EditMeetingPage: React.FC = () => {
   );
 };
 
-export default withAuthorization(EditMeetingPage, ["executive"], -1);
+export default withAuthorization(EditMeetingPage, [UserTypeEnum.Executive], -1);

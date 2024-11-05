@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { ApiMee001RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee001";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import Link from "next/link";
 
 import { useRouter } from "next/navigation";
@@ -37,7 +38,6 @@ const CreateMeetingPage: React.FC = () => {
   const {
     watch,
     getValues,
-    handleSubmit,
     formState: { isValid },
   } = formCtx;
 
@@ -67,7 +67,7 @@ const CreateMeetingPage: React.FC = () => {
 
   return (
     <FormProvider {...formCtx}>
-      <form onSubmit={handleSubmit(submitHandler)}>
+      <form>
         <FlexWrapper direction="column" gap={60}>
           <PageHead
             items={[
@@ -95,12 +95,13 @@ const CreateMeetingPage: React.FC = () => {
               </Button>
             </Link>
             <Button
-              buttonType="submit"
               type={
                 isValid && !isCreateLoading && isTemplateVisible
                   ? "default"
                   : "disabled"
               }
+              // submit 재확인 모달 추가되면 form handleSubmit으로 관리
+              onClick={submitHandler}
             >
               저장
             </Button>
@@ -111,4 +112,4 @@ const CreateMeetingPage: React.FC = () => {
   );
 };
 
-export default withAuthorization(CreateMeetingPage, ["executive"]);
+export default withAuthorization(CreateMeetingPage, [UserTypeEnum.Executive]);

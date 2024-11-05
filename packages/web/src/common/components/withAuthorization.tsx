@@ -1,12 +1,12 @@
 import { ComponentType } from "react";
 
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { jwtDecode } from "jwt-decode";
 
 import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
-import { UserType } from "@sparcs-clubs/web/utils/getUserType";
 import { getLocalStorageItem } from "@sparcs-clubs/web/utils/localStorage";
 
 import ErrorPageTemplate from "../frames/ErrorPageTemplate";
@@ -33,7 +33,7 @@ const ErrorMessage = styled.div`
 
 export const withAuthorization = <P extends object>(
   WrappedComponent: ComponentType<P>,
-  acceptedAuthorization: UserType[],
+  acceptedAuthorization: UserTypeEnum[],
   redirectUrl?: string | -1,
 ) => {
   const login = async () => {
@@ -54,7 +54,7 @@ export const withAuthorization = <P extends object>(
     }
 
     const decoded: { name?: string; type?: string } = jwtDecode(token);
-    const userType = decoded.type as UserType;
+    const userType = UserTypeEnum[decoded.type as keyof typeof UserTypeEnum];
 
     if (!acceptedAuthorization.includes(userType)) {
       return (

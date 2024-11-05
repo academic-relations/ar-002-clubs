@@ -22,18 +22,6 @@ const BinaryRadioInner = styled.div`
   gap: 16px;
 `;
 
-const StyledLabel = styled.label`
-  display: block;
-  margin: 0 2px;
-  gap: 10px;
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: 16px;
-  font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
-  color: ${({ theme }) => theme.colors.BLACK};
-  line-height: 20px;
-  text-align: left;
-`;
-
 const BinaryRadio: React.FC<BinaryRadioProps> = ({
   label = undefined,
   firstOptionLabel,
@@ -42,8 +30,8 @@ const BinaryRadio: React.FC<BinaryRadioProps> = ({
   setIsFirstOptionSelected,
 }) => (
   <BinaryRadioInner>
-    <StyledLabel>{label}</StyledLabel>
     <Radio
+      label={label}
       value={String(isFirstOptionSelected)}
       onChange={(boolStr: string) =>
         setIsFirstOptionSelected(JSON.parse(boolStr))

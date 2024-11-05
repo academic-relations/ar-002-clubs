@@ -4,10 +4,7 @@ import apiAct004, {
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 
-import {
-  axiosClientWithAuth,
-  UnexpectedAPIResponseError,
-} from "@sparcs-clubs/web/lib/axios";
+import { axiosClientWithAuth } from "@sparcs-clubs/web/lib/axios";
 
 type ISuccessResponseType = z.infer<(typeof apiAct004.responseBodyMap)[200]>;
 
@@ -18,16 +15,11 @@ export const useDeleteActivityReport = () =>
     { requestParam: ApiAct004RequestParam }
   >({
     mutationFn: async ({ requestParam }): Promise<ISuccessResponseType> => {
-      const { data, status } = await axiosClientWithAuth.delete(
+      const { data } = await axiosClientWithAuth.delete(
         apiAct004.url(requestParam.activityId),
         {},
       );
 
-      switch (status) {
-        case 200:
-          return apiAct004.responseBodyMap[200].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiAct004.responseBodyMap[200].parse(data);
     },
   });

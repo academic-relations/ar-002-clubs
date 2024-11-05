@@ -3,7 +3,6 @@ import apiClb007 from "@sparcs-clubs/interface/api/club/endpoint/apiClb007";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import type {
@@ -15,16 +14,12 @@ export const updateClubDelegates = async (
   requestParam: ApiClb007RequestParam,
   requestBody: ApiClb007RequestBody,
 ) => {
-  const { data, status } = await axiosClientWithAuth.put(
+  const { data } = await axiosClientWithAuth.put(
     apiClb007.url(requestParam.clubId),
     requestBody,
   );
-  switch (status) {
-    case 201:
-      return apiClb007.responseBodyMap[201].parse(data);
-    default:
-      throw new UnexpectedAPIResponseError();
-  }
+
+  return apiClb007.responseBodyMap[201].parse(data);
 };
 
 defineAxiosMock(mock => {
