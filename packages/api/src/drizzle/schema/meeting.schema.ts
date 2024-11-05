@@ -57,15 +57,15 @@ export const MeetingAgenda = mysqlTable("meeting_agenda", {
   ).notNull(),
   isEditableRepresentative: boolean("is_editable_representative").notNull(),
   isEditableSelf: boolean("is_editable_self").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at"),
   deletedAt: timestamp("deleted_at"),
 });
 
 export const MeetingAgendaContent = mysqlTable("meeting_agenda_content", {
   id: int("id").autoincrement().primaryKey(),
   content: text("content").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
   deletedAt: timestamp("deleted_at"),
 });
@@ -80,7 +80,7 @@ export const MeetingAttendanceDay = mysqlTable("meeting_attendance_day", {
     .notNull(),
   whichClubId: int("which_club_id").references(() => Club.id),
   whichDivisionId: int("which_division_id").references(() => Division.id),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
   deletedAt: timestamp("deleted_at"),
 });
@@ -95,7 +95,7 @@ export const MeetingAttendanceTimeT = mysqlTable("meeting_attendance_time_t", {
     .notNull(),
   startTerm: datetime("start_term").notNull(),
   endTerm: datetime("end_term"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
   deletedAt: timestamp("deleted_at"),
 });
@@ -104,7 +104,7 @@ export const MeetingAgendaVote = mysqlTable("meeting_agenda_vote", {
   id: int("id").autoincrement().primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
   deletedAt: timestamp("deleted_at"),
 });
@@ -115,7 +115,7 @@ export const MeetingVoteChoice = mysqlTable("meeting_vote_choice", {
     .references(() => MeetingAgendaVote.id)
     .notNull(),
   choice: varchar("choice", { length: 255 }).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
   deletedAt: timestamp("deleted_at"),
 });
@@ -131,7 +131,7 @@ export const MeetingVoteResult = mysqlTable("meeting_vote_result", {
   choiceId: int("choice_id")
     .references(() => MeetingVoteChoice.id)
     .notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at"),
   deletedAt: timestamp("deleted_at"),
 });
