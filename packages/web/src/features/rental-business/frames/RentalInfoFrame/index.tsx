@@ -65,6 +65,9 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ formCtx }) => {
         <CancellableModalContent
           onConfirm={() => {
             close();
+            if (step === 0) {
+              formCtx.reset();
+            }
             setStep(step - 1);
           }}
           onClose={close}
