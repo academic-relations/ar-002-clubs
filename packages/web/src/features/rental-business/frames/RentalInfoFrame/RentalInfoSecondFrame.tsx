@@ -14,13 +14,13 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-// import Easel from "@sparcs-clubs/web/features/rental-business/components/Rentals/Easel";
 // import HandCart from "@sparcs-clubs/web/features/rental-business/components/Rentals/HandCart";
 // import Mat from "@sparcs-clubs/web/features/rental-business/components/Rentals/Mat";
 // import Tool from "@sparcs-clubs/web/features/rental-business/components/Rentals/Tool";
 // import Vacuum from "@sparcs-clubs/web/features/rental-business/components/Rentals/Vacuum";
 import ItemButtonList from "@sparcs-clubs/web/features/rental-business/components/ItemButtonList";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
+import Easel from "@sparcs-clubs/web/features/rental-business/components/Rentals/Easel";
 import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
 import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
 
@@ -43,26 +43,30 @@ const rentals = {
     info: "대충 대여 기간 먼저 선택해야 한다는 안내문구 어딘가에",
     component: NoneRental,
   },
-  // easel: {
-  //   info: "대충 이젤에 대한 추가 안내사항",
-  //   component: Easel,
-  // },
-  // vacuum: {
-  //   info: "대충 청소기에 대한 추가 안내사항",
-  //   component: Vacuum,
-  // },
-  // handCart: {
-  //   info: "대충 수레에 대한 추가 안내사항",
-  //   component: HandCart,
-  // },
-  // mat: {
-  //   info: "대충 돗자리에 대한 추가 안내사항",
-  //   component: Mat,
-  // },
-  // tool: {
-  //   info: "대충 공구에 대한 추가 안내사항",
-  //   component: Tool,
-  // },
+  easel: {
+    info: "대충 이젤에 대한 추가 안내사항",
+    component: Easel,
+  },
+  vacuum: {
+    info: "대충 청소기에 대한 추가 안내사항",
+    // component: Vacuum,
+    component: Easel,
+  },
+  handCart: {
+    info: "대충 수레에 대한 추가 안내사항",
+    // component: HandCart,
+    component: Easel,
+  },
+  mat: {
+    info: "대충 돗자리에 대한 추가 안내사항",
+    // component: Mat,
+    component: Easel,
+  },
+  tool: {
+    info: "대충 공구에 대한 추가 안내사항",
+    // component: Tool,
+    component: Easel,
+  },
 };
 const RentalInfoSecondFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
@@ -76,7 +80,7 @@ const RentalInfoSecondFrame: React.FC<
   const [returnDate, setReturnDate] = useState<Date | undefined>();
   const [pendingDate, setPendingDate] = useState<Date | undefined>();
 
-  // const Rental = rentals[value].component;
+  const Rental = rentals[value].component;
 
   const handleConfirm = (state: "change" | "reset") => {
     if (state === "reset") {
@@ -136,7 +140,7 @@ const RentalInfoSecondFrame: React.FC<
         />
       </Card>
       <ItemButtonList value={value} onChange={itemOnChange} />
-      {/* <Info text={rentals[value].info} /> */}
+      <Info text={rentals[value].info} />
       {value !== "none" && (
         <Card outline gap={40}>
           <StyledCardInner>
@@ -151,12 +155,12 @@ const RentalInfoSecondFrame: React.FC<
                 // onClick={handleResetCurrent}
               />
             </FlexWrapper>
-            {/* <Rental
-              rentalDate={rentalDate ?? new Date()}
-              returnDate={returnDate ?? new Date()}
-              setHasError={setHasError}
-              {...props}
-            /> */}
+            <Rental
+              formCtx={formCtx}
+              availableRentals={{
+                objects: [],
+              }}
+            />
           </StyledCardInner>
         </Card>
       )}
