@@ -9,6 +9,7 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
+import useGetMyClub from "@sparcs-clubs/web/features/my/clubs/service/useGetMyClub";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
@@ -18,6 +19,12 @@ const RentalInfoFirstFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
 > = ({ setNextEnabled }) => {
   const { data, isLoading, isError } = useGetUserProfile();
+  // usr001 수정 후 다시 확인
+  const {
+    data: clubData,
+    isLoading: clubIsLoading,
+    isError: clubIsError,
+  } = useGetMyClub();
 
   const [clubList, setClubList] = useState<SelectItem<string>[]>([]);
   const [userName, setUserName] = useState("");
@@ -25,17 +32,26 @@ const RentalInfoFirstFrame: React.FC<
 
   useEffect(() => {
     if (data) {
+      // setClubList(
+      //   data.clubs.map(club => ({
+      //     label: club.name_kr,
+      //     value: String(club.id),
+      //     selectable: true,
+      //   })),
+      // );
+      setUserName(data.name);
+      setUserPhone(data.phoneNumber);
+    }
+    if (clubData) {
       setClubList(
-        data.clubs.map(club => ({
+        clubData?.semesters[0].clubs.map(club => ({
           label: club.name_kr,
           value: String(club.id),
           selectable: true,
         })),
       );
-      setUserName(data.name);
-      // setUserPhone(rental.info?.phoneNumber ?? data.phoneNumber);
     }
-  }, [data, setClubList, setUserName, setUserPhone]);
+  }, [data, clubData, setClubList, setUserName, setUserPhone]);
 
   const [phone, setPhone] = useState(userPhone);
   const [hasPhoneError, setHasPhoneError] = useState(false);
@@ -82,7 +98,11 @@ const RentalInfoFirstFrame: React.FC<
   // }, [selectedValue, phone, setRental]);
 
   return (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
+    // 나중에 club loading & error 지우기
+    <AsyncBoundary
+      isLoading={isLoading && clubIsLoading}
+      isError={isError && clubIsError}
+    >
       <Card outline gap={40}>
         <Select
           items={clubList}
