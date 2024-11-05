@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
@@ -17,7 +18,7 @@ import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 const RentalInfoFirstFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
-> = ({ setNextEnabled }) => {
+> = ({ formCtx }) => {
   const { data, isLoading, isError } = useGetUserProfile();
   // usr001 수정 후 다시 확인
   const {
@@ -53,50 +54,6 @@ const RentalInfoFirstFrame: React.FC<
     }
   }, [data, clubData, setClubList, setUserName, setUserPhone]);
 
-  const [phone, setPhone] = useState(userPhone);
-  const [hasPhoneError, setHasPhoneError] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
-  const [hasSelectError, setHasSelectError] = useState(false);
-
-  // useEffect(() => {
-  //   if (phone != null && phone.length > 0) {
-  //     setRental({
-  //       ...rental,
-  //       info: {
-  //         ...rental.info,
-  //         phone,
-  //       },
-  //     });
-  //   }
-  // }, [phone, setRental]);
-
-  useEffect(() => {
-    const allConditionsMet =
-      Boolean(selectedValue) &&
-      Boolean(phone) &&
-      !hasPhoneError &&
-      !hasSelectError;
-    setNextEnabled(allConditionsMet);
-  }, [selectedValue, phone, hasPhoneError, hasSelectError, setNextEnabled]);
-
-  // useEffect(() => {
-  //   if (selectedValue !== "") {
-  //     const selectClub = clubList.find(club => club.value === selectedValue);
-  //     if (!selectClub) {
-  //       return;
-  //     }
-  //     setRental({
-  //       ...rental,
-  //       info: {
-  //         clubId: Number(selectedValue),
-  //         clubName: selectClub?.label,
-  //         applicant: userName,
-  //         phone: phone ?? "",
-  //       },
-  //     });
-  //   }
-  // }, [selectedValue, phone, setRental]);
-
   return (
     // 나중에 club loading & error 지우기
     <AsyncBoundary
@@ -104,23 +61,34 @@ const RentalInfoFirstFrame: React.FC<
       isError={isError && clubIsError}
     >
       <Card outline gap={40}>
-        <Select
-          items={clubList}
-          value={String(selectedValue)}
-          onChange={setSelectedValue}
-          label="동아리 이름"
-          setErrorStatus={setHasSelectError}
+        {/* clubName 설정 */}
+        <FormController
+          name="info.clubId"
+          required
+          control={formCtx.control}
+          renderItem={props => (
+            <Select {...props} items={clubList} label="동아리 이름" />
+          )}
         />
         <TextInput label="신청자 이름" placeholder={userName} disabled />
-        <PhoneInput
-          label="신청자 전화번호"
-          value={phone ?? ""}
-          // TODO: interface 연결 후 기본 value가 제대로 로딩되지 않는 문제 수정
-          onChange={setPhone}
-          placeholder={
-            /^(\d{3}-\d{4}-\d{4})$/.test(userPhone ?? "") ? userPhone ?? "" : ""
-          }
-          setErrorStatus={setHasPhoneError}
+        <FormController
+          name="info.phoneNumber"
+          required
+          control={formCtx.control}
+          defaultValue={userPhone}
+          minLength={13}
+          pattern={/^010-\d{4}-\d{4}$/}
+          renderItem={props => (
+            <PhoneInput
+              {...props}
+              label="신청자 전화번호"
+              placeholder={
+                /^(\d{3}-\d{4}-\d{4})$/.test(userPhone ?? "")
+                  ? userPhone ?? ""
+                  : ""
+              }
+            />
+          )}
         />
       </Card>
     </AsyncBoundary>
