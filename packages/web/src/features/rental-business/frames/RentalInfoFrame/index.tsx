@@ -10,6 +10,7 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
+import { StyledBottom } from "@sparcs-clubs/web/common/components/StyledBottom";
 import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
 import postRentalOrder from "@sparcs-clubs/web/features/rental-business/service/postRentalOrder";
 
@@ -24,13 +25,6 @@ const RentalNoticeFrameInner = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-  align-self: stretch;
-`;
-
-const StyledBottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   align-self: stretch;
 `;
 

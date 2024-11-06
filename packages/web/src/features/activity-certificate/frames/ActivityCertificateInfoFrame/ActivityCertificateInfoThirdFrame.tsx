@@ -9,6 +9,7 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorModal";
+import { StyledBottom } from "@sparcs-clubs/web/common/components/StyledBottom";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import usePostActivityCertificate from "@sparcs-clubs/web/features/activity-certificate/services/usePostActivityCertificate";
@@ -18,8 +19,6 @@ import { formatActivityDuration } from "@sparcs-clubs/web/features/activity-cert
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
 
 import { formatMonth } from "@sparcs-clubs/web/utils/Date/formatDate";
-
-import { StyledBottom } from "../_atomic/StyledBottom";
 
 interface ActivityCertificateInfoThirdFrameProps {
   onPrev: VoidFunction;

@@ -13,13 +13,12 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Info from "@sparcs-clubs/web/common/components/Info";
 
+import { StyledBottom } from "@sparcs-clubs/web/common/components/StyledBottom";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   ActivityCertificateInfo,
   ActivityHistory,
 } from "@sparcs-clubs/web/features/activity-certificate/types/activityCertificate";
-
-import { StyledBottom } from "../_atomic/StyledBottom";
 
 interface ActivityCertificateInfoSecondFrameProps {
   onPrev: VoidFunction;
