@@ -14,15 +14,15 @@ import FormError from "../FormError";
 import Label from "../FormLabel";
 
 export interface ItemNumberInputProps
-  extends InputHTMLAttributes<HTMLInputElement> {
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> {
   label?: string;
   placeholder: string;
   errorMessage?: string;
   disabled?: boolean;
   itemLimit?: number;
   unit?: string;
-  value?: string;
-  handleChange?: (value: string) => void;
+  value?: number;
+  onChange: (value: number) => void;
   setErrorStatus?: (hasError: boolean) => void;
 }
 
@@ -118,24 +118,24 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
   placeholder,
   disabled = false,
   itemLimit = 99,
-  value = "",
+  value = undefined,
   unit = "개",
-  handleChange = () => {},
+  onChange,
   setErrorStatus = () => {},
   ...props
 }) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const isValidFormat = /^\d+$/g.test(value);
-    const numericValue = parseInt(value);
-    if (value === "") {
+    const isValidFormat = /^\d+$/g.test(String(value));
+    const numericValue = value;
+    if (value === undefined) {
       setError("");
       setErrorStatus(false);
     } else if (!isValidFormat) {
       setError("숫자만 입력 가능합니다");
       setErrorStatus(true);
-    } else if (numericValue > itemLimit) {
+    } else if (numericValue && numericValue > itemLimit) {
       setError("신청 가능 개수를 초과했습니다");
       setErrorStatus(true);
     } else {
@@ -145,15 +145,16 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
     }
   }, [value, itemLimit, setErrorStatus]);
 
-  const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value.replace(/[^0-9]/g, "");
-
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value.replace(/\D/g, "");
     if (inputValue.length <= 2) {
-      handleChange(inputValue);
+      onChange(Number(inputValue));
     }
   };
 
-  const displayValue = value ? `${value}${unit}` : "";
+  const displayValue =
+    value !== undefined && value !== 0 ? String(value) + unit : "";
+
   const mainInputRef = useRef<HTMLInputElement>(null);
 
   const handleCursor = () => {
@@ -180,7 +181,7 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
       <InputContainer>
         <Input
           ref={mainInputRef}
-          onChange={handleValueChange}
+          onChange={handleChange}
           value={displayValue}
           placeholder={placeholder}
           disabled={disabled}
