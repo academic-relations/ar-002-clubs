@@ -5,23 +5,21 @@ import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumbe
 import { RentalLimitProps } from "@sparcs-clubs/web/features/rental-business/frames/RentalNoticeFrame";
 
 const Easel: React.FC<RentalLimitProps> = ({ availableRentals, formCtx }) => {
+  const { control, getValues } = formCtx;
   const easelLimit =
     availableRentals?.objects.find(item => item.name === "Easel")?.maximum ?? 0;
 
   return (
     <FormController
       name="easel"
-      control={formCtx.control}
+      control={control}
       renderItem={props => (
-        // TODO: 단위 붙는 것 수정
         <ItemNumberInput
           {...props}
           label="이젤 개수"
           placeholder="0개"
           itemLimit={easelLimit}
-          value={
-            formCtx.getValues("easel") ? formCtx.getValues("easel") : undefined
-          }
+          value={getValues("easel") ? getValues("easel") : undefined}
         />
       )}
     />

@@ -1,105 +1,100 @@
-// import React from "react";
+import React from "react";
 
-// import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
-// import { RentalLimitProps } from "@sparcs-clubs/web/features/rental-business/frames/RentalNoticeFrame";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
+import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
+import { RentalLimitProps } from "@sparcs-clubs/web/features/rental-business/frames/RentalNoticeFrame";
 
-// const HandCart: React.FC<RentalLimitProps> = ({
-//   availableRentals,
-//   formCtx,
-// }) => {
-//   const rolltainerLimit =
-//     availableRentals?.objects.find(item => item.name === "Hand Cart Rolltainer")
-//       ?.maximum ?? 0;
-//   const largeLimit =
-//     availableRentals?.objects.find(item => item.name === "Hand Cart Large")
-//       ?.maximum ?? 0;
-//   const mediumLimit =
-//     availableRentals?.objects.find(item => item.name === "Hand Cart Medium")
-//       ?.maximum ?? 0;
-//   const smallLimit =
-//     availableRentals?.objects.find(item => item.name === "Hand Cart Small")
-//       ?.maximum ?? 0;
+const HandCart: React.FC<RentalLimitProps> = ({
+  availableRentals,
+  formCtx,
+}) => {
+  const { control, getValues } = formCtx;
 
-//   return (
-//     <>
-//       <ItemNumberInput
-//         label="롤테이너 개수"
-//         placeholder="0개"
-//         itemLimit={rolltainerLimit}
-//         value={
-//           rental?.handCart?.rolltainer
-//             ? String(rental?.handCart?.rolltainer)
-//             : undefined
-//         }
-//         handleChange={value =>
-//           setRental({
-//             ...rental,
-//             handCart: {
-//               ...rental.handCart,
-//               rolltainer: Number(value),
-//             },
-//           })
-//         }
-//         setErrorStatus={setRolltainerError}
-//       />
-//       <ItemNumberInput
-//         label="대형 개수"
-//         placeholder="0개"
-//         itemLimit={largeLimit}
-//         value={
-//           rental?.handCart?.large ? String(rental?.handCart?.large) : undefined
-//         }
-//         handleChange={value =>
-//           setRental({
-//             ...rental,
-//             handCart: {
-//               ...rental.handCart,
-//               large: Number(value),
-//             },
-//           })
-//         }
-//         setErrorStatus={setLargeError}
-//       />
-//       <ItemNumberInput
-//         label="중형 개수"
-//         placeholder="0개"
-//         itemLimit={mediumLimit}
-//         value={
-//           rental?.handCart?.medium
-//             ? String(rental?.handCart?.medium)
-//             : undefined
-//         }
-//         handleChange={value =>
-//           setRental({
-//             ...rental,
-//             handCart: {
-//               ...rental.handCart,
-//               medium: Number(value),
-//             },
-//           })
-//         }
-//         setErrorStatus={setMediumError}
-//       />
-//       <ItemNumberInput
-//         label="소형 개수"
-//         placeholder="0개"
-//         itemLimit={smallLimit}
-//         value={
-//           rental?.handCart?.small ? String(rental?.handCart?.small) : undefined
-//         }
-//         handleChange={value =>
-//           setRental({
-//             ...rental,
-//             handCart: {
-//               ...rental.handCart,
-//               small: Number(value),
-//             },
-//           })
-//         }
-//         setErrorStatus={setSmallError}
-//       />
-//     </>
-//   );
-// };
+  const rolltainerLimit =
+    availableRentals?.objects.find(item => item.name === "Hand Cart Rolltainer")
+      ?.maximum ?? 0;
+  const largeLimit =
+    availableRentals?.objects.find(item => item.name === "Hand Cart Large")
+      ?.maximum ?? 0;
+  const mediumLimit =
+    availableRentals?.objects.find(item => item.name === "Hand Cart Medium")
+      ?.maximum ?? 0;
+  const smallLimit =
+    availableRentals?.objects.find(item => item.name === "Hand Cart Small")
+      ?.maximum ?? 0;
 
-// export default HandCart;
+  return (
+    <>
+      <FormController
+        name="handCart.rolltainer"
+        control={control}
+        renderItem={props => (
+          <ItemNumberInput
+            {...props}
+            label="롤테이너 개수"
+            placeholder="0개"
+            itemLimit={rolltainerLimit}
+            value={
+              getValues("handCart.rolltainer")
+                ? getValues("handCart.rolltainer")
+                : undefined
+            }
+          />
+        )}
+      />
+      <FormController
+        name="handCart.large"
+        control={control}
+        renderItem={props => (
+          <ItemNumberInput
+            {...props}
+            label="대형 개수"
+            placeholder="0개"
+            itemLimit={largeLimit}
+            value={
+              getValues("handCart.large")
+                ? getValues("handCart.large")
+                : undefined
+            }
+          />
+        )}
+      />
+      <FormController
+        name="handCart.medium"
+        control={control}
+        renderItem={props => (
+          <ItemNumberInput
+            {...props}
+            label="중형 개수"
+            placeholder="0개"
+            itemLimit={mediumLimit}
+            value={
+              getValues("handCart.medium")
+                ? getValues("handCart.medium")
+                : undefined
+            }
+          />
+        )}
+      />
+      <FormController
+        name="handCart.small"
+        control={control}
+        renderItem={props => (
+          <ItemNumberInput
+            {...props}
+            label="소형 개수"
+            placeholder="0개"
+            itemLimit={smallLimit}
+            value={
+              getValues("handCart.small")
+                ? getValues("handCart.small")
+                : undefined
+            }
+          />
+        )}
+      />
+    </>
+  );
+};
+
+export default HandCart;

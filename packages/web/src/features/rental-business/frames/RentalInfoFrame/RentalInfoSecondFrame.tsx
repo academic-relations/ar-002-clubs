@@ -14,13 +14,13 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-// import HandCart from "@sparcs-clubs/web/features/rental-business/components/Rentals/HandCart";
-// import Mat from "@sparcs-clubs/web/features/rental-business/components/Rentals/Mat";
-// import Tool from "@sparcs-clubs/web/features/rental-business/components/Rentals/Tool";
-// import Vacuum from "@sparcs-clubs/web/features/rental-business/components/Rentals/Vacuum";
 import ItemButtonList from "@sparcs-clubs/web/features/rental-business/components/ItemButtonList";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
 import Easel from "@sparcs-clubs/web/features/rental-business/components/Rentals/Easel";
+import HandCart from "@sparcs-clubs/web/features/rental-business/components/Rentals/HandCart";
+import Mat from "@sparcs-clubs/web/features/rental-business/components/Rentals/Mat";
+import Tool from "@sparcs-clubs/web/features/rental-business/components/Rentals/Tool";
+import Vacuum from "@sparcs-clubs/web/features/rental-business/components/Rentals/Vacuum";
 import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
 import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
 
@@ -36,6 +36,10 @@ const StyledCardInner = styled.div`
   align-self: stretch;
 `;
 
+const FlexGrowTypography = styled.div`
+  flex-grow: 1;
+`;
+
 const NoneRental: React.FC<RentalFrameProps> = () => <>none</>;
 
 const rentals = {
@@ -49,23 +53,19 @@ const rentals = {
   },
   vacuum: {
     info: "대충 청소기에 대한 추가 안내사항",
-    // component: Vacuum,
-    component: Easel,
+    component: Vacuum,
   },
   handCart: {
     info: "대충 수레에 대한 추가 안내사항",
-    // component: HandCart,
-    component: Easel,
+    component: HandCart,
   },
   mat: {
     info: "대충 돗자리에 대한 추가 안내사항",
-    // component: Mat,
-    component: Easel,
+    component: Mat,
   },
   tool: {
     info: "대충 공구에 대한 추가 안내사항",
-    // component: Tool,
-    component: Easel,
+    component: Tool,
   },
 };
 const RentalInfoSecondFrame: React.FC<
@@ -144,11 +144,12 @@ const RentalInfoSecondFrame: React.FC<
       {value !== "none" && (
         <Card outline gap={40}>
           <StyledCardInner>
-            {/* TODO: width 100 필요한지 확인 */}
-            <FlexWrapper direction="row" gap={20}>
-              <Typography fs={20} lh={24} fw="MEDIUM" style={{ flexGrow: 1 }}>
-                세부 물품 정보
-              </Typography>
+            <FlexWrapper direction="row" gap={20} style={{ width: "100%" }}>
+              <FlexGrowTypography>
+                <Typography fs={20} lh={24} fw="MEDIUM">
+                  세부 물품 정보
+                </Typography>
+              </FlexGrowTypography>
               <TextButton
                 text="초기화"
                 // disabled={isCurrentItemEmpty()}
@@ -166,10 +167,12 @@ const RentalInfoSecondFrame: React.FC<
       )}
       <Card outline gap={40}>
         <StyledCardInner>
-          <FlexWrapper direction="row" gap={20}>
-            <Typography fs={20} lh={24} fw="MEDIUM" style={{ flexGrow: 1 }}>
-              대여 물품 목록
-            </Typography>
+          <FlexWrapper direction="row" gap={20} style={{ width: "100%" }}>
+            <FlexGrowTypography>
+              <Typography fs={20} lh={24} fw="MEDIUM">
+                대여 물품 목록
+              </Typography>
+            </FlexGrowTypography>
             <TextButton
               text="초기화"
               // disabled={isRentalListEmpty()}
