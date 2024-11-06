@@ -79,7 +79,7 @@ const ActivityCertificateInfoSecondFrame: React.FC<
     formState: { isValid, errors },
   } = useFormContext<ActivityCertificateInfo>();
 
-  const { fields, append, replace } = useFieldArray<
+  const { fields, append, replace, move } = useFieldArray<
     ActivityCertificateInfo,
     "histories"
   >({
@@ -88,14 +88,14 @@ const ActivityCertificateInfoSecondFrame: React.FC<
   });
 
   const [draggingActivityDescription, setDraggingActivityDescription] =
-    useState<ActivityHistory | null>(null);
+    useState<(ActivityHistory & { id: string }) | null>(null);
 
   const activityHistories = watch("histories");
   const activityDuration = watch("activityDuration");
 
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
-    activityDescription: ActivityHistory,
+    activityDescription: ActivityHistory & { id: string },
   ) => {
     setDraggingActivityDescription(activityDescription);
     e.dataTransfer.setData("text/plain", "");
@@ -111,54 +111,46 @@ const ActivityCertificateInfoSecondFrame: React.FC<
 
   const handleDrop = (
     e: React.DragEvent<HTMLDivElement>,
-    activityDescription: ActivityHistory,
+    activityDescription: ActivityHistory & { id: string },
   ) => {
+    e.preventDefault();
+
     if (!draggingActivityDescription) return;
 
     const currentIndex = fields.findIndex(
-      field => field.key === draggingActivityDescription.key,
+      field => field.id === draggingActivityDescription.id,
     );
     const targetIndex = fields.findIndex(
-      field => field.key === activityDescription.key,
+      field => field.id === activityDescription.id,
     );
 
-    const tempActivityDescriptions: Array<ActivityHistory> = fields.slice();
     if (currentIndex !== -1 && targetIndex !== -1) {
-      tempActivityDescriptions.splice(currentIndex, 1);
-      tempActivityDescriptions.splice(
-        targetIndex,
-        0,
-        draggingActivityDescription,
-      );
-
-      replace(tempActivityDescriptions);
+      move(currentIndex, targetIndex);
     }
+
+    setDraggingActivityDescription(null);
   };
 
   const handleAddActivityDescription = () => {
-    const maxKey = Math.max(...fields.map(({ key }) => key));
-
     if (fields.length === 0) {
       append({
-        key: 1,
         dateRange: [null, null],
         description: "",
       });
     } else if (fields.length < 5) {
       append({
-        key: maxKey + 1,
         dateRange: [null, null],
         description: "",
       });
     }
   };
 
-  const handleRemoveActivityDescription = (activityDescriptionKey: number) => {
+  const handleRemoveActivityDescription = (activityDescriptionId: string) => {
     if (fields.length > 1) {
       replace([
         ...fields.filter(
           activityDescription =>
-            activityDescription.key !== activityDescriptionKey,
+            activityDescription.id !== activityDescriptionId,
         ),
       ]);
     }
@@ -185,7 +177,7 @@ const ActivityCertificateInfoSecondFrame: React.FC<
 
             return (
               <ActivityCertificateRow
-                key={field.key}
+                key={field.id}
                 draggable="true"
                 onDragStart={e => handleDragStart(e, field)}
                 onDragEnd={handleDragEnd}
@@ -264,9 +256,8 @@ const ActivityCertificateInfoSecondFrame: React.FC<
                     )}
                   />
                 </InputFrameInner>
-
                 <IconOuterFrameInner
-                  onClick={_e => handleRemoveActivityDescription(field.key)}
+                  onClick={_e => handleRemoveActivityDescription(field.id)}
                 >
                   <IconInnerFrameInner>
                     <Icon type="delete" size={16} />

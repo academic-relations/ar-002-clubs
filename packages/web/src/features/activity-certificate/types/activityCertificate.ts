@@ -9,7 +9,6 @@ export interface ActivityBasicInfo {
 }
 
 export interface ActivityHistory {
-  key: number;
   dateRange: [Date | null, Date | null];
   description: string;
 }

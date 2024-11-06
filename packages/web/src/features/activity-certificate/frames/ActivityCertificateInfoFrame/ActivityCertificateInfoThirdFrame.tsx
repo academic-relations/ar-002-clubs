@@ -175,15 +175,17 @@ const ActivityCertificateInfoThirdFrame: React.FC<
               {`  •  활동 내역`}
             </Typography>
             <ActivityDescriptionSummaryFrameInner>
-              {getValues().histories.map(activityDescription => {
+              {getValues().histories.map((activityDescription, index) => {
                 const startMonth = activityDescription.dateRange?.[0];
                 const endMonth = activityDescription.dateRange?.[1];
 
                 return (
-                  <ActivityDescriptionSummaryRow key={activityDescription.key}>
+                  <ActivityDescriptionSummaryRow
+                    key={`activityDescription_${index}`}
+                  >
                     {startMonth?.getMonth() === endMonth?.getMonth() ? (
                       <Typography
-                        key={`${activityDescription.key}_start`}
+                        key={`${index}_start`}
                         fs={16}
                         lh={20}
                         fw="REGULAR"
@@ -197,7 +199,7 @@ const ActivityCertificateInfoThirdFrame: React.FC<
                       </Typography>
                     ) : (
                       <Typography
-                        key={`${activityDescription.key}_end`}
+                        key={`${index}_end`}
                         fs={16}
                         lh={20}
                         fw="REGULAR"
@@ -212,7 +214,7 @@ const ActivityCertificateInfoThirdFrame: React.FC<
                     )}
 
                     <Typography
-                      key={`${activityDescription.key}_description`}
+                      key={`${index}_description`}
                       fs={16}
                       lh={20}
                       fw="REGULAR"
