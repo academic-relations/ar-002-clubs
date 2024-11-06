@@ -128,14 +128,13 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
 
   useEffect(() => {
     const isValidFormat = /^\d+$/g.test(String(value));
-    const numericValue = value;
     if (value === undefined) {
       setError("");
       setErrorStatus(false);
     } else if (!isValidFormat) {
       setError("숫자만 입력 가능합니다");
       setErrorStatus(true);
-    } else if (numericValue && numericValue > itemLimit) {
+    } else if (value && value > itemLimit) {
       setError("신청 가능 개수를 초과했습니다");
       setErrorStatus(true);
     } else {
