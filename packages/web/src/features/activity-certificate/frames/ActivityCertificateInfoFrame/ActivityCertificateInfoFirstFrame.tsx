@@ -106,13 +106,13 @@ const ActivityCertificateInfoFirstFrame: React.FC<
         }
         value={
           activityCertificate?.issuedNumber
-            ? String(activityCertificate?.issuedNumber)
+            ? activityCertificate?.issuedNumber
             : undefined
         }
-        handleChange={changedNumber => {
+        onChange={changedNumber => {
           setActivityCertificate({
             ...activityCertificate,
-            issuedNumber: parseInt(changedNumber),
+            issuedNumber: changedNumber,
           });
         }}
       />
