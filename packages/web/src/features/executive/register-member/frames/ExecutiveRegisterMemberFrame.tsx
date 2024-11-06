@@ -15,7 +15,14 @@ import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import RegistrationMemberTable from "@sparcs-clubs/web/common/components/RegisterMemberTable";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 
+import { DivisionTypeTagList } from "@sparcs-clubs/web/constants/tableTagList";
+
 import { useGetMemberRegistration } from "@sparcs-clubs/web/features/executive/register-member/services/getMemberRegistration";
+
+import {
+  getDisplayNameDivisions,
+  getEnumDivisions,
+} from "@sparcs-clubs/web/types/divisions.types";
 
 interface ConvertedSelectedCategories {
   name: string;
@@ -54,6 +61,10 @@ const TableWithPaginationWrapper = styled.div`
   align-self: stretch;
 `;
 
+const DivisionTypeList = Object.keys(DivisionTypeTagList).map(key =>
+  parseInt(key),
+);
+
 export const ExecutiveRegisterMember = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const limit = 10;
@@ -68,6 +79,10 @@ export const ExecutiveRegisterMember = () => {
     setCurrentPage(page);
   };
 
+  /*
+    동아리 구분에 대해서만 hardcoding  
+    정동아리, 가동아리만 club.enum에 존재하고, 상임동아리(3)는 필터링을 위해 편의상 설정한 것이기 때문
+  */
   const [categories, setCategories] = useState<CategoryProps[]>([
     {
       name: "구분",
@@ -76,34 +91,10 @@ export const ExecutiveRegisterMember = () => {
     },
     {
       name: "분과",
-      content: [
-        "생활문화",
-        "연행예술",
-        "전시창작",
-        "밴드음악",
-        "보컬음악",
-        "연주음악",
-        "사회",
-        "종교",
-        "구기체육",
-        "생활체육",
-        "이공학술",
-        "인문학술",
-      ],
-      selectedContent: [
-        "생활문화",
-        "연행예술",
-        "전시창작",
-        "밴드음악",
-        "보컬음악",
-        "연주음악",
-        "사회",
-        "종교",
-        "구기체육",
-        "생활체육",
-        "이공학술",
-        "인문학술",
-      ],
+      content: DivisionTypeList.map(item => getDisplayNameDivisions(item)),
+      selectedContent: DivisionTypeList.map(item =>
+        getDisplayNameDivisions(item),
+      ),
     },
   ]);
 
@@ -116,7 +107,7 @@ export const ExecutiveRegisterMember = () => {
     },
     {
       name: "분과",
-      selectedContent: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      selectedContent: DivisionTypeList,
     },
   ]);
 
@@ -134,36 +125,9 @@ export const ExecutiveRegisterMember = () => {
       }
     });
 
-    const convertedDivisionId = categories[1].selectedContent.map(item => {
-      switch (item) {
-        case "생활문화":
-          return 1;
-        case "연행예술":
-          return 2;
-        case "전시창작":
-          return 3;
-        case "밴드음악":
-          return 4;
-        case "보컬음악":
-          return 5;
-        case "연주음악":
-          return 6;
-        case "사회":
-          return 7;
-        case "종교":
-          return 8;
-        case "구기체육":
-          return 9;
-        case "생활체육":
-          return 10;
-        case "이공학술":
-          return 11;
-        case "인문학술":
-          return 12;
-        default:
-          return 0;
-      }
-    });
+    const convertedDivisionId = categories[1].selectedContent.map(item =>
+      getEnumDivisions(item),
+    );
 
     setConvertedCategories([
       {
@@ -260,34 +224,12 @@ export const ExecutiveRegisterMember = () => {
                     },
                     {
                       name: "분과",
-                      content: [
-                        "생활문화",
-                        "연행예술",
-                        "전시창작",
-                        "밴드음악",
-                        "보컬음악",
-                        "연주음악",
-                        "사회",
-                        "종교",
-                        "구기체육",
-                        "생활체육",
-                        "이공학술",
-                        "인문학술",
-                      ],
-                      selectedContent: [
-                        "생활문화",
-                        "연행예술",
-                        "전시창작",
-                        "밴드음악",
-                        "보컬음악",
-                        "연주음악",
-                        "사회",
-                        "종교",
-                        "구기체육",
-                        "생활체육",
-                        "이공학술",
-                        "인문학술",
-                      ],
+                      content: DivisionTypeList.map(item =>
+                        getDisplayNameDivisions(item),
+                      ),
+                      selectedContent: DivisionTypeList.map(item =>
+                        getDisplayNameDivisions(item),
+                      ),
                     },
                   ]);
                 }}
