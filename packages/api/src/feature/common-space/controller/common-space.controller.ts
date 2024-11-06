@@ -14,6 +14,7 @@ import apiCms004 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms0
 import apiCms005 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms005";
 import apiCms006 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
 import apiCms007 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
+import apiCms008 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms008";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Public } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
@@ -48,6 +49,10 @@ import type {
   ApiCms007RequestQuery,
   ApiCms007ResponseOk,
 } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
+import type {
+  ApiCms008RequestParam,
+  ApiCms008ResponseOk,
+} from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms008";
 
 @Controller()
 export class CommonSpaceController {
@@ -159,6 +164,18 @@ export class CommonSpaceController {
         query.endDate,
         query.pageOffset,
         query.itemCount,
+      );
+    return result;
+  }
+
+  @Get("student/common-spaces/common-space/usage-order/:orderId")
+  @UsePipes(new ZodPipe(apiCms008))
+  async getStudentCommonSpacesUsageOrderDetail(
+    @Param() param: ApiCms008RequestParam,
+  ): Promise<ApiCms008ResponseOk> {
+    const result =
+      await this.commonspaceService.getStudentCommonSpacesUsageOrderDetail(
+        param.orderId,
       );
     return result;
   }
