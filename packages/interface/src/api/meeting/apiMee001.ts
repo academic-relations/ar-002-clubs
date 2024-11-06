@@ -22,12 +22,14 @@ const requestBody = z.object({
   startDate: z.coerce.date(),
   endDate: z.coerce.date().optional(),
   isRegular: z.coerce.boolean(),
-  location: z.string().min(1),
-  locationEn: z.string().min(1),
+  location: z.string().min(1).optional(),
+  locationEn: z.string().min(1).optional(),
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Created]: z.object({}),
+  [HttpStatusCode.Created]: z.object({
+    id: z.number().int().min(1),
+  }),
 };
 
 const responseErrorMap = {};

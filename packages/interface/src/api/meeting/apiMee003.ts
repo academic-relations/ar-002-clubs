@@ -27,6 +27,7 @@ const requestBody = z.object({
   isRegular: z.coerce.boolean().optional(),
   location: z.coerce.string().optional(),
   locationEn: z.coerce.string().optional(),
+  tag: z.coerce.string().optional(),
 });
 
 const responseBodyMap = {

@@ -28,8 +28,8 @@ const Easel: React.FC<RentalLimitProps> = ({
         label="이젤 개수"
         placeholder="0개"
         itemLimit={easelLimit}
-        value={rental?.easel ? String(rental.easel) : undefined}
-        handleChange={value =>
+        value={rental?.easel ? rental.easel : undefined}
+        onChange={value =>
           setRental({
             ...rental,
             easel: Number(value),

@@ -45,10 +45,10 @@ const HandCart: React.FC<RentalLimitProps> = ({
         itemLimit={rolltainerLimit}
         value={
           rental?.handCart?.rolltainer
-            ? String(rental?.handCart?.rolltainer)
+            ? rental?.handCart?.rolltainer
             : undefined
         }
-        handleChange={value =>
+        onChange={value =>
           setRental({
             ...rental,
             handCart: {
@@ -63,10 +63,8 @@ const HandCart: React.FC<RentalLimitProps> = ({
         label="대형 개수"
         placeholder="0개"
         itemLimit={largeLimit}
-        value={
-          rental?.handCart?.large ? String(rental?.handCart?.large) : undefined
-        }
-        handleChange={value =>
+        value={rental?.handCart?.large ? rental?.handCart?.large : undefined}
+        onChange={value =>
           setRental({
             ...rental,
             handCart: {
@@ -81,12 +79,8 @@ const HandCart: React.FC<RentalLimitProps> = ({
         label="중형 개수"
         placeholder="0개"
         itemLimit={mediumLimit}
-        value={
-          rental?.handCart?.medium
-            ? String(rental?.handCart?.medium)
-            : undefined
-        }
-        handleChange={value =>
+        value={rental?.handCart?.medium ? rental?.handCart?.medium : undefined}
+        onChange={value =>
           setRental({
             ...rental,
             handCart: {
@@ -101,10 +95,8 @@ const HandCart: React.FC<RentalLimitProps> = ({
         label="소형 개수"
         placeholder="0개"
         itemLimit={smallLimit}
-        value={
-          rental?.handCart?.small ? String(rental?.handCart?.small) : undefined
-        }
-        handleChange={value =>
+        value={rental?.handCart?.small ? rental?.handCart?.small : undefined}
+        onChange={value =>
           setRental({
             ...rental,
             handCart: {

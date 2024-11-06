@@ -26,8 +26,8 @@ const Mat: React.FC<RentalLimitProps> = ({
         label="돗자리 개수"
         placeholder="0개"
         itemLimit={matLimit}
-        value={rental?.mat ? String(rental?.mat) : undefined}
-        handleChange={value =>
+        value={rental?.mat ? rental?.mat : undefined}
+        onChange={value =>
           setRental({
             ...rental,
             mat: Number(value),
