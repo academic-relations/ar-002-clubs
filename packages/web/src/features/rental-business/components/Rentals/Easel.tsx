@@ -20,9 +20,7 @@ const Easel: React.FC<RentalLimitProps> = ({ availableRentals, formCtx }) => {
           placeholder="0개"
           itemLimit={easelLimit}
           value={
-            formCtx.getValues("easel")
-              ? String(formCtx.getValues("easel"))
-              : undefined
+            formCtx.getValues("easel") ? formCtx.getValues("easel") : undefined
           }
         />
       )}
