@@ -25,8 +25,8 @@ import {
 } from "@sparcs-clubs/web/constants/tableTagList";
 import { useGetRegisterClub } from "@sparcs-clubs/web/features/executive/register-club/services/useGetRegisterClub";
 import {
-  getDisplayName as getDisplayNameDivision,
-  getEnum as getEnumDivision,
+  getDisplayNameDivisions,
+  getEnumDivisions,
 } from "@sparcs-clubs/web/types/divisions.types";
 
 interface ConvertedSelectedCategories {
@@ -100,9 +100,9 @@ export const ExecutiveRegistrationClubFrame = () => {
     },
     {
       name: "분과",
-      content: DivisionTypeList.map(item => getDisplayNameDivision(item)),
+      content: DivisionTypeList.map(item => getDisplayNameDivisions(item)),
       selectedContent: DivisionTypeList.map(item =>
-        getDisplayNameDivision(item),
+        getDisplayNameDivisions(item),
       ),
     },
   ]);
@@ -126,7 +126,7 @@ export const ExecutiveRegistrationClubFrame = () => {
     );
 
     const convertedDivisionId = categories[1].selectedContent.map(item =>
-      getEnumDivision(item),
+      getEnumDivisions(item),
     );
 
     setConvertedCategories([
@@ -227,10 +227,10 @@ export const ExecutiveRegistrationClubFrame = () => {
                 {
                   name: "분과",
                   content: DivisionTypeList.map(item =>
-                    getDisplayNameDivision(item),
+                    getDisplayNameDivisions(item),
                   ),
                   selectedContent: DivisionTypeList.map(item =>
-                    getDisplayNameDivision(item),
+                    getDisplayNameDivisions(item),
                   ),
                 },
               ]);

@@ -13,7 +13,7 @@ enum DivisionType /** TODO - 20240320 기준으로 번역 단어장에 각 divis
   HumanitiesAcademics, // 인문학술
 }
 
-const getDisplayName = (type: DivisionType) => {
+const getDisplayNameDivisions = (type: DivisionType) => {
   switch (type) {
     case DivisionType.LifeCulture:
       return "생활문화";
@@ -44,7 +44,7 @@ const getDisplayName = (type: DivisionType) => {
   }
 };
 
-const getEnum = (string: string) => {
+const getEnumDivisions = (string: string) => {
   switch (string) {
     case "생활문화":
       return 1;
@@ -75,4 +75,4 @@ const getEnum = (string: string) => {
   }
 };
 
-export { DivisionType, getDisplayName, getEnum };
+export { DivisionType, getDisplayNameDivisions, getEnumDivisions };
