@@ -65,7 +65,9 @@ const NewAgendaFrame: React.FC = () => {
       typeCounter[agenda.type] += 1;
       return (
         <AgendaBlock
-          ref={refs[index]}
+          ref={el => {
+            refs.current[index] = el;
+          }}
           key={agenda.title}
           index={index}
           agenda={agenda}
