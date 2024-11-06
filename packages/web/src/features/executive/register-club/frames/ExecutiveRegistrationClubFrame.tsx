@@ -3,8 +3,8 @@
 import React, { useMemo, useState } from "react";
 
 import {
-  getDisplayName as getDisplayNameRegistration,
-  getEnum as getEnumRegistration,
+  getDisplayNameRegistration,
+  getEnumRegistration,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import { hangulIncludes } from "es-hangul";

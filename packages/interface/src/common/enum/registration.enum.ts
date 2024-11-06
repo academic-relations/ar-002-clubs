@@ -25,7 +25,9 @@ export enum RegistrationApplicationStudentStatusEnum {
   Rejected, // 반려됨
 }
 
-const getDisplayName = (type: RegistrationTypeEnum) => {
+export const getDisplayNameRegistration = (
+  type: RegistrationTypeEnum | undefined,
+) => {
   switch (type) {
     case RegistrationTypeEnum.Renewal:
       return "재등록";
@@ -39,7 +41,7 @@ const getDisplayName = (type: RegistrationTypeEnum) => {
   }
 };
 
-const getEnum = (string: string) => {
+export const getEnumRegistration = (string: string) => {
   // use flatMap
   switch (string) {
     case "재등록":
@@ -53,4 +55,4 @@ const getEnum = (string: string) => {
   }
 };
 
-export { RegistrationTypeEnum, getDisplayName, getEnum };
+export { RegistrationTypeEnum };
