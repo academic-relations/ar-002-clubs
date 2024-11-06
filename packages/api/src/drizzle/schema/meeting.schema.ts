@@ -198,13 +198,11 @@ export const MeetingMapping = mysqlTable(
     id: int("id").autoincrement().primaryKey(),
     meetingId: int("meeting_id").notNull(),
     meetingAgendaId: int("meeting_agenda_id").notNull(),
-    meetingAgendaPosition: int("meeting_agenda_position").autoincrement(),
+    meetingAgendaPosition: int("meeting_agenda_position"),
     meetingAgendaEntityType: int("meeting_agenda_entity_type").notNull(),
     meetingAgendaContentId: int("meeting_agenda_content_id"),
     meetingAgendaVoteId: int("meeting_agenda_vote_id"),
-    meetingAgendaEntityPosition: int(
-      "meeting_agenda_entity_position",
-    ).autoincrement(),
+    meetingAgendaEntityPosition: int("meeting_agenda_entity_position"),
   },
   table => ({
     meetingMeetingMappingIdFk: foreignKey({
