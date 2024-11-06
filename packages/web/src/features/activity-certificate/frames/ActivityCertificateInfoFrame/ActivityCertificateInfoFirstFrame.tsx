@@ -118,12 +118,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
           }}
           required
           renderItem={props => (
-            <ItemNumberInput
-              {...props}
-              label="발급 매수"
-              placeholder="X개"
-              showIcon={false}
-            />
+            <ItemNumberInput {...props} label="발급 매수" placeholder="X개" />
           )}
         />
 
