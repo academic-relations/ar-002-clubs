@@ -71,6 +71,8 @@ const RentalInfoFirstFrame: React.FC<
     setNextEnabled(!!clubId && !!phoneNumber && hasNoErrors);
   }, [clubId, phoneNumber, errors, setNextEnabled]);
 
+  formCtx.setValue("info.applicant", userName);
+
   return (
     // TODO: club loading & error 지우기
     <AsyncBoundary

@@ -52,6 +52,7 @@ const RentalNoticeFrame: React.FC<RentalFrameProps> = ({ formCtx }) => {
         <Typography fs={20} lh={24} fw="MEDIUM">
           안내사항
         </Typography>
+        {/* 페이지 새로고침 or 나갔다 다시 들어오면 작성 상태 초기화 공지 필요 */}
         <Typography fs={16} lh={32} fw="REGULAR">
           모든 대여 사업은 동연 소속 동아리를 대상으로 하며, 신청은 각 동아리의
           대표자 또는 대의원만 가능합니다
