@@ -45,8 +45,9 @@ export class MeetingRepository {
     return result;
   }
 
-  async vote(choiceId: number, userId: number) {
+  async vote(choiceId: number, userId: number, voteId: number) {
     const result = await this.db.insert(MeetingVoteResult).values({
+      voteId,
       choiceId,
       userId,
     });
