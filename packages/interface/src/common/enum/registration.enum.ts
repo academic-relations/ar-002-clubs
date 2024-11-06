@@ -42,7 +42,6 @@ export const getDisplayNameRegistration = (
 };
 
 export const getEnumRegistration = (string: string) => {
-  // use flatMap
   switch (string) {
     case "재등록":
       return [1];
