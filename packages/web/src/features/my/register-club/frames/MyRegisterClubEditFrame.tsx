@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ApiReg009RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg009";
 import apiReg011 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import {
+  getDisplayNameRegistration,
   RegistrationDeadlineEnum,
   RegistrationTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
@@ -213,16 +214,10 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   const { mutate, isSuccess } = usePutClubRegistration();
 
-  const title = useMemo(() => {
-    switch (detail?.registrationTypeEnumId) {
-      case RegistrationTypeEnum.Promotional:
-        return "신규 등록";
-      case RegistrationTypeEnum.Renewal:
-        return "재등록";
-      default:
-        return "가등록";
-    }
-  }, [detail]);
+  const title = useMemo(
+    () => getDisplayNameRegistration(detail?.registrationTypeEnumId),
+    [detail],
+  );
 
   const type =
     detail?.registrationTypeEnumId ?? RegistrationTypeEnum.NewProvisional;

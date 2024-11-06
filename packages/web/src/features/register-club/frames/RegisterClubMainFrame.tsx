@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import {
+  getDisplayNameRegistration,
   RegistrationDeadlineEnum,
   RegistrationTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
@@ -186,15 +187,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   const title = useMemo(() => {
     formCtx.setValue("registrationTypeEnumId", type);
-
-    switch (type) {
-      case RegistrationTypeEnum.Promotional:
-        return "신규 등록";
-      case RegistrationTypeEnum.Renewal:
-        return "재등록";
-      default:
-        return "가등록";
-    }
+    return getDisplayNameRegistration(type);
   }, [formCtx, type]);
 
   const isProvisionalClub =
