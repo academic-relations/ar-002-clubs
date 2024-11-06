@@ -62,12 +62,8 @@ const Tool: React.FC<RentalLimitProps> = ({
         label="전동 드릴 세트 개수"
         placeholder="0개"
         itemLimit={powerDrillLimit}
-        value={
-          rental?.tool?.powerDrill
-            ? String(rental?.tool?.powerDrill)
-            : undefined
-        }
-        handleChange={value =>
+        value={rental?.tool?.powerDrill ? rental?.tool?.powerDrill : undefined}
+        onChange={value =>
           setRental({
             ...rental,
             tool: {
@@ -82,8 +78,8 @@ const Tool: React.FC<RentalLimitProps> = ({
         label="드라이버 세트 개수"
         placeholder="0개"
         itemLimit={driverLimit}
-        value={rental?.tool?.driver ? String(rental?.tool?.driver) : undefined}
-        handleChange={value =>
+        value={rental?.tool?.driver ? rental?.tool?.driver : undefined}
+        onChange={value =>
           setRental({
             ...rental,
             tool: {
@@ -98,10 +94,8 @@ const Tool: React.FC<RentalLimitProps> = ({
         label="순간접착제 개수"
         placeholder="0개"
         itemLimit={superGlueLimit}
-        value={
-          rental?.tool?.superGlue ? String(rental?.tool?.superGlue) : undefined
-        }
-        handleChange={value =>
+        value={rental?.tool?.superGlue ? rental?.tool?.superGlue : undefined}
+        onChange={value =>
           setRental({
             ...rental,
             tool: {
@@ -116,8 +110,8 @@ const Tool: React.FC<RentalLimitProps> = ({
         label="니퍼 개수"
         placeholder="0개"
         itemLimit={nipperLimit}
-        value={rental?.tool?.nipper ? String(rental?.tool?.nipper) : undefined}
-        handleChange={value =>
+        value={rental?.tool?.nipper ? rental?.tool?.nipper : undefined}
+        onChange={value =>
           setRental({
             ...rental,
             tool: {
@@ -132,8 +126,8 @@ const Tool: React.FC<RentalLimitProps> = ({
         label="펜치 개수"
         placeholder="0개"
         itemLimit={plierLimit}
-        value={rental?.tool?.plier ? String(rental?.tool?.plier) : undefined}
-        handleChange={value =>
+        value={rental?.tool?.plier ? rental?.tool?.plier : undefined}
+        onChange={value =>
           setRental({
             ...rental,
             tool: {
@@ -149,11 +143,9 @@ const Tool: React.FC<RentalLimitProps> = ({
         placeholder="0개"
         itemLimit={longNosePlierLimit}
         value={
-          rental?.tool?.longNosePlier
-            ? String(rental?.tool?.longNosePlier)
-            : undefined
+          rental?.tool?.longNosePlier ? rental?.tool?.longNosePlier : undefined
         }
-        handleChange={value =>
+        onChange={value =>
           setRental({
             ...rental,
             tool: {
