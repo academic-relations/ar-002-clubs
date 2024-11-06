@@ -17,7 +17,6 @@ export interface ItemNumberInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> {
   label?: string;
   placeholder: string;
-  errorMessage?: string;
   disabled?: boolean;
   itemLimit?: number;
   unit?: string;
@@ -122,7 +121,6 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
   unit = "개",
   onChange,
   setErrorStatus = () => {},
-  ...props
 }) => {
   const [error, setError] = useState("");
 
@@ -140,7 +138,6 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
       setErrorStatus(true);
     } else {
       setError("");
-
       setErrorStatus(false);
     }
   }, [value, itemLimit, setErrorStatus]);
@@ -187,7 +184,6 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
           disabled={disabled}
           hasError={!!error}
           onSelect={handleCursor}
-          {...props}
         />
         {itemLimit !== undefined && (
           <RightContentWrapper hasError={!!error}>
