@@ -9,6 +9,7 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
 
+import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
@@ -117,20 +118,8 @@ const ActivityCertificateInfoFirstFrame: React.FC<
             min: { value: 1, message: "1 이상이어야 합니다" },
           }}
           required
-          renderItem={({ value, onChange, errorMessage }) => (
-            <TextInput
-              label="발급 매수"
-              placeholder="X개"
-              value={`${value}개`}
-              onChange={data => {
-                const extractedValue = data.currentTarget.value.replace(
-                  /[^0-9]/g,
-                  "",
-                );
-                onChange(+extractedValue);
-              }}
-              errorMessage={errorMessage}
-            />
+          renderItem={props => (
+            <ItemNumberInput {...props} label="발급 매수" placeholder="X개" />
           )}
         />
 

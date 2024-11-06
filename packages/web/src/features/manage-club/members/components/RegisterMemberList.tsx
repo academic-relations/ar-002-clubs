@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
+import { ApiClb006ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb006";
 import { ApiClb015ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
 import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
 
@@ -11,6 +12,7 @@ import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
 import MembersTable from "@sparcs-clubs/web/features/manage-club/components/MembersTable";
 import { useGetMemberRegistration } from "@sparcs-clubs/web/features/manage-club/members/services/getClubMemberRegistration";
+import { useGetClubDelegate } from "@sparcs-clubs/web/features/manage-club/services/getClubDelegate";
 import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 
 const TableWithPagination = styled.div`
@@ -27,6 +29,16 @@ const RegisterMemberList = () => {
   const { data: idData } = useGetMyManageClub() as {
     data: ApiClb015ResponseOk;
     isLoading: boolean;
+  };
+
+  const {
+    data: delegatesNow,
+    isLoading: delegatesIsLoading,
+    isError: delegatesIsError,
+  } = useGetClubDelegate({ clubId: idData.clubId }) as {
+    data: ApiClb006ResponseOK;
+    isLoading: boolean;
+    isError: boolean;
   };
 
   const {
@@ -56,8 +68,8 @@ const RegisterMemberList = () => {
   return (
     <TableWithPagination>
       <AsyncBoundary
-        isLoading={clubIsLoading || memberIsLoading}
-        isError={clubIsError || memberIsError}
+        isLoading={clubIsLoading || memberIsLoading || delegatesIsLoading}
+        isError={clubIsError || memberIsError || delegatesIsError}
       >
         {memberData && (
           <MembersTable
@@ -65,6 +77,7 @@ const RegisterMemberList = () => {
             clubName={clubData.name_kr}
             clubId={idData.clubId}
             refetch={memberRefetch}
+            delegates={delegatesNow.delegates}
           />
         )}
         {totalPage !== 1 && (

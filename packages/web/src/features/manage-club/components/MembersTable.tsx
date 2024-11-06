@@ -1,5 +1,6 @@
 import React from "react";
 
+import { ApiClb006ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb006";
 import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
 
 import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
@@ -14,6 +15,7 @@ import { overlay } from "overlay-kit";
 
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
+import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import TableButton from "@sparcs-clubs/web/common/components/Table/TableButton";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
@@ -29,7 +31,25 @@ interface MembersTableProps {
   clubName: string;
   clubId: number;
   refetch: () => void;
+  delegates: ApiClb006ResponseOK["delegates"];
 }
+
+const openDelegateCannotBeRejectedModal = (refetch: () => void) => {
+  overlay.open(({ isOpen, close }) => (
+    <Modal isOpen={isOpen}>
+      <ConfirmModalContent
+        confirmButtonText="확인"
+        onConfirm={async () => {
+          close();
+          refetch();
+        }}
+      >
+        동아리 대표자/대의원의 동아리 신청은 반려할 수 없습니다.
+        <br /> 해당 대표자/대의원 변경 후 반려 가능합니다.
+      </ConfirmModalContent>
+    </Modal>
+  ));
+};
 
 const openApproveModal = (
   member: ApiReg008ResponseOk["applies"][0],
@@ -109,6 +129,7 @@ const columnsFunction = (
   clubName: string,
   clubId: number,
   refetch: () => void,
+  delegates: ApiClb006ResponseOK["delegates"],
 ) => [
   columnHelper.accessor("applyStatusEnumId", {
     header: "상태",
@@ -155,7 +176,13 @@ const columnsFunction = (
             text={["승인", "반려"]}
             onClick={[
               () => openApproveModal(member, clubName, clubId, refetch),
-              () => openRejectModal(member, clubName, clubId, refetch),
+              () =>
+                delegates.some(
+                  delegate =>
+                    delegate.studentNumber === member.student.studentNumber,
+                )
+                  ? openDelegateCannotBeRejectedModal(refetch)
+                  : openRejectModal(member, clubName, clubId, refetch),
             ]}
           />
         )) ||
@@ -163,7 +190,15 @@ const columnsFunction = (
           RegistrationApplicationStudentStatusEnum.Approved && (
           <TableButton
             text={["반려"]}
-            onClick={[() => openRejectModal(member, clubName, clubId, refetch)]}
+            onClick={[
+              () =>
+                delegates.some(
+                  delegate =>
+                    delegate.studentNumber === member.student.studentNumber,
+                )
+                  ? openDelegateCannotBeRejectedModal(refetch)
+                  : openRejectModal(member, clubName, clubId, refetch),
+            ]}
           />
         )) ||
         (member.applyStatusEnumId ===
@@ -186,8 +221,9 @@ const MembersTable: React.FC<MembersTableProps> = ({
   clubName,
   clubId,
   refetch,
+  delegates,
 }) => {
-  const columns = columnsFunction(clubName, clubId, refetch);
+  const columns = columnsFunction(clubName, clubId, refetch, delegates);
   const table = useReactTable({
     columns,
     data: memberList,
