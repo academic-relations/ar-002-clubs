@@ -13,6 +13,8 @@ import styled, { css } from "styled-components";
 import FormError from "../FormError";
 import Label from "../FormLabel";
 
+import { TextInputProps } from "./TextInput";
+
 export interface ItemNumberInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> {
   label?: string;
@@ -71,7 +73,7 @@ const RightContentWrapper = styled.div.withConfig({
 
 const Input = styled.input.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
-})<ItemNumberInputProps & { hasError: boolean }>`
+})<TextInputProps & { hasError: boolean; itemLimit: number }>`
   display: block;
   width: 100%;
   padding: 8px 12px;
@@ -184,6 +186,7 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
           disabled={disabled}
           hasError={!!error}
           onSelect={handleCursor}
+          itemLimit={itemLimit}
         />
         {itemLimit !== undefined && (
           <RightContentWrapper hasError={!!error}>
