@@ -35,6 +35,21 @@ export class ClubDelegateDRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
   /**
+   * @param id 삭제할 변경 요청의 id
+   */
+  async deleteDelegatChangeRequestById(param: {
+    id: number;
+  }): Promise<boolean> {
+    const [result] = await this.db
+      .update(ClubDelegateChangeRequest)
+      .set({
+        deletedAt: getKSTDate(),
+      })
+      .where(eq(ClubDelegateChangeRequest.id, param.id));
+    return result.affectedRows > 0;
+  }
+
+  /**
    * @param studentId 변경을 신청한 학생의 id
    * @returns 해당 학생이 신청한 변경 요청의 목록, 로직에 문제가 없다면 배열의 길이가 항상 1 이하여야 합니다.
    */
@@ -49,6 +64,42 @@ export class ClubDelegateDRepository {
             ClubDelegateChangeRequestStatusEnum.Applied,
           ),
           eq(ClubDelegateChangeRequest.prevStudentId, param.studentId),
+          isNull(ClubDelegateChangeRequest.deletedAt),
+        ),
+      );
+    return result;
+  }
+
+  /**
+   * @param clubId 변경 신청을 조회하고자 하는 동아리의 id
+   * @returns 해당 동아리의 모든 대표자 변경 요청의 목록
+   */
+  async findDelegateChangeRequestByClubId(param: { clubId: number }) {
+    const result = await this.db
+      .select()
+      .from(ClubDelegateChangeRequest)
+      .where(
+        and(
+          eq(ClubDelegateChangeRequest.clubId, param.clubId),
+          isNull(ClubDelegateChangeRequest.deletedAt),
+        ),
+      );
+    return result;
+  }
+
+  /**
+   * @param id 변경 요청의 id
+   *
+   * @returns id가 일치하는 요청의 목록,
+   id가 유일하기 때문에 배열의 길이가 항상 1 이하여야 합니다.
+   */
+  async findDelegateChangeRequestById(param: { id: number }) {
+    const result = await this.db
+      .select()
+      .from(ClubDelegateChangeRequest)
+      .where(
+        and(
+          eq(ClubDelegateChangeRequest.id, param.id),
           isNull(ClubDelegateChangeRequest.deletedAt),
         ),
       );
@@ -352,6 +403,21 @@ export class ClubDelegateDRepository {
     });
 
     return result;
+  }
+
+  async updateClubDelegateChangeRequest(param: {
+    id: number;
+    clubDelegateChangeRequestStatusEnumId: ClubDelegateChangeRequestStatusEnum;
+  }): Promise<boolean> {
+    const [result] = await this.db
+      .update(ClubDelegateChangeRequest)
+      .set({
+        clubDelegateChangeRequestStatusEnumId:
+          param.clubDelegateChangeRequestStatusEnumId,
+      })
+      .where(eq(ClubDelegateChangeRequest.id, param.id));
+
+    return result.affectedRows === 1;
   }
 
   async isPresidentByStudentIdAndClubId(studentId: number, clubId: number) {
