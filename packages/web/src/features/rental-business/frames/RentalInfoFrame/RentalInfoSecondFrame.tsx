@@ -71,7 +71,6 @@ const rentals = {
 };
 const RentalInfoSecondFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 > = ({ formCtx, setNextEnabled }) => {
   const [value, setValue] = useState<
     "none" | "easel" | "vacuum" | "handCart" | "mat" | "tool"

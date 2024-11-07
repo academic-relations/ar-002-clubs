@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 
-import { useWatch } from "react-hook-form";
-
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
@@ -29,8 +27,14 @@ const RentalInfoFirstFrame: React.FC<
     isError: clubIsError,
   } = useGetMyClub();
 
+  const {
+    control,
+    watch,
+    setValue,
+    formState: { errors },
+  } = formCtx;
+
   const [clubList, setClubList] = useState<SelectItem<string>[]>([]);
-  const [userName, setUserName] = useState("");
   const [userPhone, setUserPhone] = useState<string | undefined>();
 
   useEffect(() => {
@@ -42,7 +46,7 @@ const RentalInfoFirstFrame: React.FC<
       //     selectable: true,
       //   })),
       // );
-      setUserName(data.name);
+      setValue("info.applicant", data.name);
       setUserPhone(data.phoneNumber);
     }
     if (clubData) {
@@ -54,24 +58,25 @@ const RentalInfoFirstFrame: React.FC<
         })),
       );
     }
-  }, [data, clubData, setClubList, setUserName, setUserPhone]);
+  }, [data, clubData, setClubList, setUserPhone, setValue]);
 
-  const clubId = useWatch({ control: formCtx.control, name: "info.clubId" });
-  const phoneNumber = useWatch({
-    control: formCtx.control,
-    name: "info.phoneNumber",
-  });
-
-  const {
-    formState: { errors },
-  } = formCtx;
+  const clubId = watch("info.clubId");
+  const phoneNumber = watch("info.phoneNumber");
 
   useEffect(() => {
     const hasNoErrors = !errors.info?.clubId && !errors.info?.phoneNumber;
+    console.log("error", hasNoErrors);
     setNextEnabled(!!clubId && !!phoneNumber && hasNoErrors);
   }, [clubId, phoneNumber, errors, setNextEnabled]);
 
-  formCtx.setValue("info.applicant", userName);
+  useEffect(() => {
+    const clubName = clubList.find(
+      club => club.value === String(clubId),
+    )?.label;
+    if (clubName) {
+      setValue("info.clubName", clubName);
+    }
+  }, [clubId, clubList, setValue]);
 
   return (
     // TODO: club loading & error 지우기
@@ -80,24 +85,27 @@ const RentalInfoFirstFrame: React.FC<
       isError={isError && clubIsError}
     >
       <Card outline gap={40}>
-        {/* TODO: clubName 설정 */}
         <FormController
           name="info.clubId"
           required
-          control={formCtx.control}
+          control={control}
           renderItem={props => (
             <Select {...props} items={clubList} label="동아리 이름" />
           )}
         />
-        <TextInput label="신청자 이름" placeholder={userName} disabled />
+        <TextInput
+          label="신청자 이름"
+          placeholder={watch("info.applicant") ?? ""}
+          disabled
+        />
         <FormController
           name="info.phoneNumber"
           required
-          control={formCtx.control}
+          control={control}
           defaultValue={userPhone}
           // TODO: phoneInput 조건 달기
           // minLength={13}
-          // pattern={/^(010-\d{4}-\d{4})$/}
+          // pattern={/^(\d{3}-\d{4}-\d{4})$/}
           renderItem={props => (
             <PhoneInput
               {...props}

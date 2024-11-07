@@ -9,7 +9,7 @@ const HandCart: React.FC<RentalLimitProps> = ({
   availableRentals,
   formCtx,
 }) => {
-  const { control, getValues } = formCtx;
+  const { control } = formCtx;
 
   return (
     <>
@@ -22,11 +22,6 @@ const HandCart: React.FC<RentalLimitProps> = ({
             label="롤테이너 개수"
             placeholder="0개"
             itemLimit={getMaxRental(availableRentals, "Hand Cart Rolltainer")}
-            value={
-              getValues("handCart.rolltainer")
-                ? getValues("handCart.rolltainer")
-                : undefined
-            }
           />
         )}
       />
@@ -39,11 +34,6 @@ const HandCart: React.FC<RentalLimitProps> = ({
             label="대형 개수"
             placeholder="0개"
             itemLimit={getMaxRental(availableRentals, "Hand Cart Large")}
-            value={
-              getValues("handCart.large")
-                ? getValues("handCart.large")
-                : undefined
-            }
           />
         )}
       />
@@ -56,11 +46,6 @@ const HandCart: React.FC<RentalLimitProps> = ({
             label="중형 개수"
             placeholder="0개"
             itemLimit={getMaxRental(availableRentals, "Hand Cart Medium")}
-            value={
-              getValues("handCart.medium")
-                ? getValues("handCart.medium")
-                : undefined
-            }
           />
         )}
       />
@@ -73,11 +58,6 @@ const HandCart: React.FC<RentalLimitProps> = ({
             label="소형 개수"
             placeholder="0개"
             itemLimit={getMaxRental(availableRentals, "Hand Cart Small")}
-            value={
-              getValues("handCart.small")
-                ? getValues("handCart.small")
-                : undefined
-            }
           />
         )}
       />
