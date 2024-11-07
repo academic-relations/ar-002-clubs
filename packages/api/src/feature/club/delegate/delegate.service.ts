@@ -26,10 +26,7 @@ import type {
   ApiClb011ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb011";
 import type { ApiClb012RequestParam } from "@sparcs-clubs/interface/api/club/endpoint/apiClb012";
-import type {
-  ApiClb013RequestParam,
-  ApiClb013ResponseOk,
-} from "@sparcs-clubs/interface/api/club/endpoint/apiClb013";
+import type { ApiClb013ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb013";
 import type {
   ApiClb014RequestBody,
   ApiClb014RequestParam,
@@ -279,7 +276,6 @@ export default class ClubDelegateService {
    */
   async getStudentClubsDelegatesRequests(param: {
     studentId: number;
-    param: ApiClb013RequestParam;
   }): Promise<ApiClb013ResponseOk> {
     const result =
       await this.clubDelegateDRepository.findDelegateChangeRequestByStudentId({
@@ -374,9 +370,9 @@ export default class ClubDelegateService {
    * @param body ApiClb014RequestBody
    *
    * @description patchStudentClubsDelegatesRequestApprove의 서비스 진입점입니다.
-   * 동아리 대표자 변경 요청을 승인합니다.
+   * 동아리 대표자 변경 요청을 승인 또는 거절합니다.
    */
-  async patchStudentClubsDelegatesRequestApprove(param: {
+  async patchStudentClubsDelegatesRequest(param: {
     studentId: number;
     param: ApiClb014RequestParam;
     body: ApiClb014RequestBody;
@@ -414,12 +410,21 @@ export default class ClubDelegateService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
 
+    if (
+      param.body.clubDelegateChangeRequestStatusEnum ===
+      ClubDelegateChangeRequestStatusEnum.Applied
+    )
+      throw new HttpException(
+        "you cannot change status to applied",
+        HttpStatus.BAD_REQUEST,
+      );
+
     // 대표자 변경 요청을 승인으로 변경합니다.
     if (
       !this.clubDelegateDRepository.updateClubDelegateChangeRequest({
         id: request.id,
         clubDelegateChangeRequestStatusEnumId:
-          ClubDelegateChangeRequestStatusEnum.Approved,
+          param.body.clubDelegateChangeRequestStatusEnum,
       })
     )
       throw new HttpException(

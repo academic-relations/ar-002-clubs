@@ -49,10 +49,7 @@ import type {
   ApiClb012RequestParam,
   ApiClb012ResponseCreated,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb012";
-import type {
-  ApiClb013RequestParam,
-  ApiClb013ResponseOk,
-} from "@sparcs-clubs/interface/api/club/endpoint/apiClb013";
+import type { ApiClb013ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb013";
 import type {
   ApiClb014RequestBody,
   ApiClb014RequestParam,
@@ -154,26 +151,24 @@ export default class ClubDelegateController {
   @UsePipes(new ZodPipe(apiClb013))
   async getStudentClubsDelegatesRequests(
     @GetStudent() user: GetStudent,
-    @Param() param: ApiClb013RequestParam,
   ): Promise<ApiClb013ResponseOk> {
     const result =
       await this.clubDelegateService.getStudentClubsDelegatesRequests({
         studentId: user.studentId,
-        param,
       });
 
     return result;
   }
 
   @Student()
-  @Patch("/student/clubs/delegates/requests/request/:requestId/approve")
+  @Patch("/student/clubs/delegates/requests/request/:requestId")
   @UsePipes(new ZodPipe(apiClb014))
-  async patchStudentClubsDelegatesRequestApprove(
+  async patchStudentClubsDelegatesRequest(
     @GetStudent() user: GetStudent,
     @Param() param: ApiClb014RequestParam,
     @Body() body: ApiClb014RequestBody,
   ): Promise<ApiClb014ResponseCreated> {
-    await this.clubDelegateService.patchStudentClubsDelegatesRequestApprove({
+    await this.clubDelegateService.patchStudentClubsDelegatesRequest({
       studentId: user.studentId,
       param,
       body,
