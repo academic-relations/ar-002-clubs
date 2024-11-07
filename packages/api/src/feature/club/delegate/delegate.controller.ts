@@ -14,6 +14,7 @@ import apiClb007 from "@sparcs-clubs/interface/api/club/endpoint/apiClb007";
 import apiClb008 from "@sparcs-clubs/interface/api/club/endpoint/apiClb008";
 import apiClb011 from "@sparcs-clubs/interface/api/club/endpoint/apiClb011";
 import apiClb012 from "@sparcs-clubs/interface/api/club/endpoint/apiClb012";
+import apiClb013 from "@sparcs-clubs/interface/api/club/endpoint/apiClb013";
 import apiClb015 from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
 
 import { Response } from "express";
@@ -46,6 +47,10 @@ import type {
   ApiClb012RequestParam,
   ApiClb012ResponseCreated,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb012";
+import type {
+  ApiClb013RequestParam,
+  ApiClb013ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb013";
 import type {
   ApiClb015ResponseNoContent,
   ApiClb015ResponseOk,
@@ -135,6 +140,22 @@ export default class ClubDelegateController {
     });
 
     return {};
+  }
+
+  @Student()
+  @Get("/student/clubs/delegates/requests")
+  @UsePipes(new ZodPipe(apiClb013))
+  async getStudentClubsDelegatesRequests(
+    @GetStudent() user: GetStudent,
+    @Param() param: ApiClb013RequestParam,
+  ): Promise<ApiClb013ResponseOk> {
+    const result =
+      await this.clubDelegateService.getStudentClubsDelegatesRequests({
+        studentId: user.studentId,
+        param,
+      });
+
+    return result;
   }
 
   @Student()

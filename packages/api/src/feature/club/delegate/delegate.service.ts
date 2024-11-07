@@ -27,6 +27,10 @@ import type {
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb011";
 import type { ApiClb012RequestParam } from "@sparcs-clubs/interface/api/club/endpoint/apiClb012";
 import type {
+  ApiClb013RequestParam,
+  ApiClb013ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb013";
+import type {
   ApiClb015ResponseNoContent,
   ApiClb015ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
@@ -110,6 +114,7 @@ export default class ClubDelegateService {
     const studentStatus = currentDelegates.find(
       e => e.studentId === param.studentId,
     );
+    logger.debug(`${studentStatus}`);
     // if (
     //   studentStatus === undefined ||
     //   (param.clubDelegateEnumId === ClubDelegateEnum.Representative &&
@@ -252,6 +257,64 @@ export default class ClubDelegateService {
           studentName: student.name,
           clubDelegateChangeRequestStatusEnumId:
             e.clubDelegateChangeRequestStatusEnumId,
+        };
+      }),
+    );
+
+    return {
+      requests,
+    };
+  }
+
+  /**
+   * @param param ApiClb013RequestParam
+   * @param studentId 조회를 요청한 학생 Id
+   *
+   * @description deleteStudentClubDelegateRequests의 서비스 진입점입니다.
+   * 학생이 자신이 받은 동아리 대표자 요청이 존재하는지 조회합니다.
+   */
+  async getStudentClubsDelegatesRequests(param: {
+    studentId: number;
+    param: ApiClb013RequestParam;
+  }): Promise<ApiClb013ResponseOk> {
+    const result =
+      await this.clubDelegateDRepository.findDelegateChangeRequestByStudentId({
+        studentId: param.studentId,
+      });
+
+    const resultWithClubInfos = await Promise.all(
+      result.map(async e => {
+        const club = await this.clubPublicService
+          .getClubByClubId({
+            clubId: e.clubId,
+          })
+          .then(arr => {
+            if (arr.length !== 1)
+              throw new HttpException(
+                "unreachable",
+                HttpStatus.INTERNAL_SERVER_ERROR,
+              );
+            return arr[0];
+          });
+
+        return {
+          clubId: e.clubId,
+          clubDelegateChangeRequestStatusEnumId:
+            e.clubDelegateChangeRequestStatusEnumId,
+          prevStudentId: e.prevStudentId,
+          clubName: club.name_kr,
+        };
+      }),
+    );
+
+    const requests = await Promise.all(
+      resultWithClubInfos.map(async e => {
+        const student = await this.userPublicService.getStudentById({
+          id: e.prevStudentId,
+        });
+        return {
+          ...e,
+          prevStudentName: student.name,
         };
       }),
     );
