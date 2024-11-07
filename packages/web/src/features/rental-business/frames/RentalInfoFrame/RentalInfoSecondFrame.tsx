@@ -22,6 +22,7 @@ import Mat from "@sparcs-clubs/web/features/rental-business/components/Rentals/M
 import Tool from "@sparcs-clubs/web/features/rental-business/components/Rentals/Tool";
 import Vacuum from "@sparcs-clubs/web/features/rental-business/components/Rentals/Vacuum";
 import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
+import mockupAvailableRental from "@sparcs-clubs/web/features/rental-business/service/_mock/mockAvailableRental";
 import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
@@ -158,9 +159,7 @@ const RentalInfoSecondFrame: React.FC<
             </FlexWrapper>
             <Rental
               formCtx={formCtx}
-              availableRentals={{
-                objects: [],
-              }}
+              availableRentals={mockupAvailableRental}
             />
           </StyledCardInner>
         </Card>
@@ -179,7 +178,10 @@ const RentalInfoSecondFrame: React.FC<
               // onClick={handleResetAll}
             />
           </FlexWrapper>
-          <RentalList formCtx={formCtx} />
+          <RentalList
+            formCtx={formCtx}
+            availableRentals={mockupAvailableRental}
+          />
         </StyledCardInner>
       </Card>
     </>

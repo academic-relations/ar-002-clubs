@@ -3,27 +3,10 @@ import React from "react";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
 import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
 import { RentalLimitProps } from "@sparcs-clubs/web/features/rental-business/frames/RentalNoticeFrame";
+import { getMaxRental } from "@sparcs-clubs/web/utils/getMaxRental";
 
 const Tool: React.FC<RentalLimitProps> = ({ availableRentals, formCtx }) => {
   const { control, getValues } = formCtx;
-
-  const powerDrillLimit =
-    availableRentals?.objects.find(item => item.name === "Power Drill Set")
-      ?.maximum ?? 0;
-  const driverLimit =
-    availableRentals?.objects.find(item => item.name === "Driver Set")
-      ?.maximum ?? 0;
-  const superGlueLimit =
-    availableRentals?.objects.find(item => item.name === "Super Glue")
-      ?.maximum ?? 0;
-  const nipperLimit =
-    availableRentals?.objects.find(item => item.name === "Nipper")?.maximum ??
-    0;
-  const plierLimit =
-    availableRentals?.objects.find(item => item.name === "Plier")?.maximum ?? 0;
-  const longNosePlierLimit =
-    availableRentals?.objects.find(item => item.name === "Long Nose Plier")
-      ?.maximum ?? 0;
 
   return (
     <>
@@ -35,7 +18,7 @@ const Tool: React.FC<RentalLimitProps> = ({ availableRentals, formCtx }) => {
             {...props}
             label="전동 드릴 세트 개수"
             placeholder="0개"
-            itemLimit={powerDrillLimit}
+            itemLimit={getMaxRental(availableRentals, "Power Drill")}
             value={
               getValues("tool.powerDrill")
                 ? getValues("tool.powerDrill")
@@ -52,7 +35,7 @@ const Tool: React.FC<RentalLimitProps> = ({ availableRentals, formCtx }) => {
             {...props}
             label="드라이버 세트 개수"
             placeholder="0개"
-            itemLimit={driverLimit}
+            itemLimit={getMaxRental(availableRentals, "Driver")}
             value={
               getValues("tool.driver") ? getValues("tool.driver") : undefined
             }
@@ -67,7 +50,7 @@ const Tool: React.FC<RentalLimitProps> = ({ availableRentals, formCtx }) => {
             {...props}
             label="순간접착제 개수"
             placeholder="0개"
-            itemLimit={superGlueLimit}
+            itemLimit={getMaxRental(availableRentals, "Super Glue")}
             value={
               getValues("tool.superGlue")
                 ? getValues("tool.superGlue")
@@ -84,7 +67,7 @@ const Tool: React.FC<RentalLimitProps> = ({ availableRentals, formCtx }) => {
             {...props}
             label="니퍼 개수"
             placeholder="0개"
-            itemLimit={nipperLimit}
+            itemLimit={getMaxRental(availableRentals, "Nipper")}
             value={
               getValues("tool.nipper") ? getValues("tool.nipper") : undefined
             }
@@ -99,7 +82,7 @@ const Tool: React.FC<RentalLimitProps> = ({ availableRentals, formCtx }) => {
             {...props}
             label="펜치 개수"
             placeholder="0개"
-            itemLimit={plierLimit}
+            itemLimit={getMaxRental(availableRentals, "Plier")}
             value={
               getValues("tool.plier") ? getValues("tool.plier") : undefined
             }
@@ -114,7 +97,7 @@ const Tool: React.FC<RentalLimitProps> = ({ availableRentals, formCtx }) => {
             {...props}
             label="롱노우즈 개수"
             placeholder="0개"
-            itemLimit={longNosePlierLimit}
+            itemLimit={getMaxRental(availableRentals, "Long Nose Plier")}
             value={
               getValues("tool.longNosePlier")
                 ? getValues("tool.longNosePlier")

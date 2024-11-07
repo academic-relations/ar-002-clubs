@@ -4,16 +4,10 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import Radio from "@sparcs-clubs/web/common/components/Radio";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { RentalLimitProps } from "@sparcs-clubs/web/features/rental-business/frames/RentalNoticeFrame";
+import { getMaxRental } from "@sparcs-clubs/web/utils/getMaxRental";
 
 const Vacuum: React.FC<RentalLimitProps> = ({ availableRentals, formCtx }) => {
   const { control, getValues } = formCtx;
-
-  const cordedLimit =
-    availableRentals?.objects.find(item => item.name === "Vacuum Corded")
-      ?.maximum ?? 0;
-  const cordlessLimit =
-    availableRentals?.objects.find(item => item.name === "Vacuum Cordless")
-      ?.maximum ?? 0;
 
   return (
     <>
@@ -25,10 +19,16 @@ const Vacuum: React.FC<RentalLimitProps> = ({ availableRentals, formCtx }) => {
         control={control}
         renderItem={props => (
           <Radio {...props} value={getValues("vacuum") ?? ""}>
-            <Radio.Option value="cordless" disabled={cordlessLimit === 0}>
+            <Radio.Option
+              value="cordless"
+              disabled={getMaxRental(availableRentals, "Vacuum Cordless") === 0}
+            >
               무선 청소기
             </Radio.Option>
-            <Radio.Option value="corded" disabled={cordedLimit === 0}>
+            <Radio.Option
+              value="corded"
+              disabled={getMaxRental(availableRentals, "Vacuum Corded") === 0}
+            >
               유선 청소기
             </Radio.Option>
           </Radio>

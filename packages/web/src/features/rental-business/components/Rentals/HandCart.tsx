@@ -3,25 +3,13 @@ import React from "react";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
 import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
 import { RentalLimitProps } from "@sparcs-clubs/web/features/rental-business/frames/RentalNoticeFrame";
+import { getMaxRental } from "@sparcs-clubs/web/utils/getMaxRental";
 
 const HandCart: React.FC<RentalLimitProps> = ({
   availableRentals,
   formCtx,
 }) => {
   const { control, getValues } = formCtx;
-
-  const rolltainerLimit =
-    availableRentals?.objects.find(item => item.name === "Hand Cart Rolltainer")
-      ?.maximum ?? 0;
-  const largeLimit =
-    availableRentals?.objects.find(item => item.name === "Hand Cart Large")
-      ?.maximum ?? 0;
-  const mediumLimit =
-    availableRentals?.objects.find(item => item.name === "Hand Cart Medium")
-      ?.maximum ?? 0;
-  const smallLimit =
-    availableRentals?.objects.find(item => item.name === "Hand Cart Small")
-      ?.maximum ?? 0;
 
   return (
     <>
@@ -33,7 +21,7 @@ const HandCart: React.FC<RentalLimitProps> = ({
             {...props}
             label="롤테이너 개수"
             placeholder="0개"
-            itemLimit={rolltainerLimit}
+            itemLimit={getMaxRental(availableRentals, "Hand Cart Rolltainer")}
             value={
               getValues("handCart.rolltainer")
                 ? getValues("handCart.rolltainer")
@@ -50,7 +38,7 @@ const HandCart: React.FC<RentalLimitProps> = ({
             {...props}
             label="대형 개수"
             placeholder="0개"
-            itemLimit={largeLimit}
+            itemLimit={getMaxRental(availableRentals, "Hand Cart Large")}
             value={
               getValues("handCart.large")
                 ? getValues("handCart.large")
@@ -67,7 +55,7 @@ const HandCart: React.FC<RentalLimitProps> = ({
             {...props}
             label="중형 개수"
             placeholder="0개"
-            itemLimit={mediumLimit}
+            itemLimit={getMaxRental(availableRentals, "Hand Cart Medium")}
             value={
               getValues("handCart.medium")
                 ? getValues("handCart.medium")
@@ -84,7 +72,7 @@ const HandCart: React.FC<RentalLimitProps> = ({
             {...props}
             label="소형 개수"
             placeholder="0개"
-            itemLimit={smallLimit}
+            itemLimit={getMaxRental(availableRentals, "Hand Cart Small")}
             value={
               getValues("handCart.small")
                 ? getValues("handCart.small")
