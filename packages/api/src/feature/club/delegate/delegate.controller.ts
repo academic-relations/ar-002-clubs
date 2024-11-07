@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Put,
@@ -12,6 +13,7 @@ import apiClb006 from "@sparcs-clubs/interface/api/club/endpoint/apiClb006";
 import apiClb007 from "@sparcs-clubs/interface/api/club/endpoint/apiClb007";
 import apiClb008 from "@sparcs-clubs/interface/api/club/endpoint/apiClb008";
 import apiClb011 from "@sparcs-clubs/interface/api/club/endpoint/apiClb011";
+import apiClb012 from "@sparcs-clubs/interface/api/club/endpoint/apiClb012";
 import apiClb015 from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
 
 import { Response } from "express";
@@ -40,6 +42,10 @@ import type {
   ApiClb011RequestParam,
   ApiClb011ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb011";
+import type {
+  ApiClb012RequestParam,
+  ApiClb012ResponseCreated,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb012";
 import type {
   ApiClb015ResponseNoContent,
   ApiClb015ResponseOk,
@@ -114,6 +120,21 @@ export default class ClubDelegateController {
       });
 
     return result;
+  }
+
+  @Student()
+  @Delete("/student/clubs/club/:clubId/delegates/delegate/requests")
+  @UsePipes(new ZodPipe(apiClb012))
+  async deleteStudentClubDelegateRequests(
+    @GetStudent() user: GetStudent,
+    @Param() param: ApiClb012RequestParam,
+  ): Promise<ApiClb012ResponseCreated> {
+    await this.clubDelegateService.deleteStudentClubDelegateRequests({
+      studentId: user.studentId,
+      param,
+    });
+
+    return {};
   }
 
   @Student()

@@ -1,6 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+import {
+  ClubDelegateChangeRequestStatusEnum,
+  ClubDelegateEnum,
+} from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
@@ -22,6 +25,7 @@ import type {
   ApiClb011RequestParam,
   ApiClb011ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb011";
+import type { ApiClb012RequestParam } from "@sparcs-clubs/interface/api/club/endpoint/apiClb012";
 import type {
   ApiClb015ResponseNoContent,
   ApiClb015ResponseOk,
@@ -255,6 +259,46 @@ export default class ClubDelegateService {
     return {
       requests,
     };
+  }
+
+  async deleteStudentClubDelegateRequests(param: {
+    param: ApiClb012RequestParam;
+    studentId: number;
+  }): Promise<void> {
+    // clubId 동아리의 현재 대표자와 대의원 목록을 가져옵니다.
+    const delegates = await this.clubDelegateDRepository.findDelegateByClubId(
+      param.param.clubId,
+    );
+
+    logger.debug(`${delegates} ${param.studentId}}`);
+    // studentId가 해당 clubId 동아리의 대표자 인지 확인합니다.
+    if (
+      delegates.find(
+        e => e.studentId === param.studentId && e.ClubDelegateEnumId === 1,
+      ) === undefined
+    )
+      throw new HttpException(
+        "The api is allowed for delegates",
+        HttpStatus.FORBIDDEN,
+      );
+
+    // 대표자 변경 요청을 삭제합니다.
+    // 해당 동아리 대표자만이 요청 가능하기에 동시성을 고려하지 않았습니다.
+    const requests =
+      await this.clubDelegateDRepository.findDelegateChangeRequestByClubId({
+        clubId: param.param.clubId,
+      });
+    const request = requests.find(
+      e =>
+        e.clubDelegateChangeRequestStatusEnumId ===
+        ClubDelegateChangeRequestStatusEnum.Applied,
+    );
+    if (request === undefined)
+      throw new HttpException("No request", HttpStatus.BAD_REQUEST);
+
+    await this.clubDelegateDRepository.deleteDelegatChangeRequestById({
+      id: request.id,
+    });
   }
 
   /**

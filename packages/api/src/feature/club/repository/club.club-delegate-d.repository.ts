@@ -35,6 +35,21 @@ export class ClubDelegateDRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
   /**
+   * @param id 삭제할 변경 요청의 id
+   */
+  async deleteDelegatChangeRequestById(param: {
+    id: number;
+  }): Promise<boolean> {
+    const [result] = await this.db
+      .update(ClubDelegateChangeRequest)
+      .set({
+        deletedAt: getKSTDate(),
+      })
+      .where(eq(ClubDelegateChangeRequest.id, param.id));
+    return result.affectedRows > 0;
+  }
+
+  /**
    * @param studentId 변경을 신청한 학생의 id
    * @returns 해당 학생이 신청한 변경 요청의 목록, 로직에 문제가 없다면 배열의 길이가 항상 1 이하여야 합니다.
    */
