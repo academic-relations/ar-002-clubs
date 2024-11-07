@@ -19,6 +19,10 @@ import type {
   ApiClb008ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb008";
 import type {
+  ApiClb011RequestParam,
+  ApiClb011ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb011";
+import type {
   ApiClb015ResponseNoContent,
   ApiClb015ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
@@ -203,6 +207,54 @@ export default class ClubDelegateService {
           );
         break;
     }
+  }
+
+  /**
+   * @param param ApiClb011RequestParam
+   * @param stduentId 조회를 요청한 학생 Id
+   *
+   * @description getStudentClubDelegateRequests의 서비스 진입점입니다.
+   * 동아리 대표자 변경 요청을 조회합니다.
+   */
+  async getStudentClubDelegateRequests(param: {
+    param: ApiClb011RequestParam;
+    studentId: number;
+  }): Promise<ApiClb011ResponseOk> {
+    // clubId 동아리의 현재 대표자와 대의원 목록을 가져옵니다.
+    const delegates = await this.clubDelegateDRepository.findDelegateByClubId(
+      param.param.clubId,
+    );
+
+    logger.debug(`${delegates} ${param.studentId}}`);
+    // studentId가 해당 clubId 동아리의 대표자 또는 대의원인지 확인합니다.
+    if (delegates.find(e => e.studentId === param.studentId) === undefined)
+      throw new HttpException(
+        "The api is allowed for delegates",
+        HttpStatus.FORBIDDEN,
+      );
+
+    const result =
+      await this.clubDelegateDRepository.findDelegateChangeRequestByClubId({
+        clubId: param.param.clubId,
+      });
+
+    const requests = await Promise.all(
+      result.map(async e => {
+        const student = await this.userPublicService.getStudentById({
+          id: e.studentId,
+        });
+        return {
+          studentId: e.studentId,
+          studentName: student.name,
+          clubDelegateChangeRequestStatusEnumId:
+            e.clubDelegateChangeRequestStatusEnumId,
+        };
+      }),
+    );
+
+    return {
+      requests,
+    };
   }
 
   /**

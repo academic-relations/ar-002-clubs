@@ -56,6 +56,23 @@ export class ClubDelegateDRepository {
   }
 
   /**
+   * @param clubId 변경 신청을 조회하고자 하는 동아리의 id
+   * @returns 해당 동아리의 모든 대표자 변경 요청의 목록
+   */
+  async findDelegateChangeRequestByClubId(param: { clubId: number }) {
+    const result = await this.db
+      .select()
+      .from(ClubDelegateChangeRequest)
+      .where(
+        and(
+          eq(ClubDelegateChangeRequest.clubId, param.clubId),
+          isNull(ClubDelegateChangeRequest.deletedAt),
+        ),
+      );
+    return result;
+  }
+
+  /**
    * @param studentId 변경의 대상이 된 학생의 id
    * @returns 해당 학생이 변경의 대상이 된 요청의 목록, 로직에 문제가 없다면 배열의 길이가 항상 1 이하여야 합니다.
    */
