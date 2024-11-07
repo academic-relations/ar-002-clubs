@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Put,
   Res,
   UsePipes,
@@ -15,6 +16,7 @@ import apiClb008 from "@sparcs-clubs/interface/api/club/endpoint/apiClb008";
 import apiClb011 from "@sparcs-clubs/interface/api/club/endpoint/apiClb011";
 import apiClb012 from "@sparcs-clubs/interface/api/club/endpoint/apiClb012";
 import apiClb013 from "@sparcs-clubs/interface/api/club/endpoint/apiClb013";
+import apiClb014 from "@sparcs-clubs/interface/api/club/endpoint/apiClb014";
 import apiClb015 from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
 
 import { Response } from "express";
@@ -51,6 +53,11 @@ import type {
   ApiClb013RequestParam,
   ApiClb013ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb013";
+import type {
+  ApiClb014RequestBody,
+  ApiClb014RequestParam,
+  ApiClb014ResponseCreated,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb014";
 import type {
   ApiClb015ResponseNoContent,
   ApiClb015ResponseOk,
@@ -156,6 +163,23 @@ export default class ClubDelegateController {
       });
 
     return result;
+  }
+
+  @Student()
+  @Patch("/student/clubs/delegates/requests/request/:requestId/approve")
+  @UsePipes(new ZodPipe(apiClb014))
+  async patchStudentClubsDelegatesRequestApprove(
+    @GetStudent() user: GetStudent,
+    @Param() param: ApiClb014RequestParam,
+    @Body() body: ApiClb014RequestBody,
+  ): Promise<ApiClb014ResponseCreated> {
+    await this.clubDelegateService.patchStudentClubsDelegatesRequestApprove({
+      studentId: user.studentId,
+      param,
+      body,
+    });
+
+    return {};
   }
 
   @Student()

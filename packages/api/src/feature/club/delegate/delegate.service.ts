@@ -31,6 +31,10 @@ import type {
   ApiClb013ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb013";
 import type {
+  ApiClb014RequestBody,
+  ApiClb014RequestParam,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb014";
+import type {
   ApiClb015ResponseNoContent,
   ApiClb015ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
@@ -362,6 +366,66 @@ export default class ClubDelegateService {
     await this.clubDelegateDRepository.deleteDelegatChangeRequestById({
       id: request.id,
     });
+  }
+
+  /**
+   * @param studentId 조회를 요청한 학생 Id
+   * @param param ApiClb014RequestParam
+   * @param body ApiClb014RequestBody
+   *
+   * @description patchStudentClubsDelegatesRequestApprove의 서비스 진입점입니다.
+   * 동아리 대표자 변경 요청을 승인합니다.
+   */
+  async patchStudentClubsDelegatesRequestApprove(param: {
+    studentId: number;
+    param: ApiClb014RequestParam;
+    body: ApiClb014RequestBody;
+  }): Promise<void> {
+    const request = await this.clubDelegateDRepository
+      .findDelegateChangeRequestById({
+        id: param.param.requestId,
+      })
+      .then(arr => {
+        if (arr.length !== 1)
+          throw new HttpException(
+            "unreachable",
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        return arr[0];
+      });
+
+    // 해당 학생과 매치되는 요청이 맞는지 검사합니다.
+    if (request.studentId !== param.studentId)
+      throw new HttpException(
+        "It seems that target student is not you",
+        HttpStatus.BAD_REQUEST,
+      );
+
+    // 대표자 변경 요청을 승인합니다.
+    if (
+      !this.clubDelegateDRepository.updateDelegate({
+        clubId: request.clubId,
+        clubDelegateEnumId: ClubDelegateEnum.Representative,
+        studentId: param.studentId,
+      })
+    )
+      throw new HttpException(
+        "Failed to change delegate",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+
+    // 대표자 변경 요청을 승인으로 변경합니다.
+    if (
+      !this.clubDelegateDRepository.updateClubDelegateChangeRequest({
+        id: request.id,
+        clubDelegateChangeRequestStatusEnumId:
+          ClubDelegateChangeRequestStatusEnum.Approved,
+      })
+    )
+      throw new HttpException(
+        "Failed to modify request status",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
   }
 
   /**

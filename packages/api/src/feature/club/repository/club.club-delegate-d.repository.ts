@@ -88,6 +88,25 @@ export class ClubDelegateDRepository {
   }
 
   /**
+   * @param id 변경 요청의 id
+   *
+   * @returns id가 일치하는 요청의 목록,
+   id가 유일하기 때문에 배열의 길이가 항상 1 이하여야 합니다.
+   */
+  async findDelegateChangeRequestById(param: { id: number }) {
+    const result = await this.db
+      .select()
+      .from(ClubDelegateChangeRequest)
+      .where(
+        and(
+          eq(ClubDelegateChangeRequest.id, param.id),
+          isNull(ClubDelegateChangeRequest.deletedAt),
+        ),
+      );
+    return result;
+  }
+
+  /**
    * @param studentId 변경의 대상이 된 학생의 id
    * @returns 해당 학생이 변경의 대상이 된 요청의 목록, 로직에 문제가 없다면 배열의 길이가 항상 1 이하여야 합니다.
    */
@@ -384,6 +403,21 @@ export class ClubDelegateDRepository {
     });
 
     return result;
+  }
+
+  async updateClubDelegateChangeRequest(param: {
+    id: number;
+    clubDelegateChangeRequestStatusEnumId: ClubDelegateChangeRequestStatusEnum;
+  }): Promise<boolean> {
+    const [result] = await this.db
+      .update(ClubDelegateChangeRequest)
+      .set({
+        clubDelegateChangeRequestStatusEnumId:
+          param.clubDelegateChangeRequestStatusEnumId,
+      })
+      .where(eq(ClubDelegateChangeRequest.id, param.id));
+
+    return result.affectedRows === 1;
   }
 
   async isPresidentByStudentIdAndClubId(studentId: number, clubId: number) {
