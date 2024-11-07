@@ -4,7 +4,7 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import Radio from "@sparcs-clubs/web/common/components/Radio";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { RentalLimitProps } from "@sparcs-clubs/web/features/rental-business/frames/RentalNoticeFrame";
-import { getMaxRental } from "@sparcs-clubs/web/utils/getMaxRental";
+import { getMaxRental } from "@sparcs-clubs/web/features/rental-business/utils/getMaxRental";
 
 const Vacuum: React.FC<RentalLimitProps> = ({ availableRentals, formCtx }) => {
   const { control, getValues } = formCtx;

@@ -3,7 +3,7 @@ import React from "react";
 import styled from "styled-components";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { getMaxRental } from "@sparcs-clubs/web/utils/getMaxRental";
+import { getMaxRental } from "@sparcs-clubs/web/features/rental-business/utils/getMaxRental";
 
 import { RentalLimitProps } from "../frames/RentalNoticeFrame";
 

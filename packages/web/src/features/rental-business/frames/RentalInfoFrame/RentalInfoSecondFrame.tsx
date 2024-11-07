@@ -24,6 +24,10 @@ import Vacuum from "@sparcs-clubs/web/features/rental-business/components/Rental
 import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
 import mockupAvailableRental from "@sparcs-clubs/web/features/rental-business/service/_mock/mockAvailableRental";
 import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
+import {
+  isCurrentItemEmpty,
+  isRentalListEmpty,
+} from "@sparcs-clubs/web/features/rental-business/utils/isRentalEmpty";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
@@ -82,15 +86,30 @@ const RentalInfoSecondFrame: React.FC<
 
   const Rental = rentals[value].component;
 
+  const { watch, reset } = formCtx;
+  const currentValues = watch();
+
   const handleConfirm = (state: "change" | "reset") => {
     if (state === "reset") {
       setRentalDate(undefined);
       setReturnDate(undefined);
     } else if (state === "change") {
+      // TODO: pendingDate 있을 때 rentalDate 설정하는 거 다시 확인
       setRentalDate(pendingDate);
       setReturnDate(undefined);
       setPendingDate(undefined);
     }
+    reset({
+      agreement: currentValues.agreement,
+      info: {
+        ...currentValues.info,
+      },
+      date: {
+        start: rentalDate,
+        end: returnDate,
+      },
+    });
+    setValue("none");
   };
 
   const itemOnChange = (
@@ -135,8 +154,7 @@ const RentalInfoSecondFrame: React.FC<
           openPeriodModal={openPeriodModal}
           pendingDate={pendingDate}
           setPendingDate={setPendingDate}
-          // isRentalListEmpty={isRentalListEmpty()}
-          isRentalListEmpty={false}
+          isRentalListEmpty={isRentalListEmpty(currentValues)}
         />
       </Card>
       <ItemButtonList value={value} onChange={itemOnChange} />
@@ -152,7 +170,7 @@ const RentalInfoSecondFrame: React.FC<
               </FlexGrowTypography>
               <TextButton
                 text="초기화"
-                // disabled={isCurrentItemEmpty()}
+                disabled={isCurrentItemEmpty(value, currentValues)}
                 // onClick={handleResetCurrent}
               />
             </FlexWrapper>
@@ -173,7 +191,7 @@ const RentalInfoSecondFrame: React.FC<
             </FlexGrowTypography>
             <TextButton
               text="초기화"
-              // disabled={isRentalListEmpty()}
+              disabled={isRentalListEmpty(currentValues)}
               // onClick={handleResetAll}
             />
           </FlexWrapper>
