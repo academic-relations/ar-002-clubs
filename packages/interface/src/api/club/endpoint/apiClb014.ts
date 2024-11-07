@@ -21,7 +21,7 @@ const requestQuery = z.object({});
 
 const requestBody = z
   .object({
-    phoneNumber: zKrPhoneNumber,
+    phoneNumber: zKrPhoneNumber.optional(),
     clubDelegateChangeRequestStatusEnum: z
       .nativeEnum(ClubDelegateChangeRequestStatusEnum)
       .refine(val => val !== ClubDelegateChangeRequestStatusEnum.Applied),
