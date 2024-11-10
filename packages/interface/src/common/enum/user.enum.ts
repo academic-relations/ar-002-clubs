@@ -10,10 +10,10 @@ export enum StudentStatusEnum {
 }
 
 export enum UserTypeEnum {
-  Undergraduate = 1,
-  Master,
-  Doctor,
-  Executive,
-  Professor,
-  Employee,
+  Undergraduate = "undergraduate",
+  Master = "master",
+  Doctor = "doctor",
+  Executive = "executive",
+  Professor = "professor",
+  Employee = "employee",
 }
