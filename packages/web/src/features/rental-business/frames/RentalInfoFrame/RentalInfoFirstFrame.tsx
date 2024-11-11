@@ -65,7 +65,6 @@ const RentalInfoFirstFrame: React.FC<
 
   useEffect(() => {
     const hasNoErrors = !errors.info?.clubId && !errors.info?.phoneNumber;
-    console.log("error", hasNoErrors);
     setNextEnabled(!!clubId && !!phoneNumber && hasNoErrors);
   }, [clubId, phoneNumber, errors, setNextEnabled]);
 

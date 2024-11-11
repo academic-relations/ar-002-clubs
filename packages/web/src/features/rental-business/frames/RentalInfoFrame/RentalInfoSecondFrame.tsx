@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
@@ -23,7 +21,7 @@ import Tool from "@sparcs-clubs/web/features/rental-business/components/Rentals/
 import Vacuum from "@sparcs-clubs/web/features/rental-business/components/Rentals/Vacuum";
 import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
 import mockupAvailableRental from "@sparcs-clubs/web/features/rental-business/service/_mock/mockAvailableRental";
-import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
+// import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
 import {
   isCurrentItemEmpty,
   isRentalListEmpty,
@@ -158,6 +156,10 @@ const RentalInfoSecondFrame: React.FC<
     ));
   };
 
+  useEffect(() => {
+    setNextEnabled(!isRentalListEmpty(currentValues));
+  }, [currentValues, setNextEnabled]);
+
   return (
     <>
       <Card outline gap={40}>
@@ -200,6 +202,7 @@ const RentalInfoSecondFrame: React.FC<
             </FlexWrapper>
             <Rental
               formCtx={formCtx}
+              // TODO: API 연결
               availableRentals={mockupAvailableRental}
             />
           </StyledCardInner>

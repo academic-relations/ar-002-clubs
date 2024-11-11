@@ -59,8 +59,6 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ formCtx }) => {
   const [nextEnabled, setNextEnabled] = useState(true);
   const CurrentFrame = frames[step];
 
-  console.log(nextEnabled);
-
   const openReturnModal = useCallback(() => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
