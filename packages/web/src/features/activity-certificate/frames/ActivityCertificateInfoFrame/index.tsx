@@ -6,7 +6,6 @@ import styled from "styled-components";
 import StepProcess, {
   StepInputType,
 } from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
-
 import { ActivityCertificateInfo } from "@sparcs-clubs/web/features/activity-certificate//types/activityCertificate";
 
 import ActivityCertificateInfoFirstFrame from "./ActivityCertificateInfoFirstFrame";
