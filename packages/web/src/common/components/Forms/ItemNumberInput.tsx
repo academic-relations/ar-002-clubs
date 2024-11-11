@@ -23,6 +23,7 @@ export interface ItemNumberInputProps
   itemLimit?: number;
   unit?: string;
   value?: number;
+  showIcon?: boolean;
   onChange: (value: number) => void;
   setErrorStatus?: (hasError: boolean) => void;
 }
@@ -121,6 +122,7 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
   itemLimit = 99,
   value = undefined,
   unit = "개",
+  showIcon = false,
   onChange,
   setErrorStatus = () => {},
 }) => {
@@ -172,9 +174,11 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
     <InputWrapper>
       <LabelWithIcon>
         {label && <Label>{label}</Label>}
-        <StyledInfoIcon
-          style={{ fontSize: "16px", width: "16px", height: "16px" }}
-        />
+        {showIcon && (
+          <StyledInfoIcon
+            style={{ fontSize: "16px", width: "16px", height: "16px" }}
+          />
+        )}
       </LabelWithIcon>
       <InputContainer>
         <Input

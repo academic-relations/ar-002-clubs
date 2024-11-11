@@ -13,4 +13,66 @@ enum DivisionType /** TODO - 20240320 기준으로 번역 단어장에 각 divis
   HumanitiesAcademics, // 인문학술
 }
 
-export { DivisionType };
+const getDisplayNameDivisions = (type: DivisionType) => {
+  switch (type) {
+    case DivisionType.LifeCulture:
+      return "생활문화";
+    case DivisionType.PerformingArts:
+      return "연행예술";
+    case DivisionType.ExhibitionCreation:
+      return "전시창작";
+    case DivisionType.BandMusic:
+      return "밴드음악";
+    case DivisionType.VocalMusic:
+      return "보컬음악";
+    case DivisionType.InstrumentalMusic:
+      return "연주음악";
+    case DivisionType.Society:
+      return "사회";
+    case DivisionType.Religion:
+      return "종교";
+    case DivisionType.BallSports:
+      return "구기체육";
+    case DivisionType.LifeSports:
+      return "생활체육";
+    case DivisionType.ScienceEngineeringAcademics:
+      return "이공학술";
+    case DivisionType.HumanitiesAcademics:
+      return "인문학술";
+    default:
+      return "";
+  }
+};
+
+const getEnumDivisions = (string: string) => {
+  switch (string) {
+    case "생활문화":
+      return 1;
+    case "연행예술":
+      return 2;
+    case "전시창작":
+      return 3;
+    case "밴드음악":
+      return 4;
+    case "보컬음악":
+      return 5;
+    case "연주음악":
+      return 6;
+    case "사회":
+      return 7;
+    case "종교":
+      return 8;
+    case "구기체육":
+      return 9;
+    case "생활체육":
+      return 10;
+    case "이공학술":
+      return 11;
+    case "인문학술":
+      return 12;
+    default:
+      return 0;
+  }
+};
+
+export { DivisionType, getDisplayNameDivisions, getEnumDivisions };

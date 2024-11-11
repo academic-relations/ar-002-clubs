@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
 
+import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -9,29 +9,7 @@ import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
 import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import {
-  ActivityCertificateInterface,
-  ActivityCertificateProgress,
-  FirstErrorStatus,
-  SecondErrorStatus,
-} from "../types/activityCertificate";
-
-export interface ActivityCertificateFrameProps {
-  activityCertificate: ActivityCertificateInterface;
-  setActivityCertificate: React.Dispatch<
-    React.SetStateAction<ActivityCertificateInterface>
-  >;
-  activityCertificateProgress: ActivityCertificateProgress;
-  setActivityCertificateProgress: React.Dispatch<
-    React.SetStateAction<ActivityCertificateProgress>
-  >;
-  firstErrorStatus: FirstErrorStatus;
-  setFirstErrorStatus: React.Dispatch<React.SetStateAction<FirstErrorStatus>>;
-  secondErrorStatus: Array<SecondErrorStatus>;
-  setSecondErrorStatus: React.Dispatch<
-    React.SetStateAction<Array<SecondErrorStatus>>
-  >;
-}
+import { ActivityCertificateInfo } from "../types/activityCertificate";
 
 const ActivityCertificateNoticeFrameInner = styled.div`
   display: flex;
@@ -41,18 +19,8 @@ const ActivityCertificateNoticeFrameInner = styled.div`
   align-self: stretch;
 `;
 
-const ActivityCertificateNoticeFrame: React.FC<
-  ActivityCertificateFrameProps
-> = ({
-  activityCertificate,
-  setActivityCertificate,
-  activityCertificateProgress,
-  setActivityCertificateProgress,
-  firstErrorStatus,
-  setFirstErrorStatus,
-  secondErrorStatus,
-  setSecondErrorStatus,
-}) => {
+const ActivityCertificateNoticeFrame: React.FC = () => {
+  const { setValue } = useFormContext<ActivityCertificateInfo>();
   const [checked, setChecked] = useState(false);
 
   return (
@@ -75,15 +43,7 @@ const ActivityCertificateNoticeFrame: React.FC<
         />
         <Button
           type={checked ? "default" : "disabled"}
-          onClick={
-            checked
-              ? () =>
-                  setActivityCertificateProgress({
-                    ...activityCertificateProgress,
-                    agreement: true,
-                  })
-              : undefined
-          }
+          onClick={() => setValue("isAgreed", true)}
         >
           다음
         </Button>

@@ -1,14 +1,13 @@
 import React, { useCallback, useState } from "react";
 
+import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
-import Button from "@sparcs-clubs/web/common/components/Button";
 import StepProcess, {
   StepInputType,
 } from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
-import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 
-import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
+import { ActivityCertificateInfo } from "@sparcs-clubs/web/features/activity-certificate//types/activityCertificate";
 
 import ActivityCertificateInfoFirstFrame from "./ActivityCertificateInfoFirstFrame";
 import ActivityCertificateInfoSecondFrame from "./ActivityCertificateInfoSecondFrame";
@@ -21,12 +20,6 @@ const RentalNoticeFrameInner = styled.div`
   gap: 60px;
   align-self: stretch;
 `;
-
-const frames = [
-  ActivityCertificateInfoFirstFrame,
-  ActivityCertificateInfoSecondFrame,
-  ActivityCertificateInfoThirdFrame,
-];
 
 const steps: StepInputType[] = [
   {
@@ -43,83 +36,37 @@ const steps: StepInputType[] = [
   },
 ];
 
-const ActivityCertificateInfoFrame: React.FC<ActivityCertificateFrameProps> = ({
-  activityCertificate,
-  setActivityCertificate,
-  activityCertificateProgress,
-  setActivityCertificateProgress,
-  firstErrorStatus,
-  setFirstErrorStatus,
-  secondErrorStatus,
-  setSecondErrorStatus,
-}) => {
-  const props = {
-    activityCertificate,
-    setActivityCertificate,
-    activityCertificateProgress,
-    setActivityCertificateProgress,
-    firstErrorStatus,
-    setFirstErrorStatus,
-    secondErrorStatus,
-    setSecondErrorStatus,
-  };
-  const [step, setStep] = useState(0);
-  const CurrentFrame = frames[step];
+const ActivityCertificateInfoFrame: React.FC = () => {
+  const { setValue } = useFormContext<ActivityCertificateInfo>();
 
-  const nextButtonDisabler = () => {
-    if (step === 0) {
-      if (
-        activityCertificateProgress.firstFilled &&
-        activityCertificateProgress.firstNoError
-      )
-        return "default";
-      return "disabled";
-    }
-    if (step === 1) {
-      if (
-        activityCertificateProgress.secondFilled &&
-        activityCertificateProgress.secondNoError
-      )
-        return "default";
-      return "disabled";
-    }
-    return "default";
-  };
+  const [step, setStep] = useState(0);
 
   const onPrev = useCallback(() => {
     if (step === 0) {
-      setActivityCertificateProgress({
-        ...activityCertificateProgress,
-        agreement: false,
-      });
+      setValue("isAgreed", false);
       return;
     }
     setStep(step - 1);
-  }, [step, setStep, activityCertificate, setActivityCertificate]);
+  }, [step, setValue]);
 
   const onNext = useCallback(() => {
-    if (step === frames.length - 1) {
+    if (step === 2) {
       return;
     }
     setStep(step + 1);
   }, [step, setStep]);
 
   return (
-    <>
-      <RentalNoticeFrameInner>
-        <StepProcess steps={steps} activeStepIndex={step + 1} />
-        <CurrentFrame {...props} />
-      </RentalNoticeFrameInner>
-      <StyledBottom>
-        <Button onClick={onPrev}>이전</Button>
-        <Button
-          onClick={nextButtonDisabler() === "default" ? onNext : undefined}
-          type={nextButtonDisabler()}
-        >
-          {step === frames.length - 1 ? "신청" : "다음"}
-        </Button>
-      </StyledBottom>
-    </>
+    <RentalNoticeFrameInner>
+      <StepProcess steps={steps} activeStepIndex={step + 1} />
+      {step === 0 && (
+        <ActivityCertificateInfoFirstFrame onPrev={onPrev} onNext={onNext} />
+      )}
+      {step === 1 && (
+        <ActivityCertificateInfoSecondFrame onPrev={onPrev} onNext={onNext} />
+      )}
+      {step === 2 && <ActivityCertificateInfoThirdFrame onPrev={onPrev} />}
+    </RentalNoticeFrameInner>
   );
 };
 

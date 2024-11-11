@@ -1,165 +1,182 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 
+import { Divider } from "@mui/material";
+
+import { useFormContext } from "react-hook-form";
+
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
 
-import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
+import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumberInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
+import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
+import { useGetUserClubs } from "@sparcs-clubs/web/features/activity-certificate/services/useGetUserClubs";
+import { ActivityBasicInfo } from "@sparcs-clubs/web/features/activity-certificate/types/activityCertificate";
+import { formatActivityDuration } from "@sparcs-clubs/web/features/activity-certificate/utils/formatActivityDuration";
 
-import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
+interface ActivityCertificateInfoFirstFrameProps {
+  onPrev: VoidFunction;
+  onNext: VoidFunction;
+}
 
 const ActivityCertificateInfoFirstFrame: React.FC<
-  ActivityCertificateFrameProps
-> = ({
-  activityCertificate,
-  setActivityCertificate,
-  activityCertificateProgress,
-  setActivityCertificateProgress,
-  firstErrorStatus,
-  setFirstErrorStatus,
-}) => {
-  const mockClubList: SelectItem<string>[] = [
-    { label: "동아리", value: "1", selectable: true },
-    { label: "또다른동아리", value: "2", selectable: true },
-    { label: "안되는동아리", value: "3", selectable: false },
-  ];
-  // TODO: 이름 전화번호 동아리 목록 백에서 받아오기
+  ActivityCertificateInfoFirstFrameProps
+> = ({ onPrev, onNext }) => {
+  const {
+    watch,
+    control,
+    resetField,
+    formState: { isValid },
+  } = useFormContext<ActivityBasicInfo>();
+
+  const clubId = watch("clubId");
+
+  const {
+    data: clubData,
+    isLoading: isClubLoading,
+    isError: isClubError,
+  } = useGetUserClubs();
+
+  const {
+    data: profile,
+    isLoading: isProfileLoading,
+    isError: isProfileError,
+  } = useGetUserProfile();
+
+  const clubList: SelectItem<number>[] =
+    clubData?.clubs.map(club => ({
+      label: club.name_kr,
+      value: club.id,
+    })) ?? [];
+
+  const getActivityDuration = useCallback(
+    () =>
+      clubData?.clubs
+        .find(club => club.id === clubId)
+        ?.dateRange.map(({ startMonth, endMonth }) => ({
+          startMonth: new Date(
+            new Date(startMonth).getFullYear(),
+            new Date(startMonth).getMonth(),
+          ),
+          endMonth: endMonth ? new Date(endMonth) : undefined,
+        })),
+    [clubData?.clubs, clubId],
+  );
+
+  const formatPhoneNumber = (value: string) => {
+    const numericValue = value.replace(/[^0-9]/g, "");
+    if (numericValue.length <= 3) return numericValue;
+    if (numericValue.length <= 7)
+      return `${numericValue.slice(0, 3)}-${numericValue.slice(3)}`;
+    return `${numericValue.slice(0, 3)}-${numericValue.slice(3, 7)}-${numericValue.slice(7, 11)}`;
+  };
 
   useEffect(() => {
-    if (
-      !activityCertificate.clubId ||
-      !activityCertificate.issuedNumber ||
-      activityCertificate.krPhoneNumber.length < 13
-    ) {
-      setActivityCertificateProgress({
-        ...activityCertificateProgress,
-        firstFilled: false,
-      });
-    } else {
-      setActivityCertificateProgress({
-        ...activityCertificateProgress,
-        firstFilled: true,
+    if (clubId != null) {
+      resetField("activityDuration", {
+        defaultValue: getActivityDuration(),
       });
     }
-  }, [activityCertificate]);
-
-  useEffect(() => {
-    if (
-      firstErrorStatus.hasClubIdError ||
-      firstErrorStatus.hasIssuedNumberError ||
-      firstErrorStatus.hasKrPhoneNumberError
-    ) {
-      setActivityCertificateProgress({
-        ...activityCertificateProgress,
-        firstNoError: false,
-      });
-    } else {
-      setActivityCertificateProgress({
-        ...activityCertificateProgress,
-        firstNoError: true,
-      });
-    }
-  }, [firstErrorStatus]);
+  }, [clubId, getActivityDuration, resetField]);
 
   return (
-    <Card outline gap={40}>
-      <Select
-        label="동아리 이름"
-        items={mockClubList}
-        // TODO - 아래 clubId를 넘겨줄 때 parseInt를 통해서 clubId 값을 받기 때문에 실제 items를 넣어줄 때는 value가 해당 동아리의 실제 clubId여야 함
-        setErrorStatus={value =>
-          JSON.stringify(firstErrorStatus) ===
-          JSON.stringify({ ...firstErrorStatus, hasClubIdError: value })
-            ? null
-            : setFirstErrorStatus({
-                ...firstErrorStatus,
-                hasClubIdError: value,
-              })
-        }
-        onChange={value => {
-          setActivityCertificate({
-            ...activityCertificate,
-            clubId: parseInt(value ?? ""),
-          });
-        }}
-        value={
-          activityCertificate.clubId
-            ? activityCertificate.clubId.toString()
-            : undefined
-        }
-      />
-      {/* TODO - 유저 동아리 목록 받아서 채우고 onchange 시 state 업데이트 */}
-      <TextInput label="활동 기간" placeholder="" disabled />
-      <ItemNumberInput
-        label="발급 매수"
-        placeholder="X개"
-        setErrorStatus={value =>
-          JSON.stringify(firstErrorStatus) ===
-          JSON.stringify({ ...firstErrorStatus, hasIssuedNumberError: value })
-            ? null
-            : setFirstErrorStatus({
-                ...firstErrorStatus,
-                hasIssuedNumberError: value,
-              })
-        }
-        value={
-          activityCertificate?.issuedNumber
-            ? activityCertificate?.issuedNumber
-            : undefined
-        }
-        onChange={changedNumber => {
-          setActivityCertificate({
-            ...activityCertificate,
-            issuedNumber: changedNumber,
-          });
-        }}
-      />
-      <TextInput
-        label="신청자 이름"
-        placeholder={
-          activityCertificate.applicant ? activityCertificate.applicant : ""
-        }
-        disabled
-      />
-      <TextInput
-        label="신청자 학과"
-        placeholder={
-          activityCertificate.department ? activityCertificate.department : ""
-        }
-        disabled
-      />
-      <TextInput
-        label="신청자 학번"
-        placeholder={
-          activityCertificate.studentNumber
-            ? activityCertificate.studentNumber
-            : ""
-        }
-        disabled
-      />
-      <PhoneInput
-        label="신청자 전화번호"
-        placeholder="010-XXXX-XXXX"
-        value={activityCertificate.krPhoneNumber}
-        setErrorStatus={value =>
-          JSON.stringify(firstErrorStatus) ===
-          JSON.stringify({ ...firstErrorStatus, hasKrPhoneNumberError: value })
-            ? null
-            : setFirstErrorStatus({
-                ...firstErrorStatus,
-                hasKrPhoneNumberError: value,
-              })
-        }
-        onChange={changedText => {
-          setActivityCertificate({
-            ...activityCertificate,
-            krPhoneNumber: changedText,
-          });
-        }}
-      />
-    </Card>
+    <AsyncBoundary
+      isLoading={isClubLoading || isProfileLoading}
+      isError={isClubError || isProfileError}
+    >
+      <Card outline gap={40}>
+        <FormController
+          name="clubId"
+          control={control}
+          required
+          renderItem={props => (
+            <Select {...props} label="동아리 이름" items={clubList} />
+          )}
+        />
+        <FormController
+          name="activityDuration"
+          control={control}
+          required
+          renderItem={({ value }) => (
+            <TextInput
+              label="활동 기간"
+              placeholder={formatActivityDuration(value ?? [])}
+              disabled
+            />
+          )}
+        />
+        <FormController
+          name="issuedNumber"
+          control={control}
+          rules={{
+            min: { value: 1, message: "1 이상이어야 합니다" },
+          }}
+          required
+          renderItem={props => (
+            <ItemNumberInput {...props} label="발급 매수" placeholder="X개" />
+          )}
+        />
+
+        <Divider />
+        <FormController
+          name="applicantName"
+          control={control}
+          defaultValue={profile?.name}
+          renderItem={({ value }) => (
+            <TextInput label="신청자 이름" placeholder={value} disabled />
+          )}
+        />
+        <FormController
+          name="applicantDepartment"
+          control={control}
+          defaultValue={profile?.department}
+          renderItem={({ value }) => (
+            <TextInput label="신청자 학과" placeholder={value} disabled />
+          )}
+        />
+        <FormController
+          name="applicantStudentNumber"
+          control={control}
+          defaultValue={profile?.studentNumber}
+          renderItem={({ value }) => (
+            <TextInput
+              label="신청자 학번"
+              placeholder={value.toString()}
+              disabled
+            />
+          )}
+        />
+        <FormController
+          name="applicantPhoneNumber"
+          control={control}
+          minLength={13}
+          required
+          renderItem={({ value, onChange, errorMessage }) => (
+            <TextInput
+              label="신청자 전화번호"
+              placeholder="010-XXXX-XXXX"
+              value={formatPhoneNumber(value)}
+              onChange={e => {
+                const formattedValue = formatPhoneNumber(e.target.value);
+                onChange(formattedValue);
+              }}
+              errorMessage={errorMessage}
+            />
+          )}
+        />
+      </Card>
+      <StyledBottom>
+        <Button onClick={onPrev}>이전</Button>
+        <Button onClick={onNext} type={isValid ? "default" : "disabled"}>
+          다음
+        </Button>
+      </StyledBottom>
+    </AsyncBoundary>
   );
 };
 

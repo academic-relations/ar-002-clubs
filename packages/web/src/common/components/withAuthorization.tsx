@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
+import { getUserTypeEnumKeyByValue } from "@sparcs-clubs/web/utils/getUserType";
 import { getLocalStorageItem } from "@sparcs-clubs/web/utils/localStorage";
 
 import ErrorPageTemplate from "../frames/ErrorPageTemplate";
@@ -54,9 +55,12 @@ export const withAuthorization = <P extends object>(
     }
 
     const decoded: { name?: string; type?: string } = jwtDecode(token);
-    const userType = UserTypeEnum[decoded.type as keyof typeof UserTypeEnum];
+    const userTypeKey = getUserTypeEnumKeyByValue(decoded.type ?? "");
 
-    if (!acceptedAuthorization.includes(userType)) {
+    if (
+      !userTypeKey ||
+      !acceptedAuthorization.includes(UserTypeEnum[userTypeKey])
+    ) {
       return (
         <ErrorPageTemplate
           message={

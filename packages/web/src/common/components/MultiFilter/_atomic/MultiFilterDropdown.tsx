@@ -21,7 +21,6 @@ const MultiFilterDropdownWrapper = styled.div`
   display: flex;
   flex-direction: column;
   min-width: 180px;
-  max-height: 280px;
   padding: 4px;
   flex-direction: column;
   align-items: flex-start;

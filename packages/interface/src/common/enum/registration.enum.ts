@@ -25,4 +25,33 @@ export enum RegistrationApplicationStudentStatusEnum {
   Rejected, // 반려됨
 }
 
+export const getDisplayNameRegistration = (
+  type: RegistrationTypeEnum | undefined,
+) => {
+  switch (type) {
+    case RegistrationTypeEnum.Renewal:
+      return "재등록";
+    case RegistrationTypeEnum.Promotional:
+      return "신규 등록";
+    case RegistrationTypeEnum.NewProvisional:
+    case RegistrationTypeEnum.ReProvisional:
+      return "가등록";
+    default:
+      return "";
+  }
+};
+
+export const getEnumRegistration = (string: string) => {
+  switch (string) {
+    case "재등록":
+      return [1];
+    case "신규 등록":
+      return [2];
+    case "가등록":
+      return [3, 4];
+    default:
+      return 0;
+  }
+};
+
 export { RegistrationTypeEnum };

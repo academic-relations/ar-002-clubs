@@ -38,11 +38,11 @@ const DateRangeInputFrameInner = styled.div`
 
 const DateRangeInput: React.FC<DateRangeInputProps> = ({
   label = ["", ""],
-  startValue = "",
-  endValue = "",
-  limitStartValue = "",
-  limitEndValue = "",
-  onChange = () => {},
+  startValue,
+  endValue,
+  limitStartValue,
+  limitEndValue,
+  onChange,
   useDays = false, // Default to false
   ...props
 }) => {
