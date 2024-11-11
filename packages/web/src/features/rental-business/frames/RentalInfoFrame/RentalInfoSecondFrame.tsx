@@ -89,6 +89,26 @@ const RentalInfoSecondFrame: React.FC<
   const { watch, reset } = formCtx;
   const currentValues = watch();
 
+  const handleResetAll = () => {
+    reset({
+      agreement: currentValues.agreement,
+      info: {
+        ...currentValues.info,
+      },
+      date: {
+        start: rentalDate,
+        end: returnDate,
+      },
+    });
+  };
+
+  const handleResetCurrent = () => {
+    reset({
+      ...currentValues,
+      [value]: undefined,
+    });
+  };
+
   const handleConfirm = (state: "change" | "reset") => {
     if (state === "reset") {
       setRentalDate(undefined);
@@ -157,7 +177,11 @@ const RentalInfoSecondFrame: React.FC<
           isRentalListEmpty={isRentalListEmpty(currentValues)}
         />
       </Card>
-      <ItemButtonList value={value} onChange={itemOnChange} />
+      <ItemButtonList
+        value={value}
+        onChange={itemOnChange}
+        currentValues={currentValues}
+      />
       <Info text={rentals[value].info} />
       {value !== "none" && (
         <Card outline gap={40}>
@@ -171,7 +195,7 @@ const RentalInfoSecondFrame: React.FC<
               <TextButton
                 text="초기화"
                 disabled={isCurrentItemEmpty(value, currentValues)}
-                // onClick={handleResetCurrent}
+                onClick={handleResetCurrent}
               />
             </FlexWrapper>
             <Rental
@@ -192,7 +216,7 @@ const RentalInfoSecondFrame: React.FC<
             <TextButton
               text="초기화"
               disabled={isRentalListEmpty(currentValues)}
-              // onClick={handleResetAll}
+              onClick={handleResetAll}
             />
           </FlexWrapper>
           <RentalList

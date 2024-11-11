@@ -39,7 +39,7 @@ const RentalList: React.FC<RentalLimitProps> = ({
   if (
     rental.easel &&
     rental.easel > 0 &&
-    getMaxRental(availableRentals, "easel") > rental.easel
+    getMaxRental(availableRentals, "easel") >= rental.easel
   ) {
     itemList.push(`이젤 ${rental.easel}개`);
   }
@@ -58,7 +58,7 @@ const RentalList: React.FC<RentalLimitProps> = ({
     if (
       rental.handCart.rolltainer &&
       rental.handCart.rolltainer > 0 &&
-      getMaxRental(availableRentals, "Hand Cart Rolltainer") >
+      getMaxRental(availableRentals, "Hand Cart Rolltainer") >=
         rental.handCart.rolltainer
     ) {
       itemList.push(`수레 > 롤테이너 ${rental.handCart.rolltainer}개`);
@@ -66,14 +66,14 @@ const RentalList: React.FC<RentalLimitProps> = ({
     if (
       rental.handCart.large &&
       rental.handCart.large > 0 &&
-      getMaxRental(availableRentals, "Hand Cart Large") > rental.handCart.large
+      getMaxRental(availableRentals, "Hand Cart Large") >= rental.handCart.large
     ) {
       itemList.push(`수레 > 대형 ${rental.handCart.large}개`);
     }
     if (
       rental.handCart.medium &&
       rental.handCart.medium > 0 &&
-      getMaxRental(availableRentals, "Hand Cart Medium") >
+      getMaxRental(availableRentals, "Hand Cart Medium") >=
         rental.handCart.medium
     ) {
       itemList.push(`수레 > 중형 ${rental.handCart.medium}개`);
@@ -81,7 +81,7 @@ const RentalList: React.FC<RentalLimitProps> = ({
     if (
       rental.handCart.small &&
       rental.handCart.small > 0 &&
-      getMaxRental(availableRentals, "Hand Cart Small") > rental.handCart.small
+      getMaxRental(availableRentals, "Hand Cart Small") >= rental.handCart.small
     ) {
       itemList.push(`수레 > 소형 ${rental.handCart.small}개`);
     }
@@ -90,7 +90,7 @@ const RentalList: React.FC<RentalLimitProps> = ({
   if (
     rental.mat &&
     rental.mat > 0 &&
-    getMaxRental(availableRentals, "Mat") > rental.mat
+    getMaxRental(availableRentals, "Mat") >= rental.mat
   ) {
     itemList.push(`돗자리 ${rental.mat}개`);
   }
@@ -99,42 +99,42 @@ const RentalList: React.FC<RentalLimitProps> = ({
     if (
       rental.tool.powerDrill &&
       rental.tool.powerDrill > 0 &&
-      getMaxRental(availableRentals, "Power Drill") > rental.tool.powerDrill
+      getMaxRental(availableRentals, "Power Drill") >= rental.tool.powerDrill
     ) {
       itemList.push(`공구 > 전동 드릴 세트 ${rental.tool.powerDrill}개`);
     }
     if (
       rental.tool.driver &&
       rental.tool.driver > 0 &&
-      getMaxRental(availableRentals, "Driver") > rental.tool.driver
+      getMaxRental(availableRentals, "Driver") >= rental.tool.driver
     ) {
       itemList.push(`공구 > 드라이버 세트 ${rental.tool.driver}개`);
     }
     if (
       rental.tool.superGlue &&
       rental.tool.superGlue > 0 &&
-      getMaxRental(availableRentals, "Super Glue") > rental.tool.superGlue
+      getMaxRental(availableRentals, "Super Glue") >= rental.tool.superGlue
     ) {
       itemList.push(`공구 > 순간접착제 ${rental.tool.superGlue}개`);
     }
     if (
       rental.tool.nipper &&
       rental.tool.nipper > 0 &&
-      getMaxRental(availableRentals, "Nipper") > rental.tool.nipper
+      getMaxRental(availableRentals, "Nipper") >= rental.tool.nipper
     ) {
       itemList.push(`공구 > 니퍼 ${rental.tool.nipper}개`);
     }
     if (
       rental.tool.plier &&
       rental.tool.plier > 0 &&
-      getMaxRental(availableRentals, "Plier") > rental.tool.plier
+      getMaxRental(availableRentals, "Plier") >= rental.tool.plier
     ) {
       itemList.push(`공구 > 펜치 ${rental.tool.plier}개`);
     }
     if (
       rental.tool.longNosePlier &&
       rental.tool.longNosePlier > 0 &&
-      getMaxRental(availableRentals, "Long Nose Plier") >
+      getMaxRental(availableRentals, "Long Nose Plier") >=
         rental.tool.longNosePlier
     ) {
       itemList.push(`공구 > 롱노우즈 ${rental.tool.longNosePlier}개`);
