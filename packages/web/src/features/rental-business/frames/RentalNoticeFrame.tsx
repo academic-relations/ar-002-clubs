@@ -9,6 +9,7 @@ import styled from "styled-components";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import type { RentalInterface } from "../types/rental";
@@ -27,13 +28,6 @@ const RentalNoticeFrameInner = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-  align-self: stretch;
-`;
-
-const StyledBottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   align-self: stretch;
 `;
 

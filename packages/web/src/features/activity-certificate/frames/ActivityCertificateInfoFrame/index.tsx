@@ -6,6 +6,7 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import StepProcess, {
   StepInputType,
 } from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 
 import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
 
@@ -18,13 +19,6 @@ const RentalNoticeFrameInner = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 60px;
-  align-self: stretch;
-`;
-
-const StyledBottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   align-self: stretch;
 `;
 
