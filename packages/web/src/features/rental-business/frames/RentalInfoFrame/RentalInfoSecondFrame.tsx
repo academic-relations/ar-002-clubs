@@ -74,18 +74,27 @@ const rentals = {
 const RentalInfoSecondFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
 > = ({ formCtx, setNextEnabled }) => {
-  const [value, setValue] = useState<
+  const [value, setRentalValue] = useState<
     "none" | "easel" | "vacuum" | "handCart" | "mat" | "tool"
   >("none");
 
-  const [rentalDate, setRentalDate] = useState<Date | undefined>();
-  const [returnDate, setReturnDate] = useState<Date | undefined>();
+  const { watch, reset, setValue } = formCtx;
+  const currentValues = watch();
+
+  const [rentalDate, setRentalDate] = useState<Date | undefined>(
+    currentValues.date?.start,
+  );
+  const [returnDate, setReturnDate] = useState<Date | undefined>(
+    currentValues.date?.end,
+  );
   const [pendingDate, setPendingDate] = useState<Date | undefined>();
 
-  const Rental = rentals[value].component;
+  useEffect(() => {
+    setValue("date.start", rentalDate);
+    setValue("date.end", returnDate);
+  }, [rentalDate, returnDate, setValue]);
 
-  const { watch, reset } = formCtx;
-  const currentValues = watch();
+  const Rental = rentals[value].component;
 
   const handleResetAll = () => {
     reset({
@@ -127,14 +136,14 @@ const RentalInfoSecondFrame: React.FC<
         end: returnDate,
       },
     });
-    setValue("none");
+    setRentalValue("none");
   };
 
   const itemOnChange = (
     newValue: "easel" | "vacuum" | "handCart" | "mat" | "tool",
   ) => {
     if (rentalDate && returnDate) {
-      setValue(newValue);
+      setRentalValue(newValue);
     }
   };
 

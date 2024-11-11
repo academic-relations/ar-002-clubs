@@ -84,6 +84,7 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ formCtx }) => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <ConfirmModalContent
+          // TODO: 신청 API 호출
           onConfirm={() => {
             close();
             router.push("/my");
