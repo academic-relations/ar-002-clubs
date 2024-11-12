@@ -16,3 +16,9 @@ export interface CommonSpaceInfoProps {
   param: CommonSpaceInterface["param"];
   setParam: React.Dispatch<React.SetStateAction<CommonSpaceInterface["param"]>>;
 }
+
+export interface CommonSpaceInfoFirstFrameProps {
+  clubName: string;
+  name: string;
+  phoneNumber: string;
+}

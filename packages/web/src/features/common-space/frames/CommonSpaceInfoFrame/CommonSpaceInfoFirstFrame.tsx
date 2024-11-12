@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+// import { useFormContext } from "react-hook-form";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -9,11 +11,23 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
-import { CommonSpaceInfoProps } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
+import {
+  // CommonSpaceInfoFirstFrameProps,
+  CommonSpaceInfoProps,
+} from "@sparcs-clubs/web/features/common-space/types/commonSpace";
 
 const CommonSpaceInfoFirstFrame: React.FC<
   CommonSpaceInfoProps & { setNextEnabled: (enabled: boolean) => void }
 > = ({ setNextEnabled, body, setBody }) => {
+  // const {
+  //   watch,
+  //   control,
+  //   resetField,
+  //   formState: { isValid },
+  // } = useFormContext<CommonSpaceInfoFirstFrameProps>();
+
+  // const name = watch("name");
+
   const { data, isLoading, isError } = useGetUserProfile();
 
   const [hasSelectError, setHasSelectError] = useState(false);
