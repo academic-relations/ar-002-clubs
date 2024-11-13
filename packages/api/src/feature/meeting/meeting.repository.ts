@@ -1,6 +1,6 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 
-import { and, eq, gte, lt } from "drizzle-orm";
+import { and, eq, gte, isNull, lt } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -120,14 +120,19 @@ export class MeetingRepository {
         announcementContent: MeetingAnnouncement.announcementContent,
       })
       .from(MeetingAnnouncement)
-      .where(eq(MeetingAnnouncement.id, announcementId))
+      .where(
+        and(
+          eq(MeetingAnnouncement.id, announcementId),
+          isNull(MeetingAnnouncement.deletedAt),
+        ),
+      )
       .execute();
 
     if (result.length !== 1) {
       logger.debug(
         `[MeetingRepository] Failed to select announcement: ${announcementId}`,
       );
-      return null;
+      throw new HttpException("No such meeting", HttpStatus.BAD_REQUEST);
     }
     return result[0];
   }
