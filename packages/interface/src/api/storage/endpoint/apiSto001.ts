@@ -1,6 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
+
 /**
  * @version v0.1
  * @description 대여 가능한 물품의 최대 갯수를 가져옵니다
@@ -16,6 +18,7 @@ const requestQuery = z.object({});
 const requestBody = z.object({
   clubId: z.coerce.number().int().min(1),
   studentId: z.coerce.number().int().min(1),
+  studentPhoneNumber: zKrPhoneNumber,
   numberOfBoxes: z.coerce.number().int().min(0),
   desiredPickUpDate: z.coerce.date(),
   nonStandardItems: z
