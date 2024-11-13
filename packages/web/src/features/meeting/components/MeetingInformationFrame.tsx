@@ -103,6 +103,7 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
                   { label: "비정기회의", value: false },
                 ]}
                 disabled={isDivisionMeeting}
+                isRequired={false} // TODO. select 컴포넌트 hookform에서 사용하게 바꾼 후 삭제
               />
             )}
           />
