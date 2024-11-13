@@ -294,7 +294,7 @@ export class MeetingRepository {
     return isDeleteSucceed;
   }
 
-  async selectExecutiveMeetingDegree(query: { meetingEnumId: number }) {
+  async selectExecutiveMeetingNextDegree(query: { meetingEnumId: number }) {
     const thisYear = getKSTDate().getFullYear();
     const startDate = new Date(thisYear, 0, 1);
     const endDate = new Date(thisYear + 1, 0, 1);
