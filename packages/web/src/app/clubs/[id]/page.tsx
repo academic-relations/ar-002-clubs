@@ -7,17 +7,18 @@ import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import ClubDetailPublicFrame from "@sparcs-clubs/web/features/clubDetails/frames/ClubDetailPublicFrame";
 import ClubDetailStudentFrame from "@sparcs-clubs/web/features/clubDetails/frames/ClubDetailStudentFrame";
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
+import isStudent from "@sparcs-clubs/web/utils/isStudent";
 
 const ClubDetail = () => {
   const { id } = useParams();
   const { data, isLoading, isError } = useGetClubDetail(id as string);
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, profile } = useAuth();
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
-      {isLoggedIn
+      {isLoggedIn && isStudent(profile)
         ? data && <ClubDetailStudentFrame club={data} />
-        : data && <ClubDetailPublicFrame club={data} />}{" "}
+        : data && <ClubDetailPublicFrame club={data} />}
     </AsyncBoundary>
   );
 };
