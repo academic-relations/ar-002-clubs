@@ -156,6 +156,8 @@ const ActivityCertificateInfoFirstFrame: React.FC<
           control={control}
           minLength={13}
           required
+          pattern={/^010-\d{4}-\d{4}$/}
+          patternMessage="전화번호는 010으로 시작하여야 합니다"
           renderItem={({ value, onChange, errorMessage }) => (
             <TextInput
               label="신청자 전화번호"
