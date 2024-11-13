@@ -22,9 +22,16 @@ import ClubRegistrationButton from "./ClubRegistrationButton";
 
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 
-interface ClubCardProps {
+export interface ClubProps {
   club: ApiClb001ResponseOK["divisions"][number]["clubs"][number];
 }
+
+interface ClubCardProps {
+  club: ApiClb001ResponseOK["divisions"][number]["clubs"][number];
+  isRegistrationPeriod?: boolean;
+  isMobile?: boolean;
+}
+
 const ClubCardRow = styled.div`
   width: 100%;
   white-space: nowrap;
@@ -55,9 +62,12 @@ const ClubName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 `;
-const ClubCard: React.FC<
-  ClubCardProps & { isRegistrationPeriod?: boolean }
-> = ({ club, isRegistrationPeriod = false }) => {
+const ClubCard: React.FC<ClubCardProps> = ({
+  club,
+  isRegistrationPeriod = false,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  isMobile = false,
+}) => {
   const { isLoggedIn } = useAuth();
 
   const {
@@ -128,4 +138,3 @@ const ClubCard: React.FC<
   );
 };
 export default ClubCard;
-export type { ClubCardProps };
