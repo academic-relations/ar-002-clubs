@@ -186,6 +186,12 @@ const paths = {
         authority: ["all"],
         featureFlag: "NO_RELEASE",
       },
+      {
+        name: "창고 사용",
+        path: "/storage",
+        authority: ["all"],
+        featureFlag: "NO_RELEASE",
+      },
     ],
     authority: ["all"],
   },
