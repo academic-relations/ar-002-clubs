@@ -14,6 +14,8 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
 
+import FormSelect from "@sparcs-clubs/web/common/components/Select/Form";
+
 import { meetingEnumToText } from "../constants/getEnumType";
 
 interface MeetingInformationFrameProps {
@@ -95,7 +97,7 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
               validate: value => typeof value === "boolean",
             }}
             renderItem={props => (
-              <Select
+              <FormSelect
                 {...props}
                 label="정기회의 여부"
                 placeholder="정기회의 여부를 선택해주세요"
@@ -104,7 +106,6 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
                   { label: "비정기회의", value: false },
                 ]}
                 disabled={isDivisionMeeting}
-                isRequired={false} // TODO. select 컴포넌트 hookform에서 사용하게 바꾼 후 삭제
               />
             )}
           />
