@@ -53,6 +53,7 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
 
   const isRegular = watch("isRegular");
   const meetingEnumId = watch("meetingEnumId");
+  const startDate = watch("startDate");
 
   const hasValue = meetingEnumId != null && isRegular != null;
   const isDivisionMeeting = meetingEnumId === MeetingEnum.divisionMeeting;
@@ -147,6 +148,7 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
                     onChange={(data: Date | null) => {
                       onChange(data);
                     }}
+                    minDate={new Date()}
                   />
                 )}
               />
@@ -162,6 +164,7 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
                     label="시작일"
                     selected={value}
                     onChange={(data: Date | null) => onChange(data)}
+                    minDate={new Date()}
                   />
                 )}
               />
@@ -169,11 +172,20 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
                 name="endDate"
                 required={isDivisionMeeting}
                 control={control}
-                renderItem={({ value, onChange }) => (
+                rules={{
+                  validate: value =>
+                    (value != null &&
+                      startDate != null &&
+                      startDate <= value!) ||
+                    "종료일은 시작일과 같거나 그 이후여야 합니다",
+                }}
+                renderItem={({ value, onChange, errorMessage }) => (
                   <DateInput
                     label="종료일"
                     selected={value}
                     onChange={(data: Date | null) => onChange(data)}
+                    minDate={new Date()}
+                    errorMessage={errorMessage}
                   />
                 )}
               />
