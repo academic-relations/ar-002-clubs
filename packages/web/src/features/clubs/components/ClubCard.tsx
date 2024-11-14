@@ -16,6 +16,7 @@ import {
   getShortClubType,
   getTagColorFromClubType,
 } from "@sparcs-clubs/web/features/clubs/services/clubTypeControl";
+import isStudent from "@sparcs-clubs/web/utils/isStudent";
 
 import ClubRegistrationButtonWrapper from "./_atomic/ClubRegistrationButtonWrapper";
 
@@ -79,7 +80,7 @@ const ClubCard: React.FC<ClubCardProps> = ({
   isRegistrationPeriod = false,
   isMobile = false,
 }) => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, profile } = useAuth();
 
   return (
     <Card gap={isMobile ? 12 : 16} padding="16px 20px">
@@ -126,7 +127,7 @@ const ClubCard: React.FC<ClubCardProps> = ({
             {club.characteristic}
           </ClubCardLongText>
         )}
-        {isRegistrationPeriod && isLoggedIn && (
+        {isRegistrationPeriod && isLoggedIn && isStudent(profile) && (
           <ClubRegistrationButtonWrapper club={club} isMobile={isMobile} />
         )}
       </ClubCardRow>
