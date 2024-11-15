@@ -101,7 +101,7 @@ const RentalInfoFirstFrame: React.FC<
           name="info.phoneNumber"
           required
           control={control}
-          defaultValue={userPhone}
+          defaultValue={data?.phoneNumber}
           // TODO: phoneInput 조건 달기
           // minLength={13}
           // pattern={/^(\d{3}-\d{4}-\d{4})$/}

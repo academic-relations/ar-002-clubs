@@ -166,7 +166,7 @@ const RentalInfoSecondFrame: React.FC<
   };
 
   useEffect(() => {
-    setNextEnabled(!isRentalListEmpty(currentValues));
+    setNextEnabled(!isRentalListEmpty(currentValues, mockupAvailableRental));
   }, [currentValues, setNextEnabled]);
 
   return (
@@ -185,13 +185,17 @@ const RentalInfoSecondFrame: React.FC<
           openPeriodModal={openPeriodModal}
           pendingDate={pendingDate}
           setPendingDate={setPendingDate}
-          isRentalListEmpty={isRentalListEmpty(currentValues)}
+          isRentalListEmpty={isRentalListEmpty(
+            currentValues,
+            mockupAvailableRental,
+          )}
         />
       </Card>
       <ItemButtonList
         value={value}
         onChange={itemOnChange}
         currentValues={currentValues}
+        availableRentals={mockupAvailableRental}
       />
       <Info text={rentals[value].info} />
       {value !== "none" && (
@@ -205,7 +209,11 @@ const RentalInfoSecondFrame: React.FC<
               </FlexGrowTypography>
               <TextButton
                 text="초기화"
-                disabled={isCurrentItemEmpty(value, currentValues)}
+                disabled={isCurrentItemEmpty(
+                  value,
+                  currentValues,
+                  mockupAvailableRental,
+                )}
                 onClick={handleResetCurrent}
               />
             </FlexWrapper>
@@ -227,7 +235,7 @@ const RentalInfoSecondFrame: React.FC<
             </FlexGrowTypography>
             <TextButton
               text="초기화"
-              disabled={isRentalListEmpty(currentValues)}
+              disabled={isRentalListEmpty(currentValues, mockupAvailableRental)}
               onClick={handleResetAll}
             />
           </FlexWrapper>

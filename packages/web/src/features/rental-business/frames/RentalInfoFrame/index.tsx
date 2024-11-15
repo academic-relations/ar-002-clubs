@@ -53,6 +53,9 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ formCtx }) => {
   const [nextEnabled, setNextEnabled] = useState(true);
   const CurrentFrame = frames[step];
 
+  const { watch, reset, setValue } = formCtx;
+  const currentValues = watch();
+
   const openReturnModal = useCallback(() => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
@@ -60,7 +63,18 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ formCtx }) => {
           onConfirm={() => {
             close();
             if (step === 0) {
-              formCtx.reset();
+              reset();
+            }
+            if (step === 1) {
+              reset({
+                agreement: currentValues.agreement,
+                info: {
+                  ...currentValues.info,
+                },
+              });
+            }
+            if (step === 2) {
+              setValue("purpose", undefined);
             }
             setStep(step - 1);
           }}

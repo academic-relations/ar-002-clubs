@@ -1,5 +1,6 @@
 import React from "react";
 
+import { ApiRnt001ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
 import styled from "styled-components";
 
 import { RentalInterface } from "../types/rental";
@@ -11,6 +12,7 @@ interface ItemButtonListProps {
   value: "easel" | "vacuum" | "handCart" | "mat" | "tool" | "none";
   onChange: (value: "easel" | "vacuum" | "handCart" | "mat" | "tool") => void;
   currentValues: RentalInterface;
+  availableRentals: ApiRnt001ResponseOK;
 }
 
 const ItemButtonListInner = styled.div`
@@ -49,12 +51,14 @@ const ItemButtonList: React.FC<ItemButtonListProps> = ({
   currentValues,
   value,
   onChange,
+  availableRentals,
 }) => (
   <ItemButtonListInner>
     {Object.keys(buttonInfo).map(key => {
       const hasItem = !isCurrentItemEmpty(
         key as keyof typeof buttonInfo,
         currentValues,
+        availableRentals,
       );
 
       return (
