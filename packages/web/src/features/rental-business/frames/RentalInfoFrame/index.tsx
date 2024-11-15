@@ -63,7 +63,7 @@ const RentalInfoFrame: React.FC<RentalFrameProps> = ({ formCtx }) => {
           onConfirm={() => {
             close();
             if (step === 0) {
-              reset();
+              reset({ agreement: false });
             }
             if (step === 1) {
               reset({
