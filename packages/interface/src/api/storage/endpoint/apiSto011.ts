@@ -22,16 +22,12 @@ const requestBody = z.object({
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({
-    status: z.coerce.string().max(30),
-    note: z.coerce.string().max(512),
-    updatedAt: z.coerce.date(),
-  }),
+  [HttpStatusCode.Ok]: z.object({}),
 };
 
 const responseErrorMap = {};
 
-const apiSto009 = {
+const apiSto011 = {
   url,
   method,
   requestParam,
@@ -41,16 +37,16 @@ const apiSto009 = {
   responseErrorMap,
 };
 
-type ApiSto009RequestParam = z.infer<typeof apiSto009.requestParam>;
-type ApiSto009RequestQuery = z.infer<typeof apiSto009.requestQuery>;
-type ApiSto009RequestBody = z.infer<typeof apiSto009.requestBody>;
-type ApiSto009ResponseOk = z.infer<(typeof apiSto009.responseBodyMap)[200]>;
+type ApiSto011RequestParam = z.infer<typeof apiSto011.requestParam>;
+type ApiSto011RequestQuery = z.infer<typeof apiSto011.requestQuery>;
+type ApiSto011RequestBody = z.infer<typeof apiSto011.requestBody>;
+type ApiSto011ResponseOk = z.infer<(typeof apiSto011.responseBodyMap)[200]>;
 
-export default apiSto009;
+export default apiSto011;
 
 export type {
-  ApiSto009RequestParam,
-  ApiSto009RequestQuery,
-  ApiSto009RequestBody,
-  ApiSto009ResponseOk,
+  ApiSto011RequestParam,
+  ApiSto011RequestQuery,
+  ApiSto011RequestBody,
+  ApiSto011ResponseOk,
 };

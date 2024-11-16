@@ -33,22 +33,7 @@ const requestBody = z.object({
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({
-    numberOfBoxes: z.coerce.number().int().min(0),
-    desiredPickUpDate: z.coerce.date(),
-    nonStandardItems: z
-      .object({
-        name: z.coerce.string().max(30),
-        fileId: z.coerce.number().int().min(1),
-      })
-      .array(),
-    desiredStartDate: z.coerce.date(),
-    desiredEndDate: z.coerce.date(),
-    status: z.coerce.string().max(30),
-    isPickedUp: z.coerce.boolean(),
-    note: z.coerce.string().max(512),
-    updatedAt: z.coerce.date(),
-  }),
+  [HttpStatusCode.Ok]: z.object({}),
 };
 
 const responseErrorMap = {};

@@ -6,7 +6,7 @@ import { z } from "zod";
  * @description 현재 학기 출력 해당 동아리의 홍보물 신청 내역을 가져옵니다.
  */
 
-const url = () => `/executive/storage/application/`;
+const url = () => `/executive/storage/applications/`;
 const method = "GET";
 
 const requestParam = z.object({});
@@ -40,7 +40,7 @@ const responseBodyMap = {
 
 const responseErrorMap = {};
 
-const apiSto010 = {
+const apiSto012 = {
   url,
   method,
   requestParam,
@@ -50,16 +50,16 @@ const apiSto010 = {
   responseErrorMap,
 };
 
-type ApiSto010RequestParam = z.infer<typeof apiSto010.requestParam>;
-type ApiSto010RequestQuery = z.infer<typeof apiSto010.requestQuery>;
-type ApiSto010RequestBody = z.infer<typeof apiSto010.requestBody>;
-type ApiSto010ResponseOk = z.infer<(typeof apiSto010.responseBodyMap)[200]>;
+type ApiSto012RequestParam = z.infer<typeof apiSto012.requestParam>;
+type ApiSto012RequestQuery = z.infer<typeof apiSto012.requestQuery>;
+type ApiSto012RequestBody = z.infer<typeof apiSto012.requestBody>;
+type ApiSto012ResponseOk = z.infer<(typeof apiSto012.responseBodyMap)[200]>;
 
-export default apiSto010;
+export default apiSto012;
 
 export type {
-  ApiSto010RequestParam,
-  ApiSto010RequestQuery,
-  ApiSto010RequestBody,
-  ApiSto010ResponseOk,
+  ApiSto012RequestParam,
+  ApiSto012RequestQuery,
+  ApiSto012RequestBody,
+  ApiSto012ResponseOk,
 };

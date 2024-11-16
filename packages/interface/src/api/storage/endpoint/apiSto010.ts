@@ -21,11 +21,7 @@ const requestBody = z.object({
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({
-    status: z.coerce.string().max(30),
-    note: z.coerce.string().max(512),
-    updatedAt: z.coerce.date(),
-  }),
+  [HttpStatusCode.Ok]: z.object({}),
 };
 
 const responseErrorMap = {};

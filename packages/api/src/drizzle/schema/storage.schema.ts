@@ -23,12 +23,13 @@ export const StorageApplicaiton = mysqlTable("storage_application", {
     .references(() => Student.id),
   studentPhoneNumber: varchar("student_phone_number", { length: 30 }).notNull(),
   numberOfBoxes: int("number_of_boxes").notNull(),
+  numberOfNonStandardItems: int("number_of_non_standard_items").notNull(),
   desiredPickUpDate: datetime("desired_pick_up_date").notNull(),
   PickUpDate: datetime("pick_up_date"),
   desiredStartDate: datetime("desired_start_date").notNull(),
   desiredEndDate: datetime("desired_end_date").notNull(),
-  status: varchar("status", { length: 30 }).notNull(),
-  isPickedUp: boolean("is_picked_up").notNull(),
+  status: varchar("status", { length: 30 }).notNull().default("apply"),
+  isPickedUp: boolean("is_picked_up").notNull().default(false),
   contractId: int("contract_id")
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     .references(() => StorageContract.id),
@@ -43,7 +44,6 @@ export const StorageContract = mysqlTable("storage_contract", {
   id: int("id").autoincrement().primaryKey(),
   endDate: datetime("end_date"),
   numberOfBoxes: int("number_of_boxes").notNull(),
-  numberOfNonStandardItems: int("number_of_non_standard_items").notNull(),
   charge: int("charge").notNull(),
   zone: varchar("zone", { length: 255 }),
   studentId: int("student_id")

@@ -51,7 +51,9 @@ const apiSto001 = {
 type ApiSto001RequestParam = z.infer<typeof apiSto001.requestParam>;
 type ApiSto001RequestQuery = z.infer<typeof apiSto001.requestQuery>;
 type ApiSto001RequestBody = z.infer<typeof apiSto001.requestBody>;
-type ApiSto001ResponseOK = z.infer<(typeof apiSto001.responseBodyMap)[201]>;
+type ApiSto001ResponseCreated = z.infer<
+  (typeof apiSto001.responseBodyMap)[201]
+>;
 
 export default apiSto001;
 
@@ -59,5 +61,5 @@ export type {
   ApiSto001RequestParam,
   ApiSto001RequestQuery,
   ApiSto001RequestBody,
-  ApiSto001ResponseOK,
+  ApiSto001ResponseCreated,
 };

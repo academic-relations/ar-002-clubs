@@ -23,17 +23,12 @@ const requestBody = z.object({
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({
-    status: z.coerce.string().max(30),
-    isPickedUp: z.coerce.boolean(),
-    note: z.coerce.string().max(512),
-    updatedAt: z.coerce.date(),
-  }),
+  [HttpStatusCode.Ok]: z.object({}),
 };
 
 const responseErrorMap = {};
 
-const apiSto006 = {
+const apiSto007 = {
   url,
   method,
   requestParam,
@@ -43,16 +38,16 @@ const apiSto006 = {
   responseErrorMap,
 };
 
-type ApiSto006RequestParam = z.infer<typeof apiSto006.requestParam>;
-type ApiSto006RequestQuery = z.infer<typeof apiSto006.requestQuery>;
-type ApiSto006RequestBody = z.infer<typeof apiSto006.requestBody>;
-type ApiSto006ResponseOk = z.infer<(typeof apiSto006.responseBodyMap)[200]>;
+type ApiSto007RequestParam = z.infer<typeof apiSto007.requestParam>;
+type ApiSto007RequestQuery = z.infer<typeof apiSto007.requestQuery>;
+type ApiSto007RequestBody = z.infer<typeof apiSto007.requestBody>;
+type ApiSto007ResponseOk = z.infer<(typeof apiSto007.responseBodyMap)[200]>;
 
-export default apiSto006;
+export default apiSto007;
 
 export type {
-  ApiSto006RequestParam,
-  ApiSto006RequestQuery,
-  ApiSto006RequestBody,
-  ApiSto006ResponseOk,
+  ApiSto007RequestParam,
+  ApiSto007RequestQuery,
+  ApiSto007RequestBody,
+  ApiSto007ResponseOk,
 };
