@@ -1,6 +1,5 @@
 import {
   boolean,
-  datetime,
   int,
   mysqlTable,
   text,
@@ -24,10 +23,10 @@ export const StorageApplicaiton = mysqlTable("storage_application", {
   studentPhoneNumber: varchar("student_phone_number", { length: 30 }).notNull(),
   numberOfBoxes: int("number_of_boxes").notNull(),
   numberOfNonStandardItems: int("number_of_non_standard_items").notNull(),
-  desiredPickUpDate: datetime("desired_pick_up_date").notNull(),
-  PickUpDate: datetime("pick_up_date"),
-  desiredStartDate: datetime("desired_start_date").notNull(),
-  desiredEndDate: datetime("desired_end_date").notNull(),
+  desiredPickUpDate: timestamp("desired_pick_up_date").notNull(),
+  PickUpDate: timestamp("pick_up_date"),
+  desiredStartDate: timestamp("desired_start_date").notNull(),
+  desiredEndDate: timestamp("desired_end_date").notNull(),
   status: varchar("status", { length: 30 }).notNull().default("apply"),
   isPickedUp: boolean("is_picked_up").notNull().default(false),
   contractId: int("contract_id")
@@ -42,8 +41,9 @@ export const StorageApplicaiton = mysqlTable("storage_application", {
 // StorageContract table
 export const StorageContract = mysqlTable("storage_contract", {
   id: int("id").autoincrement().primaryKey(),
-  endDate: datetime("end_date"),
+  endDate: timestamp("end_date"),
   numberOfBoxes: int("number_of_boxes").notNull(),
+  numberOfNonStandardItems: int("number_of_non_standard_items").notNull(),
   charge: int("charge").notNull(),
   zone: varchar("zone", { length: 255 }),
   studentId: int("student_id")

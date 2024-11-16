@@ -13,10 +13,15 @@ import { ApiSto004ResponseOk } from "@sparcs-clubs/interface/api/storage/endpoin
 import { ApiSto005ResponseOk } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto005";
 import { ApiSto006RequestBody } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto006";
 import { ApiSto007RequestBody } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto007";
+import { ApiSto008RequestBody } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto008";
+import { ApiSto009ResponseOk } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto009";
+import { ApiSto010RequestBody } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto010";
+import { ApiSto011RequestBody } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto011";
 import {
   ApiSto012RequestQuery,
   ApiSto012ResponseOk,
 } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto012";
+import { ApiSto013ResponseOk } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto013";
 
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 
@@ -25,7 +30,7 @@ import { StorageRepository } from "../repository/storage.repository";
 @Injectable()
 export class StorageService {
   constructor(
-    private readonly storageApplicationRepository: StorageRepository,
+    private readonly storageRepository: StorageRepository,
     private clubPublicService: ClubPublicService,
   ) {}
 
@@ -58,7 +63,7 @@ export class StorageService {
     });
 
     const isCreationSucceed =
-      await this.storageApplicationRepository.createApplication(body);
+      await this.storageRepository.createApplication(body);
     if (!isCreationSucceed) {
       throw new HttpException(
         "Failed to create application",
@@ -79,7 +84,7 @@ export class StorageService {
 
     const { clubId, pageOffset, itemCount } = query;
     const { paginatedItems, total } =
-      await this.storageApplicationRepository.getApplications(
+      await this.storageRepository.getApplications(
         clubId,
         pageOffset,
         itemCount,
@@ -98,7 +103,7 @@ export class StorageService {
   ): Promise<ApiSto003ResponseOk> {
     const { pageOffset, itemCount } = query;
     const { paginatedItems, total } =
-      await this.storageApplicationRepository.getMyApplications(
+      await this.storageRepository.getMyApplications(
         studentId,
         pageOffset,
         itemCount,
@@ -111,15 +116,14 @@ export class StorageService {
     };
   }
 
-  // 신청서의 정보를 불러오는 api로, Sto004, 005에서 사용합니다.
+  // 신청서의 정보를 불러오는 api로, Sto004, 005, 009에서 사용합니다.
   private async getStorageApplication(
     id: number,
   ): Promise<ApiSto004ResponseOk> {
-    const application =
-      await this.storageApplicationRepository.getApplication(id);
+    const application = await this.storageRepository.getApplication(id);
 
     const nonStandardItems =
-      await this.storageApplicationRepository.getNonStandardItems(id);
+      await this.storageRepository.getNonStandardItems(id);
 
     return { ...application, nonStandardItems };
   }
@@ -157,7 +161,7 @@ export class StorageService {
         HttpStatus.FORBIDDEN,
       );
 
-    const isUpdateSucceed = this.storageApplicationRepository.updateApplication(
+    const isUpdateSucceed = this.storageRepository.updateApplication(
       applicationId,
       body,
     );
@@ -173,7 +177,81 @@ export class StorageService {
     applicationId: number,
     body: ApiSto007RequestBody,
   ) {
-    const isUpdateSucceed = this.storageApplicationRepository.updateApplication(
+    const isUpdateSucceed = this.storageRepository.updateApplication(
+      applicationId,
+      body,
+    );
+
+    if (!isUpdateSucceed)
+      throw new HttpException(
+        "Failed to update",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+  }
+
+  async postExecutiveStorageContract(body: ApiSto008RequestBody) {
+    const isCreationSucceed = await this.storageRepository.createContract(body);
+    if (!isCreationSucceed) {
+      throw new HttpException(
+        "Failed to create application",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return isCreationSucceed;
+  }
+
+  // 계약서의 정보를 불러오는 api로, Sto009, 013에서 사용합니다.
+  private async getStorageContract(id: number): Promise<ApiSto009ResponseOk> {
+    const contract = await this.storageRepository.getContract(id);
+
+    return contract;
+  }
+
+  async getStudentStorageContract(
+    id: number,
+    studentId: number,
+  ): Promise<ApiSto009ResponseOk> {
+    const contract = await this.getStorageContract(id);
+    const application = await this.getStorageApplication(id);
+
+    await this.checkIsStudentDelegate({
+      studentId,
+      clubId: application.clubId,
+    });
+
+    return contract;
+  }
+
+  async putStudentStorageContract(
+    contractId: number,
+    body: ApiSto010RequestBody,
+    studentId: number,
+  ) {
+    const application = await this.getStorageContract(contractId);
+
+    if (application.studentId !== studentId)
+      throw new HttpException(
+        "It seems that you're not the creator of the application.",
+        HttpStatus.FORBIDDEN,
+      );
+
+    const isUpdateSucceed = this.storageRepository.updateContract(
+      contractId,
+      body,
+    );
+
+    if (!isUpdateSucceed)
+      throw new HttpException(
+        "Failed to update",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+  }
+
+  async putExecutiveStorageContract(
+    applicationId: number,
+    body: ApiSto011RequestBody,
+  ) {
+    const isUpdateSucceed = this.storageRepository.updateContract(
       applicationId,
       body,
     );
@@ -190,15 +268,16 @@ export class StorageService {
   ): Promise<ApiSto012ResponseOk> {
     const { pageOffset, itemCount } = query;
     const { paginatedItems, total } =
-      await this.storageApplicationRepository.getEveryApplications(
-        pageOffset,
-        itemCount,
-      );
+      await this.storageRepository.getEveryApplications(pageOffset, itemCount);
 
     return {
       items: paginatedItems,
       total,
       offset: pageOffset,
     };
+  }
+
+  async getExecutiveStorageContract(id: number): Promise<ApiSto013ResponseOk> {
+    return this.getStorageContract(id);
   }
 }

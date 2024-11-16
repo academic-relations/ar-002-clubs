@@ -26,7 +26,7 @@ const responseBodyMap = {
 
 const responseErrorMap = {};
 
-const apiSto009 = {
+const apiSto010 = {
   url,
   method,
   requestParam,
@@ -36,16 +36,16 @@ const apiSto009 = {
   responseErrorMap,
 };
 
-type ApiSto009RequestParam = z.infer<typeof apiSto009.requestParam>;
-type ApiSto009RequestQuery = z.infer<typeof apiSto009.requestQuery>;
-type ApiSto009RequestBody = z.infer<typeof apiSto009.requestBody>;
-type ApiSto009ResponseOk = z.infer<(typeof apiSto009.responseBodyMap)[200]>;
+type ApiSto010RequestParam = z.infer<typeof apiSto010.requestParam>;
+type ApiSto010RequestQuery = z.infer<typeof apiSto010.requestQuery>;
+type ApiSto010RequestBody = z.infer<typeof apiSto010.requestBody>;
+type ApiSto010ResponseOk = z.infer<(typeof apiSto010.responseBodyMap)[200]>;
 
-export default apiSto009;
+export default apiSto010;
 
 export type {
-  ApiSto009RequestParam,
-  ApiSto009RequestQuery,
-  ApiSto009RequestBody,
-  ApiSto009ResponseOk,
+  ApiSto010RequestParam,
+  ApiSto010RequestQuery,
+  ApiSto010RequestBody,
+  ApiSto010ResponseOk,
 };
