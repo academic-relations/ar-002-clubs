@@ -1,17 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
 
-import { differenceInHours, differenceInMinutes } from "date-fns";
+import { differenceInHours, differenceInMinutes, subSeconds } from "date-fns";
+
+import { useFormContext } from "react-hook-form";
 
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
+import { StyledBottom } from "@sparcs-clubs/web/common/components/StyledBottom";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 import useGetCommonSpaces from "@sparcs-clubs/web/features/common-space/service/getCommonSpaces";
-
+import postCommonSpaceUsageOrder from "@sparcs-clubs/web/features/common-space/service/postCommonSpaceUsageOrder";
 import { CommonSpaceInfoProps } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
 import {
   formatSimpleSlashDate,
@@ -43,11 +47,17 @@ const ReservationInfo = styled.div`
 `;
 
 const CommonSpaceInfoThirdFrame: React.FC<
-  CommonSpaceInfoProps & { setNextEnabled: (enabled: boolean) => void }
-> = ({ setNextEnabled, body, param }) => {
+  Partial<CommonSpaceInfoProps> & { onPrev: () => void }
+> = ({ onPrev }) => {
+  const {
+    watch,
+    formState: { isValid },
+  } = useFormContext();
+  const body = watch("body");
+  const param = watch("param");
   const { email, clubId, startTerm, endTerm } = body;
+
   const { spaceId } = param;
-  const correct = email && clubId && startTerm && endTerm && spaceId;
   const {
     data: commonSpacesData,
     isLoading: commonSpacesLoading,
@@ -60,11 +70,16 @@ const CommonSpaceInfoThirdFrame: React.FC<
     isError: userProfileError,
   } = useGetUserProfile();
 
-  useEffect(() => {
-    setNextEnabled(!!correct);
-  }, [correct, setNextEnabled]);
+  const handleSubmit = useCallback(() => {
+    if (isValid) {
+      postCommonSpaceUsageOrder(
+        { spaceId },
+        { email, clubId, startTerm, endTerm: subSeconds(endTerm, 1) },
+      );
+    }
+  }, [body, param]);
 
-  return correct ? (
+  return isValid ? (
     <>
       <Card outline gap={20}>
         <CardInner>
@@ -104,6 +119,12 @@ const CommonSpaceInfoThirdFrame: React.FC<
         </ReservationInfo>
       </Card>
       <Info text="먼가 넣을 것이 없을까나" />
+      <StyledBottom>
+        <Button onClick={onPrev}>이전</Button>
+        <Button type={isValid ? "default" : "disabled"} onClick={handleSubmit}>
+          다음
+        </Button>
+      </StyledBottom>
     </>
   ) : null;
 };
