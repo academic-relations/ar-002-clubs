@@ -27,10 +27,7 @@ const CommonSpaceInfoFirstFrame: React.FC<CommonSpaceInfoFirstFrameProps> = ({
 }) => {
   const {
     control,
-    // getValues,
-    // trigger,
     reset,
-    // watch,
     formState: { isValid, isDirty },
   } = useFormContext<CommonSpaceInterface>();
 
