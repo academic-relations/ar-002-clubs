@@ -10,7 +10,7 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
-import { StyledBottom } from "@sparcs-clubs/web/common/components/StyledBottom";
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";

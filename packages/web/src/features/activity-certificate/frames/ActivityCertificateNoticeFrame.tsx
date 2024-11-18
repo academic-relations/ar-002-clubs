@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
 
 import { useFormContext } from "react-hook-form";
@@ -7,6 +6,7 @@ import styled from "styled-components";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { ActivityCertificateInfo } from "../types/activityCertificate";
@@ -16,13 +16,6 @@ const ActivityCertificateNoticeFrameInner = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-  align-self: stretch;
-`;
-
-const StyledBottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   align-self: stretch;
 `;
 

@@ -4,11 +4,13 @@ import React, { useEffect, useState } from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
+import useGetMyClub from "@sparcs-clubs/web/features/my/clubs/service/useGetMyClub";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
@@ -16,91 +18,104 @@ import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 const RentalInfoFirstFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
-> = ({ setNextEnabled, rental, setRental }) => {
+> = ({ formCtx, setNextEnabled }) => {
   const { data, isLoading, isError } = useGetUserProfile();
+  // usr001 수정 후 다시 확인
+  const {
+    data: clubData,
+    isLoading: clubIsLoading,
+    isError: clubIsError,
+  } = useGetMyClub();
+
+  const {
+    control,
+    watch,
+    setValue,
+    formState: { errors },
+  } = formCtx;
 
   const [clubList, setClubList] = useState<SelectItem<string>[]>([]);
-  const [userName, setUserName] = useState("");
   const [userPhone, setUserPhone] = useState<string | undefined>();
 
   useEffect(() => {
     if (data) {
+      // setClubList(
+      //   data.clubs.map(club => ({
+      //     label: club.name_kr,
+      //     value: String(club.id),
+      //     selectable: true,
+      //   })),
+      // );
+      setValue("info.applicant", data.name);
+      setUserPhone(data.phoneNumber);
+    }
+    if (clubData) {
       setClubList(
-        data.clubs.map(club => ({
+        clubData?.semesters[0].clubs.map(club => ({
           label: club.name_kr,
           value: String(club.id),
           selectable: true,
         })),
       );
-      setUserName(data.name);
-      setUserPhone(rental.info?.phone ?? data.phoneNumber);
     }
-  }, [data, rental.info?.phone, setClubList, setUserName, setUserPhone]);
+  }, [data, clubData, setClubList, setUserPhone, setValue]);
 
-  const [phone, setPhone] = useState(rental.info?.phone ?? userPhone);
-  const [hasPhoneError, setHasPhoneError] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(rental.info?.clubId ?? "");
-  const [hasSelectError, setHasSelectError] = useState(false);
+  const clubId = watch("info.clubId");
+  const phoneNumber = watch("info.phoneNumber");
 
   useEffect(() => {
-    if (phone != null && phone.length > 0) {
-      setRental({
-        ...rental,
-        info: {
-          ...rental.info,
-          phone,
-        },
-      });
-    }
-  }, [phone, setRental]);
+    const hasNoErrors = !errors.info?.clubId && !errors.info?.phoneNumber;
+    setNextEnabled(!!clubId && !!phoneNumber && hasNoErrors);
+  }, [clubId, phoneNumber, errors, setNextEnabled]);
 
   useEffect(() => {
-    const allConditionsMet =
-      Boolean(selectedValue) &&
-      Boolean(phone) &&
-      !hasPhoneError &&
-      !hasSelectError;
-    setNextEnabled(allConditionsMet);
-  }, [selectedValue, phone, hasPhoneError, hasSelectError, setNextEnabled]);
-
-  useEffect(() => {
-    if (selectedValue !== "") {
-      const selectClub = clubList.find(club => club.value === selectedValue);
-      if (!selectClub) {
-        return;
-      }
-      setRental({
-        ...rental,
-        info: {
-          clubId: Number(selectedValue),
-          clubName: selectClub?.label,
-          applicant: userName,
-          phone: phone ?? "",
-        },
-      });
+    const clubName = clubList.find(
+      club => club.value === String(clubId),
+    )?.label;
+    if (clubName) {
+      setValue("info.clubName", clubName);
     }
-  }, [selectedValue, phone, setRental]);
+  }, [clubId, clubList, setValue]);
 
   return (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
+    // TODO: club loading & error 지우기
+    <AsyncBoundary
+      isLoading={isLoading && clubIsLoading}
+      isError={isError && clubIsError}
+    >
       <Card outline gap={40}>
-        <Select
-          items={clubList}
-          value={String(selectedValue)}
-          onChange={setSelectedValue}
-          label="동아리 이름"
-          setErrorStatus={setHasSelectError}
+        <FormController
+          name="info.clubId"
+          required
+          control={control}
+          renderItem={props => (
+            <Select {...props} items={clubList} label="동아리 이름" />
+          )}
         />
-        <TextInput label="신청자 이름" placeholder={userName} disabled />
-        <PhoneInput
-          label="신청자 전화번호"
-          value={phone ?? ""}
-          // TODO: interface 연결 후 기본 value가 제대로 로딩되지 않는 문제 수정
-          onChange={setPhone}
-          placeholder={
-            /^(\d{3}-\d{4}-\d{4})$/.test(userPhone ?? "") ? userPhone ?? "" : ""
-          }
-          setErrorStatus={setHasPhoneError}
+        <TextInput
+          label="신청자 이름"
+          placeholder={watch("info.applicant") ?? ""}
+          disabled
+        />
+        <FormController
+          name="info.phoneNumber"
+          required
+          control={control}
+          defaultValue={data?.phoneNumber}
+          // TODO: phoneInput 조건 달기
+          // minLength={13}
+          // pattern={/^(\d{3}-\d{4}-\d{4})$/}
+          renderItem={props => (
+            <PhoneInput
+              {...props}
+              label="신청자 전화번호"
+              placeholder={
+                /^(\d{3}-\d{4}-\d{4})$/.test(userPhone ?? "")
+                  ? userPhone ?? ""
+                  : ""
+              }
+            />
+          )}
         />
       </Card>
     </AsyncBoundary>

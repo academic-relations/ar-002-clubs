@@ -24,7 +24,7 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Select from "@sparcs-clubs/web/common/components/Select";
-import { StyledBottom } from "@sparcs-clubs/web/common/components/StyledBottom";
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import Timetable from "@sparcs-clubs/web/common/components/Timetable";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
