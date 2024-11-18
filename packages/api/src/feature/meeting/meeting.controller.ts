@@ -1,9 +1,23 @@
-import { Controller, Get, Query, UsePipes } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UsePipes,
+} from "@nestjs/common";
 
 import apiMee005, {
   ApiMee005RequestQuery,
   ApiMee005ResponseOk,
 } from "@sparcs-clubs/interface/api/meeting/apiMee005";
+
+import apiMee006, {
+  ApiMee006RequestBody,
+  ApiMee006RequestParam,
+  ApiMee006ResponseCreated,
+} from "@sparcs-clubs/interface/api/meeting/apiMee006";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Executive } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
@@ -28,5 +42,23 @@ export default class MeetingController {
     );
 
     return { degree };
+  }
+
+  @Executive()
+  @Post("/executive/meetings/meeting/:meetingId/agendas/agenda")
+  @UsePipes(new ZodPipe(apiMee006))
+  async postStudentRegistrationsMemberRegistration(
+    @GetExecutive() user: GetExecutive,
+    @Param() { meetingId }: ApiMee006RequestParam,
+    @Body() { description, meetingEnumId, title }: ApiMee006RequestBody,
+  ): Promise<ApiMee006ResponseCreated> {
+    const result = await this.meetingService.postExecutiveMeetingAgenda(
+      user.executiveId,
+      meetingId,
+      description,
+      meetingEnumId,
+      title,
+    );
+    return result;
   }
 }

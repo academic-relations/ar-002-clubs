@@ -1,14 +1,16 @@
 import { Inject, Injectable } from "@nestjs/common";
 
-import { and, eq, gte, lt } from "drizzle-orm";
+import { and, eq, gte, lt, max } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import {
   Meeting,
+  MeetingAgenda,
   MeetingAnnouncement,
   MeetingAttendanceTimeT,
+  MeetingMapping,
   MeetingVoteResult,
 } from "@sparcs-clubs/api/drizzle/schema/meeting.schema";
 
@@ -306,5 +308,40 @@ export class MeetingRepository {
       );
 
     return result.length;
+  }
+
+  async entryMeetingAgenda(
+    meetingEnumId: number,
+    description: string,
+    title: string,
+  ) {
+    const [result] = await this.db.insert(MeetingAgenda).values({
+      MeetingAgendaEnum: meetingEnumId,
+      description,
+      title,
+      isEditableSelf: true,
+      isEditableDivisionPresident: true,
+      isEditableRepresentative: true,
+    });
+
+    return result.insertId;
+  }
+
+  async entryMeetingMapping(agendaId: number, meetingId: number) {
+    const getMax = await this.db
+      .select({ value: max(MeetingMapping.meetingAgendaPosition) })
+      .from(MeetingMapping)
+      .where(and(eq(MeetingMapping.meetingId, meetingId)));
+
+    const maxAgendaPosition = getMax[0]?.value;
+
+    const [result] = await this.db.insert(MeetingMapping).values({
+      meetingId,
+      meetingAgendaId: agendaId,
+      meetingAgendaPosition: maxAgendaPosition + 1,
+      meetingAgendaEntityType: 3, // no agenda entity mapped yet.
+    });
+
+    return result;
   }
 }
