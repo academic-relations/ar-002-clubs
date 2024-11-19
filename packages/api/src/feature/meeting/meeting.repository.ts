@@ -310,39 +310,66 @@ export class MeetingRepository {
     return result.length;
   }
 
-  async entryMeetingAgenda(
+  async insertMeetingAgendaAndMapping(
+    meetingId: number,
     meetingEnumId: number,
     description: string,
     title: string,
   ) {
-    const [result] = await this.db.insert(MeetingAgenda).values({
-      MeetingAgendaEnum: meetingEnumId,
-      description,
-      title,
-      isEditableSelf: true,
-      isEditableDivisionPresident: true,
-      isEditableRepresentative: true,
-    });
+    const isInsertAgendaAndMappingSuccess = await this.db.transaction(
+      async tx => {
+        const [insertAgendaResult] = await tx.insert(MeetingAgenda).values({
+          MeetingAgendaEnum: meetingEnumId,
+          description,
+          title,
+          isEditableSelf: true,
+          isEditableDivisionPresident: true,
+          isEditableRepresentative: true,
+        });
 
-    return result.insertId;
-  }
+        if (insertAgendaResult.affectedRows !== 1) {
+          logger.debug("[MeetingRepository] Failed to insert meeting agenda");
+          tx.rollback();
+          return false;
+        }
 
-  async entryMeetingMapping(agendaId: number, meetingId: number) {
-    const getMax = await this.db
-      .select({ value: max(MeetingMapping.meetingAgendaPosition) })
-      .from(MeetingMapping)
-      .where(and(eq(MeetingMapping.meetingId, meetingId)));
+        const agendaId = insertAgendaResult.insertId;
+        logger.debug(
+          `[MeetingRepository] Inserted meeting agenda: ${agendaId}`,
+        );
 
-    const maxAgendaPosition = getMax[0]?.value;
+        const getMax = await tx
+          .select({ value: max(MeetingMapping.meetingAgendaPosition) })
+          .from(MeetingMapping)
+          .where(and(eq(MeetingMapping.meetingId, meetingId)));
 
-    const [result] = await this.db.insert(MeetingMapping).values({
-      meetingId,
-      meetingAgendaId: agendaId,
-      meetingAgendaPosition: maxAgendaPosition + 1,
-      meetingAgendaEntityType: 3, // no agenda entity mapped yet.
-    });
+        const maxAgendaPosition = getMax[0]?.value;
 
-    return result;
+        const [insertMappingResult] = await this.db
+          .insert(MeetingMapping)
+          .values({
+            meetingId,
+            meetingAgendaId: agendaId,
+            meetingAgendaPosition: maxAgendaPosition + 1,
+            meetingAgendaEntityType: 3, // no agenda entity mapped yet.
+          });
+
+        if (insertMappingResult.affectedRows !== 1) {
+          logger.debug("[MeetingRepository] Failed to insert meeting agenda");
+          tx.rollback();
+          return false;
+        }
+
+        const meetingMappingId = insertMappingResult.insertId;
+        logger.debug(
+          `[MeetingRepository] Inserted meeting agenda mapping: ${meetingMappingId}`,
+        );
+
+        return true;
+      },
+    );
+
+    return isInsertAgendaAndMappingSuccess;
   }
 
   async updateMeetingAgenda(
@@ -361,6 +388,33 @@ export class MeetingRepository {
         updatedAt: updateTime,
       })
       .where(eq(MeetingAgenda.id, agendaId));
+
+    if (result.affectedRows !== 1) {
+      logger.debug("[MeetingRepository] Failed to update meeting agenda.");
+      return false;
+    }
+    logger.debug(`[MeetingRepository] Updated meeting agenda: ${agendaId}`);
     return result;
+  }
+
+  async deleteMeetingAgendaMapping(meetingId: number, agendaId: number) {
+    const [meetingAgendaMappingDeleteResult] = await this.db
+      .delete(MeetingMapping)
+      .where(
+        and(
+          eq(MeetingMapping.meetingId, meetingId),
+          eq(MeetingMapping.meetingAgendaId, agendaId),
+        ),
+      );
+    if (meetingAgendaMappingDeleteResult.affectedRows !== 1) {
+      logger.debug(
+        "[MeetingRepository] Failed to delete meeting agenda mapping.",
+      );
+      return false;
+    }
+    logger.debug(
+      `[MeetingRepository] Deleted meeting agenda mapping: ${meetingId}, ${agendaId}`,
+    );
+    return meetingAgendaMappingDeleteResult;
   }
 }

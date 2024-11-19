@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -20,11 +21,16 @@ import apiMee006, {
   ApiMee006ResponseCreated,
 } from "@sparcs-clubs/interface/api/meeting/apiMee006";
 
-import apiMee08, {
+import apiMee008, {
   ApiMee008RequestBody,
   ApiMee008RequestParam,
   ApiMee008ResponseOk,
 } from "@sparcs-clubs/interface/api/meeting/apiMee008";
+
+import apiMee010, {
+  ApiMee010RequestParam,
+  ApiMee010ResponseOk,
+} from "@sparcs-clubs/interface/api/meeting/apiMee010";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Executive } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
@@ -71,7 +77,7 @@ export default class MeetingController {
 
   @Executive()
   @Patch("/executive/meetings/meeting/:meetingId/agendas/agenda/:agendaId")
-  @UsePipes(new ZodPipe(apiMee08))
+  @UsePipes(new ZodPipe(apiMee008))
   async patchExecutiveMeetingAgenda(
     @GetExecutive() user: GetExecutive,
     @Param() { agendaId }: ApiMee008RequestParam,
@@ -83,6 +89,21 @@ export default class MeetingController {
       agendaEnumId,
       description,
       title,
+    );
+    return result;
+  }
+
+  @Executive()
+  @Delete("/executive/meetings/meeting/:meetingId/agendas/agenda/:agendaId")
+  @UsePipes(new ZodPipe(apiMee010))
+  async deleteExecutiveMeetingAgenda(
+    @GetExecutive() user: GetExecutive,
+    @Param() { meetingId, agendaId }: ApiMee010RequestParam,
+  ): Promise<ApiMee010ResponseOk> {
+    const result = await this.meetingService.deleteExecutiveMeetingAgenda(
+      user.executiveId,
+      meetingId,
+      agendaId,
     );
     return result;
   }
