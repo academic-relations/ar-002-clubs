@@ -61,8 +61,8 @@ export class MeetingService {
   async postExecutiveMeetingAgenda(
     executiveId: number,
     meetingId: number,
-    description: string,
     meetingEnumId: number,
+    description: string,
     title: string,
   ): Promise<ApiMee006ResponseCreated> {
     const user = await this.userPublicService.getExecutiveById({
@@ -79,6 +79,31 @@ export class MeetingService {
       title,
     );
     await this.meetingRepository.entryMeetingMapping(agendaId, meetingId);
+
+    return {};
+  }
+
+  async patchExecutiveMeetingAgenda(
+    executiveId: number,
+    agendaId: number,
+    agendaEnumId: number,
+    description: string,
+    title: string,
+  ) {
+    const user = await this.userPublicService.getExecutiveById({
+      id: executiveId,
+    });
+
+    if (!user) {
+      throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
+    }
+
+    await this.meetingRepository.updateMeetingAgenda(
+      agendaId,
+      agendaEnumId,
+      description,
+      title,
+    );
 
     return {};
   }

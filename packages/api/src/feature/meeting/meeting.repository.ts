@@ -344,4 +344,23 @@ export class MeetingRepository {
 
     return result;
   }
+
+  async updateMeetingAgenda(
+    agendaId: number,
+    agendaEnumId: number,
+    description: string,
+    title: string,
+  ) {
+    const updateTime = new Date();
+    const [result] = await this.db
+      .update(MeetingAgenda)
+      .set({
+        MeetingAgendaEnum: agendaEnumId,
+        title,
+        description,
+        updatedAt: updateTime,
+      })
+      .where(eq(MeetingAgenda.id, agendaId));
+    return result;
+  }
 }
