@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -79,6 +80,7 @@ interface MeetingNoticeItemType {
 }
 
 const MeetingMainFrame: React.FC = () => {
+  const router = useRouter();
   const [page, setPage] = useState<number>(1);
   const [mockUpData, setMockUpData] = useState<MeetingNoticeItemType[]>(
     mockUpMeetingNotice.items.slice(0, 12),
@@ -109,12 +111,13 @@ const MeetingMainFrame: React.FC = () => {
               </MeetingNoticeDateHeader>
             </MeetingNoticeHeader>
           </MeetingNoticeHeaderWrapper>
-          {mockUpData.map(e => (
+          {mockUpData.map((e: MeetingNoticeItemType) => (
             <MeetingNoticeItem
               key={e.id}
               tag={e.tag}
               title={e.title}
               date={e.date}
+              onClick={() => router.push(`/meeting/${e.id}`)}
             />
           ))}
         </MeetingNoticeListWrapper>
