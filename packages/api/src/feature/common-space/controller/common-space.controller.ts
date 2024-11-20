@@ -81,7 +81,7 @@ export class CommonSpaceController {
     @Param() param: ApiCms003RequestParam,
     @Body() body: ApiCms003RequestBody,
   ): Promise<ApiCms003ResponseCreated> {
-    const studentId = 1;
+    const studentId = 544; // CHACHA: 1이었는데 테스트를 위해 544로 변경했더니 됨
     const result =
       await this.commonspaceService.postStudentCommonSpaceUsageOrder(
         param.spaceId,
