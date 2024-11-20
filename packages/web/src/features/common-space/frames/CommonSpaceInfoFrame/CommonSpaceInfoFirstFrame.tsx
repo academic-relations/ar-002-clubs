@@ -89,7 +89,6 @@ const CommonSpaceInfoFirstFrame: React.FC<CommonSpaceInfoFirstFrameProps> = ({
               {...props}
               label="신청자 전화번호"
               placeholder={data?.phoneNumber || ""}
-              disabled
             />
           )}
         />

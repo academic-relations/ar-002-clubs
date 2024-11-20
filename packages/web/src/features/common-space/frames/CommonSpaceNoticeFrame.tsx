@@ -25,10 +25,8 @@ const CommonSpaceNoticeFrameInner = styled.div`
 `;
 
 const CommonSpaceNoticeFrame: React.FC = () => {
-  const { setValue, watch } = useFormContext<CommonSpaceInterface>();
+  const { setValue } = useFormContext<CommonSpaceInterface>();
   const [checked, setChecked] = useState(false);
-
-  const isAgreed = watch("agreement");
 
   return (
     <CommonSpaceNoticeFrameInner>
@@ -47,7 +45,6 @@ const CommonSpaceNoticeFrame: React.FC = () => {
           checked={checked}
           onClick={() => {
             setChecked(prev => !prev);
-            setValue("agreement", !isAgreed);
           }}
           optionText="위의 안내사항을 모두 숙지하였으며, 이에 동의합니다"
         />

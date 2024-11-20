@@ -17,7 +17,7 @@ const CommonSpaceMainFrame: React.FC = () => {
       agreement: false,
       phoneNumber: "",
       name: "",
-      param: { spaceId: 0 }, // 초기값 명시
+      // param: { spaceId: 0 }, // CHACHA: 초기값 명시 안 해도 되나? 이따 더 보겠습니다
       body: { startTerm: undefined, endTerm: undefined, email: "" },
     },
   });
