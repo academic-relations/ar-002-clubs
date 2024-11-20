@@ -1,15 +1,18 @@
 import React from "react";
 
+import { ApiRnt001ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
 import styled from "styled-components";
 
 import { RentalInterface } from "../types/rental";
+import { isCurrentItemEmpty } from "../utils/isRentalEmpty";
 
 import ItemButton from "./ItemButton";
 
 interface ItemButtonListProps {
   value: "easel" | "vacuum" | "handCart" | "mat" | "tool" | "none";
   onChange: (value: "easel" | "vacuum" | "handCart" | "mat" | "tool") => void;
-  rental: RentalInterface;
+  currentValues: RentalInterface;
+  availableRentals: ApiRnt001ResponseOK;
 }
 
 const ItemButtonListInner = styled.div`
@@ -44,26 +47,19 @@ const buttonInfo = {
   },
 };
 
-const checkNonZeroItems = (items?: { [key: string]: number }): boolean =>
-  items ? Object.values(items).some(value => value > 0) : false;
-
 const ItemButtonList: React.FC<ItemButtonListProps> = ({
+  currentValues,
   value,
   onChange,
-  rental,
+  availableRentals,
 }) => (
   <ItemButtonListInner>
     {Object.keys(buttonInfo).map(key => {
-      const itemValue = rental[key as keyof typeof buttonInfo];
-      let hasItem = false;
-
-      if (typeof itemValue === "number") {
-        hasItem = itemValue > 0;
-      } else if (typeof itemValue === "object") {
-        hasItem = checkNonZeroItems(itemValue);
-      } else if (typeof itemValue === "string") {
-        hasItem = true;
-      }
+      const hasItem = !isCurrentItemEmpty(
+        key as keyof typeof buttonInfo,
+        currentValues,
+        availableRentals,
+      );
 
       return (
         <ItemButton
