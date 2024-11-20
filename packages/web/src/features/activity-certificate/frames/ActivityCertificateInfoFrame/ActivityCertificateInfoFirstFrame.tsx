@@ -13,7 +13,7 @@ import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumbe
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
-import { StyledBottom } from "@sparcs-clubs/web/common/components/StyledBottom";
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 import { useGetUserClubs } from "@sparcs-clubs/web/features/activity-certificate/services/useGetUserClubs";
 import { ActivityBasicInfo } from "@sparcs-clubs/web/features/activity-certificate/types/activityCertificate";
