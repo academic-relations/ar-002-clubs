@@ -6,7 +6,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Button> = {
   component: Button,
-  tags: ["autodocs"],
   parameters: {
     layout: "centered",
   },
