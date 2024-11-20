@@ -28,6 +28,7 @@ const CommonSpaceInfoFirstFrame: React.FC<CommonSpaceInfoFirstFrameProps> = ({
   const {
     control,
     reset,
+    setValue,
     formState: { isValid, isDirty },
   } = useFormContext<CommonSpaceInterface>();
 
@@ -52,9 +53,12 @@ const CommonSpaceInfoFirstFrame: React.FC<CommonSpaceInfoFirstFrameProps> = ({
           control={control}
           required
           defaultValue={data?.clubs[0].name_kr || ""}
-          renderItem={props => (
+          renderItem={({ onChange, value }) => (
             <Select
-              {...props}
+              onChange={selectedValue => {
+                setValue("body.clubId", parseInt(selectedValue));
+                onChange(selectedValue);
+              }}
               items={
                 data?.clubs.map(club => ({
                   label: club.name_kr,
@@ -63,6 +67,7 @@ const CommonSpaceInfoFirstFrame: React.FC<CommonSpaceInfoFirstFrameProps> = ({
                 })) || []
               }
               label="동아리 이름"
+              value={value}
             />
           )}
         />
@@ -89,6 +94,7 @@ const CommonSpaceInfoFirstFrame: React.FC<CommonSpaceInfoFirstFrameProps> = ({
               {...props}
               label="신청자 전화번호"
               placeholder={data?.phoneNumber || ""}
+              disabled
             />
           )}
         />

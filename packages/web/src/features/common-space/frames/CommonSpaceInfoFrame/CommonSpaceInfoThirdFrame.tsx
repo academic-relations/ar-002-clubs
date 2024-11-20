@@ -16,7 +16,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 import useGetCommonSpaces from "@sparcs-clubs/web/features/common-space/service/getCommonSpaces";
 import postCommonSpaceUsageOrder from "@sparcs-clubs/web/features/common-space/service/postCommonSpaceUsageOrder";
-import { CommonSpaceInfoProps } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
+import { CommonSpaceInterface } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
 import {
   formatSimpleSlashDate,
   formatTime,
@@ -47,10 +47,11 @@ const ReservationInfo = styled.div`
 `;
 
 const CommonSpaceInfoThirdFrame: React.FC<
-  Partial<CommonSpaceInfoProps> & { onPrev: () => void }
+  Partial<CommonSpaceInterface> & { onPrev: () => void }
 > = ({ onPrev }) => {
   const {
     watch,
+    getValues,
     formState: { isValid },
   } = useFormContext();
   const body = watch("body");
@@ -63,6 +64,8 @@ const CommonSpaceInfoThirdFrame: React.FC<
     isLoading: commonSpacesLoading,
     isError: commonSpacesError,
   } = useGetCommonSpaces();
+
+  console.log(spaceId);
 
   const {
     data: userProfileData,
@@ -79,6 +82,9 @@ const CommonSpaceInfoThirdFrame: React.FC<
     }
   }, [body, param]);
 
+  console.log(commonSpacesData?.commonSpaces);
+  console.log(getValues("body.clubId"));
+
   return isValid ? (
     <>
       <Card outline gap={20}>
@@ -91,7 +97,7 @@ const CommonSpaceInfoThirdFrame: React.FC<
             isError={userProfileError}
           >
             <StyledList>
-              <li>동아리: {userProfileData?.clubs[clubId]?.name_kr}</li>
+              <li>동아리: {userProfileData?.clubs[clubId - 1]?.name_kr}</li>
               <li>담당자: {userProfileData?.name}</li>
               <li>연락처: {userProfileData?.phoneNumber}</li>
             </StyledList>
@@ -106,7 +112,7 @@ const CommonSpaceInfoThirdFrame: React.FC<
             isError={commonSpacesError}
           >
             <Typography fs={16} lh={20} fw="REGULAR">
-              {commonSpacesData?.commonSpaces[spaceId]?.name},{" "}
+              {commonSpacesData?.commonSpaces[spaceId - 1]?.name},{" "}
               {`${formatSimpleSlashDate(startTerm)} `}
               {formatTime(startTerm)} ~ {formatTime(endTerm)} (
               {`${differenceInHours(endTerm, startTerm)}시간`}

@@ -61,7 +61,7 @@ type UsageOrder = z.infer<
 const CommonSpaceInfoSecondFrame: React.FC<
   Partial<CommonSpaceInfoProps> & { onPrev: () => void; onNext: () => void }
 > = ({ onPrev, onNext }) => {
-  const { control, watch, setValue } = useFormContext();
+  const { control, watch, getValues, setValue } = useFormContext();
   const { data, isLoading, isError } = useGetCommonSpaces();
   const [date, setDate] = useState(startOfWeek(new Date()));
   const [intermediateSelectedValue, setIntermediateSelectedValue] =
@@ -77,6 +77,8 @@ const CommonSpaceInfoSecondFrame: React.FC<
   );
 
   const param = watch("param") || { spaceId: 0 };
+
+  console.log(getValues("body.clubId"));
 
   const setDateTimeRange: React.Dispatch<
     React.SetStateAction<[Date, Date] | undefined>
@@ -173,48 +175,55 @@ const CommonSpaceInfoSecondFrame: React.FC<
         <FormController
           name="param.spaceId"
           control={control}
-          renderItem={({ value }) => (
-            <Select
-              items={
-                data?.commonSpaces.map(s => ({
-                  value: s.id.toString(),
-                  label: s.name,
-                  selectable: true,
-                })) || []
-              }
-              value={value}
-              onChange={val => {
-                if (dateTimeRange) {
-                  setIntermediateSelectedValue(val);
-                  setShowModal(true);
-                } else {
-                  setValue("param.spaceId", val);
+          renderItem={({ onChange, value }) => (
+            <>
+              <Select
+                items={
+                  data?.commonSpaces.map(s => ({
+                    value: s.id.toString(),
+                    label: s.name,
+                    selectable: true,
+                  })) || []
                 }
-              }}
-              label="공용공간"
-            />
+                value={value}
+                onChange={val => {
+                  if (dateTimeRange) {
+                    setIntermediateSelectedValue(val);
+                    setShowModal(true);
+                  } else {
+                    setValue("param.spaceId", parseInt(val));
+                    onChange(val);
+                  }
+                }}
+                label="공용공간"
+              />
+              {showModal && (
+                <Modal isOpen={showModal}>
+                  <CancellableModalContent
+                    onClose={() => {
+                      setShowModal(false);
+                      setIntermediateSelectedValue("");
+                    }}
+                    onConfirm={() => {
+                      setShowModal(false);
+                      setValue(
+                        "param.spaceId",
+                        parseInt(intermediateSelectedValue),
+                      );
+                      onChange(intermediateSelectedValue);
+                      setIntermediateSelectedValue("");
+                      setDateTimeRange(undefined);
+                    }}
+                  >
+                    공용공간을 변경하면 선택한 시간이 모두 초기화됩니다.
+                    <br />
+                    ㄱㅊ?
+                  </CancellableModalContent>
+                </Modal>
+              )}
+            </>
           )}
         />
-        {showModal ? (
-          <Modal isOpen={showModal}>
-            <CancellableModalContent
-              onClose={() => {
-                setShowModal(false);
-                setIntermediateSelectedValue("");
-              }}
-              onConfirm={() => {
-                setShowModal(false);
-                setValue("param.spaceId", intermediateSelectedValue);
-                setIntermediateSelectedValue("");
-                setDateTimeRange(undefined);
-              }}
-            >
-              공용공간을 변경하면 선택한 시간이 모두 초기화됩니다.
-              <br />
-              ㄱㅊ?
-            </CancellableModalContent>
-          </Modal>
-        ) : null}
       </AsyncBoundary>
       {space && (
         <>
