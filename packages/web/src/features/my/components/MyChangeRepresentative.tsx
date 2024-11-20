@@ -24,6 +24,7 @@ interface MyChangeRepresentativeProps {
   prevRepresentative: string;
   newRepresentative: string;
   refetch: () => void;
+  requestId: number;
 }
 
 const MyChangeRepresentativeWrapper = styled.div.withConfig({
@@ -49,6 +50,7 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
   prevRepresentative,
   newRepresentative,
   refetch,
+  requestId,
 }) => {
   const router = useRouter();
   const Title =
@@ -78,6 +80,7 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
           newRepresentative={newRepresentative}
           onClose={close}
           refetch={refetch}
+          requestId={requestId}
         />
       </Modal>
     ));
