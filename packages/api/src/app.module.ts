@@ -6,6 +6,7 @@ import { AppService } from "./app.service";
 import { DrizzleModule } from "./drizzle/drizzle.module";
 import ActivityModule from "./feature/activity/activity.module";
 import { ActivityCertificateModule } from "./feature/activity-certificate/activity-certificate.module";
+
 import { AuthModule } from "./feature/auth/auth.module";
 import { JwtAccessGuard } from "./feature/auth/guard/jwt-access.guard";
 import { ClubModule } from "./feature/club/club.module";

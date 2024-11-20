@@ -33,7 +33,7 @@ import { GetExecutive } from "@sparcs-clubs/api/common/util/decorators/param-dec
 
 import { AnnouncementService } from "./announcement.service";
 
-@Controller("announcement")
+@Controller()
 export class AnnouncementController {
   constructor(private announcementService: AnnouncementService) {}
 
