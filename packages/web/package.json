@@ -10,7 +10,9 @@
     "lint": "next lint",
     "build-start": "next build && next start",
     "mock:front": "pnpm dev",
-    "mock:back": "echo \"In mock:back mode, the 'web' package will not be run. Exiting.\""
+    "mock:back": "echo \"In mock:back mode, the 'web' package will not be run. Exiting.\"",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@channel.io/channel-web-sdk-loader": "^2.0.0",
@@ -65,12 +67,21 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.2",
     "@sparcs-clubs/interface": "workspace:*",
+    "@storybook/addon-actions": "^8.4.5",
+    "@storybook/addon-essentials": "^8.4.5",
+    "@storybook/addon-interactions": "^8.4.5",
+    "@storybook/addon-links": "^8.4.5",
+    "@storybook/blocks": "^8.4.5",
+    "@storybook/nextjs": "^8.4.5",
+    "@storybook/react": "^8.4.5",
     "@tanstack/react-query-devtools": "^5.28.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-datepicker": "^7.0.0",
     "@types/react-dom": "^18",
+    "storybook": "^8.4.5",
     "typescript": "^5"
   },
   "packageManager": "pnpm@8.15.8"

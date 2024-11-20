@@ -1,3 +1,8 @@
+"use client";
+
+import { createGlobalStyle } from "styled-components";
+
+const GlobalStyle = createGlobalStyle`
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 
@@ -59,3 +64,6 @@ main {
   margin-left: 5px;
   margin-right: 5px;
 }
+`;
+
+export default GlobalStyle;
