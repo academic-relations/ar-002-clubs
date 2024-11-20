@@ -61,7 +61,7 @@ type UsageOrder = z.infer<
 const CommonSpaceInfoSecondFrame: React.FC<
   Partial<CommonSpaceInfoProps> & { onPrev: () => void; onNext: () => void }
 > = ({ onPrev, onNext }) => {
-  const { control, watch, getValues, setValue } = useFormContext();
+  const { control, watch, setValue } = useFormContext();
   const { data, isLoading, isError } = useGetCommonSpaces();
   const [date, setDate] = useState(startOfWeek(new Date()));
   const [intermediateSelectedValue, setIntermediateSelectedValue] =
@@ -77,8 +77,6 @@ const CommonSpaceInfoSecondFrame: React.FC<
   );
 
   const param = watch("param") || { spaceId: 0 };
-
-  console.log(getValues("body.clubId"));
 
   const setDateTimeRange: React.Dispatch<
     React.SetStateAction<[Date, Date] | undefined>

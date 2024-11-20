@@ -65,8 +65,6 @@ const CommonSpaceInfoThirdFrame: React.FC<
     isError: commonSpacesError,
   } = useGetCommonSpaces();
 
-  console.log(spaceId);
-
   const {
     data: userProfileData,
     isLoading: userProfileLoading,
@@ -82,9 +80,6 @@ const CommonSpaceInfoThirdFrame: React.FC<
     }
   }, [body, param]);
 
-  console.log(commonSpacesData?.commonSpaces);
-  console.log(getValues("body.clubId"));
-
   return isValid ? (
     <>
       <Card outline gap={20}>
@@ -97,9 +92,15 @@ const CommonSpaceInfoThirdFrame: React.FC<
             isError={userProfileError}
           >
             <StyledList>
-              <li>동아리: {userProfileData?.clubs[clubId - 1]?.name_kr}</li>
+              <li>
+                동아리:{" "}
+                {
+                  userProfileData?.clubs.filter(club => club.id === clubId)[0]
+                    ?.name_kr
+                }
+              </li>
               <li>담당자: {userProfileData?.name}</li>
-              <li>연락처: {userProfileData?.phoneNumber}</li>
+              <li>연락처: {getValues("phoneNumber")}</li>
             </StyledList>
           </AsyncBoundary>
         </CardInner>

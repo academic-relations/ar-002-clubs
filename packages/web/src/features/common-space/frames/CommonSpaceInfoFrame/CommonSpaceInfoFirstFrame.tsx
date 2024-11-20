@@ -89,12 +89,15 @@ const CommonSpaceInfoFirstFrame: React.FC<CommonSpaceInfoFirstFrameProps> = ({
           minLength={13}
           required
           defaultValue={data?.phoneNumber || ""}
-          renderItem={props => (
+          renderItem={({ onChange, value }) => (
             <PhoneInput
-              {...props}
               label="신청자 전화번호"
               placeholder={data?.phoneNumber || ""}
-              disabled
+              onChange={val => {
+                setValue("phoneNumber", val);
+                onChange(val);
+              }}
+              value={value}
             />
           )}
         />
