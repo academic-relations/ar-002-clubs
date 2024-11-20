@@ -43,7 +43,7 @@ export class MeetingService {
     return result;
   }
 
-  async getExecutiveMeetingDegree(
+  async getExecutiveMeetingNextDegree(
     query: { meetingEnumId: number },
     executiveId: number,
   ) {
@@ -57,7 +57,7 @@ export class MeetingService {
     }
 
     const result =
-      await this.meetingRepository.selectExecutiveMeetingDegree(query);
+      await this.meetingRepository.selectExecutiveMeetingNextDegree(query);
 
     return result;
   }

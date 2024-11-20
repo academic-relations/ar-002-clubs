@@ -7,8 +7,6 @@ import styled from "styled-components";
 
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
-// import { useGetUserClubs } from "../services/getUserClubs";
-
 import { ActivityCertificateInfo } from "../types/activityCertificate";
 
 import ActivityCertificateInfoFrame from "./ActivityCertificateInfoFrame";
