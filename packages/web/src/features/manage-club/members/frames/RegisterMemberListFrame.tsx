@@ -6,6 +6,7 @@ import styled from "styled-components";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Info from "@sparcs-clubs/web/common/components/Info";
+import useGetSemesters from "@sparcs-clubs/web/common/services/getSemesters";
 import { newMemberListSectionInfoText } from "@sparcs-clubs/web/constants/manageClubMembers";
 
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
@@ -52,17 +53,28 @@ const RegisterMemberListFrame = () => {
     }
   }, [termData]);
 
+  const {
+    data: semesterInfo,
+    isLoading: semesterLoading,
+    isError: semesterError,
+  } = useGetSemesters({
+    pageOffset: 1,
+    itemCount: 1,
+  });
+
   if (!isRegistrationPeriod) return null;
 
   return (
     <FoldableSectionTitle title="신청 회원 명단" childrenMargin="20px">
       <RegisterMemberListWrapper>
-        <AsyncBoundary isLoading={isLoadingTerm} isError={isErrorTerm}>
+        <AsyncBoundary
+          isLoading={isLoadingTerm || semesterLoading}
+          isError={isErrorTerm || semesterError}
+        >
           {isRegistrationPeriod && (
-            // TODO: 학기 동적처리
             <Info
               text={newMemberListSectionInfoText(
-                "2024년 가을",
+                `${semesterInfo?.semesters[0].year}년 ${semesterInfo?.semesters[0].name}`,
                 memberRegistrationPeriodEnd,
               )}
             />

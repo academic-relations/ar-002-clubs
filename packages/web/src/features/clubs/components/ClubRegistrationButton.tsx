@@ -11,6 +11,7 @@ import styled from "styled-components";
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
+import useGetSemesters from "@sparcs-clubs/web/common/services/getSemesters";
 import { useRegisterClub } from "@sparcs-clubs/web/features/clubDetails/services/registerClub";
 import { useUnregisterClub } from "@sparcs-clubs/web/features/clubDetails/services/unregisterClub";
 
@@ -66,6 +67,11 @@ const ClubRegistrationButton: React.FC<ClubRegistrationButtonProps> = ({
     }
   `;
 
+  const { data: semesterInfo } = useGetSemesters({
+    pageOffset: 1,
+    itemCount: 1,
+  });
+
   const handleRegister = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen} onClose={close}>
@@ -76,7 +82,8 @@ const ClubRegistrationButton: React.FC<ClubRegistrationButtonProps> = ({
               ToggleUnregistered(close);
             }}
           >
-            2024학년도 봄학기
+            {semesterInfo?.semesters[0].year}년도{" "}
+            {semesterInfo?.semesters[0].name}학기
             <ResponsiveBr /> {club.type === 1 ? "정동아리" : "가동아리"}{" "}
             {club.name_kr}의
             <br />
@@ -89,7 +96,8 @@ const ClubRegistrationButton: React.FC<ClubRegistrationButtonProps> = ({
               ToggleRegistered(close);
             }}
           >
-            2024학년도 봄학기
+            {semesterInfo?.semesters[0].year}년도{" "}
+            {semesterInfo?.semesters[0].name}학기
             <ResponsiveBr /> {club.type === 1 ? "정동아리" : "가동아리"}{" "}
             {club.name_kr}의
             <br />

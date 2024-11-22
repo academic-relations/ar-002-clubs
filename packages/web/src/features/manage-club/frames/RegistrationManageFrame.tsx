@@ -13,6 +13,7 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
+import useGetSemesters from "@sparcs-clubs/web/common/services/getSemesters";
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
 import MembersTable from "@sparcs-clubs/web/features/manage-club/components/MembersTable";
 import { useGetMemberRegistration } from "@sparcs-clubs/web/features/manage-club/members/services/getClubMemberRegistration";
@@ -83,9 +84,17 @@ const RegistrationManageFrame: React.FC = () => {
     ).length;
   const totalCount = memberData && memberData.applies.length;
 
-  const title = `2024년 가을학기 (신청 ${appliedCount}명, 승인 ${approvedCount}명, 반려 ${rejectedCount}명 / 총 ${totalCount}명)`;
-  const mobileTitle = `2024년 가을학기`;
-  // TODO: 학기 받아올 수 있도록 수정
+  const {
+    data: semesterInfo,
+    isLoading: semesterLoading,
+    isError: semesterError,
+  } = useGetSemesters({
+    pageOffset: 1,
+    itemCount: 1,
+  });
+
+  const title = `${semesterInfo?.semesters[0].year}년 ${semesterInfo?.semesters[0].name}학기 (신청 ${appliedCount}명, 승인 ${approvedCount}명, 반려 ${rejectedCount}명 / 총 ${totalCount}명)`;
+  const mobileTitle = `${semesterInfo?.semesters[0].year}년 ${semesterInfo?.semesters[0].name}학기`;
 
   const theme = useTheme();
   const [isMobileView, setIsMobileView] = useState(false);
@@ -106,8 +115,15 @@ const RegistrationManageFrame: React.FC = () => {
   return (
     <FoldableSectionTitle title="회원 명단">
       <AsyncBoundary
-        isLoading={memberIsLoading || clubIsLoading || delegatesIsLoading}
-        isError={memberIsError || clubIsError || delegatesIsError}
+        isLoading={
+          memberIsLoading ||
+          clubIsLoading ||
+          delegatesIsLoading ||
+          semesterLoading
+        }
+        isError={
+          memberIsError || clubIsError || delegatesIsError || semesterError
+        }
       >
         <FlexWrapper direction="column" gap={20}>
           {memberData && clubData && (
