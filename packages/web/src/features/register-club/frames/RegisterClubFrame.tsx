@@ -14,6 +14,7 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import WarningInfo from "@sparcs-clubs/web/common/components/WarningInfo";
+import useGetSemesters from "@sparcs-clubs/web/common/services/getSemesters";
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/my/services/getMyClubRegistration";
 import ClubButton from "@sparcs-clubs/web/features/register-club/components/_atomic/ClubButton";
@@ -97,6 +98,15 @@ const RegisterClubFrame = () => {
       router.push(`register-club/provisional`);
   };
 
+  const {
+    data: semesterInfo,
+    isLoading: semesterLoading,
+    isError: semesterError,
+  } = useGetSemesters({
+    pageOffset: 1,
+    itemCount: 1,
+  });
+
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       {/* TODO: (@dora) fix loading boundary to enhance ux */}
@@ -119,11 +129,13 @@ const RegisterClubFrame = () => {
             </Typography>
           </WarningInfo>
         )}
-        <AsyncBoundary isLoading={isLoadingTerm} isError={isErrorTerm}>
-          {/* TODO: 학기 동적처리  */}
+        <AsyncBoundary
+          isLoading={isLoadingTerm || semesterLoading}
+          isError={isErrorTerm || semesterError}
+        >
           {isRegistrationPeriod ? (
             <Info
-              text={`현재는 2024년 가을학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
+              text={`현재는 ${semesterInfo?.semesters[0].year}년 ${semesterInfo?.semesters[0].name}학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
             />
           ) : (
             <Info text="현재는 동아리 등록 기간이 아닙니다" />

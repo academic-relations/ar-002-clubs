@@ -6,6 +6,7 @@ import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/re
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Info from "@sparcs-clubs/web/common/components/Info";
+import useGetSemesters from "@sparcs-clubs/web/common/services/getSemesters";
 import ClubsListFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsListFrame";
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
@@ -45,13 +46,24 @@ const ClubsStudentFrame: React.FC = () => {
     }
   }, [termData]);
 
+  const {
+    data: semesterInfo,
+    isLoading: semesterLoading,
+    isError: semesterError,
+  } = useGetSemesters({
+    pageOffset: 1,
+    itemCount: 1,
+  });
+
   return (
     <>
-      <AsyncBoundary isLoading={isLoadingTerm} isError={isErrorTerm}>
+      <AsyncBoundary
+        isLoading={isLoadingTerm || semesterLoading}
+        isError={isErrorTerm || semesterError}
+      >
         {isRegistrationPeriod && (
-          // TODO: 학기 동적처리
           <Info
-            text={`현재는 2024년 가을학기 동아리 신청 기간입니다 (신청 마감 : ${formatDateTime(memberRegistrationPeriodEnd)})`}
+            text={`현재는 ${semesterInfo?.semesters[0].year}년 ${semesterInfo?.semesters[0].name}학기 동아리 신청 기간입니다 (신청 마감 : ${formatDateTime(memberRegistrationPeriodEnd)})`}
           />
         )}
       </AsyncBoundary>
