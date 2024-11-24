@@ -350,14 +350,12 @@ export class MeetingRepository {
 
         const maxAgendaPosition = getMax[0]?.value ?? 0; // CHACHA: undefined라면 0으로 set. <TEST 필요>
 
-        const [insertMappingResult] = await this.db
-          .insert(MeetingMapping)
-          .values({
-            meetingId,
-            meetingAgendaId: agendaId,
-            meetingAgendaPosition: maxAgendaPosition + 1,
-            meetingAgendaEntityType: 3, // no agenda entity mapped yet.
-          });
+        const [insertMappingResult] = await tx.insert(MeetingMapping).values({
+          meetingId,
+          meetingAgendaId: agendaId,
+          meetingAgendaPosition: maxAgendaPosition + 1,
+          meetingAgendaEntityType: 3, // no agenda entity mapped yet.
+        });
 
         if (insertMappingResult.affectedRows !== 1) {
           logger.debug("[MeetingRepository] Failed to insert meeting agenda");
@@ -368,6 +366,14 @@ export class MeetingRepository {
         const meetingMappingId = insertMappingResult.insertId;
         logger.debug(
           `[MeetingRepository] Inserted meeting agenda mapping: ${meetingMappingId}`,
+        );
+
+        await tx
+          .update(Meeting)
+          .set({ statusEnumId: 2 })
+          .where(eq(MeetingMapping.meetingId, meetingId));
+        logger.debug(
+          `[MeetingRepository] Updated meeting status, meetingId: ${meetingId}`, // CHACHA: meeting-agenda mapping이 생겼으므로 안건 공개 상태로 변경!
         );
 
         return true;
@@ -424,24 +430,58 @@ export class MeetingRepository {
 
   async deleteMeetingAgendaMapping(meetingId: number, agendaId: number) {
     const deleteTime = new Date();
-    const [meetingAgendaMappingDeleteResult] = await this.db // CHACHA: soft delete로 수정!
-      .update(MeetingMapping)
-      .set({ deletedAt: deleteTime })
-      .where(
-        and(
-          eq(MeetingMapping.meetingId, meetingId),
-          eq(MeetingMapping.meetingAgendaId, agendaId),
-        ),
-      );
-    if (meetingAgendaMappingDeleteResult.affectedRows !== 1) {
-      logger.debug(
-        "[MeetingRepository] Failed to soft delete meeting agenda mapping.",
-      );
-      return false;
-    }
-    logger.debug(
-      `[MeetingRepository] Soft deleted meeting agenda mapping: ${meetingId}, ${agendaId}`,
+    const meetingAgendaMappingDeleteResult = await this.db.transaction(
+      async tx => {
+        const [deleteResult] = await tx // CHACHA: soft delete로 수정!
+          .update(MeetingMapping)
+          .set({ deletedAt: deleteTime })
+          .where(
+            and(
+              eq(MeetingMapping.meetingId, meetingId),
+              eq(MeetingMapping.meetingAgendaId, agendaId),
+            ),
+          );
+
+        if (deleteResult.affectedRows !== 1) {
+          logger.debug(
+            "[MeetingRepository] Failed to soft delete meeting agenda mapping.",
+          );
+          return false;
+        }
+
+        logger.debug(
+          `[MeetingRepository] Soft deleted meeting agenda mapping: ${meetingId}, ${agendaId}`,
+        );
+
+        const getEveryMappingDeletedAt = await tx
+          .select({ isDeleted: MeetingAgenda.deletedAt }) // CHACHA: 만약 모든 Meeting과 Agenda mapping이 deleted -> 그 Meeting은 공고 게시 상태로!
+          .from(MeetingMapping)
+          .where(
+            and(
+              eq(MeetingMapping.meetingId, meetingId),
+              eq(MeetingMapping.meetingAgendaId, agendaId),
+            ),
+          );
+
+        const deletedMapping = getEveryMappingDeletedAt.filter(
+          e => e.isDeleted,
+        );
+
+        if (deletedMapping.length < getEveryMappingDeletedAt.length) {
+          // CHACHA: 만약 모든 Meeting과 Agenda mapping이 deleted -> 그 Meeting은 공고 게시 상태로!
+          await tx
+            .update(Meeting)
+            .set({ statusEnumId: 1 })
+            .where(eq(MeetingMapping.meetingId, meetingId));
+          logger.debug(
+            `[MeetingRepository] Updated meeting status, meetingId: ${meetingId}`,
+          );
+        }
+
+        return deleteResult;
+      },
     );
+
     return meetingAgendaMappingDeleteResult;
   }
 }
