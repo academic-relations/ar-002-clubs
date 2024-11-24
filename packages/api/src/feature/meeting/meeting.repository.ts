@@ -348,7 +348,7 @@ export class MeetingRepository {
           .from(MeetingMapping)
           .where(and(eq(MeetingMapping.meetingId, meetingId)));
 
-        const maxAgendaPosition = getMax[0]?.value;
+        const maxAgendaPosition = getMax[0]?.value ?? 0; // CHACHA: undefined라면 0으로 set. <TEST 필요>
 
         const [insertMappingResult] = await this.db
           .insert(MeetingMapping)
@@ -384,27 +384,49 @@ export class MeetingRepository {
     title: string,
   ) {
     const updateTime = new Date();
-    const [result] = await this.db
-      .update(MeetingAgenda)
-      .set({
-        MeetingAgendaEnum: agendaEnumId,
-        title,
-        description,
-        updatedAt: updateTime,
-      })
-      .where(eq(MeetingAgenda.id, agendaId));
+    const updateAgendaNotDeletedResult = await this.db.transaction(async tx => {
+      const checkDeleted = await tx
+        .select({ isDeleted: MeetingAgenda.deletedAt })
+        .from(MeetingAgenda)
+        .where(eq(MeetingAgenda.id, agendaId));
 
-    if (result.affectedRows !== 1) {
-      logger.debug("[MeetingRepository] Failed to update meeting agenda.");
-      return false;
-    }
+      if (checkDeleted.length === 0) {
+        logger.debug("[MeetingRepository] No such agenda exists."); // CHACHA: AgendatId가 유효한지
+        return false;
+      }
+
+      if (checkDeleted[0]?.isDeleted) {
+        logger.debug("[MeetingRepository] This agenda is deleted."); // CHACHA: Update 시에 deletedAt을 검사
+        return false;
+      }
+
+      const [result] = await tx
+        .update(MeetingAgenda)
+        .set({
+          MeetingAgendaEnum: agendaEnumId,
+          title,
+          description,
+          updatedAt: updateTime,
+        })
+        .where(eq(MeetingAgenda.id, agendaId));
+
+      if (result.affectedRows !== 1) {
+        logger.debug("[MeetingRepository] Failed to update meeting agenda.");
+        return false;
+      }
+
+      return result;
+    });
+
     logger.debug(`[MeetingRepository] Updated meeting agenda: ${agendaId}`);
-    return result;
+    return updateAgendaNotDeletedResult;
   }
 
   async deleteMeetingAgendaMapping(meetingId: number, agendaId: number) {
-    const [meetingAgendaMappingDeleteResult] = await this.db
-      .delete(MeetingMapping)
+    const deleteTime = new Date();
+    const [meetingAgendaMappingDeleteResult] = await this.db // CHACHA: soft delete로 수정!
+      .update(MeetingMapping)
+      .set({ deletedAt: deleteTime })
       .where(
         and(
           eq(MeetingMapping.meetingId, meetingId),
@@ -413,12 +435,12 @@ export class MeetingRepository {
       );
     if (meetingAgendaMappingDeleteResult.affectedRows !== 1) {
       logger.debug(
-        "[MeetingRepository] Failed to delete meeting agenda mapping.",
+        "[MeetingRepository] Failed to soft delete meeting agenda mapping.",
       );
       return false;
     }
     logger.debug(
-      `[MeetingRepository] Deleted meeting agenda mapping: ${meetingId}, ${agendaId}`,
+      `[MeetingRepository] Soft deleted meeting agenda mapping: ${meetingId}, ${agendaId}`,
     );
     return meetingAgendaMappingDeleteResult;
   }
