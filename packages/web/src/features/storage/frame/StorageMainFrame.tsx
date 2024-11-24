@@ -1,55 +1,68 @@
+/* eslint-disable react/self-closing-comp */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
 
-import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import { ApiSto001RequestBody } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto001";
+import { useForm } from "react-hook-form";
+
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 
-import StorageForm from "../component/storageForm";
 import StorageNotice from "../component/StorageNotice";
 
-import type { ApiSto001RequestBody } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto001";
+import useCreateStorage from "../service/useCreateStorage";
+
+import StorageForm from "./StorageForm";
 
 const StorageMainFrame: React.FC = () => {
-  const { data, isLoading, isError } = useGetUserProfile();
   const [agreement, setAgreement] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState(1);
-  const [requestForm, setRequestForm] = useState<Partial<ApiSto001RequestBody>>(
-    {
-      nonStandardItems: [
-        {
-          name: "",
-          fileId: 0,
-        },
-      ],
+
+  const formCtx = useForm<ApiSto001RequestBody>({
+    mode: "all",
+    defaultValues: {
+      clubId: 5,
+      studentPhoneNumber: "000-0000-0000",
+      numberOfBoxes: 0,
     },
-  );
+  });
+
+  const { data, isLoading, isError } = useGetUserProfile();
+
+  const {
+    getValues,
+    watch,
+    reset,
+    formState: { isValid },
+  } = formCtx;
+
+  const { mutate: postStorage, isPending: isPostStorage } = useCreateStorage();
 
   return (
     <FlexWrapper direction="column" gap={60}>
       <PageHead
-        items={[{ name: "창고 사용", path: "/storage" }]}
-        title="창고 사용"
+        items={[
+          {
+            name: `창고 신청`,
+            path: `/storage`,
+          },
+        ]}
+        title="창고 신청"
       />
-      <AsyncBoundary isLoading={isLoading} isError={isError}>
-        {agreement ? (
-          // eslint-disable-next-line react/jsx-no-useless-fragment
-          <StorageForm
-            username={
-              data?.name ?? "유저정보로부터 이름을 가져오지 못했습니다."
-            }
-            clubs={data?.clubs ?? []}
-            setAgreement={setAgreement}
-            step={activeStep}
-            setStep={setActiveStep}
-            requestForm={requestForm}
-            setRequestForm={setRequestForm}
-          />
-        ) : (
-          <StorageNotice setAgreement={setAgreement} />
-        )}
-      </AsyncBoundary>
+      {agreement ? (
+        <StorageForm
+          setAgreement={setAgreement}
+          step={activeStep}
+          setStep={setActiveStep}
+          username={data?.name ?? "유저정보로부터 이름을 가져오지 못했습니다."}
+          clubs={data?.clubs ?? []}
+          formCtx={formCtx}
+        />
+      ) : (
+        <StorageNotice setAgreement={setAgreement} />
+      )}
     </FlexWrapper>
   );
 };

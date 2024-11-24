@@ -15,7 +15,6 @@ const storageOrderSteps: StepInputType[] = [
   },
 ];
 
-const InfoText = () =>
-  `상자의 규격은 가로 37cm, 세로 55cm, 높이 31cm 이하입니다.`;
+const maxNonStandardItems: number = 5;
 
-export { InfoText, storageOrderSteps };
+export { storageOrderSteps, maxNonStandardItems };
