@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 
-import { and, eq, gte, isNull, lt, max } from "drizzle-orm";
+import { and, eq, gte, isNull, lt, max, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -371,7 +371,7 @@ export class MeetingRepository {
         await tx
           .update(Meeting)
           .set({ statusEnumId: 2 })
-          .where(eq(MeetingMapping.meetingId, meetingId));
+          .where(eq(Meeting.id, meetingId));
         logger.debug(
           `[MeetingRepository] Updated meeting status, meetingId: ${meetingId}`, // CHACHA: meeting-agenda mapping이 생겼으므로 안건 공개 상태로 변경!
         );
@@ -389,7 +389,6 @@ export class MeetingRepository {
     description: string,
     title: string,
   ) {
-    const updateTime = new Date();
     const updateAgendaNotDeletedResult = await this.db.transaction(async tx => {
       const checkDeleted = await tx
         .select({ isDeleted: MeetingAgenda.deletedAt })
@@ -412,7 +411,7 @@ export class MeetingRepository {
           MeetingAgendaEnum: agendaEnumId,
           title,
           description,
-          updatedAt: updateTime,
+          updatedAt: sql<Date>`NOW()`,
         })
         .where(eq(MeetingAgenda.id, agendaId));
 
@@ -429,12 +428,11 @@ export class MeetingRepository {
   }
 
   async deleteMeetingAgendaMapping(meetingId: number, agendaId: number) {
-    const deleteTime = new Date();
     const meetingAgendaMappingDeleteResult = await this.db.transaction(
       async tx => {
         const [deleteResult] = await tx // CHACHA: soft delete로 수정!
           .update(MeetingMapping)
-          .set({ deletedAt: deleteTime })
+          .set({ deletedAt: sql<Date>`NOW()` })
           .where(
             and(
               eq(MeetingMapping.meetingId, meetingId),
@@ -454,25 +452,21 @@ export class MeetingRepository {
         );
 
         const getEveryMappingDeletedAt = await tx
-          .select({ isDeleted: MeetingAgenda.deletedAt }) // CHACHA: 만약 모든 Meeting과 Agenda mapping이 deleted -> 그 Meeting은 공고 게시 상태로!
+          .select({ isDeleted: MeetingMapping.deletedAt }) // CHACHA: 만약 모든 Meeting과 Agenda mapping이 deleted -> 그 Meeting은 공고 게시 상태로!
           .from(MeetingMapping)
-          .where(
-            and(
-              eq(MeetingMapping.meetingId, meetingId),
-              eq(MeetingMapping.meetingAgendaId, agendaId),
-            ),
-          );
+          .where(and(eq(MeetingMapping.meetingId, meetingId)));
 
         const deletedMapping = getEveryMappingDeletedAt.filter(
+          // CHACHA: deleted 된 mapping의 개수를 구하기 위함.
           e => e.isDeleted,
         );
 
-        if (deletedMapping.length < getEveryMappingDeletedAt.length) {
+        if (deletedMapping.length === getEveryMappingDeletedAt.length) {
           // CHACHA: 만약 모든 Meeting과 Agenda mapping이 deleted -> 그 Meeting은 공고 게시 상태로!
           await tx
             .update(Meeting)
             .set({ statusEnumId: 1 })
-            .where(eq(MeetingMapping.meetingId, meetingId));
+            .where(eq(Meeting.id, meetingId));
           logger.debug(
             `[MeetingRepository] Updated meeting status, meetingId: ${meetingId}`,
           );
