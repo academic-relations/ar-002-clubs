@@ -16,13 +16,13 @@ export default class MeetingController {
   constructor(private meetingService: MeetingService) {}
 
   @Executive()
-  @Get("executive/meetings/meeting/degree")
+  @Get("executive/meetings/meeting/next-degree")
   @UsePipes(new ZodPipe(apiMee005))
-  async getMeetingDegree(
+  async getMeetingNextDegree(
     @GetExecutive() user: GetExecutive,
     @Query() query: ApiMee005RequestQuery,
   ): Promise<ApiMee005ResponseOk> {
-    const degree = await this.meetingService.getExecutiveMeetingDegree(
+    const degree = await this.meetingService.getExecutiveMeetingNextDegree(
       query,
       user.executiveId,
     );

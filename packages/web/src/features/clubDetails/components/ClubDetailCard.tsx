@@ -8,7 +8,7 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 
 import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
-interface ClubDetailCardProps {
+export interface ClubDetailProps {
   club: ApiClb002ResponseOK;
 }
 
@@ -35,7 +35,7 @@ const EmptyDetailText = styled.div`
   color: ${({ theme }) => theme.colors.GRAY[300]};
 `;
 
-const ClubDetailCard: React.FC<ClubDetailCardProps> = ({ club }) => (
+const ClubDetailCard: React.FC<ClubDetailProps> = ({ club }) => (
   <Card gap={16} padding="16px 20px" style={{ flexGrow: "1" }}>
     {club.description ? (
       <ClubDetailText>{club.description}</ClubDetailText>

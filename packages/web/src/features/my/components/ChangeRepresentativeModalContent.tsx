@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { ClubDelegateChangeRequestStatusEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -41,13 +42,26 @@ const ChangeRepresentativeModalContent: React.FC<
 
   // TODO: clb013 014 수정되면 반영
   const onConfirm = () => {
-    patchMyDelegateRequest({ requestId: 1 }, { phoneNumber: phone });
+    patchMyDelegateRequest(
+      { requestId: 1 },
+      {
+        phoneNumber: phone,
+        clubDelegateChangeRequestStatusEnum:
+          ClubDelegateChangeRequestStatusEnum.Approved,
+      },
+    );
     onClose();
     refetch();
   };
 
   const onReject = () => {
-    patchMyDelegateRequest({ requestId: 1 }, { phoneNumber: phone });
+    patchMyDelegateRequest(
+      { requestId: 1 },
+      {
+        clubDelegateChangeRequestStatusEnum:
+          ClubDelegateChangeRequestStatusEnum.Rejected,
+      },
+    );
     onClose();
   };
 

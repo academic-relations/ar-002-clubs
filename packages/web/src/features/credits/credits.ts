@@ -72,6 +72,13 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.member,
         comment: "신입 somato입니다 감기 조심하세요~",
       },
+      {
+        nickname: "hama",
+        name: "하승종",
+        role: "APM(BE)",
+        roleType: RoleType.APM_BE,
+        comment: "항상 리뷰가 늦어서 미안해요 ㅠㅜ",
+      },
     ],
   },
   {

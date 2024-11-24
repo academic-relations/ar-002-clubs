@@ -11,6 +11,7 @@ import Typography from "../Typography";
 interface DateInputProps {
   label?: string;
   disabled?: boolean;
+  errorMessage?: string;
 }
 
 const DateInputWrapper = styled.div<{ disabled: boolean }>`
@@ -47,12 +48,14 @@ const DateInputWrapper = styled.div<{ disabled: boolean }>`
     border: none;
     outline: none;
     width: 100%;
+    padding: 0px;
   }
 `;
 
 const DateInput: React.FC<DateInputProps & DatePickerProps> = ({
   label = "",
   disabled = false,
+  errorMessage = "",
   ...props
 }) => {
   const datePickerRef = useRef<DatePicker | null>(null);
@@ -83,8 +86,15 @@ const DateInput: React.FC<DateInputProps & DatePickerProps> = ({
           }
           {...props}
         />
-        <Icon type="event" size={20} color={disabled ? "#DDDDDD" : "BLACK"} />
+        {props.showIcon && (
+          <Icon type="event" size={20} color={disabled ? "#DDDDDD" : "BLACK"} />
+        )}
       </DateInputWrapper>
+      {errorMessage.length > 0 && (
+        <Typography ff="PRETENDARD" fs={12} lh={16} color="RED.600">
+          {errorMessage}
+        </Typography>
+      )}
     </FlexWrapper>
   );
 };

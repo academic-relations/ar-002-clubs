@@ -7,7 +7,7 @@ import { z } from "zod";
  */
 
 const url = (announcementId: number) =>
-  `/meetings/announcements/announcement/${announcementId}`;
+  `/executive/meetings/announcements/announcement/${announcementId}`;
 const method = "DELETE";
 
 const requestParam = z.object({
@@ -42,8 +42,8 @@ type ApiMee004ResponseOk = z.infer<(typeof apiMee004.responseBodyMap)[200]>;
 export default apiMee004;
 
 export type {
+  ApiMee004RequestBody,
   ApiMee004RequestParam,
   ApiMee004RequestQuery,
-  ApiMee004RequestBody,
   ApiMee004ResponseOk,
 };

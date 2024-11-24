@@ -10,7 +10,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
-
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import postCommonSpaceUsageOrder from "@sparcs-clubs/web/features/common-space/service/postCommonSpaceUsageOrder";
 
 import { CommonSpaceInfoProps } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
@@ -24,13 +24,6 @@ const CommonSpaceNoticeFrameInner = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
-  align-self: stretch;
-`;
-
-const StyledBottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   align-self: stretch;
 `;
 

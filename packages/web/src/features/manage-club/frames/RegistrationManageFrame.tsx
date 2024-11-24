@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
+import { ApiClb006ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb006";
 import { ApiClb015ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
 import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
 
@@ -18,11 +19,23 @@ import { useGetMemberRegistration } from "@sparcs-clubs/web/features/manage-club
 
 import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 
+import { useGetClubDelegate } from "../services/getClubDelegate";
+
 const RegistrationManageFrame: React.FC = () => {
   // 자신이 대표자인 동아리 clubId 가져오기
   const { data: idData } = useGetMyManageClub() as {
     data: ApiClb015ResponseOk;
     isLoading: boolean;
+  };
+
+  const {
+    data: delegatesNow,
+    isLoading: delegatesIsLoading,
+    isError: delegatesIsError,
+  } = useGetClubDelegate({ clubId: idData.clubId }) as {
+    data: ApiClb006ResponseOK;
+    isLoading: boolean;
+    isError: boolean;
   };
 
   // 자신이 대표자인 동아리 clubId에 해당하는 동아리 세부정보 가져오기
@@ -93,8 +106,8 @@ const RegistrationManageFrame: React.FC = () => {
   return (
     <FoldableSectionTitle title="회원 명단">
       <AsyncBoundary
-        isLoading={memberIsLoading || clubIsLoading}
-        isError={memberIsError || clubIsError}
+        isLoading={memberIsLoading || clubIsLoading || delegatesIsLoading}
+        isError={memberIsError || clubIsError || delegatesIsError}
       >
         <FlexWrapper direction="column" gap={20}>
           {memberData && clubData && (
@@ -110,6 +123,7 @@ const RegistrationManageFrame: React.FC = () => {
                 clubName={clubData.name_kr}
                 clubId={idData.clubId}
                 refetch={memberRefetch}
+                delegates={delegatesNow.delegates}
               />
             </>
           )}

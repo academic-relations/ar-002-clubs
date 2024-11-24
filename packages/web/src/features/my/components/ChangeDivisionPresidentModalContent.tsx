@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { ClubDelegateChangeRequestStatusEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -54,14 +55,27 @@ const ChangeDivisionPresidentModalContent: React.FC<
   const [phone, setPhone] = useState<string>("");
 
   const onConfirm = () => {
-    patchMyDelegateRequest({ requestId: 1 }, { phoneNumber: phone });
+    patchMyDelegateRequest(
+      { requestId: 1 },
+      {
+        phoneNumber: phone,
+        clubDelegateChangeRequestStatusEnum:
+          ClubDelegateChangeRequestStatusEnum.Rejected,
+      },
+    );
     onConfirmed();
     onClose();
     fetch();
   };
 
   const onReject = () => {
-    patchMyDelegateRequest({ requestId: 1 }, { phoneNumber: phone });
+    patchMyDelegateRequest(
+      { requestId: 1 },
+      {
+        clubDelegateChangeRequestStatusEnum:
+          ClubDelegateChangeRequestStatusEnum.Rejected,
+      },
+    );
     onRejected();
     onClose();
   };

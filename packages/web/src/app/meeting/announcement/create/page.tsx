@@ -51,8 +51,8 @@ const CreateMeetingPage: React.FC = () => {
     createMeeting(
       { body: { ...getValues() } },
       {
-        onSuccess: () => {
-          router.replace("/meeting");
+        onSuccess: data => {
+          router.replace(`/meeting/${data.id}`);
         },
         onError: () => errorHandler("생성에 실패하였습니다"),
       },

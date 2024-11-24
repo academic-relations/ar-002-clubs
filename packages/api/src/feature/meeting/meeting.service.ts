@@ -29,15 +29,15 @@ export class MeetingService {
     return result;
   }
 
-  async vote(choiceId: number, userId: number) {
-    const result = await this.meetingRepository.vote(choiceId, userId);
+  async vote(choiceId: number, userId: number, voteId: number) {
+    const result = await this.meetingRepository.vote(choiceId, userId, voteId);
     if (!result) {
       throw new WsException("Failed to exit meeting");
     }
     return result;
   }
 
-  async getExecutiveMeetingDegree(
+  async getExecutiveMeetingNextDegree(
     query: { meetingEnumId: number },
     executiveId: number,
   ) {
@@ -51,7 +51,7 @@ export class MeetingService {
     }
 
     const result =
-      await this.meetingRepository.selectExecutiveMeetingDegree(query);
+      await this.meetingRepository.selectExecutiveMeetingNextDegree(query);
 
     return result;
   }
