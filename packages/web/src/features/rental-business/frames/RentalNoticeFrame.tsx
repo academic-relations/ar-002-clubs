@@ -2,27 +2,25 @@
 
 import React, { useState } from "react";
 
+import { ApiRnt001ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
+import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
-import { StyledBottom } from "@sparcs-clubs/web/common/components/StyledBottom";
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import type { RentalInterface } from "../types/rental";
 
 export interface RentalFrameProps {
-  rental: RentalInterface;
-  setRental: React.Dispatch<React.SetStateAction<RentalInterface>>;
+  formCtx: ReturnType<typeof useFormContext<RentalInterface>>;
 }
 
 export interface RentalLimitProps {
-  rentalDate: Date;
-  returnDate: Date;
-  rental: RentalInterface;
-  setRental: React.Dispatch<React.SetStateAction<RentalInterface>>;
-  setHasError: React.Dispatch<React.SetStateAction<boolean>>;
+  availableRentals: ApiRnt001ResponseOK;
+  formCtx: ReturnType<typeof useFormContext<RentalInterface>>;
 }
 
 const RentalNoticeFrameInner = styled.div`
@@ -33,16 +31,13 @@ const RentalNoticeFrameInner = styled.div`
   align-self: stretch;
 `;
 
-const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
-  rental,
-  setRental,
-}) => {
-  const [checked, setChecked] = useState(false);
-  // TODO: 동의하고 돌아왔을 때 체크된 상태로 두기
+const RentalNoticeFrame: React.FC<RentalFrameProps> = ({ formCtx }) => {
+  // TODO: 다음 페이지 다녀오면 초기에 체크되어있는 상태로 만들기
+  const [checked, setChecked] = useState(
+    formCtx.getValues("info.phoneNumber") != null,
+  );
   const handleNextClick = () => {
-    if (checked) {
-      setRental({ ...rental, agreement: true });
-    }
+    formCtx.setValue("agreement", checked);
   };
 
   return (
@@ -51,6 +46,7 @@ const RentalNoticeFrame: React.FC<RentalFrameProps> = ({
         <Typography fs={20} lh={24} fw="MEDIUM">
           안내사항
         </Typography>
+        {/* 페이지 새로고침 or 나갔다 다시 들어오면 작성 상태 초기화 공지 필요 */}
         <Typography fs={16} lh={32} fw="REGULAR">
           모든 대여 사업은 동연 소속 동아리를 대상으로 하며, 신청은 각 동아리의
           대표자 또는 대의원만 가능합니다

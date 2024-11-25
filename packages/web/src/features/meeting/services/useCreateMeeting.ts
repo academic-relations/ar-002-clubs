@@ -21,5 +21,5 @@ const useCreateMeeting = () =>
 export default useCreateMeeting;
 
 defineAxiosMock(mock => {
-  mock.onPost(apiMee001.url()).reply(() => [201, {}]);
+  mock.onPost(apiMee001.url()).reply(() => [201, { id: 1 }]);
 });

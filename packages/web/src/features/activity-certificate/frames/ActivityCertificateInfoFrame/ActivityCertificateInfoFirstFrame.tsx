@@ -13,7 +13,7 @@ import ItemNumberInput from "@sparcs-clubs/web/common/components/Forms/ItemNumbe
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
-import { StyledBottom } from "@sparcs-clubs/web/common/components/StyledBottom";
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 import { useGetUserClubs } from "@sparcs-clubs/web/features/activity-certificate/services/useGetUserClubs";
 import { ActivityBasicInfo } from "@sparcs-clubs/web/features/activity-certificate/types/activityCertificate";
@@ -156,6 +156,8 @@ const ActivityCertificateInfoFirstFrame: React.FC<
           control={control}
           minLength={13}
           required
+          pattern={/^010-\d{4}-\d{4}$/}
+          patternMessage="전화번호는 010으로 시작하여야 합니다"
           renderItem={({ value, onChange, errorMessage }) => (
             <TextInput
               label="신청자 전화번호"

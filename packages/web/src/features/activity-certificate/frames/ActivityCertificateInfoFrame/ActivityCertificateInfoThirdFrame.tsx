@@ -9,7 +9,7 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorModal";
-import { StyledBottom } from "@sparcs-clubs/web/common/components/StyledBottom";
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import usePostActivityCertificate from "@sparcs-clubs/web/features/activity-certificate/services/usePostActivityCertificate";

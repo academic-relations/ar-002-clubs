@@ -1,48 +1,40 @@
 import React from "react";
 
-import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
 import Radio from "@sparcs-clubs/web/common/components/Radio";
-import {
-  RentalFrameProps,
-  RentalLimitProps,
-} from "@sparcs-clubs/web/features/rental-business/frames/RentalNoticeFrame";
-import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { RentalLimitProps } from "@sparcs-clubs/web/features/rental-business/frames/RentalNoticeFrame";
+import { getMaxRental } from "@sparcs-clubs/web/features/rental-business/utils/getMaxRental";
 
-const Vacuum: React.FC<RentalLimitProps> = ({
-  rentalDate,
-  returnDate,
-  rental,
-  setRental,
-}) => {
-  const { data, isLoading, isError } = useGetAvailableRentals(
-    rentalDate,
-    returnDate,
-  );
-  const cordedLimit =
-    data?.objects.find(item => item.name === "Vacuum Corded")?.maximum ?? 0;
-  const cordlessLimit =
-    data?.objects.find(item => item.name === "Vacuum Cordless")?.maximum ?? 0;
+const Vacuum: React.FC<RentalLimitProps> = ({ availableRentals, formCtx }) => {
+  const { control, getValues } = formCtx;
 
   return (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <Radio
-        label="청소기 종류"
-        value={rental?.vacuum as string}
-        onChange={value =>
-          setRental({
-            ...rental,
-            vacuum: value as RentalFrameProps["rental"]["vacuum"],
-          })
-        }
-      >
-        <Radio.Option value="cordless" disabled={cordlessLimit === 0}>
-          무선 청소기
-        </Radio.Option>
-        <Radio.Option value="corded" disabled={cordedLimit === 0}>
-          유선 청소기
-        </Radio.Option>
-      </Radio>
-    </AsyncBoundary>
+    <>
+      <Typography fs={16} lh={20} fw="MEDIUM">
+        청소기 종류
+      </Typography>
+      <FormController
+        name="vacuum"
+        control={control}
+        renderItem={props => (
+          <Radio {...props} value={getValues("vacuum") ?? ""}>
+            <Radio.Option
+              value="cordless"
+              disabled={getMaxRental(availableRentals, "Vacuum Cordless") === 0}
+            >
+              무선 청소기
+            </Radio.Option>
+            <Radio.Option
+              value="corded"
+              disabled={getMaxRental(availableRentals, "Vacuum Corded") === 0}
+            >
+              유선 청소기
+            </Radio.Option>
+          </Radio>
+        )}
+      />
+    </>
   );
 };
 
