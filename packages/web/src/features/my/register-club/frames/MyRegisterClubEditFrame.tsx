@@ -33,6 +33,7 @@ import ProvisionalBasicInformFrame from "@sparcs-clubs/web/features/register-clu
 import computeErrorMessage from "@sparcs-clubs/web/features/register-club/utils/computeErrorMessage";
 import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
+import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
 interface RegisterClubMainFrameProps {
   applyId: number;
@@ -243,6 +244,12 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
     }
   }, [isSuccess, router, applyId, queryClient]);
 
+  const {
+    semester: semesterInfo,
+    isLoading: semesterLoading,
+    isError: semesterError,
+  } = useGetSemesterNow();
+
   if (!detail) return null;
 
   return (
@@ -265,10 +272,12 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
               enableLast
             />
             <FlexWrapper direction="column" gap={20}>
-              <AsyncBoundary isLoading={isLoadingTerm} isError={isErrorTerm}>
-                {/* TODO: 학기 동적처리  */}
+              <AsyncBoundary
+                isLoading={isLoadingTerm || semesterLoading}
+                isError={isErrorTerm || semesterError}
+              >
                 <Info
-                  text={`현재는 2024년 가을학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
+                  text={`현재는 ${semesterInfo?.year}년 ${semesterInfo?.name}학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
                 />
               </AsyncBoundary>
               <WarningInfo>
