@@ -14,7 +14,6 @@ import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Info from "@sparcs-clubs/web/common/components/Info";
 
 import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   ActivityCertificateInfo,
   ActivityHistory,
@@ -76,7 +75,7 @@ const ActivityCertificateInfoSecondFrame: React.FC<
   const {
     watch,
     control,
-    formState: { isValid, errors },
+    formState: { isValid },
   } = useFormContext<ActivityCertificateInfo>();
 
   const { fields, append, replace, move } = useFieldArray<
@@ -171,101 +170,86 @@ const ActivityCertificateInfoSecondFrame: React.FC<
       <ActivityCertificateSecondFrameInner>
         <Info text="활동 내역 최대 5개까지 입력 가능, 날짜 포함 => 워딩은 병찬이나 동연에서 고쳐주겟징~~" />
         <Card outline gap={20}>
-          {fields.map((field, index) => {
-            const errorMessage =
-              errors.histories?.[index]?.dateRange?.message ?? "";
-
-            return (
-              <ActivityCertificateRow
-                key={field.id}
-                draggable="true"
-                onDragStart={e => handleDragStart(e, field)}
-                onDragEnd={handleDragEnd}
-                onDragOver={e => handleDragOver(e)}
-                onDrop={e => handleDrop(e, field)}
-              >
-                <IconOuterFrameInner>
-                  <IconInnerFrameInner>
-                    <Icon type="menu" size={16} />
-                  </IconInnerFrameInner>
-                </IconOuterFrameInner>
-                <InputFrameInner>
-                  <FlexWrapper
-                    direction="column"
-                    gap={4}
-                    style={{ minWidth: 165 }}
-                  >
-                    <FormController
-                      name={`histories.${index}.dateRange`}
-                      control={control}
-                      rules={{
-                        validate: {
-                          endRequired: value =>
-                            value?.[1] != null ||
-                            "끝 기간을 입력하지 않았습니다",
-                          invalidRange: value =>
-                            (value[0] != null &&
-                              value[1] != null &&
-                              isValidDateRange([value[0], value[1]])) ||
-                            "활동 기간에 포함되도록 입력해주세요",
-                        },
-                      }}
-                      renderItem={({ value, onChange }) => (
-                        <DateInput
-                          showIcon={false}
-                          selectsRange
-                          showMonthYearPicker
-                          startDate={value?.[0] ?? undefined}
-                          endDate={value?.[1] ?? undefined}
-                          onChange={dates => {
-                            onChange(dates);
-                          }}
-                          selectedDates={
-                            value
-                              ? [value[0], value[1]].filter(
-                                  (date): date is Date => date !== undefined,
-                                )
-                              : undefined
-                          }
-                          placeholderText="20XX.XX - 20XX.XX"
-                          dateFormat="yyyy.MM"
-                        />
-                      )}
-                    />
-                    {errorMessage.length > 0 && (
-                      <Typography
-                        fs={12}
-                        lh={16}
-                        color="RED.600"
-                        style={{ marginLeft: 2 }}
-                      >
-                        {errorMessage}
-                      </Typography>
-                    )}
-                  </FlexWrapper>
+          {fields.map((field, index) => (
+            <ActivityCertificateRow
+              key={field.id}
+              draggable="true"
+              onDragStart={e => handleDragStart(e, field)}
+              onDragEnd={handleDragEnd}
+              onDragOver={e => handleDragOver(e)}
+              onDrop={e => handleDrop(e, field)}
+            >
+              <IconOuterFrameInner>
+                <IconInnerFrameInner>
+                  <Icon type="menu" size={16} />
+                </IconInnerFrameInner>
+              </IconOuterFrameInner>
+              <InputFrameInner>
+                <FlexWrapper
+                  direction="column"
+                  gap={4}
+                  style={{ minWidth: 165 }}
+                >
                   <FormController
-                    name={`histories.${index}.description`}
+                    name={`histories.${index}.dateRange`}
                     control={control}
-                    required
-                    maxLength={100}
-                    renderItem={props => (
-                      <TextInput
-                        {...props}
-                        placeholder="활동 내역을 작성해주세요"
+                    rules={{
+                      validate: {
+                        endRequired: value =>
+                          value?.[1] != null || "끝 기간을 입력하지 않았습니다",
+                        invalidRange: value =>
+                          (value[0] != null &&
+                            value[1] != null &&
+                            isValidDateRange([value[0], value[1]])) ||
+                          "활동 기간에 포함되도록 입력해주세요",
+                      },
+                    }}
+                    renderItem={({ value, onChange, errorMessage }) => (
+                      <DateInput
+                        showIcon={false}
+                        selectsRange
+                        showMonthYearPicker
+                        startDate={value?.[0] ?? undefined}
+                        endDate={value?.[1] ?? undefined}
+                        onChange={dates => {
+                          onChange(dates);
+                        }}
+                        selectedDates={
+                          value
+                            ? [value[0], value[1]].filter(
+                                (date): date is Date => date !== undefined,
+                              )
+                            : undefined
+                        }
+                        placeholderText="20XX.XX - 20XX.XX"
+                        dateFormat="yyyy.MM"
+                        errorMessage={errorMessage}
                       />
                     )}
                   />
-                </InputFrameInner>
-                <IconOuterFrameInner
-                  onClick={_e => handleRemoveActivityDescription(field.id)}
-                >
-                  <IconInnerFrameInner>
-                    <Icon type="delete" size={16} />
-                  </IconInnerFrameInner>
-                </IconOuterFrameInner>
-              </ActivityCertificateRow>
-            );
-          })}
+                </FlexWrapper>
+                <FormController
+                  name={`histories.${index}.description`}
+                  control={control}
+                  required
+                  maxLength={100}
+                  renderItem={props => (
+                    <TextInput
+                      {...props}
+                      placeholder="활동 내역을 작성해주세요"
+                    />
+                  )}
+                />
+              </InputFrameInner>
+              <IconOuterFrameInner
+                onClick={_e => handleRemoveActivityDescription(field.id)}
+              >
+                <IconInnerFrameInner>
+                  <Icon type="delete" size={16} />
+                </IconInnerFrameInner>
+              </IconOuterFrameInner>
+            </ActivityCertificateRow>
+          ))}
           <IconButton
             type={activityHistories.length < 5 ? "default" : "disabled"}
             onClick={handleAddActivityDescription}
