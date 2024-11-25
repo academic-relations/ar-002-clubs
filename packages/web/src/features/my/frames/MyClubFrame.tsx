@@ -5,20 +5,17 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import useGetSemesters from "@sparcs-clubs/web/common/services/getSemesters";
 import ClubListGrid from "@sparcs-clubs/web/features/clubs/components/ClubListGrid";
 import useGetMyClub from "@sparcs-clubs/web/features/my/clubs/service/useGetMyClub";
+import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
 const MyClubFrame: React.FC = () => {
   const { data, isLoading, isError } = useGetMyClub();
   const {
-    data: semesterInfo,
+    semester: semesterInfo,
     isLoading: semesterLoading,
     isError: semesterError,
-  } = useGetSemesters({
-    pageOffset: 1,
-    itemCount: 1,
-  });
+  } = useGetSemesterNow();
 
   return (
     <FoldableSectionTitle title="나의 동아리">
@@ -29,21 +26,20 @@ const MyClubFrame: React.FC = () => {
         {" "}
         <FlexWrapper direction="column" gap={20}>
           <MoreDetailTitle
-            title={`${semesterInfo?.semesters[0].year}년 ${semesterInfo?.semesters[0].name}학기`}
+            title={`${semesterInfo?.year}년 ${semesterInfo?.name}학기`}
             moreDetail="전체 보기"
             moreDetailPath="/my/clubs"
           />
           {data &&
           data.semesters.length > 0 &&
           (
-            data.semesters.find(
-              semester => semester.id === semesterInfo?.semesters[0].id,
-            )?.clubs ?? []
+            data.semesters.find(semester => semester.id === semesterInfo?.id)
+              ?.clubs ?? []
           ).length > 0 ? (
             <ClubListGrid
               clubList={
                 data.semesters.find(
-                  semester => semester.id === semesterInfo?.semesters[0].id,
+                  semester => semester.id === semesterInfo?.id,
                 )?.clubs ?? []
               }
             />

@@ -19,10 +19,9 @@ import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/Confi
 import Table from "@sparcs-clubs/web/common/components/Table";
 import TableButton from "@sparcs-clubs/web/common/components/Table/TableButton";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import useGetSemesters from "@sparcs-clubs/web/common/services/getSemesters";
 import { MemTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
-
+import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import { patchClubMemberRegistration } from "../members/services/patchClubMemberRegistration";
@@ -256,16 +255,13 @@ const MembersTable: React.FC<MembersTableProps> = ({
   refetch,
   delegates,
 }) => {
-  const { data: semesterInfo } = useGetSemesters({
-    pageOffset: 1,
-    itemCount: 1,
-  });
+  const { semester: semesterInfo } = useGetSemesterNow();
 
   const columns = columnsFunction(
     clubName,
     clubId,
-    semesterInfo?.semesters[0].year ?? 0,
-    semesterInfo?.semesters[0].name ?? "",
+    semesterInfo?.year ?? 0,
+    semesterInfo?.name ?? "",
     refetch,
     delegates,
   );

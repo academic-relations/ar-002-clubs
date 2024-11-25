@@ -6,10 +6,9 @@ import styled from "styled-components";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Info from "@sparcs-clubs/web/common/components/Info";
-import useGetSemesters from "@sparcs-clubs/web/common/services/getSemesters";
 import { newMemberListSectionInfoText } from "@sparcs-clubs/web/constants/manageClubMembers";
-
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
+import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
 import RegisterMemberList from "../components/RegisterMemberList";
 
@@ -54,13 +53,10 @@ const RegisterMemberListFrame = () => {
   }, [termData]);
 
   const {
-    data: semesterInfo,
+    semester: semesterInfo,
     isLoading: semesterLoading,
     isError: semesterError,
-  } = useGetSemesters({
-    pageOffset: 1,
-    itemCount: 1,
-  });
+  } = useGetSemesterNow();
 
   if (!isRegistrationPeriod) return null;
 
@@ -74,7 +70,7 @@ const RegisterMemberListFrame = () => {
           {isRegistrationPeriod && (
             <Info
               text={newMemberListSectionInfoText(
-                `${semesterInfo?.semesters[0].year}년 ${semesterInfo?.semesters[0].name}`,
+                `${semesterInfo?.year}년 ${semesterInfo?.name}`,
                 memberRegistrationPeriodEnd,
               )}
             />

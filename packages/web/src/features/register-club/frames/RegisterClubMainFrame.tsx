@@ -20,9 +20,9 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import useGetSemesters from "@sparcs-clubs/web/common/services/getSemesters";
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
+import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
 import ActivityReportFrame from "../components/ActivityReportFrame";
 import AdvancedInformFrame from "../components/AdvancedInformFrame";
@@ -187,13 +187,10 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   } = useRegisterClub();
 
   const {
-    data: semesterInfo,
+    semester: semesterInfo,
     isLoading: semesterLoading,
     isError: semesterError,
-  } = useGetSemesters({
-    pageOffset: 1,
-    itemCount: 1,
-  });
+  } = useGetSemesterNow();
 
   const title = useMemo(() => {
     formCtx.setValue("registrationTypeEnumId", type);
@@ -279,7 +276,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
             isError={isErrorTerm || semesterError}
           >
             <Info
-              text={`현재는 ${semesterInfo?.semesters[0].year}년 ${semesterInfo?.semesters[0].name}학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
+              text={`현재는 ${semesterInfo?.year}년 ${semesterInfo?.name}학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
             />
           </AsyncBoundary>
           {isProvisionalClub ? (

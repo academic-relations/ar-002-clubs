@@ -13,12 +13,11 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
-import useGetSemesters from "@sparcs-clubs/web/common/services/getSemesters";
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
 import MembersTable from "@sparcs-clubs/web/features/manage-club/components/MembersTable";
 import { useGetMemberRegistration } from "@sparcs-clubs/web/features/manage-club/members/services/getClubMemberRegistration";
-
 import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
+import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
 import { useGetClubDelegate } from "../services/getClubDelegate";
 
@@ -85,16 +84,13 @@ const RegistrationManageFrame: React.FC = () => {
   const totalCount = memberData && memberData.applies.length;
 
   const {
-    data: semesterInfo,
+    semester: semesterInfo,
     isLoading: semesterLoading,
     isError: semesterError,
-  } = useGetSemesters({
-    pageOffset: 1,
-    itemCount: 1,
-  });
+  } = useGetSemesterNow();
 
-  const title = `${semesterInfo?.semesters[0].year}년 ${semesterInfo?.semesters[0].name}학기 (신청 ${appliedCount}명, 승인 ${approvedCount}명, 반려 ${rejectedCount}명 / 총 ${totalCount}명)`;
-  const mobileTitle = `${semesterInfo?.semesters[0].year}년 ${semesterInfo?.semesters[0].name}학기`;
+  const title = `${semesterInfo?.year}년 ${semesterInfo?.name}학기 (신청 ${appliedCount}명, 승인 ${approvedCount}명, 반려 ${rejectedCount}명 / 총 ${totalCount}명)`;
+  const mobileTitle = `${semesterInfo?.year}년 ${semesterInfo?.name}학기`;
 
   const theme = useTheme();
   const [isMobileView, setIsMobileView] = useState(false);

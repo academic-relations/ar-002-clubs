@@ -15,11 +15,10 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
 import Table from "@sparcs-clubs/web/common/components/Table";
-import useGetSemesters from "@sparcs-clubs/web/common/services/getSemesters";
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
-
 import { useGetClubMembers } from "@sparcs-clubs/web/features/manage-club/members/services/getClubMembers";
 import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
+import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
 const columnHelper =
   createColumnHelper<ApiClb010ResponseOk["members"][number]>();
@@ -96,15 +95,12 @@ const MemberManageFrame: React.FC = () => {
   };
 
   const {
-    data: semesterInfo,
+    semester: semesterInfo,
     isLoading: semesterLoading,
     isError: semesterError,
-  } = useGetSemesters({
-    pageOffset: 1,
-    itemCount: 1,
-  });
+  } = useGetSemesterNow();
 
-  const title = `${semesterInfo?.semesters[0].year}년 ${semesterInfo?.semesters[0].name}학기 (총 ${membersCount}명)`;
+  const title = `${semesterInfo?.year}년 ${semesterInfo?.name}학기 (총 ${membersCount}명)`;
 
   return (
     <FoldableSectionTitle title="회원 명단">

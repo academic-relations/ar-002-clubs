@@ -14,11 +14,11 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import WarningInfo from "@sparcs-clubs/web/common/components/WarningInfo";
-import useGetSemesters from "@sparcs-clubs/web/common/services/getSemesters";
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/my/services/getMyClubRegistration";
 import ClubButton from "@sparcs-clubs/web/features/register-club/components/_atomic/ClubButton";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
+import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
 const ClubButtonWrapper = styled.div`
   display: flex;
@@ -99,13 +99,10 @@ const RegisterClubFrame = () => {
   };
 
   const {
-    data: semesterInfo,
+    semester: semesterInfo,
     isLoading: semesterLoading,
     isError: semesterError,
-  } = useGetSemesters({
-    pageOffset: 1,
-    itemCount: 1,
-  });
+  } = useGetSemesterNow();
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
@@ -135,7 +132,7 @@ const RegisterClubFrame = () => {
         >
           {isRegistrationPeriod ? (
             <Info
-              text={`현재는 ${semesterInfo?.semesters[0].year}년 ${semesterInfo?.semesters[0].name}학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
+              text={`현재는 ${semesterInfo?.year}년 ${semesterInfo?.name}학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
             />
           ) : (
             <Info text="현재는 동아리 등록 기간이 아닙니다" />

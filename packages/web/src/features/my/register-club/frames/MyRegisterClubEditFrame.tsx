@@ -22,7 +22,6 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import WarningInfo from "@sparcs-clubs/web/common/components/WarningInfo";
-import useGetSemesters from "@sparcs-clubs/web/common/services/getSemesters";
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 import useGetClubRegistration from "@sparcs-clubs/web/features/my/services/useGetClubRegistration";
 import usePutClubRegistration from "@sparcs-clubs/web/features/my/services/usePutClubRegistration";
@@ -34,6 +33,7 @@ import ProvisionalBasicInformFrame from "@sparcs-clubs/web/features/register-clu
 import computeErrorMessage from "@sparcs-clubs/web/features/register-club/utils/computeErrorMessage";
 import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
+import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
 interface RegisterClubMainFrameProps {
   applyId: number;
@@ -245,13 +245,10 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
   }, [isSuccess, router, applyId, queryClient]);
 
   const {
-    data: semesterInfo,
+    semester: semesterInfo,
     isLoading: semesterLoading,
     isError: semesterError,
-  } = useGetSemesters({
-    pageOffset: 1,
-    itemCount: 1,
-  });
+  } = useGetSemesterNow();
 
   if (!detail) return null;
 
@@ -280,7 +277,7 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
                 isError={isErrorTerm || semesterError}
               >
                 <Info
-                  text={`현재는 ${semesterInfo?.semesters[0].year}년 ${semesterInfo?.semesters[0].name}학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
+                  text={`현재는 ${semesterInfo?.year}년 ${semesterInfo?.name}학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
                 />
               </AsyncBoundary>
               <WarningInfo>
