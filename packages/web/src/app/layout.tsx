@@ -1,4 +1,5 @@
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import "@sparcs-clubs/web/styles/globals.css";
 import classNames from "classnames";
 
 import Footer from "@sparcs-clubs/web/common/components/Footer";
@@ -15,8 +16,6 @@ import {
 import DebugBadge from "../common/components/DebugBadge";
 import PageContent from "../common/components/PageContent";
 import { AuthProvider } from "../common/providers/AuthContext";
-
-import GlobalStyle from "../styles/GlobalStyle";
 
 import type { Metadata } from "next";
 
@@ -40,7 +39,6 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => (
         <StyledComponentsRegistry>
           <UseClientProvider>
             <AuthProvider>
-              <GlobalStyle />
               <DebugBadge />
               <Header />
               <ResponsiveContent>

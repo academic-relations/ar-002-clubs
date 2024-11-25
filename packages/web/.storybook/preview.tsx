@@ -1,7 +1,7 @@
 import { Preview } from "@storybook/react";
 import React from "react";
 
-import GlobalStyle from "../src/styles/GlobalStyle";
+import GlobalStyle from "./GlobalStyle";
 import StoryProvider from "./StoryProvider";
 
 const preview: Preview = {
@@ -18,7 +18,7 @@ const preview: Preview = {
     Story => (
       <StoryProvider>
         <GlobalStyle />
-        <Story />{" "}
+        <Story />
       </StoryProvider>
     ),
   ],

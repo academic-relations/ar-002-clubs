@@ -5,8 +5,7 @@ import { OverlayProvider } from "overlay-kit";
 import { ThemeProvider as StyledProvider } from "styled-components";
 
 import theme from "../src/styles/themes";
-
-import GlobalStyle from "../src/styles/GlobalStyle";
+import GlobalStyle from "./GlobalStyle";
 
 const queryClient = new QueryClient({
   defaultOptions: {
