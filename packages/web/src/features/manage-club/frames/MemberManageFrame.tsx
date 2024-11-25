@@ -16,9 +16,9 @@ import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSe
 import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
-
 import { useGetClubMembers } from "@sparcs-clubs/web/features/manage-club/members/services/getClubMembers";
 import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
+import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
 const columnHelper =
   createColumnHelper<ApiClb010ResponseOk["members"][number]>();
@@ -94,14 +94,19 @@ const MemberManageFrame: React.FC = () => {
     isError: boolean;
   };
 
-  const title = `2024년 가을학기(총 ${membersCount}명)`;
-  // TODO: 학기 받아올 수 있도록 수정
+  const {
+    semester: semesterInfo,
+    isLoading: semesterLoading,
+    isError: semesterError,
+  } = useGetSemesterNow();
+
+  const title = `${semesterInfo?.year}년 ${semesterInfo?.name}학기 (총 ${membersCount}명)`;
 
   return (
     <FoldableSectionTitle title="회원 명단">
       <AsyncBoundary
-        isLoading={clubIsLoading || memberIsLoading}
-        isError={clubIsError || memberIsError}
+        isLoading={clubIsLoading || memberIsLoading || semesterLoading}
+        isError={clubIsError || memberIsError || semesterError}
       >
         {clubData && membersData && (
           <FlexWrapper direction="column" gap={16}>

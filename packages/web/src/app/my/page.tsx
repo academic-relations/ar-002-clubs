@@ -14,6 +14,7 @@ import MyClubFrame from "@sparcs-clubs/web/features/my/frames/MyClubFrame";
 import MyInfoFrame from "@sparcs-clubs/web/features/my/frames/MyInfoFrame";
 import MyRegisterFrame from "@sparcs-clubs/web/features/my/frames/MyRegisterFrame";
 import ProfessorMyClubFrame from "@sparcs-clubs/web/features/my/frames/ProfessorMyClubFrame";
+// import isStudent from "@sparcs-clubs/web/utils/isStudent";
 // import MyServiceFrame from "@sparcs-clubs/web/features/my/frames/MyServiceFrame";
 
 const ResponsiveWrapper = styled(FlexWrapper)`
@@ -57,9 +58,7 @@ const My: React.FC = () => {
       {profile && profile.type !== "executive" && (
         <MyRegisterFrame profile={profile.type} />
       )}
-      {/* {(profile?.type === "undergraduate" ||
-        profile?.type === "master" ||
-        profile?.type === "doctor") && <MyServiceFrame />} */}
+      {/* {isStudent(profile) && <MyServiceFrame />} */}
     </ResponsiveWrapper>
   );
 };

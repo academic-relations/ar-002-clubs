@@ -11,7 +11,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
-interface PersonInfoCardProps {
+export interface ClubDetailFrameProps {
   club: ApiClb002ResponseOK;
   isRegistrationPeriod: boolean;
 }
@@ -28,7 +28,7 @@ const StyledCard = styled(Card)`
   }
 `;
 
-const PersonInfoTitileWrapper = styled(FlexWrapper)`
+const PersonInfoTitleWrapper = styled(FlexWrapper)`
   width: 120px;
   flex-direction: column;
   gap: 16px;
@@ -76,16 +76,16 @@ const PersonInfoContents = styled(Typography)`
   position: relative;
 `;
 
-const PersonInfoCard: React.FC<PersonInfoCardProps> = ({
+const PersonInfoCard: React.FC<ClubDetailFrameProps> = ({
   club,
   isRegistrationPeriod,
 }) => (
   <StyledCard>
-    <PersonInfoTitileWrapper direction="column" gap={16}>
+    <PersonInfoTitleWrapper direction="column" gap={16}>
       <PersonInfoTiltie>총원</PersonInfoTiltie>
       <PersonInfoTiltie>대표자</PersonInfoTiltie>
       <PersonInfoTiltie>지도교수</PersonInfoTiltie>
-    </PersonInfoTitileWrapper>
+    </PersonInfoTitleWrapper>
     <PersonInfoContentsWrapper direction="column" gap={16}>
       <PersonInfoContents>
         {isRegistrationPeriod ? "-" : `${club.totalMemberCnt}명`}

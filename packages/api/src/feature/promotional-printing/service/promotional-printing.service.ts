@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
-import { ClubDelegateDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-delegate-d.repository";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 
 import { PromotionalPrintingOrderSizeRepository } from "../repository/promotional-printing-order-size.repository";
@@ -30,7 +29,6 @@ import type {
 export class PromotionalPrintingService {
   constructor(
     private readonly clubPublicService: ClubPublicService,
-    private readonly clubDelegateDRepository: ClubDelegateDRepository,
     private readonly promotionalPrintingOrderRepository: PromotionalPrintingOrderRepository,
     private readonly promotionalPrintingOrderSizeRepository: PromotionalPrintingOrderSizeRepository,
   ) {}

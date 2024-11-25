@@ -14,9 +14,9 @@ import {
   ApiClb010ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
 
-import { ClubDelegateDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-delegate-d.repository";
 import { ClubRoomTRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-room-t.repository";
 
+import { ClubDelegateDRepository } from "../delegate/club.club-delegate-d.repository";
 import ClubStudentTRepository from "../repository/club.club-student-t.repository";
 import ClubTRepository from "../repository/club.club-t.repository";
 import { DivisionPermanentClubDRepository } from "../repository/club.division-permanent-club-d.repository";

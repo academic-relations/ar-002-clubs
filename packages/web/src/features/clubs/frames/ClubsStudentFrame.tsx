@@ -1,30 +1,24 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 
 import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
-import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Info from "@sparcs-clubs/web/common/components/Info";
-import { newMemberListSectionInfoText } from "@sparcs-clubs/web/constants/manageClubMembers";
+import ClubsListFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsListFrame";
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
+import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
-import RegisterMemberList from "../components/RegisterMemberList";
-
-const RegisterMemberListWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const RegisterMemberListFrame = () => {
+const ClubsStudentFrame: React.FC = () => {
   const {
     data: termData,
     isLoading: isLoadingTerm,
     isError: isErrorTerm,
   } = useGetRegistrationTerm();
-  const [isRegistrationPeriod, setIsRegistrationPeriod] = useState<boolean>();
+  const [isRegistrationPeriod, setIsRegistrationPeriod] =
+    useState<boolean>(false);
   const [memberRegistrationPeriodEnd, setMemberRegistrationPeriodEnd] =
     useState<Date>(new Date());
 
@@ -58,29 +52,21 @@ const RegisterMemberListFrame = () => {
     isError: semesterError,
   } = useGetSemesterNow();
 
-  if (!isRegistrationPeriod) return null;
-
   return (
-    <FoldableSectionTitle title="신청 회원 명단" childrenMargin="20px">
-      <RegisterMemberListWrapper>
-        <AsyncBoundary
-          isLoading={isLoadingTerm || semesterLoading}
-          isError={isErrorTerm || semesterError}
-        >
-          {isRegistrationPeriod && (
-            <Info
-              text={newMemberListSectionInfoText(
-                `${semesterInfo?.year}년 ${semesterInfo?.name}`,
-                memberRegistrationPeriodEnd,
-              )}
-            />
-          )}
-        </AsyncBoundary>
-
-        <RegisterMemberList />
-      </RegisterMemberListWrapper>
-    </FoldableSectionTitle>
+    <>
+      <AsyncBoundary
+        isLoading={isLoadingTerm || semesterLoading}
+        isError={isErrorTerm || semesterError}
+      >
+        {isRegistrationPeriod && (
+          <Info
+            text={`현재는 ${semesterInfo?.year}년 ${semesterInfo?.name}학기 동아리 신청 기간입니다 (신청 마감 : ${formatDateTime(memberRegistrationPeriodEnd)})`}
+          />
+        )}
+      </AsyncBoundary>
+      <ClubsListFrame isRegistrationPeriod={isRegistrationPeriod} />
+    </>
   );
 };
 
-export default RegisterMemberListFrame;
+export default ClubsStudentFrame;

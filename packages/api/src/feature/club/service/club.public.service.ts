@@ -4,7 +4,7 @@ import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 
-import { ClubDelegateDRepository } from "../repository/club.club-delegate-d.repository";
+import { ClubDelegateDRepository } from "../delegate/club.club-delegate-d.repository";
 import ClubStudentTRepository from "../repository/club.club-student-t.repository";
 import ClubRepository from "../repository/club.repository";
 import SemesterDRepository from "../repository/club.semester-d.repository";

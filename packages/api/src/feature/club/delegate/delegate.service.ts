@@ -11,7 +11,7 @@ import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
-import { ClubDelegateDRepository } from "../repository/club.club-delegate-d.repository";
+import { ClubDelegateDRepository } from "./club.club-delegate-d.repository";
 
 import type {
   ApiClb006RequestParam,
@@ -145,7 +145,7 @@ export default class ClubDelegateService {
         HttpStatus.BAD_REQUEST,
       );
 
-    // targetStudent가 현재 대표자로 활동 중인지 검사합니다.
+    // targetStudent가 현재 다른 동아리의 대표자로 활동 중인지 검사합니다.
     const targetStatus =
       param.targetStudentId !== 0
         ? await this.clubDelegateDRepository.findDelegateByStudentId(
@@ -154,7 +154,7 @@ export default class ClubDelegateService {
         : [];
     if (targetStatus.length > 1)
       throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
-    if (targetStatus.length === 1)
+    if (targetStatus.length === 1 && targetStatus[0].clubId !== param.clubId)
       throw new HttpException(
         "target student is already delegate",
         HttpStatus.BAD_REQUEST,
@@ -221,7 +221,7 @@ export default class ClubDelegateService {
 
   /**
    * @param param ApiClb011RequestParam
-   * @param stduentId 조회를 요청한 학생 Id
+   * @param studentId 조회를 요청한 학생 Id
    *
    * @description getStudentClubDelegateRequests의 서비스 진입점입니다.
    * 동아리 대표자 변경 요청을 조회합니다.
@@ -397,19 +397,6 @@ export default class ClubDelegateService {
         HttpStatus.BAD_REQUEST,
       );
 
-    // 대표자 변경 요청을 승인합니다.
-    if (
-      !this.clubDelegateDRepository.updateDelegate({
-        clubId: request.clubId,
-        clubDelegateEnumId: ClubDelegateEnum.Representative,
-        studentId: param.studentId,
-      })
-    )
-      throw new HttpException(
-        "Failed to change delegate",
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-
     if (
       param.body.clubDelegateChangeRequestStatusEnum ===
       ClubDelegateChangeRequestStatusEnum.Applied
@@ -419,7 +406,25 @@ export default class ClubDelegateService {
         HttpStatus.BAD_REQUEST,
       );
 
-    // 대표자 변경 요청을 승인으로 변경합니다.
+    // 대표자 변경 요청을 승인의 경우, 대표자 변경을 수행합니다.
+    if (
+      param.body.clubDelegateChangeRequestStatusEnum ===
+      ClubDelegateChangeRequestStatusEnum.Approved
+    ) {
+      if (
+        !this.clubDelegateDRepository.updateDelegate({
+          clubId: request.clubId,
+          clubDelegateEnumId: ClubDelegateEnum.Representative,
+          studentId: param.studentId,
+        })
+      )
+        throw new HttpException(
+          "Failed to change delegate",
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+    }
+
+    // 대표자 변경 요청을 승인/거절로 변경합니다.
     if (
       !this.clubDelegateDRepository.updateClubDelegateChangeRequest({
         id: request.id,
