@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 
-import { and, eq, gte, isNull, lt, max, sql } from "drizzle-orm";
+import { and, count, eq, gte, isNull, lt, max, not, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -451,17 +451,25 @@ export class MeetingRepository {
           `[MeetingRepository] Soft deleted meeting agenda mapping: ${meetingId}, ${agendaId}`,
         );
 
-        const getEveryMappingDeletedAt = await tx
-          .select({ isDeleted: MeetingMapping.deletedAt }) // CHACHA: 만약 모든 Meeting과 Agenda mapping이 deleted -> 그 Meeting은 공고 게시 상태로!
+        const getEveryMappingByMeetingId = await tx
+          .select({ count: count() }) // CHACHA: 만약 모든 Meeting과 Agenda mapping이 deleted -> 그 Meeting은 공고 게시 상태로!
           .from(MeetingMapping)
           .where(and(eq(MeetingMapping.meetingId, meetingId)));
 
-        const deletedMapping = getEveryMappingDeletedAt.filter(
-          // CHACHA: deleted 된 mapping의 개수를 구하기 위함.
-          e => e.isDeleted,
-        );
+        const getEveryDeletedMappingByMeetingId = await tx
+          .select({ count: count() })
+          .from(MeetingMapping)
+          .where(
+            and(
+              eq(MeetingMapping.meetingId, meetingId),
+              not(eq(MeetingMapping.deletedAt, null)),
+            ),
+          );
 
-        if (deletedMapping.length === getEveryMappingDeletedAt.length) {
+        if (
+          getEveryMappingByMeetingId[0]?.count ===
+          getEveryDeletedMappingByMeetingId[0]?.count
+        ) {
           // CHACHA: 만약 모든 Meeting과 Agenda mapping이 deleted -> 그 Meeting은 공고 게시 상태로!
           await tx
             .update(Meeting)
