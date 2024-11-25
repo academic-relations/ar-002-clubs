@@ -11,7 +11,7 @@ import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
-import { ClubDelegateDRepository } from "../repository/club.club-delegate-d.repository";
+import { ClubDelegateDRepository } from "./club.club-delegate-d.repository";
 
 import type {
   ApiClb006RequestParam,
@@ -221,7 +221,7 @@ export default class ClubDelegateService {
 
   /**
    * @param param ApiClb011RequestParam
-   * @param stduentId 조회를 요청한 학생 Id
+   * @param studentId 조회를 요청한 학생 Id
    *
    * @description getStudentClubDelegateRequests의 서비스 진입점입니다.
    * 동아리 대표자 변경 요청을 조회합니다.
