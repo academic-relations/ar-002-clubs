@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
@@ -19,6 +20,12 @@ import Mat from "@sparcs-clubs/web/features/rental-business/components/Rentals/M
 import Tool from "@sparcs-clubs/web/features/rental-business/components/Rentals/Tool";
 import Vacuum from "@sparcs-clubs/web/features/rental-business/components/Rentals/Vacuum";
 import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
+import mockupAvailableRental from "@sparcs-clubs/web/features/rental-business/service/_mock/mockAvailableRental";
+// import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
+import {
+  isCurrentItemEmpty,
+  isRentalListEmpty,
+} from "@sparcs-clubs/web/features/rental-business/utils/isRentalEmpty";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
 
@@ -30,13 +37,6 @@ const StyledCardInner = styled.div`
   align-items: flex-start;
   gap: 16px;
   align-self: stretch;
-`;
-
-const ResetTitleWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  gap: 20px;
 `;
 
 const FlexGrowTypography = styled.div`
@@ -73,40 +73,77 @@ const rentals = {
 };
 const RentalInfoSecondFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
-> = ({ rental, setRental, setNextEnabled }) => {
-  const [value, setValue] = useState<
+> = ({ formCtx, setNextEnabled }) => {
+  const [value, setRentalValue] = useState<
     "none" | "easel" | "vacuum" | "handCart" | "mat" | "tool"
   >("none");
 
-  const Rental = rentals[value].component;
-  const props = { rental, setRental };
-
-  const [hasError, setHasError] = useState(false);
+  const { watch, reset, setValue } = formCtx;
+  const currentValues = watch();
 
   const [rentalDate, setRentalDate] = useState<Date | undefined>(
-    rental.date?.start,
+    currentValues.date?.start,
   );
   const [returnDate, setReturnDate] = useState<Date | undefined>(
-    rental.date?.end,
+    currentValues.date?.end,
   );
   const [pendingDate, setPendingDate] = useState<Date | undefined>();
+
+  useEffect(() => {
+    setValue("date.start", rentalDate);
+    setValue("date.end", returnDate);
+  }, [rentalDate, returnDate, setValue]);
+
+  const Rental = rentals[value].component;
+
+  const handleResetAll = () => {
+    reset({
+      agreement: currentValues.agreement,
+      info: {
+        ...currentValues.info,
+      },
+      date: {
+        start: rentalDate,
+        end: returnDate,
+      },
+    });
+  };
+
+  const handleResetCurrent = () => {
+    reset({
+      ...currentValues,
+      [value]: undefined,
+    });
+  };
 
   const handleConfirm = (state: "change" | "reset") => {
     if (state === "reset") {
       setRentalDate(undefined);
       setReturnDate(undefined);
-      setRental({
-        ...rental,
-        date: { start: undefined, end: undefined },
-      });
     } else if (state === "change") {
+      // TODO: pendingDate 있을 때 rentalDate 설정하는 거 다시 확인
       setRentalDate(pendingDate);
       setReturnDate(undefined);
       setPendingDate(undefined);
-      setRental({
-        ...rental,
-        date: { start: rentalDate, end: undefined },
-      });
+    }
+    reset({
+      agreement: currentValues.agreement,
+      info: {
+        ...currentValues.info,
+      },
+      date: {
+        start: rentalDate,
+        end: returnDate,
+      },
+    });
+    setRentalValue("none");
+  };
+
+  const itemOnChange = (
+    newValue: "easel" | "vacuum" | "handCart" | "mat" | "tool",
+  ) => {
+    if (rentalDate && returnDate) {
+      setRentalValue(newValue);
     }
   };
 
@@ -129,86 +166,8 @@ const RentalInfoSecondFrame: React.FC<
   };
 
   useEffect(() => {
-    if (!rentalDate || !returnDate) {
-      setValue("none");
-      setRental({
-        agreement: rental.agreement,
-        info: rental.info,
-      });
-    } else {
-      setRental({
-        ...rental,
-        date: { start: rentalDate, end: returnDate },
-      });
-    }
-  }, [
-    rentalDate,
-    returnDate,
-    setValue,
-    setRental,
-    rental.agreement,
-    rental.info,
-  ]);
-
-  const itemOnChange = (
-    newValue: "easel" | "vacuum" | "handCart" | "mat" | "tool",
-  ) => {
-    if (rentalDate && returnDate) {
-      setValue(newValue);
-    }
-  };
-
-  const isRentalListEmpty = useCallback(
-    () =>
-      !rental.easel &&
-      !rental.vacuum &&
-      (!rental.handCart || Object.values(rental.handCart).every(val => !val)) &&
-      !rental.mat &&
-      (!rental.tool || Object.values(rental.tool).every(val => !val)),
-    [rental],
-  );
-
-  const isCurrentItemEmpty = () => {
-    switch (value) {
-      case "easel":
-        return !rental.easel;
-      case "vacuum":
-        return !rental.vacuum;
-      case "handCart":
-        return (
-          !rental.handCart || Object.values(rental.handCart).every(val => !val)
-        );
-      case "mat":
-        return !rental.mat;
-      case "tool":
-        return !rental.tool || Object.values(rental.tool).every(val => !val);
-      default:
-        return true;
-    }
-  };
-
-  useEffect(() => {
-    const enableNext =
-      !hasError &&
-      !isRentalListEmpty() &&
-      !(!rental.date?.start || !rental.date?.end);
-    setNextEnabled(enableNext);
-  }, [rental, hasError, setNextEnabled, isRentalListEmpty]);
-
-  const handleResetAll = () => {
-    setRental({
-      agreement: rental.agreement,
-      info: rental.info,
-      date: { start: rental.date?.start, end: rental.date?.end },
-    });
-  };
-
-  const handleResetCurrent = () => {
-    setRental(prevRental => ({
-      ...prevRental,
-      [value]: undefined,
-    }));
-  };
+    setNextEnabled(!isRentalListEmpty(currentValues, mockupAvailableRental));
+  }, [currentValues, setNextEnabled]);
 
   return (
     <>
@@ -226,15 +185,23 @@ const RentalInfoSecondFrame: React.FC<
           openPeriodModal={openPeriodModal}
           pendingDate={pendingDate}
           setPendingDate={setPendingDate}
-          isRentalListEmpty={isRentalListEmpty()}
+          isRentalListEmpty={isRentalListEmpty(
+            currentValues,
+            mockupAvailableRental,
+          )}
         />
       </Card>
-      <ItemButtonList value={value} onChange={itemOnChange} rental={rental} />
+      <ItemButtonList
+        value={value}
+        onChange={itemOnChange}
+        currentValues={currentValues}
+        availableRentals={mockupAvailableRental}
+      />
       <Info text={rentals[value].info} />
       {value !== "none" && (
         <Card outline gap={40}>
           <StyledCardInner>
-            <ResetTitleWrapper>
+            <FlexWrapper direction="row" gap={20} style={{ width: "100%" }}>
               <FlexGrowTypography>
                 <Typography fs={20} lh={24} fw="MEDIUM">
                   세부 물품 정보
@@ -242,22 +209,25 @@ const RentalInfoSecondFrame: React.FC<
               </FlexGrowTypography>
               <TextButton
                 text="초기화"
-                disabled={isCurrentItemEmpty()}
+                disabled={isCurrentItemEmpty(
+                  value,
+                  currentValues,
+                  mockupAvailableRental,
+                )}
                 onClick={handleResetCurrent}
               />
-            </ResetTitleWrapper>
+            </FlexWrapper>
             <Rental
-              rentalDate={rentalDate ?? new Date()}
-              returnDate={returnDate ?? new Date()}
-              setHasError={setHasError}
-              {...props}
+              formCtx={formCtx}
+              // TODO: API 연결
+              availableRentals={mockupAvailableRental}
             />
           </StyledCardInner>
         </Card>
       )}
       <Card outline gap={40}>
         <StyledCardInner>
-          <ResetTitleWrapper>
+          <FlexWrapper direction="row" gap={20} style={{ width: "100%" }}>
             <FlexGrowTypography>
               <Typography fs={20} lh={24} fw="MEDIUM">
                 대여 물품 목록
@@ -265,11 +235,14 @@ const RentalInfoSecondFrame: React.FC<
             </FlexGrowTypography>
             <TextButton
               text="초기화"
-              disabled={isRentalListEmpty()}
+              disabled={isRentalListEmpty(currentValues, mockupAvailableRental)}
               onClick={handleResetAll}
             />
-          </ResetTitleWrapper>
-          <RentalList rental={rental} />
+          </FlexWrapper>
+          <RentalList
+            formCtx={formCtx}
+            availableRentals={mockupAvailableRental}
+          />
         </StyledCardInner>
       </Card>
     </>
