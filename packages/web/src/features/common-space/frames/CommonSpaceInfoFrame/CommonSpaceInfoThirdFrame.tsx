@@ -2,6 +2,10 @@ import React, { useCallback } from "react";
 
 import { differenceInHours, differenceInMinutes, subSeconds } from "date-fns";
 
+import { useRouter } from "next/navigation";
+
+import { overlay } from "overlay-kit";
+
 import { useFormContext } from "react-hook-form";
 
 import styled from "styled-components";
@@ -10,6 +14,8 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -80,6 +86,24 @@ const CommonSpaceInfoThirdFrame: React.FC<
     }
   }, [body, param]);
 
+  const router = useRouter();
+
+  const openSubmitModal = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <ConfirmModalContent
+          onConfirm={() => {
+            close();
+            router.push("/my");
+          }}
+        >
+          신청이 완료되었습니다. <br />
+          확인을 누르면 마이페이지로 이동합니다.
+        </ConfirmModalContent>
+      </Modal>
+    ));
+  };
+
   return isValid ? (
     <>
       <Card outline gap={20}>
@@ -128,8 +152,14 @@ const CommonSpaceInfoThirdFrame: React.FC<
       <Info text="먼가 넣을 것이 없을까나" />
       <StyledBottom>
         <Button onClick={onPrev}>이전</Button>
-        <Button type={isValid ? "default" : "disabled"} onClick={handleSubmit}>
-          다음
+        <Button
+          type={isValid ? "default" : "disabled"}
+          onClick={() => {
+            handleSubmit();
+            openSubmitModal();
+          }}
+        >
+          신청
         </Button>
       </StyledBottom>
     </>

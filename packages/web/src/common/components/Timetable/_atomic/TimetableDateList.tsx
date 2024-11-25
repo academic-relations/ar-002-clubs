@@ -68,16 +68,19 @@ const TimetableDateList: React.FC<TimetableDateListProps> = ({
   paddingLeft = "0",
 }) => (
   <TimetableDateListInner paddingLeft={paddingLeft}>
-    {[...Array(7)].map((value, i) => (
-      <TimetableDate key={value}>
-        <span className="desktop">
-          {formatSlashDate(addDays(startDate, i))}
-        </span>
-        <span className="mobile">
-          {formatSimplerSlashDate(addDays(startDate, i))}
-        </span>
-      </TimetableDate>
-    ))}
+    {[...Array(7)].map((value, i) => {
+      const dateKey = `${startDate}-${i}`;
+      return (
+        <TimetableDate key={dateKey}>
+          <span className="desktop">
+            {formatSlashDate(addDays(startDate, i))}
+          </span>
+          <span className="mobile">
+            {formatSimplerSlashDate(addDays(startDate, i))}
+          </span>
+        </TimetableDate>
+      );
+    })}
   </TimetableDateListInner>
 );
 
