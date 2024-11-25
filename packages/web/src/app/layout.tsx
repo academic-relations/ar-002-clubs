@@ -1,6 +1,7 @@
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
-import "@sparcs-clubs/web/styles/globals.css";
 import classNames from "classnames";
+
+import "@sparcs-clubs/web/styles/globals.css";
 
 import Footer from "@sparcs-clubs/web/common/components/Footer";
 import Header from "@sparcs-clubs/web/common/components/Header";
