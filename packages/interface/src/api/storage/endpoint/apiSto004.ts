@@ -28,7 +28,7 @@ const responseBodyMap = {
     nonStandardItems: z
       .object({
         name: z.coerce.string().max(30),
-        fileId: z.coerce.number().int().min(1),
+        fileId: z.coerce.string().max(128),
       })
       .array(),
     desiredStartDate: z.coerce.date(),
