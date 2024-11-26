@@ -87,10 +87,12 @@ const AgendaBlock = forwardRef<HTMLDivElement, AgendaBlockProps>(
             (isEditMode ? (
               <AgendaEditor
                 agendaContent={agenda}
-                onDelete={deleteAgenda}
-                onSave={() => setEditMode(false)}
-                onChange={(newContent: AgendaContent) => {
-                  editAgenda(newContent);
+                onCancel={() => {
+                  setEditMode(false);
+                }}
+                onSave={(agendaContent: AgendaContent) => {
+                  editAgenda(agendaContent);
+                  setEditMode(false);
                 }}
               />
             ) : (
