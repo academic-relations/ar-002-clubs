@@ -10,8 +10,7 @@ import RepresentativeLoadFrame from "./_atomic/RepresentativeLoadFrame";
 
 const InfoWrapper = styled.div`
   display: flex;
-  align-items: center;
-  align-self: stretch;
+  justify-items: stretch;
   gap: 20px;
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
     flex-direction: column;
