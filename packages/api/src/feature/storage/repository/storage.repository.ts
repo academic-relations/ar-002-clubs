@@ -157,7 +157,7 @@ export class StorageRepository {
       desiredPickUpDate?: Date;
       nonStandardItems?: {
         name: string;
-        fileId: number;
+        fileId: string;
       }[];
       desiredStartDate?: Date;
       desiredEndDate?: Date;

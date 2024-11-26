@@ -80,7 +80,7 @@ export const StorageNonStandard = mysqlTable("Storage_non_standard", {
     .notNull()
     .references(() => StorageApplicaiton.id),
   name: varchar("name", { length: 30 }),
-  fileId: int("file_id").references(() => File.id),
+  fileId: varchar("file_id", { length: 128 }).references(() => File.id),
   note: text("note"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
