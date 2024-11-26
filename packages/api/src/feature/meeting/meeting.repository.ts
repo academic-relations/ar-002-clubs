@@ -1,14 +1,16 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 
-import { and, eq, gte, isNull, lt } from "drizzle-orm";
+import { and, count, eq, gte, isNull, lt, max, not, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import {
   Meeting,
+  MeetingAgenda,
   MeetingAnnouncement,
   MeetingAttendanceTimeT,
+  MeetingMapping,
   MeetingVoteResult,
 } from "@sparcs-clubs/api/drizzle/schema/meeting.schema";
 
@@ -311,5 +313,177 @@ export class MeetingRepository {
       );
 
     return result.length;
+  }
+
+  async insertMeetingAgendaAndMapping(
+    meetingId: number,
+    meetingEnumId: number,
+    description: string,
+    title: string,
+  ) {
+    const isInsertAgendaAndMappingSuccess = await this.db.transaction(
+      async tx => {
+        const [insertAgendaResult] = await tx.insert(MeetingAgenda).values({
+          MeetingAgendaEnum: meetingEnumId,
+          description,
+          title,
+          isEditableSelf: true,
+          isEditableDivisionPresident: true,
+          isEditableRepresentative: true,
+        });
+
+        if (insertAgendaResult.affectedRows !== 1) {
+          logger.debug("[MeetingRepository] Failed to insert meeting agenda");
+          tx.rollback();
+          return false;
+        }
+
+        const agendaId = insertAgendaResult.insertId;
+        logger.debug(
+          `[MeetingRepository] Inserted meeting agenda: ${agendaId}`,
+        );
+
+        const getMax = await tx
+          .select({ value: max(MeetingMapping.meetingAgendaPosition) })
+          .from(MeetingMapping)
+          .where(and(eq(MeetingMapping.meetingId, meetingId)));
+
+        const maxAgendaPosition = getMax[0]?.value ?? 0; // CHACHA: undefined라면 0으로 set. <TEST 필요>
+
+        const [insertMappingResult] = await tx.insert(MeetingMapping).values({
+          meetingId,
+          meetingAgendaId: agendaId,
+          meetingAgendaPosition: maxAgendaPosition + 1,
+          meetingAgendaEntityType: 3, // no agenda entity mapped yet.
+        });
+
+        if (insertMappingResult.affectedRows !== 1) {
+          logger.debug("[MeetingRepository] Failed to insert meeting agenda");
+          tx.rollback();
+          return false;
+        }
+
+        const meetingMappingId = insertMappingResult.insertId;
+        logger.debug(
+          `[MeetingRepository] Inserted meeting agenda mapping: ${meetingMappingId}`,
+        );
+
+        await tx
+          .update(Meeting)
+          .set({ statusEnumId: 2 })
+          .where(eq(Meeting.id, meetingId));
+        logger.debug(
+          `[MeetingRepository] Updated meeting status, meetingId: ${meetingId}`, // CHACHA: meeting-agenda mapping이 생겼으므로 안건 공개 상태로 변경!
+        );
+
+        return true;
+      },
+    );
+
+    return isInsertAgendaAndMappingSuccess;
+  }
+
+  async updateMeetingAgenda(
+    agendaId: number,
+    agendaEnumId: number,
+    description: string,
+    title: string,
+  ) {
+    const updateAgendaNotDeletedResult = await this.db.transaction(async tx => {
+      const checkDeleted = await tx
+        .select({ isDeleted: MeetingAgenda.deletedAt })
+        .from(MeetingAgenda)
+        .where(eq(MeetingAgenda.id, agendaId));
+
+      if (checkDeleted.length === 0) {
+        logger.debug("[MeetingRepository] No such agenda exists."); // CHACHA: AgendatId가 유효한지
+        return false;
+      }
+
+      if (checkDeleted[0]?.isDeleted) {
+        logger.debug("[MeetingRepository] This agenda is deleted."); // CHACHA: Update 시에 deletedAt을 검사
+        return false;
+      }
+
+      const [result] = await tx
+        .update(MeetingAgenda)
+        .set({
+          MeetingAgendaEnum: agendaEnumId,
+          title,
+          description,
+          updatedAt: sql<Date>`NOW()`,
+        })
+        .where(eq(MeetingAgenda.id, agendaId));
+
+      if (result.affectedRows !== 1) {
+        logger.debug("[MeetingRepository] Failed to update meeting agenda.");
+        return false;
+      }
+
+      return result;
+    });
+
+    logger.debug(`[MeetingRepository] Updated meeting agenda: ${agendaId}`);
+    return updateAgendaNotDeletedResult;
+  }
+
+  async deleteMeetingAgendaMapping(meetingId: number, agendaId: number) {
+    const meetingAgendaMappingDeleteResult = await this.db.transaction(
+      async tx => {
+        const [deleteResult] = await tx // CHACHA: soft delete로 수정!
+          .update(MeetingMapping)
+          .set({ deletedAt: sql<Date>`NOW()` })
+          .where(
+            and(
+              eq(MeetingMapping.meetingId, meetingId),
+              eq(MeetingMapping.meetingAgendaId, agendaId),
+            ),
+          );
+
+        if (deleteResult.affectedRows !== 1) {
+          logger.debug(
+            "[MeetingRepository] Failed to soft delete meeting agenda mapping.",
+          );
+          return false;
+        }
+
+        logger.debug(
+          `[MeetingRepository] Soft deleted meeting agenda mapping: ${meetingId}, ${agendaId}`,
+        );
+
+        const getEveryMappingByMeetingId = await tx
+          .select({ count: count() }) // CHACHA: 만약 모든 Meeting과 Agenda mapping이 deleted -> 그 Meeting은 공고 게시 상태로!
+          .from(MeetingMapping)
+          .where(and(eq(MeetingMapping.meetingId, meetingId)));
+
+        const getEveryDeletedMappingByMeetingId = await tx
+          .select({ count: count() })
+          .from(MeetingMapping)
+          .where(
+            and(
+              eq(MeetingMapping.meetingId, meetingId),
+              not(eq(MeetingMapping.deletedAt, null)),
+            ),
+          );
+
+        if (
+          getEveryMappingByMeetingId[0]?.count ===
+          getEveryDeletedMappingByMeetingId[0]?.count
+        ) {
+          // CHACHA: 만약 모든 Meeting과 Agenda mapping이 deleted -> 그 Meeting은 공고 게시 상태로!
+          await tx
+            .update(Meeting)
+            .set({ statusEnumId: 1 })
+            .where(eq(Meeting.id, meetingId));
+          logger.debug(
+            `[MeetingRepository] Updated meeting status, meetingId: ${meetingId}`,
+          );
+        }
+
+        return deleteResult;
+      },
+    );
+
+    return meetingAgendaMappingDeleteResult;
   }
 }
