@@ -40,15 +40,15 @@ export default class AgendaController {
   @UsePipes(new ZodPipe(apiMee006))
   async postExecutiveMeetingAgenda(
     @GetExecutive() user: GetExecutive,
-    @Param() { meetingId }: ApiMee006RequestParam,
-    @Body() { meetingEnumId, description, title }: ApiMee006RequestBody,
+    @Param() param: ApiMee006RequestParam,
+    @Body() body: ApiMee006RequestBody,
   ): Promise<ApiMee006ResponseCreated> {
     const result = await this.meetingService.postExecutiveMeetingAgenda(
       user.executiveId,
-      meetingId,
-      meetingEnumId,
-      description,
-      title,
+      param.meetingId,
+      body.meetingEnumId,
+      body.description,
+      body.title,
     );
     return result;
   }
@@ -58,15 +58,15 @@ export default class AgendaController {
   @UsePipes(new ZodPipe(apiMee008))
   async patchExecutiveMeetingAgenda(
     @GetExecutive() user: GetExecutive,
-    @Param() { agendaId }: ApiMee008RequestParam,
-    @Body() { agendaEnumId, description, title }: ApiMee008RequestBody,
+    @Param() param: ApiMee008RequestParam,
+    @Body() body: ApiMee008RequestBody,
   ): Promise<ApiMee008ResponseOk> {
     const result = await this.meetingService.patchExecutiveMeetingAgenda(
       user.executiveId,
-      agendaId,
-      agendaEnumId,
-      description,
-      title,
+      param.agendaId,
+      body.agendaEnumId,
+      body.description,
+      body.title,
     );
     return result;
   }
@@ -76,12 +76,12 @@ export default class AgendaController {
   @UsePipes(new ZodPipe(apiMee010))
   async deleteExecutiveMeetingAgenda(
     @GetExecutive() user: GetExecutive,
-    @Param() { meetingId, agendaId }: ApiMee010RequestParam,
+    @Param() param: ApiMee010RequestParam,
   ): Promise<ApiMee010ResponseOk> {
     const result = await this.meetingService.deleteExecutiveMeetingAgenda(
       user.executiveId,
-      meetingId,
-      agendaId,
+      param.meetingId,
+      param.agendaId,
     );
     return result;
   }
