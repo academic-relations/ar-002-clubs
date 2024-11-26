@@ -1,9 +1,30 @@
+"use client";
+
+import { createGlobalStyle } from "styled-components";
+
+const GlobalStyle = createGlobalStyle`
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 
 :root {
   background: linear-gradient(180deg, #eafafc 0px, #ffffff 339.67px);
   min-height: 100vh;
+  --next-font-family-pretendard: 'Pretendard', sans-serif;
+  --next-font-family-nanum-square: 'NanumSquare', sans-serif;
+  --next-font-family-raleway: 'Raleway', sans-serif;
+}
+
+
+.nanum-square-font {
+  font-family: var(--next-font-family-nanum-square);
+}
+
+.pretendard-font {
+  font-family: var(--next-font-family-pretendard);
+}
+
+.raleway-font {
+  font-family: var(--next-font-family-raleway);
 }
 
 * {
@@ -51,12 +72,6 @@ main {
   line-height: 1.5rem;
   text-align: center;
 }
+`;
 
-.viewer-download::before {
-  content: "\f019";
-}
-
-.viewer-toolbar>ul>li {
-  margin-left: 5px;
-  margin-right: 5px;
-}
+export default GlobalStyle;
