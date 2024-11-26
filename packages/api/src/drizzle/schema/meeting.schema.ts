@@ -42,6 +42,7 @@ export const Meeting = mysqlTable(
     startDate: datetime("start_datetime").notNull(),
     endDate: datetime("end_datetime"),
     tag: varchar("meeting_group_tag", { length: 255 }).notNull(),
+    statusEnumId: int("meeting_status_enum").notNull().default(1), // CHACHA : NEW!
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
     deletedAt: timestamp("deleted_at"),
@@ -203,6 +204,9 @@ export const MeetingMapping = mysqlTable(
     meetingAgendaContentId: int("meeting_agenda_content_id"),
     meetingAgendaVoteId: int("meeting_agenda_vote_id"),
     meetingAgendaEntityPosition: int("meeting_agenda_entity_position"),
+    createdAt: timestamp("created_at").defaultNow(), // CHACHA : NEW!
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(), // CHACHA : NEW!
+    deletedAt: timestamp("deleted_at"), // CHACHA : NEW!
   },
   table => ({
     meetingMeetingMappingIdFk: foreignKey({

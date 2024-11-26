@@ -4,7 +4,7 @@ import React, { HTMLAttributes } from "react";
 
 import styled from "styled-components";
 
-type ButtonProps = {
+export type ButtonProps = {
   buttonType?: "button" | "reset" | "submit";
   type?: keyof typeof ButtonTypeInner;
   children: React.ReactNode;
