@@ -44,7 +44,6 @@ const ChangeRepresentativeCard: React.FC<{
       ),
     })) ?? [];
 
-  // TODO: 대표자 items 필터링
   const [representativeItems, setRepresentativeItems] = useState<
     SelectItem<string>[]
   >(getSelectItems(clubMembers));
@@ -184,13 +183,22 @@ const ChangeRepresentativeCard: React.FC<{
     refetch();
   };
 
-  const changeRepresentativeRequest = (studentId: number) => {
-    updateClubDelegates(
-      { clubId },
-      { delegateEnumId: ClubDelegateEnum.Representative, studentId },
-    );
-    setType("Applied");
-    refetch();
+  const changeDelegateRequest = async (
+    studentId: number,
+    delegateEnumId: ClubDelegateEnum,
+  ) => {
+    await updateClubDelegates({ clubId }, { delegateEnumId, studentId });
+    await refetch();
+    if (delegateEnumId === ClubDelegateEnum.Representative && studentId !== 0) {
+      setType("Applied");
+    }
+    if (delegateEnumId === ClubDelegateEnum.Delegate1) {
+      setDelegate1(studentId === 0 ? "" : studentId.toString());
+    }
+    if (delegateEnumId === ClubDelegateEnum.Delegate2) {
+      setDelegate2(studentId === 0 ? "" : studentId.toString());
+    }
+    updateCandidateItems();
   };
 
   return (
@@ -202,6 +210,7 @@ const ChangeRepresentativeCard: React.FC<{
         <ChangeRepresentativeInfo
           type={type}
           clubName="술박스"
+          // TODO: studentNumber 받기
           prevRepresentative={`${representative} ${representativeName}`}
           newRepresentative={`${requestStatus?.requests[0]?.studentId} ${requestStatus?.requests[0]?.studentName}`}
         />
@@ -219,7 +228,10 @@ const ChangeRepresentativeCard: React.FC<{
           items={representativeItems}
           value={representative}
           onChange={value => {
-            changeRepresentativeRequest(Number(value));
+            changeDelegateRequest(
+              Number(value),
+              ClubDelegateEnum.Representative,
+            );
           }}
           disabled={type === "Applied"}
         />
@@ -230,15 +242,17 @@ const ChangeRepresentativeCard: React.FC<{
             대의원 1
           </Typography>
           <TextButton
-            text="대표자로 지정"
-            onClick={() => changeRepresentativeRequest(Number(delegate1))}
-            disabled={type === "Applied"}
+            text="대의원1 삭제"
+            onClick={() => changeDelegateRequest(0, ClubDelegateEnum.Delegate1)}
+            disabled={delegate1 === ""}
           />
         </LabelWrapper>
         <Select
           items={delegate1Items}
           value={delegate1}
-          onChange={setDelegate1}
+          onChange={value =>
+            changeDelegateRequest(Number(value), ClubDelegateEnum.Delegate1)
+          }
           isRequired={false}
           disabled={type === "Applied"}
         />
@@ -249,15 +263,17 @@ const ChangeRepresentativeCard: React.FC<{
             대의원 2
           </Typography>
           <TextButton
-            text="대표자로 지정"
-            onClick={() => changeRepresentativeRequest(Number(delegate2))}
-            disabled={type === "Applied"}
+            text="대의원2 삭제"
+            onClick={() => changeDelegateRequest(0, ClubDelegateEnum.Delegate2)}
+            disabled={delegate2 === ""}
           />
         </LabelWrapper>
         <Select
           items={delegate2Items}
           value={delegate2}
-          onChange={setDelegate2}
+          onChange={value =>
+            changeDelegateRequest(Number(value), ClubDelegateEnum.Delegate2)
+          }
           isRequired={false}
           disabled={type === "Applied"}
         />
