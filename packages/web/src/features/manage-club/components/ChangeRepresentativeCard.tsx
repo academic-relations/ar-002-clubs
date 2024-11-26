@@ -48,16 +48,7 @@ const ChangeRepresentativeCard: React.FC<{
     SelectItem<string>[]
   >(getSelectItems(clubMembers));
 
-  const [delegate1Items, setDelegate1Items] = useState<SelectItem<string>[]>(
-    getSelectItems(clubMembers).filter(
-      item =>
-        item.value !==
-        delegatesNow?.delegates
-          .find(delegate => delegate.delegateEnumId === 1)
-          ?.studentId?.toString(),
-    ),
-  );
-  const [delegate2Items, setDelegate2Items] = useState<SelectItem<string>[]>(
+  const [delegateItems, setDelegateItems] = useState<SelectItem<string>[]>(
     getSelectItems(clubMembers).filter(
       item =>
         item.value !==
@@ -118,8 +109,7 @@ const ChangeRepresentativeCard: React.FC<{
   }, [requestStatus]);
 
   const updateCandidateItems = () => {
-    setRepresentativeItems(getSelectItems(clubMembers));
-    setDelegate1Items(prevItems =>
+    setRepresentativeItems(prevItems =>
       prevItems.map(item =>
         item.value === delegate1 ||
         item.value === delegate2 ||
@@ -128,7 +118,7 @@ const ChangeRepresentativeCard: React.FC<{
           : { ...item, selectable: true },
       ),
     );
-    setDelegate2Items(prevItems =>
+    setDelegateItems(prevItems =>
       prevItems.map(item =>
         item.value === delegate1 ||
         item.value === delegate2 ||
@@ -145,13 +135,13 @@ const ChangeRepresentativeCard: React.FC<{
         delegatesNow?.delegates
           .find(delegate => delegate.delegateEnumId === 2)
           ?.studentId?.toString() &&
-      delegate1 !== ""
+      type !== "Applied"
     ) {
       updateClubDelegates(
         { clubId },
         {
           delegateEnumId: ClubDelegateEnum.Delegate1,
-          studentId: Number(delegate1),
+          studentId: delegate1 === "" ? 0 : Number(delegate1),
         },
       );
       updateCandidateItems();
@@ -164,13 +154,13 @@ const ChangeRepresentativeCard: React.FC<{
         delegatesNow?.delegates
           .find(delegate => delegate.delegateEnumId === 3)
           ?.studentId?.toString() &&
-      delegate2 !== ""
+      type !== "Applied"
     ) {
       updateClubDelegates(
         { clubId },
         {
           delegateEnumId: ClubDelegateEnum.Delegate2,
-          studentId: Number(delegate2),
+          studentId: delegate2 === "" ? 0 : Number(delegate2),
         },
       );
       updateCandidateItems();
@@ -191,12 +181,6 @@ const ChangeRepresentativeCard: React.FC<{
     await refetch();
     if (delegateEnumId === ClubDelegateEnum.Representative && studentId !== 0) {
       setType("Applied");
-    }
-    if (delegateEnumId === ClubDelegateEnum.Delegate1) {
-      setDelegate1(studentId === 0 ? "" : studentId.toString());
-    }
-    if (delegateEnumId === ClubDelegateEnum.Delegate2) {
-      setDelegate2(studentId === 0 ? "" : studentId.toString());
     }
     updateCandidateItems();
   };
@@ -243,16 +227,14 @@ const ChangeRepresentativeCard: React.FC<{
           </Typography>
           <TextButton
             text="대의원1 삭제"
-            onClick={() => changeDelegateRequest(0, ClubDelegateEnum.Delegate1)}
+            onClick={() => setDelegate1("")}
             disabled={delegate1 === ""}
           />
         </LabelWrapper>
         <Select
-          items={delegate1Items}
+          items={delegateItems}
           value={delegate1}
-          onChange={value =>
-            changeDelegateRequest(Number(value), ClubDelegateEnum.Delegate1)
-          }
+          onChange={setDelegate1}
           isRequired={false}
           disabled={type === "Applied"}
         />
@@ -264,16 +246,14 @@ const ChangeRepresentativeCard: React.FC<{
           </Typography>
           <TextButton
             text="대의원2 삭제"
-            onClick={() => changeDelegateRequest(0, ClubDelegateEnum.Delegate2)}
+            onClick={() => setDelegate2("")}
             disabled={delegate2 === ""}
           />
         </LabelWrapper>
         <Select
-          items={delegate2Items}
+          items={delegateItems}
           value={delegate2}
-          onChange={value =>
-            changeDelegateRequest(Number(value), ClubDelegateEnum.Delegate2)
-          }
+          onChange={setDelegate2}
           isRequired={false}
           disabled={type === "Applied"}
         />
