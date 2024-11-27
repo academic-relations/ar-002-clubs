@@ -16,6 +16,7 @@ interface MeetingNoticeItemProps {
   tag: MeetingNoticeTypeEnum;
   title: string;
   date: Date;
+  onClick?: VoidFunction;
 }
 
 const MeetingNoticeItemWrapper = styled.div`
@@ -48,6 +49,7 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
   tag,
   title,
   date,
+  onClick = () => {},
 }) => {
   const tagColor = () => {
     switch (tag) {
@@ -72,7 +74,7 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
   };
 
   return (
-    <MeetingNoticeItemWrapper>
+    <MeetingNoticeItemWrapper onClick={onClick}>
       <LogoWithTagAndTitleWrapper>
         <TagWithTitleWrapper>
           <Tag color={tagColor()}>{tagText()}</Tag>
@@ -93,4 +95,4 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
   );
 };
 
-export { MeetingNoticeTypeEnum, MeetingNoticeItem };
+export { MeetingNoticeItem, MeetingNoticeTypeEnum };

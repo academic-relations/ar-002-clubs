@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { ApiMee001RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee001";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import Link from "next/link";
 
 import { useRouter } from "next/navigation";
@@ -50,8 +51,8 @@ const CreateMeetingPage: React.FC = () => {
     createMeeting(
       { body: { ...getValues() } },
       {
-        onSuccess: () => {
-          router.replace("/meeting");
+        onSuccess: data => {
+          router.replace(`/meeting/${data.id}`);
         },
         onError: () => errorHandler("생성에 실패하였습니다"),
       },
@@ -111,4 +112,4 @@ const CreateMeetingPage: React.FC = () => {
   );
 };
 
-export default withAuthorization(CreateMeetingPage, ["executive"]);
+export default withAuthorization(CreateMeetingPage, [UserTypeEnum.Executive]);

@@ -3,7 +3,6 @@ import apiReg007 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg0
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import type {
@@ -15,19 +14,13 @@ export const patchClubMemberRegistration = async (
   requestParam: ApiReg007RequestParam,
   requestBody: ApiReg007RequestBody,
 ) => {
-  const { data, status } = await axiosClientWithAuth.patch(
+  const { data } = await axiosClientWithAuth.patch(
     apiReg007.url(requestParam.applyId.toString()),
     requestBody,
   );
 
-  switch (status) {
-    case 204: {
-      return data;
-      // return apiReg007.responseBodyMap[204].parse(data);
-    }
-    default:
-      throw new UnexpectedAPIResponseError();
-  }
+  // return apiReg007.responseBodyMap[204].parse(data);
+  return data;
 };
 
 defineAxiosMock(mock => {

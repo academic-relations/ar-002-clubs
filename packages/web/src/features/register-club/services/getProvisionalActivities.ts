@@ -7,7 +7,6 @@ import { useQuery } from "@tanstack/react-query";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import { activitiesGet } from "./_atomic/actApiList";
@@ -19,20 +18,11 @@ const useProvisionalActivities = (
   useQuery<ApiAct011ResponseOk, Error>({
     queryKey: [activitiesGet(profile), requestQuery],
     queryFn: async (): Promise<ApiAct011ResponseOk> => {
-      const { data, status } = await axiosClientWithAuth.get(
-        activitiesGet(profile),
-        {
-          params: requestQuery,
-        },
-      );
+      const { data } = await axiosClientWithAuth.get(activitiesGet(profile), {
+        params: requestQuery,
+      });
 
-      switch (status) {
-        case 200:
-        case 304:
-          return apiAct011.responseBodyMap[200].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiAct011.responseBodyMap[200].parse(data);
     },
   });
 

@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ApiReg009RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg009";
 import apiReg011 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import {
+  getDisplayNameRegistration,
   RegistrationDeadlineEnum,
   RegistrationTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
@@ -32,6 +33,7 @@ import ProvisionalBasicInformFrame from "@sparcs-clubs/web/features/register-clu
 import computeErrorMessage from "@sparcs-clubs/web/features/register-club/utils/computeErrorMessage";
 import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
+import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
 interface RegisterClubMainFrameProps {
   applyId: number;
@@ -213,16 +215,10 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   const { mutate, isSuccess } = usePutClubRegistration();
 
-  const title = useMemo(() => {
-    switch (detail?.registrationTypeEnumId) {
-      case RegistrationTypeEnum.Promotional:
-        return "신규 등록";
-      case RegistrationTypeEnum.Renewal:
-        return "재등록";
-      default:
-        return "가등록";
-    }
-  }, [detail]);
+  const title = useMemo(
+    () => getDisplayNameRegistration(detail?.registrationTypeEnumId),
+    [detail],
+  );
 
   const type =
     detail?.registrationTypeEnumId ?? RegistrationTypeEnum.NewProvisional;
@@ -248,6 +244,12 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
     }
   }, [isSuccess, router, applyId, queryClient]);
 
+  const {
+    semester: semesterInfo,
+    isLoading: semesterLoading,
+    isError: semesterError,
+  } = useGetSemesterNow();
+
   if (!detail) return null;
 
   return (
@@ -270,10 +272,12 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
               enableLast
             />
             <FlexWrapper direction="column" gap={20}>
-              <AsyncBoundary isLoading={isLoadingTerm} isError={isErrorTerm}>
-                {/* TODO: 학기 동적처리  */}
+              <AsyncBoundary
+                isLoading={isLoadingTerm || semesterLoading}
+                isError={isErrorTerm || semesterError}
+              >
                 <Info
-                  text={`현재는 2024년 가을학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
+                  text={`현재는 ${semesterInfo?.year}년 ${semesterInfo?.name}학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
                 />
               </AsyncBoundary>
               <WarningInfo>

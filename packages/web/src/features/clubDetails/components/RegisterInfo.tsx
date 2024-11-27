@@ -12,6 +12,8 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
+
 import { useRegisterClub } from "../services/registerClub";
 import { useUnregisterClub } from "../services/unregisterClub";
 
@@ -75,6 +77,8 @@ export const RegisterInfo: React.FC<RegisterInfoProps> = ({
     }
   `;
 
+  const semester = useGetSemesterNow()?.semester;
+
   const submitHandler = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen} onClose={close}>
@@ -85,7 +89,7 @@ export const RegisterInfo: React.FC<RegisterInfoProps> = ({
               ToggleUnregistered(close);
             }}
           >
-            2024학년도 봄학기
+            {semester?.year}년도 {semester?.name}학기
             <ResponsiveBr /> {club.type === 1 ? "정동아리" : "가동아리"}{" "}
             {club.name_kr}의<br />
             회원 등록을 취소합니다.
@@ -97,7 +101,7 @@ export const RegisterInfo: React.FC<RegisterInfoProps> = ({
               ToggleRegistered(close);
             }}
           >
-            2024학년도 봄학기
+            {semester?.year}년도 {semester?.name}학기
             <ResponsiveBr /> {club.type === 1 ? "정동아리" : "가동아리"}{" "}
             {club.name_kr}의<br />
             회원 등록 신청을 진행합니다.

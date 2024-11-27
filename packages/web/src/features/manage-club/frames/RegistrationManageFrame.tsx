@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
+import { ApiClb006ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb006";
 import { ApiClb015ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
 import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
 
@@ -15,14 +16,26 @@ import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
 import MembersTable from "@sparcs-clubs/web/features/manage-club/components/MembersTable";
 import { useGetMemberRegistration } from "@sparcs-clubs/web/features/manage-club/members/services/getClubMemberRegistration";
-
 import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
+import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
+
+import { useGetClubDelegate } from "../services/getClubDelegate";
 
 const RegistrationManageFrame: React.FC = () => {
   // 자신이 대표자인 동아리 clubId 가져오기
   const { data: idData } = useGetMyManageClub() as {
     data: ApiClb015ResponseOk;
     isLoading: boolean;
+  };
+
+  const {
+    data: delegatesNow,
+    isLoading: delegatesIsLoading,
+    isError: delegatesIsError,
+  } = useGetClubDelegate({ clubId: idData.clubId }) as {
+    data: ApiClb006ResponseOK;
+    isLoading: boolean;
+    isError: boolean;
   };
 
   // 자신이 대표자인 동아리 clubId에 해당하는 동아리 세부정보 가져오기
@@ -70,9 +83,14 @@ const RegistrationManageFrame: React.FC = () => {
     ).length;
   const totalCount = memberData && memberData.applies.length;
 
-  const title = `2024년 가을학기 (신청 ${appliedCount}명, 승인 ${approvedCount}명, 반려 ${rejectedCount}명 / 총 ${totalCount}명)`;
-  const mobileTitle = `2024년 가을학기`;
-  // TODO: 학기 받아올 수 있도록 수정
+  const {
+    semester: semesterInfo,
+    isLoading: semesterLoading,
+    isError: semesterError,
+  } = useGetSemesterNow();
+
+  const title = `${semesterInfo?.year}년 ${semesterInfo?.name}학기 (신청 ${appliedCount}명, 승인 ${approvedCount}명, 반려 ${rejectedCount}명 / 총 ${totalCount}명)`;
+  const mobileTitle = `${semesterInfo?.year}년 ${semesterInfo?.name}학기`;
 
   const theme = useTheme();
   const [isMobileView, setIsMobileView] = useState(false);
@@ -93,8 +111,15 @@ const RegistrationManageFrame: React.FC = () => {
   return (
     <FoldableSectionTitle title="회원 명단">
       <AsyncBoundary
-        isLoading={memberIsLoading || clubIsLoading}
-        isError={memberIsError || clubIsError}
+        isLoading={
+          memberIsLoading ||
+          clubIsLoading ||
+          delegatesIsLoading ||
+          semesterLoading
+        }
+        isError={
+          memberIsError || clubIsError || delegatesIsError || semesterError
+        }
       >
         <FlexWrapper direction="column" gap={20}>
           {memberData && clubData && (
@@ -110,6 +135,7 @@ const RegistrationManageFrame: React.FC = () => {
                 clubName={clubData.name_kr}
                 clubId={idData.clubId}
                 refetch={memberRefetch}
+                delegates={delegatesNow.delegates}
               />
             </>
           )}

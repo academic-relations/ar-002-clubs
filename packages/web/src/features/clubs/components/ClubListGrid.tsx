@@ -8,12 +8,10 @@ import styled, { useTheme } from "styled-components";
 import paths from "@sparcs-clubs/web/constants/paths";
 import ClubCard from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
-import MobileClubCard from "@sparcs-clubs/web/features/clubs/components/MobileClubCard";
-
-import type { ClubCardProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
+import type { ClubProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
 interface ClubListGridItemProps {
-  clubList: Array<ClubCardProps["club"]>;
+  clubList: Array<ClubProps["club"]>;
   isRegistrationPeriod?: boolean;
 }
 
@@ -57,25 +55,18 @@ const ClubListGrid: React.FC<ClubListGridItemProps> = ({
   }, []);
   return (
     <ClubListGridInner>
-      {clubList.map((club: ClubCardProps["club"]) => (
+      {clubList.map((club: ClubProps["club"]) => (
         <Link
           key={club.id}
           href={`${paths.CLUBS.sub[0].path}/${club.id.toString()}`}
           style={{ display: "flex", flexDirection: "column" }}
         >
-          {isMobileView ? (
-            <MobileClubCard
-              key={club.name_kr}
-              club={club}
-              isRegistrationPeriod={isRegistrationPeriod}
-            />
-          ) : (
-            <ClubCard
-              key={club.name_kr}
-              club={club}
-              isRegistrationPeriod={isRegistrationPeriod}
-            />
-          )}
+          <ClubCard
+            key={club.name_kr}
+            club={club}
+            isRegistrationPeriod={isRegistrationPeriod}
+            isMobile={isMobileView}
+          />
         </Link>
       ))}
     </ClubListGridInner>

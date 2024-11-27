@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { ClubDelegateDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-delegate-d.repository";
+import { ClubDelegateDRepository } from "@sparcs-clubs/api/feature/club/delegate/club.club-delegate-d.repository";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
@@ -36,11 +36,11 @@ export class ActivityCertificateService {
     });
   }
 
-  async getStudentActivityCertificatesClubHistory() {
+  async getStudentActivityCertificatesClubHistory(param: {
+    studentId: number;
+  }) {
     const clubHistory =
-      await this.clubPublicService.getClubBelongDurationOfStudent({
-        studentId: 1,
-      }); // TODO: 실제 studentId 적용
+      await this.clubPublicService.getClubBelongDurationOfStudent(param); // TODO: 실제 studentId 적용
     return clubHistory;
   }
 

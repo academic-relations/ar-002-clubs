@@ -33,6 +33,7 @@ const ExistWrapper = styled.div.withConfig({
   position: relative;
   width: 24px;
   height: 24px;
+  color: inherit;
 
   ${({ exist, type, theme }) =>
     exist &&

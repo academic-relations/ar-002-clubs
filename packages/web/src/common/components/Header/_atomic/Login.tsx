@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { jwtDecode } from "jwt-decode";
 import styled from "styled-components";

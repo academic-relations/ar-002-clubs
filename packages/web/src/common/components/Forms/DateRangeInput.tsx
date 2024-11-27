@@ -23,6 +23,7 @@ interface DateRangeInputProps
 }
 
 const DateRangeInputErrorFrameInner = styled.div`
+  min-width: 300px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -37,11 +38,11 @@ const DateRangeInputFrameInner = styled.div`
 
 const DateRangeInput: React.FC<DateRangeInputProps> = ({
   label = ["", ""],
-  startValue = "",
-  endValue = "",
-  limitStartValue = "",
-  limitEndValue = "",
-  onChange = () => {},
+  startValue,
+  endValue,
+  limitStartValue,
+  limitEndValue,
+  onChange,
   useDays = false, // Default to false
   ...props
 }) => {

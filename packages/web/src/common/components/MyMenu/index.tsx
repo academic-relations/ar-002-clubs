@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
+
 import { getUserType } from "@sparcs-clubs/web/utils/getUserType";
 
 import Button from "../Button";
