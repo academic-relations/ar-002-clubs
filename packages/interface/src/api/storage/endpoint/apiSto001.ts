@@ -26,7 +26,8 @@ const requestBody = z.object({
       name: z.coerce.string().max(30),
       fileId: z.coerce.string().max(128),
     })
-    .array(),
+    .array()
+    .optional(),
   desiredStartDate: z.coerce.date(),
   desiredEndDate: z.coerce.date(),
   note: z.coerce.string().max(512),
