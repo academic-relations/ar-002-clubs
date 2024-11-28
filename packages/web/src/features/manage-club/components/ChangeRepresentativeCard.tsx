@@ -32,7 +32,8 @@ const ChangeRepresentativeCard: React.FC<{
   clubId: number;
   delegatesNow: ApiClb006ResponseOK;
   clubMembers: ApiClb008ResponseOk;
-}> = ({ clubId, delegatesNow, clubMembers }) => {
+  clubName: string;
+}> = ({ clubId, delegatesNow, clubMembers, clubName }) => {
   const getSelectItems = (members: ApiClb008ResponseOk): SelectItem<string>[] =>
     members?.students.map(member => ({
       label: `${member.studentNumber} ${member.name}${
@@ -193,7 +194,7 @@ const ChangeRepresentativeCard: React.FC<{
       {type !== "Default" && (
         <ChangeRepresentativeInfo
           type={type}
-          clubName="술박스"
+          clubName={clubName}
           // TODO: studentNumber 받기
           prevRepresentative={`${representative} ${representativeName}`}
           newRepresentative={`${requestStatus?.requests[0]?.studentId} ${requestStatus?.requests[0]?.studentName}`}
