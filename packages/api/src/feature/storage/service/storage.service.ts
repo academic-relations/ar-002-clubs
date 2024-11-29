@@ -63,7 +63,7 @@ export class StorageService {
     });
 
     const isCreationSucceed =
-      await this.storageRepository.createApplication(body);
+      await this.storageRepository.createStorageApplication(body);
     if (!isCreationSucceed) {
       throw new HttpException(
         "Failed to create application",
@@ -84,7 +84,7 @@ export class StorageService {
 
     const { clubId, pageOffset, itemCount } = query;
     const { paginatedItems, total } =
-      await this.storageRepository.getApplications(
+      await this.storageRepository.getStorageApplications(
         clubId,
         pageOffset,
         itemCount,
@@ -120,10 +120,10 @@ export class StorageService {
   private async getStorageApplication(
     id: number,
   ): Promise<ApiSto004ResponseOk> {
-    const application = await this.storageRepository.getApplication(id);
+    const application = await this.storageRepository.getStorageApplication(id);
 
     const nonStandardItems =
-      await this.storageRepository.getNonStandardItems(id);
+      await this.storageRepository.getStorageNonStandardItems(id);
 
     return { ...application, nonStandardItems };
   }
@@ -161,7 +161,7 @@ export class StorageService {
         HttpStatus.FORBIDDEN,
       );
 
-    const isUpdateSucceed = this.storageRepository.updateApplication(
+    const isUpdateSucceed = this.storageRepository.updateStorageApplication(
       applicationId,
       body,
     );
@@ -177,7 +177,7 @@ export class StorageService {
     applicationId: number,
     body: ApiSto007RequestBody,
   ) {
-    const isUpdateSucceed = this.storageRepository.updateApplication(
+    const isUpdateSucceed = this.storageRepository.updateStorageApplication(
       applicationId,
       body,
     );
@@ -190,7 +190,8 @@ export class StorageService {
   }
 
   async postExecutiveStorageContract(body: ApiSto008RequestBody) {
-    const isCreationSucceed = await this.storageRepository.createContract(body);
+    const isCreationSucceed =
+      await this.storageRepository.createStorageContract(body);
     if (!isCreationSucceed) {
       throw new HttpException(
         "Failed to create application",
@@ -202,7 +203,7 @@ export class StorageService {
 
   // 계약서의 정보를 불러오는 api로, Sto009, 013에서 사용합니다.
   private async getStorageContract(id: number): Promise<ApiSto009ResponseOk> {
-    const contract = await this.storageRepository.getContract(id);
+    const contract = await this.storageRepository.getStorageContract(id);
 
     return contract;
   }
@@ -235,7 +236,7 @@ export class StorageService {
         HttpStatus.FORBIDDEN,
       );
 
-    const isUpdateSucceed = this.storageRepository.updateContract(
+    const isUpdateSucceed = this.storageRepository.updateStorageContract(
       contractId,
       body,
     );
@@ -251,7 +252,7 @@ export class StorageService {
     applicationId: number,
     body: ApiSto011RequestBody,
   ) {
-    const isUpdateSucceed = this.storageRepository.updateContract(
+    const isUpdateSucceed = this.storageRepository.updateStorageContract(
       applicationId,
       body,
     );
@@ -268,7 +269,10 @@ export class StorageService {
   ): Promise<ApiSto012ResponseOk> {
     const { pageOffset, itemCount } = query;
     const { paginatedItems, total } =
-      await this.storageRepository.getEveryApplications(pageOffset, itemCount);
+      await this.storageRepository.getEveryStorageApplications(
+        pageOffset,
+        itemCount,
+      );
 
     return {
       items: paginatedItems,

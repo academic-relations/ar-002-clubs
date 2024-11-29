@@ -12,7 +12,7 @@ import { File } from "./file.schema";
 import { Executive, Student } from "./user.schema";
 
 // StorageApplicaiton table
-export const StorageApplicaiton = mysqlTable("storage_application", {
+export const StorageApplication = mysqlTable("storage_application", {
   id: int("id").autoincrement().primaryKey(),
   clubId: int("club_id")
     .notNull()
@@ -27,7 +27,7 @@ export const StorageApplicaiton = mysqlTable("storage_application", {
   PickUpDate: timestamp("pick_up_date"),
   desiredStartDate: timestamp("desired_start_date").notNull(),
   desiredEndDate: timestamp("desired_end_date").notNull(),
-  status: varchar("status", { length: 30 }).notNull().default("apply"),
+  status: varchar("status", { length: 30 }).notNull().default("applied"),
   isPickedUp: boolean("is_picked_up").notNull().default(false),
   contractId: int("contract_id")
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -54,7 +54,7 @@ export const StorageContract = mysqlTable("storage_contract", {
     .references(() => Executive.id),
   applicationId: int("application_id")
     .notNull()
-    .references(() => StorageApplicaiton.id),
+    .references(() => StorageApplication.id),
   note: text("note"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -62,7 +62,7 @@ export const StorageContract = mysqlTable("storage_contract", {
 });
 
 // StorageBox table
-export const StorageBox = mysqlTable("Storage_box", {
+export const StorageBox = mysqlTable("storage_box", {
   id: int("id").autoincrement().primaryKey(),
   contractId: int("contract_id")
     .notNull()
@@ -74,11 +74,11 @@ export const StorageBox = mysqlTable("Storage_box", {
 });
 
 // StorageNonStandard table
-export const StorageNonStandard = mysqlTable("Storage_non_standard", {
+export const StorageNonStandard = mysqlTable("storage_non_standard", {
   id: int("id").autoincrement().primaryKey(),
   applicationId: int("application_id")
     .notNull()
-    .references(() => StorageApplicaiton.id),
+    .references(() => StorageApplication.id),
   name: varchar("name", { length: 30 }),
   fileId: varchar("file_id", { length: 128 }).references(() => File.id),
   note: text("note"),

@@ -8,7 +8,7 @@ import logger from "@sparcs-clubs/api/common/util/logger";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import { Club } from "@sparcs-clubs/api/drizzle/schema/club.schema";
 import {
-  StorageApplicaiton,
+  StorageApplication,
   StorageContract,
   StorageNonStandard,
 } from "@sparcs-clubs/api/drizzle/schema/storage.schema";
@@ -32,16 +32,18 @@ export class StorageRepository {
     };
   }
 
-  async createApplication(body: ApiSto001RequestBody) {
+  async createStorageApplication(body: ApiSto001RequestBody) {
     const result = await this.db.transaction(async tx => {
       const [applicationInsertResult] = await tx
-        .insert(StorageApplicaiton)
+        .insert(StorageApplication)
         .values({
           clubId: body.clubId,
           studentId: body.studentId,
           studentPhoneNumber: body.studentPhoneNumber,
           numberOfBoxes: body.numberOfBoxes,
-          numberOfNonStandardItems: body.nonStandardItems.length,
+          numberOfNonStandardItems: body.nonStandardItems
+            ? body.nonStandardItems.length
+            : 0,
           desiredPickUpDate: body.desiredPickUpDate,
           desiredStartDate: body.desiredStartDate,
           desiredEndDate: body.desiredEndDate,
@@ -50,40 +52,42 @@ export class StorageRepository {
 
       const applicationId = applicationInsertResult.insertId;
 
-      await Promise.all(
-        body.nonStandardItems.map(async obj => {
-          await tx.insert(StorageNonStandard).values({
-            applicationId,
-            ...obj,
-          });
-        }),
-      );
+      if (body.nonStandardItems !== undefined) {
+        await Promise.all(
+          body.nonStandardItems.map(async obj => {
+            await tx.insert(StorageNonStandard).values({
+              applicationId,
+              ...obj,
+            });
+          }),
+        );
+      }
       return true;
     });
     return result;
   }
 
   // apiSto002
-  async getApplications(clubId: number, page: number, pageSize: number) {
+  async getStorageApplications(clubId: number, page: number, pageSize: number) {
     const applications = await this.db
       .select({
-        applicationId: StorageApplicaiton.id,
+        applicationId: StorageApplication.id,
         clubNameKr: Club.name_kr,
         clubNameEn: Club.name_en,
         studentName: Student.name,
-        studentPhoneNumber: StorageApplicaiton.studentPhoneNumber,
-        desiredStartDate: StorageApplicaiton.desiredStartDate,
-        desiredEndDate: StorageApplicaiton.desiredEndDate,
-        numberOfBoxes: StorageApplicaiton.numberOfBoxes,
-        numberOfNonStandardItems: StorageApplicaiton.numberOfNonStandardItems,
-        status: StorageApplicaiton.status,
-        createdAt: StorageApplicaiton.createdAt,
+        studentPhoneNumber: StorageApplication.studentPhoneNumber,
+        desiredStartDate: StorageApplication.desiredStartDate,
+        desiredEndDate: StorageApplication.desiredEndDate,
+        numberOfBoxes: StorageApplication.numberOfBoxes,
+        numberOfNonStandardItems: StorageApplication.numberOfNonStandardItems,
+        status: StorageApplication.status,
+        createdAt: StorageApplication.createdAt,
       })
-      .from(StorageApplicaiton)
-      .where(eq(StorageApplicaiton.clubId, clubId))
-      .leftJoin(Student, eq(StorageApplicaiton.studentId, Student.id))
-      .leftJoin(Club, eq(StorageApplicaiton.clubId, Club.id))
-      .groupBy(StorageApplicaiton.id);
+      .from(StorageApplication)
+      .where(eq(StorageApplication.clubId, clubId))
+      .leftJoin(Student, eq(StorageApplication.studentId, Student.id))
+      .leftJoin(Club, eq(StorageApplication.clubId, Club.id))
+      .groupBy(StorageApplication.id);
 
     return this.paginate(applications, page, pageSize);
   }
@@ -107,59 +111,59 @@ export class StorageRepository {
   // }
 
   // apiSto012
-  async getEveryApplications(page: number, pageSize: number) {
+  async getEveryStorageApplications(page: number, pageSize: number) {
     const applications = await this.db
       .select({
-        applicationId: StorageApplicaiton.id,
+        applicationId: StorageApplication.id,
         clubNameKr: Club.name_kr,
         clubNameEn: Club.name_en,
         studentName: Student.name,
-        studentPhoneNumber: StorageApplicaiton.studentPhoneNumber,
-        desiredStartDate: StorageApplicaiton.desiredStartDate,
-        desiredEndDate: StorageApplicaiton.desiredEndDate,
-        numberOfBoxes: StorageApplicaiton.numberOfBoxes,
-        numberOfNonStandardItems: StorageApplicaiton.numberOfNonStandardItems,
-        status: StorageApplicaiton.status,
-        createdAt: StorageApplicaiton.createdAt,
+        studentPhoneNumber: StorageApplication.studentPhoneNumber,
+        desiredStartDate: StorageApplication.desiredStartDate,
+        desiredEndDate: StorageApplication.desiredEndDate,
+        numberOfBoxes: StorageApplication.numberOfBoxes,
+        numberOfNonStandardItems: StorageApplication.numberOfNonStandardItems,
+        status: StorageApplication.status,
+        createdAt: StorageApplication.createdAt,
       })
-      .from(StorageApplicaiton)
-      .leftJoin(Student, eq(StorageApplicaiton.studentId, Student.id))
-      .leftJoin(Club, eq(StorageApplicaiton.clubId, Club.id))
-      .groupBy(StorageApplicaiton.id);
+      .from(StorageApplication)
+      .leftJoin(Student, eq(StorageApplication.studentId, Student.id))
+      .leftJoin(Club, eq(StorageApplication.clubId, Club.id))
+      .groupBy(StorageApplication.id);
 
     return this.paginate(applications, page, pageSize);
   }
 
   // apiSto004, 005, 009
-  async getApplication(id: number) {
+  async getStorageApplication(id: number) {
     const application = await this.db
       .select({
-        clubId: StorageApplicaiton.clubId,
-        studentId: StorageApplicaiton.studentId,
+        clubId: StorageApplication.clubId,
+        studentId: StorageApplication.studentId,
         clubNameKr: Club.name_kr,
         clubNameEn: Club.name_en,
         studentName: Student.name,
-        studentPhoneNumber: StorageApplicaiton.studentPhoneNumber,
-        numberOfBoxes: StorageApplicaiton.numberOfBoxes,
-        desiredPickUpDate: StorageApplicaiton.desiredPickUpDate,
-        desiredStartDate: StorageApplicaiton.desiredStartDate,
-        desiredEndDate: StorageApplicaiton.desiredEndDate,
-        status: StorageApplicaiton.status,
-        isPickedUp: StorageApplicaiton.isPickedUp,
-        contractId: StorageApplicaiton.contractId,
-        note: StorageApplicaiton.note,
-        createdAt: StorageApplicaiton.createdAt,
+        studentPhoneNumber: StorageApplication.studentPhoneNumber,
+        numberOfBoxes: StorageApplication.numberOfBoxes,
+        desiredPickUpDate: StorageApplication.desiredPickUpDate,
+        desiredStartDate: StorageApplication.desiredStartDate,
+        desiredEndDate: StorageApplication.desiredEndDate,
+        status: StorageApplication.status,
+        isPickedUp: StorageApplication.isPickedUp,
+        contractId: StorageApplication.contractId,
+        note: StorageApplication.note,
+        createdAt: StorageApplication.createdAt,
       })
-      .from(StorageApplicaiton)
-      .leftJoin(Student, eq(StorageApplicaiton.studentId, Student.id))
-      .leftJoin(Club, eq(StorageApplicaiton.clubId, Club.id))
-      .where(eq(StorageApplicaiton.id, id))
+      .from(StorageApplication)
+      .leftJoin(Student, eq(StorageApplication.studentId, Student.id))
+      .leftJoin(Club, eq(StorageApplication.clubId, Club.id))
+      .where(eq(StorageApplication.id, id))
       .limit(1);
 
     return application[0];
   }
 
-  async getNonStandardItems(applicationId: number) {
+  async getStorageNonStandardItems(applicationId: number) {
     const nonStandardItems = await this.db
       .select({
         name: StorageNonStandard.name,
@@ -171,7 +175,7 @@ export class StorageRepository {
     return nonStandardItems;
   }
 
-  async updateApplication(
+  async updateStorageApplication(
     applicationId: number,
     body: {
       numberOfBoxes?: number;
@@ -182,27 +186,29 @@ export class StorageRepository {
       }[];
       desiredStartDate?: Date;
       desiredEndDate?: Date;
-      status: string;
+      status?: string;
       isPickedUp?: boolean;
-      note: string;
+      note?: string;
     },
   ) {
     const isUpdateSucceed = await this.db.transaction(async tx => {
       const deletedAt = new Date();
 
       const [storageApplicationSetResult] = await tx
-        .update(StorageApplicaiton)
+        .update(StorageApplication)
         .set({
           numberOfBoxes: body.numberOfBoxes,
           desiredPickUpDate: body.desiredPickUpDate,
-          numberOfNonStandardItems: body.nonStandardItems.length,
+          numberOfNonStandardItems: body.nonStandardItems
+            ? body.nonStandardItems.length
+            : 0,
           desiredStartDate: body.desiredStartDate,
           desiredEndDate: body.desiredEndDate,
           status: body.status,
           isPickedUp: body.isPickedUp,
           note: body.note,
         })
-        .where(eq(StorageApplicaiton.id, applicationId));
+        .where(eq(StorageApplication.id, applicationId));
       if (storageApplicationSetResult.affectedRows !== 1) {
         logger.debug("[updateActivity] rollback occurs");
         tx.rollback();
@@ -224,21 +230,23 @@ export class StorageRepository {
         );
 
       // NonStandardItem 재생성
-      await Promise.all(
-        body.nonStandardItems.map(async obj => {
-          await tx.insert(StorageNonStandard).values({
-            applicationId,
-            ...obj,
-          });
-        }),
-      );
+      if (body.nonStandardItems !== undefined) {
+        await Promise.all(
+          body.nonStandardItems.map(async obj => {
+            await tx.insert(StorageNonStandard).values({
+              applicationId,
+              ...obj,
+            });
+          }),
+        );
+      }
 
       return true;
     });
     return isUpdateSucceed;
   }
 
-  async createContract(body: ApiSto008RequestBody) {
+  async createStorageContract(body: ApiSto008RequestBody) {
     const result = await this.db.transaction(async tx => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [contractInsertResult] = await tx.insert(StorageContract).values({
@@ -255,7 +263,7 @@ export class StorageRepository {
     return result;
   }
 
-  async getContract(id: number) {
+  async getStorageContract(id: number) {
     const application = await this.db
       .select({
         clubNameKr: Club.name_kr,
@@ -275,10 +283,10 @@ export class StorageRepository {
       .from(StorageContract)
       .leftJoin(Student, eq(StorageContract.studentId, Student.id))
       .leftJoin(
-        StorageApplicaiton,
-        eq(StorageContract.applicationId, StorageApplicaiton.id),
+        StorageApplication,
+        eq(StorageContract.applicationId, StorageApplication.id),
       )
-      .leftJoin(Club, eq(StorageApplicaiton.clubId, Club.id))
+      .leftJoin(Club, eq(StorageApplication.clubId, Club.id))
       .leftJoin(Executive, eq(StorageContract.executiveId, Executive.id))
       .where(eq(StorageContract.id, id))
       .limit(1);
@@ -286,23 +294,36 @@ export class StorageRepository {
     return application[0];
   }
 
-  async updateContract(
+  async updateStorageContract(
     contractId: number,
     body: {
       status: string;
       note?: string;
     },
   ) {
+    const contract = await this.getStorageContract(contractId);
+
     const isUpdateSucceed = await this.db.transaction(async tx => {
+      const [storageApplicationSetResult] = await tx
+        .update(StorageApplication)
+        .set({
+          status: body.status,
+        })
+        .where(eq(StorageApplication.id, contract.applicationId));
+      if (storageApplicationSetResult.affectedRows !== 1) {
+        logger.debug("[updateStorageContract] rollback occurs");
+        tx.rollback();
+        return false;
+      }
+
       const [storageContractSetResult] = await tx
         .update(StorageContract)
         .set({
-          status: body.status,
           note: body.note,
         })
         .where(eq(StorageContract.id, contractId));
       if (storageContractSetResult.affectedRows !== 1) {
-        logger.debug("[updateActivity] rollback occurs");
+        logger.debug("[updateStorageContract] rollback occurs");
         tx.rollback();
         return false;
       }

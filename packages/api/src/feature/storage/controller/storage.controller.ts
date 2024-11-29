@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -47,11 +48,11 @@ import apiSto009, {
   ApiSto009RequestParam,
   ApiSto009ResponseOk,
 } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto009";
-import apiSto010, {
-  ApiSto010RequestBody,
-  ApiSto010RequestParam,
-  ApiSto010ResponseOk,
-} from "@sparcs-clubs/interface/api/storage/endpoint/apiSto010";
+// import apiSto010, {
+//   ApiSto010RequestBody,
+//   ApiSto010RequestParam,
+//   ApiSto010ResponseOk,
+// } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto010";
 import apiSto011, {
   ApiSto011RequestBody,
   ApiSto011RequestParam,
@@ -148,7 +149,7 @@ export class StorageController {
   }
 
   @Student()
-  @Put("/student/storage/applications/:applicationId")
+  @Put("/student/storage/applications/application/:applicationId")
   @UsePipes(new ZodPipe(apiSto006))
   async putStudentStorageApplication(
     @Param() param: ApiSto006RequestParam,
@@ -164,7 +165,7 @@ export class StorageController {
   }
 
   @Executive()
-  @Put("/executive/storage/applications/:applicationId")
+  @Patch("/executive/storage/applications/application/:applicationId")
   @UsePipes(new ZodPipe(apiSto007))
   async putExecutiveStorageApplication(
     @Param() param: ApiSto007RequestParam,
@@ -201,24 +202,24 @@ export class StorageController {
     return application;
   }
 
-  @Student()
-  @Put("/student/storage/contracts/contract/:contractId")
-  @UsePipes(new ZodPipe(apiSto010))
-  async putStudentStorageContract(
-    @Param() param: ApiSto010RequestParam,
-    @Body() body: ApiSto010RequestBody,
-    @GetStudent() user: GetStudent,
-  ): Promise<ApiSto010ResponseOk> {
-    await this.storageService.putStudentStorageContract(
-      param.contractId,
-      body,
-      user.studentId,
-    );
-    return {};
-  }
+  // @Student()
+  // @Put("/student/storage/contracts/contract/:contractId")
+  // @UsePipes(new ZodPipe(apiSto010))
+  // async putStudentStorageContract(
+  //   @Param() param: ApiSto010RequestParam,
+  //   @Body() body: ApiSto010RequestBody,
+  //   @GetStudent() user: GetStudent,
+  // ): Promise<ApiSto010ResponseOk> {
+  //   await this.storageService.putStudentStorageContract(
+  //     param.contractId,
+  //     body,
+  //     user.studentId,
+  //   );
+  //   return {};
+  // }
 
   @Executive()
-  @Put("/executive/storage/applications/:applicationId")
+  @Put("/executive/storage/contracts/contract/:contractId")
   @UsePipes(new ZodPipe(apiSto011))
   async putExecutiveStorageContract(
     @Param() param: ApiSto011RequestParam,
