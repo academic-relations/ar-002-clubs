@@ -26,7 +26,7 @@ const responseBodyMap = {
         applicationId: z.number().int().min(1),
         clubNameKr: z.string().max(128),
         clubNameEn: z.string().max(128),
-        studentName: z.number().int().min(1),
+        studentName: z.string(),
         studentPhoneNumber: z.string().max(30),
         desiredStartDate: z.date(),
         desiredEndDate: z.date(),
