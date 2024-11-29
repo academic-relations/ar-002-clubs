@@ -20,16 +20,19 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    startDate: z.coerce.date(),
-    endDate: z.coerce.date(),
-    numberOfBoxes: z.coerce.number().int().min(0),
-    numberOfNonStandardItems: z.coerce.number().int().min(0),
-    charge: z.coerce.number().int().min(0),
-    zone: z.coerce.string().max(255),
+    clubNameKr: z.string().max(128),
+    clubNameEn: z.string().max(128),
+    studentName: z.string(),
     studentId: z.coerce.number().int().min(1),
-    executiveId: z.coerce.number().int().min(1),
-    applicationId: z.coerce.number().int().min(1),
-    note: z.coerce.string().max(512),
+    executiveName: z.string(),
+    startDate: z.date(),
+    endDate: z.date(),
+    numberOfBoxes: z.number().int().min(0),
+    numberOfNonStandardItems: z.number().int().min(0),
+    charge: z.number().int().min(0),
+    zone: z.string().max(255),
+    applicationId: z.number().int().min(1),
+    note: z.string().max(512),
   }),
 };
 

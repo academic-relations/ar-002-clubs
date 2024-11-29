@@ -21,7 +21,10 @@ const requestBody = z.object({});
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     clubId: z.coerce.number().int().min(1),
+    clubNameKr: z.string().max(128),
+    clubNameEn: z.string().max(128),
     studentId: z.coerce.number().int().min(1),
+    studentName: z.string(),
     studentPhoneNumber: z.string().max(30),
     numberOfBoxes: z.coerce.number().int().min(0),
     desiredPickUpDate: z.coerce.date(),

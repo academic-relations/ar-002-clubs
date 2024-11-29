@@ -22,8 +22,10 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     items: z.array(
       z.object({
-        clubId: z.number().int().min(1),
-        studentId: z.number().int().min(1),
+        applicationId: z.number().int().min(1),
+        clubNameKr: z.string().max(128),
+        clubNameEn: z.string().max(128),
+        studentName: z.number().int().min(1),
         studentPhoneNumber: z.string().max(30),
         desiredStartDate: z.date(),
         desiredEndDate: z.date(),

@@ -5,10 +5,10 @@ import {
   ApiSto002RequestQuery,
   ApiSto002ResponseOk,
 } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto002";
-import {
-  ApiSto003RequestQuery,
-  ApiSto003ResponseOk,
-} from "@sparcs-clubs/interface/api/storage/endpoint/apiSto003";
+// import {
+//   ApiSto003RequestQuery,
+//   ApiSto003ResponseOk,
+// } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto003";
 import { ApiSto004ResponseOk } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto004";
 import { ApiSto005ResponseOk } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto005";
 import { ApiSto006RequestBody } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto006";
@@ -97,26 +97,26 @@ export class StorageService {
     };
   }
 
-  async getMyStorageApplications(
-    query: ApiSto003RequestQuery,
-    studentId: number,
-  ): Promise<ApiSto003ResponseOk> {
-    const { pageOffset, itemCount } = query;
-    const { paginatedItems, total } =
-      await this.storageRepository.getMyApplications(
-        studentId,
-        pageOffset,
-        itemCount,
-      );
+  // async getMyStorageApplications(
+  //   query: ApiSto003RequestQuery,
+  //   studentId: number,
+  // ): Promise<ApiSto003ResponseOk> {
+  //   const { pageOffset, itemCount } = query;
+  //   const { paginatedItems, total } =
+  //     await this.storageRepository.getMyApplications(
+  //       studentId,
+  //       pageOffset,
+  //       itemCount,
+  //     );
 
-    return {
-      items: paginatedItems,
-      total,
-      offset: pageOffset,
-    };
-  }
+  //   return {
+  //     items: paginatedItems,
+  //     total,
+  //     offset: pageOffset,
+  //   };
+  // }
 
-  // 신청서의 정보를 불러오는 api로, Sto004, 005, 009에서 사용합니다.
+  // 신청서의 정보를 불러오는 함수로, Sto004, 005, 009에서 사용합니다.
   private async getStorageApplication(
     id: number,
   ): Promise<ApiSto004ResponseOk> {
@@ -227,9 +227,9 @@ export class StorageService {
     body: ApiSto010RequestBody,
     studentId: number,
   ) {
-    const application = await this.getStorageContract(contractId);
+    const contract = await this.getStorageContract(contractId);
 
-    if (application.studentId !== studentId)
+    if (contract.studentId !== studentId)
       throw new HttpException(
         "It seems that you're not the creator of the application.",
         HttpStatus.FORBIDDEN,

@@ -6,11 +6,15 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
+import { Club } from "@sparcs-clubs/api/drizzle/schema/club.schema";
 import {
   StorageApplicaiton,
   StorageContract,
   StorageNonStandard,
 } from "@sparcs-clubs/api/drizzle/schema/storage.schema";
+
+import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+import { Executive } from "dist/drizzle/schema/user.schema";
 
 @Injectable()
 export class StorageRepository {
@@ -58,11 +62,14 @@ export class StorageRepository {
     return result;
   }
 
+  // apiSto002
   async getApplications(clubId: number, page: number, pageSize: number) {
     const applications = await this.db
       .select({
-        clubId: StorageApplicaiton.clubId,
-        studentId: StorageApplicaiton.studentId,
+        applicationId: StorageApplicaiton.id,
+        clubNameKr: Club.name_kr,
+        clubNameEn: Club.name_en,
+        studentName: Student.name,
         studentPhoneNumber: StorageApplicaiton.studentPhoneNumber,
         desiredStartDate: StorageApplicaiton.desiredStartDate,
         desiredEndDate: StorageApplicaiton.desiredEndDate,
@@ -73,34 +80,39 @@ export class StorageRepository {
       })
       .from(StorageApplicaiton)
       .where(eq(StorageApplicaiton.clubId, clubId))
+      .leftJoin(Student, eq(StorageApplicaiton.studentId, Student.id))
+      .leftJoin(Club, eq(StorageApplicaiton.clubId, Club.id))
       .groupBy(StorageApplicaiton.id);
 
     return this.paginate(applications, page, pageSize);
   }
 
-  async getMyApplications(studentId: number, page: number, pageSize: number) {
-    const applications = await this.db
-      .select({
-        clubId: StorageApplicaiton.clubId,
-        desiredStartDate: StorageApplicaiton.desiredStartDate,
-        desiredEndDate: StorageApplicaiton.desiredEndDate,
-        numberOfBoxes: StorageApplicaiton.numberOfBoxes,
-        numberOfNonStandardItems: StorageApplicaiton.numberOfNonStandardItems,
-        status: StorageApplicaiton.status,
-        createdAt: StorageApplicaiton.createdAt,
-      })
-      .from(StorageApplicaiton)
-      .where(eq(StorageApplicaiton.studentId, studentId))
-      .groupBy(StorageApplicaiton.id);
+  // async getMyApplications(studentId: number, page: number, pageSize: number) {
+  //   const applications = await this.db
+  //     .select({
+  //       clubId: StorageApplicaiton.clubId,
+  //       desiredStartDate: StorageApplicaiton.desiredStartDate,
+  //       desiredEndDate: StorageApplicaiton.desiredEndDate,
+  //       numberOfBoxes: StorageApplicaiton.numberOfBoxes,
+  //       numberOfNonStandardItems: StorageApplicaiton.numberOfNonStandardItems,
+  //       status: StorageApplicaiton.status,
+  //       createdAt: StorageApplicaiton.createdAt,
+  //     })
+  //     .from(StorageApplicaiton)
+  //     .where(eq(StorageApplicaiton.studentId, studentId))
+  //     .groupBy(StorageApplicaiton.id);
 
-    return this.paginate(applications, page, pageSize);
-  }
+  //   return this.paginate(applications, page, pageSize);
+  // }
 
+  // apiSto012
   async getEveryApplications(page: number, pageSize: number) {
     const applications = await this.db
       .select({
-        clubId: StorageApplicaiton.clubId,
-        studentId: StorageApplicaiton.studentId,
+        applicationId: StorageApplicaiton.id,
+        clubNameKr: Club.name_kr,
+        clubNameEn: Club.name_en,
+        studentName: Student.name,
         studentPhoneNumber: StorageApplicaiton.studentPhoneNumber,
         desiredStartDate: StorageApplicaiton.desiredStartDate,
         desiredEndDate: StorageApplicaiton.desiredEndDate,
@@ -110,16 +122,22 @@ export class StorageRepository {
         createdAt: StorageApplicaiton.createdAt,
       })
       .from(StorageApplicaiton)
+      .leftJoin(Student, eq(StorageApplicaiton.studentId, Student.id))
+      .leftJoin(Club, eq(StorageApplicaiton.clubId, Club.id))
       .groupBy(StorageApplicaiton.id);
 
     return this.paginate(applications, page, pageSize);
   }
 
+  // apiSto004, 005, 009
   async getApplication(id: number) {
     const application = await this.db
       .select({
         clubId: StorageApplicaiton.clubId,
         studentId: StorageApplicaiton.studentId,
+        clubNameKr: Club.name_kr,
+        clubNameEn: Club.name_en,
+        studentName: Student.name,
         studentPhoneNumber: StorageApplicaiton.studentPhoneNumber,
         numberOfBoxes: StorageApplicaiton.numberOfBoxes,
         desiredPickUpDate: StorageApplicaiton.desiredPickUpDate,
@@ -132,6 +150,8 @@ export class StorageRepository {
         createdAt: StorageApplicaiton.createdAt,
       })
       .from(StorageApplicaiton)
+      .leftJoin(Student, eq(StorageApplicaiton.studentId, Student.id))
+      .leftJoin(Club, eq(StorageApplicaiton.clubId, Club.id))
       .where(eq(StorageApplicaiton.id, id))
       .limit(1);
 
@@ -237,18 +257,24 @@ export class StorageRepository {
   async getContract(id: number) {
     const application = await this.db
       .select({
+        clubNameKr: Club.name_kr,
+        clubNameEn: Club.name_en,
+        studentName: Student.name,
+        studentId: Student.id,
+        executiveName: Executive.name,
         startDate: StorageContract.createdAt,
         endDate: StorageContract.endDate,
         numberOfBoxes: StorageContract.numberOfBoxes,
         numberOfNonStandardItems: StorageContract.numberOfNonStandardItems,
         charge: StorageContract.charge,
         zone: StorageContract.zone,
-        studentId: StorageContract.studentId,
-        executiveId: StorageContract.executiveId,
         applicationId: StorageContract.applicationId,
         note: StorageContract.note,
       })
       .from(StorageContract)
+      .leftJoin(Student, eq(StorageContract.studentId, Student.id))
+      .leftJoin(Club, eq(StorageContract.clubId, Club.id))
+      .leftJoin(Executive, eq(StorageContract.executiveId, Executive.id))
       .where(eq(StorageContract.id, id))
       .limit(1);
 
