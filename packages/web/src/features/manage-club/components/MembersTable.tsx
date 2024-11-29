@@ -21,7 +21,7 @@ import TableButton from "@sparcs-clubs/web/common/components/Table/TableButton";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { MemTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
-
+import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import { patchClubMemberRegistration } from "../members/services/patchClubMemberRegistration";
@@ -55,6 +55,8 @@ const openApproveModal = (
   member: ApiReg008ResponseOk["applies"][0],
   clubName: string,
   clubId: number,
+  year: number,
+  semesterName: string,
   refetch: () => void,
 ) => {
   overlay.open(({ isOpen, close }) => (
@@ -77,10 +79,8 @@ const openApproveModal = (
           close();
         }}
       >
-        {member.student.studentNumber} {member.student.name} 학생의{" "}
-        {new Date().getFullYear()}
-        년도 {new Date().getMonth() < 7 ? "봄학기" : "가을학기"} {clubName}{" "}
-        동아리 신청을
+        {member.student.studentNumber} {member.student.name} 학생의 {year}
+        년도 {semesterName}학기 {clubName} 동아리 신청을
         <br /> 승인하시겠습니까?
       </CancellableModalContent>
     </Modal>
@@ -91,6 +91,8 @@ const openRejectModal = (
   member: ApiReg008ResponseOk["applies"][0],
   clubName: string,
   clubId: number,
+  year: number,
+  semesterName: string,
   refetch: () => void,
 ) => {
   overlay.open(({ isOpen, close }) => (
@@ -113,10 +115,8 @@ const openRejectModal = (
           close();
         }}
       >
-        {member.student.studentNumber} {member.student.name} 학생의{" "}
-        {new Date().getFullYear()}
-        년도 {new Date().getMonth() < 7 ? "봄학기" : "가을학기"} {clubName}{" "}
-        동아리 신청을
+        {member.student.studentNumber} {member.student.name} 학생의 {year}
+        년도 {semesterName}학기 {clubName} 동아리 신청을
         <br /> 반려하시겠습니까?
       </CancellableModalContent>
     </Modal>
@@ -128,6 +128,8 @@ const columnHelper = createColumnHelper<ApiReg008ResponseOk["applies"][0]>();
 const columnsFunction = (
   clubName: string,
   clubId: number,
+  year: number,
+  semesterName: string,
   refetch: () => void,
   delegates: ApiClb006ResponseOK["delegates"],
 ) => [
@@ -175,14 +177,29 @@ const columnsFunction = (
           <TableButton
             text={["승인", "반려"]}
             onClick={[
-              () => openApproveModal(member, clubName, clubId, refetch),
+              () =>
+                openApproveModal(
+                  member,
+                  clubName,
+                  clubId,
+                  year,
+                  semesterName,
+                  refetch,
+                ),
               () =>
                 delegates.some(
                   delegate =>
                     delegate.studentNumber === member.student.studentNumber,
                 )
                   ? openDelegateCannotBeRejectedModal(refetch)
-                  : openRejectModal(member, clubName, clubId, refetch),
+                  : openRejectModal(
+                      member,
+                      clubName,
+                      clubId,
+                      year,
+                      semesterName,
+                      refetch,
+                    ),
             ]}
           />
         )) ||
@@ -197,7 +214,14 @@ const columnsFunction = (
                     delegate.studentNumber === member.student.studentNumber,
                 )
                   ? openDelegateCannotBeRejectedModal(refetch)
-                  : openRejectModal(member, clubName, clubId, refetch),
+                  : openRejectModal(
+                      member,
+                      clubName,
+                      clubId,
+                      year,
+                      semesterName,
+                      refetch,
+                    ),
             ]}
           />
         )) ||
@@ -206,7 +230,15 @@ const columnsFunction = (
           <TableButton
             text={["승인"]}
             onClick={[
-              () => openApproveModal(member, clubName, clubId, refetch),
+              () =>
+                openApproveModal(
+                  member,
+                  clubName,
+                  clubId,
+                  year,
+                  semesterName,
+                  refetch,
+                ),
             ]}
           />
         ))
@@ -223,7 +255,16 @@ const MembersTable: React.FC<MembersTableProps> = ({
   refetch,
   delegates,
 }) => {
-  const columns = columnsFunction(clubName, clubId, refetch, delegates);
+  const { semester: semesterInfo } = useGetSemesterNow();
+
+  const columns = columnsFunction(
+    clubName,
+    clubId,
+    semesterInfo?.year ?? 0,
+    semesterInfo?.name ?? "",
+    refetch,
+    delegates,
+  );
   const table = useReactTable({
     columns,
     data: memberList,

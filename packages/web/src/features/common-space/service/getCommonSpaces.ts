@@ -13,7 +13,8 @@ const useGetCommonSpaces = () =>
     queryFn: async (): Promise<ApiCms001ResponseOK> => {
       const { data } = await axiosClient.get(apiCms001.url(), {});
 
-      return apiCms001.responseBodyMap[200].parse(data);
+      // return apiCms001.responseBodyMap[200].parse(data);
+      return data;
     },
   });
 
