@@ -8,7 +8,7 @@ import { z } from "zod";
 
 const url = (applicationId: string) =>
   `/executive/storage/applications/application/${applicationId}`;
-const method = "PUT";
+const method = "PATCH";
 
 const requestParam = z.object({
   applicationId: z.coerce.number().int().min(1),

@@ -30,7 +30,7 @@ const requestBody = z.object({
     .optional(),
   desiredStartDate: z.coerce.date(),
   desiredEndDate: z.coerce.date(),
-  note: z.coerce.string().max(512),
+  note: z.coerce.string().max(512).optional(),
 });
 
 const responseBodyMap = {
