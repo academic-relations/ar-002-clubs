@@ -1,20 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ManageClubActivityCertificateData,
   ManageClubCommonSpaceData,
   ManageClubPrintingBusinessData,
   ManageClubRentalBusinessData,
+  ManageClubStorageData,
 } from "../types/ManageClubTable";
 import {
   activityCertificateStepOrder,
   commonSpaceStepOrder,
   printingBusinessStepOrder,
   rentalBusinessStepOrder,
+  storageStepOrder,
 } from "../types/ManageClubTableConst";
 import {
   activityCertificateHeaders,
   commonSpaceHeaders,
   printingBusinessHeaders,
   rentalBusinessHeaders,
+  storageHeaders,
 } from "../types/ManageClubTableHeader";
 
 export const rentalBusinessColumnSort =
@@ -137,5 +141,27 @@ export const commonSpaceColumnSort =
         );
       default:
         return b.submitTime.getTime() - a.submitTime.getTime();
+    }
+  };
+
+export const storageColumnSort =
+  (headerName: string) =>
+  (a: ManageClubStorageData, b: ManageClubStorageData) => {
+    switch (headerName) {
+      // case storageHeaders[0].headerName:
+      //   return (
+      //     storageStepOrder.indexOf(a.status) -
+      //     storageStepOrder.indexOf(b.status) ||
+      //     b.submitTime.getTime() - a.submitTime.getTime()
+      //   );
+      // case storageHeaders[1].headerName:
+      //   return b.submitTime.getTime() - a.submitTime.getTime();
+      // case storageHeaders[2].headerName:
+      //   return (
+      //     a.name.localeCompare(b.name) ||
+      //     b.submitTime.getTime() - a.submitTime.getTime()
+      //   );
+      default:
+        return b.createdAt.getTime() - a.createdAt.getTime();
     }
   };

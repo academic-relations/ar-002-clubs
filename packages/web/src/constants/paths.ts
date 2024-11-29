@@ -189,7 +189,7 @@ const paths = {
       {
         name: "창고 사용",
         path: "/storage",
-        authority: ["all"],
+        authority: ["employee"],
         featureFlag: "NO_RELEASE",
       },
     ],
@@ -210,6 +210,12 @@ const paths = {
         path: "/executive/register-member",
         authority: ["executive"],
         featureFlag: "REGISTER_MEMBER",
+      },
+      {
+        name: "창고 사용 신청",
+        path: "/executive/storage",
+        authority: ["executive"],
+        featureFlag: "NO_RELEASE",
       },
     ],
     authority: ["executive"],

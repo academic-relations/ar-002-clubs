@@ -18,6 +18,8 @@ import MemberManageFrame from "@sparcs-clubs/web/features/manage-club/frames/Mem
 import RegistrationManageFrame from "@sparcs-clubs/web/features/manage-club/frames/RegistrationManageFrame";
 import { useCheckManageClub } from "@sparcs-clubs/web/hooks/checkManageClub";
 
+import ServiceManageFrame from "./ServiceManageFrame";
+
 const ManageClubFrame: React.FC = () => {
   const { delegate, clubId, isLoading } = useCheckManageClub();
 
@@ -73,7 +75,7 @@ const ManageClubFrame: React.FC = () => {
         <MemberManageFrame />
       )}
 
-      {/* <ServiceManageFrame /> */}
+      <ServiceManageFrame />
     </FlexWrapper>
   );
 };
