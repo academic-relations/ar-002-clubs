@@ -12,9 +12,10 @@ import {
   StorageContract,
   StorageNonStandard,
 } from "@sparcs-clubs/api/drizzle/schema/storage.schema";
-
-import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
-import { Executive } from "dist/drizzle/schema/user.schema";
+import {
+  Executive,
+  Student,
+} from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 @Injectable()
 export class StorageRepository {

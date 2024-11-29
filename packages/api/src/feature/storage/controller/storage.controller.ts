@@ -17,10 +17,10 @@ import apiSto002, {
   ApiSto002RequestQuery,
   ApiSto002ResponseOk,
 } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto002";
-import apiSto003, {
-  ApiSto003RequestQuery,
-  ApiSto003ResponseOk,
-} from "@sparcs-clubs/interface/api/storage/endpoint/apiSto003";
+// import apiSto003, {
+//   ApiSto003RequestQuery,
+//   ApiSto003ResponseOk,
+// } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto003";
 import apiSto004, {
   ApiSto004RequestParam,
   ApiSto004ResponseOk,
@@ -106,19 +106,19 @@ export class StorageController {
     return applications;
   }
 
-  @Student()
-  @Get("/student/storage/applications/my/")
-  @UsePipes(new ZodPipe(apiSto003))
-  async getMyStorageApplications(
-    @Query() query: ApiSto003RequestQuery,
-    @GetStudent() user: GetStudent,
-  ): Promise<ApiSto003ResponseOk> {
-    const applications = await this.storageService.getMyStorageApplications(
-      query,
-      user.studentId,
-    );
-    return applications;
-  }
+  // @Student()
+  // @Get("/student/storage/applications/my/")
+  // @UsePipes(new ZodPipe(apiSto003))
+  // async getMyStorageApplications(
+  //   @Query() query: ApiSto003RequestQuery,
+  //   @GetStudent() user: GetStudent,
+  // ): Promise<ApiSto003ResponseOk> {
+  //   const applications = await this.storageService.getMyStorageApplications(
+  //     query,
+  //     user.studentId,
+  //   );
+  //   return applications;
+  // }
 
   @Student()
   @Get("/student/storage/applications/application/:applicationId")
