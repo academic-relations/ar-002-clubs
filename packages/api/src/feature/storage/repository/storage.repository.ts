@@ -273,7 +273,11 @@ export class StorageRepository {
       })
       .from(StorageContract)
       .leftJoin(Student, eq(StorageContract.studentId, Student.id))
-      .leftJoin(Club, eq(StorageContract.clubId, Club.id))
+      .leftJoin(
+        StorageApplicaiton,
+        eq(StorageContract.applicationId, StorageApplicaiton.id),
+      )
+      .leftJoin(Club, eq(StorageApplicaiton.clubId, Club.id))
       .leftJoin(Executive, eq(StorageContract.executiveId, Executive.id))
       .where(eq(StorageContract.id, id))
       .limit(1);
