@@ -53,8 +53,15 @@ const items: Array<MeetingNoticeItemType> = [
   },
 ];
 
-export const mockupMeetings: MeetingList = {
-  items,
-  total: items.length,
-  offset: 10,
+export const mockupMeetings = (meetingEnumId?: MeetingEnum) => {
+  const filteredItems =
+    meetingEnumId != null
+      ? items.filter(item => item.meetingEnumId === meetingEnumId)
+      : items;
+
+  return {
+    items: filteredItems,
+    total: filteredItems.length,
+    offset: 10,
+  };
 };
