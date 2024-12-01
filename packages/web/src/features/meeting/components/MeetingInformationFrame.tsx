@@ -13,8 +13,7 @@ import DateInput from "@sparcs-clubs/web/common/components/Forms/DateInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
-
-import { meetingEnumToText } from "../constants/getEnumType";
+import { meetingEnumToText } from "@sparcs-clubs/web/features/meeting/types/meeting";
 
 interface MeetingInformationFrameProps {
   onCreateTemplate?: VoidFunction;

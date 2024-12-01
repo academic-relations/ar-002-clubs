@@ -11,7 +11,6 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { MeetingNoticeItem } from "@sparcs-clubs/web/features/meeting/components/MeetingNoticeItem";
-import { meetingEnumToText } from "@sparcs-clubs/web/features/meeting/constants/getEnumType";
 import {
   isRegular,
   meetingType,
@@ -19,6 +18,7 @@ import {
 import useGetMeetings from "@sparcs-clubs/web/features/meeting/services/useGetMeetings";
 import {
   getMeetingEnumFromValue,
+  meetingEnumToText,
   MeetingNoticeItemType,
 } from "@sparcs-clubs/web/features/meeting/types/meeting";
 
@@ -84,8 +84,10 @@ const MeetingMainFrame: React.FC = () => {
   const searchParams = useSearchParams();
   const [page, setPage] = useState<number>(1);
 
+  const meetingEnumId = getMeetingEnumFromValue(searchParams.get("type"));
+
   const { data, isLoading, isError } = useGetMeetings({
-    meetingEnumId: getMeetingEnumFromValue(searchParams.get("type")),
+    meetingEnumId,
     pageOffset: page,
     itemCount: 10,
   });
@@ -110,8 +112,19 @@ const MeetingMainFrame: React.FC = () => {
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <FlexWrapper gap={60} direction="column">
         <PageHead
-          items={[{ name: "전체 회의", path: "/meeting" }]}
-          title="전체 회의"
+          items={[
+            {
+              name: meetingEnumId
+                ? meetingEnumToText(meetingEnumId.toString())
+                : "전체 회의",
+              path: `/meeting?type=${meetingEnumId}`,
+            },
+          ]}
+          title={
+            meetingEnumId
+              ? meetingEnumToText(meetingEnumId.toString())
+              : "전체 회의"
+          }
         />
         <ListWithPaginationWrapper>
           <MeetingNoticeListWrapper>
