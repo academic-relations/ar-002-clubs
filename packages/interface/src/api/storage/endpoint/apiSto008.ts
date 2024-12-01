@@ -19,7 +19,6 @@ const requestBody = z.object({
   charge: z.coerce.number().int().min(0),
   zone: z.coerce.string().max(255),
   studentId: z.coerce.number().int().min(1),
-  executiveId: z.coerce.number().int().min(1),
   applicationId: z.coerce.number().int().min(1),
 });
 

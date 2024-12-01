@@ -17,14 +17,13 @@ const requestQuery = z.object({});
 
 const requestBody = z.object({
   clubId: z.coerce.number().int().min(1),
-  studentId: z.coerce.number().int().min(1),
   studentPhoneNumber: zKrPhoneNumber,
   numberOfBoxes: z.coerce.number().int().min(0),
   desiredPickUpDate: z.coerce.date(),
   nonStandardItems: z
     .object({
       name: z.coerce.string().max(30),
-      fileId: z.coerce.string().max(128),
+      fileId: z.coerce.string().max(128).optional(),
     })
     .array()
     .optional(),

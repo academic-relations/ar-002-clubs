@@ -12,9 +12,9 @@ const method = "GET";
 const requestParam = z.object({});
 
 const requestQuery = z.object({
-  clubId: z.number().min(1),
-  pageOffset: z.number().min(1),
-  itemCount: z.number().min(1),
+  clubId: z.coerce.number().min(1),
+  pageOffset: z.coerce.number().min(1),
+  itemCount: z.coerce.number().min(1),
 });
 
 const requestBody = z.object({});

@@ -6,7 +6,7 @@ import { z } from "zod";
  * @description 현재 학기 출력 해당 동아리의 홍보물 신청 내역을 가져옵니다.
  */
 
-const url = (applicationId: string) =>
+const url = (applicationId: number) =>
   `/student/storage/applications/application/${applicationId}`;
 const method = "GET";
 
@@ -31,7 +31,8 @@ const responseBodyMap = {
     nonStandardItems: z
       .object({
         name: z.coerce.string().max(30),
-        fileId: z.coerce.string().max(128),
+        fileId: z.coerce.string().max(128).optional(),
+        fileUrl: z.coerce.string().optional(),
       })
       .array(),
     desiredStartDate: z.coerce.date(),

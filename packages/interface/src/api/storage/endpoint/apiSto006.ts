@@ -6,7 +6,7 @@ import { z } from "zod";
  * @description 현재 학기 출력 해당 동아리의 홍보물 신청 내역을 가져옵니다.
  */
 
-const url = (applicationId: string) =>
+const url = (applicationId: number) =>
   `/student/storage/applications/application/${applicationId}`;
 const method = "PUT";
 
@@ -17,8 +17,8 @@ const requestParam = z.object({
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  numberOfBoxes: z.coerce.number().int().min(0),
-  desiredPickUpDate: z.coerce.date(),
+  numberOfBoxes: z.coerce.number().int().min(0).optional(),
+  desiredPickUpDate: z.coerce.date().optional(),
   nonStandardItems: z
     .object({
       name: z.coerce.string().max(30),
@@ -26,10 +26,9 @@ const requestBody = z.object({
     })
     .array()
     .optional(),
-  desiredStartDate: z.coerce.date(),
-  desiredEndDate: z.coerce.date(),
+  desiredStartDate: z.coerce.date().optional(),
+  desiredEndDate: z.coerce.date().optional(),
   status: z.coerce.string().max(30).optional(),
-  isPickedUp: z.coerce.boolean(),
   note: z.coerce.string().max(512).optional(),
 });
 
