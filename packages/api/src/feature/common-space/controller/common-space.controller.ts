@@ -16,7 +16,12 @@ import apiCms006 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms0
 import apiCms007 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
-import { Public } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import {
+  Public,
+  Student,
+} from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+
+import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
 import { CommonSpaceService } from "../service/common-space.service";
 
@@ -75,68 +80,71 @@ export class CommonSpaceController {
     return result;
   }
 
+  @Student()
   @Post("student/common-spaces/common-space/:spaceId/orders/order")
   @UsePipes(new ZodPipe(apiCms003))
   async postStudentCommonSpaceUsageOrder(
+    @GetStudent() user: GetStudent,
     @Param() param: ApiCms003RequestParam,
     @Body() body: ApiCms003RequestBody,
   ): Promise<ApiCms003ResponseCreated> {
-    const studentId = 1;
     const result =
       await this.commonspaceService.postStudentCommonSpaceUsageOrder(
         param.spaceId,
         body.clubId,
-        studentId,
+        user.studentId,
         body.startTerm,
         body.endTerm,
       );
     return result;
   }
 
+  @Student()
   @Delete("student/common-spaces/common-space/:spaceId/orders/order/:orderId")
   @UsePipes(new ZodPipe(apiCms004))
   async deleteStudentCommonSpaceUsageOrder(
+    @GetStudent() user: GetStudent,
     @Param() param: ApiCms004RequestParam,
   ): Promise<ApiCms004ResponseOK> {
-    const studentId = 1;
     const result =
       await this.commonspaceService.deleteStudentCommonSpaceUsageOrder(
         param.spaceId,
         param.orderId,
-        studentId,
+        user.studentId,
       );
     return result;
   }
 
+  @Student()
   @Post("executive/common-spaces/common-space/:spaceId/orders")
   @UsePipes(new ZodPipe(apiCms005))
   async postExecutiveCommonSpaecUsageOrder(
+    @GetStudent() user: GetStudent,
     @Param() param: ApiCms005RequestParam,
     @Body() body: ApiCms005RequestBody,
   ): Promise<ApiCms005ResponseCreated> {
-    const studentId = 1;
-
     // 정기신청의 경우 사전에 미리 예약된 내역이 없고, 신청 과정에서 사용 가능한 시간에 대한 확인이 필요없다고 가정함.
     const result =
       await this.commonspaceService.postExecutiveCommonSpaecUsageOrder(
         param.spaceId,
         body.clubId,
-        studentId,
+        user.studentId,
         body.startTime,
         body.endTime,
       );
     return result;
   }
 
+  @Student()
   @Get("student/common-spaces/orders")
   @UsePipes(new ZodPipe(apiCms006))
   async getStudentCommonSpacesUsageOrder(
+    @GetStudent() user: GetStudent,
     @Query() query: ApiCms006RequestQuery,
   ): Promise<ApiCms006ResponseOk> {
-    const studentId = 1;
     const result =
       await this.commonspaceService.getStudentCommonSpacesUsageOrder(
-        studentId,
+        user.studentId,
         query.clubId,
         query.startDate,
         query.endDate,
@@ -146,15 +154,16 @@ export class CommonSpaceController {
     return result;
   }
 
+  @Student()
   @Get("student/common-spaces/orders/my")
   @UsePipes(new ZodPipe(apiCms007))
   async getStudentCommonSpacesUsageOrderMy(
+    @GetStudent() user: GetStudent,
     @Query() query: ApiCms007RequestQuery,
   ): Promise<ApiCms007ResponseOk> {
-    const studentId = 1;
     const result =
       await this.commonspaceService.getStudentCommonSpacesUsageOrderMy(
-        studentId,
+        user.studentId,
         query.startDate,
         query.endDate,
         query.pageOffset,
