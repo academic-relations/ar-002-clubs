@@ -191,6 +191,7 @@ export class StorageRepository {
       desiredEndDate?: Date;
       status?: string;
       isPickedUp?: boolean;
+      contractId?: number;
       note?: string;
     },
   ) {
@@ -209,6 +210,7 @@ export class StorageRepository {
           desiredEndDate: body.desiredEndDate,
           status: body.status,
           isPickedUp: body.isPickedUp,
+          contractId: body.contractId,
           note: body.note,
         })
         .where(eq(StorageApplication.id, applicationId));
@@ -250,20 +252,22 @@ export class StorageRepository {
   }
 
   async createStorageContract(body: ApiSto008RequestBody, executiveId: number) {
-    const result = await this.db.transaction(async tx => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const contractId = await this.db.transaction(async tx => {
       const [contractInsertResult] = await tx.insert(StorageContract).values({
         numberOfBoxes: body.numberOfBoxes,
         numberOfNonStandardItems: body.numberOfNonStandardItems,
         charge: body.charge,
         zone: body.zone,
         studentId: body.studentId,
+        endDate: body.endDate,
         executiveId,
         applicationId: body.applicationId,
       });
-      return true;
+      return contractInsertResult.insertId;
     });
-    return result;
+
+    this.updateStorageApplication(body.applicationId, { contractId });
+    return true;
   }
 
   async getStorageContract(id: number) {
@@ -282,6 +286,7 @@ export class StorageRepository {
         zone: StorageContract.zone,
         applicationId: StorageContract.applicationId,
         note: StorageContract.note,
+        createdAt: StorageContract.createdAt,
       })
       .from(StorageContract)
       .leftJoin(Student, eq(StorageContract.studentId, Student.id))
