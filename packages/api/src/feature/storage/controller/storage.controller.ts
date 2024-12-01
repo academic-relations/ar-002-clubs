@@ -74,7 +74,10 @@ import {
   Student,
 } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 
-import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
+import {
+  GetExecutive,
+  GetStudent,
+} from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
 import { StorageService } from "../service/storage.service";
 
@@ -87,8 +90,12 @@ export class StorageController {
   @UsePipes(new ZodPipe(apiSto001))
   async postStudentStorageApplication(
     @Body() body: ApiSto001RequestBody,
+    @GetStudent() user: GetStudent,
   ): Promise<ApiSto001ResponseCreated> {
-    await this.storageService.postStudentStorageApplication(body);
+    await this.storageService.postStudentStorageApplication(
+      body,
+      user.studentId,
+    );
     return {};
   }
 
@@ -171,7 +178,7 @@ export class StorageController {
     @Param() param: ApiSto007RequestParam,
     @Body() body: ApiSto007RequestBody,
   ): Promise<ApiSto007ResponseOk> {
-    await this.storageService.putExecutiveStorageApplication(
+    await this.storageService.patchExecutiveStorageApplication(
       param.applicationId,
       body,
     );
@@ -183,8 +190,12 @@ export class StorageController {
   @UsePipes(new ZodPipe(apiSto008))
   async postExecutiveStorageContract(
     @Body() body: ApiSto008RequestBody,
+    @GetExecutive() executive: GetExecutive,
   ): Promise<ApiSto008ResponseCreated> {
-    await this.storageService.postExecutiveStorageContract(body);
+    await this.storageService.postExecutiveStorageContract(
+      body,
+      executive.executiveId,
+    );
     return {};
   }
 

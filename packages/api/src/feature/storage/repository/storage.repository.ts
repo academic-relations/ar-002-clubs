@@ -32,13 +32,16 @@ export class StorageRepository {
     };
   }
 
-  async createStorageApplication(body: ApiSto001RequestBody) {
+  async createStorageApplication(
+    body: ApiSto001RequestBody,
+    studentId: number,
+  ) {
     const result = await this.db.transaction(async tx => {
       const [applicationInsertResult] = await tx
         .insert(StorageApplication)
         .values({
           clubId: body.clubId,
-          studentId: body.studentId,
+          studentId,
           studentPhoneNumber: body.studentPhoneNumber,
           numberOfBoxes: body.numberOfBoxes,
           numberOfNonStandardItems: body.nonStandardItems
@@ -246,7 +249,7 @@ export class StorageRepository {
     return isUpdateSucceed;
   }
 
-  async createStorageContract(body: ApiSto008RequestBody) {
+  async createStorageContract(body: ApiSto008RequestBody, executiveId: number) {
     const result = await this.db.transaction(async tx => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [contractInsertResult] = await tx.insert(StorageContract).values({
@@ -255,7 +258,7 @@ export class StorageRepository {
         charge: body.charge,
         zone: body.zone,
         studentId: body.studentId,
-        executiveId: body.executiveId,
+        executiveId,
         applicationId: body.applicationId,
       });
       return true;

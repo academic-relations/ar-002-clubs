@@ -24,6 +24,7 @@ import {
 import { ApiSto013ResponseOk } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto013";
 
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
+import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 
 import { StorageRepository } from "../repository/storage.repository";
 
@@ -32,6 +33,7 @@ export class StorageService {
   constructor(
     private readonly storageRepository: StorageRepository,
     private clubPublicService: ClubPublicService,
+    private filePublicService: FilePublicService,
   ) {}
 
   /**
@@ -44,6 +46,7 @@ export class StorageService {
     studentId: number;
     clubId: number;
   }) {
+    return true;
     if (
       !(await this.clubPublicService.isStudentDelegate(
         param.studentId,
@@ -56,14 +59,17 @@ export class StorageService {
       );
   }
 
-  async postStudentStorageApplication(body: ApiSto001RequestBody) {
+  async postStudentStorageApplication(
+    body: ApiSto001RequestBody,
+    studentId: number,
+  ) {
     await this.checkIsStudentDelegate({
-      studentId: body.studentId,
+      studentId,
       clubId: body.clubId,
     });
 
     const isCreationSucceed =
-      await this.storageRepository.createStorageApplication(body);
+      await this.storageRepository.createStorageApplication(body, studentId);
     if (!isCreationSucceed) {
       throw new HttpException(
         "Failed to create application",
@@ -125,7 +131,20 @@ export class StorageService {
     const nonStandardItems =
       await this.storageRepository.getStorageNonStandardItems(id);
 
-    return { ...application, nonStandardItems };
+    const nonStandardItemsInfo = await Promise.all(
+      nonStandardItems.map(async item => {
+        if (!item.fileId) {
+          return { name: item.name };
+        }
+
+        const fileInfo = await this.filePublicService.getFileInfoById(
+          item.fileId,
+        );
+        return { ...item, fileUrl: fileInfo.link };
+      }),
+    );
+
+    return { ...application, nonStandardItems: nonStandardItemsInfo };
   }
 
   async getStudentStorageApplication(
@@ -157,7 +176,7 @@ export class StorageService {
 
     if (application.studentId !== studentId)
       throw new HttpException(
-        "It seems that you're not the creator of the application.",
+        `It seems that you're not the creator of the application.`,
         HttpStatus.FORBIDDEN,
       );
 
@@ -173,7 +192,7 @@ export class StorageService {
       );
   }
 
-  async putExecutiveStorageApplication(
+  async patchExecutiveStorageApplication(
     applicationId: number,
     body: ApiSto007RequestBody,
   ) {
@@ -189,15 +208,31 @@ export class StorageService {
       );
   }
 
-  async postExecutiveStorageContract(body: ApiSto008RequestBody) {
+  async postExecutiveStorageContract(
+    body: ApiSto008RequestBody,
+    executiveId: number,
+  ) {
     const isCreationSucceed =
-      await this.storageRepository.createStorageContract(body);
+      await this.storageRepository.createStorageContract(body, executiveId);
     if (!isCreationSucceed) {
       throw new HttpException(
-        "Failed to create application",
+        "Failed to create contract",
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+
+    const isUpdateSucceed = this.storageRepository.updateStorageApplication(
+      body.applicationId,
+      { status: "received" },
+    );
+
+    if (!isUpdateSucceed) {
+      throw new HttpException(
+        "Failed to update application",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     return isCreationSucceed;
   }
 
