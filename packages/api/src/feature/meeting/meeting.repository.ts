@@ -1,5 +1,10 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 
+import {
+  ApiMee012RequestQuery,
+  ApiMee012ResponseOk,
+} from "@sparcs-clubs/interface/api/meeting/apiMee012";
+import { MeetingStatusEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
 import { and, count, eq, gte, isNull, lt, max, not, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -370,7 +375,7 @@ export class MeetingRepository {
 
         await tx
           .update(Meeting)
-          .set({ statusEnumId: 2 })
+          .set({ statusEnumId: MeetingStatusEnum.Agenda })
           .where(eq(Meeting.id, meetingId));
         logger.debug(
           `[MeetingRepository] Updated meeting status, meetingId: ${meetingId}`, // CHACHA: meeting-agenda mapping이 생겼으므로 안건 공개 상태로 변경!
@@ -473,7 +478,7 @@ export class MeetingRepository {
           // CHACHA: 만약 모든 Meeting과 Agenda mapping이 deleted -> 그 Meeting은 공고 게시 상태로!
           await tx
             .update(Meeting)
-            .set({ statusEnumId: 1 })
+            .set({ statusEnumId: MeetingStatusEnum.Announcement })
             .where(eq(Meeting.id, meetingId));
           logger.debug(
             `[MeetingRepository] Updated meeting status, meetingId: ${meetingId}`,
@@ -485,5 +490,40 @@ export class MeetingRepository {
     );
 
     return meetingAgendaMappingDeleteResult;
+  }
+
+  async getMeetingListByMeetingType(
+    query: ApiMee012RequestQuery,
+  ): Promise<ApiMee012ResponseOk> {
+    const rows = await this.db
+      .select({
+        id: Meeting.id,
+        meetingEnumId: Meeting.meetingEnumId,
+        meetingTitle: MeetingAnnouncement.announcementTitle,
+        meetingDate: Meeting.startDate,
+        isRegular: Meeting.isRegular,
+        tag: Meeting.tag,
+        meetingStatus: Meeting.statusEnumId,
+      })
+      .from(Meeting)
+      .leftJoin(
+        MeetingAnnouncement,
+        eq(Meeting.announcementId, MeetingAnnouncement.id),
+      )
+      .where(isNull(MeetingAnnouncement.deletedAt))
+      .offset((query.pageOffset - 1) * query.itemCount)
+      .limit(query.itemCount);
+
+    // TODO(ym). 분과회의일 경우 title 뒤에 분과이름 추가하여 보내주기
+
+    const result = {
+      total: query.itemCount,
+      items:
+        query.meetingEnumId != null
+          ? rows.filter(row => row.meetingEnumId === query.meetingEnumId)
+          : rows,
+      offset: query.pageOffset,
+    };
+    return result;
   }
 }
