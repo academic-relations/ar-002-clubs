@@ -495,7 +495,7 @@ export class MeetingRepository {
   async getMeetingListByMeetingType(
     query: ApiMee012RequestQuery,
   ): Promise<ApiMee012ResponseOk> {
-    const rows = await this.db
+    let rows = await this.db
       .select({
         id: Meeting.id,
         meetingEnumId: Meeting.meetingEnumId,
@@ -516,12 +516,13 @@ export class MeetingRepository {
 
     // TODO(ym). 분과회의일 경우 title 뒤에 분과이름 추가하여 보내주기
 
+    if (query.meetingEnumId != null) {
+      rows = rows.filter(row => row.meetingEnumId === query.meetingEnumId);
+    }
+
     const result = {
-      total: query.itemCount,
-      items:
-        query.meetingEnumId != null
-          ? rows.filter(row => row.meetingEnumId === query.meetingEnumId)
-          : rows,
+      total: rows.length,
+      items: rows,
       offset: query.pageOffset,
     };
     return result;
