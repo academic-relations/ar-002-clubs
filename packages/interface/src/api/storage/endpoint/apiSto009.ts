@@ -33,6 +33,7 @@ const responseBodyMap = {
     zone: z.string().max(255),
     applicationId: z.number().int().min(1),
     note: z.string().max(512),
+    createdAt: z.date(),
   }),
 };
 

@@ -18,6 +18,7 @@ const requestBody = z.object({
   numberOfNonStandardItems: z.coerce.number().int().min(0),
   charge: z.coerce.number().int().min(0),
   zone: z.coerce.string().max(255),
+  endDate: z.coerce.date(),
   studentId: z.coerce.number().int().min(1),
   applicationId: z.coerce.number().int().min(1),
 });

@@ -7,7 +7,7 @@ import { z } from "zod";
  */
 
 const url = (contractId: number) =>
-  `/student/storage/contracts/contract/${contractId}`;
+  `/executive/storage/contracts/contract/${contractId}`;
 const method = "GET";
 
 const requestParam = z.object({
@@ -33,6 +33,7 @@ const responseBodyMap = {
     zone: z.string().max(255),
     applicationId: z.number().int().min(1),
     note: z.string().max(512),
+    createdAt: z.date(),
   }),
 };
 
