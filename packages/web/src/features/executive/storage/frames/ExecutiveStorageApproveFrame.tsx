@@ -65,6 +65,7 @@ const ExecutiveStorageApproveFrame = ({
     mode: "all",
     defaultValues: {
       applicationId,
+      endDate: applicationData?.desiredEndDate,
     },
   });
 
