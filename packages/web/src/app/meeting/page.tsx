@@ -76,6 +76,7 @@ const ListWithPaginationWrapper = styled.div`
 `;
 
 const MeetingMainFrame: React.FC = () => {
+  const limit = 10;
   const router = useRouter();
   const searchParams = useSearchParams();
   const [page, setPage] = useState<number>(1);
@@ -85,7 +86,7 @@ const MeetingMainFrame: React.FC = () => {
   const { data, isLoading, isError } = useGetMeetings({
     meetingEnumId,
     pageOffset: page,
-    itemCount: 10,
+    itemCount: limit,
   });
 
   return (
@@ -130,9 +131,9 @@ const MeetingMainFrame: React.FC = () => {
             ))}
           </MeetingNoticeListWrapper>
           <Pagination
-            totalPage={data?.total ?? 0}
+            totalPage={data ? Math.ceil(data.total / limit) : 0}
             currentPage={page}
-            limit={10}
+            limit={limit}
             setPage={setPage}
           />
         </ListWithPaginationWrapper>
