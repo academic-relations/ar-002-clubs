@@ -4,6 +4,8 @@
  * @author andy@sparcs.org (Sangwoo Ye)
  */
 
+import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
+
 const externalLinks = {
   allClubRepresentativeMeeting:
     "https://cafe.naver.com/ArticleList.nhn?search.clubid=26985838&search.menuid=14&search.boardtype=L",
@@ -99,34 +101,33 @@ const paths = {
   VOTING: {
     name: "의결기구",
     featureFlag: "DEFAULT",
-    // TODO: 임시 링크
     sub: [
       {
         name: "최근 회의",
-        path: "/recent-meeting",
+        path: "/meeting",
         featureFlag: "NO_RELEASE",
       },
       {
         name: "전동대회",
-        path: externalLinks.allClubRepresentativeMeeting,
+        path: `/meeting?type=${MeetingEnum.clubRepresentativesCouncilMeeting}`,
         authority: ["all"],
         featureFlag: "DEFAULT",
       },
       {
         name: "확대운영위원회",
-        path: externalLinks.expandedOperatingCommittee,
+        path: `/meeting?type=${MeetingEnum.expansiveOperativeCommittee}`,
         authority: ["all"],
         featureFlag: "DEFAULT",
       },
       {
         name: "운영위원회",
-        path: externalLinks.operatingCommittee,
+        path: `/meeting?type=${MeetingEnum.operativeCommittee}`,
         authority: ["all"],
         featureFlag: "DEFAULT",
       },
       {
         name: "분과회의",
-        path: externalLinks.divisionMeeting,
+        path: `/meeting?type=${MeetingEnum.divisionMeeting}`,
         authority: ["all"],
         featureFlag: "DEFAULT",
       },

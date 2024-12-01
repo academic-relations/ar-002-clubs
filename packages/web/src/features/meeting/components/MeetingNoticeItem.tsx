@@ -1,19 +1,14 @@
 import React from "react";
 
+import { MeetingStatusEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
 import styled from "styled-components";
 
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
-const enum MeetingNoticeTypeEnum {
-  Agenda = "Agenda",
-  Meeting = "Meeting",
-  Notice = "Notice",
-}
-
 interface MeetingNoticeItemProps {
-  tag: MeetingNoticeTypeEnum;
+  tag: MeetingStatusEnum;
   title: string;
   date: Date;
   onClick?: VoidFunction;
@@ -28,6 +23,7 @@ const MeetingNoticeItemWrapper = styled.div`
   flex: 1;
   align-self: stretch;
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+  cursor: pointer;
 `;
 
 const TagWithTitleWrapper = styled.div`
@@ -53,9 +49,9 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
 }) => {
   const tagColor = () => {
     switch (tag) {
-      case MeetingNoticeTypeEnum.Agenda:
+      case MeetingStatusEnum.Agenda:
         return "BLUE";
-      case MeetingNoticeTypeEnum.Meeting:
+      case MeetingStatusEnum.Complete:
         return "GRAY";
       default:
         return "YELLOW";
@@ -64,9 +60,9 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
 
   const tagText = () => {
     switch (tag) {
-      case MeetingNoticeTypeEnum.Agenda:
+      case MeetingStatusEnum.Agenda:
         return "안건 공개";
-      case MeetingNoticeTypeEnum.Meeting:
+      case MeetingStatusEnum.Complete:
         return "회의 종료";
       default:
         return "공고 게시";
@@ -95,4 +91,4 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
   );
 };
 
-export { MeetingNoticeItem, MeetingNoticeTypeEnum };
+export { MeetingNoticeItem };
