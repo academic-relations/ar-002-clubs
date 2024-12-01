@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 "use client";
 
 import React, { useMemo, useState } from "react";
@@ -50,11 +48,10 @@ export const ExecutiveStorage = () => {
 
   const filterClubsWithSearch = useMemo(() => {
     const filteredRowsWithSearch = data?.items.filter(
-      _item =>
-        // item.newClubNameKr.toLowerCase().includes(searchText.toLowerCase()) ||
-        // item.newClubNameEn.toLowerCase().includes(searchText.toLowerCase()) ||
-        // hangulIncludes(item.newClubNameKr, searchText)
-        true,
+      item =>
+        item.clubNameKr.toLowerCase().includes(searchText.toLowerCase()) ||
+        item.clubNameEn.toLowerCase().includes(searchText.toLowerCase()) ||
+        hangulIncludes(item.clubNameKr, searchText),
     );
 
     return {
@@ -98,7 +95,7 @@ export const ExecutiveStorage = () => {
             </ClubSearch>
           </ClubSearchWrapper>
           <TableWithPaginationWrapper>
-            <StorageTable storageList={filteredClubs} />
+            <StorageTable storageList={filteredClubs} tableType="executive" />
             <FlexWrapper direction="row" gap={16} justify="center">
               <Pagination
                 totalPage={Math.ceil(filteredClubs.total / limit)}

@@ -35,6 +35,18 @@ const BasicInfoSummaryFrameInner = styled.div`
   display: flex;
 `;
 
+function calculateMonthsDifference(date1: Date, date2: Date): number {
+  const yearsDiff = date2.getFullYear() - date1.getFullYear();
+  const monthsDiff = date2.getMonth() - date1.getMonth();
+  const daysDiff = date2.getDate() - date1.getDate();
+  let totalMonths = yearsDiff * 12 + monthsDiff;
+  if (daysDiff > 0) {
+    totalMonths += 1;
+  }
+
+  return totalMonths;
+}
+
 type StorageFormThirdProps = Pick<StorageFormProps, "username">;
 
 const StorageFormThird: React.FC<StorageFormThirdProps> = ({
@@ -47,18 +59,6 @@ const StorageFormThird: React.FC<StorageFormThirdProps> = ({
     isLoading,
     isError,
   } = useGetClubDetail(getValues().clubId.toString());
-
-  function calculateMonthsDifference(date1: Date, date2: Date): number {
-    const yearsDiff = date2.getFullYear() - date1.getFullYear();
-    const monthsDiff = date2.getMonth() - date1.getMonth();
-    const daysDiff = date2.getDate() - date1.getDate();
-    let totalMonths = yearsDiff * 12 + monthsDiff;
-    if (daysDiff > 0) {
-      totalMonths += 1;
-    }
-
-    return totalMonths;
-  }
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>

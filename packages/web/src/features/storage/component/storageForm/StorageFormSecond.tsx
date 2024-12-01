@@ -108,7 +108,7 @@ const StorageFormSecond: React.FC = () => {
   const handleAddNonStandardItem = () => {
     if (fields.length < 5) {
       append({
-        fileId: "file-upload-input",
+        fileId: "",
         name: "",
       });
     }

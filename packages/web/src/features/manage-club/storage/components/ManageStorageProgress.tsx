@@ -6,15 +6,27 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import { manageStorageProgress } from "@sparcs-clubs/web/constants/manageClubProgress";
 
+import { getValueStorage } from "@sparcs-clubs/web/types/storage.types";
+
+import { usePatchStorageApplication } from "../services/usePatchStorageApplication";
+
 interface ManageStorageProgressProps {
+  applicationId: number;
   status: StorageStatusEnum;
 }
 
-const ManageStorageProgress: React.FC<ManageStorageProgressProps> = ({
+export const ManageStorageProgress: React.FC<ManageStorageProgressProps> = ({
+  applicationId,
   status,
 }) => {
   const manageStorage = manageStorageProgress(status);
-  const onClickCancel = () => {};
+  const onClickCancel = () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    usePatchStorageApplication(
+      { applicationId },
+      { status: getValueStorage(status) },
+    );
+  };
   return (
     <ProgressStatus
       labels={manageStorage.labels}
@@ -30,5 +42,3 @@ const ManageStorageProgress: React.FC<ManageStorageProgressProps> = ({
     />
   );
 };
-
-export default ManageStorageProgress;

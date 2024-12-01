@@ -352,7 +352,7 @@ export const manageStorageProgress = (
       return {
         labels: [
           "신청 완료",
-          "동아리 연합회 신청 반려",
+          "동아리 연합회 승인 완료",
           "계약서 작성 및 송금 대기",
           "반출 대기",
         ],
@@ -366,7 +366,7 @@ export const manageStorageProgress = (
       return {
         labels: [
           "신청 완료",
-          "동아리 연합회 신청 반려",
+          "동아리 연합회 승인 완료",
           "계약서 작성 및 송금 완료",
           "반출 대기",
         ],
@@ -381,7 +381,7 @@ export const manageStorageProgress = (
       return {
         labels: [
           "신청 완료",
-          "동아리 연합회 신청 반려",
+          "동아리 연합회 승인 완료",
           "계약서 작성 및 송금 완료",
           "반출 완료",
         ],
@@ -396,7 +396,7 @@ export const manageStorageProgress = (
       return {
         labels: [
           "신청 완료",
-          "동아리 연합회 신청 반려",
+          "동아리 연합회 승인 완료",
           "계약서 작성 및 송금 완료",
           "사용 연체",
         ],

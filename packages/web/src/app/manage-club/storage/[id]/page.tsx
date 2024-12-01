@@ -2,14 +2,11 @@
 
 import React from "react";
 
-import { StorageStatusEnum } from "@sparcs-clubs/interface/common/enum/storage.enum";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
-import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import ManageStorageProgress from "@sparcs-clubs/web/features/manage-club/storage/components/ManageStorageProgress";
 import ManageStorageDetailFrame from "@sparcs-clubs/web/features/manage-club/storage/frames/ManageStorageDetailFrame";
 
 const ManageStorageDetail = () => {
@@ -17,6 +14,9 @@ const ManageStorageDetail = () => {
   const onClick = () => {
     router.push("/manage-club/storage");
   };
+
+  const { id: applicationId } = useParams();
+
   return (
     <FlexWrapper direction="column" gap={60}>
       <PageHead
@@ -30,10 +30,9 @@ const ManageStorageDetail = () => {
         title="창고 사용 신청"
         enableLast
       />
-      <Card outline gap={20}>
-        <ManageStorageProgress status={StorageStatusEnum.Received} />
-        <ManageStorageDetailFrame />
-      </Card>
+
+      <ManageStorageDetailFrame applicationId={+applicationId} />
+
       <Button style={{ width: "max-content" }} onClick={onClick}>
         목록으로 돌아가기
       </Button>

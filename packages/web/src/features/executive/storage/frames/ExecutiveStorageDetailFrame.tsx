@@ -1,150 +1,187 @@
-"use client";
+import React from "react";
 
-import React, { useState } from "react";
-
-import { Divider } from "@mui/material";
-
-import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-
-import { useParams } from "next/navigation";
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import Pagination from "@sparcs-clubs/web/common/components/Pagination";
-import Toggle from "@sparcs-clubs/web/common/components/Toggle";
+import ThumbnailPreview from "@sparcs-clubs/web/common/components/File/ThumbnailPreview";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
 
-import { mockupClubMemberRegister } from "@sparcs-clubs/web/features/executive/register-member/[id]/_mock/mockClubMemberRegister";
-import { useGetRegisterMemberDetail } from "@sparcs-clubs/web/features/executive/register-member/[id]/services/getRegisterMemberDetail";
-import RegisterInfoTable from "@sparcs-clubs/web/features/executive/register-member/components/RegisterInfoTable";
-import StatusInfoFrame from "@sparcs-clubs/web/features/executive/register-member/components/StatusInfoFrame";
+import { FilePreviewContainer } from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubDetailFrame";
+import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
-import TotalInfoFrame from "@sparcs-clubs/web/features/executive/register-member/components/TotalInfoFrame";
+import { useGetStorageApplication } from "../services/useGetStorageApplication";
 
-const ExecutiveRegisterMemberDetail = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const limit = 10;
+const StorageDetailFrameInner = styled.div`
+  align-self: stretch;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 16px;
+  display: flex;
+`;
 
-  const { id } = useParams<{ id: string }>();
-  const clubId = parseInt(id);
+function calculateMonthsDifference(date1: Date, date2: Date): number {
+  const yearsDiff = date2.getFullYear() - date1.getFullYear();
+  const monthsDiff = date2.getMonth() - date1.getMonth();
+  const daysDiff = date2.getDate() - date1.getDate();
+  let totalMonths = yearsDiff * 12 + monthsDiff;
+  if (daysDiff > 0) {
+    totalMonths += 1;
+  }
 
-  const DividerContainer = styled.div`
-    padding-left: 28px;
-  `;
+  return totalMonths;
+}
 
-  const { data, isLoading, isError } = useGetRegisterMemberDetail({
-    clubId,
-    pageOffset: currentPage,
-    itemCount: limit,
-  });
+export interface ClubRegisterDetail {
+  applicationId: number;
+}
 
-  const paginatedData = data && {
-    totalRegistrations: data.totalRegistrations,
-    totalWaitings: data.totalWaitings,
-    totalApprovals: data.totalApprovals,
-    totalRejections: data.totalRejections,
-    regularMemberRegistrations: data.regularMemberRegistrations,
-    regularMemberWaitings: data.regularMemberWaitings,
-    regularMemberApprovals: data.regularMemberApprovals,
-    regularMemberRejections: data.regularMemberRejections,
-    total: data.total,
-    items: data.items.slice((currentPage - 1) * limit, currentPage * limit),
-    offset: (currentPage - 1) * limit,
-  };
-
-  const pendingInfo = paginatedData && {
-    Regular: paginatedData.regularMemberWaitings,
-    NonRegular:
-      paginatedData.totalWaitings - paginatedData.regularMemberWaitings,
-    Total: paginatedData.totalWaitings,
-  };
-
-  const approvalInfo = paginatedData && {
-    Regular: paginatedData.regularMemberApprovals,
-    NonRegular:
-      paginatedData.totalApprovals - paginatedData.regularMemberApprovals,
-    Total: paginatedData.totalApprovals,
-  };
-
-  const rejectionInfo = paginatedData && {
-    Regular: paginatedData.regularMemberRejections,
-    NonRegular:
-      paginatedData.totalRejections - paginatedData.regularMemberRejections,
-    Total: paginatedData.totalRejections,
-  };
-
-  const totalInfo = paginatedData && {
-    Regular: paginatedData.regularMemberRegistrations,
-    NonRegular:
-      paginatedData.totalRegistrations -
-      paginatedData.regularMemberRegistrations,
-    Total: paginatedData.totalRegistrations,
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const defaultStatusInfo = { Regular: 0, NonRegular: 0, Total: 0 };
-
-  const club = useGetClubDetail(id as string);
-
-  const GetPageTitle = () => `창고 사용 신청 내역 (${club.data?.name_kr})`;
+const ExecutiveStorageDetailFrame: React.FC<ClubRegisterDetail> = ({
+  applicationId,
+}: ClubRegisterDetail) => {
+  const { data, isLoading, isError } = useGetStorageApplication(applicationId);
 
   return (
-    <AsyncBoundary
-      isLoading={club.isLoading || isLoading}
-      isError={club.isError || isError}
-    >
-      <FlexWrapper direction="column" gap={20}>
-        <PageHead
-          items={[
-            { name: "집행부원 대시보드", path: "/executive" },
-            { name: "창고 사용 신청 내역", path: `/executive/storage` },
-          ]}
-          enableLast
-          title={GetPageTitle()}
-        />
-        <Card gap={16} padding="16px">
-          <Toggle label={<Typography>회원 등록 신청 통계</Typography>}>
-            <StatusInfoFrame
-              statusInfo={pendingInfo || defaultStatusInfo}
-              status={RegistrationApplicationStudentStatusEnum.Pending}
-            />
-            <StatusInfoFrame
-              statusInfo={approvalInfo || defaultStatusInfo}
-              status={RegistrationApplicationStudentStatusEnum.Approved}
-            />
-            <FlexWrapper gap={8} direction="column">
-              <StatusInfoFrame
-                statusInfo={rejectionInfo || defaultStatusInfo}
-                status={RegistrationApplicationStudentStatusEnum.Rejected}
-              />
-              <DividerContainer>
-                <Divider />
-              </DividerContainer>
-              <TotalInfoFrame statusInfo={totalInfo || defaultStatusInfo} />
-            </FlexWrapper>
-          </Toggle>
-        </Card>
-        {data && paginatedData && (
-          <RegisterInfoTable memberRegisterInfoList={paginatedData} />
-        )}
-        <FlexWrapper direction="row" gap={16} justify="center">
-          <Pagination
-            totalPage={Math.ceil(mockupClubMemberRegister.total / limit)}
-            currentPage={currentPage}
-            limit={limit}
-            setPage={handlePageChange}
-          />
-        </FlexWrapper>
-      </FlexWrapper>
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <Card padding="32px" gap={20} outline>
+        <StorageDetailFrameInner>
+          <Typography
+            key="orderUserInfo"
+            fs={16}
+            lh={20}
+            fw="MEDIUM"
+            style={{ whiteSpace: "pre-wrap" }}
+          >
+            신청자 정보
+          </Typography>
+          <Typography
+            key="orderInfoClub"
+            fs={16}
+            lh={20}
+            fw="REGULAR"
+            style={{ whiteSpace: "pre-wrap" }}
+          >
+            {`  •  동아리: ${data?.clubNameKr}`}{" "}
+          </Typography>
+          <Typography
+            key="orderUserName"
+            fs={16}
+            lh={20}
+            fw="REGULAR"
+            style={{ whiteSpace: "pre-wrap" }}
+          >
+            {`  •  신청자: ${data?.studentName}`}
+          </Typography>
+          <Typography
+            key="orderUserPhoneNumber"
+            fs={16}
+            lh={20}
+            fw="REGULAR"
+            style={{ whiteSpace: "pre-wrap" }}
+          >
+            {`  •  연락처: ${data?.studentPhoneNumber}`}
+          </Typography>
+          <Typography
+            key="orderInfo"
+            fs={16}
+            lh={20}
+            fw="MEDIUM"
+            style={{ whiteSpace: "pre-wrap" }}
+          >
+            창고 사용 신청 정보
+          </Typography>
+          <Typography
+            key="orderInfoBoxCount"
+            fs={16}
+            lh={20}
+            fw="REGULAR"
+            style={{ whiteSpace: "pre-wrap" }}
+          >
+            {`  •  필요한 상자 수량: ${data?.numberOfBoxes}`}
+          </Typography>
+          <Typography
+            key="orderInfoDesiredPickUpDate"
+            fs={16}
+            lh={20}
+            fw="REGULAR"
+            style={{ whiteSpace: "pre-wrap" }}
+          >
+            {`  •  상자 수령 일시: ${data?.desiredPickUpDate ? formatDate(data.desiredPickUpDate) : "오류가 발생했습니다. 관리자에게 문의주세요."}`}
+          </Typography>
+          <Typography
+            key="orderInfoDesiredStartDate"
+            fs={16}
+            lh={20}
+            fw="REGULAR"
+            style={{ whiteSpace: "pre-wrap" }}
+          >
+            {`  •  보관 시작 일시: ${data?.desiredStartDate ? formatDate(data.desiredStartDate) : "오류가 발생했습니다. 관리자에게 문의주세요."}`}
+          </Typography>
+          <Typography
+            key="orderInfoDesiredEndDate"
+            fs={16}
+            lh={20}
+            fw="REGULAR"
+            style={{ whiteSpace: "pre-wrap" }}
+          >
+            {`  •  보관 종료 일시: ${data?.desiredEndDate ? formatDate(data.desiredEndDate) : "오류가 발생했습니다. 관리자에게 문의주세요."}`}
+          </Typography>
+          <Typography
+            key="orderInfoDesiredEndDate"
+            fs={16}
+            lh={20}
+            fw="REGULAR"
+            style={{ whiteSpace: "pre-wrap" }}
+          >
+            {`  •  보관 개월: ${data?.desiredStartDate && data?.desiredEndDate ? calculateMonthsDifference(new Date(data.desiredStartDate), new Date(data.desiredEndDate)) : "오류가 발생했습니다. 관리자에게 문의주세요."}개월`}
+          </Typography>
+
+          {data?.nonStandardItems.length &&
+          data?.nonStandardItems.length > 0 ? (
+            <>
+              <Typography
+                key="orderInfo"
+                fs={16}
+                lh={20}
+                fw="MEDIUM"
+                style={{ whiteSpace: "pre-wrap" }}
+              >
+                규격 외 물품 목록
+              </Typography>
+              {data?.nonStandardItems?.map(nonstandardItem => (
+                <Typography
+                  key="nonStandardItem"
+                  fs={16}
+                  lh={20}
+                  fw="REGULAR"
+                  style={{ whiteSpace: "pre-wrap" }}
+                >
+                  {`  •  ${nonstandardItem.name}`}
+                  {nonstandardItem?.fileId && nonstandardItem?.fileUrl && (
+                    <FilePreviewContainer>
+                      <ThumbnailPreview
+                        key={`${nonstandardItem.fileId.toString()}`}
+                        file={{
+                          id: nonstandardItem.fileId,
+                          name: "",
+                          url: nonstandardItem.fileUrl,
+                        }}
+                        onClick={() => {}}
+                        disabled
+                      />
+                    </FilePreviewContainer>
+                  )}
+                </Typography>
+              ))}
+            </>
+          ) : (
+            ""
+          )}
+        </StorageDetailFrameInner>
+      </Card>
     </AsyncBoundary>
   );
 };
 
-export default ExecutiveRegisterMemberDetail;
+export default ExecutiveStorageDetailFrame;

@@ -58,7 +58,7 @@ const StorageFormFirst: React.FC<StorageFormFirstProps> = ({
         renderItem={props => (
           <PhoneInput
             {...props}
-            placeholder="신청자 전화번호"
+            placeholder="010-XXXX-XXXX"
             label="신청자 전화번호"
           />
         )}

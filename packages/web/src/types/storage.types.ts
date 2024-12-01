@@ -2,17 +2,19 @@ import { StorageStatusEnum } from "@sparcs-clubs/interface/common/enum/storage.e
 
 const getEnumStorage = (string: string): StorageStatusEnum => {
   switch (string) {
-    case "Applied":
+    case "applied":
       return StorageStatusEnum.Applied;
-    case "Canceled":
+    case "canceled":
       return StorageStatusEnum.Canceled;
-    case "Approved":
+    case "approved":
       return StorageStatusEnum.Approved;
-    case "Rejected":
+    case "rejected":
       return StorageStatusEnum.Rejected;
-    case "Shipped":
+    case "received":
+      return StorageStatusEnum.Received;
+    case "shipped":
       return StorageStatusEnum.Shipped;
-    case "Overdue":
+    case "overdue":
       return StorageStatusEnum.Overdue;
 
     default:
@@ -20,4 +22,26 @@ const getEnumStorage = (string: string): StorageStatusEnum => {
   }
 };
 
-export { getEnumStorage };
+const getValueStorage = (e: StorageStatusEnum): string => {
+  switch (e) {
+    case StorageStatusEnum.Applied:
+      return "applied";
+    case StorageStatusEnum.Canceled:
+      return "canceled";
+    case StorageStatusEnum.Approved:
+      return "approved";
+    case StorageStatusEnum.Rejected:
+      return "rejected";
+    case StorageStatusEnum.Received:
+      return "received";
+    case StorageStatusEnum.Shipped:
+      return "shipped";
+    case StorageStatusEnum.Overdue:
+      return "overdue";
+
+    default:
+      return "";
+  }
+};
+
+export { getEnumStorage, getValueStorage };

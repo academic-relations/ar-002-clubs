@@ -76,12 +76,6 @@ const StorageMainFrame: React.FC = () => {
     formState: { isValid },
   } = formCtx;
 
-  useEffect(() => {
-    if (!isLoading) {
-      setValue("studentId", data?.id ?? -1);
-    }
-  }, [data, isLoading, setValue]);
-
   const { mutate: postStorage, isPending: isPostStorage } = useCreateStorage();
 
   const submitHandler = useCallback(() => {

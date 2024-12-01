@@ -1,9 +1,7 @@
 "use client";
 
-import ManageClubTableMainFrame from "@sparcs-clubs/web/features/manageClubTable/frames/ManageClubTableMainFrame";
+import { ManageClubStorageMainFrame } from "@sparcs-clubs/web/features/manageClubTable/frames/ManageClubStorageMainFrame";
 
-const ManageClubPrintingBusiness = () => (
-  <ManageClubTableMainFrame pageType="storage" />
-);
+const ManageClubStorage = () => <ManageClubStorageMainFrame />;
 
-export default ManageClubPrintingBusiness;
+export default ManageClubStorage;

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ApiSto012ResponseOk } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto012";
+import { ApiSto002ResponseOk } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto002";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -11,12 +11,17 @@ import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { StorageTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import mockupStorage from "@sparcs-clubs/web/features/executive/storage/_mock/mockStorage";
+import { getKrStorageStatus } from "@sparcs-clubs/web/features/storage/utils/storage";
 import { getEnumStorage } from "@sparcs-clubs/web/types/storage.types";
-import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+import {
+  formatDate,
+  formatDateTime,
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface StorageTableProps {
-  storageList: ApiSto012ResponseOk;
+  storageList: ApiSto002ResponseOk;
+  tableType: "executive" | "manage-club";
 }
 
 const columnHelper =
@@ -31,55 +36,58 @@ const columns = [
         getEnumStorage(info.getValue()),
         StorageTagList,
       );
-      return <Tag color={tagColor}>{info.getValue()}</Tag>;
+      return <Tag color={tagColor}>{getKrStorageStatus(info.getValue())}</Tag>;
     },
     size: 120,
   }),
   columnHelper.accessor("createdAt", {
     id: "createdAt",
     header: "신청 일시",
-    cell: info => info.getValue(),
-    size: 291.67,
+    cell: info => formatDateTime(info.getValue()),
+    size: 475,
   }),
   columnHelper.accessor("clubNameKr", {
     id: "clubNameKr",
     header: "동아리",
     cell: info => info.getValue(),
-    size: 291.67,
+    size: 75,
   }),
   columnHelper.accessor("studentName", {
     id: "studentName",
     header: "신청자",
     cell: info => info.getValue(),
-    size: 291.67,
+    size: 75,
   }),
   columnHelper.accessor("studentPhoneNumber", {
     id: "studentPhoneNumber",
     header: "연락처",
     cell: info => info.getValue(),
-    size: 291.67,
+    size: 275,
   }),
   columnHelper.accessor("desiredStartDate", {
     id: "desiredStartDate",
     header: "보관 시작 일시",
     cell: info => formatDate(info.getValue()),
-    size: 291.67,
+    size: 350,
   }),
   columnHelper.accessor("desiredEndDate", {
     id: "desiredEndDate",
     header: "보관 종료 일시",
     cell: info => formatDate(info.getValue()),
-    size: 291.67,
+    size: 350,
   }),
   columnHelper.accessor("numberOfNonStandardItems", {
     id: "numberOfNonStandardItems",
-    header: "보관 종료 일시",
-    cell: info => `${info.getValue()}개`,
-    size: 291.67,
+    header: "규격 외 물품",
+    cell: info => `${info.getValue()}항목`,
+    size: 125,
   }),
 ];
 
-const StorageTable: React.FC<StorageTableProps> = ({ storageList }) => {
+const StorageTable: React.FC<StorageTableProps> = ({
+  storageList,
+  tableType,
+}) => {
   const table = useReactTable({
     columns,
     data: storageList.items,
@@ -91,7 +99,7 @@ const StorageTable: React.FC<StorageTableProps> = ({ storageList }) => {
     <Table
       table={table}
       count={storageList.total}
-      rowLink={row => `/executive/storage/${row.applicationId}`}
+      rowLink={row => `/${tableType}/storage/${row.applicationId}`}
     />
   );
 };
