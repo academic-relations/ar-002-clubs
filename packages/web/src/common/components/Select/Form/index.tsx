@@ -24,6 +24,7 @@ interface SelectProps<T> {
   disabled?: boolean;
   value: T;
   onChange?: (value: T) => void;
+  onBlur?: () => void;
   placeholder?: string;
 }
 
@@ -107,6 +108,7 @@ const FormSelect = <T,>({
   disabled = false,
   value,
   onChange = () => {},
+  onBlur = () => {},
   placeholder = "항목을 선택해주세요",
 }: SelectProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -119,6 +121,7 @@ const FormSelect = <T,>({
         !containerRef.current.contains(event.target as Node)
       ) {
         if (isOpen) {
+          onBlur();
           setIsOpen(false);
         }
       }
@@ -126,7 +129,7 @@ const FormSelect = <T,>({
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [containerRef, isOpen, items.length, value]);
+  }, [containerRef, isOpen, items.length, onBlur, value]);
 
   const handleSelectClick = () => {
     if (!disabled) {
