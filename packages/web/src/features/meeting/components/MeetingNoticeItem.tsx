@@ -1,16 +1,20 @@
-import React from "react";
+import React, { useMemo } from "react";
 
-import { MeetingStatusEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
+import {
+  MeetingEnum,
+  MeetingStatusEnum,
+} from "@sparcs-clubs/interface/common/enum/meeting.enum";
 import styled from "styled-components";
 
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
+import { isRegular, meetingType } from "../constants/meetingTemplate";
+import { meetingEnumToText, MeetingNoticeItemType } from "../types/meeting";
+
 interface MeetingNoticeItemProps {
-  tag: MeetingStatusEnum;
-  title: string;
-  date: Date;
+  data: MeetingNoticeItemType;
   onClick?: VoidFunction;
 }
 
@@ -41,14 +45,23 @@ const LogoWithTagAndTitleWrapper = styled.div`
   flex: 1;
 `;
 
+const DateWrapper = styled(Typography)<{ isDivisionMeeting: boolean }>`
+  font-size: 16px;
+  line-height: 24px;
+  min-width: 85px;
+  text-align: center;
+  color: ${props =>
+    props.isDivisionMeeting
+      ? props.theme.colors.GRAY[300]
+      : props.theme.colors.BLACK};
+`;
+
 const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
-  tag,
-  title,
-  date,
+  data,
   onClick = () => {},
 }) => {
   const tagColor = () => {
-    switch (tag) {
+    switch (data.meetingStatus) {
       case MeetingStatusEnum.Agenda:
         return "BLUE";
       case MeetingStatusEnum.Complete:
@@ -59,7 +72,7 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
   };
 
   const tagText = () => {
-    switch (tag) {
+    switch (data.meetingStatus) {
       case MeetingStatusEnum.Agenda:
         return "안건 공개";
       case MeetingStatusEnum.Complete:
@@ -68,6 +81,24 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
         return "공고 게시";
     }
   };
+
+  const meetingTitle = useMemo(() => {
+    if (data == null) return "";
+    let title = data.meetingTitle;
+
+    title = title.replace(
+      meetingType,
+      meetingEnumToText(data.meetingEnumId.toString()),
+    );
+    title = title.replace(
+      isRegular,
+      data.isRegular ? "정기회의" : "비정기회의",
+    );
+
+    return title;
+  }, [data]);
+
+  const isDivisionMeeting = data.meetingEnumId === MeetingEnum.divisionMeeting;
 
   return (
     <MeetingNoticeItemWrapper onClick={onClick}>
@@ -80,13 +111,13 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
             fw="MEDIUM"
             style={{ textOverflow: "ellipsis", overflow: "hidden" }}
           >
-            {title}
+            {meetingTitle}
           </Typography>
         </TagWithTitleWrapper>
       </LogoWithTagAndTitleWrapper>
-      <Typography fs={16} lh={24}>
-        {formatDotDate(date)}
-      </Typography>
+      <DateWrapper isDivisionMeeting={isDivisionMeeting}>
+        {isDivisionMeeting ? "(미정)" : formatDotDate(data.meetingDate)}
+      </DateWrapper>
     </MeetingNoticeItemWrapper>
   );
 };

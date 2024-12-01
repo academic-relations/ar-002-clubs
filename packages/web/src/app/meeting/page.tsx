@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
@@ -11,10 +11,6 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { MeetingNoticeItem } from "@sparcs-clubs/web/features/meeting/components/MeetingNoticeItem";
-import {
-  isRegular,
-  meetingType,
-} from "@sparcs-clubs/web/features/meeting/constants/meetingTemplate";
 import useGetMeetings from "@sparcs-clubs/web/features/meeting/services/useGetMeetings";
 import {
   getMeetingEnumFromValue,
@@ -92,22 +88,6 @@ const MeetingMainFrame: React.FC = () => {
     itemCount: 10,
   });
 
-  const getMeetingTitle = useCallback((item?: MeetingNoticeItemType) => {
-    if (item == null) return "";
-    let title = item.meetingTitle;
-
-    title = title.replace(
-      meetingType,
-      meetingEnumToText(item.meetingEnumId.toString()),
-    );
-    title = title.replace(
-      isRegular,
-      item.isRegular ? "정기회의" : "비정기회의",
-    );
-
-    return title;
-  }, []);
-
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <FlexWrapper gap={60} direction="column">
@@ -144,9 +124,7 @@ const MeetingMainFrame: React.FC = () => {
             {data?.items.map((e: MeetingNoticeItemType) => (
               <MeetingNoticeItem
                 key={e.id}
-                tag={e.meetingStatus}
-                title={getMeetingTitle(e)}
-                date={e.meetingDate}
+                data={e}
                 onClick={() => router.push(`/meeting/${e.id}`)}
               />
             ))}
