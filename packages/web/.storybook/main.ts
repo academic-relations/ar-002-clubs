@@ -13,7 +13,7 @@ const config: StorybookConfig = {
     options: {},
   },
   docs: {
-    autodocs: true,
+    autodocs: true, // CHACHA: 요거 몇 개는 docs에서 꺠지는 컴포넌트가 있어서 (예: Modal) default false로 하는 거 어떤가요?
   },
 };
 export default config;
