@@ -19,7 +19,8 @@ import colors from "@sparcs-clubs/web/styles/themes/colors";
 import ChangeRepresentativeModalContent from "./ChangeRepresentativeModalContent";
 
 interface MyChangeRepresentativeProps {
-  type: "Requested" | "Finished";
+  type: "Requested" | "Finished" | "Rejected";
+  setType: (type: "Requested" | "Finished" | "Rejected") => void;
   clubName: string;
   prevRepresentative: string;
   newRepresentative: string;
@@ -51,6 +52,7 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
   newRepresentative,
   refetch,
   requestId,
+  setType,
 }) => {
   const router = useRouter();
   const Title =
@@ -69,7 +71,8 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
           prevRepresentative,
           newRepresentative,
         );
-  const isNewRepresentative = true; // TODO: 본인이 새로운 대표자인지 확인하는 로직 필요
+
+  const isNewRepresentative = true; // 이전 대표자한테도 보여주는지? -> 안 보여줄거면 이 부분 삭제
   const openConfirmModal = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
@@ -78,9 +81,13 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
           clubName={clubName}
           prevRepresentative={prevRepresentative}
           newRepresentative={newRepresentative}
-          onClose={close}
+          onClose={() => {
+            close();
+            setType("Rejected");
+          }}
           refetch={refetch}
           requestId={requestId}
+          setType={setType}
         />
       </Modal>
     ));

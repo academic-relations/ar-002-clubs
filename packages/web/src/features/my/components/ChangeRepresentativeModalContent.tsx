@@ -19,6 +19,7 @@ interface ChangeRepresentativeModalContentProps {
   onClose: () => void;
   refetch: () => void;
   requestId: number;
+  setType: (type: "Requested" | "Finished") => void;
 }
 
 const ButtonWrapper = styled.div`
@@ -38,6 +39,7 @@ const ChangeRepresentativeModalContent: React.FC<
   onClose,
   refetch,
   requestId,
+  setType,
 }) => {
   const [errorPhone, setErrorPhone] = useState<boolean>(false);
   const [phone, setPhone] = useState<string>("");
@@ -54,6 +56,7 @@ const ChangeRepresentativeModalContent: React.FC<
     );
     onClose();
     refetch();
+    setType("Finished");
   };
 
   const onReject = () => {

@@ -10,13 +10,13 @@ import MyChangeRepresentative from "@sparcs-clubs/web/features/my/components/MyC
 import { useGetMyDelegateRequest } from "@sparcs-clubs/web/features/my/services/getMyDelegateRequest";
 
 export const MyChangesFrame = () => {
-  // TODO: clb014 api 구현되면 refetch 테스트
-
   const { data, isLoading, isError, refetch } = useGetMyDelegateRequest();
 
   const { data: myProfile } = useGetUserProfile();
 
-  const [type, setType] = useState<"Requested" | "Finished">("Finished");
+  const [type, setType] = useState<"Requested" | "Finished" | "Rejected">(
+    "Finished",
+  );
 
   useEffect(() => {
     switch (data?.requests[0]?.clubDelegateChangeRequestStatusEnumId) {
@@ -32,7 +32,7 @@ export const MyChangesFrame = () => {
   }, [data]);
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
-      {data?.requests && data?.requests.length > 0 && (
+      {data?.requests && data?.requests.length > 0 && type !== "Rejected" && (
         <MyChangeRepresentative
           type={type}
           clubName={data?.requests[0].clubName}
@@ -41,6 +41,7 @@ export const MyChangesFrame = () => {
           newRepresentative={`${myProfile?.studentNumber} ${myProfile?.name}`}
           refetch={refetch}
           requestId={data?.requests[0]?.id}
+          setType={setType}
         />
       )}
     </AsyncBoundary>
