@@ -75,6 +75,7 @@
     "@storybook/addon-links": "^8.4.5",
     "@storybook/blocks": "^8.4.5",
     "@storybook/nextjs": "^8.4.5",
+    "@storybook/preview-api": "^8.4.6",
     "@storybook/react": "^8.4.5",
     "@tanstack/react-query-devtools": "^5.28.4",
     "@types/node": "^20",
@@ -84,5 +85,5 @@
     "storybook": "^8.4.5",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@8.15.8"
+  "packageManager": "pnpm@9.14.4"
 }

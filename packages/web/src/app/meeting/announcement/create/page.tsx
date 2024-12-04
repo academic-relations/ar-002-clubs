@@ -2,7 +2,6 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 
-import { ApiMee001RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee001";
 import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import Link from "next/link";
 
@@ -19,6 +18,7 @@ import { withAuthorization } from "@sparcs-clubs/web/common/components/withAutho
 import MeetingAnnouncementFrame from "@sparcs-clubs/web/features/meeting/components/MeetingAnnouncementFrame";
 import MeetingInformationFrame from "@sparcs-clubs/web/features/meeting/components/MeetingInformationFrame";
 import useCreateMeeting from "@sparcs-clubs/web/features/meeting/services/useCreateMeeting";
+import { MeetingAnnouncementModel } from "@sparcs-clubs/web/features/meeting/types/meeting";
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -27,7 +27,7 @@ const ButtonWrapper = styled.div`
 
 const CreateMeetingPage: React.FC = () => {
   const router = useRouter();
-  const formCtx = useForm<ApiMee001RequestBody>({
+  const formCtx = useForm<MeetingAnnouncementModel>({
     mode: "all",
     defaultValues: {
       announcementTitle: "",
@@ -48,8 +48,12 @@ const CreateMeetingPage: React.FC = () => {
     useCreateMeeting();
 
   const submitHandler = useCallback(() => {
+    const values = getValues();
+
     createMeeting(
-      { body: { ...getValues() } },
+      {
+        body: { ...values, isRegular: values.isRegular === "true" },
+      },
       {
         onSuccess: data => {
           router.replace(`/meeting/${data.id}`);

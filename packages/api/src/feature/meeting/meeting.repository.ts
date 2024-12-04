@@ -317,7 +317,7 @@ export class MeetingRepository {
         ),
       );
 
-    return result.length;
+    return result.length + 1;
   }
 
   async insertMeetingAgendaAndMapping(

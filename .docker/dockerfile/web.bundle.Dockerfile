@@ -5,11 +5,11 @@
 
 # Base image with node + pnpm
 # TODO: bump pnpm to 9 (must change 'engine' field in package.json)
-FROM node:20-slim AS base
+FROM node:22-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
-RUN corepack prepare pnpm@8.15.8 --activate 
+RUN corepack prepare pnpm@9.14.4 --activate 
 WORKDIR /app
 
 # Build to output .next build directory
