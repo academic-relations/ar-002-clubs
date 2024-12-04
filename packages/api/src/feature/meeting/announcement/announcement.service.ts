@@ -110,8 +110,11 @@ export class AnnouncementService {
   }
 
   async getMeetingAnnouncements(query: ApiMee012RequestQuery) {
-    const result =
-      await this.meetingRepository.getMeetingListByMeetingType(query);
+    const result = await this.meetingRepository.getMeetingListByMeetingType(
+      query.meetingEnumId,
+      query.pageOffset,
+      query.itemCount,
+    );
 
     return result;
   }
