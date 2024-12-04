@@ -1,9 +1,12 @@
-import { ApiMee001RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee001";
+import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
 
-export interface CreateMeetingModel extends ApiMee001RequestBody {
-  count: number;
-}
-
-export interface MeetingDetail extends CreateMeetingModel {
-  id: number;
+export interface MeetingAnnouncementModel {
+  meetingEnumId: MeetingEnum;
+  announcementTitle: string;
+  announcementContent: string;
+  startDate: Date;
+  endDate?: Date;
+  isRegular: string;
+  location?: string;
+  locationEn?: string;
 }
