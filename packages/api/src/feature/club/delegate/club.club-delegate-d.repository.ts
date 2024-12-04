@@ -370,12 +370,27 @@ export class ClubDelegateDRepository {
           endTerm: now,
         })
         .where(
-          and(
-            eq(ClubDelegateD.clubId, param.clubId),
-            eq(ClubDelegateD.ClubDelegateEnumId, param.clubDelegateEnumId),
-            lte(ClubDelegateD.startTerm, now),
-            or(gte(ClubDelegateD.endTerm, now), isNull(ClubDelegateD.endTerm)),
-            isNull(ClubDelegateD.deletedAt),
+          or(
+            and(
+              eq(ClubDelegateD.clubId, param.clubId),
+              eq(ClubDelegateD.ClubDelegateEnumId, param.clubDelegateEnumId),
+              lte(ClubDelegateD.startTerm, now),
+              or(
+                gte(ClubDelegateD.endTerm, now),
+                isNull(ClubDelegateD.endTerm),
+              ),
+              isNull(ClubDelegateD.deletedAt),
+            ),
+            and(
+              eq(ClubDelegateD.clubId, param.clubId),
+              eq(ClubDelegateD.studentId, param.studentId),
+              lte(ClubDelegateD.startTerm, now),
+              or(
+                gte(ClubDelegateD.endTerm, now),
+                isNull(ClubDelegateD.endTerm),
+              ),
+              isNull(ClubDelegateD.deletedAt),
+            ),
           ),
         );
       // 변경된 row는 0줄 또는 한줄이어야 합니다.
