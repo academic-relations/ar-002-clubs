@@ -9,9 +9,6 @@ const meta: Meta<typeof CheckboxOption> = {
   component: CheckboxOption,
   parameters: {
     layout: "centered",
-    docs: {
-      autodocs: false,
-    },
   },
 };
 
