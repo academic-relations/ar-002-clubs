@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 
+import { ApiMee012ResponseOk } from "@sparcs-clubs/interface/api/meeting/apiMee012";
 import {
-  ApiMee012RequestQuery,
-  ApiMee012ResponseOk,
-} from "@sparcs-clubs/interface/api/meeting/apiMee012";
-import { MeetingStatusEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
+  MeetingEnum,
+  MeetingStatusEnum,
+} from "@sparcs-clubs/interface/common/enum/meeting.enum";
 import { and, count, eq, gte, isNull, lt, max, not, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -493,9 +493,11 @@ export class MeetingRepository {
   }
 
   async getMeetingListByMeetingType(
-    query: ApiMee012RequestQuery,
+    meetingEnumId: MeetingEnum,
+    pageOffset: number,
+    itemCount: number,
   ): Promise<ApiMee012ResponseOk> {
-    let rows = await this.db
+    const rows = await this.db
       .select({
         id: Meeting.id,
         meetingEnumId: Meeting.meetingEnumId,
@@ -510,20 +512,23 @@ export class MeetingRepository {
         MeetingAnnouncement,
         eq(Meeting.announcementId, MeetingAnnouncement.id),
       )
-      .where(isNull(MeetingAnnouncement.deletedAt))
-      .offset((query.pageOffset - 1) * query.itemCount)
-      .limit(query.itemCount);
+      .where(
+        and(
+          isNull(MeetingAnnouncement.deletedAt),
+          ...(meetingEnumId != null
+            ? [eq(Meeting.meetingEnumId, meetingEnumId)]
+            : []),
+        ),
+      )
+      .offset((pageOffset - 1) * itemCount)
+      .limit(itemCount);
 
     // TODO(ym). 분과회의일 경우 title 뒤에 분과이름 추가하여 보내주기
-
-    if (query.meetingEnumId != null) {
-      rows = rows.filter(row => row.meetingEnumId === query.meetingEnumId);
-    }
 
     const result = {
       total: rows.length,
       items: rows,
-      offset: query.pageOffset,
+      offset: pageOffset,
     };
     return result;
   }
