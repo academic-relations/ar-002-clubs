@@ -6,6 +6,8 @@
 
 import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
 
+import { MEETING_PATH } from "../features/meeting/constants";
+
 const externalLinks = {
   allClubRepresentativeMeeting:
     "https://cafe.naver.com/ArticleList.nhn?search.clubid=26985838&search.menuid=14&search.boardtype=L",
@@ -109,25 +111,25 @@ const paths = {
       },
       {
         name: "전동대회",
-        path: `/meeting?type=${MeetingEnum.clubRepresentativesCouncilMeeting}`,
+        path: MEETING_PATH(MeetingEnum.clubRepresentativesCouncilMeeting),
         authority: ["all"],
         featureFlag: "DEFAULT",
       },
       {
         name: "확대운영위원회",
-        path: `/meeting?type=${MeetingEnum.expansiveOperativeCommittee}`,
+        path: MEETING_PATH(MeetingEnum.expansiveOperativeCommittee),
         authority: ["all"],
         featureFlag: "DEFAULT",
       },
       {
         name: "운영위원회",
-        path: `/meeting?type=${MeetingEnum.operativeCommittee}`,
+        path: MEETING_PATH(MeetingEnum.operativeCommittee),
         authority: ["all"],
         featureFlag: "DEFAULT",
       },
       {
         name: "분과회의",
-        path: `/meeting?type=${MeetingEnum.divisionMeeting}`,
+        path: MEETING_PATH(MeetingEnum.divisionMeeting),
         authority: ["all"],
         featureFlag: "DEFAULT",
       },

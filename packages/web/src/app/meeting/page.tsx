@@ -11,6 +11,10 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { MeetingNoticeItem } from "@sparcs-clubs/web/features/meeting/components/MeetingNoticeItem";
+import {
+  MEETING_LIST_PAGINATION_LIMIT,
+  MEETING_PATH,
+} from "@sparcs-clubs/web/features/meeting/constants";
 import useGetMeetings from "@sparcs-clubs/web/features/meeting/services/useGetMeetings";
 import {
   getMeetingEnumFromValue,
@@ -76,7 +80,6 @@ const ListWithPaginationWrapper = styled.div`
 `;
 
 const MeetingMainFrame: React.FC = () => {
-  const limit = 10;
   const router = useRouter();
   const searchParams = useSearchParams();
   const [page, setPage] = useState<number>(1);
@@ -86,7 +89,7 @@ const MeetingMainFrame: React.FC = () => {
   const { data, isLoading, isError } = useGetMeetings({
     meetingEnumId,
     pageOffset: page,
-    itemCount: limit,
+    itemCount: MEETING_LIST_PAGINATION_LIMIT,
   });
 
   return (
@@ -98,7 +101,7 @@ const MeetingMainFrame: React.FC = () => {
               name: meetingEnumId
                 ? meetingEnumToText(meetingEnumId.toString())
                 : "전체 회의",
-              path: `/meeting?type=${meetingEnumId}`,
+              path: MEETING_PATH(meetingEnumId),
             },
           ]}
           title={
@@ -131,9 +134,11 @@ const MeetingMainFrame: React.FC = () => {
             ))}
           </MeetingNoticeListWrapper>
           <Pagination
-            totalPage={data ? Math.ceil(data.total / limit) : 0}
+            totalPage={
+              data ? Math.ceil(data.total / MEETING_LIST_PAGINATION_LIMIT) : 0
+            }
             currentPage={page}
-            limit={limit}
+            limit={MEETING_LIST_PAGINATION_LIMIT}
             setPage={setPage}
           />
         </ListWithPaginationWrapper>
