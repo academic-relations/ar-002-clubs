@@ -115,13 +115,13 @@ const MeetingMainFrame: React.FC = () => {
             <MeetingNoticeHeaderWrapper>
               <MeetingNoticeHeader>
                 <MeetingNoticeStatusHeader>
-                  <Typography fw="REGULAR">상태</Typography>
+                  <Typography>상태</Typography>
                 </MeetingNoticeStatusHeader>
                 <MeetingNoticeContentHeader>
-                  <Typography fw="REGULAR">회의</Typography>
+                  <Typography>회의</Typography>
                 </MeetingNoticeContentHeader>
                 <MeetingNoticeDateHeader>
-                  <Typography fw="REGULAR">회의 일자</Typography>
+                  <Typography>회의 일자</Typography>
                 </MeetingNoticeDateHeader>
               </MeetingNoticeHeader>
             </MeetingNoticeHeaderWrapper>
