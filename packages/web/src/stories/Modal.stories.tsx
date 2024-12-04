@@ -22,6 +22,13 @@ type Story = StoryObj<typeof Modal>;
 export const Primary: Story = {
   args: {
     isOpen: true,
+    width: "fit-content",
+  },
+  parameters: {
+    docs: {
+      inlineStories: false,
+      iframeHeight: 600, // CHACHA: 모르겠다아아아
+    },
   },
   render: function Render(args) {
     return (
