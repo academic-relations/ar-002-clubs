@@ -5,7 +5,7 @@ name: AR-002 PR CI
 
 on:
   push:
-    branches: ["main", "dev","pnpm-update"]
+    branches: ["main", "dev"]
   pull_request:
     branches: ["main", "dev"]
 

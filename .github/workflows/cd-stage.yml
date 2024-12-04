@@ -6,7 +6,7 @@ permissions:
 
 on:
   push:
-    branches: ["dev"]
+    branches: ["dev","pnpm-update"]
   workflow_call:
     secrets:
       STAGE_WEBHOOK_ENDPOINT:
