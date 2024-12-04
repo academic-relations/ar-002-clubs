@@ -497,6 +497,20 @@ export class MeetingRepository {
     pageOffset: number,
     itemCount: number,
   ): Promise<ApiMee012ResponseOk> {
+    const conditions = [
+      isNull(MeetingAnnouncement.deletedAt),
+      ...(meetingEnumId != null
+        ? [eq(Meeting.meetingEnumId, meetingEnumId)]
+        : []),
+    ];
+
+    const numberOfMeetings = (
+      await this.db
+        .select({ count: count() })
+        .from(Meeting)
+        .where(and(...conditions))
+    ).at(0).count;
+
     const rows = await this.db
       .select({
         id: Meeting.id,
@@ -512,21 +526,15 @@ export class MeetingRepository {
         MeetingAnnouncement,
         eq(Meeting.announcementId, MeetingAnnouncement.id),
       )
-      .where(
-        and(
-          isNull(MeetingAnnouncement.deletedAt),
-          ...(meetingEnumId != null
-            ? [eq(Meeting.meetingEnumId, meetingEnumId)]
-            : []),
-        ),
-      )
+      .where(and(...conditions))
       .offset((pageOffset - 1) * itemCount)
       .limit(itemCount);
 
-    // TODO(ym). 분과회의일 경우 title 뒤에 분과이름 추가하여 보내주기
+    // TODO(ym). 분과회의일 경우 title 뒤에 분과이름 추가하여 보내주기(혹은 분과이름 정보를 보내주기)
+    // (Meeting에 컬럼 추가할거 같은데 나중에 분과회의 tag 관련 작업할 때 한 번에 하기!)
 
     const result = {
-      total: rows.length,
+      total: numberOfMeetings,
       items: rows,
       offset: pageOffset,
     };
