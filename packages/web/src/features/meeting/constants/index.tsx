@@ -1,0 +1,1 @@
+export const MEETING_LIST_PAGINATION_LIMIT = 10;
