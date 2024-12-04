@@ -7,7 +7,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Radio> = {
   component: Radio,
-  title: "Radio",
   parameters: {
     layout: "centered",
   },
