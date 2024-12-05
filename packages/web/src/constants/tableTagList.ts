@@ -11,6 +11,8 @@ import {
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
 
+import { StorageStatusEnum } from "@sparcs-clubs/interface/common/enum/storage.enum";
+
 import { DivisionType } from "@sparcs-clubs/web/types/divisions.types";
 
 import { TagColor } from "../common/components/Tag";
@@ -185,6 +187,39 @@ const DivisionTypeTagList: { [key in DivisionType]: StatusDetail } = {
   [DivisionType.Religion]: { text: "종교", color: "PURPLE" },
 };
 
+const StorageTagList: {
+  [key in StorageStatusEnum]: StatusDetail;
+} = {
+  [StorageStatusEnum.Applied]: {
+    text: "신청",
+    color: "BLUE",
+  },
+  [StorageStatusEnum.Canceled]: {
+    text: "취소",
+    color: "GRAY",
+  },
+  [StorageStatusEnum.Approved]: {
+    text: "승인",
+    color: "YELLOW",
+  },
+  [StorageStatusEnum.Rejected]: {
+    text: "반려",
+    color: "RED",
+  },
+  [StorageStatusEnum.Received]: {
+    text: "보관",
+    color: "PURPLE",
+  },
+  [StorageStatusEnum.Shipped]: {
+    text: "반출",
+    color: "GREEN",
+  },
+  [StorageStatusEnum.Overdue]: {
+    text: "연체",
+    color: "PINK",
+  },
+};
+
 export {
   AcfTagList,
   CmsTagList,
@@ -200,4 +235,5 @@ export {
   RegistrationTypeTagList,
   RegistrationStatusTagList,
   DivisionTypeTagList,
+  StorageTagList,
 };

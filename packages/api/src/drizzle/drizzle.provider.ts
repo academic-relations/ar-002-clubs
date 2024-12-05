@@ -15,6 +15,7 @@ import * as promotionalPrintingSchema from "./schema/promotional-printing.schema
 import * as refreshTokenSchema from "./schema/refresh-token.schema";
 import * as registrationSchema from "./schema/registration.schema";
 import * as rentalSchema from "./schema/rental.schema";
+import * as storageSchema from "./schema/storage.schema";
 import * as userSchema from "./schema/user.schema";
 
 export const DrizzleAsyncProvider = "drizzleProvider";
@@ -68,6 +69,7 @@ export const getDbInstance = async () => {
         userSchema,
         registrationSchema,
         meetingSchema,
+        storageSchema,
       },
       mode: "default",
       logger: true,

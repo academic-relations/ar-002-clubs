@@ -4,7 +4,8 @@ export type ServiceType =
   | "rental-business"
   | "printing-business"
   | "activity-certificate"
-  | "common-space";
+  | "common-space"
+  | "storage";
 
 export enum ManageClubRentalBusinessStatus {
   submit = "신청",
@@ -75,6 +76,26 @@ export interface ManageClubCommonSpaceData {
   reserveRoom: string;
 }
 
+export enum ManageClubStorageStatus {
+  submit = "신청",
+  cancel = "취소",
+  approve = "승인",
+  reject = "반려",
+  receive = "보관",
+  shipp = "반출",
+  overdue = "연체",
+}
+
+export interface ManageClubStorageData {
+  status: ManageClubStorageStatus;
+  createdAt: Date;
+  name: string;
+  studentPhoneNumber: string;
+  desiredStartDate: Date;
+  desiredEndDate: Date;
+  numberOfNonStandardItems: number;
+}
+
 export interface ManageClubTagColorsInterface {
   submit: TagColor;
   cancel: TagColor;
@@ -87,4 +108,5 @@ export interface ManageClubTagColorsInterface {
   reject: TagColor;
   use: TagColor;
   overdue: TagColor;
+  shipp: TagColor;
 }

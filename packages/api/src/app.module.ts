@@ -20,6 +20,7 @@ import { PromotionalPrintingModule } from "./feature/promotional-printing/promot
 import { RegistrationModule } from "./feature/registration/registration.module";
 import { RentalModule } from "./feature/rental/rental.module";
 import SemesterModule from "./feature/semester/semester.module";
+import StorageModule from "./feature/storage/storage.module";
 import UserModule from "./feature/user/user.module";
 
 @Module({
@@ -40,6 +41,7 @@ import UserModule from "./feature/user/user.module";
     ActivityCertificateModule,
     AuthModule,
     MeetingModule,
+    StorageModule,
     SemesterModule,
   ],
   controllers: [AppController],

@@ -7,6 +7,8 @@ import {
   ManageClubPrintingBusinessStatus,
   ManageClubRentalBusinessData,
   ManageClubRentalBusinessStatus,
+  ManageClubStorageData,
+  ManageClubStorageStatus,
 } from "./ManageClubTable";
 
 export const rentalBusinessMockData: ManageClubRentalBusinessData[] = [
@@ -183,5 +185,17 @@ export const commonSpaceMockData: ManageClubCommonSpaceData[] = [
     reserveTime: new Date("2024-03-20 15:00"),
     reserveStartEndHour: "15:00 ~ 17:00",
     reserveRoom: "제1공용동아리방 (태울관 2101호)",
+  }),
+];
+
+export const storageMockData: ManageClubStorageData[] = [
+  ...Array(3).fill({
+    status: ManageClubStorageStatus.submit,
+    createdAt: new Date("2024-03-02 21:00"),
+    name: "일지윤",
+    studentPhoneNumber: "010-1234-5678",
+    desiredStartDate: new Date("2024-03-02 21:00"),
+    desiredEndDate: new Date("2024-03-02 21:00"),
+    numberOfNonStandardItem: 3,
   }),
 ];
