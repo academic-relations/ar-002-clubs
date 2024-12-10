@@ -7,12 +7,14 @@ import ActivityCertificateTable from "@sparcs-clubs/web/features/manage-club/com
 import CommonSpaceTable from "@sparcs-clubs/web/features/manage-club/components/CommonSpaceTable";
 import PrintingTable from "@sparcs-clubs/web/features/manage-club/components/PrintingTable";
 import RentalTable from "@sparcs-clubs/web/features/manage-club/components/RentalTable";
+import StorageTable from "@sparcs-clubs/web/features/manage-club/components/StorageTable";
 
 import {
   mockupManageAcf,
   mockupManageCms,
   mockupManagePrint,
   mockupManageRental,
+  mockupManageStorage,
 } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
 const ServiceManageFrame: React.FC = () => (
@@ -49,6 +51,14 @@ const ServiceManageFrame: React.FC = () => (
           moreDetailPath="/manage-club/common-space"
         />
         <CommonSpaceTable spaceList={mockupManageCms} />
+      </FlexWrapper>
+      <FlexWrapper direction="column" gap={20}>
+        <MoreDetailTitle
+          title="창고 사용"
+          moreDetail="내역 더보기"
+          moreDetailPath="/manage-club/storage"
+        />
+        <StorageTable storageList={mockupManageStorage} />
       </FlexWrapper>
     </FlexWrapper>
   </FoldableSectionTitle>
