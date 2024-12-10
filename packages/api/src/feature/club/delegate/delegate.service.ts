@@ -298,6 +298,7 @@ export default class ClubDelegateService {
           });
 
         return {
+          id: e.id,
           clubId: e.clubId,
           clubDelegateChangeRequestStatusEnumId:
             e.clubDelegateChangeRequestStatusEnumId,
