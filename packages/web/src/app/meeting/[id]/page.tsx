@@ -18,7 +18,6 @@ import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorMod
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { meetingEnumToText } from "@sparcs-clubs/web/features/meeting/constants/getEnumType";
 import {
   dateTime,
   endDate,
@@ -30,6 +29,7 @@ import {
 } from "@sparcs-clubs/web/features/meeting/constants/meetingTemplate";
 import useDeleteMeeting from "@sparcs-clubs/web/features/meeting/services/useDeleteMeeting";
 import useGetMeetingDetail from "@sparcs-clubs/web/features/meeting/services/useGetMeetingDetail";
+import { meetingEnumToText } from "@sparcs-clubs/web/features/meeting/types/meeting";
 import {
   formatDateTime,
   formatDateTimeEn,
