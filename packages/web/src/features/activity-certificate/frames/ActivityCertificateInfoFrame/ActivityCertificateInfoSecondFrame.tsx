@@ -132,12 +132,7 @@ const ActivityCertificateInfoSecondFrame: React.FC<
   };
 
   const handleAddActivityDescription = () => {
-    if (fields.length === 0) {
-      append({
-        dateRange: [null, null],
-        description: "",
-      });
-    } else if (fields.length < 5) {
+    if (fields.length < 5) {
       append({
         dateRange: [null, null],
         description: "",

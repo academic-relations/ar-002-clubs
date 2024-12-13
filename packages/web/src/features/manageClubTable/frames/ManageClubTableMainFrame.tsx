@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 "use client";
 
 import React, { useState } from "react";
@@ -16,12 +18,14 @@ import {
   commonSpaceColumnSort,
   printingBusinessColumnSort,
   rentalBusinessColumnSort,
+  storageColumnSort,
 } from "../services/columnSort";
 import {
   ManageClubActivityCertificateStatus,
   ManageClubCommonSpaceStatus,
   ManageClubPrintingBusinessStatus,
   ManageClubRentalBusinessStatus,
+  ManageClubStorageStatus,
   ManageClubTagColorsInterface,
   ServiceType,
 } from "../types/ManageClubTable";
@@ -34,12 +38,14 @@ import {
   commonSpaceHeaders,
   printingBusinessHeaders,
   rentalBusinessHeaders,
+  storageHeaders,
 } from "../types/ManageClubTableHeader";
 import {
   activityCertificateMockData,
   commonSpaceMockData,
   printingBusinessMockData,
   rentalBusinessMockData,
+  storageMockData,
 } from "../types/mock";
 
 interface ManageClubTableMainFrameProps {
@@ -91,6 +97,8 @@ const mockData = (type: ServiceType, sortColumnName: string) => {
       return activityCertificateMockData.sort(
         activityCertificateColumnSort(sortColumnName),
       );
+    // case "storage":
+    //   return storageMockData.sort(storageColumnSort(sortColumnName));
     default: // "common-space"
       return commonSpaceMockData.sort(commonSpaceColumnSort(sortColumnName));
   }
@@ -104,6 +112,8 @@ const headerTypes = (type: ServiceType) => {
       return printingBusinessHeaders;
     case "activity-certificate":
       return activityCertificateHeaders;
+    case "storage":
+      return storageHeaders;
     default: // "common-space"
       return commonSpaceHeaders;
   }
@@ -117,6 +127,8 @@ const statusTypes = (type: ServiceType) => {
       return ManageClubPrintingBusinessStatus;
     case "activity-certificate":
       return ManageClubActivityCertificateStatus;
+    case "storage":
+      return ManageClubStorageStatus;
     default: // "common-space"
       return ManageClubCommonSpaceStatus;
   }
@@ -143,6 +155,7 @@ const ManageClubTableMainFrame: React.FC<ManageClubTableMainFrameProps> = ({
     "printing-business": "홍보물 인쇄",
     "activity-certificate": "활동확인서 발급",
     "common-space": "공용공간 비정기사용",
+    "storage": "창고 사용",
   };
   const title = titles[pageType];
 

@@ -12,6 +12,7 @@ export const ManageClubTagColors: ManageClubTagColorsInterface = {
   reject: "RED",
   use: "GREEN",
   overdue: "PINK",
+  shipp: "GREEN",
 };
 
 export const dateAndTimeFormatKeys = ["submitTime", "receiveTime"];
@@ -42,6 +43,16 @@ export const activityCertificateStepOrder = [
   "반려",
 ];
 export const commonSpaceStepOrder = ["신청", "취소", "사용"];
+
+export const storageStepOrder = [
+  "신청",
+  "취소",
+  "승인",
+  "반려",
+  "보관",
+  "반출",
+  "연체",
+];
 
 export const formattedString = (
   key: string,
