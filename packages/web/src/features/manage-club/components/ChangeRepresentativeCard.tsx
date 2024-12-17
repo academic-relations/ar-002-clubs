@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { ApiClb006ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb006";
 import { ApiClb008ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb008";
 import {
   ClubDelegateChangeRequestStatusEnum,
@@ -7,21 +8,17 @@ import {
 } from "@sparcs-clubs/interface/common/enum/club.enum";
 import styled from "styled-components";
 
-import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { mockClubDelegateCandidates } from "../services/_mock/mockDelegate";
 import { deleteChangeDelegateRequest } from "../services/deleteChangeDelegateRequest";
 import { useGetChangeDelegateRequests } from "../services/getChangeDelegateRequests";
-import { useGetClubDelegate } from "../services/getClubDelegate";
-
 import { updateClubDelegates } from "../services/updateClubDelegate";
 
-import ChangeRepresentative from "./ChangeRepresentative";
+import ChangeRepresentativeInfo from "./ChangeRepresentativeInfo";
 
 const LabelWrapper = styled.div`
   display: flex;
@@ -31,20 +28,62 @@ const LabelWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const ChangeRepresentativeCard: React.FC = () => {
-  const clubId = 23; // TODO: 동아리 id 받아오기
+const ChangeRepresentativeCard: React.FC<{
+  clubId: number;
+  delegatesNow: ApiClb006ResponseOK;
+  clubMembers: ApiClb008ResponseOk;
+  clubName: string;
+}> = ({ clubId, delegatesNow, clubMembers, clubName }) => {
+  const getSelectItems = (members: ApiClb008ResponseOk): SelectItem<string>[] =>
+    members?.students.map(member => ({
+      label: `${member.studentNumber} ${member.name}${
+        member.phoneNumber ? ` (${member.phoneNumber})` : ""
+      }`,
+      value: member.id.toString(),
+      selectable: !delegatesNow.delegates.some(
+        delegate => delegate.studentId === member.id,
+      ),
+    })) ?? [];
 
-  const {
-    data: delegatesNow,
-    isLoading,
-    isError,
-  } = useGetClubDelegate({ clubId });
+  const [representativeItems, setRepresentativeItems] = useState<
+    SelectItem<string>[]
+  >(getSelectItems(clubMembers));
 
-  const [representative, setRepresentative] = useState<string>("");
-  const [representativeName, setRepresentativeName] = useState<string>("");
-  const [delegate1, setDelegate1] = useState<string>("");
-  const [delegate2, setDelegate2] = useState<string>("");
-  // TODO: 중복 선택 막는 로직 추가
+  const [delegateItems, setDelegateItems] = useState<SelectItem<string>[]>(
+    getSelectItems(clubMembers).filter(
+      item =>
+        item.value !==
+        delegatesNow?.delegates
+          .find(delegate => delegate.delegateEnumId === 1)
+          ?.studentId?.toString(),
+    ),
+  );
+
+  const representative =
+    delegatesNow?.delegates
+      .find(delegate => delegate.delegateEnumId === 1)
+      ?.studentId?.toString() ?? "";
+
+  const representativeName =
+    delegatesNow?.delegates.find(delegate => delegate.delegateEnumId === 1)
+      ?.name ?? "";
+
+  const [delegate1, setDelegate1] = useState<string>(
+    delegatesNow?.delegates.find(delegate => delegate.delegateEnumId === 2)
+      ?.studentId === 0
+      ? ""
+      : delegatesNow?.delegates
+          .find(delegate => delegate.delegateEnumId === 2)
+          ?.studentId.toString() ?? "",
+  );
+  const [delegate2, setDelegate2] = useState<string>(
+    delegatesNow?.delegates.find(delegate => delegate.delegateEnumId === 3)
+      ?.studentId === 0
+      ? ""
+      : delegatesNow?.delegates
+          .find(delegate => delegate.delegateEnumId === 3)
+          ?.studentId.toString() ?? "",
+  );
 
   const [type, setType] = useState<
     "Default" | "Applied" | "Rejected" | "Canceled"
@@ -55,7 +94,7 @@ const ChangeRepresentativeCard: React.FC = () => {
   });
 
   useEffect(() => {
-    switch (requestStatus?.requests[0].clubDelegateChangeRequestStatusEnumId) {
+    switch (requestStatus?.requests[0]?.clubDelegateChangeRequestStatusEnumId) {
       case ClubDelegateChangeRequestStatusEnum.Applied:
         setType("Applied");
         break;
@@ -70,144 +109,156 @@ const ChangeRepresentativeCard: React.FC = () => {
     }
   }, [requestStatus]);
 
+  const updateCandidateItems = () => {
+    setRepresentativeItems(prevItems =>
+      prevItems.map(item =>
+        item.value === delegate1 ||
+        item.value === delegate2 ||
+        item.value === representative
+          ? { ...item, selectable: false }
+          : { ...item, selectable: true },
+      ),
+    );
+    setDelegateItems(prevItems =>
+      prevItems.map(item =>
+        item.value === delegate1 ||
+        item.value === delegate2 ||
+        item.value === representative
+          ? { ...item, selectable: false }
+          : { ...item, selectable: true },
+      ),
+    );
+  };
+
+  useEffect(() => {
+    if (
+      delegate1 !==
+        delegatesNow?.delegates
+          .find(delegate => delegate.delegateEnumId === 2)
+          ?.studentId?.toString() &&
+      type !== "Applied"
+    ) {
+      updateClubDelegates(
+        { clubId },
+        {
+          delegateEnumId: ClubDelegateEnum.Delegate1,
+          studentId: delegate1 === "" ? 0 : Number(delegate1),
+        },
+      );
+      updateCandidateItems();
+    }
+  }, [delegate1, delegatesNow]);
+
+  useEffect(() => {
+    if (
+      delegate2 !==
+        delegatesNow?.delegates
+          .find(delegate => delegate.delegateEnumId === 3)
+          ?.studentId?.toString() &&
+      type !== "Applied"
+    ) {
+      updateClubDelegates(
+        { clubId },
+        {
+          delegateEnumId: ClubDelegateEnum.Delegate2,
+          studentId: delegate2 === "" ? 0 : Number(delegate2),
+        },
+      );
+      updateCandidateItems();
+    }
+  }, [delegate2, delegatesNow]);
+
   const cancelRequest = () => {
     setType("Canceled");
     deleteChangeDelegateRequest({ clubId });
     refetch();
   };
 
-  const getSelectItems = (
-    members: ApiClb008ResponseOk | undefined,
-  ): SelectItem<string>[] =>
-    members?.students.map(member => ({
-      label: `${member.id} ${member.name} (${member.phoneNumber})`,
-      value: member.id.toString(),
-      selectable: true,
-    })) ?? [];
-
-  // TODO: 실제 API로 대표자 및 대의원 후보 목록 가져오기
-  const representativeCandidates = mockClubDelegateCandidates;
-  const delegate1Candidates = mockClubDelegateCandidates;
-  const delegate2Candidates = mockClubDelegateCandidates;
-
-  useEffect(() => {
-    setRepresentative(delegatesNow?.delegates[0].studentId?.toString() ?? "");
-    const representativeCandidate = representativeCandidates?.students.find(
-      member => member.id.toString() === representative,
-    );
-    setRepresentativeName(representativeCandidate?.name ?? "");
-    setDelegate1(delegatesNow?.delegates[1].studentId?.toString() ?? "");
-    setDelegate2(delegatesNow?.delegates[2].studentId?.toString() ?? "");
-  }, [delegatesNow]);
-
-  const changeRepresentative = (studentId: number) => {
-    updateClubDelegates(
-      { clubId },
-      { delegateEnumId: ClubDelegateEnum.Representative, studentId },
-    );
-    refetch();
+  const changeDelegateRequest = async (
+    studentId: number,
+    delegateEnumId: ClubDelegateEnum,
+  ) => {
+    await updateClubDelegates({ clubId }, { delegateEnumId, studentId });
+    await refetch();
+    if (delegateEnumId === ClubDelegateEnum.Representative && studentId !== 0) {
+      setType("Applied");
+    }
+    updateCandidateItems();
   };
-
-  useEffect(() => {
-    if (
-      delegate1 !== delegatesNow?.delegates[1].studentId?.toString() &&
-      delegate1 !== ""
-    ) {
-      updateClubDelegates(
-        { clubId },
-        {
-          delegateEnumId: ClubDelegateEnum.Delegate1,
-          studentId: Number(delegate1),
-        },
-      );
-    }
-  }, [delegate1]);
-
-  useEffect(() => {
-    if (
-      delegate2 !== delegatesNow?.delegates[2].studentId?.toString() &&
-      delegate2 !== ""
-    ) {
-      updateClubDelegates(
-        { clubId },
-        {
-          delegateEnumId: ClubDelegateEnum.Delegate2,
-          studentId: Number(delegate2),
-        },
-      );
-    }
-  }, [delegate2]);
 
   return (
     <Card outline gap={32} style={{ flex: 1 }}>
       <Typography fw="MEDIUM" fs={20} lh={24}>
         대표자 및 대의원
       </Typography>
-      <AsyncBoundary isLoading={isLoading} isError={isError}>
-        {type !== "Default" && (
-          <ChangeRepresentative
-            type={type}
-            clubName="술박스"
-            prevRepresentative={`${representative} ${representativeName}`}
-            newRepresentative={`${requestStatus?.requests[0].studentId} ${requestStatus?.requests[0].studentName}`}
+      {type !== "Default" && (
+        <ChangeRepresentativeInfo
+          type={type}
+          clubName={clubName}
+          // TODO: studentNumber 받기
+          prevRepresentative={`${representative} ${representativeName}`}
+          newRepresentative={`${requestStatus?.requests[0]?.studentId} ${requestStatus?.requests[0]?.studentName}`}
+        />
+      )}
+      <FlexWrapper direction="column" gap={4}>
+        <LabelWrapper>
+          <Typography fw="MEDIUM" fs={16} lh={20}>
+            대표자
+          </Typography>
+          {type === "Applied" && (
+            <TextButton text="대표자 변경 요청 취소" onClick={cancelRequest} />
+          )}
+        </LabelWrapper>
+        <Select
+          items={representativeItems}
+          value={representative}
+          onChange={value => {
+            changeDelegateRequest(
+              Number(value),
+              ClubDelegateEnum.Representative,
+            );
+          }}
+          disabled={type === "Applied"}
+        />
+      </FlexWrapper>
+      <FlexWrapper direction="column" gap={4}>
+        <LabelWrapper>
+          <Typography fw="MEDIUM" fs={16} lh={20}>
+            대의원 1
+          </Typography>
+          <TextButton
+            text="대의원1 삭제"
+            onClick={() => setDelegate1("")}
+            disabled={delegate1 === ""}
           />
-        )}
-        <FlexWrapper direction="column" gap={4}>
-          <LabelWrapper>
-            <Typography fw="MEDIUM" fs={16} lh={20}>
-              대표자
-            </Typography>
-            {type === "Applied" && (
-              <TextButton
-                text="대표자 변경 요청 취소"
-                onClick={cancelRequest}
-              />
-            )}
-          </LabelWrapper>
-          <Select
-            items={getSelectItems(representativeCandidates)}
-            value={representative}
-            onChange={setRepresentative}
-            disabled={type === "Applied"}
+        </LabelWrapper>
+        <Select
+          items={delegateItems}
+          value={delegate1}
+          onChange={setDelegate1}
+          isRequired={false}
+          disabled={type === "Applied"}
+        />
+      </FlexWrapper>
+      <FlexWrapper direction="column" gap={4}>
+        <LabelWrapper>
+          <Typography fw="MEDIUM" fs={16} lh={20}>
+            대의원 2
+          </Typography>
+          <TextButton
+            text="대의원2 삭제"
+            onClick={() => setDelegate2("")}
+            disabled={delegate2 === ""}
           />
-        </FlexWrapper>
-        <FlexWrapper direction="column" gap={4}>
-          <LabelWrapper>
-            <Typography fw="MEDIUM" fs={16} lh={20}>
-              대의원 1
-            </Typography>
-            <TextButton
-              text="대표자로 지정"
-              disabled={type === "Applied"}
-              onClick={() => changeRepresentative(Number(delegate1))}
-            />
-          </LabelWrapper>
-          <Select
-            items={getSelectItems(delegate1Candidates)}
-            value={delegate1}
-            onChange={setDelegate1}
-            disabled={type === "Applied"}
-          />
-        </FlexWrapper>
-        <FlexWrapper direction="column" gap={4}>
-          <LabelWrapper>
-            <Typography fw="MEDIUM" fs={16} lh={20}>
-              대의원 2
-            </Typography>
-            <TextButton
-              text="대표자로 지정"
-              disabled={type === "Applied"}
-              onClick={() => changeRepresentative(Number(delegate2))}
-            />
-          </LabelWrapper>
-          <Select
-            items={getSelectItems(delegate2Candidates)}
-            value={delegate2}
-            onChange={setDelegate2}
-            disabled={type === "Applied"}
-          />
-        </FlexWrapper>
-      </AsyncBoundary>
+        </LabelWrapper>
+        <Select
+          items={delegateItems}
+          value={delegate2}
+          onChange={setDelegate2}
+          isRequired={false}
+          disabled={type === "Applied"}
+        />
+      </FlexWrapper>
     </Card>
   );
 };
