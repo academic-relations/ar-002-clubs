@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import apiCms002 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
 
@@ -9,17 +9,22 @@ import {
   startOfWeek,
 } from "date-fns";
 
+import { useFormContext, useWatch } from "react-hook-form";
+
 import styled from "styled-components";
 
 import { z } from "zod";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 
+import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Select from "@sparcs-clubs/web/common/components/Select";
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import Timetable from "@sparcs-clubs/web/common/components/Timetable";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -54,40 +59,59 @@ type UsageOrder = z.infer<
 >;
 
 const CommonSpaceInfoSecondFrame: React.FC<
-  CommonSpaceInfoProps & {
-    setNextEnabled: (enabled: boolean) => void;
-  }
-> = ({ setNextEnabled, body, setBody, param, setParam }) => {
+  Partial<CommonSpaceInfoProps> & { onPrev: () => void; onNext: () => void }
+> = ({ onPrev, onNext }) => {
+  const { control, watch, setValue } = useFormContext();
   const { data, isLoading, isError } = useGetCommonSpaces();
   const [date, setDate] = useState(startOfWeek(new Date()));
-
   const [intermediateSelectedValue, setIntermediateSelectedValue] =
     useState("");
-  const [hasSelectError, setHasSelectError] = useState(false);
-  const [dateTimeRange, setDateTimeRange] = useState<[Date, Date] | undefined>(
-    body?.startTerm && body?.endTerm
-      ? [body.startTerm, body.endTerm]
-      : undefined,
-  );
   const [showModal, setShowModal] = useState(false);
+
+  const startTerm = useWatch({ control, name: "body.startTerm" });
+  const endTerm = useWatch({ control, name: "body.endTerm" });
+
+  const dateTimeRange: [Date, Date] | undefined = useMemo(
+    () => (startTerm && endTerm ? [startTerm, endTerm] : undefined),
+    [startTerm, endTerm],
+  );
+
+  const param = watch("param") || { spaceId: 0 };
+
+  const setDateTimeRange: React.Dispatch<
+    React.SetStateAction<[Date, Date] | undefined>
+  > = useCallback(
+    range => {
+      const newRange =
+        typeof range === "function" ? range(dateTimeRange) : range;
+      if (newRange === undefined) {
+        setValue("body.startTerm", undefined);
+        setValue("body.endTerm", undefined);
+        return;
+      }
+      if (newRange) {
+        setValue("body.startTerm", newRange[0]);
+        setValue("body.endTerm", newRange[1]);
+      }
+    },
+    [setValue],
+  );
 
   const {
     data: usageOrdersData,
     isLoading: isUsageOrdersLoading,
     isError: isUsageOrdersError,
   } = useGetCommonSpaceUsageOrders(
-    {
-      spaceId: param.spaceId!,
-    },
+    { spaceId: param?.spaceId },
     { startDate: date, endDate: addWeeks(date, 1) },
   );
 
   const space = useMemo(
     () =>
       data?.commonSpaces.find(
-        item => item.id.toString() === param.spaceId?.toString(),
+        item => item.id.toString() === param?.spaceId?.toString(),
       ),
-    [data?.commonSpaces, param.spaceId],
+    [data?.commonSpaces, param?.spaceId],
   );
 
   const disabledCells = useMemo(() => {
@@ -121,72 +145,83 @@ const CommonSpaceInfoSecondFrame: React.FC<
     return cells;
   }, [usageOrdersData, date]);
 
-  useEffect(() => {
-    const allConditionsMet =
-      Boolean(param.spaceId) && !hasSelectError && !!dateTimeRange;
-    setNextEnabled(allConditionsMet);
-  }, [param, hasSelectError, setNextEnabled, dateTimeRange]);
-
   const diffHours =
     dateTimeRange && differenceInHours(dateTimeRange[1], dateTimeRange[0]);
+
   const diffMinutes =
     dateTimeRange && differenceInMinutes(dateTimeRange[1], dateTimeRange[0]);
 
+  const bodyStartTerm = watch("body.startTerm");
+  const bodyEndTerm = watch("body.endTerm");
+
   useEffect(() => {
-    if (dateTimeRange) {
-      setBody(prev => ({
-        ...prev,
-        startTerm: dateTimeRange[0],
-        endTerm: dateTimeRange[1],
-      }));
+    if (!dateTimeRange) {
+      return;
     }
-  }, [dateTimeRange, setBody]);
+    if (
+      bodyStartTerm?.getTime() !== dateTimeRange[0]?.getTime() ||
+      bodyEndTerm?.getTime() !== dateTimeRange[1]?.getTime()
+    ) {
+      setValue("body.startTerm", dateTimeRange[0]);
+      setValue("body.endTerm", dateTimeRange[1]);
+    }
+  }, [dateTimeRange, setValue, bodyEndTerm, bodyStartTerm]);
 
   return (
     <>
-      <AsyncBoundary isLoading={isLoading} isError={isError}>
-        <Select
-          items={
-            data?.commonSpaces.map(s => ({
-              value: s.id.toString(),
-              label: s.name,
-              selectable: true,
-            })) || []
-          }
-          value={param.spaceId?.toString() || ""}
-          onChange={value => {
-            if (dateTimeRange) {
-              setShowModal(true);
-              setIntermediateSelectedValue(value);
-            } else {
-              setParam({ ...param, spaceId: Number(value) });
-            }
-          }}
-          label="공용공간"
-          setErrorStatus={setHasSelectError}
+      <AsyncBoundary isLoading={isLoading && !data} isError={isError}>
+        <FormController
+          name="param.spaceId"
+          control={control}
+          renderItem={({ onChange, value }) => (
+            <>
+              <Select
+                items={
+                  data?.commonSpaces.map(s => ({
+                    value: s.id.toString(),
+                    label: s.name,
+                    selectable: true,
+                  })) || []
+                }
+                value={value}
+                onChange={val => {
+                  if (dateTimeRange) {
+                    setIntermediateSelectedValue(val);
+                    setShowModal(true);
+                  } else {
+                    setValue("param.spaceId", parseInt(val));
+                    onChange(val);
+                  }
+                }}
+                label="공용공간"
+              />
+              {showModal && (
+                <Modal isOpen={showModal}>
+                  <CancellableModalContent
+                    onClose={() => {
+                      setShowModal(false);
+                      setIntermediateSelectedValue("");
+                    }}
+                    onConfirm={() => {
+                      setShowModal(false);
+                      setValue(
+                        "param.spaceId",
+                        parseInt(intermediateSelectedValue),
+                      );
+                      onChange(intermediateSelectedValue);
+                      setIntermediateSelectedValue("");
+                      setDateTimeRange(undefined);
+                    }}
+                  >
+                    공용공간을 변경하면 선택한 시간이 모두 초기화됩니다.
+                    <br />
+                    ㄱㅊ?
+                  </CancellableModalContent>
+                </Modal>
+              )}
+            </>
+          )}
         />
-        {showModal ? (
-          <Modal>
-            <CancellableModalContent
-              onClose={() => {
-                setShowModal(false);
-                setIntermediateSelectedValue("");
-              }}
-              onConfirm={() => {
-                setShowModal(false);
-                setParam({
-                  ...param,
-                  spaceId: Number(intermediateSelectedValue),
-                });
-                setIntermediateSelectedValue("");
-              }}
-            >
-              공용공간을 변경하면 선택한 시간이 모두 초기화됩니다.
-              <br />
-              ㄱㅊ?
-            </CancellableModalContent>
-          </Modal>
-        ) : null}
       </AsyncBoundary>
       {space && (
         <>
@@ -224,6 +259,15 @@ const CommonSpaceInfoSecondFrame: React.FC<
           </StyledCardLayout>
         </>
       )}
+      <StyledBottom>
+        <Button onClick={onPrev}>이전</Button>
+        <Button
+          onClick={onNext}
+          type={param?.spaceId && dateTimeRange ? "default" : "disabled"}
+        >
+          다음
+        </Button>
+      </StyledBottom>
     </>
   );
 };
