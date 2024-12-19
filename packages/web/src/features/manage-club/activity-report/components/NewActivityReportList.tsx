@@ -8,94 +8,72 @@ import {
 import styled from "styled-components";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
-import Tag, { type TagColor } from "@sparcs-clubs/web/common/components/Tag";
+import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import {
+  ActTypeTagList,
+  ApplyTagList,
+} from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+
+import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import { type NewActivityReport } from "../types/activityReport";
 
 interface ActivityReportListProps {
-  data: NewActivityReport[];
+  data?: NewActivityReport[];
 }
 
 const columnHelper = createColumnHelper<NewActivityReport>();
 
-const getStatusTagColor = (status: string): TagColor => {
-  switch (status) {
-    case "운위":
-      return "ORANGE";
-    case "신청":
-      return "BLUE";
-    case "반려":
-      return "RED";
-    case "승인":
-      return "GREEN";
-    default:
-      return "GRAY";
-  }
-};
-
-const getProfessorApprovalTagColor = (professorApproval: string): TagColor => {
-  switch (professorApproval) {
-    case "대기":
-      return "GRAY";
-    case "완료":
-      return "GREEN";
-    case "반려":
-      return "RED";
-    default:
-      return "GRAY";
-  }
-};
-
-const getCategoryTagColor = (category: string): TagColor => {
-  switch (category) {
-    case "동아리 성격에 합치하는 내부 활동":
-      return "ORANGE";
-    case "동아리 성격에 합치하는 외부 활동":
-      return "BLUE";
-    case "동아리 성격에 합치하지 않는 활동":
-      return "PURPLE";
-    default:
-      return "GRAY";
-  }
-};
+// const getProfessorApprovalTagColor = (professorApproval: string): TagColor => {
+//   switch (professorApproval) {
+//     case "대기":
+//       return "GRAY";
+//     case "완료":
+//       return "GREEN";
+//     case "반려":
+//       return "RED";
+//     default:
+//       return "GRAY";
+//   }
+// };
 
 const columns = [
-  columnHelper.accessor(row => row.status, {
-    id: "status",
+  columnHelper.accessor("activityStatusEnumId", {
     header: "상태",
-    cell: info => (
-      <Tag color={getStatusTagColor(info.getValue())}>{info.getValue()}</Tag>
-    ),
+    cell: info => {
+      const { color, text } = getTagDetail(info.getValue(), ApplyTagList);
+      return <Tag color={color}>{text}</Tag>;
+    },
     size: 0,
   }),
-  columnHelper.accessor("professorApproval", {
-    id: "professorApproval",
-    header: "지도교수",
-    cell: info => (
-      <Tag color={getProfessorApprovalTagColor(info.getValue())}>
-        {info.getValue()}
-      </Tag>
-    ),
-    size: 0,
-  }),
-  columnHelper.accessor("activity", {
+  // columnHelper.accessor("professorApproval", {
+  //   id: "professorApproval",
+  //   header: "지도교수",
+  //   cell: info => (
+  //     <Tag color={getProfessorApprovalTagColor(info.getValue())}>
+  //       {info.getValue()}
+  //     </Tag>
+  //   ),
+  //   size: 0,
+  // }),
+  columnHelper.accessor("name", {
     id: "activity",
     header: "활동명",
     cell: info => info.getValue(),
     size: 20,
   }),
-  columnHelper.accessor("category", {
-    id: "category",
+  columnHelper.accessor("activityTypeEnumId", {
     header: "활동 분류",
-    cell: info => (
-      <Tag color={getCategoryTagColor(info.getValue())}>{info.getValue()}</Tag>
-    ),
+    cell: info => {
+      const { color, text } = getTagDetail(info.getValue(), ActTypeTagList);
+      return <Tag color={color}>{text}</Tag>;
+    },
     size: 32,
   }),
   columnHelper.accessor(
-    row => `${formatDate(row.startDate)} ~ ${formatDate(row.endDate)}`,
+    row => `${formatDate(row.startTerm)} ~ ${formatDate(row.endTerm)}`,
     {
       id: "date-range",
       header: "활동 기간",
@@ -114,7 +92,9 @@ const TableOuter = styled.div`
   align-self: stretch;
 `;
 
-const NewActivityReportList: React.FC<ActivityReportListProps> = ({ data }) => {
+const NewActivityReportList: React.FC<ActivityReportListProps> = ({
+  data = [],
+}) => {
   const table = useReactTable({
     columns,
     data,
