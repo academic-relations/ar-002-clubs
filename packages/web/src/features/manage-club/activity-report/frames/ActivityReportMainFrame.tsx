@@ -5,15 +5,14 @@ import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
-import FoldableSection from "@sparcs-clubs/web/common/components/FoldableSection";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { mockPastActivityData } from "../_mock/mock";
 import NewActivityReportList from "../components/NewActivityReportList";
 import PastActivityReportList from "../components/PastActivityReportList";
+import useGetActivityTerms from "../services/useGetActivityTerms";
 import useGetNewActivityReportList from "../services/useGetNewActivityReportList";
 
 const ActivityReportMainFrameInner = styled.div`
@@ -48,74 +47,78 @@ const PastSectionInner = styled.div`
 
 const ActivityReportMainFrame: React.FC = () => {
   // TODO(ym). manage-club 페이지에서 라우팅 연결되면 clubId props로 받아오기!
+  const clubId = 117;
   const {
     data: newActivityReportList,
     isLoading: isLoadingNewActivityReport,
     isError: isErrorNewActivityReport,
   } = useGetNewActivityReportList({
-    clubId: 117,
+    clubId,
   });
 
-  const isLoading = isLoadingNewActivityReport;
-  const isError = isErrorNewActivityReport;
+  const {
+    data: activityTerms,
+    isLoading: isLoadingActivityTerms,
+    isError: isErrorActivityTerms,
+  } = useGetActivityTerms({ clubId });
+
+  const isLoading = isLoadingActivityTerms;
+  const isError = isErrorActivityTerms;
 
   return (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <ActivityReportMainFrameInner>
-        <PageHead
-          items={[
-            { name: "대표 동아리 관리", path: "/manage-club" },
-            { name: "활동 보고서", path: "/manage-club/activity-report" },
-          ]}
-          title="활동 보고서"
-        />
-        <FoldableSectionTitle childrenMargin="20px" title="신규 활동 보고서">
-          <SectionInner>
-            <Info text="현재는 2024년 봄학기 활동 보고서 작성 기간입니다 (작성 마감 : 2024년 3월 10일 23:59)" />
-            <OptionOuter>
-              <Typography
-                fs={14}
-                fw="REGULAR"
-                lh={20}
-                color="GRAY.300"
-                ff="PRETENDARD"
-              >
-                활동 보고서는 최대 20개까지 작성 가능합니다
-              </Typography>
-              <Link href="/manage-club/activity-report/create">
-                <IconButton type="default" icon="add" onClick={() => {}}>
-                  활동 보고서 작성
-                </IconButton>
-              </Link>
-            </OptionOuter>
+    <ActivityReportMainFrameInner>
+      <PageHead
+        items={[
+          { name: "대표 동아리 관리", path: "/manage-club" },
+          { name: "활동 보고서", path: "/manage-club/activity-report" },
+        ]}
+        title="활동 보고서"
+      />
+      <FoldableSectionTitle childrenMargin="20px" title="신규 활동 보고서">
+        <SectionInner>
+          <Info text="현재는 2024년 봄학기 활동 보고서 작성 기간입니다 (작성 마감 : 2024년 3월 10일 23:59)" />
+          <OptionOuter>
+            <Typography
+              fs={14}
+              fw="REGULAR"
+              lh={20}
+              color="GRAY.300"
+              ff="PRETENDARD"
+            >
+              활동 보고서는 최대 20개까지 작성 가능합니다
+            </Typography>
+            <Link href="/manage-club/activity-report/create">
+              <IconButton type="default" icon="add" onClick={() => {}}>
+                활동 보고서 작성
+              </IconButton>
+            </Link>
+          </OptionOuter>
+          <AsyncBoundary
+            isLoading={isLoadingNewActivityReport}
+            isError={isError}
+          >
             <NewActivityReportList data={newActivityReportList} />
-          </SectionInner>
-        </FoldableSectionTitle>
-        {/* TODO: profile 설정 */}
-        <FoldableSectionTitle title="과거 활동 보고서">
-          <PastSectionInner>
-            <FoldableSection title="2023년 가을학기 (총 6개)">
+          </AsyncBoundary>
+        </SectionInner>
+      </FoldableSectionTitle>
+      {/* TODO: profile 설정 */}
+      <FoldableSectionTitle title="과거 활동 보고서">
+        <PastSectionInner>
+          <AsyncBoundary
+            isLoading={isLoading}
+            isError={isErrorNewActivityReport}
+          >
+            {activityTerms?.terms.map(term => (
               <PastActivityReportList
-                data={mockPastActivityData.activities}
-                profile="undergraduate"
+                key={term.id}
+                term={term}
+                clubId={clubId}
               />
-            </FoldableSection>
-            <FoldableSection title="2023년 봄학기 (총 6개)">
-              <PastActivityReportList
-                data={mockPastActivityData.activities}
-                profile="undergraduate"
-              />
-            </FoldableSection>
-            <FoldableSection title="2022년 가을학기 (총 6개)">
-              <PastActivityReportList
-                data={mockPastActivityData.activities}
-                profile="undergraduate"
-              />
-            </FoldableSection>
-          </PastSectionInner>
-        </FoldableSectionTitle>
-      </ActivityReportMainFrameInner>
-    </AsyncBoundary>
+            ))}
+          </AsyncBoundary>
+        </PastSectionInner>
+      </FoldableSectionTitle>
+    </ActivityReportMainFrameInner>
   );
 };
 
