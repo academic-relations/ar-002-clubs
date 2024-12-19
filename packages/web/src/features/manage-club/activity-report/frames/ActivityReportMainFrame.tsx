@@ -101,20 +101,21 @@ const ActivityReportMainFrame: React.FC = () => {
           </AsyncBoundary>
         </SectionInner>
       </FoldableSectionTitle>
-      {/* TODO: profile 설정 */}
       <FoldableSectionTitle title="과거 활동 보고서">
         <PastSectionInner>
           <AsyncBoundary
             isLoading={isLoading}
             isError={isErrorNewActivityReport}
           >
-            {activityTerms?.terms.map(term => (
-              <PastActivityReportList
-                key={term.id}
-                term={term}
-                clubId={clubId}
-              />
-            ))}
+            {activityTerms?.terms
+              .toReversed()
+              .map(term => (
+                <PastActivityReportList
+                  key={term.id}
+                  term={term}
+                  clubId={clubId}
+                />
+              ))}
           </AsyncBoundary>
         </PastSectionInner>
       </FoldableSectionTitle>
