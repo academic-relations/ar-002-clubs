@@ -66,7 +66,7 @@ import type {
   ApiAct004ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct004";
 import type {
-  ApiAct005RequestBody,
+  ApiAct005RequestQuery,
   ApiAct005ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
 import type {
@@ -129,10 +129,10 @@ export default class ActivityController {
   @UsePipes(new ZodPipe(apiAct005))
   async getStudentActivities(
     @GetStudent() user: GetStudent,
-    @Body() body: ApiAct005RequestBody,
+    @Query() query: ApiAct005RequestQuery,
   ): Promise<ApiAct005ResponseOk> {
     const result = await this.activityService.getStudentActivities(
-      body.clubId,
+      query.clubId,
       user.studentId,
     );
     return result;
