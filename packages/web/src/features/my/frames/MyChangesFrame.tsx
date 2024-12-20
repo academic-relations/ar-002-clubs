@@ -36,8 +36,7 @@ export const MyChangesFrame = () => {
         <MyChangeRepresentative
           type={type}
           clubName={data?.requests[0].clubName}
-          // TODO: studentNumber로 바꾸기
-          prevRepresentative={`${data?.requests[0].prevStudentId} ${data?.requests[0].prevStudentName}`}
+          prevRepresentative={`${data?.requests[0].prevStudentNumber} ${data?.requests[0].prevStudentName}`}
           newRepresentative={`${myProfile?.studentNumber} ${myProfile?.name}`}
           refetch={refetch}
           requestId={data?.requests[0]?.id}

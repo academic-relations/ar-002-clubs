@@ -317,6 +317,7 @@ export default class ClubDelegateService {
         return {
           ...e,
           prevStudentName: student.name,
+          prevStudentNumber: student.number,
         };
       }),
     );

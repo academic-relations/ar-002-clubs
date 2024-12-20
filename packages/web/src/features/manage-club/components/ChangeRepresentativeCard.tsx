@@ -199,7 +199,6 @@ const ChangeRepresentativeCard: React.FC<{
         <ChangeRepresentativeInfo
           type={type}
           clubName={clubName}
-          // TODO: studentNumber 받기
           prevRepresentative={`${representativeStudentNumber} ${representativeName}`}
           newRepresentative={`${requestStatus?.requests[0]?.studentNumber} ${requestStatus?.requests[0]?.studentName}`}
         />
