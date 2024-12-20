@@ -255,6 +255,7 @@ export default class ClubDelegateService {
         });
         return {
           studentId: e.studentId,
+          studentNumber: student.number,
           studentName: student.name,
           clubDelegateChangeRequestStatusEnumId:
             e.clubDelegateChangeRequestStatusEnumId,
@@ -316,6 +317,7 @@ export default class ClubDelegateService {
         return {
           ...e,
           prevStudentName: student.name,
+          prevStudentNumber: student.number,
         };
       }),
     );
@@ -421,6 +423,23 @@ export default class ClubDelegateService {
       )
         throw new HttpException(
           "Failed to change delegate",
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+    }
+
+    // 대표자 변경 요청 승인의 경우, 핸드폰 번호를 변경합니다.
+    if (
+      param.body.clubDelegateChangeRequestStatusEnum ===
+      ClubDelegateChangeRequestStatusEnum.Approved
+    ) {
+      if (
+        !this.userPublicService.updateStudentPhoneNumber(
+          param.studentId,
+          param.body.phoneNumber,
+        )
+      )
+        throw new HttpException(
+          "Failed to update phone number",
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
     }

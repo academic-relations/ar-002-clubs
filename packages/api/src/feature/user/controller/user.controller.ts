@@ -16,11 +16,15 @@ import {
   GetUser,
 } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
+import UserPublicService from "../service/user.public.service";
 import { UserService } from "../service/user.service";
 
 @Controller()
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly userPublicService: UserPublicService,
+  ) {}
 
   @Student()
   @Get("/student/user/my")
@@ -83,7 +87,7 @@ export class UserController {
         query.profile === "master" ||
         query.profile === "doctor"
       ) {
-        await this.userService.updateStudentPhoneNumber(
+        await this.userPublicService.updateStudentPhoneNumber(
           user.id,
           phoneNumber.phoneNumber,
         );
@@ -113,7 +117,7 @@ export class UserController {
       body.profile === "master" ||
       body.profile === "doctor"
     ) {
-      await this.userService.updateStudentPhoneNumber(
+      await this.userPublicService.updateStudentPhoneNumber(
         user.id,
         body.phoneNumber,
       );

@@ -82,7 +82,7 @@ export class StudentRepository {
       const [result] = await tx
         .update(Student)
         .set({ phoneNumber })
-        .where(and(eq(Student.userId, id), isNull(Student.deletedAt)));
+        .where(and(eq(Student.id, id), isNull(Student.deletedAt)));
       if (result.affectedRows === 0) {
         tx.rollback();
         return false;
