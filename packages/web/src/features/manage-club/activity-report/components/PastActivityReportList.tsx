@@ -20,7 +20,7 @@ import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-import useGetActivityReportListForATerm from "../services/useGetActivityReportListForATerm";
+import useGetPastActivityReportList from "../services/useGetPastActivityReportList";
 import { ActivityTerm } from "../types/activityReport";
 
 interface ActivityReportListProps {
@@ -71,10 +71,9 @@ const PastActivityReportList: React.FC<ActivityReportListProps> = ({
   clubId,
 }) => {
   const router = useRouter();
-  const { data, isLoading, isError } = useGetActivityReportListForATerm(
-    term.id,
-    { clubId },
-  );
+  const { data, isLoading, isError } = useGetPastActivityReportList(term.id, {
+    clubId,
+  });
   const table = useReactTable({
     columns,
     data: data?.activities ?? [],

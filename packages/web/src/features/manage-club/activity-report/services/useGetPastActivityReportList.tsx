@@ -9,7 +9,7 @@ import {
   defineAxiosMock,
 } from "@sparcs-clubs/web/lib/axios";
 
-const useGetActivityReportListForATerm = (
+const useGetPastActivityReportList = (
   activityTermId: number,
   query: ApiAct006RequestQuery,
 ) =>
@@ -27,7 +27,7 @@ const useGetActivityReportListForATerm = (
     },
   });
 
-export default useGetActivityReportListForATerm;
+export default useGetPastActivityReportList;
 
 const baseUrl = "/student/activities/activity-terms/activity-term/";
 
