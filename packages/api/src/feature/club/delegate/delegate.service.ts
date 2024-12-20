@@ -255,6 +255,7 @@ export default class ClubDelegateService {
         });
         return {
           studentId: e.studentId,
+          studentNumber: student.number,
           studentName: student.name,
           clubDelegateChangeRequestStatusEnumId:
             e.clubDelegateChangeRequestStatusEnumId,

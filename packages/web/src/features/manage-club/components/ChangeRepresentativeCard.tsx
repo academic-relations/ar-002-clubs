@@ -68,6 +68,10 @@ const ChangeRepresentativeCard: React.FC<{
     delegatesNow?.delegates.find(delegate => delegate.delegateEnumId === 1)
       ?.name ?? "";
 
+  const representativeStudentNumber =
+    delegatesNow?.delegates.find(delegate => delegate.delegateEnumId === 1)
+      ?.studentNumber ?? "";
+
   const [delegate1, setDelegate1] = useState<string>(
     delegatesNow?.delegates.find(delegate => delegate.delegateEnumId === 2)
       ?.studentId === 0
@@ -196,8 +200,8 @@ const ChangeRepresentativeCard: React.FC<{
           type={type}
           clubName={clubName}
           // TODO: studentNumber 받기
-          prevRepresentative={`${representative} ${representativeName}`}
-          newRepresentative={`${requestStatus?.requests[0]?.studentId} ${requestStatus?.requests[0]?.studentName}`}
+          prevRepresentative={`${representativeStudentNumber} ${representativeName}`}
+          newRepresentative={`${requestStatus?.requests[0]?.studentNumber} ${requestStatus?.requests[0]?.studentName}`}
         />
       )}
       <FlexWrapper direction="column" gap={4}>
