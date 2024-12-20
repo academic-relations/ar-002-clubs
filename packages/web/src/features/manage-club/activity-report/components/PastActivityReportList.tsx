@@ -13,7 +13,6 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FoldableSection from "@sparcs-clubs/web/common/components/FoldableSection";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { ActTypeTagList } from "@sparcs-clubs/web/constants/tableTagList";
 
@@ -90,14 +89,12 @@ const PastActivityReportList: React.FC<ActivityReportListProps> = ({
         title={`${term.year}년 ${term.name}학기 (총 ${data?.activities.length}개)`}
       >
         <TableOuter>
-          <Typography fs={16} lh={20} color="GRAY.600">
-            총 {data?.activities.length}개
-          </Typography>
           <Table
             table={table}
             onClick={row =>
               router.push(`/manage-club/activity-report/${row.id}`)
             }
+            count={data?.activities.length}
           />
         </TableOuter>
       </FoldableSection>

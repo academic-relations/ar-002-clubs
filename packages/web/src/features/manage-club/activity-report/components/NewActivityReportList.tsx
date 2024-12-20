@@ -5,17 +5,16 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   ActTypeTagList,
   ApplyTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
-
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import { type NewActivityReport } from "../types/activityReport";
@@ -25,7 +24,7 @@ interface ActivityReportListProps {
 }
 
 const columnHelper = createColumnHelper<NewActivityReport>();
-
+// TODO(ym). 지도교수 승인이 활보 정책 문서 보면 필요없을 것 같지만 혹시 몰라 동연측에 문의 중(결과 확인 후 삭제 예정)
 // const getProfessorApprovalTagColor = (professorApproval: string): TagColor => {
 //   switch (professorApproval) {
 //     case "대기":
@@ -48,6 +47,7 @@ const columns = [
     },
     size: 0,
   }),
+  // TODO(ym). 지도교수 승인이 활보 정책 문서 보면 필요없을 것 같지만 혹시 몰라 동연측에 문의 중(결과 확인 후 삭제 예정)
   // columnHelper.accessor("professorApproval", {
   //   id: "professorApproval",
   //   header: "지도교수",
@@ -95,6 +95,7 @@ const TableOuter = styled.div`
 const NewActivityReportList: React.FC<ActivityReportListProps> = ({
   data = [],
 }) => {
+  const router = useRouter();
   const table = useReactTable({
     columns,
     data,
@@ -103,10 +104,11 @@ const NewActivityReportList: React.FC<ActivityReportListProps> = ({
   });
   return (
     <TableOuter>
-      <Typography fs={14} fw="REGULAR" lh={20} ff="PRETENDARD" color="GRAY.600">
-        총 {data.length}개
-      </Typography>
-      <Table table={table} />
+      <Table
+        table={table}
+        count={data.length}
+        onClick={row => router.push(`/manage-club/activity-report/${row.id}`)}
+      />
     </TableOuter>
   );
 };

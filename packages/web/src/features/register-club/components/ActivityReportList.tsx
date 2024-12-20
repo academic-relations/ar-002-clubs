@@ -11,7 +11,6 @@ import styled from "styled-components";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { ActStatusTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import PastActivityReportModal from "@sparcs-clubs/web/features/register-club/components/_atomic/PastActivityReportModal";
@@ -28,7 +27,6 @@ import { ActivityReport } from "../types/registerClub";
 interface ActivityReportListProps {
   data: ActivityReport[];
   profile: string;
-  showItemCount?: boolean;
   refetch?: () => void;
 }
 
@@ -82,7 +80,6 @@ const TableOuter = styled.div`
 const ActivityReportList: React.FC<ActivityReportListProps> = ({
   data,
   profile,
-  showItemCount = true,
   refetch = () => {},
 }) => {
   const table = useReactTable({
@@ -108,19 +105,9 @@ const ActivityReportList: React.FC<ActivityReportListProps> = ({
 
   return (
     <TableOuter>
-      {showItemCount && (
-        <Typography
-          fs={14}
-          fw="REGULAR"
-          lh={20}
-          ff="PRETENDARD"
-          color="GRAY.600"
-        >
-          총 {data.length}개
-        </Typography>
-      )}
       <Table
         table={table}
+        count={data.length}
         onClick={row => openPastActivityReportModal(row.id)}
       />
     </TableOuter>
