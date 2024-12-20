@@ -81,10 +81,6 @@ export class UserService {
     await this.userRepository.updatePhoneNumber(userId, phoneNumber);
   }
 
-  async updateStudentPhoneNumber(userId: number, phoneNumber: string) {
-    await this.studentRepository.updateStudentPhoneNumber(userId, phoneNumber);
-  }
-
   async updateExecutivePhoneNumber(userId: number, phoneNumber: string) {
     await this.executiveRepository.updateExecutivePhoneNumber(
       userId,
