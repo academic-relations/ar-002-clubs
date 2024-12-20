@@ -427,6 +427,23 @@ export default class ClubDelegateService {
         );
     }
 
+    // 대표자 변경 요청 승인의 경우, 핸드폰 번호를 변경합니다.
+    if (
+      param.body.clubDelegateChangeRequestStatusEnum ===
+      ClubDelegateChangeRequestStatusEnum.Approved
+    ) {
+      if (
+        !this.userPublicService.updateStudentPhoneNumber(
+          param.studentId,
+          param.body.phoneNumber,
+        )
+      )
+        throw new HttpException(
+          "Failed to update phone number",
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+    }
+
     // 대표자 변경 요청을 승인/거절로 변경합니다.
     if (
       !this.clubDelegateDRepository.updateClubDelegateChangeRequest({
