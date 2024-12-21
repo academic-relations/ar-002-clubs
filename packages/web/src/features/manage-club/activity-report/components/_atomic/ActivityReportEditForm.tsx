@@ -16,12 +16,12 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useGetParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetParticipants";
 import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
 import { Participant } from "@sparcs-clubs/web/features/manage-club/activity-report/types/activityReport";
+import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
+
 import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
-import SelectActivityTerm from "../SelectActivityTerm";
-
-interface ActivityReportFormProps {
+interface ActivityReportEditFormProps {
   clubId: number;
   formCtx: ReturnType<typeof useForm>;
   onCancel: () => void;
@@ -29,7 +29,7 @@ interface ActivityReportFormProps {
   canCancel?: boolean;
 }
 
-const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
+const ActivityReportEditForm: React.FC<ActivityReportEditFormProps> = ({
   clubId,
   formCtx,
   onCancel,
@@ -336,4 +336,4 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   );
 };
 
-export default ActivityReportForm;
+export default ActivityReportEditForm;
