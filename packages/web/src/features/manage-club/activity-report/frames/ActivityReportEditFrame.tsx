@@ -122,6 +122,7 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
   const durations: Duration[] = watch("durations");
 
   // TODO: (@dora) use type FileDetail
+  // TODO: (@dora) fix type
   const rawEvidenceFiles: { fileId: string; name: string; url: string }[] =
     watch("evidenceFiles");
   const evidenceFiles: FileDetail[] = useMemo(
