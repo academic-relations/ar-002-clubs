@@ -1,71 +1,58 @@
 import React from "react";
 
-import { ApiAct011ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
+import { ApiAct006ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct006";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { overlay } from "overlay-kit";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import FoldableSection from "@sparcs-clubs/web/common/components/FoldableSection";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { ActStatusTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import PastActivityReportModal from "@sparcs-clubs/web/features/register-club/components/_atomic/PastActivityReportModal";
+import { ActTypeTagList } from "@sparcs-clubs/web/constants/tableTagList";
 
-import {
-  getActivityTypeTagColor,
-  getActivityTypeTagLabel,
-} from "@sparcs-clubs/web/features/register-club/utils/activityType";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-import { PastActivityReport } from "../_mock/mock";
+import useGetPastActivityReportList from "../services/useGetPastActivityReportList";
+import { ActivityTerm } from "../types/activityReport";
 
 interface ActivityReportListProps {
-  data: PastActivityReport[];
-  profile: string;
-  showItemCount?: boolean;
-  refetch?: () => void;
+  term: ActivityTerm;
+  clubId: number;
 }
 
 const columnHelper =
-  createColumnHelper<ApiAct011ResponseOk["activities"][number]>();
+  createColumnHelper<ApiAct006ResponseOk["activities"][number]>();
 
 const columns = [
-  columnHelper.accessor("activityStatusEnumId", {
-    id: "activityStatusEnumId",
-    header: "상태",
-    cell: info => {
-      const { color, text } = getTagDetail(info.getValue(), ActStatusTagList);
-      return <Tag color={color}>{text}</Tag>;
-    },
-    size: 64,
-  }),
   columnHelper.accessor("name", {
+    id: "activity",
     header: "활동명",
     cell: info => info.getValue(),
-    size: 128,
+    size: 20,
   }),
   columnHelper.accessor("activityTypeEnumId", {
     header: "활동 분류",
-    cell: info => (
-      <Tag color={getActivityTypeTagColor(info.getValue())}>
-        {getActivityTypeTagLabel(info.getValue())}
-      </Tag>
-    ),
-    size: 128,
+    cell: info => {
+      const { color, text } = getTagDetail(info.getValue(), ActTypeTagList);
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 32,
   }),
   columnHelper.accessor(
-    row =>
-      `${formatDate(row.durations[0].startTerm)} ~ ${formatDate(row.durations[0].endTerm)}${row.durations.length > 1 ? ` 외 ${row.durations.length - 1}개` : ""}`,
+    row => `${formatDate(row.startTerm)} ~ ${formatDate(row.endTerm)}`,
     {
+      id: "date-range",
       header: "활동 기간",
       cell: info => info.getValue(),
-      size: 255,
+      size: 48,
     },
   ),
 ];
@@ -80,50 +67,37 @@ const TableOuter = styled.div`
 `;
 
 const PastActivityReportList: React.FC<ActivityReportListProps> = ({
-  data,
-  profile,
-  showItemCount = true,
-  refetch = () => {},
+  term,
+  clubId,
 }) => {
+  const router = useRouter();
+  const { data, isLoading, isError } = useGetPastActivityReportList(term.id, {
+    clubId,
+  });
   const table = useReactTable({
     columns,
-    data,
+    data: data?.activities ?? [],
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
 
-  const openPastActivityReportModal = (activityId: number) => {
-    overlay.open(({ isOpen, close }) => (
-      <PastActivityReportModal
-        profile={profile}
-        activityId={activityId}
-        isOpen={isOpen}
-        close={() => {
-          close();
-          refetch();
-        }}
-      />
-    ));
-  };
-
   return (
-    <TableOuter>
-      {showItemCount && (
-        <Typography
-          fs={14}
-          fw="REGULAR"
-          lh={20}
-          ff="PRETENDARD"
-          color="GRAY.600"
-        >
-          총 {data.length}개
-        </Typography>
-      )}
-      <Table
-        table={table}
-        onClick={row => openPastActivityReportModal(row.id)}
-      />
-    </TableOuter>
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <FoldableSection
+        key={term.id}
+        title={`${term.year}년 ${term.name}학기 (총 ${data?.activities.length}개)`}
+      >
+        <TableOuter>
+          <Table
+            table={table}
+            onClick={row =>
+              router.push(`/manage-club/activity-report/${row.id}`)
+            }
+            count={data?.activities.length}
+          />
+        </TableOuter>
+      </FoldableSection>
+    </AsyncBoundary>
   );
 };
 
