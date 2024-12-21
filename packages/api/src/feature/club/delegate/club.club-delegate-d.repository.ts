@@ -77,6 +77,7 @@ export class ClubDelegateDRepository {
    * 3일 이내에 신청된 요청만을 조회합니다.
    * 최근에 신청된 요청이 가장 위에 위치합니다.
    */
+  // TODO: 만료 enum 추가
   async findDelegateChangeRequestByClubId(param: { clubId: number }) {
     const threeDaysAgo = new Date();
     threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
