@@ -11,8 +11,8 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
 
-import ActivityReportForm from "@sparcs-clubs/web/features/register-club/components/_atomic/ActivityReportForm";
-import usePutActivityReportForNewClub from "@sparcs-clubs/web/features/register-club/services/usePutActivityReportForNewClub";
+import ActivityReportEditForm from "../components/_atomic/ActivityReportEditForm";
+import { usePutActivityReport } from "../services/usePutActivityReport";
 
 const ActivityReportMainFrameInner = styled.div`
   align-items: flex-start;
@@ -50,14 +50,14 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
     }
   }, [data, formCtx]);
 
-  const { mutate } = usePutActivityReportForNewClub();
+  const { mutate } = usePutActivityReport();
 
   const submitHandler = useCallback(
     (_data: ApiAct003RequestBody, e: React.BaseSyntheticEvent) => {
       e.preventDefault();
       mutate(
         {
-          params: { activityId: Number(id) },
+          activityId: Number(id),
           body: {
             ..._data,
             durations: _data.durations.map(({ startTerm, endTerm }) => ({
@@ -92,17 +92,17 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
           { name: "대표 동아리 관리", path: "/manage-club" },
           { name: "활동 보고서", path: "/manage-club/activity-report" },
         ]}
-        title="활동 보고서 작성"
+        title="활동 보고서 수정"
         enableLast
       />
       <AsyncBoundary isLoading={isLoading} isError={isError}>
-        <ActivityReportForm
+        <ActivityReportEditForm
           /* eslint-disable  @typescript-eslint/no-explicit-any */
           clubId={data.clubId}
           formCtx={formCtx as any}
           onCancel={() => {}}
           onSubmit={handleSubmit}
-          asModal={false}
+          canCancel={false}
         />
       </AsyncBoundary>
     </ActivityReportMainFrameInner>
