@@ -7,7 +7,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FoldableSection from "@sparcs-clubs/web/common/components/FoldableSection";
@@ -57,15 +56,6 @@ const columns = [
   ),
 ];
 
-const TableOuter = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-start;
-  gap: 8px;
-  align-self: stretch;
-`;
-
 const PastActivityReportList: React.FC<ActivityReportListProps> = ({
   term,
   clubId,
@@ -87,15 +77,11 @@ const PastActivityReportList: React.FC<ActivityReportListProps> = ({
         key={term.id}
         title={`${term.year}년 ${term.name}학기 (총 ${data?.activities.length}개)`}
       >
-        <TableOuter>
-          <Table
-            table={table}
-            onClick={row =>
-              router.push(`/manage-club/activity-report/${row.id}`)
-            }
-            count={data?.activities.length}
-          />
-        </TableOuter>
+        <Table
+          table={table}
+          onClick={row => router.push(`/manage-club/activity-report/${row.id}`)}
+          count={data?.activities.length}
+        />
       </FoldableSection>
     </AsyncBoundary>
   );

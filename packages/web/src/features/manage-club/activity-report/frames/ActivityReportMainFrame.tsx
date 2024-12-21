@@ -1,5 +1,6 @@
 import React from "react";
 
+import { ApiClb015ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
 import Link from "next/link";
 import styled from "styled-components";
 
@@ -9,6 +10,7 @@ import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSe
 import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 
 import NewActivityReportList from "../components/NewActivityReportList";
 import PastActivityReportList from "../components/PastActivityReportList";
@@ -46,21 +48,24 @@ const PastSectionInner = styled.div`
 `;
 
 const ActivityReportMainFrame: React.FC = () => {
-  // TODO(ym). manage-club 페이지에서 라우팅 연결되면 clubId props로 받아오기!
-  const clubId = 117;
+  const { data } = useGetMyManageClub() as {
+    data: ApiClb015ResponseOk;
+    isLoading: boolean;
+  };
+
   const {
     data: newActivityReportList,
     isLoading: isLoadingNewActivityReport,
     isError: isErrorNewActivityReport,
   } = useGetNewActivityReportList({
-    clubId,
+    clubId: data.clubId,
   });
 
   const {
     data: activityTerms,
     isLoading: isLoadingActivityTerms,
     isError: isErrorActivityTerms,
-  } = useGetActivityTerms({ clubId });
+  } = useGetActivityTerms({ clubId: data.clubId });
 
   const isLoading = isLoadingActivityTerms;
   const isError = isErrorActivityTerms;
@@ -113,7 +118,7 @@ const ActivityReportMainFrame: React.FC = () => {
                 <PastActivityReportList
                   key={term.id}
                   term={term}
-                  clubId={clubId}
+                  clubId={data.clubId}
                 />
               ))}
           </AsyncBoundary>
