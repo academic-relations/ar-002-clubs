@@ -14,6 +14,7 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 
 import { FileDetail } from "@sparcs-clubs/web/common/components/File/attachment";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
@@ -39,13 +40,6 @@ const SectionInner = styled.div`
   align-items: flex-start;
   gap: 20px;
   align-self: stretch;
-`;
-
-const ActivityReportMainFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 60px;
 `;
 
 const ButtonPlaceRight = styled.div`
@@ -219,7 +213,7 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
   if (!data) return null;
 
   return (
-    <ActivityReportMainFrameInner>
+    <FlexWrapper direction="column" gap={60}>
       <PageHead
         items={[
           { name: "대표 동아리 관리", path: "/manage-club" },
@@ -237,7 +231,7 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
       >
         <FormProvider {...formCtx}>
           <form onSubmit={handleSubmit}>
-            <ActivityReportMainFrameInner>
+            <FlexWrapper direction="column" gap={32}>
               <SectionTitle>활동 정보</SectionTitle>
               <SectionInner>
                 <Card outline padding="32px" gap={32}>
@@ -419,11 +413,11 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
                   저장
                 </Button>
               </ButtonPlaceRight>
-            </ActivityReportMainFrameInner>
+            </FlexWrapper>
           </form>
         </FormProvider>
       </AsyncBoundary>
-    </ActivityReportMainFrameInner>
+    </FlexWrapper>
   );
 };
 
