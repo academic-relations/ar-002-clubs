@@ -740,6 +740,7 @@ export default class ActivityService {
         content: e.comment,
         createdAt: e.createdAt,
       })),
+      updatedAt: activity.updatedAt,
     };
   }
 
@@ -794,6 +795,7 @@ export default class ActivityService {
         content: e.comment,
         createdAt: e.createdAt,
       })),
+      updatedAt: activity.updatedAt,
     };
   }
 
