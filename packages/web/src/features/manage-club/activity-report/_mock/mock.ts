@@ -280,4 +280,5 @@ export const mockActivityDetailData: ApiAct002ResponseOkTemp = {
     },
   ],
   advisorProfessorApproval: ActivityProfessorApprovalEnum.Requested,
+  updatedAt: new Date(),
 };

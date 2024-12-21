@@ -62,6 +62,7 @@ const responseBodyMap = {
         createdAt: z.coerce.date(),
       }),
     ),
+    updatedAt: z.coerce.date(),
   }),
 };
 

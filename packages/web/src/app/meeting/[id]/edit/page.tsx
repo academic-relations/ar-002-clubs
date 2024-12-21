@@ -3,7 +3,6 @@
 import React, { useEffect, useMemo } from "react";
 
 import apiMee002 from "@sparcs-clubs/interface/api/meeting/apiMee002";
-import { ApiMee003RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee003";
 
 import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { useQueryClient } from "@tanstack/react-query";
@@ -22,6 +21,7 @@ import MeetingAnnouncementFrame from "@sparcs-clubs/web/features/meeting/compone
 import MeetingInformationFrame from "@sparcs-clubs/web/features/meeting/components/MeetingInformationFrame";
 import useGetMeetingDetail from "@sparcs-clubs/web/features/meeting/services/useGetMeetingDetail";
 import useUpdateMeeting from "@sparcs-clubs/web/features/meeting/services/useUpdateMeeting";
+import { MeetingAnnouncementModel } from "@sparcs-clubs/web/features/meeting/types/meeting";
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -33,7 +33,7 @@ const EditMeetingPage: React.FC = () => {
   const { id } = useParams();
   const queryClient = useQueryClient();
 
-  const formCtx = useForm<ApiMee003RequestBody>({
+  const formCtx = useForm<MeetingAnnouncementModel>({
     mode: "all",
   });
 
@@ -57,11 +57,13 @@ const EditMeetingPage: React.FC = () => {
   );
 
   const submitHandler = () => {
+    const values = getValues();
     updateMeeting(
       {
         requestParam: { announcementId: +id },
         body: {
-          ...getValues(),
+          ...values,
+          isRegular: values.isRegular === "true",
         },
       },
       {
@@ -76,7 +78,7 @@ const EditMeetingPage: React.FC = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      reset(data);
+      reset({ ...data, isRegular: data.isRegular ? "true" : "false" });
     }
   }, [data, isSuccess, reset]);
 

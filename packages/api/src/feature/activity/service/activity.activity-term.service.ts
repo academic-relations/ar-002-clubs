@@ -9,10 +9,11 @@ import ActivityRepository from "../repository/activity.repository";
 
 import type {
   ApiAct006RequestParam,
+  ApiAct006RequestQuery,
   ApiAct006ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct006";
 import type {
-  ApiAct009RequestBody,
+  ApiAct009RequestQuery,
   ApiAct009ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct009";
 
@@ -72,14 +73,14 @@ export default class ActivityActivityTermService {
 
   async getStudentActivitiesActivityTerm(
     param: ApiAct006RequestParam,
-    body: ApiAct009RequestBody,
+    query: ApiAct006RequestQuery,
     studentId: number,
   ): Promise<ApiAct006ResponseOk> {
     // 요청한 학생이 동아리의 대표자인지 확인합니다.
-    await this.checkIsStudentDelegate({ studentId, clubId: body.clubId });
+    await this.checkIsStudentDelegate({ studentId, clubId: query.clubId });
     const activities =
       await this.activityRepository.selectActivityByClubIdAndActivityDId(
-        body.clubId,
+        query.clubId,
         param.activityTermId,
       );
     const result = await Promise.all(
@@ -107,15 +108,16 @@ export default class ActivityActivityTermService {
   }
 
   async getStudentActivitiesActivityTerms(
-    body: ApiAct009RequestBody,
+    query: ApiAct009RequestQuery,
     studentId: number,
   ): Promise<ApiAct009ResponseOk> {
     // 요청한 학생이 동아리의 대표자인지 확인합니다.
-    await this.checkIsStudentDelegate({ studentId, clubId: body.clubId });
+    await this.checkIsStudentDelegate({ studentId, clubId: query.clubId });
     // 해당 동아리가 등록되었던 학기 정보를 가져오고, startTerm과 endTerm에 대응되는 활동기간을 조회합니다.
     const semesters = await this.clubPublicService.getClubsExistedSemesters({
-      clubId: body.clubId,
+      clubId: query.clubId,
     });
+    console.log("asdfAsdf", semesters);
     const activityTerms: ApiAct009ResponseOk["terms"] = [];
     await Promise.all(
       semesters.map(async semester => {
