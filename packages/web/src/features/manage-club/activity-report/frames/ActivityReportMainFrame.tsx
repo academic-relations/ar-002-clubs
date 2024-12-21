@@ -67,9 +67,6 @@ const ActivityReportMainFrame: React.FC = () => {
     isError: isErrorActivityTerms,
   } = useGetActivityTerms({ clubId: data.clubId });
 
-  const isLoading = isLoadingActivityTerms;
-  const isError = isErrorActivityTerms;
-
   return (
     <ActivityReportMainFrameInner>
       <PageHead
@@ -100,7 +97,7 @@ const ActivityReportMainFrame: React.FC = () => {
           </OptionOuter>
           <AsyncBoundary
             isLoading={isLoadingNewActivityReport}
-            isError={isError}
+            isError={isErrorNewActivityReport}
           >
             <NewActivityReportList data={newActivityReportList} />
           </AsyncBoundary>
@@ -109,8 +106,8 @@ const ActivityReportMainFrame: React.FC = () => {
       <FoldableSectionTitle title="과거 활동 보고서">
         <PastSectionInner>
           <AsyncBoundary
-            isLoading={isLoading}
-            isError={isErrorNewActivityReport}
+            isLoading={isLoadingActivityTerms}
+            isError={isErrorActivityTerms}
           >
             {activityTerms?.terms
               .toReversed()
