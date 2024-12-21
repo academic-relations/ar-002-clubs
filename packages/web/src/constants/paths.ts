@@ -48,6 +48,7 @@ export const productionReadyPaths: {
     // 마이페이지
     "/my/clubs",
     // 대표 동아리 관리
+    "/manage-club/activity-report",
     "/manage-club/members",
     // 동아리 / 회원 등록
     "/register-club",

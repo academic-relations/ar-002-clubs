@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
@@ -17,6 +17,8 @@ import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
+import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import { getActivityReportProgress } from "@sparcs-clubs/web/features/manage-club/activity-report/constants/activityReportProgress";
 import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
@@ -93,7 +95,7 @@ const DeleteAndEditButtonContainer = styled.div`
   gap: 10px;
 `;
 
-const ActivityReportDetail: React.FC = () => {
+const ActivityReportDetailInner: React.FC = () => {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const { profile } = useAuth();
@@ -244,6 +246,31 @@ const ActivityReportDetail: React.FC = () => {
       </AsyncBoundary>
     </FlexWrapper>
   );
+};
+
+const ActivityReportDetail = () => {
+  const { isLoggedIn, login, profile } = useAuth();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (isLoggedIn !== undefined || profile !== undefined) {
+      setLoading(false);
+    }
+  }, [isLoggedIn, profile]);
+
+  if (loading) {
+    return <AsyncBoundary isLoading={loading} isError />;
+  }
+
+  if (!isLoggedIn) {
+    return <LoginRequired login={login} />;
+  }
+
+  if (profile?.type !== "undergraduate") {
+    return <NoManageClub />;
+  }
+
+  return <ActivityReportDetailInner />;
 };
 
 export default ActivityReportDetail;
