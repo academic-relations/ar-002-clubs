@@ -6,7 +6,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import styled from "styled-components";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
@@ -83,15 +82,6 @@ const columns = [
   ),
 ];
 
-const TableOuter = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-start;
-  gap: 8px;
-  align-self: stretch;
-`;
-
 const NewActivityReportList: React.FC<ActivityReportListProps> = ({
   data = [],
 }) => {
@@ -103,13 +93,11 @@ const NewActivityReportList: React.FC<ActivityReportListProps> = ({
     enableSorting: false,
   });
   return (
-    <TableOuter>
-      <Table
-        table={table}
-        count={data.length}
-        onClick={row => router.push(`/manage-club/activity-report/${row.id}`)}
-      />
-    </TableOuter>
+    <Table
+      table={table}
+      count={data.length}
+      onClick={row => router.push(`/manage-club/activity-report/${row.id}`)}
+    />
   );
 };
 
