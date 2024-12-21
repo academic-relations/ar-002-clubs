@@ -49,9 +49,13 @@ const ButtonPlaceRight = styled.div`
   align-self: stretch;
 `;
 
+type ActivityReportForm = ApiAct003RequestBody & {
+  evidenceFiles: { fileId: string; name: string; url: string }[];
+};
+
 // TODO. 활동기간 리스트 추가, 파일업로드 추가
 const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
-  const formCtx = useForm<ApiAct003RequestBody>({ mode: "all" });
+  const formCtx = useForm<ActivityReportForm>({ mode: "all" });
 
   const { data, isLoading, isError } = useGetActivityReport(
     "undergraduate",
@@ -82,7 +86,7 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
   const { mutate } = usePutActivityReport();
 
   const submitHandler = useCallback(
-    (_data: ApiAct003RequestBody, e: React.BaseSyntheticEvent) => {
+    (_data: ActivityReportForm, e: React.BaseSyntheticEvent) => {
       e.preventDefault();
       mutate(
         {
@@ -202,7 +206,13 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
     fileId: FileIdType,
     _data: { fileId: string }[],
   ) => {
-    formCtx.setValue(fileId, _data, { shouldValidate: true });
+    formCtx.setValue(
+      fileId,
+      _data.map(d => ({ fileId: d.fileId, name: "", url: "" })),
+      {
+        shouldValidate: true,
+      },
+    );
     formCtx.trigger(fileId);
   };
 
