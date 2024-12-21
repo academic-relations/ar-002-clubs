@@ -19,7 +19,7 @@ interface ChangeRepresentativeModalContentProps {
   onClose: () => void;
   refetch: () => void;
   requestId: number;
-  setType: (type: "Requested" | "Finished") => void;
+  setType: (type: "Requested" | "Finished" | "Rejected") => void;
 }
 
 const ButtonWrapper = styled.div`
@@ -44,7 +44,6 @@ const ChangeRepresentativeModalContent: React.FC<
   const [errorPhone, setErrorPhone] = useState<boolean>(false);
   const [phone, setPhone] = useState<string>("");
 
-  // TODO: clb013 014 수정되면 반영
   const onConfirm = () => {
     patchMyDelegateRequest(
       { requestId },
@@ -67,6 +66,7 @@ const ChangeRepresentativeModalContent: React.FC<
           ClubDelegateChangeRequestStatusEnum.Rejected,
       },
     );
+    setType("Rejected");
     onClose();
   };
 
