@@ -49,8 +49,12 @@ const ButtonPlaceRight = styled.div`
   align-self: stretch;
 `;
 
+type ActivityReportForm = ApiAct001RequestBody & {
+  evidenceFiles: { uid: string; name: string; url: string }[];
+};
+
 const ActivityReportCreateFrame: React.FC = () => {
-  const formCtx = useForm<ApiAct001RequestBody>({ mode: "all" });
+  const formCtx = useForm<ActivityReportForm>({ mode: "all" });
 
   const router = useRouter();
 
@@ -62,7 +66,7 @@ const ActivityReportCreateFrame: React.FC = () => {
   const { mutate } = usePostActivityReport();
 
   const submitHandler = useCallback(
-    (_data: ApiAct001RequestBody, e: React.BaseSyntheticEvent) => {
+    (_data: ActivityReportForm, e: React.BaseSyntheticEvent) => {
       e.preventDefault();
       mutate(
         {
@@ -104,13 +108,13 @@ const ActivityReportCreateFrame: React.FC = () => {
 
   // TODO: (@dora) use type FileDetail
   // TODO: (@dora) fix type
-  const rawEvidenceFiles: { fileId: string; name: string; url: string }[] =
+  const rawEvidenceFiles: { uid: string; name: string; url: string }[] =
     watch("evidenceFiles");
   const evidenceFiles: FileDetail[] = useMemo(
     () =>
       rawEvidenceFiles
         ? rawEvidenceFiles.map(file => ({
-            id: file.fileId,
+            id: file.uid,
             name: file.name,
             url: file.url,
           }))
@@ -185,7 +189,7 @@ const ActivityReportCreateFrame: React.FC = () => {
   ) => {
     formCtx.setValue(
       fileId,
-      _data.map(d => ({ uid: d.fileId })),
+      _data.map(d => ({ uid: d.fileId, name: "", url: "" })),
       {
         shouldValidate: true,
       },
