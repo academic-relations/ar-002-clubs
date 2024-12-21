@@ -7,6 +7,7 @@ import {
 import {
   and,
   count,
+  desc,
   eq,
   gte,
   isNotNull,
@@ -73,17 +74,25 @@ export class ClubDelegateDRepository {
   /**
    * @param clubId 변경 신청을 조회하고자 하는 동아리의 id
    * @returns 해당 동아리의 모든 대표자 변경 요청의 목록
+   * 3일 이내에 신청된 요청만을 조회합니다.
+   * 최근에 신청된 요청이 가장 위에 위치합니다.
    */
   async findDelegateChangeRequestByClubId(param: { clubId: number }) {
+    const threeDaysAgo = new Date();
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+
     const result = await this.db
       .select()
       .from(ClubDelegateChangeRequest)
       .where(
         and(
           eq(ClubDelegateChangeRequest.clubId, param.clubId),
+          gte(ClubDelegateChangeRequest.createdAt, threeDaysAgo),
           isNull(ClubDelegateChangeRequest.deletedAt),
         ),
-      );
+      )
+      .orderBy(desc(ClubDelegateChangeRequest.createdAt));
+
     return result;
   }
 
@@ -109,8 +118,12 @@ export class ClubDelegateDRepository {
   /**
    * @param studentId 변경의 대상이 된 학생의 id
    * @returns 해당 학생이 변경의 대상이 된 요청의 목록, 로직에 문제가 없다면 배열의 길이가 항상 1 이하여야 합니다.
+   * 3일 이내에 신청된 요청만을 조회합니다.
    */
   async findDelegateChangeRequestByStudentId(param: { studentId: number }) {
+    const threeDaysAgo = new Date();
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+
     const result = await this.db
       .select()
       .from(ClubDelegateChangeRequest)
@@ -121,6 +134,7 @@ export class ClubDelegateDRepository {
             ClubDelegateChangeRequestStatusEnum.Applied,
           ),
           eq(ClubDelegateChangeRequest.studentId, param.studentId),
+          gte(ClubDelegateChangeRequest.createdAt, threeDaysAgo),
           isNull(ClubDelegateChangeRequest.deletedAt),
         ),
       );
