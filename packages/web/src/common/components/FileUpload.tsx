@@ -234,6 +234,9 @@ const FileUpload: React.FC<FileUploadProps> = ({
             fs={16}
             lh={20}
             fw="REGULAR"
+            style={{
+              textOverflow: "ellipsis",
+            }}
           >
             {text}
           </Typography>
