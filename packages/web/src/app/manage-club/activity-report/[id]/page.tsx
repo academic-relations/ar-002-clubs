@@ -152,18 +152,17 @@ const ActivityReportDetail: React.FC = () => {
           style={{ alignSelf: "stretch" }}
         >
           <Card outline={false} padding="32px" gap={20}>
-            {/* TODO: updatedAt 추가 예정 */}
             <ProgressStatus
               labels={
                 getActivityReportProgress(
                   data.activityStatusEnumId,
-                  undefined, // data.updatedAt,
+                  data.updatedAt,
                 ).labels
               }
               progress={
                 getActivityReportProgress(
                   data.activityStatusEnumId,
-                  undefined, // data.updatedAt,
+                  data.updatedAt,
                 ).progress
               }
               optional={

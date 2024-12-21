@@ -10,7 +10,7 @@ interface ActivityReportProgressDetail {
 
 const getActivityReportProgress = (
   status: ActivityStatusEnum,
-  date: Date | undefined,
+  date: Date,
 ): ActivityReportProgressDetail => {
   switch (status) {
     case ActivityStatusEnum.Applied:
