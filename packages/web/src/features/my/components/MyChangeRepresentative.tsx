@@ -81,10 +81,7 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
           clubName={clubName}
           prevRepresentative={prevRepresentative}
           newRepresentative={newRepresentative}
-          onClose={() => {
-            close();
-            setType("Rejected");
-          }}
+          onClose={close}
           refetch={refetch}
           requestId={requestId}
           setType={setType}

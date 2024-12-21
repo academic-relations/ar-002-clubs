@@ -140,7 +140,8 @@ const ChangeRepresentativeCard: React.FC<{
         delegatesNow?.delegates
           .find(delegate => delegate.delegateEnumId === 2)
           ?.studentId?.toString() &&
-      type !== "Applied"
+      type !== "Applied" &&
+      delegate1 !== ""
     ) {
       updateClubDelegates(
         { clubId },
@@ -159,7 +160,8 @@ const ChangeRepresentativeCard: React.FC<{
         delegatesNow?.delegates
           .find(delegate => delegate.delegateEnumId === 3)
           ?.studentId?.toString() &&
-      type !== "Applied"
+      type !== "Applied" &&
+      delegate2 !== ""
     ) {
       updateClubDelegates(
         { clubId },
@@ -175,7 +177,6 @@ const ChangeRepresentativeCard: React.FC<{
   const cancelRequest = () => {
     setType("Canceled");
     deleteChangeDelegateRequest({ clubId });
-    refetch();
   };
 
   const changeDelegateRequest = async (
@@ -231,8 +232,28 @@ const ChangeRepresentativeCard: React.FC<{
           </Typography>
           <TextButton
             text="대의원1 삭제"
-            onClick={() => setDelegate1("")}
-            disabled={delegate1 === ""}
+            onClick={async () => {
+              setDelegateItems(prevItems =>
+                prevItems.map(item =>
+                  item.value === delegate1
+                    ? { ...item, selectable: true }
+                    : item,
+                ),
+              );
+              setRepresentativeItems(prevItems =>
+                prevItems.map(item =>
+                  item.value === delegate1
+                    ? { ...item, selectable: true }
+                    : item,
+                ),
+              );
+              setDelegate1("");
+              await updateClubDelegates(
+                { clubId },
+                { delegateEnumId: ClubDelegateEnum.Delegate1, studentId: 0 },
+              );
+            }}
+            disabled={delegate1 === "" || type === "Applied"}
           />
         </LabelWrapper>
         <Select
@@ -250,8 +271,28 @@ const ChangeRepresentativeCard: React.FC<{
           </Typography>
           <TextButton
             text="대의원2 삭제"
-            onClick={() => setDelegate2("")}
-            disabled={delegate2 === ""}
+            onClick={async () => {
+              setDelegateItems(prevItems =>
+                prevItems.map(item =>
+                  item.value === delegate2
+                    ? { ...item, selectable: true }
+                    : item,
+                ),
+              );
+              setRepresentativeItems(prevItems =>
+                prevItems.map(item =>
+                  item.value === delegate2
+                    ? { ...item, selectable: true }
+                    : item,
+                ),
+              );
+              setDelegate2("");
+              await updateClubDelegates(
+                { clubId },
+                { delegateEnumId: ClubDelegateEnum.Delegate2, studentId: 0 },
+              );
+            }}
+            disabled={delegate2 === "" || type === "Applied"}
           />
         </LabelWrapper>
         <Select
