@@ -104,7 +104,7 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
         },
         {
           onSuccess: () => {
-            router.push("/manage-club/activity-report");
+            router.push(`/manage-club/activity-report/${id}`);
           },
         },
       );
