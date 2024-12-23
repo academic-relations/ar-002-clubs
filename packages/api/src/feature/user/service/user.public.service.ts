@@ -87,4 +87,11 @@ export default class UserPublicService {
 
     return students[0][0];
   }
+  /**
+   * 학생의 전화번호를 업데이트 합니다.
+   * */
+
+  async updateStudentPhoneNumber(userId: number, phoneNumber: string) {
+    await this.studentRepository.updateStudentPhoneNumber(userId, phoneNumber);
+  }
 }

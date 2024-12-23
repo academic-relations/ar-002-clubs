@@ -79,6 +79,13 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.APM_BE,
         comment: "항상 리뷰가 늦어서 미안해요 ㅠㅜ",
       },
+      {
+        nickname: "oreo",
+        name: "최용혁",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "팀원들 감사합니다! 오레오는 비틀어야 제맛",
+      },
     ],
   },
   {

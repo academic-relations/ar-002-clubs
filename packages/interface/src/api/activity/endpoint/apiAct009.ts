@@ -12,11 +12,11 @@ const method = "GET";
 
 const requestParam = z.object({});
 
-const requestQuery = z.object({});
-
-const requestBody = z.object({
+const requestQuery = z.object({
   clubId: z.coerce.number().int().min(1),
 });
+
+const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
@@ -52,8 +52,8 @@ type ApiAct009ResponseOk = z.infer<(typeof apiAct009.responseBodyMap)[200]>;
 export default apiAct009;
 
 export type {
+  ApiAct009RequestBody,
   ApiAct009RequestParam,
   ApiAct009RequestQuery,
-  ApiAct009RequestBody,
   ApiAct009ResponseOk,
 };

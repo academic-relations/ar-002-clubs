@@ -15,6 +15,8 @@ import {
   ApiMee004ResponseOk,
 } from "@sparcs-clubs/interface/api/meeting/apiMee004";
 
+import { ApiMee012RequestQuery } from "@sparcs-clubs/interface/api/meeting/apiMee012";
+
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import { MeetingRepository } from "../meeting.repository";
@@ -104,6 +106,16 @@ export class AnnouncementService {
 
     const result =
       await this.meetingRepository.deleteExecutiveMeetingAnnouncement(param);
+    return result;
+  }
+
+  async getMeetingAnnouncements(query: ApiMee012RequestQuery) {
+    const result = await this.meetingRepository.getMeetingListByMeetingType(
+      query.meetingEnumId,
+      query.pageOffset,
+      query.itemCount,
+    );
+
     return result;
   }
 }

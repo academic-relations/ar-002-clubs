@@ -50,6 +50,7 @@ import type {
   ApiAct017RequestParam,
   ApiAct017ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct017";
+import type { ApiAct018ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct018";
 
 @Injectable()
 export default class ActivityService {
@@ -311,6 +312,7 @@ export default class ActivityService {
         content: e.comment,
         createdAt: e.createdAt,
       })),
+      updatedAt: activity.updatedAt,
     };
   }
 
@@ -739,6 +741,7 @@ export default class ActivityService {
         content: e.comment,
         createdAt: e.createdAt,
       })),
+      updatedAt: activity.updatedAt,
     };
   }
 
@@ -793,6 +796,7 @@ export default class ActivityService {
         content: e.comment,
         createdAt: e.createdAt,
       })),
+      updatedAt: activity.updatedAt,
     };
   }
 
@@ -841,5 +845,32 @@ export default class ActivityService {
       throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
 
     return {};
+  }
+
+  /**
+   * @description getActivitiesDeadline의 서비스 진입점입니다.
+   * @returns 오늘의 활동보고서 작성기간을 리턴합니다.
+   */
+  async getPublicActivitiesDeadline(): Promise<ApiAct018ResponseOk> {
+    const today = getKSTDate();
+    const todayDeadline = await this.activityRepository
+      .selectDeadlineByDate(today)
+      .then(arr => {
+        if (arr.length === 0)
+          throw new HttpException(
+            "Today is not in the range of deadline",
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        return arr[0];
+      });
+    return {
+      deadline: {
+        activityDeadlineEnum: todayDeadline.deadlineEnumId,
+        duration: {
+          startTerm: todayDeadline.startDate,
+          endTerm: todayDeadline.endDate,
+        },
+      },
+    };
   }
 }

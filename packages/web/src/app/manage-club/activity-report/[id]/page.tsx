@@ -1,30 +1,28 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 
-import {
-  ActivityStatusEnum,
-  ActivityTypeEnum,
-} from "@sparcs-clubs/interface/common/enum/activity.enum";
+import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import { useParams, useRouter } from "next/navigation";
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
-import Tag from "@sparcs-clubs/web/common/components/Tag";
+import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { ProfessorApprovalTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import { mockActivityDetailData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
-import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
+import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
+import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import { getActivityReportProgress } from "@sparcs-clubs/web/features/manage-club/activity-report/constants/activityReportProgress";
+import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
-import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface ActivitySectionProps extends React.PropsWithChildren {
   label: string;
@@ -97,24 +95,29 @@ const DeleteAndEditButtonContainer = styled.div`
   gap: 10px;
 `;
 
-const ActivityReportDetail: React.FC = () => {
+const ActivityReportDetailInner: React.FC = () => {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
+  const { profile } = useAuth();
 
   const onClick = () => {
     router.push("/manage-club/activity-report");
   };
 
-  const { color: approvalTagColor, text: approvalTagText } = getTagDetail(
-    ActivityProfessorApprovalEnum.Requested,
-    ProfessorApprovalTagList,
-  );
+  // TODO: 지도교수 승인 추가 예정
+  // const { color: approvalTagColor, text: approvalTagText } = getTagDetail(
+  //   ActivityProfessorApprovalEnum.Requested,
+  //   ProfessorApprovalTagList,
+  // );
 
   const editButtonOnClick = () => {
     router.push(`/manage-club/activity-report/${id}/edit`);
   };
 
-  const data = mockActivityDetailData;
+  const { data, isLoading, isError } = useGetActivityReport(
+    profile?.type ?? "",
+    Number(id),
+  );
 
   const activityType: (type: ActivityTypeEnum) => string = type => {
     switch (type) {
@@ -132,36 +135,7 @@ const ActivityReportDetail: React.FC = () => {
     }
   };
 
-  const activityStatus: (type: ActivityStatusEnum) => string = type => {
-    switch (type) {
-      case ActivityStatusEnum.Applied:
-        return "신청 완료";
-        break;
-      case ActivityStatusEnum.Approved:
-        return "동아리 연합회 승인 완료";
-        break;
-      case ActivityStatusEnum.Rejected:
-        return "동아리 연합회 승인 반려";
-        break;
-      default:
-        return "";
-    }
-  };
-
-  const activityStatusToProgressStatus: (
-    type: ActivityStatusEnum,
-  ) => ProgressCheckSectionStatusEnum = type => {
-    switch (type) {
-      case ActivityStatusEnum.Applied:
-        return ProgressCheckSectionStatusEnum.Pending;
-        break;
-      case ActivityStatusEnum.Approved:
-        return ProgressCheckSectionStatusEnum.Approved;
-        break;
-      default: // ActivityStatusEnum.Rejected:
-        return ProgressCheckSectionStatusEnum.Canceled;
-    }
-  };
+  if (!data) return null;
 
   return (
     <FlexWrapper direction="column" gap={60}>
@@ -173,87 +147,130 @@ const ActivityReportDetail: React.FC = () => {
         title="활동 보고서"
         enableLast
       />
-      <FlexWrapper direction="column" gap={40} style={{ alignSelf: "stretch" }}>
-        <Card outline={false} padding="32px" gap={20}>
-          <ProgressStatus
-            labels={["신청 완료", activityStatus(data.activityStatusEnumId)]}
-            progress={[
-              {
-                status: ProgressCheckSectionStatusEnum.Approved,
-                date: data.writtenTime,
-              },
-              {
-                status: activityStatusToProgressStatus(
+      <AsyncBoundary isLoading={isLoading} isError={isError}>
+        <FlexWrapper
+          direction="column"
+          gap={40}
+          style={{ alignSelf: "stretch" }}
+        >
+          <Card outline={false} padding="32px" gap={20}>
+            <ProgressStatus
+              labels={
+                getActivityReportProgress(
                   data.activityStatusEnumId,
-                ),
-                date: data.checkedTime,
-              },
-            ]}
-          />
-          <ActivitySection label="활동 정보">
-            <ActivityDetail>{`활동명: ${data.name}`}</ActivityDetail>
-            <ActivityDetail>
-              {`활동 분류: ${activityType(data.activityTypeEnumId)}`}
-            </ActivityDetail>
-            <ActivityDetail>
-              {`활동 기간: ${formatDate(
-                data.durations[0].startTerm,
-              )} ~ ${formatDate(data.durations[0].endTerm)}`}
-            </ActivityDetail>
-            <ActivityDetail>{`활동 장소: ${data.location}`}</ActivityDetail>
-            <ActivityDetail>{`활동 목적: ${data.purpose}`}</ActivityDetail>
-            <ActivityDetail>{`활동 내용: ${data.detail}`}</ActivityDetail>
-          </ActivitySection>
-          <ActivitySection label={`활동 인원(${data.participants.length}명)`}>
-            {data.participants.map(participant => (
-              <ActivityDetail
-                key={participant.id}
-              >{`${participant.studentNumber} ${participant.name}`}</ActivityDetail>
-            ))}
-          </ActivitySection>
-          <ActivitySection label="활동 증빙">
-            <ActivityDetail>첨부 파일</ActivityDetail>
-            <ActivityDetail>
-              <FilePreviewContainer>
-                <ThumbnailPreviewList
-                  fileList={data.evidenceFiles.map(file => ({
-                    id: file.fileId,
-                    name: file.name,
-                    url: file.url,
-                  }))}
-                />
-              </FilePreviewContainer>
-            </ActivityDetail>
-            <ActivityDetail>{`부가 설명: ${data.evidence}`}</ActivityDetail>
-          </ActivitySection>
-          <FlexWrapper
-            direction="row"
-            gap={16}
-            justify="space-between"
-            style={{
-              alignItems: "center",
-              alignSelf: "stretch",
-              width: "100%",
-            }}
-          >
-            <ActivitySection label="지도교수 승인" />
-            <Tag color={approvalTagColor}>{approvalTagText}</Tag>
-          </FlexWrapper>
-        </Card>
-        <ButtonContainer>
-          <Button type="default" onClick={onClick}>
-            목록으로 돌아가기
-          </Button>
-          <DeleteAndEditButtonContainer>
-            <Button type="default">삭제</Button>
-            <Button type="default" onClick={editButtonOnClick}>
-              수정
+                  data.updatedAt,
+                ).labels
+              }
+              progress={
+                getActivityReportProgress(
+                  data.activityStatusEnumId,
+                  data.updatedAt,
+                ).progress
+              }
+              optional={
+                data.comments &&
+                data.comments.length > 0 && (
+                  <RejectReasonToast
+                    title="반려 사유"
+                    reasons={data.comments.map(comment => ({
+                      datetime: comment.createdAt,
+                      reason: comment.content,
+                    }))}
+                  />
+                )
+              }
+            />
+            <ActivitySection label="활동 정보">
+              <ActivityDetail>{`활동명: ${data.name}`}</ActivityDetail>
+              <ActivityDetail>
+                {`활동 분류: ${activityType(data.activityTypeEnumId)}`}
+              </ActivityDetail>
+              <ActivityDetail>
+                {`활동 기간: ${formatDate(
+                  data.durations[0].startTerm,
+                )} ~ ${formatDate(data.durations[0].endTerm)}`}
+              </ActivityDetail>
+              <ActivityDetail>{`활동 장소: ${data.location}`}</ActivityDetail>
+              <ActivityDetail>{`활동 목적: ${data.purpose}`}</ActivityDetail>
+              <ActivityDetail>{`활동 내용: ${data.detail}`}</ActivityDetail>
+            </ActivitySection>
+            <ActivitySection label={`활동 인원(${data.participants.length}명)`}>
+              {data.participants.map(participant => (
+                <ActivityDetail
+                  key={participant.studentId}
+                >{`${participant.studentNumber} ${participant.name}`}</ActivityDetail>
+              ))}
+            </ActivitySection>
+            <ActivitySection label="활동 증빙">
+              <ActivityDetail>첨부 파일</ActivityDetail>
+              <ActivityDetail>
+                <FilePreviewContainer>
+                  <ThumbnailPreviewList
+                    fileList={data.evidenceFiles.map(file => ({
+                      id: file.fileId,
+                      name: file.name,
+                      url: file.url,
+                    }))}
+                  />
+                </FilePreviewContainer>
+              </ActivityDetail>
+              <ActivityDetail>{`부가 설명: ${data.evidence}`}</ActivityDetail>
+            </ActivitySection>
+            {/* TODO: 지도교수 승인 추가 예정 */}
+            {/* <FlexWrapper
+              direction="row"
+              gap={16}
+              justify="space-between"
+              style={{
+                alignItems: "center",
+                alignSelf: "stretch",
+                width: "100%",
+              }}
+            >
+              <ActivitySection label="지도교수 승인" />
+              <Tag color={approvalTagColor}>{approvalTagText}</Tag>
+            </FlexWrapper> */}
+          </Card>
+          <ButtonContainer>
+            <Button type="default" onClick={onClick}>
+              목록으로 돌아가기
             </Button>
-          </DeleteAndEditButtonContainer>
-        </ButtonContainer>
-      </FlexWrapper>
+            <DeleteAndEditButtonContainer>
+              <Button type="default">삭제</Button>
+              <Button type="default" onClick={editButtonOnClick}>
+                수정
+              </Button>
+            </DeleteAndEditButtonContainer>
+          </ButtonContainer>
+        </FlexWrapper>
+      </AsyncBoundary>
     </FlexWrapper>
   );
+};
+
+const ActivityReportDetail = () => {
+  const { isLoggedIn, login, profile } = useAuth();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (isLoggedIn !== undefined || profile !== undefined) {
+      setLoading(false);
+    }
+  }, [isLoggedIn, profile]);
+
+  if (loading) {
+    return <AsyncBoundary isLoading={loading} isError />;
+  }
+
+  if (!isLoggedIn) {
+    return <LoginRequired login={login} />;
+  }
+
+  if (profile?.type !== "undergraduate") {
+    return <NoManageClub />;
+  }
+
+  return <ActivityReportDetailInner />;
 };
 
 export default ActivityReportDetail;

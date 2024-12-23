@@ -255,6 +255,7 @@ export default class ClubDelegateService {
         });
         return {
           studentId: e.studentId,
+          studentNumber: student.number,
           studentName: student.name,
           clubDelegateChangeRequestStatusEnumId:
             e.clubDelegateChangeRequestStatusEnumId,
@@ -298,6 +299,7 @@ export default class ClubDelegateService {
           });
 
         return {
+          id: e.id,
           clubId: e.clubId,
           clubDelegateChangeRequestStatusEnumId:
             e.clubDelegateChangeRequestStatusEnumId,
@@ -315,6 +317,7 @@ export default class ClubDelegateService {
         return {
           ...e,
           prevStudentName: student.name,
+          prevStudentNumber: student.number,
         };
       }),
     );
@@ -347,21 +350,21 @@ export default class ClubDelegateService {
 
     // 대표자 변경 요청을 삭제합니다.
     // 해당 동아리 대표자만이 요청 가능하기에 동시성을 고려하지 않았습니다.
+    // 요청 이전에 승인/거절된 대표자 변경 요청 또한 함께 삭제됩니다.
     const requests =
       await this.clubDelegateDRepository.findDelegateChangeRequestByClubId({
         clubId: param.param.clubId,
       });
-    const request = requests.find(
-      e =>
-        e.clubDelegateChangeRequestStatusEnumId ===
-        ClubDelegateChangeRequestStatusEnum.Applied,
-    );
-    if (request === undefined)
-      throw new HttpException("No request", HttpStatus.BAD_REQUEST);
 
-    await this.clubDelegateDRepository.deleteDelegatChangeRequestById({
-      id: request.id,
-    });
+    await Promise.all(
+      requests.map(request => {
+        if (request === undefined)
+          throw new HttpException("No request", HttpStatus.BAD_REQUEST);
+        return this.clubDelegateDRepository.deleteDelegatChangeRequestById({
+          id: request.id,
+        });
+      }),
+    );
   }
 
   /**
@@ -420,6 +423,23 @@ export default class ClubDelegateService {
       )
         throw new HttpException(
           "Failed to change delegate",
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+    }
+
+    // 대표자 변경 요청 승인의 경우, 핸드폰 번호를 변경합니다.
+    if (
+      param.body.clubDelegateChangeRequestStatusEnum ===
+      ClubDelegateChangeRequestStatusEnum.Approved
+    ) {
+      if (
+        !this.userPublicService.updateStudentPhoneNumber(
+          param.studentId,
+          param.body.phoneNumber,
+        )
+      )
+        throw new HttpException(
+          "Failed to update phone number",
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
     }

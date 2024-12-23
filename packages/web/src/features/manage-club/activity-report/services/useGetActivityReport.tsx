@@ -73,6 +73,7 @@ defineAxiosMock(mock => {
           createdAt: new Date(),
         },
       ],
+      updatedAt: new Date(),
     };
     return [200, dummy];
   });

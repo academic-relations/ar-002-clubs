@@ -37,7 +37,7 @@ const ChangeRepresentativeWrapper = styled.div.withConfig({
     type === "Rejected" ? theme.colors.RED[100] : theme.colors.GREEN[100]};
 `;
 
-const ChangeRepresentative: React.FC<ChangeRepresentativeProps> = ({
+const ChangeRepresentativeInfo: React.FC<ChangeRepresentativeProps> = ({
   type,
   clubName,
   prevRepresentative,
@@ -97,4 +97,4 @@ const ChangeRepresentative: React.FC<ChangeRepresentativeProps> = ({
   );
 };
 
-export default ChangeRepresentative;
+export default ChangeRepresentativeInfo;
