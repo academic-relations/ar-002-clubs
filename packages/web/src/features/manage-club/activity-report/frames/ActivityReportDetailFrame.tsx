@@ -23,6 +23,7 @@ import { Profile } from "@sparcs-clubs/web/common/providers/AuthContext";
 import { getActivityReportProgress } from "@sparcs-clubs/web/features/manage-club/activity-report/constants/activityReportProgress";
 import { useDeleteActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useDeleteActivityReport";
 import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
+import { kstToUtc } from "@sparcs-clubs/web/utils/Date/extractDate";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 interface ActivitySectionProps extends React.PropsWithChildren {
@@ -199,13 +200,13 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
               labels={
                 getActivityReportProgress(
                   data.activityStatusEnumId,
-                  data.updatedAt,
+                  kstToUtc(data.updatedAt),
                 ).labels
               }
               progress={
                 getActivityReportProgress(
                   data.activityStatusEnumId,
-                  data.updatedAt,
+                  kstToUtc(data.updatedAt),
                 ).progress
               }
               optional={
@@ -226,11 +227,18 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
               <ActivityDetail>
                 {`활동 분류: ${activityType(data.activityTypeEnumId)}`}
               </ActivityDetail>
-              <ActivityDetail>
-                {`활동 기간: ${formatDate(
-                  data.durations[0].startTerm,
-                )} ~ ${formatDate(data.durations[0].endTerm)}`}
-              </ActivityDetail>
+              <ActivityDetail>활동 기간:</ActivityDetail>
+              <FlexWrapper
+                direction="column"
+                gap={12}
+                style={{ paddingLeft: 24 }}
+              >
+                {data.durations.map((duration, index) => (
+                  <Typography key={index}>
+                    {`${formatDate(duration.startTerm)} ~ ${formatDate(duration.endTerm)}`}
+                  </Typography>
+                ))}
+              </FlexWrapper>
               <ActivityDetail>{`활동 장소: ${data.location}`}</ActivityDetail>
               <ActivityDetail>{`활동 목적: ${data.purpose}`}</ActivityDetail>
               <ActivityDetail>{`활동 내용: ${data.detail}`}</ActivityDetail>

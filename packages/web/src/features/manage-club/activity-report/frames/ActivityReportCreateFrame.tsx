@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { ApiAct001RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct001";
-
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { addHours } from "date-fns";
+
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
@@ -22,7 +21,7 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 import useGetParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetParticipants";
 import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
 import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
-import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+import { utcToKst } from "@sparcs-clubs/web/utils/Date/extractDate";
 
 import SelectParticipant from "../components/SelectParticipant";
 import usePostActivityReport from "../services/usePostActivityReport";
@@ -70,8 +69,8 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
             ..._data,
             clubId,
             duration: _data.duration.map(({ startTerm, endTerm }) => ({
-              startTerm: addHours(startTerm, 9),
-              endTerm: addHours(endTerm, 9),
+              startTerm: utcToKst(startTerm),
+              endTerm: utcToKst(endTerm),
             })),
             evidence: _data.evidence ?? "", // NOTE: (@dora) evidence is optional
             participants: _data.participants.map(({ studentId }) => ({
@@ -118,39 +117,18 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
     [rawEvidenceFiles],
   );
 
-  const initialDurations = useMemo(
-    () =>
-      durations
-        ? durations.map(d => ({
-            startDate: formatDotDate(d.startTerm),
-            endDate: formatDotDate(d.endTerm),
-          }))
-        : [],
-    [durations],
-  );
+  const initialDurations = useMemo(() => durations ?? [], [durations]);
 
   const [startTerm, setStartTerm] = useState<Date>(
     durations
       ?.map(d => d.startTerm)
-      .reduce((a, b) => (a < b ? a : b), new Date()),
+      .reduce((a, b) => (a < b ? a : b), new Date()) ?? new Date(),
   );
   const [endTerm, setEndTerm] = useState<Date>(
     durations
       ?.map(d => d.endTerm)
-      .reduce((a, b) => (a > b ? a : b), new Date()),
+      .reduce((a, b) => (a > b ? a : b), new Date()) ?? new Date(),
   );
-  useEffect(() => {
-    setStartTerm(
-      durations
-        ?.map(d => d.startTerm)
-        .reduce((a, b) => (a < b ? a : b), new Date()),
-    );
-    setEndTerm(
-      durations
-        ?.map(d => d.endTerm)
-        .reduce((a, b) => (a > b ? a : b), new Date()),
-    );
-  }, [durations]);
 
   const {
     data: participantData,
@@ -159,9 +137,16 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
     refetch,
   } = useGetParticipants({
     clubId,
-    startTerm: addHours(startTerm, 9),
-    endTerm: addHours(endTerm, 9),
+    startTerm: utcToKst(startTerm),
+    endTerm: utcToKst(endTerm),
   });
+
+  useEffect(() => {
+    if (startTerm && endTerm) {
+      refetch();
+    }
+  }, [startTerm, endTerm]);
+
   const initialParticipants: { studentId: number }[] = watch("participants");
   const [participants, setParticipants] = useState<Participant[]>([]);
 
@@ -260,29 +245,21 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
                 <SelectActivityTerm
                   initialData={initialDurations}
                   onChange={terms => {
-                    const processedTerms = terms.map(term => ({
-                      startTerm: new Date(
-                        `${term.startDate.replace(".", "-")}`,
-                      ),
-                      endTerm: new Date(`${term.endDate.replace(".", "-")}`),
-                    }));
-                    setValue("duration", processedTerms, {
+                    setValue("duration", terms, {
                       shouldValidate: true,
                     });
                     setStartTerm(
-                      processedTerms
+                      terms
                         .map(d => d.startTerm)
                         .reduce((a, b) => (a < b ? a : b)),
                     );
                     setEndTerm(
-                      processedTerms
+                      terms
                         .map(d => d.endTerm)
                         .reduce((a, b) => (a > b ? a : b)),
                     );
                     formCtx.trigger("duration");
 
-                    // TODO: (@dora) refetch participants one step late
-                    refetch();
                     setParticipants([]);
                   }}
                 />

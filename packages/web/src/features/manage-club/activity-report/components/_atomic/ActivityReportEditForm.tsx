@@ -17,9 +17,7 @@ import useGetParticipants from "@sparcs-clubs/web/features/activity-report/servi
 import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
 import { Participant } from "@sparcs-clubs/web/features/manage-club/activity-report/types/activityReport";
 import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
-
 import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
-import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 interface ActivityReportEditFormProps {
   clubId: number;
@@ -60,16 +58,7 @@ const ActivityReportEditForm: React.FC<ActivityReportEditFormProps> = ({
     [rawEvidenceFiles],
   );
 
-  const initialDurations = useMemo(
-    () =>
-      durations
-        ? durations.map(d => ({
-            startDate: formatDotDate(d.startTerm),
-            endDate: formatDotDate(d.endTerm),
-          }))
-        : [],
-    [durations],
-  );
+  const initialDurations = useMemo(() => durations ?? [], [durations]);
 
   const [startTerm, setStartTerm] = useState<Date>(
     durations
@@ -185,22 +174,16 @@ const ActivityReportEditForm: React.FC<ActivityReportEditFormProps> = ({
               <SelectActivityTerm
                 initialData={initialDurations}
                 onChange={terms => {
-                  const processedTerms = terms.map(term => ({
-                    startTerm: new Date(`${term.startDate.replace(".", "-")}`),
-                    endTerm: new Date(`${term.endDate.replace(".", "-")}`),
-                  }));
-                  setValue("durations", processedTerms, {
+                  setValue("durations", terms, {
                     shouldValidate: true,
                   });
                   setStartTerm(
-                    processedTerms
+                    terms
                       .map(d => d.startTerm)
                       .reduce((a, b) => (a < b ? a : b)),
                   );
                   setEndTerm(
-                    processedTerms
-                      .map(d => d.endTerm)
-                      .reduce((a, b) => (a > b ? a : b)),
+                    terms.map(d => d.endTerm).reduce((a, b) => (a > b ? a : b)),
                   );
                   formCtx.trigger("durations");
 
