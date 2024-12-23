@@ -179,6 +179,10 @@ const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
     startTerm: utcToKst(startTerm),
     endTerm: utcToKst(endTerm),
   });
+  const participantList = useMemo(
+    () => participantData?.students ?? [],
+    [participantData],
+  );
 
   useEffect(() => {
     if (startTerm && endTerm) {
@@ -187,11 +191,15 @@ const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
   }, [startTerm, endTerm]);
 
   const initialParticipants: { studentId: number }[] = watch("participants");
-  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [selectedParticipants, setSelectedParticipants] = useState<
+    Participant[]
+  >([]);
+
+  console.log(selectedParticipants, initialParticipants, participantData);
 
   useEffect(() => {
     if (initialParticipants && participantData) {
-      setParticipants(
+      setSelectedParticipants(
         participantData.students.filter(student =>
           initialParticipants.some(
             participant => participant.studentId === student.id,
@@ -218,8 +226,9 @@ const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
   };
 
   const validInput = useMemo(
-    () => isValid && durations && participants.length > 0 && evidenceFiles,
-    [durations, participants, evidenceFiles, isValid],
+    () =>
+      isValid && durations && selectedParticipants.length > 0 && evidenceFiles,
+    [durations, selectedParticipants, evidenceFiles, isValid],
   );
 
   if (!data) return null;
@@ -308,7 +317,7 @@ const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
                       );
                       formCtx.trigger("durations");
 
-                      setParticipants([]);
+                      setSelectedParticipants([]);
                     }}
                   />
                   {/* </FlexWrapper> */}
@@ -357,14 +366,15 @@ const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
                 {durations && (
                   <AsyncBoundary isLoading={isLoading} isError={isError}>
                     <SelectParticipant
-                      data={participantData?.students ?? []}
-                      value={participants}
+                      data={participantList}
+                      value={selectedParticipants}
                       onChange={v => {
-                        setParticipants(v);
+                        setSelectedParticipants(v);
 
                         const participantIds = v.map(_data => ({
                           studentId: +_data.id,
                         }));
+                        console.log("participantIds", participantIds);
                         formCtx.setValue("participants", participantIds);
                         formCtx.trigger("participants");
                       }}

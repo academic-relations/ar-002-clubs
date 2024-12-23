@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import {
   createColumnHelper,
@@ -83,13 +83,20 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
 
   const [selected, setSelected] = useState<Participant[]>(value);
 
-  const initialRowValues = value.reduce((acc, participant) => {
-    const index = data.findIndex(_data => _data.id === participant.id);
-    return { ...acc, [index]: true };
-  }, {});
+  const initialRowValues = useMemo(
+    () =>
+      value.reduce((acc, participant) => {
+        const index = data.findIndex(_data => _data.id === participant.id);
+        return { ...acc, [index]: true };
+      }, {}),
+    [value, data],
+  );
   const [rowValues, setRowValues] =
     useState<RowSelectionState>(initialRowValues);
 
+  useEffect(() => {
+    setRowValues(initialRowValues);
+  }, [initialRowValues]);
   useEffect(() => {
     setSelected(data.filter((_, i) => rowValues?.[i]));
   }, [rowValues, data]);
