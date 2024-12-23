@@ -8,6 +8,11 @@ const meta: Meta<ButtonProps & { buttonText: string; modalText: string }> = {
   component: Button,
   parameters: {
     layout: "fullscreen",
+    docs: {
+      description: {
+        component: "props에 onClose를 전달하면 모달 밖 여백 클릭 시 모달 꺼짐",
+      },
+    },
   },
   decorators: [
     Story => (
