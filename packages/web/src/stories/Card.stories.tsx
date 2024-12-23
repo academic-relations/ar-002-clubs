@@ -1,6 +1,12 @@
-import Card, { CardProps } from "../common/components/Card";
+import Card from "../common/components/Card";
 
 import type { Meta, StoryObj } from "@storybook/react";
+
+interface StoryCardProps {
+  outline: boolean;
+  padding: number;
+  gap: number;
+}
 
 const meta: Meta<typeof Card> = {
   component: Card,
@@ -11,20 +17,16 @@ const meta: Meta<typeof Card> = {
 
 export default meta;
 
-type Story = StoryObj<typeof Card>;
+type Story = StoryObj<StoryCardProps>;
 
 export const Primary: Story = {
   args: {
     outline: true,
-    padding: "8px",
+    padding: 8,
     gap: 20,
   },
-  argTypes: {
-    outline: { control: "boolean" },
-    gap: { control: "number" },
-  },
-  render: (props: CardProps) => (
-    <Card {...props}>
+  render: (props: StoryCardProps) => (
+    <Card {...props} padding={`${props.padding}px`}>
       <div>SPARCS Clubs</div>
     </Card>
   ),

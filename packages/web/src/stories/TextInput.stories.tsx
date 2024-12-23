@@ -24,14 +24,6 @@ export const Primary: Story = {
     disabled: false,
     value: "",
   },
-  argTypes: {
-    value: { control: "text" },
-    label: { control: "text" },
-    placeholder: { control: "text" },
-    errorMessage: { control: "text" },
-    area: { control: "boolean" },
-    disabled: { control: "boolean" },
-  },
   render: function Render(args) {
     const [{ value }, updateArgs] = useArgs<{ value: string }>();
 

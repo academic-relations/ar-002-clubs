@@ -10,7 +10,7 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import Toggle from "@sparcs-clubs/web/common/components/Toggle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-interface AgreementModalProps {
+export interface AgreementModalProps {
   isOpen: boolean;
   onAgree: () => void;
   onDisagree: () => void;
