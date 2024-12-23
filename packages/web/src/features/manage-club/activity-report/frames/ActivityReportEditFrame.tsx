@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ApiAct003RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
 
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { addHours } from "date-fns";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
@@ -11,26 +10,22 @@ import styled from "styled-components";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
-
 import { FileDetail } from "@sparcs-clubs/web/common/components/File/attachment";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import useGetParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetParticipants";
 import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
-
 import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
 import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
-import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+import { utcToKst } from "@sparcs-clubs/web/utils/Date/extractDate";
 
 import SelectParticipant from "../components/SelectParticipant";
 import { usePutActivityReport } from "../services/usePutActivityReport";
-
 import { Participant } from "../types/activityReport";
 
 const SectionInner = styled.div`
@@ -53,8 +48,15 @@ type ActivityReportForm = ApiAct003RequestBody & {
   evidenceFiles: { fileId: string; name: string; url: string }[];
 };
 
-// TODO. 활동기간 리스트 추가, 파일업로드 추가
-const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
+interface ActivityReportEditFrameProps {
+  id: string;
+  clubId: number;
+}
+
+const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
+  id,
+  clubId,
+}) => {
   const formCtx = useForm<ActivityReportForm>({ mode: "all" });
 
   const { data, isLoading, isError } = useGetActivityReport(
@@ -94,8 +96,8 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
           body: {
             ..._data,
             durations: _data.durations.map(({ startTerm, endTerm }) => ({
-              startTerm,
-              endTerm,
+              startTerm: utcToKst(startTerm),
+              endTerm: utcToKst(endTerm),
             })),
             participants: _data.participants.map(({ studentId }) => ({
               studentId,
@@ -141,16 +143,7 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
     [rawEvidenceFiles],
   );
 
-  const initialDurations = useMemo(
-    () =>
-      durations
-        ? durations.map(d => ({
-            startDate: formatDotDate(d.startTerm),
-            endDate: formatDotDate(d.endTerm),
-          }))
-        : [],
-    [durations],
-  );
+  const initialDurations = useMemo(() => durations ?? [], [durations]);
 
   const [startTerm, setStartTerm] = useState<Date>(
     durations
@@ -162,16 +155,17 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
       ?.map(d => d.endTerm)
       .reduce((a, b) => (a > b ? a : b), new Date()),
   );
+
   useEffect(() => {
-    setStartTerm(
+    setStartTerm(prevStartTerm =>
       durations
         ?.map(d => d.startTerm)
-        .reduce((a, b) => (a < b ? a : b), new Date()),
+        .reduce((a, b) => (a < b ? a : b), prevStartTerm),
     );
-    setEndTerm(
+    setEndTerm(prevEndTerm =>
       durations
         ?.map(d => d.endTerm)
-        .reduce((a, b) => (a > b ? a : b), new Date()),
+        .reduce((a, b) => (a > b ? a : b), prevEndTerm),
     );
   }, [durations]);
 
@@ -181,16 +175,31 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
     isError: isErrorParticipants,
     refetch,
   } = useGetParticipants({
-    clubId: data ? data.clubId : 1,
-    startTerm: addHours(startTerm, 9),
-    endTerm: addHours(endTerm, 9),
+    clubId,
+    startTerm: utcToKst(startTerm),
+    endTerm: utcToKst(endTerm),
   });
+  const participantList = useMemo(
+    () => participantData?.students ?? [],
+    [participantData],
+  );
+
+  useEffect(() => {
+    if (startTerm && endTerm) {
+      refetch();
+    }
+  }, [startTerm, endTerm]);
+
   const initialParticipants: { studentId: number }[] = watch("participants");
-  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [selectedParticipants, setSelectedParticipants] = useState<
+    Participant[]
+  >([]);
+
+  console.log(selectedParticipants, initialParticipants, participantData);
 
   useEffect(() => {
     if (initialParticipants && participantData) {
-      setParticipants(
+      setSelectedParticipants(
         participantData.students.filter(student =>
           initialParticipants.some(
             participant => participant.studentId === student.id,
@@ -217,8 +226,9 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
   };
 
   const validInput = useMemo(
-    () => isValid && durations && participants.length > 0 && evidenceFiles,
-    [durations, participants, evidenceFiles, isValid],
+    () =>
+      isValid && durations && selectedParticipants.length > 0 && evidenceFiles,
+    [durations, selectedParticipants, evidenceFiles, isValid],
   );
 
   if (!data) return null;
@@ -292,30 +302,22 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
                   <SelectActivityTerm
                     initialData={initialDurations}
                     onChange={terms => {
-                      const processedTerms = terms.map(term => ({
-                        startTerm: new Date(
-                          `${term.startDate.replace(".", "-")}`,
-                        ),
-                        endTerm: new Date(`${term.endDate.replace(".", "-")}`),
-                      }));
-                      setValue("durations", processedTerms, {
+                      setValue("durations", terms, {
                         shouldValidate: true,
                       });
                       setStartTerm(
-                        processedTerms
+                        terms
                           .map(d => d.startTerm)
                           .reduce((a, b) => (a < b ? a : b)),
                       );
                       setEndTerm(
-                        processedTerms
+                        terms
                           .map(d => d.endTerm)
                           .reduce((a, b) => (a > b ? a : b)),
                       );
                       formCtx.trigger("durations");
 
-                      // TODO: (@dora) refetch participants one step late
-                      refetch();
-                      setParticipants([]);
+                      setSelectedParticipants([]);
                     }}
                   />
                   {/* </FlexWrapper> */}
@@ -364,14 +366,15 @@ const ActivityReportEditFrame: React.FC<{ id: string }> = ({ id }) => {
                 {durations && (
                   <AsyncBoundary isLoading={isLoading} isError={isError}>
                     <SelectParticipant
-                      data={participantData?.students ?? []}
-                      value={participants}
+                      data={participantList}
+                      value={selectedParticipants}
                       onChange={v => {
-                        setParticipants(v);
+                        setSelectedParticipants(v);
 
                         const participantIds = v.map(_data => ({
                           studentId: +_data.id,
                         }));
+                        console.log("participantIds", participantIds);
                         formCtx.setValue("participants", participantIds);
                         formCtx.trigger("participants");
                       }}

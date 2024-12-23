@@ -4,8 +4,9 @@ import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
-
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
+import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import ActivityTermRow from "./ActivityTermRow";
 
@@ -15,10 +16,10 @@ export interface ActivityTermProps {
 }
 
 interface EditActivityTermModalProps {
-  initialData: ActivityTermProps[];
+  initialData: Duration[];
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (terms: ActivityTermProps[]) => void;
+  onConfirm: (terms: Duration[]) => void;
 }
 
 const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
@@ -27,8 +28,12 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
   onClose,
   onConfirm,
 }) => {
-  const [activityTermList, setActivityTermList] =
-    useState<ActivityTermProps[]>(initialData);
+  const [activityTermList, setActivityTermList] = useState<ActivityTermProps[]>(
+    initialData.map(d => ({
+      startDate: formatDotDate(d.startTerm),
+      endDate: formatDotDate(d.endTerm),
+    })),
+  );
   const [hasErrorList, setHasErrorList] = useState<boolean[]>(
     Array.from({ length: initialData.length }, () => false),
   );
@@ -83,7 +88,12 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
   const handleConfirm = () => {
     if (isEmpty() || isSomethingEmpty() || checkError()) return;
 
-    onConfirm(activityTermList);
+    onConfirm(
+      activityTermList.map(term => ({
+        startTerm: new Date(term.startDate.replace(".", "-")),
+        endTerm: new Date(term.endDate.replace(".", "-")),
+      })),
+    );
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
