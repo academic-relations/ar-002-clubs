@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { ApiAct001RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct001";
-import { ApiClb015ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
-
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { addHours } from "date-fns";
+
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
@@ -12,22 +10,18 @@ import styled from "styled-components";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
-
 import { FileDetail } from "@sparcs-clubs/web/common/components/File/attachment";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import useGetParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetParticipants";
-
-import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
 import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
-import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+import { utcToKst } from "@sparcs-clubs/web/utils/Date/extractDate";
 
 import SelectParticipant from "../components/SelectParticipant";
 import usePostActivityReport from "../services/usePostActivityReport";
@@ -53,15 +47,16 @@ type ActivityReportForm = ApiAct001RequestBody & {
   evidenceFiles: { uid: string; name: string; url: string }[];
 };
 
-const ActivityReportCreateFrame: React.FC = () => {
+interface ActivityReportCreateFrameProps {
+  clubId: number;
+}
+
+const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
+  clubId,
+}) => {
   const formCtx = useForm<ActivityReportForm>({ mode: "all" });
 
   const router = useRouter();
-
-  const { data: clubInfo } = useGetMyManageClub() as {
-    data: ApiClb015ResponseOk;
-    isLoading: boolean;
-  };
 
   const { mutate } = usePostActivityReport();
 
@@ -72,10 +67,10 @@ const ActivityReportCreateFrame: React.FC = () => {
         {
           body: {
             ..._data,
-            clubId: clubInfo.clubId,
+            clubId,
             duration: _data.duration.map(({ startTerm, endTerm }) => ({
-              startTerm: addHours(startTerm, 9),
-              endTerm: addHours(endTerm, 9),
+              startTerm: utcToKst(startTerm),
+              endTerm: utcToKst(endTerm),
             })),
             evidence: _data.evidence ?? "", // NOTE: (@dora) evidence is optional
             participants: _data.participants.map(({ studentId }) => ({
@@ -122,39 +117,18 @@ const ActivityReportCreateFrame: React.FC = () => {
     [rawEvidenceFiles],
   );
 
-  const initialDurations = useMemo(
-    () =>
-      durations
-        ? durations.map(d => ({
-            startDate: formatDotDate(d.startTerm),
-            endDate: formatDotDate(d.endTerm),
-          }))
-        : [],
-    [durations],
-  );
+  const initialDurations = useMemo(() => durations ?? [], [durations]);
 
   const [startTerm, setStartTerm] = useState<Date>(
     durations
       ?.map(d => d.startTerm)
-      .reduce((a, b) => (a < b ? a : b), new Date()),
+      .reduce((a, b) => (a < b ? a : b), new Date()) ?? new Date(),
   );
   const [endTerm, setEndTerm] = useState<Date>(
     durations
       ?.map(d => d.endTerm)
-      .reduce((a, b) => (a > b ? a : b), new Date()),
+      .reduce((a, b) => (a > b ? a : b), new Date()) ?? new Date(),
   );
-  useEffect(() => {
-    setStartTerm(
-      durations
-        ?.map(d => d.startTerm)
-        .reduce((a, b) => (a < b ? a : b), new Date()),
-    );
-    setEndTerm(
-      durations
-        ?.map(d => d.endTerm)
-        .reduce((a, b) => (a > b ? a : b), new Date()),
-    );
-  }, [durations]);
 
   const {
     data: participantData,
@@ -162,10 +136,17 @@ const ActivityReportCreateFrame: React.FC = () => {
     isError: isErrorParticipants,
     refetch,
   } = useGetParticipants({
-    clubId: clubInfo.clubId,
-    startTerm: addHours(startTerm, 9),
-    endTerm: addHours(endTerm, 9),
+    clubId,
+    startTerm: utcToKst(startTerm),
+    endTerm: utcToKst(endTerm),
   });
+
+  useEffect(() => {
+    if (startTerm && endTerm) {
+      refetch();
+    }
+  }, [startTerm, endTerm]);
+
   const initialParticipants: { studentId: number }[] = watch("participants");
   const [participants, setParticipants] = useState<Participant[]>([]);
 
@@ -264,29 +245,21 @@ const ActivityReportCreateFrame: React.FC = () => {
                 <SelectActivityTerm
                   initialData={initialDurations}
                   onChange={terms => {
-                    const processedTerms = terms.map(term => ({
-                      startTerm: new Date(
-                        `${term.startDate.replace(".", "-")}`,
-                      ),
-                      endTerm: new Date(`${term.endDate.replace(".", "-")}`),
-                    }));
-                    setValue("duration", processedTerms, {
+                    setValue("duration", terms, {
                       shouldValidate: true,
                     });
                     setStartTerm(
-                      processedTerms
+                      terms
                         .map(d => d.startTerm)
                         .reduce((a, b) => (a < b ? a : b)),
                     );
                     setEndTerm(
-                      processedTerms
+                      terms
                         .map(d => d.endTerm)
                         .reduce((a, b) => (a > b ? a : b)),
                     );
                     formCtx.trigger("duration");
 
-                    // TODO: (@dora) refetch participants one step late
-                    refetch();
                     setParticipants([]);
                   }}
                 />

@@ -1,22 +1,30 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useCallback } from "react";
+
+import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import { useParams, useRouter } from "next/navigation";
+import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
+import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
-import AdvisorProfessorApprovalTag, {
-  ProfessorApproval,
-} from "../components/AdvisorProfessorApprovalTag";
+import { Profile } from "@sparcs-clubs/web/common/providers/AuthContext";
+import { getActivityReportProgress } from "@sparcs-clubs/web/features/manage-club/activity-report/constants/activityReportProgress";
+import { useDeleteActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useDeleteActivityReport";
+import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
+import { kstToUtc } from "@sparcs-clubs/web/utils/Date/extractDate";
+import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 interface ActivitySectionProps extends React.PropsWithChildren {
   label: string;
@@ -53,6 +61,19 @@ const FlexTypography = styled(Typography)`
   align-self: stretch;
 `;
 
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+`;
+
+const DeleteAndEditButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
 const ActivityDetail: React.FC<{ children: string | ReactNode }> = ({
   children = "",
 }) => {
@@ -81,117 +102,199 @@ const FilePreviewContainer: React.FC<React.PropsWithChildren> = ({
   </FilePreviewContainerWrapper>
 );
 
-const ActivityReportDetailFrame: React.FC = () => {
+interface ActivityReportDetailFrameProps {
+  profile: Profile;
+}
+
+const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
+  profile,
+}) => {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
+
+  const { mutate: deleteActivityReport } = useDeleteActivityReport();
 
   const onClick = () => {
     router.push("/manage-club/activity-report");
   };
 
+  // TODO: 지도교수 승인 추가 예정
+  // const { color: approvalTagColor, text: approvalTagText } = getTagDetail(
+  //   ActivityProfessorApprovalEnum.Requested,
+  //   ProfessorApprovalTagList,
+  // );
+
+  const handleEdit = () => {
+    router.push(`/manage-club/activity-report/${id}/edit`);
+  };
+
+  const handleDelete = useCallback(() => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <CancellableModalContent
+          onConfirm={() => {
+            deleteActivityReport(
+              { requestParam: { activityId: Number(id) } },
+              {
+                onSuccess: () => {
+                  close();
+                  router.push("/manage-club/activity-report");
+                },
+              },
+            );
+          }}
+          onClose={close}
+          confirmButtonText="삭제"
+        >
+          활동 보고서를 삭제하면 복구할 수 없습니다.
+          <br />
+          삭제하시겠습니까?
+        </CancellableModalContent>
+      </Modal>
+    ));
+  }, [deleteActivityReport, id, router]);
+
+  const { data, isLoading, isError } = useGetActivityReport(
+    profile.type,
+    Number(id),
+  );
+
+  const activityType: (type: ActivityTypeEnum) => string = type => {
+    switch (type) {
+      case ActivityTypeEnum.matchedInternalActivity:
+        return "동아리 성격에 합치하는 내부 활동";
+        break;
+      case ActivityTypeEnum.matchedExternalActivity:
+        return "동아리 성격에 합치하는 외부 활동";
+        break;
+      case ActivityTypeEnum.notMatchedActivity:
+        return "동아리 성격에 합치하지 않는 활동";
+        break;
+      default:
+        return "";
+    }
+  };
+
+  if (!data || !("clubId" in data)) {
+    return <AsyncBoundary isLoading={isLoading} isError={isError} />;
+  }
+
   return (
-    <FlexWrapper
-      direction="column"
-      gap={60}
-      style={{ alignItems: "flex-start" }}
-    >
+    <FlexWrapper direction="column" gap={60}>
       <PageHead
         items={[
           { name: "대표 동아리 관리", path: "/manage-club" },
           { name: "활동 보고서", path: "/manage-club/activity-report" },
         ]}
-        title={`활동 보고서 : ${id}(id 가져오기 테스트용)`}
+        title="활동 보고서"
         enableLast
       />
-      <FlexWrapper
-        direction="column"
-        gap={40}
-        style={{ alignItems: "flex-start", alignSelf: "stretch" }}
-      >
-        <Card outline={false} padding="32px" gap={20}>
-          <ProgressStatus
-            labels={["신청 완료", "동아리 연합회 신청 반려"]}
-            progress={[
-              {
-                status: ProgressCheckSectionStatusEnum.Approved,
-                date: new Date("2024-03-11 21:00"),
-              },
-              {
-                status: ProgressCheckSectionStatusEnum.Canceled,
-                date: new Date("2024-03-11 21:00"),
-              },
-            ]}
-          />
-          <ActivitySection label="활동 정보">
-            <ActivityDetail>활동명: 스팍스 봄학기 해커톤</ActivityDetail>
-            <ActivityDetail>
-              활동 분류: 동아리 성격에 합치하는 내부 활동
-            </ActivityDetail>
-            <ActivityDetail>
-              활동 기간: 2024년 5월 24일 (금) ~ 2024년 5월 25일 (토)
-            </ActivityDetail>
-            <ActivityDetail>활동 장소: 동아리방</ActivityDetail>
-            <ActivityDetail>
-              활동 목적: 동아리 회원 개발 실력 향상
-            </ActivityDetail>
-            <ActivityDetail>활동 내용: 밤을 새서 개발을 했다.</ActivityDetail>
-          </ActivitySection>
-          <ActivitySection label="활동 인원(4명)">
-            <ActivityDetail>20200510 이지윤</ActivityDetail>
-            <ActivityDetail>20200511 박병찬</ActivityDetail>
-            <ActivityDetail>20230510 이도라</ActivityDetail>
-            <ActivityDetail>20240510 스팍스</ActivityDetail>
-          </ActivitySection>
-          <ActivitySection label="활동 증빙">
-            <ActivityDetail>활동명: 스팍스 봄학기 해커톤</ActivityDetail>
-            <ActivityDetail>첨부 파일</ActivityDetail>
-            <ActivityDetail>
-              <FilePreviewContainer>
-                <ThumbnailPreviewList
-                  fileList={[
-                    {
-                      id: "1",
-                      name: "bamseam.pdf",
-                      url: "https://pdfobject.com/pdf/sample.pdf",
-                    },
-                    {
-                      id: "2",
-                      name: "coffee.pdf",
-                      url: "https://pdfobject.com/pdf/sample.pdf",
-                    },
-                    {
-                      id: "3",
-                      name: "gaebal.pdf",
-                      url: "https://pdfobject.com/pdf/sample.pdf",
-                    },
-                  ]}
-                />
-              </FilePreviewContainer>
-            </ActivityDetail>
-            <ActivityDetail>
-              부가 설명: 커피를 마시며 개발을 했고 밤을 샜어요
-            </ActivityDetail>
-          </ActivitySection>
-          <FlexWrapper
-            direction="row"
-            gap={16}
-            justify="space-between"
-            style={{
-              alignItems: "center",
-              alignSelf: "stretch",
-              width: "100%",
-            }}
-          >
-            <ActivitySection label="지도교수 승인" />
-            <AdvisorProfessorApprovalTag
-              professorApproval={ProfessorApproval.PENDING}
+      <AsyncBoundary isLoading={isLoading} isError={isError}>
+        <FlexWrapper
+          direction="column"
+          gap={40}
+          style={{ alignSelf: "stretch" }}
+        >
+          <Card outline={false} padding="32px" gap={20}>
+            <ProgressStatus
+              labels={
+                getActivityReportProgress(
+                  data.activityStatusEnumId,
+                  kstToUtc(data.updatedAt),
+                ).labels
+              }
+              progress={
+                getActivityReportProgress(
+                  data.activityStatusEnumId,
+                  kstToUtc(data.updatedAt),
+                ).progress
+              }
+              optional={
+                data.comments &&
+                data.comments.length > 0 && (
+                  <RejectReasonToast
+                    title="반려 사유"
+                    reasons={data.comments.map(comment => ({
+                      datetime: comment.createdAt,
+                      reason: comment.content,
+                    }))}
+                  />
+                )
+              }
             />
-          </FlexWrapper>
-        </Card>
-        <Button type="default" onClick={onClick}>
-          목록으로 돌아가기
-        </Button>
-      </FlexWrapper>
+            <ActivitySection label="활동 정보">
+              <ActivityDetail>{`활동명: ${data.name}`}</ActivityDetail>
+              <ActivityDetail>
+                {`활동 분류: ${activityType(data.activityTypeEnumId)}`}
+              </ActivityDetail>
+              <ActivityDetail>활동 기간:</ActivityDetail>
+              <FlexWrapper
+                direction="column"
+                gap={12}
+                style={{ paddingLeft: 24 }}
+              >
+                {data.durations.map((duration, index) => (
+                  <Typography key={index}>
+                    {`${formatDate(duration.startTerm)} ~ ${formatDate(duration.endTerm)}`}
+                  </Typography>
+                ))}
+              </FlexWrapper>
+              <ActivityDetail>{`활동 장소: ${data.location}`}</ActivityDetail>
+              <ActivityDetail>{`활동 목적: ${data.purpose}`}</ActivityDetail>
+              <ActivityDetail>{`활동 내용: ${data.detail}`}</ActivityDetail>
+            </ActivitySection>
+            <ActivitySection label={`활동 인원(${data.participants.length}명)`}>
+              {data.participants.map(participant => (
+                <ActivityDetail
+                  key={participant.studentId}
+                >{`${participant.studentNumber} ${participant.name}`}</ActivityDetail>
+              ))}
+            </ActivitySection>
+            <ActivitySection label="활동 증빙">
+              <ActivityDetail>첨부 파일</ActivityDetail>
+              <ActivityDetail>
+                <FilePreviewContainer>
+                  <ThumbnailPreviewList
+                    fileList={data.evidenceFiles.map(file => ({
+                      id: file.fileId,
+                      name: file.name,
+                      url: file.url,
+                    }))}
+                  />
+                </FilePreviewContainer>
+              </ActivityDetail>
+              <ActivityDetail>{`부가 설명: ${data.evidence}`}</ActivityDetail>
+            </ActivitySection>
+            {/* TODO: 지도교수 승인 추가 예정 */}
+            {/* <FlexWrapper
+              direction="row"
+              gap={16}
+              justify="space-between"
+              style={{
+                alignItems: "center",
+                alignSelf: "stretch",
+                width: "100%",
+              }}
+            >
+              <ActivitySection label="지도교수 승인" />
+              <Tag color={approvalTagColor}>{approvalTagText}</Tag>
+            </FlexWrapper> */}
+          </Card>
+          <ButtonContainer>
+            <Button type="default" onClick={onClick}>
+              목록으로 돌아가기
+            </Button>
+            <DeleteAndEditButtonContainer>
+              <Button type="default" onClick={handleDelete}>
+                삭제
+              </Button>
+              <Button type="default" onClick={handleEdit}>
+                수정
+              </Button>
+            </DeleteAndEditButtonContainer>
+          </ButtonContainer>
+        </FlexWrapper>
+      </AsyncBoundary>
     </FlexWrapper>
   );
 };

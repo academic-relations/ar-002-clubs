@@ -14,6 +14,7 @@ import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/servi
 
 import NewActivityReportList from "../components/NewActivityReportList";
 import PastActivityReportList from "../components/PastActivityReportList";
+import { MAX_ACTIVITY_REPORT_COUNT } from "../constants";
 import useGetActivityTerms from "../services/useGetActivityTerms";
 import useGetNewActivityReportList from "../services/useGetNewActivityReportList";
 
@@ -47,7 +48,13 @@ const PastSectionInner = styled.div`
   gap: 40px;
 `;
 
-const ActivityReportMainFrame: React.FC = () => {
+interface ActivityReportMainFrameProps {
+  clubId: number;
+}
+
+const ActivityReportMainFrame: React.FC<ActivityReportMainFrameProps> = ({
+  clubId,
+}) => {
   const { data } = useGetMyManageClub() as {
     data: ApiClb015ResponseOk;
     isLoading: boolean;
@@ -58,7 +65,7 @@ const ActivityReportMainFrame: React.FC = () => {
     isLoading: isLoadingNewActivityReport,
     isError: isErrorNewActivityReport,
   } = useGetNewActivityReportList({
-    clubId: data.clubId,
+    clubId,
   });
 
   const {
@@ -78,27 +85,36 @@ const ActivityReportMainFrame: React.FC = () => {
       />
       <FoldableSectionTitle childrenMargin="20px" title="신규 활동 보고서">
         <SectionInner>
-          <Info text="현재는 2024년 봄학기 활동 보고서 작성 기간입니다 (작성 마감 : 2024년 3월 10일 23:59)" />
-          <OptionOuter>
-            <Typography
-              fs={14}
-              fw="REGULAR"
-              lh={20}
-              color="GRAY.300"
-              ff="PRETENDARD"
-            >
-              활동 보고서는 최대 20개까지 작성 가능합니다
-            </Typography>
-            <Link href="/manage-club/activity-report/create">
-              <IconButton type="default" icon="add" onClick={() => {}}>
-                활동 보고서 작성
-              </IconButton>
-            </Link>
-          </OptionOuter>
+          <Info text="현재는 2024년 여름-가을학기 활동 보고서 작성 기간입니다 (작성 마감 : 2024년 1월 7일 23:59)" />
           <AsyncBoundary
             isLoading={isLoadingNewActivityReport}
             isError={isErrorNewActivityReport}
           >
+            <OptionOuter>
+              <Typography
+                fs={14}
+                fw="REGULAR"
+                lh={20}
+                color="GRAY.300"
+                ff="PRETENDARD"
+              >
+                활동 보고서는 최대 20개까지 작성 가능합니다
+              </Typography>
+              <Link href="/manage-club/activity-report/create">
+                <IconButton
+                  type={
+                    newActivityReportList &&
+                    newActivityReportList.length >= MAX_ACTIVITY_REPORT_COUNT
+                      ? "disabled"
+                      : "default"
+                  }
+                  icon="add"
+                  onClick={() => {}}
+                >
+                  활동 보고서 작성
+                </IconButton>
+              </Link>
+            </OptionOuter>
             <NewActivityReportList data={newActivityReportList} />
           </AsyncBoundary>
         </SectionInner>
