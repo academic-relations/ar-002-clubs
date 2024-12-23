@@ -140,7 +140,7 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
   });
 
   return (
-    <Card outline padding="32px" gap={32}>
+    <Card outline padding="32px" gap={32} style={{ overflow: "hidden" }}>
       <SearchInput
         searchText={searchText}
         handleChange={setSearchText}
