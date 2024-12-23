@@ -1,0 +1,1 @@
+export const MAX_ACTIVITY_REPORT_COUNT = 20;
