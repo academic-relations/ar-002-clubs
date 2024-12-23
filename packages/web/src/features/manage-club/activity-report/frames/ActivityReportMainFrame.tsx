@@ -47,7 +47,13 @@ const PastSectionInner = styled.div`
   gap: 40px;
 `;
 
-const ActivityReportMainFrame: React.FC = () => {
+interface ActivityReportMainFrameProps {
+  clubId: number;
+}
+
+const ActivityReportMainFrame: React.FC<ActivityReportMainFrameProps> = ({
+  clubId,
+}) => {
   const { data } = useGetMyManageClub() as {
     data: ApiClb015ResponseOk;
     isLoading: boolean;
@@ -58,7 +64,7 @@ const ActivityReportMainFrame: React.FC = () => {
     isLoading: isLoadingNewActivityReport,
     isError: isErrorNewActivityReport,
   } = useGetNewActivityReportList({
-    clubId: data.clubId,
+    clubId,
   });
 
   const {
