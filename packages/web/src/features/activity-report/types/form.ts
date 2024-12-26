@@ -2,15 +2,11 @@ import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.e
 
 import { FileDetail } from "@sparcs-clubs/web/common/components/File/attachment";
 
+import { Participant } from "@sparcs-clubs/web/types/participant";
+
 type Duration = {
   startTerm: Date;
   endTerm: Date;
-};
-
-type Participant = {
-  id: number;
-  studentNumber: number;
-  name: string;
 };
 
 export interface ActivityReportFormData {

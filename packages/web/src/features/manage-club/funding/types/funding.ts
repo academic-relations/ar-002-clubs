@@ -1,4 +1,4 @@
-import { Participant } from "@sparcs-clubs/web/features/activity-report/types/activityReport";
+import { Participant } from "@sparcs-clubs/web/types/participant";
 
 export interface FundingInterface {
   // TODO: files 관련 추가
