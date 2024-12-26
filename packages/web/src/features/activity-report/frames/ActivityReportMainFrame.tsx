@@ -1,15 +1,17 @@
 import React from "react";
 
 import { ApiClb015ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
+
 import Link from "next/link";
-import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+
 import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 
 import NewActivityReportList from "../components/NewActivityReportList";
@@ -17,36 +19,6 @@ import PastActivityReportList from "../components/PastActivityReportList";
 import { MAX_ACTIVITY_REPORT_COUNT } from "../constants";
 import useGetActivityTerms from "../services/useGetActivityTerms";
 import useGetNewActivityReportList from "../services/useGetNewActivityReportList";
-
-const ActivityReportMainFrameInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 60px;
-`;
-
-const OptionOuter = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 16px;
-  align-self: stretch;
-`;
-
-const SectionInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-  align-self: stretch;
-`;
-
-const PastSectionInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 40px;
-`;
 
 interface ActivityReportMainFrameProps {
   clubId: number;
@@ -75,7 +47,7 @@ const ActivityReportMainFrame: React.FC<ActivityReportMainFrameProps> = ({
   } = useGetActivityTerms({ clubId: data.clubId });
 
   return (
-    <ActivityReportMainFrameInner>
+    <FlexWrapper direction="column" gap={60}>
       <PageHead
         items={[
           { name: "대표 동아리 관리", path: "/manage-club" },
@@ -84,13 +56,13 @@ const ActivityReportMainFrame: React.FC<ActivityReportMainFrameProps> = ({
         title="활동 보고서"
       />
       <FoldableSectionTitle childrenMargin="20px" title="신규 활동 보고서">
-        <SectionInner>
+        <FlexWrapper direction="column" gap={20}>
           <Info text="현재는 2024년 여름-가을학기 활동 보고서 작성 기간입니다 (작성 마감 : 2025년 1월 7일 23:59)" />
           <AsyncBoundary
             isLoading={isLoadingNewActivityReport}
             isError={isErrorNewActivityReport}
           >
-            <OptionOuter>
+            <FlexWrapper direction="row" gap={16} justify="flex-end">
               <Typography
                 fs={14}
                 fw="REGULAR"
@@ -114,13 +86,13 @@ const ActivityReportMainFrame: React.FC<ActivityReportMainFrameProps> = ({
                   활동 보고서 작성
                 </IconButton>
               </Link>
-            </OptionOuter>
+            </FlexWrapper>
             <NewActivityReportList data={newActivityReportList} />
           </AsyncBoundary>
-        </SectionInner>
+        </FlexWrapper>
       </FoldableSectionTitle>
       <FoldableSectionTitle title="과거 활동 보고서">
-        <PastSectionInner>
+        <FlexWrapper direction="column" gap={40}>
           <AsyncBoundary
             isLoading={isLoadingActivityTerms}
             isError={isErrorActivityTerms}
@@ -135,9 +107,9 @@ const ActivityReportMainFrame: React.FC<ActivityReportMainFrameProps> = ({
                 />
               ))}
           </AsyncBoundary>
-        </PastSectionInner>
+        </FlexWrapper>
       </FoldableSectionTitle>
-    </ActivityReportMainFrameInner>
+    </FlexWrapper>
   );
 };
 

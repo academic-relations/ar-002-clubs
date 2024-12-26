@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { ApiAct003RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
-
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
+
 import { FormProvider, useForm } from "react-hook-form";
-import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -17,31 +16,16 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
-import { useGetActivityReport } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
-import useGetParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetParticipants";
+
 import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
 import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 import { utcToKst } from "@sparcs-clubs/web/utils/Date/extractDate";
 
 import SelectParticipant from "../components/SelectParticipant";
+import { useGetActivityReport } from "../services/useGetActivityReport";
+import useGetParticipants from "../services/useGetParticipants";
 import { usePutActivityReport } from "../services/usePutActivityReport";
 import { Participant } from "../types/activityReport";
-
-const SectionInner = styled.div`
-  padding-left: 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-  align-self: stretch;
-`;
-
-const ButtonPlaceRight = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  align-self: stretch;
-`;
 
 type ActivityReportForm = ApiAct003RequestBody & {
   evidenceFiles: { fileId: string; name: string; url: string }[];
@@ -249,7 +233,7 @@ const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
           <form onSubmit={handleSubmit}>
             <FlexWrapper direction="column" gap={32}>
               <SectionTitle>활동 정보</SectionTitle>
-              <SectionInner>
+              <FlexWrapper direction="column" gap={20} padding="0 0 0 24px">
                 <Card outline padding="32px" gap={32}>
                   <FormController
                     name="name"
@@ -354,10 +338,10 @@ const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
                     )}
                   />
                 </Card>
-              </SectionInner>
+              </FlexWrapper>
 
               <SectionTitle>활동 인원</SectionTitle>
-              <SectionInner>
+              <FlexWrapper direction="column" gap={20} padding="0 0 0 24px">
                 {durations && (
                   <AsyncBoundary isLoading={isLoading} isError={isError}>
                     <SelectParticipant
@@ -375,9 +359,9 @@ const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
                     />
                   </AsyncBoundary>
                 )}
-              </SectionInner>
+              </FlexWrapper>
               <SectionTitle>활동 증빙</SectionTitle>
-              <SectionInner>
+              <FlexWrapper direction="column" gap={20} padding="0 0 0 24px">
                 <FormController
                   name="evidence"
                   control={control}
@@ -411,16 +395,16 @@ const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
                     )}
                   />
                 )}
-              </SectionInner>
+              </FlexWrapper>
 
-              <ButtonPlaceRight>
+              <FlexWrapper direction="row" gap={16} justify="flex-end">
                 <Button
                   buttonType="submit"
                   type={validInput ? "default" : "disabled"}
                 >
                   저장
                 </Button>
-              </ButtonPlaceRight>
+              </FlexWrapper>
             </FlexWrapper>
           </form>
         </FormProvider>
