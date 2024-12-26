@@ -138,7 +138,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
               {
                 onSuccess: () => {
                   close();
-                  router.push("/manage-club/activity-report");
+                  window.location.href = "/manage-club/activity-report";
                 },
               },
             );

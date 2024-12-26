@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ApiAct003RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
 
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 
@@ -64,8 +63,6 @@ const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
     Number(id),
   );
 
-  const router = useRouter();
-
   useEffect(() => {
     if (data) {
       /* NOTE: (@dora) request body of put should not include clubId */
@@ -106,12 +103,12 @@ const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
         },
         {
           onSuccess: () => {
-            router.push(`/manage-club/activity-report/${id}`);
+            window.location.href = `/manage-club/activity-report/${id}`;
           },
         },
       );
     },
-    [id, router, mutate],
+    [id, mutate],
   );
 
   const handleSubmit = (e: React.BaseSyntheticEvent) => {
@@ -194,8 +191,6 @@ const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
   const [selectedParticipants, setSelectedParticipants] = useState<
     Participant[]
   >([]);
-
-  console.log(selectedParticipants, initialParticipants, participantData);
 
   useEffect(() => {
     if (initialParticipants && participantData) {
@@ -374,7 +369,6 @@ const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
                         const participantIds = v.map(_data => ({
                           studentId: +_data.id,
                         }));
-                        console.log("participantIds", participantIds);
                         formCtx.setValue("participants", participantIds);
                         formCtx.trigger("participants");
                       }}
