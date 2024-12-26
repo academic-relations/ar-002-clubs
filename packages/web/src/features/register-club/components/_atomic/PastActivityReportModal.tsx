@@ -15,10 +15,10 @@ import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/Confi
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import { useDeleteActivityReportProvisional } from "@sparcs-clubs/web/features/activity-report/services/useDeleteActivityReportProvisional";
+import { useGetActivityReport } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
 import { patchActivityExecutive } from "@sparcs-clubs/web/features/executive/register-club/services/patchActivityExecutive";
 import { patchActivityExecutiveSendBack } from "@sparcs-clubs/web/features/executive/register-club/services/patchActivityExecutiveSendBack";
-import { useDeleteActivityReportProvisional } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useDeleteActivityReportProvisional";
-import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
 import { getActivityTypeTagLabel } from "@sparcs-clubs/web/features/register-club/utils/activityType";
 
 import {

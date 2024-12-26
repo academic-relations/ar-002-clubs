@@ -6,7 +6,7 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
-import ActivityReportEditFrame from "@sparcs-clubs/web/features/manage-club/activity-report/frames/ActivityReportEditFrame";
+import ActivityReportEditFrame from "@sparcs-clubs/web/features/activity-report/frames/ActivityReportEditFrame";
 import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 
 const ActivityReport = ({ params }: { params: { id: string } }) => {

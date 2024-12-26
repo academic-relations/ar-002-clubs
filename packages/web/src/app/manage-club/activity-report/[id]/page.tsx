@@ -8,7 +8,7 @@ import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 
-import ActivityReportDetailFrame from "@sparcs-clubs/web/features/manage-club/activity-report/frames/ActivityReportDetailFrame";
+import ActivityReportDetailFrame from "@sparcs-clubs/web/features/activity-report/frames/ActivityReportDetailFrame";
 
 const ActivityReportDetail = () => {
   const { isLoggedIn, login, profile } = useAuth();

@@ -20,9 +20,9 @@ import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { Profile } from "@sparcs-clubs/web/common/providers/AuthContext";
-import { getActivityReportProgress } from "@sparcs-clubs/web/features/manage-club/activity-report/constants/activityReportProgress";
-import { useDeleteActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useDeleteActivityReport";
-import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
+import { getActivityReportProgress } from "@sparcs-clubs/web/features/activity-report/constants/activityReportProgress";
+import { useDeleteActivityReport } from "@sparcs-clubs/web/features/activity-report/services/useDeleteActivityReport";
+import { useGetActivityReport } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
 import { kstToUtc } from "@sparcs-clubs/web/utils/Date/extractDate";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
