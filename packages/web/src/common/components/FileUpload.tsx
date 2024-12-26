@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { ApiFil001RequestBody } from "@sparcs-clubs/interface/api/file/apiFil001";
 import { overlay } from "overlay-kit";
@@ -115,10 +115,6 @@ const FileUpload: React.FC<FileUploadProps> = ({
   const { mutate: putFileS3Mutation } = usePutFileS3();
 
   const [files, setFiles] = useState<FileDetail[]>(initialFiles);
-
-  useEffect(() => {
-    console.log("files", files);
-  }, [files]);
 
   const updateFiles = (_files: FileDetail[]) => {
     setFiles(_files);

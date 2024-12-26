@@ -57,7 +57,9 @@ const SingleUploadWithTextAndTemplate: React.FC<
       <FileUpload
         fileId={fileId}
         initialFiles={initialFile ? [initialFile] : []}
-        onChange={onChange}
+        onChange={files => {
+          onChange(files.map(file => file.id));
+        }}
       />
       <IconButton
         style={{ marginTop: 4 }}

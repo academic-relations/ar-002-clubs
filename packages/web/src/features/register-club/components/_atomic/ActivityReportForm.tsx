@@ -282,7 +282,7 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
                         updateMultipleFile(
                           "evidenceFiles",
                           _data.map(d => ({
-                            fileId: d,
+                            fileId: d.id,
                           })),
                         );
                       }}
