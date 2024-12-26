@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ApiAct001RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct001";
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
-import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 
@@ -56,8 +55,6 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
 }) => {
   const formCtx = useForm<ActivityReportForm>({ mode: "all" });
 
-  const router = useRouter();
-
   const { mutate } = usePostActivityReport();
 
   const submitHandler = useCallback(
@@ -80,12 +77,12 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
         },
         {
           onSuccess: () => {
-            router.push("/manage-club/activity-report");
+            window.location.href = "/manage-club/activity-report";
           },
         },
       );
     },
-    [],
+    [clubId, mutate],
   );
 
   const handleSubmit = (e: React.BaseSyntheticEvent) => {
