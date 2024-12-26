@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { ApiFil001RequestBody } from "@sparcs-clubs/interface/api/file/apiFil001";
 import { overlay } from "overlay-kit";
@@ -26,7 +26,7 @@ interface FileUploadProps {
   fileId?: string;
   placeholder?: string;
   initialFiles?: FileDetail[];
-  onChange?: (string: string[]) => void;
+  onChange?: (files: FileDetail[]) => void;
   allowedTypes?: string[];
   multiple?: boolean;
   disabled?: boolean;
@@ -116,16 +116,20 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
   const [files, setFiles] = useState<FileDetail[]>(initialFiles);
 
+  useEffect(() => {
+    console.log("files", files);
+  }, [files]);
+
   const updateFiles = (_files: FileDetail[]) => {
     setFiles(_files);
-    onChange(_files.map(file => file.id!));
+    onChange(_files);
   };
   const addFiles = (_files: FileDetail[]) => {
     // NOTE: (@dora) do not add files that already exist
     const newFiles = _files.filter(file => !files.find(f => f.id === file.id));
     const updatedFiles = multiple ? [...files, ...newFiles] : newFiles;
     updateFiles(updatedFiles);
-    onChange(updatedFiles.map(file => file.id!));
+    onChange(updatedFiles);
   };
   const removeFile = (_file: FileDetail) => {
     const updatedFiles = files.filter(file => file.id !== _file.id);
