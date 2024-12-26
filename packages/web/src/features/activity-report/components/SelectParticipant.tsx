@@ -17,7 +17,7 @@ import Table from "@sparcs-clubs/web/common/components/Table";
 import Toggle from "@sparcs-clubs/web/common/components/Toggle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { type Participant } from "../types/activityReport";
+import { Participant } from "@sparcs-clubs/web/types/participant";
 
 interface SelectParticipantProps {
   data: Participant[];

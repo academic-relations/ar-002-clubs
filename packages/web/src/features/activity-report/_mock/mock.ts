@@ -8,7 +8,7 @@ import {
 
 import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
-import { Participant } from "../types/activityReport";
+import { Participant } from "@sparcs-clubs/web/types/participant";
 
 export interface ParticipantTemp {
   id: number; // 고유 ID

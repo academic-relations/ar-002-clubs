@@ -13,10 +13,12 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+
 import SelectParticipant from "@sparcs-clubs/web/features/activity-report/components/SelectParticipant";
 import useGetParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetParticipants";
-import { Participant } from "@sparcs-clubs/web/features/activity-report/types/activityReport";
 import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
+
+import { Participant } from "@sparcs-clubs/web/types/participant";
 
 import SelectActivityTerm from "../SelectActivityTerm";
 
@@ -282,7 +284,7 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
                         updateMultipleFile(
                           "evidenceFiles",
                           _data.map(d => ({
-                            fileId: d,
+                            fileId: d.id,
                           })),
                         );
                       }}
