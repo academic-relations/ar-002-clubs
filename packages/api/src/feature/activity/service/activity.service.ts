@@ -183,8 +183,9 @@ export default class ActivityService {
     // 학생이 동아리 대표자 또는 대의원이 맞는지 확인합니다.
     await this.checkIsStudentDelegate({ studentId, clubId });
 
-    const today = getKSTDate();
-    const activityD = await this.getActivityD({ date: today });
+    // const today = getKSTDate();
+    // const activityD = await this.getActivityD({ date: today });
+    const activityD = await this.getLastActivityD();
 
     const activities =
       await this.activityRepository.selectActivityByClubIdAndActivityDId(
