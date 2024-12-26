@@ -13,9 +13,11 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+
+import SelectParticipant from "@sparcs-clubs/web/features/activity-report/components/SelectParticipant";
 import useGetParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetParticipants";
-import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
-import { Participant } from "@sparcs-clubs/web/features/manage-club/activity-report/types/activityReport";
+import { Participant } from "@sparcs-clubs/web/features/activity-report/types/activityReport";
+
 import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
 import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 

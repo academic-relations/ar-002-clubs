@@ -9,9 +9,9 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { mockParticipantData } from "@sparcs-clubs/web/features/manage-club/activity-report/_mock/mock";
-import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
-import { Participant } from "@sparcs-clubs/web/features/manage-club/activity-report/types/activityReport";
+import { mockParticipantData } from "@sparcs-clubs/web/features/activity-report/_mock/mock";
+import SelectParticipant from "@sparcs-clubs/web/features/activity-report/components/SelectParticipant";
+import { Participant } from "@sparcs-clubs/web/features/activity-report/types/activityReport";
 
 import {
   isParticipantsRequired,

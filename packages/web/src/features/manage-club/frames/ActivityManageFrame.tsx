@@ -6,10 +6,10 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
-import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 
-import NewActivityReportList from "../activity-report/components/NewActivityReportList";
-import useGetNewActivityReportList from "../activity-report/services/useGetNewActivityReportList";
+import NewActivityReportList from "@sparcs-clubs/web/features/activity-report/components/NewActivityReportList";
+import useGetNewActivityReportList from "@sparcs-clubs/web/features/activity-report/services/useGetNewActivityReportList";
+import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 
 const ActivityManageFrame: React.FC = () => {
   const { data } = useGetMyManageClub() as {

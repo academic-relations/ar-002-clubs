@@ -9,7 +9,7 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
-import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
+import { useGetActivityReport } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
 
 import usePutActivityReportForNewClub from "@sparcs-clubs/web/features/register-club/services/usePutActivityReportForNewClub";
 
