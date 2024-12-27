@@ -38,8 +38,7 @@ const ActivityManageFrame: React.FC = () => {
               moreDetail="내역 더보기"
               moreDetailPath="/manage-club/activity-report"
             />
-            {/* TODO: PastActivityReportList 사용하게끔 변경 */}
-            <NewActivityReportList data={newActivityReportList?.slice(0, 10)} />
+            <NewActivityReportList data={newActivityReportList} />
           </FlexWrapper>
         </AsyncBoundary>
         {/* 
