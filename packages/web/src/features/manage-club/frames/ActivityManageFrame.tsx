@@ -9,6 +9,7 @@ import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle
 
 import NewActivityReportList from "@sparcs-clubs/web/features/activity-report/components/NewActivityReportList";
 import useGetNewActivityReportList from "@sparcs-clubs/web/features/activity-report/services/useGetNewActivityReportList";
+import { NewActivityReport } from "@sparcs-clubs/web/features/activity-report/types/activityReport";
 import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 
 const ActivityManageFrame: React.FC = () => {
@@ -38,7 +39,9 @@ const ActivityManageFrame: React.FC = () => {
               moreDetail="내역 더보기"
               moreDetailPath="/manage-club/activity-report"
             />
-            <NewActivityReportList data={newActivityReportList} />
+            <NewActivityReportList
+              data={newActivityReportList as NewActivityReport[]}
+            />
           </FlexWrapper>
         </AsyncBoundary>
         {/* 
