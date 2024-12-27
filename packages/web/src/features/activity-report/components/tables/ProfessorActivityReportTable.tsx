@@ -16,7 +16,10 @@ import {
   ActTypeTagList,
   ApplyTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
+
+import { mockProfessorActivityReportData } from "@sparcs-clubs/web/features/activity-report/_mock/professor";
 import { BaseActivityReport } from "@sparcs-clubs/web/features/activity-report/types/activityReport";
+
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
@@ -93,8 +96,9 @@ const ProfessorActivityReportTable: React.FC<
   ProfessorActivityReportTableProps
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 > = ({ clubId }) => {
-  // TODO: (@dora) 데이터 추가 예정
-  const data: ProfessorActivityReportTableData[] = [];
+  // TODO: 실제 데이터 받아오기
+  const data =
+    mockProfessorActivityReportData as ProfessorActivityReportTableData[];
   const table = useReactTable({
     columns,
     data,
