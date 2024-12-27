@@ -854,6 +854,8 @@ export default class ActivityService {
    */
   async getPublicActivitiesDeadline(): Promise<ApiAct018ResponseOk> {
     const today = getKSTDate();
+
+    const term = await this.getLastActivityD();
     const todayDeadline = await this.activityRepository
       .selectDeadlineByDate(today)
       .then(arr => {
@@ -865,6 +867,13 @@ export default class ActivityService {
         return arr[0];
       });
     return {
+      targetTerm: {
+        id: term.id,
+        name: term.name,
+        startTerm: term.startTerm,
+        endTerm: term.endTerm,
+        year: term.year,
+      },
       deadline: {
         activityDeadlineEnum: todayDeadline.deadlineEnumId,
         duration: {
