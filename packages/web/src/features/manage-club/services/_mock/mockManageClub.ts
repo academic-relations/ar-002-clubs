@@ -14,6 +14,7 @@ import type { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-spa
 import type { ApiPrt001ResponseOk } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
 import type { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
 import type { ApiRnt003ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt003";
+import type { ApiSto002ResponseOk } from "@sparcs-clubs/interface/api/storage/endpoint/apiSto002";
 
 export interface Activity {
   id: number;
@@ -615,6 +616,65 @@ const mockupManageCms: ApiCms006ResponseOk = {
   offset: 1,
 };
 
+const mockupManageStorage: ApiSto002ResponseOk = {
+  items: [
+    {
+      applicationId: 1,
+      clubNameKr: "술박스",
+      clubNameEn: "clubNameEn",
+      studentName: "일지윤",
+      studentPhoneNumber: "010-5105-4707",
+      desiredStartDate: new Date(),
+      desiredEndDate: new Date(),
+      numberOfBoxes: 4,
+      numberOfNonStandardItems: 0,
+      status: "Applied",
+      createdAt: new Date(),
+    },
+    {
+      applicationId: 1,
+      clubNameKr: "술박스",
+      clubNameEn: "clubNameEn",
+      studentName: "일지윤",
+      studentPhoneNumber: "010-5105-4707",
+      desiredStartDate: new Date(),
+      desiredEndDate: new Date(),
+      numberOfBoxes: 4,
+      numberOfNonStandardItems: 0,
+      status: "Applied",
+      createdAt: new Date(),
+    },
+    {
+      applicationId: 1,
+      clubNameKr: "술박스",
+      clubNameEn: "clubNameEn",
+      studentName: "일지윤",
+      studentPhoneNumber: "010-5105-4707",
+      desiredStartDate: new Date(),
+      desiredEndDate: new Date(),
+      numberOfBoxes: 4,
+      numberOfNonStandardItems: 0,
+      status: "Applied",
+      createdAt: new Date(),
+    },
+    {
+      applicationId: 1,
+      clubNameKr: "술박스",
+      clubNameEn: "clubNameEn",
+      studentName: "일지윤",
+      studentPhoneNumber: "010-5105-4707",
+      desiredStartDate: new Date(),
+      desiredEndDate: new Date(),
+      numberOfBoxes: 4,
+      numberOfNonStandardItems: 0,
+      status: "Applied",
+      createdAt: new Date(),
+    },
+  ],
+  total: 4,
+  offset: 1,
+};
+
 export {
   mockupManageReport,
   mockupManageFunding,
@@ -626,4 +686,5 @@ export {
   mockupManageCms,
   mockClubDescription,
   mockClubMembers,
+  mockupManageStorage,
 };

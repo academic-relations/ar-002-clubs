@@ -2,6 +2,7 @@ import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/comm
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
 import { PromotionalPrintingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
+import { StorageStatusEnum } from "@sparcs-clubs/interface/common/enum/storage.enum";
 
 import { StatusAndDate } from "../common/components/ProgressCheckSection";
 import { ProgressCheckSectionStatusEnum } from "../common/components/ProgressCheckSection/progressCheckStationStatus";
@@ -299,6 +300,113 @@ export const manageActivityCertificateProgress = (
           { status: ProgressCheckSectionStatusEnum.Canceled, date: new Date() },
         ],
         infoText: "동아리 연합회 반려 사유: 어쩌고 저쩌고",
+      };
+  }
+};
+
+export const manageStorageProgress = (
+  status: StorageStatusEnum,
+): ManageProgress => {
+  switch (status) {
+    case StorageStatusEnum.Applied:
+      return {
+        labels: [
+          "신청 완료",
+          "동아리 연합회 승인 대기",
+          "계약서 작성 및 송금 대기",
+          "반출 대기",
+        ],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+        ],
+        infoText: "승인이 완료되기 전까지 신청을 취소할 수 있습니다",
+      };
+    case StorageStatusEnum.Canceled:
+      return {
+        labels: [
+          "신청 취소",
+          "동아리 연합회 승인 대기",
+          "계약서 작성 및 송금 대기",
+          "반출 대기",
+        ],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Canceled, date: new Date() },
+        ],
+      };
+    case StorageStatusEnum.Approved:
+      return {
+        labels: [
+          "신청 완료",
+          "동아리 연합회 승인 완료",
+          "계약서 작성 및 송금 대기",
+          "반출 대기",
+        ],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Approved, date: undefined },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+        ],
+        infoText:
+          "신청서에 작성한 상자 수령 일시에 상자 수령 후, 보관 시작 일시에 보관 물품을 동아리연합회실로 가지고 오시기 바랍니다",
+      };
+    case StorageStatusEnum.Rejected:
+      return {
+        labels: [
+          "신청 완료",
+          "동아리 연합회 승인 완료",
+          "계약서 작성 및 송금 대기",
+          "반출 대기",
+        ],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Approved, date: undefined },
+          { status: ProgressCheckSectionStatusEnum.Canceled, date: new Date() },
+        ],
+        infoText: "동아리 연합회 반려 사유: 어쩌고 저쩌고",
+      };
+    case StorageStatusEnum.Received:
+      return {
+        labels: [
+          "신청 완료",
+          "동아리 연합회 승인 완료",
+          "계약서 작성 및 송금 완료",
+          "반출 대기",
+        ],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Approved, date: undefined },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: undefined },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+        ],
+        infoText: "2024년 3월 18일(월)까지 보관한 물품을 반출해주시기 바랍니다",
+      };
+    case StorageStatusEnum.Shipped:
+      return {
+        labels: [
+          "신청 완료",
+          "동아리 연합회 승인 완료",
+          "계약서 작성 및 송금 완료",
+          "반출 완료",
+        ],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Approved, date: undefined },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: undefined },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: undefined },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: new Date() },
+        ],
+      };
+    default:
+      return {
+        labels: [
+          "신청 완료",
+          "동아리 연합회 승인 완료",
+          "계약서 작성 및 송금 완료",
+          "사용 연체",
+        ],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Approved, date: undefined },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: undefined },
+          { status: ProgressCheckSectionStatusEnum.Approved, date: undefined },
+          { status: ProgressCheckSectionStatusEnum.Canceled, date: new Date() },
+        ],
+        infoText: "반출일인 2024년 3월 18일(월)로부터 3일이 연체되었습니다",
       };
   }
 };

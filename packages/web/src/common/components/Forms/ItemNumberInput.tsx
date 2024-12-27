@@ -147,7 +147,7 @@ const ItemNumberInput: React.FC<ItemNumberInputProps> = ({
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value.replace(/\D/g, "");
-    if (inputValue.length <= 2) {
+    if (inputValue.length <= Math.log10(itemLimit) + 1) {
       onChange(Number(inputValue));
     }
   };

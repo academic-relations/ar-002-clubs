@@ -57,3 +57,25 @@ export const commonSpaceHeaders: HeaderInterface[] = [
     headerType: "HeaderSort",
   },
 ];
+
+export const storageHeaders: HeaderInterface[] = [
+  { headerName: "상태", headerWidth: "90px", headerType: "HeaderSort" },
+  { headerName: "신청 일시", headerWidth: "220px", headerType: "HeaderSort" },
+  { headerName: "신청자", headerWidth: "110px", headerType: "HeaderSort" },
+  { headerName: "연락처", headerWidth: "130px", headerType: "Header" },
+  {
+    headerName: "보관 시작 일시",
+    headerWidth: "220px",
+    headerType: "HeaderSort",
+  },
+  {
+    headerName: "보관 종료 일시",
+    headerWidth: "220px",
+    headerType: "HeaderSort",
+  },
+  {
+    headerName: "규격 외 물품",
+    headerWidth: "minmax(0,100%)",
+    headerType: "Header",
+  },
+];
