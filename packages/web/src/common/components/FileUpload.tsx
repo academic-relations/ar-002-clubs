@@ -20,6 +20,7 @@ import Typography from "./Typography";
 type FileWithId = {
   file: File;
   fileId?: string;
+  previewUrl?: string;
 };
 
 interface FileUploadProps {
@@ -172,10 +173,10 @@ const FileUpload: React.FC<FileUploadProps> = ({
             },
             {
               onSuccess: () => {
-                const newFiles: FileDetail[] = data.urls.map(url => ({
+                const newFiles: FileDetail[] = data.urls.map((url, index) => ({
                   id: url.fileId,
                   name: url.name,
-                  url: url.uploadUrl,
+                  url: notUploadedFiles[index].previewUrl ?? "",
                 }));
                 addFiles(newFiles);
               },
@@ -204,7 +205,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newFiles: FileWithId[] = Array.from(event.target.files ?? []).map(
-      file => ({ file }),
+      file => ({ file, previewUrl: URL.createObjectURL(file) }),
     );
     onSubmit(newFiles);
   };

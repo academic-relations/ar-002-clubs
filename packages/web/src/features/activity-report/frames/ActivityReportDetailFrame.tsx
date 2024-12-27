@@ -264,6 +264,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
                       name: file.name,
                       url: file.url,
                     }))}
+                    disabled
                   />
                 </FilePreviewContainer>
               </ActivityDetail>
