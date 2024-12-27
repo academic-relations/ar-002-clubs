@@ -5,12 +5,14 @@ import {
   ApiAct008RequestBody,
   ApiAct008RequestParam,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
+import { ApiAct019ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct019";
 import {
   ActivityDeadlineEnum,
   ActivityStatusEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
+import ClubTRepository from "@sparcs-clubs/api/feature/club/repository/club.club-t.repository";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import { ClubRegistrationPublicService } from "@sparcs-clubs/api/feature/registration/club-registration/service/club-registration.public.service";
@@ -60,6 +62,7 @@ export default class ActivityService {
     private clubPublicService: ClubPublicService,
     private filePublicService: FilePublicService,
     private clubRegistrationPublicService: ClubRegistrationPublicService,
+    private clubTRepository: ClubTRepository,
   ) {}
 
   /**
@@ -129,6 +132,18 @@ export default class ActivityService {
     )
       throw new HttpException(
         "It seems that you are not the delegate of the club.",
+        HttpStatus.FORBIDDEN,
+      );
+  }
+
+  private async checkIsProfessor(param: {
+    professorId: number;
+    clubId: number;
+  }) {
+    const clubT = await this.clubTRepository.findClubTById(param.clubId);
+    if (clubT.professorId !== param.professorId)
+      throw new HttpException(
+        "You are not a professor of the club",
         HttpStatus.FORBIDDEN,
       );
   }
@@ -882,5 +897,48 @@ export default class ActivityService {
         },
       },
     };
+  }
+
+  async getProfessorActivities(
+    clubId: number,
+    professorId: number,
+  ): Promise<ApiAct019ResponseOk> {
+    await this.checkIsProfessor({ professorId, clubId });
+
+    const today = getKSTDate();
+    const activityD = await this.getActivityD({ date: today });
+
+    const activities =
+      await this.activityRepository.selectActivityByClubIdAndActivityDId(
+        clubId,
+        activityD.id,
+      );
+
+    const result = await Promise.all(
+      activities.map(async row => {
+        const duration =
+          await this.activityRepository.selectDurationByActivityId(row.id);
+        return {
+          ...row,
+          startTerm: duration.reduce(
+            (prev, curr) => (prev < curr.startTerm ? prev : curr.startTerm),
+            duration[0].startTerm,
+          ),
+          endTerm: duration.reduce(
+            (prev, curr) => (prev > curr.endTerm ? prev : curr.endTerm),
+            duration[0].endTerm,
+          ),
+        };
+      }),
+    );
+
+    return result.map(row => ({
+      id: row.id,
+      activityStatusEnumId: row.activityStatusEnumId,
+      name: row.name,
+      activityTypeEnumId: row.activityTypeEnumId,
+      startTerm: row.startTerm,
+      endTerm: row.endTerm,
+    }));
   }
 }
