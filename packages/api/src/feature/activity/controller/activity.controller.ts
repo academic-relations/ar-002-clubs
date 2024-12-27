@@ -38,6 +38,10 @@ import apiAct019, {
   ApiAct019RequestQuery,
   ApiAct019ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct019";
+import apiAct020, {
+  ApiAct020RequestParam,
+  ApiAct020ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct020";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -355,6 +359,7 @@ export default class ActivityController {
     return result;
   }
 
+  @Professor()
   @Get("/professor/activities")
   @UsePipes(new ZodPipe(apiAct019))
   async getProfessorActivities(
@@ -366,5 +371,19 @@ export default class ActivityController {
       user.professorId,
     );
     return result;
+  }
+
+  @Professor()
+  @Post("/professor/activities/clubs/club/:clubId/approve")
+  @UsePipes(new ZodPipe(apiAct020))
+  async postProfessorActivityApprove(
+    @GetProfessor() user: GetProfessor,
+    @Param() param: ApiAct020RequestParam,
+  ): Promise<ApiAct020ResponseOk> {
+    await this.activityService.postProfessorActivityApprove(
+      param.clubId,
+      user.professorId,
+    );
+    return {};
   }
 }

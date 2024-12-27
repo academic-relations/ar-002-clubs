@@ -17,6 +17,7 @@ import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.publi
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import { ClubRegistrationPublicService } from "@sparcs-clubs/api/feature/registration/club-registration/service/club-registration.public.service";
 
+import ActivityProfessorApproveRepository from "../repository/activity-professor-approve.repository";
 import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
 import ActivityRepository from "../repository/activity.repository";
 
@@ -63,6 +64,7 @@ export default class ActivityService {
     private filePublicService: FilePublicService,
     private clubRegistrationPublicService: ClubRegistrationPublicService,
     private clubTRepository: ClubTRepository,
+    private activityProfessorApproveRepository: ActivityProfessorApproveRepository,
   ) {}
 
   /**
@@ -940,5 +942,12 @@ export default class ActivityService {
       startTerm: row.startTerm,
       endTerm: row.endTerm,
     }));
+  }
+
+  async postProfessorActivityApprove(clubId: number, professorId: number) {
+    await this.checkIsProfessor({ professorId, clubId });
+
+    const activityD = await this.getActivityD({ date: new Date() });
+    this.activityProfessorApproveRepository.insert(clubId, activityD.id);
   }
 }

@@ -9,6 +9,7 @@ import { ClubRegistrationModule } from "../registration/club-registration/club-r
 
 import ActivityActivityTermController from "./controller/activity.activity-term.controller";
 import ActivityController from "./controller/activity.controller";
+import ActivityProfessorApproveRepository from "./repository/activity-professor-approve.repository";
 import ActivityActivityTermRepository from "./repository/activity.activity-term.repository";
 import ActivityRepository from "./repository/activity.repository";
 import ActivityActivityTermService from "./service/activity.activity-term.service";
@@ -25,6 +26,7 @@ import ActivityService from "./service/activity.service";
     ActivityActivityTermService,
     ActivityPublicService,
     ClubTRepository,
+    ActivityProfessorApproveRepository,
   ],
   exports: [ActivityPublicService],
 })

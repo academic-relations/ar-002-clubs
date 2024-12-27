@@ -200,3 +200,22 @@ export const ActivityDeadlineD = mysqlTable(
     }),
   }),
 );
+
+export const ActivityProfessorApprove = mysqlTable(
+  "activity_professor_approve",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    clubId: int("club_id").notNull(),
+    activityDId: int("activity_d_id")
+      .notNull()
+      .references(() => ActivityD.id),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    clubForeignKey: foreignKey({
+      columns: [table.clubId],
+      foreignColumns: [Club.id],
+    }),
+  }),
+);
