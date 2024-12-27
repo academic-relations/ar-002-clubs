@@ -6,6 +6,7 @@ import {
   ApiAct008RequestParam,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
 import { ApiAct019ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct019";
+import { ApiAct021ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct021";
 import {
   ActivityDeadlineEnum,
   ActivityStatusEnum,
@@ -949,5 +950,38 @@ export default class ActivityService {
 
     const activityD = await this.getActivityD({ date: new Date() });
     this.activityProfessorApproveRepository.insert(clubId, activityD.id);
+  }
+
+  async getStudentActivityApprove(
+    clubId: number,
+    studentId: number,
+  ): Promise<ApiAct021ResponseOk> {
+    await this.checkIsStudentDelegate({ clubId, studentId });
+    return this.getActivityClubApprove(clubId);
+  }
+
+  async getExecutiveActivityApprove(
+    clubId: number,
+  ): Promise<ApiAct021ResponseOk> {
+    return this.getActivityClubApprove(clubId);
+  }
+
+  async getProfessorActivityApprove(
+    clubId: number,
+    professorId: number,
+  ): Promise<ApiAct021ResponseOk> {
+    await this.checkIsProfessor({ professorId, clubId });
+    return this.getActivityClubApprove(clubId);
+  }
+
+  private async getActivityClubApprove(
+    clubId: number,
+  ): Promise<ApiAct021ResponseOk> {
+    const activityD = await this.getActivityD({ date: new Date() });
+    const isApproved = await this.activityProfessorApproveRepository.fetch(
+      clubId,
+      activityD.id,
+    );
+    return { isApproved: !!isApproved, approvedAt: isApproved?.createdAt };
   }
 }
