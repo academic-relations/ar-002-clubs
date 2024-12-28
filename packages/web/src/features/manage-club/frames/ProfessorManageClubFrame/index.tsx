@@ -1,55 +1,40 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Select from "@sparcs-clubs/web/common/components/Select";
+
 import NoManageClubForProfessor from "@sparcs-clubs/web/common/frames/NoManageClubForProfessor";
 
-import useGetMyClubProfessor from "@sparcs-clubs/web/features/my/clubs/service/getMyClubProfessor";
-
-import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
+import { useGetProfessorManageClubList } from "@sparcs-clubs/web/hooks/getManageClubList";
 
 import ClubActivitySection from "./ClubActivitySection";
 import ClubInfoSection from "./ClubInfoSection";
-import ClubMemberSection from "./ClubMemberSection";
+// import ClubMemberSection from "./ClubMemberSection";
 
 const ProfessorManageClubFrame: React.FC = () => {
   const {
-    data: clubData,
-    isLoading: clubIsLoading,
-    isError: clubIsError,
-  } = useGetMyClubProfessor();
-  const {
-    semester: semesterData,
-    isLoading: semesterIsLoading,
-    isError: semesterIsError,
-  } = useGetSemesterNow();
+    data: manageClubList,
+    isLoading,
+    isError,
+  } = useGetProfessorManageClubList();
 
-  const isLoading = clubIsLoading || semesterIsLoading;
-  const isError = clubIsError || semesterIsError;
-
-  const clubList = useMemo(() => {
-    if (!clubData || !semesterData) return [];
-    return (
-      clubData.semesters.find(semester => semester.id === semesterData.id)
-        ?.clubs ?? []
-    );
-  }, [clubData, semesterData]);
-
-  const [selectedClubId, setSelectedClubId] = useState<string | null>(null);
+  const [clubId, setClubId] = useState<number | null>(null);
   useEffect(() => {
-    if (clubList.length > 0) {
-      setSelectedClubId(clubList[0].id.toString());
+    if (clubId !== null) return;
+
+    if (manageClubList.length > 0) {
+      setClubId(manageClubList[0].id);
     } else {
-      setSelectedClubId(null);
+      setClubId(null);
     }
-  }, [clubList]);
+  }, [clubId, manageClubList]);
 
   // NOTE: (@dora) 동아리에 속해 있는 교수는 항상 해당 동아리의 지도교수임
-  if (clubList.length === 0) {
+  if (manageClubList.length === 0) {
     return <NoManageClubForProfessor />;
   }
 
@@ -64,21 +49,20 @@ const ProfessorManageClubFrame: React.FC = () => {
         <Select
           label="동아리"
           placeholder="동아리를 선택해주세요"
-          items={clubList.map(club => ({
-            value: club.id.toString(),
+          items={manageClubList.map(club => ({
             label: club.name_kr,
+            value: club.id,
+            selectable: true,
           }))}
-          value={selectedClubId}
-          onChange={value => setSelectedClubId(value)}
+          value={clubId}
+          onChange={setClubId}
         />
 
-        {selectedClubId && <ClubInfoSection clubId={selectedClubId} />}
-        {selectedClubId && (
-          <ClubActivitySection clubId={Number(selectedClubId)} />
-        )}
-        {selectedClubId && (
-          <ClubMemberSection clubId={Number(selectedClubId)} />
-        )}
+        {clubId !== null && <ClubInfoSection clubId={clubId.toString()} />}
+        {clubId !== null && <ClubActivitySection clubId={clubId} />}
+
+        {/* TODO: (@dora) 동아리 회원 명단 추가 */}
+        {/* {clubId !== null && <ClubMemberSection clubId={clubId} />} */}
       </AsyncBoundary>
     </FlexWrapper>
   );

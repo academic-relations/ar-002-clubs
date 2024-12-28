@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
@@ -12,6 +14,7 @@ import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/servi
 const ActivityReport = () => {
   const { isLoggedIn, login, profile } = useAuth();
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const { data, isLoading, isError } = useGetMyManageClub();
 
@@ -29,6 +32,9 @@ const ActivityReport = () => {
     return <LoginRequired login={login} />;
   }
 
+  if (profile?.type === "professor") {
+    router.replace("/manage-club");
+  }
   if (profile?.type !== "undergraduate") {
     return <NoManageClub />;
   }

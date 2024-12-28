@@ -15,7 +15,7 @@ const useProfessorGetCurrentActivityReportList = (
   query: ApiAct019RequestQuery,
 ) =>
   useQuery<ApiAct019ResponseOk, Error>({
-    queryKey: [apiAct019.url()],
+    queryKey: [apiAct019.url(), query.clubId],
     queryFn: async (): Promise<ApiAct019ResponseOk> => {
       const { data } = await axiosClientWithAuth.get(apiAct019.url(), {
         params: query,
