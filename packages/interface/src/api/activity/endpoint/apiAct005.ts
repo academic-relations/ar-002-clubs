@@ -31,6 +31,7 @@ const responseBodyMap = {
       activityTypeEnumId: z.nativeEnum(ActivityTypeEnum),
       startTerm: z.coerce.date(),
       endTerm: z.coerce.date(),
+      professorApprovedAt: z.coerce.date(),
     })
     .array(),
 };

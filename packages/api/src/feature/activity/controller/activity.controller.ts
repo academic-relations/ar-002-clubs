@@ -39,21 +39,9 @@ import apiAct019, {
   ApiAct019ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct019";
 import apiAct020, {
-  ApiAct020RequestParam,
-  ApiAct020ResponseOk,
+  ApiAct020RequestBody,
+  ApiAct020ResponseCreated,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct020";
-import apiAct021, {
-  ApiAct021RequestParam,
-  ApiAct021ResponseOk,
-} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct021";
-import apiAct022, {
-  ApiAct022RequestParam,
-  ApiAct022ResponseOk,
-} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct022";
-import apiAct023, {
-  ApiAct023RequestParam,
-  ApiAct023ResponseOk,
-} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -390,47 +378,12 @@ export default class ActivityController {
   @UsePipes(new ZodPipe(apiAct020))
   async postProfessorActivityApprove(
     @GetProfessor() user: GetProfessor,
-    @Param() param: ApiAct020RequestParam,
-  ): Promise<ApiAct020ResponseOk> {
+    @Body() body: ApiAct020RequestBody,
+  ): Promise<ApiAct020ResponseCreated> {
     await this.activityService.postProfessorActivityApprove(
-      param.clubId,
+      body.activities.map(activity => activity.id),
       user.professorId,
     );
     return {};
-  }
-
-  @Student()
-  @Get("/student/activities/clubs/club/:clubId/approve")
-  @UsePipes(new ZodPipe(apiAct021))
-  async getStudentActivityApprove(
-    @Param() param: ApiAct021RequestParam,
-    @GetStudent() user: GetStudent,
-  ): Promise<ApiAct021ResponseOk> {
-    return this.activityService.getStudentActivityApprove(
-      param.clubId,
-      user.studentId,
-    );
-  }
-
-  @Executive()
-  @Get("/executive/activities/clubs/club/:clubId/approve")
-  @UsePipes(new ZodPipe(apiAct022))
-  async getExecutiveActivityApprove(
-    @Param() param: ApiAct022RequestParam,
-  ): Promise<ApiAct022ResponseOk> {
-    return this.activityService.getExecutiveActivityApprove(param.clubId);
-  }
-
-  @Professor()
-  @Get("/professor/activities/clubs/club/:clubId/approve")
-  @UsePipes(new ZodPipe(apiAct023))
-  async getProfessorActivityApprove(
-    @Param() param: ApiAct023RequestParam,
-    @GetProfessor() user: GetProfessor,
-  ): Promise<ApiAct023ResponseOk> {
-    return this.activityService.getProfessorActivityApprove(
-      param.clubId,
-      user.professorId,
-    );
   }
 }

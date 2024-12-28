@@ -6,7 +6,6 @@ import {
   ApiAct008RequestParam,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
 import { ApiAct019ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct019";
-import { ApiAct021ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct021";
 import {
   ActivityDeadlineEnum,
   ActivityStatusEnum,
@@ -18,7 +17,6 @@ import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.publi
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import { ClubRegistrationPublicService } from "@sparcs-clubs/api/feature/registration/club-registration/service/club-registration.public.service";
 
-import ActivityProfessorApproveRepository from "../repository/activity-professor-approve.repository";
 import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
 import ActivityRepository from "../repository/activity.repository";
 
@@ -65,7 +63,6 @@ export default class ActivityService {
     private filePublicService: FilePublicService,
     private clubRegistrationPublicService: ClubRegistrationPublicService,
     private clubTRepository: ClubTRepository,
-    private activityProfessorApproveRepository: ActivityProfessorApproveRepository,
   ) {}
 
   /**
@@ -236,6 +233,7 @@ export default class ActivityService {
       activityTypeEnumId: row.activityTypeEnumId,
       startTerm: row.startTerm,
       endTerm: row.endTerm,
+      professorApprovedAt: row.professorApprovedAt,
     }));
   }
 
@@ -332,6 +330,7 @@ export default class ActivityService {
         createdAt: e.createdAt,
       })),
       updatedAt: activity.updatedAt,
+      professorApprovedAt: activity.professorApprovedAt,
     };
   }
 
@@ -761,6 +760,7 @@ export default class ActivityService {
         createdAt: e.createdAt,
       })),
       updatedAt: activity.updatedAt,
+      professorApprovedAt: activity.professorApprovedAt,
     };
   }
 
@@ -816,6 +816,7 @@ export default class ActivityService {
         createdAt: e.createdAt,
       })),
       updatedAt: activity.updatedAt,
+      professorApprovedAt: activity.professorApprovedAt,
     };
   }
 
@@ -908,9 +909,7 @@ export default class ActivityService {
   ): Promise<ApiAct019ResponseOk> {
     await this.checkIsProfessor({ professorId, clubId });
 
-    const today = getKSTDate();
-    const activityD = await this.getActivityD({ date: today });
-
+    const activityD = await this.getLastActivityD();
     const activities =
       await this.activityRepository.selectActivityByClubIdAndActivityDId(
         clubId,
@@ -942,46 +941,21 @@ export default class ActivityService {
       activityTypeEnumId: row.activityTypeEnumId,
       startTerm: row.startTerm,
       endTerm: row.endTerm,
+      professorApprovedAt: row.professorApprovedAt,
     }));
   }
 
-  async postProfessorActivityApprove(clubId: number, professorId: number) {
-    await this.checkIsProfessor({ professorId, clubId });
-
-    const activityD = await this.getActivityD({ date: new Date() });
-    this.activityProfessorApproveRepository.insert(clubId, activityD.id);
-  }
-
-  async getStudentActivityApprove(
-    clubId: number,
-    studentId: number,
-  ): Promise<ApiAct021ResponseOk> {
-    await this.checkIsStudentDelegate({ clubId, studentId });
-    return this.getActivityClubApprove(clubId);
-  }
-
-  async getExecutiveActivityApprove(
-    clubId: number,
-  ): Promise<ApiAct021ResponseOk> {
-    return this.getActivityClubApprove(clubId);
-  }
-
-  async getProfessorActivityApprove(
-    clubId: number,
+  async postProfessorActivityApprove(
+    activityIds: number[],
     professorId: number,
-  ): Promise<ApiAct021ResponseOk> {
-    await this.checkIsProfessor({ professorId, clubId });
-    return this.getActivityClubApprove(clubId);
-  }
+  ) {
+    const activities =
+      await this.activityRepository.selectActivityByIds(activityIds);
+    await this.checkIsProfessor({ professorId, clubId: activities[0].clubId });
 
-  private async getActivityClubApprove(
-    clubId: number,
-  ): Promise<ApiAct021ResponseOk> {
-    const activityD = await this.getActivityD({ date: new Date() });
-    const isApproved = await this.activityProfessorApproveRepository.fetch(
-      clubId,
-      activityD.id,
-    );
-    return { isApproved: !!isApproved, approvedAt: isApproved?.createdAt };
+    await this.activityRepository.updateActivityProfessorApprovedAt({
+      activityIds,
+      professorId,
+    });
   }
 }
