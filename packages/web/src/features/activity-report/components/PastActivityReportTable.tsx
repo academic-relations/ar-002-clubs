@@ -1,6 +1,5 @@
 import React from "react";
 
-import { ApiAct006ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct006";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -16,20 +15,18 @@ import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { ActTypeTagList } from "@sparcs-clubs/web/constants/tableTagList";
 
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
-
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-import useGetPastActivityReportList from "../services/useGetPastActivityReportList";
-import { ActivityTerm } from "../types/activityReport";
+import useGetActivityTerm from "../hooks/useGetActivityTerm";
+import useGetPastActivityReportList from "../hooks/useGetPastActivityReportList";
+import { PastActivityReportTableData } from "../types/table";
 
-interface ActivityReportListProps {
-  term: ActivityTerm;
+interface PastActivityReportTableProps {
+  termId: number;
   clubId: number;
 }
 
-const columnHelper =
-  createColumnHelper<ApiAct006ResponseOk["activities"][number]>();
-
+const columnHelper = createColumnHelper<PastActivityReportTableData>();
 const columns = [
   columnHelper.accessor("name", {
     id: "activity",
@@ -46,7 +43,8 @@ const columns = [
     size: 32,
   }),
   columnHelper.accessor(
-    row => `${formatDate(row.startTerm)} ~ ${formatDate(row.endTerm)}`,
+    row =>
+      `${formatDate(row.durations[0].startTerm)} ~ ${formatDate(row.durations[0].endTerm)}${row.durations.length > 1 ? ` 외 ${row.durations.length - 1}개` : ""}`,
     {
       id: "date-range",
       header: "활동 기간",
@@ -56,35 +54,39 @@ const columns = [
   ),
 ];
 
-const PastActivityReportList: React.FC<ActivityReportListProps> = ({
-  term,
+const PastActivityReportTable: React.FC<PastActivityReportTableProps> = ({
+  termId,
   clubId,
 }) => {
   const router = useRouter();
-  const { data, isLoading, isError } = useGetPastActivityReportList(term.id, {
+
+  const { data: activityTerm } = useGetActivityTerm(clubId, termId);
+  const { data, isLoading, isError } = useGetPastActivityReportList(
+    termId,
     clubId,
-  });
+  );
+
   const table = useReactTable({
     columns,
-    data: data?.activities ?? [],
+    data,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
 
   return (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <FoldableSection
-        key={term.id}
-        title={`${term.year}년 ${term.name}학기 (총 ${data?.activities.length}개)`}
-      >
+    <FoldableSection
+      key={activityTerm.id}
+      title={`${activityTerm.year}년 ${activityTerm.name}학기 (총 ${data.length}개)`}
+    >
+      <AsyncBoundary isLoading={isLoading} isError={isError}>
         <Table
           table={table}
           onClick={row => router.push(`/manage-club/activity-report/${row.id}`)}
-          count={data?.activities.length}
+          count={data.length}
         />
-      </FoldableSection>
-    </AsyncBoundary>
+      </AsyncBoundary>
+    </FoldableSection>
   );
 };
 
-export default PastActivityReportList;
+export default PastActivityReportTable;

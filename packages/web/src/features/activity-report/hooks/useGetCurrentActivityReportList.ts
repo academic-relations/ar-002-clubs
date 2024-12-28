@@ -1,9 +1,9 @@
 import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
-import useGetProfessorCurrentActivityReportList from "../services/useGetProfessorCurrentActivityReportList";
+import useGetNewActivityReportList from "../services/useGetNewActivityReportList";
 import { ActivityReportTableData } from "../types/table";
 
-const useGetProfessorActivityReportList = (
+const useGetCurrentActivityReportList = (
   clubId: number,
 ): {
   data: ActivityReportTableData[];
@@ -14,7 +14,7 @@ const useGetProfessorActivityReportList = (
     data: activityReportList,
     isLoading,
     isError,
-  } = useGetProfessorCurrentActivityReportList({
+  } = useGetNewActivityReportList({
     clubId,
   });
 
@@ -39,4 +39,4 @@ const useGetProfessorActivityReportList = (
   };
 };
 
-export default useGetProfessorActivityReportList;
+export default useGetCurrentActivityReportList;

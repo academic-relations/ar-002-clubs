@@ -7,36 +7,27 @@ import {
 } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+
 import {
   ActTypeTagList,
   ApplyTagList,
+  ProfessorApprovalTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
+
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-import { type NewActivityReport } from "../types/activityReport";
+import useGetCurrentActivityReportList from "../hooks/useGetCurrentActivityReportList";
+import { ActivityReportTableData } from "../types/table";
 
-interface ActivityReportListProps {
-  data?: NewActivityReport[];
+interface CurrentActivityReportTableProps {
+  clubId: number;
 }
 
-const columnHelper = createColumnHelper<NewActivityReport>();
-// TODO(ym). 지도교수 승인이 활보 정책 문서 보면 필요없을 것 같지만 혹시 몰라 동연측에 문의 중(결과 확인 후 삭제 예정)
-// const getProfessorApprovalTagColor = (professorApproval: string): TagColor => {
-//   switch (professorApproval) {
-//     case "대기":
-//       return "GRAY";
-//     case "완료":
-//       return "GREEN";
-//     case "반려":
-//       return "RED";
-//     default:
-//       return "GRAY";
-//   }
-// };
-
+const columnHelper = createColumnHelper<ActivityReportTableData>();
 const columns = [
   columnHelper.accessor("activityStatusEnumId", {
     header: "상태",
@@ -46,17 +37,18 @@ const columns = [
     },
     size: 0,
   }),
-  // TODO(ym). 지도교수 승인이 활보 정책 문서 보면 필요없을 것 같지만 혹시 몰라 동연측에 문의 중(결과 확인 후 삭제 예정)
-  // columnHelper.accessor("professorApproval", {
-  //   id: "professorApproval",
-  //   header: "지도교수",
-  //   cell: info => (
-  //     <Tag color={getProfessorApprovalTagColor(info.getValue())}>
-  //       {info.getValue()}
-  //     </Tag>
-  //   ),
-  //   size: 0,
-  // }),
+  columnHelper.accessor("professorApproval", {
+    id: "professorApproval",
+    header: "지도교수",
+    cell: info => {
+      const { color, text } = getTagDetail(
+        info.getValue(),
+        ProfessorApprovalTagList,
+      );
+      return <Tag color={color}>{text}</Tag>;
+    },
+    size: 0,
+  }),
   columnHelper.accessor("name", {
     id: "activity",
     header: "활동명",
@@ -72,7 +64,8 @@ const columns = [
     size: 32,
   }),
   columnHelper.accessor(
-    row => `${formatDate(row.startTerm)} ~ ${formatDate(row.endTerm)}`,
+    row =>
+      `${formatDate(row.durations[0].startTerm)} ~ ${formatDate(row.durations[0].endTerm)}${row.durations.length > 1 ? ` 외 ${row.durations.length - 1}개` : ""}`,
     {
       id: "date-range",
       header: "활동 기간",
@@ -82,23 +75,29 @@ const columns = [
   ),
 ];
 
-const NewActivityReportList: React.FC<ActivityReportListProps> = ({
-  data = [],
+const CurrentActivityReportTable: React.FC<CurrentActivityReportTableProps> = ({
+  clubId,
 }) => {
   const router = useRouter();
+
+  const { data, isLoading, isError } = useGetCurrentActivityReportList(clubId);
+
   const table = useReactTable({
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
+
   return (
-    <Table
-      table={table}
-      count={data.length}
-      onClick={row => router.push(`/manage-club/activity-report/${row.id}`)}
-    />
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <Table
+        table={table}
+        count={data.length}
+        onClick={row => router.push(`/manage-club/activity-report/${row.id}`)}
+      />
+    </AsyncBoundary>
   );
 };
 
-export default NewActivityReportList;
+export default CurrentActivityReportTable;

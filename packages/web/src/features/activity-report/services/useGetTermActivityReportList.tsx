@@ -9,12 +9,14 @@ import {
   defineAxiosMock,
 } from "@sparcs-clubs/web/lib/axios";
 
+import { mockActivityReportData } from "../_mock/activityReportList";
+
 export const pastActivityReportListQueryKey = (
   activityTermId: number,
   clubId: number,
 ) => [apiAct006.url(activityTermId), clubId];
 
-const useGetPastActivityReportList = (
+const useGetTermActivityReportList = (
   activityTermId: number,
   query: ApiAct006RequestQuery,
 ) =>
@@ -32,23 +34,12 @@ const useGetPastActivityReportList = (
     },
   });
 
-export default useGetPastActivityReportList;
+export default useGetTermActivityReportList;
 
 const baseUrl = "/student/activities/activity-terms/activity-term/";
 
 defineAxiosMock(mock => {
-  mock.onGet(new RegExp(`^${baseUrl}\\d+$`)).reply(() => [
-    200,
-    {
-      activities: [
-        {
-          id: 111,
-          name: "개발개발한 어떠한 활동",
-          activityTypeEnumId: 2,
-          startTerm: "2024-12-06T02:58:38.000Z",
-          endTerm: "2024-12-17T02:58:49.000Z",
-        },
-      ],
-    },
-  ]);
+  mock
+    .onGet(new RegExp(`^${baseUrl}\\d+$`))
+    .reply(() => [200, { activities: mockActivityReportData }]);
 });

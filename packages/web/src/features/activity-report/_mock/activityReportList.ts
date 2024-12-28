@@ -5,7 +5,7 @@ import {
 
 import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
-export const mockProfessorActivityReportData = [
+export const mockActivityReportData = [
   {
     id: 1,
     name: "2024 가을학기 신입생 프로그래밍 교육",

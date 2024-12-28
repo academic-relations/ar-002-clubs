@@ -38,25 +38,3 @@ export interface CurrentActivityReport extends BaseActivityReport {
   professorApprovedAt?: Date;
   comments: Comment[];
 }
-
-export interface PastActivityReport extends BaseActivityReport {
-  id: number;
-  activityTypeEnumId: ActivityTypeEnum;
-  name: string;
-  startTerm: Date;
-  endTerm: Date;
-}
-
-export interface NewActivityReport extends PastActivityReport {
-  activityStatusEnumId: ActivityStatusEnum;
-  professorApproval?: string;
-  professorApprovedAt?: Date;
-}
-
-export interface ActivityTerm {
-  id: number;
-  name: string;
-  startTerm: Date;
-  endTerm: Date;
-  year: number;
-}

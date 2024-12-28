@@ -9,7 +9,7 @@ import {
   defineAxiosMock,
 } from "@sparcs-clubs/web/lib/axios";
 
-import { mockProfessorActivityReportData } from "../_mock/professor";
+import { mockActivityReportData } from "../_mock/activityReportList";
 
 export const professorCurrentActivityReportListQueryKey = (clubId: number) => [
   apiAct019.url(),
@@ -36,5 +36,5 @@ export default useProfessorGetCurrentActivityReportList;
 defineAxiosMock(mock => {
   mock
     .onGet(apiAct019.url())
-    .reply(() => [200, mockProfessorActivityReportData as ApiAct019ResponseOk]);
+    .reply(() => [200, mockActivityReportData as ApiAct019ResponseOk]);
 });
