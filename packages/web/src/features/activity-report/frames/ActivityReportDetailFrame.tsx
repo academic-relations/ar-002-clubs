@@ -6,6 +6,8 @@ import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
+import NotFound from "@sparcs-clubs/web/app/not-found";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -176,6 +178,10 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
 
     return null;
   };
+
+  if (isError) {
+    return <NotFound />;
+  }
 
   if (!data || !("clubId" in data)) {
     return <AsyncBoundary isLoading={isLoading} isError={isError} />;
