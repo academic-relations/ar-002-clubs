@@ -922,14 +922,10 @@ export default class ActivityService {
           await this.activityRepository.selectDurationByActivityId(row.id);
         return {
           ...row,
-          startTerm: duration.reduce(
-            (prev, curr) => (prev < curr.startTerm ? prev : curr.startTerm),
-            duration[0].startTerm,
-          ),
-          endTerm: duration.reduce(
-            (prev, curr) => (prev > curr.endTerm ? prev : curr.endTerm),
-            duration[0].endTerm,
-          ),
+          durations: duration.map(e => ({
+            startTerm: e.startTerm,
+            endTerm: e.endTerm,
+          })),
         };
       }),
     );
@@ -939,9 +935,7 @@ export default class ActivityService {
       activityStatusEnumId: row.activityStatusEnumId,
       name: row.name,
       activityTypeEnumId: row.activityTypeEnumId,
-      startTerm: row.startTerm,
-      endTerm: row.endTerm,
-      professorApprovedAt: row.professorApprovedAt,
+      durations: row.durations,
     }));
   }
 
