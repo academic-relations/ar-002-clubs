@@ -3,7 +3,7 @@ import { z } from "zod";
 
 /**
  * @version v0.1
- * @description 현재 학기의 활동보고서를 조회합니다.
+ * @description 지도교수가 동아리의 활동보고서를 승인합니다.
  */
 
 const url = () => `/professor/activities/approve`;
