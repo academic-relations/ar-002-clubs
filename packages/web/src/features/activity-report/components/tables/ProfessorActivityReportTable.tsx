@@ -24,7 +24,10 @@ import {
 } from "@sparcs-clubs/web/constants/tableTagList";
 
 import useGetProfessorManageClubActivityReportList from "@sparcs-clubs/web/features/activity-report/hooks/useGetProfessorManageClubActivityReportList";
+import useProfessorApproveActivityReport from "@sparcs-clubs/web/features/activity-report/services/useProfessorApproveActivityReport";
 import { ProfessorActivityReportTableData } from "@sparcs-clubs/web/features/activity-report/types/table";
+
+import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
@@ -86,6 +89,9 @@ const ProfessorActivityReportTable: React.FC<
 > = ({ clubId }) => {
   const { data, isLoading, isError } =
     useGetProfessorManageClubActivityReportList(clubId);
+
+  const { mutate: approveActivityReport } = useProfessorApproveActivityReport();
+
   const table = useReactTable({
     columns,
     data,
@@ -94,14 +100,24 @@ const ProfessorActivityReportTable: React.FC<
   });
   const router = useRouter();
 
+  const hasActivitiesToApprove = data.some(
+    activity => activity.professorApproval === ProfessorApprovalEnum.Pending,
+  );
+
   const openApproveAllModal = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <CancellableModalContent
           confirmButtonText="승인"
           onConfirm={() => {
-            // TODO: (@dora) 전체 승인 로직 넣기
+            approveActivityReport({
+              body: {
+                activities: data.map(activity => ({ id: activity.id })),
+              },
+            });
             close();
+
+            window.location.href = "/manage-club/activity-report";
           }}
           onClose={close}
         >
@@ -120,7 +136,10 @@ const ProfessorActivityReportTable: React.FC<
         <Typography fs={20} lh={24} fw="MEDIUM" style={{ flex: 1 }}>
           활동 보고서
         </Typography>
-        <Button type="default" onClick={openApproveAllModal}>
+        <Button
+          type={hasActivitiesToApprove ? "default" : "disabled"}
+          onClick={openApproveAllModal}
+        >
           전체 승인
         </Button>
       </FlexWrapper>

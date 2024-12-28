@@ -1,4 +1,4 @@
-import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
+import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
 import useGetProfessorCurrentActivityReportList from "../services/useGetProfessorCurrentActivityReportList";
 import { ProfessorActivityReportTableData } from "../types/table";
@@ -38,8 +38,8 @@ const useGetProfessorManageClubActivityReportList = (
       })),
       professorApproval:
         activityReport.professorApprovedAt !== null
-          ? ActivityProfessorApprovalEnum.Approved
-          : ActivityProfessorApprovalEnum.Requested,
+          ? ProfessorApprovalEnum.Approved
+          : ProfessorApprovalEnum.Pending,
     })),
     isLoading,
     isError,

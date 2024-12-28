@@ -1,6 +1,6 @@
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
-import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
+import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
 import { BaseActivityReport } from "./activityReport";
 
@@ -11,5 +11,5 @@ export interface ProfessorActivityReportTableData
   > {
   id: number;
   activityStatusEnumId: ActivityStatusEnum;
-  professorApproval: ActivityProfessorApprovalEnum;
+  professorApproval: ProfessorApprovalEnum;
 }

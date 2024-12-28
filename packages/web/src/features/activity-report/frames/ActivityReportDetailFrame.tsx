@@ -15,21 +15,31 @@ import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/Thumb
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
+import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
+import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { Profile } from "@sparcs-clubs/web/common/providers/AuthContext";
 
 import { getActivityTypeLabel } from "@sparcs-clubs/web/types/activityType";
+import ProfessorApprovalEnum, {
+  getProfessorApprovalLabel,
+  getProfessorApprovalTagColor,
+} from "@sparcs-clubs/web/types/professorApproval";
 
 import { kstToUtc } from "@sparcs-clubs/web/utils/Date/extractDate";
-import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+import {
+  formatDate,
+  formatDotDetailDate,
+} from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import { getActivityReportProgress } from "../constants/activityReportProgress";
 import { useDeleteActivityReport } from "../services/useDeleteActivityReport";
 import { useGetActivityReport } from "../services/useGetActivityReport";
+import useProfessorApproveActivityReport from "../services/useProfessorApproveActivityReport";
 
 interface ActivitySectionProps extends React.PropsWithChildren {
   label: string;
@@ -104,24 +114,23 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
 
-  const { data, isLoading, isError } = useGetActivityReport(
+  const { data, isLoading, isError, refetch } = useGetActivityReport(
     profile.type,
     Number(id),
   );
   const { mutate: deleteActivityReport } = useDeleteActivityReport();
+  const { mutate: approveActivityReport } = useProfessorApproveActivityReport();
 
   const isProgressVisible =
     profile.type === "undergraduate" || profile.type === "executive";
 
-  const onClick = () => {
-    router.push("/manage-club/activity-report");
+  const navigateToActivityReportList = () => {
+    if (profile.type === "professor") {
+      router.push(`/manage-club`);
+    } else {
+      router.push("/manage-club/activity-report");
+    }
   };
-
-  // TODO: 지도교수 승인 추가 예정
-  // const { color: approvalTagColor, text: approvalTagText } = getTagDetail(
-  //   ActivityProfessorApprovalEnum.Requested,
-  //   ProfessorApprovalTagList,
-  // );
 
   const handleEdit = () => {
     router.push(`/manage-club/activity-report/${id}/edit`);
@@ -153,6 +162,50 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     ));
   }, [deleteActivityReport, id]);
 
+  const handleProfessorApproval = useCallback(() => {
+    approveActivityReport(
+      {
+        body: {
+          activities: [{ id: Number(id) }],
+        },
+      },
+      {
+        onSuccess: () => {
+          overlay.open(({ isOpen, close }) => (
+            <Modal isOpen={isOpen}>
+              <ConfirmModalContent onConfirm={close}>
+                활동 보고서 승인이 완료되었습니다.
+              </ConfirmModalContent>
+            </Modal>
+          ));
+          refetch();
+        },
+        onError: () => {
+          overlay.open(({ isOpen, close }) => (
+            <Modal isOpen={isOpen}>
+              <ConfirmModalContent onConfirm={close}>
+                활동 보고서 승인에 실패했습니다.
+              </ConfirmModalContent>
+            </Modal>
+          ));
+        },
+      },
+    );
+  }, [approveActivityReport, id]);
+
+  if (isError) {
+    return <NotFound />;
+  }
+
+  if (!data || !("clubId" in data)) {
+    return <AsyncBoundary isLoading={isLoading} isError={isError} />;
+  }
+
+  const professorApproval =
+    data.professorApprovedAt !== null
+      ? ProfessorApprovalEnum.Approved
+      : ProfessorApprovalEnum.Pending;
+
   const additionalButtons = () => {
     if (profile.type === "undergraduate") {
       return (
@@ -168,9 +221,11 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     }
 
     if (profile.type === "professor") {
-      // TODO: 지도교수 승인 추가 예정
       return (
-        <Button type="default" onClick={() => {}}>
+        <Button
+          type={data.professorApprovedAt !== null ? "disabled" : "default"}
+          onClick={handleProfessorApproval}
+        >
           승인
         </Button>
       );
@@ -178,14 +233,6 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
 
     return null;
   };
-
-  if (isError) {
-    return <NotFound />;
-  }
-
-  if (!data || !("clubId" in data)) {
-    return <AsyncBoundary isLoading={isLoading} isError={isError} />;
-  }
 
   return (
     <FlexWrapper direction="column" gap={60}>
@@ -276,8 +323,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
               </ActivityDetail>
               <ActivityDetail>{`부가 설명: ${data.evidence}`}</ActivityDetail>
             </ActivitySection>
-            {/* TODO: 지도교수 승인 추가 예정 */}
-            {/* <FlexWrapper
+            <FlexWrapper
               direction="row"
               gap={16}
               justify="space-between"
@@ -288,11 +334,24 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
               }}
             >
               <ActivitySection label="지도교수 승인" />
-              <Tag color={approvalTagColor}>{approvalTagText}</Tag>
-            </FlexWrapper> */}
+              <FlexWrapper
+                direction="row"
+                gap={8}
+                style={{ alignItems: "center" }}
+              >
+                {data.professorApprovedAt !== null && (
+                  <Typography fs={14} lh={16} color="GRAY.300">
+                    {formatDotDetailDate(kstToUtc(data.professorApprovedAt))}
+                  </Typography>
+                )}
+                <Tag color={getProfessorApprovalTagColor(professorApproval)}>
+                  {getProfessorApprovalLabel(professorApproval)}
+                </Tag>
+              </FlexWrapper>
+            </FlexWrapper>
           </Card>
           <FlexWrapper gap={20} justify="space-between">
-            <Button type="default" onClick={onClick}>
+            <Button type="default" onClick={navigateToActivityReportList}>
               목록으로 돌아가기
             </Button>
 
