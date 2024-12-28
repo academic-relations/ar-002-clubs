@@ -948,6 +948,9 @@ export default class ActivityService {
       await this.activityRepository.selectActivityByIds(activityIds);
     await this.checkIsProfessor({ professorId, clubId: activities[0].clubId });
 
+    if (activities.some(activity => activity.clubId !== activities[0].clubId))
+      throw new HttpException("Invalid club id", HttpStatus.BAD_REQUEST);
+
     await this.activityRepository.updateActivityProfessorApprovedAt({
       activityIds,
       professorId,
