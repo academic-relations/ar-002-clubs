@@ -1,10 +1,9 @@
 import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 
-import useGetProfessorActivityReportApproval from "../services/useGetProfessorActivityReportApproval";
 import useGetProfessorCurrentActivityReportList from "../services/useGetProfessorCurrentActivityReportList";
 import { ProfessorActivityReportTableData } from "../types/table";
 
-export const useGetProfessorActivityReportList = (
+const useGetProfessorManageClubActivityReportList = (
   clubId: number,
 ): {
   data: ProfessorActivityReportTableData[];
@@ -13,24 +12,13 @@ export const useGetProfessorActivityReportList = (
 } => {
   const {
     data: activityReportList,
-    isLoading: activityReportListLoading,
-    isError: activityReportListError,
+    isLoading,
+    isError,
   } = useGetProfessorCurrentActivityReportList({
     clubId,
   });
 
-  const {
-    data: approvalStatus,
-    isLoading: approvalStatusLoading,
-    isError: approvalStatusError,
-  } = useGetProfessorActivityReportApproval({
-    clubId,
-  });
-
-  const isLoading = approvalStatusLoading || activityReportListLoading;
-  const isError = approvalStatusError || activityReportListError;
-
-  if (isLoading || isError || !activityReportList || !approvalStatus) {
+  if (isLoading || isError || !activityReportList) {
     return {
       data: [],
       isLoading,
@@ -48,11 +36,14 @@ export const useGetProfessorActivityReportList = (
         startTerm: new Date(duration.startTerm),
         endTerm: new Date(duration.endTerm),
       })),
-      professorApproval: approvalStatus.isApproved
-        ? ActivityProfessorApprovalEnum.Approved
-        : ActivityProfessorApprovalEnum.Requested,
+      professorApproval:
+        activityReport.professorApprovedAt !== null
+          ? ActivityProfessorApprovalEnum.Approved
+          : ActivityProfessorApprovalEnum.Requested,
     })),
     isLoading,
     isError,
   };
 };
+
+export default useGetProfessorManageClubActivityReportList;
