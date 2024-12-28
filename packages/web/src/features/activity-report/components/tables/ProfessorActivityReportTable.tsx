@@ -1,7 +1,5 @@
 import React from "react";
 
-import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -9,42 +7,24 @@ import {
 } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Table from "@sparcs-clubs/web/common/components/Table";
-import Tag, { TagColor } from "@sparcs-clubs/web/common/components/Tag";
+import Tag from "@sparcs-clubs/web/common/components/Tag";
 
 import {
   ActTypeTagList,
   ApplyTagList,
+  ProfessorApprovalTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
 
-import { mockProfessorActivityReportData } from "@sparcs-clubs/web/features/activity-report/_mock/professor";
-import { BaseActivityReport } from "@sparcs-clubs/web/features/activity-report/types/activityReport";
-
+import { useGetProfessorActivityReportList } from "@sparcs-clubs/web/features/activity-report/hooks/useGetProfessorManageClubActivityReportList";
+import { ProfessorActivityReportTableData } from "@sparcs-clubs/web/features/activity-report/types/table";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface ProfessorActivityReportTableProps {
   clubId: number;
 }
-
-interface ProfessorActivityReportTableData extends BaseActivityReport {
-  id: number;
-  activityStatusEnumId: ActivityStatusEnum;
-  professorApproval: string;
-}
-
-const getProfessorApprovalTagColor = (professorApproval: string): TagColor => {
-  switch (professorApproval) {
-    case "대기":
-      return "GRAY";
-    case "완료":
-      return "GREEN";
-    case "반려":
-      return "RED";
-    default:
-      return "GRAY";
-  }
-};
 
 const columnHelper = createColumnHelper<ProfessorActivityReportTableData>();
 const columns = [
@@ -59,11 +39,13 @@ const columns = [
   columnHelper.accessor("professorApproval", {
     id: "professorApproval",
     header: "지도교수",
-    cell: info => (
-      <Tag color={getProfessorApprovalTagColor(info.getValue())}>
-        {info.getValue()}
-      </Tag>
-    ),
+    cell: info => {
+      const { color, text } = getTagDetail(
+        info.getValue(),
+        ProfessorApprovalTagList,
+      );
+      return <Tag color={color}>{text}</Tag>;
+    },
     size: 0,
   }),
   columnHelper.accessor("name", {
@@ -94,11 +76,9 @@ const columns = [
 
 const ProfessorActivityReportTable: React.FC<
   ProfessorActivityReportTableProps
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 > = ({ clubId }) => {
-  // TODO: 실제 데이터 받아오기
-  const data =
-    mockProfessorActivityReportData as ProfessorActivityReportTableData[];
+  const { data, isLoading, isError } =
+    useGetProfessorActivityReportList(clubId);
   const table = useReactTable({
     columns,
     data,
@@ -107,12 +87,16 @@ const ProfessorActivityReportTable: React.FC<
   });
   const router = useRouter();
 
+  if (!data) return null;
+
   return (
-    <Table
-      table={table}
-      count={data.length}
-      onClick={row => router.push(`/manage-club/activity-report/${row.id}`)}
-    />
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <Table
+        table={table}
+        count={data.length}
+        onClick={row => router.push(`/manage-club/activity-report/${row.id}`)}
+      />
+    </AsyncBoundary>
   );
 };
 
