@@ -313,9 +313,11 @@ export default class ActivityController {
   @UsePipes(new ZodPipe(apiAct015))
   async getProfessorActivity(
     @Param() param: ApiAct015RequestParam,
+    @GetProfessor() user: GetProfessor,
   ): Promise<ApiAct015ResponseOk> {
     const result = await this.activityService.getProfessorActivity(
       param.activityId,
+      user.professorId,
     );
 
     return result;

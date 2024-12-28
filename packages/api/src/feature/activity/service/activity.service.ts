@@ -764,8 +764,13 @@ export default class ActivityService {
     };
   }
 
-  async getProfessorActivity(activityId: number): Promise<ApiAct002ResponseOk> {
+  async getProfessorActivity(
+    activityId: number,
+    professorId: number,
+  ): Promise<ApiAct002ResponseOk> {
     const activity = await this.getActivity({ activityId });
+
+    await this.checkIsProfessor({ professorId, clubId: activity.clubId });
 
     const evidence = await this.activityRepository.selectFileByActivityId(
       activity.id,
@@ -922,10 +927,14 @@ export default class ActivityService {
           await this.activityRepository.selectDurationByActivityId(row.id);
         return {
           ...row,
-          durations: duration.map(e => ({
-            startTerm: e.startTerm,
-            endTerm: e.endTerm,
-          })),
+          startTerm: duration.reduce(
+            (prev, curr) => (prev < curr.startTerm ? prev : curr.startTerm),
+            duration[0].startTerm,
+          ),
+          endTerm: duration.reduce(
+            (prev, curr) => (prev > curr.endTerm ? prev : curr.endTerm),
+            duration[0].endTerm,
+          ),
         };
       }),
     );
@@ -935,7 +944,8 @@ export default class ActivityService {
       activityStatusEnumId: row.activityStatusEnumId,
       name: row.name,
       activityTypeEnumId: row.activityTypeEnumId,
-      durations: row.durations,
+      startTerm: row.startTerm,
+      endTerm: row.endTerm,
       professorApprovedAt: row.professorApprovedAt,
     }));
   }
