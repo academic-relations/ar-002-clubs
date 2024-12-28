@@ -24,7 +24,8 @@ import {
 } from "@sparcs-clubs/web/constants/tableTagList";
 
 import useGetProfessorActivityReportList from "@sparcs-clubs/web/features/activity-report/hooks/useGetProfessorActivityReportList";
-import useProfessorApproveActivityReport from "@sparcs-clubs/web/features/activity-report/services/useProfessorApproveActivityReport";
+import usePostProfessorApproveActivityReport from "@sparcs-clubs/web/features/activity-report/services/useProfessorApproveActivityReport";
+
 import { ActivityReportTableData } from "@sparcs-clubs/web/features/activity-report/types/table";
 
 import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
@@ -91,7 +92,8 @@ const ProfessorActivityReportTable: React.FC<
 
   const { data, isLoading, isError } =
     useGetProfessorActivityReportList(clubId);
-  const { mutate: approveActivityReport } = useProfessorApproveActivityReport();
+  const { mutate: approveActivityReport } =
+    usePostProfessorApproveActivityReport();
 
   const table = useReactTable({
     columns,

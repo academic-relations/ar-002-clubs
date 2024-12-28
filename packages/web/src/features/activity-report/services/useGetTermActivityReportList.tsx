@@ -39,10 +39,7 @@ export default useGetTermActivityReportList;
 const baseUrl = "/student/activities/activity-terms/activity-term/";
 
 defineAxiosMock(mock => {
-  mock.onGet(new RegExp(`^${baseUrl}\\d+$`)).reply(() => [
-    200,
-    {
-      activities: mockActivityReportData,
-    },
-  ]);
+  mock
+    .onGet(new RegExp(`^${baseUrl}\\d+$`))
+    .reply(() => [200, { activities: mockActivityReportData }]);
 });

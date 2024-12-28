@@ -38,8 +38,8 @@ import {
 
 import { getActivityReportProgress } from "../constants/activityReportProgress";
 import useGetActivityReportDetail from "../hooks/useGetActivityReportDetail";
+import useProfessorApproveSingleActivityReport from "../hooks/useProfessorApproveSingleActivityReport";
 import { useDeleteActivityReport } from "../services/useDeleteActivityReport";
-import useProfessorApproveActivityReport from "../services/useProfessorApproveActivityReport";
 
 interface ActivitySectionProps extends React.PropsWithChildren {
   label: string;
@@ -116,7 +116,8 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
 
   const { data, isLoading, isError } = useGetActivityReportDetail(Number(id));
   const { mutate: deleteActivityReport } = useDeleteActivityReport();
-  const { mutate: approveActivityReport } = useProfessorApproveActivityReport();
+  const { mutate: approveActivityReport } =
+    useProfessorApproveSingleActivityReport();
 
   const isProgressVisible =
     profile.type === "undergraduate" || profile.type === "executive";
@@ -156,33 +157,26 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
   }, [deleteActivityReport, id]);
 
   const handleProfessorApproval = useCallback(() => {
-    approveActivityReport(
-      {
-        body: {
-          activities: [{ id: Number(id) }],
-        },
+    approveActivityReport(Number(id), {
+      onSuccess: () => {
+        overlay.open(({ isOpen, close }) => (
+          <Modal isOpen={isOpen}>
+            <ConfirmModalContent onConfirm={close}>
+              활동 보고서 승인이 완료되었습니다.
+            </ConfirmModalContent>
+          </Modal>
+        ));
       },
-      {
-        onSuccess: () => {
-          overlay.open(({ isOpen, close }) => (
-            <Modal isOpen={isOpen}>
-              <ConfirmModalContent onConfirm={close}>
-                활동 보고서 승인이 완료되었습니다.
-              </ConfirmModalContent>
-            </Modal>
-          ));
-        },
-        onError: () => {
-          overlay.open(({ isOpen, close }) => (
-            <Modal isOpen={isOpen}>
-              <ConfirmModalContent onConfirm={close}>
-                활동 보고서 승인에 실패했습니다.
-              </ConfirmModalContent>
-            </Modal>
-          ));
-        },
+      onError: () => {
+        overlay.open(({ isOpen, close }) => (
+          <Modal isOpen={isOpen}>
+            <ConfirmModalContent onConfirm={close}>
+              활동 보고서 승인에 실패했습니다.
+            </ConfirmModalContent>
+          </Modal>
+        ));
       },
-    );
+    });
   }, [approveActivityReport, id]);
 
   if (isError) {
@@ -210,7 +204,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     if (profile.type === "professor") {
       return (
         <Button
-          type={data.professorApprovedAt !== null ? "disabled" : "default"}
+          type={data.professorApprovedAt ? "disabled" : "default"}
           onClick={handleProfessorApproval}
         >
           승인
