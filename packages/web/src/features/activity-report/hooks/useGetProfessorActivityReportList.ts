@@ -3,7 +3,7 @@ import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 import useGetProfessorCurrentActivityReportList from "../services/useGetProfessorCurrentActivityReportList";
 import { ProfessorActivityReportTableData } from "../types/table";
 
-const useGetProfessorManageClubActivityReportList = (
+const useGetProfessorActivityReportList = (
   clubId: number,
 ): {
   data: ProfessorActivityReportTableData[];
@@ -28,14 +28,7 @@ const useGetProfessorManageClubActivityReportList = (
 
   return {
     data: activityReportList.map(activityReport => ({
-      id: activityReport.id,
-      activityStatusEnumId: activityReport.activityStatusEnumId,
-      name: activityReport.name,
-      activityTypeEnumId: activityReport.activityTypeEnumId,
-      durations: activityReport.durations.map(duration => ({
-        startTerm: new Date(duration.startTerm),
-        endTerm: new Date(duration.endTerm),
-      })),
+      ...activityReport,
       professorApproval:
         activityReport.professorApprovedAt !== null
           ? ProfessorApprovalEnum.Approved
@@ -46,4 +39,4 @@ const useGetProfessorManageClubActivityReportList = (
   };
 };
 
-export default useGetProfessorManageClubActivityReportList;
+export default useGetProfessorActivityReportList;

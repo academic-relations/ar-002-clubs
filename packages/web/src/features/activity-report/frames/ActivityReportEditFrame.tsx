@@ -1,17 +1,18 @@
-import React, { useCallback } from "react";
+import React from "react";
+
+import { overlay } from "overlay-kit";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import ActivityReportForm from "../components/ActivityReportForm";
-import { useGetActivityReport } from "../services/useGetActivityReport";
-import { usePutActivityReport } from "../services/usePutActivityReport";
+import useGetInitialActivityReportFormData from "../hooks/useGetInitialActivityReportFormData";
+import useUpdateActivityReport from "../hooks/useUpdateActivityReport";
 import { ActivityReportFormData } from "../types/form";
-import {
-  transformFromApiAct002Response,
-  transformToApiAct003RequestBody,
-} from "../utils/transform";
 
 interface ActivityReportEditFrameProps {
   id: string;
@@ -22,28 +23,42 @@ const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
   id,
   clubId,
 }) => {
-  const { mutate } = usePutActivityReport();
-  const { data, isLoading, isError } = useGetActivityReport(
-    "undergraduate",
-    Number(id),
-  );
+  const activityId = Number(id);
+  const { data, isLoading, isError } =
+    useGetInitialActivityReportFormData(activityId);
+  const { mutateAsync: updateActivityReport } =
+    useUpdateActivityReport(activityId);
 
-  const handleSubmit = useCallback(
-    (_data: ActivityReportFormData) => {
-      mutate(
-        {
-          activityId: Number(id),
-          body: transformToApiAct003RequestBody(_data),
-        },
-        {
-          onSuccess: () => {
-            window.location.href = `/manage-club/activity-report/${id}`;
-          },
-        },
-      );
-    },
-    [id, mutate],
-  );
+  const handleSubmit = (_data: ActivityReportFormData) => {
+    updateActivityReport(_data, {
+      onSuccess: () => {
+        overlay.open(({ isOpen, close }) => (
+          <Modal isOpen={isOpen}>
+            <ConfirmModalContent
+              onConfirm={() => {
+                close();
+                window.location.href = `/manage-club/activity-report/${activityId}`;
+              }}
+            >
+              활동 보고서 수정이 완료되었습니다.
+            </ConfirmModalContent>
+          </Modal>
+        ));
+      },
+      onError: error => {
+        overlay.open(({ isOpen, close }) => (
+          <Modal isOpen={isOpen}>
+            <ConfirmModalContent onConfirm={close}>
+              활동 보고서 수정에 실패했습니다.
+              <Typography color="GRAY.300" fs={12} lh={16} fw="REGULAR">
+                {error.message}
+              </Typography>
+            </ConfirmModalContent>
+          </Modal>
+        ));
+      },
+    });
+  };
 
   if (!data) return null;
 
@@ -62,7 +77,7 @@ const ActivityReportEditFrame: React.FC<ActivityReportEditFrameProps> = ({
         <ActivityReportForm
           clubId={clubId}
           onSubmit={handleSubmit}
-          initialData={transformFromApiAct002Response(data)}
+          initialData={data}
         />
       </AsyncBoundary>
     </FlexWrapper>
