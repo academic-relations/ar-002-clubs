@@ -4,12 +4,18 @@ import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
 import { BaseActivityReport } from "./activityReport";
 
-export interface ActivityReportTableData
+export interface BaseActivityReportTableData
   extends Pick<
     BaseActivityReport,
     "name" | "activityTypeEnumId" | "durations"
   > {
   id: number;
+}
+
+export interface ActivityReportTableData extends BaseActivityReportTableData {
   activityStatusEnumId: ActivityStatusEnum;
   professorApproval: ProfessorApprovalEnum;
 }
+
+export interface PastActivityReportTableData
+  extends BaseActivityReportTableData {}

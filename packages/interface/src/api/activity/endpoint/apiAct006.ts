@@ -30,8 +30,12 @@ const responseBodyMap = {
         id: z.coerce.number().int().min(1),
         name: z.string().max(255),
         activityTypeEnumId: z.nativeEnum(ActivityTypeEnum),
-        startTerm: z.coerce.date(),
-        endTerm: z.coerce.date(),
+        durations: z.array(
+          z.object({
+            startTerm: z.coerce.date(),
+            endTerm: z.coerce.date(),
+          }),
+        ),
       }),
     ),
   }),
