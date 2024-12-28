@@ -14,16 +14,17 @@ import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { numberToKrWon } from "@sparcs-clubs/web/constants/manageClubFunding";
 
 import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import {
-  Funding,
-  mockupManageFunding,
-} from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
+import { NewFundingData } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-const columnHelper = createColumnHelper<Funding>();
+interface NewFundingListTableProps {
+  newFundingList?: NewFundingData[];
+}
+
+const columnHelper = createColumnHelper<NewFundingData>();
 
 const columns = [
-  columnHelper.accessor("status", {
+  columnHelper.accessor("fundingOrderStatusEnumId", {
     header: "상태",
     cell: info => {
       const { color, text } = getTagDetail(info.getValue(), FundingTagList);
@@ -31,17 +32,17 @@ const columns = [
     },
     size: 10,
   }),
-  columnHelper.accessor("name", {
+  columnHelper.accessor("activityName", {
     header: "활동명",
     cell: info => info.getValue(),
     size: 45,
   }),
-  columnHelper.accessor("itemName", {
+  columnHelper.accessor("name", {
     header: "항목명",
     cell: info => info.getValue(),
     size: 15,
   }),
-  columnHelper.accessor("requestedAmount", {
+  columnHelper.accessor("expenditureAmount", {
     header: "신청 금액",
     cell: info => `${info.getValue().toLocaleString("ko-KR")}원`,
     size: 15,
@@ -56,10 +57,12 @@ const columns = [
   }),
 ];
 
-const NewFundingListTable: React.FC = () => {
+const NewFundingListTable: React.FC<NewFundingListTableProps> = ({
+  newFundingList = [],
+}) => {
   const table = useReactTable({
     columns,
-    data: mockupManageFunding,
+    data: newFundingList,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
@@ -67,7 +70,7 @@ const NewFundingListTable: React.FC = () => {
   return (
     <Table
       table={table}
-      count={mockupManageFunding.length}
+      count={newFundingList.length}
       footer={
         <TableRow>
           <TableCell type="Default" width="70%">
@@ -75,15 +78,15 @@ const NewFundingListTable: React.FC = () => {
           </TableCell>
           <TableCell type="Default" width="15%">
             {numberToKrWon(
-              mockupManageFunding.reduce(
-                (acc, data) => acc + data.requestedAmount,
+              newFundingList.reduce(
+                (acc, data) => acc + data.expenditureAmount,
                 0,
               ),
             )}
           </TableCell>
           <TableCell type="Default" width="15%">
             {numberToKrWon(
-              mockupManageFunding.reduce(
+              newFundingList.reduce(
                 (acc, data) => acc + (data.approvedAmount ?? 0),
                 0,
               ),
