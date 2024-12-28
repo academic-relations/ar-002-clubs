@@ -936,6 +936,7 @@ export default class ActivityService {
       name: row.name,
       activityTypeEnumId: row.activityTypeEnumId,
       durations: row.durations,
+      professorApprovedAt: row.professorApprovedAt,
     }));
   }
 
