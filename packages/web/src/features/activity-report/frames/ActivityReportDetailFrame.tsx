@@ -2,11 +2,11 @@
 
 import React, { ReactNode, useCallback } from "react";
 
-import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-
 import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
+
+import NotFound from "@sparcs-clubs/web/app/not-found";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -22,8 +22,9 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { Profile } from "@sparcs-clubs/web/common/providers/AuthContext";
 
-import { kstToUtc } from "@sparcs-clubs/web/utils/Date/extractDate";
+import { getActivityTypeLabel } from "@sparcs-clubs/web/types/activityType";
 
+import { kstToUtc } from "@sparcs-clubs/web/utils/Date/extractDate";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import { getActivityReportProgress } from "../constants/activityReportProgress";
@@ -65,19 +66,6 @@ const FlexTypography = styled(Typography)`
   align-self: stretch;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  align-self: stretch;
-`;
-
-const DeleteAndEditButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
-
 const ActivityDetail: React.FC<{ children: string | ReactNode }> = ({
   children = "",
 }) => {
@@ -116,7 +104,14 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
 
+  const { data, isLoading, isError } = useGetActivityReport(
+    profile.type,
+    Number(id),
+  );
   const { mutate: deleteActivityReport } = useDeleteActivityReport();
+
+  const isProgressVisible =
+    profile.type === "undergraduate" || profile.type === "executive";
 
   const onClick = () => {
     router.push("/manage-club/activity-report");
@@ -156,28 +151,37 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
         </CancellableModalContent>
       </Modal>
     ));
-  }, [deleteActivityReport, id, router]);
+  }, [deleteActivityReport, id]);
 
-  const { data, isLoading, isError } = useGetActivityReport(
-    profile.type,
-    Number(id),
-  );
-
-  const activityType: (type: ActivityTypeEnum) => string = type => {
-    switch (type) {
-      case ActivityTypeEnum.matchedInternalActivity:
-        return "동아리 성격에 합치하는 내부 활동";
-        break;
-      case ActivityTypeEnum.matchedExternalActivity:
-        return "동아리 성격에 합치하는 외부 활동";
-        break;
-      case ActivityTypeEnum.notMatchedActivity:
-        return "동아리 성격에 합치하지 않는 활동";
-        break;
-      default:
-        return "";
+  const additionalButtons = () => {
+    if (profile.type === "undergraduate") {
+      return (
+        <FlexWrapper gap={12}>
+          <Button type="default" onClick={handleDelete}>
+            삭제
+          </Button>
+          <Button type="default" onClick={handleEdit}>
+            수정
+          </Button>
+        </FlexWrapper>
+      );
     }
+
+    if (profile.type === "professor") {
+      // TODO: 지도교수 승인 추가 예정
+      return (
+        <Button type="default" onClick={() => {}}>
+          승인
+        </Button>
+      );
+    }
+
+    return null;
   };
+
+  if (isError) {
+    return <NotFound />;
+  }
 
   if (!data || !("clubId" in data)) {
     return <AsyncBoundary isLoading={isLoading} isError={isError} />;
@@ -200,36 +204,38 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
           style={{ alignSelf: "stretch" }}
         >
           <Card outline={false} padding="32px" gap={20}>
-            <ProgressStatus
-              labels={
-                getActivityReportProgress(
-                  data.activityStatusEnumId,
-                  kstToUtc(data.updatedAt),
-                ).labels
-              }
-              progress={
-                getActivityReportProgress(
-                  data.activityStatusEnumId,
-                  kstToUtc(data.updatedAt),
-                ).progress
-              }
-              optional={
-                data.comments &&
-                data.comments.length > 0 && (
-                  <RejectReasonToast
-                    title="반려 사유"
-                    reasons={data.comments.map(comment => ({
-                      datetime: comment.createdAt,
-                      reason: comment.content,
-                    }))}
-                  />
-                )
-              }
-            />
+            {isProgressVisible && (
+              <ProgressStatus
+                labels={
+                  getActivityReportProgress(
+                    data.activityStatusEnumId,
+                    kstToUtc(data.updatedAt),
+                  ).labels
+                }
+                progress={
+                  getActivityReportProgress(
+                    data.activityStatusEnumId,
+                    kstToUtc(data.updatedAt),
+                  ).progress
+                }
+                optional={
+                  data.comments &&
+                  data.comments.length > 0 && (
+                    <RejectReasonToast
+                      title="반려 사유"
+                      reasons={data.comments.map(comment => ({
+                        datetime: comment.createdAt,
+                        reason: comment.content,
+                      }))}
+                    />
+                  )
+                }
+              />
+            )}
             <ActivitySection label="활동 정보">
               <ActivityDetail>{`활동명: ${data.name}`}</ActivityDetail>
               <ActivityDetail>
-                {`활동 분류: ${activityType(data.activityTypeEnumId)}`}
+                {`활동 분류: ${getActivityTypeLabel(data.activityTypeEnumId)}`}
               </ActivityDetail>
               <ActivityDetail>활동 기간:</ActivityDetail>
               <FlexWrapper
@@ -285,19 +291,13 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
               <Tag color={approvalTagColor}>{approvalTagText}</Tag>
             </FlexWrapper> */}
           </Card>
-          <ButtonContainer>
+          <FlexWrapper gap={20} justify="space-between">
             <Button type="default" onClick={onClick}>
               목록으로 돌아가기
             </Button>
-            <DeleteAndEditButtonContainer>
-              <Button type="default" onClick={handleDelete}>
-                삭제
-              </Button>
-              <Button type="default" onClick={handleEdit}>
-                수정
-              </Button>
-            </DeleteAndEditButtonContainer>
-          </ButtonContainer>
+
+            {additionalButtons()}
+          </FlexWrapper>
         </FlexWrapper>
       </AsyncBoundary>
     </FlexWrapper>

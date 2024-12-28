@@ -261,12 +261,13 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
               </Typography>
               <FormController
                 name="evidence"
+                required
                 control={control}
                 renderItem={props => (
                   <TextInput
                     {...props}
                     area
-                    placeholder="(선택) 활동 증빙에 대해서 작성하고 싶은 것이 있다면 입력해주세요"
+                    placeholder="활동 증빙에 대해서 작성하고 싶은 것이 있다면 입력해주세요"
                   />
                 )}
               />

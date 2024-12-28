@@ -6,10 +6,16 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
+import { overlay } from "overlay-kit";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import Button from "@sparcs-clubs/web/common/components/Button";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import {
   ActTypeTagList,
@@ -88,10 +94,36 @@ const ProfessorActivityReportTable: React.FC<
   });
   const router = useRouter();
 
+  const openApproveAllModal = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <CancellableModalContent
+          confirmButtonText="승인"
+          onConfirm={() => {
+            // TODO: (@dora) 전체 승인 로직 넣기
+            close();
+          }}
+          onClose={close}
+        >
+          모든 활동 보고서를 일괄 승인합니다. <br />
+          해당 작업은 되돌릴 수 없습니다.
+        </CancellableModalContent>
+      </Modal>
+    ));
+  };
+
   if (!data) return null;
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <FlexWrapper direction="row" gap={16} style={{ alignItems: "center" }}>
+        <Typography fs={20} lh={24} fw="MEDIUM" style={{ flex: 1 }}>
+          활동 보고서
+        </Typography>
+        <Button type="default" onClick={openApproveAllModal}>
+          전체 승인
+        </Button>
+      </FlexWrapper>
       <Table
         table={table}
         count={data.length}
