@@ -11,11 +11,16 @@ import {
 
 import { mockProfessorActivityReportData } from "../_mock/professor";
 
+export const professorCurrentActivityReportListQueryKey = (clubId: number) => [
+  apiAct019.url(),
+  clubId,
+];
+
 const useProfessorGetCurrentActivityReportList = (
   query: ApiAct019RequestQuery,
 ) =>
   useQuery<ApiAct019ResponseOk, Error>({
-    queryKey: [apiAct019.url(), query.clubId],
+    queryKey: professorCurrentActivityReportListQueryKey(query.clubId),
     queryFn: async (): Promise<ApiAct019ResponseOk> => {
       const { data } = await axiosClientWithAuth.get(apiAct019.url(), {
         params: query,
