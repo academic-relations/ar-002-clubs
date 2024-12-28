@@ -25,7 +25,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { Profile } from "@sparcs-clubs/web/common/providers/AuthContext";
 
 import { getActivityTypeLabel } from "@sparcs-clubs/web/types/activityType";
-import ProfessorApprovalEnum, {
+import {
   getProfessorApprovalLabel,
   getProfessorApprovalTagColor,
 } from "@sparcs-clubs/web/types/professorApproval";
@@ -37,8 +37,8 @@ import {
 } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import { getActivityReportProgress } from "../constants/activityReportProgress";
+import useGetActivityReportDetail from "../hooks/useGetActivityReportDetail";
 import { useDeleteActivityReport } from "../services/useDeleteActivityReport";
-import { useGetActivityReport } from "../services/useGetActivityReport";
 import useProfessorApproveActivityReport from "../services/useProfessorApproveActivityReport";
 
 interface ActivitySectionProps extends React.PropsWithChildren {
@@ -114,10 +114,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
 
-  const { data, isLoading, isError, refetch } = useGetActivityReport(
-    profile.type,
-    Number(id),
-  );
+  const { data, isLoading, isError } = useGetActivityReportDetail(Number(id));
   const { mutate: deleteActivityReport } = useDeleteActivityReport();
   const { mutate: approveActivityReport } = useProfessorApproveActivityReport();
 
@@ -174,7 +171,6 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
               </ConfirmModalContent>
             </Modal>
           ));
-          refetch();
         },
         onError: () => {
           overlay.open(({ isOpen, close }) => (
@@ -196,11 +192,6 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
   if (!data || !("clubId" in data)) {
     return <AsyncBoundary isLoading={isLoading} isError={isError} />;
   }
-
-  const professorApproval =
-    data.professorApprovedAt !== null
-      ? ProfessorApprovalEnum.Approved
-      : ProfessorApprovalEnum.Pending;
 
   const additionalButtons = () => {
     if (profile.type === "undergraduate") {
@@ -299,7 +290,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
             <ActivitySection label={`활동 인원(${data.participants.length}명)`}>
               {data.participants.map(participant => (
                 <ActivityDetail
-                  key={participant.studentId}
+                  key={participant.id}
                 >{`${participant.studentNumber} ${participant.name}`}</ActivityDetail>
               ))}
             </ActivitySection>
@@ -308,11 +299,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
               <ActivityDetail>
                 <FilePreviewContainer>
                   <ThumbnailPreviewList
-                    fileList={data.evidenceFiles.map(file => ({
-                      id: file.fileId,
-                      name: file.name,
-                      url: file.url,
-                    }))}
+                    fileList={data.evidenceFiles}
                     disabled
                   />
                 </FilePreviewContainer>
@@ -335,13 +322,15 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
                 gap={8}
                 style={{ alignItems: "center" }}
               >
-                {data.professorApprovedAt !== null && (
+                {data.professorApprovedAt && (
                   <Typography fs={14} lh={16} color="GRAY.300">
                     {formatDotDetailDate(kstToUtc(data.professorApprovedAt))}
                   </Typography>
                 )}
-                <Tag color={getProfessorApprovalTagColor(professorApproval)}>
-                  {getProfessorApprovalLabel(professorApproval)}
+                <Tag
+                  color={getProfessorApprovalTagColor(data.professorApproval)}
+                >
+                  {getProfessorApprovalLabel(data.professorApproval)}
                 </Tag>
               </FlexWrapper>
             </FlexWrapper>

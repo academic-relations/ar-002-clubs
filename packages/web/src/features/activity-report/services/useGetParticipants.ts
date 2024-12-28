@@ -7,9 +7,14 @@ import { useQuery } from "@tanstack/react-query";
 
 import { axiosClientWithAuth } from "@sparcs-clubs/web/lib/axios";
 
+export const activityReportParticipantsQueryKey = (clubId: number) => [
+  apiAct010.url(),
+  clubId,
+];
+
 const useGetParticipants = (query: ApiAct010RequestQuery) =>
   useQuery<ApiAct010ResponseOk, Error>({
-    queryKey: [apiAct010.url(), query.clubId],
+    queryKey: activityReportParticipantsQueryKey(query.clubId),
     queryFn: async (): Promise<ApiAct010ResponseOk> => {
       const { data } = await axiosClientWithAuth.get(apiAct010.url(), {
         params: query,

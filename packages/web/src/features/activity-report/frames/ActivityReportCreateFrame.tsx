@@ -1,12 +1,17 @@
-import React, { useCallback } from "react";
+import React from "react";
+
+import { useRouter } from "next/navigation";
+import { overlay } from "overlay-kit";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import ActivityReportForm from "../components/ActivityReportForm";
-import usePostActivityReport from "../services/usePostActivityReport";
+import { useCreateActivityReport } from "../hooks/useCreateActivityReport";
 import { ActivityReportFormData } from "../types/form";
-import { transformToApiAct001RequestBody } from "../utils/transform";
 
 interface ActivityReportCreateFrameProps {
   clubId: number;
@@ -15,21 +20,39 @@ interface ActivityReportCreateFrameProps {
 const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
   clubId,
 }) => {
-  const { mutate } = usePostActivityReport();
+  const router = useRouter();
+  const { mutate: createActivityReport } = useCreateActivityReport(clubId);
 
-  const handleSubmit = useCallback(
-    (data: ActivityReportFormData) => {
-      mutate(
-        { body: transformToApiAct001RequestBody(data, clubId) },
-        {
-          onSuccess: () => {
-            window.location.href = "/manage-club/activity-report";
-          },
-        },
-      );
-    },
-    [clubId, mutate],
-  );
+  const handleSubmit = (data: ActivityReportFormData) => {
+    createActivityReport(data, {
+      onSuccess: () => {
+        overlay.open(({ isOpen, close }) => (
+          <Modal isOpen={isOpen}>
+            <ConfirmModalContent
+              onConfirm={() => {
+                close();
+                router.push("/manage-club/activity-report");
+              }}
+            >
+              활동 보고서 작성이 완료되었습니다.
+            </ConfirmModalContent>
+          </Modal>
+        ));
+      },
+      onError: error => {
+        overlay.open(({ isOpen, close }) => (
+          <Modal isOpen={isOpen}>
+            <ConfirmModalContent onConfirm={close}>
+              활동 보고서 작성에 실패했습니다.
+              <Typography color="GRAY.300" fs={12} lh={16} fw="REGULAR">
+                {error.message}
+              </Typography>
+            </ConfirmModalContent>
+          </Modal>
+        ));
+      },
+    });
+  };
 
   return (
     <FlexWrapper direction="column" gap={60}>

@@ -9,9 +9,14 @@ import {
   defineAxiosMock,
 } from "@sparcs-clubs/web/lib/axios";
 
+export const newActivityReportListQueryKey = (clubId: number) => [
+  apiAct005.url(),
+  clubId,
+];
+
 const useGetNewActivityReportList = (query: ApiAct005RequestQuery) =>
   useQuery<ApiAct005ResponseOk, Error>({
-    queryKey: [apiAct005.url(), query.clubId],
+    queryKey: newActivityReportListQueryKey(query.clubId),
     queryFn: async (): Promise<ApiAct005ResponseOk> => {
       const { data } = await axiosClientWithAuth.get(apiAct005.url(), {
         params: query,

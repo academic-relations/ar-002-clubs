@@ -9,9 +9,14 @@ import {
   defineAxiosMock,
 } from "@sparcs-clubs/web/lib/axios";
 
+export const activityTermsQueryKey = (clubId: number) => [
+  apiAct009.url(),
+  clubId,
+];
+
 const useGetActivityTerms = (query: ApiAct009RequestQuery) =>
   useQuery<ApiAct009ResponseOk, Error>({
-    queryKey: [apiAct009.url(), query.clubId],
+    queryKey: activityTermsQueryKey(query.clubId),
     queryFn: async (): Promise<ApiAct009ResponseOk> => {
       const { data } = await axiosClientWithAuth.get(apiAct009.url(), {
         params: query,
