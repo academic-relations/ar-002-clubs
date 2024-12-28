@@ -374,7 +374,7 @@ export default class ActivityController {
   }
 
   @Professor()
-  @Post("/professor/activities/clubs/club/:clubId/approve")
+  @Post("/professor/activities/approve")
   @UsePipes(new ZodPipe(apiAct020))
   async postProfessorActivityApprove(
     @GetProfessor() user: GetProfessor,
