@@ -25,7 +25,7 @@ import {
 
 import useGetProfessorActivityReportList from "@sparcs-clubs/web/features/activity-report/hooks/useGetProfessorActivityReportList";
 import useProfessorApproveActivityReport from "@sparcs-clubs/web/features/activity-report/services/useProfessorApproveActivityReport";
-import { ProfessorActivityReportTableData } from "@sparcs-clubs/web/features/activity-report/types/table";
+import { ActivityReportTableData } from "@sparcs-clubs/web/features/activity-report/types/table";
 
 import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
@@ -36,7 +36,7 @@ interface ProfessorActivityReportTableProps {
   clubId: number;
 }
 
-const columnHelper = createColumnHelper<ProfessorActivityReportTableData>();
+const columnHelper = createColumnHelper<ActivityReportTableData>();
 const columns = [
   columnHelper.accessor("activityStatusEnumId", {
     header: "상태",
@@ -87,9 +87,10 @@ const columns = [
 const ProfessorActivityReportTable: React.FC<
   ProfessorActivityReportTableProps
 > = ({ clubId }) => {
+  const router = useRouter();
+
   const { data, isLoading, isError } =
     useGetProfessorActivityReportList(clubId);
-
   const { mutate: approveActivityReport } = useProfessorApproveActivityReport();
 
   const table = useReactTable({
@@ -98,7 +99,6 @@ const ProfessorActivityReportTable: React.FC<
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
-  const router = useRouter();
 
   const hasActivitiesToApprove = data.some(
     activity => activity.professorApproval === ProfessorApprovalEnum.Pending,
@@ -127,8 +127,6 @@ const ProfessorActivityReportTable: React.FC<
       </Modal>
     ));
   };
-
-  if (!data) return null;
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>

@@ -14,12 +14,11 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 
-import NewActivityReportList from "../components/NewActivityReportList";
+import CurrentActivityReportTable from "../components/CurrentActivityReportTable";
 import PastActivityReportList from "../components/PastActivityReportList";
 import { MAX_ACTIVITY_REPORT_COUNT } from "../constants";
 import useGetActivityTerms from "../services/useGetActivityTerms";
 import useGetNewActivityReportList from "../services/useGetNewActivityReportList";
-import { NewActivityReport } from "../types/activityReport";
 
 interface ActivityReportMainFrameProps {
   clubId: number;
@@ -88,9 +87,7 @@ const ActivityReportMainFrame: React.FC<ActivityReportMainFrameProps> = ({
                 </IconButton>
               </Link>
             </FlexWrapper>
-            <NewActivityReportList
-              data={newActivityReportList as NewActivityReport[]}
-            />
+            <CurrentActivityReportTable clubId={data.clubId} />
           </AsyncBoundary>
         </FlexWrapper>
       </FoldableSectionTitle>
