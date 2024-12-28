@@ -313,9 +313,11 @@ export default class ActivityController {
   @UsePipes(new ZodPipe(apiAct015))
   async getProfessorActivity(
     @Param() param: ApiAct015RequestParam,
+    @GetProfessor() user: GetProfessor,
   ): Promise<ApiAct015ResponseOk> {
     const result = await this.activityService.getProfessorActivity(
       param.activityId,
+      user.professorId,
     );
 
     return result;
@@ -374,7 +376,7 @@ export default class ActivityController {
   }
 
   @Professor()
-  @Post("/professor/activities/clubs/club/:clubId/approve")
+  @Post("/professor/activities/approve")
   @UsePipes(new ZodPipe(apiAct020))
   async postProfessorActivityApprove(
     @GetProfessor() user: GetProfessor,

@@ -1,7 +1,5 @@
 import React from "react";
 
-import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -10,21 +8,26 @@ import {
 import { useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Table from "@sparcs-clubs/web/common/components/Table";
-import Tag, { TagColor } from "@sparcs-clubs/web/common/components/Tag";
+import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import {
   ActTypeTagList,
   ApplyTagList,
+  ProfessorApprovalTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
 
-import { mockProfessorActivityReportData } from "@sparcs-clubs/web/features/activity-report/_mock/professor";
-import { BaseActivityReport } from "@sparcs-clubs/web/features/activity-report/types/activityReport";
+import useGetProfessorManageClubActivityReportList from "@sparcs-clubs/web/features/activity-report/hooks/useGetProfessorManageClubActivityReportList";
+import useProfessorApproveActivityReport from "@sparcs-clubs/web/features/activity-report/services/useProfessorApproveActivityReport";
+import { ProfessorActivityReportTableData } from "@sparcs-clubs/web/features/activity-report/types/table";
+
+import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
@@ -32,25 +35,6 @@ import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 interface ProfessorActivityReportTableProps {
   clubId: number;
 }
-
-interface ProfessorActivityReportTableData extends BaseActivityReport {
-  id: number;
-  activityStatusEnumId: ActivityStatusEnum;
-  professorApproval: string;
-}
-
-const getProfessorApprovalTagColor = (professorApproval: string): TagColor => {
-  switch (professorApproval) {
-    case "대기":
-      return "GRAY";
-    case "완료":
-      return "GREEN";
-    case "반려":
-      return "RED";
-    default:
-      return "GRAY";
-  }
-};
 
 const columnHelper = createColumnHelper<ProfessorActivityReportTableData>();
 const columns = [
@@ -65,11 +49,13 @@ const columns = [
   columnHelper.accessor("professorApproval", {
     id: "professorApproval",
     header: "지도교수",
-    cell: info => (
-      <Tag color={getProfessorApprovalTagColor(info.getValue())}>
-        {info.getValue()}
-      </Tag>
-    ),
+    cell: info => {
+      const { color, text } = getTagDetail(
+        info.getValue(),
+        ProfessorApprovalTagList,
+      );
+      return <Tag color={color}>{text}</Tag>;
+    },
     size: 0,
   }),
   columnHelper.accessor("name", {
@@ -100,11 +86,12 @@ const columns = [
 
 const ProfessorActivityReportTable: React.FC<
   ProfessorActivityReportTableProps
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 > = ({ clubId }) => {
-  // TODO: 실제 데이터 받아오기
-  const data =
-    mockProfessorActivityReportData as ProfessorActivityReportTableData[];
+  const { data, isLoading, isError } =
+    useGetProfessorManageClubActivityReportList(clubId);
+
+  const { mutate: approveActivityReport } = useProfessorApproveActivityReport();
+
   const table = useReactTable({
     columns,
     data,
@@ -113,14 +100,24 @@ const ProfessorActivityReportTable: React.FC<
   });
   const router = useRouter();
 
+  const hasActivitiesToApprove = data.some(
+    activity => activity.professorApproval === ProfessorApprovalEnum.Pending,
+  );
+
   const openApproveAllModal = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <CancellableModalContent
           confirmButtonText="승인"
           onConfirm={() => {
-            // TODO: (@dora) 전체 승인 로직 넣기
+            approveActivityReport({
+              body: {
+                activities: data.map(activity => ({ id: activity.id })),
+              },
+            });
             close();
+
+            window.location.href = "/manage-club/activity-report";
           }}
           onClose={close}
         >
@@ -131,13 +128,18 @@ const ProfessorActivityReportTable: React.FC<
     ));
   };
 
+  if (!data) return null;
+
   return (
-    <>
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
       <FlexWrapper direction="row" gap={16} style={{ alignItems: "center" }}>
         <Typography fs={20} lh={24} fw="MEDIUM" style={{ flex: 1 }}>
           활동 보고서
         </Typography>
-        <Button type="default" onClick={openApproveAllModal}>
+        <Button
+          type={hasActivitiesToApprove ? "default" : "disabled"}
+          onClick={openApproveAllModal}
+        >
           전체 승인
         </Button>
       </FlexWrapper>
@@ -146,7 +148,7 @@ const ProfessorActivityReportTable: React.FC<
         count={data.length}
         onClick={row => router.push(`/manage-club/activity-report/${row.id}`)}
       />
-    </>
+    </AsyncBoundary>
   );
 };
 
