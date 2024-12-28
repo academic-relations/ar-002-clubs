@@ -74,6 +74,7 @@ defineAxiosMock(mock => {
         },
       ],
       updatedAt: new Date(),
+      professorApprovedAt: new Date(),
     };
     return [200, dummy];
   });

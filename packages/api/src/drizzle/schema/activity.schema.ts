@@ -62,7 +62,8 @@ export const Activity = mysqlTable(
       .notNull()
       .references(() => ActivityStatusEnum.id),
     chargedExecutiveId: int("charged_executive_id"),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
+    professorApprovedAt: timestamp("professor_approved_at"),
+    createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },

@@ -35,6 +35,7 @@ export interface PastActivityReport extends BaseActivityReport {
 export interface NewActivityReport extends PastActivityReport {
   activityStatusEnumId: ActivityStatusEnum;
   professorApproval?: string;
+  professorApprovedAt?: Date;
 }
 
 export interface ActivityTerm {

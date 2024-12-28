@@ -11,7 +11,7 @@ import {
  * @description 현재 학기의 활동보고서를 조회합니다.
  */
 
-const url = () => `/student/activities`;
+const url = () => `/professor/activities`;
 const method = "GET";
 
 const requestParam = z.object({});
@@ -38,7 +38,7 @@ const responseBodyMap = {
 
 const responseErrorMap = {};
 
-const apiAct005 = {
+const apiAct019 = {
   url,
   method,
   requestParam,
@@ -48,16 +48,16 @@ const apiAct005 = {
   responseErrorMap,
 };
 
-type ApiAct005RequestParam = z.infer<typeof apiAct005.requestParam>;
-type ApiAct005RequestQuery = z.infer<typeof apiAct005.requestQuery>;
-type ApiAct005RequestBody = z.infer<typeof apiAct005.requestBody>;
-type ApiAct005ResponseOk = z.infer<(typeof apiAct005.responseBodyMap)[200]>;
+type ApiAct019RequestParam = z.infer<typeof apiAct019.requestParam>;
+type ApiAct019RequestQuery = z.infer<typeof apiAct019.requestQuery>;
+type ApiAct019RequestBody = z.infer<typeof apiAct019.requestBody>;
+type ApiAct019ResponseOk = z.infer<(typeof apiAct019.responseBodyMap)[200]>;
 
-export default apiAct005;
+export default apiAct019;
 
 export type {
-  ApiAct005RequestBody,
-  ApiAct005RequestParam,
-  ApiAct005RequestQuery,
-  ApiAct005ResponseOk,
+  ApiAct019RequestBody,
+  ApiAct019RequestParam,
+  ApiAct019RequestQuery,
+  ApiAct019ResponseOk,
 };

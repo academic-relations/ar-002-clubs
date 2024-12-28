@@ -3,10 +3,11 @@ import {
   ActivityStatusEnum,
   ActivityTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { and, asc, eq, gt, isNull, lte, not } from "drizzle-orm";
+import { and, asc, eq, gt, inArray, isNull, lte, not } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   Activity,
@@ -22,6 +23,25 @@ import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 @Injectable()
 export default class ActivityRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
+
+  selectActivityByIds(activityIds: number[]) {
+    return this.db
+      .select()
+      .from(Activity)
+      .where(inArray(Activity.id, activityIds));
+  }
+
+  updateActivityProfessorApprovedAt(param: {
+    activityIds: number[];
+    professorId: number;
+  }) {
+    const today = getKSTDate();
+
+    return this.db
+      .update(Activity)
+      .set({ professorApprovedAt: today })
+      .where(inArray(Activity.id, param.activityIds));
+  }
 
   // 활동을 DB에서 soft delete 합니다.
   // 작성에 성공하면 True, 실패하면 False를 리턴합니다.
