@@ -14,7 +14,7 @@ const useGetPastActivityReportList = (
   query: ApiAct006RequestQuery,
 ) =>
   useQuery<ApiAct006ResponseOk, Error>({
-    queryKey: [apiAct006.url(activityTermId)],
+    queryKey: [apiAct006.url(activityTermId), query.clubId],
     queryFn: async (): Promise<ApiAct006ResponseOk> => {
       const { data } = await axiosClientWithAuth.get(
         apiAct006.url(activityTermId),

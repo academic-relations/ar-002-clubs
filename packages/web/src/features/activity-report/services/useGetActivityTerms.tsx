@@ -11,7 +11,7 @@ import {
 
 const useGetActivityTerms = (query: ApiAct009RequestQuery) =>
   useQuery<ApiAct009ResponseOk, Error>({
-    queryKey: [apiAct009.url()],
+    queryKey: [apiAct009.url(), query.clubId],
     queryFn: async (): Promise<ApiAct009ResponseOk> => {
       const { data } = await axiosClientWithAuth.get(apiAct009.url(), {
         params: query,
