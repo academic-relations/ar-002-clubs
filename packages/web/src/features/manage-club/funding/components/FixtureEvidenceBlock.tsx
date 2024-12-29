@@ -41,16 +41,16 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
   const content = isFixture ? "비품" : "동아리 용품";
 
   const fixtureEvidenceList = [
-    { label: `${content} 구매`, value: String(FixtureEvidenceEnum.Purchase) },
-    { label: `${content} 관리`, value: String(FixtureEvidenceEnum.Management) },
+    { label: `${content} 구매`, value: FixtureEvidenceEnum.Purchase },
+    { label: `${content} 관리`, value: FixtureEvidenceEnum.Management },
   ];
 
   const fixtureClassList = [
-    { label: "전자기기", value: String(FixtureClassEnum.Electronics) },
-    { label: "가구", value: String(FixtureClassEnum.Furniture) },
-    { label: "악기", value: String(FixtureClassEnum.MusicalInstruments) },
-    { label: "소프트웨어", value: String(FixtureClassEnum.Software) },
-    { label: "기타", value: String(FixtureClassEnum.Others) },
+    { label: "전자기기", value: FixtureClassEnum.Electronics },
+    { label: "가구", value: FixtureClassEnum.Furniture },
+    { label: "악기", value: FixtureClassEnum.MusicalInstruments },
+    { label: "소프트웨어", value: FixtureClassEnum.Software },
+    { label: "기타", value: FixtureClassEnum.Others },
   ];
 
   return (
@@ -161,58 +161,110 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                   ? "* 동아리 성격에 합치하는 활동에 사용하는 소프트웨어라는 소명 필요"
                   : `* ${content} 사용 목적 입력 필요`}
               </Typography>
-              <FormController
-                name={isFixture ? "fixturePurpose" : "clubSuppliesPurpose"}
-                required={required}
-                control={control}
-                renderItem={props => (
-                  <TextInput
-                    {...props}
-                    placeholder={
-                      (isFixture
-                        ? fixtureClassEnumId
-                        : clubSuppliesClassEnumId) === FixtureClassEnum.Software
-                        ? "소프트웨어 증빙을 입력하세요"
-                        : `${content} 증빙을 입력하세요`
-                    }
-                    area
-                  />
-                )}
-              />
               {isFixture ? (
                 <FormController
-                  name="fixtureSoftwareEvidenceFiles"
+                  name={
+                    fixtureClassEnumId === FixtureClassEnum.Software
+                      ? "fixtureSoftwareEvidence"
+                      : "fixturePurpose"
+                  }
+                  required={required}
+                  control={control}
+                  renderItem={props => (
+                    <TextInput
+                      {...props}
+                      placeholder={
+                        (isFixture
+                          ? fixtureClassEnumId
+                          : clubSuppliesClassEnumId) ===
+                        FixtureClassEnum.Software
+                          ? "소프트웨어 증빙을 입력하세요"
+                          : `${content} 증빙을 입력하세요`
+                      }
+                      area
+                    />
+                  )}
+                />
+              ) : (
+                <FormController
+                  name={
+                    fixtureClassEnumId === FixtureClassEnum.Software
+                      ? "fixtureSoftwareEvidence"
+                      : "fixturePurpose"
+                  }
+                  required={required}
+                  control={control}
+                  renderItem={props => (
+                    <TextInput
+                      {...props}
+                      placeholder={
+                        (isFixture
+                          ? fixtureClassEnumId
+                          : clubSuppliesClassEnumId) ===
+                        FixtureClassEnum.Software
+                          ? "소프트웨어 증빙을 입력하세요"
+                          : `${content} 증빙을 입력하세요`
+                      }
+                      area
+                    />
+                  )}
+                />
+              )}
+
+              {isFixture ? (
+                <FormController
+                  name={
+                    fixtureClassEnumId === FixtureClassEnum.Software
+                      ? "fixtureSoftwareEvidenceFiles"
+                      : "fixtureImageFiles"
+                  }
                   required={required}
                   control={control}
                   renderItem={props => (
                     <FileUpload
                       {...props}
-                      fileId="fixtureSoftwareEvidenceFiles"
+                      fileId="fixtureFiles"
                       multiple
                       initialFiles={fixtureFiles}
                       onChange={files =>
-                        setValue("fixtureSoftwareEvidenceFiles", files, {
-                          shouldValidate: true,
-                        })
+                        setValue(
+                          fixtureClassEnumId === FixtureClassEnum.Software
+                            ? "fixtureSoftwareEvidenceFiles"
+                            : "fixtureImageFiles",
+                          files,
+                          {
+                            shouldValidate: true,
+                          },
+                        )
                       }
                     />
                   )}
                 />
               ) : (
                 <FormController
-                  name="clubSuppliesSoftwareEvidenceFiles"
+                  name={
+                    clubSuppliesClassEnumId === FixtureClassEnum.Software
+                      ? "clubSuppliesSoftwareEvidenceFiles"
+                      : "clubSuppliesImageFiles"
+                  }
                   required={required}
                   control={control}
                   renderItem={props => (
                     <FileUpload
                       {...props}
-                      fileId="clubSuppliesSoftwareEvidenceFiles"
+                      fileId="clubSuppliesFiles"
                       multiple
                       initialFiles={clubSuppliesFiles}
                       onChange={files =>
-                        setValue("clubSuppliesSoftwareEvidenceFiles", files, {
-                          shouldValidate: true,
-                        })
+                        setValue(
+                          clubSuppliesClassEnumId === FixtureClassEnum.Software
+                            ? "clubSuppliesSoftwareEvidenceFiles"
+                            : "clubSuppliesImageFiles",
+                          files,
+                          {
+                            shouldValidate: true,
+                          },
+                        )
                       }
                     />
                   )}
