@@ -1,3 +1,5 @@
+import { FundingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+
 import { Participant } from "@sparcs-clubs/web/types/participant";
 
 export interface FundingInterface {
@@ -61,4 +63,16 @@ export interface FundingInterface {
 
   isEtcExpense: boolean;
   etcExpenseExplanation?: string;
+}
+
+export interface PastFundingData {
+  id: number;
+  activityName: string;
+  name: string;
+  expenditureAmount: number;
+  approvedAmount?: number;
+}
+
+export interface NewFundingData extends PastFundingData {
+  fundingOrderStatusEnumId: FundingOrderStatusEnum;
 }

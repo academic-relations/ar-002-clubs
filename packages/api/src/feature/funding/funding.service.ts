@@ -10,7 +10,7 @@ import {
   ApiFnd003RequestParam,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd003";
 import { ApiFnd004RequestParam } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd004";
-import { ApiFnd005RequestBody } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
+import { ApiFnd005RequestQuery } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
 import {
   ApiFnd006RequestBody,
   ApiFnd006RequestParam,
@@ -264,7 +264,7 @@ export default class FundingService {
     return this.fundingRepository.deleteStudentFunding(param.id);
   }
 
-  async getStudentFundings(studentId: number, body: ApiFnd005RequestBody) {
+  async getStudentFundings(studentId: number, query: ApiFnd005RequestQuery) {
     const user = await this.userPublicService.getStudentById({ id: studentId });
     if (!user) {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
@@ -276,7 +276,7 @@ export default class FundingService {
 
     const fundings =
       await this.fundingRepository.selectFundingsSemesterByClubId(
-        body.clubId,
+        query.clubId,
         thisSemester,
       );
 
