@@ -20,7 +20,7 @@ import {
 
 const AddEvidenceFrame: React.FC = () => {
   const formCtx = useFormContext<FundingFormData>();
-  const { control, watch } = formCtx;
+  const { control, watch, setValue } = formCtx;
 
   const purposeId = watch("purposeId");
   const isFixture = watch("isFixture");
@@ -184,73 +184,101 @@ const AddEvidenceFrame: React.FC = () => {
           <NonCorpEvidenceBlock required={isNonCorporateTransaction} />
         )}
         {isFoodExpense && (
-          <FormController
-            name="foodExpenseExplanation"
+          <OtherEvidenceBlock
+            content="식비"
+            explanationControlName="foodExpenseExplanation"
+            fileControlName="foodExpenseFiles"
             required={isFoodExpense}
-            control={control}
-            renderItem={props => (
-              <OtherEvidenceBlock {...props} content="식비" />
-            )}
+            fileOnChange={files =>
+              setValue("foodExpenseFiles", files, {
+                shouldValidate: true,
+              })
+            }
+            initialFiles={watch("foodExpenseFiles")}
           />
         )}
         {isLaborContract && (
-          <FormController
-            name="laborContractExplanation"
+          <OtherEvidenceBlock
+            content="근로 계약"
+            explanationControlName="laborContractExplanation"
+            fileControlName="laborContractFiles"
             required={isLaborContract}
-            control={control}
-            renderItem={props => (
-              <OtherEvidenceBlock {...props} content="근로 계약" />
-            )}
+            fileOnChange={files =>
+              setValue("laborContractFiles", files, {
+                shouldValidate: true,
+              })
+            }
+            initialFiles={watch("laborContractFiles")}
           />
         )}
         {isExternalEventParticipationFee && (
-          <FormController
-            name="externalEventParticipationFeeExplanation"
+          <OtherEvidenceBlock
+            content="외부 행사 참가비"
+            explanationControlName="externalEventParticipationFeeExplanation"
+            fileControlName="externalEventParticipationFeeFiles"
             required={isExternalEventParticipationFee}
-            control={control}
-            renderItem={props => (
-              <OtherEvidenceBlock {...props} content="외부 행사 참가비" />
-            )}
+            fileOnChange={files =>
+              setValue("externalEventParticipationFeeFiles", files, {
+                shouldValidate: true,
+              })
+            }
+            initialFiles={watch("externalEventParticipationFeeFiles")}
           />
         )}
         {isPublication && (
-          <FormController
-            name="publicationExplanation"
+          <OtherEvidenceBlock
+            content="발간물"
+            explanationControlName="publicationExplanation"
+            fileControlName="publicationFiles"
             required={isPublication}
-            control={control}
-            renderItem={props => (
-              <OtherEvidenceBlock {...props} content="발간물" />
-            )}
+            fileOnChange={files =>
+              setValue("publicationFiles", files, {
+                shouldValidate: true,
+              })
+            }
+            initialFiles={watch("publicationFiles")}
           />
         )}
         {isProfitMakingActivity && (
-          <FormController
-            name="profitMakingActivityExplanation"
+          <OtherEvidenceBlock
+            content="수익 사업"
+            explanationControlName="profitMakingActivityExplanation"
+            fileControlName="profitMakingActivityFiles"
             required={isProfitMakingActivity}
-            control={control}
-            renderItem={props => (
-              <OtherEvidenceBlock {...props} content="수익 사업" />
-            )}
+            fileOnChange={files =>
+              setValue("profitMakingActivityFiles", files, {
+                shouldValidate: true,
+              })
+            }
+            initialFiles={watch("profitMakingActivityFiles")}
           />
         )}
         {isJointExpense && (
-          <FormController
-            name="jointExpenseExplanation"
+          <OtherEvidenceBlock
+            content="공동 경비"
+            explanationControlName="jointExpenseExplanation"
+            fileControlName="jointExpenseFiles"
             required={isJointExpense}
-            control={control}
-            renderItem={props => (
-              <OtherEvidenceBlock {...props} content="공동 경비" />
-            )}
+            fileOnChange={files =>
+              setValue("jointExpenseFiles", files, {
+                shouldValidate: true,
+              })
+            }
+            initialFiles={watch("jointExpenseFiles")}
           />
         )}
         {isEtcExpense && (
-          <FormController
-            name="etcExpenseExplanation"
+          <OtherEvidenceBlock
+            content="기타"
+            explanationControlName="etcExpenseExplanation"
+            fileControlName="etcExpenseFiles"
             required={isEtcExpense}
-            control={control}
-            renderItem={props => (
-              <OtherEvidenceBlock {...props} content="기타" />
-            )}
+            fileOnChange={files =>
+              setValue("etcExpenseFiles", files, {
+                shouldValidate: true,
+              })
+            }
+            initialFiles={watch("etcExpenseFiles")}
           />
         )}
       </FlexWrapper>

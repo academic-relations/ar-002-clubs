@@ -14,13 +14,33 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
   const { mutateAsync: updateFunding } = usePutFunding();
 
   return useMutation({
-    mutationFn: (data: FundingFormData) =>
+    mutationFn: ({
+      purposeId,
+      name,
+      expenditureDate,
+      expenditureAmount,
+      tradeDetailExplanation,
+      isFixture,
+      isTransportation,
+      isNonCorporateTransaction,
+      isFoodExpense,
+      isLaborContract,
+      isExternalEventParticipationFee,
+      isPublication,
+      isProfitMakingActivity,
+      isJointExpense,
+      isEtcExpense,
+      ...data
+    }: FundingFormData) =>
       updateFunding(
         {
           fundingId,
           body: {
-            ...data,
             clubId,
+            purposeId: Number(purposeId),
+            name,
+            expenditureDate,
+            expenditureAmount: Number(expenditureAmount),
 
             tradeEvidenceFiles: data.tradeEvidenceFiles.map(file => ({
               fileId: file.id,
@@ -28,52 +48,87 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
             tradeDetailFiles: data.tradeDetailFiles.map(file => ({
               fileId: file.id,
             })),
+            tradeDetailExplanation,
 
-            ...(isActivityReportUnverifiable(Number(data.purposeId))
+            isFixture,
+            isTransportation,
+            isNonCorporateTransaction,
+            isFoodExpense,
+            isLaborContract,
+            isExternalEventParticipationFee,
+            isPublication,
+            isProfitMakingActivity,
+            isJointExpense,
+            isEtcExpense,
+
+            ...(isActivityReportUnverifiable(Number(purposeId))
               ? {
                   clubSuppliesName: data.clubSuppliesName,
                   clubSuppliesEvidenceEnumId: data.clubSuppliesEvidenceEnumId,
                   clubSuppliesClassEnumId: data.clubSuppliesClassEnumId,
                   clubSuppliesPurpose: data.clubSuppliesPurpose,
-                  clubSuppliesImageFiles: data.clubSuppliesImageFiles.map(
-                    file => ({
-                      fileId: file.id,
-                    }),
-                  ),
+                  clubSuppliesImageFiles: data.clubSuppliesImageFiles
+                    ? data.clubSuppliesImageFiles.map(file => ({
+                        fileId: file.id,
+                      }))
+                    : [],
                   clubSuppliesSoftwareEvidence:
                     data.clubSuppliesSoftwareEvidence,
                   clubSuppliesSoftwareEvidenceFiles:
-                    data.clubSuppliesSoftwareEvidenceFiles.map(file => ({
-                      fileId: file.id,
-                    })),
-                  numberOfClubSupplies: data.numberOfClubSupplies,
-                  priceOfClubSupplies: data.priceOfClubSupplies,
+                    data.clubSuppliesSoftwareEvidenceFiles
+                      ? data.clubSuppliesSoftwareEvidenceFiles.map(file => ({
+                          fileId: file.id,
+                        }))
+                      : [],
+                  numberOfClubSupplies: Number(data.numberOfClubSupplies),
+                  priceOfClubSupplies: Number(data.priceOfClubSupplies),
                 }
               : {
+                  clubSuppliesName: undefined,
+                  clubSuppliesEvidenceEnumId: undefined,
+                  clubSuppliesClassEnumId: undefined,
+                  clubSuppliesPurpose: undefined,
                   clubSuppliesImageFiles: [],
+                  clubSuppliesSoftwareEvidence: undefined,
                   clubSuppliesSoftwareEvidenceFiles: [],
+                  numberOfClubSupplies: undefined,
+                  priceOfClubSupplies: undefined,
                 }),
 
-            ...(data.isFixture
+            ...(isFixture
               ? {
                   fixtureName: data.fixtureName,
                   fixtureEvidenceEnumId: data.fixtureEvidenceEnumId,
                   fixtureClassEnumId: data.fixtureClassEnumId,
                   fixturePurpose: data.fixturePurpose,
-                  fixtureImageFiles: data.fixtureImageFiles.map(file => ({
-                    fileId: file.id,
-                  })),
+                  fixtureImageFiles: data.fixtureImageFiles
+                    ? data.fixtureImageFiles.map(file => ({
+                        fileId: file.id,
+                      }))
+                    : [],
                   fixtureSoftwareEvidence: data.fixtureSoftwareEvidence,
                   fixtureSoftwareEvidenceFiles:
-                    data.fixtureSoftwareEvidenceFiles.map(file => ({
-                      fileId: file.id,
-                    })),
+                    data.fixtureSoftwareEvidenceFiles
+                      ? data.fixtureSoftwareEvidenceFiles.map(file => ({
+                          fileId: file.id,
+                        }))
+                      : [],
                   numberOfFixture: data.numberOfFixture,
                   priceOfFixture: data.priceOfFixture,
                 }
-              : { fixtureImageFiles: [], fixtureSoftwareEvidenceFiles: [] }),
+              : {
+                  fixtureName: undefined,
+                  fixtureEvidenceEnumId: undefined,
+                  fixtureClassEnumId: undefined,
+                  fixturePurpose: undefined,
+                  fixtureImageFiles: [],
+                  fixtureSoftwareEvidence: undefined,
+                  fixtureSoftwareEvidenceFiles: [],
+                  numberOfFixture: undefined,
+                  priceOfFixture: undefined,
+                }),
 
-            ...(data.isTransportation
+            ...(isTransportation
               ? {
                   transportationEnumId: data.transportationEnumId,
                   origin: data.origin,
@@ -81,63 +136,107 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
                   purposeOfTransportation: data.purposeOfTransportation,
                   placeValidity: data.placeValidity,
                 }
-              : {}),
+              : {
+                  transportationEnumId: undefined,
+                  origin: undefined,
+                  destination: undefined,
+                  purposeOfTransportation: undefined,
+                  placeValidity: undefined,
+                }),
 
-            ...(data.isTransportation &&
+            ...(isTransportation &&
             isParticipantsRequired(data.transportationEnumId)
               ? {
-                  transportationPassengers: data.transportationPassengers.map(
-                    participant => ({
-                      studentNumber: participant.studentNumber.toString(),
-                    }),
-                  ),
+                  transportationPassengers: data.transportationPassengers
+                    ? data.transportationPassengers.map(participant => ({
+                        studentNumber: participant.studentNumber.toString(),
+                      }))
+                    : [],
                 }
               : { transportationPassengers: [] }),
 
-            ...(data.isNonCorporateTransaction
+            ...(isNonCorporateTransaction
               ? {
                   traderName: data.traderName,
                   traderAccountNumber: data.traderAccountNumber,
                   wasteExplanation: data.wasteExplanation,
                 }
-              : {}),
+              : {
+                  traderName: undefined,
+                  traderAccountNumber: undefined,
+                  wasteExplanation: undefined,
+                }),
 
-            foodExpenseFiles: data.isFoodExpense
-              ? data.foodExpenseFiles.map(file => ({
-                  fileId: file.id,
-                }))
-              : [],
-            laborContractFiles: data.isLaborContract
-              ? data.laborContractFiles.map(file => ({
-                  fileId: file.id,
-                }))
-              : [],
-            externalEventParticipationFeeFiles:
-              data.isExternalEventParticipationFee
-                ? data.externalEventParticipationFeeFiles.map(file => ({
+            ...(isFoodExpense
+              ? {
+                  foodExpenseExplanation: data.foodExpenseExplanation,
+                  foodExpenseFiles: data.foodExpenseFiles.map(file => ({
                     fileId: file.id,
-                  }))
-                : [],
-            publicationFiles: data.isPublication
-              ? data.publicationFiles.map(file => ({
-                  fileId: file.id,
-                }))
-              : [],
-            profitMakingActivityFiles: data.isProfitMakingActivity
-              ? data.profitMakingActivityFiles.map(file => ({
-                  fileId: file.id,
-                }))
-              : [],
-            jointExpenseFiles: data.isJointExpense
-              ? data.jointExpenseFiles.map(file => ({
-                  fileId: file.id,
-                }))
-              : [],
-            etcExpenseFiles: data.isEtcExpense
-              ? data.etcExpenseFiles.map(file => ({
-                  fileId: file.id,
-                }))
-              : [],
+                  })),
+                }
+              : { foodExpenseExplanation: undefined, foodExpenseFiles: [] }),
+            ...(isLaborContract
+              ? {
+                  laborContractExplanation: data.laborContractExplanation,
+                  laborContractFiles: data.laborContractFiles.map(file => ({
+                    fileId: file.id,
+                  })),
+                }
+              : {
+                  laborContractExplanation: undefined,
+                  laborContractFiles: [],
+                }),
+            ...(isExternalEventParticipationFee
+              ? {
+                  externalEventParticipationFeeExplanation:
+                    data.externalEventParticipationFeeExplanation,
+                  externalEventParticipationFeeFiles:
+                    data.externalEventParticipationFeeFiles.map(file => ({
+                      fileId: file.id,
+                    })),
+                }
+              : {
+                  externalEventParticipationFeeExplanation: undefined,
+                  externalEventParticipationFeeFiles: [],
+                }),
+            ...(isPublication
+              ? {
+                  publicationExplanation: data.publicationExplanation,
+                  publicationFiles: data.publicationFiles.map(file => ({
+                    fileId: file.id,
+                  })),
+                }
+              : { publicationExplanation: undefined, publicationFiles: [] }),
+            ...(isProfitMakingActivity
+              ? {
+                  profitMakingActivityExplanation:
+                    data.profitMakingActivityExplanation,
+                  profitMakingActivityFiles: data.profitMakingActivityFiles.map(
+                    file => ({
+                      fileId: file.id,
+                    }),
+                  ),
+                }
+              : {
+                  profitMakingActivityExplanation: undefined,
+                  profitMakingActivityFiles: [],
+                }),
+            ...(isJointExpense
+              ? {
+                  jointExpenseExplanation: data.jointExpenseExplanation,
+                  jointExpenseFiles: data.jointExpenseFiles.map(file => ({
+                    fileId: file.id,
+                  })),
+                }
+              : { jointExpenseExplanation: undefined, jointExpenseFiles: [] }),
+            ...(isEtcExpense
+              ? {
+                  etcExpenseExplanation: data.etcExpenseExplanation,
+                  etcExpenseFiles: data.etcExpenseFiles.map(file => ({
+                    fileId: file.id,
+                  })),
+                }
+              : { etcExpenseExplanation: undefined, etcExpenseFiles: [] }),
           },
         },
         {
