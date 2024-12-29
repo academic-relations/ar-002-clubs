@@ -43,6 +43,7 @@ import apiAct020, {
   ApiAct020ResponseCreated,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct020";
 import apiAct023 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
+import apiAct024 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -116,6 +117,10 @@ import type {
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct017";
 import type { ApiAct018ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct018";
 import type { ApiAct023ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
+import type {
+  ApiAct024RequestQuery,
+  ApiAct024ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
 
 @Controller()
 export default class ActivityController {
@@ -396,6 +401,19 @@ export default class ActivityController {
   @UsePipes(new ZodPipe(apiAct023))
   async getExecutiveActivitiesClubs(): Promise<ApiAct023ResponseOk> {
     const result = await this.activityService.getExecutiveActivitiesClubs();
+    return result;
+  }
+
+  @Executive()
+  @Get("/executive/activities/club-brief")
+  @UsePipes(new ZodPipe(apiAct024))
+  async getExecutiveActivitiesClubBrief(
+    @GetExecutive() user: GetExecutive,
+    @Query() query: ApiAct024RequestQuery,
+  ): Promise<ApiAct024ResponseOk> {
+    const result = await this.activityService.getExecutiveActivitiesClubBrief({
+      query,
+    });
     return result;
   }
 }
