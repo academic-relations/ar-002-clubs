@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
+import { FileDetail } from "@sparcs-clubs/web/common/components/File/attachment";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -11,8 +13,11 @@ import EvidenceBlockTitle from "./EvidenceBlockTitle";
 interface OtherEvidenceBlockProps {
   content: string;
   info?: string;
-  value?: string;
-  onChange: (value: string) => void;
+  explanationControlName: string;
+  fileControlName: string;
+  required?: boolean;
+  fileOnChange: (files: FileDetail[]) => void;
+  initialFiles: FileDetail[];
 }
 
 const EvidenceInfo = [
@@ -45,10 +50,14 @@ const EvidenceInfo = [
 const OtherEvidenceBlock: React.FC<OtherEvidenceBlockProps> = ({
   content,
   info = "",
-  value = "",
-  onChange,
+  fileControlName,
+  explanationControlName,
+  required = false,
+  fileOnChange,
+  initialFiles,
 }) => {
   const [toggle, setToggle] = useState<boolean>(true);
+
   return (
     <FlexWrapper direction="column" gap={8}>
       <EvidenceBlockTitle
@@ -68,13 +77,30 @@ const OtherEvidenceBlock: React.FC<OtherEvidenceBlockProps> = ({
             >
               {EvidenceInfo.find(e => e.content === content)?.info || info}
             </Typography>
-            <TextInput
-              placeholder={`${content} 증빙을 입력하세요.`}
-              area
-              value={value}
-              handleChange={onChange}
+            <FormController
+              name={explanationControlName}
+              required={required}
+              renderItem={props => (
+                <TextInput
+                  {...props}
+                  placeholder={`${content} 증빙을 입력하세요.`}
+                  area
+                />
+              )}
             />
-            <FileUpload />
+            <FormController
+              name={fileControlName}
+              required={required}
+              renderItem={props => (
+                <FileUpload
+                  {...props}
+                  fileId={fileControlName}
+                  multiple
+                  onChange={fileOnChange}
+                  initialFiles={initialFiles}
+                />
+              )}
+            />
           </FlexWrapper>
         </Card>
       </EvidenceBlockTitle>

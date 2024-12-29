@@ -39,8 +39,18 @@ const requestPreBody = z.object({
   tradeDetailExplanation: z.coerce.string(),
 
   clubSuppliesName: z.coerce.string().max(255).optional(),
-  clubSuppliesEvidenceEnumId: z.nativeEnum(FixtureEvidenceEnum).optional(),
-  clubSuppliesClassEnumId: z.nativeEnum(FixtureClassEnum).optional(),
+  clubSuppliesEvidenceEnumId: z
+    .preprocess(
+      val => z.coerce.number().int().parse(val),
+      z.nativeEnum(FixtureEvidenceEnum),
+    )
+    .optional(),
+  clubSuppliesClassEnumId: z
+    .preprocess(
+      val => z.coerce.number().int().parse(val),
+      z.nativeEnum(FixtureClassEnum),
+    )
+    .optional(),
   clubSuppliesPurpose: z.coerce.string().optional(),
   clubSuppliesImageFiles: z.array(
     z.object({
@@ -58,8 +68,18 @@ const requestPreBody = z.object({
 
   isFixture: z.coerce.boolean(),
   fixtureName: z.coerce.string().max(255).optional(),
-  fixtureEvidenceEnumId: z.nativeEnum(FixtureEvidenceEnum).optional(),
-  fixtureClassEnumId: z.nativeEnum(FixtureClassEnum).optional(),
+  fixtureEvidenceEnumId: z
+    .preprocess(
+      val => z.coerce.number().int().parse(val),
+      z.nativeEnum(FixtureEvidenceEnum),
+    )
+    .optional(),
+  fixtureClassEnumId: z
+    .preprocess(
+      val => z.coerce.number().int().parse(val),
+      z.nativeEnum(FixtureClassEnum),
+    )
+    .optional(),
   fixturePurpose: z.coerce.string().optional(),
   fixtureImageFiles: z.array(
     z.object({
@@ -76,7 +96,12 @@ const requestPreBody = z.object({
   priceOfFixture: z.coerce.number().int().min(1).optional(),
 
   isTransportation: z.coerce.boolean(),
-  transportationEnumId: z.nativeEnum(TransportationEnum).optional(),
+  transportationEnumId: z
+    .preprocess(
+      val => z.coerce.number().int().parse(val),
+      z.nativeEnum(TransportationEnum),
+    )
+    .optional(),
   origin: z.coerce.string().max(255).optional(),
   destination: z.coerce.string().max(255).optional(),
   purposeOfTransportation: z.coerce.string().optional(),
@@ -334,9 +359,9 @@ type ApiFnd001ResponseCreated = z.infer<
 export default apiFnd001;
 
 export type {
+  ApiFnd001RequestBody,
   ApiFnd001RequestParam,
   ApiFnd001RequestQuery,
-  ApiFnd001RequestBody,
   ApiFnd001ResponseCreated,
 };
 

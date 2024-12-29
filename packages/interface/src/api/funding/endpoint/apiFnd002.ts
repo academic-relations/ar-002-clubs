@@ -101,7 +101,8 @@ const responsePreBodyMap = z.object({
   placeValidity: z.coerce.string().optional(),
   transportationPassengers: z.array(
     z.object({
-      studentNumber: z.coerce.string(),
+      id: z.coerce.number().int().min(1),
+      studentNumber: z.coerce.number().int().min(1),
       name: z.coerce.string(),
     }),
   ),
@@ -363,8 +364,8 @@ type ApiFnd002ResponseOk = z.infer<(typeof apiFnd002.responseBodyMap)[200]>;
 export default apiFnd002;
 
 export type {
+  ApiFnd002RequestBody,
   ApiFnd002RequestParam,
   ApiFnd002RequestQuery,
-  ApiFnd002RequestBody,
   ApiFnd002ResponseOk,
 };
