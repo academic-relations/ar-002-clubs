@@ -29,8 +29,13 @@ const responseBodyMap = {
       activityStatusEnumId: z.nativeEnum(ActivityStatusEnum),
       name: z.string().max(255),
       activityTypeEnumId: z.nativeEnum(ActivityTypeEnum),
-      startTerm: z.coerce.date(),
-      endTerm: z.coerce.date(),
+      durations: z.array(
+        z.object({
+          startTerm: z.coerce.date(),
+          endTerm: z.coerce.date(),
+        }),
+      ),
+      professorApprovedAt: z.coerce.date().nullable(),
     })
     .array(),
 };

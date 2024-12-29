@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UsePipes,
 } from "@nestjs/common";
 import apiFnd001, {
@@ -26,7 +27,7 @@ import apiFnd004, {
   ApiFnd004ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd004";
 import apiFnd005, {
-  ApiFnd005RequestBody,
+  ApiFnd005RequestQuery,
   ApiFnd005ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
 import apiFnd006, {
@@ -102,9 +103,9 @@ export default class FundingController {
   @UsePipes(new ZodPipe(apiFnd005))
   async getStudentFundings(
     @GetStudent() user: GetStudent,
-    @Body() body: ApiFnd005RequestBody,
+    @Query() query: ApiFnd005RequestQuery,
   ): Promise<ApiFnd005ResponseOk> {
-    return this.fundingService.getStudentFundings(user.studentId, body);
+    return this.fundingService.getStudentFundings(user.studentId, query);
   }
 
   @Student()

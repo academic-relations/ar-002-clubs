@@ -3,9 +3,11 @@ import { Module } from "@nestjs/common";
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 
 import { ClubModule } from "../club/club.module";
+import ClubTRepository from "../club/repository/club.club-t.repository";
+import DivisionModule from "../division/division.module";
 import { FileModule } from "../file/file.module";
-
 import { ClubRegistrationModule } from "../registration/club-registration/club-registration.module";
+import UserModule from "../user/user.module";
 
 import ActivityActivityTermController from "./controller/activity.activity-term.controller";
 import ActivityController from "./controller/activity.controller";
@@ -16,7 +18,14 @@ import ActivityPublicService from "./service/activity.public.service";
 import ActivityService from "./service/activity.service";
 
 @Module({
-  imports: [ClubModule, DrizzleModule, FileModule, ClubRegistrationModule],
+  imports: [
+    ClubModule,
+    DivisionModule,
+    DrizzleModule,
+    FileModule,
+    ClubRegistrationModule,
+    UserModule,
+  ],
   controllers: [ActivityController, ActivityActivityTermController],
   providers: [
     ActivityRepository,
@@ -24,6 +33,7 @@ import ActivityService from "./service/activity.service";
     ActivityService,
     ActivityActivityTermService,
     ActivityPublicService,
+    ClubTRepository,
   ],
   exports: [ActivityPublicService],
 })

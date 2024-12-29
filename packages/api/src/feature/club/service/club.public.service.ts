@@ -6,7 +6,9 @@ import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 
 import { ClubDelegateDRepository } from "../delegate/club.club-delegate-d.repository";
 import ClubStudentTRepository from "../repository/club.club-student-t.repository";
+import ClubTRepository from "../repository/club.club-t.repository";
 import ClubRepository from "../repository/club.repository";
+
 import SemesterDRepository from "../repository/club.semester-d.repository";
 
 @Injectable()
@@ -14,6 +16,7 @@ export default class ClubPublicService {
   constructor(
     private clubDelegateDRepository: ClubDelegateDRepository,
     private clubRepository: ClubRepository,
+    private clubTRepository: ClubTRepository,
     private clubStudentTRepository: ClubStudentTRepository,
     private semesterDRepository: SemesterDRepository,
   ) {}
@@ -51,6 +54,36 @@ export default class ClubPublicService {
 
     if (result.find(row => row.studentId === studentId)) return true;
     return false;
+  }
+
+  /**
+   * @returns 이번 학기 활동중인 동아리 목록을 리턴합니다.
+   */
+  async getAtivatedClubs() {
+    const semesterId = await this.dateToSemesterId(getKSTDate());
+    if (semesterId === undefined)
+      throw new HttpException(
+        "Today is not in semester",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+
+    const clubTs = await this.clubTRepository.selectBySemesterId(semesterId);
+    const result = await Promise.all(
+      clubTs.map(async clubT => {
+        const club = await this.clubRepository.findByClubId(clubT.clubId);
+        if (club.length === 0 || club.length > 1)
+          throw new HttpException(
+            "unreachable",
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        return {
+          club: club[0],
+          clubT,
+        };
+      }),
+    );
+
+    return result;
   }
 
   /**

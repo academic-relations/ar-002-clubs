@@ -15,11 +15,11 @@ import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/Confi
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import { useDeleteActivityReportProvisional } from "@sparcs-clubs/web/features/activity-report/services/useDeleteActivityReportProvisional";
+import { useGetActivityReport } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
 import { patchActivityExecutive } from "@sparcs-clubs/web/features/executive/register-club/services/patchActivityExecutive";
 import { patchActivityExecutiveSendBack } from "@sparcs-clubs/web/features/executive/register-club/services/patchActivityExecutiveSendBack";
-import { useDeleteActivityReportProvisional } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useDeleteActivityReportProvisional";
-import { useGetActivityReport } from "@sparcs-clubs/web/features/manage-club/activity-report/services/useGetActivityReport";
-import { getActivityTypeTagLabel } from "@sparcs-clubs/web/features/register-club/utils/activityType";
+import { getActivityTypeLabel } from "@sparcs-clubs/web/types/activityType";
 
 import {
   formatDate,
@@ -153,7 +153,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
             <FlexWrapper gap={12} direction="column">
               <ListItem>활동명: {data.name}</ListItem>
               <ListItem>
-                활동 분류: {getActivityTypeTagLabel(data.activityTypeEnumId)}
+                활동 분류: {getActivityTypeLabel(data.activityTypeEnumId)}
               </ListItem>
               <ListItem>활동 기간: </ListItem>
               <FlexWrapper

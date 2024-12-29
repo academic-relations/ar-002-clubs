@@ -13,10 +13,12 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+
+import SelectParticipant from "@sparcs-clubs/web/features/activity-report/components/SelectParticipant";
 import useGetParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetParticipants";
-import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
-import { Participant } from "@sparcs-clubs/web/features/manage-club/activity-report/types/activityReport";
 import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
+
+import { Participant } from "@sparcs-clubs/web/types/participant";
 
 import SelectActivityTerm from "../SelectActivityTerm";
 
@@ -259,12 +261,13 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
               </Typography>
               <FormController
                 name="evidence"
+                required
                 control={control}
                 renderItem={props => (
                   <TextInput
                     {...props}
                     area
-                    placeholder="(선택) 활동 증빙에 대해서 작성하고 싶은 것이 있다면 입력해주세요"
+                    placeholder="활동 증빙에 대해서 작성하고 싶은 것이 있다면 입력해주세요"
                   />
                 )}
               />
@@ -282,7 +285,7 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
                         updateMultipleFile(
                           "evidenceFiles",
                           _data.map(d => ({
-                            fileId: d,
+                            fileId: d.id,
                           })),
                         );
                       }}

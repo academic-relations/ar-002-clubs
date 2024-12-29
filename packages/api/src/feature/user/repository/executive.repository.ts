@@ -30,6 +30,7 @@ export default class ExecutiveRepository {
     return result.length > 0;
   }
 
+  // 주의: Executive를 조회하는 것이 아닌 ExecutiveT를 조회합니다.
   async getExecutiveById(id: number) {
     const crt = getKSTDate();
     const result = await this.db
@@ -78,5 +79,14 @@ export default class ExecutiveRepository {
       return true;
     });
     return isUpdateSucceed;
+  }
+
+  async selectExecutiveById(id: { id: number }) {
+    const result = await this.db
+      .select()
+      .from(Executive)
+      .where(and(eq(Executive.userId, id.id), isNull(Executive.deletedAt)));
+
+    return result;
   }
 }

@@ -12,6 +12,23 @@ import { ClubT, SemesterD } from "src/drizzle/schema/club.schema";
 export default class ClubTRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
+  async findClubTById(clubId: number) {
+    const crt = getKSTDate();
+    return this.db
+      .select()
+      .from(ClubT)
+      .where(
+        and(
+          eq(ClubT.clubId, clubId),
+          or(
+            and(isNull(ClubT.endTerm), lte(ClubT.endTerm, crt)),
+            gte(ClubT.endTerm, crt),
+          ),
+        ),
+      )
+      .then(takeUnique);
+  }
+
   async findClubDetail(semesterId: number, clubId: number) {
     return this.db
       .select({
@@ -94,5 +111,13 @@ export default class ClubTRepository {
           clubs: [{ id: row.clubs.id }],
         })),
       );
+  }
+
+  async selectBySemesterId(semesterId: number) {
+    return this.db
+      .select()
+      .from(ClubT)
+      .where(and(eq(ClubT.semesterId, semesterId), isNull(ClubT.deletedAt)))
+      .then(result => result);
   }
 }

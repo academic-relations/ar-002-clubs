@@ -5,15 +5,19 @@ import {
   ApiAct008RequestBody,
   ApiAct008RequestParam,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
+import { ApiAct019ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct019";
 import {
   ActivityDeadlineEnum,
   ActivityStatusEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
+import ClubTRepository from "@sparcs-clubs/api/feature/club/repository/club.club-t.repository";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
+import DivisionPublicService from "@sparcs-clubs/api/feature/division/service/division.public.service";
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import { ClubRegistrationPublicService } from "@sparcs-clubs/api/feature/registration/club-registration/service/club-registration.public.service";
+import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
 import ActivityRepository from "../repository/activity.repository";
@@ -51,6 +55,7 @@ import type {
   ApiAct017ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct017";
 import type { ApiAct018ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct018";
+import type { ApiAct023ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 
 @Injectable()
 export default class ActivityService {
@@ -58,8 +63,11 @@ export default class ActivityService {
     private activityRepository: ActivityRepository,
     private activityActivityTermRepository: ActivityActivityTermRepository,
     private clubPublicService: ClubPublicService,
+    private divisionPublicService: DivisionPublicService,
     private filePublicService: FilePublicService,
     private clubRegistrationPublicService: ClubRegistrationPublicService,
+    private clubTRepository: ClubTRepository,
+    private userPublicService: UserPublicService,
   ) {}
 
   /**
@@ -133,6 +141,18 @@ export default class ActivityService {
       );
   }
 
+  private async checkIsProfessor(param: {
+    professorId: number;
+    clubId: number;
+  }) {
+    const clubT = await this.clubTRepository.findClubTById(param.clubId);
+    if (clubT.professorId !== param.professorId)
+      throw new HttpException(
+        "You are not a professor of the club",
+        HttpStatus.FORBIDDEN,
+      );
+  }
+
   private async checkDeadline(param: { enums: Array<ActivityDeadlineEnum> }) {
     const today = getKSTDate();
     const todayDeadline = await this.activityRepository
@@ -153,6 +173,28 @@ export default class ActivityService {
         "Today is not a day for activity deletion",
         HttpStatus.BAD_REQUEST,
       );
+  }
+
+  /**
+   * @param activityDId 조회하고 싶은 활동기간 id, 없을 경우 직전 활동기간의 id를 사용합니다.
+   * @param clubId 동아리 id
+   * @returns 해당 동아리의 활동기간에 대한 활동 목록을 가져옵니다.
+   */
+  async getActivities(param: {
+    activityDId?: number | undefined;
+    clubId: number;
+  }) {
+    const activityDId =
+      param.activityDId !== undefined
+        ? param.activityDId
+        : await this.getLastActivityD().then(e => e.id);
+
+    const activities =
+      await this.activityRepository.selectActivityByClubIdAndActivityDId(
+        param.clubId,
+        activityDId,
+      );
+    return activities;
   }
 
   async deleteStudentActivity(activityId: number, studentId: number) {
@@ -183,8 +225,9 @@ export default class ActivityService {
     // 학생이 동아리 대표자 또는 대의원이 맞는지 확인합니다.
     await this.checkIsStudentDelegate({ studentId, clubId });
 
-    const today = getKSTDate();
-    const activityD = await this.getActivityD({ date: today });
+    // const today = getKSTDate();
+    // const activityD = await this.getActivityD({ date: today });
+    const activityD = await this.getLastActivityD();
 
     const activities =
       await this.activityRepository.selectActivityByClubIdAndActivityDId(
@@ -198,14 +241,7 @@ export default class ActivityService {
           await this.activityRepository.selectDurationByActivityId(row.id);
         return {
           ...row,
-          startTerm: duration.reduce(
-            (prev, curr) => (prev < curr.startTerm ? prev : curr.startTerm),
-            duration[0].startTerm,
-          ),
-          endTerm: duration.reduce(
-            (prev, curr) => (prev > curr.endTerm ? prev : curr.endTerm),
-            duration[0].endTerm,
-          ),
+          durations: duration,
         };
       }),
     );
@@ -215,8 +251,8 @@ export default class ActivityService {
       activityStatusEnumId: row.activityStatusEnumId,
       name: row.name,
       activityTypeEnumId: row.activityTypeEnumId,
-      startTerm: row.startTerm,
-      endTerm: row.endTerm,
+      durations: row.durations,
+      professorApprovedAt: row.professorApprovedAt,
     }));
   }
 
@@ -313,6 +349,7 @@ export default class ActivityService {
         createdAt: e.createdAt,
       })),
       updatedAt: activity.updatedAt,
+      professorApprovedAt: activity.professorApprovedAt,
     };
   }
 
@@ -742,11 +779,17 @@ export default class ActivityService {
         createdAt: e.createdAt,
       })),
       updatedAt: activity.updatedAt,
+      professorApprovedAt: activity.professorApprovedAt,
     };
   }
 
-  async getProfessorActivity(activityId: number): Promise<ApiAct002ResponseOk> {
+  async getProfessorActivity(
+    activityId: number,
+    professorId: number,
+  ): Promise<ApiAct002ResponseOk> {
     const activity = await this.getActivity({ activityId });
+
+    await this.checkIsProfessor({ professorId, clubId: activity.clubId });
 
     const evidence = await this.activityRepository.selectFileByActivityId(
       activity.id,
@@ -797,6 +840,7 @@ export default class ActivityService {
         createdAt: e.createdAt,
       })),
       updatedAt: activity.updatedAt,
+      professorApprovedAt: activity.professorApprovedAt,
     };
   }
 
@@ -853,6 +897,8 @@ export default class ActivityService {
    */
   async getPublicActivitiesDeadline(): Promise<ApiAct018ResponseOk> {
     const today = getKSTDate();
+
+    const term = await this.getLastActivityD();
     const todayDeadline = await this.activityRepository
       .selectDeadlineByDate(today)
       .then(arr => {
@@ -864,6 +910,13 @@ export default class ActivityService {
         return arr[0];
       });
     return {
+      targetTerm: {
+        id: term.id,
+        name: term.name,
+        startTerm: term.startTerm,
+        endTerm: term.endTerm,
+        year: term.year,
+      },
       deadline: {
         activityDeadlineEnum: todayDeadline.deadlineEnumId,
         duration: {
@@ -871,6 +924,150 @@ export default class ActivityService {
           endTerm: todayDeadline.endDate,
         },
       },
+    };
+  }
+
+  async getProfessorActivities(
+    clubId: number,
+    professorId: number,
+  ): Promise<ApiAct019ResponseOk> {
+    await this.checkIsProfessor({ professorId, clubId });
+
+    const activityD = await this.getLastActivityD();
+    const activities =
+      await this.activityRepository.selectActivityByClubIdAndActivityDId(
+        clubId,
+        activityD.id,
+      );
+
+    const result = await Promise.all(
+      activities.map(async row => {
+        const duration =
+          await this.activityRepository.selectDurationByActivityId(row.id);
+        return {
+          ...row,
+          durations: duration.map(e => ({
+            startTerm: e.startTerm,
+            endTerm: e.endTerm,
+          })),
+        };
+      }),
+    );
+
+    return result.map(row => ({
+      id: row.id,
+      activityStatusEnumId: row.activityStatusEnumId,
+      name: row.name,
+      activityTypeEnumId: row.activityTypeEnumId,
+      durations: row.durations,
+      professorApprovedAt: row.professorApprovedAt,
+    }));
+  }
+
+  async postProfessorActivityApprove(
+    activityIds: number[],
+    professorId: number,
+  ) {
+    const activities =
+      await this.activityRepository.selectActivityByIds(activityIds);
+    await this.checkIsProfessor({ professorId, clubId: activities[0].clubId });
+
+    if (activities.some(activity => activity.clubId !== activities[0].clubId))
+      throw new HttpException("Invalid club id", HttpStatus.BAD_REQUEST);
+
+    await this.activityRepository.updateActivityProfessorApprovedAt({
+      activityIds,
+      professorId,
+    });
+  }
+
+  async getExecutiveActivitiesClubs(): Promise<ApiAct023ResponseOk> {
+    const clubs = await this.clubPublicService.getAtivatedClubs();
+    return {
+      items: await Promise.all(
+        clubs.map(async club => {
+          const activities = await this.getActivities({ clubId: club.club.id });
+          const pendingActivitiesCount = activities.filter(
+            activity =>
+              activity.activityStatusEnumId === ActivityStatusEnum.Applied,
+          ).length;
+          const approvedActivitiesCount = activities.filter(
+            activity =>
+              activity.activityStatusEnumId === ActivityStatusEnum.Approved,
+          ).length;
+          const rejectedActivitiesCount = activities.filter(
+            activity =>
+              activity.activityStatusEnumId === ActivityStatusEnum.Rejected,
+          ).length;
+
+          const professor =
+            club.clubT.professorId !== undefined
+              ? await this.userPublicService.getProfessorById({
+                  id: club.clubT.professorId,
+                })
+              : undefined;
+
+          const executiveIds = activities.reduce(
+            (acc: Array<{ id: number; count: number }>, cur) => {
+              const accRef = acc;
+              if (
+                cur.chargedExecutiveId === undefined ||
+                cur.chargedExecutiveId === null
+              ) {
+                return acc;
+              }
+
+              const index = acc.findIndex(e => e.id === cur.chargedExecutiveId);
+              if (index === -1) {
+                acc.push({ id: cur.chargedExecutiveId, count: 1 });
+              } else {
+                accRef[index].count += 1;
+              }
+              return accRef;
+            },
+            [],
+          );
+          const chargedExecutiveId = executiveIds.reduce(
+            (acc, cur) => {
+              if (cur.count > acc.count) {
+                return cur;
+              }
+              return acc;
+            },
+            { id: 0, count: 0 },
+          ).id;
+
+          const chargedExecutive =
+            chargedExecutiveId !== 0
+              ? await this.userPublicService.getExecutiveAndExecutiveTByExecutiveId(
+                  {
+                    executiveId: chargedExecutiveId,
+                  },
+                )
+              : undefined;
+
+          return {
+            clubId: club.club.id,
+            clubTypeEnum: club.clubT.clubStatusEnumId,
+            divisionName: await this.divisionPublicService
+              .getDivionById({ id: club.club.divisionId })
+              .then(e => e[0].name),
+            clubNameKr: club.club.name_kr,
+            clubNameEn: club.club.name_en,
+            pendingActivitiesCount,
+            approvedActivitiesCount,
+            rejectedActivitiesCount,
+            advisorName: professor !== undefined ? professor.name : undefined,
+            chargedExecutive:
+              chargedExecutive !== undefined
+                ? {
+                    id: chargedExecutive.executive.id,
+                    name: chargedExecutive.executive.name,
+                  }
+                : undefined,
+          };
+        }),
+      ),
     };
   }
 }

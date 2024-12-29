@@ -8,16 +8,16 @@ import { FundingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/fund
  * @description 현재 학기의 지원금 신청을 조회합니다.
  */
 
-const url = "/student/fundings";
+const url = () => "/student/fundings";
 const method = "GET";
 
 const requestParam = z.object({});
 
-const requestQuery = z.object({});
-
-const requestBody = z.object({
+const requestQuery = z.object({
   clubId: z.coerce.number().int().min(1),
 });
+
+const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
@@ -26,6 +26,7 @@ const responseBodyMap = {
         id: z.coerce.number().int().min(1),
         fundingOrderStatusEnumId: z.nativeEnum(FundingOrderStatusEnum),
         activityName: z.coerce.string().max(255),
+        name: z.coerce.string().max(255),
         expenditureAmount: z.coerce.number().int().min(0),
         approvedAmount: z.coerce.number().int().min(0).optional(),
       }),
@@ -53,8 +54,8 @@ type ApiFnd005ResponseOk = z.infer<(typeof apiFnd005.responseBodyMap)[200]>;
 export default apiFnd005;
 
 export type {
+  ApiFnd005RequestBody,
   ApiFnd005RequestParam,
   ApiFnd005RequestQuery,
-  ApiFnd005RequestBody,
   ApiFnd005ResponseOk,
 };

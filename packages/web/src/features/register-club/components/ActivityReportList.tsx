@@ -16,9 +16,9 @@ import { ActStatusTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import PastActivityReportModal from "@sparcs-clubs/web/features/register-club/components/_atomic/PastActivityReportModal";
 
 import {
+  getActivityTypeLabel,
   getActivityTypeTagColor,
-  getActivityTypeTagLabel,
-} from "@sparcs-clubs/web/features/register-club/utils/activityType";
+} from "@sparcs-clubs/web/types/activityType";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
@@ -52,7 +52,7 @@ const columns = [
     header: "활동 분류",
     cell: info => (
       <Tag color={getActivityTypeTagColor(info.getValue())}>
-        {getActivityTypeTagLabel(info.getValue())}
+        {getActivityTypeLabel(info.getValue())}
       </Tag>
     ),
     size: 128,

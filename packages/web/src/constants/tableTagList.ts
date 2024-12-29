@@ -4,6 +4,7 @@ import {
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
+import { FundingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import { PromotionalPrintingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
 import {
   RegistrationStatusEnum,
@@ -16,7 +17,6 @@ import { DivisionType } from "@sparcs-clubs/web/types/divisions.types";
 import { TagColor } from "../common/components/Tag";
 import {
   ActivityProfessorApprovalEnum,
-  FundingStatusEnum,
   MemberStatusEnum,
 } from "../features/manage-club/services/_mock/mockManageClub";
 import { StatusDetail } from "../utils/getTagDetail";
@@ -92,12 +92,12 @@ const MemTagList: {
 };
 
 const FundingTagList: {
-  [key in FundingStatusEnum]: StatusDetail;
+  [key in FundingOrderStatusEnum]: StatusDetail;
 } = {
-  [FundingStatusEnum.Applied]: { text: "신청", color: "BLUE" },
-  [FundingStatusEnum.Committee]: { text: "운위", color: "YELLOW" },
-  [FundingStatusEnum.Approved]: { text: "승인", color: "GREEN" },
-  [FundingStatusEnum.Rejected]: { text: "반려", color: "RED" },
+  [FundingOrderStatusEnum.Applied]: { text: "신청", color: "BLUE" },
+  [FundingOrderStatusEnum.Committee]: { text: "운위", color: "YELLOW" },
+  [FundingOrderStatusEnum.Approved]: { text: "승인", color: "GREEN" },
+  [FundingOrderStatusEnum.Rejected]: { text: "반려", color: "RED" },
 };
 
 // TODO: interface enum 사용
@@ -187,17 +187,17 @@ const DivisionTypeTagList: { [key in DivisionType]: StatusDetail } = {
 
 export {
   AcfTagList,
-  CmsTagList,
-  PrtTagList,
-  RntTagList,
-  MemTagList,
-  ApplyTagList,
   ActStatusTagList,
+  ActTypeTagList,
+  ApplyTagList,
+  CmsTagList,
+  DivisionTypeTagList,
+  FundingTagList,
+  MemTagList,
   ProfessorApprovalTagList,
   ProfessorIsApprovedTagList,
-  ActTypeTagList,
-  FundingTagList,
-  RegistrationTypeTagList,
+  PrtTagList,
   RegistrationStatusTagList,
-  DivisionTypeTagList,
+  RegistrationTypeTagList,
+  RntTagList,
 };
