@@ -1,25 +1,39 @@
 import React from "react";
 
+import { useFormContext } from "react-hook-form";
+
 import Card from "@sparcs-clubs/web/common/components/Card";
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import FixtureEvidenceBlock from "../components/FixtureEvidenceBlock";
 import NonCorpEvidenceBlock from "../components/NonCorpEvidenceBlock";
 import OtherEvidenceBlock from "../components/OtherEvidenceBlock";
 import TransportEvidenceBlock from "../components/TransportEvidenceBlock";
+import { FundingFormData } from "../types/funding";
 
-import { FundingFrameProps } from "./FundingInfoFrame";
+const AddEvidenceFrame: React.FC = () => {
+  const formCtx = useFormContext<FundingFormData>();
+  const { control, watch } = formCtx;
 
-const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
-  funding,
-  setFunding,
-}) => {
-  const setFundingHandler = (key: string, value: boolean | string) => {
-    setFunding({ ...funding, [key]: value });
-  };
+  const purposeId = watch("purposeId");
+  const isFixture = watch("isFixture");
+  const isTransportation = watch("isTransportation");
+  const isNonCorporateTransaction = watch("isNonCorporateTransaction");
+  const isFoodExpense = watch("isFoodExpense");
+  const isLaborContract = watch("isLaborContract");
+  const isPublication = watch("isPublication");
+  const isExternalEventParticipationFee = watch(
+    "isExternalEventParticipationFee",
+  );
+  const isProfitMakingActivity = watch("isProfitMakingActivity");
+  const isJointExpense = watch("isJointExpense");
+  const isEtcExpense = watch("isEtcExpense");
+
+  console.log(purposeId);
 
   return (
     <FoldableSectionTitle title="추가 증빙">
@@ -38,179 +52,188 @@ const AddEvidenceFrame: React.FC<FundingFrameProps> = ({
             <FlexWrapper direction="column" gap={12}>
               <CheckboxOption
                 optionText="(활동보고서로 증빙이 불가능한) 동아리 용품"
-                checked={funding.purposeId === "0"}
+                checked={Number(purposeId) === 0}
                 onClick={() => {}}
               />
-              <CheckboxOption
-                optionText="비품"
-                checked={funding.isFixture}
-                onClick={() =>
-                  setFundingHandler("isFixture", !funding.isFixture)
-                }
+              <FormController
+                name="isFixture"
+                control={control}
+                renderItem={({ value, onChange }) => (
+                  <CheckboxOption
+                    optionText="비품"
+                    checked={value}
+                    onClick={() => onChange(!value)}
+                  />
+                )}
               />
-              <CheckboxOption
-                optionText="교통비"
-                checked={funding.isTransportation}
-                onClick={() =>
-                  setFundingHandler(
-                    "isTransportation",
-                    !funding.isTransportation,
-                  )
-                }
+              <FormController
+                name="isTransportation"
+                control={control}
+                renderItem={({ value, onChange }) => (
+                  <CheckboxOption
+                    optionText="교통비"
+                    checked={value}
+                    onClick={() => onChange(!value)}
+                  />
+                )}
               />
-              <CheckboxOption
-                optionText="비법인 거래"
-                checked={funding.isNonCorporateTransaction}
-                onClick={() =>
-                  setFundingHandler(
-                    "isNonCorporateTransaction",
-                    !funding.isNonCorporateTransaction,
-                  )
-                }
+              <FormController
+                name="isNonCorporateTransaction"
+                control={control}
+                renderItem={({ value, onChange }) => (
+                  <CheckboxOption
+                    optionText="비법인 거래"
+                    checked={value}
+                    onClick={() => onChange(!value)}
+                  />
+                )}
               />
-              <CheckboxOption
-                optionText="식비"
-                checked={funding.isFoodExpense}
-                onClick={() =>
-                  setFundingHandler("isFoodExpense", !funding.isFoodExpense)
-                }
+              <FormController
+                name="isFoodExpense"
+                control={control}
+                renderItem={({ value, onChange }) => (
+                  <CheckboxOption
+                    optionText="식비"
+                    checked={value}
+                    onClick={() => onChange(!value)}
+                  />
+                )}
               />
-              <CheckboxOption
-                optionText="근로 계약"
-                checked={funding.isLaborContract}
-                onClick={() =>
-                  setFundingHandler("isLaborContract", !funding.isLaborContract)
-                }
+              <FormController
+                name="isLaborContract"
+                control={control}
+                renderItem={({ value, onChange }) => (
+                  <CheckboxOption
+                    optionText="근로 계약"
+                    checked={value}
+                    onClick={() => onChange(!value)}
+                  />
+                )}
               />
-              <CheckboxOption
-                optionText="외부 행사 참가비"
-                checked={funding.isExternalEventParticipationFee}
-                onClick={() =>
-                  setFundingHandler(
-                    "isExternalEventParticipationFee",
-                    !funding.isExternalEventParticipationFee,
-                  )
-                }
+              <FormController
+                name="isExternalEventParticipationFee"
+                control={control}
+                renderItem={({ value, onChange }) => (
+                  <CheckboxOption
+                    optionText="외부 행사 참가비"
+                    checked={value}
+                    onClick={() => onChange(!value)}
+                  />
+                )}
               />
-              <CheckboxOption
-                optionText="발간물"
-                checked={funding.isPublication}
-                onClick={() =>
-                  setFundingHandler("isPublication", !funding.isPublication)
-                }
+              <FormController
+                name="isPublication"
+                control={control}
+                renderItem={({ value, onChange }) => (
+                  <CheckboxOption
+                    optionText="발간물"
+                    checked={value}
+                    onClick={() => onChange(!value)}
+                  />
+                )}
               />
-              <CheckboxOption
-                optionText="수익 사업"
-                checked={funding.isProfitMakingActivity}
-                onClick={() =>
-                  setFundingHandler(
-                    "isProfitMakingActivity",
-                    !funding.isProfitMakingActivity,
-                  )
-                }
+              <FormController
+                name="isProfitMakingActivity"
+                control={control}
+                renderItem={({ value, onChange }) => (
+                  <CheckboxOption
+                    optionText="수익 사업"
+                    checked={value}
+                    onClick={() => onChange(!value)}
+                  />
+                )}
               />
-              <CheckboxOption
-                optionText="공동 경비"
-                checked={funding.isJointExpense}
-                onClick={() =>
-                  setFundingHandler("isJointExpense", !funding.isJointExpense)
-                }
+              <FormController
+                name="isJointExpense"
+                control={control}
+                renderItem={({ value, onChange }) => (
+                  <CheckboxOption
+                    optionText="공동 경비"
+                    checked={value}
+                    onClick={() => onChange(!value)}
+                  />
+                )}
               />
-              <CheckboxOption
-                optionText="기타"
-                checked={funding.isEtcExpense}
-                onClick={() =>
-                  setFundingHandler("isEtcExpense", !funding.isEtcExpense)
-                }
+              <FormController
+                name="isEtcExpense"
+                control={control}
+                renderItem={({ value, onChange }) => (
+                  <CheckboxOption
+                    optionText="기타"
+                    checked={value}
+                    onClick={() => onChange(!value)}
+                  />
+                )}
               />
             </FlexWrapper>
           </FlexWrapper>
         </Card>
         {/* 활보로 증빙 불가능한 동아리 용품 */}
-        {funding.purposeId === "0" && (
-          <FixtureEvidenceBlock
-            isFixture={false}
-            funding={funding}
-            setFunding={setFunding}
+        {Number(purposeId) === 0 && <FixtureEvidenceBlock isFixture={false} />}
+        {isFixture && <FixtureEvidenceBlock isFixture />}
+        {isTransportation && <TransportEvidenceBlock />}
+        {isNonCorporateTransaction && <NonCorpEvidenceBlock />}
+        {isFoodExpense && (
+          <FormController
+            name="foodExpenseExplanation"
+            control={control}
+            renderItem={props => (
+              <OtherEvidenceBlock {...props} content="식비" />
+            )}
           />
         )}
-        {funding.isFixture && (
-          <FixtureEvidenceBlock
-            isFixture
-            funding={funding}
-            setFunding={setFunding}
+        {isLaborContract && (
+          <FormController
+            name="laborContractExplanation"
+            control={control}
+            renderItem={props => (
+              <OtherEvidenceBlock {...props} content="근로 계약" />
+            )}
           />
         )}
-        {funding.isTransportation && (
-          <TransportEvidenceBlock funding={funding} setFunding={setFunding} />
-        )}
-        {funding.isNonCorporateTransaction && (
-          <NonCorpEvidenceBlock funding={funding} setFunding={setFunding} />
-        )}
-        {funding.isFoodExpense && (
-          <OtherEvidenceBlock
-            content="식비"
-            value={funding.foodExpenseExplanation}
-            onChange={value =>
-              setFundingHandler("foodExpenseExplanation", value)
-            }
+        {isExternalEventParticipationFee && (
+          <FormController
+            name="externalEventParticipationFeeExplanation"
+            control={control}
+            renderItem={props => (
+              <OtherEvidenceBlock {...props} content="외부 행사 참가비" />
+            )}
           />
         )}
-        {funding.isLaborContract && (
-          <OtherEvidenceBlock
-            content="근로 계약"
-            value={funding.laborContractExplanation}
-            onChange={value =>
-              setFundingHandler("laborContractExplanation", value)
-            }
+        {isPublication && (
+          <FormController
+            name="publicationExplanation"
+            control={control}
+            renderItem={props => (
+              <OtherEvidenceBlock {...props} content="발간물" />
+            )}
           />
         )}
-        {funding.isExternalEventParticipationFee && (
-          <OtherEvidenceBlock
-            content="외부 행사 참가비"
-            value={funding.externalEventParticipationFeeExplanation}
-            onChange={value =>
-              setFundingHandler(
-                "externalEventParticipationFeeExplanation",
-                value,
-              )
-            }
+        {isProfitMakingActivity && (
+          <FormController
+            name="profitMakingActivityExplanation"
+            control={control}
+            renderItem={props => (
+              <OtherEvidenceBlock {...props} content="수익 사업" />
+            )}
           />
         )}
-        {funding.isPublication && (
-          <OtherEvidenceBlock
-            content="발간물"
-            value={funding.publicationExplanation}
-            onChange={value =>
-              setFundingHandler("publicationExplanation", value)
-            }
+        {isJointExpense && (
+          <FormController
+            name="jointExpenseExplanation"
+            control={control}
+            renderItem={props => (
+              <OtherEvidenceBlock {...props} content="공동 경비" />
+            )}
           />
         )}
-        {funding.isProfitMakingActivity && (
-          <OtherEvidenceBlock
-            content="수익 사업"
-            value={funding.profitMakingActivityExplanation}
-            onChange={value =>
-              setFundingHandler("profitMakingActivityExplanation", value)
-            }
-          />
-        )}
-        {funding.isJointExpense && (
-          <OtherEvidenceBlock
-            content="공동 경비"
-            value={funding.jointExpenseExplanation}
-            onChange={value =>
-              setFundingHandler("jointExpenseExplanation", value)
-            }
-          />
-        )}
-        {funding.isEtcExpense && (
-          <OtherEvidenceBlock
-            content="기타"
-            value={funding.etcExpenseExplanation}
-            onChange={value =>
-              setFundingHandler("etcExpenseExplanation", value)
-            }
+        {isEtcExpense && (
+          <FormController
+            name="etcExpenseExplanation"
+            control={control}
+            renderItem={props => (
+              <OtherEvidenceBlock {...props} content="기타" />
+            )}
           />
         )}
       </FlexWrapper>
