@@ -37,7 +37,13 @@ const EditFundingFrame: React.FC<EditFundingFrameProps> = ({ clubId }) => {
   const { mutateAsync: updateFunding } = useUpdateFunding(+fundingId, clubId);
 
   const handleSubmit = (data: FundingFormData) => {
-    updateFunding(data, {
+    const filteredData = Object.fromEntries(
+      Object.entries(data)
+        .filter(([_, value]) => value !== null) // null 값 제외
+        .map(([key, value]) => [key, value]), // map을 사용하여 그대로 반환
+    ) as FundingFormData;
+
+    updateFunding(filteredData, {
       onSuccess: () => {
         overlay.open(({ isOpen, close }) => (
           <Modal isOpen={isOpen}>
