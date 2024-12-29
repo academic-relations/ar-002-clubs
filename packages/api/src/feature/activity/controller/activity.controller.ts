@@ -42,6 +42,7 @@ import apiAct020, {
   ApiAct020RequestBody,
   ApiAct020ResponseCreated,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct020";
+import apiAct023 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -114,6 +115,7 @@ import type {
   ApiAct017ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct017";
 import type { ApiAct018ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct018";
+import type { ApiAct023ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 
 @Controller()
 export default class ActivityController {
@@ -387,5 +389,13 @@ export default class ActivityController {
       user.professorId,
     );
     return {};
+  }
+
+  @Executive()
+  @Get("/executive/activities/clubs")
+  @UsePipes(new ZodPipe(apiAct023))
+  async getExecutiveActivitiesClubs(): Promise<ApiAct023ResponseOk> {
+    const result = await this.activityService.getExecutiveActivitiesClubs();
+    return result;
   }
 }

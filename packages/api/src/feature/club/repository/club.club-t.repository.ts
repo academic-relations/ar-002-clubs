@@ -112,4 +112,12 @@ export default class ClubTRepository {
         })),
       );
   }
+
+  async selectBySemesterId(semesterId: number) {
+    return this.db
+      .select()
+      .from(ClubT)
+      .where(and(eq(ClubT.semesterId, semesterId), isNull(ClubT.deletedAt)))
+      .then(result => result);
+  }
 }
