@@ -13,7 +13,10 @@ import FixtureEvidenceBlock from "../components/FixtureEvidenceBlock";
 import NonCorpEvidenceBlock from "../components/NonCorpEvidenceBlock";
 import OtherEvidenceBlock from "../components/OtherEvidenceBlock";
 import TransportEvidenceBlock from "../components/TransportEvidenceBlock";
-import { FundingFormData } from "../types/funding";
+import {
+  FundingFormData,
+  isActivityReportUnverifiable,
+} from "../types/funding";
 
 const AddEvidenceFrame: React.FC = () => {
   const formCtx = useFormContext<FundingFormData>();
@@ -33,8 +36,6 @@ const AddEvidenceFrame: React.FC = () => {
   const isJointExpense = watch("isJointExpense");
   const isEtcExpense = watch("isEtcExpense");
 
-  console.log(purposeId);
-
   return (
     <FoldableSectionTitle title="추가 증빙">
       <FlexWrapper direction="column" gap={40}>
@@ -52,7 +53,7 @@ const AddEvidenceFrame: React.FC = () => {
             <FlexWrapper direction="column" gap={12}>
               <CheckboxOption
                 optionText="(활동보고서로 증빙이 불가능한) 동아리 용품"
-                checked={Number(purposeId) === 0}
+                checked={isActivityReportUnverifiable(Number(purposeId))}
                 onClick={() => {}}
               />
               <FormController
@@ -169,13 +170,23 @@ const AddEvidenceFrame: React.FC = () => {
           </FlexWrapper>
         </Card>
         {/* 활보로 증빙 불가능한 동아리 용품 */}
-        {Number(purposeId) === 0 && <FixtureEvidenceBlock isFixture={false} />}
-        {isFixture && <FixtureEvidenceBlock isFixture />}
-        {isTransportation && <TransportEvidenceBlock />}
-        {isNonCorporateTransaction && <NonCorpEvidenceBlock />}
+        {isActivityReportUnverifiable(Number(purposeId)) && (
+          <FixtureEvidenceBlock
+            isFixture={false}
+            required={isActivityReportUnverifiable(Number(purposeId))}
+          />
+        )}
+        {isFixture && <FixtureEvidenceBlock isFixture required={isFixture} />}
+        {isTransportation && (
+          <TransportEvidenceBlock required={isTransportation} />
+        )}
+        {isNonCorporateTransaction && (
+          <NonCorpEvidenceBlock required={isNonCorporateTransaction} />
+        )}
         {isFoodExpense && (
           <FormController
             name="foodExpenseExplanation"
+            required={isFoodExpense}
             control={control}
             renderItem={props => (
               <OtherEvidenceBlock {...props} content="식비" />
@@ -185,6 +196,7 @@ const AddEvidenceFrame: React.FC = () => {
         {isLaborContract && (
           <FormController
             name="laborContractExplanation"
+            required={isLaborContract}
             control={control}
             renderItem={props => (
               <OtherEvidenceBlock {...props} content="근로 계약" />
@@ -194,6 +206,7 @@ const AddEvidenceFrame: React.FC = () => {
         {isExternalEventParticipationFee && (
           <FormController
             name="externalEventParticipationFeeExplanation"
+            required={isExternalEventParticipationFee}
             control={control}
             renderItem={props => (
               <OtherEvidenceBlock {...props} content="외부 행사 참가비" />
@@ -203,6 +216,7 @@ const AddEvidenceFrame: React.FC = () => {
         {isPublication && (
           <FormController
             name="publicationExplanation"
+            required={isPublication}
             control={control}
             renderItem={props => (
               <OtherEvidenceBlock {...props} content="발간물" />
@@ -212,6 +226,7 @@ const AddEvidenceFrame: React.FC = () => {
         {isProfitMakingActivity && (
           <FormController
             name="profitMakingActivityExplanation"
+            required={isProfitMakingActivity}
             control={control}
             renderItem={props => (
               <OtherEvidenceBlock {...props} content="수익 사업" />
@@ -221,6 +236,7 @@ const AddEvidenceFrame: React.FC = () => {
         {isJointExpense && (
           <FormController
             name="jointExpenseExplanation"
+            required={isJointExpense}
             control={control}
             renderItem={props => (
               <OtherEvidenceBlock {...props} content="공동 경비" />
@@ -230,6 +246,7 @@ const AddEvidenceFrame: React.FC = () => {
         {isEtcExpense && (
           <FormController
             name="etcExpenseExplanation"
+            required={isEtcExpense}
             control={control}
             renderItem={props => (
               <OtherEvidenceBlock {...props} content="기타" />

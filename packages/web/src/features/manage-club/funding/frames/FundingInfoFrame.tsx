@@ -76,7 +76,6 @@ const FundingInfoFrame: React.FC = () => {
                 onChange={(data: Date | null) => {
                   onChange(data);
                 }}
-                minDate={new Date()}
                 errorMessage={errorMessage}
                 showIcon
               />

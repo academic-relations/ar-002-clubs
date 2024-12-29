@@ -16,7 +16,9 @@ const FixedWidthWrapper = styled.div`
   min-width: 200px;
 `;
 
-const NonCorpEvidenceBlock: React.FC = () => {
+const NonCorpEvidenceBlock: React.FC<{ required?: boolean }> = ({
+  required = false,
+}) => {
   const formCtx = useFormContext<AddEvidence>();
   const { control } = formCtx;
 
@@ -28,6 +30,7 @@ const NonCorpEvidenceBlock: React.FC = () => {
             <FixedWidthWrapper>
               <FormController
                 name="traderName"
+                required={required}
                 control={control}
                 renderItem={props => (
                   <TextInput
@@ -40,6 +43,7 @@ const NonCorpEvidenceBlock: React.FC = () => {
             </FixedWidthWrapper>
             <FormController
               name="traderAccountNumber"
+              required={required}
               control={control}
               renderItem={props => (
                 <TextInput
@@ -52,6 +56,7 @@ const NonCorpEvidenceBlock: React.FC = () => {
           </FlexWrapper>
           <FormController
             name="wasteExplanation"
+            required={required}
             control={control}
             renderItem={props => (
               <TextInput

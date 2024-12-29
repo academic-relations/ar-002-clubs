@@ -58,7 +58,9 @@ const purposeInfo = (type: E | undefined) => {
   }
 };
 
-const TransportEvidenceBlock: React.FC = () => {
+const TransportEvidenceBlock: React.FC<{ required?: boolean }> = ({
+  required = false,
+}) => {
   const formCtx = useFormContext<AddEvidence>();
   const { control, watch, setValue } = formCtx;
 
@@ -73,6 +75,7 @@ const TransportEvidenceBlock: React.FC = () => {
             <FixedWidthWrapper>
               <FormController
                 name="transportationEnumId"
+                required={required}
                 control={control}
                 renderItem={props => (
                   <Select
@@ -86,6 +89,7 @@ const TransportEvidenceBlock: React.FC = () => {
             </FixedWidthWrapper>
             <FormController
               name="origin"
+              required={required}
               control={control}
               renderItem={props => (
                 <TextInput
@@ -97,6 +101,7 @@ const TransportEvidenceBlock: React.FC = () => {
             />
             <FormController
               name="destination"
+              required={required}
               control={control}
               renderItem={props => (
                 <TextInput
@@ -145,6 +150,7 @@ const TransportEvidenceBlock: React.FC = () => {
             )}
             <FormController
               name="purposeOfTransportation"
+              required={required}
               control={control}
               renderItem={props => (
                 <TextInput

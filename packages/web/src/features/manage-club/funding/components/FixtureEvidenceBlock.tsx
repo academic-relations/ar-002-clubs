@@ -23,10 +23,12 @@ import EvidenceBlockTitle from "./EvidenceBlockTitle";
 
 interface FixtureEvidenceBlockProps {
   isFixture: boolean;
+  required?: boolean;
 }
 
 const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
   isFixture,
+  required = false,
 }) => {
   const formCtx = useFormContext<AddEvidence>();
   const { control, watch, setValue } = formCtx;
@@ -62,6 +64,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                   ? "fixtureEvidenceEnumId"
                   : "clubSuppliesEvidenceEnumId"
               }
+              required={required}
               control={control}
               renderItem={props => (
                 <Select
@@ -76,6 +79,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               name={
                 isFixture ? "fixtureClassEnumId" : "clubSuppliesClassEnumId"
               }
+              required={required}
               control={control}
               renderItem={props => (
                 <Select
@@ -89,6 +93,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
           </FlexWrapper>
           <FormController
             name={isFixture ? "fixtureName" : "clubSuppliesName"}
+            required={required}
             control={control}
             renderItem={props => (
               <TextInput
@@ -102,6 +107,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
           <FlexWrapper direction="row" gap={32}>
             <FormController
               name={isFixture ? "numberOfFixture" : "numberOfClubSupplies"}
+              required={required}
               control={control}
               renderItem={props => (
                 <ItemNumberInput
@@ -113,6 +119,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
             />
             <FormController
               name={isFixture ? "priceOfFixture" : "priceOfClubSupplies"}
+              required={required}
               control={control}
               renderItem={({ value, onChange }) => (
                 <UnitInput
@@ -156,6 +163,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               </Typography>
               <FormController
                 name={isFixture ? "fixturePurpose" : "clubSuppliesPurpose"}
+                required={required}
                 control={control}
                 renderItem={props => (
                   <TextInput
@@ -174,7 +182,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               {isFixture ? (
                 <FormController
                   name="fixtureSoftwareEvidenceFiles"
-                  required
+                  required={required}
                   control={control}
                   renderItem={props => (
                     <FileUpload
@@ -193,7 +201,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               ) : (
                 <FormController
                   name="clubSuppliesSoftwareEvidenceFiles"
-                  required
+                  required={required}
                   control={control}
                   renderItem={props => (
                     <FileUpload
