@@ -1,51 +1,46 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { overlay } from "overlay-kit";
+import { useEffect, useState } from "react";
 
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import Modal from "@sparcs-clubs/web/common/components/Modal";
-import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
-import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import FundingForm from "@sparcs-clubs/web/features/manage-club/funding/frames/FundingForm";
-import { FundingFormData } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
+import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import CreateFundingFrame from "@sparcs-clubs/web/features/manage-club/funding/frames/CreateFundingFrame";
+import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 
 const CreateFunding = () => {
-  const router = useRouter();
-  const fundingCancelClick = () => {
-    router.push("/manage-club/funding");
-  };
+  const { isLoggedIn, login, profile } = useAuth();
+  const [loading, setLoading] = useState(true);
 
-  const openConfirmModal = (data: FundingFormData) => {
-    overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen}>
-        <ConfirmModalContent
-          onConfirm={() => {
-            // TODO: 신청 로직 넣기
-            console.log(data);
-            close();
-            router.push("/manage-club/funding");
-          }}
-        >
-          신청이 완료되었습니다. <br />
-          확인을 누르면 신청 내역 화면으로 이동합니다.
-        </ConfirmModalContent>
-      </Modal>
-    ));
-  };
+  const { data, isLoading, isError } = useGetMyManageClub();
+
+  useEffect(() => {
+    if (isLoggedIn !== undefined || profile !== undefined) {
+      setLoading(false);
+    }
+  }, [isLoggedIn, profile]);
+
+  if (loading) {
+    return <AsyncBoundary isLoading={loading} isError />;
+  }
+
+  if (!isLoggedIn) {
+    return <LoginRequired login={login} />;
+  }
+
+  if (profile?.type !== "undergraduate") {
+    return <NoManageClub />;
+  }
+
+  if (!data || !("clubId" in data)) {
+    return <AsyncBoundary isLoading={isLoading} isError={isError} />;
+  }
 
   return (
-    <FlexWrapper direction="column" gap={60}>
-      <PageHead
-        items={[
-          { name: "대표 동아리 관리", path: "/manage-club" },
-          { name: "지원금", path: "/manage-club/funding" },
-        ]}
-        title="지원금 신청"
-        enableLast
-      />
-      <FundingForm onCancel={fundingCancelClick} onSubmit={openConfirmModal} />
-    </FlexWrapper>
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <CreateFundingFrame clubId={data.clubId} />
+    </AsyncBoundary>
   );
 };
 

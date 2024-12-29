@@ -159,3 +159,6 @@ export interface AddEvidence {
 }
 
 export type FundingFormData = FundingInfo & BasicEvidence & AddEvidence;
+
+export const isActivityReportUnverifiable = (purposeId: number) =>
+  purposeId === 0;
