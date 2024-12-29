@@ -1,44 +1,53 @@
 import React from "react";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { overlay } from "overlay-kit";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { useCreateFunding } from "../hooks/useCreateFunding";
+import useGetInitialFundingFormData from "../hooks/useGetInitialFundingForm";
+import useUpdateFunding from "../hooks/useUpdateFunding";
 import { FundingFormData } from "../types/funding";
 
 import FundingForm from "./FundingForm";
 
-interface CreateFundingFrameProps {
+interface EditFundingFrameProps {
   clubId: number;
 }
 
-const CreateFundingFrame: React.FC<CreateFundingFrameProps> = ({ clubId }) => {
+const EditFundingFrame: React.FC<EditFundingFrameProps> = ({ clubId }) => {
   const router = useRouter();
-  const fundingCancelClick = () => {
-    router.push("/manage-club/funding");
+  const { id: fundingId } = useParams<{ id: string }>();
+  const cancelClick = () => {
+    router.push(`/manage-club/funding/${fundingId}`);
   };
 
-  const { mutate: createFunding } = useCreateFunding(clubId);
+  const {
+    data: funding,
+    isLoading,
+    isError,
+  } = useGetInitialFundingFormData(+fundingId);
+
+  const { mutateAsync: updateFunding } = useUpdateFunding(+fundingId, clubId);
 
   const handleSubmit = (data: FundingFormData) => {
-    createFunding(data, {
+    updateFunding(data, {
       onSuccess: () => {
         overlay.open(({ isOpen, close }) => (
           <Modal isOpen={isOpen}>
             <ConfirmModalContent
               onConfirm={() => {
                 close();
-                router.push("/manage-club/funding");
+                router.push(`/manage-club/funding/${fundingId}`);
               }}
             >
-              신청이 완료되었습니다. <br />
+              수정이 완료되었습니다. <br />
               확인을 누르면 신청 내역 화면으로 이동합니다.
             </ConfirmModalContent>
           </Modal>
@@ -48,7 +57,7 @@ const CreateFundingFrame: React.FC<CreateFundingFrameProps> = ({ clubId }) => {
         overlay.open(({ isOpen, close }) => (
           <Modal isOpen={isOpen}>
             <ConfirmModalContent onConfirm={close}>
-              지원금 신청에 실패했습니다.
+              지원금 수정에 실패했습니다.
               <Typography color="GRAY.300" fs={12} lh={16} fw="REGULAR">
                 {error.message}
               </Typography>
@@ -66,12 +75,18 @@ const CreateFundingFrame: React.FC<CreateFundingFrameProps> = ({ clubId }) => {
           { name: "대표 동아리 관리", path: "/manage-club" },
           { name: "지원금", path: "/manage-club/funding" },
         ]}
-        title="지원금 신청"
+        title="지원금 수정"
         enableLast
       />
-      <FundingForm onCancel={fundingCancelClick} onSubmit={handleSubmit} />
+      <AsyncBoundary isLoading={isLoading} isError={isError}>
+        <FundingForm
+          onCancel={cancelClick}
+          onSubmit={handleSubmit}
+          initialData={funding ?? []}
+        />
+      </AsyncBoundary>
     </FlexWrapper>
   );
 };
 
-export default CreateFundingFrame;
+export default EditFundingFrame;

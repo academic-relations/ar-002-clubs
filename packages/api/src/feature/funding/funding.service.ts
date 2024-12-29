@@ -210,15 +210,15 @@ export default class FundingService {
       transportationPassengerTIds.map(async id => {
         const student = await this.userPublicService.getStudentByTId({ id });
         return {
+          id: student.id,
           name: student.name,
-          studentNumber: student.number.toString(),
+          studentNumber: student.number,
         };
       }),
     );
 
     return {
       ...funding,
-
       transportationPassengers,
 
       tradeEvidenceFiles,

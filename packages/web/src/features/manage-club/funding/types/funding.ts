@@ -118,7 +118,7 @@ export interface AddEvidence {
   fixtureSoftwareEvidence?: string;
   fixtureSoftwareEvidenceFiles: FileDetail[];
   numberOfFixture?: number;
-  priceOfFixture: number;
+  priceOfFixture?: number;
   // 교통비 증빙
   isTransportation: boolean;
   transportationEnumId?: TransportationEnum;

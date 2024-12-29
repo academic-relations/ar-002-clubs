@@ -2,22 +2,22 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { isParticipantsRequired } from "@sparcs-clubs/web/utils/isTransportation";
 
+import { fundingDetailQueryKey } from "../services/useGetFunding";
+import { usePutFunding } from "../services/usePutFunding";
 import {
   FundingFormData,
   isActivityReportUnverifiable,
 } from "../types/funding";
 
-import { newFundingListQueryKey } from "./useGetNewFundingList";
-import usePostFunding from "./usePostFunding";
-
-export const useCreateFunding = (clubId: number) => {
+const useUpdateFunding = (fundingId: number, clubId: number) => {
   const queryClient = useQueryClient();
-  const { mutateAsync: createFunding } = usePostFunding();
+  const { mutateAsync: updateFunding } = usePutFunding();
 
   return useMutation({
     mutationFn: (data: FundingFormData) =>
-      createFunding(
+      updateFunding(
         {
+          fundingId,
           body: {
             ...data,
             clubId,
@@ -143,10 +143,12 @@ export const useCreateFunding = (clubId: number) => {
         {
           onSuccess: () => {
             queryClient.invalidateQueries({
-              queryKey: newFundingListQueryKey(clubId),
+              queryKey: fundingDetailQueryKey(fundingId),
             });
           },
         },
       ),
   });
 };
+
+export default useUpdateFunding;
