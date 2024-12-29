@@ -19,6 +19,7 @@ import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.publi
 import { ClubRegistrationPublicService } from "@sparcs-clubs/api/feature/registration/club-registration/service/club-registration.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
+import ActivityClubChargedExecutiveRepository from "../repository/activity.activity-club-charged-executive.repository";
 import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
 import ActivityRepository from "../repository/activity.repository";
 
@@ -65,6 +66,7 @@ import type {
 export default class ActivityService {
   constructor(
     private activityRepository: ActivityRepository,
+    private activityClubChargedExecutiveRepository: ActivityClubChargedExecutiveRepository,
     private activityActivityTermRepository: ActivityActivityTermRepository,
     private clubPublicService: ClubPublicService,
     private divisionPublicService: DivisionPublicService,
@@ -1085,6 +1087,35 @@ export default class ActivityService {
     }
 
     const activities = await this.getActivities({ clubId: param.query.clubId });
+    const chargedExecutiveId = await this.activityClubChargedExecutiveRepository
+      .selectActivityClubChargedExecutiveByClubId({
+        acitvityDId: await this.getLastActivityD().then(e => e.id),
+        clubId: param.query.clubId,
+      })
+      .then(arr => {
+        if (arr.length === 0) {
+          return undefined;
+        }
+        if (arr.length > 1) {
+          throw new HttpException(
+            "unreachable",
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
+        return arr[0].executiveId;
+      });
+    const clubChargedExecutive =
+      chargedExecutiveId === undefined
+        ? undefined
+        : await this.userPublicService
+            .getExecutiveAndExecutiveTByExecutiveId({
+              executiveId: chargedExecutiveId,
+            })
+            .then(e => ({
+              id: e.executive.id,
+              name: e.executive.name,
+            }));
+
     const items: ApiAct024ResponseOk["items"] = await Promise.all(
       activities.map(async activity => {
         const lastFeedback = await this.activityRepository
@@ -1137,6 +1168,7 @@ export default class ActivityService {
     );
 
     return {
+      chargedExecutive: clubChargedExecutive,
       items,
     };
   }

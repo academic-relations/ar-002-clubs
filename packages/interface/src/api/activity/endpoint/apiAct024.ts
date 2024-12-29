@@ -23,6 +23,12 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
+    chargedExecutive: z
+      .object({
+        id: zId,
+        name: z.string().max(30),
+      })
+      .optional(),
     items: z.array(
       z.object({
         activityId: zId,
