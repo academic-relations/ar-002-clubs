@@ -1,12 +1,30 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, count, desc, eq, gte, isNull, lte, or } from "drizzle-orm";
+import {
+  and,
+  count,
+  desc,
+  eq,
+  gte,
+  inArray,
+  isNotNull,
+  isNull,
+  lte,
+  not,
+  or,
+} from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
-import { takeUnique } from "@sparcs-clubs/api/common/util/util";
+import logger from "@sparcs-clubs/api/common/util/logger";
+import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
-import { Club, ClubStudentT, SemesterD } from "src/drizzle/schema/club.schema";
+import {
+  Club,
+  ClubDelegateD,
+  ClubStudentT,
+  SemesterD,
+} from "src/drizzle/schema/club.schema";
 
 @Injectable()
 export default class ClubStudentTRepository {
@@ -118,7 +136,8 @@ export default class ClubStudentTRepository {
     const clubs = await this.db
       .select({
         id: ClubStudentT.clubId,
-        name: Club.name,
+        name_kr: Club.name_kr,
+        name_en: Club.name_en,
       })
       .from(ClubStudentT)
       .leftJoin(Club, eq(Club.id, ClubStudentT.clubId))
@@ -130,5 +149,120 @@ export default class ClubStudentTRepository {
         ),
       );
     return clubs;
+  }
+
+  async addStudentToClub(
+    studentId: number,
+    clubId: number,
+    semesterId: number,
+  ): Promise<void> {
+    const cur = getKSTDate();
+    await this.db
+      .insert(ClubStudentT)
+      .values({
+        studentId,
+        clubId,
+        semesterId,
+        startTerm: cur,
+      })
+      .execute();
+  }
+
+  // ** 주의: delegate 또는 일반 부원을 제거합니다.
+  // ** 제거 시 hard deletion이 이루어집니다.
+  async removeStudentFromClub(
+    studentId: number,
+    clubId: number,
+    semesterId: number,
+    isTargetStudentDelegate: boolean,
+  ): Promise<void> {
+    if (isTargetStudentDelegate)
+      await this.db
+        .delete(ClubDelegateD)
+        .where(
+          and(
+            eq(ClubDelegateD.studentId, studentId),
+            eq(ClubDelegateD.clubId, clubId),
+            isNull(ClubDelegateD.deletedAt),
+          ),
+        )
+        .execute();
+    await this.db
+      .delete(ClubStudentT)
+      .where(
+        and(
+          eq(ClubStudentT.studentId, studentId),
+          eq(ClubStudentT.clubId, clubId),
+          eq(ClubStudentT.semesterId, semesterId),
+          isNull(ClubStudentT.deletedAt),
+        ),
+      )
+      .execute();
+  }
+
+  /**
+   * @param param
+   * @returns 어떤 동아리에 해당 기간동안 활동한 학생 목록을 가져옵니다.
+   * @description 동아리 회원이 변경되는 기간이 매우 한정적이기에 동시성을 지원하지 않습니다.
+   */
+  async selectStudentByClubIdAndDuration(param: {
+    clubId: number;
+    duration: {
+      startTerm: Date;
+      endTerm: Date;
+    };
+  }) {
+    const studentIds = await this.db
+      .select()
+      .from(ClubStudentT)
+      .where(
+        and(
+          eq(ClubStudentT.clubId, param.clubId),
+          not(
+            or(
+              gte(ClubStudentT.startTerm, param.duration.endTerm),
+              and(
+                isNotNull(ClubStudentT.endTerm),
+                lte(ClubStudentT.endTerm, param.duration.startTerm),
+              ),
+            ),
+          ),
+          isNull(ClubStudentT.deletedAt),
+        ),
+      )
+      .then(arr => arr.map(e => e.studentId));
+    logger.debug(studentIds);
+    if (studentIds.length === 0) return [];
+    const result = await this.db
+      .select()
+      .from(Student)
+      .where(and(inArray(Student.id, studentIds), isNull(Student.deletedAt)));
+
+    return result;
+  }
+
+  /** NOTE: (@dora)
+   * 말 그대로 semesterId 기준, 즉 해당 학기에 활동을 했느냐 기준으로 회원 목록을 반환하는 것이므로
+   * 해당 학기의 활동 기간을 다 채우지 못한 회원에 대해서 (예를 들어 중간 탈퇴) 고려하고 있지 않음.
+   * 만약 이런 회원들에 대한 처리가 필요해지면 endTerm을 고려하여 로직 수정 필요
+   */
+  async selectMemberByClubIdAndSemesterId(clubId: number, semesterId: number) {
+    return this.db
+      .select({
+        name: Student.name,
+        studentId: Student.id,
+        studentNumber: Student.number,
+        email: Student.email,
+        phoneNumber: Student.phoneNumber,
+      })
+      .from(ClubStudentT)
+      .innerJoin(Student, eq(Student.id, ClubStudentT.studentId))
+      .where(
+        and(
+          eq(ClubStudentT.clubId, clubId),
+          eq(ClubStudentT.semesterId, semesterId),
+          isNull(ClubStudentT.deletedAt),
+        ),
+      );
   }
 }

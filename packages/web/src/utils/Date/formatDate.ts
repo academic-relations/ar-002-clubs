@@ -18,13 +18,18 @@ const formatSlashDate = (date: Date) =>
 const formatDateTime = (date: Date) =>
   format(date, "yyyy년 M월 d일 (iii) HH:mm", { locale: ko });
 
+const formatDateTimeEn = (date: Date) =>
+  format(date, "MMM dd, yyyy (iii) HH:mm");
+
 const formatTime = (date: Date) => format(date, "HH:mm", { locale: ko });
 
-const formatSlashDateTime = (date: Date) =>
-  format(date, "yyyy/MM/dd HH:mm", { locale: ko });
+const formatSlashDateTime = (date: Date) => format(date, "yyyy/MM/dd HH:mm");
 
 const formatDotDate = (date: Date) =>
   format(date, "yyyy.MM.dd", { locale: ko });
+
+const formatDotSimpleDate = (date: Date) =>
+  format(date, "yy.MM.dd", { locale: ko });
 
 const formatDotDetailDate = (date: Date) =>
   format(date, "yyyy.MM.dd HH:mm", { locale: ko });
@@ -32,12 +37,14 @@ const formatDotDetailDate = (date: Date) =>
 export {
   formatDate,
   formatDateTime,
+  formatDateTimeEn,
   formatDotDate,
+  formatDotDetailDate,
+  formatDotSimpleDate,
   formatMonth,
-  formatSimpleSlashDate,
   formatSimplerSlashDate,
+  formatSimpleSlashDate,
   formatSlashDate,
   formatSlashDateTime,
   formatTime,
-  formatDotDetailDate,
 };

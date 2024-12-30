@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
-import { ClubDelegateDRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-delegate-d.repository";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 
 import { PromotionalPrintingOrderSizeRepository } from "../repository/promotional-printing-order-size.repository";
@@ -30,7 +29,6 @@ import type {
 export class PromotionalPrintingService {
   constructor(
     private readonly clubPublicService: ClubPublicService,
-    private readonly clubDelegateDRepository: ClubDelegateDRepository,
     private readonly promotionalPrintingOrderRepository: PromotionalPrintingOrderRepository,
     private readonly promotionalPrintingOrderSizeRepository: PromotionalPrintingOrderSizeRepository,
   ) {}
@@ -112,9 +110,8 @@ export class PromotionalPrintingService {
 
   async getStudentPromotionalPrintingsOrder(
     parameter: ApiPrt003RequestParam,
+    reqStudentID: number,
   ): Promise<ApiPrt003ResponseOk> {
-    const mockUpStudentId = 605; // 하승종 Id
-
     const search = await this.promotionalPrintingOrderRepository.findByOrderId(
       parameter.orderId,
     );
@@ -124,21 +121,18 @@ export class PromotionalPrintingService {
     }
     const order = search[0];
 
-    // TODO: order.clubsId와 order.studentId 를 통해 조회 권한 확인 필요
-    const representatives =
-      await this.clubDelegateDRepository.findRepresentativeIdListByClubId(
-        order.clubId,
-      );
-    logger.debug(
-      `[getStudentPromotionalPrintingsOrder] ${order.clubId}'s current representatives are ${representatives}`,
-    );
     if (
-      order.studentId !== mockUpStudentId &&
-      representatives.find(row => row.studentId === order.studentId) ===
-        undefined
-    ) {
-      throw new HttpException("permission denied", HttpStatus.FORBIDDEN);
-    }
+      !(
+        (await this.clubPublicService.isStudentDelegate(
+          order.studentId,
+          order.clubId,
+        )) || order.studentId === reqStudentID
+      )
+    )
+      throw new HttpException(
+        "You are not the delegate of the club or the applicant oneself.",
+        HttpStatus.FORBIDDEN,
+      );
 
     const orders =
       await this.promotionalPrintingOrderSizeRepository.findPromotionalPrintingOrderSizeByPromotionalPrintingOrderId(

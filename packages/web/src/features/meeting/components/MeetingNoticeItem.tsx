@@ -1,25 +1,21 @@
-import React from "react";
+import React, { useMemo } from "react";
 
-import Image from "next/image";
-
+import {
+  MeetingEnum,
+  MeetingStatusEnum,
+} from "@sparcs-clubs/interface/common/enum/meeting.enum";
 import styled from "styled-components";
 
-import logoSvg from "@sparcs-clubs/web/assets/logo-icon.svg";
-import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
-const enum MeetingNoticeTypeEnum {
-  Agenda = "Agenda",
-  Meeting = "Meeting",
-  Notice = "Notice",
-}
+import { isRegular, meetingType } from "../constants/meetingTemplate";
+import { meetingEnumToText, MeetingNoticeItemType } from "../types/meeting";
 
 interface MeetingNoticeItemProps {
-  tag: MeetingNoticeTypeEnum;
-  title: string;
-  date: Date;
+  data: MeetingNoticeItemType;
+  onClick?: VoidFunction;
 }
 
 const MeetingNoticeItemWrapper = styled.div`
@@ -31,6 +27,7 @@ const MeetingNoticeItemWrapper = styled.div`
   flex: 1;
   align-self: stretch;
   border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+  cursor: pointer;
 `;
 
 const TagWithTitleWrapper = styled.div`
@@ -38,23 +35,6 @@ const TagWithTitleWrapper = styled.div`
   align-items: center;
   gap: 8px;
   flex: 1;
-`;
-
-const ClubsLogoWrapper = styled.div`
-  display: flex;
-  width: 32px;
-  height: 32px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-`;
-
-const ArrowLogoWrapper = styled.div`
-  display: flex;
-  width: 32px;
-  height: 32px;
-  padding-top: 4px;
-  justify-content: flex-end;
 `;
 
 const LogoWithTagAndTitleWrapper = styled.div`
@@ -65,45 +45,64 @@ const LogoWithTagAndTitleWrapper = styled.div`
   flex: 1;
 `;
 
+const DateWrapper = styled(Typography)<{ isDivisionMeeting: boolean }>`
+  font-size: 16px;
+  line-height: 24px;
+  min-width: 85px;
+  text-align: center;
+  color: ${props =>
+    props.isDivisionMeeting
+      ? props.theme.colors.GRAY[300]
+      : props.theme.colors.BLACK};
+`;
+
 const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
-  tag,
-  title,
-  date,
+  data,
+  onClick = () => {},
 }) => {
   const tagColor = () => {
-    switch (tag) {
-      case MeetingNoticeTypeEnum.Agenda:
-        return "GREEN";
-      case MeetingNoticeTypeEnum.Meeting:
+    switch (data.meetingStatus) {
+      case MeetingStatusEnum.Agenda:
         return "BLUE";
+      case MeetingStatusEnum.Complete:
+        return "GRAY";
       default:
         return "YELLOW";
     }
   };
 
   const tagText = () => {
-    switch (tag) {
-      case MeetingNoticeTypeEnum.Agenda:
-        return "안건";
-      case MeetingNoticeTypeEnum.Meeting:
-        return "회의";
+    switch (data.meetingStatus) {
+      case MeetingStatusEnum.Agenda:
+        return "안건 공개";
+      case MeetingStatusEnum.Complete:
+        return "회의 종료";
       default:
-        return "공고";
+        return "공고 게시";
     }
   };
 
+  const meetingTitle = useMemo(() => {
+    if (data == null) return "";
+    let title = data.meetingTitle;
+
+    title = title.replace(
+      meetingType,
+      meetingEnumToText(data.meetingEnumId.toString()),
+    );
+    title = title.replace(
+      isRegular,
+      data.isRegular ? "정기회의" : "비정기회의",
+    );
+
+    return title;
+  }, [data]);
+
+  const isDivisionMeeting = data.meetingEnumId === MeetingEnum.divisionMeeting;
+
   return (
-    <MeetingNoticeItemWrapper>
+    <MeetingNoticeItemWrapper onClick={onClick}>
       <LogoWithTagAndTitleWrapper>
-        {tag === MeetingNoticeTypeEnum.Notice ? (
-          <ClubsLogoWrapper>
-            <Image src={logoSvg} alt="clubs-logo" />
-          </ClubsLogoWrapper>
-        ) : (
-          <ArrowLogoWrapper>
-            <Icon type="subdirectory_arrow_right" size={20} />
-          </ArrowLogoWrapper>
-        )}
         <TagWithTitleWrapper>
           <Tag color={tagColor()}>{tagText()}</Tag>
           <Typography
@@ -112,15 +111,15 @@ const MeetingNoticeItem: React.FC<MeetingNoticeItemProps> = ({
             fw="MEDIUM"
             style={{ textOverflow: "ellipsis", overflow: "hidden" }}
           >
-            {title}
+            {meetingTitle}
           </Typography>
         </TagWithTitleWrapper>
       </LogoWithTagAndTitleWrapper>
-      <Typography fs={16} lh={24}>
-        {formatDotDate(date)}
-      </Typography>
+      <DateWrapper isDivisionMeeting={isDivisionMeeting}>
+        {isDivisionMeeting ? "(미정)" : formatDotDate(data.meetingDate)}
+      </DateWrapper>
     </MeetingNoticeItemWrapper>
   );
 };
 
-export { MeetingNoticeTypeEnum, MeetingNoticeItem };
+export { MeetingNoticeItem };

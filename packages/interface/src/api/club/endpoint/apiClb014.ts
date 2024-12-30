@@ -1,6 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { ClubDelegateChangeRequestStatusEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
 
 /**
@@ -9,7 +10,7 @@ import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.
  */
 
 const url = (requestId: number) =>
-  `/student/clubs/delegates/requests/request/${requestId}/approve`;
+  `/student/clubs/delegates/requests/request/${requestId}`;
 const method = "PATCH";
 
 const requestParam = z.object({
@@ -18,9 +19,19 @@ const requestParam = z.object({
 
 const requestQuery = z.object({});
 
-const requestBody = z.object({
-  phoneNumber: zKrPhoneNumber,
-});
+const requestBody = z
+  .object({
+    phoneNumber: zKrPhoneNumber.optional(),
+    clubDelegateChangeRequestStatusEnum: z
+      .nativeEnum(ClubDelegateChangeRequestStatusEnum)
+      .refine(val => val !== ClubDelegateChangeRequestStatusEnum.Applied),
+  })
+  .refine(
+    val =>
+      val.phoneNumber !== undefined ||
+      val.clubDelegateChangeRequestStatusEnum ===
+        ClubDelegateChangeRequestStatusEnum.Rejected,
+  );
 
 const responseBodyMap = {
   [HttpStatusCode.Created]: z.object({}),

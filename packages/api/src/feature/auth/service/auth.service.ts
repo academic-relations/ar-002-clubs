@@ -1,27 +1,81 @@
 import { HttpException, Injectable } from "@nestjs/common";
-
 import { JwtService } from "@nestjs/jwt";
-
-import { ApiAut002ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut002";
+import { ApiAut001RequestQuery } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut001";
+import { ApiAut002ResponseCreated } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut002";
 import { ApiAut003ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut003";
+import { ApiAut004RequestQuery } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut004";
 
+import { getSsoConfig } from "@sparcs-clubs/api/env";
+
+import { Request } from "../dto/auth.dto";
+import { SSOUser } from "../dto/sparcs-sso.dto";
 import { AuthRepository } from "../repository/auth.repository";
+import { Client } from "../util/sparcs-sso";
 
 @Injectable()
 export class AuthService {
+  private readonly ssoClient;
+
   constructor(
     private readonly authRepository: AuthRepository,
     private readonly jwtService: JwtService,
-  ) {}
+  ) {
+    const ssoConfig = getSsoConfig();
+    const ssoClient = new Client(ssoConfig.ssoClientId, ssoConfig.ssoSecretKey);
+    this.ssoClient = ssoClient;
+  }
 
-  async postAuthSignin() {
-    // TODO: SPARCS SSO 로그인 구현
-    const studentNumber = process.env.USER_KU_STD_NO;
-    const email = process.env.USER_MAIL;
-    const sid = process.env.USER_SID;
-    const name = process.env.USER_KU_KNAME;
-    const type = process.env.USER_KU_PERSON_TYPE;
-    const department = process.env.USER_KU_KAIST_ORG_ID;
+  /**
+   * @param query
+   * @param req
+   * @description getAuthSignIn의 서비스 진입점입니다.
+   * @returns SPRACS SSO의 로그인 url을 리턴합니다.
+   */
+  public async getAuthSignIn(query: ApiAut001RequestQuery, req: Request) {
+    // eslint-disable-next-line no-param-reassign
+    req.session.next = query.next ?? "/";
+    const { url, state } = this.ssoClient.get_login_params();
+    // eslint-disable-next-line no-param-reassign
+    req.session.ssoState = state;
+    return url;
+  }
+
+  /**
+   * @param query
+   * @param session
+   * @description getAuthSignInCallback의 서비스 진입점입니다.
+   * @returns
+   */
+  public async getAuthSignInCallback(
+    query: ApiAut004RequestQuery,
+    session: Request["session"],
+  ) {
+    const stateBefore = session.ssoState;
+    if (!stateBefore || stateBefore !== query.state) {
+      return {
+        nextUrl: "/error/invalid-login",
+        refreshToken: null,
+        refreshTokenOptions: null,
+      };
+    }
+
+    const ssoProfile: SSOUser = await this.ssoClient.get_user_info(query.code);
+
+    let studentNumber = ssoProfile.kaist_info.ku_std_no || "00000000";
+    let email = ssoProfile.email || "unknown@kaist.ac.kr";
+    let sid = ssoProfile.sid || "00000000";
+    let name = ssoProfile.kaist_info.ku_kname || "unknown";
+    let type = ssoProfile.kaist_info.ku_person_type || "Student";
+    let department = ssoProfile.kaist_info.ku_kaist_org_id || "4421";
+
+    if (process.env.NODE_ENV === "local") {
+      studentNumber = process.env.USER_KU_STD_NO;
+      email = process.env.USER_MAIL;
+      sid = process.env.USER_SID;
+      name = process.env.USER_KU_KNAME;
+      type = process.env.USER_KU_PERSON_TYPE;
+      department = process.env.USER_KU_KAIST_ORG_ID;
+    }
 
     const user = await this.authRepository.findOrCreateUser(
       email,
@@ -38,18 +92,29 @@ export class AuthService {
     const accessToken = this.getAccessToken(user);
     const refreshToken = this.getRefreshToken(user);
     const current = new Date(); // todo 시간 변경 필요.
-    const expiresAt = new Date(
+    const accessTokenTokenExpiresAt = new Date(
+      current.getTime() + parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN),
+    );
+    const refreshTokenExpiresAt = new Date(
       current.getTime() + parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN),
     );
+    const nextUrl = session.next ?? "/";
+
+    const token = {
+      accessToken,
+      refreshToken,
+      refreshTokenExpiresAt,
+      accessTokenTokenExpiresAt,
+    };
+
     return (await this.authRepository.createRefreshTokenRecord(
       user.id,
       refreshToken,
-      expiresAt,
+      refreshTokenExpiresAt,
     ))
       ? {
-          accessToken,
-          refreshToken,
-          expiresAt,
+          next: nextUrl,
+          token,
         }
       : (() => {
           throw new HttpException("Cannot store refreshtoken", 500);
@@ -61,7 +126,7 @@ export class AuthService {
     sid: string;
     name: string;
     email: string;
-  }): Promise<ApiAut002ResponseOk> {
+  }): Promise<ApiAut002ResponseCreated> {
     const user = await this.authRepository.findUserById(_user.id);
     const accessToken = this.getAccessToken(user);
 

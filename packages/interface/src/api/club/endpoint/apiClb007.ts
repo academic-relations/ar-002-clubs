@@ -9,7 +9,7 @@ import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum"
  */
 
 const url = (clubId: number) =>
-  `/student/clubs/club/${clubId}/delegates/delegate/`;
+  `/student/clubs/club/${clubId}/delegates/delegate`;
 const method = "PUT";
 
 const requestParam = z.object({
@@ -19,7 +19,7 @@ const requestParam = z.object({
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  studentId: z.coerce.number().int().min(1),
+  studentId: z.coerce.number().int().min(0), // studentId로 0이 넘어오면 해당 지위를 비워둡니다.
   delegateEnumId: z.nativeEnum(ClubDelegateEnum),
 });
 

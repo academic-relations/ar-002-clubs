@@ -1,24 +1,72 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
+import { useRouter, useSearchParams } from "next/navigation";
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { MeetingNoticeItem } from "@sparcs-clubs/web/features/meeting/components/MeetingNoticeItem";
 import {
-  MeetingNoticeItem,
-  MeetingNoticeTypeEnum,
-} from "@sparcs-clubs/web/features/meeting/components/MeetingNoticeItem";
-import mockUpMeetingNotice from "@sparcs-clubs/web/features/meeting/services/_mock/mockupMeetingNotice";
+  MEETING_LIST_PAGINATION_LIMIT,
+  MEETING_PATH,
+} from "@sparcs-clubs/web/features/meeting/constants";
+import useGetMeetings from "@sparcs-clubs/web/features/meeting/services/useGetMeetings";
+import {
+  getMeetingEnumFromValue,
+  meetingEnumToText,
+  MeetingNoticeItemType,
+} from "@sparcs-clubs/web/features/meeting/types/meeting";
 
 const MeetingNoticeListWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
   align-self: stretch;
-  border-top: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+`;
+
+const MeetingNoticeHeaderWrapper = styled.div`
+  display: flex;
+  padding: 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  align-self: stretch;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
+`;
+
+const MeetingNoticeHeader = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex: 1 0 0;
+`;
+
+const MeetingNoticeStatusHeader = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+`;
+
+const MeetingNoticeContentHeader = styled.div`
+  display: flex;
+  flex: 1 0 0;
+  justify-content: center;
+  align-items: center;
+`;
+
+const MeetingNoticeDateHeader = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 84px;
 `;
 
 const ListWithPaginationWrapper = styled.div`
@@ -31,48 +79,71 @@ const ListWithPaginationWrapper = styled.div`
   align-self: stretch;
 `;
 
-interface MeetingNoticeItemType {
-  id: number;
-  tag: MeetingNoticeTypeEnum;
-  title: string;
-  date: Date;
-}
-
 const MeetingMainFrame: React.FC = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [page, setPage] = useState<number>(1);
-  const [mockUpData, setMockUpData] = useState<MeetingNoticeItemType[]>(
-    mockUpMeetingNotice.items.slice(0, 12),
-  );
 
-  useEffect(() => {
-    setMockUpData(mockUpMeetingNotice.items.slice((page - 1) * 12, page * 12));
-  }, [page]);
+  const meetingEnumId = getMeetingEnumFromValue(searchParams.get("type"));
+
+  const { data, isLoading, isError } = useGetMeetings({
+    meetingEnumId,
+    pageOffset: page,
+    itemCount: MEETING_LIST_PAGINATION_LIMIT,
+  });
 
   return (
-    <FlexWrapper gap={60} direction="column">
-      <PageHead
-        items={[{ name: "전체 회의", path: "/meeting" }]}
-        title="전체 회의"
-      />
-      <ListWithPaginationWrapper>
-        <MeetingNoticeListWrapper>
-          {mockUpData.map(e => (
-            <MeetingNoticeItem
-              key={e.id}
-              tag={e.tag}
-              title={e.title}
-              date={e.date}
-            />
-          ))}
-        </MeetingNoticeListWrapper>
-        <Pagination
-          totalPage={Math.ceil(mockUpMeetingNotice.items.length / 12)}
-          currentPage={page}
-          limit={10}
-          setPage={setPage}
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <FlexWrapper gap={60} direction="column">
+        <PageHead
+          items={[
+            {
+              name: meetingEnumId
+                ? meetingEnumToText(meetingEnumId.toString())
+                : "전체 회의",
+              path: MEETING_PATH(meetingEnumId),
+            },
+          ]}
+          title={
+            meetingEnumId
+              ? meetingEnumToText(meetingEnumId.toString())
+              : "전체 회의"
+          }
         />
-      </ListWithPaginationWrapper>
-    </FlexWrapper>
+        <ListWithPaginationWrapper>
+          <MeetingNoticeListWrapper>
+            <MeetingNoticeHeaderWrapper>
+              <MeetingNoticeHeader>
+                <MeetingNoticeStatusHeader>
+                  <Typography>상태</Typography>
+                </MeetingNoticeStatusHeader>
+                <MeetingNoticeContentHeader>
+                  <Typography>회의</Typography>
+                </MeetingNoticeContentHeader>
+                <MeetingNoticeDateHeader>
+                  <Typography>회의 일자</Typography>
+                </MeetingNoticeDateHeader>
+              </MeetingNoticeHeader>
+            </MeetingNoticeHeaderWrapper>
+            {data?.items.map((e: MeetingNoticeItemType) => (
+              <MeetingNoticeItem
+                key={e.id}
+                data={e}
+                onClick={() => router.push(`/meeting/${e.id}`)}
+              />
+            ))}
+          </MeetingNoticeListWrapper>
+          <Pagination
+            totalPage={
+              data ? Math.ceil(data.total / MEETING_LIST_PAGINATION_LIMIT) : 0
+            }
+            currentPage={page}
+            limit={MEETING_LIST_PAGINATION_LIMIT}
+            setPage={setPage}
+          />
+        </ListWithPaginationWrapper>
+      </FlexWrapper>
+    </AsyncBoundary>
   );
 };
 

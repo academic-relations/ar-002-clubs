@@ -5,7 +5,9 @@ const headerPaths: (keyof Paths)[] = [
   "VOTING",
   "COMMUNITY",
   "SERVICE",
+  "EXECUTIVE",
 ];
+
 const footerPaths: (keyof Paths)[] = ["MADE_BY", "LICENSE", "TERMS_OF_SERVICE"];
 
 const navPaths = {

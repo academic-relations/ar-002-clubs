@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { ClubDelegateChangeRequestStatusEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -17,6 +18,8 @@ interface ChangeRepresentativeModalContentProps {
   phonePlaceholder?: string;
   onClose: () => void;
   refetch: () => void;
+  requestId: number;
+  setType: (type: "Requested" | "Finished" | "Rejected") => void;
 }
 
 const ButtonWrapper = styled.div`
@@ -35,19 +38,35 @@ const ChangeRepresentativeModalContent: React.FC<
   phonePlaceholder = "010-XXXX-XXXX",
   onClose,
   refetch,
+  requestId,
+  setType,
 }) => {
   const [errorPhone, setErrorPhone] = useState<boolean>(false);
   const [phone, setPhone] = useState<string>("");
 
-  // TODO: clb013 014 수정되면 반영
   const onConfirm = () => {
-    patchMyDelegateRequest({ requestId: 1 }, { phoneNumber: phone });
+    patchMyDelegateRequest(
+      { requestId },
+      {
+        phoneNumber: phone,
+        clubDelegateChangeRequestStatusEnum:
+          ClubDelegateChangeRequestStatusEnum.Approved,
+      },
+    );
     onClose();
     refetch();
+    setType("Finished");
   };
 
   const onReject = () => {
-    patchMyDelegateRequest({ requestId: 1 }, { phoneNumber: phone });
+    patchMyDelegateRequest(
+      { requestId },
+      {
+        clubDelegateChangeRequestStatusEnum:
+          ClubDelegateChangeRequestStatusEnum.Rejected,
+      },
+    );
+    setType("Rejected");
     onClose();
   };
 

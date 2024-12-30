@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
@@ -16,6 +17,8 @@ import {
   newFundingListSectionTitle,
   newFundingOrderButtonText,
 } from "@sparcs-clubs/web/constants/manageClubFunding";
+
+import useGetNewFundingList from "../services/useGetNewFundingList";
 
 import NewFundingListTable from "./_atomic/NewFundingListTable";
 
@@ -35,11 +38,19 @@ const NewFundingOrderButtonRow = styled.div`
   flex-grow: 0; */
 `;
 
-const NewFundingListSection: React.FC = () => {
+const NewFundingListSection: React.FC<{ clubId: number }> = ({ clubId }) => {
   const router = useRouter();
   const createFundingClick = () => {
     router.push(`/manage-club/funding/create`);
   };
+
+  const {
+    data: newFundingList,
+    isLoading: isLoadingNewFundingList,
+    isError: isErrorNewFundingList,
+  } = useGetNewFundingList({
+    clubId,
+  });
 
   return (
     <FoldableSectionTitle title={newFundingListSectionTitle}>
@@ -51,8 +62,12 @@ const NewFundingListSection: React.FC = () => {
             {newFundingOrderButtonText}
           </IconButton>
         </NewFundingOrderButtonRow>
-        {/* TODO: ManageClubFundingMainFrame으로부터 주입받은 테이블 데이터 전달하기 */}
-        <NewFundingListTable />
+        <AsyncBoundary
+          isLoading={isLoadingNewFundingList}
+          isError={isErrorNewFundingList}
+        >
+          <NewFundingListTable newFundingList={newFundingList?.fundings} />
+        </AsyncBoundary>
       </FlexWrapper>
     </FoldableSectionTitle>
   );

@@ -4,7 +4,8 @@ import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
+import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 // 공지사항을 단순이 디스플레이하는 덤 컴포넌트라고 생각되어 컴포넌트단에서 구현했습니다.
@@ -21,20 +22,6 @@ const PrintingBusinessNoticeInner = styled.div`
   align-items: flex-start;
   gap: 20px;
   align-self: stretch;
-`;
-
-const StyledBottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  align-self: stretch;
-`;
-
-const StyledCheckboxOuter = styled.div`
-  display: flex;
-  padding-left: 4px;
-  align-items: center;
-  gap: 12px;
 `;
 
 const PrintingBusinessNotice: React.FC<PrintingBusinessNoticeProps> = ({
@@ -56,15 +43,11 @@ const PrintingBusinessNotice: React.FC<PrintingBusinessNoticeProps> = ({
         </Typography>
       </Card>
       <StyledBottom>
-        <StyledCheckboxOuter>
-          <Checkbox
-            checked={checked}
-            onClick={() => setChecked(prev => !prev)}
-          />
-          <Typography fs={16} lh={20} fw="REGULAR">
-            위의 안내사항을 모두 숙지하였으며, 이에 동의합니다
-          </Typography>
-        </StyledCheckboxOuter>
+        <CheckboxOption
+          checked={checked}
+          onClick={() => setChecked(prev => !prev)}
+          optionText="위의 안내사항을 모두 숙지하였으며, 이에 동의합니다"
+        />
         <Button
           type={checked ? "default" : "disabled"}
           onClick={() => setAgreement(true)}

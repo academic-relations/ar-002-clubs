@@ -1,26 +1,25 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import Link from "next/link";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 import paths from "@sparcs-clubs/web/constants/paths";
 import ClubCard from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
-import type { ClubCardProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
+import type { ClubProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
 interface ClubListGridItemProps {
-  clubList: Array<ClubCardProps["club"]>;
+  clubList: Array<ClubProps["club"]>;
   isRegistrationPeriod?: boolean;
 }
 
 const ClubListGridInner = styled.div`
-  width: calc(100% - 48px);
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
-  padding-left: 24px;
 
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.xl}) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -38,22 +37,40 @@ const ClubListGridInner = styled.div`
 const ClubListGrid: React.FC<ClubListGridItemProps> = ({
   clubList,
   isRegistrationPeriod = false,
-}) => (
-  <ClubListGridInner>
-    {clubList.map((club: ClubCardProps["club"]) => (
-      <Link
-        key={club.id}
-        href={`${paths.CLUBS.sub[0].path}/${club.id.toString()}`}
-        style={{ display: "flex", flexDirection: "column" }}
-      >
-        <ClubCard
-          key={club.name}
-          club={club}
-          isRegistrationPeriod={isRegistrationPeriod}
-        />
-      </Link>
-    ))}
-  </ClubListGridInner>
-);
+}) => {
+  const theme = useTheme();
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(
+        window.innerWidth <= parseInt(theme.responsive.BREAKPOINT.sm),
+      );
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  return (
+    <ClubListGridInner>
+      {clubList.map((club: ClubProps["club"]) => (
+        <Link
+          key={club.id}
+          href={`${paths.CLUBS.sub[0].path}/${club.id.toString()}`}
+          style={{ display: "flex", flexDirection: "column" }}
+        >
+          <ClubCard
+            key={club.name_kr}
+            club={club}
+            isRegistrationPeriod={isRegistrationPeriod}
+            isMobile={isMobileView}
+          />
+        </Link>
+      ))}
+    </ClubListGridInner>
+  );
+};
 
 export default ClubListGrid;

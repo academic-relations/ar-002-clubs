@@ -3,7 +3,7 @@
 import { env } from "@sparcs-clubs/web/env";
 import DemoComponent from "@sparcs-clubs/web/features/_example/components/DemoComponent";
 
-const Home = () => (
+const Example = () => (
   <div>
     <h1>Home</h1>
     <p>Welcome to SPARCS Clubs! This is an example api call!</p>
@@ -14,4 +14,4 @@ const Home = () => (
   </div>
 );
 
-export default Home;
+export default Example;

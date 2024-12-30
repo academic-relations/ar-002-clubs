@@ -3,9 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 
 import mockupAvailableRental from "@sparcs-clubs/web/features/rental-business/service/_mock/mockAvailableRental";
 import {
-  axiosClient,
+  axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import type {
@@ -19,16 +18,11 @@ export const useGetAvailableRentals = (startDate: Date, endDate: Date) => {
   return useQuery<ApiRnt001ResponseOK, Error>({
     queryKey: [apiRnt001.url(), requestQuery],
     queryFn: async (): Promise<ApiRnt001ResponseOK> => {
-      const { data, status } = await axiosClient.get(apiRnt001.url(), {
+      const { data } = await axiosClientWithAuth.get(apiRnt001.url(), {
         params: requestQuery,
       });
 
-      switch (status) {
-        case 200:
-          return apiRnt001.responseBodyMap[200].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiRnt001.responseBodyMap[200].parse(data);
     },
   });
 };

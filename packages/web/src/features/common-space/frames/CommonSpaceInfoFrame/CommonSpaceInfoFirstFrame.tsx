@@ -1,65 +1,117 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+
+import { useFormContext } from "react-hook-form";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 
+import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
-import { CommonSpaceInfoProps } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
+import { CommonSpaceInterface } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
 
-const CommonSpaceInfoFirstFrame: React.FC<
-  CommonSpaceInfoProps & { setNextEnabled: (enabled: boolean) => void }
-> = ({ setNextEnabled, body, setBody }) => {
+interface CommonSpaceInfoFirstFrameProps {
+  onPrev: VoidFunction;
+  onNext: VoidFunction;
+}
+
+const CommonSpaceInfoFirstFrame: React.FC<CommonSpaceInfoFirstFrameProps> = ({
+  onPrev,
+  onNext,
+}) => {
+  const {
+    control,
+    reset,
+    setValue,
+    formState: { isValid, isDirty },
+  } = useFormContext<CommonSpaceInterface>();
+
   const { data, isLoading, isError } = useGetUserProfile();
 
-  const [hasSelectError, setHasSelectError] = useState(false);
-
   useEffect(() => {
-    setBody({ ...body, email: data?.email });
-  }, [data]);
-
-  useEffect(() => {
-    const allConditionsMet =
-      Boolean(body.clubId) && Boolean(body.email) && !hasSelectError;
-    setNextEnabled(allConditionsMet);
-  }, [body, hasSelectError]);
-
-  const [phoneNumber, setPhoneNumber] = useState(data?.phoneNumber || "");
+    if (data) {
+      reset({
+        agreement: true,
+        clubName: data.clubs[0]?.name_kr || "",
+        name: data.name || "",
+        phoneNumber: data.phoneNumber || "",
+      });
+    }
+  }, [data, reset]);
 
   return (
-    <Card outline gap={40}>
-      <AsyncBoundary isLoading={isLoading} isError={isError}>
-        <Select
-          items={
-            data?.clubs.map(club => ({
-              label: club.name,
-              value: club.id.toString(),
-              selectable: true,
-            })) || []
-          }
-          value={body.clubId?.toString()}
-          onChange={value => setBody({ ...body, clubId: Number(value) })}
-          label="동아리 이름"
-          setErrorStatus={setHasSelectError}
+    <AsyncBoundary isLoading={isLoading || !data} isError={isError}>
+      <Card outline gap={40}>
+        <FormController
+          name="clubName"
+          control={control}
+          required
+          defaultValue={data?.clubs[0].name_kr || ""}
+          renderItem={({ onChange, value }) => (
+            <Select
+              onChange={selectedValue => {
+                setValue("body.clubId", parseInt(selectedValue));
+                onChange(selectedValue);
+              }}
+              items={
+                data?.clubs.map(club => ({
+                  label: club.name_kr,
+                  value: club.id.toString(),
+                  selectable: true,
+                })) || []
+              }
+              label="동아리 이름"
+              value={value}
+            />
+          )}
         />
-        <TextInput
-          label="신청자 이름"
-          placeholder={data?.name || ""}
-          disabled
+        <FormController
+          name="name"
+          control={control}
+          required
+          renderItem={() => (
+            <TextInput
+              label="신청자 이름"
+              placeholder={data?.name || ""}
+              disabled
+            />
+          )}
         />
-        <PhoneInput
-          label="신청자 전화번호"
-          value={phoneNumber}
-          placeholder={data?.phoneNumber || ""}
-          onChange={setPhoneNumber}
-          disabled
+        <FormController
+          name="phoneNumber"
+          control={control}
+          minLength={13}
+          required
+          defaultValue={data?.phoneNumber || ""}
+          renderItem={({ onChange, value }) => (
+            <PhoneInput
+              label="신청자 전화번호"
+              placeholder={data?.phoneNumber || ""}
+              onChange={val => {
+                setValue("phoneNumber", val);
+                onChange(val);
+              }}
+              value={value}
+            />
+          )}
         />
-      </AsyncBoundary>
-    </Card>
+      </Card>
+      <StyledBottom>
+        <Button onClick={onPrev}>이전</Button>
+        <Button
+          onClick={onNext}
+          type={isValid && isDirty ? "default" : "disabled"}
+        >
+          다음
+        </Button>
+      </StyledBottom>
+    </AsyncBoundary>
   );
 };
 

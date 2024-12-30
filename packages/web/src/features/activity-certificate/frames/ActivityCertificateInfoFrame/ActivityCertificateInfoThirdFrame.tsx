@@ -1,12 +1,28 @@
 import React from "react";
 
+import { useRouter } from "next/navigation";
+import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
+import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorModal";
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { ActivityCertificateFrameProps } from "../ActivityCertificateNoticeFrame";
+import usePostActivityCertificate from "@sparcs-clubs/web/features/activity-certificate/services/usePostActivityCertificate";
+import { ActivityCertificateInfo } from "@sparcs-clubs/web/features/activity-certificate/types/activityCertificate";
+
+import { formatActivityDuration } from "@sparcs-clubs/web/features/activity-certificate/utils/formatActivityDuration";
+import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
+
+import { formatMonth } from "@sparcs-clubs/web/utils/Date/formatDate";
+
+interface ActivityCertificateInfoThirdFrameProps {
+  onPrev: VoidFunction;
+}
 
 const ActivityCertificateThirdFrameInner = styled.div`
   display: flex;
@@ -46,158 +62,210 @@ const ActivityDescriptionSummaryRow = styled.div`
 `;
 
 const ActivityCertificateInfoThirdFrame: React.FC<
-  ActivityCertificateFrameProps
-> = ({ activityCertificate }) => (
-  <ActivityCertificateThirdFrameInner>
-    <Card outline gap={20}>
-      <BasicInfoSummaryFrameInner>
-        <Typography
-          key="orderUserInfo"
-          fs={16}
-          lh={20}
-          fw="MEDIUM"
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          신청자 정보
-        </Typography>
-        <Typography
-          key="orderUserName"
-          fs={16}
-          lh={20}
-          fw="REGULAR"
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          {`  •  이름: ${activityCertificate.applicant}`}
-        </Typography>
-        <Typography
-          key="orderUserDepartment"
-          fs={16}
-          lh={20}
-          fw="REGULAR"
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          {`  •  학과: ${activityCertificate.department}`}
-        </Typography>
-        <Typography
-          key="orderUserStudentNumber"
-          fs={16}
-          lh={20}
-          fw="REGULAR"
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          {`  •  학번: ${activityCertificate.studentNumber}`}
-        </Typography>
-        <Typography
-          key="orderUserPhoneNumber"
-          fs={16}
-          lh={20}
-          fw="REGULAR"
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          {`  •  연락처: ${activityCertificate.krPhoneNumber}`}
-        </Typography>
-        <Typography
-          key="orderInfo"
-          fs={16}
-          lh={20}
-          fw="MEDIUM"
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          활동확인서 발급 신청 정보
-        </Typography>
-        <Typography
-          key="orderInfoClub"
-          fs={16}
-          lh={20}
-          fw="REGULAR"
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          {`  •  동아리: ${activityCertificate.clubId!}`}{" "}
-          {/* TODO - 실제 클럽 이름으로 바꾸기 */}
-        </Typography>
-        <Typography
-          key="orderInfoDuration"
-          fs={16}
-          lh={20}
-          fw="REGULAR"
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          {`  •  활동 기간: ${activityCertificate.startMonth} ~ ${activityCertificate.endMonth}`}
-          {/* TODO - DB 형식에 의거해서 startMonth endMonth 형식으로 있다면 포맷하고 string이라면 그냥 넣기 */}
-        </Typography>
-        <Typography
-          key="orderInfoIssueCount"
-          fs={16}
-          lh={20}
-          fw="REGULAR"
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          {`  •  발급 매수: ${activityCertificate.issuedNumber!}매`}
-        </Typography>
-        <Typography
-          key="orderInfoText"
-          fs={16}
-          lh={20}
-          fw="REGULAR"
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          {`  •  활동 내역`}
-        </Typography>
-        <ActivityDescriptionSummaryFrameInner>
-          {activityCertificate.detail.map(activityDescription => (
-            <ActivityDescriptionSummaryRow key={activityDescription.key}>
-              {activityDescription.startMonth.split(".")[0] ===
-                activityDescription.endMonth.split(".")[0] &&
-              parseInt(activityDescription.startMonth.split(".")[1]) ===
-                parseInt(activityDescription.endMonth.split(".")[1]) ? (
-                <Typography
-                  key={`${activityDescription.key}_start`}
-                  fs={16}
-                  lh={20}
-                  fw="REGULAR"
-                  style={{
-                    whiteSpace: "pre-wrap",
-                    width: "200px",
-                    textAlign: "center",
-                  }}
-                >
-                  {`${activityDescription.startMonth.split(".")[0]}년 ${parseInt(activityDescription.startMonth.split(".")[1])}월`}
-                </Typography>
-              ) : (
-                <Typography
-                  key={`${activityDescription.key}_end`}
-                  fs={16}
-                  lh={20}
-                  fw="REGULAR"
-                  style={{
-                    whiteSpace: "pre-wrap",
-                    width: "200px",
-                    textAlign: "center",
-                  }}
-                >
-                  {`${activityDescription.startMonth.split(".")[0]}년 ${parseInt(activityDescription.startMonth.split(".")[1])}월 ~ ${activityDescription.endMonth.split(".")[0]}년 ${parseInt(activityDescription.endMonth.split(".")[1])}월`}
-                </Typography>
-              )}
+  ActivityCertificateInfoThirdFrameProps
+> = ({ onPrev }) => {
+  const router = useRouter();
 
-              <Typography
-                key={`${activityDescription.key}_description`}
-                fs={16}
-                lh={20}
-                fw="REGULAR"
-                style={{
-                  whiteSpace: "pre-wrap",
-                  flex: "1 1 0",
-                }}
-              >
-                {activityDescription.description}
-              </Typography>
-            </ActivityDescriptionSummaryRow>
-          ))}
-        </ActivityDescriptionSummaryFrameInner>
-      </BasicInfoSummaryFrameInner>
-    </Card>
-    <Info text="활동확인서 발급이 완료되면 이메일 또는 문자를 통해 (방법은 동연에서 정해주세요) 연락이 갈 것이라는 안내 문구" />
-  </ActivityCertificateThirdFrameInner>
-);
+  const {
+    getValues,
+    formState: { isValid },
+  } = useFormContext<ActivityCertificateInfo>();
+
+  const {
+    data: clubData,
+    isLoading,
+    isError,
+  } = useGetClubDetail(getValues().clubId.toString());
+
+  const { mutate, isPending } = usePostActivityCertificate();
+
+  return (
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <ActivityCertificateThirdFrameInner>
+        <Card outline gap={20}>
+          <BasicInfoSummaryFrameInner>
+            <Typography
+              key="orderUserInfo"
+              fs={16}
+              lh={20}
+              fw="MEDIUM"
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              신청자 정보
+            </Typography>
+            <Typography
+              key="orderUserName"
+              fs={16}
+              lh={20}
+              fw="REGULAR"
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              {`  •  이름: ${getValues().applicantName}`}
+            </Typography>
+            <Typography
+              key="orderUserDepartment"
+              fs={16}
+              lh={20}
+              fw="REGULAR"
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              {`  •  학과: ${getValues().applicantDepartment}`}
+            </Typography>
+            <Typography
+              key="orderUserStudentNumber"
+              fs={16}
+              lh={20}
+              fw="REGULAR"
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              {`  •  학번: ${getValues().applicantStudentNumber}`}
+            </Typography>
+            <Typography
+              key="orderUserPhoneNumber"
+              fs={16}
+              lh={20}
+              fw="REGULAR"
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              {`  •  연락처: ${getValues().applicantPhoneNumber}`}
+            </Typography>
+            <Typography
+              key="orderInfo"
+              fs={16}
+              lh={20}
+              fw="MEDIUM"
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              활동확인서 발급 신청 정보
+            </Typography>
+            <Typography
+              key="orderInfoClub"
+              fs={16}
+              lh={20}
+              fw="REGULAR"
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              {`  •  동아리: ${clubData?.name_kr}`}{" "}
+            </Typography>
+            <Typography
+              key="orderInfoDuration"
+              fs={16}
+              lh={20}
+              fw="REGULAR"
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              {`  •  활동 기간: ${formatActivityDuration(getValues().activityDuration)}`}
+            </Typography>
+            <Typography
+              key="orderInfoIssueCount"
+              fs={16}
+              lh={20}
+              fw="REGULAR"
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              {`  •  발급 매수: ${getValues().issuedNumber!}매`}
+            </Typography>
+            <Typography
+              key="orderInfoText"
+              fs={16}
+              lh={20}
+              fw="REGULAR"
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              {`  •  활동 내역`}
+            </Typography>
+            <ActivityDescriptionSummaryFrameInner>
+              {getValues().histories.map((activityDescription, index) => {
+                const startMonth = activityDescription.dateRange?.[0];
+                const endMonth = activityDescription.dateRange?.[1];
+
+                return (
+                  <ActivityDescriptionSummaryRow
+                    key={`activityDescription_${index}`}
+                  >
+                    {startMonth?.getMonth() === endMonth?.getMonth() ? (
+                      <Typography
+                        key={`${index}_start`}
+                        fs={16}
+                        lh={20}
+                        fw="REGULAR"
+                        style={{
+                          whiteSpace: "pre-wrap",
+                          width: "200px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {formatMonth(startMonth!)}
+                      </Typography>
+                    ) : (
+                      <Typography
+                        key={`${index}_end`}
+                        fs={16}
+                        lh={20}
+                        fw="REGULAR"
+                        style={{
+                          whiteSpace: "pre-wrap",
+                          width: "200px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {formatMonth(startMonth!)} ~{formatMonth(endMonth!)}
+                      </Typography>
+                    )}
+
+                    <Typography
+                      key={`${index}_description`}
+                      fs={16}
+                      lh={20}
+                      fw="REGULAR"
+                      style={{
+                        whiteSpace: "pre-wrap",
+                        flex: "1 1 0",
+                      }}
+                    >
+                      {activityDescription.description}
+                    </Typography>
+                  </ActivityDescriptionSummaryRow>
+                );
+              })}
+            </ActivityDescriptionSummaryFrameInner>
+          </BasicInfoSummaryFrameInner>
+        </Card>
+        <Info text="활동확인서 발급이 완료되면 이메일 또는 문자를 통해 (방법은 동연에서 정해주세요) 연락이 갈 것이라는 안내 문구" />
+      </ActivityCertificateThirdFrameInner>
+      <StyledBottom>
+        <Button onClick={onPrev}>이전</Button>
+        <Button
+          onClick={() => {
+            mutate(
+              {
+                body: {
+                  clubId: getValues().clubId,
+                  issuedNumber: getValues().issuedNumber,
+                  studentPhoneNumber:
+                    getValues().applicantPhoneNumber.toString(),
+                  items: getValues().histories.map(value => ({
+                    startMonth: value.dateRange[0]!,
+                    endMonth: value.dateRange[1]!,
+                    detail: value.description,
+                  })),
+                },
+              },
+              {
+                onSuccess: () => {
+                  router.replace("/");
+                },
+                onError: () => errorHandler("생성에 실패하였습니다"),
+              },
+            );
+          }}
+          type={isValid && !isPending ? "default" : "disabled"}
+        >
+          신청
+        </Button>
+      </StyledBottom>
+    </AsyncBoundary>
+  );
+};
 
 export default ActivityCertificateInfoThirdFrame;

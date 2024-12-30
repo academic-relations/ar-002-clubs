@@ -8,3 +8,12 @@ export enum StudentStatusEnum {
   Attending = 1, // 재학
   LeaveOfAbsence, // 휴학
 }
+
+export enum UserTypeEnum {
+  Undergraduate = "undergraduate",
+  Master = "master",
+  Doctor = "doctor",
+  Executive = "executive",
+  Professor = "professor",
+  Employee = "employee",
+}

@@ -21,6 +21,9 @@ const NoticeListAndPaginationFrameInner = styled.div`
   flex-wrap: nowrap;
   align-items: center;
   row-gap: 20px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    row-gap: 4px;
+  }
 `;
 
 const NoticeListAndPaginationFrame = () => {

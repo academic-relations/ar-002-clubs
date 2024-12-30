@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React from "react";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import ClubListGrid from "@sparcs-clubs/web/features/clubs/components/ClubListGrid";
 
-import type { ClubCardProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
+import type { ClubProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
 
 type ClubsSectionFrameProps = {
   showLength?: boolean; // section title에 길이 보여줄지 여부
   title: string; // 분과
-  clubList: Array<ClubCardProps["club"]>;
+  clubList: Array<ClubProps["club"]>;
   isRegistrationPeriod?: boolean;
 };
 
@@ -20,28 +20,17 @@ const ClubsSectionFrame: React.FC<ClubsSectionFrameProps> = ({
   title,
   clubList,
   isRegistrationPeriod = false,
-}) => {
-  const [toggle, setToggle] = useState(true);
-  const toggleHandler = useCallback(
-    () => setToggle(!toggle),
-    [toggle, setToggle],
-  );
-
-  return (
-    <FlexWrapper direction="column" gap={20}>
-      <FoldableSectionTitle
-        title={`${title} ${showLength ? `(${clubList.length})` : ""}`}
-        toggle={toggle}
-        toggleHandler={toggleHandler}
+}) => (
+  <FlexWrapper direction="column" gap={20}>
+    <FoldableSectionTitle
+      title={`${title} ${showLength ? `(${clubList.length})` : ""}`}
+    >
+      <ClubListGrid
+        clubList={clubList}
+        isRegistrationPeriod={isRegistrationPeriod}
       />
-      {toggle && (
-        <ClubListGrid
-          clubList={clubList}
-          isRegistrationPeriod={isRegistrationPeriod}
-        />
-      )}
-    </FlexWrapper>
-  );
-};
+    </FoldableSectionTitle>
+  </FlexWrapper>
+);
 
 export default ClubsSectionFrame;

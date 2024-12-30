@@ -1,3 +1,7 @@
+import { FundingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+
+import { Participant } from "@sparcs-clubs/web/types/participant";
+
 export interface FundingInterface {
   // TODO: files 관련 추가
   purposeId?: string;
@@ -32,7 +36,7 @@ export interface FundingInterface {
   destination?: string;
   purposeOfTransportation?: string;
   placeValidity?: string;
-  transportationPassengers: { studentNumber: string; name: string }[];
+  transportationPassengers: Participant[];
 
   isNonCorporateTransaction: boolean;
   traderName?: string;
@@ -59,4 +63,16 @@ export interface FundingInterface {
 
   isEtcExpense: boolean;
   etcExpenseExplanation?: string;
+}
+
+export interface PastFundingData {
+  id: number;
+  activityName: string;
+  name: string;
+  expenditureAmount: number;
+  approvedAmount?: number;
+}
+
+export interface NewFundingData extends PastFundingData {
+  fundingOrderStatusEnumId: FundingOrderStatusEnum;
 }

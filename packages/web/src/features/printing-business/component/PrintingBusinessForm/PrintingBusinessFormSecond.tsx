@@ -85,8 +85,8 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
           placeholder="A3 크기로 인쇄하고 싶은 매수를 적어 주세요"
           itemLimit={45}
           unit="매"
-          value={a3PrintCount.toString()}
-          handleChange={value => {
+          value={a3PrintCount}
+          onChange={value => {
             setA3PrintCount(Number(value));
           }}
         />
@@ -95,8 +95,8 @@ const PrintingBusinessFormSecond: React.FC<PrintingBusinessFormSecondProps> = ({
           placeholder="A4 크기로 인쇄하고 싶은 매수를 적어 주세요"
           itemLimit={45}
           unit="매"
-          value={a4PrintCount.toString()}
-          handleChange={value => {
+          value={a4PrintCount}
+          onChange={value => {
             setA4PrintCount(Number(value));
           }}
         />

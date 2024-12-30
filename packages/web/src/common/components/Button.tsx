@@ -4,7 +4,7 @@ import React, { HTMLAttributes } from "react";
 
 import styled from "styled-components";
 
-type ButtonProps = {
+export type ButtonProps = {
   buttonType?: "button" | "reset" | "submit";
   type?: keyof typeof ButtonTypeInner;
   children: React.ReactNode;
@@ -20,6 +20,7 @@ const ButtonInner = styled.button`
   font-size: 16px;
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
+  flex-shrink: 0;
 `;
 
 const ButtonDefaultInner = styled(ButtonInner)`
@@ -64,6 +65,7 @@ const Button = ({
     <ButtonChosenInner
       {...divProps}
       type={buttonType}
+      disabled={type === "disabled"}
       onClick={type === "disabled" ? undefined : divProps.onClick}
     >
       {children}

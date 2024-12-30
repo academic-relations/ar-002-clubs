@@ -1,18 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
 
-import { differenceInHours, differenceInMinutes } from "date-fns";
+import { differenceInHours, differenceInMinutes, subSeconds } from "date-fns";
+
+import { useRouter } from "next/navigation";
+
+import { overlay } from "overlay-kit";
+
+import { useFormContext } from "react-hook-form";
 
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Info from "@sparcs-clubs/web/common/components/Info";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
+import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 import useGetCommonSpaces from "@sparcs-clubs/web/features/common-space/service/getCommonSpaces";
-
-import { CommonSpaceInfoProps } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
+import postCommonSpaceUsageOrder from "@sparcs-clubs/web/features/common-space/service/postCommonSpaceUsageOrder";
+import { CommonSpaceInterface } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
 import {
   formatSimpleSlashDate,
   formatTime,
@@ -43,11 +53,18 @@ const ReservationInfo = styled.div`
 `;
 
 const CommonSpaceInfoThirdFrame: React.FC<
-  CommonSpaceInfoProps & { setNextEnabled: (enabled: boolean) => void }
-> = ({ setNextEnabled, body, param }) => {
+  Partial<CommonSpaceInterface> & { onPrev: () => void }
+> = ({ onPrev }) => {
+  const {
+    watch,
+    getValues,
+    formState: { isValid },
+  } = useFormContext();
+  const body = watch("body");
+  const param = watch("param");
   const { email, clubId, startTerm, endTerm } = body;
+
   const { spaceId } = param;
-  const correct = email && clubId && startTerm && endTerm && spaceId;
   const {
     data: commonSpacesData,
     isLoading: commonSpacesLoading,
@@ -60,11 +77,34 @@ const CommonSpaceInfoThirdFrame: React.FC<
     isError: userProfileError,
   } = useGetUserProfile();
 
-  useEffect(() => {
-    setNextEnabled(!!correct);
-  }, [correct, setNextEnabled]);
+  const handleSubmit = useCallback(() => {
+    if (isValid) {
+      postCommonSpaceUsageOrder(
+        { spaceId },
+        { email, clubId, startTerm, endTerm: subSeconds(endTerm, 1) },
+      );
+    }
+  }, [body, param]);
 
-  return correct ? (
+  const router = useRouter();
+
+  const openSubmitModal = () => {
+    overlay.open(({ isOpen, close }) => (
+      <Modal isOpen={isOpen}>
+        <ConfirmModalContent
+          onConfirm={() => {
+            close();
+            router.push("/my");
+          }}
+        >
+          신청이 완료되었습니다. <br />
+          확인을 누르면 마이페이지로 이동합니다.
+        </ConfirmModalContent>
+      </Modal>
+    ));
+  };
+
+  return isValid ? (
     <>
       <Card outline gap={20}>
         <CardInner>
@@ -76,9 +116,15 @@ const CommonSpaceInfoThirdFrame: React.FC<
             isError={userProfileError}
           >
             <StyledList>
-              <li>동아리: {userProfileData?.clubs[clubId]?.name}</li>
+              <li>
+                동아리:{" "}
+                {
+                  userProfileData?.clubs.filter(club => club.id === clubId)[0]
+                    ?.name_kr
+                }
+              </li>
               <li>담당자: {userProfileData?.name}</li>
-              <li>연락처: {userProfileData?.phoneNumber}</li>
+              <li>연락처: {getValues("phoneNumber")}</li>
             </StyledList>
           </AsyncBoundary>
         </CardInner>
@@ -91,7 +137,7 @@ const CommonSpaceInfoThirdFrame: React.FC<
             isError={commonSpacesError}
           >
             <Typography fs={16} lh={20} fw="REGULAR">
-              {commonSpacesData?.commonSpaces[spaceId]?.name},{" "}
+              {commonSpacesData?.commonSpaces[spaceId - 1]?.name},{" "}
               {`${formatSimpleSlashDate(startTerm)} `}
               {formatTime(startTerm)} ~ {formatTime(endTerm)} (
               {`${differenceInHours(endTerm, startTerm)}시간`}
@@ -104,6 +150,18 @@ const CommonSpaceInfoThirdFrame: React.FC<
         </ReservationInfo>
       </Card>
       <Info text="먼가 넣을 것이 없을까나" />
+      <StyledBottom>
+        <Button onClick={onPrev}>이전</Button>
+        <Button
+          type={isValid ? "default" : "disabled"}
+          onClick={() => {
+            handleSubmit();
+            openSubmitModal();
+          }}
+        >
+          신청
+        </Button>
+      </StyledBottom>
     </>
   ) : null;
 };

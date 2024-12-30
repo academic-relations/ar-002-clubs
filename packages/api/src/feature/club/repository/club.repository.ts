@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
-import { and, eq, gte, inArray, isNull, lte, or, sql } from "drizzle-orm";
+import { and, eq, gt, gte, inArray, isNull, lte, or, sql } from "drizzle-orm";
+import { union } from "drizzle-orm/mysql-core";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
@@ -16,8 +17,10 @@ import {
 } from "@sparcs-clubs/api/drizzle/schema/division.schema";
 import {
   Professor,
+  ProfessorT,
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
@@ -28,7 +31,8 @@ interface IClubs {
   clubs: {
     type: number;
     id: number;
-    name: string;
+    name_kr: string;
+    name_en: string;
     isPermanent: boolean;
     characteristic: string;
     representative: string;
@@ -57,7 +61,8 @@ export default class ClubRepository {
     const clubInfo = await this.db
       .select({
         id: Club.id,
-        name: Club.name,
+        name_kr: Club.name_kr,
+        name_en: Club.name_en,
         type: ClubT.clubStatusEnumId,
         characteristic: ClubT.characteristicKr,
         advisor: Professor.name,
@@ -98,8 +103,9 @@ export default class ClubRepository {
         clubs: {
           type: ClubT.clubStatusEnumId,
           id: Club.id,
-          name: Club.name,
-          isPermanent: sql`COALESCE(MAX(CASE WHEN ${DivisionPermanentClubD.id} IS NOT NULL THEN TRUE ELSE FALSE END), FALSE)`,
+          name_kr: Club.name_kr,
+          name_en: Club.name_en,
+          isPermanent: DivisionPermanentClubD.id,
           characteristic: ClubT.characteristicKr,
           representative: Student.name,
           advisor: Professor.name,
@@ -124,7 +130,9 @@ export default class ClubRepository {
         ClubStudentT,
         and(
           eq(Club.id, ClubStudentT.clubId),
+          lte(ClubStudentT.startTerm, crt),
           or(isNull(ClubStudentT.endTerm), gte(ClubStudentT.endTerm, crt)),
+          isNull(ClubStudentT.deletedAt),
         ),
       )
       .leftJoin(
@@ -138,17 +146,26 @@ export default class ClubRepository {
       .leftJoin(Student, eq(ClubDelegateD.studentId, Student.id))
       .leftJoin(
         DivisionPermanentClubD,
-        eq(Club.id, DivisionPermanentClubD.clubId),
+        and(
+          eq(DivisionPermanentClubD.clubId, Club.id),
+          lte(DivisionPermanentClubD.startTerm, crt),
+          or(
+            gte(DivisionPermanentClubD.endTerm, crt),
+            isNull(DivisionPermanentClubD.endTerm),
+          ),
+        ),
       )
       .groupBy(
         Division.id,
         Division.name,
         Club.id,
-        Club.name,
+        Club.name_kr,
+        Club.name_en,
         ClubT.clubStatusEnumId,
         ClubT.characteristicKr,
         Student.name,
         Professor.name,
+        DivisionPermanentClubD.id,
       );
     const record = rows.reduce<Record<number, IClubs>>((acc, row) => {
       const divId = row.id;
@@ -161,7 +178,10 @@ export default class ClubRepository {
       }
 
       if (club) {
-        acc[divId].clubs.push({ ...club, isPermanent: club.isPermanent === 1 });
+        acc[divId].clubs.push({
+          ...club,
+          isPermanent: club.isPermanent !== null,
+        });
       }
       return acc;
     }, {});
@@ -172,7 +192,12 @@ export default class ClubRepository {
   }
 
   async findClubActivities(studentId: number): Promise<{
-    clubs: { id: number; name: string; startMonth: Date; endMonth: Date }[];
+    clubs: {
+      id: number;
+      name_kr: string;
+      name_en: string;
+      dateRange: { startMonth: Date; endMonth: Date | undefined }[];
+    }[];
   }> {
     const clubActivities = await this.db
       .select()
@@ -182,84 +207,255 @@ export default class ClubRepository {
       .then(rows =>
         rows.map(row => ({
           id: row.club_student_t.clubId,
-          name: row.club.name,
+          name_kr: row.club.name_kr,
+          name_en: row.club.name_en,
           startMonth: row.club_student_t.startTerm,
           endMonth: row.club_student_t.endTerm,
         })),
       );
-    return { clubs: clubActivities };
+
+    const groupedActivities = clubActivities.reduce(
+      (acc, activity) => {
+        const {
+          id,
+          name_kr: nameKr,
+          name_en: nameEn,
+          startMonth,
+          endMonth,
+        } = activity;
+
+        const updatedAcc = { ...acc };
+        if (!updatedAcc[id]) {
+          updatedAcc[id] = {
+            id,
+            name_kr: nameKr,
+            name_en: nameEn,
+            dateRange: [{ startMonth, endMonth }],
+          };
+          return updatedAcc;
+        }
+
+        let updated = false;
+        const { dateRange } = acc[id];
+
+        for (let i = 0; i < dateRange.length; i += 1) {
+          const dates = dateRange[i];
+
+          if (
+            startMonth.getTime() - dates.endMonth.getTime() ===
+            24 * 60 * 60 * 1000
+          ) {
+            dates.endMonth = endMonth;
+            updated = true;
+            break;
+          }
+        }
+
+        if (!updated) {
+          acc[id].dateRange.push({ startMonth, endMonth });
+        }
+
+        return acc;
+      },
+      {} as {
+        [key: number]: {
+          id: number;
+          name_kr: string;
+          name_en: string;
+          dateRange: { startMonth: Date; endMonth: Date | undefined }[];
+        };
+      },
+    );
+    return { clubs: Object.values(groupedActivities) };
   }
 
-  async findClubName(clubId: number): Promise<string> {
+  async findClubName(
+    clubId: number,
+  ): Promise<{ name_kr: string; name_en: string }> {
     return this.db
-      .select({ name: Club.name })
+      .select({ name_kr: Club.name_kr, name_en: Club.name_en })
       .from(Club)
       .where(eq(Club.id, clubId))
-      .then(result => result[0]?.name);
-  }
-
-  async findClubIdByClubStatusEnumId(
-    clubStatusEnumId: number,
-    semesterId: number,
-  ) {
-    return this.db
-      .select({ id: Club.id })
-      .from(Club)
-      .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
-      .where(
-        and(
-          eq(ClubT.clubStatusEnumId, clubStatusEnumId),
-          eq(ClubT.semesterId, semesterId),
-        ),
+      .then(result =>
+        result[0]
+          ? { name_kr: result[0].name_kr, name_en: result[0].name_en }
+          : undefined,
       );
   }
 
-  async findEligibleClubsForRegistration(semesterId: number) {
+  async findClubIdByClubStatusEnumId(
+    studentId: number,
+    clubStatusEnumIds: Array<ClubTypeEnum>,
+    semesterId: number,
+  ) {
+    const result = await this.db.transaction(async tx => {
+      const cur = getKSTDate();
+      const delegate = tx
+        .select({
+          clubId: ClubDelegateD.clubId,
+        })
+        .from(ClubDelegateD)
+        .where(
+          and(
+            eq(ClubDelegateD.studentId, studentId),
+            lte(ClubDelegateD.startTerm, cur),
+            or(gte(ClubDelegateD.endTerm, cur), isNull(ClubDelegateD.endTerm)),
+            isNull(ClubDelegateD.deletedAt),
+          ),
+        );
+      const professor = tx
+        .select({
+          id: Professor.id,
+          name: Professor.name,
+          email: Professor.email,
+          professorEnumId: ProfessorT.professorEnum,
+        })
+        .from(Professor)
+        .innerJoin(
+          ProfessorT,
+          and(
+            eq(Professor.id, ProfessorT.professorId),
+            lte(ProfessorT.startTerm, cur),
+            or(gt(ProfessorT.endTerm, cur), isNull(ProfessorT.endTerm)),
+            isNull(ProfessorT.deletedAt),
+          ),
+        )
+        .where(isNull(Professor.deletedAt))
+        .as("professor");
+      const club = await tx
+        .selectDistinct({
+          id: Club.id,
+          clubNameKr: Club.name_kr,
+          clubNameEn: Club.name_en,
+          professor: {
+            name: professor.name,
+            email: professor.email,
+            professorEnumId: professor.professorEnumId,
+          },
+        })
+        .from(Club)
+        .innerJoin(
+          ClubT,
+          and(
+            eq(Club.id, ClubT.clubId),
+            eq(ClubT.semesterId, semesterId),
+            isNull(ClubT.deletedAt),
+            inArray(ClubT.clubStatusEnumId, clubStatusEnumIds),
+          ),
+        )
+        .leftJoin(professor, eq(professor.id, ClubT.professorId))
+        .where(and(inArray(Club.id, delegate), isNull(Club.deletedAt)));
+      return club;
+    });
+    console.log(result);
+    return result;
+  }
+
+  async findEligibleClubsForRegistration(
+    studentId: number,
+    semesterId: number,
+  ) {
     // 주어진 semesterId를 기준으로 최근 2학기와 3학기를 계산
     const recentTwoSemesters = [semesterId - 1, semesterId];
+    const { length } = recentTwoSemesters;
     const recentThreeSemesters = [semesterId - 2, semesterId - 1, semesterId];
 
-    // 최근 2학기 동안 가동아리 상태를 유지한 클럽을 조회
-    const provisionalClubs = await this.db
-      .select({ id: Club.id })
-      .from(Club)
-      .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
-      .where(
-        and(
-          eq(ClubT.clubStatusEnumId, ClubTypeEnum.Provisional), // 가동아리
-          inArray(ClubT.semesterId, recentTwoSemesters), // recentTwoSemesters에 포함된 학기 동안
-        ),
-      )
-      .groupBy(Club.id);
+    const result = await this.db.transaction(async tx => {
+      const cur = getKSTDate();
+      const delegate = tx
+        .select({
+          clubId: ClubDelegateD.clubId,
+        })
+        .from(ClubDelegateD)
+        .where(
+          and(
+            eq(ClubDelegateD.studentId, studentId),
+            lte(ClubDelegateD.startTerm, cur),
+            or(gte(ClubDelegateD.endTerm, cur), isNull(ClubDelegateD.endTerm)),
+            isNull(ClubDelegateD.deletedAt),
+          ),
+        );
+      // 최근 2학기 동안 가동아리 상태를 유지한 클럽을 조회
+      const provisionalClubs = tx
+        .select({
+          id: Club.id,
+        })
+        .from(Club)
+        .innerJoin(ClubT, eq(Club.id, ClubT.clubId))
+        .where(
+          and(
+            eq(ClubT.clubStatusEnumId, ClubTypeEnum.Provisional), // 가동아리
+            inArray(ClubT.semesterId, recentTwoSemesters), // recentTwoSemesters에 포함된 학기 동안
+            inArray(Club.id, delegate),
+            isNull(ClubT.deletedAt),
+          ),
+        )
+        .groupBy(Club.id)
+        .having(sql`COUNT(DISTINCT ${ClubT.semesterId}) = ${length}`);
+      // 최근 3학기 중 하나라도 정동아리 상태인 클럽을 조회
+      const regularClubs = tx
+        .select({
+          id: Club.id,
+        })
+        .from(Club)
+        .innerJoin(ClubT, eq(Club.id, ClubT.clubId))
+        .where(
+          and(
+            eq(ClubT.clubStatusEnumId, ClubTypeEnum.Regular), // 정동아리
+            inArray(ClubT.semesterId, recentThreeSemesters), // recentThreeSemesters에 포함된 학기 동안
+            inArray(Club.id, delegate),
+            isNull(ClubT.deletedAt),
+          ),
+        )
+        .groupBy(Club.id);
 
-    // 최근 3학기 중 하나라도 정동아리 상태인 클럽을 조회
-    const regularClubs = await this.db
-      .select({ id: Club.id })
-      .from(Club)
-      .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
-      .where(
-        and(
-          eq(ClubT.clubStatusEnumId, ClubTypeEnum.Regular), // 정동아리
-          inArray(ClubT.semesterId, recentThreeSemesters), // recentThreeSemesters에 포함된 학기 동안
-          isNull(ClubT.deletedAt),
-        ),
-      )
-      .groupBy(Club.id);
+      const professor = tx
+        .select({
+          id: Professor.id,
+          name: Professor.name,
+          email: Professor.email,
+          professorEnumId: ProfessorT.professorEnum,
+        })
+        .from(Professor)
+        .innerJoin(
+          ProfessorT,
+          and(
+            eq(Professor.id, ProfessorT.professorId),
+            lte(ProfessorT.startTerm, cur),
+            or(gt(ProfessorT.endTerm, cur), isNull(ProfessorT.endTerm)),
+            isNull(ProfessorT.deletedAt),
+          ),
+        )
+        .where(isNull(Professor.deletedAt))
+        .as("professor");
 
-    const provisionalClubIds = new Set(provisionalClubs.map(club => club.id));
-    const regularClubIds = new Set(regularClubs.map(club => club.id));
-
-    // 필터링된 가동아리 클럽 ID와 정동아리 클럽 ID를 합치기
-    const eligibleClubIds = new Set([
-      ...Array.from(provisionalClubIds).filter(id => {
-        const count = provisionalClubs.filter(club => club.id === id).length;
-        return count === 2; // 가동아리 상태가 최근 2학기 모두에 존재하는 클럽
-      }),
-      // 정동아리 상태 클럽을 추가
-      ...Array.from(regularClubIds),
-    ]);
-
-    // 중복 제거된 클럽 ID 리스트를 반환
-    return Array.from(eligibleClubIds).map(id => ({ id }));
+      const sq = union(provisionalClubs, regularClubs);
+      const response = await tx
+        .selectDistinct({
+          id: Club.id,
+          clubNameKr: Club.name_kr,
+          clubNameEn: Club.name_en,
+          professor: {
+            name: professor.name,
+            email: professor.email,
+            professorEnumId: professor.professorEnumId,
+          },
+        })
+        .from(Club)
+        .innerJoin(
+          ClubT,
+          and(
+            eq(Club.id, ClubT.clubId),
+            inArray(ClubT.clubId, sq),
+            lte(ClubT.startTerm, cur),
+            isNull(ClubT.deletedAt),
+            or(isNull(ClubT.endTerm), gt(ClubT.endTerm, cur)),
+          ),
+        )
+        .leftJoin(professor, eq(professor.id, ClubT.professorId))
+        .where(isNull(Club.deletedAt));
+      return response;
+    });
+    return result;
   }
 }

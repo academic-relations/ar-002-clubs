@@ -1,3 +1,5 @@
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
 const mockSemester = "봄";
 const mockDeadline = new Date();
 
@@ -12,6 +14,71 @@ const mockAllSemesters = {
     { id: 7, year: 2023, name: "봄" },
     { id: 8, year: 2023, name: "가을" },
     { id: 9, year: 2024, name: "봄" },
+  ],
+};
+
+const mockRegisterMembers = {
+  applies: [
+    {
+      id: 1,
+      applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Pending,
+      createdAt: new Date("2024-03-04T21:00:00"),
+      student: {
+        id: 1,
+        name: "이지윤",
+        studentNumber: 20200510,
+        email: "nicolelee2001@kaist.ac.kr",
+        phoneNumber: "010-1234-5678",
+      },
+    },
+    {
+      id: 2,
+      applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Pending,
+      createdAt: new Date("2024-03-04T21:00:00"),
+      student: {
+        id: 1,
+        name: "박지호",
+        studentNumber: 20200510,
+        email: "nicolelee2001@kaist.ac.kr",
+        phoneNumber: "010-1234-5678",
+      },
+    },
+    {
+      id: 3,
+      applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Pending,
+      createdAt: new Date("2024-03-04T21:00:00"),
+      student: {
+        id: 1,
+        name: "박병찬",
+        studentNumber: 20200510,
+        email: "nicolelee2001@kaist.ac.kr",
+        phoneNumber: "010-1234-5678",
+      },
+    },
+    {
+      id: 4,
+      applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Approved,
+      createdAt: new Date("2024-03-04T21:00:00"),
+      student: {
+        id: 1,
+        name: "이도라",
+        studentNumber: 20200510,
+        email: "nicolelee2001@kaist.ac.kr",
+        phoneNumber: "010-1234-5678",
+      },
+    },
+    {
+      id: 5,
+      applyStatusEnumId: RegistrationApplicationStudentStatusEnum.Rejected,
+      createdAt: new Date("2024-03-04T21:00:00"),
+      student: {
+        id: 1,
+        name: "이지윤",
+        studentNumber: 20200510,
+        email: "nicolelee2001@kaist.ac.kr",
+        phoneNumber: "010-1234-5678",
+      },
+    },
   ],
 };
 
@@ -98,4 +165,10 @@ const mockSemesterMembers = {
   ],
 };
 
-export { mockDeadline, mockSemester, mockAllSemesters, mockSemesterMembers };
+export {
+  mockDeadline,
+  mockSemester,
+  mockAllSemesters,
+  mockRegisterMembers,
+  mockSemesterMembers,
+};

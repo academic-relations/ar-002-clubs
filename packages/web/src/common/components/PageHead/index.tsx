@@ -16,6 +16,9 @@ const PageHeadWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    gap: 12px;
+  }
   align-items: flex-start;
   align-self: stretch;
 `;
@@ -25,6 +28,11 @@ const TitleWrapper = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
 `;
 
 const PageHead: React.FC<PageHeadProps> = ({

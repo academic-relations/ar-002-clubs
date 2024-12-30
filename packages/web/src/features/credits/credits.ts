@@ -21,6 +21,74 @@ export interface SemesterCredit {
 
 const credits: SemesterCredit[] = [
   {
+    semester: "2024년 가을",
+    members: [
+      {
+        nickname: "shiro",
+        name: "이재환",
+        role: "인턴",
+        roleType: RoleType.intern,
+        comment: "ㅇㅅㅇ",
+      },
+      {
+        nickname: "daystar",
+        name: "권진현",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "가을은 코딩하기 좋은 계절",
+      },
+      {
+        nickname: "default",
+        name: "김현수",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "https://skykhs3.github.io",
+      },
+      {
+        nickname: "chacha",
+        name: "안채연",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "클럽수수수수퍼노바",
+      },
+      {
+        nickname: "eel",
+        name: "최우정",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "일이 복사돼요!",
+      },
+      {
+        nickname: "ava",
+        name: "주영미",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "가을이다~",
+      },
+      {
+        nickname: "somato",
+        name: "장성원",
+        role: "Designer",
+        roleType: RoleType.member,
+        comment: "신입 somato입니다 감기 조심하세요~",
+      },
+      {
+        nickname: "hama",
+        name: "하승종",
+        role: "APM(BE)",
+        roleType: RoleType.APM_BE,
+        comment: "항상 리뷰가 늦어서 미안해요 ㅠㅜ",
+      },
+      {
+        nickname: "oreo",
+        name: "최용혁",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "팀원들 감사합니다! 오레오는 비틀어야 제맛",
+      },
+    ],
+  },
+  {
     semester: "2024년 여름",
     members: [
       {

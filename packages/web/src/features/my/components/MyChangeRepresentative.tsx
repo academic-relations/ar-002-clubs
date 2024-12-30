@@ -1,6 +1,7 @@
 import React from "react";
 
 import isPropValid from "@emotion/is-prop-valid";
+import { useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
 
@@ -18,11 +19,13 @@ import colors from "@sparcs-clubs/web/styles/themes/colors";
 import ChangeRepresentativeModalContent from "./ChangeRepresentativeModalContent";
 
 interface MyChangeRepresentativeProps {
-  type: "Requested" | "Finished";
+  type: "Requested" | "Finished" | "Rejected";
+  setType: (type: "Requested" | "Finished" | "Rejected") => void;
   clubName: string;
   prevRepresentative: string;
   newRepresentative: string;
   refetch: () => void;
+  requestId: number;
 }
 
 const MyChangeRepresentativeWrapper = styled.div.withConfig({
@@ -48,7 +51,10 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
   prevRepresentative,
   newRepresentative,
   refetch,
+  requestId,
+  setType,
 }) => {
+  const router = useRouter();
   const Title =
     type === "Requested"
       ? "동아리 대표자 변경 요청"
@@ -60,8 +66,13 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
           prevRepresentative,
           newRepresentative,
         )
-      : myChangeRepresentativeFinishText(clubName);
+      : myChangeRepresentativeFinishText(
+          clubName,
+          prevRepresentative,
+          newRepresentative,
+        );
 
+  const isNewRepresentative = true; // 이전 대표자한테도 보여주는지? -> 안 보여줄거면 이 부분 삭제
   const openConfirmModal = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
@@ -72,6 +83,8 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
           newRepresentative={newRepresentative}
           onClose={close}
           refetch={refetch}
+          requestId={requestId}
+          setType={setType}
         />
       </Modal>
     ));
@@ -94,9 +107,19 @@ const MyChangeRepresentative: React.FC<MyChangeRepresentativeProps> = ({
         {type === "Requested" && (
           <TextButton
             color="GRAY"
-            text="클릭해서 더보기"
+            text="클릭하여 더보기"
             fw="REGULAR"
             onClick={openConfirmModal}
+          />
+        )}
+        {type === "Finished" && isNewRepresentative && (
+          <TextButton
+            color="GRAY"
+            text="대표 동아리 관리 페이지 바로가기"
+            fw="REGULAR"
+            onClick={() => {
+              router.push(`/manage-club/`);
+            }}
           />
         )}
       </FlexWrapper>

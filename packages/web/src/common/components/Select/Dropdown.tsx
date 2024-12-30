@@ -3,9 +3,13 @@ import styled from "styled-components";
 
 const Dropdown = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
-})<{ marginTop?: number; maxContent?: boolean }>`
+})<{
+  marginTop?: number;
+  maxContent?: boolean;
+  position?: string;
+}>`
   /* TODO: marginTop magic number인데 좀 더 깔끔하게 바꾸는 방법 */
-  position: absolute;
+  position: ${({ position }) => position || "absolute"};
   display: flex;
   flex-direction: column;
   width: ${({ maxContent }) => (maxContent ? "max-content" : "100%")};
@@ -16,6 +20,9 @@ const Dropdown = styled.div.withConfig({
   background-color: ${({ theme }) => theme.colors.WHITE};
   gap: 4px;
   z-index: 1000; // Ensure the dropdown appears above other content
+
+  max-height: 200px;
+  overflow-y: auto;
 `;
 
 export default Dropdown;

@@ -1,4 +1,4 @@
-import { ApiFnd002ResponseOk } from "@sparcs-clubs/interface/api/funding/apiFnd002";
+// import { ApiFnd002ResponseOk } from "@sparcs-clubs/interface/api/funding/apiFnd002";
 import {
   FixtureClassEnum,
   FixtureEvidenceEnum,
@@ -6,7 +6,8 @@ import {
   TransportationEnum,
 } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
-const mockFundingDetail: ApiFnd002ResponseOk = {
+// NOTE: (@dora) use type ApiFnd002ResponseOk after https://github.com/academic-relations/ar-002-clubs/issues/1119 is done
+const mockFundingDetail = {
   clubId: 1,
   purposeId: 0,
   name: "M1 맥북 Pro 16 inch",
@@ -70,8 +71,8 @@ const mockFundingDetail: ApiFnd002ResponseOk = {
   purposeOfTransportation: "해커톤 장소 사전답사",
   placeValidity: "",
   transportationPassengers: [
-    { studentNumber: "20240510", name: "스팍스" },
-    { studentNumber: "20200515", name: "이도라" },
+    { id: 1, studentNumber: 20240510, name: "스팍스" },
+    { id: 2, studentNumber: 20200515, name: "이도라" },
   ],
 
   isNonCorporateTransaction: true,

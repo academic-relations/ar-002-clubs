@@ -2,43 +2,39 @@
 
 import React from "react";
 
-import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import styled from "styled-components";
+
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
-import { useGetClubsList } from "@sparcs-clubs/web/features/clubs/services/useGetClubsList";
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import ClubsListFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsListFrame";
+import ClubsStudentFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsStudentFrame";
+import isStudent from "@sparcs-clubs/web/utils/isStudent";
+
+const ResponsiveWrapper = styled(FlexWrapper)`
+  gap: 60px;
+  direction: column;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.md}) {
+    gap: 40px;
+  }
+`;
 
 const Clubs: React.FC = () => {
-  const { data, isLoading, isError } = useGetClubsList();
-  const isRegistrationPeriod = true;
+  const { isLoggedIn, profile } = useAuth();
 
   return (
-    <FlexWrapper direction="column" gap={60}>
+    <ResponsiveWrapper direction="column" gap={60}>
       <PageHead
         items={[{ name: "동아리 목록", path: "/clubs" }]}
         title="동아리 목록"
       />
-      <AsyncBoundary isLoading={isLoading} isError={isError}>
-        {isRegistrationPeriod && (
-          <Info text="현재는 2024년 봄학기 동아리 신청 기간입니다 (신청 마감 : 2024년 3월 10일 23:59)" />
-        )}
-        <FlexWrapper direction="column" gap={40}>
-          {(data?.divisions ?? []).map(division => (
-            <ClubsSectionFrame
-              title={division.name}
-              clubList={division.clubs.sort((a, b) => {
-                if (a.isPermanent && !b.isPermanent) return -1;
-                if (!a.isPermanent && b.isPermanent) return 1;
-                return a.type - b.type || a.name.localeCompare(b.name);
-              })}
-              key={division.name}
-              isRegistrationPeriod={isRegistrationPeriod}
-            />
-          ))}
-        </FlexWrapper>
-      </AsyncBoundary>
-    </FlexWrapper>
+      {isLoggedIn && isStudent(profile) ? (
+        <ClubsStudentFrame />
+      ) : (
+        <ClubsListFrame isRegistrationPeriod={false} />
+      )}
+    </ResponsiveWrapper>
   );
 };
 

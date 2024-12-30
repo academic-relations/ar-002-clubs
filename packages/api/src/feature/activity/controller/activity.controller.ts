@@ -4,8 +4,10 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
+  Query,
   UsePipes,
 } from "@nestjs/common";
 
@@ -14,11 +16,47 @@ import apiAct002 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
 import apiAct003 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct003";
 import apiAct004 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct004";
 import apiAct005 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
+import apiAct007, {
+  ApiAct007RequestBody,
+  ApiAct007ResponseCreated,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
+import apiAct008, {
+  ApiAct008RequestBody,
+  ApiAct008RequestParam,
+  ApiAct008ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
+import apiAct010 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct010";
+import apiAct011 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
+import apiAct012 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct012";
+import apiAct013 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct013";
+import apiAct014 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct014";
+import apiAct015 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct015";
+import apiAct016 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct016";
+import apiAct017 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct017";
+import apiAct018 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct018";
+import apiAct019, {
+  ApiAct019RequestQuery,
+  ApiAct019ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct019";
+import apiAct020, {
+  ApiAct020RequestBody,
+  ApiAct020ResponseCreated,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct020";
+import apiAct023 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
-import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
-import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
+import {
+  Executive,
+  Professor,
+  Public,
+  Student,
+} from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import {
+  GetExecutive,
+  GetProfessor,
+  GetStudent,
+} from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
 import ActivityService from "../service/activity.service";
 
@@ -40,9 +78,44 @@ import type {
   ApiAct004ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct004";
 import type {
-  ApiAct005RequestBody,
+  ApiAct005RequestQuery,
   ApiAct005ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct005";
+import type {
+  ApiAct010RequestQuery,
+  ApiAct010ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct010";
+import type {
+  ApiAct011RequestQuery,
+  ApiAct011ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
+import type {
+  ApiAct012RequestQuery,
+  ApiAct012ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct012";
+import type {
+  ApiAct013RequestQuery,
+  ApiAct013ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct013";
+import type {
+  ApiAct014RequestParam,
+  ApiAct014ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct014";
+import type {
+  ApiAct015RequestParam,
+  ApiAct015ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct015";
+import type {
+  ApiAct016RequestParam,
+  ApiAct016ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct016";
+import type {
+  ApiAct017RequestBody,
+  ApiAct017RequestParam,
+  ApiAct017ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct017";
+import type { ApiAct018ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct018";
+import type { ApiAct023ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 
 @Controller()
 export default class ActivityController {
@@ -70,10 +143,10 @@ export default class ActivityController {
   @UsePipes(new ZodPipe(apiAct005))
   async getStudentActivities(
     @GetStudent() user: GetStudent,
-    @Body() body: ApiAct005RequestBody,
+    @Query() query: ApiAct005RequestQuery,
   ): Promise<ApiAct005ResponseOk> {
     const result = await this.activityService.getStudentActivities(
-      body.clubId,
+      query.clubId,
       user.studentId,
     );
     return result;
@@ -89,7 +162,7 @@ export default class ActivityController {
   ): Promise<ApiAct002ResponseOk> {
     const result = await this.activityService.getStudentActivity(
       param.activityId,
-      user.studentId,
+      // user.studentId,
     );
 
     return result;
@@ -118,5 +191,211 @@ export default class ActivityController {
   ): Promise<ApiAct003ResponseOk> {
     await this.activityService.putStudentActivity(param, body, user.studentId);
     return {};
+  }
+
+  @Student()
+  @Post("/student/activities/activity/provisional")
+  @UsePipes(new ZodPipe(apiAct007))
+  async postStudentActivityProvisional(
+    @GetStudent() user: GetStudent,
+    @Body() body: ApiAct007RequestBody,
+  ): Promise<ApiAct007ResponseCreated> {
+    await this.activityService.postStudentActivityProvisional(
+      body,
+      user.studentId,
+    );
+    return {};
+  }
+
+  @Student()
+  @Put("/student/activities/activity/:activityId/provisional")
+  @UsePipes(new ZodPipe(apiAct008))
+  async putStudentActivityProvisional(
+    @GetStudent() user: GetStudent,
+    @Param() param: ApiAct008RequestParam,
+    @Body() body: ApiAct008RequestBody,
+  ): Promise<ApiAct008ResponseOk> {
+    await this.activityService.putStudentActivityProvisional(
+      param,
+      body,
+      user.studentId,
+    );
+    return {};
+  }
+
+  @Student()
+  @Delete("/student/activities/activity/:activityId/provisional")
+  @UsePipes(new ZodPipe(apiAct004))
+  async deleteStudentActivityProvisional(
+    @GetStudent() user: GetStudent,
+    @Param() param: ApiAct004RequestParam,
+  ): Promise<ApiAct004ResponseOk> {
+    await this.activityService.deleteStudentActivityProvisional(
+      param.activityId,
+      user.studentId,
+    );
+    return {};
+  }
+
+  @Student()
+  @Get("/student/activities/available-members")
+  @UsePipes(new ZodPipe(apiAct010))
+  async getStudentActivitiesAvailableMembers(
+    @GetStudent() user: GetStudent,
+    @Query() query: ApiAct010RequestQuery,
+  ): Promise<ApiAct010ResponseOk> {
+    const result =
+      await this.activityService.getStudentActivitiesAvailableMembers({
+        studentId: user.studentId,
+        query,
+      });
+    return result;
+  }
+
+  @Student()
+  @Get("/student/provisional/activities")
+  @UsePipes(new ZodPipe(apiAct011))
+  async getStudentProvisionalActivities(
+    @GetStudent() user: GetStudent,
+    @Query() query: ApiAct011RequestQuery,
+  ): Promise<ApiAct011ResponseOk> {
+    const result = await this.activityService.getStudentProvisionalActivities({
+      studentId: user.studentId,
+      query,
+    });
+
+    return result;
+  }
+
+  @Executive()
+  @Get("/executive/provisional/activities")
+  @UsePipes(new ZodPipe(apiAct012))
+  async getExecutiveProvisionalActivities(
+    @Query() query: ApiAct012RequestQuery,
+  ): Promise<ApiAct012ResponseOk> {
+    const result = await this.activityService.getExecutiveProvisionalActivities(
+      {
+        query,
+      },
+    );
+
+    return result;
+  }
+
+  @Professor()
+  @Get("/professor/provisional/activities")
+  @UsePipes(new ZodPipe(apiAct013))
+  async getProfessorProvisionalActivities(
+    @Query() query: ApiAct013RequestQuery,
+  ): Promise<ApiAct013ResponseOk> {
+    const result = await this.activityService.getProfessorProvisionalActivities(
+      {
+        query,
+      },
+    );
+
+    return result;
+  }
+
+  @Executive()
+  @Get("/executive/activities/activity/:activityId")
+  @UsePipes(new ZodPipe(apiAct014))
+  async getExecutiveActivity(
+    @Param() param: ApiAct014RequestParam,
+  ): Promise<ApiAct014ResponseOk> {
+    const result = await this.activityService.getExecutiveActivity(
+      param.activityId,
+    );
+
+    return result;
+  }
+
+  @Professor()
+  @Get("/professor/activities/activity/:activityId")
+  @UsePipes(new ZodPipe(apiAct015))
+  async getProfessorActivity(
+    @Param() param: ApiAct015RequestParam,
+    @GetProfessor() user: GetProfessor,
+  ): Promise<ApiAct015ResponseOk> {
+    const result = await this.activityService.getProfessorActivity(
+      param.activityId,
+      user.professorId,
+    );
+
+    return result;
+  }
+
+  @Executive()
+  @Patch("/executive/activities/activity/:activityId/approval")
+  @UsePipes(new ZodPipe(apiAct016))
+  async patchExecutiveActivityApproval(
+    @GetExecutive() user: GetExecutive,
+    @Param() param: ApiAct016RequestParam,
+  ): Promise<ApiAct016ResponseOk> {
+    const result = await this.activityService.patchExecutiveActivityApproval({
+      executiveId: user.executiveId,
+      param,
+    });
+    return result;
+  }
+
+  @Executive()
+  @Patch("/executive/activities/activity/:activityId/send-back")
+  @UsePipes(new ZodPipe(apiAct017))
+  async patchExecutiveActivitySendBack(
+    @GetExecutive() user: GetExecutive,
+    @Param() param: ApiAct017RequestParam,
+    @Body() body: ApiAct017RequestBody,
+  ): Promise<ApiAct017ResponseOk> {
+    const result = await this.activityService.patchExecutiveActivitySendBack({
+      executiveId: user.executiveId,
+      param,
+      body,
+    });
+    return result;
+  }
+
+  @Public()
+  @Get("/public/activities/deadline")
+  @UsePipes(new ZodPipe(apiAct018))
+  async getPublicActivitiesDeadline(): Promise<ApiAct018ResponseOk> {
+    const result = await this.activityService.getPublicActivitiesDeadline();
+    return result;
+  }
+
+  @Professor()
+  @Get("/professor/activities")
+  @UsePipes(new ZodPipe(apiAct019))
+  async getProfessorActivities(
+    @GetProfessor() user: GetProfessor,
+    @Query() query: ApiAct019RequestQuery,
+  ): Promise<ApiAct019ResponseOk> {
+    const result = await this.activityService.getProfessorActivities(
+      query.clubId,
+      user.professorId,
+    );
+    return result;
+  }
+
+  @Professor()
+  @Post("/professor/activities/approve")
+  @UsePipes(new ZodPipe(apiAct020))
+  async postProfessorActivityApprove(
+    @GetProfessor() user: GetProfessor,
+    @Body() body: ApiAct020RequestBody,
+  ): Promise<ApiAct020ResponseCreated> {
+    await this.activityService.postProfessorActivityApprove(
+      body.activities.map(activity => activity.id),
+      user.professorId,
+    );
+    return {};
+  }
+
+  @Executive()
+  @Get("/executive/activities/clubs")
+  @UsePipes(new ZodPipe(apiAct023))
+  async getExecutiveActivitiesClubs(): Promise<ApiAct023ResponseOk> {
+    const result = await this.activityService.getExecutiveActivitiesClubs();
+    return result;
   }
 }

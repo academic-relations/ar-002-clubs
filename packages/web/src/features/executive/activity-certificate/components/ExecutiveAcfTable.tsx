@@ -13,7 +13,7 @@ import { mockExecutiveAcf } from "@sparcs-clubs/web/features/executive/_mock/moc
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-interface ExecutivePrintingTableProps {
+interface ExecutiveAcfTableProps {
   acfList: typeof mockExecutiveAcf;
 }
 
@@ -68,9 +68,7 @@ const columns = [
   }),
 ];
 
-const ExecutiveAcfTable: React.FC<ExecutivePrintingTableProps> = ({
-  acfList,
-}) => {
+const ExecutiveAcfTable: React.FC<ExecutiveAcfTableProps> = ({ acfList }) => {
   const table = useReactTable({
     columns,
     data: acfList.items,

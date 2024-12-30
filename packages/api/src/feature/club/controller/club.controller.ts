@@ -16,10 +16,30 @@ import apiClb004, {
 import apiClb005, {
   ApiClb005RequestBody,
   ApiClb005RequestParam,
-  ApiClb005ResponseCreated,
+  ApiClb005ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb005";
+import apiClb009, {
+  ApiClb009RequestParam,
+  ApiClb009ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb009";
+import apiClb010, {
+  ApiClb010RequestParam,
+  ApiClb010ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
+import apiClb016, {
+  ApiClb016ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb016";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
+import {
+  Professor,
+  Public,
+  Student,
+} from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import {
+  GetProfessor,
+  GetStudent,
+} from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
 import { ClubService } from "../service/club.service";
 
@@ -27,6 +47,7 @@ import { ClubService } from "../service/club.service";
 export class ClubController {
   constructor(private readonly clubService: ClubService) {}
 
+  @Public()
   @Get("clubs")
   @UsePipes(new ZodPipe(apiClb001))
   async getClubs(): Promise<ApiClb001ResponseOK> {
@@ -35,6 +56,7 @@ export class ClubController {
     return result;
   }
 
+  @Public()
   @Get("clubs/club/:clubId")
   @UsePipes(new ZodPipe(apiClb002))
   async getClub(
@@ -45,38 +67,81 @@ export class ClubController {
     return clubInfo;
   }
 
+  @Student()
   @Get("student/clubs/my")
   @UsePipes(new ZodPipe(apiClb003))
-  async getStudentClubsMy(): Promise<ApiClb003ResponseOK> {
-    // TODO: getProfileStudent로 인증 로직 이용해 수정 필요
-    const studentId = 605;
-    const result = await this.clubService.getStudentClubsMy(studentId);
-    // return apiClb003.responseBodyMap[200].parse(result);
+  async getStudentClubsMy(
+    @GetStudent() user: GetStudent,
+  ): Promise<ApiClb003ResponseOK> {
+    const result = await this.clubService.getStudentClubsMy(user.studentId);
     return result;
   }
 
+  @Student()
   @Get("student/clubs/club/:clubId/brief")
   @UsePipes(new ZodPipe(apiClb004))
   async getStudentClubBrief(
+    @GetStudent() user: GetStudent,
     @Param() param: ApiClb004RequestParam,
   ): Promise<ApiClb004ResponseOK> {
-    const studentId = 605;
-    const result = await this.clubService.getStudentClubBrief(studentId, param);
+    const result = await this.clubService.getStudentClubBrief(
+      user.studentId,
+      param,
+    );
     return result;
   }
 
+  @Student()
   @Put("student/clubs/club/:clubId/brief")
   @UsePipes(new ZodPipe(apiClb005))
   async putStudentClubBrief(
+    @GetStudent() user: GetStudent,
     @Param() param: ApiClb005RequestParam,
     @Body() body: ApiClb005RequestBody,
-  ): Promise<ApiClb005ResponseCreated> {
-    const studentId = 605;
+  ): Promise<ApiClb005ResponseOk> {
     const result = await this.clubService.putStudentClubBrief(
-      studentId,
+      user.studentId,
       param,
       body,
     );
+    return result;
+  }
+
+  @Student()
+  @Get("/student/clubs/club/:clubId/members/semesters")
+  @UsePipes(new ZodPipe(apiClb009))
+  async getStudentClubSemesters(
+    @GetStudent() user: GetStudent,
+    @Param() param: ApiClb009RequestParam,
+  ): Promise<ApiClb009ResponseOk> {
+    const result = await this.clubService.getStudentClubSemesters(
+      user.studentId,
+      param,
+    );
+    return result;
+  }
+
+  @Student()
+  @Get("student/clubs/club/:clubId/members/semesters/semester/:semesterId")
+  @UsePipes(new ZodPipe(apiClb010))
+  async getStudentClubMembers(
+    @GetStudent() user: GetStudent,
+    @Param() param: ApiClb010RequestParam,
+  ): Promise<ApiClb010ResponseOk> {
+    const result = await this.clubService.getStudentClubMembers(
+      user.studentId,
+      param,
+    );
+    return result;
+  }
+
+  @Professor()
+  @Get("professor/clubs/my")
+  @UsePipes(new ZodPipe(apiClb016))
+  async getProfessorClubsMy(
+    @GetProfessor() user: GetProfessor,
+  ): Promise<ApiClb016ResponseOk> {
+    const result = await this.clubService.getProfessorClubsMy(user.professorId);
     return result;
   }
 }

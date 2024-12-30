@@ -2,9 +2,8 @@ import apiPrt005 from "@sparcs-clubs/interface/api/promotional-printing/endpoint
 import { useQuery } from "@tanstack/react-query";
 
 import {
-  axiosClient,
+  axiosClientWithAuth,
   defineAxiosMock,
-  UnexpectedAPIResponseError,
 } from "@sparcs-clubs/web/lib/axios";
 
 import { mockupMyPrint } from "./_mock/mockMyClub";
@@ -30,16 +29,11 @@ export const useGetMyPrinting = (
   return useQuery<ApiPrt005ResponseOk, Error>({
     queryKey: [apiPrt005.url(), requestQuery],
     queryFn: async (): Promise<ApiPrt005ResponseOk> => {
-      const { data, status } = await axiosClient.get(apiPrt005.url(), {
+      const { data } = await axiosClientWithAuth.get(apiPrt005.url(), {
         params: requestQuery,
       });
 
-      switch (status) {
-        case 200:
-          return apiPrt005.responseBodyMap[200].parse(data);
-        default:
-          throw new UnexpectedAPIResponseError();
-      }
+      return apiPrt005.responseBodyMap[200].parse(data);
     },
   });
 };

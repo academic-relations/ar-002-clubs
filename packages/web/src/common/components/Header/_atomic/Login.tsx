@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { jwtDecode } from "jwt-decode";
-
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import MyMenu from "@sparcs-clubs/web/common/components/MyMenu";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import { getUserType } from "@sparcs-clubs/web/utils/getUserType";
+import { getLocalStorageItem } from "@sparcs-clubs/web/utils/localStorage";
 
 const LoginInner = styled.div`
   display: flex;
@@ -39,7 +39,7 @@ const Login = () => {
     if (!isLoggedIn) {
       setIsMenuOpen(false);
     } else {
-      const token = localStorage.getItem("accessToken");
+      const token = getLocalStorageItem("accessToken");
       if (token) {
         setSelectedToken(token);
         const decoded: { name?: string; type?: string } = jwtDecode(token);

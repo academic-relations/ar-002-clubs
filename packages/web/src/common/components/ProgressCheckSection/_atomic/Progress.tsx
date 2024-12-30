@@ -1,5 +1,3 @@
-import React from "react";
-
 import styled from "styled-components";
 
 import Typography, {
@@ -7,10 +5,12 @@ import Typography, {
 } from "@sparcs-clubs/web/common/components/Typography";
 import { formatSlashDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
-import ProgressDot, { Status } from "./ProgressDot";
+import { ProgressCheckSectionStatusEnum } from "../progressCheckStationStatus";
+
+import ProgressDot from "./ProgressDot";
 
 interface ProgressProps {
-  status?: Status;
+  status?: ProgressCheckSectionStatusEnum;
   label: string;
   date: Date | undefined;
 }
@@ -34,13 +34,17 @@ const TextWrapper = styled.div`
   width: max-content;
 `;
 
-const Progress = ({ status = Status.Pending, label, date }: ProgressProps) => {
+const Progress = ({
+  status = ProgressCheckSectionStatusEnum.Pending,
+  label,
+  date,
+}: ProgressProps) => {
   let labelColor: ThemeColors;
   switch (status) {
-    case Status.Approved:
+    case ProgressCheckSectionStatusEnum.Approved:
       labelColor = "PRIMARY";
       break;
-    case Status.Canceled:
+    case ProgressCheckSectionStatusEnum.Canceled:
       labelColor = "RED.600";
       break;
     default:

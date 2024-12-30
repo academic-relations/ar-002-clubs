@@ -3,9 +3,9 @@ import React from "react";
 import styled from "styled-components";
 
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
-import Filter from "@sparcs-clubs/web/common/components/Filter/Index";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
+import SemesterFilter from "@sparcs-clubs/web/common/components/SemesterFilter/index";
 
 import { SemesterListProps } from "../types/semesterList";
 
@@ -43,7 +43,7 @@ const MemberSearchAndFilter: React.FC<
     <FlexWrapper direction="column" gap={20}>
       <SearchAndFilterWrapper>
         <SearchInput searchText={searchText} handleChange={handleChange} />
-        <Filter
+        <SemesterFilter
           semesters={semesters}
           selectedSemesters={selectedSemesters}
           setSelectedSemesters={setSelectedSemesters}

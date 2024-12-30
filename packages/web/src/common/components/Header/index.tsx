@@ -6,10 +6,16 @@ import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import NavList from "@sparcs-clubs/web/common/components/NavTools/NavList";
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import navPaths from "@sparcs-clubs/web/constants/nav";
+
+import paths from "@sparcs-clubs/web/constants/paths";
+
+import { getFeatureFlagString } from "@sparcs-clubs/web/hooks/getFeatureFlag";
 
 import MobileNavMenu from "../NavTools/MobileNavMenu";
 
+import Beta from "./_atomic/Beta";
 import Login from "./_atomic/Login";
 import Logo from "./_atomic/Logo";
 
@@ -18,6 +24,10 @@ const IdentityBar = styled.div`
   width: 100%;
   height: 5px;
   background-color: ${({ theme }) => theme.colors.PRIMARY};
+`;
+
+const LogoContainer = styled.div`
+  position: relative;
 `;
 
 const NavInner = styled.div`
@@ -67,25 +77,48 @@ const Menu = styled.div`
 `;
 
 const Header: React.FC = () => {
+  const isBetaPeriod = true;
+
   const [isMobileMenuVisible, setIsMobileMenuVisible] = useState<boolean>();
+
+  const { profile } = useAuth();
+
+  const headerPaths = navPaths.header
+    .filter(
+      menu =>
+        paths[menu].authority.includes(profile?.type as string) ||
+        paths[menu].authority.includes("all"),
+    )
+    .filter(menu => getFeatureFlagString(paths[menu].featureFlag));
+
+  const handleClose = () => {
+    setIsMobileMenuVisible(false);
+  };
+  const handleClick = () => {
+    setIsMobileMenuVisible(prev => !prev);
+  };
+
   return (
     <HeaderInner>
       <IdentityBar />
       <NavInner>
-        <Logo />
+        <LogoContainer>
+          <Logo onClick={handleClose} />
+          {isBetaPeriod && <Beta />}
+        </LogoContainer>
         <Login />
         <Menu>
           <Icon
-            type="menu"
+            type={isMobileMenuVisible ? "close" : "menu"}
             size={24}
-            onClick={() => setIsMobileMenuVisible(!isMobileMenuVisible)}
+            onClick={handleClick}
           />
         </Menu>
-        <StyledNavList highlight keys={navPaths.header} />
+        <StyledNavList highlight keys={headerPaths} />
       </NavInner>
       {isMobileMenuVisible && (
         <MobileNavMenu
-          keys={navPaths.header}
+          keys={headerPaths}
           onClose={() => setIsMobileMenuVisible(!isMobileMenuVisible)}
         />
       )}

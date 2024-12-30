@@ -4,6 +4,6 @@ import React from "react";
 
 import ActivityCertificateMainFrame from "@sparcs-clubs/web/features/activity-certificate/frames/ActivityCertificateMainFrame";
 
-const Clubs = () => <ActivityCertificateMainFrame />;
+const ActivityCertificate = () => <ActivityCertificateMainFrame />;
 
-export default Clubs;
+export default ActivityCertificate;

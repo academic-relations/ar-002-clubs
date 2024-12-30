@@ -27,6 +27,7 @@ interface FormControllerProps<
         | number
         | Date
         | FieldPathValue<TFieldValues, TName>
+        | null
         | undefined,
     ) => void;
     onBlur: () => void;
@@ -39,9 +40,12 @@ interface FormControllerProps<
   maxLength?: number;
   minLength?: number;
   pattern?: RegExp;
+  requiredMessage?: string;
+  maxLengthMessage?: string;
+  minLengthMessage?: string;
+  patternMessage?: string;
 }
 
-// TODO. maxLength rule 추가,
 function FormController<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
@@ -59,7 +63,7 @@ function FormController<
   const patternMessage = "정해진 형식에 맞지 않습니다.";
 
   const isValidLength = (length: number | undefined) =>
-    length != null && length > 0;
+    length !== undefined && length > 0;
 
   const {
     field: { onChange, onBlur, value },
@@ -71,23 +75,26 @@ function FormController<
       ...rules,
       required: {
         value: props.required ?? false,
-        message: requiredMessage,
+        message: props.requiredMessage ?? requiredMessage,
       },
       maxLength: isValidLength(props.maxLength)
         ? {
             value: props.maxLength as number,
-            message: maxLengthMessage,
+            message: props.maxLengthMessage ?? maxLengthMessage,
           }
         : undefined,
       minLength: isValidLength(props.minLength)
         ? {
             value: props.minLength as number,
-            message: minLengthMessage,
+            message: props.minLengthMessage ?? minLengthMessage,
           }
         : undefined,
       pattern:
-        props.pattern != null
-          ? { value: props.pattern, message: patternMessage }
+        props.pattern !== undefined
+          ? {
+              value: props.pattern,
+              message: props.patternMessage ?? patternMessage,
+            }
           : undefined,
     },
     defaultValue,
@@ -96,9 +103,9 @@ function FormController<
   return renderItem({
     ...props,
     onChange: useCallback(e => onChange(e), [onChange]),
-    onBlur: () => {
+    onBlur: useCallback(() => {
       onBlur();
-    },
+    }, [onBlur]),
     value,
     hasError: !!error?.message,
     errorMessage: error?.message,

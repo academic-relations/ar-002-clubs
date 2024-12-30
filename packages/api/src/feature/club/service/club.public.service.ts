@@ -1,10 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 
-import { ClubDelegateDRepository } from "../repository/club.club-delegate-d.repository";
+import { ClubDelegateDRepository } from "../delegate/club.club-delegate-d.repository";
 import ClubStudentTRepository from "../repository/club.club-student-t.repository";
+import ClubTRepository from "../repository/club.club-t.repository";
 import ClubRepository from "../repository/club.repository";
+
 import SemesterDRepository from "../repository/club.semester-d.repository";
 
 @Injectable()
@@ -12,6 +16,7 @@ export default class ClubPublicService {
   constructor(
     private clubDelegateDRepository: ClubDelegateDRepository,
     private clubRepository: ClubRepository,
+    private clubTRepository: ClubTRepository,
     private clubStudentTRepository: ClubStudentTRepository,
     private semesterDRepository: SemesterDRepository,
   ) {}
@@ -49,6 +54,66 @@ export default class ClubPublicService {
 
     if (result.find(row => row.studentId === studentId)) return true;
     return false;
+  }
+
+  /**
+   * @returns 이번 학기 활동중인 동아리 목록을 리턴합니다.
+   */
+  async getAtivatedClubs() {
+    const semesterId = await this.dateToSemesterId(getKSTDate());
+    if (semesterId === undefined)
+      throw new HttpException(
+        "Today is not in semester",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+
+    const clubTs = await this.clubTRepository.selectBySemesterId(semesterId);
+    const result = await Promise.all(
+      clubTs.map(async clubT => {
+        const club = await this.clubRepository.findByClubId(clubT.clubId);
+        if (club.length === 0 || club.length > 1)
+          throw new HttpException(
+            "unreachable",
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        return {
+          club: club[0],
+          clubT,
+        };
+      }),
+    );
+
+    return result;
+  }
+
+  /**
+   * @param param
+   * @returns 해당 동아리에서 해당 기간동안 활동했던 학생 목록을 리턴합니다.
+   */
+  async getMemberFromDuration(param: {
+    clubId: number;
+    duration: {
+      startTerm: Date;
+      endTerm: Date;
+    };
+  }): Promise<
+    Array<{
+      studentId: number;
+      name: string;
+      studentNumber: number;
+    }>
+  > {
+    const result =
+      await this.clubStudentTRepository.selectStudentByClubIdAndDuration({
+        clubId: param.clubId,
+        duration: param.duration,
+      });
+
+    return result.map(e => ({
+      studentId: e.id,
+      name: e.name,
+      studentNumber: e.number,
+    }));
   }
 
   async getMemberFromSemester(param: { semesterId: number; clubId: number }) {
@@ -103,34 +168,39 @@ export default class ClubPublicService {
   }
 
   /**
-   * @param clubStatusEnumId 동아리 상태 enum id
+   * @param clubStatusEnumId 동아리 상태 enum id의 배열
+   * @param studentId 사용중인 학생 id
    * @param semesterId 신청 학기 id
-   * @returns 특정 학기의 특정 상태(정동아리/가동아리)의 동아리(clubId) list
-   * 예를 들어, getClubIdByClubStatusEnumId(ClubTypeEnum.Regular, semesterId) 의 경우,
-   * semsterId 학기 당시 정동아리였던 동아리의 clubId list를 반환합니다.
+   * @returns 특정 학기의 특정 상태(정동아리/가동아리/정동아리 or 가동아리)의 동아리(clubId) list
+   * 예를 들어, getClubIdByClubStatusEnumId([ClubTypeEnum.Regular], semesterId) 의 경우,
+   * semesterId 학기 당시 정동아리였던 동아리의 clubId list를 반환합니다.
    */
   async getClubIdByClubStatusEnumId(
-    clubStatusEnumId: number,
+    studentId: number,
+    clubStatusEnumIds: Array<ClubTypeEnum>,
     semesterId: number,
   ) {
     const clubList = await this.clubRepository.findClubIdByClubStatusEnumId(
-      clubStatusEnumId,
+      studentId,
+      clubStatusEnumIds,
       semesterId,
     );
     return clubList;
   }
 
   /**
-   *
+   * @param studentId
    * @param semesterId
    * @returns 신규 등록 신청이 가능한 동아리 list
    * 신청 학기를 기준으로 아래에 포함되는 clubId list를 반환합니다.
    * 1. 최근 2학기 동안 가동아리 상태를 유지한 동아리
    * 2. 최근 3학기 이내 한 번이라도 정동아리였던 동아리
    */
-  async getEligibleClubsForRegistration(semesterId: number) {
-    const clubList =
-      await this.clubRepository.findEligibleClubsForRegistration(semesterId);
+  async getEligibleClubsForRegistration(studentId: number, semesterId: number) {
+    const clubList = await this.clubRepository.findEligibleClubsForRegistration(
+      studentId,
+      semesterId,
+    );
     return clubList;
   }
 
@@ -144,5 +214,73 @@ export default class ClubPublicService {
         clubId,
       );
     return isPresident;
+  }
+
+  /**
+   * @param studentId 학생의 ID
+   * @param clubId 동아리의 ID
+   * @returns void
+   *
+   * 학생을 특정 동아리에 추가합니다.
+   * 이 메소드는 현재 학기(`semesterId`)에 해당하는 동아리에 학생을 추가합니다.
+   * 현재 학기를 기준으로 `semesterId`를 조회하고, 조회된 학기가 없는 경우 예외를 발생시킵니다.
+   * 조회된 `semesterId`를 사용하여 해당 동아리(`clubId`)에 학생(`studentId`)을 추가합니다.
+   */
+
+  async addStudentToClub(studentId: number, clubId: number): Promise<void> {
+    const cur = getKSTDate(); // 현재 KST 시간을 가져옴
+
+    const semesterId = await this.dateToSemesterId(cur);
+    if (!semesterId) {
+      throw new HttpException(
+        "No current semester found.",
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    // 신입 부원 추가
+    await this.clubStudentTRepository.addStudentToClub(
+      studentId,
+      clubId,
+      semesterId,
+    );
+  }
+
+  /**
+   * 학생을 특정 동아리에서 제거합니다.
+   *
+   * @param studentId 학생의 ID
+   * @param clubId 동아리의 ID
+   * @returns void
+   *
+   * 이 메소드는 현재 학기(`semesterId`)에 해당하는 동아리에서 학생을 제거합니다.
+   * 현재 학기를 기준으로 `semesterId`를 조회하고, 조회된 학기가 없는 경우 예외를 발생시킵니다.
+   * 조회된 `semesterId`를 사용하여 해당 동아리(`clubId`)에서 학생(`studentId`)을 제거합니다.
+   */
+  async removeStudentFromClub(
+    studentId: number,
+    clubId: number,
+  ): Promise<void> {
+    const cur = getKSTDate(); // 현재 KST 시간을 가져옴
+
+    const semesterId = await this.dateToSemesterId(cur);
+    if (!semesterId) {
+      throw new HttpException(
+        "No current semester found.",
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const isTargetStudentDelegate = await this.isStudentDelegate(
+      studentId,
+      clubId,
+    );
+    // 신입 부원 제거
+    await this.clubStudentTRepository.removeStudentFromClub(
+      studentId,
+      clubId,
+      semesterId,
+      isTargetStudentDelegate,
+    );
   }
 }

@@ -1,5 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 
+import { isValid, parse } from "date-fns";
+import { ko } from "date-fns/locale";
 import styled from "styled-components";
 
 import TextInput, {
@@ -21,8 +23,10 @@ interface DateRangeInputProps
 }
 
 const DateRangeInputErrorFrameInner = styled.div`
+  min-width: 300px;
   display: flex;
   flex-direction: column;
+  flex: 1;
 `;
 
 const DateRangeInputFrameInner = styled.div`
@@ -32,28 +36,13 @@ const DateRangeInputFrameInner = styled.div`
   display: flex;
 `;
 
-const availableMonths = [
-  "01",
-  "02",
-  "03",
-  "04",
-  "05",
-  "06",
-  "07",
-  "08",
-  "09",
-  "10",
-  "11",
-  "12",
-];
-
 const DateRangeInput: React.FC<DateRangeInputProps> = ({
   label = ["", ""],
-  startValue = "",
-  endValue = "",
-  limitStartValue = "",
-  limitEndValue = "",
-  onChange = () => {},
+  startValue,
+  endValue,
+  limitStartValue,
+  limitEndValue,
+  onChange,
   useDays = false, // Default to false
   ...props
 }) => {
@@ -71,10 +60,14 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
           /^\d*$/.test(startValue.replace(/./g, ""))) &&
         (dateFormat.test(endValue) || /^\d*$/.test(endValue.replace(/./g, "")));
 
+      const isValidDate = (date: string) => {
+        const parsed = useDays
+          ? parse(date, "yyyy.MM.dd", new Date(), { locale: ko })
+          : parse(date, "yyyy.MM", new Date(), { locale: ko });
+        return isValid(parsed);
+      };
       if (!startValue) {
         setError("시작 기간을 입력하지 않았습니다");
-      } else if (!endValue) {
-        setError("끝 기간을 입력하지 않았습니다");
       } else if (!isValidFormat) {
         setError("입력 기간이 올바르지 않습니다");
       } else if (
@@ -82,28 +75,26 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
         !(endValue.length === maxLength)
       ) {
         setError("입력 기간이 올바르지 않습니다");
-      } else if (
-        !availableMonths.includes(startValue.split(".")[1]) ||
-        !availableMonths.includes(endValue.split(".")[1])
-      ) {
-        setError("입력 기간이 올바르지 않습니다");
+      } else if (!isValidDate(startValue) || !isValidDate(endValue)) {
+        setError("유효하지 않은 날짜입니다");
+      } else if (!endValue) {
+        setError("끝 기간을 입력하지 않았습니다");
       } else if (
         new Date(startValue).getTime() > new Date(endValue).getTime()
       ) {
-        setError("입력 기간이 올바르지 않습니다");
+        setError("종료일은 시작일보다 빠를 수 없습니다");
       } else if (
         new Date(startValue).getTime() < new Date(limitStartValue).getTime() ||
         new Date(limitEndValue).getTime() < new Date(startValue).getTime() ||
         new Date(endValue).getTime() < new Date(limitStartValue).getTime() ||
         new Date(limitEndValue).getTime() < new Date(endValue).getTime()
       ) {
-        setError("입력 기간이 올바르지 않습니다");
+        setError("입력 가능 범위를 벗어났습니다");
       } else {
         setError("");
       }
     }
   }, [startValue, endValue, touched, useDays]);
-
   const handleBlur = () => {
     setTouched(true);
   };

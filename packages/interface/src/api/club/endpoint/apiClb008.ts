@@ -15,7 +15,10 @@ const method = "GET";
 
 const requestParam = z.object({
   clubId: z.coerce.number().int(),
-  delegateEnumId: z.nativeEnum(ClubDelegateEnum),
+  delegateEnumId: z.preprocess(
+    val => z.coerce.number().int().parse(val),
+    z.nativeEnum(ClubDelegateEnum),
+  ),
 });
 
 const requestQuery = z.object({});
@@ -27,7 +30,8 @@ const responseBodyMap = {
     students: z.array(
       z.object({
         id: z.coerce.number().int(),
-        name: z.coerce.string().max(20),
+        studentNumber: z.string(),
+        name: z.coerce.string().max(20), // studentNumber는 string으로 통일!
         phoneNumber: zKrPhoneNumber,
       }),
     ),
