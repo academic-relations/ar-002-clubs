@@ -44,6 +44,7 @@ import apiAct020, {
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct020";
 import apiAct023 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 import apiAct024 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
+import apiAct025 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct025";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -121,6 +122,10 @@ import type {
   ApiAct024RequestQuery,
   ApiAct024ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
+import type {
+  ApiAct025RequestBody,
+  ApiAct025ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct025";
 
 @Controller()
 export default class ActivityController {
@@ -415,5 +420,18 @@ export default class ActivityController {
       query,
     });
     return result;
+  }
+
+  @Executive()
+  @Patch("/executive/activities")
+  @UsePipes(new ZodPipe(apiAct025))
+  async patchExecutiveActivities(
+    @GetExecutive() user: GetExecutive,
+    @Body() body: ApiAct025RequestBody,
+  ): Promise<ApiAct025ResponseOk> {
+    await this.activityService.patchExecutiveActivities({
+      body,
+    });
+    return {};
   }
 }

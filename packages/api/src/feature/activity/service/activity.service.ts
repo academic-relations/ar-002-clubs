@@ -61,6 +61,10 @@ import type {
   ApiAct024RequestQuery,
   ApiAct024ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
+import type {
+  ApiAct025RequestBody,
+  ApiAct025ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct025";
 
 @Injectable()
 export default class ActivityService {
@@ -1171,5 +1175,21 @@ export default class ActivityService {
       chargedExecutive: clubChargedExecutive,
       items,
     };
+  }
+
+  async patchExecutiveActivities(param: {
+    body: ApiAct025RequestBody;
+  }): Promise<ApiAct025ResponseOk> {
+    await Promise.all(
+      param.body.activityIds.map(async activityId => {
+        const isUpdateSuceed =
+          await this.activityRepository.updateActivityChargedExecutive({
+            activityId,
+            executiveId: param.body.executiveId,
+          });
+        return isUpdateSuceed;
+      }),
+    );
+    return {};
   }
 }

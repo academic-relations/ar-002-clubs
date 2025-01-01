@@ -1,5 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import logger from "@sparcs-clubs/api/common/util/logger";
+
 import ExecutiveRepository from "../repository/executive.repository";
 import ProfessorRepository from "../repository/professor.repository";
 import { StudentRepository } from "../repository/student.repository";
@@ -59,7 +61,7 @@ export default class UserPublicService {
     if (executiveTs.length === 0) {
       return undefined;
     }
-
+    logger.debug(`executiveT.id: ${executiveTs[0].executiveId}`);
     const executives = await this.executiveRepository.selectExecutiveById({
       id: executiveTs[0].executiveId,
     });
@@ -68,6 +70,7 @@ export default class UserPublicService {
     if (executives.length === 0) {
       return undefined;
     }
+    logger.debug(`executive.name: ${executives[0].name}`);
 
     return {
       executive: executives[0],
