@@ -42,6 +42,8 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 
 interface MarkdownProps {
   placeholder?: string;
+  initialValue?: string;
+  onChange?: (content: string) => void;
 }
 
 const ButtonWrapper = styled.div`
@@ -68,7 +70,11 @@ const ProtectedParagraph = Node.create({
   },
 });
 
-const Markdown = ({ placeholder = "" }: MarkdownProps) => {
+const Markdown = ({
+  placeholder = "",
+  initialValue = "",
+  onChange = () => {},
+}: MarkdownProps) => {
   const editor = useEditor({
     extensions: [
       Document,
@@ -105,7 +111,13 @@ const Markdown = ({ placeholder = "" }: MarkdownProps) => {
       TableHeader,
       Text,
     ],
-    content: ``,
+    content: initialValue,
+    onUpdate: () => {
+      const content = editor?.getHTML();
+      if (content) {
+        onChange(content); // 부모로 HTML 전달
+      }
+    },
   });
 
   // 테이블 삽입, 이후 삭제 방지된 텍스트 노드 삽입
