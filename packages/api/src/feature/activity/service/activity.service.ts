@@ -19,6 +19,7 @@ import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.publi
 import { ClubRegistrationPublicService } from "@sparcs-clubs/api/feature/registration/club-registration/service/club-registration.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
+import ActivityClubChargedExecutiveRepository from "../repository/activity.activity-club-charged-executive.repository";
 import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
 import ActivityRepository from "../repository/activity.repository";
 
@@ -56,11 +57,16 @@ import type {
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct017";
 import type { ApiAct018ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct018";
 import type { ApiAct023ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
+import type {
+  ApiAct024RequestQuery,
+  ApiAct024ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
 
 @Injectable()
 export default class ActivityService {
   constructor(
     private activityRepository: ActivityRepository,
+    private activityClubChargedExecutiveRepository: ActivityClubChargedExecutiveRepository,
     private activityActivityTermRepository: ActivityActivityTermRepository,
     private clubPublicService: ClubPublicService,
     private divisionPublicService: DivisionPublicService,
@@ -1068,6 +1074,102 @@ export default class ActivityService {
           };
         }),
       ),
+    };
+  }
+
+  async getExecutiveActivitiesClubBrief(param: {
+    query: ApiAct024RequestQuery;
+  }): Promise<ApiAct024ResponseOk> {
+    // check the clubs is activated
+    const clubs = await this.clubPublicService.getAtivatedClubs();
+    if (!clubs.some(e => e.club.id === param.query.clubId)) {
+      throw new HttpException("No such club", HttpStatus.NOT_FOUND);
+    }
+
+    const activities = await this.getActivities({ clubId: param.query.clubId });
+    const chargedExecutiveId = await this.activityClubChargedExecutiveRepository
+      .selectActivityClubChargedExecutiveByClubId({
+        acitvityDId: await this.getLastActivityD().then(e => e.id),
+        clubId: param.query.clubId,
+      })
+      .then(arr => {
+        if (arr.length === 0) {
+          return undefined;
+        }
+        if (arr.length > 1) {
+          throw new HttpException(
+            "unreachable",
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
+        return arr[0].executiveId;
+      });
+    const clubChargedExecutive =
+      chargedExecutiveId === undefined
+        ? undefined
+        : await this.userPublicService
+            .getExecutiveAndExecutiveTByExecutiveId({
+              executiveId: chargedExecutiveId,
+            })
+            .then(e => ({
+              id: e.executive.id,
+              name: e.executive.name,
+            }));
+
+    const items: ApiAct024ResponseOk["items"] = await Promise.all(
+      activities.map(async activity => {
+        const lastFeedback = await this.activityRepository
+          .selectActivityFeedbackByActivityId({
+            activityId: activity.id,
+          })
+          .then(arr =>
+            arr.reduce((acc, cur) => {
+              if (acc === undefined || acc.createdAt < cur.createdAt) {
+                return cur;
+              }
+              return acc;
+            }, undefined),
+          );
+
+        const lastReviewedExecutive =
+          lastFeedback === undefined
+            ? undefined
+            : await this.userPublicService
+                .getExecutiveAndExecutiveTByExecutiveId({
+                  executiveId: lastFeedback.executiveId,
+                })
+                .then(e => ({
+                  id: e.executive.id,
+                  name: e.executive.name,
+                }));
+
+        const chargedExecutive =
+          activity.chargedExecutiveId === undefined ||
+          activity.chargedExecutiveId === null
+            ? undefined
+            : await this.userPublicService
+                .getExecutiveAndExecutiveTByExecutiveId({
+                  executiveId: activity.chargedExecutiveId,
+                })
+                .then(e => ({
+                  id: e.executive.id,
+                  name: e.executive.name,
+                }));
+
+        return {
+          activityId: activity.id,
+          activityStatusEnum: activity.activityStatusEnumId,
+          activityName: activity.name,
+          lastReviewedExecutive,
+          chargedExecutive,
+          updatedAt: activity.updatedAt,
+        };
+      }),
+    );
+
+    return {
+      chargedExecutive: clubChargedExecutive,
+      items,
     };
   }
 }

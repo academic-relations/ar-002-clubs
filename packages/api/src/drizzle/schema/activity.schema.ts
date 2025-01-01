@@ -183,6 +183,35 @@ export const ProfessorSignStatus = mysqlTable(
   }),
 );
 
+export const ActivityClubChargedExecutive = mysqlTable(
+  "activity_club_charged_executive",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    activityDId: int("activity_d_id").notNull(),
+    clubId: int("club_id").notNull(),
+    executiveId: int("executive_id").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    activityForeignKey: foreignKey({
+      name: "activity_club_charged_executive_activity_d_id_fk",
+      columns: [table.activityDId],
+      foreignColumns: [ActivityD.id],
+    }),
+    clubForeignKey: foreignKey({
+      name: "activity_club_charged_executive_club_id_fk",
+      columns: [table.clubId],
+      foreignColumns: [Club.id],
+    }),
+    executiveForeignKey: foreignKey({
+      name: "activity_club_charged_executive_executive_id_fk",
+      columns: [table.executiveId],
+      foreignColumns: [Executive.id],
+    }),
+  }),
+);
+
 export const ActivityDeadlineD = mysqlTable(
   "activity_deadline_d",
   {

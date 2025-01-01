@@ -333,10 +333,7 @@ export default class ActivityRepository {
    */
   async selectActivityFeedbackByActivityId(param: { activityId: number }) {
     const result = await this.db
-      .select({
-        comment: ActivityFeedback.comment,
-        createdAt: ActivityFeedback.createdAt,
-      })
+      .select()
       .from(ActivityFeedback)
       .where(
         and(
