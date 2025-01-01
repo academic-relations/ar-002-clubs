@@ -21,6 +21,18 @@ export interface SemesterCredit {
 
 const credits: SemesterCredit[] = [
   {
+    semester: "2024년 겨울",
+    members: [
+      {
+        nickname: "eel",
+        name: "최우정",
+        role: "FE / BE",
+        roleType: RoleType.member,
+        comment: "겨울에 코딩하면 즐거워요",
+      },
+    ],
+  },
+  {
     semester: "2024년 가을",
     members: [
       {
