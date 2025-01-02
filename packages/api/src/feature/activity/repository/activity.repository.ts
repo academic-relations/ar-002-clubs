@@ -613,4 +613,26 @@ export default class ActivityRepository {
     });
     return isUpdateSucceed;
   }
+
+  /**
+   * @param activityId 활동 Id
+   * @param executiveId 집행부원 Id
+   * @description 해당 활동의 담당 집행부원을 변경합니다.
+   * @returns update에 성공했는지 성공여부를 리턴합니다.
+   */
+  async updateActivityChargedExecutive(param: {
+    activityId: number;
+    executiveId: number;
+  }): Promise<boolean> {
+    const [updateResult] = await this.db
+      .update(Activity)
+      .set({
+        chargedExecutiveId: param.executiveId,
+      })
+      .where(
+        and(eq(Activity.id, param.activityId), isNull(Activity.deletedAt)),
+      );
+
+    return updateResult.warningStatus === 0;
+  }
 }
