@@ -1,6 +1,6 @@
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
 
-const useHasProfessor = (
+const useHasAdvisor = (
   clubId: string,
 ): {
   data: boolean;
@@ -18,10 +18,10 @@ const useHasProfessor = (
   }
 
   return {
-    data: data.advisor !== undefined,
+    data: data.advisor !== undefined && data.advisor !== null,
     isLoading,
     isError,
   };
 };
 
-export default useHasProfessor;
+export default useHasAdvisor;

@@ -1,4 +1,4 @@
-import useHasProfessor from "@sparcs-clubs/web/features/clubs/hooks/useHasProfessor";
+import useHasAdvisor from "@sparcs-clubs/web/features/clubs/hooks/useHasAdvisor";
 import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
 import useGetNewActivityReportList from "../services/useGetNewActivityReportList";
@@ -22,7 +22,7 @@ const useGetCurrentActivityReportList = (
     data: hasProfessor,
     isLoading: hasProfessorLoading,
     isError: hasProfessorError,
-  } = useHasProfessor(clubId.toString());
+  } = useHasAdvisor(clubId.toString());
 
   const isLoading = activityReportListLoading || hasProfessorLoading;
   const isError = activityReportListError || hasProfessorError;
