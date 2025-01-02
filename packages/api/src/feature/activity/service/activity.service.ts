@@ -374,6 +374,14 @@ export default class ActivityService {
     await this.checkDeadline({
       enums: [ActivityDeadlineEnum.Upload, ActivityDeadlineEnum.Exceptional],
     });
+
+    const activities = await this.getActivities({ clubId: body.clubId });
+    if (activities.length >= 20) {
+      throw new HttpException(
+        "The number of activities is over the limit",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     // QUESTION: 신청내용중 startTerm과 endTerm이 이번 학기의 활동기간에 맞는지 검사해야 할까요?.
     const activityD = await this.getLastActivityD();
     // 현재학기에 동아리원이 아니였던 참가자가 있는지 검사합니다.
