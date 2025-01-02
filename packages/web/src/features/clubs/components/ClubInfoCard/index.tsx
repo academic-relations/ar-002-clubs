@@ -12,8 +12,13 @@ import {
   getTagContentFromClubType,
 } from "@sparcs-clubs/web/types/clubdetail.types";
 
-import { ClubDetailProps } from "./ClubDetailCard";
 import ClubInfoItem from "./ClubInfoItem";
+
+import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
+
+export interface ClubInfoCardProps {
+  club: ApiClb002ResponseOK;
+}
 
 const ClubInfoRow = styled.div`
   display: flex;
@@ -50,7 +55,7 @@ const ResponsiveClubCard = styled(Card)`
   }
 `;
 
-const ClubInfoCard: React.FC<ClubDetailProps> = ({ club }) => {
+const ClubInfoCard: React.FC<ClubInfoCardProps> = ({ club }) => {
   const theme = useTheme();
   const [isMobile, setIsMobile] = useState(false);
 

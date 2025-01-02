@@ -9,7 +9,7 @@ import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSe
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
+import { useGetClubDetail } from "@sparcs-clubs/web/features/clubs/services/getClubDetail";
 import {
   getTagColorFromClubType,
   getTagColorFromDivision,

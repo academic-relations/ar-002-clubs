@@ -28,7 +28,7 @@ const StyledCard = styled(Card)`
   }
 `;
 
-const PersonInfoTitleWrapper = styled(FlexWrapper)`
+const TitleWrapper = styled(FlexWrapper)`
   width: 120px;
   flex-direction: column;
   gap: 16px;
@@ -38,7 +38,7 @@ const PersonInfoTitleWrapper = styled(FlexWrapper)`
     width: 106px;
   }
 `;
-const PersonInfoContentsWrapper = styled(FlexWrapper)`
+const ContentsWrapper = styled(FlexWrapper)`
   display: flex;
   width: 100%;
   min-width: 120px;
@@ -48,7 +48,7 @@ const PersonInfoContentsWrapper = styled(FlexWrapper)`
   align-items: center;
 `;
 
-const PersonInfoTiltie = styled(Typography)`
+const Title = styled(Typography)`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.MEDIUM};
   font-size: 16px;
   line-height: 24px;
@@ -58,7 +58,7 @@ const PersonInfoTiltie = styled(Typography)`
   }
 `;
 
-const PersonInfoContents = styled(Typography)`
+const Contents = styled(Typography)`
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
   @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.sm}) {
     font-size: 14px;
@@ -76,22 +76,22 @@ const PersonInfoContents = styled(Typography)`
   position: relative;
 `;
 
-const PersonInfoCard: React.FC<ClubDetailFrameProps> = ({
+const ClubMemberCard: React.FC<ClubDetailFrameProps> = ({
   club,
   isRegistrationPeriod,
 }) => (
   <StyledCard>
-    <PersonInfoTitleWrapper direction="column" gap={16}>
-      <PersonInfoTiltie>총원</PersonInfoTiltie>
-      <PersonInfoTiltie>대표자</PersonInfoTiltie>
-      <PersonInfoTiltie>지도교수</PersonInfoTiltie>
-    </PersonInfoTitleWrapper>
-    <PersonInfoContentsWrapper direction="column" gap={16}>
-      <PersonInfoContents>
+    <TitleWrapper direction="column" gap={16}>
+      <Title>총원</Title>
+      <Title>대표자</Title>
+      <Title>지도교수</Title>
+    </TitleWrapper>
+    <ContentsWrapper direction="column" gap={16}>
+      <Contents>
         {isRegistrationPeriod ? "-" : `${club.totalMemberCnt}명`}
-      </PersonInfoContents>
-      <PersonInfoContents>{club.representative}</PersonInfoContents>
-      <PersonInfoContents>
+      </Contents>
+      <Contents>{club.representative}</Contents>
+      <Contents>
         {club.advisor === null ||
         club.advisor === undefined ||
         club.advisor === "null" ||
@@ -99,9 +99,9 @@ const PersonInfoCard: React.FC<ClubDetailFrameProps> = ({
         club.advisor === ""
           ? "-"
           : club.advisor}
-      </PersonInfoContents>
-    </PersonInfoContentsWrapper>
+      </Contents>
+    </ContentsWrapper>
   </StyledCard>
 );
 
-export default PersonInfoCard;
+export default ClubMemberCard;
