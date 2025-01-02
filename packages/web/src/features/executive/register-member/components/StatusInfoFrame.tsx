@@ -47,7 +47,7 @@ const StatusContentsContationer = styled.div`
   line-height: 20px;
 `;
 
-const TotalContentsContationer = styled.div`
+export const TotalContentsContationer = styled.div`
   width: 40px;
   height: 24px;
   justify-content: center;
