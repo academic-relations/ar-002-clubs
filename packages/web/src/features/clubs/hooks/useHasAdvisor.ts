@@ -1,4 +1,4 @@
-import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
+import { useGetClubDetail } from "@sparcs-clubs/web/features/clubs/services/getClubDetail";
 
 const useHasAdvisor = (
   clubId: string,
