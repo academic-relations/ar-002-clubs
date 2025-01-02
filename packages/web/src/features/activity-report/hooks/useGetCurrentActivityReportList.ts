@@ -1,3 +1,4 @@
+import useHasProfessor from "@sparcs-clubs/web/features/clubs/hooks/useHasProfessor";
 import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
 import useGetNewActivityReportList from "../services/useGetNewActivityReportList";
@@ -12,11 +13,19 @@ const useGetCurrentActivityReportList = (
 } => {
   const {
     data: activityReportList,
-    isLoading,
-    isError,
+    isLoading: activityReportListLoading,
+    isError: activityReportListError,
   } = useGetNewActivityReportList({
     clubId,
   });
+  const {
+    data: hasProfessor,
+    isLoading: hasProfessorLoading,
+    isError: hasProfessorError,
+  } = useHasProfessor(clubId.toString());
+
+  const isLoading = activityReportListLoading || hasProfessorLoading;
+  const isError = activityReportListError || hasProfessorError;
 
   if (isLoading || isError || !activityReportList) {
     return {
@@ -29,10 +38,15 @@ const useGetCurrentActivityReportList = (
   return {
     data: activityReportList.map(activityReport => ({
       ...activityReport,
-      professorApproval:
-        activityReport.professorApprovedAt !== null
+      hasProfessor,
+      professorApproval: (() => {
+        if (!hasProfessor) {
+          return null;
+        }
+        return activityReport.professorApprovedAt !== null
           ? ProfessorApprovalEnum.Approved
-          : ProfessorApprovalEnum.Pending,
+          : ProfessorApprovalEnum.Pending;
+      })(),
     })),
     isLoading,
     isError,
