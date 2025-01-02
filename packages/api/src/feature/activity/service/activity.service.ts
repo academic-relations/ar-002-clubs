@@ -377,21 +377,26 @@ export default class ActivityService {
     // QUESTION: 신청내용중 startTerm과 endTerm이 이번 학기의 활동기간에 맞는지 검사해야 할까요?.
     const activityD = await this.getLastActivityD();
     // 현재학기에 동아리원이 아니였던 참가자가 있는지 검사합니다.
+    // TODO: 현재학기 뿐만 아니라 직전학기 동아리원도 활동 참가자로 포함될 수 있어야 합니다.
+    // const participantIds = await Promise.all(
+    //   body.participants.map(async e => {
+    //     if (
+    //       !(await this.clubPublicService.isStudentBelongsTo(
+    //         e.studentId,
+    //         body.clubId,
+    //       ))
+    //     )
+    //       throw new HttpException(
+    //         "Some student is not belonged to the club",
+    //         HttpStatus.BAD_REQUEST,
+    //       );
+    //     return e.studentId;
+    //   }),
+    // );
     const participantIds = await Promise.all(
-      body.participants.map(async e => {
-        if (
-          !(await this.clubPublicService.isStudentBelongsTo(
-            e.studentId,
-            body.clubId,
-          ))
-        )
-          throw new HttpException(
-            "Some student is not belonged to the club",
-            HttpStatus.BAD_REQUEST,
-          );
-        return e.studentId;
-      }),
+      body.participants.map(async e => e.studentId),
     );
+    // TOD
     // TODO: 파일 유효한지 검사하는 로직도 필요해요! 이건 파일 모듈 구성되면 public할듯
 
     const isInsertionSucceed = await this.activityRepository.insertActivity({
