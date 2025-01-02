@@ -8,6 +8,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import ExecutiveActivityReportFrame from "@sparcs-clubs/web/features/executive/activity-report/frames/ExecutiveActivityReportFrame";
 
 const ExecutiveActivityReport = () => {
   const { isLoggedIn, login, profile } = useAuth();
@@ -40,6 +41,7 @@ const ExecutiveActivityReport = () => {
         ]}
         title="활동 보고서 작성 내역"
       />
+      <ExecutiveActivityReportFrame />
     </FlexWrapper>
   );
 };
