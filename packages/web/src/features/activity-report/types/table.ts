@@ -17,5 +17,10 @@ export interface ActivityReportTableData extends BaseActivityReportTableData {
   professorApproval: ProfessorApprovalEnum | null;
 }
 
+export interface ProfessorActivityReportTableData
+  extends ActivityReportTableData {
+  professorApproval: ProfessorApprovalEnum;
+}
+
 export interface PastActivityReportTableData
   extends BaseActivityReportTableData {}
