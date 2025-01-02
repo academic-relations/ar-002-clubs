@@ -45,6 +45,7 @@ import apiAct020, {
 import apiAct023 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 import apiAct024 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
 import apiAct025 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct025";
+import apiAct026 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct026";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -126,6 +127,10 @@ import type {
   ApiAct025RequestBody,
   ApiAct025ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct025";
+import type {
+  ApiAct026RequestBody,
+  ApiAct026ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct026";
 
 @Controller()
 export default class ActivityController {
@@ -430,6 +435,19 @@ export default class ActivityController {
     @Body() body: ApiAct025RequestBody,
   ): Promise<ApiAct025ResponseOk> {
     await this.activityService.patchExecutiveActivities({
+      body,
+    });
+    return {};
+  }
+
+  @Executive()
+  @Put("/executive/activities/club-charged-executive")
+  @UsePipes(new ZodPipe(apiAct026))
+  async putExecutiveActivitiesClubChargedExecutive(
+    @GetExecutive() user: GetExecutive,
+    @Body() body: ApiAct026RequestBody,
+  ): Promise<ApiAct026ResponseOk> {
+    await this.activityService.putExecutiveActivitiesClubChargedExecutive({
       body,
     });
     return {};
