@@ -65,6 +65,10 @@ import type {
   ApiAct025RequestBody,
   ApiAct025ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct025";
+import type {
+  ApiAct026RequestBody,
+  ApiAct026ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct026";
 
 @Injectable()
 export default class ActivityService {
@@ -1106,7 +1110,7 @@ export default class ActivityService {
     const activities = await this.getActivities({ clubId: param.query.clubId });
     const chargedExecutiveId = await this.activityClubChargedExecutiveRepository
       .selectActivityClubChargedExecutiveByClubId({
-        acitvityDId: await this.getLastActivityD().then(e => e.id),
+        activityDId: await this.getLastActivityD().then(e => e.id),
         clubId: param.query.clubId,
       })
       .then(arr => {
@@ -1190,6 +1194,9 @@ export default class ActivityService {
     };
   }
 
+  /**
+   * @description patchExecutiveActivities의 서비스 진입점입니다.
+   */
   async patchExecutiveActivities(param: {
     body: ApiAct025RequestBody;
   }): Promise<ApiAct025ResponseOk> {
@@ -1198,6 +1205,64 @@ export default class ActivityService {
         const isUpdateSuceed =
           await this.activityRepository.updateActivityChargedExecutive({
             activityId,
+            executiveId: param.body.executiveId,
+          });
+        return isUpdateSuceed;
+      }),
+    );
+    return {};
+  }
+
+  /**
+   * @description putExecutiveActivitiesClubChargedExecutive의 서비스 진입점입니다.
+   * @param body
+   */
+  async putExecutiveActivitiesClubChargedExecutive(param: {
+    body: ApiAct026RequestBody;
+  }): Promise<ApiAct026ResponseOk> {
+    const activityDId = await this.getLastActivityD().then(e => e.id);
+    const prevChargedExecutiveId =
+      await this.activityClubChargedExecutiveRepository.selectActivityClubChargedExecutiveByClubId(
+        { activityDId, clubId: param.body.clubId },
+      );
+    let upsertReulst = false;
+    if (prevChargedExecutiveId.length === 0) {
+      upsertReulst =
+        await this.activityClubChargedExecutiveRepository.insertActivityClubChargedExecutive(
+          {
+            activityDId,
+            clubId: param.body.clubId,
+            executiveId: param.body.executiveId,
+          },
+        );
+    } else {
+      upsertReulst =
+        await this.activityClubChargedExecutiveRepository.updateActivityClubChargedExecutive(
+          {
+            activityDId,
+            clubId: param.body.clubId,
+            executiveId: param.body.executiveId,
+          },
+        );
+    }
+    if (upsertReulst === false) {
+      throw new HttpException(
+        "failed to change charged-executive",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const activities =
+      await this.activityRepository.selectActivityByClubIdAndActivityDId(
+        param.body.clubId,
+        activityDId,
+      );
+
+    await Promise.all(
+      activities.map(async e => {
+        const isUpdateSuceed =
+          await this.activityRepository.updateActivityChargedExecutive({
+            activityId: e.id,
             executiveId: param.body.executiveId,
           });
         return isUpdateSuceed;

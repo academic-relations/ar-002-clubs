@@ -189,7 +189,7 @@ export const ActivityClubChargedExecutive = mysqlTable(
     id: int("id").autoincrement().primaryKey().notNull(),
     activityDId: int("activity_d_id").notNull(),
     clubId: int("club_id").notNull(),
-    executiveId: int("executive_id").notNull(),
+    executiveId: int("executive_id"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
