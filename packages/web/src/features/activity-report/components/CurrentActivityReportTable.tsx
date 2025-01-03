@@ -17,6 +17,7 @@ import {
   ProfessorApprovalTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
 
+import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
@@ -41,8 +42,12 @@ const columns = [
     id: "professorApproval",
     header: "지도교수",
     cell: info => {
+      if (info.getValue() === null) {
+        return "-";
+      }
+
       const { color, text } = getTagDetail(
-        info.getValue(),
+        info.getValue() as ProfessorApprovalEnum,
         ProfessorApprovalTagList,
       );
       return <Tag color={color}>{text}</Tag>;

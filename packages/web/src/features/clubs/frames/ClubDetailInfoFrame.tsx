@@ -6,11 +6,11 @@ import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
-import ClubDetailCard from "@sparcs-clubs/web/features/clubDetails/components/ClubDetailCard";
-import ClubInfoCard from "@sparcs-clubs/web/features/clubDetails/components/ClubInfoCard";
-import PersonInfoCard, {
+import ClubDetailCard from "@sparcs-clubs/web/features/clubs/components/ClubDetailCard";
+import ClubInfoCard from "@sparcs-clubs/web/features/clubs/components/ClubInfoCard";
+import ClubMemberCard, {
   ClubDetailFrameProps,
-} from "@sparcs-clubs/web/features/clubDetails/components/PersonInfoCard";
+} from "@sparcs-clubs/web/features/clubs/components/ClubMemberCard";
 
 const CardWrapper = styled.div`
   width: 100%;
@@ -57,7 +57,7 @@ const ClubDetailInfoFrame: React.FC<ClubDetailFrameProps> = ({
       <PersonInfoWrapper>
         <SectionTitle size="lg">인적 사항 </SectionTitle>
         <CardWrapper>
-          <PersonInfoCard
+          <ClubMemberCard
             club={club}
             isRegistrationPeriod={isRegistrationPeriod}
           />

@@ -300,34 +300,36 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
               </ActivityDetail>
               <ActivityDetail>{`부가 설명: ${data.evidence}`}</ActivityDetail>
             </ActivitySection>
-            <FlexWrapper
-              direction="row"
-              gap={16}
-              justify="space-between"
-              style={{
-                alignItems: "center",
-                alignSelf: "stretch",
-                width: "100%",
-              }}
-            >
-              <ActivitySection label="지도교수 승인" />
+            {data.professorApproval !== null && (
               <FlexWrapper
                 direction="row"
-                gap={8}
-                style={{ alignItems: "center" }}
+                gap={16}
+                justify="space-between"
+                style={{
+                  alignItems: "center",
+                  alignSelf: "stretch",
+                  width: "100%",
+                }}
               >
-                {data.professorApprovedAt && (
-                  <Typography fs={14} lh={16} color="GRAY.300">
-                    {formatDotDetailDate(kstToUtc(data.professorApprovedAt))}
-                  </Typography>
-                )}
-                <Tag
-                  color={getProfessorApprovalTagColor(data.professorApproval)}
+                <ActivitySection label="지도교수 승인" />
+                <FlexWrapper
+                  direction="row"
+                  gap={8}
+                  style={{ alignItems: "center" }}
                 >
-                  {getProfessorApprovalLabel(data.professorApproval)}
-                </Tag>
+                  {data.professorApprovedAt && (
+                    <Typography fs={14} lh={16} color="GRAY.300">
+                      {formatDotDetailDate(kstToUtc(data.professorApprovedAt))}
+                    </Typography>
+                  )}
+                  <Tag
+                    color={getProfessorApprovalTagColor(data.professorApproval)}
+                  >
+                    {getProfessorApprovalLabel(data.professorApproval)}
+                  </Tag>
+                </FlexWrapper>
               </FlexWrapper>
-            </FlexWrapper>
+            )}
           </Card>
           <FlexWrapper gap={20} justify="space-between">
             <Button type="default" onClick={navigateToActivityReportList}>

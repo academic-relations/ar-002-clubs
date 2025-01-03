@@ -1,12 +1,12 @@
 import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
 import useGetProfessorCurrentActivityReportList from "../services/useGetProfessorCurrentActivityReportList";
-import { ActivityReportTableData } from "../types/table";
+import { ProfessorActivityReportTableData } from "../types/table";
 
 const useGetProfessorActivityReportList = (
   clubId: number,
 ): {
-  data: ActivityReportTableData[];
+  data: ProfessorActivityReportTableData[];
   isLoading: boolean;
   isError: boolean;
 } => {

@@ -26,7 +26,7 @@ import {
 import useGetProfessorActivityReportList from "@sparcs-clubs/web/features/activity-report/hooks/useGetProfessorActivityReportList";
 import usePostProfessorApproveActivityReport from "@sparcs-clubs/web/features/activity-report/services/useProfessorApproveActivityReport";
 
-import { ActivityReportTableData } from "@sparcs-clubs/web/features/activity-report/types/table";
+import { ProfessorActivityReportTableData } from "@sparcs-clubs/web/features/activity-report/types/table";
 
 import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
@@ -37,7 +37,7 @@ interface ProfessorActivityReportTableProps {
   clubId: number;
 }
 
-const columnHelper = createColumnHelper<ActivityReportTableData>();
+const columnHelper = createColumnHelper<ProfessorActivityReportTableData>();
 const columns = [
   columnHelper.accessor("activityStatusEnumId", {
     header: "상태",
