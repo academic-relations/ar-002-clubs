@@ -20,7 +20,10 @@ import {
   ApiMee009ResponseCreated,
 } from "@sparcs-clubs/interface/api/meeting/apiMee009";
 
-import { ApiMee010ResponseOk } from "@sparcs-clubs/interface/api/meeting/apiMee010";
+import {
+  ApiMee010RequestParam,
+  ApiMee010ResponseOk,
+} from "@sparcs-clubs/interface/api/meeting/apiMee010";
 
 import {
   ApiMee011RequestParam,
@@ -118,8 +121,7 @@ export class AgendaService {
 
   async deleteExecutiveMeetingAgenda(
     executiveId: number,
-    meetingId: number,
-    agendaId: number,
+    param: ApiMee010RequestParam,
   ): Promise<ApiMee010ResponseOk> {
     const user = await this.userPublicService.getExecutiveById({
       id: executiveId,
@@ -130,8 +132,8 @@ export class AgendaService {
     }
 
     await this.meetingRepository.deleteMeetingAgendaMapping(
-      meetingId,
-      agendaId,
+      param.meetingId,
+      param.agendaId,
     );
 
     return {};

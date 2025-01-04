@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Patch,
   Post,
@@ -69,7 +70,7 @@ export default class AgendaController {
     return result;
   }
 
-  @Post("/executive/meetings/meeting/:meetingId/agendas")
+  @Get("/executive/meetings/meeting/:meetingId/agendas")
   @UsePipes(new ZodPipe(apiMee007))
   async getExecutiveMeetingAgendas(
     @Param() param: ApiMee007RequestParam,
@@ -121,8 +122,7 @@ export default class AgendaController {
   ): Promise<ApiMee010ResponseOk> {
     const result = await this.meetingService.deleteExecutiveMeetingAgenda(
       user.executiveId,
-      param.meetingId,
-      param.agendaId,
+      param,
     );
     return result;
   }

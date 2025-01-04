@@ -539,6 +539,7 @@ export class MeetingRepository {
             and(
               eq(MeetingMapping.meetingAgendaId, agendaId),
               eq(MeetingMapping.meetingId, meetingId),
+              isNull(MeetingMapping.deletedAt), // Filter out soft-deleted records
             ),
           )
           .then(result => {
