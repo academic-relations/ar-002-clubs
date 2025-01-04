@@ -153,10 +153,21 @@ const ExecutiveActivityClubTable: React.FC<ExecutiveActivityClubTableProps> = ({
 
   const totalCount = sortedActivities.length;
 
+  const selectedCount = table
+    .getRowModel()
+    .rows.filter(row => row.getIsSelected()).length;
+
+  let countString = `총 ${totalCount}개`;
+  if (selectedCount !== 0) {
+    countString = `선택 항목 ${selectedCount}개 / 총 ${totalCount}개`;
+  } else if (filteredActivities.length !== totalCount) {
+    countString = `검색 결과 ${filteredActivities.length}개 / 총 ${totalCount}개`;
+  }
+
   return (
     <FlexWrapper direction="column" gap={8}>
       <Typography fs={16} lh={20} style={{ flex: 1, textAlign: "right" }}>
-        총 {totalCount}개
+        {countString}
       </Typography>
       <Table table={table} />
     </FlexWrapper>
