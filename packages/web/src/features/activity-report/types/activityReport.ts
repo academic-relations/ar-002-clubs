@@ -13,7 +13,7 @@ type Duration = {
   endTerm: Date;
 };
 
-type Comment = {
+export type Comment = {
   content: string;
   createdAt: Date;
 };

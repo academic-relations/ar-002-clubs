@@ -23,7 +23,8 @@ const formatDateTimeEn = (date: Date) =>
 
 const formatTime = (date: Date) => format(date, "HH:mm", { locale: ko });
 
-const formatSlashDateTime = (date: Date) => format(date, "yyyy/MM/dd HH:mm");
+const formatSlashDateTime = (date: Date) =>
+  format(date, "yyyy/MM/dd HH:mm", { locale: ko });
 
 const formatDotDate = (date: Date) =>
   format(date, "yyyy.MM.dd", { locale: ko });

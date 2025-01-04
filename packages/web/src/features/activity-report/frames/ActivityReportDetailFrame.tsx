@@ -36,6 +36,7 @@ import {
   formatDotDetailDate,
 } from "@sparcs-clubs/web/utils/Date/formatDate";
 
+import ExecutiveActivityReportApprovalSection from "../components/ExecutiveActivityReportApprovalSection";
 import { getActivityReportProgress } from "../constants/activityReportProgress";
 import useGetActivityReportDetail from "../hooks/useGetActivityReportDetail";
 import useProfessorApproveSingleActivityReport from "../hooks/useProfessorApproveSingleActivityReport";
@@ -120,6 +121,8 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     useProfessorApproveSingleActivityReport();
 
   const isProgressVisible =
+    profile.type === "undergraduate" || profile.type === "executive";
+  const isCommentsVisible =
     profile.type === "undergraduate" || profile.type === "executive";
 
   const navigateToActivityReportList = () => {
@@ -231,7 +234,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
           gap={40}
           style={{ alignSelf: "stretch" }}
         >
-          <Card outline={false} padding="32px" gap={20}>
+          <Card outline padding="32px" gap={20}>
             {isProgressVisible && (
               <ProgressStatus
                 labels={
@@ -247,6 +250,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
                   ).progress
                 }
                 optional={
+                  isCommentsVisible &&
                   data.comments &&
                   data.comments.length > 0 && (
                     <RejectReasonToast
@@ -260,6 +264,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
                 }
               />
             )}
+
             <ActivitySection label="활동 정보">
               <ActivityDetail>{`활동명: ${data.name}`}</ActivityDetail>
               <ActivityDetail>
@@ -331,6 +336,9 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
               </FlexWrapper>
             )}
           </Card>
+
+          <ExecutiveActivityReportApprovalSection />
+
           <FlexWrapper gap={20} justify="space-between">
             <Button type="default" onClick={navigateToActivityReportList}>
               목록으로 돌아가기
