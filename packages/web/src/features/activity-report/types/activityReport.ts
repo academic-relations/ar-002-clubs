@@ -34,7 +34,7 @@ export interface CurrentActivityReport extends BaseActivityReport {
   id: number;
   updatedAt: Date;
   activityStatusEnumId: ActivityStatusEnum;
-  professorApproval: ProfessorApprovalEnum;
+  professorApproval: ProfessorApprovalEnum | null;
   professorApprovedAt?: Date;
   comments: Comment[];
 }

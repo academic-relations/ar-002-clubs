@@ -29,6 +29,14 @@ const credits: SemesterCredit[] = [
         role: "FE / BE",
         roleType: RoleType.member,
         comment: "겨울에 코딩하면 즐거워요",
+
+      },
+      {
+        nickname: "dora",
+        name: "이지윤",
+        role: "APM(FE) / Designer",
+        roleType: RoleType.APM_FE,
+        comment: "이제 진짜 스팍스 졸업해야징",
       },
     ],
   },
@@ -97,6 +105,13 @@ const credits: SemesterCredit[] = [
         role: "BE",
         roleType: RoleType.member,
         comment: "팀원들 감사합니다! 오레오는 비틀어야 제맛",
+      },
+      {
+        nickname: "dora",
+        name: "이지윤",
+        role: "APM(FE) / Designer",
+        roleType: RoleType.APM_FE,
+        comment: "25년이 되어서야 만드는 24년 크레딧",
       },
     ],
   },

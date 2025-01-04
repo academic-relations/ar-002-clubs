@@ -81,11 +81,11 @@ export default class ExecutiveRepository {
     return isUpdateSucceed;
   }
 
-  async selectExecutiveById(id: { id: number }) {
+  async selectExecutiveById(param: { id: number }) {
     const result = await this.db
       .select()
       .from(Executive)
-      .where(and(eq(Executive.userId, id.id), isNull(Executive.deletedAt)));
+      .where(and(eq(Executive.id, param.id), isNull(Executive.deletedAt)));
 
     return result;
   }

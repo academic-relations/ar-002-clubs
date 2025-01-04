@@ -1,5 +1,5 @@
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
-
+import useHasAdvisor from "@sparcs-clubs/web/features/clubs/hooks/useHasAdvisor";
 import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
 import { useGetActivityReport } from "../services/useGetActivityReport";
@@ -15,9 +15,17 @@ const useGetActivityReportDetail = (
   const { profile } = useAuth();
   const {
     data: activityReport,
-    isLoading,
-    isError,
+    isLoading: activityReportLoading,
+    isError: activityReportError,
   } = useGetActivityReport(profile?.type ?? "undergraduate", activityId);
+  const {
+    data: hasProfessor,
+    isLoading: hasProfessorLoading,
+    isError: hasProfessorError,
+  } = useHasAdvisor(activityReport?.clubId.toString() ?? "");
+
+  const isLoading = activityReportLoading || hasProfessorLoading;
+  const isError = activityReportError || hasProfessorError;
 
   if (isLoading || isError || !activityReport) {
     return {
@@ -41,10 +49,14 @@ const useGetActivityReportDetail = (
         name: participant.name,
         studentNumber: participant.studentNumber,
       })),
-      professorApproval:
-        activityReport.professorApprovedAt !== null
+      professorApproval: (() => {
+        if (!hasProfessor) {
+          return null;
+        }
+        return activityReport.professorApprovedAt !== null
           ? ProfessorApprovalEnum.Approved
-          : ProfessorApprovalEnum.Pending,
+          : ProfessorApprovalEnum.Pending;
+      })(),
       professorApprovedAt:
         activityReport.professorApprovedAt !== null
           ? activityReport.professorApprovedAt
