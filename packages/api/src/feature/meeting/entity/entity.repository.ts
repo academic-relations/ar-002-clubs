@@ -10,8 +10,10 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 import logger from "@sparcs-clubs/api/common/util/logger";
 // import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 
-import { MeetingMapping } from "@sparcs-clubs/api/drizzle/schema/meeting.schema";
-import { MeetingAgendaContent } from "dist/drizzle/schema/meeting.schema";
+import {
+  MeetingAgendaContent,
+  MeetingMapping,
+} from "@sparcs-clubs/api/drizzle/schema/meeting.schema";
 
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
