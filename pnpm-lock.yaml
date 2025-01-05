@@ -103,7 +103,7 @@ importers:
         version: 1.4.6
       drizzle-orm:
         specifier: ^0.30.9
-        version: 0.30.9(mysql2@3.9.7)
+        version: 0.30.9(@types/react@18.2.64)(mysql2@3.9.7)(react@18.2.0)
       express-session:
         specifier: ^1.18.0
         version: 1.18.0
@@ -8574,7 +8574,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.30.9(mysql2@3.9.7):
+  /drizzle-orm@0.30.9(@types/react@18.2.64)(mysql2@3.9.7)(react@18.2.0):
     resolution: {integrity: sha512-VOiCFsexErmgqvNCOmbzmqDCZzZsHoz6SkWAjTFxsTr1AllKDbDJ2+GgedLXsXMDgpg/ljDG1zItIFeZtiO2LA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -8654,7 +8654,9 @@ packages:
       sqlite3:
         optional: true
     dependencies:
+      '@types/react': 18.2.64
       mysql2: 3.9.7
+      react: 18.2.0
     dev: false
 
   /eastasianwidth@0.2.0:
