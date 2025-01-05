@@ -90,8 +90,8 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
 
     onConfirm(
       activityTermList.map(term => ({
-        startTerm: new Date(term.startDate.replace(".", "-")),
-        endTerm: new Date(term.endDate.replace(".", "-")),
+        startTerm: new Date(`${term.startDate.replaceAll(".", "-")}T00:00:00Z`),
+        endTerm: new Date(`${term.endDate.replaceAll(".", "-")}T00:00:00Z`),
       })),
     );
   };

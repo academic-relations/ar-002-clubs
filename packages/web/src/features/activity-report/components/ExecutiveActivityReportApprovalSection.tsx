@@ -2,18 +2,22 @@ import React, { useState } from "react";
 
 import { useParams } from "next/navigation";
 
+import { overlay } from "overlay-kit";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import { formatSlashDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
+import useExecutiveApproveActivityReport from "../hooks/useExecutiveApproveActivityReport";
+import useExecutiveRejectActivityReport from "../hooks/useExecutiveRejectActivityReport";
 import useGetActivityReportComments from "../hooks/useGetActivityReportComments";
-import { patchActivityExecutive } from "../services/patchActivityExecutive";
-import { patchActivityExecutiveSendBack } from "../services/patchActivityExecutiveSendBack";
 
 const ExecutiveActivityReportApprovalSection: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,18 +30,50 @@ const ExecutiveActivityReportApprovalSection: React.FC = () => {
     isError,
   } = useGetActivityReportComments(activityId);
 
+  const { mutate: approveActivityReport } =
+    useExecutiveApproveActivityReport(activityId);
+  const { mutate: rejectActivityReport } =
+    useExecutiveRejectActivityReport(activityId);
   const [rejectionDetail, setRejectionDetail] = useState("");
 
-  const handleApprove = async () => {
-    await patchActivityExecutive({ activityId });
+  const handleApprove = () => {
+    approveActivityReport(undefined, {
+      onSuccess: () => {
+        overlay.open(({ isOpen, close }) => (
+          <Modal isOpen={isOpen}>
+            <ConfirmModalContent onConfirm={close}>
+              활동 보고서 승인이 완료되었습니다.
+            </ConfirmModalContent>
+          </Modal>
+        ));
+      },
+      onError: () => {
+        overlay.open(({ isOpen, close }) => (
+          <Modal isOpen={isOpen}>
+            <ConfirmModalContent onConfirm={close}>
+              활동 보고서 승인에 실패했습니다.
+            </ConfirmModalContent>
+          </Modal>
+        ));
+      },
+    });
   };
 
-  const handleReject = async () => {
-    await patchActivityExecutiveSendBack(
-      { activityId },
-      { comment: rejectionDetail },
-    );
-    setRejectionDetail("");
+  const handleReject = () => {
+    rejectActivityReport(rejectionDetail, {
+      onSuccess: () => {
+        setRejectionDetail("");
+      },
+      onError: () => {
+        overlay.open(({ isOpen, close }) => (
+          <Modal isOpen={isOpen}>
+            <ConfirmModalContent onConfirm={close}>
+              활동 보고서 반려에 실패했습니다.
+            </ConfirmModalContent>
+          </Modal>
+        ));
+      },
+    });
   };
 
   if (profile?.type !== "executive") {
@@ -55,9 +91,7 @@ const ExecutiveActivityReportApprovalSection: React.FC = () => {
           {comments.map((comment, index) => (
             <FlexWrapper direction="column" gap={4} key={`${index.toString()}`}>
               <Typography fs={14} lh={16} color="GRAY.600">
-                {`${formatSlashDateTime(comment.createdAt)} ${
-                  comment.createdAt
-                }`}
+                {formatSlashDateTime(comment.createdAt)}
               </Typography>
               <Typography fs={16} lh={24}>
                 {comment.content}

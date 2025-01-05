@@ -30,7 +30,6 @@ import {
   getProfessorApprovalTagColor,
 } from "@sparcs-clubs/web/types/professorApproval";
 
-import { kstToUtc } from "@sparcs-clubs/web/utils/Date/extractDate";
 import {
   formatDate,
   formatDotDetailDate,
@@ -240,13 +239,13 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
                 labels={
                   getActivityReportProgress(
                     data.activityStatusEnumId,
-                    kstToUtc(data.updatedAt),
+                    data.updatedAt,
                   ).labels
                 }
                 progress={
                   getActivityReportProgress(
                     data.activityStatusEnumId,
-                    kstToUtc(data.updatedAt),
+                    data.updatedAt,
                   ).progress
                 }
                 optional={
@@ -324,7 +323,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
                 >
                   {data.professorApprovedAt && (
                     <Typography fs={14} lh={16} color="GRAY.300">
-                      {formatDotDetailDate(kstToUtc(data.professorApprovedAt))}
+                      {formatDotDetailDate(data.professorApprovedAt)}
                     </Typography>
                   )}
                   <Tag
