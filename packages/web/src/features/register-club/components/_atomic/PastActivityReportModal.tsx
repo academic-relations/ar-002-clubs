@@ -14,11 +14,11 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import useExecutiveApproveActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveApproveActivityReport";
+import useExecutiveRejectActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveRejectActivityReport";
 
 import { useDeleteActivityReportProvisional } from "@sparcs-clubs/web/features/activity-report/services/useDeleteActivityReportProvisional";
 import { useGetActivityReport } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
-import { patchActivityExecutive } from "@sparcs-clubs/web/features/executive/register-club/services/patchActivityExecutive";
-import { patchActivityExecutiveSendBack } from "@sparcs-clubs/web/features/executive/register-club/services/patchActivityExecutiveSendBack";
 import { getActivityTypeLabel } from "@sparcs-clubs/web/types/activityType";
 
 import {
@@ -113,16 +113,17 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
     }
   }, [isDeleteSuccess, isDeleteError]);
 
+  const { mutate: patchActivityExecutive } =
+    useExecutiveApproveActivityReport(activityId);
+  const { mutate: patchActivityExecutiveSendBack } =
+    useExecutiveRejectActivityReport(activityId);
   const handleApprove = async () => {
-    await patchActivityExecutive({ activityId });
+    await patchActivityExecutive();
     close();
   };
 
   const handleReject = async () => {
-    await patchActivityExecutiveSendBack(
-      { activityId },
-      { comment: rejectionDetail },
-    );
+    await patchActivityExecutiveSendBack(rejectionDetail);
     setRejectionDetail("");
     refetch();
     close();
