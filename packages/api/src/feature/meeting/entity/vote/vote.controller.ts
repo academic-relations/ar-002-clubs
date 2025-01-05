@@ -11,7 +11,7 @@ import { VoteService } from "./vote.service";
 
 @Controller()
 export default class VoteController {
-  constructor(private entityService: VoteService) {}
+  constructor(private voteService: VoteService) {}
 
   // @Executive()
   // @Get()
