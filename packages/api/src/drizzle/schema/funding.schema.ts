@@ -58,6 +58,7 @@ export const FundingOrder = mysqlTable(
     expenditureAmount: int("expenditure_amount").notNull(),
     approvedAmount: int("approved_amount"),
     tradeDetailExplanation: text("trade_detail_explanation"),
+    isClubSupplies: boolean("is_club_supplies").notNull(),
     clubSuppliesName: varchar("club_supplies_name", { length: 255 }),
     clubSuppliesEvidenceEnumId: int("club_supplies_evidence_enum_id"),
     clubSuppliesClassEnumId: int("club_supplies_class_enum_id"),
