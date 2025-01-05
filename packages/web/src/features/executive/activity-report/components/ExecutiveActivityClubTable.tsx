@@ -84,6 +84,7 @@ const columns = [
         rejectedActivitiesCount;
       const reviewed = approvedActivitiesCount + rejectedActivitiesCount;
       const reviewRate = total ? (reviewed / total) * 100 : 0;
+      if (total === 0) return "-";
       return `${reviewRate.toFixed(2)}% (${reviewed} / ${total})`;
     },
     {
@@ -104,6 +105,7 @@ const columns = [
         approvedActivitiesCount +
         rejectedActivitiesCount;
       const approvedRate = total ? (approvedActivitiesCount / total) * 100 : 0;
+      if (total === 0) return "-";
       return `${approvedRate.toFixed(2)}% (${approvedActivitiesCount} / ${total})`;
     },
     {
