@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import usePatchActivityExecutive from "../services/patchActivityExecutive";
-import { activityReportDetailQueryKey } from "../services/useGetActivityReportForProfessor";
+import { activityReportDetailQueryKey } from "../services/useGetActivityReport";
 
 const useExecutiveApproveActivityReport = (activityId: number) => {
   const queryClient = useQueryClient();
