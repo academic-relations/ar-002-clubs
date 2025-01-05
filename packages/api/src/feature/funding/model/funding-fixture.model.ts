@@ -1,4 +1,4 @@
-import { FundingResponseDto } from "./funding.response-dto.model";
+import { FundingDto } from "./funding.dto.model";
 
 export class FundingFixture {
   fixtureName: string;
@@ -19,7 +19,7 @@ export class FundingFixture {
 
   priceOfFixture: number;
 
-  constructor(data: FundingResponseDto) {
+  constructor(data: FundingDto) {
     Object.assign(this, {
       fixtureName: data.fixtureName,
       fixtureEvidenceEnumId: data.fixtureEvidenceEnumId,

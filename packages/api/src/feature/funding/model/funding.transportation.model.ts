@@ -1,4 +1,4 @@
-import { FundingResponseDto } from "./funding.response-dto.model";
+import { FundingDto } from "./funding.dto.model";
 
 export class FundingTransportation {
   transportationEnumId?: number;
@@ -11,9 +11,12 @@ export class FundingTransportation {
 
   placeValidity?: string;
 
-  transportationPassengers: Array<{ studentNumber: string }>;
+  transportationPassengers: Array<{
+    name: string;
+    studentNumber: string;
+  }>;
 
-  constructor(data: FundingResponseDto) {
+  constructor(data: FundingDto) {
     Object.assign(this, {
       transportationEnumId: data.transportationEnumId,
       origin: data.origin,

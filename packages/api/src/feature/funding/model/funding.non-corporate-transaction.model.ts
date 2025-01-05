@@ -1,4 +1,4 @@
-import { FundingResponseDto } from "./funding.response-dto.model";
+import { FundingDto } from "./funding.dto.model";
 
 export class FundingNonCorporateTransaction {
   traderName?: string;
@@ -7,7 +7,7 @@ export class FundingNonCorporateTransaction {
 
   wasteExplanation?: string;
 
-  constructor(data: FundingResponseDto) {
+  constructor(data: FundingDto) {
     Object.assign(this, {
       traderName: data.traderName,
       traderAccountNumber: data.traderAccountNumber,

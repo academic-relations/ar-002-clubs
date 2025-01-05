@@ -1,4 +1,4 @@
-import { FundingResponseDto } from "./funding.response-dto.model";
+import { FundingDto } from "./funding.dto.model";
 
 export class FundingClubSupplies {
   clubSuppliesName?: string;
@@ -19,7 +19,7 @@ export class FundingClubSupplies {
 
   priceOfClubSupplies?: number;
 
-  constructor(data: FundingResponseDto) {
+  constructor(data: FundingDto) {
     Object.assign(this, data);
   }
 }

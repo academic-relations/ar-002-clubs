@@ -1,11 +1,11 @@
-import { FundingResponseDto } from "./funding.response-dto.model";
+import { FundingDto } from "./funding.dto.model";
 
 export class FundingPublication {
   publicationExplanation?: string;
 
-  foodExpenseFiles: Array<{ fileId: string }>;
+  publicationFiles: Array<{ fileId: string; name: string; link: string }>;
 
-  constructor(data: FundingResponseDto) {
+  constructor(data: FundingDto) {
     Object.assign(this, {
       publicationExplanation: data.publicationExplanation,
       publicationFiles: data.publicationFiles,

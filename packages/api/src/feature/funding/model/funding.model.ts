@@ -1,5 +1,6 @@
 import { FundingFixture } from "./funding-fixture.model";
 import { FundingClubSupplies } from "./funding.club-supplies.model";
+import { FundingDto } from "./funding.dto.model";
 import { FundingEtcExpense } from "./funding.etc-expense.model";
 import { FundingExternalEventParticipationFee } from "./funding.external-event-participation-fee.model";
 import { FundingFoodExpense } from "./funding.food-expense.model";
@@ -39,9 +40,9 @@ export class Funding {
   // Trade related
   tradeDetailExplanation: string;
 
-  tradeEvidenceFiles: Array<{ fileId: string }>;
+  tradeEvidenceFiles: Array<{ fileId: string; name: string; link: string }>;
 
-  tradeDetailFiles: Array<{ fileId: string }>;
+  tradeDetailFiles: Array<{ fileId: string; name: string; link: string }>;
 
   // Club supplies related
   isClubSupplies: boolean;
@@ -98,7 +99,7 @@ export class Funding {
 
   etcExpense?: FundingEtcExpense;
 
-  constructor(data: FundingResponseDto) {
+  constructor(data: FundingDto) {
     Object.assign(this, {
       id: data.id,
       clubId: data.clubId,
@@ -172,5 +173,142 @@ export class Funding {
     if (data.isEtcExpense) {
       this.etcExpense = new FundingEtcExpense(data);
     }
+  }
+
+  toResponseDto(): FundingResponseDto {
+    const dto: FundingResponseDto = {
+      id: this.id,
+      clubId: this.clubId,
+      purposeId: this.purposeId,
+      semesterId: this.semesterId,
+      fundingOrderStatusEnumId: this.fundingOrderStatusEnumId,
+      name: this.name,
+      expenditureDate: this.expenditureDate,
+      expenditureAmount: this.expenditureAmount,
+      approvedAmount: this.approvedAmount,
+      feedback: this.feedback,
+      createdAt: this.createdAt,
+      deletedAt: this.deletedAt,
+      tradeDetailExplanation: this.tradeDetailExplanation,
+      tradeEvidenceFiles: this.tradeEvidenceFiles,
+      tradeDetailFiles: this.tradeDetailFiles,
+      isFixture: this.isFixture,
+      isTransportation: this.isTransportation,
+      isFoodExpense: this.isFoodExpense,
+      isLaborContract: this.isLaborContract,
+      isExternalEventParticipationFee: this.isExternalEventParticipationFee,
+      isPublication: this.isPublication,
+      isProfitMakingActivity: this.isProfitMakingActivity,
+      isJointExpense: this.isJointExpense,
+      isEtcExpense: this.isEtcExpense,
+      isClubSupplies: this.isClubSupplies,
+      isNonCorporateTransaction: this.isNonCorporateTransaction,
+    };
+
+    if (this.clubSupplies) {
+      Object.assign(dto, {
+        clubSuppliesName: this.clubSupplies.clubSuppliesName,
+        clubSuppliesEvidenceEnumId:
+          this.clubSupplies.clubSuppliesEvidenceEnumId,
+        clubSuppliesClassEnumId: this.clubSupplies.clubSuppliesClassEnumId,
+        clubSuppliesPurpose: this.clubSupplies.clubSuppliesPurpose,
+        clubSuppliesSoftwareEvidence:
+          this.clubSupplies.clubSuppliesSoftwareEvidence,
+        clubSuppliesImageFiles: this.clubSupplies.clubSuppliesImageFiles,
+        clubSuppliesSoftwareEvidenceFiles:
+          this.clubSupplies.clubSuppliesSoftwareEvidenceFiles,
+        numberOfClubSupplies: this.clubSupplies.numberOfClubSupplies,
+        priceOfClubSupplies: this.clubSupplies.priceOfClubSupplies,
+      });
+    }
+
+    if (this.fixture) {
+      Object.assign(dto, {
+        fixtureName: this.fixture.fixtureName,
+        fixtureEvidenceEnumId: this.fixture.fixtureEvidenceEnumId,
+        fixtureClassEnumId: this.fixture.fixtureClassEnumId,
+        fixturePurpose: this.fixture.fixturePurpose,
+        fixtureSoftwareEvidence: this.fixture.fixtureSoftwareEvidence,
+        fixtureImageFiles: this.fixture.fixtureImageFiles,
+        fixtureSoftwareEvidenceFiles: this.fixture.fixtureSoftwareEvidenceFiles,
+        numberOfFixture: this.fixture.numberOfFixture,
+        priceOfFixture: this.fixture.priceOfFixture,
+      });
+    }
+
+    if (this.transportation) {
+      Object.assign(dto, {
+        transportationEnumId: this.transportation.transportationEnumId,
+        origin: this.transportation.origin,
+        destination: this.transportation.destination,
+        purposeOfTransportation: this.transportation.purposeOfTransportation,
+        placeValidity: this.transportation.placeValidity,
+        transportationPassengers: this.transportation.transportationPassengers,
+      });
+    }
+
+    if (this.nonCorporateTransaction) {
+      Object.assign(dto, {
+        traderName: this.nonCorporateTransaction.traderName,
+        traderAccountNumber: this.nonCorporateTransaction.traderAccountNumber,
+        wasteExplanation: this.nonCorporateTransaction.wasteExplanation,
+      });
+    }
+
+    if (this.foodExpense) {
+      Object.assign(dto, {
+        foodExpenseExplanation: this.foodExpense.foodExpenseExplanation,
+        foodExpenseFiles: this.foodExpense.foodExpenseFiles,
+      });
+    }
+
+    if (this.laborContract) {
+      Object.assign(dto, {
+        laborContractExplanation: this.laborContract.laborContractExplanation,
+        laborContractFiles: this.laborContract.laborContractFiles,
+      });
+    }
+
+    if (this.externalEventParticipationFee) {
+      Object.assign(dto, {
+        externalEventParticipationFeeExplanation:
+          this.externalEventParticipationFee
+            .externalEventParticipationFeeExplanation,
+        externalEventParticipationFeeFiles:
+          this.externalEventParticipationFee.externalEventParticipationFeeFiles,
+      });
+    }
+
+    if (this.publication) {
+      Object.assign(dto, {
+        publicationExplanation: this.publication.publicationExplanation,
+        publicationFiles: this.publication.publicationFiles,
+      });
+    }
+
+    if (this.profitMakingActivity) {
+      Object.assign(dto, {
+        profitMakingActivityExplanation:
+          this.profitMakingActivity.profitMakingActivityExplanation,
+        profitMakingActivityFiles:
+          this.profitMakingActivity.profitMakingActivityFiles,
+      });
+    }
+
+    if (this.jointExpense) {
+      Object.assign(dto, {
+        jointExpenseExplanation: this.jointExpense.jointExpenseExplanation,
+        jointExpenseFiles: this.jointExpense.jointExpenseFiles,
+      });
+    }
+
+    if (this.etcExpense) {
+      Object.assign(dto, {
+        etcExpenseExplanation: this.etcExpense.etcExpenseExplanation,
+        etcExpenseFiles: this.etcExpense.etcExpenseFiles,
+      });
+    }
+
+    return dto;
   }
 }

@@ -38,6 +38,7 @@ const requestPreBody = z.object({
   ),
   tradeDetailExplanation: z.string().min(1),
 
+  isClubSupplies: z.coerce.boolean(),
   clubSuppliesName: z.string().max(255).optional(),
   clubSuppliesEvidenceEnumId: z.nativeEnum(FixtureEvidenceEnum).optional(),
   clubSuppliesClassEnumId: z.nativeEnum(FixtureClassEnum).optional(),
@@ -83,7 +84,7 @@ const requestPreBody = z.object({
   placeValidity: z.string().optional(),
   transportationPassengers: z.array(
     z.object({
-      studentNumber: z.string().min(1),
+      studentId: z.coerce.number().int().min(1),
     }),
   ),
 

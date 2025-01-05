@@ -22,7 +22,7 @@ import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.publi
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
-import { FundingResponseDto } from "../model/funding.response-dto.model";
+import { FundingDto } from "../model/funding.dto.model";
 import FundingRepository from "../repository/funding.repository";
 
 @Injectable()
@@ -49,8 +49,9 @@ export default class FundingService {
     const now = getKSTDate();
     const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
 
-    const fundingDto: FundingResponseDto = {
+    const fundingDto: FundingDto = {
       ...body,
+      fundingOrderStatusEnumId: 1,
       semesterId,
       expenditureDate: new Date(body.expenditureDate),
       isFixture: body.isFixture ?? false,
@@ -65,7 +66,6 @@ export default class FundingService {
       isEtcExpense: body.isEtcExpense ?? false,
       isClubSupplies: body.isClubSupplies ?? false,
       isNonCorporateTransaction: body.isNonCorporateTransaction ?? false,
-      tradeDetailExplanation: body.tradeDetailExplanation ?? "",
       tradeEvidenceFiles: body.tradeEvidenceFiles ?? [],
       tradeDetailFiles: body.tradeDetailFiles ?? [],
       clubSuppliesImageFiles: body.clubSuppliesImageFiles ?? [],
@@ -102,7 +102,99 @@ export default class FundingService {
       throw new HttpException("Funding not found", HttpStatus.NOT_FOUND);
     }
 
-    return funding;
+    const fundingDto = funding.toResponseDto();
+
+    fundingDto.tradeEvidenceFiles.forEach(async file => {
+      const { name, link } = await this.filePublicService.getFileInfoById(
+        file.fileId,
+      );
+      // eslint-disable-next-line no-param-reassign
+      file.name = name;
+      // eslint-disable-next-line no-param-reassign
+      file.link = link;
+    });
+
+    fundingDto.tradeDetailFiles.forEach(async file => {
+      const { name, link } = await this.filePublicService.getFileInfoById(
+        file.fileId,
+      );
+      // eslint-disable-next-line no-param-reassign
+      file.name = name;
+      // eslint-disable-next-line no-param-reassign
+      file.link = link;
+    });
+
+    fundingDto.foodExpenseFiles.forEach(async file => {
+      const { name, link } = await this.filePublicService.getFileInfoById(
+        file.fileId,
+      );
+      // eslint-disable-next-line no-param-reassign
+      file.name = name;
+      // eslint-disable-next-line no-param-reassign
+      file.link = link;
+    });
+
+    fundingDto.laborContractFiles.forEach(async file => {
+      const { name, link } = await this.filePublicService.getFileInfoById(
+        file.fileId,
+      );
+      // eslint-disable-next-line no-param-reassign
+      file.name = name;
+      // eslint-disable-next-line no-param-reassign
+      file.link = link;
+    });
+
+    fundingDto.externalEventParticipationFeeFiles.forEach(async file => {
+      const { name, link } = await this.filePublicService.getFileInfoById(
+        file.fileId,
+      );
+      // eslint-disable-next-line no-param-reassign
+      file.name = name;
+      // eslint-disable-next-line no-param-reassign
+      file.link = link;
+    });
+
+    fundingDto.publicationFiles.forEach(async file => {
+      const { name, link } = await this.filePublicService.getFileInfoById(
+        file.fileId,
+      );
+      // eslint-disable-next-line no-param-reassign
+      file.name = name;
+      // eslint-disable-next-line no-param-reassign
+      file.link = link;
+    });
+
+    fundingDto.profitMakingActivityFiles.forEach(async file => {
+      const { name, link } = await this.filePublicService.getFileInfoById(
+        file.fileId,
+      );
+      // eslint-disable-next-line no-param-reassign
+      file.name = name;
+      // eslint-disable-next-line no-param-reassign
+      file.link = link;
+    });
+
+    fundingDto.jointExpenseFiles.forEach(async file => {
+      const { name, link } = await this.filePublicService.getFileInfoById(
+        file.fileId,
+      );
+      // eslint-disable-next-line no-param-reassign
+      file.name = name;
+      // eslint-disable-next-line no-param-reassign
+      file.link = link;
+    });
+
+    fundingDto.etcExpenseFiles.forEach(async file => {
+      const { name, link } = await this.filePublicService.getFileInfoById(
+        file.fileId,
+      );
+      // eslint-disable-next-line no-param-reassign
+      file.name = name;
+      // eslint-disable-next-line no-param-reassign
+      file.link = link;
+    });
+
+    return fundingDto;
   }
 
   async putStudentFunding(
@@ -123,9 +215,10 @@ export default class FundingService {
     const now = getKSTDate();
     const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
 
-    const fundingDto: FundingResponseDto = {
+    const fundingDto: FundingDto = {
       ...body,
       semesterId,
+      fundingOrderStatusEnumId: 1,
       expenditureDate: new Date(body.expenditureDate),
       isFixture: body.isFixture ?? false,
       isTransportation: body.isTransportation ?? false,

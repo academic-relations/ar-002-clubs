@@ -31,17 +31,17 @@ const responsePreBodyMap = z.object({
   expenditureDate: z.coerce.date(),
   expenditureAmount: z.coerce.number().int().min(1),
   fundingOrderStatusEnumId: z.nativeEnum(FundingOrderStatusEnum),
-  feedback: z.coerce.string(),
+  feedback: z.coerce.string().optional(),
   tradeEvidenceFiles: z.array(
     z.object({
-      id: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(255),
       link: z.coerce.string(),
       name: z.coerce.string().max(255),
     }),
   ),
   tradeDetailFiles: z.array(
     z.object({
-      id: z.coerce.string().max(255),
+      fileId: z.coerce.string().max(255),
       link: z.coerce.string(),
       name: z.coerce.string().max(255),
     }),
@@ -52,21 +52,25 @@ const responsePreBodyMap = z.object({
   clubSuppliesEvidenceEnumId: z.nativeEnum(FixtureEvidenceEnum).optional(),
   clubSuppliesClassEnumId: z.nativeEnum(FixtureClassEnum).optional(),
   clubSuppliesPurpose: z.coerce.string().optional(),
-  clubSuppliesImageFiles: z.array(
-    z.object({
-      id: z.coerce.string().max(255),
-      link: z.coerce.string(),
-      name: z.coerce.string().max(255),
-    }),
-  ),
+  clubSuppliesImageFiles: z
+    .array(
+      z.object({
+        fileId: z.coerce.string().max(255),
+        link: z.coerce.string(),
+        name: z.coerce.string().max(255),
+      }),
+    )
+    .optional(),
   clubSuppliesSoftwareEvidence: z.coerce.string().optional(),
-  clubSuppliesSoftwareEvidenceFiles: z.array(
-    z.object({
-      id: z.coerce.string().max(255),
-      link: z.coerce.string(),
-      name: z.coerce.string().max(255),
-    }),
-  ),
+  clubSuppliesSoftwareEvidenceFiles: z
+    .array(
+      z.object({
+        fileId: z.coerce.string().max(255),
+        link: z.coerce.string(),
+        name: z.coerce.string().max(255),
+      }),
+    )
+    .optional(),
   numberOfClubSupplies: z.coerce.number().int().min(1).optional(),
   priceOfClubSupplies: z.coerce.number().int().min(1).optional(),
 
@@ -75,21 +79,25 @@ const responsePreBodyMap = z.object({
   fixtureEvidenceEnumId: z.nativeEnum(FixtureEvidenceEnum).optional(),
   fixtureClassEnumId: z.nativeEnum(FixtureClassEnum).optional(),
   fixturePurpose: z.coerce.string().optional(),
-  fixtureImageFiles: z.array(
-    z.object({
-      id: z.coerce.string().max(255),
-      link: z.coerce.string(),
-      name: z.coerce.string().max(255),
-    }),
-  ),
+  fixtureImageFiles: z
+    .array(
+      z.object({
+        fileId: z.coerce.string().max(255),
+        link: z.coerce.string(),
+        name: z.coerce.string().max(255),
+      }),
+    )
+    .optional(),
   fixtureSoftwareEvidence: z.coerce.string().optional(),
-  fixtureSoftwareEvidenceFiles: z.array(
-    z.object({
-      id: z.coerce.string().max(255),
-      link: z.coerce.string(),
-      name: z.coerce.string().max(255),
-    }),
-  ),
+  fixtureSoftwareEvidenceFiles: z
+    .array(
+      z.object({
+        fileId: z.coerce.string().max(255),
+        link: z.coerce.string(),
+        name: z.coerce.string().max(255),
+      }),
+    )
+    .optional(),
   numberOfFixture: z.coerce.number().int().min(1).optional(),
   priceOfFixture: z.coerce.number().int().min(1).optional(),
 
@@ -99,12 +107,14 @@ const responsePreBodyMap = z.object({
   destination: z.coerce.string().max(255).optional(),
   purposeOfTransportation: z.coerce.string().optional(),
   placeValidity: z.coerce.string().optional(),
-  transportationPassengers: z.array(
-    z.object({
-      studentNumber: z.coerce.string(),
-      name: z.coerce.string(),
-    }),
-  ),
+  transportationPassengers: z
+    .array(
+      z.object({
+        studentNumber: z.coerce.string(),
+        name: z.coerce.string(),
+      }),
+    )
+    .optional(),
 
   isNonCorporateTransaction: z.coerce.boolean(),
   traderName: z.coerce.string().max(255).optional(),
@@ -127,55 +137,69 @@ const responsePreBodyMap = z.object({
   jointExpenseExplanation: z.coerce.string().optional(),
   etcExpenseExplanation: z.coerce.string().optional(),
 
-  foodExpenseFiles: z.array(
-    z.object({
-      id: z.coerce.string().max(255),
-      link: z.coerce.string(),
-      name: z.coerce.string().max(255),
-    }),
-  ),
-  laborContractFiles: z.array(
-    z.object({
-      id: z.coerce.string().max(255),
-      link: z.coerce.string(),
-      name: z.coerce.string().max(255),
-    }),
-  ),
-  externalEventParticipationFeeFiles: z.array(
-    z.object({
-      id: z.coerce.string().max(255),
-      link: z.coerce.string(),
-      name: z.coerce.string().max(255),
-    }),
-  ),
-  publicationFiles: z.array(
-    z.object({
-      id: z.coerce.string().max(255),
-      link: z.coerce.string(),
-      name: z.coerce.string().max(255),
-    }),
-  ),
-  profitMakingActivityFiles: z.array(
-    z.object({
-      id: z.coerce.string().max(255),
-      link: z.coerce.string(),
-      name: z.coerce.string().max(255),
-    }),
-  ),
-  jointExpenseFiles: z.array(
-    z.object({
-      id: z.coerce.string().max(255),
-      link: z.coerce.string(),
-      name: z.coerce.string().max(255),
-    }),
-  ),
-  etcExpenseFiles: z.array(
-    z.object({
-      id: z.coerce.string().max(255),
-      link: z.coerce.string(),
-      name: z.coerce.string().max(255),
-    }),
-  ),
+  foodExpenseFiles: z
+    .array(
+      z.object({
+        fileId: z.coerce.string().max(255),
+        link: z.coerce.string(),
+        name: z.coerce.string().max(255),
+      }),
+    )
+    .optional(),
+  laborContractFiles: z
+    .array(
+      z.object({
+        fileId: z.coerce.string().max(255),
+        link: z.coerce.string(),
+        name: z.coerce.string().max(255),
+      }),
+    )
+    .optional(),
+  externalEventParticipationFeeFiles: z
+    .array(
+      z.object({
+        fileId: z.coerce.string().max(255),
+        link: z.coerce.string(),
+        name: z.coerce.string().max(255),
+      }),
+    )
+    .optional(),
+  publicationFiles: z
+    .array(
+      z.object({
+        fileId: z.coerce.string().max(255),
+        link: z.coerce.string(),
+        name: z.coerce.string().max(255),
+      }),
+    )
+    .optional(),
+  profitMakingActivityFiles: z
+    .array(
+      z.object({
+        fileId: z.coerce.string().max(255),
+        link: z.coerce.string(),
+        name: z.coerce.string().max(255),
+      }),
+    )
+    .optional(),
+  jointExpenseFiles: z
+    .array(
+      z.object({
+        fileId: z.coerce.string().max(255),
+        link: z.coerce.string(),
+        name: z.coerce.string().max(255),
+      }),
+    )
+    .optional(),
+  etcExpenseFiles: z
+    .array(
+      z.object({
+        fileId: z.coerce.string().max(255),
+        link: z.coerce.string(),
+        name: z.coerce.string().max(255),
+      }),
+    )
+    .optional(),
 });
 
 const responseBodyMap = {

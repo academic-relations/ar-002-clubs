@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, eq, inArray, isNull } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
@@ -22,8 +22,11 @@ import {
   TransportationPassenger,
 } from "@sparcs-clubs/api/drizzle/schema/funding.schema";
 
+import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+
+import { FundingDto } from "../model/funding.dto.model";
 import { Funding } from "../model/funding.model";
-import { FundingResponseDto } from "../model/funding.response-dto.model";
+import { FundingSummaryDto } from "../model/funding.summury-dto.model";
 
 @Injectable()
 export default class FundingRepository {
@@ -180,47 +183,54 @@ export default class FundingRepository {
           ),
         ),
       this.db
-        .select()
+        .select({
+          fundingOrderId: TransportationPassenger.fundingOrderId,
+          studentId: TransportationPassenger.studentId,
+          studentNumber: Student.number,
+          name: Student.name,
+        })
         .from(TransportationPassenger)
-        .where(
-          and(
-            eq(TransportationPassenger.fundingOrderId, id),
-            isNull(TransportationPassenger.deletedAt),
-          ),
-        ),
+        .where(and(isNull(TransportationPassenger.deletedAt)))
+        .innerJoin(Student, eq(Student.id, TransportationPassenger.studentId)),
     ]);
 
-    return FundingResponseDto.fromDBResult({
-      fundingOrder: result[0].funding_order,
-      fundingOrderFeedback: result[0].funding_order_feedback,
-      tradeEvidenceFiles,
-      tradeDetailFiles,
-      clubSuppliesImageFiles,
-      clubSuppliesSoftwareEvidenceFiles,
-      fixtureImageFiles,
-      fixtureSoftwareEvidenceFiles,
-      foodExpenseFiles,
-      laborContractFiles,
-      externalEventParticipationFeeFiles,
-      publicationFiles,
-      profitMakingActivityFiles,
-      jointExpenseFiles,
-      etcExpenseFiles,
-      transportationPassengers,
-    });
+    return new Funding(
+      FundingDto.fromDBResult({
+        fundingOrder: result[0].funding_order,
+        fundingOrderFeedback: result[0].funding_order_feedback,
+        tradeEvidenceFiles,
+        tradeDetailFiles,
+        clubSuppliesImageFiles,
+        clubSuppliesSoftwareEvidenceFiles,
+        fixtureImageFiles,
+        fixtureSoftwareEvidenceFiles,
+        foodExpenseFiles,
+        laborContractFiles,
+        externalEventParticipationFeeFiles,
+        publicationFiles,
+        profitMakingActivityFiles,
+        jointExpenseFiles,
+        etcExpenseFiles,
+        transportationPassengers,
+      }),
+    );
   }
 
-  async selectAll(clubId: number, semesterId: number): Promise<Funding[]> {
+  async selectAll(
+    clubId: number,
+    semesterId: number,
+  ): Promise<FundingSummaryDto[]> {
     const fundingOrders = await this.db
       .select({
-        funding_order: FundingOrder,
-        funding_order_feedback: FundingOrderFeedback,
+        id: FundingOrder.id,
+        activityName: FundingOrder.name,
+        name: FundingOrder.name,
+        expenditureAmount: FundingOrder.expenditureAmount,
+        approvedAmount: FundingOrder.approvedAmount,
+        fundingOrderStatusEnumId: FundingOrder.fundingOrderStatusEnumId,
+        purposeId: FundingOrder.purposeId,
       })
       .from(FundingOrder)
-      .leftJoin(
-        FundingOrderFeedback,
-        eq(FundingOrderFeedback.fundingOrderId, FundingOrder.id),
-      )
       .where(
         and(
           eq(FundingOrder.clubId, clubId),
@@ -233,215 +243,12 @@ export default class FundingRepository {
       return [];
     }
 
-    const fundingIds = fundingOrders.map(order => order.funding_order.id);
-
-    const [
-      tradeEvidenceFiles,
-      tradeDetailFiles,
-      clubSuppliesImageFiles,
-      clubSuppliesSoftwareEvidenceFiles,
-      fixtureImageFiles,
-      fixtureSoftwareEvidenceFiles,
-      foodExpenseFiles,
-      laborContractFiles,
-      externalEventParticipationFeeFiles,
-      publicationFiles,
-      profitMakingActivityFiles,
-      jointExpenseFiles,
-      etcExpenseFiles,
-      transportationPassengers,
-    ] = await Promise.all([
-      this.db
-        .select()
-        .from(TradeEvidenceFile)
-        .where(
-          and(
-            inArray(TradeEvidenceFile.fundingOrderId, fundingIds),
-            isNull(TradeEvidenceFile.deletedAt),
-          ),
-        ),
-      this.db
-        .select()
-        .from(TradeDetailFile)
-        .where(
-          and(
-            inArray(TradeDetailFile.fundingOrderId, fundingIds),
-            isNull(TradeDetailFile.deletedAt),
-          ),
-        ),
-      this.db
-        .select()
-        .from(ClubSuppliesImageFile)
-        .where(
-          and(
-            inArray(ClubSuppliesImageFile.fundingOrderId, fundingIds),
-            isNull(ClubSuppliesImageFile.deletedAt),
-          ),
-        ),
-      this.db
-        .select()
-        .from(ClubSuppliesSoftwareEvidenceFile)
-        .where(
-          and(
-            inArray(
-              ClubSuppliesSoftwareEvidenceFile.fundingOrderId,
-              fundingIds,
-            ),
-            isNull(ClubSuppliesSoftwareEvidenceFile.deletedAt),
-          ),
-        ),
-      this.db
-        .select()
-        .from(FixtureImageFile)
-        .where(
-          and(
-            inArray(FixtureImageFile.fundingOrderId, fundingIds),
-            isNull(FixtureImageFile.deletedAt),
-          ),
-        ),
-      this.db
-        .select()
-        .from(FixtureSoftwareEvidenceFile)
-        .where(
-          and(
-            inArray(FixtureSoftwareEvidenceFile.fundingOrderId, fundingIds),
-            isNull(FixtureSoftwareEvidenceFile.deletedAt),
-          ),
-        ),
-      this.db
-        .select()
-        .from(FoodExpenseFile)
-        .where(
-          and(
-            inArray(FoodExpenseFile.fundingOrderId, fundingIds),
-            isNull(FoodExpenseFile.deletedAt),
-          ),
-        ),
-      this.db
-        .select()
-        .from(LaborContractFile)
-        .where(
-          and(
-            inArray(LaborContractFile.fundingOrderId, fundingIds),
-            isNull(LaborContractFile.deletedAt),
-          ),
-        ),
-      this.db
-        .select()
-        .from(ExternalEventParticipationFeeFile)
-        .where(
-          and(
-            inArray(
-              ExternalEventParticipationFeeFile.fundingOrderId,
-              fundingIds,
-            ),
-            isNull(ExternalEventParticipationFeeFile.deletedAt),
-          ),
-        ),
-      this.db
-        .select()
-        .from(PublicationFile)
-        .where(
-          and(
-            inArray(PublicationFile.fundingOrderId, fundingIds),
-            isNull(PublicationFile.deletedAt),
-          ),
-        ),
-      this.db
-        .select()
-        .from(ProfitMakingActivityFile)
-        .where(
-          and(
-            inArray(ProfitMakingActivityFile.fundingOrderId, fundingIds),
-            isNull(ProfitMakingActivityFile.deletedAt),
-          ),
-        ),
-      this.db
-        .select()
-        .from(JointExpenseFile)
-        .where(
-          and(
-            inArray(JointExpenseFile.fundingOrderId, fundingIds),
-            isNull(JointExpenseFile.deletedAt),
-          ),
-        ),
-      this.db
-        .select()
-        .from(EtcExpenseFile)
-        .where(
-          and(
-            inArray(EtcExpenseFile.fundingOrderId, fundingIds),
-            isNull(EtcExpenseFile.deletedAt),
-          ),
-        ),
-      this.db
-        .select()
-        .from(TransportationPassenger)
-        .where(
-          and(
-            inArray(TransportationPassenger.fundingOrderId, fundingIds),
-            isNull(TransportationPassenger.deletedAt),
-          ),
-        ),
-    ]);
-
-    return fundingOrders.map(order => {
-      const fundingId = order.funding_order.id;
-
-      return new Funding(
-        FundingResponseDto.fromDBResult({
-          fundingOrder: order.funding_order,
-          fundingOrderFeedback: order.funding_order_feedback,
-          tradeEvidenceFiles: tradeEvidenceFiles.filter(
-            f => f.fundingOrderId === fundingId,
-          ),
-          tradeDetailFiles: tradeDetailFiles.filter(
-            f => f.fundingOrderId === fundingId,
-          ),
-          clubSuppliesImageFiles: clubSuppliesImageFiles.filter(
-            f => f.fundingOrderId === fundingId,
-          ),
-          clubSuppliesSoftwareEvidenceFiles:
-            clubSuppliesSoftwareEvidenceFiles.filter(
-              f => f.fundingOrderId === fundingId,
-            ),
-          fixtureImageFiles: fixtureImageFiles.filter(
-            f => f.fundingOrderId === fundingId,
-          ),
-          fixtureSoftwareEvidenceFiles: fixtureSoftwareEvidenceFiles.filter(
-            f => f.fundingOrderId === fundingId,
-          ),
-          foodExpenseFiles: foodExpenseFiles.filter(
-            f => f.fundingOrderId === fundingId,
-          ),
-          laborContractFiles: laborContractFiles.filter(
-            f => f.fundingOrderId === fundingId,
-          ),
-          externalEventParticipationFeeFiles:
-            externalEventParticipationFeeFiles.filter(
-              f => f.fundingOrderId === fundingId,
-            ),
-          publicationFiles: publicationFiles.filter(
-            f => f.fundingOrderId === fundingId,
-          ),
-          profitMakingActivityFiles: profitMakingActivityFiles.filter(
-            f => f.fundingOrderId === fundingId,
-          ),
-          jointExpenseFiles: jointExpenseFiles.filter(
-            f => f.fundingOrderId === fundingId,
-          ),
-          etcExpenseFiles: etcExpenseFiles.filter(
-            f => f.fundingOrderId === fundingId,
-          ),
-          transportationPassengers: transportationPassengers.filter(
-            p => p.fundingOrderId === fundingId,
-          ),
-        }),
-      );
-    });
+    return fundingOrders.map(
+      fundingOrder => new FundingSummaryDto(fundingOrder),
+    );
   }
 
-  async insert(funding: FundingResponseDto): Promise<Funding> {
+  async insert(funding: FundingDto): Promise<Funding> {
     const result = await this.db.transaction(async tx => {
       // 1. Insert funding order
       const [fundingOrder] = await tx.insert(FundingOrder).values({
@@ -607,7 +414,7 @@ export default class FundingRepository {
           ? funding.transportationPassengers.map(passenger =>
               tx.insert(TransportationPassenger).values({
                 fundingOrderId,
-                studentId: parseInt(passenger.studentNumber),
+                studentId: passenger.studentId,
               }),
             )
           : []),
@@ -620,7 +427,7 @@ export default class FundingRepository {
     return this.select(result);
   }
 
-  async put(id: number, funding: FundingResponseDto): Promise<Funding> {
+  async put(id: number, funding: FundingDto): Promise<Funding> {
     const fundingOrderId = await this.db.transaction(async tx => {
       // 1. Soft delete existing funding order and related records
       const now = new Date();
@@ -857,7 +664,7 @@ export default class FundingRepository {
           ? funding.transportationPassengers.map(passenger =>
               tx.insert(TransportationPassenger).values({
                 fundingOrderId: newFundingOrderId,
-                studentId: parseInt(passenger.studentNumber),
+                studentId: passenger.studentId,
               }),
             )
           : []),
