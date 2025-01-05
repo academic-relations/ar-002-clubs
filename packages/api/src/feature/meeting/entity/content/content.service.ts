@@ -61,7 +61,7 @@ export class ContentService {
     agendaId: number,
     contentId: number,
   ) {
-    const result = await this.entityRepository.patchMeetingAgendaContent(
+    const result = await this.entityRepository.deleteMeetingAgendaContent(
       userId,
       meetingId,
       agendaId,
