@@ -20,14 +20,6 @@ interface AgendaEditorProps {
   onSave: (agendaContent: AgendaContent) => void;
 }
 
-// TODO: Impl TextArea
-// const TextEditor = styled.input.withConfig({
-//   shouldForwardProp: prop => isPropValid(prop),
-// })`
-//   border: 1px solid ${({ theme }) => theme.colors.PRIMARY};
-//   padding: 32px;
-// `;
-
 const AgendaEditor: React.FC<AgendaEditorProps> = ({
   agendaContent,
   onCancel,
