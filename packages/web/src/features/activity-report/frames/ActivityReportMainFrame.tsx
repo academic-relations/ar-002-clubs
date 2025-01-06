@@ -64,7 +64,7 @@ const ActivityReportMainFrame: React.FC<ActivityReportMainFrameProps> = ({
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         <FoldableSectionTitle childrenMargin="20px" title="신규 활동 보고서">
           <FlexWrapper direction="column" gap={20}>
-            <Info text="현재는 2024년 여름-가을학기 활동 보고서 작성 기간입니다 (작성 마감 : 2025년 1월 7일 23:59)" />
+            <Info text="현재는 2024년 여름-가을학기 활동 보고서 작성 기간입니다 (작성 마감 : 2025년 1월 17일 23:59)" />
             <FlexWrapper
               direction="row"
               gap={16}
