@@ -120,4 +120,18 @@ export default class ClubTRepository {
       .where(and(eq(ClubT.semesterId, semesterId), isNull(ClubT.deletedAt)))
       .then(result => result);
   }
+
+  async findByClubIdAndSemesterId(clubId: number, semesterId: number) {
+    return this.db
+      .select()
+      .from(ClubT)
+      .where(
+        and(
+          eq(ClubT.clubId, clubId),
+          eq(ClubT.semesterId, semesterId),
+          isNull(ClubT.deletedAt),
+        ),
+      )
+      .then(takeUnique);
+  }
 }
