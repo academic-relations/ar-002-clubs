@@ -15,6 +15,8 @@ const ExecutiveActivityReportFrame = () => {
   const [searchText, setSearchText] = useState<string>("");
   const { data, isLoading, isError } = useGetExecutiveActivities();
 
+  const [selectedClubIds, setSelectedClubIds] = useState<number[]>([]);
+
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <ActivityReportStatistic activities={data ?? { items: [] }} />
@@ -46,6 +48,8 @@ const ExecutiveActivityReportFrame = () => {
         <ExecutiveActivityClubTable
           activities={data ?? { items: [] }}
           searchText={searchText}
+          selectedClubIds={selectedClubIds}
+          setSelectedClubIds={setSelectedClubIds}
         />
       ) : (
         <div>담당자별</div>

@@ -1,13 +1,14 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { ApiAct023ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 import {
   createColumnHelper,
   getCoreRowModel,
+  getFilteredRowModel,
+  RowSelectionState,
   useReactTable,
 } from "@tanstack/react-table";
 
-import { hangulIncludes } from "es-hangul";
 import styled from "styled-components";
 
 import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
@@ -22,6 +23,8 @@ import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 interface ExecutiveActivityClubTableProps {
   activities: ApiAct023ResponseOk;
   searchText: string;
+  selectedClubIds: number[];
+  setSelectedClubIds: (clubIds: number[]) => void;
 }
 
 const CheckboxCenterPlacer = styled.div`
@@ -129,41 +132,64 @@ const columns = [
 const ExecutiveActivityClubTable: React.FC<ExecutiveActivityClubTableProps> = ({
   activities,
   searchText,
+  selectedClubIds,
+  setSelectedClubIds,
 }) => {
   const sortedActivities = useMemo(
     () => [...activities.items].sort((a, b) => (a.clubId < b.clubId ? -1 : 1)),
     [activities.items],
   );
 
-  const filteredActivities = useMemo(
+  const initialRowValues = useMemo(
     () =>
-      sortedActivities.filter(
-        item =>
-          item.clubNameKr.toLowerCase().includes(searchText.toLowerCase()) ||
-          item.clubNameEn.toLowerCase().includes(searchText.toLowerCase()) ||
-          hangulIncludes(item.clubNameKr, searchText),
-      ),
-    [sortedActivities, searchText],
+      selectedClubIds.reduce((acc, clubId) => {
+        const index = sortedActivities.findIndex(
+          activity => activity.clubId === clubId,
+        );
+        return { ...acc, [index]: true };
+      }, {}),
+    [selectedClubIds, sortedActivities],
   );
 
+  const [rowValues, setRowValues] =
+    useState<RowSelectionState>(initialRowValues);
+
+  useEffect(() => {
+    setRowValues(initialRowValues);
+  }, [initialRowValues]);
+
+  const handleRowClick = (rowState: RowSelectionState) => {
+    setRowValues(rowState);
+    const newSelected = sortedActivities.filter((_, i) => rowState?.[i]);
+    setSelectedClubIds(newSelected.map(activity => activity.clubId));
+  };
+
   const table = useReactTable({
-    data: searchText === "" ? sortedActivities : filteredActivities,
+    data: sortedActivities,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      rowSelection: rowValues,
+      globalFilter: searchText,
+    },
+    onRowSelectionChange: updaterOrValue => {
+      if (typeof updaterOrValue === "function") {
+        handleRowClick(updaterOrValue(rowValues));
+      } else {
+        handleRowClick(updaterOrValue);
+      }
+    },
     enableSorting: false,
   });
 
   const totalCount = sortedActivities.length;
 
-  const selectedCount = table
-    .getRowModel()
-    .rows.filter(row => row.getIsSelected()).length;
-
   let countString = `총 ${totalCount}개`;
-  if (selectedCount !== 0) {
-    countString = `선택 항목 ${selectedCount}개 / 총 ${totalCount}개`;
-  } else if (filteredActivities.length !== totalCount) {
-    countString = `검색 결과 ${filteredActivities.length}개 / 총 ${totalCount}개`;
+  if (selectedClubIds.length !== 0) {
+    countString = `선택 항목 ${selectedClubIds.length}개 / 총 ${totalCount}개`;
+  } else if (table.getRowModel().rows.length !== totalCount) {
+    countString = `검색 결과 ${table.getRowModel().rows.length}개 / 총 ${totalCount}개`;
   }
 
   return (
