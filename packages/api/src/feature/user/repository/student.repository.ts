@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { StudentStatusEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
-import { and, count, eq, gte, isNull, lte, or } from "drizzle-orm";
+import { and, count, eq, gte, inArray, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
@@ -9,6 +9,8 @@ import {
   Student,
   StudentT,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+
+import { MStudent } from "../model/student.model";
 
 @Injectable()
 export class StudentRepository {
@@ -90,5 +92,15 @@ export class StudentRepository {
       return true;
     });
     return isUpdateSucceed;
+  }
+
+  async selectStudentsByIds(studentIds: number[]): Promise<MStudent[]> {
+    const students = await this.db
+      .select()
+      .from(Student)
+      .where(and(inArray(Student.id, studentIds), isNull(Student.deletedAt)));
+    return students.map(
+      student => new MStudent({ ...student, studentNumber: student.number }),
+    );
   }
 }
