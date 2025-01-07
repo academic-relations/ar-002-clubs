@@ -100,7 +100,8 @@ export class StudentRepository {
       .from(Student)
       .where(and(inArray(Student.id, studentIds), isNull(Student.deletedAt)));
     return students.map(
-      student => new MStudent({ ...student, studentNumber: student.number }),
+      student =>
+        new MStudent({ ...student, studentNumber: student.number.toString() }),
     );
   }
 }
