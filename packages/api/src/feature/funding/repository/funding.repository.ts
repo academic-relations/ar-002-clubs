@@ -1,4 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
+
+import { IFundingSummary } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 import { and, eq, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -24,9 +26,7 @@ import {
 
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
-import { FundingDto } from "../model/funding.dto.model";
 import { Funding } from "../model/funding.model";
-import { FundingSummaryDto } from "../model/funding.summury-dto.model";
 
 @Injectable()
 export default class FundingRepository {
@@ -194,32 +194,34 @@ export default class FundingRepository {
         .innerJoin(Student, eq(Student.id, TransportationPassenger.studentId)),
     ]);
 
-    return new Funding(
-      FundingDto.fromDBResult({
-        fundingOrder: result[0].funding_order,
-        fundingOrderFeedback: result[0].funding_order_feedback,
-        tradeEvidenceFiles,
-        tradeDetailFiles,
-        clubSuppliesImageFiles,
-        clubSuppliesSoftwareEvidenceFiles,
-        fixtureImageFiles,
-        fixtureSoftwareEvidenceFiles,
-        foodExpenseFiles,
-        laborContractFiles,
-        externalEventParticipationFeeFiles,
-        publicationFiles,
-        profitMakingActivityFiles,
-        jointExpenseFiles,
-        etcExpenseFiles,
-        transportationPassengers,
-      }),
-    );
+    return Funding.fromDBResult({
+      fundingOrder: result[0].funding_order,
+      fundingOrderFeedback: result[0].funding_order_feedback,
+      tradeEvidenceFiles: tradeEvidenceFiles.map(file => ({
+        id: file.fileId,
+      })),
+      tradeDetailFiles: tradeDetailFiles.map(file => ({
+        id: file.fileId,
+      })),
+      clubSuppliesImageFiles,
+      clubSuppliesSoftwareEvidenceFiles,
+      fixtureImageFiles,
+      fixtureSoftwareEvidenceFiles,
+      foodExpenseFiles,
+      laborContractFiles,
+      externalEventParticipationFeeFiles,
+      publicationFiles,
+      profitMakingActivityFiles,
+      jointExpenseFiles,
+      etcExpenseFiles,
+      transportationPassengers,
+    });
   }
 
   async selectAll(
     clubId: number,
     semesterId: number,
-  ): Promise<FundingSummaryDto[]> {
+  ): Promise<IFundingSummary[]> {
     const fundingOrders = await this.db
       .select({
         id: FundingOrder.id,
@@ -243,12 +245,10 @@ export default class FundingRepository {
       return [];
     }
 
-    return fundingOrders.map(
-      fundingOrder => new FundingSummaryDto(fundingOrder),
-    );
+    return fundingOrders;
   }
 
-  async insert(funding: FundingDto): Promise<Funding> {
+  async insert(funding: Funding): Promise<Funding> {
     const result = await this.db.transaction(async tx => {
       // 1. Insert funding order
       const [fundingOrder] = await tx.insert(FundingOrder).values({
@@ -270,21 +270,11 @@ export default class FundingRepository {
         isProfitMakingActivity: funding.isProfitMakingActivity,
         isJointExpense: funding.isJointExpense,
         isEtcExpense: funding.isEtcExpense,
-        isClubSupplies: funding.isClubSupplies,
         isNonCorporateTransaction: funding.isNonCorporateTransaction,
         tradeDetailExplanation: funding.tradeDetailExplanation,
       });
 
       const fundingOrderId = Number(fundingOrder.insertId);
-
-      // 2. Insert feedback if exists
-      if (funding.feedback) {
-        await tx.insert(FundingOrderFeedback).values({
-          fundingOrderId,
-          chargedExecutiveId: 1, // TODO: 실제 값으로 대체 필요
-          feedback: funding.feedback,
-        });
-      }
 
       // 3. Insert files and related data
       await Promise.all([
@@ -292,129 +282,129 @@ export default class FundingRepository {
         ...funding.tradeEvidenceFiles.map(file =>
           tx.insert(TradeEvidenceFile).values({
             fundingOrderId,
-            fileId: file.fileId,
+            fileId: file.id,
           }),
         ),
         ...funding.tradeDetailFiles.map(file =>
           tx.insert(TradeDetailFile).values({
             fundingOrderId,
-            fileId: file.fileId,
+            fileId: file.id,
           }),
         ),
 
         // Club supplies files
-        ...(funding.isClubSupplies && funding.clubSuppliesImageFiles
-          ? funding.clubSuppliesImageFiles.map(file =>
+        ...(funding.clubSupplies && funding.clubSupplies.imageFiles
+          ? funding.clubSupplies.imageFiles.map(file =>
               tx.insert(ClubSuppliesImageFile).values({
                 fundingOrderId,
-                fileId: file.fileId,
+                fileId: file.id,
               }),
             )
           : []),
-        ...(funding.isClubSupplies && funding.clubSuppliesSoftwareEvidenceFiles
-          ? funding.clubSuppliesSoftwareEvidenceFiles.map(file =>
+        ...(funding.clubSupplies && funding.clubSupplies.softwareEvidenceFiles
+          ? funding.clubSupplies.softwareEvidenceFiles.map(file =>
               tx.insert(ClubSuppliesSoftwareEvidenceFile).values({
                 fundingOrderId,
-                fileId: file.fileId,
+                fileId: file.id,
               }),
             )
           : []),
 
         // Fixture files
-        ...(funding.isFixture && funding.fixtureImageFiles
-          ? funding.fixtureImageFiles.map(file =>
+        ...(funding.isFixture && funding.fixture.imageFiles
+          ? funding.fixture.imageFiles.map(file =>
               tx.insert(FixtureImageFile).values({
                 fundingOrderId,
-                fileId: file.fileId,
+                fileId: file.id,
               }),
             )
           : []),
-        ...(funding.isFixture && funding.fixtureSoftwareEvidenceFiles
-          ? funding.fixtureSoftwareEvidenceFiles.map(file =>
+        ...(funding.isFixture && funding.fixture.softwareEvidenceFiles
+          ? funding.fixture.softwareEvidenceFiles.map(file =>
               tx.insert(FixtureSoftwareEvidenceFile).values({
                 fundingOrderId,
-                fileId: file.fileId,
+                fileId: file.id,
               }),
             )
           : []),
 
         // Food expense files
-        ...(funding.isFoodExpense && funding.foodExpenseFiles
-          ? funding.foodExpenseFiles.map(file =>
+        ...(funding.isFoodExpense && funding.foodExpense
+          ? funding.foodExpense.files.map(file =>
               tx.insert(FoodExpenseFile).values({
                 fundingOrderId,
-                fileId: file.fileId,
+                fileId: file.id,
               }),
             )
           : []),
 
         // Labor contract files
-        ...(funding.isLaborContract && funding.laborContractFiles
-          ? funding.laborContractFiles.map(file =>
+        ...(funding.isLaborContract && funding.laborContract
+          ? funding.laborContract.files.map(file =>
               tx.insert(LaborContractFile).values({
                 fundingOrderId,
-                fileId: file.fileId,
+                fileId: file.id,
               }),
             )
           : []),
 
         // External event participation fee files
         ...(funding.isExternalEventParticipationFee &&
-        funding.externalEventParticipationFeeFiles
-          ? funding.externalEventParticipationFeeFiles.map(file =>
+        funding.externalEventParticipationFee
+          ? funding.externalEventParticipationFee.files.map(file =>
               tx.insert(ExternalEventParticipationFeeFile).values({
                 fundingOrderId,
-                fileId: file.fileId,
+                fileId: file.id,
               }),
             )
           : []),
 
         // Publication files
-        ...(funding.isPublication && funding.publicationFiles
-          ? funding.publicationFiles.map(file =>
+        ...(funding.isPublication && funding.publication
+          ? funding.publication.files.map(file =>
               tx.insert(PublicationFile).values({
                 fundingOrderId,
-                fileId: file.fileId,
+                fileId: file.id,
               }),
             )
           : []),
 
         // Profit making activity files
-        ...(funding.isProfitMakingActivity && funding.profitMakingActivityFiles
-          ? funding.profitMakingActivityFiles.map(file =>
+        ...(funding.isProfitMakingActivity && funding.profitMakingActivity
+          ? funding.profitMakingActivity.files.map(file =>
               tx.insert(ProfitMakingActivityFile).values({
                 fundingOrderId,
-                fileId: file.fileId,
+                fileId: file.id,
               }),
             )
           : []),
 
         // Joint expense files
-        ...(funding.isJointExpense && funding.jointExpenseFiles
-          ? funding.jointExpenseFiles.map(file =>
+        ...(funding.isJointExpense && funding.jointExpense
+          ? funding.jointExpense.files.map(file =>
               tx.insert(JointExpenseFile).values({
                 fundingOrderId,
-                fileId: file.fileId,
+                fileId: file.id,
               }),
             )
           : []),
 
         // Etc expense files
-        ...(funding.isEtcExpense && funding.etcExpenseFiles
-          ? funding.etcExpenseFiles.map(file =>
+        ...(funding.isEtcExpense && funding.etcExpense
+          ? funding.etcExpense.files.map(file =>
               tx.insert(EtcExpenseFile).values({
                 fundingOrderId,
-                fileId: file.fileId,
+                fileId: file.id,
               }),
             )
           : []),
 
         // Transportation passengers
-        ...(funding.isTransportation && funding.transportationPassengers
-          ? funding.transportationPassengers.map(passenger =>
+        ...(funding.isTransportation && funding.transportation
+          ? funding.transportation.passengers.map(passenger =>
               tx.insert(TransportationPassenger).values({
                 fundingOrderId,
-                studentId: passenger.studentId,
+                studentId: passenger.id,
               }),
             )
           : []),
@@ -425,256 +415,6 @@ export default class FundingRepository {
 
     // 4. Return the newly created funding
     return this.select(result);
-  }
-
-  async put(id: number, funding: FundingDto): Promise<Funding> {
-    const fundingOrderId = await this.db.transaction(async tx => {
-      // 1. Soft delete existing funding order and related records
-      const now = new Date();
-
-      await tx
-        .update(FundingOrder)
-        .set({ deletedAt: now })
-        .where(eq(FundingOrder.id, id));
-
-      await Promise.all([
-        tx
-          .update(FundingOrderFeedback)
-          .set({ deletedAt: now })
-          .where(eq(FundingOrderFeedback.fundingOrderId, id)),
-        tx
-          .update(TradeEvidenceFile)
-          .set({ deletedAt: now })
-          .where(eq(TradeEvidenceFile.fundingOrderId, id)),
-        tx
-          .update(TradeDetailFile)
-          .set({ deletedAt: now })
-          .where(eq(TradeDetailFile.fundingOrderId, id)),
-        tx
-          .update(ClubSuppliesImageFile)
-          .set({ deletedAt: now })
-          .where(eq(ClubSuppliesImageFile.fundingOrderId, id)),
-        tx
-          .update(ClubSuppliesSoftwareEvidenceFile)
-          .set({ deletedAt: now })
-          .where(eq(ClubSuppliesSoftwareEvidenceFile.fundingOrderId, id)),
-        tx
-          .update(FixtureImageFile)
-          .set({ deletedAt: now })
-          .where(eq(FixtureImageFile.fundingOrderId, id)),
-        tx
-          .update(FixtureSoftwareEvidenceFile)
-          .set({ deletedAt: now })
-          .where(eq(FixtureSoftwareEvidenceFile.fundingOrderId, id)),
-        tx
-          .update(FoodExpenseFile)
-          .set({ deletedAt: now })
-          .where(eq(FoodExpenseFile.fundingOrderId, id)),
-        tx
-          .update(LaborContractFile)
-          .set({ deletedAt: now })
-          .where(eq(LaborContractFile.fundingOrderId, id)),
-        tx
-          .update(ExternalEventParticipationFeeFile)
-          .set({ deletedAt: now })
-          .where(eq(ExternalEventParticipationFeeFile.fundingOrderId, id)),
-        tx
-          .update(PublicationFile)
-          .set({ deletedAt: now })
-          .where(eq(PublicationFile.fundingOrderId, id)),
-        tx
-          .update(ProfitMakingActivityFile)
-          .set({ deletedAt: now })
-          .where(eq(ProfitMakingActivityFile.fundingOrderId, id)),
-        tx
-          .update(JointExpenseFile)
-          .set({ deletedAt: now })
-          .where(eq(JointExpenseFile.fundingOrderId, id)),
-        tx
-          .update(EtcExpenseFile)
-          .set({ deletedAt: now })
-          .where(eq(EtcExpenseFile.fundingOrderId, id)),
-        tx
-          .update(TransportationPassenger)
-          .set({ deletedAt: now })
-          .where(eq(TransportationPassenger.fundingOrderId, id)),
-      ]);
-
-      // 2. Insert new funding order
-      const [fundingOrder] = await tx.insert(FundingOrder).values({
-        clubId: funding.clubId,
-        purposeId: funding.purposeId,
-        semesterId: funding.semesterId,
-        fundingOrderStatusEnumId: funding.fundingOrderStatusEnumId,
-        name: funding.name,
-        expenditureDate: funding.expenditureDate,
-        expenditureAmount: funding.expenditureAmount,
-        approvedAmount: funding.approvedAmount,
-        isFixture: funding.isFixture,
-        isTransportation: funding.isTransportation,
-        isFoodExpense: funding.isFoodExpense,
-        isLaborContract: funding.isLaborContract,
-        isExternalEventParticipationFee:
-          funding.isExternalEventParticipationFee,
-        isPublication: funding.isPublication,
-        isProfitMakingActivity: funding.isProfitMakingActivity,
-        isJointExpense: funding.isJointExpense,
-        isEtcExpense: funding.isEtcExpense,
-        isClubSupplies: funding.isClubSupplies,
-        isNonCorporateTransaction: funding.isNonCorporateTransaction,
-        tradeDetailExplanation: funding.tradeDetailExplanation,
-      });
-
-      const newFundingOrderId = Number(fundingOrder.insertId);
-
-      // 3. Insert feedback if exists
-      if (funding.feedback) {
-        await tx.insert(FundingOrderFeedback).values({
-          fundingOrderId: newFundingOrderId,
-          chargedExecutiveId: 1, // TODO: 실제 값으로 대체 필요
-          feedback: funding.feedback,
-        });
-      }
-
-      // 4. Insert files and related data
-      await Promise.all([
-        // Trade files
-        ...funding.tradeEvidenceFiles.map(file =>
-          tx.insert(TradeEvidenceFile).values({
-            fundingOrderId: newFundingOrderId,
-            fileId: file.fileId,
-          }),
-        ),
-        ...funding.tradeDetailFiles.map(file =>
-          tx.insert(TradeDetailFile).values({
-            fundingOrderId: newFundingOrderId,
-            fileId: file.fileId,
-          }),
-        ),
-
-        // Club supplies files
-        ...(funding.isClubSupplies && funding.clubSuppliesImageFiles
-          ? funding.clubSuppliesImageFiles.map(file =>
-              tx.insert(ClubSuppliesImageFile).values({
-                fundingOrderId: newFundingOrderId,
-                fileId: file.fileId,
-              }),
-            )
-          : []),
-        ...(funding.isClubSupplies && funding.clubSuppliesSoftwareEvidenceFiles
-          ? funding.clubSuppliesSoftwareEvidenceFiles.map(file =>
-              tx.insert(ClubSuppliesSoftwareEvidenceFile).values({
-                fundingOrderId: newFundingOrderId,
-                fileId: file.fileId,
-              }),
-            )
-          : []),
-
-        // Fixture files
-        ...(funding.isFixture && funding.fixtureImageFiles
-          ? funding.fixtureImageFiles.map(file =>
-              tx.insert(FixtureImageFile).values({
-                fundingOrderId: newFundingOrderId,
-                fileId: file.fileId,
-              }),
-            )
-          : []),
-        ...(funding.isFixture && funding.fixtureSoftwareEvidenceFiles
-          ? funding.fixtureSoftwareEvidenceFiles.map(file =>
-              tx.insert(FixtureSoftwareEvidenceFile).values({
-                fundingOrderId: newFundingOrderId,
-                fileId: file.fileId,
-              }),
-            )
-          : []),
-
-        // Food expense files
-        ...(funding.isFoodExpense && funding.foodExpenseFiles
-          ? funding.foodExpenseFiles.map(file =>
-              tx.insert(FoodExpenseFile).values({
-                fundingOrderId: newFundingOrderId,
-                fileId: file.fileId,
-              }),
-            )
-          : []),
-
-        // Labor contract files
-        ...(funding.isLaborContract && funding.laborContractFiles
-          ? funding.laborContractFiles.map(file =>
-              tx.insert(LaborContractFile).values({
-                fundingOrderId: newFundingOrderId,
-                fileId: file.fileId,
-              }),
-            )
-          : []),
-
-        // External event participation fee files
-        ...(funding.isExternalEventParticipationFee &&
-        funding.externalEventParticipationFeeFiles
-          ? funding.externalEventParticipationFeeFiles.map(file =>
-              tx.insert(ExternalEventParticipationFeeFile).values({
-                fundingOrderId: newFundingOrderId,
-                fileId: file.fileId,
-              }),
-            )
-          : []),
-
-        // Publication files
-        ...(funding.isPublication && funding.publicationFiles
-          ? funding.publicationFiles.map(file =>
-              tx.insert(PublicationFile).values({
-                fundingOrderId: newFundingOrderId,
-                fileId: file.fileId,
-              }),
-            )
-          : []),
-
-        // Profit making activity files
-        ...(funding.isProfitMakingActivity && funding.profitMakingActivityFiles
-          ? funding.profitMakingActivityFiles.map(file =>
-              tx.insert(ProfitMakingActivityFile).values({
-                fundingOrderId: newFundingOrderId,
-                fileId: file.fileId,
-              }),
-            )
-          : []),
-
-        // Joint expense files
-        ...(funding.isJointExpense && funding.jointExpenseFiles
-          ? funding.jointExpenseFiles.map(file =>
-              tx.insert(JointExpenseFile).values({
-                fundingOrderId: newFundingOrderId,
-                fileId: file.fileId,
-              }),
-            )
-          : []),
-
-        // Etc expense files
-        ...(funding.isEtcExpense && funding.etcExpenseFiles
-          ? funding.etcExpenseFiles.map(file =>
-              tx.insert(EtcExpenseFile).values({
-                fundingOrderId: newFundingOrderId,
-                fileId: file.fileId,
-              }),
-            )
-          : []),
-
-        // Transportation passengers
-        ...(funding.isTransportation && funding.transportationPassengers
-          ? funding.transportationPassengers.map(passenger =>
-              tx.insert(TransportationPassenger).values({
-                fundingOrderId: newFundingOrderId,
-                studentId: passenger.studentId,
-              }),
-            )
-          : []),
-      ]);
-
-      return newFundingOrderId;
-    });
-
-    // 5. Return the updated funding
-    return this.select(fundingOrderId);
   }
 
   async delete(id: number): Promise<void> {
@@ -749,5 +489,10 @@ export default class FundingRepository {
           .where(eq(TransportationPassenger.fundingOrderId, id)),
       ]);
     });
+  }
+
+  async put(id: number, funding: Funding): Promise<Funding> {
+    await this.delete(id);
+    return this.insert(funding);
   }
 }

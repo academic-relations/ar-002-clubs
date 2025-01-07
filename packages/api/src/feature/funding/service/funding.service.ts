@@ -1,6 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { ApiFnd001RequestBody } from "@sparcs-clubs/interface/api/funding/apiFnd001";
+import {
+  ApiFnd001RequestBody,
+  ApiFnd001ResponseCreated,
+} from "@sparcs-clubs/interface/api/funding/apiFnd001";
 import {
   ApiFnd002RequestParam,
   ApiFnd002ResponseOk,
@@ -8,12 +11,20 @@ import {
 import {
   ApiFnd003RequestBody,
   ApiFnd003RequestParam,
+  ApiFnd003ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/apiFnd003";
-import { ApiFnd004RequestParam } from "@sparcs-clubs/interface/api/funding/apiFnd004";
-import { ApiFnd005RequestQuery } from "@sparcs-clubs/interface/api/funding/apiFnd005";
+import {
+  ApiFnd004RequestParam,
+  ApiFnd004ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/apiFnd004";
+import {
+  ApiFnd005RequestQuery,
+  ApiFnd005ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/apiFnd005";
 import {
   ApiFnd006RequestBody,
   ApiFnd006RequestParam,
+  ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/apiFnd006";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
@@ -22,7 +33,7 @@ import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.publi
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
-import { FundingDto } from "../model/funding.dto.model";
+import { Funding } from "../model/funding.model";
 import FundingRepository from "../repository/funding.repository";
 
 @Injectable()
@@ -35,7 +46,10 @@ export default class FundingService {
     private readonly activityPublicService: ActivityPublicService,
   ) {}
 
-  async postStudentFunding(body: ApiFnd001RequestBody, studentId: number) {
+  async postStudentFunding(
+    body: ApiFnd001RequestBody,
+    studentId: number,
+  ): Promise<ApiFnd001ResponseCreated> {
     const user = await this.userPublicService.getStudentById({ id: studentId });
     if (!user) {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
@@ -49,43 +63,9 @@ export default class FundingService {
     const now = getKSTDate();
     const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
 
-    const fundingDto: FundingDto = {
-      ...body,
-      fundingOrderStatusEnumId: 1,
-      semesterId,
-      expenditureDate: new Date(body.expenditureDate),
-      isFixture: body.isFixture ?? false,
-      isTransportation: body.isTransportation ?? false,
-      isFoodExpense: body.isFoodExpense ?? false,
-      isLaborContract: body.isLaborContract ?? false,
-      isExternalEventParticipationFee:
-        body.isExternalEventParticipationFee ?? false,
-      isPublication: body.isPublication ?? false,
-      isProfitMakingActivity: body.isProfitMakingActivity ?? false,
-      isJointExpense: body.isJointExpense ?? false,
-      isEtcExpense: body.isEtcExpense ?? false,
-      isClubSupplies: body.isClubSupplies ?? false,
-      isNonCorporateTransaction: body.isNonCorporateTransaction ?? false,
-      tradeEvidenceFiles: body.tradeEvidenceFiles ?? [],
-      tradeDetailFiles: body.tradeDetailFiles ?? [],
-      clubSuppliesImageFiles: body.clubSuppliesImageFiles ?? [],
-      clubSuppliesSoftwareEvidenceFiles:
-        body.clubSuppliesSoftwareEvidenceFiles ?? [],
-      fixtureImageFiles: body.fixtureImageFiles ?? [],
-      fixtureSoftwareEvidenceFiles: body.fixtureSoftwareEvidenceFiles ?? [],
-      foodExpenseFiles: body.foodExpenseFiles ?? [],
-      laborContractFiles: body.laborContractFiles ?? [],
-      externalEventParticipationFeeFiles:
-        body.externalEventParticipationFeeFiles ?? [],
-      publicationFiles: body.publicationFiles ?? [],
-      profitMakingActivityFiles: body.profitMakingActivityFiles ?? [],
-      jointExpenseFiles: body.jointExpenseFiles ?? [],
-      etcExpenseFiles: body.etcExpenseFiles ?? [],
-      transportationPassengers: body.transportationPassengers ?? [],
-    };
-
-    const funding = await this.fundingRepository.insert(fundingDto);
-    return funding;
+    const funding = new Funding(body);
+    funding.semesterId = semesterId;
+    return this.fundingRepository.insert(funding);
   }
 
   async getStudentFunding(
@@ -102,106 +82,104 @@ export default class FundingService {
       throw new HttpException("Funding not found", HttpStatus.NOT_FOUND);
     }
 
-    const fundingDto = funding.toResponseDto();
-
-    fundingDto.tradeEvidenceFiles.forEach(async file => {
+    funding.tradeEvidenceFiles.forEach(async file => {
       const { name, link } = await this.filePublicService.getFileInfoById(
-        file.fileId,
+        file.id,
       );
       // eslint-disable-next-line no-param-reassign
       file.name = name;
       // eslint-disable-next-line no-param-reassign
-      file.link = link;
+      file.url = link;
     });
 
-    fundingDto.tradeDetailFiles.forEach(async file => {
+    funding.tradeDetailFiles.forEach(async file => {
       const { name, link } = await this.filePublicService.getFileInfoById(
-        file.fileId,
+        file.id,
       );
       // eslint-disable-next-line no-param-reassign
       file.name = name;
       // eslint-disable-next-line no-param-reassign
-      file.link = link;
+      file.url = link;
     });
 
-    fundingDto.foodExpenseFiles.forEach(async file => {
+    funding.foodExpense.files.forEach(async file => {
       const { name, link } = await this.filePublicService.getFileInfoById(
-        file.fileId,
+        file.id,
       );
       // eslint-disable-next-line no-param-reassign
       file.name = name;
       // eslint-disable-next-line no-param-reassign
-      file.link = link;
+      file.url = link;
     });
 
-    fundingDto.laborContractFiles.forEach(async file => {
+    funding.laborContract.files.forEach(async file => {
       const { name, link } = await this.filePublicService.getFileInfoById(
-        file.fileId,
+        file.id,
       );
       // eslint-disable-next-line no-param-reassign
       file.name = name;
       // eslint-disable-next-line no-param-reassign
-      file.link = link;
+      file.url = link;
     });
 
-    fundingDto.externalEventParticipationFeeFiles.forEach(async file => {
+    funding.externalEventParticipationFee.files.forEach(async file => {
       const { name, link } = await this.filePublicService.getFileInfoById(
-        file.fileId,
+        file.id,
       );
       // eslint-disable-next-line no-param-reassign
       file.name = name;
       // eslint-disable-next-line no-param-reassign
-      file.link = link;
+      file.url = link;
     });
 
-    fundingDto.publicationFiles.forEach(async file => {
+    funding.publication.files.forEach(async file => {
       const { name, link } = await this.filePublicService.getFileInfoById(
-        file.fileId,
+        file.id,
       );
       // eslint-disable-next-line no-param-reassign
       file.name = name;
       // eslint-disable-next-line no-param-reassign
-      file.link = link;
+      file.url = link;
     });
 
-    fundingDto.profitMakingActivityFiles.forEach(async file => {
+    funding.profitMakingActivity.files.forEach(async file => {
       const { name, link } = await this.filePublicService.getFileInfoById(
-        file.fileId,
+        file.id,
       );
       // eslint-disable-next-line no-param-reassign
       file.name = name;
       // eslint-disable-next-line no-param-reassign
-      file.link = link;
+      file.url = link;
     });
 
-    fundingDto.jointExpenseFiles.forEach(async file => {
+    funding.jointExpense.files.forEach(async file => {
       const { name, link } = await this.filePublicService.getFileInfoById(
-        file.fileId,
+        file.id,
       );
       // eslint-disable-next-line no-param-reassign
       file.name = name;
       // eslint-disable-next-line no-param-reassign
-      file.link = link;
+      file.url = link;
     });
 
-    fundingDto.etcExpenseFiles.forEach(async file => {
+    funding.etcExpense.files.forEach(async file => {
       const { name, link } = await this.filePublicService.getFileInfoById(
-        file.fileId,
+        file.id,
       );
       // eslint-disable-next-line no-param-reassign
       file.name = name;
       // eslint-disable-next-line no-param-reassign
-      file.link = link;
+      file.url = link;
     });
 
-    return fundingDto;
+    return funding;
   }
 
   async putStudentFunding(
     body: ApiFnd003RequestBody,
     param: ApiFnd003RequestParam,
     studentId: number,
-  ) {
+  ): Promise<ApiFnd003ResponseOk> {
     const user = await this.userPublicService.getStudentById({ id: studentId });
     if (!user) {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
@@ -215,55 +193,28 @@ export default class FundingService {
     const now = getKSTDate();
     const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
 
-    const fundingDto: FundingDto = {
-      ...body,
-      semesterId,
-      fundingOrderStatusEnumId: 1,
-      expenditureDate: new Date(body.expenditureDate),
-      isFixture: body.isFixture ?? false,
-      isTransportation: body.isTransportation ?? false,
-      isFoodExpense: body.isFoodExpense ?? false,
-      isLaborContract: body.isLaborContract ?? false,
-      isExternalEventParticipationFee:
-        body.isExternalEventParticipationFee ?? false,
-      isPublication: body.isPublication ?? false,
-      isProfitMakingActivity: body.isProfitMakingActivity ?? false,
-      isJointExpense: body.isJointExpense ?? false,
-      isEtcExpense: body.isEtcExpense ?? false,
-      isClubSupplies: body.isClubSupplies ?? false,
-      isNonCorporateTransaction: body.isNonCorporateTransaction ?? false,
-      tradeDetailExplanation: body.tradeDetailExplanation ?? "",
-      tradeEvidenceFiles: body.tradeEvidenceFiles ?? [],
-      tradeDetailFiles: body.tradeDetailFiles ?? [],
-      clubSuppliesImageFiles: body.clubSuppliesImageFiles ?? [],
-      clubSuppliesSoftwareEvidenceFiles:
-        body.clubSuppliesSoftwareEvidenceFiles ?? [],
-      fixtureImageFiles: body.fixtureImageFiles ?? [],
-      fixtureSoftwareEvidenceFiles: body.fixtureSoftwareEvidenceFiles ?? [],
-      foodExpenseFiles: body.foodExpenseFiles ?? [],
-      laborContractFiles: body.laborContractFiles ?? [],
-      externalEventParticipationFeeFiles:
-        body.externalEventParticipationFeeFiles ?? [],
-      publicationFiles: body.publicationFiles ?? [],
-      profitMakingActivityFiles: body.profitMakingActivityFiles ?? [],
-      jointExpenseFiles: body.jointExpenseFiles ?? [],
-      etcExpenseFiles: body.etcExpenseFiles ?? [],
-      transportationPassengers: body.transportationPassengers ?? [],
-    };
+    const funding = new Funding(body);
+    funding.semesterId = semesterId;
 
-    const funding = await this.fundingRepository.put(param.id, fundingDto);
-    return funding;
+    return this.fundingRepository.put(param.id, funding);
   }
 
-  async deleteStudentFunding(studentId: number, param: ApiFnd004RequestParam) {
+  async deleteStudentFunding(
+    studentId: number,
+    param: ApiFnd004RequestParam,
+  ): Promise<ApiFnd004ResponseOk> {
     const user = await this.userPublicService.getStudentById({ id: studentId });
     if (!user) {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
     await this.fundingRepository.delete(param.id);
+    return {};
   }
 
-  async getStudentFundings(studentId: number, query: ApiFnd005RequestQuery) {
+  async getStudentFundings(
+    studentId: number,
+    query: ApiFnd005RequestQuery,
+  ): Promise<ApiFnd005ResponseOk> {
     const user = await this.userPublicService.getStudentById({ id: studentId });
     if (!user) {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
@@ -277,13 +228,16 @@ export default class FundingService {
       thisSemester,
     );
 
-    const activityNames = await Promise.all(
+    const activities = await Promise.all(
       fundings.map(async funding => {
         const activityName =
           await this.activityPublicService.getActivityNameById(
             funding.purposeId,
           );
-        return { activityName: activityName[0], id: funding.purposeId };
+        return {
+          name: activityName[0].name ?? "활동보고서로 증빙이 불가능한 물품",
+          id: funding.purposeId,
+        };
       }),
     );
 
@@ -291,8 +245,10 @@ export default class FundingService {
       fundings: fundings.map(funding => ({
         id: funding.id,
         fundingOrderStatusEnumId: funding.fundingOrderStatusEnumId,
-        activityName: activityNames.find(name => name.id === funding.purposeId)
-          .activityName.name,
+        purposeId: funding.purposeId,
+        activityName: activities.find(
+          activity => activity.id === funding.purposeId,
+        ).name,
         name: funding.name,
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,
@@ -304,7 +260,7 @@ export default class FundingService {
     studentId: number,
     param: ApiFnd006RequestParam,
     body: ApiFnd006RequestBody,
-  ) {
+  ): Promise<ApiFnd006ResponseOk> {
     const user = await this.userPublicService.getStudentById({ id: studentId });
     if (!user) {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
@@ -315,13 +271,16 @@ export default class FundingService {
       param.semesterId,
     );
 
-    const activityNames = await Promise.all(
+    const activities = await Promise.all(
       fundings.map(async funding => {
         const activityName =
           await this.activityPublicService.getActivityNameById(
             funding.purposeId,
           );
-        return { activityName: activityName[0], id: funding.purposeId };
+        return {
+          name: activityName[0].name ?? "활동보고서로 증빙이 불가능한 물품",
+          id: funding.purposeId,
+        };
       }),
     );
 
@@ -329,8 +288,10 @@ export default class FundingService {
       fundings: fundings.map(funding => ({
         id: funding.id,
         fundingOrderStatusEnumId: funding.fundingOrderStatusEnumId,
-        activityName: activityNames.find(name => name.id === funding.purposeId)
-          .activityName.name,
+        purposeId: funding.purposeId,
+        activityName: activities.find(
+          activity => activity.id === funding.purposeId,
+        ).name,
         name: funding.name,
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,

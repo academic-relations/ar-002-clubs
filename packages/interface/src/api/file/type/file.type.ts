@@ -13,3 +13,6 @@ export const zFileSummary = z.object({
   name: z.string().optional(),
   url: z.string().optional(),
 });
+
+export type IFile = z.infer<typeof zFile>;
+export type IFileSummary = z.infer<typeof zFileSummary>;

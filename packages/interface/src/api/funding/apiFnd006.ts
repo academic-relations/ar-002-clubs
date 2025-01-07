@@ -1,6 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { zFundingSummary } from "./type/funding.type";
+
 /**
  * @version v0.1
  * @description 특정 학기의 지원금 신청을 조회합니다.
@@ -22,15 +24,7 @@ const requestBody = z.object({
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    fundings: z.array(
-      z.object({
-        id: z.coerce.number().int().min(1),
-        activityName: z.coerce.string().max(255),
-        name: z.coerce.string().max(255),
-        expenditureAmount: z.coerce.number().int().min(1),
-        approvedAmount: z.coerce.number().int().min(0).optional(),
-      }),
-    ),
+    fundings: z.array(zFundingSummary),
   }),
 };
 
