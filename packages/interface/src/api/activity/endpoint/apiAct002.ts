@@ -63,6 +63,7 @@ const responseBodyMap = {
       }),
     ),
     updatedAt: z.coerce.date(),
+    professorApprovedAt: z.coerce.date().nullable(),
   }),
 };
 

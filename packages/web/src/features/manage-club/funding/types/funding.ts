@@ -1,4 +1,6 @@
-import { Participant } from "@sparcs-clubs/web/features/manage-club/activity-report/types/activityReport";
+import { FundingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+
+import { Participant } from "@sparcs-clubs/web/types/participant";
 
 export interface FundingInterface {
   // TODO: files 관련 추가
@@ -61,4 +63,16 @@ export interface FundingInterface {
 
   isEtcExpense: boolean;
   etcExpenseExplanation?: string;
+}
+
+export interface PastFundingData {
+  id: number;
+  activityName: string;
+  name: string;
+  expenditureAmount: number;
+  approvedAmount?: number;
+}
+
+export interface NewFundingData extends PastFundingData {
+  fundingOrderStatusEnumId: FundingOrderStatusEnum;
 }

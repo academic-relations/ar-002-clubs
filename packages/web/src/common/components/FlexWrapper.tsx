@@ -2,8 +2,8 @@ import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 
 interface FlexWrapperProps {
-  direction: "row" | "column";
-  gap: number;
+  direction?: "row" | "column";
+  gap?: number;
   justify?: string;
   padding?: string;
 }
@@ -13,8 +13,8 @@ const FlexWrapper = styled.div.withConfig({
 })<FlexWrapperProps>`
   display: flex;
   position: relative;
-  flex-direction: ${({ direction }) => direction};
-  gap: ${({ gap }) => `${gap}px`};
+  flex-direction: ${({ direction }) => direction ?? "row"};
+  gap: ${({ gap }) => `${gap}px` ?? 0};
   justify-content: ${({ justify }) => justify ?? "flex-start"};
   padding: ${({ padding }) => padding ?? 0};
 `;

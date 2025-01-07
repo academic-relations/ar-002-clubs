@@ -19,6 +19,13 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
+    targetTerm: z.object({
+      id: z.coerce.number().int().min(1),
+      year: z.coerce.number().int().min(1900),
+      name: z.string().max(255),
+      startTerm: z.coerce.date(),
+      endTerm: z.coerce.date(),
+    }),
     deadline: z.object({
       activityDeadlineEnum: z.nativeEnum(ActivityDeadlineEnum),
       duration: z

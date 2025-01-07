@@ -6,13 +6,15 @@ import styled from "styled-components";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import EditActivityTermModal, {
-  ActivityTermProps,
-} from "./_atomic/EditActivityTermModal";
+import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+
+import { Duration } from "../types/registerClub";
+
+import EditActivityTermModal from "./_atomic/EditActivityTermModal";
 
 interface SelectActivityTermProps {
-  initialData?: ActivityTermProps[];
-  onChange?: (data: ActivityTermProps[]) => void;
+  initialData?: Duration[];
+  onChange?: (data: Duration[]) => void;
 }
 
 const ActivityTermArea = styled.div`
@@ -50,11 +52,11 @@ const SelectActivityTerm: React.FC<SelectActivityTermProps> = ({
   onChange = () => {},
 }) => {
   const [activityTermList, setActivityTermList] =
-    useState<ActivityTermProps[]>(initialData);
+    useState<Duration[]>(initialData);
 
   const handleTerm = () => {
     overlay.open(({ isOpen, close }) => {
-      const handleConfirm = (terms: ActivityTermProps[]) => {
+      const handleConfirm = (terms: Duration[]) => {
         setActivityTermList(terms);
         onChange(terms);
         close();
@@ -62,11 +64,7 @@ const SelectActivityTerm: React.FC<SelectActivityTermProps> = ({
 
       return (
         <EditActivityTermModal
-          initialData={
-            activityTermList.length > 0
-              ? activityTermList
-              : [{ startDate: "", endDate: "" }]
-          }
+          initialData={activityTermList}
           isOpen={isOpen}
           onClose={close}
           onConfirm={handleConfirm}
@@ -89,9 +87,9 @@ const SelectActivityTerm: React.FC<SelectActivityTermProps> = ({
       <ActivityTermArea onClick={handleTerm}>
         <ActivityTermContent>
           {activityTermList.length > 0
-            ? `${activityTermList[0].startDate} ~ ${
-                activityTermList[0].endDate
-              }${activityTermList.length > 1 ? ` 외 ${activityTermList.length - 1}개` : ""}`
+            ? `${formatDotDate(activityTermList[0].startTerm)} ~ ${formatDotDate(
+                activityTermList[0].endTerm,
+              )}${activityTermList.length > 1 ? ` 외 ${activityTermList.length - 1}개` : ""}`
             : ""}
         </ActivityTermContent>
 

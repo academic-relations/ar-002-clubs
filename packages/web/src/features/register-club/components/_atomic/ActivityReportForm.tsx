@@ -13,11 +13,12 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+
+import SelectParticipant from "@sparcs-clubs/web/features/activity-report/components/SelectParticipant";
 import useGetParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetParticipants";
-import SelectParticipant from "@sparcs-clubs/web/features/manage-club/activity-report/components/SelectParticipant";
-import { Participant } from "@sparcs-clubs/web/features/manage-club/activity-report/types/activityReport";
 import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
-import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+
+import { Participant } from "@sparcs-clubs/web/types/participant";
 
 import SelectActivityTerm from "../SelectActivityTerm";
 
@@ -60,16 +61,7 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
     [rawEvidenceFiles],
   );
 
-  const initialDurations = useMemo(
-    () =>
-      durations
-        ? durations.map(d => ({
-            startDate: formatDotDate(d.startTerm),
-            endDate: formatDotDate(d.endTerm),
-          }))
-        : [],
-    [durations],
-  );
+  const initialDurations = useMemo(() => durations ?? [], [durations]);
 
   const [startTerm, setStartTerm] = useState<Date>(
     durations
@@ -185,22 +177,16 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
               <SelectActivityTerm
                 initialData={initialDurations}
                 onChange={terms => {
-                  const processedTerms = terms.map(term => ({
-                    startTerm: new Date(`${term.startDate.replace(".", "-")}`),
-                    endTerm: new Date(`${term.endDate.replace(".", "-")}`),
-                  }));
-                  setValue("durations", processedTerms, {
+                  setValue("durations", terms, {
                     shouldValidate: true,
                   });
                   setStartTerm(
-                    processedTerms
+                    terms
                       .map(d => d.startTerm)
                       .reduce((a, b) => (a < b ? a : b)),
                   );
                   setEndTerm(
-                    processedTerms
-                      .map(d => d.endTerm)
-                      .reduce((a, b) => (a > b ? a : b)),
+                    terms.map(d => d.endTerm).reduce((a, b) => (a > b ? a : b)),
                   );
                   formCtx.trigger("durations");
 
@@ -275,12 +261,13 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
               </Typography>
               <FormController
                 name="evidence"
+                required
                 control={control}
                 renderItem={props => (
                   <TextInput
                     {...props}
                     area
-                    placeholder="(선택) 활동 증빙에 대해서 작성하고 싶은 것이 있다면 입력해주세요"
+                    placeholder="활동 증빙에 대해서 작성하고 싶은 것이 있다면 입력해주세요"
                   />
                 )}
               />
@@ -298,7 +285,7 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
                         updateMultipleFile(
                           "evidenceFiles",
                           _data.map(d => ({
-                            fileId: d,
+                            fileId: d.id,
                           })),
                         );
                       }}

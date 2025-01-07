@@ -1,20 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { ApiFnd001RequestBody } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd001";
+import { ApiFnd001RequestBody } from "@sparcs-clubs/interface/api/funding/apiFnd001";
 import {
   ApiFnd002RequestParam,
   ApiFnd002ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
+} from "@sparcs-clubs/interface/api/funding/apiFnd002";
 import {
   ApiFnd003RequestBody,
   ApiFnd003RequestParam,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd003";
-import { ApiFnd004RequestParam } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd004";
-import { ApiFnd005RequestBody } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
+} from "@sparcs-clubs/interface/api/funding/apiFnd003";
+import { ApiFnd004RequestParam } from "@sparcs-clubs/interface/api/funding/apiFnd004";
+import { ApiFnd005RequestQuery } from "@sparcs-clubs/interface/api/funding/apiFnd005";
 import {
   ApiFnd006RequestBody,
   ApiFnd006RequestParam,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
+} from "@sparcs-clubs/interface/api/funding/apiFnd006";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ActivityPublicService from "@sparcs-clubs/api/feature/activity/service/activity.public.service";
@@ -44,7 +44,12 @@ export default class FundingService {
     ) {
       throw new HttpException("Student is not delegate", HttpStatus.FORBIDDEN);
     }
-    return this.fundingRepository.insertFunding(body);
+
+    // TODO: 지원금 학기 기준으로 semeterId 설정
+    const now = getKSTDate();
+    const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
+
+    return this.fundingRepository.insertFunding(body, semesterId);
   }
 
   // TODO: 최적화
@@ -59,6 +64,10 @@ export default class FundingService {
     const funding = await this.fundingRepository.selectFundingByFundingId(
       param.id,
     );
+
+    if (!funding) {
+      throw new HttpException("Funding not found", HttpStatus.NOT_FOUND);
+    }
 
     const tradeEvidenceFileIds =
       await this.fundingRepository.selectTradeEvidenceFileIdsByFundingId(
@@ -253,7 +262,12 @@ export default class FundingService {
     ) {
       throw new HttpException("Student is not delegate", HttpStatus.FORBIDDEN);
     }
-    return this.fundingRepository.putStudentFunding(body, param.id);
+
+    // TODO: 지원금 학기 기준으로 semeterId 설정
+    const now = getKSTDate();
+    const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
+
+    return this.fundingRepository.putStudentFunding(body, param.id, semesterId);
   }
 
   async deleteStudentFunding(studentId: number, param: ApiFnd004RequestParam) {
@@ -264,7 +278,7 @@ export default class FundingService {
     return this.fundingRepository.deleteStudentFunding(param.id);
   }
 
-  async getStudentFundings(studentId: number, body: ApiFnd005RequestBody) {
+  async getStudentFundings(studentId: number, query: ApiFnd005RequestQuery) {
     const user = await this.userPublicService.getStudentById({ id: studentId });
     if (!user) {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
@@ -276,7 +290,7 @@ export default class FundingService {
 
     const fundings =
       await this.fundingRepository.selectFundingsSemesterByClubId(
-        body.clubId,
+        query.clubId,
         thisSemester,
       );
 
