@@ -12,16 +12,6 @@ export interface ErrorModalProps {
   message?: string;
 }
 
-export const errorHandler = (message?: string) => {
-  overlay.open(({ isOpen, close }) => (
-    <Modal isOpen={isOpen}>
-      <ConfirmModalContent onConfirm={close}>
-        {message ?? "실패하였습니다"}
-      </ConfirmModalContent>
-    </Modal>
-  ));
-};
-
 const ErrorModal: React.FC<ErrorModalProps> = ({
   isOpen,
   onConfirm,
@@ -33,3 +23,9 @@ const ErrorModal: React.FC<ErrorModalProps> = ({
 );
 
 export default ErrorModal;
+
+export const errorHandler = (message?: string) => {
+  overlay.open(({ isOpen, close }) => (
+    <ErrorModal isOpen={isOpen} message={message} onConfirm={close} />
+  ));
+};

@@ -26,6 +26,9 @@ const meta: Meta<typeof Modal> = {
     Story => (
       <div
         style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           padding: "16px",
           boxSizing: "border-box",
           height: "50vh",
