@@ -17,6 +17,14 @@ export class ContentService {
     agendaId: number,
     content: string,
   ) {
+    const user = await this.userPublicService.getExecutiveById({
+      id: userId,
+    });
+
+    if (!user) {
+      throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
+    }
+
     const result = await this.entityRepository.postMeetingAgendaContent(
       userId,
       meetingId,
@@ -39,6 +47,14 @@ export class ContentService {
     contentId: number,
     content: string,
   ) {
+    const user = await this.userPublicService.getExecutiveById({
+      id: userId,
+    });
+
+    if (!user) {
+      throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
+    }
+
     const result = await this.entityRepository.patchMeetingAgendaContent(
       userId,
       meetingId,
@@ -61,6 +77,14 @@ export class ContentService {
     agendaId: number,
     contentId: number,
   ) {
+    const user = await this.userPublicService.getExecutiveById({
+      id: userId,
+    });
+
+    if (!user) {
+      throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
+    }
+
     const result = await this.entityRepository.deleteMeetingAgendaContent(
       userId,
       meetingId,
