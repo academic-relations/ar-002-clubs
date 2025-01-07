@@ -34,7 +34,7 @@ const ActivityReportStatistic: React.FC<ActivityReportStatisticProps> = ({
     pendingTotalCount + approvedTotalCount + rejectedTotalCount;
 
   return (
-    <Card gap={16} padding="16px">
+    <Card gap={16} padding="16px" outline>
       <Toggle label={<Typography>활동 보고서 통계</Typography>}>
         <FlexWrapper direction="column" gap={8} style={{ width: "100%" }}>
           <FlexWrapper direction="row" gap={20}>

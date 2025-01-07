@@ -48,7 +48,7 @@ const StatusContentsContationer = styled.div`
 `;
 
 export const TotalContentsContationer = styled.div`
-  width: 40px;
+  flex: 1;
   height: 24px;
   justify-content: center;
   align-items: center;
