@@ -1,4 +1,4 @@
-import { useArgs } from "@storybook/preview-api";
+import React from "react";
 
 import { Meta, StoryObj } from "@storybook/react";
 
@@ -47,22 +47,20 @@ type Story = StoryObj<
 export const AgreeModal: Story = {
   parameters: {
     docs: {
-      inlineStories: false,
+      inlineStories: true,
     },
   },
   render: function Render(args) {
-    const [{ isOpen }, updateArgs] = useArgs<{
-      isOpen: boolean;
-    }>();
+    const [isOpen, setIsOpen] = React.useState(false);
 
     return (
       <>
-        <Button onClick={() => updateArgs({ isOpen: true })}>모달 열기</Button>
+        <Button onClick={() => setIsOpen(true)}>모달 열기</Button>
         <AgreementModal
           {...args}
           isOpen={isOpen}
-          onAgree={() => updateArgs({ isOpen: false })}
-          onDisagree={() => updateArgs({ isOpen: false })}
+          onAgree={() => setIsOpen(false)}
+          onDisagree={() => setIsOpen(false)}
         />
       </>
     );
@@ -76,14 +74,14 @@ export const ConfirmModal: Story = {
   },
   parameters: {
     docs: {
-      inlineStories: false,
+      inlineStories: true,
     },
   },
   render: function Render({ buttonText, modalText, ...props }) {
-    const [{ value }, updateArgs] = useArgs<{ value: boolean }>();
+    const [isOpen, setIsOpen] = React.useState(false);
 
     const handleClick = () => {
-      updateArgs({ value: true });
+      setIsOpen(true);
     };
 
     return (
@@ -91,8 +89,8 @@ export const ConfirmModal: Story = {
         <Button {...props} onClick={() => handleClick()}>
           {buttonText}
         </Button>
-        <Modal isOpen={value}>
-          <ConfirmModalContent onConfirm={() => updateArgs({ value: false })}>
+        <Modal isOpen={isOpen}>
+          <ConfirmModalContent onConfirm={() => setIsOpen(false)}>
             {modalText}
           </ConfirmModalContent>
         </Modal>
@@ -118,14 +116,14 @@ export const CancellableModal: Story = {
   },
   parameters: {
     docs: {
-      inlineStories: false,
+      inlineStories: true,
     },
   },
   render: function Render({ modalText, ...props }) {
-    const [{ value }, updateArgs] = useArgs<{ value: boolean }>();
+    const [isOpen, setIsOpen] = React.useState(false);
 
     const handleClick = () => {
-      updateArgs({ value: true });
+      setIsOpen(true);
     };
 
     return (
@@ -133,10 +131,10 @@ export const CancellableModal: Story = {
         <Button {...props} onClick={handleClick}>
           {props.children}
         </Button>
-        <Modal isOpen={value}>
+        <Modal isOpen={isOpen}>
           <CancellableModalContent
-            onConfirm={() => updateArgs({ value: false })}
-            onClose={() => updateArgs({ value: false })}
+            onConfirm={() => setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
           >
             {modalText}
           </CancellableModalContent>
@@ -163,14 +161,14 @@ export const HandleErrorModal: Story = {
   },
   parameters: {
     docs: {
-      inlineStories: false,
+      inlineStories: true,
     },
   },
   render: function Render({ buttonText, modalText, ...props }) {
-    const [{ value }, updateArgs] = useArgs<{ value: boolean }>();
+    const [isOpen, setIsOpen] = React.useState(false);
 
     const handleClick = () => {
-      updateArgs({ value: true });
+      setIsOpen(true);
     };
 
     return (
@@ -179,8 +177,8 @@ export const HandleErrorModal: Story = {
           {buttonText}
         </Button>
         <ErrorModal
-          isOpen={value}
-          onConfirm={() => updateArgs({ value: false })}
+          isOpen={isOpen}
+          onConfirm={() => setIsOpen(false)}
           message={modalText}
         />
       </>
