@@ -13,7 +13,6 @@ import ErrorModal from "../common/components/Modal/ErrorModal";
 import Modal from "../common/components/Modal/index";
 
 const meta: Meta<typeof Modal> = {
-  title: "Modal",
   component: Modal,
   parameters: {
     layout: "fullscreen",
@@ -167,7 +166,7 @@ export const HandleErrorModal: Story = {
       inlineStories: false,
     },
   },
-  render: function Render({ modalText, ...props }) {
+  render: function Render({ buttonText, modalText, ...props }) {
     const [{ value }, updateArgs] = useArgs<{ value: boolean }>();
 
     const handleClick = () => {
@@ -177,7 +176,7 @@ export const HandleErrorModal: Story = {
     return (
       <>
         <Button {...props} onClick={handleClick}>
-          모달 열기
+          {buttonText}
         </Button>
         <ErrorModal
           isOpen={value}
