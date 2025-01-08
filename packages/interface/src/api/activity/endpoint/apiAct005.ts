@@ -16,11 +16,11 @@ const method = "GET";
 
 const requestParam = z.object({});
 
-const requestQuery = z.object({});
-
-const requestBody = z.object({
+const requestQuery = z.object({
   clubId: z.coerce.number().int().min(1),
 });
+
+const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z
@@ -29,8 +29,13 @@ const responseBodyMap = {
       activityStatusEnumId: z.nativeEnum(ActivityStatusEnum),
       name: z.string().max(255),
       activityTypeEnumId: z.nativeEnum(ActivityTypeEnum),
-      startTerm: z.coerce.date(),
-      endTerm: z.coerce.date(),
+      durations: z.array(
+        z.object({
+          startTerm: z.coerce.date(),
+          endTerm: z.coerce.date(),
+        }),
+      ),
+      professorApprovedAt: z.coerce.date().nullable(),
     })
     .array(),
 };
@@ -55,8 +60,8 @@ type ApiAct005ResponseOk = z.infer<(typeof apiAct005.responseBodyMap)[200]>;
 export default apiAct005;
 
 export type {
+  ApiAct005RequestBody,
   ApiAct005RequestParam,
   ApiAct005RequestQuery,
-  ApiAct005RequestBody,
   ApiAct005ResponseOk,
 };

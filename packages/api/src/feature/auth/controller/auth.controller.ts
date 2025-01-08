@@ -78,6 +78,7 @@ export class AuthController {
       expires: token.accessTokenTokenExpiresAt,
       httpOnly: false,
     });
+    logger.debug(`Redirecting to ${next}`);
     return res.redirect(next);
   }
 

@@ -17,11 +17,11 @@ const requestParam = z.object({
   activityTermId: z.coerce.number().int().min(1),
 });
 
-const requestQuery = z.object({});
-
-const requestBody = z.object({
+const requestQuery = z.object({
   clubId: z.coerce.number().int().min(1),
 });
+
+const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
@@ -30,8 +30,12 @@ const responseBodyMap = {
         id: z.coerce.number().int().min(1),
         name: z.string().max(255),
         activityTypeEnumId: z.nativeEnum(ActivityTypeEnum),
-        startTerm: z.coerce.date(),
-        endTerm: z.coerce.date(),
+        durations: z.array(
+          z.object({
+            startTerm: z.coerce.date(),
+            endTerm: z.coerce.date(),
+          }),
+        ),
       }),
     ),
   }),
@@ -57,8 +61,8 @@ type ApiAct006ResponseOk = z.infer<(typeof apiAct006.responseBodyMap)[200]>;
 export default apiAct006;
 
 export type {
+  ApiAct006RequestBody,
   ApiAct006RequestParam,
   ApiAct006RequestQuery,
-  ApiAct006RequestBody,
   ApiAct006ResponseOk,
 };

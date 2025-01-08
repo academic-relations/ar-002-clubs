@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 
-import { ApiMee001RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee001";
 import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
 import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
@@ -13,8 +12,11 @@ import DateInput from "@sparcs-clubs/web/common/components/Forms/DateInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
-
-import { meetingEnumToText } from "../constants/getEnumType";
+import FormSelect from "@sparcs-clubs/web/common/components/Select/Form";
+import {
+  MeetingAnnouncementModel,
+  meetingEnumToText,
+} from "@sparcs-clubs/web/features/meeting/types/meeting";
 
 interface MeetingInformationFrameProps {
   onCreateTemplate?: VoidFunction;
@@ -49,7 +51,7 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
     control,
     setValue,
     formState: { isValid },
-  } = useFormContext<ApiMee001RequestBody>();
+  } = useFormContext<MeetingAnnouncementModel>();
 
   const isRegular = watch("isRegular");
   const meetingEnumId = watch("meetingEnumId");
@@ -60,7 +62,7 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
 
   useEffect(() => {
     if (isDivisionMeeting) {
-      setValue("isRegular", true, { shouldValidate: true });
+      setValue("isRegular", "true", { shouldValidate: true });
     }
   }, [isDivisionMeeting, setValue]);
 
@@ -91,20 +93,17 @@ const MeetingInformationFrame: React.FC<MeetingInformationFrameProps> = ({
           <FormController
             name="isRegular"
             control={control}
-            rules={{
-              validate: value => typeof value === "boolean",
-            }}
+            required
             renderItem={props => (
-              <Select
+              <FormSelect
                 {...props}
                 label="정기회의 여부"
                 placeholder="정기회의 여부를 선택해주세요"
                 items={[
-                  { label: "정기회의", value: true },
-                  { label: "비정기회의", value: false },
+                  { label: "정기회의", value: "true" },
+                  { label: "비정기회의", value: "false" },
                 ]}
                 disabled={isDivisionMeeting}
-                isRequired={false} // TODO. select 컴포넌트 hookform에서 사용하게 바꾼 후 삭제
               />
             )}
           />

@@ -20,13 +20,14 @@ import Typography from "./Typography";
 type FileWithId = {
   file: File;
   fileId?: string;
+  previewUrl?: string;
 };
 
 interface FileUploadProps {
   fileId?: string;
   placeholder?: string;
   initialFiles?: FileDetail[];
-  onChange?: (string: string[]) => void;
+  onChange?: (files: FileDetail[]) => void;
   allowedTypes?: string[];
   multiple?: boolean;
   disabled?: boolean;
@@ -118,14 +119,14 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
   const updateFiles = (_files: FileDetail[]) => {
     setFiles(_files);
-    onChange(_files.map(file => file.id!));
+    onChange(_files);
   };
   const addFiles = (_files: FileDetail[]) => {
     // NOTE: (@dora) do not add files that already exist
     const newFiles = _files.filter(file => !files.find(f => f.id === file.id));
     const updatedFiles = multiple ? [...files, ...newFiles] : newFiles;
     updateFiles(updatedFiles);
-    onChange(updatedFiles.map(file => file.id!));
+    onChange(updatedFiles);
   };
   const removeFile = (_file: FileDetail) => {
     const updatedFiles = files.filter(file => file.id !== _file.id);
@@ -172,10 +173,10 @@ const FileUpload: React.FC<FileUploadProps> = ({
             },
             {
               onSuccess: () => {
-                const newFiles: FileDetail[] = data.urls.map(url => ({
+                const newFiles: FileDetail[] = data.urls.map((url, index) => ({
                   id: url.fileId,
                   name: url.name,
-                  url: url.uploadUrl,
+                  url: notUploadedFiles[index].previewUrl ?? "",
                 }));
                 addFiles(newFiles);
               },
@@ -204,7 +205,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newFiles: FileWithId[] = Array.from(event.target.files ?? []).map(
-      file => ({ file }),
+      file => ({ file, previewUrl: URL.createObjectURL(file) }),
     );
     onSubmit(newFiles);
   };

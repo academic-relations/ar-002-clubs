@@ -31,9 +31,9 @@ const NoManageClubForProfessor: NextPage = () => {
 
   const Message = (
     <ErrorMessage>
-      지도교수는 동아리 대표자가 될 수 없습니다.
+      이번 학기에 지도교수로
       <br />
-      지도 동아리 확인은 마이페이지에서 가능합니다.
+      관리하는 동아리가 없습니다
     </ErrorMessage>
   );
 

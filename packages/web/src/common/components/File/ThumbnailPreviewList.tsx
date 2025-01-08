@@ -77,6 +77,7 @@ const ThumbnailPreviewList: React.FC<ThumbnailPreviewListProps> = ({
         gap={16}
         direction="row"
         style={{
+          width: "100%",
           overflowX: "scroll",
           paddingBottom: "14px",
         }}

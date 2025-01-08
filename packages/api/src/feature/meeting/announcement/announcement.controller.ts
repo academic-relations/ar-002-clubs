@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UsePipes,
 } from "@nestjs/common";
 
@@ -26,6 +27,10 @@ import apiMee004, {
   ApiMee004RequestParam,
   ApiMee004ResponseOk,
 } from "@sparcs-clubs/interface/api/meeting/apiMee004";
+import apiMee012, {
+  ApiMee012RequestQuery,
+  ApiMee012ResponseOk,
+} from "@sparcs-clubs/interface/api/meeting/apiMee012";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Executive } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
@@ -89,5 +94,15 @@ export class AnnouncementController {
       user.executiveId,
     );
     return {};
+  }
+
+  @Get("/meetings/announcements")
+  @UsePipes(new ZodPipe(apiMee012))
+  async getMeetingAnnouncements(
+    @Query() query: ApiMee012RequestQuery,
+  ): Promise<ApiMee012ResponseOk> {
+    const result =
+      await this.announcementService.getMeetingAnnouncements(query);
+    return result;
   }
 }

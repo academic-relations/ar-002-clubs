@@ -14,9 +14,9 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import usePostActivityCertificate from "@sparcs-clubs/web/features/activity-certificate/services/usePostActivityCertificate";
 import { ActivityCertificateInfo } from "@sparcs-clubs/web/features/activity-certificate/types/activityCertificate";
-
 import { formatActivityDuration } from "@sparcs-clubs/web/features/activity-certificate/utils/formatActivityDuration";
-import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
+
+import { useGetClubDetail } from "@sparcs-clubs/web/features/clubs/services/getClubDetail";
 
 import { formatMonth } from "@sparcs-clubs/web/utils/Date/formatDate";
 

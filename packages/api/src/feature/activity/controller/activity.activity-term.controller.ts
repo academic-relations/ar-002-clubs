@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, UsePipes } from "@nestjs/common";
+import { Controller, Get, Param, Query, UsePipes } from "@nestjs/common";
 
 import apiAct006 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct006";
 import apiAct009 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct009";
@@ -12,12 +12,12 @@ import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decor
 import ActivityActivityTermService from "../service/activity.activity-term.service";
 
 import type {
-  ApiAct006RequestBody,
   ApiAct006RequestParam,
+  ApiAct006RequestQuery,
   ApiAct006ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct006";
 import type {
-  ApiAct009RequestBody,
+  ApiAct009RequestQuery,
   ApiAct009ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct009";
 
@@ -32,11 +32,11 @@ export default class ActivityActivityTermController {
   @UsePipes(new ZodPipe(apiAct009))
   async getStudentActivitiesActivityTerms(
     @GetStudent() user: GetStudent,
-    @Body() body: ApiAct009RequestBody,
+    @Query() query: ApiAct009RequestQuery,
   ): Promise<ApiAct009ResponseOk> {
     const result =
       await this.activityActivityTermService.getStudentActivitiesActivityTerms(
-        body,
+        query,
         user.studentId,
       );
     return result;
@@ -48,12 +48,12 @@ export default class ActivityActivityTermController {
   async getStudentActivitiesActivityTerm(
     @GetStudent() user: GetStudent,
     @Param() param: ApiAct006RequestParam,
-    @Body() body: ApiAct006RequestBody,
+    @Query() query: ApiAct006RequestQuery,
   ): Promise<ApiAct006ResponseOk> {
     const result =
       await this.activityActivityTermService.getStudentActivitiesActivityTerm(
         param,
-        body,
+        query,
         user.studentId,
       );
     return result;

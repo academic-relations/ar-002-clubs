@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 
-import { ApiMee001RequestBody } from "@sparcs-clubs/interface/api/meeting/apiMee001";
 import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
 import { overlay } from "overlay-kit";
 
@@ -16,6 +15,7 @@ import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/C
 
 import { MeetingTemplate } from "../constants/meetingTemplate";
 import useGetMeetingDegree from "../services/useGetMeetingDegree";
+import { MeetingAnnouncementModel } from "../types/meeting";
 
 interface MeetingAnnouncementFormProps {
   isEditMode?: boolean;
@@ -29,7 +29,7 @@ const AlignEnd = styled.div`
 const MeetingAnnouncementForm: React.FC<MeetingAnnouncementFormProps> = ({
   isEditMode = false,
 }) => {
-  const formCtx = useFormContext<ApiMee001RequestBody>();
+  const formCtx = useFormContext<MeetingAnnouncementModel>();
   const { control, watch, resetField } = formCtx;
 
   const meetingEnumId = watch("meetingEnumId");

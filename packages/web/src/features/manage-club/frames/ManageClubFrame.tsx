@@ -10,8 +10,8 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
-// import ActivityManageFrame from "@sparcs-clubs/web/features/manage-club/frames/ActivityManageFrame";
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
+import ActivityManageFrame from "@sparcs-clubs/web/features/manage-club/frames/ActivityManageFrame";
 import InfoManageFrame from "@sparcs-clubs/web/features/manage-club/frames/InfoManageFrame";
 import MemberManageFrame from "@sparcs-clubs/web/features/manage-club/frames/MemberManageFrame";
 // import ServiceManageFrame from "@sparcs-clubs/web/features/manage-club/frames/ServiceManageFrame";
@@ -66,7 +66,7 @@ const ManageClubFrame: React.FC = () => {
         isRepresentative={delegate === ClubDelegateEnum.Representative}
         clubId={clubId || 0}
       />
-      {/* <ActivityManageFrame /> */}
+      <ActivityManageFrame />
       {isRegistrationPeriod ? (
         <RegistrationManageFrame />
       ) : (
