@@ -7,6 +7,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 
 import ActivityReportStatistic from "../components/ActivityReportStatistic";
+import ExecutiveActivityChargedTable from "../components/ExecutiveActivityChargedTable";
 import ExecutiveActivityClubTable from "../components/ExecutiveActivityClubTable";
 import useGetExecutiveActivities from "../services/useGetExecutiveActivities";
 
@@ -54,7 +55,10 @@ const ExecutiveActivityReportFrame = () => {
           setSelectedClubIds={setSelectedClubIds}
         />
       ) : (
-        <div>담당자별</div>
+        <ExecutiveActivityChargedTable
+          activities={data ?? { items: [], executiveProgresses: [] }}
+          searchText={searchText}
+        />
       )}
     </AsyncBoundary>
   );
