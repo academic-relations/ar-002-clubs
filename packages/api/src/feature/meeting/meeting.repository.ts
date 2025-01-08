@@ -388,6 +388,40 @@ export class MeetingRepository {
     return isInsertAgendaAndMappingSuccess;
   }
 
+  async getMeetingAgendas(meetingId: number) {
+    const rawAgendas = await this.db
+      .select({
+        agendaId: MeetingAgenda.id,
+        agendaEnumId: MeetingAgenda.MeetingAgendaEnum,
+        title: MeetingAgenda.title,
+        description: MeetingAgenda.description,
+      })
+      .from(MeetingMapping)
+      .innerJoin(
+        MeetingAgenda,
+        eq(MeetingMapping.meetingAgendaId, MeetingAgenda.id),
+      )
+      .where(eq(MeetingMapping.meetingId, meetingId));
+
+    if (rawAgendas.length === 0) {
+      logger.debug(
+        `[MeetingRepository] No agendas found for meeting ID: ${meetingId}`,
+      );
+      return null;
+    }
+
+    const response = {
+      agendas: rawAgendas.map(agenda => ({
+        agendaId: agenda.agendaId,
+        agendaEnumId: agenda.agendaEnumId,
+        title: agenda.title,
+        description: agenda.description,
+      })),
+    };
+
+    return response;
+  }
+
   async updateMeetingAgenda(
     agendaId: number,
     agendaEnumId: number,
@@ -490,6 +524,102 @@ export class MeetingRepository {
     );
 
     return meetingAgendaMappingDeleteResult;
+  }
+
+  async updateMeetingAgendasOrder(meetingId: number, agendaIdList: number[]) {
+    if (agendaIdList.length === 0) {
+      logger.debug(
+        `[MeetingRepository] No agenda IDs provided for meeting ID: ${meetingId}`,
+      );
+      return null; // No need to update if the list is empty
+    }
+
+    await this.db.transaction(async trx => {
+      const updatePromises = agendaIdList.map((agendaId, index) =>
+        // Create a promise for each agenda update
+        trx
+          .update(MeetingMapping)
+          .set({ meetingAgendaPosition: index }) // Set the new position based on the index
+          .where(
+            and(
+              eq(MeetingMapping.meetingAgendaId, agendaId),
+              eq(MeetingMapping.meetingId, meetingId),
+              isNull(MeetingMapping.deletedAt), // Filter out soft-deleted records
+            ),
+          )
+          .then(result => {
+            // Log a warning if no row was updated
+            if (result[0].affectedRows === 0) {
+              logger.warn(
+                `[MeetingRepository] No MeetingMapping found for meeting ID: ${meetingId} and agenda ID: ${agendaId}`,
+              );
+            }
+          }),
+      );
+
+      // Wait for all updates to complete concurrently
+      await Promise.all(updatePromises);
+    });
+
+    logger.info(
+      `[MeetingRepository] Successfully updated agenda positions for meeting ID: ${meetingId}`,
+    );
+    return { success: true };
+  }
+
+  async addMeetingAgendaMapping(meetingId: number, agendaId: number) {
+    // Check if a mapping already exists to avoid duplicates
+    const existingMapping = await this.db
+      .select()
+      .from(MeetingMapping)
+      .where(
+        and(
+          eq(MeetingMapping.meetingId, meetingId),
+          eq(MeetingMapping.meetingAgendaId, agendaId),
+        ),
+      )
+      .execute();
+
+    if (existingMapping.length > 0) {
+      logger.debug(
+        `[MeetingRepository] Mapping already exists for meetingId: ${meetingId} and agendaId: ${agendaId}`,
+      );
+      return { success: false, message: "Mapping already exists" };
+    }
+
+    // Get the current maximum meetingAgendaPosition for the given meetingId
+    const [maxPositionResult] = await this.db
+      .select({
+        maxPosition: sql<number>`MAX(${MeetingMapping.meetingAgendaPosition})`,
+      })
+      .from(MeetingMapping)
+      .where(eq(MeetingMapping.meetingId, meetingId))
+      .execute();
+
+    const newPosition = (maxPositionResult?.maxPosition || 0) + 1;
+
+    // Insert the new mapping into the MeetingMapping table
+    const result = await this.db
+      .insert(MeetingMapping)
+      .values({
+        meetingId,
+        meetingAgendaId: agendaId,
+        meetingAgendaPosition: newPosition, // Set position to the next available value
+        meetingAgendaEntityType: 1, // Entity type is fixed to 1
+      })
+      .execute();
+
+    // Check if insertion was successful
+    if (result[0].affectedRows === 1) {
+      logger.info(
+        `[MeetingRepository] Successfully added mapping for meetingId: ${meetingId} and agendaId: ${agendaId} with position: ${newPosition}`,
+      );
+      return { success: true };
+    }
+    logger.error(
+      `[MeetingRepository] Failed to add mapping for meetingId: ${meetingId} and agendaId: ${agendaId}`,
+    );
+    return { success: false, message: "Failed to add mapping" };
   }
 
   async getMeetingListByMeetingType(
