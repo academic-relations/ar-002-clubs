@@ -130,7 +130,9 @@ export default class ClubRepository {
         ClubStudentT,
         and(
           eq(Club.id, ClubStudentT.clubId),
+          lte(ClubStudentT.startTerm, crt),
           or(isNull(ClubStudentT.endTerm), gte(ClubStudentT.endTerm, crt)),
+          isNull(ClubStudentT.deletedAt),
         ),
       )
       .leftJoin(

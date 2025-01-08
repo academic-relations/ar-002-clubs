@@ -92,7 +92,7 @@ const ChangeClubInfoCard = () => {
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <FormProvider {...formCtx}>
-        <form onSubmit={handleSubmit(handleSave)} style={{ width: "100%" }}>
+        <form onSubmit={handleSubmit(handleSave)} style={{ flex: 1 }}>
           <Card
             outline
             gap={32}

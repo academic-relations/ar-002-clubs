@@ -11,8 +11,8 @@ import styled from "styled-components";
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
-import { useRegisterClub } from "@sparcs-clubs/web/features/clubDetails/services/registerClub";
-import { useUnregisterClub } from "@sparcs-clubs/web/features/clubDetails/services/unregisterClub";
+import { useRegisterClub } from "@sparcs-clubs/web/features/clubs/services/registerClub";
+import { useUnregisterClub } from "@sparcs-clubs/web/features/clubs/services/unregisterClub";
 import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
 interface ClubRegistrationButtonProps {

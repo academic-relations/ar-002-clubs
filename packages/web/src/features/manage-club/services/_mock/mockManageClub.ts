@@ -1,11 +1,14 @@
 import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
+import { FundingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import {
   PromotionalPrintingOrderStatusEnum,
   PromotionalPrintingSizeEnum,
 } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
 import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
+
+import { NewFundingData } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
 
 import type { ApiAcf003ResponseOk } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf003";
 import type { ApiClb004ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb004";
@@ -188,54 +191,54 @@ const mockupManageMems: ApiReg008ResponseOk["applies"][0][] = [
   },
 ];
 
-const mockupManageFunding: Funding[] = [
+const mockupManageFunding: NewFundingData[] = [
   {
     id: 1,
-    status: 1,
+    fundingOrderStatusEnumId: FundingOrderStatusEnum.Applied,
     name: "개발개발한 어떠한 활동",
-    itemName: "모니터",
-    requestedAmount: 300000,
-    approvedAmount: null,
+    activityName: "모니터",
+    expenditureAmount: 300000,
+    approvedAmount: undefined,
   },
   {
     id: 2,
-    status: 1,
+    fundingOrderStatusEnumId: FundingOrderStatusEnum.Applied,
     name: "개발개발한 어떠한 활동",
-    itemName: "모니터",
-    requestedAmount: 300000,
-    approvedAmount: null,
+    activityName: "모니터",
+    expenditureAmount: 300000,
+    approvedAmount: undefined,
   },
   {
     id: 3,
-    status: 2,
+    fundingOrderStatusEnumId: FundingOrderStatusEnum.Committee,
     name: "개발개발한 어떠한 활동",
-    itemName: "모니터",
-    requestedAmount: 300000,
-    approvedAmount: null,
+    activityName: "모니터",
+    expenditureAmount: 300000,
+    approvedAmount: undefined,
   },
   {
     id: 4,
-    status: 4,
+    fundingOrderStatusEnumId: FundingOrderStatusEnum.Rejected,
     name: "개발개발한 어떠한 활동",
-    itemName: "모니터",
-    requestedAmount: 300000,
-    approvedAmount: null,
+    activityName: "모니터",
+    expenditureAmount: 300000,
+    approvedAmount: 0,
   },
   {
     id: 5,
-    status: 3,
+    fundingOrderStatusEnumId: FundingOrderStatusEnum.Approved,
     name: "개발개발한 어떠한 활동",
-    itemName: "모니터",
-    requestedAmount: 300000,
+    activityName: "모니터",
+    expenditureAmount: 300000,
     approvedAmount: 300000,
   },
   {
     id: 6,
-    status: 3,
-    name: "2024년도 봄학기 MT",
-    itemName: "모니터",
-    requestedAmount: 300000,
-    approvedAmount: 0,
+    fundingOrderStatusEnumId: FundingOrderStatusEnum.Approved,
+    name: "개발개발한 어떠한 활동",
+    activityName: "모니터",
+    expenditureAmount: 300000,
+    approvedAmount: 100000,
   },
 ];
 
@@ -616,14 +619,14 @@ const mockupManageCms: ApiCms006ResponseOk = {
 };
 
 export {
-  mockupManageReport,
-  mockupManageFunding,
-  mockupPastManageFunding,
-  mockupManageMems,
-  mockupManageAcf,
-  mockupManageRental,
-  mockupManagePrint,
-  mockupManageCms,
   mockClubDescription,
   mockClubMembers,
+  mockupManageAcf,
+  mockupManageCms,
+  mockupManageFunding,
+  mockupManageMems,
+  mockupManagePrint,
+  mockupManageRental,
+  mockupManageReport,
+  mockupPastManageFunding,
 };

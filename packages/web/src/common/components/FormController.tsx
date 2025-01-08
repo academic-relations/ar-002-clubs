@@ -46,7 +46,6 @@ interface FormControllerProps<
   patternMessage?: string;
 }
 
-// TODO. maxLength rule 추가,
 function FormController<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
@@ -104,9 +103,9 @@ function FormController<
   return renderItem({
     ...props,
     onChange: useCallback(e => onChange(e), [onChange]),
-    onBlur: () => {
+    onBlur: useCallback(() => {
       onBlur();
-    },
+    }, [onBlur]),
     value,
     hasError: !!error?.message,
     errorMessage: error?.message,

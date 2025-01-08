@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 
@@ -6,6 +6,8 @@ import UserModule from "../user/user.module";
 
 import { ClubController } from "./controller/club.controller";
 import { ClubDelegateDRepository } from "./delegate/club.club-delegate-d.repository";
+// eslint-disable-next-line import/no-cycle
+import { DelegateModule } from "./delegate/delegate.module";
 import { ClubRoomTRepository } from "./repository/club.club-room-t.repository";
 import ClubStudentTRepository from "./repository/club.club-student-t.repository";
 import ClubTRepository from "./repository/club.club-t.repository";
@@ -19,7 +21,7 @@ import ClubPublicService from "./service/club.public.service";
 import { ClubService } from "./service/club.service";
 
 @Module({
-  imports: [DrizzleModule, UserModule],
+  imports: [DrizzleModule, UserModule, forwardRef(() => DelegateModule)],
   controllers: [ClubController],
   providers: [
     ClubService,

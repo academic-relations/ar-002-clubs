@@ -1,4 +1,4 @@
-// import { ApiFnd002ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
+// import { ApiFnd002ResponseOk } from "@sparcs-clubs/interface/api/funding/apiFnd002";
 import {
   FixtureClassEnum,
   FixtureEvidenceEnum,

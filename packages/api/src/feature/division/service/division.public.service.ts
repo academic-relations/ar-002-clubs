@@ -10,4 +10,9 @@ export default class DivisionPublicService {
     const result = await this.divisionRepository.findDivisionById(id);
     return result;
   }
+
+  async getDivionById(param: { id: number }) {
+    const result = await this.divisionRepository.selectDivisionById(param);
+    return result;
+  }
 }

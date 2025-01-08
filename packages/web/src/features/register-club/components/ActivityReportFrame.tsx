@@ -11,11 +11,11 @@ import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
-import PastActivityReportList from "@sparcs-clubs/web/features/manage-club/activity-report/components/PastActivityReportList";
 
 import { useGetActivityReportsForPromotional } from "../services/useGetActivityReportsForPromotional";
 
 import CreateActivityReportModal from "./_atomic/CreateActivityReportModal";
+import ActivityReportList from "./ActivityReportList";
 
 interface ActivityReportFrameProps {
   clubId: number;
@@ -82,7 +82,7 @@ const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
               활동 보고서 작성
             </IconButton>
           </OptionOuter>
-          <PastActivityReportList
+          <ActivityReportList
             data={data?.activities ?? []}
             profile={profile?.type ?? ""}
             refetch={refetch}
