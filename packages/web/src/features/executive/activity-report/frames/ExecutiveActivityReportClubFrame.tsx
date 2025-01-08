@@ -7,6 +7,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 
 import ActivityReportClubStatistic from "../components/ActivityReportClubStatisti";
+import ExecutiveClubActivitiesTable from "../components/ExecutiveClubActivitiesTable";
 import useGetExecutiveClubActivities from "../services/useGetExecutiveClubActivities";
 
 const ExecutiveActivityReportClubFrame: React.FC<{ clubId: string }> = ({
@@ -17,7 +18,7 @@ const ExecutiveActivityReportClubFrame: React.FC<{ clubId: string }> = ({
     clubId: Number(clubId),
   });
 
-  // const [selectedClubIds, setSelectedClubIds] = useState<number[]>([]);
+  const [selectedActivityIds, setSelectedActivityIds] = useState<number[]>([]);
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
@@ -30,6 +31,12 @@ const ExecutiveActivityReportClubFrame: React.FC<{ clubId: string }> = ({
         />
         <Button>담당자 변경</Button>
       </FlexWrapper>
+      <ExecutiveClubActivitiesTable
+        data={data ?? { items: [] }}
+        searchText={searchText}
+        selectedActivityIds={selectedActivityIds}
+        setSelectedActivityIds={setSelectedActivityIds}
+      />
     </AsyncBoundary>
   );
 };
