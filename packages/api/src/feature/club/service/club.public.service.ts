@@ -238,11 +238,23 @@ export default class ClubPublicService {
       );
     }
 
+    const clubT = await this.clubTRepository.findByClubIdAndSemesterId(
+      clubId,
+      semesterId,
+    );
+    if (!semesterId) {
+      throw new HttpException(
+        "The club is not found at that semester.",
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     // 신입 부원 추가
     await this.clubStudentTRepository.addStudentToClub(
       studentId,
       clubId,
       semesterId,
+      clubT.startTerm,
     );
   }
 

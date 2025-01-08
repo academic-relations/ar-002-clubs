@@ -3,7 +3,7 @@
 import isPropValid from "@emotion/is-prop-valid";
 import styled from "styled-components";
 
-interface CardProps {
+export interface CardProps {
   outline?: boolean;
   padding?: string;
   gap?: number;
