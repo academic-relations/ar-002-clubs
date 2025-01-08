@@ -3,9 +3,10 @@ import { z } from "zod";
 export const zFile = z.object({
   id: z.string().max(128).min(1),
   name: z.string(),
+  extension: z.string(),
   size: z.number(),
-  type: z.string(),
   url: z.string(),
+  userId: z.coerce.number().min(1),
 });
 
 export const zFileSummary = z.object({
