@@ -89,4 +89,26 @@ export default class ExecutiveRepository {
 
     return result;
   }
+
+  async selectExecutiveByDate(param: { date: Date }) {
+    const result = await this.db
+      .select()
+      .from(ExecutiveT)
+      .where(
+        and(
+          lte(ExecutiveT.startTerm, param.date),
+          or(gte(ExecutiveT.endTerm, param.date), isNull(ExecutiveT.endTerm)),
+          isNull(ExecutiveT.deletedAt),
+        ),
+      )
+      .innerJoin(
+        Executive,
+        and(
+          eq(Executive.id, ExecutiveT.executiveId),
+          isNull(Executive.deletedAt),
+        ),
+      );
+
+    return result;
+  }
 }
