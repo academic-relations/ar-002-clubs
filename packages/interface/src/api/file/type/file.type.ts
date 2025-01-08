@@ -11,8 +11,8 @@ export const zFile = z.object({
 
 export const zFileSummary = z.object({
   id: z.string().max(128).min(1),
-  name: z.string().optional(),
-  url: z.string().optional(),
+  name: z.string(),
+  url: z.string(),
 });
 
 export type IFile = z.infer<typeof zFile>;

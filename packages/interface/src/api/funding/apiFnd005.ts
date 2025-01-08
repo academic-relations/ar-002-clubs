@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zFundingSummary } from "./type/funding.type";
+import { zFundingResponseSummary } from "./type/funding.type";
 
 /**
  * @version v0.1
@@ -21,7 +21,7 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    fundings: z.array(zFundingSummary),
+    fundings: z.array(zFundingResponseSummary),
   }),
 };
 

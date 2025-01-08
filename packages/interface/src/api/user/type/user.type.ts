@@ -11,8 +11,9 @@ export const zStudent = z.object({
 
 export const zStudentSummary = z.object({
   id: z.coerce.number().int().min(1),
-  name: z.string().optional(),
-  studentNumber: z.string().optional(),
+  name: z.string(),
+  studentNumber: z.string(),
 });
 
 export type IStudent = z.infer<typeof zStudent>;
+export type IStudentSummary = z.infer<typeof zStudentSummary>;

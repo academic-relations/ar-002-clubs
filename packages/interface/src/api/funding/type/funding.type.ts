@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { zActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 import { zFileSummary } from "@sparcs-clubs/interface/api/file/type/file.type";
 import { zStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 import {
@@ -13,9 +14,9 @@ export const zClubSupplies = z.object({
   evidenceEnumId: z.nativeEnum(FixtureEvidenceEnum).optional(),
   classEnumId: z.nativeEnum(FixtureClassEnum).optional(),
   purpose: z.string().optional(),
-  imageFiles: z.array(zFileSummary),
+  imageFiles: z.array(zFileSummary.pick({ id: true })),
   softwareEvidence: z.string().optional(),
-  softwareEvidenceFiles: z.array(zFileSummary),
+  softwareEvidenceFiles: z.array(zFileSummary.pick({ id: true })),
   number: z.coerce.number().int().min(1).optional(),
   price: z.coerce.number().int().min(1).optional(),
 });
@@ -25,9 +26,9 @@ export const zFixture = z.object({
   evidenceEnumId: z.nativeEnum(FixtureEvidenceEnum).optional(),
   classEnumId: z.nativeEnum(FixtureClassEnum).optional(),
   purpose: z.string().optional(),
-  imageFiles: z.array(zFileSummary),
+  imageFiles: z.array(zFileSummary.pick({ id: true })),
   softwareEvidence: z.string().optional(),
-  softwareEvidenceFiles: z.array(zFileSummary),
+  softwareEvidenceFiles: z.array(zFileSummary.pick({ id: true })),
   number: z.coerce.number().int().min(1).optional(),
   price: z.coerce.number().int().min(1).optional(),
 });
@@ -38,7 +39,7 @@ export const zTransportation = z.object({
   destination: z.string().max(255).optional(),
   purpose: z.string().optional(),
   placeValidity: z.string().optional(),
-  passengers: z.array(zStudentSummary),
+  passengers: z.array(zStudentSummary.pick({ id: true })),
 });
 
 export const zNonCorporateTransaction = z.object({
@@ -47,9 +48,9 @@ export const zNonCorporateTransaction = z.object({
   wasteExplanation: z.string().optional(),
 });
 
-const zMinorExpense = z.object({
+export const zMinorExpense = z.object({
   explanation: z.string().max(255).optional(),
-  files: z.array(zFileSummary),
+  files: z.array(zFileSummary.pick({ id: true })),
 });
 
 const zFundingBase = z.object({
@@ -57,13 +58,13 @@ const zFundingBase = z.object({
   clubId: z.coerce.number().int().min(1),
   semesterId: z.coerce.number().int().min(1),
   fundingOrderStatusEnumId: z.coerce.number().int().min(1),
-  purposeId: z.coerce.number().int().min(1).optional(),
+  purposeActivity: zActivitySummary.pick({ id: true }).optional(),
   name: z.string().max(255).min(1),
   expenditureDate: z.coerce.date(),
   expenditureAmount: z.coerce.number().int().min(0),
   approvedAmount: z.coerce.number().int().min(0).optional(),
-  tradeEvidenceFiles: z.array(zFileSummary),
-  tradeDetailFiles: z.array(zFileSummary),
+  tradeEvidenceFiles: z.array(zFileSummary.pick({ id: true })),
+  tradeDetailFiles: z.array(zFileSummary.pick({ id: true })),
   tradeDetailExplanation: z.string(),
 
   clubSupplies: zClubSupplies.optional(),
@@ -100,7 +101,7 @@ const zFundingBase = z.object({
 });
 
 export const zFunding = zFundingBase.superRefine((data, ctx) => {
-  if (data.purposeId === undefined) {
+  if (data.purposeActivity === undefined) {
     if (
       !data.clubSupplies ||
       !data.clubSupplies.name ||
@@ -266,14 +267,76 @@ export const zFunding = zFundingBase.superRefine((data, ctx) => {
   }
 });
 
-export const zFundingSummary = z.object({
-  id: z.coerce.number().int().min(1),
-  fundingOrderStatusEnumId: z.coerce.number().int().min(1),
-  activityName: z.string(),
-  name: z.string(),
-  expenditureAmount: z.coerce.number().int().min(1),
-  approvedAmount: z.coerce.number().int().min(1),
-  purposeId: z.coerce.number().int().min(1),
+export const zFundingResponse = zFundingBase.extend({
+  tradeEvidenceFiles: z.array(zFileSummary),
+  tradeDetailFiles: z.array(zFileSummary),
+  clubSupplies: zClubSupplies
+    .extend({
+      imageFiles: z.array(zFileSummary),
+      softwareEvidenceFiles: z.array(zFileSummary),
+    })
+    .optional(),
+  fixture: zFixture
+    .extend({
+      imageFiles: z.array(zFileSummary),
+      softwareEvidenceFiles: z.array(zFileSummary),
+    })
+    .optional(),
+  transportation: zTransportation
+    .extend({
+      passengers: z.array(zStudentSummary),
+    })
+    .optional(),
+  nonCorporateTransaction: zNonCorporateTransaction
+    .extend({
+      files: z.array(zFileSummary),
+    })
+    .optional(),
+  foodExpense: zMinorExpense
+    .extend({
+      files: z.array(zFileSummary),
+    })
+    .optional(),
+  laborContract: zMinorExpense
+    .extend({
+      files: z.array(zFileSummary),
+    })
+    .optional(),
+  externalEventParticipationFee: zMinorExpense
+    .extend({
+      files: z.array(zFileSummary),
+    })
+    .optional(),
+  publication: zMinorExpense
+    .extend({
+      files: z.array(zFileSummary),
+    })
+    .optional(),
+  profitMakingActivity: zMinorExpense
+    .extend({
+      files: z.array(zFileSummary),
+    })
+    .optional(),
+  jointExpense: zMinorExpense
+    .extend({
+      files: z.array(zFileSummary),
+    })
+    .optional(),
+  etcExpense: zMinorExpense
+    .extend({
+      files: z.array(zFileSummary),
+    })
+    .optional(),
+  purposeActivity: zActivitySummary.optional(),
+});
+
+export const zFundingResponseSummary = zFundingResponse.pick({
+  id: true,
+  fundingOrderStatusEnumId: true,
+  name: true,
+  expenditureAmount: true,
+  approvedAmount: true,
+  purposeActivity: true,
 });
 
 export type IClubSupplies = z.infer<typeof zClubSupplies>;
@@ -283,4 +346,5 @@ export type IMinorExpense = z.infer<typeof zMinorExpense>;
 export type INonCorporateTransaction = z.infer<typeof zNonCorporateTransaction>;
 
 export type IFunding = z.infer<typeof zFunding>;
-export type IFundingSummary = z.infer<typeof zFundingSummary>;
+export type IFundingResponse = z.infer<typeof zFundingResponse>;
+export type IFundingResponseSummary = z.infer<typeof zFundingResponseSummary>;
