@@ -11,6 +11,7 @@ import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   Activity,
+  ActivityClubChargedExecutive,
   ActivityDeadlineD,
   ActivityEvidenceFile,
   ActivityFeedback,
@@ -18,7 +19,12 @@ import {
   ActivityT,
   ProfessorSignStatus,
 } from "@sparcs-clubs/api/drizzle/schema/activity.schema";
-import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+import { Club, ClubT } from "@sparcs-clubs/api/drizzle/schema/club.schema";
+import { Division } from "@sparcs-clubs/api/drizzle/schema/division.schema";
+import {
+  Professor,
+  Student,
+} from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 @Injectable()
 export default class ActivityRepository {
@@ -293,6 +299,16 @@ export default class ActivityRepository {
     return result;
   }
 
+  async selectActivityByActivityDId(activityDId: number) {
+    const result = await this.db
+      .select()
+      .from(Activity)
+      .where(
+        and(eq(Activity.activityDId, activityDId), isNull(Activity.deletedAt)),
+      );
+    return result;
+  }
+
   /**
    * @param clubId 동아리 ID
    * @description 가동아리 활보 작성은 하나의 기간만 존재하기에
@@ -333,10 +349,7 @@ export default class ActivityRepository {
    */
   async selectActivityFeedbackByActivityId(param: { activityId: number }) {
     const result = await this.db
-      .select({
-        comment: ActivityFeedback.comment,
-        createdAt: ActivityFeedback.createdAt,
-      })
+      .select()
       .from(ActivityFeedback)
       .where(
         and(
@@ -568,7 +581,7 @@ export default class ActivityRepository {
     const result = await this.db
       .select({ name: Activity.name })
       .from(Activity)
-      .where(eq(Activity.id, id));
+      .where(eq(Activity.id, id))[0];
     return result;
   }
 
@@ -615,5 +628,76 @@ export default class ActivityRepository {
       return true;
     });
     return isUpdateSucceed;
+  }
+
+  /**
+   * @param activityId 활동 Id
+   * @param executiveId 집행부원 Id
+   * @description 해당 활동의 담당 집행부원을 변경합니다.
+   * @returns update에 성공했는지 성공여부를 리턴합니다.
+   */
+  async updateActivityChargedExecutive(param: {
+    activityId: number;
+    executiveId: number;
+  }): Promise<boolean> {
+    const [updateResult] = await this.db
+      .update(Activity)
+      .set({
+        chargedExecutiveId: param.executiveId,
+      })
+      .where(
+        and(eq(Activity.id, param.activityId), isNull(Activity.deletedAt)),
+      );
+
+    return updateResult.warningStatus === 0;
+  }
+
+  /**
+   *
+   * @param param
+   * @description 서비스 getExecutiveActivitiesClubs 메소드에서 이용되는 전용 메소드입니다.
+   */
+  async getExecutiveActivitiesClubs(param: {
+    semesterId: number;
+    activityDId: number;
+    clubsList: number[];
+  }) {
+    const result = await this.db
+      .select({
+        clubId: Club.id,
+        clubTypeEnum: ClubT.clubStatusEnumId,
+        divisionName: Division.name,
+        clubNameKr: Club.name_kr,
+        clubNameEn: Club.name_en,
+        advisor: Professor.name,
+        chargedExecutiveId: ActivityClubChargedExecutive.executiveId,
+      })
+      .from(Club)
+      .innerJoin(
+        ClubT,
+        and(
+          eq(ClubT.clubId, Club.id),
+          eq(ClubT.semesterId, param.semesterId),
+          isNull(ClubT.deletedAt),
+        ),
+      )
+      .innerJoin(
+        Division,
+        and(eq(Division.id, Club.divisionId), isNull(Division.deletedAt)),
+      )
+      .leftJoin(
+        Professor,
+        and(eq(Professor.id, ClubT.professorId), isNull(Professor.deletedAt)),
+      )
+      .leftJoin(
+        ActivityClubChargedExecutive,
+        and(
+          eq(ActivityClubChargedExecutive.clubId, Club.id),
+          eq(ActivityClubChargedExecutive.activityDId, param.activityDId),
+          isNull(ActivityClubChargedExecutive.deletedAt),
+        ),
+      )
+      .where(and(inArray(Club.id, param.clubsList), isNull(Club.deletedAt)));
+    return result;
   }
 }

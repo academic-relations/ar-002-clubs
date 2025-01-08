@@ -13,7 +13,7 @@ type Duration = {
   endTerm: Date;
 };
 
-type Comment = {
+export type Comment = {
   content: string;
   createdAt: Date;
 };
@@ -34,7 +34,7 @@ export interface CurrentActivityReport extends BaseActivityReport {
   id: number;
   updatedAt: Date;
   activityStatusEnumId: ActivityStatusEnum;
-  professorApproval: ProfessorApprovalEnum;
+  professorApproval: ProfessorApprovalEnum | null;
   professorApprovedAt?: Date;
   comments: Comment[];
 }

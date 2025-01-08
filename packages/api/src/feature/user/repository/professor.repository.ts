@@ -35,6 +35,13 @@ export default class ProfessorRepository {
     return result;
   }
 
+  async selectProfessorById(id: number) {
+    return this.db
+      .select()
+      .from(Professor)
+      .where(and(eq(Professor.userId, id), isNull(Professor.deletedAt)));
+  }
+
   async updateProfessorPhoneNumber(id: number, phoneNumber: string) {
     const isUpdateSucceed = await this.db.transaction(async tx => {
       const [result] = await tx

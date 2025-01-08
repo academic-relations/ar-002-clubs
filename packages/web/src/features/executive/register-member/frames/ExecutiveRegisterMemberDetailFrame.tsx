@@ -16,7 +16,7 @@ import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import Toggle from "@sparcs-clubs/web/common/components/Toggle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { useGetClubDetail } from "@sparcs-clubs/web/features/clubDetails/services/getClubDetail";
+import { useGetClubDetail } from "@sparcs-clubs/web/features/clubs/services/getClubDetail";
 
 import { mockupClubMemberRegister } from "@sparcs-clubs/web/features/executive/register-member/[id]/_mock/mockClubMemberRegister";
 import { useGetRegisterMemberDetail } from "@sparcs-clubs/web/features/executive/register-member/[id]/services/getRegisterMemberDetail";

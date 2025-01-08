@@ -41,4 +41,12 @@ export default class DivisionRepository {
       .then(takeUnique);
     return result ? result.id : undefined;
   }
+
+  async selectDivisionById(param: { id: number }) {
+    const result = await this.db
+      .select()
+      .from(Division)
+      .where(and(eq(Division.id, param.id), isNull(Division.deletedAt)));
+    return result;
+  }
 }
