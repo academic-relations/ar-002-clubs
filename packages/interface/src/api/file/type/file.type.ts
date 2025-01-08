@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const zFile = z.object({
-  id: z.string().max(128).min(1),
+  id: z.string().length(128),
   name: z.string(),
   extension: z.string(),
   size: z.number(),
@@ -9,11 +9,7 @@ export const zFile = z.object({
   userId: z.coerce.number().min(1),
 });
 
-export const zFileSummary = z.object({
-  id: z.string().max(128).min(1),
-  name: z.string(),
-  url: z.string(),
-});
+export const zFileSummary = zFile.pick({ id: true, name: true, url: true });
 
 export type IFile = z.infer<typeof zFile>;
 export type IFileSummary = z.infer<typeof zFileSummary>;

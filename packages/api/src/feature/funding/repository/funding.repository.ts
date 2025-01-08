@@ -1,6 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 
-import { IFundingSummary } from "@sparcs-clubs/interface/api/funding/type/funding.type";
+import {
+  IFundingRequest,
+  IFundingSummary,
+} from "@sparcs-clubs/interface/api/funding/type/funding.type";
 import { and, eq, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -26,13 +29,13 @@ import {
 
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
-import { Funding } from "../model/funding.model";
+import { MFunding } from "../model/funding.model";
 
 @Injectable()
 export default class FundingRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  async select(id: number): Promise<Funding> {
+  async select(id: number): Promise<MFunding> {
     const result = await this.db
       .select({
         funding_order: FundingOrder,
@@ -194,7 +197,7 @@ export default class FundingRepository {
         .innerJoin(Student, eq(Student.id, TransportationPassenger.studentId)),
     ]);
 
-    return Funding.fromDBResult({
+    return MFunding.fromDBResult({
       fundingOrder: result[0].funding_order,
       fundingOrderFeedback: result[0].funding_order_feedback,
       tradeEvidenceFiles: tradeEvidenceFiles.map(file => ({
@@ -203,18 +206,45 @@ export default class FundingRepository {
       tradeDetailFiles: tradeDetailFiles.map(file => ({
         id: file.fileId,
       })),
-      clubSuppliesImageFiles,
-      clubSuppliesSoftwareEvidenceFiles,
-      fixtureImageFiles,
-      fixtureSoftwareEvidenceFiles,
-      foodExpenseFiles,
-      laborContractFiles,
-      externalEventParticipationFeeFiles,
-      publicationFiles,
-      profitMakingActivityFiles,
-      jointExpenseFiles,
-      etcExpenseFiles,
-      transportationPassengers,
+      clubSuppliesImageFiles: clubSuppliesImageFiles.map(file => ({
+        id: file.fileId,
+      })),
+      clubSuppliesSoftwareEvidenceFiles: clubSuppliesSoftwareEvidenceFiles.map(
+        file => ({
+          id: file.fileId,
+        }),
+      ),
+      fixtureImageFiles: fixtureImageFiles.map(file => ({
+        id: file.fileId,
+      })),
+      fixtureSoftwareEvidenceFiles: fixtureSoftwareEvidenceFiles.map(file => ({
+        id: file.fileId,
+      })),
+      foodExpenseFiles: foodExpenseFiles.map(file => ({
+        id: file.fileId,
+      })),
+      laborContractFiles: laborContractFiles.map(file => ({
+        id: file.fileId,
+      })),
+      externalEventParticipationFeeFiles:
+        externalEventParticipationFeeFiles.map(file => ({
+          id: file.fileId,
+        })),
+      publicationFiles: publicationFiles.map(file => ({
+        id: file.fileId,
+      })),
+      profitMakingActivityFiles: profitMakingActivityFiles.map(file => ({
+        id: file.fileId,
+      })),
+      jointExpenseFiles: jointExpenseFiles.map(file => ({
+        id: file.fileId,
+      })),
+      etcExpenseFiles: etcExpenseFiles.map(file => ({
+        id: file.fileId,
+      })),
+      transportationPassengers: transportationPassengers.map(passenger => ({
+        id: passenger.studentId,
+      })),
     });
   }
 
@@ -225,12 +255,11 @@ export default class FundingRepository {
     const fundingOrders = await this.db
       .select({
         id: FundingOrder.id,
-        activityName: FundingOrder.name,
         name: FundingOrder.name,
         expenditureAmount: FundingOrder.expenditureAmount,
         approvedAmount: FundingOrder.approvedAmount,
         fundingOrderStatusEnumId: FundingOrder.fundingOrderStatusEnumId,
-        purposeId: FundingOrder.purposeId,
+        purposeActivity: FundingOrder.purposeId,
       })
       .from(FundingOrder)
       .where(
@@ -245,15 +274,20 @@ export default class FundingRepository {
       return [];
     }
 
-    return fundingOrders;
+    return fundingOrders.map(fundingOrder => ({
+      ...fundingOrder,
+      purposeActivity: {
+        id: fundingOrder.purposeActivity,
+      },
+    }));
   }
 
-  async insert(funding: Funding): Promise<Funding> {
+  async insert(funding: IFundingRequest): Promise<MFunding> {
     const result = await this.db.transaction(async tx => {
       // 1. Insert funding order
       const [fundingOrder] = await tx.insert(FundingOrder).values({
         clubId: funding.clubId,
-        purposeId: funding.purposeId,
+        purposeId: funding.purposeActivity.id,
         semesterId: funding.semesterId,
         fundingOrderStatusEnumId: funding.fundingOrderStatusEnumId,
         name: funding.name,
@@ -491,7 +525,7 @@ export default class FundingRepository {
     });
   }
 
-  async put(id: number, funding: Funding): Promise<Funding> {
+  async put(id: number, funding: IFundingRequest): Promise<MFunding> {
     await this.delete(id);
     return this.insert(funding);
   }

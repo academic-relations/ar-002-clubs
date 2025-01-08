@@ -1,4 +1,3 @@
-import { IFileSummary } from "@sparcs-clubs/interface/api/file/type/file.type";
 import {
   IClubSupplies,
   IFixture,
@@ -65,46 +64,36 @@ export type FundingDBResult = {
   fundingOrderFeedback?: {
     feedback?: string;
   };
-  tradeEvidenceFiles: IFileSummary[];
-  tradeDetailFiles: IFileSummary[];
+  tradeEvidenceFiles: { id: string }[];
+  tradeDetailFiles: { id: string }[];
   clubSuppliesImageFiles?: Array<{
-    fileId: string;
-    name?: string;
-    link?: string;
+    id: string;
   }>;
   clubSuppliesSoftwareEvidenceFiles?: Array<{
-    fileId: string;
-    name?: string;
-    link?: string;
+    id: string;
   }>;
-  fixtureImageFiles?: Array<{ fileId: string; name?: string; link?: string }>;
+  fixtureImageFiles?: Array<{ id: string }>;
   fixtureSoftwareEvidenceFiles?: Array<{
-    fileId: string;
-    name?: string;
-    link?: string;
+    id: string;
   }>;
-  foodExpenseFiles?: Array<{ fileId: string; name?: string; link?: string }>;
-  laborContractFiles?: Array<{ fileId: string; name?: string; link?: string }>;
+  foodExpenseFiles?: Array<{ id: string }>;
+  laborContractFiles?: Array<{ id: string }>;
   externalEventParticipationFeeFiles?: Array<{
-    fileId: string;
-    name?: string;
-    link?: string;
+    id: string;
   }>;
-  publicationFiles?: Array<{ fileId: string; name?: string; link?: string }>;
+  publicationFiles?: Array<{ id: string }>;
   profitMakingActivityFiles?: Array<{
-    fileId: string;
-    name?: string;
-    link?: string;
+    id: string;
   }>;
-  jointExpenseFiles?: Array<{ fileId: string; name?: string; link?: string }>;
-  etcExpenseFiles?: Array<{ fileId: string; name?: string; link?: string }>;
+  jointExpenseFiles?: Array<{ id: string }>;
+  etcExpenseFiles?: Array<{ id: string }>;
   transportationPassengers?: Array<{
-    studentId: number;
+    id: number;
   }>;
 };
 
-export class Funding implements IFunding {
-  id?: number;
+export class MFunding implements IFunding {
+  id: number;
 
   clubId: number;
 
@@ -122,9 +111,9 @@ export class Funding implements IFunding {
 
   approvedAmount?: number;
 
-  tradeEvidenceFiles: IFileSummary[];
+  tradeEvidenceFiles: { id: string }[];
 
-  tradeDetailFiles: IFileSummary[];
+  tradeDetailFiles: { id: string }[];
 
   tradeDetailExplanation: string;
 
@@ -170,12 +159,12 @@ export class Funding implements IFunding {
 
   etcExpense?: IMinorExpense;
 
-  constructor(data: Funding) {
+  constructor(data: MFunding) {
     Object.assign(this, data);
   }
 
   static fromDBResult(result: FundingDBResult) {
-    return new Funding({
+    return new MFunding({
       id: result.fundingOrder.id,
       clubId: result.fundingOrder.clubId,
       name: result.fundingOrder.name,
@@ -187,13 +176,9 @@ export class Funding implements IFunding {
       approvedAmount: result.fundingOrder.approvedAmount,
       tradeEvidenceFiles: result.tradeEvidenceFiles.map(file => ({
         id: file.id,
-        name: file.name ?? undefined,
-        url: file.url ?? undefined,
       })),
       tradeDetailFiles: result.tradeDetailFiles.map(file => ({
         id: file.id,
-        name: file.name ?? undefined,
-        url: file.url ?? undefined,
       })),
       tradeDetailExplanation: result.fundingOrder.tradeDetailExplanation,
       isFixture: result.fundingOrder.isFixture,
@@ -216,15 +201,11 @@ export class Funding implements IFunding {
         number: result.fundingOrder.numberOfClubSupplies,
         price: result.fundingOrder.priceOfClubSupplies,
         imageFiles: result.clubSuppliesImageFiles.map(file => ({
-          id: file.fileId,
-          name: file.name ?? undefined,
-          url: file.link ?? undefined,
+          id: file.id,
         })),
         softwareEvidenceFiles: result.clubSuppliesSoftwareEvidenceFiles.map(
           file => ({
-            id: file.fileId,
-            name: file.name ?? undefined,
-            url: file.link ?? undefined,
+            id: file.id,
           }),
         ),
       },
@@ -237,15 +218,11 @@ export class Funding implements IFunding {
         number: result.fundingOrder.numberOfFixture,
         price: result.fundingOrder.priceOfFixture,
         imageFiles: result.fixtureImageFiles.map(file => ({
-          id: file.fileId,
-          name: file.name ?? undefined,
-          url: file.link ?? undefined,
+          id: file.id,
         })),
         softwareEvidenceFiles: result.fixtureSoftwareEvidenceFiles.map(
           file => ({
-            id: file.fileId,
-            name: file.name ?? undefined,
-            url: file.link ?? undefined,
+            id: file.id,
           }),
         ),
       },
@@ -256,7 +233,7 @@ export class Funding implements IFunding {
         purpose: result.fundingOrder.purposeOfTransportation,
         placeValidity: result.fundingOrder.placeValidity,
         passengers: result.transportationPassengers.map(passenger => ({
-          id: passenger.studentId,
+          id: passenger.id,
         })),
       },
       nonCorporateTransaction: {
@@ -267,58 +244,44 @@ export class Funding implements IFunding {
       foodExpense: {
         explanation: result.fundingOrder.foodExpenseExplanation,
         files: result.foodExpenseFiles.map(file => ({
-          id: file.fileId,
-          name: file.name ?? undefined,
-          url: file.link ?? undefined,
+          id: file.id,
         })),
       },
       laborContract: {
         explanation: result.fundingOrder.laborContractExplanation,
         files: result.laborContractFiles.map(file => ({
-          id: file.fileId,
-          name: file.name ?? undefined,
-          url: file.link ?? undefined,
+          id: file.id,
         })),
       },
       externalEventParticipationFee: {
         explanation:
           result.fundingOrder.externalEventParticipationFeeExplanation,
         files: result.externalEventParticipationFeeFiles.map(file => ({
-          id: file.fileId,
-          name: file.name ?? undefined,
-          url: file.link ?? undefined,
+          id: file.id,
         })),
       },
       publication: {
         explanation: result.fundingOrder.publicationExplanation,
         files: result.publicationFiles.map(file => ({
-          id: file.fileId,
-          name: file.name ?? undefined,
-          url: file.link ?? undefined,
+          id: file.id,
         })),
       },
       profitMakingActivity: {
         explanation: result.fundingOrder.profitMakingActivityExplanation,
         files: result.profitMakingActivityFiles.map(file => ({
-          id: file.fileId,
-          name: file.name ?? undefined,
-          url: file.link ?? undefined,
+          id: file.id,
         })),
       },
       jointExpense: {
         explanation: result.fundingOrder.jointExpenseExplanation,
         files: result.jointExpenseFiles.map(file => ({
-          id: file.fileId,
-          name: file.name ?? undefined,
-          url: file.link ?? undefined,
+          id: file.id,
         })),
       },
       etcExpense: {
         explanation: result.fundingOrder.etcExpenseExplanation,
         files: result.etcExpenseFiles.map(file => ({
-          id: file.fileId,
-          name: file.name ?? undefined,
-          url: file.link ?? undefined,
+          id: file.id,
         })),
       },
     });

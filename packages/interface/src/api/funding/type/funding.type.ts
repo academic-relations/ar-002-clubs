@@ -53,8 +53,8 @@ export const zMinorExpense = z.object({
   files: z.array(zFileSummary.pick({ id: true })),
 });
 
-const zFundingBase = z.object({
-  id: z.coerce.number().int().min(1).optional(),
+const zFunding = z.object({
+  id: z.coerce.number().int().min(1),
   clubId: z.coerce.number().int().min(1),
   semesterId: z.coerce.number().int().min(1),
   fundingOrderStatusEnumId: z.coerce.number().int().min(1),
@@ -100,7 +100,11 @@ const zFundingBase = z.object({
   etcExpense: zMinorExpense.optional(),
 });
 
-export const zFunding = zFundingBase.superRefine((data, ctx) => {
+const zFundingRequestBase = zFunding.omit({
+  id: true,
+});
+
+export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {
   if (data.purposeActivity === undefined) {
     if (
       !data.clubSupplies ||
@@ -267,7 +271,8 @@ export const zFunding = zFundingBase.superRefine((data, ctx) => {
   }
 });
 
-export const zFundingResponse = zFundingBase.extend({
+export const zFundingResponse = zFunding.extend({
+  id: z.coerce.number().int().min(1),
   tradeEvidenceFiles: z.array(zFileSummary),
   tradeDetailFiles: z.array(zFileSummary),
   clubSupplies: zClubSupplies
@@ -330,6 +335,15 @@ export const zFundingResponse = zFundingBase.extend({
   purposeActivity: zActivitySummary.optional(),
 });
 
+export const zFundingSummary = zFunding.pick({
+  id: true,
+  fundingOrderStatusEnumId: true,
+  name: true,
+  expenditureAmount: true,
+  approvedAmount: true,
+  purposeActivity: true,
+});
+
 export const zFundingResponseSummary = zFundingResponse.pick({
   id: true,
   fundingOrderStatusEnumId: true,
@@ -346,5 +360,7 @@ export type IMinorExpense = z.infer<typeof zMinorExpense>;
 export type INonCorporateTransaction = z.infer<typeof zNonCorporateTransaction>;
 
 export type IFunding = z.infer<typeof zFunding>;
+export type IFundingRequest = z.infer<typeof zFundingRequest>;
+export type IFundingSummary = z.infer<typeof zFundingSummary>;
 export type IFundingResponse = z.infer<typeof zFundingResponse>;
 export type IFundingResponseSummary = z.infer<typeof zFundingResponseSummary>;

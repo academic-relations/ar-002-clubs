@@ -565,7 +565,7 @@ export default class ActivityRepository {
     const result = await this.db
       .select({ name: Activity.name })
       .from(Activity)
-      .where(eq(Activity.id, id));
+      .where(eq(Activity.id, id))[0];
     return result;
   }
 

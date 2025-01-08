@@ -26,6 +26,7 @@ import {
   ApiFnd006RequestParam,
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/apiFnd006";
+import { IFundingResponse } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ActivityPublicService from "@sparcs-clubs/api/feature/activity/service/activity.public.service";
@@ -33,7 +34,6 @@ import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.publi
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
-import { Funding } from "../model/funding.model";
 import FundingRepository from "../repository/funding.repository";
 
 @Injectable()
@@ -63,9 +63,9 @@ export default class FundingService {
     const now = getKSTDate();
     const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
 
-    const funding = new Funding(body);
-    funding.semesterId = semesterId;
-    return this.fundingRepository.insert(funding);
+    // eslint-disable-next-line no-param-reassign
+    body.semesterId = semesterId;
+    return this.fundingRepository.insert(body);
   }
 
   async getStudentFunding(
@@ -77,100 +77,61 @@ export default class FundingService {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
 
-    const funding = await this.fundingRepository.select(param.id);
+    const funding = (await this.fundingRepository.select(
+      param.id,
+    )) as IFundingResponse;
     if (!funding) {
       throw new HttpException("Funding not found", HttpStatus.NOT_FOUND);
     }
 
-    funding.tradeEvidenceFiles.forEach(async file => {
-      const { name, link } = await this.filePublicService.getFileInfoById(
-        file.id,
+    funding.purposeActivity =
+      await this.activityPublicService.getActivityNameById(
+        funding.purposeActivity.id,
       );
-      // eslint-disable-next-line no-param-reassign
-      file.name = name;
-      // eslint-disable-next-line no-param-reassign
-      file.url = link;
-    });
-
-    funding.tradeDetailFiles.forEach(async file => {
-      const { name, link } = await this.filePublicService.getFileInfoById(
-        file.id,
+    funding.tradeEvidenceFiles = await this.filePublicService.getFilesByIds(
+      funding.tradeEvidenceFiles.flatMap(file => file.id),
+    );
+    funding.tradeDetailFiles = await this.filePublicService.getFilesByIds(
+      funding.tradeDetailFiles.flatMap(file => file.id),
+    );
+    funding.clubSupplies.imageFiles =
+      await this.filePublicService.getFilesByIds(
+        funding.clubSupplies.imageFiles.flatMap(file => file.id),
       );
-      // eslint-disable-next-line no-param-reassign
-      file.name = name;
-      // eslint-disable-next-line no-param-reassign
-      file.url = link;
-    });
-
-    funding.foodExpense.files.forEach(async file => {
-      const { name, link } = await this.filePublicService.getFileInfoById(
-        file.id,
+    funding.clubSupplies.softwareEvidenceFiles =
+      await this.filePublicService.getFilesByIds(
+        funding.clubSupplies.softwareEvidenceFiles.flatMap(file => file.id),
       );
-      // eslint-disable-next-line no-param-reassign
-      file.name = name;
-      // eslint-disable-next-line no-param-reassign
-      file.url = link;
-    });
-
-    funding.laborContract.files.forEach(async file => {
-      const { name, link } = await this.filePublicService.getFileInfoById(
-        file.id,
+    funding.fixture.imageFiles = await this.filePublicService.getFilesByIds(
+      funding.fixture.imageFiles.flatMap(file => file.id),
+    );
+    funding.fixture.softwareEvidenceFiles =
+      await this.filePublicService.getFilesByIds(
+        funding.fixture.softwareEvidenceFiles.flatMap(file => file.id),
       );
-      // eslint-disable-next-line no-param-reassign
-      file.name = name;
-      // eslint-disable-next-line no-param-reassign
-      file.url = link;
-    });
-
-    funding.externalEventParticipationFee.files.forEach(async file => {
-      const { name, link } = await this.filePublicService.getFileInfoById(
-        file.id,
+    funding.foodExpense.files = await this.filePublicService.getFilesByIds(
+      funding.foodExpense.files.flatMap(file => file.id),
+    );
+    funding.laborContract.files = await this.filePublicService.getFilesByIds(
+      funding.laborContract.files.flatMap(file => file.id),
+    );
+    funding.externalEventParticipationFee.files =
+      await this.filePublicService.getFilesByIds(
+        funding.externalEventParticipationFee.files.flatMap(file => file.id),
       );
-      // eslint-disable-next-line no-param-reassign
-      file.name = name;
-      // eslint-disable-next-line no-param-reassign
-      file.url = link;
-    });
-
-    funding.publication.files.forEach(async file => {
-      const { name, link } = await this.filePublicService.getFileInfoById(
-        file.id,
+    funding.publication.files = await this.filePublicService.getFilesByIds(
+      funding.publication.files.flatMap(file => file.id),
+    );
+    funding.profitMakingActivity.files =
+      await this.filePublicService.getFilesByIds(
+        funding.profitMakingActivity.files.flatMap(file => file.id),
       );
-      // eslint-disable-next-line no-param-reassign
-      file.name = name;
-      // eslint-disable-next-line no-param-reassign
-      file.url = link;
-    });
-
-    funding.profitMakingActivity.files.forEach(async file => {
-      const { name, link } = await this.filePublicService.getFileInfoById(
-        file.id,
-      );
-      // eslint-disable-next-line no-param-reassign
-      file.name = name;
-      // eslint-disable-next-line no-param-reassign
-      file.url = link;
-    });
-
-    funding.jointExpense.files.forEach(async file => {
-      const { name, link } = await this.filePublicService.getFileInfoById(
-        file.id,
-      );
-      // eslint-disable-next-line no-param-reassign
-      file.name = name;
-      // eslint-disable-next-line no-param-reassign
-      file.url = link;
-    });
-
-    funding.etcExpense.files.forEach(async file => {
-      const { name, link } = await this.filePublicService.getFileInfoById(
-        file.id,
-      );
-      // eslint-disable-next-line no-param-reassign
-      file.name = name;
-      // eslint-disable-next-line no-param-reassign
-      file.url = link;
-    });
+    funding.jointExpense.files = await this.filePublicService.getFilesByIds(
+      funding.jointExpense.files.flatMap(file => file.id),
+    );
+    funding.etcExpense.files = await this.filePublicService.getFilesByIds(
+      funding.etcExpense.files.flatMap(file => file.id),
+    );
 
     return funding;
   }
@@ -193,10 +154,10 @@ export default class FundingService {
     const now = getKSTDate();
     const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
 
-    const funding = new Funding(body);
-    funding.semesterId = semesterId;
+    // eslint-disable-next-line no-param-reassign
+    body.semesterId = semesterId;
 
-    return this.fundingRepository.put(param.id, funding);
+    return this.fundingRepository.put(param.id, body);
   }
 
   async deleteStudentFunding(
@@ -232,11 +193,11 @@ export default class FundingService {
       fundings.map(async funding => {
         const activityName =
           await this.activityPublicService.getActivityNameById(
-            funding.purposeId,
+            funding.purposeActivity.id,
           );
         return {
           name: activityName[0].name ?? "활동보고서로 증빙이 불가능한 물품",
-          id: funding.purposeId,
+          id: funding.purposeActivity.id,
         };
       }),
     );
@@ -245,9 +206,9 @@ export default class FundingService {
       fundings: fundings.map(funding => ({
         id: funding.id,
         fundingOrderStatusEnumId: funding.fundingOrderStatusEnumId,
-        purposeId: funding.purposeId,
+        purposeId: funding.purposeActivity.id,
         activityName: activities.find(
-          activity => activity.id === funding.purposeId,
+          activity => activity.id === funding.purposeActivity.id,
         ).name,
         name: funding.name,
         expenditureAmount: funding.expenditureAmount,
@@ -275,11 +236,11 @@ export default class FundingService {
       fundings.map(async funding => {
         const activityName =
           await this.activityPublicService.getActivityNameById(
-            funding.purposeId,
+            funding.purposeActivity.id,
           );
         return {
           name: activityName[0].name ?? "활동보고서로 증빙이 불가능한 물품",
-          id: funding.purposeId,
+          id: funding.purposeActivity.id,
         };
       }),
     );
@@ -288,9 +249,9 @@ export default class FundingService {
       fundings: fundings.map(funding => ({
         id: funding.id,
         fundingOrderStatusEnumId: funding.fundingOrderStatusEnumId,
-        purposeId: funding.purposeId,
+        purposeId: funding.purposeActivity.id,
         activityName: activities.find(
-          activity => activity.id === funding.purposeId,
+          activity => activity.id === funding.purposeActivity.id,
         ).name,
         name: funding.name,
         expenditureAmount: funding.expenditureAmount,

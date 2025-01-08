@@ -2,7 +2,7 @@ import { z } from "zod";
 
 // TODO: 수정 필요
 export const zActivityBase = z.object({
-  id: z.coerce.number().int().min(1).optional(),
+  id: z.coerce.number().int().min(1),
   clubId: z.coerce.number().int().min(1),
   name: z.string().max(255).min(1),
 });

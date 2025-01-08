@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zFunding } from "./type/funding.type";
+import { zFundingRequest } from "./type/funding.type";
 
 /**
  * @version v0.1
@@ -17,7 +17,7 @@ const requestParam = z.object({
 
 const requestQuery = z.object({});
 
-const requestBody = zFunding;
+const requestBody = zFundingRequest;
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({}),
