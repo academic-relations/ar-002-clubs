@@ -6,6 +6,7 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 
+import ActivityReportClubStatistic from "../components/ActivityReportClubStatisti";
 import useGetExecutiveClubActivities from "../services/useGetExecutiveClubActivities";
 
 const ExecutiveActivityReportClubFrame: React.FC<{ clubId: string }> = ({
@@ -17,11 +18,10 @@ const ExecutiveActivityReportClubFrame: React.FC<{ clubId: string }> = ({
   });
 
   // const [selectedClubIds, setSelectedClubIds] = useState<number[]>([]);
-  console.log(data);
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
-      {/* <ActivityReportClubStatistic activities={data ?? { items: [] }} /> */}
+      <ActivityReportClubStatistic data={data ?? { items: [] }} />
       <FlexWrapper direction="row" gap={16}>
         <SearchInput
           searchText={searchText}
