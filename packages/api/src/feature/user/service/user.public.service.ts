@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 
 import { MStudent } from "../model/student.model";
 import ExecutiveRepository from "../repository/executive.repository";
@@ -49,6 +50,19 @@ export default class UserPublicService {
     }
 
     return executives[0];
+  }
+
+  /**
+   * 현재 모든 집행부원을 가져옵니다.
+   * 느려요~
+   * */
+  async getCurrentExecutives() {
+    const today = getKSTDate();
+    const executives = await this.executiveRepository.selectExecutiveByDate({
+      date: today,
+    });
+
+    return executives;
   }
 
   async getExecutiveAndExecutiveTByExecutiveId(executive: {
