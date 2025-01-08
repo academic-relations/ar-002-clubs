@@ -44,13 +44,13 @@ const AgendaBlock = forwardRef<HTMLDivElement, AgendaBlockProps>(
     const currentNewAgendaTypeName = AgendaTypeName[agenda.type];
 
     const goUpWrapper = () => {
-      if (index <= 0) return;
+      if (index <= 0 || isEditMode) return;
       setEditMode(false);
       goUp();
     };
 
     const closeAndGoDown = () => {
-      if (index >= lastIndex) return;
+      if (index >= lastIndex || isEditMode) return;
       setEditMode(false);
       goDown();
     };
@@ -64,13 +64,19 @@ const AgendaBlock = forwardRef<HTMLDivElement, AgendaBlockProps>(
                 type="arrow_drop_up"
                 size={24}
                 onClick={goUpWrapper}
-                color={index > 0 ? colors.BLACK : colors.GRAY[300]}
+                color={
+                  !isEditMode && index > 0 ? colors.BLACK : colors.GRAY[300]
+                }
               />
               <Icon
                 type="arrow_drop_down"
                 size={24}
                 onClick={closeAndGoDown}
-                color={index < lastIndex ? colors.BLACK : colors.GRAY[300]}
+                color={
+                  !isEditMode && index < lastIndex
+                    ? colors.BLACK
+                    : colors.GRAY[300]
+                }
               />
             </FlexWrapper>
             <Typography
@@ -81,16 +87,24 @@ const AgendaBlock = forwardRef<HTMLDivElement, AgendaBlockProps>(
             >
               {`${currentNewAgendaTypeName}${typeIndex}`}
             </Typography>
-            <FoldUnfoldButton folded={folded} setFolded={setFolded} />
+            <FoldUnfoldButton
+              folded={folded}
+              setFolded={() => {
+                if (!isEditMode) setFolded(!folded);
+              }}
+              disabled={isEditMode}
+            />
           </FlexWrapper>
           {!folded &&
             (isEditMode ? (
               <AgendaEditor
                 agendaContent={agenda}
-                onDelete={deleteAgenda}
-                onSave={() => setEditMode(false)}
-                onChange={(newContent: AgendaContent) => {
-                  editAgenda(newContent);
+                onCancel={() => {
+                  setEditMode(false);
+                }}
+                onSave={(agendaContent: AgendaContent) => {
+                  editAgenda(agendaContent);
+                  setEditMode(false);
                 }}
               />
             ) : (

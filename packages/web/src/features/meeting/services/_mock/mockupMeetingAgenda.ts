@@ -5,7 +5,8 @@ export const mockUpMeetingAgenda: AgendaContent[] = [
   {
     type: AgendaTypeEnum.Report,
     title: "보고하기",
-    content: "이것은 보고 안건입니다.",
+    content:
+      '<p>이것은 보고 안건입니다<strong class="bold-text">. 하하하하</strong></p><table class="table" style="min-width: 50px"><colgroup><col><col></colgroup><tbody><tr><td colspan="1" rowspan="1"><p>1</p></td><td colspan="1" rowspan="1"><p>1</p></td></tr><tr><td colspan="1" rowspan="1"><p>1</p></td><td colspan="1" rowspan="1"><p>1</p></td></tr></tbody></table><p></p>',
   },
   {
     type: AgendaTypeEnum.Approval,
