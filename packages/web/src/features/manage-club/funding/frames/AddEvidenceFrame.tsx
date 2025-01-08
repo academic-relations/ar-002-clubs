@@ -22,7 +22,7 @@ const AddEvidenceFrame: React.FC = () => {
   const formCtx = useFormContext<FundingFormData>();
   const { control, watch, setValue } = formCtx;
 
-  const purposeId = watch("purposeId");
+  const purposeId = watch("purposeActivity.id");
   const isFixture = watch("isFixture");
   const isTransportation = watch("isTransportation");
   const isNonCorporateTransaction = watch("isNonCorporateTransaction");

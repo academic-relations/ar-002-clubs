@@ -26,6 +26,7 @@ const FundingInfoFrame: React.FC = () => {
   const formCtx = useFormContext<FundingInfo>();
   const { control } = formCtx;
 
+  // TODO. purposeActivity 데이터로 변경
   const purposeItems = [
     { value: "1", label: "활동보고서 1" },
     { value: "2", label: "활동보고서 2" },
@@ -50,7 +51,7 @@ const FundingInfoFrame: React.FC = () => {
         />
         <RowWrapper>
           <FormController
-            name="purposeId"
+            name="purposeActivity.id"
             required
             control={control}
             renderItem={props => (

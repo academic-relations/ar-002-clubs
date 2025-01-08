@@ -32,85 +32,62 @@ const useGetInitialFundingFormData = (
   return {
     data: {
       ...funding,
-      tradeEvidenceFiles: funding.tradeEvidenceFiles.map(file => ({
-        id: file.id,
-        name: file.name,
-        url: file.link,
-      })),
-      tradeDetailFiles: funding.tradeDetailFiles.map(file => ({
-        id: file.id,
-        name: file.name,
-        url: file.link,
-      })),
-      clubSuppliesImageFiles: funding.clubSuppliesImageFiles.map(file => ({
-        id: file.id,
-        name: file.name,
-        url: file.link,
-      })),
+      // 동아리 용품 증빙
+      clubSuppliesName: funding.clubSupplies?.name,
+      clubSuppliesEvidenceEnumId: funding.clubSupplies?.evidenceEnumId,
+      clubSuppliesClassEnumId: funding.clubSupplies?.classEnumId,
+      clubSuppliesPurpose: funding.clubSupplies?.purpose,
+      clubSuppliesImageFiles: funding.clubSupplies?.imageFiles ?? [],
+      clubSuppliesSoftwareEvidence: funding.clubSupplies?.softwareEvidence,
       clubSuppliesSoftwareEvidenceFiles:
-        funding.clubSuppliesSoftwareEvidenceFiles.map(file => ({
-          id: file.id,
-          name: file.name,
-          url: file.link,
-        })),
-      fixtureImageFiles: funding.fixtureImageFiles.map(file => ({
-        id: file.id,
-        name: file.name,
-        url: file.link,
-      })),
-      fixtureSoftwareEvidenceFiles: funding.fixtureSoftwareEvidenceFiles.map(
-        file => ({
-          id: file.id,
-          name: file.name,
-          url: file.link,
-        }),
-      ),
-      transportationPassengers: funding.transportationPassengers.map(
-        participant => ({
-          id: participant.id,
-          name: participant.name,
-          studentNumber: participant.studentNumber,
-        }),
-      ),
+        funding.clubSupplies?.softwareEvidenceFiles ?? [],
+      numberOfClubSupplies: funding.clubSupplies?.number,
+      priceOfClubSupplies: funding.clubSupplies?.price,
 
-      foodExpenseFiles: funding.foodExpenseFiles.map(file => ({
-        id: file.id,
-        name: file.name,
-        url: file.link,
-      })),
-      laborContractFiles: funding.laborContractFiles.map(file => ({
-        id: file.id,
-        name: file.name,
-        url: file.link,
-      })),
+      // 비품 증빙
+      fixtureName: funding.fixture?.name,
+      fixtureEvidenceEnumId: funding.fixture?.evidenceEnumId,
+      fixtureClassEnumId: funding.fixture?.classEnumId,
+      fixturePurpose: funding.fixture?.purpose,
+      fixtureImageFiles: funding.fixture?.imageFiles ?? [],
+      fixtureSoftwareEvidence: funding.fixture?.softwareEvidence,
+      fixtureSoftwareEvidenceFiles:
+        funding.fixture?.softwareEvidenceFiles ?? [],
+      numberOfFixture: funding.fixture?.number,
+      priceOfFixture: funding.fixture?.price,
+
+      // 교통비 증빙
+      transportationEnumId: funding.transportation?.enumId,
+      origin: funding.transportation?.origin,
+      destination: funding.transportation?.destination,
+      purposeOfTransportation: funding.transportation?.purpose,
+      placeValidity: funding.transportation?.placeValidity,
+      transportationPassengers: funding.transportation?.passengers ?? [],
+
+      // 비법인 거래 증빙
+      traderName: funding.nonCorporateTransaction?.traderName,
+      traderAccountNumber: funding.nonCorporateTransaction?.traderAccountNumber,
+      wasteExplanation: funding.nonCorporateTransaction?.wasteExplanation,
+
+      // 식비, 근로 계약, 외부 행사 참가비, 발간물, 수익 사업, 공동 경비, 기타 증빙
+      foodExpenseExplanation: funding.foodExpense?.explanation,
+      laborContractExplanation: funding.laborContract?.explanation,
+      externalEventParticipationFeeExplanation:
+        funding.externalEventParticipationFee?.explanation,
+      publicationExplanation: funding.publication?.explanation,
+      profitMakingActivityExplanation:
+        funding.profitMakingActivity?.explanation,
+      jointExpenseExplanation: funding.jointExpense?.explanation,
+      etcExpenseExplanation: funding.etcExpense?.explanation,
+
+      foodExpenseFiles: funding.foodExpense?.files ?? [],
+      laborContractFiles: funding.laborContract?.files ?? [],
       externalEventParticipationFeeFiles:
-        funding.externalEventParticipationFeeFiles.map(file => ({
-          id: file.id,
-          name: file.name,
-          url: file.link,
-        })),
-      publicationFiles: funding.publicationFiles.map(file => ({
-        id: file.id,
-        name: file.name,
-        url: file.link,
-      })),
-      profitMakingActivityFiles: funding.profitMakingActivityFiles.map(
-        file => ({
-          id: file.id,
-          name: file.name,
-          url: file.link,
-        }),
-      ),
-      jointExpenseFiles: funding.jointExpenseFiles.map(file => ({
-        id: file.id,
-        name: file.name,
-        url: file.link,
-      })),
-      etcExpenseFiles: funding.etcExpenseFiles.map(file => ({
-        id: file.id,
-        name: file.name,
-        url: file.link,
-      })),
+        funding.externalEventParticipationFee?.files ?? [],
+      publicationFiles: funding.publication?.files ?? [],
+      profitMakingActivityFiles: funding.profitMakingActivity?.files ?? [],
+      jointExpenseFiles: funding.jointExpense?.files ?? [],
+      etcExpenseFiles: funding.etcExpense?.files ?? [],
     },
     isLoading,
     isError,
