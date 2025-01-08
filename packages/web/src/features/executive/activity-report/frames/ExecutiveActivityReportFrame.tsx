@@ -19,7 +19,9 @@ const ExecutiveActivityReportFrame = () => {
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <ActivityReportStatistic activities={data ?? { items: [] }} />
+      <ActivityReportStatistic
+        activities={data ?? { items: [], executiveProgresses: [] }}
+      />
       <FlexWrapper direction="row" gap={12}>
         <Button
           style={{ flex: 1 }}
@@ -46,7 +48,7 @@ const ExecutiveActivityReportFrame = () => {
       </FlexWrapper>
       {isClubView ? (
         <ExecutiveActivityClubTable
-          activities={data ?? { items: [] }}
+          activities={data ?? { items: [], executiveProgresses: [] }}
           searchText={searchText}
           selectedClubIds={selectedClubIds}
           setSelectedClubIds={setSelectedClubIds}
