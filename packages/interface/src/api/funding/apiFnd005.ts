@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { FundingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+import { zFundingResponseSummary } from "./type/funding.type";
 
 /**
  * @version v0.1
@@ -21,16 +21,7 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    fundings: z.array(
-      z.object({
-        id: z.coerce.number().int().min(1),
-        fundingOrderStatusEnumId: z.nativeEnum(FundingOrderStatusEnum),
-        activityName: z.coerce.string().max(255),
-        name: z.coerce.string().max(255),
-        expenditureAmount: z.coerce.number().int().min(0),
-        approvedAmount: z.coerce.number().int().min(0).optional(),
-      }),
-    ),
+    fundings: z.array(zFundingResponseSummary),
   }),
 };
 

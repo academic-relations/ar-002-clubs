@@ -7,9 +7,9 @@ import { ClubModule } from "../club/club.module";
 import { FileModule } from "../file/file.module";
 import UserModule from "../user/user.module";
 
-import FundingController from "./funding.controller";
-import FundingRepository from "./funding.repository";
-import FundingService from "./funding.service";
+import FundingController from "./controller/funding.controller";
+import FundingRepository from "./repository/funding.repository";
+import FundingService from "./service/funding.service";
 
 @Module({
   imports: [DrizzleModule, UserModule, ClubModule, ActivityModule, FileModule],

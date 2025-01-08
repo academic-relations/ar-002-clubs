@@ -17,3 +17,14 @@ export function getKSTDate(input?: string | Date): Date {
   }
   return new Date(input);
 }
+
+export function getArrayDiff<T extends string | number>(
+  arr1: T[],
+  arr2: T[],
+): T[] {
+  const union = new Set([...arr1, ...arr2]); // 합집합
+  const intersection = new Set(arr1.filter(x => arr2.includes(x))); // 교집합
+
+  // 합집합에서 교집합 요소를 제거
+  return Array.from(union).filter(x => !intersection.has(x));
+}
