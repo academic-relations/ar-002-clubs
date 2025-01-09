@@ -37,7 +37,7 @@ const columns = [
       const { color, text } = getTagDetail(info.getValue(), ClubTypeTagList);
       return <Tag color={color}>{text}</Tag>;
     },
-    size: 100,
+    size: 50,
   }),
   columnHelper.accessor("divisionName", {
     header: "분과",
@@ -46,7 +46,7 @@ const columns = [
         {info.getValue()}
       </Tag>
     ),
-    size: 100,
+    size: 50,
   }),
   columnHelper.accessor("clubNameKr", {
     header: "동아리",
