@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const zFile = z.object({
-  id: z.string().length(128),
-  name: z.string(),
-  extension: z.string(),
+  id: z.string().max(128),
+  name: z.string().max(255),
+  extension: z.string().max(30),
   size: z.number(),
   url: z.string(),
   userId: z.coerce.number().min(1),
