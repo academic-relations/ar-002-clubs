@@ -65,12 +65,11 @@ export default class FundingService {
     const fundingOrderStatusEnumId = 1;
     const approvedAmount = 0;
 
-    return this.fundingRepository.insert(
-      body,
+    return this.fundingRepository.insert(body, {
       semesterId,
       fundingOrderStatusEnumId,
       approvedAmount,
-    );
+    });
   }
 
   async getStudentFunding(
@@ -161,13 +160,11 @@ export default class FundingService {
     const fundingOrderStatusEnumId = 1;
     const approvedAmount = 0;
 
-    return this.fundingRepository.put(
-      param.id,
-      body,
+    return this.fundingRepository.put(param.id, body, {
       semesterId,
       fundingOrderStatusEnumId,
       approvedAmount,
-    );
+    });
   }
 
   async deleteStudentFunding(

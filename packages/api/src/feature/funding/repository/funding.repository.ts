@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 
 import {
+  IFundingExtra,
   IFundingRequest,
   IFundingSummary,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
@@ -284,21 +285,19 @@ export default class FundingRepository {
 
   async insert(
     funding: IFundingRequest,
-    semesterId: number,
-    fundingOrderStatusEnumId: number,
-    approvedAmount: number,
+    extra: IFundingExtra,
   ): Promise<MFunding> {
     const result = await this.db.transaction(async tx => {
       // 1. Insert funding order
       const [fundingOrder] = await tx.insert(FundingOrder).values({
         clubId: funding.clubId,
         purposeId: funding.purposeActivity.id,
-        semesterId,
-        fundingOrderStatusEnumId,
+        semesterId: extra.semesterId,
+        fundingOrderStatusEnumId: extra.fundingOrderStatusEnumId,
         name: funding.name,
         expenditureDate: funding.expenditureDate,
         expenditureAmount: funding.expenditureAmount,
-        approvedAmount,
+        approvedAmount: extra.approvedAmount,
         isFixture: funding.isFixture,
         isTransportation: funding.isTransportation,
         isFoodExpense: funding.isFoodExpense,
@@ -533,16 +532,9 @@ export default class FundingRepository {
   async put(
     id: number,
     funding: IFundingRequest,
-    semesterId: number,
-    fundingOrderStatusEnumId: number,
-    approvedAmount: number,
+    extra: IFundingExtra,
   ): Promise<MFunding> {
     await this.delete(id);
-    return this.insert(
-      funding,
-      semesterId,
-      fundingOrderStatusEnumId,
-      approvedAmount,
-    );
+    return this.insert(funding, extra);
   }
 }
