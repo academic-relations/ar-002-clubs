@@ -100,8 +100,17 @@ const zFunding = z.object({
   etcExpense: zMinorExpense.optional(),
 });
 
+const zFundingExtra = zFunding.pick({
+  semesterId: true,
+  fundingOrderStatusEnumId: true,
+  approvedAmount: true,
+});
+
 const zFundingRequestBase = zFunding.omit({
   id: true,
+  semesterId: true,
+  fundingOrderStatusEnumId: true,
+  approvedAmount: true,
 });
 
 export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {
@@ -364,3 +373,4 @@ export type IFundingRequest = z.infer<typeof zFundingRequest>;
 export type IFundingSummary = z.infer<typeof zFundingSummary>;
 export type IFundingResponse = z.infer<typeof zFundingResponse>;
 export type IFundingResponseSummary = z.infer<typeof zFundingResponseSummary>;
+export type IFundingExtra = z.infer<typeof zFundingExtra>;
