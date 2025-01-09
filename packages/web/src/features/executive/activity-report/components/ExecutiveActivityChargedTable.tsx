@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 
 import { ApiAct023ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -8,8 +9,12 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import { overlay } from "overlay-kit";
+
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Modal from "@sparcs-clubs/web/common/components/Modal";
+import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -17,6 +22,37 @@ interface ExecutiveActivityChargedTableProps {
   activities: ApiAct023ResponseOk;
   searchText: string;
 }
+
+interface ChargedClubsAndProgresses {
+  clubId: number;
+  clubTypeEnum: ClubTypeEnum;
+  divisionName: string;
+  clubNameKr: string;
+  clubNameEn: string;
+  pendingActivitiesCount: number;
+  approvedActivitiesCount: number;
+  rejectedActivitiesCount: number;
+}
+interface ExecutiveProgresses {
+  executiveName: string;
+  chargedClubsAndProgresses: ChargedClubsAndProgresses[];
+}
+
+const openAssignModal = (data: ExecutiveProgresses) => {
+  overlay.open(({ isOpen, close }) => (
+    <Modal isOpen={isOpen}>
+      <ConfirmModalContent
+        onConfirm={() => {
+          close();
+        }}
+      >
+        <Typography fs={16} lh={28} fw="MEDIUM">
+          {data.executiveName} 활동 보고서 검토 현황 상세
+        </Typography>
+      </ConfirmModalContent>
+    </Modal>
+  ));
+};
 
 const columnHelper =
   createColumnHelper<ApiAct023ResponseOk["executiveProgresses"][number]>();
@@ -101,12 +137,25 @@ const columns = [
       size: 200,
     },
   ),
-  columnHelper.accessor("executiveId", {
-    header: "상태",
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    cell: info => <TextButton text="보기" />,
-    size: 125,
-  }),
+  columnHelper.accessor(
+    row => {
+      const { executiveName, chargedClubsAndProgresses } = row;
+      return {
+        executiveName,
+        chargedClubsAndProgresses,
+      };
+    },
+    {
+      header: "상태",
+      cell: info => (
+        <TextButton
+          text="보기"
+          onClick={() => openAssignModal(info.getValue())}
+        />
+      ),
+      size: 125,
+    },
+  ),
 ];
 
 const ExecutiveActivityChargedTable: React.FC<
