@@ -45,7 +45,7 @@ const ExecutiveActivityReportFrame = () => {
           handleChange={setSearchText}
           placeholder=""
         />
-        {isClubView && <Button>담당자 변경</Button>}
+        {isClubView && <Button type="disabled">담당자 변경</Button>}
       </FlexWrapper>
       {isClubView ? (
         <ExecutiveActivityClubTable

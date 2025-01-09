@@ -8,7 +8,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Toggle from "@sparcs-clubs/web/common/components/Toggle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { TotalContentsContationer } from "@sparcs-clubs/web/features/executive/register-member/components/StatusInfoFrame";
+import { TotalContentsContainer } from "@sparcs-clubs/web/features/executive/register-member/components/StatusInfoFrame";
 
 interface ActivityReportStatisticProps {
   activities: ApiAct023ResponseOk;
@@ -34,7 +34,7 @@ const ActivityReportStatistic: React.FC<ActivityReportStatisticProps> = ({
     pendingTotalCount + approvedTotalCount + rejectedTotalCount;
 
   return (
-    <Card gap={16} padding="16px">
+    <Card gap={16} padding="16px" outline>
       <Toggle label={<Typography>활동 보고서 통계</Typography>}>
         <FlexWrapper direction="column" gap={8} style={{ width: "100%" }}>
           <FlexWrapper direction="row" gap={20}>
@@ -50,21 +50,21 @@ const ActivityReportStatistic: React.FC<ActivityReportStatisticProps> = ({
           <FlexWrapper direction="row" gap={40}>
             <FlexWrapper direction="row" gap={20}>
               <Tag color="GRAY">대기</Tag>
-              <TotalContentsContationer>
+              <TotalContentsContainer>
                 {pendingTotalCount}개
-              </TotalContentsContationer>
+              </TotalContentsContainer>
             </FlexWrapper>
             <FlexWrapper direction="row" gap={20}>
               <Tag color="GREEN">승인</Tag>
-              <TotalContentsContationer>
+              <TotalContentsContainer>
                 {approvedTotalCount}개
-              </TotalContentsContationer>
+              </TotalContentsContainer>
             </FlexWrapper>
             <FlexWrapper direction="row" gap={20}>
               <Tag color="RED">반려</Tag>
-              <TotalContentsContationer>
+              <TotalContentsContainer>
                 {rejectedTotalCount}개
-              </TotalContentsContationer>
+              </TotalContentsContainer>
             </FlexWrapper>
           </FlexWrapper>
         </FlexWrapper>
