@@ -102,6 +102,9 @@ const zFunding = z.object({
 
 const zFundingRequestBase = zFunding.omit({
   id: true,
+  semesterId: true,
+  fundingOrderStatusEnumId: true,
+  approvedAmount: true,
 });
 
 export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {

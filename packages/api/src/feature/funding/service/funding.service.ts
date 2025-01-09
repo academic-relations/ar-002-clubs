@@ -62,10 +62,15 @@ export default class FundingService {
 
     const now = getKSTDate();
     const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
+    const fundingOrderStatusEnumId = 1;
+    const approvedAmount = 0;
 
-    // eslint-disable-next-line no-param-reassign
-    body.semesterId = semesterId;
-    return this.fundingRepository.insert(body);
+    return this.fundingRepository.insert(
+      body,
+      semesterId,
+      fundingOrderStatusEnumId,
+      approvedAmount,
+    );
   }
 
   async getStudentFunding(
@@ -153,11 +158,16 @@ export default class FundingService {
 
     const now = getKSTDate();
     const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
+    const fundingOrderStatusEnumId = 1;
+    const approvedAmount = 0;
 
-    // eslint-disable-next-line no-param-reassign
-    body.semesterId = semesterId;
-
-    return this.fundingRepository.put(param.id, body);
+    return this.fundingRepository.put(
+      param.id,
+      body,
+      semesterId,
+      fundingOrderStatusEnumId,
+      approvedAmount,
+    );
   }
 
   async deleteStudentFunding(

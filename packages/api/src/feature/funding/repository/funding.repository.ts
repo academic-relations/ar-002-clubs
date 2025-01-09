@@ -282,18 +282,23 @@ export default class FundingRepository {
     }));
   }
 
-  async insert(funding: IFundingRequest): Promise<MFunding> {
+  async insert(
+    funding: IFundingRequest,
+    semesterId: number,
+    fundingOrderStatusEnumId: number,
+    approvedAmount: number,
+  ): Promise<MFunding> {
     const result = await this.db.transaction(async tx => {
       // 1. Insert funding order
       const [fundingOrder] = await tx.insert(FundingOrder).values({
         clubId: funding.clubId,
         purposeId: funding.purposeActivity.id,
-        semesterId: funding.semesterId,
-        fundingOrderStatusEnumId: funding.fundingOrderStatusEnumId,
+        semesterId,
+        fundingOrderStatusEnumId,
         name: funding.name,
         expenditureDate: funding.expenditureDate,
         expenditureAmount: funding.expenditureAmount,
-        approvedAmount: funding.approvedAmount,
+        approvedAmount,
         isFixture: funding.isFixture,
         isTransportation: funding.isTransportation,
         isFoodExpense: funding.isFoodExpense,
@@ -525,8 +530,19 @@ export default class FundingRepository {
     });
   }
 
-  async put(id: number, funding: IFundingRequest): Promise<MFunding> {
+  async put(
+    id: number,
+    funding: IFundingRequest,
+    semesterId: number,
+    fundingOrderStatusEnumId: number,
+    approvedAmount: number,
+  ): Promise<MFunding> {
     await this.delete(id);
-    return this.insert(funding);
+    return this.insert(
+      funding,
+      semesterId,
+      fundingOrderStatusEnumId,
+      approvedAmount,
+    );
   }
 }
