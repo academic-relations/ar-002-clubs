@@ -29,7 +29,7 @@ const ExecutiveActivityReportClubFrame: React.FC<{ clubId: string }> = ({
           handleChange={setSearchText}
           placeholder=""
         />
-        <Button>담당자 변경</Button>
+        <Button type="disabled">담당자 변경</Button>
       </FlexWrapper>
       <ExecutiveClubActivitiesTable
         data={data ?? { items: [] }}
