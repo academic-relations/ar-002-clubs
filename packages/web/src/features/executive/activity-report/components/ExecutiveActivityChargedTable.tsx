@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 
 import { ApiAct023ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
-import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -18,24 +17,13 @@ import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/Confi
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import ChargedActivityModalTable, {
+  ExecutiveProgresses,
+} from "./ChargedActivityModalTable";
+
 interface ExecutiveActivityChargedTableProps {
   activities: ApiAct023ResponseOk;
   searchText: string;
-}
-
-interface ChargedClubsAndProgresses {
-  clubId: number;
-  clubTypeEnum: ClubTypeEnum;
-  divisionName: string;
-  clubNameKr: string;
-  clubNameEn: string;
-  pendingActivitiesCount: number;
-  approvedActivitiesCount: number;
-  rejectedActivitiesCount: number;
-}
-interface ExecutiveProgresses {
-  executiveName: string;
-  chargedClubsAndProgresses: ChargedClubsAndProgresses[];
 }
 
 const openAssignModal = (data: ExecutiveProgresses) => {
@@ -46,9 +34,17 @@ const openAssignModal = (data: ExecutiveProgresses) => {
           close();
         }}
       >
-        <Typography fs={16} lh={28} fw="MEDIUM">
+        <Typography
+          fs={16}
+          lh={28}
+          fw="MEDIUM"
+          style={{ flex: 1, textAlign: "left" }}
+        >
           {data.executiveName} 활동 보고서 검토 현황 상세
         </Typography>
+        <div style={{ width: "600px" }}>
+          <ChargedActivityModalTable data={data.chargedClubsAndProgresses} />
+        </div>
       </ConfirmModalContent>
     </Modal>
   ));
