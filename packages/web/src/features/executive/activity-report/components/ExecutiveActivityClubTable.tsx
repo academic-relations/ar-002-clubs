@@ -135,20 +135,15 @@ const ExecutiveActivityClubTable: React.FC<ExecutiveActivityClubTableProps> = ({
   selectedClubIds,
   setSelectedClubIds,
 }) => {
-  const sortedActivities = useMemo(
-    () => [...activities.items].sort((a, b) => (a.clubId < b.clubId ? -1 : 1)),
-    [activities.items],
-  );
-
   const initialRowValues = useMemo(
     () =>
       selectedClubIds.reduce((acc, clubId) => {
-        const index = sortedActivities.findIndex(
+        const index = activities.items.findIndex(
           activity => activity.clubId === clubId,
         );
         return { ...acc, [index]: true };
       }, {}),
-    [selectedClubIds, sortedActivities],
+    [selectedClubIds, activities],
   );
 
   const [rowValues, setRowValues] =
@@ -160,12 +155,12 @@ const ExecutiveActivityClubTable: React.FC<ExecutiveActivityClubTableProps> = ({
 
   const handleRowClick = (rowState: RowSelectionState) => {
     setRowValues(rowState);
-    const newSelected = sortedActivities.filter((_, i) => rowState?.[i]);
+    const newSelected = activities.items.filter((_, i) => rowState?.[i]);
     setSelectedClubIds(newSelected.map(activity => activity.clubId));
   };
 
   const table = useReactTable({
-    data: sortedActivities,
+    data: activities.items,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -183,7 +178,7 @@ const ExecutiveActivityClubTable: React.FC<ExecutiveActivityClubTableProps> = ({
     enableSorting: false,
   });
 
-  const totalCount = sortedActivities.length;
+  const totalCount = activities.items.length;
 
   let countString = `총 ${totalCount}개`;
   if (selectedClubIds.length !== 0) {

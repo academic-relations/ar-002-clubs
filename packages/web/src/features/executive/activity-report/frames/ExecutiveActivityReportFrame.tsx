@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 
@@ -17,10 +17,18 @@ const ExecutiveActivityReportFrame = () => {
 
   const [selectedClubIds, setSelectedClubIds] = useState<number[]>([]);
 
+  const sortedActivities = useMemo(
+    () => [...data.items].sort((a, b) => (a.clubId < b.clubId ? -1 : 1)),
+    [data.items],
+  );
+
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <ActivityReportStatistic
-        activities={data ?? { items: [], executiveProgresses: [] }}
+        activities={{
+          items: sortedActivities,
+          executiveProgresses: data?.executiveProgresses,
+        }}
       />
       <FlexWrapper direction="row" gap={12}>
         <Button
