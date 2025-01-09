@@ -6,7 +6,7 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 
-import ActivityReportClubStatistic from "../components/ActivityReportClubStatisti";
+import ActivityReportClubStatistic from "../components/ActivityReportClubStatistic";
 import ExecutiveClubActivitiesTable from "../components/ExecutiveClubActivitiesTable";
 import useGetExecutiveClubActivities from "../services/useGetExecutiveClubActivities";
 
