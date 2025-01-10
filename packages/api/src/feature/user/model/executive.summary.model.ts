@@ -5,6 +5,8 @@ import { MExecutive } from "./executive.model";
 export class MExecutiveSummary implements IExecutiveSummary {
   id: number;
 
+  userId: number;
+
   name: string;
 
   studentNumber: string;
@@ -15,16 +17,13 @@ export class MExecutiveSummary implements IExecutiveSummary {
   constructor(executive: MExecutive);
 
   constructor(param: IExecutiveSummary | MExecutive) {
-    if ("userId" in param) {
-      // MExecutive로부터 초기화
+    if (param instanceof MExecutive) {
       this.id = param.id;
+      this.userId = param.userId;
       this.name = param.name;
       this.studentNumber = param.studentNumber;
     } else {
-      // IExecutiveSummary로부터 초기화
-      this.id = param.id;
-      this.name = param.name;
-      this.studentNumber = param.studentNumber;
+      Object.assign(this, param);
     }
   }
 }

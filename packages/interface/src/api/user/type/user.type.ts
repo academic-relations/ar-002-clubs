@@ -31,6 +31,7 @@ export const zExecutive = z.object({
 
 export const zExecutiveSummary = zExecutive.pick({
   id: true,
+  userId: true,
   name: true,
   studentNumber: true,
 });
