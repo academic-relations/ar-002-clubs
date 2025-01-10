@@ -27,7 +27,6 @@ const ErrorMessage = styled.div`
 `;
 
 const NotFound: NextPage = () => {
-  // ToDo : 버튼 onClick 연결
   const Message = (
     <ErrorMessage>
       현재 접근한 페이지는

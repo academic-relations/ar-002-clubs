@@ -1,9 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { File } from "src/drizzle/schema/file.schema";
+
+import { MFile } from "../model/file.model";
 
 @Injectable()
 export class FileRepository {
@@ -44,5 +46,24 @@ export class FileRepository {
       .where(eq(File.id, id))
       .then(result => result[0]);
     return file;
+  }
+
+  async findByIds(ids: string[]): Promise<Omit<MFile, "url">[]> {
+    const files = await this.db
+      .select()
+      .from(File)
+      .where(inArray(File.id, ids))
+      .then(result => result);
+
+    return files.map(
+      (file): Omit<MFile, "url"> => ({
+        id: file.id,
+        name: file.name,
+        extension: file.extension,
+        size: file.size,
+        userId: file.userId,
+        // url은 포함하지 않음
+      }),
+    );
   }
 }

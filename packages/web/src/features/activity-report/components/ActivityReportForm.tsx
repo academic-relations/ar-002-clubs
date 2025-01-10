@@ -16,8 +16,6 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 
 import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
 
-import { utcToKst } from "@sparcs-clubs/web/utils/Date/extractDate";
-
 import useGetParticipants from "../services/useGetParticipants";
 import { ActivityReportFormData } from "../types/form";
 
@@ -80,8 +78,8 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
     refetch,
   } = useGetParticipants({
     clubId,
-    startTerm: utcToKst(startTerm),
-    endTerm: utcToKst(endTerm),
+    startTerm,
+    endTerm,
   });
 
   useEffect(() => {

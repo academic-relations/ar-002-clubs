@@ -66,7 +66,12 @@ const NewFundingListSection: React.FC<{ clubId: number }> = ({ clubId }) => {
           isLoading={isLoadingNewFundingList}
           isError={isErrorNewFundingList}
         >
-          <NewFundingListTable newFundingList={newFundingList?.fundings} />
+          <NewFundingListTable
+            newFundingList={newFundingList?.fundings.map(funding => ({
+              ...funding,
+              activityName: funding.purposeActivity?.name ?? "",
+            }))}
+          />
         </AsyncBoundary>
       </FlexWrapper>
     </FoldableSectionTitle>

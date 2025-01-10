@@ -11,6 +11,7 @@ import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   Activity,
+  ActivityClubChargedExecutive,
   ActivityDeadlineD,
   ActivityEvidenceFile,
   ActivityFeedback,
@@ -18,7 +19,12 @@ import {
   ActivityT,
   ProfessorSignStatus,
 } from "@sparcs-clubs/api/drizzle/schema/activity.schema";
-import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+import { Club, ClubT } from "@sparcs-clubs/api/drizzle/schema/club.schema";
+import { Division } from "@sparcs-clubs/api/drizzle/schema/division.schema";
+import {
+  Professor,
+  Student,
+} from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 @Injectable()
 export default class ActivityRepository {
@@ -290,6 +296,16 @@ export default class ActivityRepository {
       .select()
       .from(Activity)
       .where(and(eq(Activity.id, activityId), isNull(Activity.deletedAt)));
+    return result;
+  }
+
+  async selectActivityByActivityDId(activityDId: number) {
+    const result = await this.db
+      .select()
+      .from(Activity)
+      .where(
+        and(eq(Activity.activityDId, activityDId), isNull(Activity.deletedAt)),
+      );
     return result;
   }
 
@@ -565,7 +581,7 @@ export default class ActivityRepository {
     const result = await this.db
       .select({ name: Activity.name })
       .from(Activity)
-      .where(eq(Activity.id, id));
+      .where(eq(Activity.id, id))[0];
     return result;
   }
 
@@ -634,5 +650,54 @@ export default class ActivityRepository {
       );
 
     return updateResult.warningStatus === 0;
+  }
+
+  /**
+   *
+   * @param param
+   * @description 서비스 getExecutiveActivitiesClubs 메소드에서 이용되는 전용 메소드입니다.
+   */
+  async getExecutiveActivitiesClubs(param: {
+    semesterId: number;
+    activityDId: number;
+    clubsList: number[];
+  }) {
+    const result = await this.db
+      .select({
+        clubId: Club.id,
+        clubTypeEnum: ClubT.clubStatusEnumId,
+        divisionName: Division.name,
+        clubNameKr: Club.name_kr,
+        clubNameEn: Club.name_en,
+        advisor: Professor.name,
+        chargedExecutiveId: ActivityClubChargedExecutive.executiveId,
+      })
+      .from(Club)
+      .innerJoin(
+        ClubT,
+        and(
+          eq(ClubT.clubId, Club.id),
+          eq(ClubT.semesterId, param.semesterId),
+          isNull(ClubT.deletedAt),
+        ),
+      )
+      .innerJoin(
+        Division,
+        and(eq(Division.id, Club.divisionId), isNull(Division.deletedAt)),
+      )
+      .leftJoin(
+        Professor,
+        and(eq(Professor.id, ClubT.professorId), isNull(Professor.deletedAt)),
+      )
+      .leftJoin(
+        ActivityClubChargedExecutive,
+        and(
+          eq(ActivityClubChargedExecutive.clubId, Club.id),
+          eq(ActivityClubChargedExecutive.activityDId, param.activityDId),
+          isNull(ActivityClubChargedExecutive.deletedAt),
+        ),
+      )
+      .where(and(inArray(Club.id, param.clubsList), isNull(Club.deletedAt)));
+    return result;
   }
 }

@@ -1,7 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 
+import { MStudent } from "../model/student.model";
 import ExecutiveRepository from "../repository/executive.repository";
 import ProfessorRepository from "../repository/professor.repository";
 import { StudentRepository } from "../repository/student.repository";
@@ -48,6 +50,19 @@ export default class UserPublicService {
     }
 
     return executives[0];
+  }
+
+  /**
+   * 현재 모든 집행부원을 가져옵니다.
+   * 느려요~
+   * */
+  async getCurrentExecutives() {
+    const today = getKSTDate();
+    const executives = await this.executiveRepository.selectExecutiveByDate({
+      date: today,
+    });
+
+    return executives;
   }
 
   async getExecutiveAndExecutiveTByExecutiveId(executive: {
@@ -144,5 +159,17 @@ export default class UserPublicService {
 
   async updateStudentPhoneNumber(userId: number, phoneNumber: string) {
     await this.studentRepository.updateStudentPhoneNumber(userId, phoneNumber);
+  }
+
+  /**
+   * 학생의 studentID Array를 통해 학생 정보를 반환합니다.
+   * */
+  async getStudentsByIds(studentIds: number[]): Promise<MStudent[]> {
+    const students =
+      await this.studentRepository.selectStudentsByIds(studentIds);
+    if (students.length === 0) {
+      throw new HttpException("Student Doesn't exist", HttpStatus.NOT_FOUND);
+    }
+    return students;
   }
 }

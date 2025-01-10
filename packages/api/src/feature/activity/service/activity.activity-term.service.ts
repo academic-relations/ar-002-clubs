@@ -91,12 +91,22 @@ export default class ActivityActivityTermService {
           id: row.id,
           name: row.name,
           activityTypeEnumId: row.activityTypeEnumId,
-          durations: duration,
+          durations: duration.sort((a, b) =>
+            a.startTerm.getTime() === b.startTerm.getTime()
+              ? a.endTerm.getTime() - b.endTerm.getTime()
+              : a.startTerm.getTime() - b.startTerm.getTime(),
+          ),
         };
       }),
     );
     return {
-      activities: result,
+      activities: result.sort((a, b) =>
+        a.durations[0].startTerm.getTime() ===
+        b.durations[0].startTerm.getTime()
+          ? a.durations[0].endTerm.getTime() - b.durations[0].endTerm.getTime()
+          : a.durations[0].startTerm.getTime() -
+            b.durations[0].startTerm.getTime(),
+      ),
     };
   }
 
@@ -121,7 +131,9 @@ export default class ActivityActivityTermService {
           date: semester.endTerm,
         });
         if (
-          activityTerms.find(e => e.id === startActivityTerm.id) === undefined
+          activityTerms.find(e => e.id === startActivityTerm.id) ===
+            undefined &&
+          startActivityTerm.endTerm < new Date()
         )
           activityTerms.push({
             id: startActivityTerm.id,
@@ -130,7 +142,10 @@ export default class ActivityActivityTermService {
             startTerm: startActivityTerm.startTerm,
             endTerm: startActivityTerm.endTerm,
           });
-        if (activityTerms.find(e => e.id === endActivityTerm.id) === undefined)
+        if (
+          activityTerms.find(e => e.id === endActivityTerm.id) === undefined &&
+          endActivityTerm.endTerm < new Date()
+        )
           activityTerms.push({
             id: endActivityTerm.id,
             year: endActivityTerm.year,
@@ -142,7 +157,9 @@ export default class ActivityActivityTermService {
     );
 
     return {
-      terms: activityTerms.sort((a, b) => a.id - b.id),
+      terms: activityTerms.sort(
+        (a, b) => a.startTerm.getTime() - b.startTerm.getTime(),
+      ),
     };
   }
 }

@@ -3,6 +3,7 @@ import {
   ActivityTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
 import { FundingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import { PromotionalPrintingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
@@ -185,11 +186,19 @@ const DivisionTypeTagList: { [key in DivisionType]: StatusDetail } = {
   [DivisionType.Religion]: { text: "종교", color: "PURPLE" },
 };
 
+const ClubTypeTagList: {
+  [key in ClubTypeEnum]: StatusDetail;
+} = {
+  [ClubTypeEnum.Regular]: { text: "정동아리", color: "BLUE" },
+  [ClubTypeEnum.Provisional]: { text: "가동아리", color: "ORANGE" },
+};
+
 export {
   AcfTagList,
   ActStatusTagList,
   ActTypeTagList,
   ApplyTagList,
+  ClubTypeTagList,
   CmsTagList,
   DivisionTypeTagList,
   FundingTagList,
