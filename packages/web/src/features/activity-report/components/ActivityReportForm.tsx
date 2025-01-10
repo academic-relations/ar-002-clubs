@@ -217,7 +217,13 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
               <SectionTitle>활동 인원</SectionTitle>
               <FlexWrapper direction="column" gap={20} padding="0 0 0 24px">
                 <SelectParticipant
-                  data={participantList?.students ?? []}
+                  data={
+                    participantList?.students.map(student => ({
+                      id: student.id,
+                      name: student.name,
+                      studentNumber: student.studentNumber.toString(),
+                    })) ?? []
+                  }
                   value={participants}
                   onChange={_participants => {
                     setValue("participants", _participants, {
