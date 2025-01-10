@@ -100,7 +100,7 @@ export default class ClubPublicService {
     Array<{
       studentId: number;
       name: string;
-      studentNumber: number;
+      studentNumber: string;
     }>
   > {
     const result =
