@@ -64,8 +64,9 @@ export default class ClubStudentTRepository {
                 lte(ClubStudentT.startTerm, today),
                 or(
                   gte(ClubStudentT.endTerm, today),
-                  eq(ClubStudentT.endTerm, null),
+                  isNull(ClubStudentT.endTerm),
                 ),
+                isNull(ClubStudentT.deletedAt),
               ),
         ),
       )
