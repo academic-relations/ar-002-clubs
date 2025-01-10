@@ -17,9 +17,9 @@ export const mockActivityReportData = [
     detail: "Python 기초 문법부터 알고리즘까지 단계별 교육",
     evidence: "출석부, 강의자료",
     participants: [
-      { id: 1, name: "김철수", studentNumber: 20240001 },
-      { id: 2, name: "이영희", studentNumber: 20240002 },
-      { id: 3, name: "박지민", studentNumber: 20240003 },
+      { id: 1, name: "김철수", studentNumber: "20240001" },
+      { id: 2, name: "이영희", studentNumber: "20240002" },
+      { id: 3, name: "박지민", studentNumber: "20240003" },
     ],
     durations: [
       {
@@ -41,8 +41,8 @@ export const mockActivityReportData = [
     detail: "React 커뮤니티 버그 수정 및 문서화 작업",
     evidence: "Github PR 내역",
     participants: [
-      { id: 1, name: "장민수", studentNumber: 20240001 },
-      { id: 2, name: "김도현", studentNumber: 20240002 },
+      { id: 1, name: "장민수", studentNumber: "20240001" },
+      { id: 2, name: "김도현", studentNumber: "20240002" },
     ],
     durations: [
       {
@@ -64,8 +64,8 @@ export const mockActivityReportData = [
     detail: "기존 홈페이지 리뉴얼 및 기능 개선",
     evidence: "기획서, 개발 문서",
     participants: [
-      { id: 1, name: "이지원", studentNumber: 20240001 },
-      { id: 2, name: "박현우", studentNumber: 20240002 },
+      { id: 1, name: "이지원", studentNumber: "20240001" },
+      { id: 2, name: "박현우", studentNumber: "20240002" },
     ],
     durations: [
       {
@@ -87,9 +87,9 @@ export const mockActivityReportData = [
     detail: "최신 AI 기술 학습 및 실습",
     evidence: "발표자료, 실습 결과물",
     participants: [
-      { id: 1, name: "김태희", studentNumber: 20240001 },
-      { id: 2, name: "정우성", studentNumber: 20240002 },
-      { id: 3, name: "손예진", studentNumber: 20240003 },
+      { id: 1, name: "김태희", studentNumber: "20240001" },
+      { id: 2, name: "정우성", studentNumber: "20240002" },
+      { id: 3, name: "손예진", studentNumber: "20240003" },
     ],
     durations: [
       {
@@ -119,8 +119,8 @@ export const mockActivityReportData = [
     detail: "알고리즘 대회 개최 및 운영",
     evidence: "대회 결과물, 시상 내역",
     participants: [
-      { id: 1, name: "현빈", studentNumber: 20240001 },
-      { id: 2, name: "송혜교", studentNumber: 20240002 },
+      { id: 1, name: "현빈", studentNumber: "20240001" },
+      { id: 2, name: "송혜교", studentNumber: "20240002" },
     ],
     durations: [
       {
@@ -142,9 +142,9 @@ export const mockActivityReportData = [
     detail: "최신 AI 기술 학습 및 실습",
     evidence: "발표자료, 실습 결과물",
     participants: [
-      { id: 1, name: "김태희", studentNumber: 20240001 },
-      { id: 2, name: "정우성", studentNumber: 20240002 },
-      { id: 3, name: "손예진", studentNumber: 20240003 },
+      { id: 1, name: "김태희", studentNumber: "20240001" },
+      { id: 2, name: "정우성", studentNumber: "20240002" },
+      { id: 3, name: "손예진", studentNumber: "20240003" },
     ],
     durations: [
       {
@@ -166,9 +166,9 @@ export const mockActivityReportData = [
     detail: "최신 AI 기술 학습 및 실습",
     evidence: "발표자료, 실습 결과물",
     participants: [
-      { id: 1, name: "김태희", studentNumber: 20240001 },
-      { id: 2, name: "정우성", studentNumber: 20240002 },
-      { id: 3, name: "손예진", studentNumber: 20240003 },
+      { id: 1, name: "김태희", studentNumber: "20240001" },
+      { id: 2, name: "정우성", studentNumber: "20240002" },
+      { id: 3, name: "손예진", studentNumber: "20240003" },
     ],
     durations: [
       {
@@ -198,9 +198,9 @@ export const mockActivityReportData = [
     detail: "최신 AI 기술 학습 및 실습",
     evidence: "발표자료, 실습 결과물",
     participants: [
-      { id: 1, name: "김태희", studentNumber: 20240001 },
-      { id: 2, name: "정우성", studentNumber: 20240002 },
-      { id: 3, name: "손예진", studentNumber: 20240003 },
+      { id: 1, name: "김태희", studentNumber: "20240001" },
+      { id: 2, name: "정우성", studentNumber: "20240002" },
+      { id: 3, name: "손예진", studentNumber: "20240003" },
     ],
     durations: [
       {
@@ -222,9 +222,9 @@ export const mockActivityReportData = [
     detail: "최신 AI 기술 학습 및 실습",
     evidence: "발표자료, 실습 결과물",
     participants: [
-      { id: 1, name: "김태희", studentNumber: 20240001 },
-      { id: 2, name: "정우성", studentNumber: 20240002 },
-      { id: 3, name: "손예진", studentNumber: 20240003 },
+      { id: 1, name: "김태희", studentNumber: "20240001" },
+      { id: 2, name: "정우성", studentNumber: "20240002" },
+      { id: 3, name: "손예진", studentNumber: "20240003" },
     ],
     durations: [
       {
@@ -246,9 +246,9 @@ export const mockActivityReportData = [
     detail: "최신 AI 기술 학습 및 실습",
     evidence: "발표자료, 실습 결과물",
     participants: [
-      { id: 1, name: "김태희", studentNumber: 20240001 },
-      { id: 2, name: "정우성", studentNumber: 20240002 },
-      { id: 3, name: "손예진", studentNumber: 20240003 },
+      { id: 1, name: "김태희", studentNumber: "20240001" },
+      { id: 2, name: "정우성", studentNumber: "20240002" },
+      { id: 3, name: "손예진", studentNumber: "20240003" },
     ],
     durations: [
       {
@@ -270,9 +270,9 @@ export const mockActivityReportData = [
     detail: "최신 AI 기술 학습 및 실습",
     evidence: "발표자료, 실습 결과물",
     participants: [
-      { id: 1, name: "김태희", studentNumber: 20240001 },
-      { id: 2, name: "정우성", studentNumber: 20240002 },
-      { id: 3, name: "손예진", studentNumber: 20240003 },
+      { id: 1, name: "김태희", studentNumber: "20240001" },
+      { id: 2, name: "정우성", studentNumber: "20240002" },
+      { id: 3, name: "손예진", studentNumber: "20240003" },
     ],
     durations: [
       {
@@ -294,9 +294,9 @@ export const mockActivityReportData = [
     detail: "최신 AI 기술 학습 및 실습",
     evidence: "발표자료, 실습 결과물",
     participants: [
-      { id: 1, name: "김태희", studentNumber: 20240001 },
-      { id: 2, name: "정우성", studentNumber: 20240002 },
-      { id: 3, name: "손예진", studentNumber: 20240003 },
+      { id: 1, name: "김태희", studentNumber: "20240001" },
+      { id: 2, name: "정우성", studentNumber: "20240002" },
+      { id: 3, name: "손예진", studentNumber: "20240003" },
     ],
     durations: [
       {
@@ -318,9 +318,9 @@ export const mockActivityReportData = [
     detail: "최신 AI 기술 학습 및 실습",
     evidence: "발표자료, 실습 결과물",
     participants: [
-      { id: 1, name: "김태희", studentNumber: 20240001 },
-      { id: 2, name: "정우성", studentNumber: 20240002 },
-      { id: 3, name: "손예진", studentNumber: 20240003 },
+      { id: 1, name: "김태희", studentNumber: "20240001" },
+      { id: 2, name: "정우성", studentNumber: "20240002" },
+      { id: 3, name: "손예진", studentNumber: "20240003" },
     ],
     durations: [
       {
@@ -354,9 +354,9 @@ export const mockActivityReportData = [
     detail: "최신 AI 기술 학습 및 실습",
     evidence: "발표자료, 실습 결과물",
     participants: [
-      { id: 1, name: "김태희", studentNumber: 20240001 },
-      { id: 2, name: "정우성", studentNumber: 20240002 },
-      { id: 3, name: "손예진", studentNumber: 20240003 },
+      { id: 1, name: "김태희", studentNumber: "20240001" },
+      { id: 2, name: "정우성", studentNumber: "20240002" },
+      { id: 3, name: "손예진", studentNumber: "20240003" },
     ],
     durations: [
       {
@@ -378,9 +378,9 @@ export const mockActivityReportData = [
     detail: "최신 AI 기술 학습 및 실습",
     evidence: "발표자료, 실습 결과물",
     participants: [
-      { id: 1, name: "김태희", studentNumber: 20240001 },
-      { id: 2, name: "정우성", studentNumber: 20240002 },
-      { id: 3, name: "손예진", studentNumber: 20240003 },
+      { id: 1, name: "김태희", studentNumber: "20240001" },
+      { id: 2, name: "정우성", studentNumber: "20240002" },
+      { id: 3, name: "손예진", studentNumber: "20240003" },
     ],
     durations: [
       {
@@ -402,9 +402,9 @@ export const mockActivityReportData = [
     detail: "최신 AI 기술 학습 및 실습",
     evidence: "발표자료, 실습 결과물",
     participants: [
-      { id: 1, name: "김태희", studentNumber: 20240001 },
-      { id: 2, name: "정우성", studentNumber: 20240002 },
-      { id: 3, name: "손예진", studentNumber: 20240003 },
+      { id: 1, name: "김태희", studentNumber: "20240001" },
+      { id: 2, name: "정우성", studentNumber: "20240002" },
+      { id: 3, name: "손예진", studentNumber: "20240003" },
     ],
     durations: [
       {
@@ -442,9 +442,9 @@ export const mockActivityReportData = [
     detail: "최신 AI 기술 학습 및 실습",
     evidence: "발표자료, 실습 결과물",
     participants: [
-      { id: 1, name: "김태희", studentNumber: 20240001 },
-      { id: 2, name: "정우성", studentNumber: 20240002 },
-      { id: 3, name: "손예진", studentNumber: 20240003 },
+      { id: 1, name: "김태희", studentNumber: "20240001" },
+      { id: 2, name: "정우성", studentNumber: "20240002" },
+      { id: 3, name: "손예진", studentNumber: "20240003" },
     ],
     durations: [
       {
@@ -466,9 +466,9 @@ export const mockActivityReportData = [
     detail: "최신 AI 기술 학습 및 실습",
     evidence: "발표자료, 실습 결과물",
     participants: [
-      { id: 1, name: "김태희", studentNumber: 20240001 },
-      { id: 2, name: "정우성", studentNumber: 20240002 },
-      { id: 3, name: "손예진", studentNumber: 20240003 },
+      { id: 1, name: "김태희", studentNumber: "20240001" },
+      { id: 2, name: "정우성", studentNumber: "20240002" },
+      { id: 3, name: "손예진", studentNumber: "20240003" },
     ],
     durations: [
       {

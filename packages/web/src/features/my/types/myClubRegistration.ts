@@ -12,7 +12,7 @@ export interface MyClubRegistrationDetail {
   clubId?: number;
   clubNameKr: string;
   clubNameEn: string;
-  representative: { studentNumber: number; name: string };
+  representative: { studentNumber: string; name: string };
   phoneNumber: string;
   foundedAt: Date;
   divisionId: number;

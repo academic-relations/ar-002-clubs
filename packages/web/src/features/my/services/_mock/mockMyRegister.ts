@@ -32,7 +32,7 @@ const mockProfClubRegister = {
       clubName: "술박스",
       student: {
         id: 1,
-        studentNumber: 20200000,
+        studentNumber: "20200000",
         name: "이지윤",
         phoneNumber: "000-0000-0000",
         email: "xxxxx@kaist.ac.kr",

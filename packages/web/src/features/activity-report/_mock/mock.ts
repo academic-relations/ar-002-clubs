@@ -12,7 +12,7 @@ import { Participant } from "@sparcs-clubs/web/types/participant";
 
 export interface ParticipantTemp {
   id: number; // 고유 ID
-  studentNumber: number; // 학번
+  studentNumber: string; // 학번
   name: string; // 이름
 }
 
@@ -179,42 +179,42 @@ export const mockPastActivityData: ApiAct011ResponseOk = {
 export const mockParticipantData: Participant[] = [
   {
     id: 1,
-    studentNumber: 20200515,
+    studentNumber: "20200515",
     name: "이지윤",
     // phoneNumber: "XXX-XXXX-XXXX",
     // email: "nicolelee2001@kaist.ac.kr",
   },
   {
     id: 2,
-    studentNumber: 20210514,
+    studentNumber: "20210514",
     name: "박지윤",
     // phoneNumber: "XXX-XXXX-XXXX",
     // email: "nicolelee2001@kaist.ac.kr",
   },
   {
     id: 3,
-    studentNumber: 20200513,
+    studentNumber: "20200513",
     name: "박병찬",
     // phoneNumber: "XXX-XXXX-XXXX",
     // email: "nicolelee2001@kaist.ac.kr",
   },
   {
     id: 4,
-    studentNumber: 20230512,
+    studentNumber: "20230512",
     name: "이도라",
     // phoneNumber: "XXX-XXXX-XXXX",
     // email: "nicolelee2001@kaist.ac.kr",
   },
   {
     id: 5,
-    studentNumber: 20240510,
+    studentNumber: "20240510",
     name: "스팍스",
     // phoneNumber: "XXX-XXXX-XXXX",
     // email: "nicolelee2001@kaist.ac.kr",
   },
   {
     id: 6,
-    studentNumber: 20200230,
+    studentNumber: "20200230",
     name: "스팍스",
     // phoneNumber: "XXX-XXXX-XXXX",
     // email: "nicolelee2001@kaist.ac.kr",
@@ -254,22 +254,22 @@ export const mockActivityDetailData: ApiAct002ResponseOkTemp = {
   participants: [
     {
       id: 1,
-      studentNumber: 20200510,
+      studentNumber: "20200510",
       name: "이지윤",
     },
     {
       id: 2,
-      studentNumber: 20200511,
+      studentNumber: "20200511",
       name: "박병찬",
     },
     {
       id: 3,
-      studentNumber: 20230510,
+      studentNumber: "20230510",
       name: "이도라",
     },
     {
       id: 4,
-      studentNumber: 20240510,
+      studentNumber: "20240510",
       name: "스팍스",
     },
   ],
