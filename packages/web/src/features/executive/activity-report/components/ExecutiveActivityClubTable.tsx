@@ -197,7 +197,10 @@ const ExecutiveActivityClubTable: React.FC<ExecutiveActivityClubTableProps> = ({
       <Typography fs={16} lh={20} style={{ flex: 1, textAlign: "right" }}>
         {countString}
       </Typography>
-      <Table table={table} />
+      <Table
+        table={table}
+        rowLink={row => `/executive/activity-report/club/${row.clubId}`}
+      />
     </FlexWrapper>
   );
 };
