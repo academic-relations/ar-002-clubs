@@ -46,6 +46,11 @@ import apiAct023 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 import apiAct024 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
 import apiAct025 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct025";
 import apiAct026 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct026";
+import apiAct027, {
+  ApiAct027RequestQuery,
+  ApiAct027RequestUrl,
+  ApiAct027ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct027";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -451,5 +456,17 @@ export default class ActivityController {
       body,
     });
     return {};
+  }
+
+  @Executive()
+  @Get(ApiAct027RequestUrl)
+  @UsePipes(new ZodPipe(apiAct027))
+  async getClubChargeAvailableExecutives(
+    @Query() query: ApiAct027RequestQuery,
+  ): Promise<ApiAct027ResponseOk> {
+    const result = await this.activityService.getClubChargeAvailableExecutives({
+      query,
+    });
+    return result;
   }
 }
