@@ -11,7 +11,7 @@ export class MStudent implements IStudent {
 
   email: string;
 
-  phoneNumber: string;
+  phoneNumber?: string;
 
   constructor(student: IStudent) {
     Object.assign(this, student);
