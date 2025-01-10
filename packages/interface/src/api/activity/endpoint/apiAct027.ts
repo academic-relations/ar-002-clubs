@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { zClubBase } from "@sparcs-clubs/interface/api/club/type/club.type";
 import { zExecutiveSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
+import { zPickElement } from "@sparcs-clubs/interface/common/zodUtil";
 
 /**
  * @version v0.1
@@ -19,7 +20,7 @@ export const ApiAct027RequestUrl =
 const requestParam = z.object({});
 
 const requestQuery = z.object({
-  clubIds: zClubBase.pick({ id: true }).array(),
+  clubIds: zPickElement(zClubBase, "id").array(),
 });
 
 const requestBody = z.object({});

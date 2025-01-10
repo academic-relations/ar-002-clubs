@@ -6,11 +6,12 @@ export const zStudent = z.object({
   studentNumber: z.string(),
   name: z.string(),
   email: z.string(),
-  phoneNumber: z.string(),
+  phoneNumber: z.string().optional(),
 });
 
 export const zStudentSummary = zStudent.pick({
   id: true,
+  userId: true,
   name: true,
   studentNumber: true,
 });
