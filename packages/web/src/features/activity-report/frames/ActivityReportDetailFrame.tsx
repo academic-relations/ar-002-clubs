@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useCallback } from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 
 import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
@@ -113,6 +113,16 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
 }) => {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
+
+  const [isPastActivity, setIsPastActivity] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const storedValue = localStorage.getItem("isPastActivity");
+    if (storedValue !== null) {
+      setIsPastActivity(storedValue === "true");
+      localStorage.removeItem("isPastActivity");
+    }
+  }, []);
 
   const { data, isLoading, isError } = useGetActivityReportDetail(Number(id));
   const { mutate: deleteActivityReport } = useDeleteActivityReport();
@@ -343,7 +353,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
               목록으로 돌아가기
             </Button>
 
-            {additionalButtons()}
+            {isPastActivity ? null : additionalButtons()}
           </FlexWrapper>
         </FlexWrapper>
       </AsyncBoundary>
