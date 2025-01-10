@@ -257,19 +257,31 @@ export default class ActivityService {
           await this.activityRepository.selectDurationByActivityId(row.id);
         return {
           ...row,
-          durations: duration,
+          durations: duration.sort((a, b) =>
+            a.startTerm.getTime() === b.startTerm.getTime()
+              ? a.endTerm.getTime() - b.endTerm.getTime()
+              : a.startTerm.getTime() - b.startTerm.getTime(),
+          ),
         };
       }),
     );
 
-    return result.map(row => ({
-      id: row.id,
-      activityStatusEnumId: row.activityStatusEnumId,
-      name: row.name,
-      activityTypeEnumId: row.activityTypeEnumId,
-      durations: row.durations,
-      professorApprovedAt: row.professorApprovedAt,
-    }));
+    return result
+      .map(row => ({
+        id: row.id,
+        activityStatusEnumId: row.activityStatusEnumId,
+        name: row.name,
+        activityTypeEnumId: row.activityTypeEnumId,
+        durations: row.durations,
+        professorApprovedAt: row.professorApprovedAt,
+      }))
+      .sort((a, b) =>
+        a.durations[0].startTerm.getTime() ===
+        b.durations[0].startTerm.getTime()
+          ? a.durations[0].endTerm.getTime() - b.durations[0].endTerm.getTime()
+          : a.durations[0].startTerm.getTime() -
+            b.durations[0].startTerm.getTime(),
+      );
   }
 
   /**
