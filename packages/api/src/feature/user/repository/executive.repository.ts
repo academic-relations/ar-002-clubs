@@ -9,7 +9,10 @@ import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider
 import {
   Executive,
   ExecutiveT,
+  Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+
+import { MExecutiveSummary } from "../model/executive.summary.model";
 
 @Injectable()
 export default class ExecutiveRepository {
@@ -110,5 +113,43 @@ export default class ExecutiveRepository {
       );
 
     return result;
+  }
+
+  async selectExecutiveSummaryByDate(param: {
+    date: Date;
+  }): Promise<MExecutiveSummary[]> {
+    const result = await this.db
+      .select({
+        id: Executive.id,
+        userId: Executive.userId,
+        name: Executive.name,
+        studentNumber: Student.number,
+      })
+      .from(ExecutiveT)
+      .where(
+        and(
+          lte(ExecutiveT.startTerm, param.date),
+          or(gte(ExecutiveT.endTerm, param.date), isNull(ExecutiveT.endTerm)),
+          isNull(ExecutiveT.deletedAt),
+        ),
+      )
+      .innerJoin(
+        Executive,
+        and(
+          eq(Executive.id, ExecutiveT.executiveId),
+          isNull(Executive.deletedAt),
+        ),
+      )
+      .innerJoin(
+        Student,
+        and(eq(Student.userId, Executive.userId), isNull(Student.deletedAt)),
+      );
+    return result.map(
+      r =>
+        new MExecutiveSummary({
+          ...r,
+          studentNumber: r.studentNumber.toString(), // TODO: studentNumber가 string으로 바뀌면 변경 필요
+        }),
+    );
   }
 }

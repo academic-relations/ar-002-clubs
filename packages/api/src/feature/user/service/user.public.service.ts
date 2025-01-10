@@ -1,5 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import { IExecutiveSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
+
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 
@@ -171,5 +173,19 @@ export default class UserPublicService {
       throw new HttpException("Student Doesn't exist", HttpStatus.NOT_FOUND);
     }
     return students;
+  }
+
+  /**
+   * 현재 모든 집행부원의 ExecutiveSummary를 가져옵니다.
+   * Entity 적용 버전
+   * */
+  async getCurrentExecutiveSummaries(): Promise<IExecutiveSummary[]> {
+    const today = getKSTDate();
+    const executives =
+      await this.executiveRepository.selectExecutiveSummaryByDate({
+        date: today,
+      });
+
+    return executives;
   }
 }
