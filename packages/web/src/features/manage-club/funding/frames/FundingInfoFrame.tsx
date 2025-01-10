@@ -28,9 +28,9 @@ const FundingInfoFrame: React.FC = () => {
 
   // TODO. purposeActivity 데이터로 변경
   const purposeItems = [
-    { value: "1", label: "활동보고서 1" },
-    { value: "2", label: "활동보고서 2" },
-    { value: "3", label: "활동보고서 3" },
+    { value: "32", label: "활동보고서 1" },
+    { value: "111", label: "활동보고서 2" },
+    { value: "115", label: "활동보고서 3" },
     { value: "0", label: "활동보고서로 증빙 불가" },
   ];
 
