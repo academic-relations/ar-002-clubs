@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
+import { zStudentNumber } from "@sparcs-clubs/interface/common/type/user.type";
 
 /**
  * @version v0.1
@@ -30,7 +31,7 @@ const responseBodyMap = {
     students: z.array(
       z.object({
         id: z.coerce.number().int(),
-        studentNumber: z.string(),
+        studentNumber: zStudentNumber,
         name: z.coerce.string().max(20), // studentNumber는 string으로 통일!
         phoneNumber: zKrPhoneNumber,
       }),

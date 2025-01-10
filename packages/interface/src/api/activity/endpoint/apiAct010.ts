@@ -2,7 +2,7 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import { zUserName } from "@sparcs-clubs/interface/common/commonString";
-
+import { zStudentNumber } from "@sparcs-clubs/interface/common/type/user.type";
 /**
  * @version v0.1
  * @description
@@ -26,7 +26,7 @@ const responseBodyMap = {
     students: z.array(
       z.object({
         id: z.coerce.number().int().min(1),
-        studentNumber: z.coerce.number().int().min(1),
+        studentNumber: zStudentNumber,
         name: zUserName,
       }),
     ),
