@@ -306,14 +306,14 @@ export default class ClubPublicService {
    *
    */
 
-  async getUnionMemberSummariesFromSemester(param: {
-    semesterId: number;
-    clubIds: number[];
-  }): Promise<IStudentSummary[]> {
+  async getUnionMemberSummaries(
+    semesterId: number,
+    clubIds: number[],
+  ): Promise<IStudentSummary[]> {
     const result =
       await this.clubStudentTRepository.findUnionByClubIdsAndSemesterId(
-        param.clubIds,
-        param.semesterId,
+        clubIds,
+        semesterId,
       );
 
     return result;
@@ -321,7 +321,7 @@ export default class ClubPublicService {
 
   // date를 포함하고 있는 학기의 semesterId를 리턴합니다.
   // 만약 해당하는 semester가 존재하지 않을 경우, 404에러를 throw 하니 예외처리를 하지 않아도 됩니다.
-  async dateToSemesterIdThrow404(date: Date): Promise<number> {
+  async getSemesterId(date: Date): Promise<number> {
     const result = await this.semesterDRepository.findByDate(date);
 
     if (result.length !== 1) {

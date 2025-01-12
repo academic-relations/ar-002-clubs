@@ -182,9 +182,7 @@ export default class UserPublicService {
   async getCurrentExecutiveSummaries(): Promise<IExecutiveSummary[]> {
     const today = getKSTDate();
     const executives =
-      await this.executiveRepository.selectExecutiveSummaryByDate({
-        date: today,
-      });
+      await this.executiveRepository.selectExecutiveSummary(today);
 
     return executives;
   }

@@ -461,12 +461,13 @@ export default class ActivityController {
   @Executive()
   @Get(ApiAct027RequestUrl)
   @UsePipes(new ZodPipe(apiAct027))
-  async getClubChargeAvailableExecutives(
+  async getExecutiveActivitiesClubChargeAvailableExecutives(
     @Query() query: ApiAct027RequestQuery,
   ): Promise<ApiAct027ResponseOk> {
-    const result = await this.activityService.getClubChargeAvailableExecutives({
-      query,
-    });
+    const result =
+      await this.activityService.getExecutiveActivitiesClubChargeAvailableExecutives(
+        query,
+      );
     return result;
   }
 }

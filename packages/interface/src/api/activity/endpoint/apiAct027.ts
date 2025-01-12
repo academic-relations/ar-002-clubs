@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zClubBase } from "@sparcs-clubs/interface/api/club/type/club.type";
+import { zClub } from "@sparcs-clubs/interface/api/club/type/club.type";
 import { zExecutiveSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 // import { zPickElement } from "@sparcs-clubs/interface/common/zodUtil";
 
@@ -20,8 +20,8 @@ export const ApiAct027RequestUrl =
 const requestParam = z.object({});
 
 const requestQuery = z.object({
-  // clubIds: zPickElement(zClubBase, "id").array(),
-  clubIds: zClubBase.pick({ id: true }).shape.id.array(),
+  // clubIds: zPickElement(zClub, "id").array(),
+  clubIds: zClub.pick({ id: true }).shape.id.array(),
 });
 
 const requestBody = z.object({});

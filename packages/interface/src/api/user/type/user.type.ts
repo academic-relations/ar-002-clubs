@@ -2,10 +2,10 @@ import { z } from "zod";
 
 export const zStudent = z.object({
   id: z.number(),
-  userId: z.number(),
+  userId: z.number().optional(),
   studentNumber: z.string(),
   name: z.string(),
-  email: z.string(),
+  email: z.string().optional(),
   phoneNumber: z.string().optional(),
 });
 
@@ -18,11 +18,11 @@ export const zStudentSummary = zStudent.pick({
 
 export const zExecutive = z.object({
   id: z.number(),
-  userId: z.number(),
+  userId: z.number().optional(),
   studentNumber: z.string(),
   name: z.string(),
-  email: z.string(),
-  phoneNumber: z.string(),
+  email: z.string().optional(),
+  phoneNumber: z.string().optional(),
   // TODO: 다음 칼럼들 논의 및 추가
   // executiveBureauEnum
   // executiveStatusEnum

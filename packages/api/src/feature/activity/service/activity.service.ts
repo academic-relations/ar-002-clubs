@@ -1314,20 +1314,16 @@ export default class ActivityService {
     return {};
   }
 
-  async getClubChargeAvailableExecutives(param: {
-    query: ApiAct027RequestQuery;
-  }): Promise<ApiAct027ResponseOk> {
+  async getExecutiveActivitiesClubChargeAvailableExecutives(
+    query: ApiAct027RequestQuery,
+  ): Promise<ApiAct027ResponseOk> {
     const nowKST = getKSTDate();
-    const semesterId =
-      await this.clubPublicService.dateToSemesterIdThrow404(nowKST);
-    const { clubIds } = param.query;
+    const semesterId = await this.clubPublicService.getSemesterId(nowKST);
+    const { clubIds } = query;
 
     // TODO: 지금은 entity로 불러오는데, id만 들고 오는 public service 및 repository 를 만들어서 한다면 좀더 효율이 높아질 수 있음
     const [clubMembers, executives] = await Promise.all([
-      this.clubPublicService.getUnionMemberSummariesFromSemester({
-        semesterId,
-        clubIds,
-      }),
+      this.clubPublicService.getUnionMemberSummaries(semesterId, clubIds),
       this.userPublicService.getCurrentExecutiveSummaries(),
     ]);
 

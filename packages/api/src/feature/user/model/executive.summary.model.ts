@@ -2,10 +2,10 @@ import { IExecutiveSummary } from "@sparcs-clubs/interface/api/user/type/user.ty
 
 import { MExecutive } from "./executive.model";
 
-export class MExecutiveSummary implements IExecutiveSummary {
+export class VExecutiveSummary implements IExecutiveSummary {
   id: number;
 
-  userId: number;
+  userId?: number;
 
   name: string;
 

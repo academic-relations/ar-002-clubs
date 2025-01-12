@@ -12,7 +12,7 @@ import {
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
-import { MExecutiveSummary } from "../model/executive.summary.model";
+import { VExecutiveSummary } from "../model/executive.summary.model";
 
 @Injectable()
 export default class ExecutiveRepository {
@@ -115,9 +115,7 @@ export default class ExecutiveRepository {
     return result;
   }
 
-  async selectExecutiveSummaryByDate(param: {
-    date: Date;
-  }): Promise<MExecutiveSummary[]> {
+  async selectExecutiveSummary(date: Date): Promise<VExecutiveSummary[]> {
     const result = await this.db
       .select({
         id: Executive.id,
@@ -128,8 +126,8 @@ export default class ExecutiveRepository {
       .from(ExecutiveT)
       .where(
         and(
-          lte(ExecutiveT.startTerm, param.date),
-          or(gte(ExecutiveT.endTerm, param.date), isNull(ExecutiveT.endTerm)),
+          lte(ExecutiveT.startTerm, date),
+          or(gte(ExecutiveT.endTerm, date), isNull(ExecutiveT.endTerm)),
           isNull(ExecutiveT.deletedAt),
         ),
       )
@@ -146,7 +144,7 @@ export default class ExecutiveRepository {
       );
     return result.map(
       r =>
-        new MExecutiveSummary({
+        new VExecutiveSummary({
           ...r,
           studentNumber: r.studentNumber.toString(), // TODO: studentNumber가 string으로 바뀌면 변경 필요
         }),
