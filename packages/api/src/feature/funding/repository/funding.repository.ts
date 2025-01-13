@@ -10,22 +10,22 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
-  ClubSuppliesImageFile,
-  ClubSuppliesSoftwareEvidenceFile,
-  EtcExpenseFile,
-  ExternalEventParticipationFeeFile,
-  FixtureImageFile,
-  FixtureSoftwareEvidenceFile,
-  FoodExpenseFile,
-  FundingOrder,
-  FundingOrderFeedback,
-  JointExpenseFile,
-  LaborContractFile,
-  ProfitMakingActivityFile,
-  PublicationFile,
-  TradeDetailFile,
-  TradeEvidenceFile,
-  TransportationPassenger,
+  Funding,
+  FundingClubSuppliesImageFile,
+  FundingClubSuppliesSoftwareEvidenceFile,
+  FundingEtcExpenseFile,
+  FundingExternalEventParticipationFeeFile,
+  FundingFeedback,
+  FundingFixtureImageFile,
+  FundingFixtureSoftwareEvidenceFile,
+  FundingFoodExpenseFile,
+  FundingJointExpenseFile,
+  FundingLaborContractFile,
+  FundingProfitMakingActivityFile,
+  FundingPublicationFile,
+  FundingTradeDetailFile,
+  FundingTradeEvidenceFile,
+  FundingTransportationPassenger,
 } from "@sparcs-clubs/api/drizzle/schema/funding.schema";
 
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
@@ -39,15 +39,12 @@ export default class FundingRepository {
   async select(id: number): Promise<MFunding> {
     const result = await this.db
       .select({
-        funding_order: FundingOrder,
-        funding_order_feedback: FundingOrderFeedback,
+        funding: Funding,
+        fundingFeedback: FundingFeedback,
       })
-      .from(FundingOrder)
-      .leftJoin(
-        FundingOrderFeedback,
-        eq(FundingOrderFeedback.fundingOrderId, id),
-      )
-      .where(and(eq(FundingOrder.id, id), isNull(FundingOrder.deletedAt)));
+      .from(Funding)
+      .leftJoin(FundingFeedback, eq(FundingFeedback.fundingId, id))
+      .where(and(eq(Funding.id, id), isNull(Funding.deletedAt)));
 
     if (result.length === 0) {
       return null;
@@ -71,136 +68,139 @@ export default class FundingRepository {
     ] = await Promise.all([
       this.db
         .select()
-        .from(TradeEvidenceFile)
+        .from(FundingTradeEvidenceFile)
         .where(
           and(
-            eq(TradeEvidenceFile.fundingOrderId, id),
-            isNull(TradeEvidenceFile.deletedAt),
+            eq(FundingTradeEvidenceFile.fundingId, id),
+            isNull(FundingTradeEvidenceFile.deletedAt),
           ),
         ),
       this.db
         .select()
-        .from(TradeDetailFile)
+        .from(FundingTradeDetailFile)
         .where(
           and(
-            eq(TradeDetailFile.fundingOrderId, id),
-            isNull(TradeDetailFile.deletedAt),
+            eq(FundingTradeDetailFile.fundingId, id),
+            isNull(FundingTradeDetailFile.deletedAt),
           ),
         ),
       this.db
         .select()
-        .from(ClubSuppliesImageFile)
+        .from(FundingClubSuppliesImageFile)
         .where(
           and(
-            eq(ClubSuppliesImageFile.fundingOrderId, id),
-            isNull(ClubSuppliesImageFile.deletedAt),
+            eq(FundingClubSuppliesImageFile.fundingId, id),
+            isNull(FundingClubSuppliesImageFile.deletedAt),
           ),
         ),
       this.db
         .select()
-        .from(ClubSuppliesSoftwareEvidenceFile)
+        .from(FundingClubSuppliesSoftwareEvidenceFile)
         .where(
           and(
-            eq(ClubSuppliesSoftwareEvidenceFile.fundingOrderId, id),
-            isNull(ClubSuppliesSoftwareEvidenceFile.deletedAt),
+            eq(FundingClubSuppliesSoftwareEvidenceFile.fundingId, id),
+            isNull(FundingClubSuppliesSoftwareEvidenceFile.deletedAt),
           ),
         ),
       this.db
         .select()
-        .from(FixtureImageFile)
+        .from(FundingFixtureImageFile)
         .where(
           and(
-            eq(FixtureImageFile.fundingOrderId, id),
-            isNull(FixtureImageFile.deletedAt),
+            eq(FundingFixtureImageFile.fundingId, id),
+            isNull(FundingFixtureImageFile.deletedAt),
           ),
         ),
       this.db
         .select()
-        .from(FixtureSoftwareEvidenceFile)
+        .from(FundingFixtureSoftwareEvidenceFile)
         .where(
           and(
-            eq(FixtureSoftwareEvidenceFile.fundingOrderId, id),
-            isNull(FixtureSoftwareEvidenceFile.deletedAt),
+            eq(FundingFixtureSoftwareEvidenceFile.fundingId, id),
+            isNull(FundingFixtureSoftwareEvidenceFile.deletedAt),
           ),
         ),
       this.db
         .select()
-        .from(FoodExpenseFile)
+        .from(FundingFoodExpenseFile)
         .where(
           and(
-            eq(FoodExpenseFile.fundingOrderId, id),
-            isNull(FoodExpenseFile.deletedAt),
+            eq(FundingFoodExpenseFile.fundingId, id),
+            isNull(FundingFoodExpenseFile.deletedAt),
           ),
         ),
       this.db
         .select()
-        .from(LaborContractFile)
+        .from(FundingLaborContractFile)
         .where(
           and(
-            eq(LaborContractFile.fundingOrderId, id),
-            isNull(LaborContractFile.deletedAt),
+            eq(FundingLaborContractFile.fundingId, id),
+            isNull(FundingLaborContractFile.deletedAt),
           ),
         ),
       this.db
         .select()
-        .from(ExternalEventParticipationFeeFile)
+        .from(FundingExternalEventParticipationFeeFile)
         .where(
           and(
-            eq(ExternalEventParticipationFeeFile.fundingOrderId, id),
-            isNull(ExternalEventParticipationFeeFile.deletedAt),
+            eq(FundingExternalEventParticipationFeeFile.fundingId, id),
+            isNull(FundingExternalEventParticipationFeeFile.deletedAt),
           ),
         ),
       this.db
         .select()
-        .from(PublicationFile)
+        .from(FundingPublicationFile)
         .where(
           and(
-            eq(PublicationFile.fundingOrderId, id),
-            isNull(PublicationFile.deletedAt),
+            eq(FundingPublicationFile.fundingId, id),
+            isNull(FundingPublicationFile.deletedAt),
           ),
         ),
       this.db
         .select()
-        .from(ProfitMakingActivityFile)
+        .from(FundingProfitMakingActivityFile)
         .where(
           and(
-            eq(ProfitMakingActivityFile.fundingOrderId, id),
-            isNull(ProfitMakingActivityFile.deletedAt),
+            eq(FundingProfitMakingActivityFile.fundingId, id),
+            isNull(FundingProfitMakingActivityFile.deletedAt),
           ),
         ),
       this.db
         .select()
-        .from(JointExpenseFile)
+        .from(FundingJointExpenseFile)
         .where(
           and(
-            eq(JointExpenseFile.fundingOrderId, id),
-            isNull(JointExpenseFile.deletedAt),
+            eq(FundingJointExpenseFile.fundingId, id),
+            isNull(FundingJointExpenseFile.deletedAt),
           ),
         ),
       this.db
         .select()
-        .from(EtcExpenseFile)
+        .from(FundingEtcExpenseFile)
         .where(
           and(
-            eq(EtcExpenseFile.fundingOrderId, id),
-            isNull(EtcExpenseFile.deletedAt),
+            eq(FundingEtcExpenseFile.fundingId, id),
+            isNull(FundingEtcExpenseFile.deletedAt),
           ),
         ),
       this.db
         .select({
-          fundingOrderId: TransportationPassenger.fundingOrderId,
-          studentId: TransportationPassenger.studentId,
+          fundingId: FundingTransportationPassenger.fundingId,
+          studentId: FundingTransportationPassenger.studentId,
           studentNumber: Student.number,
           name: Student.name,
         })
-        .from(TransportationPassenger)
-        .where(and(isNull(TransportationPassenger.deletedAt)))
-        .innerJoin(Student, eq(Student.id, TransportationPassenger.studentId)),
+        .from(FundingTransportationPassenger)
+        .where(and(isNull(FundingTransportationPassenger.deletedAt)))
+        .innerJoin(
+          Student,
+          eq(Student.id, FundingTransportationPassenger.studentId),
+        ),
     ]);
 
     return MFunding.fromDBResult({
-      fundingOrder: result[0].funding_order,
-      fundingOrderFeedback: result[0].funding_order_feedback,
+      funding: result[0].funding,
+      fundingFeedback: result[0].fundingFeedback,
       tradeEvidenceFiles: tradeEvidenceFiles.map(file => ({
         id: file.fileId,
       })),
@@ -255,19 +255,19 @@ export default class FundingRepository {
   ): Promise<IFundingSummary[]> {
     const fundingOrders = await this.db
       .select({
-        id: FundingOrder.id,
-        name: FundingOrder.name,
-        expenditureAmount: FundingOrder.expenditureAmount,
-        approvedAmount: FundingOrder.approvedAmount,
-        fundingOrderStatusEnumId: FundingOrder.fundingOrderStatusEnumId,
-        purposeActivity: FundingOrder.purposeId,
+        id: Funding.id,
+        name: Funding.name,
+        expenditureAmount: Funding.expenditureAmount,
+        approvedAmount: Funding.approvedAmount,
+        fundingStatusEnumId: Funding.fundingStatusEnumId,
+        purposeActivity: Funding.purposeActivityId,
       })
-      .from(FundingOrder)
+      .from(Funding)
       .where(
         and(
-          eq(FundingOrder.clubId, clubId),
-          eq(FundingOrder.semesterId, semesterId),
-          isNull(FundingOrder.deletedAt),
+          eq(Funding.clubId, clubId),
+          eq(Funding.semesterId, semesterId),
+          isNull(Funding.deletedAt),
         ),
       );
 
@@ -289,11 +289,11 @@ export default class FundingRepository {
   ): Promise<MFunding> {
     const result = await this.db.transaction(async tx => {
       // 1. Insert funding order
-      const [fundingOrder] = await tx.insert(FundingOrder).values({
+      const [fundingOrder] = await tx.insert(Funding).values({
         clubId: funding.clubId,
-        purposeId: funding.purposeActivity.id,
+        purposeActivityId: funding.purposeActivity.id,
         semesterId: extra.semesterId,
-        fundingOrderStatusEnumId: extra.fundingOrderStatusEnumId,
+        fundingStatusEnumId: extra.fundingStatusEnumId,
         name: funding.name,
         expenditureDate: funding.expenditureDate,
         expenditureAmount: funding.expenditureAmount,
@@ -312,20 +312,20 @@ export default class FundingRepository {
         tradeDetailExplanation: funding.tradeDetailExplanation,
       });
 
-      const fundingOrderId = Number(fundingOrder.insertId);
+      const fundingId = Number(fundingOrder.insertId);
 
       // 3. Insert files and related data
       await Promise.all([
         // Trade files
         ...funding.tradeEvidenceFiles.map(file =>
-          tx.insert(TradeEvidenceFile).values({
-            fundingOrderId,
+          tx.insert(FundingTradeEvidenceFile).values({
+            fundingId,
             fileId: file.id,
           }),
         ),
         ...funding.tradeDetailFiles.map(file =>
-          tx.insert(TradeDetailFile).values({
-            fundingOrderId,
+          tx.insert(FundingTradeDetailFile).values({
+            fundingId,
             fileId: file.id,
           }),
         ),
@@ -333,16 +333,16 @@ export default class FundingRepository {
         // Club supplies files
         ...(funding.clubSupplies && funding.clubSupplies.imageFiles
           ? funding.clubSupplies.imageFiles.map(file =>
-              tx.insert(ClubSuppliesImageFile).values({
-                fundingOrderId,
+              tx.insert(FundingClubSuppliesImageFile).values({
+                fundingId,
                 fileId: file.id,
               }),
             )
           : []),
         ...(funding.clubSupplies && funding.clubSupplies.softwareEvidenceFiles
           ? funding.clubSupplies.softwareEvidenceFiles.map(file =>
-              tx.insert(ClubSuppliesSoftwareEvidenceFile).values({
-                fundingOrderId,
+              tx.insert(FundingClubSuppliesSoftwareEvidenceFile).values({
+                fundingId,
                 fileId: file.id,
               }),
             )
@@ -351,16 +351,16 @@ export default class FundingRepository {
         // Fixture files
         ...(funding.isFixture && funding.fixture.imageFiles
           ? funding.fixture.imageFiles.map(file =>
-              tx.insert(FixtureImageFile).values({
-                fundingOrderId,
+              tx.insert(FundingFixtureImageFile).values({
+                fundingId,
                 fileId: file.id,
               }),
             )
           : []),
         ...(funding.isFixture && funding.fixture.softwareEvidenceFiles
           ? funding.fixture.softwareEvidenceFiles.map(file =>
-              tx.insert(FixtureSoftwareEvidenceFile).values({
-                fundingOrderId,
+              tx.insert(FundingFixtureSoftwareEvidenceFile).values({
+                fundingId,
                 fileId: file.id,
               }),
             )
@@ -369,8 +369,8 @@ export default class FundingRepository {
         // Food expense files
         ...(funding.isFoodExpense && funding.foodExpense
           ? funding.foodExpense.files.map(file =>
-              tx.insert(FoodExpenseFile).values({
-                fundingOrderId,
+              tx.insert(FundingFoodExpenseFile).values({
+                fundingId,
                 fileId: file.id,
               }),
             )
@@ -379,8 +379,8 @@ export default class FundingRepository {
         // Labor contract files
         ...(funding.isLaborContract && funding.laborContract
           ? funding.laborContract.files.map(file =>
-              tx.insert(LaborContractFile).values({
-                fundingOrderId,
+              tx.insert(FundingLaborContractFile).values({
+                fundingId,
                 fileId: file.id,
               }),
             )
@@ -390,8 +390,8 @@ export default class FundingRepository {
         ...(funding.isExternalEventParticipationFee &&
         funding.externalEventParticipationFee
           ? funding.externalEventParticipationFee.files.map(file =>
-              tx.insert(ExternalEventParticipationFeeFile).values({
-                fundingOrderId,
+              tx.insert(FundingExternalEventParticipationFeeFile).values({
+                fundingId,
                 fileId: file.id,
               }),
             )
@@ -400,8 +400,8 @@ export default class FundingRepository {
         // Publication files
         ...(funding.isPublication && funding.publication
           ? funding.publication.files.map(file =>
-              tx.insert(PublicationFile).values({
-                fundingOrderId,
+              tx.insert(FundingPublicationFile).values({
+                fundingId,
                 fileId: file.id,
               }),
             )
@@ -410,8 +410,8 @@ export default class FundingRepository {
         // Profit making activity files
         ...(funding.isProfitMakingActivity && funding.profitMakingActivity
           ? funding.profitMakingActivity.files.map(file =>
-              tx.insert(ProfitMakingActivityFile).values({
-                fundingOrderId,
+              tx.insert(FundingProfitMakingActivityFile).values({
+                fundingId,
                 fileId: file.id,
               }),
             )
@@ -420,8 +420,8 @@ export default class FundingRepository {
         // Joint expense files
         ...(funding.isJointExpense && funding.jointExpense
           ? funding.jointExpense.files.map(file =>
-              tx.insert(JointExpenseFile).values({
-                fundingOrderId,
+              tx.insert(FundingJointExpenseFile).values({
+                fundingId,
                 fileId: file.id,
               }),
             )
@@ -430,8 +430,8 @@ export default class FundingRepository {
         // Etc expense files
         ...(funding.isEtcExpense && funding.etcExpense
           ? funding.etcExpense.files.map(file =>
-              tx.insert(EtcExpenseFile).values({
-                fundingOrderId,
+              tx.insert(FundingEtcExpenseFile).values({
+                fundingId,
                 fileId: file.id,
               }),
             )
@@ -440,15 +440,15 @@ export default class FundingRepository {
         // Transportation passengers
         ...(funding.isTransportation && funding.transportation
           ? funding.transportation.passengers.map(passenger =>
-              tx.insert(TransportationPassenger).values({
-                fundingOrderId,
+              tx.insert(FundingTransportationPassenger).values({
+                fundingId,
                 studentId: passenger.id,
               }),
             )
           : []),
       ]);
 
-      return fundingOrderId;
+      return fundingId;
     });
 
     // 4. Return the newly created funding
@@ -461,70 +461,67 @@ export default class FundingRepository {
 
       // Soft delete funding order and all related records
       await Promise.all([
+        tx.update(Funding).set({ deletedAt: now }).where(eq(Funding.id, id)),
         tx
-          .update(FundingOrder)
+          .update(FundingFeedback)
           .set({ deletedAt: now })
-          .where(eq(FundingOrder.id, id)),
+          .where(eq(FundingFeedback.fundingId, id)),
         tx
-          .update(FundingOrderFeedback)
+          .update(FundingTradeEvidenceFile)
           .set({ deletedAt: now })
-          .where(eq(FundingOrderFeedback.fundingOrderId, id)),
+          .where(eq(FundingTradeEvidenceFile.fundingId, id)),
         tx
-          .update(TradeEvidenceFile)
+          .update(FundingTradeDetailFile)
           .set({ deletedAt: now })
-          .where(eq(TradeEvidenceFile.fundingOrderId, id)),
+          .where(eq(FundingTradeDetailFile.fundingId, id)),
         tx
-          .update(TradeDetailFile)
+          .update(FundingClubSuppliesImageFile)
           .set({ deletedAt: now })
-          .where(eq(TradeDetailFile.fundingOrderId, id)),
+          .where(eq(FundingClubSuppliesImageFile.fundingId, id)),
         tx
-          .update(ClubSuppliesImageFile)
+          .update(FundingClubSuppliesSoftwareEvidenceFile)
           .set({ deletedAt: now })
-          .where(eq(ClubSuppliesImageFile.fundingOrderId, id)),
+          .where(eq(FundingClubSuppliesSoftwareEvidenceFile.fundingId, id)),
         tx
-          .update(ClubSuppliesSoftwareEvidenceFile)
+          .update(FundingFixtureImageFile)
           .set({ deletedAt: now })
-          .where(eq(ClubSuppliesSoftwareEvidenceFile.fundingOrderId, id)),
+          .where(eq(FundingFixtureImageFile.fundingId, id)),
         tx
-          .update(FixtureImageFile)
+          .update(FundingFixtureSoftwareEvidenceFile)
           .set({ deletedAt: now })
-          .where(eq(FixtureImageFile.fundingOrderId, id)),
+          .where(eq(FundingFixtureSoftwareEvidenceFile.fundingId, id)),
         tx
-          .update(FixtureSoftwareEvidenceFile)
+          .update(FundingFoodExpenseFile)
           .set({ deletedAt: now })
-          .where(eq(FixtureSoftwareEvidenceFile.fundingOrderId, id)),
+          .where(eq(FundingFoodExpenseFile.fundingId, id)),
         tx
-          .update(FoodExpenseFile)
+          .update(FundingLaborContractFile)
           .set({ deletedAt: now })
-          .where(eq(FoodExpenseFile.fundingOrderId, id)),
+          .where(eq(FundingLaborContractFile.fundingId, id)),
         tx
-          .update(LaborContractFile)
+          .update(FundingExternalEventParticipationFeeFile)
           .set({ deletedAt: now })
-          .where(eq(LaborContractFile.fundingOrderId, id)),
+          .where(eq(FundingExternalEventParticipationFeeFile.fundingId, id)),
         tx
-          .update(ExternalEventParticipationFeeFile)
+          .update(FundingPublicationFile)
           .set({ deletedAt: now })
-          .where(eq(ExternalEventParticipationFeeFile.fundingOrderId, id)),
+          .where(eq(FundingPublicationFile.fundingId, id)),
         tx
-          .update(PublicationFile)
+          .update(FundingProfitMakingActivityFile)
           .set({ deletedAt: now })
-          .where(eq(PublicationFile.fundingOrderId, id)),
+          .where(eq(FundingProfitMakingActivityFile.fundingId, id)),
         tx
-          .update(ProfitMakingActivityFile)
+          .update(FundingJointExpenseFile)
           .set({ deletedAt: now })
-          .where(eq(ProfitMakingActivityFile.fundingOrderId, id)),
+          .where(eq(FundingJointExpenseFile.fundingId, id)),
         tx
-          .update(JointExpenseFile)
+          .update(FundingEtcExpenseFile)
           .set({ deletedAt: now })
-          .where(eq(JointExpenseFile.fundingOrderId, id)),
+          .where(eq(FundingEtcExpenseFile.fundingId, id)),
         tx
-          .update(EtcExpenseFile)
+          .update(FundingTransportationPassenger)
           .set({ deletedAt: now })
-          .where(eq(EtcExpenseFile.fundingOrderId, id)),
-        tx
-          .update(TransportationPassenger)
-          .set({ deletedAt: now })
-          .where(eq(TransportationPassenger.fundingOrderId, id)),
+          .where(eq(FundingTransportationPassenger.fundingId, id)),
       ]);
     });
   }

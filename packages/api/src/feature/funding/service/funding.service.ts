@@ -62,12 +62,12 @@ export default class FundingService {
 
     const now = getKSTDate();
     const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
-    const fundingOrderStatusEnumId = 1;
+    const fundingStatusEnumId = 1;
     const approvedAmount = 0;
 
     return this.fundingRepository.insert(body, {
       semesterId,
-      fundingOrderStatusEnumId,
+      fundingStatusEnumId,
       approvedAmount,
     });
   }
@@ -157,12 +157,12 @@ export default class FundingService {
 
     const now = getKSTDate();
     const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
-    const fundingOrderStatusEnumId = 1;
+    const fundingStatusEnumId = 1;
     const approvedAmount = 0;
 
     return this.fundingRepository.put(param.id, body, {
       semesterId,
-      fundingOrderStatusEnumId,
+      fundingStatusEnumId,
       approvedAmount,
     });
   }
@@ -212,7 +212,7 @@ export default class FundingService {
     return {
       fundings: fundings.map(funding => ({
         id: funding.id,
-        fundingOrderStatusEnumId: funding.fundingOrderStatusEnumId,
+        fundingStatusEnumId: funding.fundingStatusEnumId,
         purposeId: funding.purposeActivity.id,
         activityName: activities.find(
           activity => activity.id === funding.purposeActivity.id,
@@ -255,7 +255,7 @@ export default class FundingService {
     return {
       fundings: fundings.map(funding => ({
         id: funding.id,
-        fundingOrderStatusEnumId: funding.fundingOrderStatusEnumId,
+        fundingStatusEnumId: funding.fundingStatusEnumId,
         purposeId: funding.purposeActivity.id,
         activityName: activities.find(
           activity => activity.id === funding.purposeActivity.id,

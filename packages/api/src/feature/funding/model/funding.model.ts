@@ -8,12 +8,12 @@ import {
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 
 export type FundingDBResult = {
-  fundingOrder: {
+  funding: {
     id: number;
     clubId: number;
-    purposeId?: number;
+    purposeActivityId?: number;
     semesterId?: number;
-    fundingOrderStatusEnumId?: number;
+    fundingStatusEnumId?: number;
     name: string;
     expenditureDate: Date;
     expenditureAmount: number;
@@ -61,7 +61,7 @@ export type FundingDBResult = {
     purposeOfTransportation: string;
     placeValidity: string;
   };
-  fundingOrderFeedback?: {
+  fundingFeedback?: {
     feedback?: string;
   };
   tradeEvidenceFiles: { id: string }[];
@@ -99,9 +99,9 @@ export class MFunding implements IFunding {
 
   semesterId: number;
 
-  fundingOrderStatusEnumId: number;
+  fundingStatusEnumId: number;
 
-  purposeId?: number;
+  purposeActivityId?: number;
 
   name: string;
 
@@ -165,41 +165,41 @@ export class MFunding implements IFunding {
 
   static fromDBResult(result: FundingDBResult) {
     return new MFunding({
-      id: result.fundingOrder.id,
-      clubId: result.fundingOrder.clubId,
-      name: result.fundingOrder.name,
-      semesterId: result.fundingOrder.semesterId,
-      fundingOrderStatusEnumId: result.fundingOrder.fundingOrderStatusEnumId,
-      purposeId: result.fundingOrder.purposeId,
-      expenditureDate: result.fundingOrder.expenditureDate,
-      expenditureAmount: result.fundingOrder.expenditureAmount,
-      approvedAmount: result.fundingOrder.approvedAmount,
+      id: result.funding.id,
+      clubId: result.funding.clubId,
+      name: result.funding.name,
+      semesterId: result.funding.semesterId,
+      fundingStatusEnumId: result.funding.fundingStatusEnumId,
+      purposeActivityId: result.funding.purposeActivityId,
+      expenditureDate: result.funding.expenditureDate,
+      expenditureAmount: result.funding.expenditureAmount,
+      approvedAmount: result.funding.approvedAmount,
       tradeEvidenceFiles: result.tradeEvidenceFiles.map(file => ({
         id: file.id,
       })),
       tradeDetailFiles: result.tradeDetailFiles.map(file => ({
         id: file.id,
       })),
-      tradeDetailExplanation: result.fundingOrder.tradeDetailExplanation,
-      isFixture: result.fundingOrder.isFixture,
-      isTransportation: result.fundingOrder.isTransportation,
-      isNonCorporateTransaction: result.fundingOrder.isNonCorporateTransaction,
-      isFoodExpense: result.fundingOrder.isFoodExpense,
-      isLaborContract: result.fundingOrder.isLaborContract,
+      tradeDetailExplanation: result.funding.tradeDetailExplanation,
+      isFixture: result.funding.isFixture,
+      isTransportation: result.funding.isTransportation,
+      isNonCorporateTransaction: result.funding.isNonCorporateTransaction,
+      isFoodExpense: result.funding.isFoodExpense,
+      isLaborContract: result.funding.isLaborContract,
       isExternalEventParticipationFee:
-        result.fundingOrder.isExternalEventParticipationFee,
-      isPublication: result.fundingOrder.isPublication,
-      isProfitMakingActivity: result.fundingOrder.isProfitMakingActivity,
-      isJointExpense: result.fundingOrder.isJointExpense,
-      isEtcExpense: result.fundingOrder.isEtcExpense,
+        result.funding.isExternalEventParticipationFee,
+      isPublication: result.funding.isPublication,
+      isProfitMakingActivity: result.funding.isProfitMakingActivity,
+      isJointExpense: result.funding.isJointExpense,
+      isEtcExpense: result.funding.isEtcExpense,
       clubSupplies: {
-        name: result.fundingOrder.clubSuppliesName,
-        evidenceEnumId: result.fundingOrder.clubSuppliesEvidenceEnumId,
-        classEnumId: result.fundingOrder.clubSuppliesClassEnumId,
-        purpose: result.fundingOrder.clubSuppliesPurpose,
-        softwareEvidence: result.fundingOrder.clubSuppliesSoftwareEvidence,
-        number: result.fundingOrder.numberOfClubSupplies,
-        price: result.fundingOrder.priceOfClubSupplies,
+        name: result.funding.clubSuppliesName,
+        evidenceEnumId: result.funding.clubSuppliesEvidenceEnumId,
+        classEnumId: result.funding.clubSuppliesClassEnumId,
+        purpose: result.funding.clubSuppliesPurpose,
+        softwareEvidence: result.funding.clubSuppliesSoftwareEvidence,
+        number: result.funding.numberOfClubSupplies,
+        price: result.funding.priceOfClubSupplies,
         imageFiles: result.clubSuppliesImageFiles.map(file => ({
           id: file.id,
         })),
@@ -210,13 +210,13 @@ export class MFunding implements IFunding {
         ),
       },
       fixture: {
-        name: result.fundingOrder.fixtureName,
-        purpose: result.fundingOrder.fixturePurpose,
-        evidenceEnumId: result.fundingOrder.fixtureEvidenceEnumId,
-        classEnumId: result.fundingOrder.fixtureClassEnumId,
-        softwareEvidence: result.fundingOrder.fixtureSoftwareEvidence,
-        number: result.fundingOrder.numberOfFixture,
-        price: result.fundingOrder.priceOfFixture,
+        name: result.funding.fixtureName,
+        purpose: result.funding.fixturePurpose,
+        evidenceEnumId: result.funding.fixtureEvidenceEnumId,
+        classEnumId: result.funding.fixtureClassEnumId,
+        softwareEvidence: result.funding.fixtureSoftwareEvidence,
+        number: result.funding.numberOfFixture,
+        price: result.funding.priceOfFixture,
         imageFiles: result.fixtureImageFiles.map(file => ({
           id: file.id,
         })),
@@ -227,59 +227,58 @@ export class MFunding implements IFunding {
         ),
       },
       transportation: {
-        enumId: result.fundingOrder.transportationEnumId,
-        origin: result.fundingOrder.origin,
-        destination: result.fundingOrder.destination,
-        purpose: result.fundingOrder.purposeOfTransportation,
-        placeValidity: result.fundingOrder.placeValidity,
+        enumId: result.funding.transportationEnumId,
+        origin: result.funding.origin,
+        destination: result.funding.destination,
+        purpose: result.funding.purposeOfTransportation,
+        placeValidity: result.funding.placeValidity,
         passengers: result.transportationPassengers.map(passenger => ({
           id: passenger.id,
         })),
       },
       nonCorporateTransaction: {
-        traderName: result.fundingOrder.traderName,
-        traderAccountNumber: result.fundingOrder.traderAccountNumber,
-        wasteExplanation: result.fundingOrder.wasteExplanation,
+        traderName: result.funding.traderName,
+        traderAccountNumber: result.funding.traderAccountNumber,
+        wasteExplanation: result.funding.wasteExplanation,
       },
       foodExpense: {
-        explanation: result.fundingOrder.foodExpenseExplanation,
+        explanation: result.funding.foodExpenseExplanation,
         files: result.foodExpenseFiles.map(file => ({
           id: file.id,
         })),
       },
       laborContract: {
-        explanation: result.fundingOrder.laborContractExplanation,
+        explanation: result.funding.laborContractExplanation,
         files: result.laborContractFiles.map(file => ({
           id: file.id,
         })),
       },
       externalEventParticipationFee: {
-        explanation:
-          result.fundingOrder.externalEventParticipationFeeExplanation,
+        explanation: result.funding.externalEventParticipationFeeExplanation,
         files: result.externalEventParticipationFeeFiles.map(file => ({
           id: file.id,
         })),
       },
       publication: {
-        explanation: result.fundingOrder.publicationExplanation,
+        explanation: result.funding.publicationExplanation,
         files: result.publicationFiles.map(file => ({
           id: file.id,
         })),
       },
       profitMakingActivity: {
-        explanation: result.fundingOrder.profitMakingActivityExplanation,
+        explanation: result.funding.profitMakingActivityExplanation,
         files: result.profitMakingActivityFiles.map(file => ({
           id: file.id,
         })),
       },
       jointExpense: {
-        explanation: result.fundingOrder.jointExpenseExplanation,
+        explanation: result.funding.jointExpenseExplanation,
         files: result.jointExpenseFiles.map(file => ({
           id: file.id,
         })),
       },
       etcExpense: {
-        explanation: result.fundingOrder.etcExpenseExplanation,
+        explanation: result.funding.etcExpenseExplanation,
         files: result.etcExpenseFiles.map(file => ({
           id: file.id,
         })),

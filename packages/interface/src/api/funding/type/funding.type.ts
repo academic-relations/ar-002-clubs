@@ -57,7 +57,7 @@ const zFunding = z.object({
   id: z.coerce.number().int().min(1),
   clubId: z.coerce.number().int().min(1),
   semesterId: z.coerce.number().int().min(1),
-  fundingOrderStatusEnumId: z.coerce.number().int().min(1),
+  fundingStatusEnumId: z.coerce.number().int().min(1),
   purposeActivity: zActivitySummary.pick({ id: true }).optional(),
   name: z.string().max(255).min(1),
   expenditureDate: z.coerce.date(),
@@ -102,14 +102,14 @@ const zFunding = z.object({
 
 const zFundingExtra = zFunding.pick({
   semesterId: true,
-  fundingOrderStatusEnumId: true,
+  fundingStatusEnumId: true,
   approvedAmount: true,
 });
 
 const zFundingRequestBase = zFunding.omit({
   id: true,
   semesterId: true,
-  fundingOrderStatusEnumId: true,
+  fundingStatusEnumId: true,
   approvedAmount: true,
 });
 
@@ -346,7 +346,7 @@ export const zFundingResponse = zFunding.extend({
 
 export const zFundingSummary = zFunding.pick({
   id: true,
-  fundingOrderStatusEnumId: true,
+  fundingStatusEnumId: true,
   name: true,
   expenditureAmount: true,
   approvedAmount: true,
@@ -355,7 +355,7 @@ export const zFundingSummary = zFunding.pick({
 
 export const zFundingResponseSummary = zFundingResponse.pick({
   id: true,
-  fundingOrderStatusEnumId: true,
+  fundingStatusEnumId: true,
   name: true,
   expenditureAmount: true,
   approvedAmount: true,
