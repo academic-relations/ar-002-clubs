@@ -19,6 +19,7 @@ import { takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+import { MStudent } from "@sparcs-clubs/api/feature/user/model/student.model";
 import {
   Club,
   ClubDelegateD,
@@ -64,8 +65,9 @@ export default class ClubStudentTRepository {
                 lte(ClubStudentT.startTerm, today),
                 or(
                   gte(ClubStudentT.endTerm, today),
-                  eq(ClubStudentT.endTerm, null),
+                  isNull(ClubStudentT.endTerm),
                 ),
+                isNull(ClubStudentT.deletedAt),
               ),
         ),
       )
@@ -264,5 +266,43 @@ export default class ClubStudentTRepository {
           isNull(ClubStudentT.deletedAt),
         ),
       );
+  }
+
+  /**
+   * Semester랑 ClubIds 로 해당 동아리들을 하는 모든 Member의 IStudentSummary의 Union을 가져옵니다.
+   *
+   * @param semesterId 학기의 ID
+   * @param clubIds 동아리의 ID []
+   * @returns MStudent[]
+   *
+   */
+
+  async findUnionByClubIdsAndSemesterId(
+    clubIds: number[],
+    semesterId: number,
+  ): Promise<MStudent[]> {
+    const result = await this.db
+      .select({
+        id: ClubStudentT.studentId,
+        userId: Student.userId,
+        name: Student.name,
+        studentNumber: Student.number,
+        email: Student.email,
+        phoneNumber: Student.phoneNumber,
+      })
+      .from(ClubStudentT)
+      .where(
+        and(
+          eq(ClubStudentT.semesterId, semesterId),
+          inArray(ClubStudentT.clubId, clubIds),
+          and(isNull(ClubStudentT.deletedAt), isNull(ClubStudentT.deletedAt)),
+        ),
+      )
+      .innerJoin(Student, eq(Student.id, ClubStudentT.studentId));
+
+    return result.map(
+      row =>
+        new MStudent({ ...row, studentNumber: row.studentNumber.toString() }), // TODO: studentNumber가 string으로 바뀌면 변경 필요
+    );
   }
 }
