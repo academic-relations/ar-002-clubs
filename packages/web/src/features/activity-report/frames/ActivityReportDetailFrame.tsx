@@ -196,8 +196,16 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
       return false;
     }
 
+    const maxEndTermDuration = data.durations.reduce(
+      (maxDuration, currentDuration) =>
+        new Date(currentDuration.endTerm) > new Date(maxDuration.endTerm)
+          ? currentDuration
+          : maxDuration,
+      data.durations[0],
+    );
+
     return (
-      new Date(data.durations[data.durations.length - 1].endTerm) <
+      new Date(maxEndTermDuration.endTerm) <
       new Date(activityDeadline.targetTerm.startTerm)
     );
   }, [activityDeadline, data.durations]);
