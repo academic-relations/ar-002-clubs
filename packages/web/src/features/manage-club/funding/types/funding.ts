@@ -4,7 +4,7 @@ import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type
 import {
   FixtureClassEnum,
   FixtureEvidenceEnum,
-  FundingOrderStatusEnum,
+  FundingStatusEnum,
   TransportationEnum,
 } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
@@ -19,7 +19,7 @@ export interface PastFundingData {
 }
 
 export interface NewFundingData extends PastFundingData {
-  fundingOrderStatusEnumId: FundingOrderStatusEnum;
+  fundingStatusEnum: FundingStatusEnum;
 }
 
 export interface FundingInfo {
@@ -38,8 +38,8 @@ export interface BasicEvidence {
 export interface AddEvidence {
   // 동아리 용품 증빙
   clubSuppliesName?: string;
-  clubSuppliesEvidenceEnumId?: FixtureEvidenceEnum;
-  clubSuppliesClassEnumId?: FixtureClassEnum;
+  clubSuppliesEvidenceEnum?: FixtureEvidenceEnum;
+  clubSuppliesClassEnum?: FixtureClassEnum;
   clubSuppliesPurpose?: string;
   clubSuppliesImageFiles: FileDetail[];
   clubSuppliesSoftwareEvidence?: string;
@@ -49,8 +49,8 @@ export interface AddEvidence {
   // 비품 증빙
   isFixture: boolean;
   fixtureName?: string;
-  fixtureEvidenceEnumId?: FixtureEvidenceEnum;
-  fixtureClassEnumId?: FixtureClassEnum;
+  fixtureEvidenceEnum?: FixtureEvidenceEnum;
+  fixtureClassEnum?: FixtureClassEnum;
   fixturePurpose?: string;
   fixtureImageFiles: FileDetail[];
   fixtureSoftwareEvidence?: string;
@@ -59,7 +59,7 @@ export interface AddEvidence {
   priceOfFixture?: number;
   // 교통비 증빙
   isTransportation: boolean;
-  transportationEnumId?: TransportationEnum;
+  transportationEnum?: TransportationEnum;
   origin?: string;
   destination?: string;
   purposeOfTransportation?: string;

@@ -64,7 +64,7 @@ const TransportEvidenceBlock: React.FC<{ required?: boolean }> = ({
   const formCtx = useFormContext<AddEvidence>();
   const { control, watch, setValue } = formCtx;
 
-  const transportationEnumId = watch("transportationEnumId");
+  const transportationEnum = watch("transportationEnum");
   const participants = watch("transportationPassengers");
 
   return (
@@ -74,7 +74,7 @@ const TransportEvidenceBlock: React.FC<{ required?: boolean }> = ({
           <FlexWrapper direction="row" gap={32}>
             <FixedWidthWrapper>
               <FormController
-                name="transportationEnumId"
+                name="transportationEnum"
                 required={required}
                 control={control}
                 renderItem={props => (
@@ -112,7 +112,7 @@ const TransportEvidenceBlock: React.FC<{ required?: boolean }> = ({
               )}
             />
           </FlexWrapper>
-          {isParticipantsRequired(transportationEnumId) && (
+          {isParticipantsRequired(transportationEnum) && (
             <FlexWrapper direction="column" gap={4}>
               <Typography fs={16} fw="MEDIUM" lh={20}>
                 탑승자 명단
@@ -137,7 +137,7 @@ const TransportEvidenceBlock: React.FC<{ required?: boolean }> = ({
             >
               이용 목적
             </Typography>
-            {isPurposeInfoRequired(transportationEnumId) && (
+            {isPurposeInfoRequired(transportationEnum) && (
               <Typography
                 fw="REGULAR"
                 fs={14}
@@ -145,7 +145,7 @@ const TransportEvidenceBlock: React.FC<{ required?: boolean }> = ({
                 color="GRAY.600"
                 style={{ whiteSpace: "pre-wrap" }}
               >
-                {purposeInfo(transportationEnumId)}
+                {purposeInfo(transportationEnum)}
               </Typography>
             )}
             <FormController

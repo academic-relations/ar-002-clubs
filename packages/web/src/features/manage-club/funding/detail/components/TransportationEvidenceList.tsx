@@ -20,7 +20,7 @@ const TransportationEvidenceList = () => (
       교통비
     </Typography>
     <ListItem>
-      교통수단: {transportationEnumMap(mockFundingDetail.transportationEnumId)}
+      교통수단: {transportationEnumMap(mockFundingDetail.transportationEnum)}
     </ListItem>
     <ListItem>출발지: {mockFundingDetail.origin}</ListItem>
     <ListItem>도착지: {mockFundingDetail.destination}</ListItem>
