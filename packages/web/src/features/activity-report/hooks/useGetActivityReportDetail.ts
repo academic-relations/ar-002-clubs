@@ -47,7 +47,7 @@ const useGetActivityReportDetail = (
       participants: activityReport.participants.map(participant => ({
         id: participant.studentId,
         name: participant.name,
-        studentNumber: participant.studentNumber,
+        studentNumber: participant.studentNumber.toString(),
       })),
       professorApproval: (() => {
         if (!hasProfessor) {
