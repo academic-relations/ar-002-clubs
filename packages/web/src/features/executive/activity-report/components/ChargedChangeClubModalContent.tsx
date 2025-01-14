@@ -62,6 +62,7 @@ const ChargedChangeClubModalContent: React.FC<
           value={selectedExecutiveIdModal}
           onChange={setSelectedExecutiveIdModal}
           label="동아리별 활동 보고서 담당자"
+          isTextAlignStart
         />
         {/* <ChargedChangeClubModalTable/> */}
         <Typography fs={14} lh={20} fw="MEDIUM" style={{ textAlign: "left" }}>
