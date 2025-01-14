@@ -7,7 +7,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import useGetActivityClubChargeAvailableExecutives from "../services/useGetActivityClubChargeAvailableExecutives";
 
-// import ChargedChangeClubModalTable from "./ChargedChangeClubModalTable";
+import ChargedChangeClubModalTable from "./ChargedChangeClubModalTable";
 
 interface ChargedChangeClubModalContentProps {
   selectedClubIds: number[];
@@ -64,7 +64,27 @@ const ChargedChangeClubModalContent: React.FC<
           label="동아리별 활동 보고서 담당자"
           isTextAlignStart
         />
-        {/* <ChargedChangeClubModalTable/> */}
+        <ChargedChangeClubModalTable
+          data={[
+            {
+              clubId: 1,
+              clubNameKr: "동아리1",
+              clubNameEn: "Club1",
+              prevExecutiveName: "",
+            },
+            {
+              clubId: 2,
+              clubNameKr: "동아리2",
+              clubNameEn: "Club2",
+              prevExecutiveName: "이전 담당자2",
+            },
+          ]}
+          newExecutiveName={
+            chargeableExecutives
+              .find(executive => executive.value === selectedExecutiveIdModal)
+              ?.label.split(" ")[0] ?? ""
+          }
+        />
         <Typography fs={14} lh={20} fw="MEDIUM" style={{ textAlign: "left" }}>
           * 동아리별 활동 보고서 담당자를 변경할 경우, 해당 동아리가 작성한 활동
           보고서의 담당자가 모두 해당 담당자로 변경됩니다.
