@@ -15,6 +15,7 @@ import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/compone
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 
+import { useDeleteFunding } from "@sparcs-clubs/web/features/manage-club/funding/services/useDeleteFunding";
 import { useGetFunding } from "@sparcs-clubs/web/features/manage-club/funding/services/useGetFunding";
 import { isActivityReportUnverifiable } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
 
@@ -39,6 +40,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
   const { id } = useParams<{ id: string }>();
 
   const { data: funding, isLoading, isError } = useGetFunding(+id);
+  const { mutate: deleteFunding } = useDeleteFunding();
 
   const onClick = () => {
     router.push("/manage-club/funding");
@@ -68,9 +70,15 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
       <Modal isOpen={isOpen}>
         <CancellableModalContent
           onConfirm={() => {
-            close();
-            // TODO: 삭제 로직 넣기
-            router.push("/manage-club/funding");
+            deleteFunding(
+              { requestParam: { id: Number(id) } },
+              {
+                onSuccess: () => {
+                  close();
+                  router.replace("/manage-club/funding");
+                },
+              },
+            );
           }}
           onClose={close}
         >
