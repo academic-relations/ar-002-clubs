@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { ApiClb004ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb004";
 import { overlay } from "overlay-kit";
@@ -32,7 +32,8 @@ const ChangeClubInfoCard = () => {
     clubId,
   });
 
-  const isRoomPasswordRequired = true; // TODO: 동방 없는 곳은 비밀번호 입력 안 해도 에러 안 뜨게 수정
+  // 동아리방 비밀번호 변경 미구현으로 임시 주석처리
+  // const isRoomPasswordRequired = true; // TODO: 동방 없는 곳은 비밀번호 입력 안 해도 에러 안 뜨게 수정
 
   const formCtx = useForm<ApiClb004ResponseOK>({
     mode: "all",
@@ -115,7 +116,8 @@ const ChangeClubInfoCard = () => {
                 />
               )}
             />
-            <FormController
+            {/* 동아리방 비밀번호 변경 미구현으로 임시 주석처리 */}
+            {/* <FormController
               name="roomPassword"
               required={isRoomPasswordRequired}
               control={control}
@@ -127,7 +129,7 @@ const ChangeClubInfoCard = () => {
                   placeholder="동아리방 비밀번호를 입력하세요"
                 />
               )}
-            />
+            /> */}
             <Button
               buttonType="submit"
               type={isValid ? "default" : "disabled"}
