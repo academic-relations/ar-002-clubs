@@ -14,6 +14,7 @@ import ChargedChangeClubModalContent from "../components/ChargedChangeClubModalC
 import { ChargedChangeClubProps } from "../components/ChargedChangeClubModalTable";
 import ExecutiveActivityChargedTable from "../components/ExecutiveActivityChargedTable";
 import ExecutiveActivityClubTable from "../components/ExecutiveActivityClubTable";
+import { putClubActivitiesChargedExecutive } from "../services/putClubActivitiesChargedExecutive";
 import useGetExecutiveActivities from "../services/useGetExecutiveActivities";
 
 const ExecutiveActivityReportFrame = () => {
@@ -28,6 +29,7 @@ const ExecutiveActivityReportFrame = () => {
   const [selectedClubInfos, setSelectedClubInfos] = useState<
     ChargedChangeClubProps[]
   >([]);
+  // console.log(selectedExecutiveId);
 
   useEffect(() => {
     if (data) {
@@ -48,12 +50,19 @@ const ExecutiveActivityReportFrame = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <CancellableModalContent
-          onConfirm={() => {
-            setSelectedExecutiveId(null);
-            close();
+          // TODO: 로직 확인 및 수정 필요
+          onConfirm={async () => {
+            if (selectedExecutiveId !== null) {
+              await putClubActivitiesChargedExecutive({
+                clubId: selectedClubIds[0],
+                executiveId: selectedExecutiveId,
+              });
+              close();
+            }
+            // setSelectedExecutiveId(null);
           }}
           onClose={() => {
-            setSelectedExecutiveId(null);
+            // setSelectedExecutiveId(null);
             close();
           }}
         >
