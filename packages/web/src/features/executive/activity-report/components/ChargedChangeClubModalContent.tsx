@@ -7,10 +7,13 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import useGetActivityClubChargeAvailableExecutives from "../services/useGetActivityClubChargeAvailableExecutives";
 
-import ChargedChangeClubModalTable from "./ChargedChangeClubModalTable";
+import ChargedChangeClubModalTable, {
+  ChargedChangeClubProps,
+} from "./ChargedChangeClubModalTable";
 
 interface ChargedChangeClubModalContentProps {
   selectedClubIds: number[];
+  selectedClubInfos: ChargedChangeClubProps[];
   selectedExecutiveId: number | null;
   setSelectedExecutiveId: (value: number | null) => void;
 }
@@ -22,7 +25,12 @@ interface ChargeableExecutive {
 
 const ChargedChangeClubModalContent: React.FC<
   ChargedChangeClubModalContentProps
-> = ({ selectedClubIds, selectedExecutiveId, setSelectedExecutiveId }) => {
+> = ({
+  selectedClubIds,
+  selectedClubInfos,
+  selectedExecutiveId,
+  setSelectedExecutiveId,
+}) => {
   const { data, isLoading, isError } =
     useGetActivityClubChargeAvailableExecutives({ clubIds: selectedClubIds });
   const [selectedExecutiveIdModal, setSelectedExecutiveIdModal] = useState<
@@ -65,20 +73,7 @@ const ChargedChangeClubModalContent: React.FC<
           isTextAlignStart
         />
         <ChargedChangeClubModalTable
-          data={[
-            {
-              clubId: 1,
-              clubNameKr: "동아리1",
-              clubNameEn: "Club1",
-              prevExecutiveName: "",
-            },
-            {
-              clubId: 2,
-              clubNameKr: "동아리2",
-              clubNameEn: "Club2",
-              prevExecutiveName: "이전 담당자2",
-            },
-          ]}
+          data={selectedClubInfos}
           newExecutiveName={
             chargeableExecutives
               .find(executive => executive.value === selectedExecutiveIdModal)

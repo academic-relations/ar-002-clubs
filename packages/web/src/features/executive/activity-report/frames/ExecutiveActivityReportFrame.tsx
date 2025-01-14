@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { overlay } from "overlay-kit";
 
@@ -11,6 +11,7 @@ import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 
 import ActivityReportStatistic from "../components/ActivityReportStatistic";
 import ChargedChangeClubModalContent from "../components/ChargedChangeClubModalContent";
+import { ChargedChangeClubProps } from "../components/ChargedChangeClubModalTable";
 import ExecutiveActivityChargedTable from "../components/ExecutiveActivityChargedTable";
 import ExecutiveActivityClubTable from "../components/ExecutiveActivityClubTable";
 import useGetExecutiveActivities from "../services/useGetExecutiveActivities";
@@ -24,6 +25,24 @@ const ExecutiveActivityReportFrame = () => {
   const [selectedExecutiveId, setSelectedExecutiveId] = useState<number | null>(
     null,
   );
+  const [selectedClubInfos, setSelectedClubInfos] = useState<
+    ChargedChangeClubProps[]
+  >([]);
+
+  useEffect(() => {
+    if (data) {
+      setSelectedClubInfos(
+        data.items
+          .filter(item => selectedClubIds.includes(item.clubId))
+          .map(item => ({
+            clubId: item.clubId,
+            clubNameKr: item.clubNameKr,
+            clubNameEn: item.clubNameEn,
+            prevExecutiveName: item.chargedExecutive?.name ?? "",
+          })),
+      );
+    }
+  }, [data, selectedClubIds]);
 
   const openChargedChangeModal = () => {
     overlay.open(({ isOpen, close }) => (
@@ -31,6 +50,7 @@ const ExecutiveActivityReportFrame = () => {
         <CancellableModalContent onConfirm={close} onClose={close}>
           <ChargedChangeClubModalContent
             selectedClubIds={selectedClubIds}
+            selectedClubInfos={selectedClubInfos}
             selectedExecutiveId={selectedExecutiveId}
             setSelectedExecutiveId={setSelectedExecutiveId}
           />

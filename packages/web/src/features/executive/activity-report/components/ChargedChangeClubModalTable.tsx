@@ -42,7 +42,7 @@ const getChargedExecutiveContent = (
   );
 };
 
-interface ChargedChangeClubProps {
+export interface ChargedChangeClubProps {
   clubId: number;
   clubNameKr: string;
   clubNameEn: string;
