@@ -1,13 +1,16 @@
 import React from "react";
 
+import { IFundingResponse } from "@sparcs-clubs/interface/api/funding/type/funding.type";
+
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/services/_mock/mockFundingDetail";
 import { transportationEnumMap } from "@sparcs-clubs/web/utils/fundingEnumMap";
 
 import { ListItem } from "./FundingInfoList";
 
-const TransportationEvidenceList = () => (
+const TransportationEvidenceList: React.FC<{ data: IFundingResponse }> = ({
+  data,
+}) => (
   <FlexWrapper direction="column" gap={16}>
     <Typography
       ff="PRETENDARD"
@@ -20,15 +23,15 @@ const TransportationEvidenceList = () => (
       교통비
     </Typography>
     <ListItem>
-      교통수단: {transportationEnumMap(mockFundingDetail.transportationEnumId)}
+      교통수단: {transportationEnumMap(data.transportation?.enumId)}
     </ListItem>
-    <ListItem>출발지: {mockFundingDetail.origin}</ListItem>
-    <ListItem>도착지: {mockFundingDetail.destination}</ListItem>
+    <ListItem>출발지: {data.transportation?.origin}</ListItem>
+    <ListItem>도착지: {data.transportation?.destination}</ListItem>
     <ListItem>
-      탑승자 명단 ({mockFundingDetail.transportationPassengers.length}명)
+      탑승자 명단 ({data.transportation?.passengers.length}명)
     </ListItem>
     <FlexWrapper direction="column" gap={12} style={{ paddingLeft: 24 }}>
-      {mockFundingDetail.transportationPassengers.map(passenger => (
+      {data.transportation?.passengers.map(passenger => (
         <Typography
           key={passenger.name}
           ff="PRETENDARD"
@@ -41,7 +44,7 @@ const TransportationEvidenceList = () => (
         </Typography>
       ))}
     </FlexWrapper>
-    <ListItem>이용 목적: {mockFundingDetail.purposeOfTransportation}</ListItem>
+    <ListItem>이용 목적: {data.transportation?.purpose}</ListItem>
   </FlexWrapper>
 );
 

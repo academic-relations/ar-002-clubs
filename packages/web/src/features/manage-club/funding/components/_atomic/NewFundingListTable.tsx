@@ -6,6 +6,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import { useRouter } from "next/navigation";
+
 import Table from "@sparcs-clubs/web/common/components/Table";
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import { TableRow } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
@@ -60,6 +62,7 @@ const columns = [
 const NewFundingListTable: React.FC<NewFundingListTableProps> = ({
   newFundingList = [],
 }) => {
+  const router = useRouter();
   const table = useReactTable({
     columns,
     data: newFundingList,
@@ -71,6 +74,7 @@ const NewFundingListTable: React.FC<NewFundingListTableProps> = ({
     <Table
       table={table}
       count={newFundingList.length}
+      onClick={row => router.push(`/manage-club/funding/${row.id}`)}
       footer={
         <TableRow>
           <TableCell type="Default" width="70%">
