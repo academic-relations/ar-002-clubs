@@ -42,7 +42,10 @@ const columns = [
       <CheckboxCenterPlacer>
         <Checkbox
           checked={row.getIsSelected()}
-          onClick={row.getToggleSelectedHandler()}
+          onClick={e => {
+            e?.stopPropagation();
+            row.getToggleSelectedHandler()(e);
+          }}
         />
       </CheckboxCenterPlacer>
     ),
