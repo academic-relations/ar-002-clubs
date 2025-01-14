@@ -47,7 +47,16 @@ const ExecutiveActivityReportFrame = () => {
   const openChargedChangeModal = () => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
-        <CancellableModalContent onConfirm={close} onClose={close}>
+        <CancellableModalContent
+          onConfirm={() => {
+            setSelectedExecutiveId(null);
+            close();
+          }}
+          onClose={() => {
+            setSelectedExecutiveId(null);
+            close();
+          }}
+        >
           <ChargedChangeClubModalContent
             selectedClubIds={selectedClubIds}
             selectedClubInfos={selectedClubInfos}
@@ -87,7 +96,12 @@ const ExecutiveActivityReportFrame = () => {
           placeholder=""
         />
         {isClubView && (
-          <Button onClick={openChargedChangeModal}>담당자 변경</Button>
+          <Button
+            onClick={openChargedChangeModal}
+            type={selectedClubIds.length === 0 ? "disabled" : "default"}
+          >
+            담당자 변경
+          </Button>
         )}
       </FlexWrapper>
       {isClubView ? (
