@@ -1,3 +1,4 @@
+import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 import {
   IClubSupplies,
   IFixture,
@@ -101,7 +102,7 @@ export class MFunding implements IFunding {
 
   fundingOrderStatusEnumId: number;
 
-  purposeId?: number;
+  purposeActivity?: Pick<IActivitySummary, "id">;
 
   name: string;
 
@@ -170,7 +171,9 @@ export class MFunding implements IFunding {
       name: result.fundingOrder.name,
       semesterId: result.fundingOrder.semesterId,
       fundingOrderStatusEnumId: result.fundingOrder.fundingOrderStatusEnumId,
-      purposeId: result.fundingOrder.purposeId,
+      purposeActivity: {
+        id: result.fundingOrder.purposeId,
+      },
       expenditureDate: result.fundingOrder.expenditureDate,
       expenditureAmount: result.fundingOrder.expenditureAmount,
       approvedAmount: result.fundingOrder.approvedAmount,
@@ -192,98 +195,121 @@ export class MFunding implements IFunding {
       isProfitMakingActivity: result.fundingOrder.isProfitMakingActivity,
       isJointExpense: result.fundingOrder.isJointExpense,
       isEtcExpense: result.fundingOrder.isEtcExpense,
-      clubSupplies: {
-        name: result.fundingOrder.clubSuppliesName,
-        evidenceEnumId: result.fundingOrder.clubSuppliesEvidenceEnumId,
-        classEnumId: result.fundingOrder.clubSuppliesClassEnumId,
-        purpose: result.fundingOrder.clubSuppliesPurpose,
-        softwareEvidence: result.fundingOrder.clubSuppliesSoftwareEvidence,
-        number: result.fundingOrder.numberOfClubSupplies,
-        price: result.fundingOrder.priceOfClubSupplies,
-        imageFiles: result.clubSuppliesImageFiles.map(file => ({
-          id: file.id,
-        })),
-        softwareEvidenceFiles: result.clubSuppliesSoftwareEvidenceFiles.map(
-          file => ({
-            id: file.id,
-          }),
-        ),
-      },
-      fixture: {
-        name: result.fundingOrder.fixtureName,
-        purpose: result.fundingOrder.fixturePurpose,
-        evidenceEnumId: result.fundingOrder.fixtureEvidenceEnumId,
-        classEnumId: result.fundingOrder.fixtureClassEnumId,
-        softwareEvidence: result.fundingOrder.fixtureSoftwareEvidence,
-        number: result.fundingOrder.numberOfFixture,
-        price: result.fundingOrder.priceOfFixture,
-        imageFiles: result.fixtureImageFiles.map(file => ({
-          id: file.id,
-        })),
-        softwareEvidenceFiles: result.fixtureSoftwareEvidenceFiles.map(
-          file => ({
-            id: file.id,
-          }),
-        ),
-      },
-      transportation: {
-        enumId: result.fundingOrder.transportationEnumId,
-        origin: result.fundingOrder.origin,
-        destination: result.fundingOrder.destination,
-        purpose: result.fundingOrder.purposeOfTransportation,
-        placeValidity: result.fundingOrder.placeValidity,
-        passengers: result.transportationPassengers.map(passenger => ({
-          id: passenger.id,
-        })),
-      },
-      nonCorporateTransaction: {
-        traderName: result.fundingOrder.traderName,
-        traderAccountNumber: result.fundingOrder.traderAccountNumber,
-        wasteExplanation: result.fundingOrder.wasteExplanation,
-      },
-      foodExpense: {
-        explanation: result.fundingOrder.foodExpenseExplanation,
-        files: result.foodExpenseFiles.map(file => ({
-          id: file.id,
-        })),
-      },
-      laborContract: {
-        explanation: result.fundingOrder.laborContractExplanation,
-        files: result.laborContractFiles.map(file => ({
-          id: file.id,
-        })),
-      },
-      externalEventParticipationFee: {
-        explanation:
-          result.fundingOrder.externalEventParticipationFeeExplanation,
-        files: result.externalEventParticipationFeeFiles.map(file => ({
-          id: file.id,
-        })),
-      },
-      publication: {
-        explanation: result.fundingOrder.publicationExplanation,
-        files: result.publicationFiles.map(file => ({
-          id: file.id,
-        })),
-      },
-      profitMakingActivity: {
-        explanation: result.fundingOrder.profitMakingActivityExplanation,
-        files: result.profitMakingActivityFiles.map(file => ({
-          id: file.id,
-        })),
-      },
-      jointExpense: {
-        explanation: result.fundingOrder.jointExpenseExplanation,
-        files: result.jointExpenseFiles.map(file => ({
-          id: file.id,
-        })),
-      },
-      etcExpense: {
-        explanation: result.fundingOrder.etcExpenseExplanation,
-        files: result.etcExpenseFiles.map(file => ({
-          id: file.id,
-        })),
-      },
+      clubSupplies: result.fundingOrder.purposeId
+        ? undefined
+        : {
+            name: result.fundingOrder.clubSuppliesName,
+            evidenceEnumId: result.fundingOrder.clubSuppliesEvidenceEnumId,
+            classEnumId: result.fundingOrder.clubSuppliesClassEnumId,
+            purpose: result.fundingOrder.clubSuppliesPurpose,
+            softwareEvidence: result.fundingOrder.clubSuppliesSoftwareEvidence,
+            number: result.fundingOrder.numberOfClubSupplies,
+            price: result.fundingOrder.priceOfClubSupplies,
+            imageFiles: result.clubSuppliesImageFiles.map(file => ({
+              id: file.id,
+            })),
+            softwareEvidenceFiles: result.clubSuppliesSoftwareEvidenceFiles.map(
+              file => ({
+                id: file.id,
+              }),
+            ),
+          },
+      fixture: result.fundingOrder.isFixture
+        ? {
+            name: result.fundingOrder.fixtureName,
+            purpose: result.fundingOrder.fixturePurpose,
+            evidenceEnumId: result.fundingOrder.fixtureEvidenceEnumId,
+            classEnumId: result.fundingOrder.fixtureClassEnumId,
+            softwareEvidence: result.fundingOrder.fixtureSoftwareEvidence,
+            number: result.fundingOrder.numberOfFixture,
+            price: result.fundingOrder.priceOfFixture,
+            imageFiles: result.fixtureImageFiles.map(file => ({
+              id: file.id,
+            })),
+            softwareEvidenceFiles: result.fixtureSoftwareEvidenceFiles.map(
+              file => ({
+                id: file.id,
+              }),
+            ),
+          }
+        : undefined,
+      transportation: result.fundingOrder.isTransportation
+        ? {
+            enumId: result.fundingOrder.transportationEnumId,
+            origin: result.fundingOrder.origin,
+            destination: result.fundingOrder.destination,
+            purpose: result.fundingOrder.purposeOfTransportation,
+            placeValidity: result.fundingOrder.placeValidity,
+            passengers: result.transportationPassengers.map(passenger => ({
+              id: passenger.id,
+            })),
+          }
+        : undefined,
+      nonCorporateTransaction: result.fundingOrder.isNonCorporateTransaction
+        ? {
+            traderName: result.fundingOrder.traderName,
+            traderAccountNumber: result.fundingOrder.traderAccountNumber,
+            wasteExplanation: result.fundingOrder.wasteExplanation,
+          }
+        : undefined,
+      foodExpense: result.fundingOrder.isFoodExpense
+        ? {
+            explanation: result.fundingOrder.foodExpenseExplanation,
+            files: result.foodExpenseFiles.map(file => ({
+              id: file.id,
+            })),
+          }
+        : undefined,
+      laborContract: result.fundingOrder.isLaborContract
+        ? {
+            explanation: result.fundingOrder.laborContractExplanation,
+            files: result.laborContractFiles.map(file => ({
+              id: file.id,
+            })),
+          }
+        : undefined,
+      externalEventParticipationFee: result.fundingOrder
+        .isExternalEventParticipationFee
+        ? {
+            explanation:
+              result.fundingOrder.externalEventParticipationFeeExplanation,
+            files: result.externalEventParticipationFeeFiles.map(file => ({
+              id: file.id,
+            })),
+          }
+        : undefined,
+      publication: result.fundingOrder.isPublication
+        ? {
+            explanation: result.fundingOrder.publicationExplanation,
+            files: result.publicationFiles.map(file => ({
+              id: file.id,
+            })),
+          }
+        : undefined,
+      profitMakingActivity: result.fundingOrder.isProfitMakingActivity
+        ? {
+            explanation: result.fundingOrder.profitMakingActivityExplanation,
+            files: result.profitMakingActivityFiles.map(file => ({
+              id: file.id,
+            })),
+          }
+        : undefined,
+      jointExpense: result.fundingOrder.isJointExpense
+        ? {
+            explanation: result.fundingOrder.jointExpenseExplanation,
+            files: result.jointExpenseFiles.map(file => ({
+              id: file.id,
+            })),
+          }
+        : undefined,
+      etcExpense: result.fundingOrder.isEtcExpense
+        ? {
+            explanation: result.fundingOrder.etcExpenseExplanation,
+            files: result.etcExpenseFiles.map(file => ({
+              id: file.id,
+            })),
+          }
+        : undefined,
     });
   }
 }
