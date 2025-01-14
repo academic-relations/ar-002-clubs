@@ -1,0 +1,208 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { isParticipantsRequired } from "@sparcs-clubs/web/utils/isTransportation";
+
+import { fundingDetailQueryKey } from "../services/useGetFunding";
+import { usePutFunding } from "../services/usePutFunding";
+import {
+  FundingFormData,
+  isActivityReportUnverifiable,
+} from "../types/funding";
+
+const useUpdateFunding = (fundingId: number, clubId: number) => {
+  const queryClient = useQueryClient();
+  const { mutateAsync: updateFunding } = usePutFunding();
+
+  return useMutation({
+    mutationFn: ({
+      purposeActivity,
+      name,
+      expenditureDate,
+      expenditureAmount,
+      tradeDetailExplanation,
+      isFixture,
+      isTransportation,
+      isNonCorporateTransaction,
+      isFoodExpense,
+      isLaborContract,
+      isExternalEventParticipationFee,
+      isPublication,
+      isProfitMakingActivity,
+      isJointExpense,
+      isEtcExpense,
+      ...data
+    }: FundingFormData) =>
+      updateFunding(
+        {
+          fundingId,
+          body: {
+            clubId,
+            purposeActivity: purposeActivity
+              ? { id: purposeActivity.id }
+              : undefined,
+            name,
+            expenditureDate,
+            expenditureAmount: Number(expenditureAmount),
+
+            tradeEvidenceFiles: data.tradeEvidenceFiles.map(file => ({
+              id: file.id,
+            })),
+            tradeDetailFiles: data.tradeDetailFiles.map(file => ({
+              id: file.id,
+            })),
+            tradeDetailExplanation,
+
+            isFixture,
+            isTransportation,
+            isNonCorporateTransaction,
+            isFoodExpense,
+            isLaborContract,
+            isExternalEventParticipationFee,
+            isPublication,
+            isProfitMakingActivity,
+            isJointExpense,
+            isEtcExpense,
+
+            clubSupplies: isActivityReportUnverifiable(purposeActivity?.id)
+              ? {
+                  name: data.clubSuppliesName,
+                  evidenceEnumId: data.clubSuppliesEvidenceEnumId,
+                  classEnumId: data.clubSuppliesClassEnumId,
+                  purpose: data.clubSuppliesPurpose,
+                  imageFiles: data.clubSuppliesImageFiles
+                    ? data.clubSuppliesImageFiles.map(file => ({
+                        id: file.id,
+                      }))
+                    : [],
+                  softwareEvidence: data.clubSuppliesSoftwareEvidence,
+                  softwareEvidenceFiles: data.clubSuppliesSoftwareEvidenceFiles
+                    ? data.clubSuppliesSoftwareEvidenceFiles.map(file => ({
+                        id: file.id,
+                      }))
+                    : [],
+                  number: Number(data.numberOfClubSupplies),
+                  price: Number(data.priceOfClubSupplies),
+                }
+              : undefined,
+
+            fixture: isFixture
+              ? {
+                  name: data.fixtureName,
+                  evidenceEnumId: data.fixtureEvidenceEnumId,
+                  classEnumId: data.fixtureClassEnumId,
+                  purpose: data.fixturePurpose,
+                  imageFiles: data.fixtureImageFiles
+                    ? data.fixtureImageFiles.map(file => ({
+                        id: file.id,
+                      }))
+                    : [],
+                  softwareEvidence: data.fixtureSoftwareEvidence,
+                  softwareEvidenceFiles: data.fixtureSoftwareEvidenceFiles
+                    ? data.fixtureSoftwareEvidenceFiles.map(file => ({
+                        id: file.id,
+                      }))
+                    : [],
+                  number: data.numberOfFixture,
+                  price: data.priceOfFixture,
+                }
+              : undefined,
+
+            transportation: isTransportation
+              ? {
+                  enumId: data.transportationEnumId,
+                  origin: data.origin,
+                  destination: data.destination,
+                  purpose: data.purposeOfTransportation,
+                  placeValidity: data.placeValidity,
+                  passengers: isParticipantsRequired(data.transportationEnumId)
+                    ? data.transportationPassengers.map(participant => ({
+                        id: participant.id,
+                      }))
+                    : [],
+                }
+              : undefined,
+
+            nonCorporateTransaction: isNonCorporateTransaction
+              ? {
+                  traderName: data.traderName,
+                  traderAccountNumber: data.traderAccountNumber,
+                  wasteExplanation: data.wasteExplanation,
+                }
+              : undefined,
+
+            foodExpense: isFoodExpense
+              ? {
+                  explanation: data.foodExpenseExplanation,
+                  files: data.foodExpenseFiles.map(file => ({
+                    id: file.id,
+                  })),
+                }
+              : undefined,
+
+            laborContract: isLaborContract
+              ? {
+                  explanation: data.laborContractExplanation,
+                  files: data.laborContractFiles.map(file => ({
+                    id: file.id,
+                  })),
+                }
+              : undefined,
+
+            externalEventParticipationFee: isExternalEventParticipationFee
+              ? {
+                  explanation: data.externalEventParticipationFeeExplanation,
+                  files: data.externalEventParticipationFeeFiles.map(file => ({
+                    id: file.id,
+                  })),
+                }
+              : undefined,
+
+            publication: isPublication
+              ? {
+                  explanation: data.publicationExplanation,
+                  files: data.publicationFiles.map(file => ({
+                    id: file.id,
+                  })),
+                }
+              : undefined,
+
+            profitMakingActivity: isProfitMakingActivity
+              ? {
+                  explanation: data.profitMakingActivityExplanation,
+                  files: data.profitMakingActivityFiles.map(file => ({
+                    id: file.id,
+                  })),
+                }
+              : undefined,
+
+            jointExpense: isJointExpense
+              ? {
+                  explanation: data.jointExpenseExplanation,
+                  files: data.jointExpenseFiles.map(file => ({
+                    id: file.id,
+                  })),
+                }
+              : undefined,
+
+            etcExpense: isEtcExpense
+              ? {
+                  explanation: data.etcExpenseExplanation,
+                  files: data.etcExpenseFiles.map(file => ({
+                    id: file.id,
+                  })),
+                }
+              : undefined,
+          },
+        },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: fundingDetailQueryKey(fundingId),
+            });
+          },
+        },
+      ),
+  });
+};
+
+export default useUpdateFunding;

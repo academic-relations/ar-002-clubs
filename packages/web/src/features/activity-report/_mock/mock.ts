@@ -1,5 +1,6 @@
 import { ApiAct002ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
 import { ApiAct011ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
+import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 
 import {
   ActivityStatusEnum,
@@ -7,8 +8,6 @@ import {
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
-
-import { Participant } from "@sparcs-clubs/web/types/participant";
 
 export interface ParticipantTemp {
   id: number; // 고유 ID
@@ -176,7 +175,7 @@ export const mockPastActivityData: ApiAct011ResponseOk = {
   ],
 };
 
-export const mockParticipantData: Participant[] = [
+export const mockParticipantData: IStudentSummary[] = [
   {
     id: 1,
     studentNumber: "20200515",

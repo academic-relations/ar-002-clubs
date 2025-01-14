@@ -203,7 +203,7 @@ export default class FundingService {
             funding.purposeActivity.id,
           );
         return {
-          name: activityName[0].name ?? "활동보고서로 증빙이 불가능한 물품",
+          name: activityName.name ?? "활동보고서로 증빙이 불가능한 물품",
           id: funding.purposeActivity.id,
         };
       }),
@@ -213,10 +213,9 @@ export default class FundingService {
       fundings: fundings.map(funding => ({
         id: funding.id,
         fundingOrderStatusEnumId: funding.fundingOrderStatusEnumId,
-        purposeId: funding.purposeActivity.id,
-        activityName: activities.find(
+        purposeActivity: activities.find(
           activity => activity.id === funding.purposeActivity.id,
-        ).name,
+        ),
         name: funding.name,
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,
