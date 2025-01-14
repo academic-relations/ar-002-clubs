@@ -13,7 +13,7 @@ export type FundingDBResult = {
     clubId: number;
     purposeActivityId?: number;
     semesterId?: number;
-    fundingStatusEnumId?: number;
+    fundingStatusEnum?: number;
     name: string;
     expenditureDate: Date;
     expenditureAmount: number;
@@ -31,15 +31,15 @@ export type FundingDBResult = {
     isEtcExpense: boolean;
     isNonCorporateTransaction: boolean;
     clubSuppliesName: string;
-    clubSuppliesEvidenceEnumId: number;
-    clubSuppliesClassEnumId: number;
+    clubSuppliesEvidenceEnum: number;
+    clubSuppliesClassEnum: number;
     clubSuppliesPurpose: string;
     clubSuppliesSoftwareEvidence: string;
     numberOfClubSupplies: number;
     priceOfClubSupplies: number;
     fixtureName: string;
-    fixtureEvidenceEnumId: number;
-    fixtureClassEnumId: number;
+    fixtureEvidenceEnum: number;
+    fixtureClassEnum: number;
     fixturePurpose: string;
     fixtureSoftwareEvidence: string;
     numberOfFixture: number;
@@ -55,7 +55,7 @@ export type FundingDBResult = {
     profitMakingActivityExplanation: string;
     jointExpenseExplanation: string;
     etcExpenseExplanation: string;
-    transportationEnumId: number;
+    transportationEnum: number;
     origin: string;
     destination: string;
     purposeOfTransportation: string;
@@ -99,7 +99,7 @@ export class MFunding implements IFunding {
 
   semesterId: number;
 
-  fundingStatusEnumId: number;
+  fundingStatusEnum: number;
 
   purposeActivityId?: number;
 
@@ -169,7 +169,7 @@ export class MFunding implements IFunding {
       clubId: result.funding.clubId,
       name: result.funding.name,
       semesterId: result.funding.semesterId,
-      fundingStatusEnumId: result.funding.fundingStatusEnumId,
+      fundingStatusEnum: result.funding.fundingStatusEnum,
       purposeActivityId: result.funding.purposeActivityId,
       expenditureDate: result.funding.expenditureDate,
       expenditureAmount: result.funding.expenditureAmount,
@@ -194,8 +194,8 @@ export class MFunding implements IFunding {
       isEtcExpense: result.funding.isEtcExpense,
       clubSupplies: {
         name: result.funding.clubSuppliesName,
-        evidenceEnumId: result.funding.clubSuppliesEvidenceEnumId,
-        classEnumId: result.funding.clubSuppliesClassEnumId,
+        evidenceEnum: result.funding.clubSuppliesEvidenceEnum,
+        classEnum: result.funding.clubSuppliesClassEnum,
         purpose: result.funding.clubSuppliesPurpose,
         softwareEvidence: result.funding.clubSuppliesSoftwareEvidence,
         number: result.funding.numberOfClubSupplies,
@@ -212,8 +212,8 @@ export class MFunding implements IFunding {
       fixture: {
         name: result.funding.fixtureName,
         purpose: result.funding.fixturePurpose,
-        evidenceEnumId: result.funding.fixtureEvidenceEnumId,
-        classEnumId: result.funding.fixtureClassEnumId,
+        evidenceEnum: result.funding.fixtureEvidenceEnum,
+        classEnum: result.funding.fixtureClassEnum,
         softwareEvidence: result.funding.fixtureSoftwareEvidence,
         number: result.funding.numberOfFixture,
         price: result.funding.priceOfFixture,
@@ -227,7 +227,7 @@ export class MFunding implements IFunding {
         ),
       },
       transportation: {
-        enumId: result.funding.transportationEnumId,
+        enum: result.funding.transportationEnum,
         origin: result.funding.origin,
         destination: result.funding.destination,
         purpose: result.funding.purposeOfTransportation,

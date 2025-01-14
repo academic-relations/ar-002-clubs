@@ -259,7 +259,7 @@ export default class FundingRepository {
         name: Funding.name,
         expenditureAmount: Funding.expenditureAmount,
         approvedAmount: Funding.approvedAmount,
-        fundingStatusEnumId: Funding.fundingStatusEnumId,
+        fundingStatusEnum: Funding.fundingStatusEnum,
         purposeActivity: Funding.purposeActivityId,
       })
       .from(Funding)
@@ -293,7 +293,7 @@ export default class FundingRepository {
         clubId: funding.clubId,
         purposeActivityId: funding.purposeActivity.id,
         semesterId: extra.semesterId,
-        fundingStatusEnumId: extra.fundingStatusEnumId,
+        fundingStatusEnum: extra.fundingStatusEnum,
         name: funding.name,
         expenditureDate: funding.expenditureDate,
         expenditureAmount: funding.expenditureAmount,

@@ -11,8 +11,8 @@ import {
 
 export const zClubSupplies = z.object({
   name: z.string().max(255).optional(),
-  evidenceEnumId: z.nativeEnum(FixtureEvidenceEnum).optional(),
-  classEnumId: z.nativeEnum(FixtureClassEnum).optional(),
+  evidenceEnum: z.nativeEnum(FixtureEvidenceEnum).optional(),
+  classEnum: z.nativeEnum(FixtureClassEnum).optional(),
   purpose: z.string().optional(),
   imageFiles: z.array(zFileSummary.pick({ id: true })),
   softwareEvidence: z.string().optional(),
@@ -23,8 +23,8 @@ export const zClubSupplies = z.object({
 
 export const zFixture = z.object({
   name: z.string().max(255).optional(),
-  evidenceEnumId: z.nativeEnum(FixtureEvidenceEnum).optional(),
-  classEnumId: z.nativeEnum(FixtureClassEnum).optional(),
+  evidenceEnum: z.nativeEnum(FixtureEvidenceEnum).optional(),
+  classEnum: z.nativeEnum(FixtureClassEnum).optional(),
   purpose: z.string().optional(),
   imageFiles: z.array(zFileSummary.pick({ id: true })),
   softwareEvidence: z.string().optional(),
@@ -34,7 +34,7 @@ export const zFixture = z.object({
 });
 
 export const zTransportation = z.object({
-  enumId: z.nativeEnum(TransportationEnum).optional(),
+  enum: z.nativeEnum(TransportationEnum).optional(),
   origin: z.string().max(255).optional(),
   destination: z.string().max(255).optional(),
   purpose: z.string().optional(),
@@ -57,7 +57,7 @@ const zFunding = z.object({
   id: z.coerce.number().int().min(1),
   clubId: z.coerce.number().int().min(1),
   semesterId: z.coerce.number().int().min(1),
-  fundingStatusEnumId: z.coerce.number().int().min(1),
+  fundingStatusEnum: z.coerce.number().int().min(1),
   purposeActivity: zActivitySummary.pick({ id: true }).optional(),
   name: z.string().max(255).min(1),
   expenditureDate: z.coerce.date(),
@@ -102,14 +102,14 @@ const zFunding = z.object({
 
 const zFundingExtra = zFunding.pick({
   semesterId: true,
-  fundingStatusEnumId: true,
+  fundingStatusEnum: true,
   approvedAmount: true,
 });
 
 const zFundingRequestBase = zFunding.omit({
   id: true,
   semesterId: true,
-  fundingStatusEnumId: true,
+  fundingStatusEnum: true,
   approvedAmount: true,
 });
 
@@ -118,8 +118,8 @@ export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {
     if (
       !data.clubSupplies ||
       !data.clubSupplies.name ||
-      !data.clubSupplies.evidenceEnumId ||
-      !data.clubSupplies.classEnumId ||
+      !data.clubSupplies.evidenceEnum ||
+      !data.clubSupplies.classEnum ||
       !data.clubSupplies.number ||
       !data.clubSupplies.price
     ) {
@@ -129,7 +129,7 @@ export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {
       });
     }
 
-    if (data.clubSupplies?.classEnumId === FixtureClassEnum.Software) {
+    if (data.clubSupplies?.classEnum === FixtureClassEnum.Software) {
       if (!data.clubSupplies?.softwareEvidence) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -148,8 +148,8 @@ export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {
     if (
       !data.fixture ||
       !data.fixture.name ||
-      !data.fixture.evidenceEnumId ||
-      !data.fixture.classEnumId ||
+      !data.fixture.evidenceEnum ||
+      !data.fixture.classEnum ||
       !data.fixture.number ||
       !data.fixture.price
     ) {
@@ -158,7 +158,7 @@ export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {
         message: "fixture is required",
       });
     }
-    if (data.fixture?.classEnumId === FixtureClassEnum.Software) {
+    if (data.fixture?.classEnum === FixtureClassEnum.Software) {
       if (!data.fixture?.softwareEvidence) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -176,7 +176,7 @@ export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {
   if (data.isTransportation) {
     if (
       !data.transportation ||
-      !data.transportation.enumId ||
+      !data.transportation.enum ||
       !data.transportation.origin ||
       !data.transportation.destination ||
       !data.transportation.purpose
@@ -187,11 +187,11 @@ export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {
       });
     }
     if (
-      data.transportation?.enumId === TransportationEnum.CallVan ||
-      data.transportation?.enumId === TransportationEnum.Cargo ||
-      data.transportation?.enumId === TransportationEnum.Airplane ||
-      data.transportation?.enumId === TransportationEnum.Ship ||
-      data.transportation?.enumId === TransportationEnum.Others
+      data.transportation?.enum === TransportationEnum.CallVan ||
+      data.transportation?.enum === TransportationEnum.Cargo ||
+      data.transportation?.enum === TransportationEnum.Airplane ||
+      data.transportation?.enum === TransportationEnum.Ship ||
+      data.transportation?.enum === TransportationEnum.Others
     ) {
       if (!data.transportation?.placeValidity) {
         ctx.addIssue({
@@ -346,7 +346,7 @@ export const zFundingResponse = zFunding.extend({
 
 export const zFundingSummary = zFunding.pick({
   id: true,
-  fundingStatusEnumId: true,
+  fundingStatusEnum: true,
   name: true,
   expenditureAmount: true,
   approvedAmount: true,
@@ -355,7 +355,7 @@ export const zFundingSummary = zFunding.pick({
 
 export const zFundingResponseSummary = zFundingResponse.pick({
   id: true,
-  fundingStatusEnumId: true,
+  fundingStatusEnum: true,
   name: true,
   expenditureAmount: true,
   approvedAmount: true,
