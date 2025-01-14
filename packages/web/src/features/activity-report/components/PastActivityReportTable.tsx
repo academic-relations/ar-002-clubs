@@ -82,7 +82,6 @@ const PastActivityReportTable: React.FC<PastActivityReportTableProps> = ({
         <Table
           table={table}
           onClick={row => {
-            localStorage.setItem("isPastActivity", "true");
             router.push(`/manage-club/activity-report/${row.id}`);
           }}
           count={data.length}
