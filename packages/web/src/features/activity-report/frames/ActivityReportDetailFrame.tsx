@@ -131,7 +131,11 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     profile.type === "undergraduate" || profile.type === "executive";
 
   const navigateToActivityReportList = () => {
-    router.push("/manage-club/activity-report");
+    if (profile.type === "executive") {
+      router.back();
+    } else {
+      router.push("/manage-club/activity-report");
+    }
   };
 
   const handleEdit = () => {
