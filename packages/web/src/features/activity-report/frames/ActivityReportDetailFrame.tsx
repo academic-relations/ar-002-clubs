@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 
 import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
@@ -13,6 +13,7 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import List from "@sparcs-clubs/web/common/components/List";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
@@ -67,29 +68,8 @@ const ActivitySection: React.FC<ActivitySectionProps> = ({
   </FlexWrapper>
 );
 // ActivitySection은 활동 보고서에서 구분된 각 영역을 나타냅니다.
-// label prop으로 이름을 넣고, children으로 ActivityDetail들을 넣어 주세요.
-
-const FlexTypography = styled(Typography)`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: flex-start;
-  align-self: stretch;
-`;
-
-const ActivityDetail: React.FC<{ children: string | ReactNode }> = ({
-  children = "",
-}) => {
-  const isString: boolean = typeof children === "string";
-  return (
-    <FlexTypography fw="REGULAR" fs={16} lh={20}>
-      {isString ? `• ${children}` : children}
-    </FlexTypography>
-  );
-};
-// ActivityDetail은 세부 활동 내역을 나타냅니다.
-// string이면 bullet point가 자동으로 포함됩니다.
-// string이 아닌 경우는 FilePreview가 들어가는 경우입니다. padding이 포함됩니다.
+// label prop으로 이름을 넣고, children으로 List 컴포넌트 또는 기타 children을 넣어주세요.
+// 들여쓰기가 필요한 경우 FlexWrapper를 활용해 주세요.
 
 const FilePreviewContainerWrapper = styled(FlexWrapper)`
   padding-left: 24px;
@@ -294,11 +274,16 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
             )}
 
             <ActivitySection label="활동 정보">
-              <ActivityDetail>{`활동명: ${data.name}`}</ActivityDetail>
-              <ActivityDetail>
-                {`활동 분류: ${getActivityTypeLabel(data.activityTypeEnumId)}`}
-              </ActivityDetail>
-              <ActivityDetail>활동 기간:</ActivityDetail>
+              <List
+                dataList={[
+                  `활동명: ${data.name}`,
+                  `활동 분류: ${getActivityTypeLabel(data.activityTypeEnumId)}`,
+                  "활동 기간:",
+                ]}
+                listType="bullet"
+                gap={16}
+              />
+
               <FlexWrapper
                 direction="column"
                 gap={12}
@@ -310,28 +295,45 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
                   </Typography>
                 ))}
               </FlexWrapper>
-              <ActivityDetail>{`활동 장소: ${data.location}`}</ActivityDetail>
-              <ActivityDetail>{`활동 목적: ${data.purpose}`}</ActivityDetail>
-              <ActivityDetail>{`활동 내용: ${data.detail}`}</ActivityDetail>
+              <List
+                dataList={[
+                  `활동 장소: ${data.location}`,
+                  `활동 목적: ${data.purpose}`,
+                  `활동 내용: ${data.detail}`,
+                ]}
+                listType="bullet"
+                gap={16}
+              />
             </ActivitySection>
             <ActivitySection label={`활동 인원(${data.participants.length}명)`}>
-              {data.participants.map(participant => (
-                <ActivityDetail
-                  key={participant.id}
-                >{`${participant.studentNumber} ${participant.name}`}</ActivityDetail>
-              ))}
+              <List
+                dataList={data.participants.map(
+                  participant =>
+                    `${participant.studentNumber} ${participant.name}`,
+                )}
+                listType="bullet"
+                gap={16}
+                startIndex={0}
+                fw="REGULAR"
+                fs={16}
+                lh={20}
+              />
             </ActivitySection>
             <ActivitySection label="활동 증빙">
-              <ActivityDetail>첨부 파일</ActivityDetail>
-              <ActivityDetail>
-                <FilePreviewContainer>
-                  <ThumbnailPreviewList
-                    fileList={data.evidenceFiles}
-                    disabled
-                  />
-                </FilePreviewContainer>
-              </ActivityDetail>
-              <ActivityDetail>{`부가 설명: ${data.evidence}`}</ActivityDetail>
+              <List
+                dataList={[
+                  "첨부 파일",
+                  <FilePreviewContainer key="file-preview">
+                    <ThumbnailPreviewList
+                      fileList={data.evidenceFiles}
+                      disabled
+                    />
+                  </FilePreviewContainer>,
+                  `부가 설명: ${data.evidence}`,
+                ]}
+                listType="bullet"
+                gap={16}
+              />
             </ActivitySection>
             {data.professorApproval !== null && (
               <FlexWrapper
