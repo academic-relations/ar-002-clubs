@@ -6,41 +6,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Table from "@sparcs-clubs/web/common/components/Table";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
-
-const getChargedExecutiveContent = (
-  prevExecutiveName: string,
-  newExecutiveName: string,
-) => {
-  if (prevExecutiveName !== "" && newExecutiveName !== "") {
-    return `${prevExecutiveName} → ${newExecutiveName}`;
-  }
-  if (prevExecutiveName === "" && newExecutiveName === "") {
-    return (
-      <FlexWrapper gap={4} direction="row">
-        <Typography color="GRAY.300">(미정)</Typography>
-        <Typography>→</Typography>
-        <Typography color="GRAY.300">(미정)</Typography>
-      </FlexWrapper>
-    );
-  }
-  if (newExecutiveName === "") {
-    return (
-      <FlexWrapper gap={4} direction="row">
-        <Typography>{prevExecutiveName} → </Typography>
-        <Typography color="GRAY.300">(미정)</Typography>
-      </FlexWrapper>
-    );
-  }
-  return (
-    <FlexWrapper gap={4} direction="row">
-      <Typography color="GRAY.300">(미정)</Typography>
-      <Typography>→ {newExecutiveName}</Typography>
-    </FlexWrapper>
-  );
-};
+import getChargedExecutiveContent from "@sparcs-clubs/web/utils/getChargedExecutiveContent";
 
 export interface ChargedChangeClubProps {
   clubId: number;
