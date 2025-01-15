@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useCallback } from "react";
+import React, { ReactNode, useCallback, useMemo } from "react";
 
 import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
@@ -40,6 +40,7 @@ import { getActivityReportProgress } from "../constants/activityReportProgress";
 import useGetActivityReportDetail from "../hooks/useGetActivityReportDetail";
 import useProfessorApproveSingleActivityReport from "../hooks/useProfessorApproveSingleActivityReport";
 import { useDeleteActivityReport } from "../services/useDeleteActivityReport";
+import useGetActivityDeadline from "../services/useGetActivityDeadline";
 
 interface ActivitySectionProps extends React.PropsWithChildren {
   label: string;
@@ -115,6 +116,11 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
   const { id } = useParams<{ id: string }>();
 
   const { data, isLoading, isError } = useGetActivityReportDetail(Number(id));
+  const {
+    data: activityDeadline,
+    isLoading: isLoadingDeadline,
+    isError: isErrorDeadline,
+  } = useGetActivityDeadline();
   const { mutate: deleteActivityReport } = useDeleteActivityReport();
   const { mutate: approveActivityReport } =
     useProfessorApproveSingleActivityReport();
@@ -184,6 +190,25 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
       },
     });
   }, [approveActivityReport, id]);
+
+  const isPastActivity = useMemo(() => {
+    if (!activityDeadline || !activityDeadline.targetTerm || !data.durations) {
+      return false;
+    }
+
+    const maxEndTermDuration = data.durations.reduce(
+      (maxDuration, currentDuration) =>
+        new Date(currentDuration.endTerm) > new Date(maxDuration.endTerm)
+          ? currentDuration
+          : maxDuration,
+      data.durations[0],
+    );
+
+    return (
+      new Date(maxEndTermDuration.endTerm) <
+      new Date(activityDeadline.targetTerm.startTerm)
+    );
+  }, [activityDeadline, data.durations]);
 
   if (isError) {
     return <NotFound />;
@@ -347,7 +372,12 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
               목록으로 돌아가기
             </Button>
 
-            {additionalButtons()}
+            <AsyncBoundary
+              isLoading={isLoadingDeadline}
+              isError={isErrorDeadline}
+            >
+              {isPastActivity ? null : additionalButtons()}
+            </AsyncBoundary>
           </FlexWrapper>
         </FlexWrapper>
       </AsyncBoundary>
