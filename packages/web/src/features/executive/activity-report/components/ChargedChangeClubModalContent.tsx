@@ -48,10 +48,12 @@ const ChargedChangeClubModalContent: React.FC<
   useEffect(() => {
     if (data) {
       setChargeableExecutives(
-        data.executives.map(executive => ({
-          label: `${executive.name} (${executive.studentNumber})`,
-          value: executive.id,
-        })),
+        data.executives
+          .map(executive => ({
+            label: `${executive.name} (${executive.studentNumber})`,
+            value: executive.id,
+          }))
+          .sort((a, b) => a.label.localeCompare(b.label)),
       );
     }
   }, [data]);
