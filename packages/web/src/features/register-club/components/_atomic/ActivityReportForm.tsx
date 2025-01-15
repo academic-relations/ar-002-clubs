@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 
+import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { addHours } from "date-fns";
 import { FormProvider, useForm } from "react-hook-form";
@@ -17,8 +18,6 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import SelectParticipant from "@sparcs-clubs/web/features/activity-report/components/SelectParticipant";
 import useGetParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetParticipants";
 import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
-
-import { Participant } from "@sparcs-clubs/web/types/participant";
 
 import SelectActivityTerm from "../SelectActivityTerm";
 
@@ -97,16 +96,22 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
     endTerm: addHours(endTerm, 9),
   });
   const initialParticipants: { studentId: number }[] = watch("participants");
-  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [participants, setParticipants] = useState<IStudentSummary[]>([]);
 
   useEffect(() => {
     if (initialParticipants && participantData) {
       setParticipants(
-        participantData.students.filter(student =>
-          initialParticipants.some(
-            participant => participant.studentId === student.id,
-          ),
-        ),
+        participantData.students
+          .filter(student =>
+            initialParticipants.some(
+              participant => participant.studentId === student.id,
+            ),
+          )
+          .map(data => ({
+            id: data.id,
+            name: data.name,
+            studentNumber: data.studentNumber.toString(),
+          })),
       );
     }
   }, [initialParticipants, participantData]);
@@ -240,7 +245,13 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
                 </Typography>
                 <AsyncBoundary isLoading={isLoading} isError={isError}>
                   <SelectParticipant
-                    data={participantData?.students ?? []}
+                    data={
+                      participantData?.students.map(student => ({
+                        id: student.id,
+                        name: student.name,
+                        studentNumber: student.studentNumber.toString(),
+                      })) ?? []
+                    }
                     value={participants}
                     onChange={v => {
                       setParticipants(v);

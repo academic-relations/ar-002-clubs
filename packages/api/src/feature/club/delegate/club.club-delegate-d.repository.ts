@@ -379,38 +379,48 @@ export class ClubDelegateDRepository {
     const now = getKSTDate();
 
     const result = await this.db.transaction(async tx => {
+      // 기존 대표자의 임기를 종료
+      const [prevDelegateUpdateResult] = await tx
+        .update(ClubDelegateD)
+        .set({
+          endTerm: now,
+        })
+        .where(
+          and(
+            eq(ClubDelegateD.clubId, param.clubId),
+            eq(ClubDelegateD.ClubDelegateEnumId, param.clubDelegateEnumId),
+            lte(ClubDelegateD.startTerm, now),
+            or(gte(ClubDelegateD.endTerm, now), isNull(ClubDelegateD.endTerm)),
+            isNull(ClubDelegateD.deletedAt),
+          ),
+        );
+      // 신규 delegate가 맡고 있던 지위를 해제
       const [delegateUpdateResult] = await tx
         .update(ClubDelegateD)
         .set({
           endTerm: now,
         })
         .where(
-          or(
-            and(
-              eq(ClubDelegateD.clubId, param.clubId),
-              eq(ClubDelegateD.ClubDelegateEnumId, param.clubDelegateEnumId),
-              lte(ClubDelegateD.startTerm, now),
-              or(
-                gte(ClubDelegateD.endTerm, now),
-                isNull(ClubDelegateD.endTerm),
-              ),
-              isNull(ClubDelegateD.deletedAt),
-            ),
-            and(
-              eq(ClubDelegateD.clubId, param.clubId),
-              eq(ClubDelegateD.studentId, param.studentId),
-              lte(ClubDelegateD.startTerm, now),
-              or(
-                gte(ClubDelegateD.endTerm, now),
-                isNull(ClubDelegateD.endTerm),
-              ),
-              isNull(ClubDelegateD.deletedAt),
-            ),
+          and(
+            eq(ClubDelegateD.clubId, param.clubId),
+            eq(ClubDelegateD.studentId, param.studentId),
+            lte(ClubDelegateD.startTerm, now),
+            or(gte(ClubDelegateD.endTerm, now), isNull(ClubDelegateD.endTerm)),
+            isNull(ClubDelegateD.deletedAt),
           ),
         );
-      // 변경된 row는 0줄 또는 한줄이어야 합니다.
-      if (delegateUpdateResult.affectedRows > 1) {
-        logger.debug("[updateDelegate] more than 1 row is modified. Rollback.");
+      // 변경된 row는 각각 0줄 또는 한줄이어야 합니다.
+      if (
+        prevDelegateUpdateResult.affectedRows > 1 ||
+        delegateUpdateResult.affectedRows > 1
+      ) {
+        const errorReason =
+          prevDelegateUpdateResult.affectedRows > 1
+            ? "Previous Delegate"
+            : "New Delegate";
+        logger.debug(
+          `[updateDelegate] ${errorReason}: more than 1 row is modified. Rollback.`,
+        );
         tx.rollback();
         return false;
       }

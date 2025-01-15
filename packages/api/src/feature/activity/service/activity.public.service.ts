@@ -1,5 +1,7 @@
 import { Injectable } from "@nestjs/common";
 
+import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
+
 import ActivityRepository from "../repository/activity.repository";
 
 @Injectable()
@@ -12,5 +14,9 @@ export default class ActivityPublicService {
    */
   async getActivityNameById(id: number) {
     return this.activityRepository.selectActivityNameById(id);
+  }
+
+  async getActivitySummary(id: number): Promise<IActivitySummary> {
+    return this.activityRepository.selectActivityById(id);
   }
 }

@@ -10,14 +10,14 @@ import {
   defineAxiosMock,
 } from "@sparcs-clubs/web/lib/axios";
 
-export const newActivityReportListQueryKey = (clubId: number) => [
+export const newFundingListQueryKey = (clubId: number) => [
   apiFnd005.url(),
   clubId,
 ];
 
 const useGetNewFundingList = (query: ApiFnd005RequestQuery) =>
   useQuery<ApiFnd005ResponseOk, Error>({
-    queryKey: newActivityReportListQueryKey(query.clubId),
+    queryKey: newFundingListQueryKey(query.clubId),
     queryFn: async (): Promise<ApiFnd005ResponseOk> => {
       const { data } = await axiosClientWithAuth.get(apiFnd005.url(), {
         params: query,

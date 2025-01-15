@@ -1,4 +1,4 @@
-export enum FundingOrderStatusEnum {
+export enum FundingStatusEnum {
   Applied = 1, // 제출
   Approved, // 승인
   Rejected, // 반려

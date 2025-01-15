@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import useHasAdvisor from "@sparcs-clubs/web/features/clubs/hooks/useHasAdvisor";
 import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
@@ -27,16 +29,12 @@ const useGetActivityReportDetail = (
   const isLoading = activityReportLoading || hasProfessorLoading;
   const isError = activityReportError || hasProfessorError;
 
-  if (isLoading || isError || !activityReport) {
-    return {
-      data: {} as CurrentActivityReport,
-      isLoading,
-      isError,
-    };
-  }
+  const memoizedData = useMemo(() => {
+    if (isLoading || isError || !activityReport) {
+      return {} as CurrentActivityReport;
+    }
 
-  return {
-    data: {
+    return {
       ...activityReport,
       id: activityId,
       evidenceFiles: activityReport.evidenceFiles.map(file => ({
@@ -47,7 +45,7 @@ const useGetActivityReportDetail = (
       participants: activityReport.participants.map(participant => ({
         id: participant.studentId,
         name: participant.name,
-        studentNumber: participant.studentNumber,
+        studentNumber: participant.studentNumber.toString(),
       })),
       professorApproval: (() => {
         if (!hasProfessor) {
@@ -61,7 +59,11 @@ const useGetActivityReportDetail = (
         activityReport.professorApprovedAt !== null
           ? activityReport.professorApprovedAt
           : undefined,
-    },
+    };
+  }, [activityReport, activityId, hasProfessor, isLoading, isError]);
+
+  return {
+    data: memoizedData,
     isLoading,
     isError,
   };

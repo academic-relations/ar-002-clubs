@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { TransportationEnum as E } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
+import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
@@ -13,14 +15,12 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { mockParticipantData } from "@sparcs-clubs/web/features/activity-report/_mock/mock";
 import SelectParticipant from "@sparcs-clubs/web/features/activity-report/components/SelectParticipant";
 
-import { Participant } from "@sparcs-clubs/web/types/participant";
-
 import {
   isParticipantsRequired,
   isPurposeInfoRequired,
 } from "@sparcs-clubs/web/utils/isTransportation";
 
-import { FundingFrameProps } from "../frames/FundingInfoFrame";
+import { AddEvidence } from "../types/funding";
 
 import EvidenceBlockTitle from "./EvidenceBlockTitle";
 
@@ -29,20 +29,19 @@ const FixedWidthWrapper = styled.div`
 `;
 
 const TransportationList = [
-  { label: "시내/마을버스", value: String(E.CityBus) },
-  { label: "고속/시외버스", value: String(E.IntercityBus) },
-  { label: "철도", value: String(E.Rail) },
-  { label: "택시", value: String(E.Taxi) },
-  { label: "전세버스", value: String(E.CharterBus) },
-  { label: "화물 운반", value: String(E.Cargo) },
-  { label: "콜밴", value: String(E.CallVan) },
-  { label: "비행기", value: String(E.Airplane) },
-  { label: "선박", value: String(E.Ship) },
-  { label: "기타", value: String(E.Others) },
+  { label: "시내/마을버스", value: E.CityBus },
+  { label: "고속/시외버스", value: E.IntercityBus },
+  { label: "철도", value: E.Rail },
+  { label: "택시", value: E.Taxi },
+  { label: "전세버스", value: E.CharterBus },
+  { label: "화물 운반", value: E.Cargo },
+  { label: "콜밴", value: E.CallVan },
+  { label: "비행기", value: E.Airplane },
+  { label: "선박", value: E.Ship },
+  { label: "기타", value: E.Others },
 ];
 
-const purposeInfo = (enumString: string | undefined) => {
-  const type = Number(enumString);
+const purposeInfo = (type: E | undefined) => {
   switch (type) {
     case E.Cargo:
       return "* 운반한 화물 목록을 함께 작성해주세요";
@@ -59,32 +58,14 @@ const purposeInfo = (enumString: string | undefined) => {
   }
 };
 
-const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
-  funding,
-  setFunding,
+const TransportEvidenceBlock: React.FC<{ required?: boolean }> = ({
+  required = false,
 }) => {
-  const setFundingHandler = (key: string, value: boolean | string) => {
-    setFunding({ ...funding, [key]: value });
-  };
+  const formCtx = useFormContext<AddEvidence>();
+  const { control, watch, setValue } = formCtx;
 
-  const [participants, setParticipants] = useState<Participant[]>([]);
-
-  useEffect(() => {
-    setParticipants(funding.transportationPassengers);
-  }, []);
-
-  useEffect(() => {
-    setFunding({
-      ...funding,
-      transportationPassengers: mockParticipantData
-        .filter((_, i) => participants[i])
-        .map(participant => ({
-          id: participant.id,
-          studentNumber: participant.studentNumber,
-          name: participant.name,
-        })),
-    });
-  }, [participants, setFunding]);
+  const transportationEnum = watch("transportationEnum");
+  const participants = watch("transportationPassengers");
 
   return (
     <FlexWrapper direction="column" gap={8}>
@@ -92,38 +73,58 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
         <Card outline gap={32}>
           <FlexWrapper direction="row" gap={32}>
             <FixedWidthWrapper>
-              <Select
-                items={TransportationList}
-                label="교통수단"
-                placeholder="교통수단을 선택해주세요"
-                value={funding.transportationEnumId}
-                onChange={value =>
-                  setFundingHandler("transportationEnumId", value ?? "")
-                }
+              <FormController
+                name="transportationEnum"
+                required={required}
+                control={control}
+                renderItem={props => (
+                  <Select
+                    {...props}
+                    items={TransportationList}
+                    label="교통수단"
+                    placeholder="교통수단을 선택해주세요"
+                  />
+                )}
               />
             </FixedWidthWrapper>
-            <TextInput
-              placeholder="출발지를 입력해주세요"
-              label="출발지"
-              value={funding.origin}
-              handleChange={value => setFundingHandler("origin", value)}
+            <FormController
+              name="origin"
+              required={required}
+              control={control}
+              renderItem={props => (
+                <TextInput
+                  {...props}
+                  placeholder="출발지를 입력해주세요"
+                  label="출발지"
+                />
+              )}
             />
-            <TextInput
-              placeholder="도착지를 입력해주세요"
-              label="도착지"
-              value={funding.destination}
-              handleChange={value => setFundingHandler("destination", value)}
+            <FormController
+              name="destination"
+              required={required}
+              control={control}
+              renderItem={props => (
+                <TextInput
+                  {...props}
+                  placeholder="도착지를 입력해주세요"
+                  label="도착지"
+                />
+              )}
             />
           </FlexWrapper>
-          {isParticipantsRequired(funding.transportationEnumId) && (
+          {isParticipantsRequired(transportationEnum) && (
             <FlexWrapper direction="column" gap={4}>
               <Typography fs={16} fw="MEDIUM" lh={20}>
                 탑승자 명단
               </Typography>
               <SelectParticipant
                 data={mockParticipantData}
-                onChange={setParticipants}
                 value={participants}
+                onChange={_participants => {
+                  setValue("transportationPassengers", _participants, {
+                    shouldValidate: true,
+                  });
+                }}
               />
             </FlexWrapper>
           )}
@@ -136,7 +137,7 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
             >
               이용 목적
             </Typography>
-            {isPurposeInfoRequired(funding.transportationEnumId) && (
+            {isPurposeInfoRequired(transportationEnum) && (
               <Typography
                 fw="REGULAR"
                 fs={14}
@@ -144,16 +145,20 @@ const TransportEvidenceBlock: React.FC<FundingFrameProps> = ({
                 color="GRAY.600"
                 style={{ whiteSpace: "pre-wrap" }}
               >
-                {purposeInfo(funding.transportationEnumId)}
+                {purposeInfo(transportationEnum)}
               </Typography>
             )}
-            <TextInput
-              area
-              placeholder="이용 목적을 입력하세요"
-              value={funding.purposeOfTransportation}
-              handleChange={value =>
-                setFundingHandler("purposeOfTransportation", value)
-              }
+            <FormController
+              name="purposeOfTransportation"
+              required={required}
+              control={control}
+              renderItem={props => (
+                <TextInput
+                  {...props}
+                  area
+                  placeholder="이용 목적을 입력하세요"
+                />
+              )}
             />
           </FlexWrapper>
         </Card>

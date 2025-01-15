@@ -206,12 +206,11 @@ const ActivityCertificateInfoSecondFrame: React.FC<
                     }}
                     renderItem={({ value, onChange, errorMessage }) => (
                       <DateInput
-                        showIcon={false}
                         selectsRange
                         showMonthYearPicker
                         startDate={value?.[0] ?? undefined}
                         endDate={value?.[1] ?? undefined}
-                        onChange={dates => {
+                        onChange={(dates: Date | null) => {
                           onChange(dates);
                         }}
                         selectedDates={

@@ -9,11 +9,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import styled from "styled-components";
-
 import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Table from "@sparcs-clubs/web/common/components/Table";
+import CheckboxCenterPlacerStopPropagation from "@sparcs-clubs/web/common/components/Table/CheckboxCenterPlacerStopPropagation";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { ClubTypeTagList } from "@sparcs-clubs/web/constants/tableTagList";
@@ -27,23 +26,18 @@ interface ExecutiveActivityClubTableProps {
   setSelectedClubIds: (clubIds: number[]) => void;
 }
 
-const CheckboxCenterPlacer = styled.div`
-  height: 100%;
-  display: flex;
-  align-items: center;
-`;
-
 const columnHelper = createColumnHelper<ApiAct023ResponseOk["items"][number]>();
 const columns = [
   columnHelper.display({
     id: "multiSelect",
     cell: ({ row }) => (
-      <CheckboxCenterPlacer>
-        <Checkbox
-          checked={row.getIsSelected()}
-          onClick={row.getToggleSelectedHandler()}
-        />
-      </CheckboxCenterPlacer>
+      <CheckboxCenterPlacerStopPropagation
+        onClick={e => {
+          row.getToggleSelectedHandler()(e);
+        }}
+      >
+        <Checkbox checked={row.getIsSelected()} />
+      </CheckboxCenterPlacerStopPropagation>
     ),
     size: 56,
   }),
