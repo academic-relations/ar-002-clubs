@@ -171,9 +171,11 @@ export class MFunding implements IFunding {
       name: result.funding.name,
       semesterId: result.funding.semesterId,
       fundingStatusEnum: result.funding.fundingStatusEnum,
-      purposeActivity: {
-        id: result.funding.purposeActivityId,
-      },
+      purposeActivity: result.funding.purposeActivityId
+        ? {
+            id: result.funding.purposeActivityId,
+          }
+        : undefined,
       expenditureDate: result.funding.expenditureDate,
       expenditureAmount: result.funding.expenditureAmount,
       approvedAmount: result.funding.approvedAmount,
