@@ -62,7 +62,9 @@ export class AuthService {
     const ssoProfile: SSOUser = await this.ssoClient.get_user_info(query.code);
 
     let studentNumber = ssoProfile.kaist_info.ku_std_no || "00000000";
-    let email = ssoProfile.email || "unknown@kaist.ac.kr";
+    let email =
+      ssoProfile.kaist_info.mail?.replace("mailto:", "") ||
+      "unknown@kaist.ac.kr";
     let sid = ssoProfile.sid || "00000000";
     let name = ssoProfile.kaist_info.ku_kname || "unknown";
     let type = ssoProfile.kaist_info.ku_person_type || "Student";
