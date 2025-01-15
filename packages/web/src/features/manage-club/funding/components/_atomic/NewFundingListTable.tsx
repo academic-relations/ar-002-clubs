@@ -26,7 +26,7 @@ interface NewFundingListTableProps {
 const columnHelper = createColumnHelper<NewFundingData>();
 
 const columns = [
-  columnHelper.accessor("fundingOrderStatusEnumId", {
+  columnHelper.accessor("fundingStatusEnum", {
     header: "상태",
     cell: info => {
       const { color, text } = getTagDetail(info.getValue(), FundingTagList);

@@ -18,6 +18,7 @@ import CurrentActivityReportTable from "../components/CurrentActivityReportTable
 import PastActivityReportList from "../components/PastActivityReportTable";
 import { MAX_ACTIVITY_REPORT_COUNT } from "../constants";
 import useGetCurrentActivityReportList from "../hooks/useGetCurrentActivityReportList";
+import useGetActivityDeadline from "../services/useGetActivityDeadline";
 import useGetActivityTerms from "../services/useGetActivityTerms";
 
 interface ActivityReportMainFrameProps {
@@ -44,9 +45,16 @@ const ActivityReportMainFrame: React.FC<ActivityReportMainFrameProps> = ({
     isLoading: isLoadingActivityTerms,
     isError: isErrorActivityTerms,
   } = useGetActivityTerms({ clubId: data.clubId });
+  const {
+    data: activityDeadline,
+    isLoading: isLoadingDeadline,
+    isError: isErrorDeadline,
+  } = useGetActivityDeadline();
 
-  const isLoading = isLoadingActivityReportList || isLoadingActivityTerms;
-  const isError = isErrorActivityReportList || isErrorActivityTerms;
+  const isLoading =
+    isLoadingActivityReportList || isLoadingActivityTerms || isLoadingDeadline;
+  const isError =
+    isErrorActivityReportList || isErrorActivityTerms || isErrorDeadline;
 
   if (!activityTerms) {
     return null;
@@ -95,13 +103,25 @@ const ActivityReportMainFrame: React.FC<ActivityReportMainFrameProps> = ({
 
         <FoldableSectionTitle title="과거 활동 보고서">
           <FlexWrapper direction="column" gap={40}>
-            {activityTerms.terms.toReversed().map(term => (
-              <PastActivityReportList
-                key={term.id}
-                termId={term.id}
-                clubId={data.clubId}
-              />
-            ))}
+            {activityTerms.terms
+              .toReversed()
+              .filter(term => {
+                if (!activityDeadline) return true;
+
+                return (
+                  new Date(term.startTerm).getTime() !==
+                    new Date(activityDeadline.targetTerm.startTerm).getTime() &&
+                  new Date(term.endTerm).getTime() !==
+                    new Date(activityDeadline.targetTerm.endTerm).getTime()
+                );
+              })
+              .map(term => (
+                <PastActivityReportList
+                  key={term.id}
+                  termId={term.id}
+                  clubId={data.clubId}
+                />
+              ))}
           </FlexWrapper>
         </FoldableSectionTitle>
       </AsyncBoundary>

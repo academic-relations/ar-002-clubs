@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
 import useGetProfessorCurrentActivityReportList from "../services/useGetProfessorCurrentActivityReportList";
@@ -18,22 +20,22 @@ const useGetProfessorActivityReportList = (
     clubId,
   });
 
-  if (isLoading || isError || !activityReportList) {
-    return {
-      data: [],
-      isLoading,
-      isError,
-    };
-  }
+  const memoizedData = useMemo(() => {
+    if (isLoading || isError || !activityReportList) {
+      return [];
+    }
 
-  return {
-    data: activityReportList.map(activityReport => ({
+    return activityReportList.map(activityReport => ({
       ...activityReport,
       professorApproval:
         activityReport.professorApprovedAt !== null
           ? ProfessorApprovalEnum.Approved
           : ProfessorApprovalEnum.Pending,
-    })),
+    }));
+  }, [activityReportList, isLoading, isError]);
+
+  return {
+    data: memoizedData,
     isLoading,
     isError,
   };

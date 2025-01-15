@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
+import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 import {
   ActivityStatusEnum,
   ActivityTypeEnum,
@@ -580,6 +581,17 @@ export default class ActivityRepository {
   async selectActivityNameById(id: number) {
     const result = await this.db
       .select({ name: Activity.name, id: Activity.id })
+      .from(Activity)
+      .where(eq(Activity.id, id));
+    return result[0];
+  }
+
+  async selectActivityById(id: number): Promise<IActivitySummary> {
+    const result = await this.db
+      .select({
+        name: Activity.name,
+        id: Activity.id,
+      })
       .from(Activity)
       .where(eq(Activity.id, id));
     return result[0];

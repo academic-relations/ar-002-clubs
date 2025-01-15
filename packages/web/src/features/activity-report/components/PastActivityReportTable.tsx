@@ -81,7 +81,9 @@ const PastActivityReportTable: React.FC<PastActivityReportTableProps> = ({
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         <Table
           table={table}
-          onClick={row => router.push(`/manage-club/activity-report/${row.id}`)}
+          onClick={row => {
+            router.push(`/manage-club/activity-report/${row.id}`);
+          }}
           count={data.length}
         />
       </AsyncBoundary>
