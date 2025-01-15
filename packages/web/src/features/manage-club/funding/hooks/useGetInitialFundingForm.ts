@@ -34,8 +34,8 @@ const useGetInitialFundingFormData = (
       ...funding,
       // 동아리 용품 증빙
       clubSuppliesName: funding.clubSupplies?.name,
-      clubSuppliesEvidenceEnumId: funding.clubSupplies?.evidenceEnumId,
-      clubSuppliesClassEnumId: funding.clubSupplies?.classEnumId,
+      clubSuppliesEvidenceEnum: funding.clubSupplies?.evidenceEnum,
+      clubSuppliesClassEnum: funding.clubSupplies?.classEnum,
       clubSuppliesPurpose: funding.clubSupplies?.purpose,
       clubSuppliesImageFiles: funding.clubSupplies?.imageFiles ?? [],
       clubSuppliesSoftwareEvidence: funding.clubSupplies?.softwareEvidence,
@@ -46,8 +46,8 @@ const useGetInitialFundingFormData = (
 
       // 비품 증빙
       fixtureName: funding.fixture?.name,
-      fixtureEvidenceEnumId: funding.fixture?.evidenceEnumId,
-      fixtureClassEnumId: funding.fixture?.classEnumId,
+      fixtureEvidenceEnum: funding.fixture?.evidenceEnum,
+      fixtureClassEnum: funding.fixture?.classEnum,
       fixturePurpose: funding.fixture?.purpose,
       fixtureImageFiles: funding.fixture?.imageFiles ?? [],
       fixtureSoftwareEvidence: funding.fixture?.softwareEvidence,
@@ -57,7 +57,7 @@ const useGetInitialFundingFormData = (
       priceOfFixture: funding.fixture?.price,
 
       // 교통비 증빙
-      transportationEnumId: funding.transportation?.enumId,
+      transportationEnum: funding.transportation?.enum,
       origin: funding.transportation?.origin,
       destination: funding.transportation?.destination,
       purposeOfTransportation: funding.transportation?.purpose,

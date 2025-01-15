@@ -66,8 +66,8 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
             clubSupplies: isActivityReportUnverifiable(purposeActivity?.id)
               ? {
                   name: data.clubSuppliesName,
-                  evidenceEnumId: data.clubSuppliesEvidenceEnumId,
-                  classEnumId: data.clubSuppliesClassEnumId,
+                  evidenceEnum: data.clubSuppliesEvidenceEnum,
+                  classEnum: data.clubSuppliesClassEnum,
                   purpose: data.clubSuppliesPurpose,
                   imageFiles: data.clubSuppliesImageFiles
                     ? data.clubSuppliesImageFiles.map(file => ({
@@ -88,8 +88,8 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
             fixture: isFixture
               ? {
                   name: data.fixtureName,
-                  evidenceEnumId: data.fixtureEvidenceEnumId,
-                  classEnumId: data.fixtureClassEnumId,
+                  evidenceEnum: data.fixtureEvidenceEnum,
+                  classEnum: data.fixtureClassEnum,
                   purpose: data.fixturePurpose,
                   imageFiles: data.fixtureImageFiles
                     ? data.fixtureImageFiles.map(file => ({
@@ -109,12 +109,12 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
 
             transportation: isTransportation
               ? {
-                  enumId: data.transportationEnumId,
+                  enum: data.transportationEnum,
                   origin: data.origin,
                   destination: data.destination,
                   purpose: data.purposeOfTransportation,
                   placeValidity: data.placeValidity,
-                  passengers: isParticipantsRequired(data.transportationEnumId)
+                  passengers: isParticipantsRequired(data.transportationEnum)
                     ? data.transportationPassengers.map(participant => ({
                         id: participant.id,
                       }))

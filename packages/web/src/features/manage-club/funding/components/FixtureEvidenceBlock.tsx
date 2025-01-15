@@ -33,8 +33,8 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
   const formCtx = useFormContext<AddEvidence>();
   const { control, watch, setValue } = formCtx;
 
-  const fixtureClassEnumId = watch("fixtureClassEnumId");
-  const clubSuppliesClassEnumId = watch("clubSuppliesClassEnumId");
+  const fixtureClassEnum = watch("fixtureClassEnum");
+  const clubSuppliesClassEnum = watch("clubSuppliesClassEnum");
   const fixtureFiles = watch("fixtureSoftwareEvidenceFiles");
   const clubSuppliesFiles = watch("clubSuppliesSoftwareEvidenceFiles");
 
@@ -60,9 +60,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
           <FlexWrapper direction="row" gap={32}>
             <FormController
               name={
-                isFixture
-                  ? "fixtureEvidenceEnumId"
-                  : "clubSuppliesEvidenceEnumId"
+                isFixture ? "fixtureEvidenceEnum" : "clubSuppliesEvidenceEnum"
               }
               required={required}
               control={control}
@@ -76,9 +74,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               )}
             />
             <FormController
-              name={
-                isFixture ? "fixtureClassEnumId" : "clubSuppliesClassEnumId"
-              }
+              name={isFixture ? "fixtureClassEnum" : "clubSuppliesClassEnum"}
               required={required}
               control={control}
               renderItem={props => (
@@ -134,7 +130,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
             />
           </FlexWrapper>
           {/* TODO: EvidenceUploadWithText 컴포넌트로 변경 */}
-          {(isFixture ? fixtureClassEnumId : clubSuppliesClassEnumId) && (
+          {(isFixture ? fixtureClassEnum : clubSuppliesClassEnum) && (
             <FlexWrapper direction="column" gap={4}>
               <Typography
                 ff="PRETENDARD"
@@ -143,7 +139,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                 lh={20}
                 color="BLACK"
               >
-                {(isFixture ? fixtureClassEnumId : clubSuppliesClassEnumId) ===
+                {(isFixture ? fixtureClassEnum : clubSuppliesClassEnum) ===
                 FixtureClassEnum.Software
                   ? "소프트웨어 증빙"
                   : `${content} 증빙`}
@@ -156,7 +152,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                 color="GRAY.600"
                 style={{ whiteSpace: "pre-wrap" }}
               >
-                {(isFixture ? fixtureClassEnumId : clubSuppliesClassEnumId) ===
+                {(isFixture ? fixtureClassEnum : clubSuppliesClassEnum) ===
                 FixtureClassEnum.Software
                   ? "* 동아리 성격에 합치하는 활동에 사용하는 소프트웨어라는 소명 필요"
                   : `* ${content} 사용 목적 입력 필요`}
@@ -164,7 +160,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               {isFixture ? (
                 <FormController
                   name={
-                    fixtureClassEnumId === FixtureClassEnum.Software
+                    fixtureClassEnum === FixtureClassEnum.Software
                       ? "fixtureSoftwareEvidence"
                       : "fixturePurpose"
                   }
@@ -175,9 +171,8 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                       {...props}
                       placeholder={
                         (isFixture
-                          ? fixtureClassEnumId
-                          : clubSuppliesClassEnumId) ===
-                        FixtureClassEnum.Software
+                          ? fixtureClassEnum
+                          : clubSuppliesClassEnum) === FixtureClassEnum.Software
                           ? "소프트웨어 증빙을 입력하세요"
                           : `${content} 증빙을 입력하세요`
                       }
@@ -188,7 +183,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               ) : (
                 <FormController
                   name={
-                    fixtureClassEnumId === FixtureClassEnum.Software
+                    fixtureClassEnum === FixtureClassEnum.Software
                       ? "fixtureSoftwareEvidence"
                       : "fixturePurpose"
                   }
@@ -199,9 +194,8 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                       {...props}
                       placeholder={
                         (isFixture
-                          ? fixtureClassEnumId
-                          : clubSuppliesClassEnumId) ===
-                        FixtureClassEnum.Software
+                          ? fixtureClassEnum
+                          : clubSuppliesClassEnum) === FixtureClassEnum.Software
                           ? "소프트웨어 증빙을 입력하세요"
                           : `${content} 증빙을 입력하세요`
                       }
@@ -214,7 +208,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               {isFixture ? (
                 <FormController
                   name={
-                    fixtureClassEnumId === FixtureClassEnum.Software
+                    fixtureClassEnum === FixtureClassEnum.Software
                       ? "fixtureSoftwareEvidenceFiles"
                       : "fixtureImageFiles"
                   }
@@ -228,7 +222,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                       initialFiles={fixtureFiles}
                       onChange={files =>
                         setValue(
-                          fixtureClassEnumId === FixtureClassEnum.Software
+                          fixtureClassEnum === FixtureClassEnum.Software
                             ? "fixtureSoftwareEvidenceFiles"
                             : "fixtureImageFiles",
                           files,
@@ -243,7 +237,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               ) : (
                 <FormController
                   name={
-                    clubSuppliesClassEnumId === FixtureClassEnum.Software
+                    clubSuppliesClassEnum === FixtureClassEnum.Software
                       ? "clubSuppliesSoftwareEvidenceFiles"
                       : "clubSuppliesImageFiles"
                   }
@@ -257,7 +251,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                       initialFiles={clubSuppliesFiles}
                       onChange={files =>
                         setValue(
-                          clubSuppliesClassEnumId === FixtureClassEnum.Software
+                          clubSuppliesClassEnum === FixtureClassEnum.Software
                             ? "clubSuppliesSoftwareEvidenceFiles"
                             : "clubSuppliesImageFiles",
                           files,
