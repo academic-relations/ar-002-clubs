@@ -75,7 +75,7 @@ const ChargedChangeClubModalTable: React.FC<{
     enableSorting: false,
   });
 
-  return <Table table={table} />;
+  return <Table table={table} minWidth={200} />;
 };
 
 export default ChargedChangeClubModalTable;
