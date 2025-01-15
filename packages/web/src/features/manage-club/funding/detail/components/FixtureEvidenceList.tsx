@@ -28,7 +28,7 @@ const FixtureEvidenceList: React.FC<FixtureEvidenceListProps> = ({
 
   const { purpose, fileList } = useMemo(() => {
     if (isFixture) {
-      return data.fixture?.classEnumId === FixtureClassEnum.Software
+      return data.fixture?.classEnum === FixtureClassEnum.Software
         ? {
             purpose: data.fixture.softwareEvidence,
             fileList: data.fixture.softwareEvidenceFiles,
@@ -39,7 +39,7 @@ const FixtureEvidenceList: React.FC<FixtureEvidenceListProps> = ({
           };
     }
 
-    return data.clubSupplies?.classEnumId === FixtureClassEnum.Software
+    return data.clubSupplies?.classEnum === FixtureClassEnum.Software
       ? {
           purpose: data.clubSupplies.softwareEvidence,
           fileList: data.clubSupplies.softwareEvidenceFiles,
@@ -66,16 +66,14 @@ const FixtureEvidenceList: React.FC<FixtureEvidenceListProps> = ({
         증빙 분류: {content}{" "}
         {evidenceEnumMap(
           isFixture
-            ? data.fixture?.evidenceEnumId
-            : data.clubSupplies?.evidenceEnumId,
+            ? data.fixture?.evidenceEnum
+            : data.clubSupplies?.evidenceEnum,
         )}
       </ListItem>
       <ListItem>
         {content} 분류:{" "}
         {classEnumMap(
-          isFixture
-            ? data.fixture?.classEnumId
-            : data.clubSupplies?.classEnumId,
+          isFixture ? data.fixture?.classEnum : data.clubSupplies?.classEnum,
         )}
       </ListItem>
       <ListItem>

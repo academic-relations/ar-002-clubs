@@ -23,7 +23,7 @@ const TransportationEvidenceList: React.FC<{ data: IFundingResponse }> = ({
       교통비
     </Typography>
     <ListItem>
-      교통수단: {transportationEnumMap(data.transportation?.enumId)}
+      교통수단: {transportationEnumMap(data.transportation?.enum)}
     </ListItem>
     <ListItem>출발지: {data.transportation?.origin}</ListItem>
     <ListItem>도착지: {data.transportation?.destination}</ListItem>
