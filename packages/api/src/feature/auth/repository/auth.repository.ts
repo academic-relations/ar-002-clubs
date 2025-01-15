@@ -65,7 +65,7 @@ export class AuthRepository {
       .insert(User)
       .values({ sid, name, email })
       .onDuplicateKeyUpdate({
-        set: { name },
+        set: { name, email },
       });
 
     const user = await this.db
@@ -105,7 +105,7 @@ export class AuthRepository {
           userId: user.id,
           email,
         })
-        .onDuplicateKeyUpdate({ set: { userId: user.id, name } });
+        .onDuplicateKeyUpdate({ set: { userId: user.id, name, email } });
       const student = await this.db
         .select()
         .from(Student)
@@ -214,7 +214,7 @@ export class AuthRepository {
       const professor = await this.db
         .select()
         .from(Professor)
-        .where(eq(Professor.email, email))
+        .where(eq(Professor.userId, user.id))
         .then(takeUnique);
       await this.db
         .insert(ProfessorT)
@@ -248,13 +248,7 @@ export class AuthRepository {
       const employee = await this.db
         .select()
         .from(Employee)
-        .where(
-          and(
-            eq(Employee.userId, user.id),
-            eq(Employee.name, name),
-            eq(Employee.email, email),
-          ),
-        )
+        .where(and(eq(Employee.userId, user.id)))
         .then(takeUnique);
       await this.db
         .insert(EmployeeT)
