@@ -1,3 +1,4 @@
+import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 import {
   IClubSupplies,
   IFixture,
@@ -101,7 +102,7 @@ export class MFunding implements IFunding {
 
   fundingStatusEnum: number;
 
-  purposeActivityId?: number;
+  purposeActivity?: Pick<IActivitySummary, "id">;
 
   name: string;
 
@@ -170,7 +171,11 @@ export class MFunding implements IFunding {
       name: result.funding.name,
       semesterId: result.funding.semesterId,
       fundingStatusEnum: result.funding.fundingStatusEnum,
-      purposeActivityId: result.funding.purposeActivityId,
+      purposeActivity: result.funding.purposeActivityId
+        ? {
+            id: result.funding.purposeActivityId,
+          }
+        : undefined,
       expenditureDate: result.funding.expenditureDate,
       expenditureAmount: result.funding.expenditureAmount,
       approvedAmount: result.funding.approvedAmount,
@@ -192,97 +197,121 @@ export class MFunding implements IFunding {
       isProfitMakingActivity: result.funding.isProfitMakingActivity,
       isJointExpense: result.funding.isJointExpense,
       isEtcExpense: result.funding.isEtcExpense,
-      clubSupplies: {
-        name: result.funding.clubSuppliesName,
-        evidenceEnum: result.funding.clubSuppliesEvidenceEnum,
-        classEnum: result.funding.clubSuppliesClassEnum,
-        purpose: result.funding.clubSuppliesPurpose,
-        softwareEvidence: result.funding.clubSuppliesSoftwareEvidence,
-        number: result.funding.numberOfClubSupplies,
-        price: result.funding.priceOfClubSupplies,
-        imageFiles: result.clubSuppliesImageFiles.map(file => ({
-          id: file.id,
-        })),
-        softwareEvidenceFiles: result.clubSuppliesSoftwareEvidenceFiles.map(
-          file => ({
-            id: file.id,
-          }),
-        ),
-      },
-      fixture: {
-        name: result.funding.fixtureName,
-        purpose: result.funding.fixturePurpose,
-        evidenceEnum: result.funding.fixtureEvidenceEnum,
-        classEnum: result.funding.fixtureClassEnum,
-        softwareEvidence: result.funding.fixtureSoftwareEvidence,
-        number: result.funding.numberOfFixture,
-        price: result.funding.priceOfFixture,
-        imageFiles: result.fixtureImageFiles.map(file => ({
-          id: file.id,
-        })),
-        softwareEvidenceFiles: result.fixtureSoftwareEvidenceFiles.map(
-          file => ({
-            id: file.id,
-          }),
-        ),
-      },
-      transportation: {
-        enum: result.funding.transportationEnum,
-        origin: result.funding.origin,
-        destination: result.funding.destination,
-        purpose: result.funding.purposeOfTransportation,
-        placeValidity: result.funding.placeValidity,
-        passengers: result.transportationPassengers.map(passenger => ({
-          id: passenger.id,
-        })),
-      },
-      nonCorporateTransaction: {
-        traderName: result.funding.traderName,
-        traderAccountNumber: result.funding.traderAccountNumber,
-        wasteExplanation: result.funding.wasteExplanation,
-      },
-      foodExpense: {
-        explanation: result.funding.foodExpenseExplanation,
-        files: result.foodExpenseFiles.map(file => ({
-          id: file.id,
-        })),
-      },
-      laborContract: {
-        explanation: result.funding.laborContractExplanation,
-        files: result.laborContractFiles.map(file => ({
-          id: file.id,
-        })),
-      },
-      externalEventParticipationFee: {
-        explanation: result.funding.externalEventParticipationFeeExplanation,
-        files: result.externalEventParticipationFeeFiles.map(file => ({
-          id: file.id,
-        })),
-      },
-      publication: {
-        explanation: result.funding.publicationExplanation,
-        files: result.publicationFiles.map(file => ({
-          id: file.id,
-        })),
-      },
-      profitMakingActivity: {
-        explanation: result.funding.profitMakingActivityExplanation,
-        files: result.profitMakingActivityFiles.map(file => ({
-          id: file.id,
-        })),
-      },
-      jointExpense: {
-        explanation: result.funding.jointExpenseExplanation,
-        files: result.jointExpenseFiles.map(file => ({
-          id: file.id,
-        })),
-      },
-      etcExpense: {
-        explanation: result.funding.etcExpenseExplanation,
-        files: result.etcExpenseFiles.map(file => ({
-          id: file.id,
-        })),
-      },
+      clubSupplies: result.funding.purposeActivityId
+        ? undefined
+        : {
+            name: result.funding.clubSuppliesName,
+            evidenceEnum: result.funding.clubSuppliesEvidenceEnum,
+            classEnum: result.funding.clubSuppliesClassEnum,
+            purpose: result.funding.clubSuppliesPurpose,
+            softwareEvidence: result.funding.clubSuppliesSoftwareEvidence,
+            number: result.funding.numberOfClubSupplies,
+            price: result.funding.priceOfClubSupplies,
+            imageFiles: result.clubSuppliesImageFiles.map(file => ({
+              id: file.id,
+            })),
+            softwareEvidenceFiles: result.clubSuppliesSoftwareEvidenceFiles.map(
+              file => ({
+                id: file.id,
+              }),
+            ),
+          },
+      fixture: result.funding.isFixture
+        ? {
+            name: result.funding.fixtureName,
+            purpose: result.funding.fixturePurpose,
+            evidenceEnum: result.funding.fixtureEvidenceEnum,
+            classEnum: result.funding.fixtureClassEnum,
+            softwareEvidence: result.funding.fixtureSoftwareEvidence,
+            number: result.funding.numberOfFixture,
+            price: result.funding.priceOfFixture,
+            imageFiles: result.fixtureImageFiles.map(file => ({
+              id: file.id,
+            })),
+            softwareEvidenceFiles: result.fixtureSoftwareEvidenceFiles.map(
+              file => ({
+                id: file.id,
+              }),
+            ),
+          }
+        : undefined,
+      transportation: result.funding.isTransportation
+        ? {
+            enum: result.funding.transportationEnum,
+            origin: result.funding.origin,
+            destination: result.funding.destination,
+            purpose: result.funding.purposeOfTransportation,
+            placeValidity: result.funding.placeValidity,
+            passengers: result.transportationPassengers.map(passenger => ({
+              id: passenger.id,
+            })),
+          }
+        : undefined,
+      nonCorporateTransaction: result.funding.isNonCorporateTransaction
+        ? {
+            traderName: result.funding.traderName,
+            traderAccountNumber: result.funding.traderAccountNumber,
+            wasteExplanation: result.funding.wasteExplanation,
+          }
+        : undefined,
+      foodExpense: result.funding.isFoodExpense
+        ? {
+            explanation: result.funding.foodExpenseExplanation,
+            files: result.foodExpenseFiles.map(file => ({
+              id: file.id,
+            })),
+          }
+        : undefined,
+      laborContract: result.funding.isLaborContract
+        ? {
+            explanation: result.funding.laborContractExplanation,
+            files: result.laborContractFiles.map(file => ({
+              id: file.id,
+            })),
+          }
+        : undefined,
+      externalEventParticipationFee: result.funding
+        .isExternalEventParticipationFee
+        ? {
+            explanation:
+              result.funding.externalEventParticipationFeeExplanation,
+            files: result.externalEventParticipationFeeFiles.map(file => ({
+              id: file.id,
+            })),
+          }
+        : undefined,
+      publication: result.funding.isPublication
+        ? {
+            explanation: result.funding.publicationExplanation,
+            files: result.publicationFiles.map(file => ({
+              id: file.id,
+            })),
+          }
+        : undefined,
+      profitMakingActivity: result.funding.isProfitMakingActivity
+        ? {
+            explanation: result.funding.profitMakingActivityExplanation,
+            files: result.profitMakingActivityFiles.map(file => ({
+              id: file.id,
+            })),
+          }
+        : undefined,
+      jointExpense: result.funding.isJointExpense
+        ? {
+            explanation: result.funding.jointExpenseExplanation,
+            files: result.jointExpenseFiles.map(file => ({
+              id: file.id,
+            })),
+          }
+        : undefined,
+      etcExpense: result.funding.isEtcExpense
+        ? {
+            explanation: result.funding.etcExpenseExplanation,
+            files: result.etcExpenseFiles.map(file => ({
+              id: file.id,
+            })),
+          }
+        : undefined,
     });
   }
 }

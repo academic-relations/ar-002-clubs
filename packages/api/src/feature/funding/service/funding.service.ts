@@ -88,54 +88,115 @@ export default class FundingService {
       throw new HttpException("Funding not found", HttpStatus.NOT_FOUND);
     }
 
-    funding.purposeActivity =
-      await this.activityPublicService.getActivityNameById(
-        funding.purposeActivity.id,
-      );
     funding.tradeEvidenceFiles = await this.filePublicService.getFilesByIds(
       funding.tradeEvidenceFiles.flatMap(file => file.id),
     );
     funding.tradeDetailFiles = await this.filePublicService.getFilesByIds(
       funding.tradeDetailFiles.flatMap(file => file.id),
     );
-    funding.clubSupplies.imageFiles =
-      await this.filePublicService.getFilesByIds(
-        funding.clubSupplies.imageFiles.flatMap(file => file.id),
+
+    if (funding.purposeActivity) {
+      funding.purposeActivity =
+        await this.activityPublicService.getActivitySummary(
+          funding.purposeActivity.id,
+        );
+    }
+
+    if (funding.clubSupplies) {
+      funding.clubSupplies.imageFiles =
+        await this.filePublicService.getFilesByIds(
+          funding.clubSupplies.imageFiles.flatMap(file => file.id),
+        );
+    }
+
+    if (funding.clubSupplies) {
+      funding.clubSupplies.softwareEvidenceFiles =
+        await this.filePublicService.getFilesByIds(
+          funding.clubSupplies.softwareEvidenceFiles.flatMap(file => file.id),
+        );
+    }
+
+    if (funding.fixture) {
+      funding.fixture.imageFiles = await this.filePublicService.getFilesByIds(
+        funding.fixture.imageFiles.flatMap(file => file.id),
       );
-    funding.clubSupplies.softwareEvidenceFiles =
-      await this.filePublicService.getFilesByIds(
-        funding.clubSupplies.softwareEvidenceFiles.flatMap(file => file.id),
+    }
+
+    if (funding.fixture) {
+      funding.fixture.softwareEvidenceFiles =
+        await this.filePublicService.getFilesByIds(
+          funding.fixture.softwareEvidenceFiles.flatMap(file => file.id),
+        );
+    }
+
+    if (funding.foodExpense) {
+      funding.foodExpense.files = await this.filePublicService.getFilesByIds(
+        funding.foodExpense.files.flatMap(file => file.id),
       );
-    funding.fixture.imageFiles = await this.filePublicService.getFilesByIds(
-      funding.fixture.imageFiles.flatMap(file => file.id),
-    );
-    funding.fixture.softwareEvidenceFiles =
-      await this.filePublicService.getFilesByIds(
-        funding.fixture.softwareEvidenceFiles.flatMap(file => file.id),
+    }
+
+    if (funding.laborContract) {
+      funding.laborContract.files = await this.filePublicService.getFilesByIds(
+        funding.laborContract.files.flatMap(file => file.id),
       );
-    funding.foodExpense.files = await this.filePublicService.getFilesByIds(
-      funding.foodExpense.files.flatMap(file => file.id),
-    );
-    funding.laborContract.files = await this.filePublicService.getFilesByIds(
-      funding.laborContract.files.flatMap(file => file.id),
-    );
-    funding.externalEventParticipationFee.files =
-      await this.filePublicService.getFilesByIds(
-        funding.externalEventParticipationFee.files.flatMap(file => file.id),
+    }
+
+    if (funding.externalEventParticipationFee) {
+      funding.externalEventParticipationFee.files =
+        await this.filePublicService.getFilesByIds(
+          funding.externalEventParticipationFee.files.flatMap(file => file.id),
+        );
+    }
+
+    if (funding.publication) {
+      funding.publication.files = await this.filePublicService.getFilesByIds(
+        funding.publication.files.flatMap(file => file.id),
       );
-    funding.publication.files = await this.filePublicService.getFilesByIds(
-      funding.publication.files.flatMap(file => file.id),
-    );
-    funding.profitMakingActivity.files =
-      await this.filePublicService.getFilesByIds(
-        funding.profitMakingActivity.files.flatMap(file => file.id),
+    }
+
+    if (funding.profitMakingActivity) {
+      funding.profitMakingActivity.files =
+        await this.filePublicService.getFilesByIds(
+          funding.profitMakingActivity.files.flatMap(file => file.id),
+        );
+    }
+
+    if (funding.jointExpense) {
+      funding.jointExpense.files = await this.filePublicService.getFilesByIds(
+        funding.laborContract.files.flatMap(file => file.id),
       );
-    funding.jointExpense.files = await this.filePublicService.getFilesByIds(
-      funding.jointExpense.files.flatMap(file => file.id),
-    );
-    funding.etcExpense.files = await this.filePublicService.getFilesByIds(
-      funding.etcExpense.files.flatMap(file => file.id),
-    );
+    }
+
+    if (funding.etcExpense) {
+      funding.etcExpense.files = await this.filePublicService.getFilesByIds(
+        funding.etcExpense.files.flatMap(file => file.id),
+      );
+    }
+
+    if (funding.publication) {
+      funding.publication.files = await this.filePublicService.getFilesByIds(
+        funding.publication.files.flatMap(file => file.id),
+      );
+    }
+
+    if (funding.profitMakingActivity) {
+      funding.profitMakingActivity.files =
+        await this.filePublicService.getFilesByIds(
+          funding.profitMakingActivity.files.flatMap(file => file.id),
+        );
+    }
+
+    if (funding.jointExpense) {
+      funding.jointExpense.files = await this.filePublicService.getFilesByIds(
+        funding.jointExpense.files.flatMap(file => file.id),
+      );
+    }
+
+    if (funding.etcExpense) {
+      funding.etcExpense.files = await this.filePublicService.getFilesByIds(
+        funding.etcExpense.files.flatMap(file => file.id),
+      );
+    }
 
     return funding;
   }
