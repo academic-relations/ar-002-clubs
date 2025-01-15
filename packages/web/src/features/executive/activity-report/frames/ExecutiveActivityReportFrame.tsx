@@ -5,8 +5,6 @@ import { overlay } from "overlay-kit";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
-import Modal from "@sparcs-clubs/web/common/components/Modal";
-import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 
 import ActivityReportStatistic from "../components/ActivityReportStatistic";
@@ -14,7 +12,6 @@ import ChargedChangeClubModalContent from "../components/ChargedChangeClubModalC
 import { ChargedChangeClubProps } from "../components/ChargedChangeClubModalTable";
 import ExecutiveActivityChargedTable from "../components/ExecutiveActivityChargedTable";
 import ExecutiveActivityClubTable from "../components/ExecutiveActivityClubTable";
-import { putClubActivitiesChargedExecutive } from "../services/putClubActivitiesChargedExecutive";
 import useGetExecutiveActivities from "../services/useGetExecutiveActivities";
 
 const ExecutiveActivityReportFrame = () => {
@@ -23,13 +20,9 @@ const ExecutiveActivityReportFrame = () => {
   const { data, isLoading, isError } = useGetExecutiveActivities();
 
   const [selectedClubIds, setSelectedClubIds] = useState<number[]>([]);
-  const [selectedExecutiveId, setSelectedExecutiveId] = useState<number | null>(
-    null,
-  );
   const [selectedClubInfos, setSelectedClubInfos] = useState<
     ChargedChangeClubProps[]
   >([]);
-  // console.log(selectedExecutiveId);
 
   useEffect(() => {
     if (data) {
@@ -48,32 +41,12 @@ const ExecutiveActivityReportFrame = () => {
 
   const openChargedChangeModal = () => {
     overlay.open(({ isOpen, close }) => (
-      <Modal isOpen={isOpen}>
-        <CancellableModalContent
-          // TODO: 로직 확인 및 수정 필요
-          onConfirm={async () => {
-            if (selectedExecutiveId !== null) {
-              await putClubActivitiesChargedExecutive({
-                clubId: selectedClubIds[0],
-                executiveId: selectedExecutiveId,
-              });
-              close();
-            }
-            // setSelectedExecutiveId(null);
-          }}
-          onClose={() => {
-            // setSelectedExecutiveId(null);
-            close();
-          }}
-        >
-          <ChargedChangeClubModalContent
-            selectedClubIds={selectedClubIds}
-            selectedClubInfos={selectedClubInfos}
-            selectedExecutiveId={selectedExecutiveId}
-            setSelectedExecutiveId={setSelectedExecutiveId}
-          />
-        </CancellableModalContent>
-      </Modal>
+      <ChargedChangeClubModalContent
+        isOpen={isOpen}
+        close={close}
+        selectedClubIds={selectedClubIds}
+        selectedClubInfos={selectedClubInfos}
+      />
     ));
   };
 
