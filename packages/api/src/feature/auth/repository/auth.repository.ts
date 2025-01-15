@@ -65,7 +65,7 @@ export class AuthRepository {
       .insert(User)
       .values({ sid, name, email })
       .onDuplicateKeyUpdate({
-        set: { name },
+        set: { name, email },
       });
 
     const user = await this.db
@@ -105,7 +105,7 @@ export class AuthRepository {
           userId: user.id,
           email,
         })
-        .onDuplicateKeyUpdate({ set: { userId: user.id, name } });
+        .onDuplicateKeyUpdate({ set: { userId: user.id, name, email } });
       const student = await this.db
         .select()
         .from(Student)
@@ -210,7 +210,7 @@ export class AuthRepository {
       await this.db
         .insert(Professor)
         .values({ userId: user.id, name, email })
-        .onDuplicateKeyUpdate({ set: { name } });
+        .onDuplicateKeyUpdate({ set: { userId: user.id, name } });
       const professor = await this.db
         .select()
         .from(Professor)
