@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 
+import apiAct023 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
+
+import { useQueryClient } from "@tanstack/react-query";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
@@ -29,6 +33,8 @@ interface ChargeableExecutive {
 const ChargedChangeClubModalContent: React.FC<
   ChargedChangeClubModalContentProps
 > = ({ isOpen, close, selectedClubIds, selectedClubInfos }) => {
+  const queryClient = useQueryClient();
+
   const { data, isLoading, isError } =
     useGetActivityClubChargeAvailableExecutives({ clubIds: selectedClubIds });
   const [selectedExecutiveId, setSelectedExecutiveId] = useState<number | null>(
@@ -59,6 +65,7 @@ const ChargedChangeClubModalContent: React.FC<
               clubIds: selectedClubIds,
               executiveId: selectedExecutiveId,
             });
+            queryClient.invalidateQueries({ queryKey: [apiAct023.url()] });
             close();
           }
           setSelectedExecutiveId(null);
