@@ -9,12 +9,12 @@ import {
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 
 export type FundingDBResult = {
-  fundingOrder: {
+  funding: {
     id: number;
     clubId: number;
-    purposeId?: number;
+    purposeActivityId?: number;
     semesterId?: number;
-    fundingOrderStatusEnumId?: number;
+    fundingStatusEnum?: number;
     name: string;
     expenditureDate: Date;
     expenditureAmount: number;
@@ -32,15 +32,15 @@ export type FundingDBResult = {
     isEtcExpense: boolean;
     isNonCorporateTransaction: boolean;
     clubSuppliesName: string;
-    clubSuppliesEvidenceEnumId: number;
-    clubSuppliesClassEnumId: number;
+    clubSuppliesEvidenceEnum: number;
+    clubSuppliesClassEnum: number;
     clubSuppliesPurpose: string;
     clubSuppliesSoftwareEvidence: string;
     numberOfClubSupplies: number;
     priceOfClubSupplies: number;
     fixtureName: string;
-    fixtureEvidenceEnumId: number;
-    fixtureClassEnumId: number;
+    fixtureEvidenceEnum: number;
+    fixtureClassEnum: number;
     fixturePurpose: string;
     fixtureSoftwareEvidence: string;
     numberOfFixture: number;
@@ -56,13 +56,13 @@ export type FundingDBResult = {
     profitMakingActivityExplanation: string;
     jointExpenseExplanation: string;
     etcExpenseExplanation: string;
-    transportationEnumId: number;
+    transportationEnum: number;
     origin: string;
     destination: string;
     purposeOfTransportation: string;
     placeValidity: string;
   };
-  fundingOrderFeedback?: {
+  fundingFeedback?: {
     feedback?: string;
   };
   tradeEvidenceFiles: { id: string }[];
@@ -100,7 +100,7 @@ export class MFunding implements IFunding {
 
   semesterId: number;
 
-  fundingOrderStatusEnumId: number;
+  fundingStatusEnum: number;
 
   purposeActivity?: Pick<IActivitySummary, "id">;
 
@@ -166,45 +166,45 @@ export class MFunding implements IFunding {
 
   static fromDBResult(result: FundingDBResult) {
     return new MFunding({
-      id: result.fundingOrder.id,
-      clubId: result.fundingOrder.clubId,
-      name: result.fundingOrder.name,
-      semesterId: result.fundingOrder.semesterId,
-      fundingOrderStatusEnumId: result.fundingOrder.fundingOrderStatusEnumId,
+      id: result.funding.id,
+      clubId: result.funding.clubId,
+      name: result.funding.name,
+      semesterId: result.funding.semesterId,
+      fundingStatusEnum: result.funding.fundingStatusEnum,
       purposeActivity: {
-        id: result.fundingOrder.purposeId,
+        id: result.funding.purposeActivityId,
       },
-      expenditureDate: result.fundingOrder.expenditureDate,
-      expenditureAmount: result.fundingOrder.expenditureAmount,
-      approvedAmount: result.fundingOrder.approvedAmount,
+      expenditureDate: result.funding.expenditureDate,
+      expenditureAmount: result.funding.expenditureAmount,
+      approvedAmount: result.funding.approvedAmount,
       tradeEvidenceFiles: result.tradeEvidenceFiles.map(file => ({
         id: file.id,
       })),
       tradeDetailFiles: result.tradeDetailFiles.map(file => ({
         id: file.id,
       })),
-      tradeDetailExplanation: result.fundingOrder.tradeDetailExplanation,
-      isFixture: result.fundingOrder.isFixture,
-      isTransportation: result.fundingOrder.isTransportation,
-      isNonCorporateTransaction: result.fundingOrder.isNonCorporateTransaction,
-      isFoodExpense: result.fundingOrder.isFoodExpense,
-      isLaborContract: result.fundingOrder.isLaborContract,
+      tradeDetailExplanation: result.funding.tradeDetailExplanation,
+      isFixture: result.funding.isFixture,
+      isTransportation: result.funding.isTransportation,
+      isNonCorporateTransaction: result.funding.isNonCorporateTransaction,
+      isFoodExpense: result.funding.isFoodExpense,
+      isLaborContract: result.funding.isLaborContract,
       isExternalEventParticipationFee:
-        result.fundingOrder.isExternalEventParticipationFee,
-      isPublication: result.fundingOrder.isPublication,
-      isProfitMakingActivity: result.fundingOrder.isProfitMakingActivity,
-      isJointExpense: result.fundingOrder.isJointExpense,
-      isEtcExpense: result.fundingOrder.isEtcExpense,
-      clubSupplies: result.fundingOrder.purposeId
+        result.funding.isExternalEventParticipationFee,
+      isPublication: result.funding.isPublication,
+      isProfitMakingActivity: result.funding.isProfitMakingActivity,
+      isJointExpense: result.funding.isJointExpense,
+      isEtcExpense: result.funding.isEtcExpense,
+      clubSupplies: result.funding.purposeActivityId
         ? undefined
         : {
-            name: result.fundingOrder.clubSuppliesName,
-            evidenceEnumId: result.fundingOrder.clubSuppliesEvidenceEnumId,
-            classEnumId: result.fundingOrder.clubSuppliesClassEnumId,
-            purpose: result.fundingOrder.clubSuppliesPurpose,
-            softwareEvidence: result.fundingOrder.clubSuppliesSoftwareEvidence,
-            number: result.fundingOrder.numberOfClubSupplies,
-            price: result.fundingOrder.priceOfClubSupplies,
+            name: result.funding.clubSuppliesName,
+            evidenceEnum: result.funding.clubSuppliesEvidenceEnum,
+            classEnum: result.funding.clubSuppliesClassEnum,
+            purpose: result.funding.clubSuppliesPurpose,
+            softwareEvidence: result.funding.clubSuppliesSoftwareEvidence,
+            number: result.funding.numberOfClubSupplies,
+            price: result.funding.priceOfClubSupplies,
             imageFiles: result.clubSuppliesImageFiles.map(file => ({
               id: file.id,
             })),
@@ -214,15 +214,15 @@ export class MFunding implements IFunding {
               }),
             ),
           },
-      fixture: result.fundingOrder.isFixture
+      fixture: result.funding.isFixture
         ? {
-            name: result.fundingOrder.fixtureName,
-            purpose: result.fundingOrder.fixturePurpose,
-            evidenceEnumId: result.fundingOrder.fixtureEvidenceEnumId,
-            classEnumId: result.fundingOrder.fixtureClassEnumId,
-            softwareEvidence: result.fundingOrder.fixtureSoftwareEvidence,
-            number: result.fundingOrder.numberOfFixture,
-            price: result.fundingOrder.priceOfFixture,
+            name: result.funding.fixtureName,
+            purpose: result.funding.fixturePurpose,
+            evidenceEnum: result.funding.fixtureEvidenceEnum,
+            classEnum: result.funding.fixtureClassEnum,
+            softwareEvidence: result.funding.fixtureSoftwareEvidence,
+            number: result.funding.numberOfFixture,
+            price: result.funding.priceOfFixture,
             imageFiles: result.fixtureImageFiles.map(file => ({
               id: file.id,
             })),
@@ -233,78 +233,78 @@ export class MFunding implements IFunding {
             ),
           }
         : undefined,
-      transportation: result.fundingOrder.isTransportation
+      transportation: result.funding.isTransportation
         ? {
-            enumId: result.fundingOrder.transportationEnumId,
-            origin: result.fundingOrder.origin,
-            destination: result.fundingOrder.destination,
-            purpose: result.fundingOrder.purposeOfTransportation,
-            placeValidity: result.fundingOrder.placeValidity,
+            enum: result.funding.transportationEnum,
+            origin: result.funding.origin,
+            destination: result.funding.destination,
+            purpose: result.funding.purposeOfTransportation,
+            placeValidity: result.funding.placeValidity,
             passengers: result.transportationPassengers.map(passenger => ({
               id: passenger.id,
             })),
           }
         : undefined,
-      nonCorporateTransaction: result.fundingOrder.isNonCorporateTransaction
+      nonCorporateTransaction: result.funding.isNonCorporateTransaction
         ? {
-            traderName: result.fundingOrder.traderName,
-            traderAccountNumber: result.fundingOrder.traderAccountNumber,
-            wasteExplanation: result.fundingOrder.wasteExplanation,
+            traderName: result.funding.traderName,
+            traderAccountNumber: result.funding.traderAccountNumber,
+            wasteExplanation: result.funding.wasteExplanation,
           }
         : undefined,
-      foodExpense: result.fundingOrder.isFoodExpense
+      foodExpense: result.funding.isFoodExpense
         ? {
-            explanation: result.fundingOrder.foodExpenseExplanation,
+            explanation: result.funding.foodExpenseExplanation,
             files: result.foodExpenseFiles.map(file => ({
               id: file.id,
             })),
           }
         : undefined,
-      laborContract: result.fundingOrder.isLaborContract
+      laborContract: result.funding.isLaborContract
         ? {
-            explanation: result.fundingOrder.laborContractExplanation,
+            explanation: result.funding.laborContractExplanation,
             files: result.laborContractFiles.map(file => ({
               id: file.id,
             })),
           }
         : undefined,
-      externalEventParticipationFee: result.fundingOrder
+      externalEventParticipationFee: result.funding
         .isExternalEventParticipationFee
         ? {
             explanation:
-              result.fundingOrder.externalEventParticipationFeeExplanation,
+              result.funding.externalEventParticipationFeeExplanation,
             files: result.externalEventParticipationFeeFiles.map(file => ({
               id: file.id,
             })),
           }
         : undefined,
-      publication: result.fundingOrder.isPublication
+      publication: result.funding.isPublication
         ? {
-            explanation: result.fundingOrder.publicationExplanation,
+            explanation: result.funding.publicationExplanation,
             files: result.publicationFiles.map(file => ({
               id: file.id,
             })),
           }
         : undefined,
-      profitMakingActivity: result.fundingOrder.isProfitMakingActivity
+      profitMakingActivity: result.funding.isProfitMakingActivity
         ? {
-            explanation: result.fundingOrder.profitMakingActivityExplanation,
+            explanation: result.funding.profitMakingActivityExplanation,
             files: result.profitMakingActivityFiles.map(file => ({
               id: file.id,
             })),
           }
         : undefined,
-      jointExpense: result.fundingOrder.isJointExpense
+      jointExpense: result.funding.isJointExpense
         ? {
-            explanation: result.fundingOrder.jointExpenseExplanation,
+            explanation: result.funding.jointExpenseExplanation,
             files: result.jointExpenseFiles.map(file => ({
               id: file.id,
             })),
           }
         : undefined,
-      etcExpense: result.fundingOrder.isEtcExpense
+      etcExpense: result.funding.isEtcExpense
         ? {
-            explanation: result.fundingOrder.etcExpenseExplanation,
+            explanation: result.funding.etcExpenseExplanation,
             files: result.etcExpenseFiles.map(file => ({
               id: file.id,
             })),

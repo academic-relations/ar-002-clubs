@@ -4,10 +4,12 @@ import {
   count,
   desc,
   eq,
+  gt,
   gte,
   inArray,
   isNotNull,
   isNull,
+  lt,
   lte,
   not,
   or,
@@ -214,6 +216,15 @@ export default class ClubStudentTRepository {
       endTerm: Date;
     };
   }) {
+    // startTerm과 endTerm 의 값을 한국시간대에 맞게 변형합니다.
+    function toKST(date) {
+      const KST_OFFSET = -9 * 60 * 60 * 1000; // UTC+9
+      return new Date(date.getTime() + KST_OFFSET);
+    }
+
+    const startTermKST = toKST(new Date(param.duration.startTerm));
+    const endTermKST = toKST(new Date(param.duration.endTerm));
+
     const studentIds = await this.db
       .select()
       .from(ClubStudentT)
@@ -222,18 +233,19 @@ export default class ClubStudentTRepository {
           eq(ClubStudentT.clubId, param.clubId),
           not(
             or(
-              gte(ClubStudentT.startTerm, param.duration.endTerm),
+              gt(ClubStudentT.startTerm, endTermKST), // 날짜에 대한 컨벤션: 포함관계이므로 not 이니 gt, lt 사용
               and(
                 isNotNull(ClubStudentT.endTerm),
-                lte(ClubStudentT.endTerm, param.duration.startTerm),
+                lt(ClubStudentT.endTerm, startTermKST),
               ),
             ),
           ),
           isNull(ClubStudentT.deletedAt),
         ),
       )
-      .then(arr => arr.map(e => e.studentId));
+      .then(result => result.map(row => row.studentId));
     logger.debug(studentIds);
+
     if (studentIds.length === 0) return [];
     const result = await this.db
       .select()

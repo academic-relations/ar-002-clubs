@@ -38,16 +38,16 @@ const FixtureEvidenceList: React.FC<FixtureEvidenceListProps> = ({
         증빙 분류: {content}{" "}
         {evidenceEnumMap(
           isFixture
-            ? mockFundingDetail.fixtureEvidenceEnumId
-            : mockFundingDetail.clubSuppliesEvidenceEnumId,
+            ? mockFundingDetail.fixtureEvidenceEnum
+            : mockFundingDetail.clubSuppliesEvidenceEnum,
         )}
       </ListItem>
       <ListItem>
         {content} 분류:{" "}
         {classEnumMap(
           isFixture
-            ? mockFundingDetail.fixtureClassEnumId
-            : mockFundingDetail.clubSuppliesClassEnumId,
+            ? mockFundingDetail.fixtureClassEnum
+            : mockFundingDetail.clubSuppliesClassEnum,
         )}
       </ListItem>
       <ListItem>

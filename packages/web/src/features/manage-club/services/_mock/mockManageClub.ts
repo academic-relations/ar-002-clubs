@@ -1,6 +1,6 @@
 import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
-import { FundingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import {
   PromotionalPrintingOrderStatusEnum,
   PromotionalPrintingSizeEnum,
@@ -48,13 +48,6 @@ export enum ActivityProfessorApprovalEnum {
   Requested = 1, // 대기
   Approved, // 완료
   Denied, // 반려
-}
-
-export enum FundingStatusEnum {
-  Applied = 1, // 신청
-  Committee, // 운위
-  Approved, // 승인
-  Rejected, // 반려
 }
 
 export enum MemberStatusEnum {
@@ -194,7 +187,7 @@ const mockupManageMems: ApiReg008ResponseOk["applies"][0][] = [
 const mockupManageFunding: NewFundingData[] = [
   {
     id: 1,
-    fundingOrderStatusEnumId: FundingOrderStatusEnum.Applied,
+    fundingStatusEnum: FundingStatusEnum.Applied,
     name: "개발개발한 어떠한 활동",
     activityName: "모니터",
     expenditureAmount: 300000,
@@ -202,7 +195,7 @@ const mockupManageFunding: NewFundingData[] = [
   },
   {
     id: 2,
-    fundingOrderStatusEnumId: FundingOrderStatusEnum.Applied,
+    fundingStatusEnum: FundingStatusEnum.Applied,
     name: "개발개발한 어떠한 활동",
     activityName: "모니터",
     expenditureAmount: 300000,
@@ -210,7 +203,7 @@ const mockupManageFunding: NewFundingData[] = [
   },
   {
     id: 3,
-    fundingOrderStatusEnumId: FundingOrderStatusEnum.Committee,
+    fundingStatusEnum: FundingStatusEnum.Committee,
     name: "개발개발한 어떠한 활동",
     activityName: "모니터",
     expenditureAmount: 300000,
@@ -218,7 +211,7 @@ const mockupManageFunding: NewFundingData[] = [
   },
   {
     id: 4,
-    fundingOrderStatusEnumId: FundingOrderStatusEnum.Rejected,
+    fundingStatusEnum: FundingStatusEnum.Rejected,
     name: "개발개발한 어떠한 활동",
     activityName: "모니터",
     expenditureAmount: 300000,
@@ -226,7 +219,7 @@ const mockupManageFunding: NewFundingData[] = [
   },
   {
     id: 5,
-    fundingOrderStatusEnumId: FundingOrderStatusEnum.Approved,
+    fundingStatusEnum: FundingStatusEnum.Approved,
     name: "개발개발한 어떠한 활동",
     activityName: "모니터",
     expenditureAmount: 300000,
@@ -234,7 +227,7 @@ const mockupManageFunding: NewFundingData[] = [
   },
   {
     id: 6,
-    fundingOrderStatusEnumId: FundingOrderStatusEnum.Approved,
+    fundingStatusEnum: FundingStatusEnum.Approved,
     name: "개발개발한 어떠한 활동",
     activityName: "모니터",
     expenditureAmount: 300000,
