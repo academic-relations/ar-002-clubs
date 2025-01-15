@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 import apiAct023 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
-
+import apiAct024 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
 import { useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -11,18 +12,18 @@ import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/C
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { putClubActivitiesChargedExecutive } from "../services/putClubActivitiesChargedExecutive";
+import { patchActivityChargedExecutive } from "../services/patchActivityChargedExecutive";
 import useGetActivityClubChargeAvailableExecutives from "../services/useGetActivityClubChargeAvailableExecutives";
 
-import ChargedChangeClubModalTable, {
-  ChargedChangeClubProps,
-} from "./ChargedChangeClubModalTable";
+import ChargedChangeActivityModalTable, {
+  ChargedChangeActivityProps,
+} from "./ChargedChangeActivityModalTable";
 
-interface ChargedChangeClubModalContentProps {
+interface ChargedChangeActivityModalContentProps {
   isOpen: boolean;
   close: VoidFunction;
-  selectedClubIds: number[];
-  selectedClubInfos: ChargedChangeClubProps[];
+  selectedActivityIds: number[];
+  selectedActivityInfos: ChargedChangeActivityProps[];
 }
 
 interface ChargeableExecutive {
@@ -30,13 +31,16 @@ interface ChargeableExecutive {
   value: number;
 }
 
-const ChargedChangeClubModalContent: React.FC<
-  ChargedChangeClubModalContentProps
-> = ({ isOpen, close, selectedClubIds, selectedClubInfos }) => {
+const ChargedChangeActivityModalContent: React.FC<
+  ChargedChangeActivityModalContentProps
+> = ({ isOpen, close, selectedActivityIds, selectedActivityInfos }) => {
   const queryClient = useQueryClient();
+  const { id } = useParams();
 
   const { data, isLoading, isError } =
-    useGetActivityClubChargeAvailableExecutives({ clubIds: selectedClubIds });
+    useGetActivityClubChargeAvailableExecutives({
+      clubIds: [Number(id)],
+    });
   const [selectedExecutiveId, setSelectedExecutiveId] = useState<number | null>(
     null,
   );
@@ -61,11 +65,14 @@ const ChargedChangeClubModalContent: React.FC<
       <CancellableModalContent
         onConfirm={async () => {
           if (selectedExecutiveId !== null) {
-            await putClubActivitiesChargedExecutive({
-              clubIds: selectedClubIds,
+            await patchActivityChargedExecutive({
+              activityIds: selectedActivityIds,
               executiveId: selectedExecutiveId,
             });
             await queryClient.invalidateQueries({
+              queryKey: [apiAct024.url()],
+            });
+            queryClient.invalidateQueries({
               queryKey: [apiAct023.url()],
             });
             close();
@@ -87,11 +94,11 @@ const ChargedChangeClubModalContent: React.FC<
               items={chargeableExecutives}
               value={selectedExecutiveId}
               onChange={setSelectedExecutiveId}
-              label="동아리별 활동 보고서 담당자"
+              label="개별 활동 보고서 담당자"
               isTextAlignStart
             />
-            <ChargedChangeClubModalTable
-              data={selectedClubInfos}
+            <ChargedChangeActivityModalTable
+              data={selectedActivityInfos}
               newExecutiveName={
                 chargeableExecutives
                   .find(executive => executive.value === selectedExecutiveId)
@@ -104,8 +111,8 @@ const ChargedChangeClubModalContent: React.FC<
               fw="MEDIUM"
               style={{ textAlign: "left" }}
             >
-              * 동아리별 활동 보고서 담당자를 변경할 경우, 해당 동아리가 작성한
-              활동 보고서의 담당자가 모두 해당 담당자로 변경됩니다.
+              * 개별 활동 보고서 담당자를 변경할 경우, 해당 동아리의 활동 보고서
+              담당자와 개별 활동 보고서 담당자가 달라질 수 있습니다.
             </Typography>
           </FlexWrapper>
         </AsyncBoundary>
@@ -114,4 +121,4 @@ const ChargedChangeClubModalContent: React.FC<
   );
 };
 
-export default ChargedChangeClubModalContent;
+export default ChargedChangeActivityModalContent;
