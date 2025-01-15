@@ -195,6 +195,60 @@ export default class ActivityService {
       );
   }
 
+  private async changeClubChargedExecutive(param: {
+    clubId: number;
+    executiveId: number;
+  }) {
+    const activityDId = await this.getLastActivityD().then(e => e.id);
+    const prevChargedExecutiveId =
+      await this.activityClubChargedExecutiveRepository.selectActivityClubChargedExecutiveByClubId(
+        { activityDId, clubId: param.clubId },
+      );
+    let upsertResult = false;
+    if (prevChargedExecutiveId.length === 0) {
+      upsertResult =
+        await this.activityClubChargedExecutiveRepository.insertActivityClubChargedExecutive(
+          {
+            activityDId,
+            clubId: param.clubId,
+            executiveId: param.executiveId,
+          },
+        );
+    } else {
+      upsertResult =
+        await this.activityClubChargedExecutiveRepository.updateActivityClubChargedExecutive(
+          {
+            activityDId,
+            clubId: param.clubId,
+            executiveId: param.executiveId,
+          },
+        );
+    }
+    if (upsertResult === false) {
+      throw new HttpException(
+        "failed to change charged-executive",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const activities =
+      await this.activityRepository.selectActivityByClubIdAndActivityDId(
+        param.clubId,
+        activityDId,
+      );
+
+    await Promise.all(
+      activities.map(async e => {
+        const isUpdateSuceed =
+          await this.activityRepository.updateActivityChargedExecutive({
+            activityId: e.id,
+            executiveId: param.executiveId,
+          });
+        return isUpdateSuceed;
+      }),
+    );
+  }
+
   /**
    * @param activityDId 조회하고 싶은 활동기간 id, 없을 경우 직전 활동기간의 id를 사용합니다.
    * @param clubId 동아리 id
@@ -1263,52 +1317,12 @@ export default class ActivityService {
   async putExecutiveActivitiesClubChargedExecutive(param: {
     body: ApiAct026RequestBody;
   }): Promise<ApiAct026ResponseOk> {
-    const activityDId = await this.getLastActivityD().then(e => e.id);
-    const prevChargedExecutiveId =
-      await this.activityClubChargedExecutiveRepository.selectActivityClubChargedExecutiveByClubId(
-        { activityDId, clubId: param.body.clubId },
-      );
-    let upsertReulst = false;
-    if (prevChargedExecutiveId.length === 0) {
-      upsertReulst =
-        await this.activityClubChargedExecutiveRepository.insertActivityClubChargedExecutive(
-          {
-            activityDId,
-            clubId: param.body.clubId,
-            executiveId: param.body.executiveId,
-          },
-        );
-    } else {
-      upsertReulst =
-        await this.activityClubChargedExecutiveRepository.updateActivityClubChargedExecutive(
-          {
-            activityDId,
-            clubId: param.body.clubId,
-            executiveId: param.body.executiveId,
-          },
-        );
-    }
-    if (upsertReulst === false) {
-      throw new HttpException(
-        "failed to change charged-executive",
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    const activities =
-      await this.activityRepository.selectActivityByClubIdAndActivityDId(
-        param.body.clubId,
-        activityDId,
-      );
-
-    await Promise.all(
-      activities.map(async e => {
-        const isUpdateSuceed =
-          await this.activityRepository.updateActivityChargedExecutive({
-            activityId: e.id,
-            executiveId: param.body.executiveId,
-          });
-        return isUpdateSuceed;
+    Promise.all(
+      param.body.clubIds.map(async clubId => {
+        this.changeClubChargedExecutive({
+          clubId,
+          executiveId: param.body.executiveId,
+        });
       }),
     );
     return {};

@@ -47,9 +47,9 @@ import apiAct024 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
 import apiAct025 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct025";
 import apiAct026 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct026";
 import apiAct027, {
-  ApiAct027RequestQuery,
+  type ApiAct027RequestQuery,
   ApiAct027RequestUrl,
-  ApiAct027ResponseOk,
+  type ApiAct027ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct027";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
