@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 
+import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -17,12 +18,10 @@ import Table from "@sparcs-clubs/web/common/components/Table";
 import Toggle from "@sparcs-clubs/web/common/components/Toggle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import { Participant } from "@sparcs-clubs/web/types/participant";
-
 interface SelectParticipantProps {
-  data: Participant[];
-  value?: Participant[];
-  onChange?: (value: Participant[]) => void;
+  data: IStudentSummary[];
+  value?: IStudentSummary[];
+  onChange?: (value: IStudentSummary[]) => void;
 }
 
 const SelectParticipantInner = styled.div`
@@ -39,7 +38,7 @@ const CheckboxCenterPlacer = styled.div`
   align-items: center;
 `;
 
-const columnHelper = createColumnHelper<Participant>();
+const columnHelper = createColumnHelper<IStudentSummary>();
 
 const columns = [
   columnHelper.display({
@@ -81,7 +80,7 @@ const SelectParticipant: React.FC<SelectParticipantProps> = ({
 }) => {
   const [searchText, setSearchText] = useState<string>("");
 
-  const [selected, setSelected] = useState<Participant[]>(value);
+  const [selected, setSelected] = useState<IStudentSummary[]>(value);
 
   const initialRowValues = useMemo(
     () =>

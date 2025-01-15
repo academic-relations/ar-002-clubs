@@ -49,6 +49,10 @@ export class FileRepository {
   }
 
   async findByIds(ids: string[]): Promise<Omit<MFile, "url">[]> {
+    if (ids.length === 0) {
+      return [];
+    }
+
     const files = await this.db
       .select()
       .from(File)

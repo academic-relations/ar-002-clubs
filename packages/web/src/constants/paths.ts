@@ -211,6 +211,12 @@ const paths = {
         authority: ["executive"],
         featureFlag: "REGISTER_MEMBER",
       },
+      {
+        name: "활동 보고서",
+        path: "/executive/activity-report",
+        authority: ["executive"],
+        featureFlag: "DEFAULT",
+      },
     ],
     authority: ["executive"],
   },

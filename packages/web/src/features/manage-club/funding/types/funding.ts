@@ -1,69 +1,14 @@
-import { FundingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
+import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 
-import { Participant } from "@sparcs-clubs/web/types/participant";
+import {
+  FixtureClassEnum,
+  FixtureEvidenceEnum,
+  FundingStatusEnum,
+  TransportationEnum,
+} from "@sparcs-clubs/interface/common/enum/funding.enum";
 
-export interface FundingInterface {
-  // TODO: files 관련 추가
-  purposeId?: string;
-  name?: string;
-  // TODO: date, amount 컴포넌트 추가되면 date, number로 변경
-  expenditureDate?: string;
-  expenditureAmount?: string;
-  tradeDetailExplanation?: string;
-
-  clubSuppliesName?: string;
-  clubSuppliesEvidenceEnumId?: string;
-  clubSuppliesClassEnumId?: string;
-  clubSuppliesPurpose?: string;
-  clubSuppliesSoftwareEvidence?: string;
-  // unitInput 추가되면 number로 변경
-  numberOfClubSupplies?: string;
-  priceOfClubSupplies?: string;
-
-  isFixture: boolean;
-  fixtureName?: string;
-  fixtureEvidenceEnumId?: string;
-  fixtureClassEnumId?: string;
-  fixturePurpose?: string;
-  fixtureSoftwareEvidence?: string;
-  // unitInput 추가되면 number로 변경
-  numberOfFixture?: string;
-  priceOfFixture?: string;
-
-  isTransportation: boolean;
-  transportationEnumId?: string;
-  origin?: string;
-  destination?: string;
-  purposeOfTransportation?: string;
-  placeValidity?: string;
-  transportationPassengers: Participant[];
-
-  isNonCorporateTransaction: boolean;
-  traderName?: string;
-  traderAccountNumber?: string;
-  wasteExplanation?: string;
-
-  isFoodExpense: boolean;
-  foodExpenseExplanation?: string;
-
-  isLaborContract: boolean;
-  laborContractExplanation?: string;
-
-  isExternalEventParticipationFee: boolean;
-  externalEventParticipationFeeExplanation?: string;
-
-  isPublication: boolean;
-  publicationExplanation?: string;
-
-  isProfitMakingActivity: boolean;
-  profitMakingActivityExplanation?: string;
-
-  isJointExpense: boolean;
-  jointExpenseExplanation?: string;
-
-  isEtcExpense: boolean;
-  etcExpenseExplanation?: string;
-}
+import { FileDetail } from "@sparcs-clubs/web/common/components/File/attachment";
 
 export interface PastFundingData {
   id: number;
@@ -74,5 +19,84 @@ export interface PastFundingData {
 }
 
 export interface NewFundingData extends PastFundingData {
-  fundingOrderStatusEnumId: FundingOrderStatusEnum;
+  fundingStatusEnum: FundingStatusEnum;
 }
+
+export interface FundingInfo {
+  purposeActivity?: IActivitySummary;
+  name: string;
+  expenditureDate: Date;
+  expenditureAmount: number;
+}
+
+export interface BasicEvidence {
+  tradeEvidenceFiles: FileDetail[];
+  tradeDetailFiles: FileDetail[];
+  tradeDetailExplanation: string;
+}
+
+export interface AddEvidence {
+  // 동아리 용품 증빙
+  clubSuppliesName?: string;
+  clubSuppliesEvidenceEnum?: FixtureEvidenceEnum;
+  clubSuppliesClassEnum?: FixtureClassEnum;
+  clubSuppliesPurpose?: string;
+  clubSuppliesImageFiles: FileDetail[];
+  clubSuppliesSoftwareEvidence?: string;
+  clubSuppliesSoftwareEvidenceFiles: FileDetail[];
+  numberOfClubSupplies?: number;
+  priceOfClubSupplies?: number;
+  // 비품 증빙
+  isFixture: boolean;
+  fixtureName?: string;
+  fixtureEvidenceEnum?: FixtureEvidenceEnum;
+  fixtureClassEnum?: FixtureClassEnum;
+  fixturePurpose?: string;
+  fixtureImageFiles: FileDetail[];
+  fixtureSoftwareEvidence?: string;
+  fixtureSoftwareEvidenceFiles: FileDetail[];
+  numberOfFixture?: number;
+  priceOfFixture?: number;
+  // 교통비 증빙
+  isTransportation: boolean;
+  transportationEnum?: TransportationEnum;
+  origin?: string;
+  destination?: string;
+  purposeOfTransportation?: string;
+  placeValidity?: string;
+  transportationPassengers: IStudentSummary[];
+  // 비법인 거래 증빙
+  isNonCorporateTransaction: boolean;
+  traderName?: string;
+  traderAccountNumber?: string;
+  wasteExplanation?: string;
+  // 식비, 근로 계약, 외부 행사 참가비, 발간물, 수익 사업, 공동 경비, 기타 증빙
+  isFoodExpense: boolean;
+  isLaborContract: boolean;
+  isExternalEventParticipationFee: boolean;
+  isPublication: boolean;
+  isProfitMakingActivity: boolean;
+  isJointExpense: boolean;
+  isEtcExpense: boolean;
+
+  foodExpenseExplanation?: string;
+  laborContractExplanation?: string;
+  externalEventParticipationFeeExplanation?: string;
+  publicationExplanation?: string;
+  profitMakingActivityExplanation?: string;
+  jointExpenseExplanation?: string;
+  etcExpenseExplanation?: string;
+
+  foodExpenseFiles: FileDetail[];
+  laborContractFiles: FileDetail[];
+  externalEventParticipationFeeFiles: FileDetail[];
+  publicationFiles: FileDetail[];
+  profitMakingActivityFiles: FileDetail[];
+  jointExpenseFiles: FileDetail[];
+  etcExpenseFiles: FileDetail[];
+}
+
+export type FundingFormData = FundingInfo & BasicEvidence & AddEvidence;
+
+export const isActivityReportUnverifiable = (purposeId?: number) =>
+  purposeId === 0;

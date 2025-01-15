@@ -2,7 +2,7 @@
 import {
   FixtureClassEnum,
   FixtureEvidenceEnum,
-  FundingOrderStatusEnum,
+  FundingStatusEnum,
   TransportationEnum,
 } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
@@ -13,7 +13,7 @@ const mockFundingDetail = {
   name: "M1 맥북 Pro 16 inch",
   expenditureDate: new Date(),
   expenditureAmount: 2500000,
-  fundingOrderStatusEnumId: FundingOrderStatusEnum.Applied,
+  fundingStatusEnum: FundingStatusEnum.Applied,
   feedback: "피드백",
   tradeEvidenceFiles: [
     {
@@ -32,8 +32,8 @@ const mockFundingDetail = {
   tradeDetailExplanation: "이벤트를 위한 거래에 대한 세부 정보입니다.",
 
   clubSuppliesName: "맥북",
-  clubSuppliesEvidenceEnumId: FixtureEvidenceEnum.Purchase,
-  clubSuppliesClassEnumId: FixtureClassEnum.Electronics,
+  clubSuppliesEvidenceEnum: FixtureEvidenceEnum.Purchase,
+  clubSuppliesClassEnum: FixtureClassEnum.Electronics,
   clubSuppliesPurpose: "물품 사용 목적을 포함한 어떠한 머시꺵이",
   clubSuppliesImageFiles: [
     {
@@ -49,8 +49,8 @@ const mockFundingDetail = {
 
   isFixture: true,
   fixtureName: "A4 종이",
-  fixtureEvidenceEnumId: FixtureEvidenceEnum.Management,
-  fixtureClassEnumId: FixtureClassEnum.Others,
+  fixtureEvidenceEnum: FixtureEvidenceEnum.Management,
+  fixtureClassEnum: FixtureClassEnum.Others,
   fixturePurpose: "비품 사용 목적을 포함한 어떠한 머시꺵이",
   fixtureImageFiles: [
     {
@@ -65,14 +65,14 @@ const mockFundingDetail = {
   priceOfFixture: 300,
 
   isTransportation: true,
-  transportationEnumId: TransportationEnum.Airplane,
+  transportationEnum: TransportationEnum.Airplane,
   origin: "서울역",
   destination: "대전역",
   purposeOfTransportation: "해커톤 장소 사전답사",
   placeValidity: "",
   transportationPassengers: [
-    { id: 1, studentNumber: 20240510, name: "스팍스" },
-    { id: 2, studentNumber: 20200515, name: "이도라" },
+    { id: 1, studentNumber: "20240510", name: "스팍스" },
+    { id: 2, studentNumber: "20200515", name: "이도라" },
   ],
 
   isNonCorporateTransaction: true,

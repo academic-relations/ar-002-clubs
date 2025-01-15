@@ -15,8 +15,8 @@ const useGetMyClubProfessor = () =>
     queryKey: [apiClb016.url()],
     queryFn: async (): Promise<ApiClb016ResponseOk> => {
       const { data } = await axiosClientWithAuth.get(apiClb016.url(), {});
-
-      return apiClb016.responseBodyMap[200].parse(data);
+      return data;
+      // return apiClb016.responseBodyMap[200].parse(data);
     },
   });
 

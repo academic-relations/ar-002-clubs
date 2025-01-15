@@ -1,3 +1,4 @@
+import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 import {
   ActivityStatusEnum,
   ActivityTypeEnum,
@@ -5,7 +6,6 @@ import {
 
 import { FileDetail } from "@sparcs-clubs/web/common/components/File/attachment";
 
-import { Participant } from "@sparcs-clubs/web/types/participant";
 import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
 type Duration = {
@@ -27,7 +27,7 @@ export interface BaseActivityReport {
   detail: string;
   evidence: string;
   evidenceFiles: FileDetail[];
-  participants: Participant[];
+  participants: IStudentSummary[];
 }
 
 export interface CurrentActivityReport extends BaseActivityReport {

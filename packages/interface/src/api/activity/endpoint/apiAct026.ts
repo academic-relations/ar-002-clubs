@@ -16,7 +16,7 @@ const requestParam = z.object({});
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  clubId: zId,
+  clubIds: zId.array(),
   executiveId: zId,
 });
 
