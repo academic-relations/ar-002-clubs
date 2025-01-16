@@ -63,8 +63,6 @@ const FundingInfoFrame: React.FC = () => {
               />
             )}
           />
-
-          {/* TODO: 지출 일자, 지출 금액 해당 컴포넌트로 구현 */}
           <FormController
             name="expenditureDate"
             required
