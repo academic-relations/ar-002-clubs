@@ -708,4 +708,19 @@ export default class ActivityRepository {
       .where(and(inArray(Club.id, param.clubsList), isNull(Club.deletedAt)));
     return result;
   }
+
+  async fetchActivitySummaries(
+    activityIds: number[],
+  ): Promise<IActivitySummary[]> {
+    const result = await this.db
+      .select({
+        id: Activity.id,
+        name: Activity.name,
+      })
+      .from(Activity)
+      .where(
+        and(inArray(Activity.id, activityIds), isNull(Activity.deletedAt)),
+      );
+    return result;
+  }
 }

@@ -320,27 +320,17 @@ export default class FundingService {
       param.semesterId,
     );
 
-    const activities = await Promise.all(
-      fundings.map(async funding => {
-        const activityName =
-          await this.activityPublicService.getActivityNameById(
-            funding.purposeActivity.id,
-          );
-        return {
-          name: activityName[0].name ?? "활동보고서로 증빙이 불가능한 물품",
-          id: funding.purposeActivity.id,
-        };
-      }),
+    const activities = await this.activityPublicService.fetchActivitySummaries(
+      fundings.map(funding => funding.purposeActivity.id),
     );
 
     return {
       fundings: fundings.map(funding => ({
         id: funding.id,
         fundingStatusEnum: funding.fundingStatusEnum,
-        purposeId: funding.purposeActivity.id,
-        activityName: activities.find(
+        purposeActivity: activities.find(
           activity => activity.id === funding.purposeActivity.id,
-        ).name,
+        ),
         name: funding.name,
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,
