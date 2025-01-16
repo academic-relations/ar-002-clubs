@@ -37,7 +37,7 @@ const ClubCardRow = styled.div.withConfig({
 })<{ isMobile: boolean }>`
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 16px;
   justify-content: space-between;
   align-items: center;
 `;
@@ -58,13 +58,13 @@ const ClubCardNameWithTag = styled.div`
   align-items: center;
   gap: 4px;
   flex: 1 0 0;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const ClubName = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<{ isMobile: boolean }>`
-  display: flex;
-  flex-direction: column;
   flex: 1 0 0;
   width: 100%;
   font-size: ${({ isMobile }) => (isMobile ? "16px" : "20px")};
