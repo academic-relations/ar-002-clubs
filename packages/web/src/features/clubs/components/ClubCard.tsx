@@ -19,6 +19,7 @@ import {
 import isStudent from "@sparcs-clubs/web/utils/isStudent";
 
 import ClubRegistrationButtonWrapper from "./_atomic/ClubRegistrationButtonWrapper";
+// import ScrollingText from "./_atomic/ScrollingText";
 
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 
@@ -92,6 +93,8 @@ const ClubCard: React.FC<ClubCardProps> = ({
             </Tag>
           )}
           <ClubName isMobile={isMobile}>{club.name_kr}</ClubName>
+          {/* 돌아가는 텍스트를 만들 수 있어요
+             <ScrollingText isMobile={isMobile} >{club.name_kr}</ScrollingText> */}
         </ClubCardNameWithTag>
         <FlexWrapper direction="row" gap={4}>
           <Icon type="person" size={16} />

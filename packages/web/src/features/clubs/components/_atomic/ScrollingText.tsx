@@ -1,7 +1,8 @@
 // @eel width를 넘는 텍스트에 대해 좌우로 스크롤되는 텍스트 컴포넌트
 // ClubCard에서 사용될 목적으로 개발되었지만 실제로 사용되지 않았음
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
+// import React, { useEffect, useRef, useState } from "react";
 
 import styled from "styled-components";
 
@@ -47,16 +48,19 @@ const ScrollingText: React.FC<{ isMobile: boolean; children: string }> = ({
 }) => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
-  const [shouldScroll, setShouldScroll] = useState(false);
+  const shouldScroll = true;
 
-  useEffect(() => {
-    if (wrapperRef.current && contentRef.current) {
-      const wrapperWidth = wrapperRef.current.offsetWidth;
-      const contentWidth = contentRef.current.offsetWidth;
+  // width가 길 경우에만 스크롤되는 로직
+  //   const [shouldScroll, setShouldScroll] = useState(false);
 
-      setShouldScroll(contentWidth > wrapperWidth);
-    }
-  }, [children]);
+  //   useEffect(() => {
+  //     if (wrapperRef.current && contentRef.current) {
+  //       const wrapperWidth = wrapperRef.current.offsetWidth;
+  //       const contentWidth = contentRef.current.offsetWidth;
+
+  //       setShouldScroll(contentWidth > wrapperWidth);
+  //     }
+  //   }, [children]);
 
   return (
     <ScrollingTextWrapper ref={wrapperRef}>
@@ -66,6 +70,21 @@ const ScrollingText: React.FC<{ isMobile: boolean; children: string }> = ({
         isMobile={isMobile}
       >
         {children}
+        {shouldScroll && (
+          <div style={{ fontWeight: fonts.WEIGHT.MEDIUM }}>{children}</div>
+        )}
+        {shouldScroll && (
+          <div style={{ fontWeight: fonts.WEIGHT.MEDIUM }}>{children}</div>
+        )}
+        {shouldScroll && (
+          <div style={{ fontWeight: fonts.WEIGHT.MEDIUM }}>{children}</div>
+        )}{" "}
+        {shouldScroll && (
+          <div style={{ fontWeight: fonts.WEIGHT.MEDIUM }}>{children}</div>
+        )}
+        {shouldScroll && (
+          <div style={{ fontWeight: fonts.WEIGHT.MEDIUM }}>{children}</div>
+        )}
         {shouldScroll && (
           <div style={{ fontWeight: fonts.WEIGHT.MEDIUM }}>{children}</div>
         )}
