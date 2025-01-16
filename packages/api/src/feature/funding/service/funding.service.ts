@@ -26,7 +26,10 @@ import {
   ApiFnd006RequestParam,
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/apiFnd006";
-import { IFundingResponse } from "@sparcs-clubs/interface/api/funding/type/funding.type";
+import {
+  IFundingCommentResponse,
+  IFundingResponse,
+} from "@sparcs-clubs/interface/api/funding/type/funding.type";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ActivityPublicService from "@sparcs-clubs/api/feature/activity/service/activity.public.service";
@@ -34,12 +37,14 @@ import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.publi
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
+import FundingCommentRepository from "../repository/funding.comment.repository";
 import FundingRepository from "../repository/funding.repository";
 
 @Injectable()
 export default class FundingService {
   constructor(
-    private fundingRepository: FundingRepository,
+    private readonly fundingRepository: FundingRepository,
+    private readonly fundingCommentRepository: FundingCommentRepository,
     private readonly filePublicService: FilePublicService,
     private readonly userPublicService: UserPublicService,
     private readonly clubPublicSevice: ClubPublicService,
@@ -81,12 +86,9 @@ export default class FundingService {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
 
-    const funding = (await this.fundingRepository.select(
+    const funding = (await this.fundingRepository.fetch(
       param.id,
     )) as IFundingResponse;
-    if (!funding) {
-      throw new HttpException("Funding not found", HttpStatus.NOT_FOUND);
-    }
 
     funding.tradeEvidenceFiles = await this.filePublicService.getFilesByIds(
       funding.tradeEvidenceFiles.flatMap(file => file.id),
@@ -197,6 +199,24 @@ export default class FundingService {
         funding.etcExpense.files.flatMap(file => file.id),
       );
     }
+
+    const comments = (await this.fundingCommentRepository.fetchComments(
+      funding.id,
+    )) as IFundingCommentResponse[];
+
+    const chargedExecutive =
+      await this.userPublicService.fetchExecutiveSummaries(
+        comments.map(comment => comment.chargedExecutive.id),
+      );
+
+    comments.forEach(comment => {
+      // eslint-disable-next-line no-param-reassign
+      comment.chargedExecutive = chargedExecutive.find(
+        executive => executive.id === comment.chargedExecutive.id,
+      );
+    });
+
+    funding.comments = comments;
 
     return funding;
   }

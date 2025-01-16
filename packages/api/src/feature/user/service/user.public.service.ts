@@ -186,4 +186,13 @@ export default class UserPublicService {
 
     return executives;
   }
+
+  async fetchExecutiveSummaries(
+    executiveIds: number[],
+  ): Promise<IExecutiveSummary[]> {
+    const executives =
+      await this.executiveRepository.fetchExecutiveSummaries(executiveIds);
+
+    return executives;
+  }
 }

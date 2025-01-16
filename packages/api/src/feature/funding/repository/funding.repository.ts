@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
 import {
   IFundingExtra,
@@ -36,14 +36,20 @@ import { MFunding } from "../model/funding.model";
 export default class FundingRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  async select(id: number): Promise<MFunding> {
+  async fetch(id: number): Promise<MFunding> {
+    const funding = await this.find(id);
+    if (!funding) {
+      throw new NotFoundException(`Funding: ${id} not found`);
+    }
+    return funding;
+  }
+
+  async find(id: number): Promise<MFunding | null> {
     const result = await this.db
       .select({
         funding: Funding,
-        fundingFeedback: FundingFeedback,
       })
       .from(Funding)
-      .leftJoin(FundingFeedback, eq(FundingFeedback.fundingId, id))
       .where(and(eq(Funding.id, id), isNull(Funding.deletedAt)));
 
     if (result.length === 0) {
@@ -200,7 +206,6 @@ export default class FundingRepository {
 
     return MFunding.fromDBResult({
       funding: result[0].funding,
-      fundingFeedback: result[0].fundingFeedback,
       tradeEvidenceFiles: tradeEvidenceFiles.map(file => ({
         id: file.fileId,
       })),
@@ -452,7 +457,7 @@ export default class FundingRepository {
     });
 
     // 4. Return the newly created funding
-    return this.select(result);
+    return this.fetch(result);
   }
 
   async delete(id: number): Promise<void> {
