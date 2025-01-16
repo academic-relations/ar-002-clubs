@@ -104,27 +104,27 @@ export default class FundingService {
         );
     }
 
-    if (funding.clubSupplies) {
+    if (funding.clubSupplies?.imageFiles) {
       funding.clubSupplies.imageFiles =
         await this.filePublicService.getFilesByIds(
           funding.clubSupplies.imageFiles.flatMap(file => file.id),
         );
     }
 
-    if (funding.clubSupplies) {
+    if (funding.clubSupplies?.softwareEvidenceFiles) {
       funding.clubSupplies.softwareEvidenceFiles =
         await this.filePublicService.getFilesByIds(
           funding.clubSupplies.softwareEvidenceFiles.flatMap(file => file.id),
         );
     }
 
-    if (funding.fixture) {
+    if (funding.fixture?.imageFiles) {
       funding.fixture.imageFiles = await this.filePublicService.getFilesByIds(
         funding.fixture.imageFiles.flatMap(file => file.id),
       );
     }
 
-    if (funding.fixture) {
+    if (funding.fixture?.softwareEvidenceFiles) {
       funding.fixture.softwareEvidenceFiles =
         await this.filePublicService.getFilesByIds(
           funding.fixture.softwareEvidenceFiles.flatMap(file => file.id),
@@ -197,6 +197,21 @@ export default class FundingService {
     if (funding.etcExpense) {
       funding.etcExpense.files = await this.filePublicService.getFilesByIds(
         funding.etcExpense.files.flatMap(file => file.id),
+      );
+    }
+
+    if (funding.transportation?.passengers) {
+      funding.transportation.passengers =
+        await this.userPublicService.fetchStudentSummaries(
+          funding.transportation.passengers.flatMap(passenger => passenger.id),
+        );
+
+      funding.transportation.passengers = funding.transportation.passengers.map(
+        passenger => ({
+          id: passenger.id,
+          name: passenger.name,
+          studentNumber: passenger.studentNumber,
+        }),
       );
     }
 
