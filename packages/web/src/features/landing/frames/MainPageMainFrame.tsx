@@ -99,11 +99,12 @@ https://apply.sparcs.org/ (리크루팅 기간에 접속 가능)
      `;
 
 const MainPageMainFrame: React.FC = () => {
+  // 이스터에그_리크루팅
   useEffect(() => {
     console.log(
       easterEgg,
-      "color:#eba12a; font-weight: bold; margin: auto",
-      "color:#000000;",
+      "color:#eba12a; font-weight: bold; margin: auto", // 로고
+      "", // 텍스트
     );
     console.log();
   }, []);
