@@ -315,6 +315,43 @@ export default class FundingRepository {
         isEtcExpense: funding.isEtcExpense,
         isNonCorporateTransaction: funding.isNonCorporateTransaction,
         tradeDetailExplanation: funding.tradeDetailExplanation,
+        // Club supplies fields
+        clubSuppliesName: funding.clubSupplies?.name,
+        clubSuppliesEvidenceEnum: funding.clubSupplies?.evidenceEnum,
+        clubSuppliesClassEnum: funding.clubSupplies?.classEnum,
+        clubSuppliesPurpose: funding.clubSupplies?.purpose,
+        clubSuppliesSoftwareEvidence: funding.clubSupplies?.softwareEvidence,
+        numberOfClubSupplies: funding.clubSupplies?.number,
+        priceOfClubSupplies: funding.clubSupplies?.price,
+        // Fixture fields
+        fixtureName: funding.fixture?.name,
+        fixtureEvidenceEnum: funding.fixture?.evidenceEnum,
+        fixtureClassEnum: funding.fixture?.classEnum,
+        fixturePurpose: funding.fixture?.purpose,
+        fixtureSoftwareEvidence: funding.fixture?.softwareEvidence,
+        numberOfFixture: funding.fixture?.number,
+        priceOfFixture: funding.fixture?.price,
+        // Transportation fields
+        transportationEnum: funding.transportation?.enum,
+        origin: funding.transportation?.origin,
+        destination: funding.transportation?.destination,
+        purposeOfTransportation: funding.transportation?.purpose,
+        placeValidity: funding.transportation?.placeValidity,
+        // Trader fields
+        traderName: funding.nonCorporateTransaction?.traderName,
+        traderAccountNumber:
+          funding.nonCorporateTransaction?.traderAccountNumber,
+        wasteExplanation: funding.nonCorporateTransaction?.wasteExplanation,
+        // Expense explanations
+        foodExpenseExplanation: funding.foodExpense?.explanation,
+        laborContractExplanation: funding.laborContract?.explanation,
+        externalEventParticipationFeeExplanation:
+          funding.externalEventParticipationFee?.explanation,
+        publicationExplanation: funding.publication?.explanation,
+        profitMakingActivityExplanation:
+          funding.profitMakingActivity?.explanation,
+        jointExpenseExplanation: funding.jointExpense?.explanation,
+        etcExpenseExplanation: funding.etcExpense?.explanation,
       });
 
       const fundingId = Number(fundingOrder.insertId);
@@ -561,6 +598,43 @@ export default class FundingRepository {
           isEtcExpense: funding.isEtcExpense,
           isNonCorporateTransaction: funding.isNonCorporateTransaction,
           tradeDetailExplanation: funding.tradeDetailExplanation,
+          // Club supplies fields
+          clubSuppliesName: funding.clubSupplies?.name,
+          clubSuppliesEvidenceEnum: funding.clubSupplies?.evidenceEnum,
+          clubSuppliesClassEnum: funding.clubSupplies?.classEnum,
+          clubSuppliesPurpose: funding.clubSupplies?.purpose,
+          clubSuppliesSoftwareEvidence: funding.clubSupplies?.softwareEvidence,
+          numberOfClubSupplies: funding.clubSupplies?.number,
+          priceOfClubSupplies: funding.clubSupplies?.price,
+          // Fixture fields
+          fixtureName: funding.fixture?.name,
+          fixtureEvidenceEnum: funding.fixture?.evidenceEnum,
+          fixtureClassEnum: funding.fixture?.classEnum,
+          fixturePurpose: funding.fixture?.purpose,
+          fixtureSoftwareEvidence: funding.fixture?.softwareEvidence,
+          numberOfFixture: funding.fixture?.number,
+          priceOfFixture: funding.fixture?.price,
+          // Transportation fields
+          transportationEnum: funding.transportation?.enum,
+          origin: funding.transportation?.origin,
+          destination: funding.transportation?.destination,
+          purposeOfTransportation: funding.transportation?.purpose,
+          placeValidity: funding.transportation?.placeValidity,
+          // Trader fields
+          traderName: funding.nonCorporateTransaction?.traderName,
+          traderAccountNumber:
+            funding.nonCorporateTransaction?.traderAccountNumber,
+          wasteExplanation: funding.nonCorporateTransaction?.wasteExplanation,
+          // Expense explanations
+          foodExpenseExplanation: funding.foodExpense?.explanation,
+          laborContractExplanation: funding.laborContract?.explanation,
+          externalEventParticipationFeeExplanation:
+            funding.externalEventParticipationFee?.explanation,
+          publicationExplanation: funding.publication?.explanation,
+          profitMakingActivityExplanation:
+            funding.profitMakingActivity?.explanation,
+          jointExpenseExplanation: funding.jointExpense?.explanation,
+          etcExpenseExplanation: funding.etcExpense?.explanation,
         })
         .where(eq(Funding.id, id));
 
