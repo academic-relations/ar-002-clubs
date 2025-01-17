@@ -8,7 +8,7 @@ export enum ActivityStatusEnum {
   Applied = 1, // 신청
   Approved, // 승인
   Rejected, // 반려
-  OperatingCommittee, // 운영위원회
+  Committee, // 운영위원회
 }
 
 export enum ActivityDeadlineEnum {

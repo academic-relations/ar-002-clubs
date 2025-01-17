@@ -749,10 +749,7 @@ export default class ActivityRepository {
           eq(Activity.activityDId, activityDId),
           or(
             eq(Activity.activityStatusEnumId, ActivityStatusEnum.Approved),
-            eq(
-              Activity.activityStatusEnumId,
-              ActivityStatusEnum.OperatingCommittee,
-            ),
+            eq(Activity.activityStatusEnumId, ActivityStatusEnum.Committee),
           ),
           isNull(Activity.deletedAt),
         ),
