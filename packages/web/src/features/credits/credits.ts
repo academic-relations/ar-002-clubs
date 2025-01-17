@@ -37,6 +37,13 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.APM_FE,
         comment: "이제 진짜 스팍스 졸업해야징",
       },
+      {
+        nickname: "hama",
+        name: "하승종",
+        role: "APM(BE)",
+        roleType: RoleType.APM_BE,
+        comment: "9시에 일어나고 11시에 잡시다",
+      },
     ],
   },
   {
