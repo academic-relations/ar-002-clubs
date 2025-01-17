@@ -723,4 +723,30 @@ export default class ActivityRepository {
       );
     return result;
   }
+
+  /**
+   * @param clubId
+   * @param semesterId
+   * @description 해당학기 해당  ActivitySummary
+   */
+
+  async fetchActivitySummariesWithClubId(
+    clubId: number,
+    activityDId: number,
+  ): Promise<IActivitySummary[]> {
+    const result = await this.db
+      .select({
+        id: Activity.id,
+        name: Activity.name,
+      })
+      .from(Activity)
+      .where(
+        and(
+          eq(Activity.clubId, clubId),
+          eq(Activity.activityDId, activityDId),
+          isNull(Activity.deletedAt),
+        ),
+      );
+    return result;
+  }
 }

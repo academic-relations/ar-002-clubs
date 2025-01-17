@@ -4,9 +4,14 @@ import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/acti
 
 import ActivityRepository from "../repository/activity.repository";
 
+import ActivityService from "./activity.service";
+
 @Injectable()
 export default class ActivityPublicService {
-  constructor(private activityRepository: ActivityRepository) {}
+  constructor(
+    private activityRepository: ActivityRepository,
+    private activityService: ActivityService,
+  ) {}
 
   /**
    * @param id activity id
@@ -24,5 +29,21 @@ export default class ActivityPublicService {
     activityIds: number[],
   ): Promise<IActivitySummary[]> {
     return this.activityRepository.fetchActivitySummaries(activityIds);
+  }
+
+  async fetchActivitySummariesByClubId(
+    clubId: number,
+  ): Promise<IActivitySummary[]> {
+    // TS 오버로딩 너무 구림
+    // 인수 개수 다른건 어떻게 처리하지?
+    //     if (clubId !== undefined && startTerm && endTerm) {
+    // 저렇게 할 것도 아니고.
+    // 쓸 때는 또 undefined, clubId, startTerm 이렇게 써야하고.
+    // param 이라고 이름 붙이면 그게 더 쓰기 고역인데
+    const activityDId = (await this.activityService.getLastActivityD()).id;
+    return this.activityRepository.fetchActivitySummariesWithClubId(
+      clubId,
+      activityDId,
+    );
   }
 }

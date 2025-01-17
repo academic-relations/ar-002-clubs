@@ -131,7 +131,7 @@ export default class ActivityService {
    * @returns 현재 활동보고서를 작성해야 하는 직전학기 정보를 리턴합니다.
    * ex. 현재 겨울학기일 경우, 여름-가을학기 활동기간을 리턴해야 합니다.
    */
-  private async getLastActivityD() {
+  async getLastActivityD() {
     const today = getKSTDate();
     const [activityD] =
       await this.activityActivityTermRepository.selectLastActivityDByDate(
