@@ -26,7 +26,10 @@ import {
   ApiFnd006RequestParam,
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/apiFnd006";
-import { IFundingResponse } from "@sparcs-clubs/interface/api/funding/type/funding.type";
+import {
+  IFundingCommentResponse,
+  IFundingResponse,
+} from "@sparcs-clubs/interface/api/funding/type/funding.type";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ActivityPublicService from "@sparcs-clubs/api/feature/activity/service/activity.public.service";
@@ -34,12 +37,14 @@ import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.publi
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
+import FundingCommentRepository from "../repository/funding.comment.repository";
 import FundingRepository from "../repository/funding.repository";
 
 @Injectable()
 export default class FundingService {
   constructor(
-    private fundingRepository: FundingRepository,
+    private readonly fundingRepository: FundingRepository,
+    private readonly fundingCommentRepository: FundingCommentRepository,
     private readonly filePublicService: FilePublicService,
     private readonly userPublicService: UserPublicService,
     private readonly clubPublicSevice: ClubPublicService,
@@ -81,12 +86,9 @@ export default class FundingService {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
 
-    const funding = (await this.fundingRepository.select(
+    const funding = (await this.fundingRepository.fetch(
       param.id,
     )) as IFundingResponse;
-    if (!funding) {
-      throw new HttpException("Funding not found", HttpStatus.NOT_FOUND);
-    }
 
     funding.tradeEvidenceFiles = await this.filePublicService.getFilesByIds(
       funding.tradeEvidenceFiles.flatMap(file => file.id),
@@ -102,27 +104,27 @@ export default class FundingService {
         );
     }
 
-    if (funding.clubSupplies) {
+    if (funding.clubSupplies?.imageFiles) {
       funding.clubSupplies.imageFiles =
         await this.filePublicService.getFilesByIds(
           funding.clubSupplies.imageFiles.flatMap(file => file.id),
         );
     }
 
-    if (funding.clubSupplies) {
+    if (funding.clubSupplies?.softwareEvidenceFiles) {
       funding.clubSupplies.softwareEvidenceFiles =
         await this.filePublicService.getFilesByIds(
           funding.clubSupplies.softwareEvidenceFiles.flatMap(file => file.id),
         );
     }
 
-    if (funding.fixture) {
+    if (funding.fixture?.imageFiles) {
       funding.fixture.imageFiles = await this.filePublicService.getFilesByIds(
         funding.fixture.imageFiles.flatMap(file => file.id),
       );
     }
 
-    if (funding.fixture) {
+    if (funding.fixture?.softwareEvidenceFiles) {
       funding.fixture.softwareEvidenceFiles =
         await this.filePublicService.getFilesByIds(
           funding.fixture.softwareEvidenceFiles.flatMap(file => file.id),
@@ -198,6 +200,39 @@ export default class FundingService {
       );
     }
 
+    if (funding.transportation?.passengers) {
+      funding.transportation.passengers =
+        await this.userPublicService.fetchStudentSummaries(
+          funding.transportation.passengers.flatMap(passenger => passenger.id),
+        );
+
+      funding.transportation.passengers = funding.transportation.passengers.map(
+        passenger => ({
+          id: passenger.id,
+          name: passenger.name,
+          studentNumber: passenger.studentNumber,
+        }),
+      );
+    }
+
+    const comments = (await this.fundingCommentRepository.fetchComments(
+      funding.id,
+    )) as IFundingCommentResponse[];
+
+    const chargedExecutive =
+      await this.userPublicService.fetchExecutiveSummaries(
+        comments.map(comment => comment.chargedExecutive.id),
+      );
+
+    comments.forEach(comment => {
+      // eslint-disable-next-line no-param-reassign
+      comment.chargedExecutive = chargedExecutive.find(
+        executive => executive.id === comment.chargedExecutive.id,
+      );
+    });
+
+    funding.comments = comments;
+
     return funding;
   }
 
@@ -257,25 +292,15 @@ export default class FundingService {
       thisSemester,
     );
 
-    const activities = await Promise.all(
-      fundings.map(async funding => {
-        const activityName =
-          await this.activityPublicService.getActivityNameById(
-            funding.purposeActivity.id,
-          );
-        return {
-          name: activityName.name ?? "활동보고서로 증빙이 불가능한 물품",
-          id: funding.purposeActivity.id,
-        };
-      }),
+    const activities = await this.activityPublicService.fetchActivitySummaries(
+      fundings.map(funding => funding.purposeActivity.id),
     );
 
     return {
       fundings: fundings.map(funding => ({
         id: funding.id,
         fundingStatusEnum: funding.fundingStatusEnum,
-        purposeId: funding.purposeActivity.id,
-        activityName: activities.find(
+        purposeActivity: activities.find(
           activity => activity.id === funding.purposeActivity.id,
         ),
         name: funding.name,
@@ -300,27 +325,17 @@ export default class FundingService {
       param.semesterId,
     );
 
-    const activities = await Promise.all(
-      fundings.map(async funding => {
-        const activityName =
-          await this.activityPublicService.getActivityNameById(
-            funding.purposeActivity.id,
-          );
-        return {
-          name: activityName[0].name ?? "활동보고서로 증빙이 불가능한 물품",
-          id: funding.purposeActivity.id,
-        };
-      }),
+    const activities = await this.activityPublicService.fetchActivitySummaries(
+      fundings.map(funding => funding.purposeActivity.id),
     );
 
     return {
       fundings: fundings.map(funding => ({
         id: funding.id,
         fundingStatusEnum: funding.fundingStatusEnum,
-        purposeId: funding.purposeActivity.id,
-        activityName: activities.find(
+        purposeActivity: activities.find(
           activity => activity.id === funding.purposeActivity.id,
-        ).name,
+        ),
         name: funding.name,
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,

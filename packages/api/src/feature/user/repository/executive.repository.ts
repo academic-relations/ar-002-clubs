@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 
-import { and, eq, gte, isNull, lte, or } from "drizzle-orm";
+import { and, eq, gte, inArray, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
@@ -147,6 +147,35 @@ export default class ExecutiveRepository {
         new VExecutiveSummary({
           ...r,
           studentNumber: r.studentNumber.toString(), // TODO: studentNumber가 string으로 바뀌면 변경 필요
+        }),
+    );
+  }
+
+  async fetchExecutiveSummaries(
+    executiveIds: number[],
+  ): Promise<VExecutiveSummary[]> {
+    if (executiveIds.length === 0) {
+      return [];
+    }
+
+    const result = await this.db
+      .select()
+      .from(Executive)
+      .where(
+        and(inArray(Executive.id, executiveIds), isNull(Executive.deletedAt)),
+      )
+      .innerJoin(
+        Student,
+        and(eq(Student.userId, Executive.userId), isNull(Student.deletedAt)),
+      );
+
+    return result.map(
+      r =>
+        new VExecutiveSummary({
+          id: r.executive.id,
+          name: r.executive.name,
+          studentNumber: r.student.number.toString(),
+          userId: r.executive.userId,
         }),
     );
   }
