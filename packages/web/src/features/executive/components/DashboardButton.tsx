@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
@@ -19,15 +20,22 @@ const DashboardButtonWrapper = styled.div`
 `;
 
 const DashboardButton: React.FC<{
-  onClick?: () => void;
+  link: string;
   text: string;
-}> = ({ onClick = () => {}, text }) => (
-  <DashboardButtonWrapper onClick={onClick}>
-    <Typography fs={16} lh={20} fw="MEDIUM">
-      {text}
-    </Typography>
-    <Icon type="chevron_right" size={20} color={colors.BLACK} />
-  </DashboardButtonWrapper>
-);
+}> = ({ link, text }) => {
+  const router = useRouter();
+  return (
+    <DashboardButtonWrapper
+      onClick={() => {
+        router.push(link);
+      }}
+    >
+      <Typography fs={16} lh={20} fw="MEDIUM">
+        {text}
+      </Typography>
+      <Icon type="chevron_right" size={20} color={colors.BLACK} />
+    </DashboardButtonWrapper>
+  );
+};
 
 export default DashboardButton;
