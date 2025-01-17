@@ -361,7 +361,9 @@ export default class FundingService {
     }
 
     const activities =
-      await this.activityPublicService.findActivitySummariesByClubId(clubId);
+      await this.activityPublicService.findAvailableActivitySummariesWithClubId(
+        clubId,
+      );
 
     return {
       activities,

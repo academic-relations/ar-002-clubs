@@ -6,7 +6,7 @@ import { zStudentSummary } from "../user/type/user.type";
 
 /**
  * @version v0.1
- * @description 현재 학기의 지원금 신청을 조회합니다.
+ * @description 선택된 학기 활동보고서의 참여 인원을 불러옵니다.
  */
 
 const url = () => "/student/fundings/activities/participants";

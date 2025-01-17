@@ -6,7 +6,9 @@ import { zClub } from "../club/type/club.type";
 
 /**
  * @version v0.1
- * @description 현재 학기의 지원금 신청을 조회합니다.
+ * @description 현재 학기 활동보고서 중 지원금 지출 목적으로 쓸 수 있는 항목들을 불러옵니다.
+ * 구체적으로는, 해당 학기의 승인 or 운위 의 활보를 불러옵니다.
+ * 오늘이 지원금 작성 or 수정 기간이어야 합니다.
  */
 
 const url = () => "/student/fundings/activities";
