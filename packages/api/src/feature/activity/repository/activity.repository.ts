@@ -27,6 +27,8 @@ import {
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
+import { VStudentSummary } from "@sparcs-clubs/api/feature/user/model/student.summary.model";
+
 @Injectable()
 export default class ActivityRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
@@ -730,7 +732,7 @@ export default class ActivityRepository {
    * @description 해당학기 해당  ActivitySummary
    */
 
-  async fetchActivitySummariesWithClubId(
+  async findActivitySummariesWithClubId(
     clubId: number,
     activityDId: number,
   ): Promise<IActivitySummary[]> {
@@ -748,5 +750,33 @@ export default class ActivityRepository {
         ),
       );
     return result;
+  }
+
+  async findParticipantsSummaryByActivityId(
+    activityId: number,
+  ): Promise<VStudentSummary[]> {
+    const result = await this.db
+      .select({
+        id: ActivityParticipant.studentId,
+        userId: Student.userId,
+        studentNumber: Student.number,
+        name: Student.name,
+      })
+      .from(ActivityParticipant)
+      .leftJoin(Student, eq(ActivityParticipant.studentId, Student.id))
+      .where(
+        and(
+          eq(ActivityParticipant.activityId, activityId),
+          isNull(ActivityParticipant.deletedAt),
+        ),
+      );
+
+    return result.map(
+      participant =>
+        new VStudentSummary({
+          ...participant,
+          studentNumber: participant.studentNumber.toString(), // TODO: studentNumber가 string으로 바뀌면 삭제
+        }),
+    );
   }
 }

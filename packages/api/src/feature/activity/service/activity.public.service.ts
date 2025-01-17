@@ -1,6 +1,7 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
+import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 
 import ActivityRepository from "../repository/activity.repository";
 
@@ -31,7 +32,8 @@ export default class ActivityPublicService {
     return this.activityRepository.fetchActivitySummaries(activityIds);
   }
 
-  async fetchActivitySummariesByClubId(
+  // API Fnd 007
+  async findActivitySummariesByClubId(
     clubId: number,
   ): Promise<IActivitySummary[]> {
     // TS 오버로딩 너무 구림
@@ -41,9 +43,27 @@ export default class ActivityPublicService {
     // 쓸 때는 또 undefined, clubId, startTerm 이렇게 써야하고.
     // param 이라고 이름 붙이면 그게 더 쓰기 고역인데
     const activityDId = (await this.activityService.getLastActivityD()).id;
-    return this.activityRepository.fetchActivitySummariesWithClubId(
+    return this.activityRepository.findActivitySummariesWithClubId(
       clubId,
       activityDId,
     );
+  }
+
+  // API Fnd 008
+  async fetchActivityParticipants(
+    activityId: number,
+  ): Promise<IStudentSummary[]> {
+    const participants =
+      await this.activityRepository.findParticipantsSummaryByActivityId(
+        activityId,
+      );
+
+    if (participants.length === 0) {
+      throw new HttpException(
+        `Participants not found for activity ${activityId}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return participants;
   }
 }

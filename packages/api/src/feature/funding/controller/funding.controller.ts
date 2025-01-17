@@ -40,6 +40,11 @@ import apiFnd007, {
   ApiFnd007RequestUrl,
   ApiFnd007ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/apiFnd007";
+import apiFnd008, {
+  ApiFnd008RequestQuery,
+  ApiFnd008RequestUrl,
+  ApiFnd008ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/apiFnd008";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -135,6 +140,18 @@ export default class FundingController {
     return this.fundingService.getStudentFundingActivity(
       user.studentId,
       query.clubId,
+    );
+  }
+
+  @Student()
+  @Get(ApiFnd008RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd008))
+  async getStudentFundingActivityParticipants(
+    @GetStudent() user: GetStudent,
+    @Query() query: ApiFnd008RequestQuery,
+  ): Promise<ApiFnd008ResponseOk> {
+    return this.fundingService.getStudentFundingActivityParticipants(
+      query.activityId,
     );
   }
 }

@@ -16,14 +16,14 @@ export const ApiFnd008RequestUrl = "/student/fundings/activities/participants";
 const requestParam = z.object({});
 
 const requestQuery = z.object({
-  clubId: zActivityBase.pick({ id: true }).shape.id, // TODO: clubId: zPickElement(zClub, "id"),
+  activityId: zActivityBase.pick({ id: true }).shape.id, // TODO: clubId: zPickElement(zClub, "id"),
 });
 
 const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    students: z.array(zStudentSummary),
+    participants: z.array(zStudentSummary),
   }),
 };
 

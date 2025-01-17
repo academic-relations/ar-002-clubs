@@ -27,6 +27,7 @@ import {
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/apiFnd006";
 import { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/apiFnd007";
+import { ApiFnd008ResponseOk } from "@sparcs-clubs/interface/api/funding/apiFnd008";
 
 import {
   IFundingCommentResponse,
@@ -360,10 +361,20 @@ export default class FundingService {
     }
 
     const activities =
-      await this.activityPublicService.fetchActivitySummariesByClubId(clubId);
+      await this.activityPublicService.findActivitySummariesByClubId(clubId);
 
     return {
       activities,
+    };
+  }
+
+  async getStudentFundingActivityParticipants(
+    activityId: number,
+  ): Promise<ApiFnd008ResponseOk> {
+    const participants =
+      await this.activityPublicService.fetchActivityParticipants(activityId);
+    return {
+      participants,
     };
   }
 }
