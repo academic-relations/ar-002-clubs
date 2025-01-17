@@ -25,6 +25,7 @@ export interface TextInputProps
   setErrorStatus?: (hasError: boolean) => void;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   onBlur?: FocusEventHandler<HTMLInputElement>;
+  isTextAlignCenter?: boolean;
 }
 
 const errorBorderStyle = css`
@@ -63,6 +64,8 @@ const Input = styled.input
     font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
     color: ${({ theme }) => theme.colors.BLACK};
     background-color: ${({ theme }) => theme.colors.WHITE};
+    text-align: ${({ isTextAlignCenter }) =>
+      isTextAlignCenter ? "center" : "inherit"};
     &:focus {
         border-color: ${({ theme, hasError, disabled }) =>
           !hasError && !disabled && theme.colors.PRIMARY};
@@ -98,6 +101,7 @@ const TextInput: React.FC<TextInputProps> = ({
   setErrorStatus = () => {},
   onChange = undefined,
   onBlur = () => {},
+  isTextAlignCenter = false,
   ...props
 }) => {
   const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -124,6 +128,7 @@ const TextInput: React.FC<TextInputProps> = ({
           value={value}
           onChange={onChange ?? handleValueChange}
           onBlur={onBlur}
+          isTextAlignCenter={isTextAlignCenter}
           {...props}
         />
         {errorMessage && <FormError>{errorMessage}</FormError>}

@@ -19,6 +19,7 @@ interface DateRangeInputProps
   limitStartValue: string;
   limitEndValue: string;
   onChange: (value: string) => void;
+  isTextAlignCenter?: boolean;
   useDays?: boolean; // New prop to include days
 }
 
@@ -44,6 +45,7 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
   limitEndValue,
   onChange,
   useDays = false, // Default to false
+  isTextAlignCenter = false,
   ...props
 }) => {
   const maxLength = useDays ? 10 : 7;
@@ -143,6 +145,7 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
           onChange={e => handleChange(e, "start")}
           errorMessage={error ? " " : ""}
           onBlur={handleBlur}
+          isTextAlignCenter={isTextAlignCenter}
           {...props}
         />
 
@@ -161,6 +164,7 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
           onChange={e => handleChange(e, "end")}
           errorMessage={error ? " " : ""}
           onBlur={handleBlur}
+          isTextAlignCenter={isTextAlignCenter}
           {...props}
         />
       </DateRangeInputFrameInner>
