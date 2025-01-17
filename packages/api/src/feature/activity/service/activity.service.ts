@@ -1278,7 +1278,7 @@ export default class ActivityService {
           activityId: activity.id,
           activityStatusEnum: activity.activityStatusEnumId,
           activityName: activity.name,
-          lastReviewedExecutive,
+          finalReviewedExecutive: lastReviewedExecutive,
           chargedExecutive,
           updatedAt: activity.updatedAt,
         };
