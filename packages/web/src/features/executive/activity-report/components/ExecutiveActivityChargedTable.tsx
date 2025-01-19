@@ -29,22 +29,17 @@ interface ExecutiveActivityChargedTableProps {
 const openAssignModal = (data: ExecutiveProgresses) => {
   overlay.open(({ isOpen, close }) => (
     <Modal isOpen={isOpen}>
-      <ConfirmModalContent
-        onConfirm={() => {
-          close();
-        }}
-      >
-        <Typography
-          fs={16}
-          lh={28}
-          fw="MEDIUM"
-          style={{ flex: 1, textAlign: "left" }}
+      <ConfirmModalContent onConfirm={close}>
+        <FlexWrapper
+          direction="column"
+          gap={12}
+          style={{ width: "min(900px, 80vw)" }}
         >
-          {data.executiveName} 활동 보고서 검토 현황 상세
-        </Typography>
-        <div style={{ width: "600px" }}>
+          <Typography fs={16} lh={28} fw="MEDIUM" style={{ textAlign: "left" }}>
+            {data.executiveName} 활동 보고서 검토 현황 상세
+          </Typography>
           <ChargedActivityModalTable data={data.chargedClubsAndProgresses} />
-        </div>
+        </FlexWrapper>
       </ConfirmModalContent>
     </Modal>
   ));
@@ -188,7 +183,7 @@ const ExecutiveActivityChargedTable: React.FC<
       <Typography fs={16} lh={20} style={{ flex: 1, textAlign: "right" }}>
         {countString}
       </Typography>
-      <Table table={table} />
+      <Table table={table} minWidth={800} />
     </FlexWrapper>
   );
 };

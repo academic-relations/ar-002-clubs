@@ -1,6 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { IExecutiveSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
+import {
+  IExecutiveSummary,
+  IStudentSummary,
+} from "@sparcs-clubs/interface/api/user/type/user.type";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
@@ -183,6 +186,23 @@ export default class UserPublicService {
     const today = getKSTDate();
     const executives =
       await this.executiveRepository.selectExecutiveSummary(today);
+
+    return executives;
+  }
+
+  async fetchStudentSummaries(
+    studentIds: number[],
+  ): Promise<IStudentSummary[]> {
+    const students =
+      await this.studentRepository.fetchStudentSummaries(studentIds);
+    return students;
+  }
+
+  async fetchExecutiveSummaries(
+    executiveIds: number[],
+  ): Promise<IExecutiveSummary[]> {
+    const executives =
+      await this.executiveRepository.fetchExecutiveSummaries(executiveIds);
 
     return executives;
   }

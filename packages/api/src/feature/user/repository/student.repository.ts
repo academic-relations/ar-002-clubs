@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 import { StudentStatusEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { and, count, eq, gte, inArray, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
@@ -103,5 +104,20 @@ export class StudentRepository {
       student =>
         new MStudent({ ...student, studentNumber: student.number.toString() }),
     );
+  }
+
+  async fetchStudentSummaries(
+    studentIds: number[],
+  ): Promise<IStudentSummary[]> {
+    const students = await this.db
+      .select()
+      .from(Student)
+      .where(and(inArray(Student.id, studentIds), isNull(Student.deletedAt)));
+
+    return students.map(student => ({
+      id: student.id,
+      name: student.name,
+      studentNumber: student.number.toString(),
+    }));
   }
 }

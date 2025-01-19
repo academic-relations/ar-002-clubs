@@ -101,7 +101,7 @@ const ClubCard: React.FC<ClubCardProps> = ({
         </FlexWrapper>
       </ClubCardRow>
       {!isMobile && (
-        <Typography fs={16} lh={20}>
+        <ClubCardLongText isMobile={isMobile}>
           {club.advisor === "null" ||
           club.advisor === "undefined" ||
           club.advisor === undefined ||
@@ -109,7 +109,7 @@ const ClubCard: React.FC<ClubCardProps> = ({
           club.advisor === ""
             ? `회장 ${club.representative}`
             : `회장 ${club.representative} | 지도교수 ${club.advisor}`}
-        </Typography>
+        </ClubCardLongText>
       )}
       {!isMobile && (
         <ClubCardLongText isMobile={isMobile}>

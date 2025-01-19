@@ -19,4 +19,10 @@ export default class ActivityPublicService {
   async getActivitySummary(id: number): Promise<IActivitySummary> {
     return this.activityRepository.selectActivityById(id);
   }
+
+  async fetchActivitySummaries(
+    activityIds: number[],
+  ): Promise<IActivitySummary[]> {
+    return this.activityRepository.fetchActivitySummaries(activityIds);
+  }
 }

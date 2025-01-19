@@ -4,7 +4,7 @@ import {
   ActivityStatusEnum,
   ActivityTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { and, asc, eq, gt, inArray, isNull, lte, not } from "drizzle-orm";
+import { and, asc, eq, gt, inArray, isNull, lte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -626,11 +626,7 @@ export default class ActivityRepository {
           activityStatusEnumId: param.activityStatusEnumId,
         })
         .where(
-          and(
-            eq(Activity.id, param.activityId),
-            not(eq(Activity.activityStatusEnumId, ActivityStatusEnum.Approved)),
-            isNull(Activity.deletedAt),
-          ),
+          and(eq(Activity.id, param.activityId), isNull(Activity.deletedAt)),
         );
       if (updateResult.affectedRows !== 1)
         throw new HttpException(
@@ -710,6 +706,21 @@ export default class ActivityRepository {
         ),
       )
       .where(and(inArray(Club.id, param.clubsList), isNull(Club.deletedAt)));
+    return result;
+  }
+
+  async fetchActivitySummaries(
+    activityIds: number[],
+  ): Promise<IActivitySummary[]> {
+    const result = await this.db
+      .select({
+        id: Activity.id,
+        name: Activity.name,
+      })
+      .from(Activity)
+      .where(
+        and(inArray(Activity.id, activityIds), isNull(Activity.deletedAt)),
+      );
     return result;
   }
 }
