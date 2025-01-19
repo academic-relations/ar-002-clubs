@@ -4,6 +4,7 @@ import { getKSTDate } from "@sparcs-clubs/web/utils/Date/getKSTDate";
 import { isParticipantsRequired } from "@sparcs-clubs/web/utils/isTransportation";
 
 import { fundingDetailQueryKey } from "../services/useGetFunding";
+import { newFundingListQueryKey } from "../services/useGetNewFundingList";
 import { usePutFunding } from "../services/usePutFunding";
 import {
   FundingFormData,
@@ -198,6 +199,9 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
           onSuccess: () => {
             queryClient.invalidateQueries({
               queryKey: fundingDetailQueryKey(fundingId),
+            });
+            queryClient.invalidateQueries({
+              queryKey: newFundingListQueryKey(clubId),
             });
           },
         },

@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
@@ -17,6 +18,7 @@ import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonT
 import { getFundingProgress } from "@sparcs-clubs/web/features/manage-club/funding/constants/fundingProgressStatus";
 import { useDeleteFunding } from "@sparcs-clubs/web/features/manage-club/funding/services/useDeleteFunding";
 import { useGetFunding } from "@sparcs-clubs/web/features/manage-club/funding/services/useGetFunding";
+import { newFundingListQueryKey } from "@sparcs-clubs/web/features/manage-club/funding/services/useGetNewFundingList";
 import { isActivityReportUnverifiable } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
 
 import BasicEvidenceList from "../components/BasicEvidenceList";
@@ -28,6 +30,7 @@ import TransportationEvidenceList from "../components/TransportationEvidenceList
 
 interface FundingDetailFrameProps {
   isNow: boolean;
+  clubId: number;
 }
 
 const ButtonWrapper = styled.div`
@@ -35,8 +38,12 @@ const ButtonWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
+const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({
+  isNow,
+  clubId,
+}) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { id } = useParams<{ id: string }>();
 
   const { data: funding, isLoading, isError } = useGetFunding(+id);
@@ -73,6 +80,9 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
               { requestParam: { id: Number(id) } },
               {
                 onSuccess: () => {
+                  queryClient.invalidateQueries({
+                    queryKey: newFundingListQueryKey(clubId),
+                  });
                   close();
                   router.replace("/manage-club/funding");
                 },
