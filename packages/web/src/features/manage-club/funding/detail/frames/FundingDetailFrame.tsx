@@ -11,10 +11,10 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
-import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressCheckSection/progressCheckStationStatus";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 
+import { getFundingProgress } from "@sparcs-clubs/web/features/manage-club/funding/constants/fundingProgressStatus";
 import { useDeleteFunding } from "@sparcs-clubs/web/features/manage-club/funding/services/useDeleteFunding";
 import { useGetFunding } from "@sparcs-clubs/web/features/manage-club/funding/services/useGetFunding";
 import { isActivityReportUnverifiable } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
@@ -52,7 +52,6 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
         <CancellableModalContent
           onConfirm={() => {
             close();
-            // TODO: 수정 로직 넣기
             router.push(`/manage-club/funding/${id}/edit`);
           }}
           onClose={close}
@@ -103,27 +102,27 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
       <Card outline>
         {isNow && (
           <ProgressStatus
-            labels={["신청 완료", "동아리 연합회 신청 반려"]}
-            progress={[
-              {
-                status: ProgressCheckSectionStatusEnum.Approved,
-                date: new Date(),
-              },
-              {
-                status: ProgressCheckSectionStatusEnum.Canceled,
-                date: new Date(),
-              },
-            ]}
+            labels={
+              getFundingProgress(
+                funding.fundingStatusEnum,
+                new Date(), // TODO. funding 반환값 date로 수정
+              ).labels
+            }
+            // TODO. funding 반환값 date로 수정
+            progress={
+              getFundingProgress(funding.fundingStatusEnum, new Date()).progress
+            }
             optional={
-              <RejectReasonToast
-                title="반려 사유"
-                reasons={[
-                  {
-                    reason: "대충 어떤 반려 사유 어쩌고",
-                    datetime: new Date(),
-                  },
-                ]}
-              />
+              funding.comments &&
+              funding.comments.length > 0 && (
+                <RejectReasonToast
+                  title="반려 사유"
+                  reasons={funding.comments.map(comment => ({
+                    datetime: comment.createdAt,
+                    reason: comment.content,
+                  }))}
+                />
+              )
             }
           />
         )}
