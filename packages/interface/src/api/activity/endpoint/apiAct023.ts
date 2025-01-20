@@ -29,15 +29,33 @@ const responseBodyMap = {
         clubNameKr: z.string().max(30),
         clubNameEn: z.string().max(30),
         advisor: z.string().max(255).optional(),
-        pendingActivitiesCount: z.number().int().min(0),
-        approvedActivitiesCount: z.number().int().min(0),
-        rejectedActivitiesCount: z.number().int().min(0),
+        pendingActivitiesCount: z.coerce.number().int().min(0),
+        approvedActivitiesCount: z.coerce.number().int().min(0),
+        rejectedActivitiesCount: z.coerce.number().int().min(0),
         chargedExecutive: z
           .object({
             id: zId,
             name: z.string().max(30),
           })
           .optional(),
+      }),
+    ),
+    executiveProgresses: z.array(
+      z.object({
+        executiveId: zId,
+        executiveName: z.string(),
+        chargedClubsAndProgresses: z.array(
+          z.object({
+            clubId: zId,
+            clubTypeEnum: z.nativeEnum(ClubTypeEnum),
+            divisionName: z.string().max(10),
+            clubNameKr: z.string().max(30),
+            clubNameEn: z.string().max(30),
+            pendingActivitiesCount: z.coerce.number().int().min(0),
+            approvedActivitiesCount: z.coerce.number().int().min(0),
+            rejectedActivitiesCount: z.coerce.number().int().min(0),
+          }),
+        ),
       }),
     ),
   }),

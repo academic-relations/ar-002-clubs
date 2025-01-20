@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 
 const SelectOption = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
-})<{ selectable?: boolean }>`
+})<{ selectable?: boolean; isTextAlignStart?: boolean }>`
   gap: 10px;
   border-radius: 4px;
   padding: 4px 12px;
@@ -22,6 +22,8 @@ const SelectOption = styled.div.withConfig({
       }
     `}
   cursor: ${({ selectable }) => (selectable ? `pointer` : null)};
+  text-align: ${({ isTextAlignStart }) =>
+    isTextAlignStart ? "start" : "inherit"};
 `;
 
 export default SelectOption;

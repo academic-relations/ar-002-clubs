@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
@@ -238,11 +239,23 @@ export default class ClubPublicService {
       );
     }
 
+    const clubT = await this.clubTRepository.findByClubIdAndSemesterId(
+      clubId,
+      semesterId,
+    );
+    if (!semesterId) {
+      throw new HttpException(
+        "The club is not found at that semester.",
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     // 신입 부원 추가
     await this.clubStudentTRepository.addStudentToClub(
       studentId,
       clubId,
       semesterId,
+      clubT.startTerm,
     );
   }
 
@@ -282,5 +295,41 @@ export default class ClubPublicService {
       semesterId,
       isTargetStudentDelegate,
     );
+  }
+
+  /**
+   * Semester랑 ClubIds 로 해당 동아리들을 하는 모든 Member의 IStudentSummary의 Union을 가져옵니다.
+   *
+   * @param semesterId 학기의 ID
+   * @param clubIds 동아리의 ID []
+   * @returns StudentsSummary[]
+   *
+   */
+
+  async getUnionMemberSummaries(
+    semesterId: number,
+    clubIds: number[],
+  ): Promise<IStudentSummary[]> {
+    const result =
+      await this.clubStudentTRepository.findUnionByClubIdsAndSemesterId(
+        clubIds,
+        semesterId,
+      );
+
+    return result;
+  }
+
+  // date를 포함하고 있는 학기의 semesterId를 리턴합니다.
+  // 만약 해당하는 semester가 존재하지 않을 경우, 404에러를 throw 하니 예외처리를 하지 않아도 됩니다.
+  async getSemesterId(date: Date): Promise<number> {
+    const result = await this.semesterDRepository.findByDate(date);
+
+    if (result.length !== 1) {
+      throw new HttpException(
+        `No semester found for ${date}`, // TODO: 예쁘게 출력
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return result[0].id;
   }
 }

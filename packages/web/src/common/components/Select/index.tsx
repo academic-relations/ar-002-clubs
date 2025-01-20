@@ -27,6 +27,7 @@ interface SelectProps<T> {
   setErrorStatus?: (hasError: boolean) => void;
   placeholder?: string;
   isRequired?: boolean;
+  isTextAlignStart?: boolean;
 }
 
 const SelectInner = styled.div`
@@ -47,6 +48,7 @@ const StyledSelect = styled.div.withConfig({
   hasError?: boolean;
   disabled?: boolean;
   isOpen?: boolean;
+  isTextAlignStart?: boolean;
 }>`
   width: 100%;
   padding: 8px 12px;
@@ -63,6 +65,8 @@ const StyledSelect = styled.div.withConfig({
   font-size: 16px;
   line-height: 20px;
   font-weight: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
+  text-align: ${({ isTextAlignStart }) =>
+    isTextAlignStart ? "start" : "inherit"};
 
   &:focus,
   &:hover:not(:focus) {
@@ -116,6 +120,7 @@ const Select = <T,>({
   setErrorStatus = () => {},
   placeholder = "항목을 선택해주세요",
   isRequired = true,
+  isTextAlignStart = false,
 }: SelectProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hasOpenedOnce, setHasOpenedOnce] = useState(false);
@@ -177,6 +182,7 @@ const Select = <T,>({
             disabled={disabled}
             onClick={handleSelectClick}
             isOpen={isOpen}
+            isTextAlignStart={isTextAlignStart}
           >
             <SelectValue
               isSelected={value != null && value !== ""}
@@ -202,6 +208,7 @@ const Select = <T,>({
                       item.selectable || item.selectable === undefined
                     }
                     onClick={() => handleOptionClick(item)}
+                    isTextAlignStart={isTextAlignStart}
                   >
                     {item.label}
                   </SelectOption>

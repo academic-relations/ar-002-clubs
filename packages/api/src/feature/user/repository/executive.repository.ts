@@ -9,7 +9,10 @@ import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider
 import {
   Executive,
   ExecutiveT,
+  Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+
+import { VExecutiveSummary } from "../model/executive.summary.model";
 
 @Injectable()
 export default class ExecutiveRepository {
@@ -88,5 +91,63 @@ export default class ExecutiveRepository {
       .where(and(eq(Executive.id, param.id), isNull(Executive.deletedAt)));
 
     return result;
+  }
+
+  async selectExecutiveByDate(param: { date: Date }) {
+    const result = await this.db
+      .select()
+      .from(ExecutiveT)
+      .where(
+        and(
+          lte(ExecutiveT.startTerm, param.date),
+          or(gte(ExecutiveT.endTerm, param.date), isNull(ExecutiveT.endTerm)),
+          isNull(ExecutiveT.deletedAt),
+        ),
+      )
+      .innerJoin(
+        Executive,
+        and(
+          eq(Executive.id, ExecutiveT.executiveId),
+          isNull(Executive.deletedAt),
+        ),
+      );
+
+    return result;
+  }
+
+  async selectExecutiveSummary(date: Date): Promise<VExecutiveSummary[]> {
+    const result = await this.db
+      .select({
+        id: Executive.id,
+        userId: Executive.userId,
+        name: Executive.name,
+        studentNumber: Student.number,
+      })
+      .from(ExecutiveT)
+      .where(
+        and(
+          lte(ExecutiveT.startTerm, date),
+          or(gte(ExecutiveT.endTerm, date), isNull(ExecutiveT.endTerm)),
+          isNull(ExecutiveT.deletedAt),
+        ),
+      )
+      .innerJoin(
+        Executive,
+        and(
+          eq(Executive.id, ExecutiveT.executiveId),
+          isNull(Executive.deletedAt),
+        ),
+      )
+      .innerJoin(
+        Student,
+        and(eq(Student.userId, Executive.userId), isNull(Student.deletedAt)),
+      );
+    return result.map(
+      r =>
+        new VExecutiveSummary({
+          ...r,
+          studentNumber: r.studentNumber.toString(), // TODO: studentNumber가 string으로 바뀌면 변경 필요
+        }),
+    );
   }
 }

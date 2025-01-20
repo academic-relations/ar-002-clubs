@@ -12,6 +12,7 @@ interface DateInputProps {
   label?: string;
   disabled?: boolean;
   errorMessage?: string;
+  showIcon?: boolean;
 }
 
 const DateInputWrapper = styled.div<{ disabled: boolean }>`
@@ -52,10 +53,13 @@ const DateInputWrapper = styled.div<{ disabled: boolean }>`
   }
 `;
 
-const DateInput: React.FC<DateInputProps & DatePickerProps> = ({
+const DateInput: React.FC<
+  DateInputProps & Omit<DatePickerProps, "showIcon">
+> = ({
   label = "",
   disabled = false,
   errorMessage = "",
+  showIcon = false,
   ...props
 }) => {
   const datePickerRef = useRef<DatePicker | null>(null);
@@ -86,7 +90,7 @@ const DateInput: React.FC<DateInputProps & DatePickerProps> = ({
           }
           {...props}
         />
-        {props.showIcon && (
+        {showIcon && (
           <Icon type="event" size={20} color={disabled ? "#DDDDDD" : "BLACK"} />
         )}
       </DateInputWrapper>

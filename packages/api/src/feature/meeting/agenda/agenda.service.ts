@@ -7,9 +7,28 @@ import {
 
 import { ApiMee006ResponseCreated } from "@sparcs-clubs/interface/api/meeting/apiMee006";
 
+import {
+  ApiMee007RequestParam,
+  ApiMee007ResponseCreated,
+} from "@sparcs-clubs/interface/api/meeting/apiMee007";
+
 import { ApiMee008ResponseOk } from "@sparcs-clubs/interface/api/meeting/apiMee008";
 
-import { ApiMee010ResponseOk } from "@sparcs-clubs/interface/api/meeting/apiMee010";
+import {
+  ApiMee009RequestBody,
+  ApiMee009RequestParam,
+  ApiMee009ResponseCreated,
+} from "@sparcs-clubs/interface/api/meeting/apiMee009";
+
+import {
+  ApiMee010RequestParam,
+  ApiMee010ResponseOk,
+} from "@sparcs-clubs/interface/api/meeting/apiMee010";
+
+import {
+  ApiMee011RequestParam,
+  ApiMee011ResponseCreated,
+} from "@sparcs-clubs/interface/api/meeting/apiMee011";
 
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
@@ -47,6 +66,13 @@ export class AgendaService {
     return {};
   }
 
+  async getMeetingAgendas(
+    param: ApiMee007RequestParam,
+  ): Promise<ApiMee007ResponseCreated> {
+    const res = await this.meetingRepository.getMeetingAgendas(param.meetingId);
+    return res;
+  }
+
   async patchExecutiveMeetingAgenda(
     executiveId: number,
     agendaId: number,
@@ -72,10 +98,30 @@ export class AgendaService {
     return {};
   }
 
+  async patchExecutiveMeetingAgendasOrder(
+    executiveId: number,
+    param: ApiMee009RequestParam,
+    body: ApiMee009RequestBody,
+  ): Promise<ApiMee009ResponseCreated> {
+    const user = await this.userPublicService.getExecutiveById({
+      id: executiveId,
+    });
+
+    if (!user) {
+      throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
+    }
+
+    await this.meetingRepository.updateMeetingAgendasOrder(
+      param.meetingId,
+      body.agendaIdList,
+    );
+
+    return {};
+  }
+
   async deleteExecutiveMeetingAgenda(
     executiveId: number,
-    meetingId: number,
-    agendaId: number,
+    param: ApiMee010RequestParam,
   ): Promise<ApiMee010ResponseOk> {
     const user = await this.userPublicService.getExecutiveById({
       id: executiveId,
@@ -86,8 +132,28 @@ export class AgendaService {
     }
 
     await this.meetingRepository.deleteMeetingAgendaMapping(
-      meetingId,
-      agendaId,
+      param.meetingId,
+      param.agendaId,
+    );
+
+    return {};
+  }
+
+  async postExecutiveMeetingAgendaImport(
+    executiveId: number,
+    param: ApiMee011RequestParam,
+  ): Promise<ApiMee011ResponseCreated> {
+    const user = await this.userPublicService.getExecutiveById({
+      id: executiveId,
+    });
+
+    if (!user) {
+      throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
+    }
+
+    await this.meetingRepository.addMeetingAgendaMapping(
+      param.meetingId,
+      param.agendaId,
     );
 
     return {};

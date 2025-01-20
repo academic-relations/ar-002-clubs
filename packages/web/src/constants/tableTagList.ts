@@ -3,8 +3,9 @@ import {
   ActivityTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
-import { FundingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import { PromotionalPrintingOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/promotionalPrinting.enum";
 import {
   RegistrationStatusEnum,
@@ -92,12 +93,12 @@ const MemTagList: {
 };
 
 const FundingTagList: {
-  [key in FundingOrderStatusEnum]: StatusDetail;
+  [key in FundingStatusEnum]: StatusDetail;
 } = {
-  [FundingOrderStatusEnum.Applied]: { text: "신청", color: "BLUE" },
-  [FundingOrderStatusEnum.Committee]: { text: "운위", color: "YELLOW" },
-  [FundingOrderStatusEnum.Approved]: { text: "승인", color: "GREEN" },
-  [FundingOrderStatusEnum.Rejected]: { text: "반려", color: "RED" },
+  [FundingStatusEnum.Applied]: { text: "신청", color: "BLUE" },
+  [FundingStatusEnum.Committee]: { text: "운위", color: "YELLOW" },
+  [FundingStatusEnum.Approved]: { text: "승인", color: "GREEN" },
+  [FundingStatusEnum.Rejected]: { text: "반려", color: "RED" },
 };
 
 // TODO: interface enum 사용
@@ -185,11 +186,19 @@ const DivisionTypeTagList: { [key in DivisionType]: StatusDetail } = {
   [DivisionType.Religion]: { text: "종교", color: "PURPLE" },
 };
 
+const ClubTypeTagList: {
+  [key in ClubTypeEnum]: StatusDetail;
+} = {
+  [ClubTypeEnum.Regular]: { text: "정동아리", color: "BLUE" },
+  [ClubTypeEnum.Provisional]: { text: "가동아리", color: "ORANGE" },
+};
+
 export {
   AcfTagList,
   ActStatusTagList,
   ActTypeTagList,
   ApplyTagList,
+  ClubTypeTagList,
   CmsTagList,
   DivisionTypeTagList,
   FundingTagList,

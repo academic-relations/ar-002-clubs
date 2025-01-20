@@ -52,8 +52,8 @@ export const ClubT = mysqlTable("club_t", {
   clubStatusEnumId: int("club_status_enum_id")
     .notNull()
     .references(() => ClubStatusEnum.id),
-  characteristicKr: varchar("characteristic_kr", { length: 50 }),
-  characteristicEn: varchar("characteristic_en", { length: 50 }),
+  characteristicKr: varchar("characteristic_kr", { length: 255 }),
+  characteristicEn: varchar("characteristic_en", { length: 255 }),
   professorId: int("professor_id").references(() => Professor.id),
   semesterId: int("semester_id")
     .notNull()
