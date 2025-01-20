@@ -4,6 +4,8 @@ import {
   Injectable,
 } from "@nestjs/common";
 
+import { MeetingAgendaEntityTypeEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
+
 import {
   and,
   count,
@@ -781,7 +783,14 @@ export class EntityRepository {
     userId: number,
     meetingId: number,
     agendaId: number,
-  ) {
+  ): Promise<
+    {
+      meetingAgendaEntityTypeEnum: MeetingAgendaEntityTypeEnum;
+      content?: string;
+      title?: string;
+      description?: string;
+    }[]
+  > {
     const getContents = await this.db
       .select({
         meetingAgendaEntityTypeEnum: MeetingMapping.meetingAgendaEntityType,
@@ -827,8 +836,13 @@ export class EntityRepository {
       (a, b) => a.position - b.position,
     );
 
-    const resultArray = mergedArray.map(({ position: _, ...rest }) => rest);
+    const items = mergedArray.map(({ position: _, ...rest }) => ({
+      meetingAgendaEntityTypeEnum: rest.meetingAgendaEntityTypeEnum,
+      content: "content" in rest ? rest.content : undefined,
+      title: "title" in rest ? rest.title : undefined,
+      description: "description" in rest ? rest.description : undefined,
+    }));
 
-    return resultArray;
+    return items;
   }
 }

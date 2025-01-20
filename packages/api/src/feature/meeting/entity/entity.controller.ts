@@ -64,6 +64,6 @@ export default class EntityController {
       agendaId,
     );
 
-    return result;
+    return { items: result };
   }
 }
