@@ -40,7 +40,7 @@ export class ContentService {
     return result;
   }
 
-  async patchExecutiveMeetingAgendaContent(
+  async putExecutiveMeetingAgendaContent(
     userId: number,
     meetingId: number,
     agendaId: number,
@@ -55,7 +55,7 @@ export class ContentService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.patchMeetingAgendaContent(
+    const result = await this.entityRepository.putMeetingAgendaContent(
       userId,
       meetingId,
       agendaId,

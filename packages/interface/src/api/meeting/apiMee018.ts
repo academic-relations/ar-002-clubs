@@ -8,7 +8,7 @@ import { z } from "zod";
 
 const url = (meetingId: number, agendaId: number, voteId: number) =>
   `/executive/meetings/meeting/${meetingId}/agendas/agenda/${agendaId}/votes/vote/${voteId}`;
-const method = "PATCH";
+const method = "PUT";
 
 const requestParam = z.object({
   meetingId: z.coerce.number().int().min(1),
@@ -24,7 +24,7 @@ const requestBody = z.object({
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Created]: z.object({}),
+  [HttpStatusCode.Ok]: z.object({}),
 };
 
 const responseErrorMap = {};
@@ -42,7 +42,7 @@ const apiMee018 = {
 type ApiMee018RequestParam = z.infer<typeof apiMee018.requestParam>;
 type ApiMee018RequestQuery = z.infer<typeof apiMee018.requestQuery>;
 type ApiMee018RequestBody = z.infer<typeof apiMee018.requestBody>;
-type ApiMee018ResponseOk = z.infer<(typeof apiMee018.responseBodyMap)[201]>;
+type ApiMee018ResponseOk = z.infer<(typeof apiMee018.responseBodyMap)[200]>;
 
 export default apiMee018;
 

@@ -1,6 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { MeetingAgendaEntityTypeEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
+
 /**
  * @version v0.1
  * @description 특정 회의에 속한 안건에 달리는 Content, Vote의 순서를 변경합니다.
@@ -8,7 +10,7 @@ import { z } from "zod";
 
 const url = (meetingId: number, agendaId: number) =>
   `/executive/meetings/meeting/${meetingId}/agendas/agenda/${agendaId}/entities`;
-const method = "PATCH";
+const method = "PUT";
 
 const requestParam = z.object({
   meetingId: z.coerce.number().int().min(1),
@@ -20,14 +22,14 @@ const requestQuery = z.object({});
 const requestBody = z.object({
   entityIdList: z.array(
     z.object({
-      meetingAgendaEntityType: z.coerce.number().int().min(1),
+      meetingAgendaEntityType: z.nativeEnum(MeetingAgendaEntityTypeEnum),
       id: z.coerce.number().int().min(1),
     }),
   ),
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Created]: z.object({}),
+  [HttpStatusCode.Ok]: z.object({}),
 };
 
 const responseErrorMap = {};
@@ -45,7 +47,7 @@ const apiMee021 = {
 type ApiMee021RequestParam = z.infer<typeof apiMee021.requestParam>;
 type ApiMee021RequestQuery = z.infer<typeof apiMee021.requestQuery>;
 type ApiMee021RequestBody = z.infer<typeof apiMee021.requestBody>;
-type ApiMee021ResponseOk = z.infer<(typeof apiMee021.responseBodyMap)[201]>;
+type ApiMee021ResponseOk = z.infer<(typeof apiMee021.responseBodyMap)[200]>;
 
 export default apiMee021;
 

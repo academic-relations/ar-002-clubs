@@ -3,11 +3,11 @@ import { z } from "zod";
 
 /**
  * @version v0.1
- * @description 특정 회의에 속한 안건에 달리는 투표에 대한 유저의 투표 결과를 생성합니다.
+ * @description 특정 회의에 속한 안건에 달리는 투표에 대한 유저의 투표 결과를 생성합니다. (투표 전체 결과 아님)
  */
 
 const url = (meetingId: number, agendaId: number, voteId: number) =>
-  `/executive/meetings/meeting/${meetingId}/agendas/agenda/${agendaId}/votes/vote/${voteId}`;
+  `/executive/meetings/meeting/${meetingId}/agendas/agenda/${agendaId}/votes/vote/${voteId}/results`;
 const method = "POST";
 
 const requestParam = z.object({

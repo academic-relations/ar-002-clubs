@@ -4,7 +4,7 @@ import {
   Injectable,
 } from "@nestjs/common";
 
-import { and, count, eq, max, sql } from "drizzle-orm";
+import { and, count, eq, isNull, max, or, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -94,7 +94,7 @@ export class EntityRepository {
     return isPostContentSuccess;
   }
 
-  async patchMeetingAgendaContent(
+  async putMeetingAgendaContent(
     userId: number,
     meetingId: number,
     agendaId: number,
@@ -322,7 +322,7 @@ export class EntityRepository {
     return isPostVoteResultSuccess;
   }
 
-  async patchMeetingAgendaVote(
+  async putMeetingAgendaVote(
     userId: number,
     meetingId: number,
     agendaId: number,
@@ -330,7 +330,7 @@ export class EntityRepository {
     title: string,
     description: string,
   ) {
-    const isPatchVoteSuccess = await this.db.transaction(async tx => {
+    const isPutVoteSuccess = await this.db.transaction(async tx => {
       const checkDeleted = await tx
         .select({ isDeleted: MeetingAgendaVote.deletedAt })
         .from(MeetingAgendaVote)
@@ -346,7 +346,7 @@ export class EntityRepository {
         return false;
       }
 
-      const [patchVoteResult] = await tx
+      const [putVoteResult] = await tx
         .update(MeetingAgendaVote)
         .set({
           title,
@@ -355,7 +355,7 @@ export class EntityRepository {
         })
         .where(eq(MeetingAgendaVote.id, voteId));
 
-      if (patchVoteResult.affectedRows !== 1) {
+      if (putVoteResult.affectedRows !== 1) {
         logger.debug("[EntityRepository] Failed to modify meeting agenda vote");
         tx.rollback();
         return false;
@@ -365,17 +365,17 @@ export class EntityRepository {
     });
     logger.debug(`[EntityRepository] Modified meeting agenda vote: ${voteId}`);
 
-    return isPatchVoteSuccess;
+    return isPutVoteSuccess;
   }
 
-  async patchMeetingAgendaVoteChoices(
+  async putMeetingAgendaVoteChoices(
     userId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
     choices: Array<{ id: number; choice: string }>, // CHACHA: 여기서 id는 순서 구분의 용도
   ) {
-    const isPatchVoteChoicesSuccess = await this.db.transaction(async tx => {
+    const isPutVoteChoicesSuccess = await this.db.transaction(async tx => {
       const countChoices = await tx
         .select({ value: count() })
         .from(MeetingVoteChoice)
@@ -416,17 +416,17 @@ export class EntityRepository {
       return true;
     });
 
-    return isPatchVoteChoicesSuccess;
+    return isPutVoteChoicesSuccess;
   }
 
-  async patchMeetingAgendaVoteUserChoice(
+  async putMeetingAgendaVoteUserChoice(
     userId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
     choiceId: number, // CHACHA: 여기서 choiceId는 MeetingVoteChoice.id
   ) {
-    const isPatchUserVoteResultSuccess = await this.db.transaction(async tx => {
+    const isPutUserVoteResultSuccess = await this.db.transaction(async tx => {
       const [isChoiceIdValid] = await tx
         .select()
         .from(MeetingVoteChoice)
@@ -439,7 +439,7 @@ export class EntityRepository {
         return false;
       }
 
-      const [patchVoteResultResult] = await tx
+      const [putVoteResultResult] = await tx
         .update(MeetingVoteResult)
         .set({
           choiceId,
@@ -451,7 +451,7 @@ export class EntityRepository {
           ),
         );
 
-      if (patchVoteResultResult.affectedRows !== 1) {
+      if (putVoteResultResult.affectedRows !== 1) {
         logger.debug(
           "[EntityRepository] Failed to modify user's meeting agenda vote result",
         );
@@ -465,6 +465,109 @@ export class EntityRepository {
       return true;
     });
 
-    return isPatchUserVoteResultSuccess;
+    return isPutUserVoteResultSuccess;
+  }
+
+  async putMeetingAgendaEntities(
+    userId: number,
+    meetingId: number,
+    agendaId: number,
+    entityIdList: Array<{ id: number; meetingAgendaEntityType: number }>,
+  ) {
+    await this.db.transaction(async tx => {
+      const updatePromises = entityIdList.map(
+        ({ id, meetingAgendaEntityType }, index) =>
+          tx
+            .update(MeetingMapping)
+            .set({ meetingAgendaEntityPosition: index })
+            .where(
+              or(
+                and(
+                  // 1. If entity is content
+                  eq(MeetingMapping.meetingAgendaId, agendaId),
+                  eq(MeetingMapping.meetingId, meetingId),
+                  eq(
+                    MeetingMapping.meetingAgendaEntityType,
+                    meetingAgendaEntityType,
+                  ),
+                  eq(MeetingMapping.meetingAgendaContentId, id),
+                  isNull(MeetingMapping.deletedAt),
+                ),
+                and(
+                  // 2. If entity is vote
+                  eq(MeetingMapping.meetingAgendaId, agendaId),
+                  eq(MeetingMapping.meetingId, meetingId),
+                  eq(
+                    MeetingMapping.meetingAgendaEntityType,
+                    meetingAgendaEntityType,
+                  ),
+                  eq(MeetingMapping.meetingAgendaVoteId, id),
+                  isNull(MeetingMapping.deletedAt),
+                ),
+              ),
+            )
+            .then(result => {
+              if (result[0].affectedRows === 0) {
+                logger.warn(
+                  `[EntityRepository] No MeetingMapping found for meeting ID: ${meetingId} and agenda ID: ${agendaId} and entity ID: ${id}`,
+                );
+              }
+            }),
+      );
+
+      await Promise.all(updatePromises);
+    });
+
+    logger.debug(
+      `[EntityRepository] Modified entity position order ${meetingId}, ${agendaId}`,
+    );
+    return true;
+  }
+
+  async deleteMeetingAgendaVote(
+    userId: number,
+    meetingId: number,
+    agendaId: number,
+    voteId: number,
+  ) {
+    const isDeleteVoteSuccess = await this.db.transaction(async tx => {
+      const [deleteFromVoteResult] = await tx
+        .update(MeetingAgendaVote)
+        .set({ deletedAt: sql<Date>`Now()` })
+        .where(eq(MeetingAgendaVote.id, voteId));
+
+      if (deleteFromVoteResult.affectedRows !== 1) {
+        logger.debug(
+          "[EntityRepository] Failed to soft delete meeting agenda vote.",
+        );
+        return false;
+      }
+
+      const [deleteFromMappingResult] = await tx
+        .update(MeetingMapping)
+        .set({ deletedAt: sql<Date>`NOW()` })
+        .where(
+          and(
+            eq(MeetingMapping.meetingId, meetingId),
+            eq(MeetingMapping.meetingAgendaId, agendaId),
+            eq(MeetingMapping.meetingAgendaVoteId, voteId),
+          ),
+        );
+
+      if (deleteFromMappingResult.affectedRows !== 1) {
+        logger.debug(
+          "[EntityRepository] Failed to soft delete meeting agenda vote mapping.",
+        );
+        return false;
+      }
+
+      logger.debug(
+        `[EntityRepository] Soft deleted meeting agenda vote mapping: ${meetingId}, ${agendaId}, ${voteId}`,
+      );
+
+      return deleteFromMappingResult;
+    });
+
+    return isDeleteVoteSuccess;
   }
 }

@@ -66,7 +66,7 @@ export default class ContentController {
     @Param() { meetingId, agendaId, contentId }: ApiMee014RequestParam,
     @Body() { content }: ApiMee014RequestBody,
   ): Promise<ApiMee014ResponseOk> {
-    const result = await this.contentService.patchExecutiveMeetingAgendaContent(
+    const result = await this.contentService.putExecutiveMeetingAgendaContent(
       user.executiveId,
       meetingId,
       agendaId,

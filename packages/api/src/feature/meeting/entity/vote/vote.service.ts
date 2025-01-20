@@ -74,7 +74,7 @@ export class VoteService {
     return result;
   }
 
-  async patchExecutiveMeetingAgendaVote(
+  async putExecutiveMeetingAgendaVote(
     userId: number,
     meetingId: number,
     agendaId: number,
@@ -90,7 +90,7 @@ export class VoteService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.patchMeetingAgendaVote(
+    const result = await this.entityRepository.putMeetingAgendaVote(
       userId,
       meetingId,
       agendaId,
@@ -104,7 +104,7 @@ export class VoteService {
     return result;
   }
 
-  async patchExecutiveMeetingAgendaVoteChoices(
+  async putExecutiveMeetingAgendaVoteChoices(
     userId: number,
     meetingId: number,
     agendaId: number,
@@ -119,7 +119,7 @@ export class VoteService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.patchMeetingAgendaVoteChoices(
+    const result = await this.entityRepository.putMeetingAgendaVoteChoices(
       userId,
       meetingId,
       agendaId,
@@ -135,7 +135,7 @@ export class VoteService {
     return result;
   }
 
-  async patchExecutiveMeetingAgendaVoteUserChoice(
+  async putExecutiveMeetingAgendaVoteUserChoice(
     userId: number,
     meetingId: number,
     agendaId: number,
@@ -150,7 +150,7 @@ export class VoteService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.patchMeetingAgendaVoteUserChoice(
+    const result = await this.entityRepository.putMeetingAgendaVoteUserChoice(
       userId,
       meetingId,
       agendaId,
@@ -166,58 +166,29 @@ export class VoteService {
     return result;
   }
 
-  // async patchExecutiveMeetingAgendaEntities(
-  //   userId: number,
-  //   meetingId: number,
-  //   agendaId: number,
-  //   entityIdList: Array<{ id: number; meetingAgendaEntityType: number }>,
-  // ) {
-  //   const user = await this.userPublicService.getExecutiveById({
-  //     id: userId,
-  //   });
+  async deleteExecutiveMeetingAgendaVote(
+    userId: number,
+    meetingId: number,
+    agendaId: number,
+    voteId: number,
+  ) {
+    const user = await this.userPublicService.getExecutiveById({
+      id: userId,
+    });
 
-  //   if (!user) {
-  //     throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
-  //   }
+    if (!user) {
+      throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
+    }
 
-  //   const result = await this.entityRepository.patchMeetingAgendaEntities(
-  //     userId,
-  //     meetingId,
-  //     agendaId,
-  //     entityIdList,
-  //   );
-  //   if (!result) {
-  //     throw new HttpException(
-  //       "Failed to modify entity position",
-  //       HttpStatus.BAD_REQUEST,
-  //     );
-  //   }
-  //   return result;
-  // }
-
-  // async deleteExecutiveMeetingAgendaVote(
-  //   userId: number,
-  //   meetingId: number,
-  //   agendaId: number,
-  //   voteId: number,
-  // ) {
-  //   const user = await this.userPublicService.getExecutiveById({
-  //     id: userId,
-  //   });
-
-  //   if (!user) {
-  //     throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
-  //   }
-
-  //   const result = await this.entityRepository.deleteMeetingAgendaVote(
-  //     userId,
-  //     meetingId,
-  //     agendaId,
-  //     voteId,
-  //   );
-  //   if (!result) {
-  //     throw new HttpException("Failed to delete vote", HttpStatus.BAD_REQUEST);
-  //   }
-  //   return result;
-  // }
+    const result = await this.entityRepository.deleteMeetingAgendaVote(
+      userId,
+      meetingId,
+      agendaId,
+      voteId,
+    );
+    if (!result) {
+      throw new HttpException("Failed to delete vote", HttpStatus.BAD_REQUEST);
+    }
+    return result;
+  }
 }
