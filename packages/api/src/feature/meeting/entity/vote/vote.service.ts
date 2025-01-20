@@ -4,12 +4,12 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
-import { EntityRepository } from "../entity.repository";
+import { VoteRepository } from "./vote.repository";
 
 @Injectable()
 export class VoteService {
   constructor(
-    private readonly entityRepository: EntityRepository,
+    private readonly voteRepository: VoteRepository,
     private readonly userPublicService: UserPublicService,
   ) {}
 
@@ -29,7 +29,7 @@ export class VoteService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.postMeetingAgendaVote(
+    const result = await this.voteRepository.postMeetingAgendaVote(
       userId,
       meetingId,
       agendaId,
@@ -58,7 +58,7 @@ export class VoteService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.postMeetingAgendaVoteResult(
+    const result = await this.voteRepository.postMeetingAgendaVoteResult(
       userId,
       meetingId,
       agendaId,
@@ -90,7 +90,7 @@ export class VoteService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.putMeetingAgendaVote(
+    const result = await this.voteRepository.putMeetingAgendaVote(
       userId,
       meetingId,
       agendaId,
@@ -119,7 +119,7 @@ export class VoteService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.putMeetingAgendaVoteChoices(
+    const result = await this.voteRepository.putMeetingAgendaVoteChoices(
       userId,
       meetingId,
       agendaId,
@@ -150,7 +150,7 @@ export class VoteService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.putMeetingAgendaVoteUserChoice(
+    const result = await this.voteRepository.putMeetingAgendaVoteUserChoice(
       userId,
       meetingId,
       agendaId,
@@ -180,7 +180,7 @@ export class VoteService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.deleteMeetingAgendaVote(
+    const result = await this.voteRepository.deleteMeetingAgendaVote(
       userId,
       meetingId,
       agendaId,
@@ -206,7 +206,7 @@ export class VoteService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.deleteMeetingAgendaVoteForUser(
+    const result = await this.voteRepository.deleteMeetingAgendaVoteForUser(
       userId,
       meetingId,
       agendaId,
@@ -236,7 +236,7 @@ export class VoteService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.getMeetingAgendaVote(
+    const result = await this.voteRepository.getMeetingAgendaVote(
       userId,
       meetingId,
       agendaId,
@@ -263,7 +263,7 @@ export class VoteService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.getMeetingAgendaVoteWithResults(
+    const result = await this.voteRepository.getMeetingAgendaVoteWithResults(
       userId,
       meetingId,
       agendaId,
@@ -292,7 +292,7 @@ export class VoteService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.getMeetingAgendaVoteFinal(
+    const result = await this.voteRepository.getMeetingAgendaVoteFinal(
       userId,
       meetingId,
       agendaId,

@@ -2,12 +2,12 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
-import { EntityRepository } from "../entity.repository";
+import { ContentRepository } from "./content.repository";
 
 @Injectable()
 export class ContentService {
   constructor(
-    private readonly entityRepository: EntityRepository,
+    private readonly contentRepository: ContentRepository,
     private readonly userPublicService: UserPublicService,
   ) {}
 
@@ -25,7 +25,7 @@ export class ContentService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.postMeetingAgendaContent(
+    const result = await this.contentRepository.postMeetingAgendaContent(
       userId,
       meetingId,
       agendaId,
@@ -55,7 +55,7 @@ export class ContentService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.putMeetingAgendaContent(
+    const result = await this.contentRepository.putMeetingAgendaContent(
       userId,
       meetingId,
       agendaId,
@@ -85,7 +85,7 @@ export class ContentService {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
-    const result = await this.entityRepository.deleteMeetingAgendaContent(
+    const result = await this.contentRepository.deleteMeetingAgendaContent(
       userId,
       meetingId,
       agendaId,
