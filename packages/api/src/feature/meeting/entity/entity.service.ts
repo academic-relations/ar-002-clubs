@@ -41,4 +41,31 @@ export class EntityService {
     }
     return result;
   }
+
+  async getExecutiveMeetingAgendaEntities(
+    userId: number,
+    meetingId: number,
+    agendaId: number,
+  ) {
+    const user = await this.userPublicService.getExecutiveById({
+      id: userId,
+    });
+
+    if (!user) {
+      throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
+    }
+
+    const result = await this.entityRepository.getMeetingAgendaEntities(
+      userId,
+      meetingId,
+      agendaId,
+    );
+    if (!result) {
+      throw new HttpException(
+        "Failed get meeting agenda entities",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return result;
+  }
 }

@@ -4,7 +4,17 @@ import {
   Injectable,
 } from "@nestjs/common";
 
-import { and, count, eq, isNull, max, or, sql } from "drizzle-orm";
+import {
+  and,
+  count,
+  countDistinct,
+  eq,
+  inArray,
+  isNull,
+  max,
+  or,
+  sql,
+} from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -569,5 +579,256 @@ export class EntityRepository {
     });
 
     return isDeleteVoteSuccess;
+  }
+
+  async deleteMeetingAgendaVoteForUser(
+    userId: number,
+    meetingId: number,
+    agendaId: number,
+    voteId: number,
+  ) {
+    const isDeleteVoteSuccess = await this.db.transaction(async tx => {
+      const [deleteFromVoteResult] = await tx
+        .update(MeetingVoteResult)
+        .set({ deletedAt: sql<Date>`Now()` })
+        .where(
+          and(
+            eq(MeetingVoteResult.id, voteId),
+            eq(MeetingVoteResult.id, userId),
+          ),
+        );
+
+      if (deleteFromVoteResult.affectedRows !== 1) {
+        logger.debug(
+          "[EntityRepository] Failed to soft delete meeting agenda vote result for user.",
+        );
+        return false;
+      }
+
+      logger.debug(
+        `[EntityRepository] Soft deleted meeting agenda vote result for user: ${meetingId}, ${agendaId}, ${voteId}, ${userId}`,
+      );
+
+      return deleteFromVoteResult;
+    });
+
+    return isDeleteVoteSuccess;
+  }
+
+  async getMeetingAgendaVote(
+    userId: number,
+    meetingId: number,
+    agendaId: number,
+    voteId: number,
+  ) {
+    const isGetVoteSuccess = await this.db
+      .select({
+        title: MeetingAgendaVote.title,
+        description: MeetingAgendaVote.description,
+      })
+      .from(MeetingAgendaVote)
+      .where(
+        and(
+          eq(MeetingAgendaVote.id, voteId),
+          isNull(MeetingAgendaVote.deletedAt),
+        ),
+      );
+
+    if (isGetVoteSuccess.length !== 1) {
+      logger.debug("[EntityRepository] Failed to retrieve one vote from table");
+      return false;
+    }
+
+    const title = isGetVoteSuccess[0]?.title;
+    const description = isGetVoteSuccess[0]?.description;
+
+    const choices = await this.db
+      .select({
+        id: MeetingVoteChoice.id,
+        choice: MeetingVoteChoice.choice,
+      })
+      .from(MeetingVoteChoice)
+      .where(
+        and(
+          eq(MeetingVoteChoice.voteId, voteId),
+          isNull(MeetingVoteChoice.deletedAt),
+        ),
+      );
+
+    return { title, description, choices };
+  }
+
+  async getMeetingAgendaVoteWithResults(
+    userId: number,
+    meetingId: number,
+    agendaId: number,
+    voteId: number,
+  ) {
+    const isGetVoteSuccess = await this.db
+      .select({
+        title: MeetingAgendaVote.title,
+        description: MeetingAgendaVote.description,
+      })
+      .from(MeetingAgendaVote)
+      .where(
+        and(
+          eq(MeetingAgendaVote.id, voteId),
+          isNull(MeetingAgendaVote.deletedAt),
+        ),
+      );
+
+    if (isGetVoteSuccess.length !== 1) {
+      logger.debug("[EntityRepository] Failed to retrieve one vote from table");
+      return false;
+    }
+
+    const title = isGetVoteSuccess[0]?.title;
+    const description = isGetVoteSuccess[0]?.description;
+
+    const choices = await this.db
+      .select({
+        id: MeetingVoteChoice.id,
+        choice: MeetingVoteChoice.choice,
+      })
+      .from(MeetingVoteChoice)
+      .where(
+        and(
+          eq(MeetingVoteChoice.voteId, voteId),
+          isNull(MeetingVoteChoice.deletedAt),
+        ),
+      );
+
+    const getChoiceForUser = await this.db
+      .select({
+        id: MeetingVoteResult.choiceId,
+      })
+      .from(MeetingVoteResult)
+      .where(
+        and(
+          eq(MeetingVoteResult.userId, userId),
+          eq(MeetingVoteResult.voteId, voteId),
+          isNull(MeetingVoteResult.deletedAt),
+        ),
+      );
+
+    const choiceId = getChoiceForUser[0]?.id;
+
+    // if getChoiceForUser.length === 0: user cancelled vote.
+
+    return { title, description, choices, choiceId };
+  }
+
+  async getMeetingAgendaVoteFinal(
+    userId: number,
+    meetingId: number,
+    agendaId: number,
+    voteId: number,
+  ) {
+    const isGetVoteSuccess = await this.db
+      .select({
+        title: MeetingAgendaVote.title,
+        description: MeetingAgendaVote.description,
+      })
+      .from(MeetingAgendaVote)
+      .where(
+        and(
+          eq(MeetingAgendaVote.id, voteId),
+          isNull(MeetingAgendaVote.deletedAt),
+        ),
+      );
+
+    if (isGetVoteSuccess.length !== 1) {
+      logger.debug("[EntityRepository] Failed to retrieve one vote from table");
+      return false;
+    }
+
+    const title = isGetVoteSuccess[0]?.title;
+    const description = isGetVoteSuccess[0]?.description;
+
+    const getChoices = await this.db
+      .select({
+        id: MeetingVoteChoice.id,
+        choice: MeetingVoteChoice.choice,
+      })
+      .from(MeetingVoteChoice)
+      .where(
+        and(
+          eq(MeetingVoteChoice.voteId, voteId),
+          isNull(MeetingVoteChoice.deletedAt),
+        ),
+      );
+
+    const choiceArray = getChoices.map(e => e.id);
+
+    const results = await this.db
+      .select({
+        id: MeetingVoteResult.choiceId,
+        votes: countDistinct(MeetingVoteResult.userId),
+      })
+      .from(MeetingVoteResult)
+      .where(
+        and(
+          inArray(MeetingVoteResult.choiceId, choiceArray),
+          isNull(MeetingVoteResult.deletedAt),
+        ),
+      )
+      .groupBy(MeetingVoteResult.choiceId); // choiceId 별 그룹화
+
+    return { title, description, results };
+  }
+
+  async getMeetingAgendaEntities(
+    userId: number,
+    meetingId: number,
+    agendaId: number,
+  ) {
+    const getContents = await this.db
+      .select({
+        meetingAgendaEntityTypeEnum: MeetingMapping.meetingAgendaEntityType,
+        content: MeetingAgendaContent.content,
+        position: MeetingMapping.meetingAgendaEntityPosition,
+      })
+      .from(MeetingMapping)
+      .innerJoin(
+        MeetingAgendaContent,
+        eq(MeetingAgendaContent.id, MeetingMapping.meetingAgendaContentId),
+      )
+      .where(
+        and(
+          eq(MeetingMapping.meetingId, meetingId),
+          eq(MeetingMapping.meetingAgendaId, agendaId),
+          eq(MeetingMapping.meetingAgendaEntityType, 1),
+          isNull(MeetingMapping.deletedAt),
+        ),
+      );
+
+    const getVotes = await this.db
+      .select({
+        meetingAgendaEntityTypeEnum: MeetingMapping.meetingAgendaEntityType,
+        title: MeetingAgendaVote.title,
+        description: MeetingAgendaVote.description,
+        position: MeetingMapping.meetingAgendaEntityPosition,
+      })
+      .from(MeetingMapping)
+      .innerJoin(
+        MeetingAgendaVote,
+        eq(MeetingAgendaVote.id, MeetingMapping.meetingAgendaVoteId),
+      )
+      .where(
+        and(
+          eq(MeetingMapping.meetingId, meetingId),
+          eq(MeetingMapping.meetingAgendaId, agendaId),
+          eq(MeetingMapping.meetingAgendaEntityType, 2),
+          isNull(MeetingMapping.deletedAt),
+        ),
+      );
+
+    const mergedArray = [...getVotes, ...getContents].sort(
+      (a, b) => a.position - b.position,
+    );
+
+    const resultArray = mergedArray.map(({ position: _, ...rest }) => rest);
+
+    return resultArray;
   }
 }

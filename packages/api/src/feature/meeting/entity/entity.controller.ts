@@ -1,7 +1,8 @@
 import {
   Body,
   Controller,
-  // Get, Query,
+  Get,
+  // Query,
   Param,
   Put,
   UsePipes,
@@ -12,6 +13,11 @@ import apiMee021, {
   ApiMee021RequestParam,
   ApiMee021ResponseOk,
 } from "@sparcs-clubs/interface/api/meeting/apiMee021";
+
+import apiMee027, {
+  ApiMee027RequestParam,
+  ApiMee027ResponseOk,
+} from "@sparcs-clubs/interface/api/meeting/apiMee027";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Executive } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
@@ -38,6 +44,24 @@ export default class EntityController {
       meetingId,
       agendaId,
       entityIdList,
+    );
+
+    return result;
+  }
+
+  @Executive()
+  @Get(
+    "/executive/meetings/meeting/:meetingId/agendas/agenda/:agendaId/entities",
+  )
+  @UsePipes(new ZodPipe(apiMee027))
+  async getExecutiveMeetingAgendaEntities(
+    @GetExecutive() user: GetExecutive,
+    @Param() { meetingId, agendaId }: ApiMee027RequestParam,
+  ): Promise<ApiMee027ResponseOk> {
+    const result = await this.entityService.getExecutiveMeetingAgendaEntities(
+      user.executiveId,
+      meetingId,
+      agendaId,
     );
 
     return result;
