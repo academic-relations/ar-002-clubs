@@ -35,18 +35,23 @@ export default class ActivityPublicService {
   // API Fnd 007
   async fetchAvailableActivitySummaries(
     clubId: number,
+  ): Promise<IActivitySummary[]>;
+  async fetchAvailableActivitySummaries(
+    clubId: number,
+    activityDId: number,
+  ): Promise<IActivitySummary[]>;
+  async fetchAvailableActivitySummaries(
+    arg1: number,
+    arg2?: number,
   ): Promise<IActivitySummary[]> {
-    // TS 오버로딩 너무 구림
-    // 인수 개수 다른건 어떻게 처리하지?
-    //     if (clubId !== undefined && startTerm && endTerm) {
-    // 저렇게 할 것도 아니고.
-    // 쓸 때는 또 undefined, clubId, startTerm 이렇게 써야하고.
-    // param 이라고 이름 붙이면 그게 더 쓰기 고역인데
-    const activityDId = (await this.activityService.getLastActivityD()).id;
-    return this.activityRepository.fetchAvailableActivitySummaries(
-      clubId,
-      activityDId,
-    );
+    if (arg2 === undefined) {
+      const activityDId = (await this.activityService.getLastActivityD()).id;
+      return this.activityRepository.fetchAvailableActivitySummaries(
+        arg1,
+        activityDId,
+      );
+    }
+    return this.activityRepository.fetchAvailableActivitySummaries(arg1, arg2);
   }
 
   // API Fnd 008
