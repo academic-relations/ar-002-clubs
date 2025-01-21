@@ -361,9 +361,7 @@ export default class FundingService {
     }
 
     const activities =
-      await this.activityPublicService.findAvailableActivitySummariesWithClubId(
-        clubId,
-      );
+      await this.activityPublicService.fetchAvailableActivitySummaries(clubId);
 
     return {
       activities,
@@ -374,7 +372,9 @@ export default class FundingService {
     activityId: number,
   ): Promise<ApiFnd008ResponseOk> {
     const participants =
-      await this.activityPublicService.fetchActivityParticipants(activityId);
+      await this.activityPublicService.fetchParticipantStudentSummaries(
+        activityId,
+      );
     return {
       participants,
     };

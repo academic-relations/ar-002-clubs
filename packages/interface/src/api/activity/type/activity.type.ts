@@ -1,14 +1,14 @@
 import { z } from "zod";
 
 // TODO: 수정 필요
-export const zActivityBase = z.object({
+export const zActivity = z.object({
   id: z.coerce.number().int().min(1),
   clubId: z.coerce.number().int().min(1),
   name: z.string().max(255).min(1),
 });
 
 // TODO: 수정 필요
-export const zActivitySummary = zActivityBase.pick({
+export const zActivitySummary = zActivity.pick({
   id: true,
   name: true,
 });

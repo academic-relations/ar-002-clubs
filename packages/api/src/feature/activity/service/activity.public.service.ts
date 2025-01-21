@@ -33,7 +33,7 @@ export default class ActivityPublicService {
   }
 
   // API Fnd 007
-  async findAvailableActivitySummariesWithClubId(
+  async fetchAvailableActivitySummaries(
     clubId: number,
   ): Promise<IActivitySummary[]> {
     // TS 오버로딩 너무 구림
@@ -43,18 +43,18 @@ export default class ActivityPublicService {
     // 쓸 때는 또 undefined, clubId, startTerm 이렇게 써야하고.
     // param 이라고 이름 붙이면 그게 더 쓰기 고역인데
     const activityDId = (await this.activityService.getLastActivityD()).id;
-    return this.activityRepository.findAvailableActivitySummariesWithClubId(
+    return this.activityRepository.fetchAvailableActivitySummaries(
       clubId,
       activityDId,
     );
   }
 
   // API Fnd 008
-  async fetchActivityParticipants(
+  async fetchParticipantStudentSummaries(
     activityId: number,
   ): Promise<IStudentSummary[]> {
     const participants =
-      await this.activityRepository.findParticipantsSummaryByActivityId(
+      await this.activityRepository.fetchParticipantStudentSummaries(
         activityId,
       );
 

@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zActivityBase } from "../activity/type/activity.type";
+import { zActivity } from "../activity/type/activity.type";
 import { zStudentSummary } from "../user/type/user.type";
 
 /**
@@ -16,7 +16,7 @@ export const ApiFnd008RequestUrl = "/student/fundings/activities/participants";
 const requestParam = z.object({});
 
 const requestQuery = z.object({
-  activityId: zActivityBase.pick({ id: true }).shape.id, // TODO: clubId: zPickElement(zClub, "id"),
+  activityId: zActivity.pick({ id: true }).shape.id, // TODO: clubId: zPickElement(zActivitySummary, "id"),
 });
 
 const requestBody = z.object({});

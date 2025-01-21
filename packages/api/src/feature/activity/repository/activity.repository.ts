@@ -733,7 +733,7 @@ export default class ActivityRepository {
    * 선택가능한 활동이란, 승인되거나 운위로 넘겨진 경우를 의미합니다.
    */
 
-  async findAvailableActivitySummariesWithClubId(
+  async fetchAvailableActivitySummaries(
     clubId: number,
     activityDId: number,
   ): Promise<IActivitySummary[]> {
@@ -757,7 +757,7 @@ export default class ActivityRepository {
     return result;
   }
 
-  async findParticipantsSummaryByActivityId(
+  async fetchParticipantStudentSummaries(
     activityId: number,
   ): Promise<VStudentSummary[]> {
     const result = await this.db
