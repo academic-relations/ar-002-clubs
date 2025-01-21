@@ -56,7 +56,7 @@ export const zMinorExpense = z.object({
   files: z.array(zFileSummary.pick({ id: true })),
 });
 
-const zFunding = z.object({
+export const zFunding = z.object({
   id: z.coerce.number().int().min(1),
   clubId: z.coerce.number().int().min(1),
   semesterId: z.coerce.number().int().min(1),
