@@ -27,8 +27,6 @@ import {
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
-import { VStudentSummary } from "@sparcs-clubs/api/feature/user/model/student.summary.model";
-
 @Injectable()
 export default class ActivityRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
@@ -758,18 +756,12 @@ export default class ActivityRepository {
     return result;
   }
 
-  async fetchParticipantSummaries(
-    activityId: number,
-  ): Promise<VStudentSummary[]> {
+  async fetchParticipantIds(activityId: number): Promise<number[]> {
     const result = await this.db
       .select({
         id: ActivityParticipant.studentId,
-        userId: Student.userId,
-        studentNumber: Student.number,
-        name: Student.name,
       })
       .from(ActivityParticipant)
-      .leftJoin(Student, eq(ActivityParticipant.studentId, Student.id))
       .where(
         and(
           eq(ActivityParticipant.activityId, activityId),
@@ -777,12 +769,6 @@ export default class ActivityRepository {
         ),
       );
 
-    return result.map(
-      participant =>
-        new VStudentSummary({
-          ...participant,
-          studentNumber: participant.studentNumber.toString(), // TODO: studentNumber가 string으로 바뀌면 삭제
-        }),
-    );
+    return result.map(participant => participant.id);
   }
 }
