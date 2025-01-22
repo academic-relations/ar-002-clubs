@@ -507,7 +507,10 @@ export default class FundingRepository {
 
       // Soft delete funding order and all related records
       await Promise.all([
-        tx.update(Funding).set({ deletedAt: now }).where(eq(Funding.id, id)),
+        tx
+          .update(Funding)
+          .set({ deletedAt: now, editedAt: now })
+          .where(eq(Funding.id, id)),
         tx
           .update(FundingFeedback)
           .set({ deletedAt: now })
@@ -638,6 +641,7 @@ export default class FundingRepository {
             funding.profitMakingActivity?.explanation,
           jointExpenseExplanation: funding.jointExpense?.explanation,
           etcExpenseExplanation: funding.etcExpense?.explanation,
+          editedAt: now,
         })
         .where(eq(Funding.id, id));
 
