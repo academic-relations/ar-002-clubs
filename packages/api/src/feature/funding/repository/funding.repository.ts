@@ -336,7 +336,6 @@ export default class FundingRepository {
         origin: funding.transportation?.origin,
         destination: funding.transportation?.destination,
         purposeOfTransportation: funding.transportation?.purpose,
-        placeValidity: funding.transportation?.placeValidity,
         // Trader fields
         traderName: funding.nonCorporateTransaction?.traderName,
         traderAccountNumber:
@@ -619,7 +618,6 @@ export default class FundingRepository {
           origin: funding.transportation?.origin,
           destination: funding.transportation?.destination,
           purposeOfTransportation: funding.transportation?.purpose,
-          placeValidity: funding.transportation?.placeValidity,
           // Trader fields
           traderName: funding.nonCorporateTransaction?.traderName,
           traderAccountNumber:

@@ -60,7 +60,6 @@ export type FundingDBResult = {
     origin: string;
     destination: string;
     purposeOfTransportation: string;
-    placeValidity: string;
   };
   fundingFeedback?: {
     feedback?: string;
@@ -241,7 +240,6 @@ export class MFunding implements IFunding {
             origin: result.funding.origin,
             destination: result.funding.destination,
             purpose: result.funding.purposeOfTransportation,
-            placeValidity: result.funding.placeValidity,
             passengers: result.transportationPassengers.map(passenger => ({
               id: passenger.id,
             })),
