@@ -197,7 +197,12 @@ export default class FundingRepository {
           name: Student.name,
         })
         .from(FundingTransportationPassenger)
-        .where(and(isNull(FundingTransportationPassenger.deletedAt)))
+        .where(
+          and(
+            eq(FundingTransportationPassenger.fundingId, id),
+            isNull(FundingTransportationPassenger.deletedAt),
+          ),
+        )
         .innerJoin(
           Student,
           eq(Student.id, FundingTransportationPassenger.studentId),
