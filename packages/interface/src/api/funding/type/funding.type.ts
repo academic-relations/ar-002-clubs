@@ -100,6 +100,12 @@ const zFunding = z.object({
 
   isEtcExpense: z.coerce.boolean(),
   etcExpense: zMinorExpense.optional(),
+
+  editedAt: z.coerce.date(),
+  commentedAt: z.coerce.date().optional(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date().optional(),
+  deletedAt: z.coerce.date().optional(),
 });
 
 const zFundingExtra = zFunding.pick({
