@@ -69,7 +69,6 @@ const mockFundingDetail = {
   origin: "서울역",
   destination: "대전역",
   purposeOfTransportation: "해커톤 장소 사전답사",
-  placeValidity: "",
   transportationPassengers: [
     { id: 1, studentNumber: "20240510", name: "스팍스" },
     { id: 2, studentNumber: "20200515", name: "이도라" },

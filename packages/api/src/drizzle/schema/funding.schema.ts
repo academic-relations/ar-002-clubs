@@ -46,7 +46,6 @@ export const Funding = mysqlTable(
     origin: varchar("origin", { length: 255 }),
     destination: varchar("destination", { length: 255 }),
     purposeOfTransportation: text("purpose_of_transportation"),
-    placeValidity: text("place_validity"),
     isNonCorporateTransaction: boolean(
       "is_non_corporate_transaction",
     ).notNull(),

@@ -218,7 +218,7 @@ export default class FundingService {
       );
     }
 
-    const comments = (await this.fundingCommentRepository.fetchComments(
+    const comments = (await this.fundingCommentRepository.fetchAll(
       funding.id,
     )) as IFundingCommentResponse[];
 
@@ -290,12 +290,12 @@ export default class FundingService {
     const now = getKSTDate();
     const thisSemester = await this.clubPublicService.dateToSemesterId(now);
 
-    const fundings = await this.fundingRepository.selectAll(
+    const fundings = await this.fundingRepository.fetchSummaries(
       query.clubId,
       thisSemester,
     );
 
-    const activities = await this.activityPublicService.fetchActivitySummaries(
+    const activities = await this.activityPublicService.fetchSummaries(
       fundings.map(funding => funding.purposeActivity.id),
     );
 
@@ -323,12 +323,12 @@ export default class FundingService {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
 
-    const fundings = await this.fundingRepository.selectAll(
+    const fundings = await this.fundingRepository.fetchSummaries(
       body.clubId,
       param.semesterId,
     );
 
-    const activities = await this.activityPublicService.fetchActivitySummaries(
+    const activities = await this.activityPublicService.fetchSummaries(
       fundings.map(funding => funding.purposeActivity.id),
     );
 
@@ -361,7 +361,7 @@ export default class FundingService {
     }
 
     const activities =
-      await this.activityPublicService.fetchAvailableActivitySummaries(clubId);
+      await this.activityPublicService.fetchAvailableSummaries(clubId);
 
     return {
       activities,
@@ -372,9 +372,7 @@ export default class FundingService {
     activityId: number,
   ): Promise<ApiFnd008ResponseOk> {
     const participants =
-      await this.activityPublicService.fetchParticipantStudentSummaries(
-        activityId,
-      );
+      await this.activityPublicService.fetchParticipantSummaries(activityId);
     return {
       participants,
     };

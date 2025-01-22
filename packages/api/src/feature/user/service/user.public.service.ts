@@ -8,10 +8,9 @@ import {
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 
-import { MStudent } from "../model/student.model";
 import ExecutiveRepository from "../repository/executive.repository";
 import ProfessorRepository from "../repository/professor.repository";
-import { StudentRepository } from "../repository/student.repository";
+import StudentRepository from "../repository/student.repository";
 
 @Injectable()
 export default class UserPublicService {
@@ -164,18 +163,6 @@ export default class UserPublicService {
 
   async updateStudentPhoneNumber(userId: number, phoneNumber: string) {
     await this.studentRepository.updateStudentPhoneNumber(userId, phoneNumber);
-  }
-
-  /**
-   * 학생의 studentID Array를 통해 학생 정보를 반환합니다.
-   * */
-  async getStudentsByIds(studentIds: number[]): Promise<MStudent[]> {
-    const students =
-      await this.studentRepository.selectStudentsByIds(studentIds);
-    if (students.length === 0) {
-      throw new HttpException("Student Doesn't exist", HttpStatus.NOT_FOUND);
-    }
-    return students;
   }
 
   /**

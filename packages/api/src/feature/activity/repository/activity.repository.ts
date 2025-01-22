@@ -27,8 +27,6 @@ import {
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
-import { VStudentSummary } from "@sparcs-clubs/api/feature/user/model/student.summary.model";
-
 @Injectable()
 export default class ActivityRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
@@ -711,9 +709,10 @@ export default class ActivityRepository {
     return result;
   }
 
-  async fetchActivitySummaries(
-    activityIds: number[],
-  ): Promise<IActivitySummary[]> {
+  async fetchSummaries(activityIds: number[]): Promise<IActivitySummary[]> {
+    if (activityIds.length === 0) {
+      return [];
+    }
     const result = await this.db
       .select({
         id: Activity.id,
@@ -733,7 +732,7 @@ export default class ActivityRepository {
    * 선택가능한 활동이란, 승인되거나 운위로 넘겨진 경우를 의미합니다.
    */
 
-  async fetchAvailableActivitySummaries(
+  async fetchAvailableSummaries(
     clubId: number,
     activityDId: number,
   ): Promise<IActivitySummary[]> {
@@ -757,18 +756,12 @@ export default class ActivityRepository {
     return result;
   }
 
-  async fetchParticipantStudentSummaries(
-    activityId: number,
-  ): Promise<VStudentSummary[]> {
+  async fetchParticipantIds(activityId: number): Promise<number[]> {
     const result = await this.db
       .select({
         id: ActivityParticipant.studentId,
-        userId: Student.userId,
-        studentNumber: Student.number,
-        name: Student.name,
       })
       .from(ActivityParticipant)
-      .leftJoin(Student, eq(ActivityParticipant.studentId, Student.id))
       .where(
         and(
           eq(ActivityParticipant.activityId, activityId),
@@ -776,12 +769,6 @@ export default class ActivityRepository {
         ),
       );
 
-    return result.map(
-      participant =>
-        new VStudentSummary({
-          ...participant,
-          studentNumber: participant.studentNumber.toString(), // TODO: studentNumber가 string으로 바뀌면 삭제
-        }),
-    );
+    return result.map(participant => participant.id);
   }
 }

@@ -112,7 +112,6 @@ export const useCreateFunding = (clubId: number) => {
                   origin: data.origin,
                   destination: data.destination,
                   purpose: data.purposeOfTransportation,
-                  placeValidity: data.placeValidity,
                   passengers: isParticipantsRequired(data.transportationEnum)
                     ? data.transportationPassengers.map(participant => ({
                         id: participant.id,

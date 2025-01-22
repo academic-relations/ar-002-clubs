@@ -197,7 +197,12 @@ export default class FundingRepository {
           name: Student.name,
         })
         .from(FundingTransportationPassenger)
-        .where(and(isNull(FundingTransportationPassenger.deletedAt)))
+        .where(
+          and(
+            eq(FundingTransportationPassenger.fundingId, id),
+            isNull(FundingTransportationPassenger.deletedAt),
+          ),
+        )
         .innerJoin(
           Student,
           eq(Student.id, FundingTransportationPassenger.studentId),
@@ -254,18 +259,18 @@ export default class FundingRepository {
     });
   }
 
-  async selectAll(
+  async fetchSummaries(
     clubId: number,
     semesterId: number,
   ): Promise<IFundingSummary[]> {
-    const fundingOrders = await this.db
+    const fundings = await this.db
       .select({
         id: Funding.id,
         name: Funding.name,
         expenditureAmount: Funding.expenditureAmount,
         approvedAmount: Funding.approvedAmount,
         fundingStatusEnum: Funding.fundingStatusEnum,
-        purposeActivity: Funding.purposeActivityId,
+        purposeActivityId: Funding.purposeActivityId,
       })
       .from(Funding)
       .where(
@@ -276,14 +281,14 @@ export default class FundingRepository {
         ),
       );
 
-    if (fundingOrders.length === 0) {
+    if (fundings.length === 0) {
       return [];
     }
 
-    return fundingOrders.map(fundingOrder => ({
-      ...fundingOrder,
+    return fundings.map(funding => ({
+      ...funding,
       purposeActivity: {
-        id: fundingOrder.purposeActivity,
+        id: funding.purposeActivityId,
       },
     }));
   }
@@ -336,7 +341,6 @@ export default class FundingRepository {
         origin: funding.transportation?.origin,
         destination: funding.transportation?.destination,
         purposeOfTransportation: funding.transportation?.purpose,
-        placeValidity: funding.transportation?.placeValidity,
         // Trader fields
         traderName: funding.nonCorporateTransaction?.traderName,
         traderAccountNumber:
@@ -619,7 +623,6 @@ export default class FundingRepository {
           origin: funding.transportation?.origin,
           destination: funding.transportation?.destination,
           purposeOfTransportation: funding.transportation?.purpose,
-          placeValidity: funding.transportation?.placeValidity,
           // Trader fields
           traderName: funding.nonCorporateTransaction?.traderName,
           traderAccountNumber:
