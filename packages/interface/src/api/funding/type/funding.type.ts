@@ -119,6 +119,11 @@ const zFundingRequestBase = zFunding.omit({
   semesterId: true,
   fundingStatusEnum: true,
   approvedAmount: true,
+  editedAt: true,
+  commentedAt: true,
+  createdAt: true,
+  updatedAt: true,
+  deletedAt: true,
 });
 
 export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {

@@ -80,6 +80,8 @@ defineAxiosMock(mock => {
       ],
       updatedAt: new Date(),
       professorApprovedAt: new Date(),
+      editedAt: new Date(),
+      commentedAt: null,
     };
     return [200, dummy];
   });
