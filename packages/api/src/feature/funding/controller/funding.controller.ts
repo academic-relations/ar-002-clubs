@@ -31,8 +31,8 @@ import apiFnd005, {
   ApiFnd005ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/apiFnd005";
 import apiFnd006, {
-  ApiFnd006RequestBody,
   ApiFnd006RequestParam,
+  ApiFnd006RequestQuery,
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/apiFnd006";
 import apiFnd007, {
@@ -121,12 +121,12 @@ export default class FundingController {
   async getStudentFundingSemester(
     @GetStudent() user: GetStudent,
     @Param() param: ApiFnd006RequestParam,
-    @Body() body: ApiFnd006RequestBody,
+    @Query() query: ApiFnd006RequestQuery,
   ): Promise<ApiFnd006ResponseOk> {
     return this.fundingService.getStudentFundingSemester(
       user.studentId,
       param,
-      body,
+      query,
     );
   }
 

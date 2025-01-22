@@ -13,15 +13,9 @@ import Table from "@sparcs-clubs/web/common/components/Table";
 
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import { TableRow } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
-import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { numberToKrWon } from "@sparcs-clubs/web/constants/manageClubFunding";
 
-import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import {
-  Funding,
-  mockupPastManageFunding,
-} from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
-import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+import { PastFundingData } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
 
 const TableWithCount = styled.div`
   display: flex;
@@ -42,28 +36,20 @@ const CountRow = styled.div`
   color: ${({ theme }) => theme.colors.GRAY[600]};
 `;
 
-const columnHelper = createColumnHelper<Funding>();
+const columnHelper = createColumnHelper<PastFundingData>();
 
 const columns = [
-  columnHelper.accessor("status", {
-    header: "상태",
-    cell: info => {
-      const { color, text } = getTagDetail(info.getValue(), FundingTagList);
-      return <Tag color={color}>{text}</Tag>;
-    },
-    size: 10,
-  }),
-  columnHelper.accessor("name", {
+  columnHelper.accessor("activityName", {
     header: "활동명",
     cell: info => info.getValue(),
-    size: 45,
+    size: 55,
   }),
-  columnHelper.accessor("itemName", {
+  columnHelper.accessor("name", {
     header: "항목명",
     cell: info => info.getValue(),
     size: 15,
   }),
-  columnHelper.accessor("requestedAmount", {
+  columnHelper.accessor("expenditureAmount", {
     header: "신청 금액",
     cell: info => `${info.getValue().toLocaleString("ko-KR")}원`,
     size: 15,
@@ -78,17 +64,19 @@ const columns = [
   }),
 ];
 
-const PastFundingListTable: React.FC = () => {
+const PastFundingListTable: React.FC<{ data: PastFundingData[] }> = ({
+  data: fundings,
+}) => {
   const table = useReactTable({
     columns,
-    data: mockupPastManageFunding,
+    data: fundings,
     getCoreRowModel: getCoreRowModel(),
     enableSorting: false,
   });
 
   return (
     <TableWithCount>
-      <CountRow>총 {mockupPastManageFunding.length}개</CountRow>
+      <CountRow>총 {fundings.length}개</CountRow>
       <Table
         table={table}
         footer={
@@ -98,15 +86,12 @@ const PastFundingListTable: React.FC = () => {
             </TableCell>
             <TableCell type="Default" width="15%">
               {numberToKrWon(
-                mockupPastManageFunding.reduce(
-                  (acc, data) => acc + data.requestedAmount,
-                  0,
-                ),
+                fundings.reduce((acc, data) => acc + data.expenditureAmount, 0),
               )}
             </TableCell>
             <TableCell type="Default" width="15%">
               {numberToKrWon(
-                mockupPastManageFunding.reduce(
+                fundings.reduce(
                   (acc, data) => acc + (data.approvedAmount ?? 0),
                   0,
                 ),
