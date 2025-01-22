@@ -12,7 +12,7 @@ import {
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 @Injectable()
-export class StudentRepository {
+export default class StudentRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
   async selectStudentById(id: number) {

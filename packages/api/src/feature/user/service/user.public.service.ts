@@ -10,7 +10,7 @@ import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 
 import ExecutiveRepository from "../repository/executive.repository";
 import ProfessorRepository from "../repository/professor.repository";
-import { StudentRepository } from "../repository/student.repository";
+import StudentRepository from "../repository/student.repository";
 
 @Injectable()
 export default class UserPublicService {
