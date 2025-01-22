@@ -32,7 +32,10 @@ const ActivityReportStatisticContent: React.FC<
             </Typography>
             <Typography>
               {reviewdTotalCount}개 / {totalCount}개 (
-              {((reviewdTotalCount / totalCount) * 100).toFixed(1)}%)
+              {totalCount === 0
+                ? "-"
+                : ((reviewdTotalCount / totalCount) * 100).toFixed(1)}
+              %)
             </Typography>
           </FlexWrapper>
           <Divider />

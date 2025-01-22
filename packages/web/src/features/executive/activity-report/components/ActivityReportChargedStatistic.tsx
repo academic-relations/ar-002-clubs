@@ -5,12 +5,12 @@ import { ApiAct023ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoi
 import ActivityReportStatisticContent from "./_atomic/ActivityReportStatisticContent";
 
 interface ActivityReportStatisticProps {
-  activities: ApiAct023ResponseOk;
+  activities: ApiAct023ResponseOk; // to be changed
 }
 
-const ActivityReportStatistic: React.FC<ActivityReportStatisticProps> = ({
-  activities,
-}) => {
+const ActivityReportChargedStatistic: React.FC<
+  ActivityReportStatisticProps
+> = ({ activities }) => {
   const pendingTotalCount = activities.items.reduce(
     (acc, item) => acc + item.pendingActivitiesCount,
     0,
@@ -33,4 +33,4 @@ const ActivityReportStatistic: React.FC<ActivityReportStatisticProps> = ({
   );
 };
 
-export default ActivityReportStatistic;
+export default ActivityReportChargedStatistic;
