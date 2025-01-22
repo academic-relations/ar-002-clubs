@@ -711,9 +711,7 @@ export default class ActivityRepository {
     return result;
   }
 
-  async fetchActivitySummaries(
-    activityIds: number[],
-  ): Promise<IActivitySummary[]> {
+  async fetchSummaries(activityIds: number[]): Promise<IActivitySummary[]> {
     if (activityIds.length === 0) {
       return [];
     }
@@ -736,7 +734,7 @@ export default class ActivityRepository {
    * 선택가능한 활동이란, 승인되거나 운위로 넘겨진 경우를 의미합니다.
    */
 
-  async fetchAvailableActivitySummaries(
+  async fetchAvailableSummaries(
     clubId: number,
     activityDId: number,
   ): Promise<IActivitySummary[]> {
@@ -760,7 +758,7 @@ export default class ActivityRepository {
     return result;
   }
 
-  async fetchParticipantStudentSummaries(
+  async fetchParticipantSummaries(
     activityId: number,
   ): Promise<VStudentSummary[]> {
     const result = await this.db

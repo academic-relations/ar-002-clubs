@@ -26,42 +26,33 @@ export default class ActivityPublicService {
     return this.activityRepository.selectActivityById(id);
   }
 
-  async fetchActivitySummaries(
-    activityIds: number[],
-  ): Promise<IActivitySummary[]> {
-    return this.activityRepository.fetchActivitySummaries(activityIds);
+  async fetchSummaries(activityIds: number[]): Promise<IActivitySummary[]> {
+    return this.activityRepository.fetchSummaries(activityIds);
   }
 
   // API Fnd 007
-  async fetchAvailableActivitySummaries(
-    clubId: number,
-  ): Promise<IActivitySummary[]>;
-  async fetchAvailableActivitySummaries(
+  async fetchAvailableSummaries(clubId: number): Promise<IActivitySummary[]>;
+  async fetchAvailableSummaries(
     clubId: number,
     activityDId: number,
   ): Promise<IActivitySummary[]>;
-  async fetchAvailableActivitySummaries(
+  async fetchAvailableSummaries(
     arg1: number,
     arg2?: number,
   ): Promise<IActivitySummary[]> {
     if (arg2 === undefined) {
       const activityDId = (await this.activityService.getLastActivityD()).id;
-      return this.activityRepository.fetchAvailableActivitySummaries(
-        arg1,
-        activityDId,
-      );
+      return this.activityRepository.fetchAvailableSummaries(arg1, activityDId);
     }
-    return this.activityRepository.fetchAvailableActivitySummaries(arg1, arg2);
+    return this.activityRepository.fetchAvailableSummaries(arg1, arg2);
   }
 
   // API Fnd 008
-  async fetchParticipantStudentSummaries(
+  async fetchParticipantSummaries(
     activityId: number,
   ): Promise<IStudentSummary[]> {
     const participants =
-      await this.activityRepository.fetchParticipantStudentSummaries(
-        activityId,
-      );
+      await this.activityRepository.fetchParticipantSummaries(activityId);
 
     if (participants.length === 0) {
       throw new HttpException(

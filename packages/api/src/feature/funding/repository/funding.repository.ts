@@ -259,7 +259,7 @@ export default class FundingRepository {
     });
   }
 
-  async fetchFundingSummaries(
+  async fetchSummaries(
     clubId: number,
     semesterId: number,
   ): Promise<IFundingSummary[]> {
