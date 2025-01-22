@@ -116,14 +116,14 @@ export default class FundingController {
   }
 
   @Student()
-  @Get("student/fundings/semesters/semester/:semesterId")
+  @Get("student/fundings/activity-durations/activity-duration/:activityDId")
   @UsePipes(new ZodPipe(apiFnd006))
-  async getStudentFundingSemester(
+  async getStudentFundingActivityDuration(
     @GetStudent() user: GetStudent,
     @Param() param: ApiFnd006RequestParam,
     @Body() body: ApiFnd006RequestBody,
   ): Promise<ApiFnd006ResponseOk> {
-    return this.fundingService.getStudentFundingSemester(
+    return this.fundingService.getStudentFundingActivityDuration(
       user.studentId,
       param,
       body,

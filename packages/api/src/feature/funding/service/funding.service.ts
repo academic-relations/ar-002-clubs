@@ -313,7 +313,7 @@ export default class FundingService {
     };
   }
 
-  async getStudentFundingSemester(
+  async getStudentFundingActivityDuration(
     studentId: number,
     param: ApiFnd006RequestParam,
     body: ApiFnd006RequestBody,
@@ -325,7 +325,7 @@ export default class FundingService {
 
     const fundings = await this.fundingRepository.fetchSummaries(
       body.clubId,
-      param.semesterId,
+      param.activityDId,
     );
 
     const activities = await this.activityPublicService.fetchSummaries(
