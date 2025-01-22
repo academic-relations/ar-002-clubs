@@ -26,6 +26,9 @@ import {
   ApiFnd006RequestParam,
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/apiFnd006";
+import { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/apiFnd007";
+import { ApiFnd008ResponseOk } from "@sparcs-clubs/interface/api/funding/apiFnd008";
+
 import {
   IFundingCommentResponse,
   IFundingResponse,
@@ -47,7 +50,7 @@ export default class FundingService {
     private readonly fundingCommentRepository: FundingCommentRepository,
     private readonly filePublicService: FilePublicService,
     private readonly userPublicService: UserPublicService,
-    private readonly clubPublicSevice: ClubPublicService,
+    private readonly clubPublicService: ClubPublicService,
     private readonly activityPublicService: ActivityPublicService,
   ) {}
 
@@ -60,13 +63,13 @@ export default class FundingService {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
     if (
-      !(await this.clubPublicSevice.isStudentDelegate(studentId, body.clubId))
+      !(await this.clubPublicService.isStudentDelegate(studentId, body.clubId))
     ) {
       throw new HttpException("Student is not delegate", HttpStatus.FORBIDDEN);
     }
 
     const now = getKSTDate();
-    const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
+    const semesterId = await this.clubPublicService.dateToSemesterId(now);
     const fundingStatusEnum = 1;
     const approvedAmount = 0;
 
@@ -246,13 +249,13 @@ export default class FundingService {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
     if (
-      !(await this.clubPublicSevice.isStudentDelegate(studentId, body.clubId))
+      !(await this.clubPublicService.isStudentDelegate(studentId, body.clubId))
     ) {
       throw new HttpException("Student is not delegate", HttpStatus.FORBIDDEN);
     }
 
     const now = getKSTDate();
-    const semesterId = await this.clubPublicSevice.dateToSemesterId(now);
+    const semesterId = await this.clubPublicService.dateToSemesterId(now);
     const fundingStatusEnum = 1;
     const approvedAmount = 0;
 
@@ -285,7 +288,7 @@ export default class FundingService {
     }
 
     const now = getKSTDate();
-    const thisSemester = await this.clubPublicSevice.dateToSemesterId(now);
+    const thisSemester = await this.clubPublicService.dateToSemesterId(now);
 
     const fundings = await this.fundingRepository.selectAll(
       query.clubId,
@@ -340,6 +343,40 @@ export default class FundingService {
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,
       })),
+    };
+  }
+
+  async getStudentFundingActivity(
+    studentId: number,
+    clubId: number,
+  ): Promise<ApiFnd007ResponseOk> {
+    const [isStudentDelegate] = await Promise.all([
+      this.clubPublicService.isStudentDelegate(studentId, clubId),
+    ]);
+    if (!isStudentDelegate) {
+      throw new HttpException(
+        `Student ${studentId} is not the delegate of Club ${clubId}`,
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    const activities =
+      await this.activityPublicService.fetchAvailableActivitySummaries(clubId);
+
+    return {
+      activities,
+    };
+  }
+
+  async getStudentFundingActivityParticipants(
+    activityId: number,
+  ): Promise<ApiFnd008ResponseOk> {
+    const participants =
+      await this.activityPublicService.fetchParticipantStudentSummaries(
+        activityId,
+      );
+    return {
+      participants,
     };
   }
 }

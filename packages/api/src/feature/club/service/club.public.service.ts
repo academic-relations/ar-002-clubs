@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import { ISemester } from "@sparcs-clubs/interface/api/club/type/semester.type";
 import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
@@ -154,7 +155,7 @@ export default class ClubPublicService {
 
   // 학생(studentId)이 현재 학기 동아리(clubId)의 대표자 중 1명인지 확인합니다.
   // studentId와 clubId가 유효한지 검사하지 않습니다.
-  async isStudentDelegate(studentId: number, clubId: number) {
+  async isStudentDelegate(studentId: number, clubId: number): Promise<boolean> {
     const representatives =
       await this.clubDelegateDRepository.findRepresentativeIdListByClubId(
         clubId,
@@ -321,15 +322,9 @@ export default class ClubPublicService {
 
   // date를 포함하고 있는 학기의 semesterId를 리턴합니다.
   // 만약 해당하는 semester가 존재하지 않을 경우, 404에러를 throw 하니 예외처리를 하지 않아도 됩니다.
-  async getSemesterId(date: Date): Promise<number> {
-    const result = await this.semesterDRepository.findByDate(date);
-
-    if (result.length !== 1) {
-      throw new HttpException(
-        `No semester found for ${date}`, // TODO: 예쁘게 출력
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    return result[0].id;
+  // date를 넣지 않으면 현재 날짜를 기준으로 합니다.
+  async fetchSemester(date?: Date): Promise<ISemester> {
+    const targetDate = date || getKSTDate();
+    return this.semesterDRepository.fetch(targetDate);
   }
 }

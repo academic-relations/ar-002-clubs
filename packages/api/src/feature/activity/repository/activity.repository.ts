@@ -4,7 +4,7 @@ import {
   ActivityStatusEnum,
   ActivityTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { and, asc, eq, gt, inArray, isNull, lte } from "drizzle-orm";
+import { and, asc, eq, gt, inArray, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -26,6 +26,8 @@ import {
   Professor,
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+
+import { VStudentSummary } from "@sparcs-clubs/api/feature/user/model/student.summary.model";
 
 @Injectable()
 export default class ActivityRepository {
@@ -722,5 +724,64 @@ export default class ActivityRepository {
         and(inArray(Activity.id, activityIds), isNull(Activity.deletedAt)),
       );
     return result;
+  }
+
+  /**
+   * @param clubId
+   * @param semesterId
+   * @description 해당학기의 선택가능한 ActivitySummary를 반환합니다.
+   * 선택가능한 활동이란, 승인되거나 운위로 넘겨진 경우를 의미합니다.
+   */
+
+  async fetchAvailableActivitySummaries(
+    clubId: number,
+    activityDId: number,
+  ): Promise<IActivitySummary[]> {
+    const result = await this.db
+      .select({
+        id: Activity.id,
+        name: Activity.name,
+      })
+      .from(Activity)
+      .where(
+        and(
+          eq(Activity.clubId, clubId),
+          eq(Activity.activityDId, activityDId),
+          or(
+            eq(Activity.activityStatusEnumId, ActivityStatusEnum.Approved),
+            eq(Activity.activityStatusEnumId, ActivityStatusEnum.Committee),
+          ),
+          isNull(Activity.deletedAt),
+        ),
+      );
+    return result;
+  }
+
+  async fetchParticipantStudentSummaries(
+    activityId: number,
+  ): Promise<VStudentSummary[]> {
+    const result = await this.db
+      .select({
+        id: ActivityParticipant.studentId,
+        userId: Student.userId,
+        studentNumber: Student.number,
+        name: Student.name,
+      })
+      .from(ActivityParticipant)
+      .leftJoin(Student, eq(ActivityParticipant.studentId, Student.id))
+      .where(
+        and(
+          eq(ActivityParticipant.activityId, activityId),
+          isNull(ActivityParticipant.deletedAt),
+        ),
+      );
+
+    return result.map(
+      participant =>
+        new VStudentSummary({
+          ...participant,
+          studentNumber: participant.studentNumber.toString(), // TODO: studentNumber가 string으로 바뀌면 삭제
+        }),
+    );
   }
 }

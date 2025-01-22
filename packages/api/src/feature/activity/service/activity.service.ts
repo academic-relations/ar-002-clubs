@@ -131,7 +131,7 @@ export default class ActivityService {
    * @returns 현재 활동보고서를 작성해야 하는 직전학기 정보를 리턴합니다.
    * ex. 현재 겨울학기일 경우, 여름-가을학기 활동기간을 리턴해야 합니다.
    */
-  private async getLastActivityD() {
+  async getLastActivityD() {
     const today = getKSTDate();
     const [activityD] =
       await this.activityActivityTermRepository.selectLastActivityDByDate(
@@ -1332,12 +1332,12 @@ export default class ActivityService {
     query: ApiAct027RequestQuery,
   ): Promise<ApiAct027ResponseOk> {
     const nowKST = getKSTDate();
-    const semesterId = await this.clubPublicService.getSemesterId(nowKST);
+    const semester = await this.clubPublicService.fetchSemester(nowKST);
     const { clubIds } = query;
 
     // TODO: 지금은 entity로 불러오는데, id만 들고 오는 public service 및 repository 를 만들어서 한다면 좀더 효율이 높아질 수 있음
     const [clubMembers, executives] = await Promise.all([
-      this.clubPublicService.getUnionMemberSummaries(semesterId, clubIds),
+      this.clubPublicService.getUnionMemberSummaries(semester.id, clubIds),
       this.userPublicService.getCurrentExecutiveSummaries(),
     ]);
 
