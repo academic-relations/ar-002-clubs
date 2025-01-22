@@ -8,12 +8,12 @@ import { zFundingResponseSummary } from "./type/funding.type";
  * @description 특정 학기의 지원금 신청을 조회합니다.
  */
 
-const url = (semesterId: number) =>
-  `/student/fundings/semesters/semester/${semesterId}`;
+const url = (activityDId: number) =>
+  `/student/fundings/activity-durations/activity-duration/${activityDId}`;
 const method = "GET";
 
 const requestParam = z.object({
-  semesterId: z.coerce.number().int().min(1),
+  activityDId: z.coerce.number().int().min(1),
 });
 
 const requestQuery = z.object({});

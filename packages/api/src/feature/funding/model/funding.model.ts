@@ -13,7 +13,7 @@ export type FundingDBResult = {
     id: number;
     clubId: number;
     purposeActivityId?: number;
-    semesterId?: number;
+    activityDId: number;
     fundingStatusEnum?: number;
     name: string;
     expenditureDate: Date;
@@ -100,7 +100,7 @@ export class MFunding implements IFunding {
 
   clubId: number;
 
-  semesterId: number;
+  activityDId: number;
 
   fundingStatusEnum: number;
 
@@ -179,7 +179,7 @@ export class MFunding implements IFunding {
       id: result.funding.id,
       clubId: result.funding.clubId,
       name: result.funding.name,
-      semesterId: result.funding.semesterId,
+      activityDId: result.funding.activityDId,
       fundingStatusEnum: result.funding.fundingStatusEnum,
       purposeActivity: result.funding.purposeActivityId
         ? {
