@@ -61,7 +61,6 @@ const useGetInitialFundingFormData = (
       origin: funding.transportation?.origin,
       destination: funding.transportation?.destination,
       purposeOfTransportation: funding.transportation?.purpose,
-      placeValidity: funding.transportation?.placeValidity,
       transportationPassengers: funding.transportation?.passengers ?? [],
 
       // 비법인 거래 증빙
