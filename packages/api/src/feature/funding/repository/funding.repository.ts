@@ -259,18 +259,18 @@ export default class FundingRepository {
     });
   }
 
-  async selectAll(
+  async fetchFundingSummaries(
     clubId: number,
     semesterId: number,
   ): Promise<IFundingSummary[]> {
-    const fundingOrders = await this.db
+    const fundings = await this.db
       .select({
         id: Funding.id,
         name: Funding.name,
         expenditureAmount: Funding.expenditureAmount,
         approvedAmount: Funding.approvedAmount,
         fundingStatusEnum: Funding.fundingStatusEnum,
-        purposeActivity: Funding.purposeActivityId,
+        purposeActivityId: Funding.purposeActivityId,
       })
       .from(Funding)
       .where(
@@ -281,14 +281,14 @@ export default class FundingRepository {
         ),
       );
 
-    if (fundingOrders.length === 0) {
+    if (fundings.length === 0) {
       return [];
     }
 
-    return fundingOrders.map(fundingOrder => ({
-      ...fundingOrder,
+    return fundings.map(funding => ({
+      ...funding,
       purposeActivity: {
-        id: fundingOrder.purposeActivity,
+        id: funding.purposeActivityId,
       },
     }));
   }

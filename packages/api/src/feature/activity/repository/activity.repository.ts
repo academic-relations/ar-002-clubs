@@ -714,6 +714,9 @@ export default class ActivityRepository {
   async fetchActivitySummaries(
     activityIds: number[],
   ): Promise<IActivitySummary[]> {
+    if (activityIds.length === 0) {
+      return [];
+    }
     const result = await this.db
       .select({
         id: Activity.id,

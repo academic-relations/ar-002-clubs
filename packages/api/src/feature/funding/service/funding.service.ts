@@ -290,7 +290,7 @@ export default class FundingService {
     const now = getKSTDate();
     const thisSemester = await this.clubPublicService.dateToSemesterId(now);
 
-    const fundings = await this.fundingRepository.selectAll(
+    const fundings = await this.fundingRepository.fetchFundingSummaries(
       query.clubId,
       thisSemester,
     );
@@ -323,7 +323,7 @@ export default class FundingService {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
 
-    const fundings = await this.fundingRepository.selectAll(
+    const fundings = await this.fundingRepository.fetchFundingSummaries(
       body.clubId,
       param.semesterId,
     );
