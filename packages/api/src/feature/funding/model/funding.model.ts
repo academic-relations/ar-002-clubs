@@ -164,11 +164,11 @@ export class MFunding implements IFunding {
 
   editedAt: Date;
 
-  commentedAt: Date | null;
+  commentedAt?: Date;
 
   createdAt: Date;
 
-  updatedAt: Date | null;
+  updatedAt?: Date;
 
   constructor(data: MFunding) {
     Object.assign(this, data);
