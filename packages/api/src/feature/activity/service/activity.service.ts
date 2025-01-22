@@ -332,6 +332,8 @@ export default class ActivityService {
         activityTypeEnumId: row.activityTypeEnumId,
         durations: row.durations,
         professorApprovedAt: row.professorApprovedAt,
+        editedAt: row.editedAt,
+        commentedAt: row.commentedAt,
       }))
       .sort((a, b) =>
         a.durations[0].startTerm.getTime() ===
@@ -436,6 +438,8 @@ export default class ActivityService {
       })),
       updatedAt: activity.updatedAt,
       professorApprovedAt: activity.professorApprovedAt,
+      editedAt: activity.editedAt,
+      commentedAt: activity.commentedAt,
     };
   }
 
@@ -879,6 +883,8 @@ export default class ActivityService {
       })),
       updatedAt: activity.updatedAt,
       professorApprovedAt: activity.professorApprovedAt,
+      editedAt: activity.editedAt,
+      commentedAt: activity.commentedAt,
     };
   }
 
@@ -940,6 +946,8 @@ export default class ActivityService {
       })),
       updatedAt: activity.updatedAt,
       professorApprovedAt: activity.professorApprovedAt,
+      editedAt: activity.editedAt,
+      commentedAt: activity.commentedAt,
     };
   }
 
@@ -1060,6 +1068,8 @@ export default class ActivityService {
       activityTypeEnumId: row.activityTypeEnumId,
       durations: row.durations,
       professorApprovedAt: row.professorApprovedAt,
+      editedAt: row.editedAt,
+      commentedAt: row.commentedAt,
     }));
   }
 

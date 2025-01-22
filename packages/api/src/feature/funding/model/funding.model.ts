@@ -19,7 +19,10 @@ export type FundingDBResult = {
     expenditureDate: Date;
     expenditureAmount: number;
     approvedAmount?: number;
-    createdAt?: Date;
+    editedAt: Date;
+    commentedAt?: Date;
+    createdAt: Date;
+    updatedAt?: Date;
     deletedAt?: Date;
     isFixture: boolean;
     isTransportation: boolean;
@@ -158,6 +161,14 @@ export class MFunding implements IFunding {
   isEtcExpense: boolean;
 
   etcExpense?: IMinorExpense;
+
+  editedAt: Date;
+
+  commentedAt?: Date;
+
+  createdAt: Date;
+
+  updatedAt?: Date;
 
   constructor(data: MFunding) {
     Object.assign(this, data);
@@ -310,6 +321,10 @@ export class MFunding implements IFunding {
             })),
           }
         : undefined,
+      editedAt: result.funding.editedAt,
+      commentedAt: result.funding.commentedAt,
+      createdAt: result.funding.createdAt,
+      updatedAt: result.funding.updatedAt,
     });
   }
 }

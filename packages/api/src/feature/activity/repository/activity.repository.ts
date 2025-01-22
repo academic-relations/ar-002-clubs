@@ -59,6 +59,7 @@ export default class ActivityRepository {
         .update(Activity)
         .set({
           deletedAt,
+          editedAt: deletedAt,
         })
         .where(
           and(eq(Activity.id, contents.activityId), isNull(Activity.deletedAt)),
@@ -450,6 +451,7 @@ export default class ActivityRepository {
           evidence: param.evidence,
           activityDId: param.activityDId,
           activityStatusEnumId: Number(param.activityStatusEnumId),
+          editedAt: deletedAt,
         })
         .where(eq(Activity.id, param.activityId));
       if (activitySetResult.affectedRows !== 1) {
@@ -624,6 +626,7 @@ export default class ActivityRepository {
         .update(Activity)
         .set({
           activityStatusEnumId: param.activityStatusEnumId,
+          commentedAt: new Date(),
         })
         .where(
           and(eq(Activity.id, param.activityId), isNull(Activity.deletedAt)),

@@ -281,4 +281,6 @@ export const mockActivityDetailData: ApiAct002ResponseOkTemp = {
   advisorProfessorApproval: ActivityProfessorApprovalEnum.Requested,
   updatedAt: new Date(),
   professorApprovedAt: null,
+  editedAt: new Date(),
+  commentedAt: null,
 };
