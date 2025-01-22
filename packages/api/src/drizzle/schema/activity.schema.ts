@@ -65,7 +65,7 @@ export const Activity = mysqlTable(
     professorApprovedAt: timestamp("professor_approved_at"),
     editedAt: timestamp("edited_at").defaultNow().notNull(),
     commentedAt: timestamp("commented_at"),
-    createdAt: timestamp("created_at").defaultNow(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
