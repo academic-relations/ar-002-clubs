@@ -69,12 +69,12 @@ export default class FundingService {
     }
 
     const now = getKSTDate();
-    const semesterId = await this.clubPublicService.dateToSemesterId(now);
+    const activityD = await this.activityPublicService.fetchLastActivityD(now);
     const fundingStatusEnum = 1;
     const approvedAmount = 0;
 
     return this.fundingRepository.insert(body, {
-      semesterId,
+      activityDId: activityD.id,
       fundingStatusEnum,
       approvedAmount,
     });
@@ -255,12 +255,12 @@ export default class FundingService {
     }
 
     const now = getKSTDate();
-    const semesterId = await this.clubPublicService.dateToSemesterId(now);
+    const activityD = await this.activityPublicService.fetchLastActivityD(now);
     const fundingStatusEnum = 1;
     const approvedAmount = 0;
 
     return this.fundingRepository.put(param.id, body, {
-      semesterId,
+      activityDId: activityD.id,
       fundingStatusEnum,
       approvedAmount,
     });
