@@ -1,5 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import { ApiAct021ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct021";
+import { ApiAct022ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct022";
 import {
   ActivityDeadlineEnum,
   ActivityStatusEnum,
@@ -10,7 +12,6 @@ import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubTRepository from "@sparcs-clubs/api/feature/club/repository/club.club-t.repository";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
-import DivisionPublicService from "@sparcs-clubs/api/feature/division/service/division.public.service";
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import { ClubRegistrationPublicService } from "@sparcs-clubs/api/feature/registration/club-registration/service/club-registration.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
@@ -83,7 +84,6 @@ export default class ActivityService {
     private activityClubChargedExecutiveRepository: ActivityClubChargedExecutiveRepository,
     private activityActivityTermRepository: ActivityActivityTermRepository,
     private clubPublicService: ClubPublicService,
-    private divisionPublicService: DivisionPublicService,
     private filePublicService: FilePublicService,
     private clubRegistrationPublicService: ClubRegistrationPublicService,
     private clubTRepository: ClubTRepository,
@@ -1355,6 +1355,42 @@ export default class ActivityService {
     // clubMemberUserIds에 없는 executive만 필터링
     return {
       executives: executives.filter(e => !clubMemberUserIds.includes(e.userId)),
+    };
+  }
+
+  async getStudentActivitiesAvailable(
+    studentId: number,
+    clubId: number,
+  ): Promise<ApiAct021ResponseOk> {
+    const [isStudentDelegate] = await Promise.all([
+      this.clubPublicService.isStudentDelegate(studentId, clubId),
+    ]);
+    if (!isStudentDelegate) {
+      throw new HttpException(
+        `Student ${studentId} is not the delegate of Club ${clubId}`,
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    const activityDId = (await this.getLastActivityD()).id;
+    const activities = await this.activityRepository.fetchAvailableSummaries(
+      clubId,
+      activityDId,
+    );
+
+    return {
+      activities,
+    };
+  }
+
+  async getStudentActivityParticipants(
+    activityId: number,
+  ): Promise<ApiAct022ResponseOk> {
+    const participantIds =
+      await this.activityRepository.fetchParticipantIds(activityId);
+    return {
+      participants:
+        await this.userPublicService.fetchStudentSummaries(participantIds),
     };
   }
 }

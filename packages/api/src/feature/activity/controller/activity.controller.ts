@@ -42,6 +42,16 @@ import apiAct020, {
   ApiAct020RequestBody,
   ApiAct020ResponseCreated,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct020";
+import apiAct021, {
+  type ApiAct021RequestQuery,
+  ApiAct021RequestUrl,
+  type ApiAct021ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct021";
+import apiAct022, {
+  ApiAct022RequestParam,
+  ApiAct022RequestUrl,
+  type ApiAct022ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct022";
 import apiAct023 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 import apiAct024 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
 import apiAct025 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct025";
@@ -469,5 +479,28 @@ export default class ActivityController {
         query,
       );
     return result;
+  }
+
+  @Student()
+  @Get(ApiAct021RequestUrl)
+  @UsePipes(new ZodPipe(apiAct021))
+  async getStudentActivitiesAvailable(
+    @GetStudent() user: GetStudent,
+    @Query() query: ApiAct021RequestQuery,
+  ): Promise<ApiAct021ResponseOk> {
+    return this.activityService.getStudentActivitiesAvailable(
+      query.clubId,
+      user.studentId,
+    );
+  }
+
+  @Student()
+  @Get(ApiAct022RequestUrl)
+  @UsePipes(new ZodPipe(apiAct022))
+  async getStudentActivityParticipants(
+    @GetStudent() user: GetStudent,
+    @Param() param: ApiAct022RequestParam,
+  ): Promise<ApiAct022ResponseOk> {
+    return this.activityService.getStudentActivityParticipants(param.id);
   }
 }

@@ -26,8 +26,6 @@ import {
   ApiFnd006RequestParam,
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/apiFnd006";
-import { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/apiFnd007";
-import { ApiFnd008ResponseOk } from "@sparcs-clubs/interface/api/funding/apiFnd008";
 
 import {
   IFundingCommentResponse,
@@ -343,38 +341,6 @@ export default class FundingService {
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,
       })),
-    };
-  }
-
-  async getStudentFundingActivity(
-    studentId: number,
-    clubId: number,
-  ): Promise<ApiFnd007ResponseOk> {
-    const [isStudentDelegate] = await Promise.all([
-      this.clubPublicService.isStudentDelegate(studentId, clubId),
-    ]);
-    if (!isStudentDelegate) {
-      throw new HttpException(
-        `Student ${studentId} is not the delegate of Club ${clubId}`,
-        HttpStatus.FORBIDDEN,
-      );
-    }
-
-    const activities =
-      await this.activityPublicService.fetchAvailableSummaries(clubId);
-
-    return {
-      activities,
-    };
-  }
-
-  async getStudentFundingActivityParticipants(
-    activityId: number,
-  ): Promise<ApiFnd008ResponseOk> {
-    const participants =
-      await this.activityPublicService.fetchParticipantSummaries(activityId);
-    return {
-      participants,
     };
   }
 }
