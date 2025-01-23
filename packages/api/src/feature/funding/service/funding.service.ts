@@ -3,29 +3,29 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import {
   ApiFnd001RequestBody,
   ApiFnd001ResponseCreated,
-} from "@sparcs-clubs/interface/api/funding/apiFnd001";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd001";
 import {
   ApiFnd002RequestParam,
   ApiFnd002ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd002";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
 import {
   ApiFnd003RequestBody,
   ApiFnd003RequestParam,
   ApiFnd003ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd003";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd003";
 import {
   ApiFnd004RequestParam,
   ApiFnd004ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd004";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd004";
 import {
   ApiFnd005RequestQuery,
   ApiFnd005ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd005";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
 import {
   ApiFnd006RequestBody,
   ApiFnd006RequestParam,
   ApiFnd006ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd006";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
 import { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
 
 import {
