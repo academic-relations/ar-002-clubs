@@ -4,7 +4,7 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import { FundingFeedback } from "@sparcs-clubs/api/drizzle/schema/funding.schema";
-import { MFundingComment } from "@sparcs-clubs/api/feature/funding/model/funding.comment";
+import { MFundingComment } from "@sparcs-clubs/api/feature/funding/model/funding.comment.model";
 
 @Injectable()
 export default class FundingCommentRepository {
