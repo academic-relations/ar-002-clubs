@@ -261,7 +261,7 @@ export default class FundingRepository {
 
   async fetchSummaries(
     clubId: number,
-    semesterId: number,
+    activityDId: number,
   ): Promise<IFundingSummary[]> {
     const fundings = await this.db
       .select({
@@ -276,7 +276,7 @@ export default class FundingRepository {
       .where(
         and(
           eq(Funding.clubId, clubId),
-          eq(Funding.semesterId, semesterId),
+          eq(Funding.activityDId, activityDId),
           isNull(Funding.deletedAt),
         ),
       );
@@ -302,7 +302,7 @@ export default class FundingRepository {
       const [fundingOrder] = await tx.insert(Funding).values({
         clubId: funding.clubId,
         purposeActivityId: funding.purposeActivity.id,
-        semesterId: extra.semesterId,
+        activityDId: extra.activityDId,
         fundingStatusEnum: extra.fundingStatusEnum,
         name: funding.name,
         expenditureDate: funding.expenditureDate,

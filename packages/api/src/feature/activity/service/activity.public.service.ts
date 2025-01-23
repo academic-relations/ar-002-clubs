@@ -1,10 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 
-import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
+import {
+  IActivityD,
+  IActivitySummary,
+} from "@sparcs-clubs/interface/api/activity/type/activity.type";
 import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
+import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
 import ActivityRepository from "../repository/activity.repository";
 
 import ActivityService from "./activity.service";
@@ -15,6 +19,7 @@ export default class ActivityPublicService {
     private activityRepository: ActivityRepository,
     private activityService: ActivityService,
     private userPublicService: UserPublicService,
+    private activityActivityTermRepository: ActivityActivityTermRepository,
   ) {}
 
   /**
@@ -57,5 +62,14 @@ export default class ActivityPublicService {
     const participantIds =
       await this.activityRepository.fetchParticipantIds(activityId);
     return this.userPublicService.fetchStudentSummaries(participantIds);
+  }
+
+  async fetchLastActivityD(date: Date): Promise<IActivityD> {
+    const result =
+      await this.activityActivityTermRepository.selectLastActivityDByDate(date);
+    if (result.length === 0) {
+      throw new NotFoundException("No such activityD");
+    }
+    return result[0];
   }
 }

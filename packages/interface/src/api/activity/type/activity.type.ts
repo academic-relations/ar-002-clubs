@@ -13,4 +13,12 @@ export const zActivitySummary = zActivity.pick({
   name: true,
 });
 
+// TODO: 수정 필요
+export const zActivityD = z.object({
+  id: z.coerce.number().int().min(1),
+  startTerm: z.date(),
+  endTerm: z.date(),
+});
+
 export type IActivitySummary = z.infer<typeof zActivitySummary>;
+export type IActivityD = z.infer<typeof zActivityD>;

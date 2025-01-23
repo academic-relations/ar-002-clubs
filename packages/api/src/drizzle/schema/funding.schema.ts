@@ -9,8 +9,8 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-import { Activity } from "./activity.schema";
-import { Club, SemesterD } from "./club.schema";
+import { Activity, ActivityD } from "./activity.schema";
+import { Club } from "./club.schema";
 import { ExecutiveT, StudentT } from "./user.schema";
 
 export const Funding = mysqlTable(
@@ -18,7 +18,9 @@ export const Funding = mysqlTable(
   {
     id: int("id").autoincrement().primaryKey().notNull(),
     clubId: int("club_id").notNull(),
-    semesterId: int("semester_id").notNull(),
+    activityDId: int("activity_d_id")
+      .notNull()
+      .references(() => ActivityD.id),
     fundingStatusEnum: int("funding_status_enum").notNull(),
     purposeActivityId: int("purpose_activity_id"),
     name: varchar("name", { length: 255 }).notNull(),
@@ -82,11 +84,6 @@ export const Funding = mysqlTable(
       name: "funding_club_id_fk",
       columns: [table.clubId],
       foreignColumns: [Club.id],
-    }),
-    semesterForeignKey: foreignKey({
-      name: "funding_semester_id_fk",
-      columns: [table.semesterId],
-      foreignColumns: [SemesterD.id],
     }),
     purposeForeignKey: foreignKey({
       name: "funding_purpose_id_fk",

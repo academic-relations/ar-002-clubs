@@ -58,7 +58,7 @@ export const zMinorExpense = z.object({
 const zFunding = z.object({
   id: z.coerce.number().int().min(1),
   clubId: z.coerce.number().int().min(1),
-  semesterId: z.coerce.number().int().min(1),
+  activityDId: z.coerce.number().int().min(1),
   fundingStatusEnum: z.coerce.number().int().min(1),
   purposeActivity: zActivitySummary.pick({ id: true }).optional(),
   name: z.string().max(255).min(1),
@@ -109,14 +109,14 @@ const zFunding = z.object({
 });
 
 const zFundingExtra = zFunding.pick({
-  semesterId: true,
+  activityDId: true,
   fundingStatusEnum: true,
   approvedAmount: true,
 });
 
 const zFundingRequestBase = zFunding.omit({
   id: true,
-  semesterId: true,
+  activityDId: true,
   fundingStatusEnum: true,
   approvedAmount: true,
   editedAt: true,
