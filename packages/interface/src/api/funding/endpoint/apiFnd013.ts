@@ -3,7 +3,11 @@ import { z } from "zod";
 
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
-import { zFunding, zFundingComment } from "../type/funding.type";
+import {
+  zFunding,
+  zFundingComment,
+  zFundingCommentRequestCreate,
+} from "../type/funding.type";
 
 /**
  * @version v0.1
@@ -11,10 +15,10 @@ import { zFunding, zFundingComment } from "../type/funding.type";
  */
 
 const url = (id: number, fundingStatusEnum: FundingStatusEnum) =>
-  `/executive/fundings/funding/${id}/comments/${fundingStatusEnum}`;
+  `/executive/fundings/funding/${id}/comments/comment/${fundingStatusEnum}`;
 const method = "POST";
 export const ApiFnd013RequestUrl =
-  "/executive/fundings/funding/:id/comments/:fundingStatusEnum";
+  "/executive/fundings/funding/:id/comments/comment/:fundingStatusEnum";
 
 const requestParam = z.object({
   id: zFunding.pick({ id: true }).shape.id,
@@ -24,13 +28,14 @@ const requestParam = z.object({
 
 const requestQuery = z.object({});
 
-const requestBody = z.object({
-  approvedAmount: zFundingComment.pick({ approvedAmount: true }).shape
-    .approvedAmount,
+const requestBody = zFundingCommentRequestCreate.omit({
+  funding: true,
+  fundingStatusEnum: true,
+  chargedExecutive: true,
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({}),
+  [HttpStatusCode.Created]: z.object({}),
 };
 
 const responseErrorMap = {};
@@ -48,7 +53,9 @@ const apiFnd013 = {
 type ApiFnd013RequestParam = z.infer<typeof apiFnd013.requestParam>;
 type ApiFnd013RequestQuery = z.infer<typeof apiFnd013.requestQuery>;
 type ApiFnd013RequestBody = z.infer<typeof apiFnd013.requestBody>;
-type ApiFnd013ResponseOk = z.infer<(typeof apiFnd013.responseBodyMap)[200]>;
+type ApiFnd013ResponseCreated = z.infer<
+  (typeof apiFnd013.responseBodyMap)[201]
+>;
 
 export default apiFnd013;
 
@@ -56,5 +63,5 @@ export type {
   ApiFnd013RequestParam,
   ApiFnd013RequestQuery,
   ApiFnd013RequestBody,
-  ApiFnd013ResponseOk,
+  ApiFnd013ResponseCreated,
 };
