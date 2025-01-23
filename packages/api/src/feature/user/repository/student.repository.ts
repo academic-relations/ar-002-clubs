@@ -11,10 +11,8 @@ import {
   StudentT,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
-import { MStudent } from "../model/student.model";
-
 @Injectable()
-export class StudentRepository {
+export default class StudentRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
   async selectStudentById(id: number) {
@@ -95,20 +93,12 @@ export class StudentRepository {
     return isUpdateSucceed;
   }
 
-  async selectStudentsByIds(studentIds: number[]): Promise<MStudent[]> {
-    const students = await this.db
-      .select()
-      .from(Student)
-      .where(and(inArray(Student.id, studentIds), isNull(Student.deletedAt)));
-    return students.map(
-      student =>
-        new MStudent({ ...student, studentNumber: student.number.toString() }),
-    );
-  }
-
   async fetchStudentSummaries(
     studentIds: number[],
   ): Promise<IStudentSummary[]> {
+    if (studentIds.length === 0) {
+      return [];
+    }
     const students = await this.db
       .select()
       .from(Student)

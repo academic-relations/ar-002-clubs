@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 
-import { ClubModule } from "@sparcs-clubs/api/feature/club/club.module";
+import ClubModule from "@sparcs-clubs/api/feature/club/club.module";
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 
 import { PromotionalPrintingController } from "./controller/promotional-printing.controller";

@@ -29,6 +29,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: null,
+    editedAt: new Date("2024-09-01"),
+    commentedAt: null,
   },
   {
     id: 2,
@@ -52,6 +54,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: null,
+    editedAt: new Date("2024-07-15"),
+    commentedAt: null,
   },
   {
     id: 3,
@@ -75,6 +79,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-08-01"),
+    editedAt: new Date("2024-08-01"),
+    commentedAt: null,
   },
   {
     id: 4,
@@ -107,6 +113,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-07-01"),
+    editedAt: new Date("2024-07-01"),
+    commentedAt: null,
   },
   {
     id: 5,
@@ -130,6 +138,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-09-15"),
+    editedAt: new Date("2024-09-15"),
+    commentedAt: null,
   },
   {
     id: 6,
@@ -154,6 +164,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-08-01"),
+    editedAt: new Date("2024-08-01"),
+    commentedAt: null,
   },
   {
     id: 7,
@@ -186,6 +198,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-07-01"),
+    editedAt: new Date("2024-07-01"),
+    commentedAt: null,
   },
   {
     id: 8,
@@ -210,6 +224,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-09-01"),
+    editedAt: new Date("2024-09-01"),
+    commentedAt: null,
   },
   {
     id: 9,
@@ -234,6 +250,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-07-15"),
+    editedAt: new Date("2024-07-15"),
+    commentedAt: null,
   },
   {
     id: 10,
@@ -258,6 +276,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-08-15"),
+    editedAt: new Date("2024-08-15"),
+    commentedAt: null,
   },
   {
     id: 11,
@@ -282,6 +302,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-09-10"),
+    editedAt: new Date("2024-09-10"),
+    commentedAt: null,
   },
   {
     id: 12,
@@ -306,6 +328,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-07-01"),
+    editedAt: new Date("2024-07-01"),
+    commentedAt: null,
   },
   {
     id: 13,
@@ -342,6 +366,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-08-01"),
+    editedAt: new Date("2024-08-01"),
+    commentedAt: null,
   },
   {
     id: 14,
@@ -366,6 +392,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-09-01"),
+    editedAt: new Date("2024-09-01"),
+    commentedAt: null,
   },
   {
     id: 15,
@@ -390,6 +418,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-07-15"),
+    editedAt: new Date("2024-07-15"),
+    commentedAt: null,
   },
   {
     id: 16,
@@ -430,6 +460,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-10-01"),
+    editedAt: new Date("2024-10-01"),
+    commentedAt: null,
   },
   {
     id: 17,
@@ -454,6 +486,8 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-09-15"),
+    editedAt: new Date("2024-09-15"),
+    commentedAt: null,
   },
   {
     id: 18,
@@ -478,5 +512,7 @@ export const mockActivityReportData = [
     ],
     evidenceFiles: [],
     professorApprovedAt: new Date("2024-08-15"),
+    editedAt: new Date("2024-08-15"),
+    commentedAt: null,
   },
 ];

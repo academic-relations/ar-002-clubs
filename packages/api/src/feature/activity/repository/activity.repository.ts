@@ -4,7 +4,7 @@ import {
   ActivityStatusEnum,
   ActivityTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { and, asc, eq, gt, inArray, isNull, lte } from "drizzle-orm";
+import { and, asc, eq, gt, inArray, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -59,6 +59,7 @@ export default class ActivityRepository {
         .update(Activity)
         .set({
           deletedAt,
+          editedAt: deletedAt,
         })
         .where(
           and(eq(Activity.id, contents.activityId), isNull(Activity.deletedAt)),
@@ -450,6 +451,7 @@ export default class ActivityRepository {
           evidence: param.evidence,
           activityDId: param.activityDId,
           activityStatusEnumId: Number(param.activityStatusEnumId),
+          editedAt: deletedAt,
         })
         .where(eq(Activity.id, param.activityId));
       if (activitySetResult.affectedRows !== 1) {
@@ -624,6 +626,7 @@ export default class ActivityRepository {
         .update(Activity)
         .set({
           activityStatusEnumId: param.activityStatusEnumId,
+          commentedAt: new Date(),
         })
         .where(
           and(eq(Activity.id, param.activityId), isNull(Activity.deletedAt)),
@@ -709,9 +712,10 @@ export default class ActivityRepository {
     return result;
   }
 
-  async fetchActivitySummaries(
-    activityIds: number[],
-  ): Promise<IActivitySummary[]> {
+  async fetchSummaries(activityIds: number[]): Promise<IActivitySummary[]> {
+    if (activityIds.length === 0) {
+      return [];
+    }
     const result = await this.db
       .select({
         id: Activity.id,
@@ -722,5 +726,52 @@ export default class ActivityRepository {
         and(inArray(Activity.id, activityIds), isNull(Activity.deletedAt)),
       );
     return result;
+  }
+
+  /**
+   * @param clubId
+   * @param semesterId
+   * @description 해당학기의 선택가능한 ActivitySummary를 반환합니다.
+   * 선택가능한 활동이란, 승인되거나 운위로 넘겨진 경우를 의미합니다.
+   */
+
+  async fetchAvailableSummaries(
+    clubId: number,
+    activityDId: number,
+  ): Promise<IActivitySummary[]> {
+    const result = await this.db
+      .select({
+        id: Activity.id,
+        name: Activity.name,
+      })
+      .from(Activity)
+      .where(
+        and(
+          eq(Activity.clubId, clubId),
+          eq(Activity.activityDId, activityDId),
+          or(
+            eq(Activity.activityStatusEnumId, ActivityStatusEnum.Approved),
+            eq(Activity.activityStatusEnumId, ActivityStatusEnum.Committee),
+          ),
+          isNull(Activity.deletedAt),
+        ),
+      );
+    return result;
+  }
+
+  async fetchParticipantIds(activityId: number): Promise<number[]> {
+    const result = await this.db
+      .select({
+        id: ActivityParticipant.studentId,
+      })
+      .from(ActivityParticipant)
+      .where(
+        and(
+          eq(ActivityParticipant.activityId, activityId),
+          isNull(ActivityParticipant.deletedAt),
+        ),
+      );
+
+    return result.map(participant => participant.id);
   }
 }

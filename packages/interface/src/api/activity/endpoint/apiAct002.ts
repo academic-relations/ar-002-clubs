@@ -64,6 +64,8 @@ const responseBodyMap = {
     ),
     updatedAt: z.coerce.date(),
     professorApprovedAt: z.coerce.date().nullable(),
+    editedAt: z.coerce.date(),
+    commentedAt: z.coerce.date().nullable(),
   }),
 };
 

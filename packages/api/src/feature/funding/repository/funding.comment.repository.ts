@@ -10,7 +10,7 @@ import { MFundingComment } from "@sparcs-clubs/api/feature/funding/model/funding
 export default class FundingCommentRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  async fetchComments(fundingId: number): Promise<MFundingComment[]> {
+  async fetchAll(fundingId: number): Promise<MFundingComment[]> {
     const result = await this.db
       .select()
       .from(FundingFeedback)

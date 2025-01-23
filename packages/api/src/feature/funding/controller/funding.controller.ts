@@ -35,6 +35,16 @@ import apiFnd006, {
   ApiFnd006RequestParam,
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/apiFnd006";
+import apiFnd007, {
+  ApiFnd007RequestQuery,
+  ApiFnd007RequestUrl,
+  ApiFnd007ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/apiFnd007";
+import apiFnd008, {
+  ApiFnd008RequestQuery,
+  ApiFnd008RequestUrl,
+  ApiFnd008ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/apiFnd008";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -106,17 +116,42 @@ export default class FundingController {
   }
 
   @Student()
-  @Get("student/fundings/semesters/semester/:semesterId")
+  @Get("student/fundings/activity-durations/activity-duration/:activityDId")
   @UsePipes(new ZodPipe(apiFnd006))
-  async getStudentFundingSemester(
+  async getStudentFundingActivityDuration(
     @GetStudent() user: GetStudent,
     @Param() param: ApiFnd006RequestParam,
     @Body() body: ApiFnd006RequestBody,
   ): Promise<ApiFnd006ResponseOk> {
-    return this.fundingService.getStudentFundingSemester(
+    return this.fundingService.getStudentFundingActivityDuration(
       user.studentId,
       param,
       body,
+    );
+  }
+
+  @Student()
+  @Get(ApiFnd007RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd007))
+  async getStudentFundingActivity(
+    @GetStudent() user: GetStudent,
+    @Query() query: ApiFnd007RequestQuery,
+  ): Promise<ApiFnd007ResponseOk> {
+    return this.fundingService.getStudentFundingActivity(
+      user.studentId,
+      query.clubId,
+    );
+  }
+
+  @Student()
+  @Get(ApiFnd008RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd008))
+  async getStudentFundingActivityParticipants(
+    @GetStudent() user: GetStudent,
+    @Query() query: ApiFnd008RequestQuery,
+  ): Promise<ApiFnd008ResponseOk> {
+    return this.fundingService.getStudentFundingActivityParticipants(
+      query.activityId,
     );
   }
 }

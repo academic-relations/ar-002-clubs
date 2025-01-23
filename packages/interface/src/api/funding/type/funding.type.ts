@@ -41,7 +41,6 @@ export const zTransportation = z.object({
   origin: z.string().max(255).optional(),
   destination: z.string().max(255).optional(),
   purpose: z.string().optional(),
-  placeValidity: z.string().optional(),
   passengers: z.array(zStudentSummary.pick({ id: true })),
 });
 
@@ -59,7 +58,7 @@ export const zMinorExpense = z.object({
 export const zFunding = z.object({
   id: z.coerce.number().int().min(1),
   clubId: z.coerce.number().int().min(1),
-  semesterId: z.coerce.number().int().min(1),
+  activityDId: z.coerce.number().int().min(1),
   fundingStatusEnum: z.coerce.number().int().min(1),
   purposeActivity: zActivitySummary.pick({ id: true }).optional(),
   name: z.string().max(255).min(1),
@@ -101,19 +100,30 @@ export const zFunding = z.object({
 
   isEtcExpense: z.coerce.boolean(),
   etcExpense: zMinorExpense.optional(),
+
+  editedAt: z.coerce.date(),
+  commentedAt: z.coerce.date().optional(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date().optional(),
+  deletedAt: z.coerce.date().optional(),
 });
 
 const zFundingExtra = zFunding.pick({
-  semesterId: true,
+  activityDId: true,
   fundingStatusEnum: true,
   approvedAmount: true,
 });
 
 const zFundingRequestBase = zFunding.omit({
   id: true,
-  semesterId: true,
+  activityDId: true,
   fundingStatusEnum: true,
   approvedAmount: true,
+  editedAt: true,
+  commentedAt: true,
+  createdAt: true,
+  updatedAt: true,
+  deletedAt: true,
 });
 
 export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {
@@ -188,20 +198,6 @@ export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {
         code: z.ZodIssueCode.custom,
         message: "transportation is required",
       });
-    }
-    if (
-      data.transportation?.enum === TransportationEnum.CallVan ||
-      data.transportation?.enum === TransportationEnum.Cargo ||
-      data.transportation?.enum === TransportationEnum.Airplane ||
-      data.transportation?.enum === TransportationEnum.Ship ||
-      data.transportation?.enum === TransportationEnum.Others
-    ) {
-      if (!data.transportation?.placeValidity) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "transportationPlaceValidity is required",
-        });
-      }
     }
   }
 

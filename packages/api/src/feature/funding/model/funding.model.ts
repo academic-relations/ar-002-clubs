@@ -13,13 +13,16 @@ export type FundingDBResult = {
     id: number;
     clubId: number;
     purposeActivityId?: number;
-    semesterId?: number;
+    activityDId: number;
     fundingStatusEnum?: number;
     name: string;
     expenditureDate: Date;
     expenditureAmount: number;
     approvedAmount?: number;
-    createdAt?: Date;
+    editedAt: Date;
+    commentedAt?: Date;
+    createdAt: Date;
+    updatedAt?: Date;
     deletedAt?: Date;
     isFixture: boolean;
     isTransportation: boolean;
@@ -60,7 +63,6 @@ export type FundingDBResult = {
     origin: string;
     destination: string;
     purposeOfTransportation: string;
-    placeValidity: string;
   };
   fundingFeedback?: {
     feedback?: string;
@@ -98,7 +100,7 @@ export class MFunding implements IFunding {
 
   clubId: number;
 
-  semesterId: number;
+  activityDId: number;
 
   fundingStatusEnum: number;
 
@@ -160,6 +162,14 @@ export class MFunding implements IFunding {
 
   etcExpense?: IMinorExpense;
 
+  editedAt: Date;
+
+  commentedAt?: Date;
+
+  createdAt: Date;
+
+  updatedAt?: Date;
+
   constructor(data: MFunding) {
     Object.assign(this, data);
   }
@@ -169,7 +179,7 @@ export class MFunding implements IFunding {
       id: result.funding.id,
       clubId: result.funding.clubId,
       name: result.funding.name,
-      semesterId: result.funding.semesterId,
+      activityDId: result.funding.activityDId,
       fundingStatusEnum: result.funding.fundingStatusEnum,
       purposeActivity: result.funding.purposeActivityId
         ? {
@@ -241,7 +251,6 @@ export class MFunding implements IFunding {
             origin: result.funding.origin,
             destination: result.funding.destination,
             purpose: result.funding.purposeOfTransportation,
-            placeValidity: result.funding.placeValidity,
             passengers: result.transportationPassengers.map(passenger => ({
               id: passenger.id,
             })),
@@ -312,6 +321,10 @@ export class MFunding implements IFunding {
             })),
           }
         : undefined,
+      editedAt: result.funding.editedAt,
+      commentedAt: result.funding.commentedAt,
+      createdAt: result.funding.createdAt,
+      updatedAt: result.funding.updatedAt,
     });
   }
 }
