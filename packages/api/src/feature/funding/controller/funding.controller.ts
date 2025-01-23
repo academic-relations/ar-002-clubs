@@ -38,14 +38,29 @@ import apiFnd006, {
 import apiFnd007, {
   ApiFnd007ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
+import apiFnd012, {
+  ApiFnd012RequestParam,
+  ApiFnd012RequestUrl,
+  ApiFnd012ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd012";
+import apiFnd013, {
+  ApiFnd013RequestBody,
+  ApiFnd013RequestParam,
+  ApiFnd013RequestUrl,
+  ApiFnd013ResponseCreated,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd013";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
 import {
+  Executive,
   Public,
   Student,
 } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
-import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
+import {
+  GetExecutive,
+  GetStudent,
+} from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
 import FundingService from "../service/funding.service";
 
@@ -131,5 +146,32 @@ export default class FundingController {
   @UsePipes(new ZodPipe(apiFnd007))
   async getPublicFundingsDeadline(): Promise<ApiFnd007ResponseOk> {
     return this.fundingService.getPublicFundingsDeadline();
+  }
+
+  @Executive()
+  @Get(ApiFnd012RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd012))
+  async getExecutiveFunding(
+    @GetExecutive() executive: GetExecutive,
+    @Param() param: ApiFnd012RequestParam,
+  ): Promise<ApiFnd012ResponseOk> {
+    return this.fundingService.getExecutiveFunding(executive.id, param.id);
+  }
+
+  @Executive()
+  @Post(ApiFnd013RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd013))
+  async postExecutiveFundingComment(
+    @GetExecutive() executive: GetExecutive,
+    @Param() param: ApiFnd013RequestParam,
+    @Body() body: ApiFnd013RequestBody,
+  ): Promise<ApiFnd013ResponseCreated> {
+    return this.fundingService.postExecutiveFundingComment(
+      executive.id,
+      param.id,
+      param.fundingStatusEnum,
+      body.approvedAmount,
+      body.content,
+    );
   }
 }

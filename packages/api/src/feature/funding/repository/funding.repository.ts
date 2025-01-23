@@ -8,7 +8,10 @@ import {
 import { and, eq, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
-import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
+import {
+  DrizzleAsyncProvider,
+  DrizzleTransaction,
+} from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   Funding,
   FundingClubSuppliesImageFile,
@@ -31,6 +34,10 @@ import {
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 import { MFunding } from "../model/funding.model";
+import {
+  FundingSummaryDBResult,
+  VFundingSummary,
+} from "../model/funding.summary.model";
 
 @Injectable()
 export default class FundingRepository {
@@ -841,5 +848,45 @@ export default class FundingRepository {
 
       return this.fetch(id);
     });
+  }
+
+  async fetchSummary(
+    id: number,
+    transaction?: DrizzleTransaction,
+  ): Promise<VFundingSummary> {
+    const db = transaction || this.db;
+
+    const result = (await db
+      .select()
+      .from(Funding)
+      .where(eq(Funding.id, id))) as FundingSummaryDBResult[];
+
+    if (result.length === 0) {
+      throw new NotFoundException(`Funding: ${id} not found`);
+    }
+
+    return VFundingSummary.fromDBResult(result[0]);
+  }
+
+  async patchStatus(
+    { id, fundingStatusEnum, approvedAmount, commentedAt },
+    transaction?: DrizzleTransaction,
+  ): Promise<VFundingSummary> {
+    // summary를 가져오는 이유: DB부담 최소화
+    const db = transaction || this.db;
+
+    const now = new Date();
+
+    await db
+      .update(Funding)
+      .set({
+        fundingStatusEnum,
+        approvedAmount,
+        commentedAt,
+        editedAt: now,
+      })
+      .where(eq(Funding.id, id));
+
+    return this.fetchSummary(id);
   }
 }

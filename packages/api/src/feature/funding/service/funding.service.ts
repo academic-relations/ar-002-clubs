@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 
 import {
   ApiFnd001RequestBody,
@@ -27,13 +27,21 @@ import {
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
 import { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
+import { ApiFnd012ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd012";
+import { ApiFnd013ResponseCreated } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd013";
 
 import {
-  IFundingCommentResponse,
+  IFunding,
+  IFundingComment,
+  IFundingCommentRequestCreate,
   IFundingResponse,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
+import { IExecutive } from "@sparcs-clubs/interface/api/user/type/user.type";
+
+import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
+import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import ActivityPublicService from "@sparcs-clubs/api/feature/activity/service/activity.public.service";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
@@ -53,6 +61,7 @@ export default class FundingService {
     private readonly clubPublicService: ClubPublicService,
     private readonly activityPublicService: ActivityPublicService,
     private fundingDeadlineRepository: FundingDeadlineRepository,
+    @Inject(DrizzleAsyncProvider) private db: MySql2Database,
   ) {}
 
   async postStudentFunding(
@@ -219,9 +228,7 @@ export default class FundingService {
       );
     }
 
-    const comments = (await this.fundingCommentRepository.fetchAll(
-      funding.id,
-    )) as IFundingCommentResponse[];
+    const comments = await this.fundingCommentRepository.fetchAll(funding.id);
 
     const chargedExecutive =
       await this.userPublicService.fetchExecutiveSummaries(
@@ -234,8 +241,12 @@ export default class FundingService {
         executive => executive.id === comment.chargedExecutive.id,
       );
     });
-
-    funding.comments = comments;
+    funding.comments = comments.map(comment => ({
+      ...comment,
+      chargedExecutive: chargedExecutive.find(
+        executive => executive.id === comment.chargedExecutive.id,
+      ),
+    }));
 
     return funding;
   }
@@ -363,5 +374,209 @@ export default class FundingService {
       targetDuration,
       deadline,
     };
+  }
+
+  /**
+   * @description 집행부원이 검토를 위해 지원금 신청을 조회합니다.
+   * @returns 집행부원 검토를 위한 지원금 신청 정보를 리턴합니다.
+   * 들어온 executive Id가 현재 집행부원인지 확인합니다.
+   */
+  async getExecutiveFunding(
+    id: IFunding["id"],
+    executiveId: IExecutive["id"],
+  ): Promise<ApiFnd012ResponseOk> {
+    await this.userPublicService.checkCurrentExecutive(executiveId);
+
+    const funding = (await this.fundingRepository.fetch(
+      id,
+    )) as IFundingResponse; // TODO: 이거 이래도 되나? comments 필드가 없는데. 에러 안나나?
+
+    funding.tradeEvidenceFiles = await this.filePublicService.getFilesByIds(
+      funding.tradeEvidenceFiles.flatMap(file => file.id),
+    );
+    funding.tradeDetailFiles = await this.filePublicService.getFilesByIds(
+      funding.tradeDetailFiles.flatMap(file => file.id),
+    );
+
+    if (funding.purposeActivity) {
+      funding.purposeActivity =
+        await this.activityPublicService.getActivitySummary(
+          funding.purposeActivity.id,
+        );
+    }
+
+    if (funding.clubSupplies?.imageFiles) {
+      funding.clubSupplies.imageFiles =
+        await this.filePublicService.getFilesByIds(
+          funding.clubSupplies.imageFiles.flatMap(file => file.id),
+        );
+    }
+
+    if (funding.clubSupplies?.softwareEvidenceFiles) {
+      funding.clubSupplies.softwareEvidenceFiles =
+        await this.filePublicService.getFilesByIds(
+          funding.clubSupplies.softwareEvidenceFiles.flatMap(file => file.id),
+        );
+    }
+
+    if (funding.fixture?.imageFiles) {
+      funding.fixture.imageFiles = await this.filePublicService.getFilesByIds(
+        funding.fixture.imageFiles.flatMap(file => file.id),
+      );
+    }
+
+    if (funding.fixture?.softwareEvidenceFiles) {
+      funding.fixture.softwareEvidenceFiles =
+        await this.filePublicService.getFilesByIds(
+          funding.fixture.softwareEvidenceFiles.flatMap(file => file.id),
+        );
+    }
+
+    if (funding.foodExpense) {
+      funding.foodExpense.files = await this.filePublicService.getFilesByIds(
+        funding.foodExpense.files.flatMap(file => file.id),
+      );
+    }
+
+    if (funding.laborContract) {
+      funding.laborContract.files = await this.filePublicService.getFilesByIds(
+        funding.laborContract.files.flatMap(file => file.id),
+      );
+    }
+
+    if (funding.externalEventParticipationFee) {
+      funding.externalEventParticipationFee.files =
+        await this.filePublicService.getFilesByIds(
+          funding.externalEventParticipationFee.files.flatMap(file => file.id),
+        );
+    }
+
+    if (funding.publication) {
+      funding.publication.files = await this.filePublicService.getFilesByIds(
+        funding.publication.files.flatMap(file => file.id),
+      );
+    }
+
+    if (funding.profitMakingActivity) {
+      funding.profitMakingActivity.files =
+        await this.filePublicService.getFilesByIds(
+          funding.profitMakingActivity.files.flatMap(file => file.id),
+        );
+    }
+
+    if (funding.jointExpense) {
+      funding.jointExpense.files = await this.filePublicService.getFilesByIds(
+        funding.laborContract.files.flatMap(file => file.id),
+      );
+    }
+
+    if (funding.etcExpense) {
+      funding.etcExpense.files = await this.filePublicService.getFilesByIds(
+        funding.etcExpense.files.flatMap(file => file.id),
+      );
+    }
+
+    if (funding.publication) {
+      funding.publication.files = await this.filePublicService.getFilesByIds(
+        funding.publication.files.flatMap(file => file.id),
+      );
+    }
+
+    if (funding.profitMakingActivity) {
+      funding.profitMakingActivity.files =
+        await this.filePublicService.getFilesByIds(
+          funding.profitMakingActivity.files.flatMap(file => file.id),
+        );
+    }
+
+    if (funding.jointExpense) {
+      funding.jointExpense.files = await this.filePublicService.getFilesByIds(
+        funding.jointExpense.files.flatMap(file => file.id),
+      );
+    }
+
+    if (funding.etcExpense) {
+      funding.etcExpense.files = await this.filePublicService.getFilesByIds(
+        funding.etcExpense.files.flatMap(file => file.id),
+      );
+    }
+
+    if (funding.transportation?.passengers) {
+      funding.transportation.passengers =
+        await this.userPublicService.fetchStudentSummaries(
+          funding.transportation.passengers.flatMap(passenger => passenger.id),
+        );
+
+      funding.transportation.passengers = funding.transportation.passengers.map(
+        passenger => ({
+          id: passenger.id,
+          name: passenger.name,
+          studentNumber: passenger.studentNumber,
+        }),
+      );
+    }
+
+    const comments = await this.fundingCommentRepository.fetchAll(funding.id);
+
+    const chargedExecutive =
+      await this.userPublicService.fetchExecutiveSummaries(
+        comments.map(comment => comment.chargedExecutive.id),
+      );
+
+    funding.comments = comments.map(comment => ({
+      ...comment,
+      chargedExecutive: chargedExecutive.find(
+        executive => executive.id === comment.chargedExecutive.id,
+      ),
+    }));
+
+    return funding;
+  }
+
+  /**
+   * @description 집행부원으로서 지원금 신청에 comment를 남깁니다.
+   * @returns
+   */
+  async postExecutiveFundingComment(
+    executiveId: IExecutive["id"],
+    id: IFunding["id"],
+    fundingStatusEnum: IFundingComment["fundingStatusEnum"],
+    approvedAmount: IFundingComment["approvedAmount"],
+    content: IFundingComment["content"],
+  ): Promise<ApiFnd013ResponseCreated> {
+    const fundingComment = await this.db.transaction(async tx => {
+      const comment = await this.fundingCommentRepository.insert(
+        {
+          fundingStatusEnum,
+          approvedAmount,
+          funding: { id },
+          chargedExecutive: { id: executiveId },
+          content,
+        } as IFundingCommentRequestCreate,
+        tx,
+      );
+
+      const funding = await this.fundingRepository.patchStatus(
+        {
+          id,
+          fundingStatusEnum,
+          approvedAmount,
+          commentedAt: comment.createdAt,
+        },
+        tx,
+      );
+
+      // funding 이랑 comment 의 값들이 다르면 에러
+      if (!comment.isFinalComment(funding)) {
+        throw new HttpException(
+          "Funding and Comment Has Different Value",
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      return comment;
+    });
+
+    return fundingComment;
   }
 }
