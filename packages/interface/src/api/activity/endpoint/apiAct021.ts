@@ -1,8 +1,9 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zActivitySummary } from "../activity/type/activity.type";
-import { zClub } from "../club/type/club.type";
+// eslint-disable-next-line no-restricted-imports
+import { zClub } from "../../club/type/club.type";
+import { zActivitySummary } from "../type/activity.type";
 
 /**
  * @version v0.1
@@ -11,9 +12,9 @@ import { zClub } from "../club/type/club.type";
  * 오늘이 지원금 작성 or 수정 기간이어야 합니다.
  */
 
-const url = () => "/student/fundings/activities";
+const url = () => "/student/activities/available";
 const method = "GET";
-export const ApiFnd007RequestUrl = "/student/fundings/activities";
+export const ApiAct021RequestUrl = "/student/activities/available";
 
 const requestParam = z.object({});
 
@@ -31,7 +32,7 @@ const responseBodyMap = {
 
 const responseErrorMap = {};
 
-const apiFnd007 = {
+const apiAct021 = {
   url,
   method,
   requestParam,
@@ -41,16 +42,16 @@ const apiFnd007 = {
   responseErrorMap,
 };
 
-type ApiFnd007RequestParam = z.infer<typeof apiFnd007.requestParam>;
-type ApiFnd007RequestQuery = z.infer<typeof apiFnd007.requestQuery>;
-type ApiFnd007RequestBody = z.infer<typeof apiFnd007.requestBody>;
-type ApiFnd007ResponseOk = z.infer<(typeof apiFnd007.responseBodyMap)[200]>;
+type ApiAct021RequestParam = z.infer<typeof apiAct021.requestParam>;
+type ApiAct021RequestQuery = z.infer<typeof apiAct021.requestQuery>;
+type ApiAct021RequestBody = z.infer<typeof apiAct021.requestBody>;
+type ApiAct021ResponseOk = z.infer<(typeof apiAct021.responseBodyMap)[200]>;
 
-export default apiFnd007;
+export default apiAct021;
 
 export type {
-  ApiFnd007RequestBody,
-  ApiFnd007RequestParam,
-  ApiFnd007RequestQuery,
-  ApiFnd007ResponseOk,
+  ApiAct021RequestBody,
+  ApiAct021RequestParam,
+  ApiAct021RequestQuery,
+  ApiAct021ResponseOk,
 };

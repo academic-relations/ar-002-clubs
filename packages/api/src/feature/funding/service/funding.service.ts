@@ -3,31 +3,30 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import {
   ApiFnd001RequestBody,
   ApiFnd001ResponseCreated,
-} from "@sparcs-clubs/interface/api/funding/apiFnd001";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd001";
 import {
   ApiFnd002RequestParam,
   ApiFnd002ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd002";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
 import {
   ApiFnd003RequestBody,
   ApiFnd003RequestParam,
   ApiFnd003ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd003";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd003";
 import {
   ApiFnd004RequestParam,
   ApiFnd004ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd004";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd004";
 import {
   ApiFnd005RequestQuery,
   ApiFnd005ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd005";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
 import {
   ApiFnd006RequestBody,
   ApiFnd006RequestParam,
   ApiFnd006ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd006";
-import { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/apiFnd007";
-import { ApiFnd008ResponseOk } from "@sparcs-clubs/interface/api/funding/apiFnd008";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
+import { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
 
 import {
   IFundingCommentResponse,
@@ -41,6 +40,7 @@ import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.publi
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import FundingCommentRepository from "../repository/funding.comment.repository";
+import FundingDeadlineRepository from "../repository/funding.deadline.repository";
 import FundingRepository from "../repository/funding.repository";
 
 @Injectable()
@@ -52,6 +52,7 @@ export default class FundingService {
     private readonly userPublicService: UserPublicService,
     private readonly clubPublicService: ClubPublicService,
     private readonly activityPublicService: ActivityPublicService,
+    private fundingDeadlineRepository: FundingDeadlineRepository,
   ) {}
 
   async postStudentFunding(
@@ -346,35 +347,21 @@ export default class FundingService {
     };
   }
 
-  async getStudentFundingActivity(
-    studentId: number,
-    clubId: number,
-  ): Promise<ApiFnd007ResponseOk> {
-    const [isStudentDelegate] = await Promise.all([
-      this.clubPublicService.isStudentDelegate(studentId, clubId),
+  /**
+   * @description 지원금 신청의 작성 기한을 확인합니다.
+   * @returns 현재 시점의 지원금 신청 마감 기한과 대상 활동 기간을 리턴합니다.
+   */
+  async getPublicFundingsDeadline(): Promise<ApiFnd007ResponseOk> {
+    const today = getKSTDate();
+
+    const [targetDuration, deadline] = await Promise.all([
+      this.activityPublicService.fetchLastActivityD(),
+      this.fundingDeadlineRepository.fetch(today),
     ]);
-    if (!isStudentDelegate) {
-      throw new HttpException(
-        `Student ${studentId} is not the delegate of Club ${clubId}`,
-        HttpStatus.FORBIDDEN,
-      );
-    }
-
-    const activities =
-      await this.activityPublicService.fetchAvailableSummaries(clubId);
 
     return {
-      activities,
-    };
-  }
-
-  async getStudentFundingActivityParticipants(
-    activityId: number,
-  ): Promise<ApiFnd008ResponseOk> {
-    const participants =
-      await this.activityPublicService.fetchParticipantSummaries(activityId);
-    return {
-      participants,
+      targetDuration,
+      deadline,
     };
   }
 }
