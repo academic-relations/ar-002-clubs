@@ -12,46 +12,42 @@ import {
 import apiFnd001, {
   ApiFnd001RequestBody,
   ApiFnd001ResponseCreated,
-} from "@sparcs-clubs/interface/api/funding/apiFnd001";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd001";
 import apiFnd002, {
   ApiFnd002RequestParam,
   ApiFnd002ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd002";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
 import apiFnd003, {
   ApiFnd003RequestBody,
   ApiFnd003RequestParam,
   ApiFnd003ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd003";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd003";
 import apiFnd004, {
   ApiFnd004RequestParam,
   ApiFnd004ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd004";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd004";
 import apiFnd005, {
   ApiFnd005RequestQuery,
   ApiFnd005ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd005";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
 import apiFnd006, {
   ApiFnd006RequestBody,
   ApiFnd006RequestParam,
   ApiFnd006ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd006";
-import apiFnd007, {
-  ApiFnd007RequestQuery,
-  ApiFnd007RequestUrl,
-  ApiFnd007ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd007";
-import apiFnd008, {
-  ApiFnd008RequestQuery,
-  ApiFnd008RequestUrl,
-  ApiFnd008ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd008";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
+import apiFnd007 from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
-import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import {
+  Public,
+  Student,
+} from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
 import FundingService from "../service/funding.service";
+
+import type { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
 
 @Controller()
 export default class FundingController {
@@ -130,28 +126,10 @@ export default class FundingController {
     );
   }
 
-  @Student()
-  @Get(ApiFnd007RequestUrl)
+  @Public()
+  @Get("/public/fundings/deadline")
   @UsePipes(new ZodPipe(apiFnd007))
-  async getStudentFundingActivity(
-    @GetStudent() user: GetStudent,
-    @Query() query: ApiFnd007RequestQuery,
-  ): Promise<ApiFnd007ResponseOk> {
-    return this.fundingService.getStudentFundingActivity(
-      user.studentId,
-      query.clubId,
-    );
-  }
-
-  @Student()
-  @Get(ApiFnd008RequestUrl)
-  @UsePipes(new ZodPipe(apiFnd008))
-  async getStudentFundingActivityParticipants(
-    @GetStudent() user: GetStudent,
-    @Query() query: ApiFnd008RequestQuery,
-  ): Promise<ApiFnd008ResponseOk> {
-    return this.fundingService.getStudentFundingActivityParticipants(
-      query.activityId,
-    );
+  async getPublicFundingsDeadline(): Promise<ApiFnd007ResponseOk> {
+    return this.fundingService.getPublicFundingsDeadline();
   }
 }

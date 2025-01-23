@@ -7,7 +7,6 @@ export enum FundingStatusEnum {
 }
 
 export enum FundingDeadlineEnum {
-  Activity = 1, // 활동
   Writing, // 작성
   Revision, // 수정
   Review, // 검토

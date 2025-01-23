@@ -1,6 +1,6 @@
 import apiFnd002, {
   ApiFnd002ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd002";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
 import { useQuery } from "@tanstack/react-query";
 
 import {
