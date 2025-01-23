@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zFundingResponse } from "./type/funding.type";
+import { zFundingResponse } from "../type/funding.type";
 
 /**
  * @version v0.1
@@ -12,7 +12,7 @@ import { zFundingResponse } from "./type/funding.type";
 
 const url = (id: number) => `/executive/fundings/funding/${id}`;
 const method = "GET";
-export const ApiFnd013RequestUrl = "/executive/fundings/funding/:id";
+export const ApiFnd012RequestUrl = "/executive/fundings/funding/:id";
 
 const requestParam = z.object({
   id: z.coerce.number().int().min(1),
@@ -28,7 +28,7 @@ const responseBodyMap = {
 
 const responseErrorMap = {};
 
-const apiFnd013 = {
+const apiFnd012 = {
   url,
   method,
   requestParam,
@@ -38,16 +38,16 @@ const apiFnd013 = {
   responseErrorMap,
 };
 
-type ApiFnd013RequestParam = z.infer<typeof apiFnd013.requestParam>;
-type ApiFnd013RequestQuery = z.infer<typeof apiFnd013.requestQuery>;
-type ApiFnd013RequestBody = z.infer<typeof apiFnd013.requestBody>;
-type ApiFnd013ResponseOk = z.infer<(typeof apiFnd013.responseBodyMap)[200]>;
+type ApiFnd012RequestParam = z.infer<typeof apiFnd012.requestParam>;
+type ApiFnd012RequestQuery = z.infer<typeof apiFnd012.requestQuery>;
+type ApiFnd012RequestBody = z.infer<typeof apiFnd012.requestBody>;
+type ApiFnd012ResponseOk = z.infer<(typeof apiFnd012.responseBodyMap)[200]>;
 
-export default apiFnd013;
+export default apiFnd012;
 
 export type {
-  ApiFnd013RequestParam,
-  ApiFnd013RequestQuery,
-  ApiFnd013RequestBody,
-  ApiFnd013ResponseOk,
+  ApiFnd012RequestParam,
+  ApiFnd012RequestQuery,
+  ApiFnd012RequestBody,
+  ApiFnd012ResponseOk,
 };

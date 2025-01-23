@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
-import { zFunding, zFundingComment } from "./type/funding.type";
+import { zFunding, zFundingComment } from "../type/funding.type";
 
 /**
  * @version v0.1
@@ -13,7 +13,7 @@ import { zFunding, zFundingComment } from "./type/funding.type";
 const url = (id: number, fundingStatusEnum: FundingStatusEnum) =>
   `/executive/fundings/funding/${id}/comments/${fundingStatusEnum}`;
 const method = "POST";
-export const ApiFnd014RequestUrl =
+export const ApiFnd013RequestUrl =
   "/executive/fundings/funding/:id/comments/:fundingStatusEnum";
 
 const requestParam = z.object({
@@ -35,7 +35,7 @@ const responseBodyMap = {
 
 const responseErrorMap = {};
 
-const apiFnd014 = {
+const apiFnd013 = {
   url,
   method,
   requestParam,
@@ -45,16 +45,16 @@ const apiFnd014 = {
   responseErrorMap,
 };
 
-type ApiFnd014RequestParam = z.infer<typeof apiFnd014.requestParam>;
-type ApiFnd014RequestQuery = z.infer<typeof apiFnd014.requestQuery>;
-type ApiFnd014RequestBody = z.infer<typeof apiFnd014.requestBody>;
-type ApiFnd014ResponseOk = z.infer<(typeof apiFnd014.responseBodyMap)[200]>;
+type ApiFnd013RequestParam = z.infer<typeof apiFnd013.requestParam>;
+type ApiFnd013RequestQuery = z.infer<typeof apiFnd013.requestQuery>;
+type ApiFnd013RequestBody = z.infer<typeof apiFnd013.requestBody>;
+type ApiFnd013ResponseOk = z.infer<(typeof apiFnd013.responseBodyMap)[200]>;
 
-export default apiFnd014;
+export default apiFnd013;
 
 export type {
-  ApiFnd014RequestParam,
-  ApiFnd014RequestQuery,
-  ApiFnd014RequestBody,
-  ApiFnd014ResponseOk,
+  ApiFnd013RequestParam,
+  ApiFnd013RequestQuery,
+  ApiFnd013RequestBody,
+  ApiFnd013ResponseOk,
 };
