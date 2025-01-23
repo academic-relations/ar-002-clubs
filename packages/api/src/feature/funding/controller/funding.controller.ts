@@ -35,7 +35,9 @@ import apiFnd006, {
   ApiFnd006RequestParam,
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
-import apiFnd007 from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
+import apiFnd007, {
+  ApiFnd007ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -46,8 +48,6 @@ import {
 import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
 import FundingService from "../service/funding.service";
-
-import type { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
 
 @Controller()
 export default class FundingController {
