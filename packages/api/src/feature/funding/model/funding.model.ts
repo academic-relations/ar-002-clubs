@@ -7,6 +7,7 @@ import {
   INonCorporateTransaction,
   ITransportation,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
+import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
 export type FundingDBResult = {
   funding: {
@@ -98,11 +99,11 @@ export type FundingDBResult = {
 export class MFunding implements IFunding {
   id: number;
 
-  clubId: number;
+  club: { id: number };
 
-  activityDId: number;
+  activityD: { id: number };
 
-  fundingStatusEnum: number;
+  fundingStatusEnum: FundingStatusEnum;
 
   purposeActivity?: Pick<IActivitySummary, "id">;
 
@@ -177,9 +178,9 @@ export class MFunding implements IFunding {
   static fromDBResult(result: FundingDBResult) {
     return new MFunding({
       id: result.funding.id,
-      clubId: result.funding.clubId,
+      club: { id: result.funding.clubId },
       name: result.funding.name,
-      activityDId: result.funding.activityDId,
+      activityD: { id: result.funding.activityDId },
       fundingStatusEnum: result.funding.fundingStatusEnum,
       purposeActivity: result.funding.purposeActivityId
         ? {

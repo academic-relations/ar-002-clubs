@@ -63,7 +63,7 @@ export default class FundingService {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
     if (
-      !(await this.clubPublicService.isStudentDelegate(studentId, body.clubId))
+      !(await this.clubPublicService.isStudentDelegate(studentId, body.club.id))
     ) {
       throw new HttpException("Student is not delegate", HttpStatus.FORBIDDEN);
     }
@@ -74,7 +74,7 @@ export default class FundingService {
     const approvedAmount = 0;
 
     return this.fundingRepository.insert(body, {
-      activityDId: activityD.id,
+      activityD,
       fundingStatusEnum,
       approvedAmount,
     });
@@ -249,7 +249,7 @@ export default class FundingService {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
     if (
-      !(await this.clubPublicService.isStudentDelegate(studentId, body.clubId))
+      !(await this.clubPublicService.isStudentDelegate(studentId, body.club.id))
     ) {
       throw new HttpException("Student is not delegate", HttpStatus.FORBIDDEN);
     }
@@ -260,7 +260,7 @@ export default class FundingService {
     const approvedAmount = 0;
 
     return this.fundingRepository.put(param.id, body, {
-      activityDId: activityD.id,
+      activityD,
       fundingStatusEnum,
       approvedAmount,
     });

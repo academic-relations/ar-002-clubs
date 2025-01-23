@@ -300,9 +300,9 @@ export default class FundingRepository {
     const result = await this.db.transaction(async tx => {
       // 1. Insert funding order
       const [fundingOrder] = await tx.insert(Funding).values({
-        clubId: funding.clubId,
+        clubId: funding.club.id,
         purposeActivityId: funding.purposeActivity.id,
-        activityDId: extra.activityDId,
+        activityDId: extra.activityD.id,
         fundingStatusEnum: extra.fundingStatusEnum,
         name: funding.name,
         expenditureDate: funding.expenditureDate,

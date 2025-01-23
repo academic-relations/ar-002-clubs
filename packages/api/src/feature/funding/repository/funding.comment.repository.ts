@@ -18,11 +18,8 @@ export default class FundingCommentRepository {
 
     return result.map(row =>
       MFundingComment.fromDBResult({
-        id: row.id,
-        fundingId: row.fundingId,
-        chargedExecutiveId: row.chargedExecutiveId,
+        ...row,
         content: row.feedback,
-        createdAt: row.createdAt,
       }),
     );
   }

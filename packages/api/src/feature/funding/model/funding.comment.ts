@@ -1,9 +1,12 @@
 import { IFundingComment } from "@sparcs-clubs/interface/api/funding/type/funding.type";
+import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
 export type FundingCommentDBResult = {
   id: number;
   fundingId: number;
   chargedExecutiveId: number;
+  fundingStatusEnum: FundingStatusEnum;
+  approvedAmount: number;
   content: string;
   createdAt: Date;
 };
@@ -11,13 +14,17 @@ export type FundingCommentDBResult = {
 export class MFundingComment implements IFundingComment {
   id: number;
 
-  fundingId: number;
+  funding: { id: number };
 
   chargedExecutive: {
     id: number;
   };
 
   content: string;
+
+  fundingStatusEnum: FundingStatusEnum;
+
+  approvedAmount: number;
 
   createdAt: Date;
 
@@ -28,10 +35,12 @@ export class MFundingComment implements IFundingComment {
   static fromDBResult(result: FundingCommentDBResult) {
     return new MFundingComment({
       id: result.id,
-      fundingId: result.fundingId,
+      funding: { id: result.fundingId },
       chargedExecutive: {
         id: result.chargedExecutiveId,
       },
+      fundingStatusEnum: result.fundingStatusEnum,
+      approvedAmount: result.approvedAmount,
       content: result.content,
       createdAt: result.createdAt,
     });

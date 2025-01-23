@@ -3,6 +3,7 @@ export enum FundingStatusEnum {
   Approved, // 승인
   Rejected, // 반려
   Committee, // 운위
+  Partial, // 부분 승인
 }
 
 export enum FundingDeadlineEnum {
