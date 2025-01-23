@@ -1,9 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 
-import {
-  IActivityD,
-  IActivitySummary,
-} from "@sparcs-clubs/interface/api/activity/type/activity.type";
+import { IActivityDuration } from "@sparcs-clubs/interface/api/activity/type/activity.duration.type";
+import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 
@@ -33,9 +31,9 @@ export default class ActivityPublicService {
     return this.activityRepository.fetchSummaries(activityIds);
   }
 
-  async fetchLastActivityD(): Promise<IActivityD>;
-  async fetchLastActivityD(date: Date): Promise<IActivityD>;
-  async fetchLastActivityD(arg1?: Date): Promise<IActivityD> {
+  async fetchLastActivityD(): Promise<IActivityDuration>;
+  async fetchLastActivityD(date: Date): Promise<IActivityDuration>;
+  async fetchLastActivityD(arg1?: Date): Promise<IActivityDuration> {
     if (arg1 === undefined) {
       const date = getKSTDate();
       const result =

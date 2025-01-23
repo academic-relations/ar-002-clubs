@@ -26,6 +26,7 @@ import {
   ApiFnd006RequestParam,
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/apiFnd006";
+import { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
 
 import {
   IFundingCommentResponse,
@@ -39,6 +40,7 @@ import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.publi
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import FundingCommentRepository from "../repository/funding.comment.repository";
+import FundingDeadlineRepository from "../repository/funding.deadline.repository";
 import FundingRepository from "../repository/funding.repository";
 
 @Injectable()
@@ -50,6 +52,7 @@ export default class FundingService {
     private readonly userPublicService: UserPublicService,
     private readonly clubPublicService: ClubPublicService,
     private readonly activityPublicService: ActivityPublicService,
+    private fundingDeadlineRepository: FundingDeadlineRepository,
   ) {}
 
   async postStudentFunding(
@@ -341,6 +344,24 @@ export default class FundingService {
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,
       })),
+    };
+  }
+
+  /**
+   * @description 지원금 신청의 작성 기한을 확인합니다.
+   * @returns 현재 시점의 지원금 신청 마감 기한과 대상 활동 기간을 리턴합니다.
+   */
+  async getPublicFundingsDeadline(): Promise<ApiFnd007ResponseOk> {
+    const today = getKSTDate();
+
+    const [targetDuration, deadline] = await Promise.all([
+      this.activityPublicService.fetchLastActivityD(),
+      this.fundingDeadlineRepository.fetch(today),
+    ]);
+
+    return {
+      targetDuration,
+      deadline,
     };
   }
 }

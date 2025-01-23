@@ -35,13 +35,19 @@ import apiFnd006, {
   ApiFnd006RequestParam,
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/apiFnd006";
+import apiFnd007 from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
-import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
+import {
+  Public,
+  Student,
+} from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 import { GetStudent } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
 import FundingService from "../service/funding.service";
+
+import type { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
 
 @Controller()
 export default class FundingController {
@@ -118,5 +124,12 @@ export default class FundingController {
       param,
       body,
     );
+  }
+
+  @Public()
+  @Get("/public/fundings/deadline")
+  @UsePipes(new ZodPipe(apiFnd007))
+  async getPublicFundingsDeadline(): Promise<ApiFnd007ResponseOk> {
+    return this.fundingService.getPublicFundingsDeadline();
   }
 }
