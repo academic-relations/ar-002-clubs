@@ -1397,10 +1397,10 @@ export default class ActivityService {
       );
     }
 
-    const activityDId = (await this.getLastActivityD()).id;
+    const activityD = await this.getLastActivityD();
     const activities = await this.activityRepository.fetchAvailableSummaries(
       clubId,
-      activityDId,
+      activityD.id,
     );
 
     return {
