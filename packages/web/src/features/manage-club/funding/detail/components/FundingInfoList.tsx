@@ -38,7 +38,9 @@ const FundingInfoList: React.FC<FundingInfoListProps> = ({ data }) => (
       지원금 정보
     </Typography>
     <ListItem>항목명: {data.name}</ListItem>
-    <ListItem>지출 목적: {data.purposeActivity?.name}</ListItem>
+    <ListItem>
+      지출 목적: {data.purposeActivity?.name ?? "활동보고서로 증빙 불가"}
+    </ListItem>
     <ListItem>지출 일자: {formatDate(data.expenditureDate)}</ListItem>
     <ListItem>지출 금액: {data.expenditureAmount.toLocaleString()}원</ListItem>
   </FlexWrapper>
