@@ -1,36 +1,27 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
-
-import {
-  zFunding,
-  zFundingComment,
-  zFundingCommentRequestCreate,
-} from "../type/funding.type";
+import { zFunding, zFundingCommentRequestCreate } from "../type/funding.type";
 
 /**
  * @version v0.1
  * @description 집행부원으로서 지원금 신청에 comment를 남깁니다.
  */
 
-const url = (id: number, fundingStatusEnum: FundingStatusEnum) =>
-  `/executive/fundings/funding/${id}/comments/comment/${fundingStatusEnum}`;
+const url = (id: number) =>
+  `/executive/fundings/funding/${id}/comments/comment`;
 const method = "POST";
 export const ApiFnd013RequestUrl =
-  "/executive/fundings/funding/:id/comments/comment/:fundingStatusEnum";
+  "/executive/fundings/funding/:id/comments/comment";
 
 const requestParam = z.object({
   id: zFunding.pick({ id: true }).shape.id,
-  fundingStatusEnum: zFundingComment.pick({ fundingStatusEnum: true }).shape
-    .fundingStatusEnum,
 });
 
 const requestQuery = z.object({});
 
 const requestBody = zFundingCommentRequestCreate.omit({
   funding: true,
-  fundingStatusEnum: true,
   chargedExecutive: true,
 });
 

@@ -36,7 +36,11 @@ export class MFundingComment implements IFundingComment {
   }
 
   isFinalComment(funding: VFundingSummary | MFunding): boolean {
-    return Object.keys(this).every(key => this[key] === funding[key]);
+    return (
+      funding.approvedAmount === this.approvedAmount &&
+      funding.fundingStatusEnum === this.fundingStatusEnum &&
+      funding.id === this.funding.id
+    );
   }
 
   static fromDBResult(result: FundingCommentDBResult) {

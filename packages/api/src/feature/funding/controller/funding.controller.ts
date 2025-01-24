@@ -170,9 +170,9 @@ export default class FundingController {
     @Body() body: ApiFnd013RequestBody,
   ): Promise<ApiFnd013ResponseCreated> {
     return this.fundingService.postExecutiveFundingComment(
-      executive.id,
+      executive.executiveId,
       param.id,
-      param.fundingStatusEnum,
+      body.fundingStatusEnum,
       body.approvedAmount,
       body.content,
     );

@@ -38,6 +38,7 @@ import {
   IFundingResponse,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 import { IExecutive } from "@sparcs-clubs/interface/api/user/type/user.type";
+import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -538,6 +539,54 @@ export default class FundingService {
     approvedAmount: IFundingComment["approvedAmount"],
     content: IFundingComment["content"],
   ): Promise<ApiFnd013ResponseCreated> {
+    if (approvedAmount < 0) {
+      throw new HttpException(
+        "승인 금액은 0 이상이어야 합니다.",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (fundingStatusEnum === FundingStatusEnum.Applied) {
+      throw new HttpException(
+        "대기 상태로는 바꿀 수 없습니다.",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (
+      fundingStatusEnum === FundingStatusEnum.Rejected &&
+      approvedAmount !== 0
+    ) {
+      throw new HttpException(
+        "반려 상태에서는 승인 금액을 0으로 설정해야 합니다.",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const { expenditureAmount } = await this.fundingRepository.fetch(id);
+    if (approvedAmount > expenditureAmount) {
+      throw new HttpException(
+        "승인 금액이 지출 금액보다 많을 수 없습니다.",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (
+      fundingStatusEnum === FundingStatusEnum.Approved &&
+      expenditureAmount !== approvedAmount
+    ) {
+      throw new HttpException(
+        "승인을 위해선 전체 금액의 전부가 승인되어야 합니다. 부분 승인을 이용해 주세요.",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (
+      fundingStatusEnum === FundingStatusEnum.Partial &&
+      (approvedAmount === 0 || approvedAmount === expenditureAmount)
+    ) {
+      throw new HttpException(
+        "승인 상태에서는 승인 금액이 0이 될 수 없습니다.",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const fundingComment = await this.db.transaction(async tx => {
       const comment = await this.fundingCommentRepository.insert(
         {

@@ -56,7 +56,7 @@ export default class FundingCommentRepository {
   ): Promise<MFundingComment> {
     const db = transaction || this.db;
 
-    const createdId = await db
+    const [comment] = await db
       .insert(FundingFeedback)
       .values({
         ...param,
@@ -67,7 +67,7 @@ export default class FundingCommentRepository {
       })
       .execute();
 
-    const newId = Number(createdId);
+    const newId = Number(comment.insertId);
 
     return this.fetch(newId, transaction);
   }
