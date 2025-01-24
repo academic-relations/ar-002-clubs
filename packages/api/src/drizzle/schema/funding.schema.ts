@@ -138,6 +138,24 @@ export const FundingTradeDetailFile = mysqlTable(
   }),
 );
 
+export const FundingNonCorporateTransactionFile = mysqlTable(
+  "funding_non_corporate_transaction_file",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    fundingId: int("funding_id").notNull(),
+    fileId: varchar("file_id", { length: 128 }).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    fundingForeignKey: foreignKey({
+      name: "non_corporate_transaction_file_funding_id_fk",
+      columns: [table.fundingId],
+      foreignColumns: [Funding.id],
+    }),
+  }),
+);
+
 export const FundingFoodExpenseFile = mysqlTable(
   "funding_food_expense_file",
   {

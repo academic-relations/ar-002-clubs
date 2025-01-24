@@ -24,6 +24,7 @@ import {
   FundingFoodExpenseFile,
   FundingJointExpenseFile,
   FundingLaborContractFile,
+  FundingNonCorporateTransactionFile,
   FundingProfitMakingActivityFile,
   FundingPublicationFile,
   FundingTradeDetailFile,
@@ -70,6 +71,7 @@ export default class FundingRepository {
       clubSuppliesSoftwareEvidenceFiles,
       fixtureImageFiles,
       fixtureSoftwareEvidenceFiles,
+      nonCorporateTransactionFiles,
       foodExpenseFiles,
       laborContractFiles,
       externalEventParticipationFeeFiles,
@@ -131,6 +133,15 @@ export default class FundingRepository {
           and(
             eq(FundingFixtureSoftwareEvidenceFile.fundingId, id),
             isNull(FundingFixtureSoftwareEvidenceFile.deletedAt),
+          ),
+        ),
+      this.db
+        .select()
+        .from(FundingNonCorporateTransactionFile)
+        .where(
+          and(
+            eq(FundingNonCorporateTransactionFile.fundingId, id),
+            isNull(FundingNonCorporateTransactionFile.deletedAt),
           ),
         ),
       this.db
@@ -236,6 +247,9 @@ export default class FundingRepository {
         id: file.fileId,
       })),
       fixtureSoftwareEvidenceFiles: fixtureSoftwareEvidenceFiles.map(file => ({
+        id: file.fileId,
+      })),
+      nonCorporateTransactionFiles: nonCorporateTransactionFiles.map(file => ({
         id: file.fileId,
       })),
       foodExpenseFiles: foodExpenseFiles.map(file => ({
@@ -419,6 +433,16 @@ export default class FundingRepository {
             )
           : []),
 
+        // NonCorporateTransaction files
+        ...(funding.isNonCorporateTransaction && funding.nonCorporateTransaction
+          ? funding.nonCorporateTransaction.files.map(file =>
+              tx.insert(FundingNonCorporateTransactionFile).values({
+                fundingId,
+                fileId: file.id,
+              }),
+            )
+          : []),
+
         // Food expense files
         ...(funding.isFoodExpense && funding.foodExpense
           ? funding.foodExpense.files.map(file =>
@@ -546,6 +570,11 @@ export default class FundingRepository {
           .update(FundingFixtureSoftwareEvidenceFile)
           .set({ deletedAt: now })
           .where(eq(FundingFixtureSoftwareEvidenceFile.fundingId, id)),
+        tx
+          .update(FundingNonCorporateTransactionFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingNonCorporateTransactionFile.fundingId, id)),
+
         tx
           .update(FundingFoodExpenseFile)
           .set({ deletedAt: now })
@@ -679,6 +708,10 @@ export default class FundingRepository {
           .set({ deletedAt: now })
           .where(eq(FundingFixtureSoftwareEvidenceFile.fundingId, id)),
         tx
+          .update(FundingNonCorporateTransactionFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingNonCorporateTransactionFile.fundingId, id)),
+        tx
           .update(FundingFoodExpenseFile)
           .set({ deletedAt: now })
           .where(eq(FundingFoodExpenseFile.fundingId, id)),
@@ -757,6 +790,16 @@ export default class FundingRepository {
           : []),
         ...(funding.isFixture && funding.fixture.softwareEvidenceFiles
           ? funding.fixture.softwareEvidenceFiles.map(file =>
+              tx.insert(FundingFixtureSoftwareEvidenceFile).values({
+                fundingId: id,
+                fileId: file.id,
+              }),
+            )
+          : []),
+
+        // NonCorporateTransaction files
+        ...(funding.isNonCorporateTransaction && funding.nonCorporateTransaction
+          ? funding.nonCorporateTransaction.files.map(file =>
               tx.insert(FundingFixtureSoftwareEvidenceFile).values({
                 fundingId: id,
                 fileId: file.id,

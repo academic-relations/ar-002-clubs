@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 
+import { IFileSummary } from "@sparcs-clubs/interface/api/file/type/file.type";
 import {
   ApiFnd001RequestBody,
   ApiFnd001ResponseCreated,
@@ -47,6 +48,7 @@ import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.publi
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
+import { MFunding } from "../model/funding.model";
 import FundingCommentRepository from "../repository/funding.comment.repository";
 import FundingDeadlineRepository from "../repository/funding.deadline.repository";
 import FundingRepository from "../repository/funding.repository";
@@ -189,12 +191,14 @@ export default class FundingService {
     }
 
     if (funding.publication) {
+      // 이거 중복인데?
       funding.publication.files = await this.filePublicService.getFilesByIds(
         funding.publication.files.flatMap(file => file.id),
       );
     }
 
     if (funding.profitMakingActivity) {
+      // 이거 중복인데?
       funding.profitMakingActivity.files =
         await this.filePublicService.getFilesByIds(
           funding.profitMakingActivity.files.flatMap(file => file.id),
@@ -202,12 +206,14 @@ export default class FundingService {
     }
 
     if (funding.jointExpense) {
+      // 이거 중복인데?
       funding.jointExpense.files = await this.filePublicService.getFilesByIds(
         funding.jointExpense.files.flatMap(file => file.id),
       );
     }
 
     if (funding.etcExpense) {
+      // 이거 중복인데?
       funding.etcExpense.files = await this.filePublicService.getFilesByIds(
         funding.etcExpense.files.flatMap(file => file.id),
       );
@@ -249,6 +255,132 @@ export default class FundingService {
     }));
 
     return funding;
+  }
+
+  private async transformFundingToResponse(
+    funding: MFunding,
+  ): Promise<IFundingResponse> {
+    const purposeActivity = funding.purposeActivity
+      ? await this.activityPublicService.getActivitySummary(
+          funding.purposeActivity.id,
+        )
+      : undefined;
+
+    // 채울 곳
+    const resolvedFiles = {
+      tradeEvidenceFiles: await this.resolveFilesOrNull(
+        funding.tradeEvidenceFiles,
+      ),
+      tradeDetailFiles: await this.resolveFilesOrNull(funding.tradeDetailFiles),
+
+      foodExpense: await this.resolveFilesOrNull(funding.foodExpense),
+      laborContract: await this.resolveFilesOrNull(funding.laborContract),
+      externalEventParticipationFee: await this.resolveFilesOrNull(
+        funding.externalEventParticipationFee,
+      ),
+      publication: await this.resolveFilesOrNull(funding.publication),
+      profitMakingActivity: await this.resolveFilesOrNull(
+        funding.profitMakingActivity,
+      ),
+      jointExpense: await this.resolveFilesOrNull(funding.jointExpense),
+      etcExpense: await this.resolveFilesOrNull(funding.etcExpense),
+      nonCorporateTransaction: await this.resolveFilesOrNull(
+        funding.nonCorporateTransaction,
+      ),
+      // 구분선
+
+      clubSupplies: funding.clubSupplies
+        ? {
+            ...funding.clubSupplies,
+            imageFiles: await this.resolveFilesOrNull(
+              funding.clubSupplies.imageFiles,
+            ),
+            softwareEvidenceFiles: await this.resolveFilesOrNull(
+              funding.clubSupplies.softwareEvidenceFiles,
+            ),
+          }
+        : undefined,
+      fixture: funding.fixture
+        ? {
+            ...funding.fixture,
+            imageFiles: await this.resolveFilesOrNull(
+              funding.fixture.imageFiles,
+            ),
+            softwareEvidenceFiles: await this.resolveFilesOrNull(
+              funding.fixture.softwareEvidenceFiles,
+            ),
+          }
+        : undefined,
+    };
+
+    let transportation;
+    if (funding.transportation && funding.transportation.passengers) {
+      transportation = {
+        ...funding.transportation,
+        passengers: await this.userPublicService.fetchStudentSummaries(
+          funding.transportation.passengers.map(passenger => passenger.id),
+        ),
+      };
+    }
+
+    const comments = await this.fundingCommentRepository.fetchAll(funding.id);
+
+    const chargedExecutive =
+      await this.userPublicService.fetchExecutiveSummaries(
+        comments.map(comment => comment.chargedExecutive.id),
+      );
+
+    const commentResponses = comments.map(comment => ({
+      ...comment,
+      chargedExecutive: chargedExecutive.find(
+        executive => executive.id === comment.chargedExecutive.id,
+      ),
+    }));
+
+    return {
+      ...funding,
+      purposeActivity,
+      ...resolvedFiles,
+      transportation,
+      comments: commentResponses,
+    };
+  }
+
+  // 메서드 오버로딩 선언부
+  private async resolveFilesOrNull(items: undefined): Promise<undefined>;
+  private async resolveFilesOrNull(
+    items: { id: string }[],
+  ): Promise<IFileSummary[]>;
+  private async resolveFilesOrNull<T extends { files: { id: string }[] }>(
+    items: T,
+  ): Promise<Omit<T, "files"> & { files: IFileSummary[] }>;
+
+  // 구현부
+  private async resolveFilesOrNull<T extends { files: { id: string }[] }>(
+    items: T | undefined | { id: string }[],
+  ): Promise<
+    undefined | IFileSummary[] | (Omit<T, "files"> & { files: IFileSummary[] })
+  > {
+    if (!items) {
+      return undefined; // items가 undefined이면 undefined 반환
+    }
+
+    if (Array.isArray(items)) {
+      // items가 배열인 경우 처리
+      const resolvedFiles = await this.filePublicService.getFilesByIds(
+        items.map(file => file.id),
+      );
+      return resolvedFiles; // FileSummary[] 반환
+    }
+
+    if ("files" in items) {
+      // items에 files 속성이 있는 경우 처리
+      const resolvedFiles = await this.filePublicService.getFilesByIds(
+        items.files.map(file => file.id),
+      );
+      return { ...items, files: resolvedFiles }; // files가 IFileSummary[]로 변환된 객체 반환
+    }
+    return undefined;
   }
 
   async putStudentFunding(
@@ -382,8 +514,8 @@ export default class FundingService {
    * 들어온 executive Id가 현재 집행부원인지 확인합니다.
    */
   async getExecutiveFunding(
-    id: IFunding["id"],
     executiveId: IExecutive["id"],
+    id: IFunding["id"],
   ): Promise<ApiFnd012ResponseOk> {
     await this.userPublicService.checkCurrentExecutive(executiveId);
 
@@ -391,146 +523,8 @@ export default class FundingService {
       id,
     )) as IFundingResponse; // TODO: 이거 이래도 되나? comments 필드가 없는데. 에러 안나나?
 
-    funding.tradeEvidenceFiles = await this.filePublicService.getFilesByIds(
-      funding.tradeEvidenceFiles.flatMap(file => file.id),
-    );
-    funding.tradeDetailFiles = await this.filePublicService.getFilesByIds(
-      funding.tradeDetailFiles.flatMap(file => file.id),
-    );
-
-    if (funding.purposeActivity) {
-      funding.purposeActivity =
-        await this.activityPublicService.getActivitySummary(
-          funding.purposeActivity.id,
-        );
-    }
-
-    if (funding.clubSupplies?.imageFiles) {
-      funding.clubSupplies.imageFiles =
-        await this.filePublicService.getFilesByIds(
-          funding.clubSupplies.imageFiles.flatMap(file => file.id),
-        );
-    }
-
-    if (funding.clubSupplies?.softwareEvidenceFiles) {
-      funding.clubSupplies.softwareEvidenceFiles =
-        await this.filePublicService.getFilesByIds(
-          funding.clubSupplies.softwareEvidenceFiles.flatMap(file => file.id),
-        );
-    }
-
-    if (funding.fixture?.imageFiles) {
-      funding.fixture.imageFiles = await this.filePublicService.getFilesByIds(
-        funding.fixture.imageFiles.flatMap(file => file.id),
-      );
-    }
-
-    if (funding.fixture?.softwareEvidenceFiles) {
-      funding.fixture.softwareEvidenceFiles =
-        await this.filePublicService.getFilesByIds(
-          funding.fixture.softwareEvidenceFiles.flatMap(file => file.id),
-        );
-    }
-
-    if (funding.foodExpense) {
-      funding.foodExpense.files = await this.filePublicService.getFilesByIds(
-        funding.foodExpense.files.flatMap(file => file.id),
-      );
-    }
-
-    if (funding.laborContract) {
-      funding.laborContract.files = await this.filePublicService.getFilesByIds(
-        funding.laborContract.files.flatMap(file => file.id),
-      );
-    }
-
-    if (funding.externalEventParticipationFee) {
-      funding.externalEventParticipationFee.files =
-        await this.filePublicService.getFilesByIds(
-          funding.externalEventParticipationFee.files.flatMap(file => file.id),
-        );
-    }
-
-    if (funding.publication) {
-      funding.publication.files = await this.filePublicService.getFilesByIds(
-        funding.publication.files.flatMap(file => file.id),
-      );
-    }
-
-    if (funding.profitMakingActivity) {
-      funding.profitMakingActivity.files =
-        await this.filePublicService.getFilesByIds(
-          funding.profitMakingActivity.files.flatMap(file => file.id),
-        );
-    }
-
-    if (funding.jointExpense) {
-      funding.jointExpense.files = await this.filePublicService.getFilesByIds(
-        funding.laborContract.files.flatMap(file => file.id),
-      );
-    }
-
-    if (funding.etcExpense) {
-      funding.etcExpense.files = await this.filePublicService.getFilesByIds(
-        funding.etcExpense.files.flatMap(file => file.id),
-      );
-    }
-
-    if (funding.publication) {
-      funding.publication.files = await this.filePublicService.getFilesByIds(
-        funding.publication.files.flatMap(file => file.id),
-      );
-    }
-
-    if (funding.profitMakingActivity) {
-      funding.profitMakingActivity.files =
-        await this.filePublicService.getFilesByIds(
-          funding.profitMakingActivity.files.flatMap(file => file.id),
-        );
-    }
-
-    if (funding.jointExpense) {
-      funding.jointExpense.files = await this.filePublicService.getFilesByIds(
-        funding.jointExpense.files.flatMap(file => file.id),
-      );
-    }
-
-    if (funding.etcExpense) {
-      funding.etcExpense.files = await this.filePublicService.getFilesByIds(
-        funding.etcExpense.files.flatMap(file => file.id),
-      );
-    }
-
-    if (funding.transportation?.passengers) {
-      funding.transportation.passengers =
-        await this.userPublicService.fetchStudentSummaries(
-          funding.transportation.passengers.flatMap(passenger => passenger.id),
-        );
-
-      funding.transportation.passengers = funding.transportation.passengers.map(
-        passenger => ({
-          id: passenger.id,
-          name: passenger.name,
-          studentNumber: passenger.studentNumber,
-        }),
-      );
-    }
-
-    const comments = await this.fundingCommentRepository.fetchAll(funding.id);
-
-    const chargedExecutive =
-      await this.userPublicService.fetchExecutiveSummaries(
-        comments.map(comment => comment.chargedExecutive.id),
-      );
-
-    funding.comments = comments.map(comment => ({
-      ...comment,
-      chargedExecutive: chargedExecutive.find(
-        executive => executive.id === comment.chargedExecutive.id,
-      ),
-    }));
-
-    return funding;
+    const fundingResponse = await this.transformFundingToResponse(funding);
+    return fundingResponse;
   }
 
   /**
@@ -555,7 +549,6 @@ export default class FundingService {
         } as IFundingCommentRequestCreate,
         tx,
       );
-
       const funding = await this.fundingRepository.patchStatus(
         {
           id,

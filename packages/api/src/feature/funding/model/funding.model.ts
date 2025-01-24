@@ -80,6 +80,7 @@ export type FundingDBResult = {
   fixtureSoftwareEvidenceFiles?: Array<{
     id: string;
   }>;
+  nonCorporateTransactionFiles?: Array<{ id: string }>;
   foodExpenseFiles?: Array<{ id: string }>;
   laborContractFiles?: Array<{ id: string }>;
   externalEventParticipationFeeFiles?: Array<{
@@ -262,6 +263,9 @@ export class MFunding implements IFunding {
             traderName: result.funding.traderName,
             traderAccountNumber: result.funding.traderAccountNumber,
             wasteExplanation: result.funding.wasteExplanation,
+            files: result.nonCorporateTransactionFiles.map(file => ({
+              id: file.id,
+            })),
           }
         : undefined,
       foodExpense: result.funding.isFoodExpense

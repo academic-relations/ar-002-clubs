@@ -155,7 +155,10 @@ export default class FundingController {
     @GetExecutive() executive: GetExecutive,
     @Param() param: ApiFnd012RequestParam,
   ): Promise<ApiFnd012ResponseOk> {
-    return this.fundingService.getExecutiveFunding(executive.id, param.id);
+    return this.fundingService.getExecutiveFunding(
+      executive.executiveId,
+      param.id,
+    );
   }
 
   @Executive()
