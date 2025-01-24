@@ -25,7 +25,13 @@ const FundingForm: React.FC<FundingFormProps> = ({
 }) => {
   const formCtx = useForm<FundingFormData>({
     mode: "all",
-    defaultValues: initialData,
+    defaultValues: {
+      ...initialData,
+      purposeActivity: {
+        id: initialData?.purposeActivity?.id,
+        name: initialData?.purposeActivity?.name,
+      },
+    },
   });
 
   const {
