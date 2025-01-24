@@ -301,7 +301,7 @@ export default class FundingRepository {
       // 1. Insert funding order
       const [fundingOrder] = await tx.insert(Funding).values({
         clubId: funding.clubId,
-        purposeActivityId: funding.purposeActivity.id,
+        purposeActivityId: funding.purposeActivity?.id ?? null,
         activityDId: extra.activityDId,
         fundingStatusEnum: extra.fundingStatusEnum,
         name: funding.name,
