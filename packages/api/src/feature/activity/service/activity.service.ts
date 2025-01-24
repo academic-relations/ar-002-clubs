@@ -173,6 +173,12 @@ export default class ActivityService {
       );
   }
 
+  /**
+   *
+   * @param enums: ActivityDeadlineEnum의 배열을 받습니다.
+   * @description 오늘이 해당하는 deadlineEnum이 enums에 포함되어있지 않으면 400 exception을 throw
+   * @returns void
+   */
   private async checkDeadline(param: { enums: Array<ActivityDeadlineEnum> }) {
     const today = getKSTDate();
     const todayDeadline = await this.activityRepository
@@ -195,6 +201,13 @@ export default class ActivityService {
       );
   }
 
+  /**
+   *
+   * @param clubId
+   * @param executiveId
+   * @description 동아리의 담당 집행부원을 변경합니다.
+   * 해당 동아리의 활동에 대한 개별 담당 집행부원도 전부 덮어씌웁니다.
+   */
   private async changeClubChargedExecutive(param: {
     clubId: number;
     executiveId: number;
@@ -968,6 +981,17 @@ export default class ActivityService {
         "the activity is already approved",
         HttpStatus.BAD_REQUEST,
       );
+
+    const isInsertionSucceed =
+      await this.activityRepository.insertActivityFeedback({
+        activityId: param.param.activityId,
+        comment: "활동이 승인되었습니다", // feedback에 승인을 기록하기 위한 임의의 문자열ㄴ
+        executiveId: param.executiveId,
+      });
+    if (!isInsertionSucceed)
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+
+    return {};
     return {};
   }
 
