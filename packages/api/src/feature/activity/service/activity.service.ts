@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { ApiAct021ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct021";
 import { ApiAct022ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct022";
+import { ApiAct028ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct028";
 import {
   ActivityDeadlineEnum,
   ActivityStatusEnum,
@@ -1415,6 +1416,37 @@ export default class ActivityService {
     return {
       participants:
         await this.userPublicService.fetchStudentSummaries(participantIds),
+    };
+  }
+
+  async getExecutiveActivitiesExecutiveBrief(
+    executiveId: number,
+  ): Promise<ApiAct028ResponseOk> {
+    const [executive, activities] = await Promise.all([
+      this.userPublicService.fetchExecutiveSummary(executiveId),
+      this.activityRepository.fetchCommentedSummaries(executiveId),
+    ]);
+
+    const activitiesWithClub = await Promise.all(
+      activities.map(async activity => {
+        const club = await this.clubPublicService.fetchSummary(
+          activity.club.id,
+        );
+        const chargedExecutive =
+          await this.userPublicService.findExecutiveSummary(
+            activity.chargedExecutive.id,
+          );
+        const recentReviewedExecutive =
+          await this.userPublicService.findExecutiveSummary(
+            activity.recentReviewedExecutive.id,
+          );
+        return { ...activity, club, chargedExecutive, recentReviewedExecutive };
+      }),
+    );
+
+    return {
+      chargedExecutive: executive,
+      activities: activitiesWithClub,
     };
   }
 }

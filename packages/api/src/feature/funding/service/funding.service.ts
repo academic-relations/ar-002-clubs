@@ -102,10 +102,9 @@ export default class FundingService {
     );
 
     if (funding.purposeActivity) {
-      funding.purposeActivity =
-        await this.activityPublicService.getActivitySummary(
-          funding.purposeActivity.id,
-        );
+      funding.purposeActivity = await this.activityPublicService.fetchSummary(
+        funding.purposeActivity.id,
+      );
     }
 
     if (funding.clubSupplies?.imageFiles) {

@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 
 import { IActivityDuration } from "@sparcs-clubs/interface/api/activity/type/activity.duration.type";
-import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
+import { IActivityResponseSummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
+
+import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 
 import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
 import ActivityRepository from "../repository/activity.repository";
@@ -13,6 +15,7 @@ export default class ActivityPublicService {
   constructor(
     private activityRepository: ActivityRepository,
     private activityActivityTermRepository: ActivityActivityTermRepository,
+    private clubPublicService: ClubPublicService,
   ) {}
 
   /**
@@ -23,12 +26,27 @@ export default class ActivityPublicService {
     return this.activityRepository.selectActivityNameById(id);
   }
 
-  async getActivitySummary(id: number): Promise<IActivitySummary> {
-    return this.activityRepository.selectActivityById(id);
+  async fetchSummary(id: number): Promise<IActivityResponseSummary> {
+    const summary = await this.activityRepository.fetchSummary(id);
+    const club = await this.clubPublicService.fetchSummary(summary.club.id);
+
+    return {
+      ...summary,
+      club,
+    };
   }
 
-  async fetchSummaries(activityIds: number[]): Promise<IActivitySummary[]> {
-    return this.activityRepository.fetchSummaries(activityIds);
+  async fetchSummaries(
+    activityIds: number[],
+  ): Promise<IActivityResponseSummary[]> {
+    const summaries = await this.activityRepository.fetchSummaries(activityIds);
+    const clubs = await this.clubPublicService.fetchSummaries(
+      summaries.map(summary => summary.club.id),
+    );
+    return summaries.map((summary, index) => ({
+      ...summary,
+      club: clubs[index],
+    }));
   }
 
   async fetchLastActivityD(): Promise<IActivityDuration>;

@@ -117,12 +117,7 @@ export default class ExecutiveRepository {
 
   async selectExecutiveSummary(date: Date): Promise<VExecutiveSummary[]> {
     const result = await this.db
-      .select({
-        id: Executive.id,
-        userId: Executive.userId,
-        name: Executive.name,
-        studentNumber: Student.number,
-      })
+      .select()
       .from(ExecutiveT)
       .where(
         and(
@@ -142,18 +137,10 @@ export default class ExecutiveRepository {
         Student,
         and(eq(Student.userId, Executive.userId), isNull(Student.deletedAt)),
       );
-    return result.map(
-      r =>
-        new VExecutiveSummary({
-          ...r,
-          studentNumber: r.studentNumber.toString(), // TODO: studentNumber가 string으로 바뀌면 변경 필요
-        }),
-    );
+    return result.map(VExecutiveSummary.fromDBResult);
   }
 
-  async fetchExecutiveSummaries(
-    executiveIds: number[],
-  ): Promise<VExecutiveSummary[]> {
+  async fetchSummaries(executiveIds: number[]): Promise<VExecutiveSummary[]> {
     if (executiveIds.length === 0) {
       return [];
     }
@@ -169,14 +156,28 @@ export default class ExecutiveRepository {
         and(eq(Student.userId, Executive.userId), isNull(Student.deletedAt)),
       );
 
-    return result.map(
-      r =>
-        new VExecutiveSummary({
-          id: r.executive.id,
-          name: r.executive.name,
-          studentNumber: r.student.number.toString(),
-          userId: r.executive.userId,
-        }),
-    );
+    return result.map(VExecutiveSummary.fromDBResult);
+  }
+
+  async fetchSummary(id: number): Promise<VExecutiveSummary> {
+    const result = await this.findSummary(id);
+    if (!result) {
+      throw new Error("Executive not found");
+    }
+    return result;
+  }
+
+  async findSummary(id: number): Promise<VExecutiveSummary | null> {
+    const result = await this.db
+      .select()
+      .from(Executive)
+      .where(and(eq(Executive.id, id), isNull(Executive.deletedAt)))
+      .innerJoin(
+        Student,
+        and(eq(Student.userId, Executive.userId), isNull(Student.deletedAt)),
+      )
+      .then(takeUnique);
+
+    return result ? VExecutiveSummary.fromDBResult(result) : null;
   }
 }
