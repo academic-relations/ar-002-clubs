@@ -1,7 +1,7 @@
 import apiFnd006, {
   ApiFnd006RequestQuery,
   ApiFnd006ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd006";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import { useQuery } from "@tanstack/react-query";
 
