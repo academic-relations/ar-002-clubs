@@ -1,4 +1,5 @@
 // import { ApiFnd002ResponseOk } from "@sparcs-clubs/interface/api/funding/apiFnd002";
+import { ApiFnd002ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
 import {
   FixtureClassEnum,
   FixtureEvidenceEnum,
@@ -7,13 +8,13 @@ import {
 } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
 // NOTE: (@dora) use type ApiFnd002ResponseOk after https://github.com/academic-relations/ar-002-clubs/issues/1119 is done
-const mockFundingDetail = {
+const mockFundingDetail: ApiFnd002ResponseOk = {
   clubId: 1,
   purposeId: 0,
   name: "M1 맥북 Pro 16 inch",
   expenditureDate: new Date(),
   expenditureAmount: 2500000,
-  fundingStatusEnum: FundingStatusEnum.Applied,
+  fundingOrderStatusEnumId: FundingStatusEnum.Applied,
   feedback: "피드백",
   tradeEvidenceFiles: [
     {
@@ -32,8 +33,8 @@ const mockFundingDetail = {
   tradeDetailExplanation: "이벤트를 위한 거래에 대한 세부 정보입니다.",
 
   clubSuppliesName: "맥북",
-  clubSuppliesEvidenceEnum: FixtureEvidenceEnum.Purchase,
-  clubSuppliesClassEnum: FixtureClassEnum.Electronics,
+  clubSuppliesEvidenceEnumId: FixtureEvidenceEnum.Purchase,
+  clubSuppliesClassEnumId: FixtureClassEnum.Electronics,
   clubSuppliesPurpose: "물품 사용 목적을 포함한 어떠한 머시꺵이",
   clubSuppliesImageFiles: [
     {
@@ -49,8 +50,8 @@ const mockFundingDetail = {
 
   isFixture: true,
   fixtureName: "A4 종이",
-  fixtureEvidenceEnum: FixtureEvidenceEnum.Management,
-  fixtureClassEnum: FixtureClassEnum.Others,
+  fixtureEvidenceEnumId: FixtureEvidenceEnum.Management,
+  fixtureClassEnumId: FixtureClassEnum.Others,
   fixturePurpose: "비품 사용 목적을 포함한 어떠한 머시꺵이",
   fixtureImageFiles: [
     {
@@ -65,13 +66,13 @@ const mockFundingDetail = {
   priceOfFixture: 300,
 
   isTransportation: true,
-  transportationEnum: TransportationEnum.Airplane,
+  transportationEnumId: TransportationEnum.Airplane,
   origin: "서울역",
   destination: "대전역",
   purposeOfTransportation: "해커톤 장소 사전답사",
   transportationPassengers: [
-    { id: 1, studentNumber: "20240510", name: "스팍스" },
-    { id: 2, studentNumber: "20200515", name: "이도라" },
+    { studentNumber: "20240510", name: "스팍스" },
+    { studentNumber: "20200515", name: "이도라" },
   ],
 
   isNonCorporateTransaction: true,
