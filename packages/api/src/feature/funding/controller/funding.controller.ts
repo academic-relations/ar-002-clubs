@@ -32,6 +32,7 @@ import apiFnd005, {
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
 import apiFnd006, {
   ApiFnd006RequestParam,
+  ApiFnd006RequestQuery,
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
 import apiFnd007 from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";

@@ -4,8 +4,11 @@ import React from "react";
 
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import { pastFundingListSectionTitle } from "@sparcs-clubs/web/constants/manageClubFunding";
+
+import useGetActivityTerms from "@sparcs-clubs/web/features/activity-report/services/useGetActivityTerms";
 
 import PastSingleSemesterFundingListSection from "./_atomic/PastSingleSemesterFundingListSection";
 
@@ -43,17 +46,34 @@ const PastFundingListSectionContents = styled.div`
   flex-grow: 0; */
 `;
 
-const PastFundingListSection: React.FC = () => (
-  <PastFundingListSectionInner>
-    <FoldableSectionTitle title={pastFundingListSectionTitle}>
-      <PastFundingListSectionContents>
-        {/* TODO: ManageClubFundingMainFrame으로부터 주입받은 테이블 데이터 매핑하기 */}
-        <PastSingleSemesterFundingListSection />
-        <PastSingleSemesterFundingListSection />
-        <PastSingleSemesterFundingListSection />
-      </PastFundingListSectionContents>
-    </FoldableSectionTitle>
-  </PastFundingListSectionInner>
-);
+const PastFundingListSection: React.FC<{ clubId: number }> = ({ clubId }) => {
+  const {
+    data: activityTerms,
+    isLoading,
+    isError,
+  } = useGetActivityTerms({ clubId });
+
+  if (!activityTerms) {
+    return null;
+  }
+
+  return (
+    <PastFundingListSectionInner>
+      <FoldableSectionTitle title={pastFundingListSectionTitle}>
+        <AsyncBoundary isLoading={isLoading} isError={isError}>
+          <PastFundingListSectionContents>
+            {activityTerms.terms.toReversed().map(term => (
+              <PastSingleSemesterFundingListSection
+                key={term.id}
+                termId={term.id}
+                clubId={clubId}
+              />
+            ))}
+          </PastFundingListSectionContents>
+        </AsyncBoundary>
+      </FoldableSectionTitle>
+    </PastFundingListSectionInner>
+  );
+};
 
 export default PastFundingListSection;

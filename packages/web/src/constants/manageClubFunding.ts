@@ -22,9 +22,10 @@ const numberToKrWon = (amount: number) => `${amount.toLocaleString("ko-KR")}원`
 
 const pastFundingListSectionTitle = "과거 지원금 내역";
 const singleSemesterFundingListSectionTitleText = (
+  year: number,
   semester: string,
   itemCount: number,
-) => `${semester} (총 ${itemCount}개)`;
+) => `${year}년 ${semester}학기 (총 ${itemCount}개)`;
 
 export {
   manageClubFundingPageBreadCrumbName,

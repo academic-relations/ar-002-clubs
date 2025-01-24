@@ -169,31 +169,6 @@ export default class FundingService {
 
     if (funding.jointExpense) {
       funding.jointExpense.files = await this.filePublicService.getFilesByIds(
-        funding.laborContract.files.flatMap(file => file.id),
-      );
-    }
-
-    if (funding.etcExpense) {
-      funding.etcExpense.files = await this.filePublicService.getFilesByIds(
-        funding.etcExpense.files.flatMap(file => file.id),
-      );
-    }
-
-    if (funding.publication) {
-      funding.publication.files = await this.filePublicService.getFilesByIds(
-        funding.publication.files.flatMap(file => file.id),
-      );
-    }
-
-    if (funding.profitMakingActivity) {
-      funding.profitMakingActivity.files =
-        await this.filePublicService.getFilesByIds(
-          funding.profitMakingActivity.files.flatMap(file => file.id),
-        );
-    }
-
-    if (funding.jointExpense) {
-      funding.jointExpense.files = await this.filePublicService.getFilesByIds(
         funding.jointExpense.files.flatMap(file => file.id),
       );
     }

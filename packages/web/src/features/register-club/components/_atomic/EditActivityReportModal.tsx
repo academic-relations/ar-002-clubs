@@ -98,10 +98,14 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
             data.comments.length > 0 && (
               <RejectReasonToast
                 title="반려 사유"
-                reasons={data.comments.map(comment => ({
-                  datetime: comment.createdAt,
-                  reason: comment.content,
-                }))}
+                reasons={data.comments
+                  .filter(
+                    comment => comment.content !== "활동이 승인되었습니다",
+                  )
+                  .map(comment => ({
+                    datetime: comment.createdAt,
+                    reason: comment.content,
+                  }))}
               />
             )}
 

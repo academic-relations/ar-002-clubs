@@ -48,8 +48,8 @@ type ApiFnd006ResponseOk = z.infer<(typeof apiFnd006.responseBodyMap)[200]>;
 export default apiFnd006;
 
 export type {
+  ApiFnd006RequestBody,
   ApiFnd006RequestParam,
   ApiFnd006RequestQuery,
-  ApiFnd006RequestBody,
   ApiFnd006ResponseOk,
 };
