@@ -6,8 +6,6 @@ import {
   TransportationEnum,
 } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
-// NOTE: (@dora) use type ApiFnd002ResponseOk after https://github.com/academic-relations/ar-002-clubs/issues/1119 is done
-
 const mockFundingDetail: ApiFnd002ResponseOk = {
   id: 1,
   club: {
