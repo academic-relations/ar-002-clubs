@@ -1,12 +1,16 @@
-import { getDate, getHours, getMinutes, getMonth, getYear } from "date-fns";
+import { getDate, getMonth, getYear } from "date-fns";
 
 const manageClubFundingPageBreadCrumbName = "지원금";
 const manageClubFundingPageName = "지원금";
 const manageClubFundingPagePath = "/manage-club/funding";
 
 const newFundingListSectionTitle = "신규 지원금 신청";
-const newFundingListSectionInfoText = (semester: string, deadline: Date) =>
-  `현재는 ${semester}학기 지원금 신청 기간입니다 (신청 마감 : ${getYear(deadline)}년 ${getMonth(deadline)}월 ${getDate(deadline)}일 ${getHours(deadline)}:${getMinutes(deadline)})`;
+const newFundingListSectionInfoText = (
+  semester: string,
+  status: string,
+  deadline?: Date,
+) =>
+  `현재는 ${semester}학기 지원금 ${status} 기간입니다 (${status} 마감 : ${deadline ? `${getYear(deadline)}년 ${getMonth(deadline) + 1}월 ${getDate(deadline)}일 23:59` : "-"})`;
 const newFundingOrderButtonText = "지원금 신청 내역 추가";
 
 const tableRowCountText = (count: number) => `총 ${count}개`;

@@ -18,10 +18,15 @@ import {
   newFundingOrderButtonText,
 } from "@sparcs-clubs/web/constants/manageClubFunding";
 
+import { fundingDeadlineEnumToString } from "../constants/fundingDeadlineEnumToString";
+import useGetFundingDeadline from "../services/useGetFundingDeadline";
 import useGetNewFundingList from "../services/useGetNewFundingList";
 
 import NewFundingListTable from "./_atomic/NewFundingListTable";
 
+interface NewFundingListSectionProps {
+  clubId: number;
+}
 const NewFundingOrderButtonRow = styled.div`
   /* Auto layout */
   display: flex;
@@ -38,7 +43,9 @@ const NewFundingOrderButtonRow = styled.div`
   flex-grow: 0; */
 `;
 
-const NewFundingListSection: React.FC<{ clubId: number }> = ({ clubId }) => {
+const NewFundingListSection: React.FC<NewFundingListSectionProps> = ({
+  clubId,
+}) => {
   const router = useRouter();
   const createFundingClick = () => {
     router.push(`/manage-club/funding/create`);
@@ -52,11 +59,29 @@ const NewFundingListSection: React.FC<{ clubId: number }> = ({ clubId }) => {
     clubId,
   });
 
+  const {
+    data: fundingDeadline,
+    isLoading: isLoadingFundingDeadline,
+    isError: isErrorFundingDeadline,
+  } = useGetFundingDeadline();
+
   return (
     <FoldableSectionTitle title={newFundingListSectionTitle}>
       <FlexWrapper direction="column" gap={20}>
-        {/* TODO: 지원금 신청 기간 받아오는 API 생기면 대체해야함! */}
-        <Info text={newFundingListSectionInfoText("2024 봄", new Date())} />
+        <AsyncBoundary
+          isLoading={isLoadingFundingDeadline}
+          isError={isErrorFundingDeadline}
+        >
+          <Info
+            text={newFundingListSectionInfoText(
+              `${fundingDeadline?.targetDuration.year}년 ${fundingDeadline?.targetDuration.name}`,
+              fundingDeadlineEnumToString(
+                fundingDeadline?.deadline.deadlineEnum,
+              ),
+              fundingDeadline?.deadline.endDate,
+            )}
+          />
+        </AsyncBoundary>
         <NewFundingOrderButtonRow>
           <IconButton icon="add" type="default" onClick={createFundingClick}>
             {newFundingOrderButtonText}
