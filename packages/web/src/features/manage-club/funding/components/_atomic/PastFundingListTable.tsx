@@ -7,6 +7,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
@@ -79,6 +80,7 @@ const columns = [
 ];
 
 const PastFundingListTable: React.FC = () => {
+  const router = useRouter();
   const table = useReactTable({
     columns,
     data: mockupPastManageFunding,
@@ -91,6 +93,7 @@ const PastFundingListTable: React.FC = () => {
       <CountRow>총 {mockupPastManageFunding.length}개</CountRow>
       <Table
         table={table}
+        onClick={row => router.push(`/manage-club/funding/${row.id}`)}
         footer={
           <TableRow>
             <TableCell type="Default" width="70%">
