@@ -36,18 +36,18 @@ export const useCreateFunding = (clubId: number) => {
         {
           body: {
             clubId,
-            purposeActivity: purposeActivity
-              ? { id: purposeActivity.id }
-              : undefined,
+            // purposeActivity: purposeActivity
+            //   ? { id: purposeActivity.id }
+            //   : undefined,
             name,
             expenditureDate,
             expenditureAmount: Number(expenditureAmount),
 
             tradeEvidenceFiles: data.tradeEvidenceFiles.map(file => ({
-              id: file.id,
+              fileId: file.id,
             })),
             tradeDetailFiles: data.tradeDetailFiles.map(file => ({
-              id: file.id,
+              fileId: file.id,
             })),
             tradeDetailExplanation,
 
@@ -125,6 +125,9 @@ export const useCreateFunding = (clubId: number) => {
                   traderName: data.traderName,
                   traderAccountNumber: data.traderAccountNumber,
                   wasteExplanation: data.wasteExplanation,
+                  files: data.nonCorporateTransactionFiles.map(file => ({
+                    id: file.id,
+                  })),
                 }
               : undefined,
 
