@@ -106,16 +106,16 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
     if (
       !fundingDeadline ||
       !fundingDeadline.targetDuration ||
-      !funding?.editedAt
+      !funding?.expenditureDate
     ) {
       return false;
     }
 
     return (
-      new Date(funding.editedAt) <
+      new Date(funding.expenditureDate) <
       new Date(fundingDeadline.targetDuration.startTerm)
     );
-  }, [fundingDeadline, funding?.editedAt]);
+  }, [fundingDeadline, funding?.expenditureDate]);
 
   if (isError) {
     return <NotFound />;
