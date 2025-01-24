@@ -6,6 +6,10 @@ import { zFunding, zFundingCommentRequestCreate } from "../type/funding.type";
 /**
  * @version v0.1
  * @description 집행부원으로서 지원금 신청에 comment를 남깁니다.
+ * applied로는 바꿀 수 없습니다.
+ * approved 의 경우 expenditureAmount와 approvedAmount가 동일해야 합니다.
+ * rejected의 경우 approvedAmount는 0이어야 합니다.
+ * partial의 경우 expenditureAmount보다 approvedAmount가 작아야 합니다.
  */
 
 const url = (id: number) =>
