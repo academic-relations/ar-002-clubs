@@ -178,7 +178,10 @@ const AddEvidenceFrame: React.FC = () => {
         )}
         {isFixture && <FixtureEvidenceBlock isFixture required={isFixture} />}
         {isTransportation && (
-          <TransportEvidenceBlock required={isTransportation} />
+          <TransportEvidenceBlock
+            required={isTransportation}
+            activityId={purposeId}
+          />
         )}
         {isNonCorporateTransaction && (
           <NonCorpEvidenceBlock required={isNonCorporateTransaction} />
