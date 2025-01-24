@@ -26,17 +26,6 @@ const TableWithCount = styled.div`
   width: 100%;
 `;
 
-const CountRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  width: 100%;
-  font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
-  font-size: ${({ theme }) => theme.fonts.WEIGHT.REGULAR};
-  color: ${({ theme }) => theme.colors.GRAY[600]};
-`;
-
 const columnHelper = createColumnHelper<PastFundingData>();
 
 const columns = [
@@ -79,9 +68,9 @@ const PastFundingListTable: React.FC<{ data: PastFundingData[] }> = ({
 
   return (
     <TableWithCount>
-      <CountRow>총 {fundings.length}개</CountRow>
       <Table
         table={table}
+        count={fundings.length}
         onClick={row => router.push(`/manage-club/funding/${row.id}`)}
         footer={
           <TableRow>
