@@ -30,6 +30,16 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
           <Modal isOpen={isOpen}>
             <ConfirmModalContent
               onConfirm={() => {
+                localStorage.removeItem("durations");
+                localStorage.removeItem("participants");
+                localStorage.removeItem("evidenceFiles");
+                localStorage.removeItem("name");
+                localStorage.removeItem("activityTypeEnumId");
+                localStorage.removeItem("location");
+                localStorage.removeItem("purpose");
+                localStorage.removeItem("detail");
+                localStorage.removeItem("evidence");
+
                 close();
                 router.push("/manage-club/activity-report");
               }}
@@ -64,7 +74,38 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
         title="활동 보고서 작성"
         enableLast
       />
-      <ActivityReportForm clubId={clubId} onSubmit={handleSubmit} />
+      <ActivityReportForm
+        clubId={clubId}
+        onSubmit={handleSubmit}
+        temporaryStorageName={
+          JSON.parse(localStorage.getItem("name") || '""') || undefined
+        }
+        temporaryStorageActivityTypeEnumId={
+          JSON.parse(localStorage.getItem("activityTypeEnumId") || '""') ||
+          undefined
+        }
+        temporaryStorageDurations={
+          JSON.parse(localStorage.getItem("durations") || '""') || undefined
+        }
+        temporaryStorageLocation={
+          JSON.parse(localStorage.getItem("location") || '""') || undefined
+        }
+        temporaryStoragePurpose={
+          JSON.parse(localStorage.getItem("purpose") || '""') || undefined
+        }
+        temporaryStorageDetail={
+          JSON.parse(localStorage.getItem("detail") || '""') || undefined
+        }
+        temporaryStorageEvidence={
+          JSON.parse(localStorage.getItem("evidence") || '""') || undefined
+        }
+        temporaryStorageEvidenceFiles={
+          JSON.parse(localStorage.getItem("evidenceFiles") || '""') || undefined
+        }
+        temporaryStorageParticipants={
+          JSON.parse(localStorage.getItem("participants") || '""') || undefined
+        }
+      />
     </FlexWrapper>
   );
 };
