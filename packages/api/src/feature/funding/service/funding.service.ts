@@ -22,8 +22,8 @@ import {
   ApiFnd005ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
 import {
-  ApiFnd006RequestBody,
   ApiFnd006RequestParam,
+  ApiFnd006RequestQuery,
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
 import { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
@@ -292,7 +292,7 @@ export default class FundingService {
   async getStudentFundingActivityDuration(
     studentId: number,
     param: ApiFnd006RequestParam,
-    body: ApiFnd006RequestBody,
+    query: ApiFnd006RequestQuery,
   ): Promise<ApiFnd006ResponseOk> {
     const user = await this.userPublicService.getStudentById({ id: studentId });
     if (!user) {
@@ -300,7 +300,7 @@ export default class FundingService {
     }
 
     const fundings = await this.fundingRepository.fetchSummaries(
-      body.clubId,
+      query.clubId,
       param.activityDId,
     );
 

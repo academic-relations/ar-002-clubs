@@ -16,11 +16,11 @@ const requestParam = z.object({
   activityDId: z.coerce.number().int().min(1),
 });
 
-const requestQuery = z.object({});
-
-const requestBody = z.object({
+const requestQuery = z.object({
   clubId: z.coerce.number().int().min(1),
 });
+
+const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
@@ -48,8 +48,8 @@ type ApiFnd006ResponseOk = z.infer<(typeof apiFnd006.responseBodyMap)[200]>;
 export default apiFnd006;
 
 export type {
+  ApiFnd006RequestBody,
   ApiFnd006RequestParam,
   ApiFnd006RequestQuery,
-  ApiFnd006RequestBody,
   ApiFnd006ResponseOk,
 };
