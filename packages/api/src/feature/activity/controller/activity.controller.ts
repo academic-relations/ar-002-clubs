@@ -494,8 +494,8 @@ export default class ActivityController {
     @Query() query: ApiAct021RequestQuery,
   ): Promise<ApiAct021ResponseOk> {
     return this.activityService.getStudentActivitiesAvailable(
-      query.clubId,
       user.studentId,
+      query.clubId,
     );
   }
 

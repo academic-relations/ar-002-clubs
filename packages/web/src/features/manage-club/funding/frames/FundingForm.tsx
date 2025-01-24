@@ -13,12 +13,14 @@ import BasicEvidenceFrame from "./BasicEvidenceFrame";
 import FundingInfoFrame from "./FundingInfoFrame";
 
 interface FundingFormProps {
+  clubId: number;
   initialData?: FundingFormData;
   onCancel: VoidFunction;
   onSubmit: (data: FundingFormData) => void;
 }
 
 const FundingForm: React.FC<FundingFormProps> = ({
+  clubId,
   initialData = undefined,
   onCancel,
   onSubmit,
@@ -43,7 +45,7 @@ const FundingForm: React.FC<FundingFormProps> = ({
     <FormProvider {...formCtx}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FlexWrapper direction="column" gap={60}>
-          <FundingInfoFrame />
+          <FundingInfoFrame clubId={clubId} />
           <BasicEvidenceFrame />
           <AddEvidenceFrame />
           <StyledBottom>
