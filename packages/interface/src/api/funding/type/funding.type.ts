@@ -54,6 +54,7 @@ export const zNonCorporateTransaction = z.object({
   traderName: z.string().max(255).optional(),
   traderAccountNumber: z.string().max(255).optional(),
   wasteExplanation: z.string().optional(),
+  files: z.array(zFileSummary.pick({ id: true })),
 });
 
 export const zMinorExpense = z.object({
