@@ -16,11 +16,11 @@ const requestParam = z.object({
   activityDId: z.coerce.number().int().min(1),
 });
 
-const requestQuery = z.object({});
-
-const requestBody = z.object({
+const requestQuery = z.object({
   clubId: z.coerce.number().int().min(1),
 });
+
+const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
