@@ -1427,26 +1427,42 @@ export default class ActivityService {
       this.activityRepository.fetchCommentedSummaries(executiveId),
     ]);
 
-    const activitiesWithClub = await Promise.all(
-      activities.map(async activity => {
-        const club = await this.clubPublicService.fetchSummary(
-          activity.club.id,
-        );
-        const chargedExecutive =
-          await this.userPublicService.findExecutiveSummary(
-            activity.chargedExecutive.id,
-          );
-        const recentReviewedExecutive =
-          await this.userPublicService.findExecutiveSummary(
-            activity.recentReviewedExecutive.id,
-          );
-        return { ...activity, club, chargedExecutive, recentReviewedExecutive };
-      }),
+    // 필요한 모든 ID들을 수집
+    const clubIds = new Set(activities.map(activity => activity.club.id));
+    const executiveIds = new Set(
+      activities.flatMap(activity =>
+        [
+          activity.chargedExecutive?.id,
+          activity.recentReviewedExecutive?.id,
+        ].filter(Boolean),
+      ),
     );
+
+    // 한 번에 모든 데이터 가져오기
+    const [clubs, executives] = await Promise.all([
+      this.clubPublicService.fetchSummaries(Array.from(clubIds)),
+      this.userPublicService.fetchExecutiveSummaries(Array.from(executiveIds)),
+    ]);
+
+    // 조회를 위한 Map 생성
+    const clubMap = new Map(clubs.map(club => [club.id, club]));
+    const executiveMap = new Map(executives.map(exec => [exec.id, exec]));
+
+    // 데이터 매핑
+    const activitiesWithDetails = activities.map(activity => ({
+      ...activity,
+      club: clubMap.get(activity.club.id),
+      chargedExecutive: activity.chargedExecutive?.id
+        ? executiveMap.get(activity.chargedExecutive.id)
+        : undefined,
+      recentReviewedExecutive: activity.recentReviewedExecutive?.id
+        ? executiveMap.get(activity.recentReviewedExecutive.id)
+        : undefined,
+    }));
 
     return {
       chargedExecutive: executive,
-      activities: activitiesWithClub,
+      activities: activitiesWithDetails,
     };
   }
 }
