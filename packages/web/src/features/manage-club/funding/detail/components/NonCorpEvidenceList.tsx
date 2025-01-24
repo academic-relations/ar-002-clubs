@@ -20,12 +20,16 @@ const NonCorpEvidenceList = () => (
       비법인 거래
     </Typography>
     {/* TODO: file이랑 연결 */}
-    <ListItem>거래자명: {mockFundingDetail.traderName}</ListItem>
     <ListItem>
-      거래자 계좌번호: {mockFundingDetail.traderAccountNumber}
+      거래자명: {mockFundingDetail.nonCorporateTransaction?.traderName}
     </ListItem>
     <ListItem>
-      낭비가 아니라는 소명: {mockFundingDetail.wasteExplanation}
+      거래자 계좌번호:{" "}
+      {mockFundingDetail.nonCorporateTransaction?.traderAccountNumber}
+    </ListItem>
+    <ListItem>
+      낭비가 아니라는 소명:{" "}
+      {mockFundingDetail.nonCorporateTransaction?.wasteExplanation}
     </ListItem>
   </FlexWrapper>
 );

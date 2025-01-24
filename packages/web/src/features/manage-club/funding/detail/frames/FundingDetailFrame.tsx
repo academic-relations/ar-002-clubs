@@ -107,54 +107,54 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ isNow }) => {
         )}
         <FundingInfoList />
         <BasicEvidenceList />
-        {mockFundingDetail.purposeId === 0 && <FixtureEvidenceList />}
+        {mockFundingDetail.purposeActivity?.id === 0 && <FixtureEvidenceList />}
         {mockFundingDetail.isFixture && <FixtureEvidenceList isFixture />}
         {mockFundingDetail.isTransportation && <TransportationEvidenceList />}
         {mockFundingDetail.isNonCorporateTransaction && <NonCorpEvidenceList />}
         {mockFundingDetail.isFoodExpense && (
           <OtherEvidenceList
             content="식비"
-            explanation={mockFundingDetail.foodExpenseExplanation ?? ""}
+            explanation={mockFundingDetail.foodExpense?.explanation ?? ""}
           />
         )}
         {mockFundingDetail.isLaborContract && (
           <OtherEvidenceList
             content="근로 계약"
-            explanation={mockFundingDetail.laborContractExplanation ?? ""}
+            explanation={mockFundingDetail.laborContract?.explanation ?? ""}
           />
         )}
         {mockFundingDetail.isExternalEventParticipationFee && (
           <OtherEvidenceList
             content="외부 행사 참가비"
             explanation={
-              mockFundingDetail.externalEventParticipationFeeExplanation ?? ""
+              mockFundingDetail.externalEventParticipationFee?.explanation ?? ""
             }
           />
         )}
         {mockFundingDetail.isPublication && (
           <OtherEvidenceList
             content="발간물"
-            explanation={mockFundingDetail.publicationExplanation ?? ""}
+            explanation={mockFundingDetail.publication?.explanation ?? ""}
           />
         )}
         {mockFundingDetail.isProfitMakingActivity && (
           <OtherEvidenceList
             content="수익 사업"
             explanation={
-              mockFundingDetail.profitMakingActivityExplanation ?? ""
+              mockFundingDetail.profitMakingActivity?.explanation ?? ""
             }
           />
         )}
         {mockFundingDetail.isJointExpense && (
           <OtherEvidenceList
             content="공동 경비"
-            explanation={mockFundingDetail.jointExpenseExplanation ?? ""}
+            explanation={mockFundingDetail.jointExpense?.explanation ?? ""}
           />
         )}
         {mockFundingDetail.isEtcExpense && (
           <OtherEvidenceList
             content="기타"
-            explanation={mockFundingDetail.etcExpenseExplanation ?? ""}
+            explanation={mockFundingDetail.etcExpense?.explanation ?? ""}
           />
         )}
       </Card>

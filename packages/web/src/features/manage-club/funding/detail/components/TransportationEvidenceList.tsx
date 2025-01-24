@@ -20,15 +20,15 @@ const TransportationEvidenceList = () => (
       교통비
     </Typography>
     <ListItem>
-      교통수단: {transportationEnumMap(mockFundingDetail.transportationEnum)}
+      교통수단: {transportationEnumMap(mockFundingDetail.transportation?.enum)}
     </ListItem>
-    <ListItem>출발지: {mockFundingDetail.origin}</ListItem>
-    <ListItem>도착지: {mockFundingDetail.destination}</ListItem>
+    <ListItem>출발지: {mockFundingDetail.transportation?.origin}</ListItem>
+    <ListItem>도착지: {mockFundingDetail.transportation?.destination}</ListItem>
     <ListItem>
-      탑승자 명단 ({mockFundingDetail.transportationPassengers.length}명)
+      탑승자 명단 ({mockFundingDetail.transportation?.passengers.length}명)
     </ListItem>
     <FlexWrapper direction="column" gap={12} style={{ paddingLeft: 24 }}>
-      {mockFundingDetail.transportationPassengers.map(passenger => (
+      {mockFundingDetail.transportation?.passengers.map(passenger => (
         <Typography
           key={passenger.name}
           ff="PRETENDARD"
@@ -41,7 +41,7 @@ const TransportationEvidenceList = () => (
         </Typography>
       ))}
     </FlexWrapper>
-    <ListItem>이용 목적: {mockFundingDetail.purposeOfTransportation}</ListItem>
+    <ListItem>이용 목적: {mockFundingDetail.transportation?.purpose}</ListItem>
   </FlexWrapper>
 );
 

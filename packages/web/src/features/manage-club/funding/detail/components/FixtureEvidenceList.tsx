@@ -38,31 +38,31 @@ const FixtureEvidenceList: React.FC<FixtureEvidenceListProps> = ({
         증빙 분류: {content}{" "}
         {evidenceEnumMap(
           isFixture
-            ? mockFundingDetail.fixtureEvidenceEnum
-            : mockFundingDetail.clubSuppliesEvidenceEnum,
+            ? mockFundingDetail.fixture?.evidenceEnum
+            : mockFundingDetail.clubSupplies?.evidenceEnum,
         )}
       </ListItem>
       <ListItem>
         {content} 분류:{" "}
         {classEnumMap(
           isFixture
-            ? mockFundingDetail.fixtureClassEnum
-            : mockFundingDetail.clubSuppliesClassEnum,
+            ? mockFundingDetail.fixture?.classEnum
+            : mockFundingDetail.clubSupplies?.classEnum,
         )}
       </ListItem>
       <ListItem>
         {content}명:{" "}
         {isFixture
-          ? mockFundingDetail.fixtureName
-          : mockFundingDetail.clubSuppliesName}
+          ? mockFundingDetail.fixture?.name
+          : mockFundingDetail.clubSupplies?.name}
       </ListItem>
       <ListItem>{content} 증빙</ListItem>
       {/* TODO: file이랑 연결 */}
       <FlexWrapper direction="column" gap={12} style={{ paddingLeft: 24 }}>
         <Typography ff="PRETENDARD" fw="REGULAR" fs={14} lh={16} color="BLACK">
           {isFixture
-            ? mockFundingDetail.fixturePurpose
-            : mockFundingDetail.clubSuppliesPurpose}
+            ? mockFundingDetail.fixture?.purpose
+            : mockFundingDetail.clubSupplies?.purpose}
         </Typography>
         <ThumbnailPreviewList
           fileList={[
