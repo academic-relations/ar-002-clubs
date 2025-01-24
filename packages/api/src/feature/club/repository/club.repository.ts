@@ -470,6 +470,10 @@ export default class ClubRepository {
   }
 
   async fetchSummaries(clubIds: number[]): Promise<VClubSummary[]> {
+    if (clubIds.length === 0) {
+      return [];
+    }
+
     const result = await this.db
       .select()
       .from(Club)

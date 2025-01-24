@@ -13,6 +13,7 @@ import {
 import {
   and,
   asc,
+  desc,
   eq,
   exists,
   gt,
@@ -743,15 +744,41 @@ export default class ActivityRepository {
   async fetchCommentedSummaries(
     executiveId: number,
   ): Promise<VActivitySummary[]> {
+    const latestFeedbacks = this.db
+      .select({
+        activityId: ActivityFeedback.activityId,
+        executiveId: ActivityFeedback.executiveId,
+      })
+      .from(ActivityFeedback)
+      .where(
+        and(
+          eq(ActivityFeedback.executiveId, executiveId),
+          isNull(ActivityFeedback.deletedAt),
+        ),
+      )
+      .orderBy(desc(ActivityFeedback.createdAt))
+      .as("latest_feedbacks");
+
     const results = await this.db
-      .select()
+      .select({
+        id: Activity.id,
+        activityStatusEnumId: Activity.activityStatusEnumId,
+        activityTypeEnumId: Activity.activityTypeEnumId,
+        clubId: Activity.clubId,
+        name: Activity.name,
+        commentedAt: Activity.commentedAt,
+        editedAt: Activity.editedAt,
+        updatedAt: Activity.updatedAt,
+        chargedExecutiveId: Activity.chargedExecutiveId,
+        commentedExecutiveId: latestFeedbacks.executiveId,
+      })
       .from(Activity)
+      .leftJoin(latestFeedbacks, eq(latestFeedbacks.activityId, Activity.id))
       .where(
         and(
           isNull(Activity.deletedAt),
           or(
             eq(Activity.chargedExecutiveId, executiveId),
-            eq(Activity.reviewedExecutiveId, executiveId),
             exists(
               this.db
                 .select()

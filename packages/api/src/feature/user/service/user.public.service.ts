@@ -197,11 +197,4 @@ export default class UserPublicService {
     const executive = await this.executiveRepository.fetchSummary(executiveId);
     return executive;
   }
-
-  async findExecutiveSummary(
-    executiveId: number,
-  ): Promise<IExecutiveSummary | null> {
-    const executive = await this.executiveRepository.findSummary(executiveId);
-    return executive;
-  }
 }

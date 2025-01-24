@@ -25,11 +25,11 @@ export class VActivitySummary implements IActivitySummary {
 
   chargedExecutive: {
     id: number;
-  } | null;
+  };
 
-  recentReviewedExecutive: {
+  commentedExecutive: {
     id: number;
-  } | null;
+  };
 
   constructor(data: VActivitySummary) {
     Object.assign(this, data);
@@ -44,8 +44,8 @@ export class VActivitySummary implements IActivitySummary {
     commentedAt: Date | null;
     editedAt: Date;
     updatedAt: Date;
-    chargedExecutiveId: number;
-    reviewedExecutiveId: number;
+    chargedExecutiveId?: number;
+    commentedExecutiveId?: number;
   }): VActivitySummary {
     return new VActivitySummary({
       id: activity.id,
@@ -58,12 +58,16 @@ export class VActivitySummary implements IActivitySummary {
       commentedAt: activity.commentedAt,
       editedAt: activity.editedAt,
       updatedAt: activity.updatedAt,
-      chargedExecutive: {
-        id: activity.chargedExecutiveId,
-      },
-      recentReviewedExecutive: {
-        id: activity.reviewedExecutiveId,
-      },
+      chargedExecutive: activity.chargedExecutiveId
+        ? {
+            id: activity.chargedExecutiveId,
+          }
+        : undefined,
+      commentedExecutive: activity.commentedExecutiveId
+        ? {
+            id: activity.commentedExecutiveId,
+          }
+        : undefined,
     });
   }
 }

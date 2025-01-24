@@ -1284,7 +1284,7 @@ export default class ActivityService {
             }, undefined),
           );
 
-        const lastReviewedExecutive =
+        const commentedExecutive =
           lastFeedback === undefined
             ? undefined
             : await this.userPublicService
@@ -1313,7 +1313,7 @@ export default class ActivityService {
           activityId: activity.id,
           activityStatusEnum: activity.activityStatusEnumId,
           activityName: activity.name,
-          finalReviewedExecutive: lastReviewedExecutive,
+          commentedExecutive,
           chargedExecutive,
           updatedAt: activity.updatedAt,
         };
@@ -1431,10 +1431,9 @@ export default class ActivityService {
     const clubIds = new Set(activities.map(activity => activity.club.id));
     const executiveIds = new Set(
       activities.flatMap(activity =>
-        [
-          activity.chargedExecutive?.id,
-          activity.recentReviewedExecutive?.id,
-        ].filter(Boolean),
+        [activity.chargedExecutive?.id, activity.commentedExecutive?.id].filter(
+          Boolean,
+        ),
       ),
     );
 
@@ -1455,8 +1454,8 @@ export default class ActivityService {
       chargedExecutive: activity.chargedExecutive?.id
         ? executiveMap.get(activity.chargedExecutive.id)
         : undefined,
-      recentReviewedExecutive: activity.recentReviewedExecutive?.id
-        ? executiveMap.get(activity.recentReviewedExecutive.id)
+      commentedExecutive: activity.commentedExecutive?.id
+        ? executiveMap.get(activity.commentedExecutive.id)
         : undefined,
     }));
 

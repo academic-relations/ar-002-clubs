@@ -32,7 +32,7 @@ export const zActivitySummaryResponse = zActivitySummary.extend({
 export const zActivitySummaryExecutiveResponse =
   zActivitySummaryResponse.extend({
     chargedExecutive: zExecutiveSummary.optional(),
-    recentReviewedExecutive: zExecutiveSummary.optional(),
+    commentedExecutive: zExecutiveSummary.optional(),
   });
 
 // TODO: 수정 필요

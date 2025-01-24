@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
 import { and, eq, gte, inArray, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
@@ -162,7 +162,7 @@ export default class ExecutiveRepository {
   async fetchSummary(id: number): Promise<VExecutiveSummary> {
     const result = await this.findSummary(id);
     if (!result) {
-      throw new Error("Executive not found");
+      throw new NotFoundException("Executive not found");
     }
     return result;
   }

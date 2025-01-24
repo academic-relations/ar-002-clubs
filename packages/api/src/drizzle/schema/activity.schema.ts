@@ -64,9 +64,6 @@ export const Activity = mysqlTable(
     chargedExecutiveId: int("charged_executive_id").references(
       () => Executive.id,
     ),
-    reviewedExecutiveId: int("reviewed_executive_id").references(
-      () => Executive.id,
-    ),
     professorApprovedAt: timestamp("professor_approved_at"),
     editedAt: timestamp("edited_at").defaultNow().notNull(),
     commentedAt: timestamp("commented_at"),
