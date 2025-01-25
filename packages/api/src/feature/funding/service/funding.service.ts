@@ -228,7 +228,7 @@ export default class FundingService {
     funding: MFunding,
   ): Promise<IFundingResponse> {
     const purposeActivity = funding.purposeActivity
-      ? await this.activityPublicService.getActivitySummary(
+      ? await this.activityPublicService.fetchSummary(
           funding.purposeActivity.id,
         )
       : undefined;
@@ -485,9 +485,7 @@ export default class FundingService {
   ): Promise<ApiFnd012ResponseOk> {
     await this.userPublicService.checkCurrentExecutive(executiveId);
 
-    const funding = (await this.fundingRepository.fetch(
-      id,
-    )) as IFundingResponse; // TODO: 이거 이래도 되나? comments 필드가 없는데. 에러 안나나?
+    const funding = await this.fundingRepository.fetch(id); // TODO: 이거 이래도 되나? comments 필드가 없는데. 에러 안나나?
 
     const fundingResponse = await this.transformFundingToResponse(funding);
     return fundingResponse;

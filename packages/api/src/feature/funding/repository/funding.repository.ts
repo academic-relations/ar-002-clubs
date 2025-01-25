@@ -1,11 +1,11 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
 import {
+  IFunding,
   IFundingExtra,
   IFundingRequest,
   IFundingSummary,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
-import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import { and, eq, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -894,13 +894,15 @@ export default class FundingRepository {
     });
   }
 
-  async fetchSummary(
-    id: number,
-    transaction?: DrizzleTransaction,
-  ): Promise<VFundingSummary> {
-    const db = transaction || this.db;
+  async fetchSummary(id: number): Promise<VFundingSummary> {
+    return this.db.transaction(async tx => this.fetchSummaryTx(tx, id));
+  }
 
-    const result = (await db
+  async fetchSummaryTx(
+    tx: DrizzleTransaction,
+    id: number,
+  ): Promise<VFundingSummary> {
+    const result = (await tx
       .select()
       .from(Funding)
       .where(eq(Funding.id, id))) as FundingSummaryDBResult[];
@@ -913,10 +915,10 @@ export default class FundingRepository {
   }
 
   async patchStatus(param: {
-    id: number;
-    fundingStatusEnum: FundingStatusEnum;
-    approvedAmount: number;
-    commentedAt: Date;
+    id: IFunding["id"];
+    fundingStatusEnum: IFunding["fundingStatusEnum"];
+    approvedAmount: IFunding["approvedAmount"];
+    commentedAt: IFunding["commentedAt"];
   }): Promise<VFundingSummary> {
     return this.db.transaction(async tx => this.patchStatusTx(tx, param));
   }
@@ -924,10 +926,10 @@ export default class FundingRepository {
   async patchStatusTx(
     tx: DrizzleTransaction,
     param: {
-      id: number;
-      fundingStatusEnum: FundingStatusEnum;
-      approvedAmount: number;
-      commentedAt: Date;
+      id: IFunding["id"];
+      fundingStatusEnum: IFunding["fundingStatusEnum"];
+      approvedAmount: IFunding["approvedAmount"];
+      commentedAt: IFunding["commentedAt"];
     },
   ): Promise<VFundingSummary> {
     const now = new Date();
@@ -942,6 +944,6 @@ export default class FundingRepository {
       })
       .where(eq(Funding.id, param.id));
 
-    return this.fetchSummary(param.id, tx);
+    return this.fetchSummaryTx(tx, param.id);
   }
 }
