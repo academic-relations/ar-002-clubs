@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 
 import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import useEasterEgg from "@sparcs-clubs/web/common/hooks/useEasteregg";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 import Banner from "../components/Banner";
@@ -58,56 +59,9 @@ const ResponsiveWrapper = styled(FlexWrapper)`
     gap: 40px;
   }
 `;
-
-const easterEgg = `%c
-                        -     
-                       -=.    
-                      -===    
-                     =====.   
-:                   -=====-   
-+-                 -=======   
-++=               =========-  
-+++=.            -==========  
-+++++:          ============- 
-++++++-        ============== 
-+++++++=      ===============:
-++++++++=.  .================:
-+++++++++= .===============-  
-++++++++=. ===============.   
-+++++++=..==============:     
-++++++=..==============       
-+++++= .=============.        
-++++=..============:          
-+++=..===========-            
-++= .===========-.            
-+=.:==========+++++++===--:::.  
-= :=======+++++++++++++++===: 
- :====+++++++++++++++=====:   
-.---====++++++++=======-.     
-             :=======-.       
-            :======-.         
-           :=====:            
-          -====:              
-         -===:                
-        -=-.                  
-       =-                     
-     .:.                       
-%c찾으셨군요!
-SPARCS의 여정에 함께하지 않으시겠어요?
-https://sparcs.org/
-https://apply.sparcs.org/ (리크루팅 기간에 접속 가능)
-     `;
-
 const MainPageMainFrame: React.FC = () => {
   // 이스터에그_리크루팅
-  useEffect(() => {
-    console.log(
-      easterEgg,
-      "color:#eba12a; font-weight: bold; margin: auto", // 로고
-      "", // 텍스트
-    );
-    console.log();
-  }, []);
+  useEasterEgg();
   return (
     <ResponsiveWrapper direction="column" gap={60}>
       <Banner icon="star">

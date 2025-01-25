@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { hangulIncludes } from "es-hangul";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
+import useEasterEgg from "@sparcs-clubs/web/common/hooks/useEasteregg";
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
 import { useGetClubsList } from "@sparcs-clubs/web/features/clubs/services/useGetClubsList";
 
@@ -14,55 +15,9 @@ interface ClubsListProps {
   isRegistrationPeriod: boolean;
 }
 
-const easterEgg = `%c
-                        -     
-                       -=.    
-                      -===    
-                     =====.   
-:                   -=====-   
-+-                 -=======   
-++=               =========-  
-+++=.            -==========  
-+++++:          ============- 
-++++++-        ============== 
-+++++++=      ===============:
-++++++++=.  .================:
-+++++++++= .===============-  
-++++++++=. ===============.   
-+++++++=..==============:     
-++++++=..==============       
-+++++= .=============.        
-++++=..============:          
-+++=..===========-            
-++= .===========-.            
-+=.:==========+++++++===--:::.  
-= :=======+++++++++++++++===: 
- :====+++++++++++++++=====:   
-.---====++++++++=======-.     
-             :=======-.       
-            :======-.         
-           :=====:            
-          -====:              
-         -===:                
-        -=-.                  
-       =-                     
-     .:.                       
-%c찾으셨군요!
-SPARCS의 여정에 함께하지 않으시겠어요?
-https://sparcs.org/
-https://apply.sparcs.org/ (리크루팅 기간에 접속 가능)
-     `;
-
 const ClubsListFrame: React.FC<ClubsListProps> = ({ isRegistrationPeriod }) => {
   // 이스터에그_리크루팅
-  useEffect(() => {
-    console.log(
-      easterEgg,
-      "color:#eba12a; font-weight: bold; margin: auto", // 로고
-      "", // 텍스트
-    );
-    console.log();
-  }, []);
+  useEasterEgg();
 
   const { data, isLoading, isError } = useGetClubsList();
 
