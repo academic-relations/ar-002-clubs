@@ -1,16 +1,19 @@
 import React from "react";
 
-import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import { useParams } from "next/navigation";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 import ActivityReportChargedStatistic from "../components/ActivityReportChargedStatistic";
+import useGetExecutiveChargedActivities from "../services/useGetExecutiveChargedActivities";
 
 const ExecutiveActivityReportChargedFrame: React.FC = () => {
-  const executiveName = "집행부";
-  const isLoading = false;
-  const isError = false;
+  const { id: executiveId } = useParams();
+  const { data, isLoading, isError } = useGetExecutiveChargedActivities({
+    executiveId: Number(executiveId),
+  });
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
@@ -23,7 +26,7 @@ const ExecutiveActivityReportChargedFrame: React.FC = () => {
               path: `/executive/activity-report`,
             },
           ]}
-          title={`활동 보고서 검토 내역 (${executiveName})`}
+          title={`활동 보고서 검토 내역 (${data?.chargedExecutive.name})`}
           enableLast
         />
         <ActivityReportChargedStatistic
