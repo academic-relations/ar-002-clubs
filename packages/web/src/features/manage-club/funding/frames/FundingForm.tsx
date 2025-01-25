@@ -30,8 +30,12 @@ const FundingForm: React.FC<FundingFormProps> = ({
     defaultValues: {
       ...initialData,
       purposeActivity: {
-        id: initialData?.purposeActivity?.id ?? Infinity,
-        name: initialData?.purposeActivity?.name ?? "활동보고서로 증빙 불가",
+        id: initialData
+          ? initialData.purposeActivity?.id ?? Infinity
+          : undefined,
+        name: initialData
+          ? initialData.purposeActivity?.name ?? "활동보고서로 증빙 불가"
+          : undefined,
       },
     },
   });
