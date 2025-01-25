@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { IFileSummary } from "@sparcs-clubs/interface/api/file/type/file.type";
 import {
@@ -40,10 +40,7 @@ import {
 import { IExecutive } from "@sparcs-clubs/interface/api/user/type/user.type";
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
-import { MySql2Database } from "drizzle-orm/mysql2";
-
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
-import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import ActivityPublicService from "@sparcs-clubs/api/feature/activity/service/activity.public.service";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
@@ -64,7 +61,6 @@ export default class FundingService {
     private readonly clubPublicService: ClubPublicService,
     private readonly activityPublicService: ActivityPublicService,
     private fundingDeadlineRepository: FundingDeadlineRepository,
-    @Inject(DrizzleAsyncProvider) private db: MySql2Database,
   ) {}
 
   async postStudentFunding(
@@ -186,35 +182,6 @@ export default class FundingService {
     }
 
     if (funding.etcExpense) {
-      funding.etcExpense.files = await this.filePublicService.getFilesByIds(
-        funding.etcExpense.files.flatMap(file => file.id),
-      );
-    }
-
-    if (funding.publication) {
-      // 이거 중복인데?
-      funding.publication.files = await this.filePublicService.getFilesByIds(
-        funding.publication.files.flatMap(file => file.id),
-      );
-    }
-
-    if (funding.profitMakingActivity) {
-      // 이거 중복인데?
-      funding.profitMakingActivity.files =
-        await this.filePublicService.getFilesByIds(
-          funding.profitMakingActivity.files.flatMap(file => file.id),
-        );
-    }
-
-    if (funding.jointExpense) {
-      // 이거 중복인데?
-      funding.jointExpense.files = await this.filePublicService.getFilesByIds(
-        funding.jointExpense.files.flatMap(file => file.id),
-      );
-    }
-
-    if (funding.etcExpense) {
-      // 이거 중복인데?
       funding.etcExpense.files = await this.filePublicService.getFilesByIds(
         funding.etcExpense.files.flatMap(file => file.id),
       );
@@ -587,37 +554,33 @@ export default class FundingService {
       );
     }
 
-    const fundingComment = await this.db.transaction(async tx => {
-      const comment = await this.fundingCommentRepository.insert(
-        {
+    const fundingComment = await this.fundingCommentRepository.withTransaction(
+      async tx => {
+        const comment = await this.fundingCommentRepository.insertTx(tx, {
           fundingStatusEnum,
           approvedAmount,
           funding: { id },
           chargedExecutive: { id: executiveId },
           content,
-        } as IFundingCommentRequestCreate,
-        tx,
-      );
-      const funding = await this.fundingRepository.patchStatus(
-        {
+        } as IFundingCommentRequestCreate);
+        const funding = await this.fundingRepository.patchStatusTx(tx, {
           id,
           fundingStatusEnum,
           approvedAmount,
           commentedAt: comment.createdAt,
-        },
-        tx,
-      );
+        });
 
-      // funding 이랑 comment 의 값들이 다르면 에러
-      if (!comment.isFinalComment(funding)) {
-        throw new HttpException(
-          "Funding and Comment Has Different Value",
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
+        // funding 이랑 comment 의 값들이 다르면 에러
+        if (!comment.isFinalComment(funding)) {
+          throw new HttpException(
+            "Funding and Comment Has Different Value",
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
 
-      return comment;
-    });
+        return comment;
+      },
+    );
 
     return fundingComment;
   }

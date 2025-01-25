@@ -30,11 +30,6 @@ export class MFundingComment implements IFundingComment {
     Object.assign(this, data);
   }
 
-  equals(other: MFundingComment): boolean {
-    // 모든 키의 값이 동일한지 확인
-    return Object.keys(this).every(key => this[key] === other[key]);
-  }
-
   isFinalComment(funding: VFundingSummary | MFunding): boolean {
     return (
       funding.approvedAmount === this.approvedAmount &&

@@ -5,6 +5,7 @@ import {
   IFundingRequest,
   IFundingSummary,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
+import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import { and, eq, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -911,25 +912,36 @@ export default class FundingRepository {
     return VFundingSummary.fromDBResult(result[0]);
   }
 
-  async patchStatus(
-    { id, fundingStatusEnum, approvedAmount, commentedAt },
-    transaction?: DrizzleTransaction,
-  ): Promise<VFundingSummary> {
-    // summary를 가져오는 이유: DB부담 최소화
-    const db = transaction || this.db;
+  async patchStatus(param: {
+    id: number;
+    fundingStatusEnum: FundingStatusEnum;
+    approvedAmount: number;
+    commentedAt: Date;
+  }): Promise<VFundingSummary> {
+    return this.db.transaction(async tx => this.patchStatusTx(tx, param));
+  }
 
+  async patchStatusTx(
+    tx: DrizzleTransaction,
+    param: {
+      id: number;
+      fundingStatusEnum: FundingStatusEnum;
+      approvedAmount: number;
+      commentedAt: Date;
+    },
+  ): Promise<VFundingSummary> {
     const now = new Date();
 
-    await db
+    await tx
       .update(Funding)
       .set({
-        fundingStatusEnum,
-        approvedAmount,
-        commentedAt,
+        fundingStatusEnum: param.fundingStatusEnum,
+        approvedAmount: param.approvedAmount,
+        commentedAt: param.commentedAt,
         editedAt: now,
       })
-      .where(eq(Funding.id, id));
+      .where(eq(Funding.id, param.id));
 
-    return this.fetchSummary(id);
+    return this.fetchSummary(param.id, tx);
   }
 }
