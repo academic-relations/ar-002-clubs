@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { zExecutiveSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 
-import { zActivitySummaryExecutiveResponse } from "../type/activity.type";
+import { zActivitySummaryResponse } from "../type/activity.type";
 
 const url = (executiveId: number) =>
   `/executive/activities/executives/executive/${executiveId}/brief`;
@@ -22,7 +22,12 @@ const requestBody = z.object({});
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     chargedExecutive: zExecutiveSummary,
-    activities: zActivitySummaryExecutiveResponse.array(),
+    activities: zActivitySummaryResponse
+      .extend({
+        chargedExecutive: zExecutiveSummary.nullable(),
+        commentedExecutive: zExecutiveSummary.nullable(),
+      })
+      .array(),
   }),
 };
 
