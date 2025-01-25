@@ -1,10 +1,27 @@
-import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 import {
   ActivityStatusEnum,
   ActivityTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { and, asc, eq, gt, inArray, isNull, lte, or } from "drizzle-orm";
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  exists,
+  gt,
+  inArray,
+  isNull,
+  lte,
+  or,
+} from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
@@ -27,7 +44,7 @@ import {
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
-import { VStudentSummary } from "@sparcs-clubs/api/feature/user/model/student.summary.model";
+import { VActivitySummary } from "../model/activity.summary.model";
 
 @Injectable()
 export default class ActivityRepository {
@@ -61,6 +78,7 @@ export default class ActivityRepository {
         .update(Activity)
         .set({
           deletedAt,
+          editedAt: deletedAt,
         })
         .where(
           and(eq(Activity.id, contents.activityId), isNull(Activity.deletedAt)),
@@ -452,6 +470,7 @@ export default class ActivityRepository {
           evidence: param.evidence,
           activityDId: param.activityDId,
           activityStatusEnumId: Number(param.activityStatusEnumId),
+          editedAt: deletedAt,
         })
         .where(eq(Activity.id, param.activityId));
       if (activitySetResult.affectedRows !== 1) {
@@ -588,15 +607,25 @@ export default class ActivityRepository {
     return result[0];
   }
 
-  async selectActivityById(id: number): Promise<IActivitySummary> {
+  async fetchSummary(id: number): Promise<IActivitySummary> {
     const result = await this.db
-      .select({
-        name: Activity.name,
-        id: Activity.id,
-      })
+      .select()
       .from(Activity)
       .where(eq(Activity.id, id));
-    return result[0];
+
+    if (result.length !== 1) {
+      throw new NotFoundException("Activity not found");
+    }
+
+    return VActivitySummary.fromDBResult(result[0]);
+  }
+
+  async fetchSummaries(activityIds: number[]): Promise<IActivitySummary[]> {
+    const results = await this.db
+      .select()
+      .from(Activity)
+      .where(inArray(Activity.id, activityIds));
+    return results.map(result => VActivitySummary.fromDBResult(result));
   }
 
   /**
@@ -626,6 +655,7 @@ export default class ActivityRepository {
         .update(Activity)
         .set({
           activityStatusEnumId: param.activityStatusEnumId,
+          commentedAt: new Date(),
         })
         .where(
           and(eq(Activity.id, param.activityId), isNull(Activity.deletedAt)),
@@ -711,19 +741,61 @@ export default class ActivityRepository {
     return result;
   }
 
-  async fetchActivitySummaries(
-    activityIds: number[],
-  ): Promise<IActivitySummary[]> {
-    const result = await this.db
+  async fetchCommentedSummaries(
+    executiveId: number,
+  ): Promise<VActivitySummary[]> {
+    const latestFeedbacks = this.db
+      .select({
+        activityId: ActivityFeedback.activityId,
+        executiveId: ActivityFeedback.executiveId,
+      })
+      .from(ActivityFeedback)
+      .where(
+        and(
+          eq(ActivityFeedback.executiveId, executiveId),
+          isNull(ActivityFeedback.deletedAt),
+        ),
+      )
+      .orderBy(desc(ActivityFeedback.createdAt))
+      .as("latest_feedbacks");
+
+    const results = await this.db
       .select({
         id: Activity.id,
+        activityStatusEnumId: Activity.activityStatusEnumId,
+        activityTypeEnumId: Activity.activityTypeEnumId,
+        clubId: Activity.clubId,
         name: Activity.name,
+        commentedAt: Activity.commentedAt,
+        editedAt: Activity.editedAt,
+        updatedAt: Activity.updatedAt,
+        chargedExecutiveId: Activity.chargedExecutiveId,
+        commentedExecutiveId: latestFeedbacks.executiveId,
       })
       .from(Activity)
+      .leftJoin(latestFeedbacks, eq(latestFeedbacks.activityId, Activity.id))
       .where(
-        and(inArray(Activity.id, activityIds), isNull(Activity.deletedAt)),
+        and(
+          isNull(Activity.deletedAt),
+          or(
+            eq(Activity.chargedExecutiveId, executiveId),
+            exists(
+              this.db
+                .select()
+                .from(ActivityFeedback)
+                .where(
+                  and(
+                    eq(ActivityFeedback.activityId, Activity.id),
+                    eq(ActivityFeedback.executiveId, executiveId),
+                    isNull(ActivityFeedback.deletedAt),
+                  ),
+                ),
+            ),
+          ),
+        ),
       );
-    return result;
+
+    return results.map(result => VActivitySummary.fromDBResult(result));
   }
 
   /**
@@ -733,15 +805,12 @@ export default class ActivityRepository {
    * 선택가능한 활동이란, 승인되거나 운위로 넘겨진 경우를 의미합니다.
    */
 
-  async fetchAvailableActivitySummaries(
+  async fetchAvailableSummaries(
     clubId: number,
     activityDId: number,
-  ): Promise<IActivitySummary[]> {
-    const result = await this.db
-      .select({
-        id: Activity.id,
-        name: Activity.name,
-      })
+  ): Promise<VActivitySummary[]> {
+    const results = await this.db
+      .select()
       .from(Activity)
       .where(
         and(
@@ -754,21 +823,15 @@ export default class ActivityRepository {
           isNull(Activity.deletedAt),
         ),
       );
-    return result;
+    return results.map(result => VActivitySummary.fromDBResult(result));
   }
 
-  async fetchParticipantStudentSummaries(
-    activityId: number,
-  ): Promise<VStudentSummary[]> {
+  async fetchParticipantIds(activityId: number): Promise<number[]> {
     const result = await this.db
       .select({
         id: ActivityParticipant.studentId,
-        userId: Student.userId,
-        studentNumber: Student.number,
-        name: Student.name,
       })
       .from(ActivityParticipant)
-      .leftJoin(Student, eq(ActivityParticipant.studentId, Student.id))
       .where(
         and(
           eq(ActivityParticipant.activityId, activityId),
@@ -776,12 +839,6 @@ export default class ActivityRepository {
         ),
       );
 
-    return result.map(
-      participant =>
-        new VStudentSummary({
-          ...participant,
-          studentNumber: participant.studentNumber.toString(), // TODO: studentNumber가 string으로 바뀌면 삭제
-        }),
-    );
+    return result.map(participant => participant.id);
   }
 }

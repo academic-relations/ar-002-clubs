@@ -197,7 +197,12 @@ export default class FundingRepository {
           name: Student.name,
         })
         .from(FundingTransportationPassenger)
-        .where(and(isNull(FundingTransportationPassenger.deletedAt)))
+        .where(
+          and(
+            eq(FundingTransportationPassenger.fundingId, id),
+            isNull(FundingTransportationPassenger.deletedAt),
+          ),
+        )
         .innerJoin(
           Student,
           eq(Student.id, FundingTransportationPassenger.studentId),
@@ -254,36 +259,36 @@ export default class FundingRepository {
     });
   }
 
-  async selectAll(
+  async fetchSummaries(
     clubId: number,
-    semesterId: number,
+    activityDId: number,
   ): Promise<IFundingSummary[]> {
-    const fundingOrders = await this.db
+    const fundings = await this.db
       .select({
         id: Funding.id,
         name: Funding.name,
         expenditureAmount: Funding.expenditureAmount,
         approvedAmount: Funding.approvedAmount,
         fundingStatusEnum: Funding.fundingStatusEnum,
-        purposeActivity: Funding.purposeActivityId,
+        purposeActivityId: Funding.purposeActivityId,
       })
       .from(Funding)
       .where(
         and(
           eq(Funding.clubId, clubId),
-          eq(Funding.semesterId, semesterId),
+          eq(Funding.activityDId, activityDId),
           isNull(Funding.deletedAt),
         ),
       );
 
-    if (fundingOrders.length === 0) {
+    if (fundings.length === 0) {
       return [];
     }
 
-    return fundingOrders.map(fundingOrder => ({
-      ...fundingOrder,
+    return fundings.map(funding => ({
+      ...funding,
       purposeActivity: {
-        id: fundingOrder.purposeActivity,
+        id: funding.purposeActivityId,
       },
     }));
   }
@@ -296,8 +301,8 @@ export default class FundingRepository {
       // 1. Insert funding order
       const [fundingOrder] = await tx.insert(Funding).values({
         clubId: funding.clubId,
-        purposeActivityId: funding.purposeActivity.id,
-        semesterId: extra.semesterId,
+        purposeActivityId: funding.purposeActivity?.id ?? null,
+        activityDId: extra.activityDId,
         fundingStatusEnum: extra.fundingStatusEnum,
         name: funding.name,
         expenditureDate: funding.expenditureDate,
@@ -336,7 +341,6 @@ export default class FundingRepository {
         origin: funding.transportation?.origin,
         destination: funding.transportation?.destination,
         purposeOfTransportation: funding.transportation?.purpose,
-        placeValidity: funding.transportation?.placeValidity,
         // Trader fields
         traderName: funding.nonCorporateTransaction?.traderName,
         traderAccountNumber:
@@ -503,7 +507,10 @@ export default class FundingRepository {
 
       // Soft delete funding order and all related records
       await Promise.all([
-        tx.update(Funding).set({ deletedAt: now }).where(eq(Funding.id, id)),
+        tx
+          .update(Funding)
+          .set({ deletedAt: now, editedAt: now })
+          .where(eq(Funding.id, id)),
         tx
           .update(FundingFeedback)
           .set({ deletedAt: now })
@@ -619,7 +626,6 @@ export default class FundingRepository {
           origin: funding.transportation?.origin,
           destination: funding.transportation?.destination,
           purposeOfTransportation: funding.transportation?.purpose,
-          placeValidity: funding.transportation?.placeValidity,
           // Trader fields
           traderName: funding.nonCorporateTransaction?.traderName,
           traderAccountNumber:
@@ -635,6 +641,7 @@ export default class FundingRepository {
             funding.profitMakingActivity?.explanation,
           jointExpenseExplanation: funding.jointExpense?.explanation,
           etcExpenseExplanation: funding.etcExpense?.explanation,
+          editedAt: now,
         })
         .where(eq(Funding.id, id));
 

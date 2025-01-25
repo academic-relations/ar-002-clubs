@@ -63,7 +63,6 @@ export interface AddEvidence {
   origin?: string;
   destination?: string;
   purposeOfTransportation?: string;
-  placeValidity?: string;
   transportationPassengers: IStudentSummary[];
   // 비법인 거래 증빙
   isNonCorporateTransaction: boolean;

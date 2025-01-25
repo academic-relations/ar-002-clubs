@@ -37,7 +37,7 @@ const Funding: React.FC = () => {
       />
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         <NewFundingListSection clubId={data?.clubId} />
-        <PastFundingListSection />
+        <PastFundingListSection clubId={data?.clubId} />
       </AsyncBoundary>
     </FlexWrapper>
   );
