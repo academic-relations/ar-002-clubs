@@ -1,5 +1,9 @@
 import { ApiFnd002ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
 import {
+  ActivityStatusEnum,
+  ActivityTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/activity.enum";
+import {
   FixtureClassEnum,
   FixtureEvidenceEnum,
   FundingStatusEnum,
@@ -17,6 +21,12 @@ const mockFundingDetail: ApiFnd002ResponseOk = {
   purposeActivity: {
     id: 1,
     name: "2021년 1학기 해커톤",
+    activityStatusEnum: ActivityStatusEnum.Approved,
+    activityTypeEnum: ActivityTypeEnum.matchedExternalActivity,
+    club: { id: 112 },
+    commentedAt: new Date(),
+    editedAt: new Date(),
+    updatedAt: new Date(),
   },
   name: "M1 맥북 Pro 16 inch",
   expenditureDate: new Date(),
