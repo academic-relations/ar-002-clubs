@@ -20,6 +20,8 @@ export const zActivitySummary = z.object({
   activityTypeEnum: z.nativeEnum(ActivityTypeEnum),
   club: zClubSummary.pick({ id: true }),
   name: z.string().max(255),
+  chargedExecutive: zExecutiveSummary.pick({ id: true }).optional(),
+  commentedExecutive: zExecutiveSummary.pick({ id: true }).optional(),
   commentedAt: z.coerce.date().nullable(),
   editedAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
@@ -28,12 +30,6 @@ export const zActivitySummary = z.object({
 export const zActivitySummaryResponse = zActivitySummary.extend({
   club: zClubSummary,
 });
-
-export const zActivitySummaryExecutiveResponse =
-  zActivitySummaryResponse.extend({
-    chargedExecutive: zExecutiveSummary.optional(),
-    commentedExecutive: zExecutiveSummary.optional(),
-  });
 
 // TODO: 수정 필요
 export const zActivityD = z.object({
@@ -44,7 +40,4 @@ export const zActivityD = z.object({
 
 export type IActivitySummary = z.infer<typeof zActivitySummary>;
 export type IActivityResponseSummary = z.infer<typeof zActivitySummaryResponse>;
-export type IActivitySummaryExecutiveResponse = z.infer<
-  typeof zActivitySummaryExecutiveResponse
->;
 export type IActivityD = z.infer<typeof zActivityD>;

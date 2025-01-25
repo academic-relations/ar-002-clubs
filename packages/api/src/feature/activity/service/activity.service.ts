@@ -1453,10 +1453,10 @@ export default class ActivityService {
       club: clubMap.get(activity.club.id),
       chargedExecutive: activity.chargedExecutive?.id
         ? executiveMap.get(activity.chargedExecutive.id)
-        : undefined,
+        : null,
       commentedExecutive: activity.commentedExecutive?.id
         ? executiveMap.get(activity.commentedExecutive.id)
-        : undefined,
+        : null,
     }));
 
     return {
