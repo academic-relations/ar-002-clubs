@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { and, eq, gt, gte, inArray, isNull, lte, or, sql } from "drizzle-orm";
 import { union } from "drizzle-orm/mysql-core";
@@ -22,6 +22,8 @@ import {
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
+
+import { VClubSummary } from "../model/club.summary.model";
 
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 
@@ -347,7 +349,6 @@ export default class ClubRepository {
         .where(and(inArray(Club.id, delegate), isNull(Club.deletedAt)));
       return club;
     });
-    console.log(result);
     return result;
   }
 
@@ -457,5 +458,27 @@ export default class ClubRepository {
       return response;
     });
     return result;
+  }
+
+  async fetchSummary(clubId: number): Promise<VClubSummary> {
+    const result = await this.db.select().from(Club).where(eq(Club.id, clubId));
+
+    if (result.length !== 1) {
+      throw new NotFoundException("Club not found");
+    }
+    return VClubSummary.fromDBResult(result[0]);
+  }
+
+  async fetchSummaries(clubIds: number[]): Promise<VClubSummary[]> {
+    if (clubIds.length === 0) {
+      return [];
+    }
+
+    const result = await this.db
+      .select()
+      .from(Club)
+      .where(inArray(Club.id, clubIds));
+
+    return result.map(VClubSummary.fromDBResult);
   }
 }

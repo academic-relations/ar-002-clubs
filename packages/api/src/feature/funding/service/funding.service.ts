@@ -23,8 +23,8 @@ import {
   ApiFnd005ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
 import {
-  ApiFnd006RequestBody,
   ApiFnd006RequestParam,
+  ApiFnd006RequestQuery,
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
 import { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
@@ -110,10 +110,9 @@ export default class FundingService {
     );
 
     if (funding.purposeActivity) {
-      funding.purposeActivity =
-        await this.activityPublicService.getActivitySummary(
-          funding.purposeActivity.id,
-        );
+      funding.purposeActivity = await this.activityPublicService.fetchSummary(
+        funding.purposeActivity.id,
+      );
     }
 
     if (funding.clubSupplies?.imageFiles) {
@@ -177,7 +176,7 @@ export default class FundingService {
 
     if (funding.jointExpense) {
       funding.jointExpense.files = await this.filePublicService.getFilesByIds(
-        funding.laborContract.files.flatMap(file => file.id),
+        funding.jointExpense.files.flatMap(file => file.id),
       );
     }
 
@@ -399,12 +398,11 @@ export default class FundingService {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
 
-    const now = getKSTDate();
-    const thisSemester = await this.clubPublicService.dateToSemesterId(now);
+    const activityD = await this.activityPublicService.fetchLastActivityD();
 
     const fundings = await this.fundingRepository.fetchSummaries(
       query.clubId,
-      thisSemester,
+      activityD.id,
     );
 
     const activities = await this.activityPublicService.fetchSummaries(
@@ -428,7 +426,7 @@ export default class FundingService {
   async getStudentFundingActivityDuration(
     studentId: number,
     param: ApiFnd006RequestParam,
-    body: ApiFnd006RequestBody,
+    query: ApiFnd006RequestQuery,
   ): Promise<ApiFnd006ResponseOk> {
     const user = await this.userPublicService.getStudentById({ id: studentId });
     if (!user) {
@@ -436,7 +434,7 @@ export default class FundingService {
     }
 
     const fundings = await this.fundingRepository.fetchSummaries(
-      body.clubId,
+      query.clubId,
       param.activityDId,
     );
 

@@ -189,8 +189,7 @@ export default class UserPublicService {
     executiveIds: number[],
   ): Promise<IExecutiveSummary[]> {
     const executives =
-      await this.executiveRepository.fetchExecutiveSummaries(executiveIds);
-
+      await this.executiveRepository.fetchSummaries(executiveIds);
     return executives;
   }
 
@@ -212,5 +211,10 @@ export default class UserPublicService {
         HttpStatus.FORBIDDEN,
       );
     }
+  }
+
+  async fetchExecutiveSummary(executiveId: number): Promise<IExecutiveSummary> {
+    const executive = await this.executiveRepository.fetchSummary(executiveId);
+    return executive;
   }
 }
