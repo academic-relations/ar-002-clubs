@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 
+import { ApiAct028ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct028";
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import {
   createColumnHelper,
@@ -18,10 +19,8 @@ import {
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-import type { IActivitySummaryExecutiveResponse } from "@sparcs-clubs/interface/api/activity/type/activity.type";
-
 const columnHelper =
-  createColumnHelper<IActivitySummaryExecutiveResponse[][number]>();
+  createColumnHelper<ApiAct028ResponseOk["activities"][number]>();
 const columns = [
   columnHelper.accessor("name", {
     header: "활동명",
@@ -61,7 +60,7 @@ const columns = [
 ];
 
 const ActivityReportChargedClubTable: React.FC<{
-  activities: IActivitySummaryExecutiveResponse[];
+  activities: ApiAct028ResponseOk["activities"];
 }> = ({ activities }) => {
   const { length } = activities;
 
