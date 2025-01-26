@@ -29,9 +29,7 @@ const ExecutiveActivityReportChargedFrame: React.FC = () => {
           title={`활동 보고서 검토 내역 (${data?.chargedExecutive.name})`}
           enableLast
         />
-        <ActivityReportChargedStatistic
-          activities={{ items: [], executiveProgresses: [] }}
-        />
+        <ActivityReportChargedStatistic activities={data?.activities ?? []} />
       </FlexWrapper>
     </AsyncBoundary>
   );
