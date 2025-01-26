@@ -29,7 +29,7 @@ const useGetTermFundingList = (
         },
       );
 
-      return apiFnd006.responseBodyMap[200].parse(data);
+      return data;
     },
   });
 

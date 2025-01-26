@@ -23,7 +23,7 @@ const useGetNewFundingList = (query: ApiFnd005RequestQuery) =>
         params: query,
       });
 
-      return apiFnd005.responseBodyMap[200].parse(data);
+      return data;
     },
   });
 

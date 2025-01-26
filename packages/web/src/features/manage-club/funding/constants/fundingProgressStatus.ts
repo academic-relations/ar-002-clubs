@@ -15,21 +15,27 @@ interface FundingProgressDetail {
  */
 const getFundingProgress = (
   status: FundingStatusEnum,
-  date: Date, // KST 기준 날짜
+  editedAt: Date, // KST 기준 날짜
+  commentedAt?: Date,
 ): FundingProgressDetail => {
   // date는 이미 KST로 들어오므로 추가 변환 불필요
   switch (status) {
     case FundingStatusEnum.Applied:
       return {
         labels: ["신청 완료", "승인 대기"],
-        progress: [{ status: ProgressCheckSectionStatusEnum.Approved, date }],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Approved, date: editedAt },
+        ],
       };
     case FundingStatusEnum.Approved:
       return {
         labels: ["신청 완료", "동아리 연합회 승인 완료"],
         progress: [
           { status: ProgressCheckSectionStatusEnum.Approved, date: undefined },
-          { status: ProgressCheckSectionStatusEnum.Approved, date },
+          {
+            status: ProgressCheckSectionStatusEnum.Approved,
+            date: commentedAt,
+          },
         ],
       };
     case FundingStatusEnum.Rejected:
@@ -37,7 +43,10 @@ const getFundingProgress = (
         labels: ["신청 완료", "동아리 연합회 신청 반려"],
         progress: [
           { status: ProgressCheckSectionStatusEnum.Approved, date: undefined },
-          { status: ProgressCheckSectionStatusEnum.Canceled, date },
+          {
+            status: ProgressCheckSectionStatusEnum.Canceled,
+            date: commentedAt,
+          },
         ],
       };
     default:

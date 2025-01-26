@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import { useFormContext } from "react-hook-form";
 
@@ -36,6 +36,11 @@ const AddEvidenceFrame: React.FC = () => {
   const isJointExpense = watch("isJointExpense");
   const isEtcExpense = watch("isEtcExpense");
 
+  const isNoActivityPurpose = useMemo(
+    () => isActivityReportUnverifiable(purposeId),
+    [purposeId],
+  );
+
   return (
     <FoldableSectionTitle title="추가 증빙">
       <FlexWrapper direction="column" gap={40}>
@@ -51,134 +56,174 @@ const AddEvidenceFrame: React.FC = () => {
               추가 증빙 분류
             </Typography>
             <FlexWrapper direction="column" gap={12}>
-              <CheckboxOption
-                optionText="(활동보고서로 증빙이 불가능한) 동아리 용품"
-                checked={isActivityReportUnverifiable(Number(purposeId))}
-                onClick={() => {}}
-              />
-              <FormController
-                name="isFixture"
-                control={control}
-                renderItem={({ value, onChange }) => (
+              {isNoActivityPurpose ? (
+                <>
                   <CheckboxOption
-                    optionText="비품"
-                    checked={value}
-                    onClick={() => onChange(!value)}
+                    optionText="(활동보고서로 증빙이 불가능한) 동아리 용품"
+                    checked={isNoActivityPurpose}
+                    onClick={() => {}}
+                  />{" "}
+                  <FormController
+                    name="isFixture"
+                    control={control}
+                    renderItem={({ value, onChange }) => (
+                      <CheckboxOption
+                        optionText="비품"
+                        checked={value}
+                        onClick={() => onChange(!value)}
+                      />
+                    )}
                   />
-                )}
-              />
-              <FormController
-                name="isTransportation"
-                control={control}
-                renderItem={({ value, onChange }) => (
-                  <CheckboxOption
-                    optionText="교통비"
-                    checked={value}
-                    onClick={() => onChange(!value)}
+                  <FormController
+                    name="isNonCorporateTransaction"
+                    control={control}
+                    renderItem={({ value, onChange }) => (
+                      <CheckboxOption
+                        optionText="비법인 거래"
+                        checked={value}
+                        onClick={() => onChange(!value)}
+                      />
+                    )}
                   />
-                )}
-              />
-              <FormController
-                name="isNonCorporateTransaction"
-                control={control}
-                renderItem={({ value, onChange }) => (
-                  <CheckboxOption
-                    optionText="비법인 거래"
-                    checked={value}
-                    onClick={() => onChange(!value)}
+                  <FormController
+                    name="isEtcExpense"
+                    control={control}
+                    renderItem={({ value, onChange }) => (
+                      <CheckboxOption
+                        optionText="기타"
+                        checked={value}
+                        onClick={() => onChange(!value)}
+                      />
+                    )}
                   />
-                )}
-              />
-              <FormController
-                name="isFoodExpense"
-                control={control}
-                renderItem={({ value, onChange }) => (
-                  <CheckboxOption
-                    optionText="식비"
-                    checked={value}
-                    onClick={() => onChange(!value)}
+                </>
+              ) : (
+                <>
+                  <FormController
+                    name="isFixture"
+                    control={control}
+                    renderItem={({ value, onChange }) => (
+                      <CheckboxOption
+                        optionText="비품"
+                        checked={value}
+                        onClick={() => onChange(!value)}
+                      />
+                    )}
                   />
-                )}
-              />
-              <FormController
-                name="isLaborContract"
-                control={control}
-                renderItem={({ value, onChange }) => (
-                  <CheckboxOption
-                    optionText="근로 계약"
-                    checked={value}
-                    onClick={() => onChange(!value)}
+                  <FormController
+                    name="isTransportation"
+                    control={control}
+                    renderItem={({ value, onChange }) => (
+                      <CheckboxOption
+                        optionText="교통비"
+                        checked={value}
+                        onClick={() => onChange(!value)}
+                      />
+                    )}
                   />
-                )}
-              />
-              <FormController
-                name="isExternalEventParticipationFee"
-                control={control}
-                renderItem={({ value, onChange }) => (
-                  <CheckboxOption
-                    optionText="외부 행사 참가비"
-                    checked={value}
-                    onClick={() => onChange(!value)}
+                  <FormController
+                    name="isNonCorporateTransaction"
+                    control={control}
+                    renderItem={({ value, onChange }) => (
+                      <CheckboxOption
+                        optionText="비법인 거래"
+                        checked={value}
+                        onClick={() => onChange(!value)}
+                      />
+                    )}
                   />
-                )}
-              />
-              <FormController
-                name="isPublication"
-                control={control}
-                renderItem={({ value, onChange }) => (
-                  <CheckboxOption
-                    optionText="발간물"
-                    checked={value}
-                    onClick={() => onChange(!value)}
+                  <FormController
+                    name="isFoodExpense"
+                    control={control}
+                    renderItem={({ value, onChange }) => (
+                      <CheckboxOption
+                        optionText="식비"
+                        checked={value}
+                        onClick={() => onChange(!value)}
+                      />
+                    )}
                   />
-                )}
-              />
-              <FormController
-                name="isProfitMakingActivity"
-                control={control}
-                renderItem={({ value, onChange }) => (
-                  <CheckboxOption
-                    optionText="수익 사업"
-                    checked={value}
-                    onClick={() => onChange(!value)}
+                  <FormController
+                    name="isLaborContract"
+                    control={control}
+                    renderItem={({ value, onChange }) => (
+                      <CheckboxOption
+                        optionText="근로 계약"
+                        checked={value}
+                        onClick={() => onChange(!value)}
+                      />
+                    )}
                   />
-                )}
-              />
-              <FormController
-                name="isJointExpense"
-                control={control}
-                renderItem={({ value, onChange }) => (
-                  <CheckboxOption
-                    optionText="공동 경비"
-                    checked={value}
-                    onClick={() => onChange(!value)}
+                  <FormController
+                    name="isExternalEventParticipationFee"
+                    control={control}
+                    renderItem={({ value, onChange }) => (
+                      <CheckboxOption
+                        optionText="외부 행사 참가비"
+                        checked={value}
+                        onClick={() => onChange(!value)}
+                      />
+                    )}
                   />
-                )}
-              />
-              <FormController
-                name="isEtcExpense"
-                control={control}
-                renderItem={({ value, onChange }) => (
-                  <CheckboxOption
-                    optionText="기타"
-                    checked={value}
-                    onClick={() => onChange(!value)}
+                  <FormController
+                    name="isPublication"
+                    control={control}
+                    renderItem={({ value, onChange }) => (
+                      <CheckboxOption
+                        optionText="발간물"
+                        checked={value}
+                        onClick={() => onChange(!value)}
+                      />
+                    )}
                   />
-                )}
-              />
+                  <FormController
+                    name="isProfitMakingActivity"
+                    control={control}
+                    renderItem={({ value, onChange }) => (
+                      <CheckboxOption
+                        optionText="수익 사업"
+                        checked={value}
+                        onClick={() => onChange(!value)}
+                      />
+                    )}
+                  />
+                  <FormController
+                    name="isJointExpense"
+                    control={control}
+                    renderItem={({ value, onChange }) => (
+                      <CheckboxOption
+                        optionText="공동 경비"
+                        checked={value}
+                        onClick={() => onChange(!value)}
+                      />
+                    )}
+                  />
+                  <FormController
+                    name="isEtcExpense"
+                    control={control}
+                    renderItem={({ value, onChange }) => (
+                      <CheckboxOption
+                        optionText="기타"
+                        checked={value}
+                        onClick={() => onChange(!value)}
+                      />
+                    )}
+                  />
+                </>
+              )}
             </FlexWrapper>
           </FlexWrapper>
         </Card>
         {/* 활보로 증빙 불가능한 동아리 용품 */}
-        {isActivityReportUnverifiable(Number(purposeId)) && (
-          <FixtureEvidenceBlock
-            isFixture={false}
-            required={isActivityReportUnverifiable(Number(purposeId))}
-          />
+        {isNoActivityPurpose && (
+          <FixtureEvidenceBlock isFixture={false} required />
         )}
         {isFixture && <FixtureEvidenceBlock isFixture required={isFixture} />}
         {isTransportation && (
-          <TransportEvidenceBlock required={isTransportation} />
+          <TransportEvidenceBlock
+            required={isTransportation}
+            activityId={purposeId}
+          />
         )}
         {isNonCorporateTransaction && (
           <NonCorpEvidenceBlock required={isNonCorporateTransaction} />
