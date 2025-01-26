@@ -1,4 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { ISemester } from "@sparcs-clubs/interface/api/club/type/semester.type";
 import { and, between, eq, gt, isNull, lte, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -61,5 +62,24 @@ export default class SemesterDRepository {
       .where(and(eq(ClubT.clubId, param.clubId), isNull(ClubT.deletedAt)))
       .then(e => e.map(({ semester_d }) => semester_d));
     return result;
+  }
+
+  async fetch(date: Date): Promise<ISemester> {
+    const result = await this.db
+      .select()
+      .from(SemesterD)
+      .where(
+        and(
+          lte(SemesterD.startTerm, date),
+          gt(SemesterD.endTerm, date),
+          isNull(SemesterD.deletedAt),
+        ),
+      );
+
+    if (result.length !== 1) {
+      throw new NotFoundException(`No semester found for ${date}`);
+    }
+
+    return result[0];
   }
 }

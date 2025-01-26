@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import { zActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 import { zFileSummary } from "@sparcs-clubs/interface/api/file/type/file.type";
-import { zStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
+import {
+  zExecutiveSummary,
+  zStudentSummary,
+} from "@sparcs-clubs/interface/api/user/type/user.type";
 import {
   FixtureClassEnum,
   FixtureEvidenceEnum,
@@ -38,7 +41,6 @@ export const zTransportation = z.object({
   origin: z.string().max(255).optional(),
   destination: z.string().max(255).optional(),
   purpose: z.string().optional(),
-  placeValidity: z.string().optional(),
   passengers: z.array(zStudentSummary.pick({ id: true })),
 });
 
@@ -56,7 +58,7 @@ export const zMinorExpense = z.object({
 const zFunding = z.object({
   id: z.coerce.number().int().min(1),
   clubId: z.coerce.number().int().min(1),
-  semesterId: z.coerce.number().int().min(1),
+  activityDId: z.coerce.number().int().min(1),
   fundingStatusEnum: z.coerce.number().int().min(1),
   purposeActivity: zActivitySummary.pick({ id: true }).optional(),
   name: z.string().max(255).min(1),
@@ -98,19 +100,30 @@ const zFunding = z.object({
 
   isEtcExpense: z.coerce.boolean(),
   etcExpense: zMinorExpense.optional(),
+
+  editedAt: z.coerce.date(),
+  commentedAt: z.coerce.date().optional(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date().optional(),
+  deletedAt: z.coerce.date().optional(),
 });
 
 const zFundingExtra = zFunding.pick({
-  semesterId: true,
+  activityDId: true,
   fundingStatusEnum: true,
   approvedAmount: true,
 });
 
 const zFundingRequestBase = zFunding.omit({
   id: true,
-  semesterId: true,
+  activityDId: true,
   fundingStatusEnum: true,
   approvedAmount: true,
+  editedAt: true,
+  commentedAt: true,
+  createdAt: true,
+  updatedAt: true,
+  deletedAt: true,
 });
 
 export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {
@@ -185,20 +198,6 @@ export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {
         code: z.ZodIssueCode.custom,
         message: "transportation is required",
       });
-    }
-    if (
-      data.transportation?.enum === TransportationEnum.CallVan ||
-      data.transportation?.enum === TransportationEnum.Cargo ||
-      data.transportation?.enum === TransportationEnum.Airplane ||
-      data.transportation?.enum === TransportationEnum.Ship ||
-      data.transportation?.enum === TransportationEnum.Others
-    ) {
-      if (!data.transportation?.placeValidity) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "transportationPlaceValidity is required",
-        });
-      }
     }
   }
 
@@ -280,10 +279,23 @@ export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {
   }
 });
 
+export const zFundingComment = z.object({
+  id: z.coerce.number().int().min(1),
+  fundingId: z.coerce.number().int().min(1),
+  chargedExecutive: zExecutiveSummary.pick({ id: true }),
+  content: z.string(),
+  createdAt: z.coerce.date(),
+});
+
+export const zFundingCommentResponse = zFundingComment.extend({
+  chargedExecutive: zExecutiveSummary,
+});
+
 export const zFundingResponse = zFunding.extend({
   id: z.coerce.number().int().min(1),
   tradeEvidenceFiles: z.array(zFileSummary),
   tradeDetailFiles: z.array(zFileSummary),
+  purposeActivity: zActivitySummary.optional(),
   clubSupplies: zClubSupplies
     .extend({
       imageFiles: z.array(zFileSummary),
@@ -341,7 +353,7 @@ export const zFundingResponse = zFunding.extend({
       files: z.array(zFileSummary),
     })
     .optional(),
-  purposeActivity: zActivitySummary.optional(),
+  comments: z.array(zFundingCommentResponse),
 });
 
 export const zFundingSummary = zFunding.pick({
@@ -374,3 +386,5 @@ export type IFundingSummary = z.infer<typeof zFundingSummary>;
 export type IFundingResponse = z.infer<typeof zFundingResponse>;
 export type IFundingResponseSummary = z.infer<typeof zFundingResponseSummary>;
 export type IFundingExtra = z.infer<typeof zFundingExtra>;
+export type IFundingComment = z.infer<typeof zFundingComment>;
+export type IFundingCommentResponse = z.infer<typeof zFundingCommentResponse>;

@@ -9,8 +9,8 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-import { Activity } from "./activity.schema";
-import { Club, SemesterD } from "./club.schema";
+import { Activity, ActivityD } from "./activity.schema";
+import { Club } from "./club.schema";
 import { ExecutiveT, StudentT } from "./user.schema";
 
 export const Funding = mysqlTable(
@@ -18,7 +18,9 @@ export const Funding = mysqlTable(
   {
     id: int("id").autoincrement().primaryKey().notNull(),
     clubId: int("club_id").notNull(),
-    semesterId: int("semester_id").notNull(),
+    activityDId: int("activity_d_id")
+      .notNull()
+      .references(() => ActivityD.id),
     fundingStatusEnum: int("funding_status_enum").notNull(),
     purposeActivityId: int("purpose_activity_id"),
     name: varchar("name", { length: 255 }).notNull(),
@@ -46,7 +48,6 @@ export const Funding = mysqlTable(
     origin: varchar("origin", { length: 255 }),
     destination: varchar("destination", { length: 255 }),
     purposeOfTransportation: text("purpose_of_transportation"),
-    placeValidity: text("place_validity"),
     isNonCorporateTransaction: boolean(
       "is_non_corporate_transaction",
     ).notNull(),
@@ -72,7 +73,8 @@ export const Funding = mysqlTable(
     isEtcExpense: boolean("is_etc_expense").notNull(),
     etcExpenseExplanation: text("etc_expense_explanation"),
     chargedExecutiveId: int("charged_executive_id"),
-    isCommitee: boolean("is_commitee").default(false).notNull(),
+    editedAt: timestamp("edited_at").defaultNow().notNull(),
+    commentedAt: timestamp("commented_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
     deletedAt: timestamp("deleted_at"),
@@ -82,11 +84,6 @@ export const Funding = mysqlTable(
       name: "funding_club_id_fk",
       columns: [table.clubId],
       foreignColumns: [Club.id],
-    }),
-    semesterForeignKey: foreignKey({
-      name: "funding_semester_id_fk",
-      columns: [table.semesterId],
-      foreignColumns: [SemesterD.id],
     }),
     purposeForeignKey: foreignKey({
       name: "funding_purpose_id_fk",

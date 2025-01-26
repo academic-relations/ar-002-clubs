@@ -1,5 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import { ApiAct021ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct021";
+import { ApiAct022ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct022";
+import { ApiAct028ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct028";
 import {
   ActivityDeadlineEnum,
   ActivityStatusEnum,
@@ -10,7 +13,6 @@ import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubTRepository from "@sparcs-clubs/api/feature/club/repository/club.club-t.repository";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
-import DivisionPublicService from "@sparcs-clubs/api/feature/division/service/division.public.service";
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import { ClubRegistrationPublicService } from "@sparcs-clubs/api/feature/registration/club-registration/service/club-registration.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
@@ -83,7 +85,6 @@ export default class ActivityService {
     private activityClubChargedExecutiveRepository: ActivityClubChargedExecutiveRepository,
     private activityActivityTermRepository: ActivityActivityTermRepository,
     private clubPublicService: ClubPublicService,
-    private divisionPublicService: DivisionPublicService,
     private filePublicService: FilePublicService,
     private clubRegistrationPublicService: ClubRegistrationPublicService,
     private clubTRepository: ClubTRepository,
@@ -131,7 +132,7 @@ export default class ActivityService {
    * @returns 현재 활동보고서를 작성해야 하는 직전학기 정보를 리턴합니다.
    * ex. 현재 겨울학기일 경우, 여름-가을학기 활동기간을 리턴해야 합니다.
    */
-  private async getLastActivityD() {
+  async getLastActivityD() {
     const today = getKSTDate();
     const [activityD] =
       await this.activityActivityTermRepository.selectLastActivityDByDate(
@@ -173,6 +174,12 @@ export default class ActivityService {
       );
   }
 
+  /**
+   *
+   * @param enums: ActivityDeadlineEnum의 배열을 받습니다.
+   * @description 오늘이 해당하는 deadlineEnum이 enums에 포함되어있지 않으면 400 exception을 throw
+   * @returns void
+   */
   private async checkDeadline(param: { enums: Array<ActivityDeadlineEnum> }) {
     const today = getKSTDate();
     const todayDeadline = await this.activityRepository
@@ -195,6 +202,13 @@ export default class ActivityService {
       );
   }
 
+  /**
+   *
+   * @param clubId
+   * @param executiveId
+   * @description 동아리의 담당 집행부원을 변경합니다.
+   * 해당 동아리의 활동에 대한 개별 담당 집행부원도 전부 덮어씌웁니다.
+   */
   private async changeClubChargedExecutive(param: {
     clubId: number;
     executiveId: number;
@@ -332,6 +346,8 @@ export default class ActivityService {
         activityTypeEnumId: row.activityTypeEnumId,
         durations: row.durations,
         professorApprovedAt: row.professorApprovedAt,
+        editedAt: row.editedAt,
+        commentedAt: row.commentedAt,
       }))
       .sort((a, b) =>
         a.durations[0].startTerm.getTime() ===
@@ -436,6 +452,8 @@ export default class ActivityService {
       })),
       updatedAt: activity.updatedAt,
       professorApprovedAt: activity.professorApprovedAt,
+      editedAt: activity.editedAt,
+      commentedAt: activity.commentedAt,
     };
   }
 
@@ -879,6 +897,8 @@ export default class ActivityService {
       })),
       updatedAt: activity.updatedAt,
       professorApprovedAt: activity.professorApprovedAt,
+      editedAt: activity.editedAt,
+      commentedAt: activity.commentedAt,
     };
   }
 
@@ -940,6 +960,8 @@ export default class ActivityService {
       })),
       updatedAt: activity.updatedAt,
       professorApprovedAt: activity.professorApprovedAt,
+      editedAt: activity.editedAt,
+      commentedAt: activity.commentedAt,
     };
   }
 
@@ -960,6 +982,17 @@ export default class ActivityService {
         "the activity is already approved",
         HttpStatus.BAD_REQUEST,
       );
+
+    const isInsertionSucceed =
+      await this.activityRepository.insertActivityFeedback({
+        activityId: param.param.activityId,
+        comment: "활동이 승인되었습니다", // feedback에 승인을 기록하기 위한 임의의 문자열ㄴ
+        executiveId: param.executiveId,
+      });
+    if (!isInsertionSucceed)
+      throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
+
+    return {};
     return {};
   }
 
@@ -1060,6 +1093,8 @@ export default class ActivityService {
       activityTypeEnumId: row.activityTypeEnumId,
       durations: row.durations,
       professorApprovedAt: row.professorApprovedAt,
+      editedAt: row.editedAt,
+      commentedAt: row.commentedAt,
     }));
   }
 
@@ -1249,7 +1284,7 @@ export default class ActivityService {
             }, undefined),
           );
 
-        const lastReviewedExecutive =
+        const commentedExecutive =
           lastFeedback === undefined
             ? undefined
             : await this.userPublicService
@@ -1278,7 +1313,7 @@ export default class ActivityService {
           activityId: activity.id,
           activityStatusEnum: activity.activityStatusEnumId,
           activityName: activity.name,
-          lastReviewedExecutive,
+          commentedExecutive,
           chargedExecutive,
           updatedAt: activity.updatedAt,
         };
@@ -1332,12 +1367,12 @@ export default class ActivityService {
     query: ApiAct027RequestQuery,
   ): Promise<ApiAct027ResponseOk> {
     const nowKST = getKSTDate();
-    const semesterId = await this.clubPublicService.getSemesterId(nowKST);
+    const semester = await this.clubPublicService.fetchSemester(nowKST);
     const { clubIds } = query;
 
     // TODO: 지금은 entity로 불러오는데, id만 들고 오는 public service 및 repository 를 만들어서 한다면 좀더 효율이 높아질 수 있음
     const [clubMembers, executives] = await Promise.all([
-      this.clubPublicService.getUnionMemberSummaries(semesterId, clubIds),
+      this.clubPublicService.getUnionMemberSummaries(semester.id, clubIds),
       this.userPublicService.getCurrentExecutiveSummaries(),
     ]);
 
@@ -1345,6 +1380,88 @@ export default class ActivityService {
     // clubMemberUserIds에 없는 executive만 필터링
     return {
       executives: executives.filter(e => !clubMemberUserIds.includes(e.userId)),
+    };
+  }
+
+  async getStudentActivitiesAvailable(
+    studentId: number,
+    clubId: number,
+  ): Promise<ApiAct021ResponseOk> {
+    const [isStudentDelegate] = await Promise.all([
+      this.clubPublicService.isStudentDelegate(studentId, clubId),
+    ]);
+    if (!isStudentDelegate) {
+      throw new HttpException(
+        `Student ${studentId} is not the delegate of Club ${clubId}`,
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    const activityD = await this.getLastActivityD();
+    const activities = await this.activityRepository.fetchAvailableSummaries(
+      clubId,
+      activityD.id,
+    );
+
+    return {
+      activities,
+    };
+  }
+
+  async getStudentActivityParticipants(
+    activityId: number,
+  ): Promise<ApiAct022ResponseOk> {
+    const participantIds =
+      await this.activityRepository.fetchParticipantIds(activityId);
+    return {
+      participants:
+        await this.userPublicService.fetchStudentSummaries(participantIds),
+    };
+  }
+
+  async getExecutiveActivitiesExecutiveBrief(
+    executiveId: number,
+  ): Promise<ApiAct028ResponseOk> {
+    const [executive, activities] = await Promise.all([
+      this.userPublicService.fetchExecutiveSummary(executiveId),
+      this.activityRepository.fetchCommentedSummaries(executiveId),
+    ]);
+
+    // 필요한 모든 ID들을 수집
+    const clubIds = new Set(activities.map(activity => activity.club.id));
+    const executiveIds = new Set(
+      activities.flatMap(activity =>
+        [activity.chargedExecutive?.id, activity.commentedExecutive?.id].filter(
+          Boolean,
+        ),
+      ),
+    );
+
+    // 한 번에 모든 데이터 가져오기
+    const [clubs, executives] = await Promise.all([
+      this.clubPublicService.fetchSummaries(Array.from(clubIds)),
+      this.userPublicService.fetchExecutiveSummaries(Array.from(executiveIds)),
+    ]);
+
+    // 조회를 위한 Map 생성
+    const clubMap = new Map(clubs.map(club => [club.id, club]));
+    const executiveMap = new Map(executives.map(exec => [exec.id, exec]));
+
+    // 데이터 매핑
+    const activitiesWithDetails = activities.map(activity => ({
+      ...activity,
+      club: clubMap.get(activity.club.id),
+      chargedExecutive: activity.chargedExecutive?.id
+        ? executiveMap.get(activity.chargedExecutive.id)
+        : null,
+      commentedExecutive: activity.commentedExecutive?.id
+        ? executiveMap.get(activity.commentedExecutive.id)
+        : null,
+    }));
+
+    return {
+      chargedExecutive: executive,
+      activities: activitiesWithDetails,
     };
   }
 }

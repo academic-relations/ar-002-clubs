@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { getKSTDate } from "@sparcs-clubs/web/utils/Date/getKSTDate";
 import { isParticipantsRequired } from "@sparcs-clubs/web/utils/isTransportation";
 
 import { fundingDetailQueryKey } from "../services/useGetFunding";
+import { newFundingListQueryKey } from "../services/useGetNewFundingList";
 import { usePutFunding } from "../services/usePutFunding";
 import {
   FundingFormData,
@@ -17,7 +19,6 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
     mutationFn: ({
       purposeActivity,
       name,
-      expenditureDate,
       expenditureAmount,
       tradeDetailExplanation,
       isFixture,
@@ -37,11 +38,13 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
           fundingId,
           body: {
             clubId,
-            purposeActivity: purposeActivity
-              ? { id: purposeActivity.id }
-              : undefined,
+            purposeActivity:
+              purposeActivity &&
+              !isActivityReportUnverifiable(purposeActivity.id)
+                ? { id: purposeActivity.id }
+                : undefined,
             name,
-            expenditureDate,
+            expenditureDate: getKSTDate(data.expenditureDate),
             expenditureAmount: Number(expenditureAmount),
 
             tradeEvidenceFiles: data.tradeEvidenceFiles.map(file => ({
@@ -113,7 +116,6 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
                   origin: data.origin,
                   destination: data.destination,
                   purpose: data.purposeOfTransportation,
-                  placeValidity: data.placeValidity,
                   passengers: isParticipantsRequired(data.transportationEnum)
                     ? data.transportationPassengers.map(participant => ({
                         id: participant.id,
@@ -198,6 +200,9 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
           onSuccess: () => {
             queryClient.invalidateQueries({
               queryKey: fundingDetailQueryKey(fundingId),
+            });
+            queryClient.invalidateQueries({
+              queryKey: newFundingListQueryKey(clubId),
             });
           },
         },

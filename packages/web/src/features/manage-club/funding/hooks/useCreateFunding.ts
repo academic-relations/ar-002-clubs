@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { getKSTDate } from "@sparcs-clubs/web/utils/Date/getKSTDate";
 import { isParticipantsRequired } from "@sparcs-clubs/web/utils/isTransportation";
 
 import { newFundingListQueryKey } from "../services/useGetNewFundingList";
@@ -17,7 +18,6 @@ export const useCreateFunding = (clubId: number) => {
     mutationFn: ({
       purposeActivity,
       name,
-      expenditureDate,
       expenditureAmount,
       tradeDetailExplanation,
       isFixture,
@@ -36,11 +36,13 @@ export const useCreateFunding = (clubId: number) => {
         {
           body: {
             clubId,
-            purposeActivity: purposeActivity
-              ? { id: purposeActivity.id }
-              : undefined,
+            purposeActivity:
+              purposeActivity &&
+              !isActivityReportUnverifiable(purposeActivity.id)
+                ? { id: purposeActivity.id }
+                : undefined,
             name,
-            expenditureDate,
+            expenditureDate: getKSTDate(data.expenditureDate),
             expenditureAmount: Number(expenditureAmount),
 
             tradeEvidenceFiles: data.tradeEvidenceFiles.map(file => ({
@@ -112,7 +114,6 @@ export const useCreateFunding = (clubId: number) => {
                   origin: data.origin,
                   destination: data.destination,
                   purpose: data.purposeOfTransportation,
-                  placeValidity: data.placeValidity,
                   passengers: isParticipantsRequired(data.transportationEnum)
                     ? data.transportationPassengers.map(participant => ({
                         id: participant.id,

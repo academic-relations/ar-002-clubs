@@ -40,6 +40,7 @@ const getActivityReportProgress = (
           { status: ProgressCheckSectionStatusEnum.Canceled, date },
         ],
       };
+    // TODO: Committee 케이스 추가
     default:
       throw new Error("Invalid activity report status");
   }

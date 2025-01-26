@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
 import {
   IFundingExtra,
@@ -36,14 +36,20 @@ import { MFunding } from "../model/funding.model";
 export default class FundingRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
-  async select(id: number): Promise<MFunding> {
+  async fetch(id: number): Promise<MFunding> {
+    const funding = await this.find(id);
+    if (!funding) {
+      throw new NotFoundException(`Funding: ${id} not found`);
+    }
+    return funding;
+  }
+
+  async find(id: number): Promise<MFunding | null> {
     const result = await this.db
       .select({
         funding: Funding,
-        fundingFeedback: FundingFeedback,
       })
       .from(Funding)
-      .leftJoin(FundingFeedback, eq(FundingFeedback.fundingId, id))
       .where(and(eq(Funding.id, id), isNull(Funding.deletedAt)));
 
     if (result.length === 0) {
@@ -191,7 +197,12 @@ export default class FundingRepository {
           name: Student.name,
         })
         .from(FundingTransportationPassenger)
-        .where(and(isNull(FundingTransportationPassenger.deletedAt)))
+        .where(
+          and(
+            eq(FundingTransportationPassenger.fundingId, id),
+            isNull(FundingTransportationPassenger.deletedAt),
+          ),
+        )
         .innerJoin(
           Student,
           eq(Student.id, FundingTransportationPassenger.studentId),
@@ -200,7 +211,6 @@ export default class FundingRepository {
 
     return MFunding.fromDBResult({
       funding: result[0].funding,
-      fundingFeedback: result[0].fundingFeedback,
       tradeEvidenceFiles: tradeEvidenceFiles.map(file => ({
         id: file.fileId,
       })),
@@ -249,36 +259,36 @@ export default class FundingRepository {
     });
   }
 
-  async selectAll(
+  async fetchSummaries(
     clubId: number,
-    semesterId: number,
+    activityDId: number,
   ): Promise<IFundingSummary[]> {
-    const fundingOrders = await this.db
+    const fundings = await this.db
       .select({
         id: Funding.id,
         name: Funding.name,
         expenditureAmount: Funding.expenditureAmount,
         approvedAmount: Funding.approvedAmount,
         fundingStatusEnum: Funding.fundingStatusEnum,
-        purposeActivity: Funding.purposeActivityId,
+        purposeActivityId: Funding.purposeActivityId,
       })
       .from(Funding)
       .where(
         and(
           eq(Funding.clubId, clubId),
-          eq(Funding.semesterId, semesterId),
+          eq(Funding.activityDId, activityDId),
           isNull(Funding.deletedAt),
         ),
       );
 
-    if (fundingOrders.length === 0) {
+    if (fundings.length === 0) {
       return [];
     }
 
-    return fundingOrders.map(fundingOrder => ({
-      ...fundingOrder,
+    return fundings.map(funding => ({
+      ...funding,
       purposeActivity: {
-        id: fundingOrder.purposeActivity,
+        id: funding.purposeActivityId,
       },
     }));
   }
@@ -291,8 +301,8 @@ export default class FundingRepository {
       // 1. Insert funding order
       const [fundingOrder] = await tx.insert(Funding).values({
         clubId: funding.clubId,
-        purposeActivityId: funding.purposeActivity.id,
-        semesterId: extra.semesterId,
+        purposeActivityId: funding.purposeActivity?.id ?? null,
+        activityDId: extra.activityDId,
         fundingStatusEnum: extra.fundingStatusEnum,
         name: funding.name,
         expenditureDate: funding.expenditureDate,
@@ -310,6 +320,42 @@ export default class FundingRepository {
         isEtcExpense: funding.isEtcExpense,
         isNonCorporateTransaction: funding.isNonCorporateTransaction,
         tradeDetailExplanation: funding.tradeDetailExplanation,
+        // Club supplies fields
+        clubSuppliesName: funding.clubSupplies?.name,
+        clubSuppliesEvidenceEnum: funding.clubSupplies?.evidenceEnum,
+        clubSuppliesClassEnum: funding.clubSupplies?.classEnum,
+        clubSuppliesPurpose: funding.clubSupplies?.purpose,
+        clubSuppliesSoftwareEvidence: funding.clubSupplies?.softwareEvidence,
+        numberOfClubSupplies: funding.clubSupplies?.number,
+        priceOfClubSupplies: funding.clubSupplies?.price,
+        // Fixture fields
+        fixtureName: funding.fixture?.name,
+        fixtureEvidenceEnum: funding.fixture?.evidenceEnum,
+        fixtureClassEnum: funding.fixture?.classEnum,
+        fixturePurpose: funding.fixture?.purpose,
+        fixtureSoftwareEvidence: funding.fixture?.softwareEvidence,
+        numberOfFixture: funding.fixture?.number,
+        priceOfFixture: funding.fixture?.price,
+        // Transportation fields
+        transportationEnum: funding.transportation?.enum,
+        origin: funding.transportation?.origin,
+        destination: funding.transportation?.destination,
+        purposeOfTransportation: funding.transportation?.purpose,
+        // Trader fields
+        traderName: funding.nonCorporateTransaction?.traderName,
+        traderAccountNumber:
+          funding.nonCorporateTransaction?.traderAccountNumber,
+        wasteExplanation: funding.nonCorporateTransaction?.wasteExplanation,
+        // Expense explanations
+        foodExpenseExplanation: funding.foodExpense?.explanation,
+        laborContractExplanation: funding.laborContract?.explanation,
+        externalEventParticipationFeeExplanation:
+          funding.externalEventParticipationFee?.explanation,
+        publicationExplanation: funding.publication?.explanation,
+        profitMakingActivityExplanation:
+          funding.profitMakingActivity?.explanation,
+        jointExpenseExplanation: funding.jointExpense?.explanation,
+        etcExpenseExplanation: funding.etcExpense?.explanation,
       });
 
       const fundingId = Number(fundingOrder.insertId);
@@ -452,7 +498,7 @@ export default class FundingRepository {
     });
 
     // 4. Return the newly created funding
-    return this.select(result);
+    return this.fetch(result);
   }
 
   async delete(id: number): Promise<void> {
@@ -461,7 +507,10 @@ export default class FundingRepository {
 
       // Soft delete funding order and all related records
       await Promise.all([
-        tx.update(Funding).set({ deletedAt: now }).where(eq(Funding.id, id)),
+        tx
+          .update(Funding)
+          .set({ deletedAt: now, editedAt: now })
+          .where(eq(Funding.id, id)),
         tx
           .update(FundingFeedback)
           .set({ deletedAt: now })
@@ -531,7 +580,266 @@ export default class FundingRepository {
     funding: IFundingRequest,
     extra: IFundingExtra,
   ): Promise<MFunding> {
-    await this.delete(id);
-    return this.insert(funding, extra);
+    return this.db.transaction(async tx => {
+      const now = new Date();
+
+      // Update funding table
+      await tx
+        .update(Funding)
+        .set({
+          purposeActivityId: funding.purposeActivity.id,
+          fundingStatusEnum: extra.fundingStatusEnum,
+          name: funding.name,
+          expenditureDate: funding.expenditureDate,
+          expenditureAmount: funding.expenditureAmount,
+          approvedAmount: extra.approvedAmount,
+          isFixture: funding.isFixture,
+          isTransportation: funding.isTransportation,
+          isFoodExpense: funding.isFoodExpense,
+          isLaborContract: funding.isLaborContract,
+          isExternalEventParticipationFee:
+            funding.isExternalEventParticipationFee,
+          isPublication: funding.isPublication,
+          isProfitMakingActivity: funding.isProfitMakingActivity,
+          isJointExpense: funding.isJointExpense,
+          isEtcExpense: funding.isEtcExpense,
+          isNonCorporateTransaction: funding.isNonCorporateTransaction,
+          tradeDetailExplanation: funding.tradeDetailExplanation,
+          // Club supplies fields
+          clubSuppliesName: funding.clubSupplies?.name,
+          clubSuppliesEvidenceEnum: funding.clubSupplies?.evidenceEnum,
+          clubSuppliesClassEnum: funding.clubSupplies?.classEnum,
+          clubSuppliesPurpose: funding.clubSupplies?.purpose,
+          clubSuppliesSoftwareEvidence: funding.clubSupplies?.softwareEvidence,
+          numberOfClubSupplies: funding.clubSupplies?.number,
+          priceOfClubSupplies: funding.clubSupplies?.price,
+          // Fixture fields
+          fixtureName: funding.fixture?.name,
+          fixtureEvidenceEnum: funding.fixture?.evidenceEnum,
+          fixtureClassEnum: funding.fixture?.classEnum,
+          fixturePurpose: funding.fixture?.purpose,
+          fixtureSoftwareEvidence: funding.fixture?.softwareEvidence,
+          numberOfFixture: funding.fixture?.number,
+          priceOfFixture: funding.fixture?.price,
+          // Transportation fields
+          transportationEnum: funding.transportation?.enum,
+          origin: funding.transportation?.origin,
+          destination: funding.transportation?.destination,
+          purposeOfTransportation: funding.transportation?.purpose,
+          // Trader fields
+          traderName: funding.nonCorporateTransaction?.traderName,
+          traderAccountNumber:
+            funding.nonCorporateTransaction?.traderAccountNumber,
+          wasteExplanation: funding.nonCorporateTransaction?.wasteExplanation,
+          // Expense explanations
+          foodExpenseExplanation: funding.foodExpense?.explanation,
+          laborContractExplanation: funding.laborContract?.explanation,
+          externalEventParticipationFeeExplanation:
+            funding.externalEventParticipationFee?.explanation,
+          publicationExplanation: funding.publication?.explanation,
+          profitMakingActivityExplanation:
+            funding.profitMakingActivity?.explanation,
+          jointExpenseExplanation: funding.jointExpense?.explanation,
+          etcExpenseExplanation: funding.etcExpense?.explanation,
+          editedAt: now,
+        })
+        .where(eq(Funding.id, id));
+
+      // Soft delete all related records
+      await Promise.all([
+        tx
+          .update(FundingTradeEvidenceFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingTradeEvidenceFile.fundingId, id)),
+        tx
+          .update(FundingTradeDetailFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingTradeDetailFile.fundingId, id)),
+        tx
+          .update(FundingClubSuppliesImageFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingClubSuppliesImageFile.fundingId, id)),
+        tx
+          .update(FundingClubSuppliesSoftwareEvidenceFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingClubSuppliesSoftwareEvidenceFile.fundingId, id)),
+        tx
+          .update(FundingFixtureImageFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingFixtureImageFile.fundingId, id)),
+        tx
+          .update(FundingFixtureSoftwareEvidenceFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingFixtureSoftwareEvidenceFile.fundingId, id)),
+        tx
+          .update(FundingFoodExpenseFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingFoodExpenseFile.fundingId, id)),
+        tx
+          .update(FundingLaborContractFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingLaborContractFile.fundingId, id)),
+        tx
+          .update(FundingExternalEventParticipationFeeFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingExternalEventParticipationFeeFile.fundingId, id)),
+        tx
+          .update(FundingPublicationFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingPublicationFile.fundingId, id)),
+        tx
+          .update(FundingProfitMakingActivityFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingProfitMakingActivityFile.fundingId, id)),
+        tx
+          .update(FundingJointExpenseFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingJointExpenseFile.fundingId, id)),
+        tx
+          .update(FundingEtcExpenseFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingEtcExpenseFile.fundingId, id)),
+        tx
+          .update(FundingTransportationPassenger)
+          .set({ deletedAt: now })
+          .where(eq(FundingTransportationPassenger.fundingId, id)),
+      ]);
+
+      // Insert new related records
+      await Promise.all([
+        // Trade files
+        ...funding.tradeEvidenceFiles.map(file =>
+          tx.insert(FundingTradeEvidenceFile).values({
+            fundingId: id,
+            fileId: file.id,
+          }),
+        ),
+        ...funding.tradeDetailFiles.map(file =>
+          tx.insert(FundingTradeDetailFile).values({
+            fundingId: id,
+            fileId: file.id,
+          }),
+        ),
+
+        // Club supplies files
+        ...(funding.clubSupplies && funding.clubSupplies.imageFiles
+          ? funding.clubSupplies.imageFiles.map(file =>
+              tx.insert(FundingClubSuppliesImageFile).values({
+                fundingId: id,
+                fileId: file.id,
+              }),
+            )
+          : []),
+        ...(funding.clubSupplies && funding.clubSupplies.softwareEvidenceFiles
+          ? funding.clubSupplies.softwareEvidenceFiles.map(file =>
+              tx.insert(FundingClubSuppliesSoftwareEvidenceFile).values({
+                fundingId: id,
+                fileId: file.id,
+              }),
+            )
+          : []),
+
+        // Fixture files
+        ...(funding.isFixture && funding.fixture.imageFiles
+          ? funding.fixture.imageFiles.map(file =>
+              tx.insert(FundingFixtureImageFile).values({
+                fundingId: id,
+                fileId: file.id,
+              }),
+            )
+          : []),
+        ...(funding.isFixture && funding.fixture.softwareEvidenceFiles
+          ? funding.fixture.softwareEvidenceFiles.map(file =>
+              tx.insert(FundingFixtureSoftwareEvidenceFile).values({
+                fundingId: id,
+                fileId: file.id,
+              }),
+            )
+          : []),
+
+        // Food expense files
+        ...(funding.isFoodExpense && funding.foodExpense
+          ? funding.foodExpense.files.map(file =>
+              tx.insert(FundingFoodExpenseFile).values({
+                fundingId: id,
+                fileId: file.id,
+              }),
+            )
+          : []),
+
+        // Labor contract files
+        ...(funding.isLaborContract && funding.laborContract
+          ? funding.laborContract.files.map(file =>
+              tx.insert(FundingLaborContractFile).values({
+                fundingId: id,
+                fileId: file.id,
+              }),
+            )
+          : []),
+
+        // External event participation fee files
+        ...(funding.isExternalEventParticipationFee &&
+        funding.externalEventParticipationFee
+          ? funding.externalEventParticipationFee.files.map(file =>
+              tx.insert(FundingExternalEventParticipationFeeFile).values({
+                fundingId: id,
+                fileId: file.id,
+              }),
+            )
+          : []),
+
+        // Publication files
+        ...(funding.isPublication && funding.publication
+          ? funding.publication.files.map(file =>
+              tx.insert(FundingPublicationFile).values({
+                fundingId: id,
+                fileId: file.id,
+              }),
+            )
+          : []),
+
+        // Profit making activity files
+        ...(funding.isProfitMakingActivity && funding.profitMakingActivity
+          ? funding.profitMakingActivity.files.map(file =>
+              tx.insert(FundingProfitMakingActivityFile).values({
+                fundingId: id,
+                fileId: file.id,
+              }),
+            )
+          : []),
+
+        // Joint expense files
+        ...(funding.isJointExpense && funding.jointExpense
+          ? funding.jointExpense.files.map(file =>
+              tx.insert(FundingJointExpenseFile).values({
+                fundingId: id,
+                fileId: file.id,
+              }),
+            )
+          : []),
+
+        // Etc expense files
+        ...(funding.isEtcExpense && funding.etcExpense
+          ? funding.etcExpense.files.map(file =>
+              tx.insert(FundingEtcExpenseFile).values({
+                fundingId: id,
+                fileId: file.id,
+              }),
+            )
+          : []),
+
+        // Transportation passengers
+        ...(funding.isTransportation && funding.transportation
+          ? funding.transportation.passengers.map(passenger =>
+              tx.insert(FundingTransportationPassenger).values({
+                fundingId: id,
+                studentId: passenger.id,
+              }),
+            )
+          : []),
+      ]);
+
+      return this.fetch(id);
+    });
   }
 }

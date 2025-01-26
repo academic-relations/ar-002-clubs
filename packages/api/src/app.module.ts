@@ -9,10 +9,10 @@ import { ActivityCertificateModule } from "./feature/activity-certificate/activi
 
 import { AuthModule } from "./feature/auth/auth.module";
 import { JwtAccessGuard } from "./feature/auth/guard/jwt-access.guard";
-import { ClubModule } from "./feature/club/club.module";
+import ClubModule from "./feature/club/club.module";
 import { CommonSpaceModule } from "./feature/common-space/common-space.module";
 import DivisionModule from "./feature/division/division.module";
-import { FileModule } from "./feature/file/file.module";
+import FileModule from "./feature/file/file.module";
 import FundingModule from "./feature/funding/funding.module";
 import { MeetingModule } from "./feature/meeting/meeting.module";
 import { NoticeModule } from "./feature/notice/notice.module";

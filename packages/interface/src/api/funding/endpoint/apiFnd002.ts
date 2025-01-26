@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zFundingResponse } from "./type/funding.type";
+import { zFundingResponse } from "../type/funding.type";
 
 /**
  * @version v0.1

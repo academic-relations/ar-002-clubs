@@ -1,7 +1,7 @@
 import apiFnd001, {
   ApiFnd001RequestBody,
   ApiFnd001ResponseCreated,
-} from "@sparcs-clubs/interface/api/funding/apiFnd001";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd001";
 import { useMutation } from "@tanstack/react-query";
 
 import {
@@ -14,7 +14,7 @@ const usePostFunding = () =>
     mutationFn: async ({ body }): Promise<ApiFnd001ResponseCreated> => {
       const { data } = await axiosClientWithAuth.post(apiFnd001.url(), body);
 
-      return apiFnd001.responseBodyMap[201].parse(data);
+      return data;
     },
   });
 

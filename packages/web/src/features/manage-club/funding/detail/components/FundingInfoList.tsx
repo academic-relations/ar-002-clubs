@@ -1,9 +1,16 @@
+import * as React from "react";
+
+import { IFundingResponse } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import mockFundingDetail from "@sparcs-clubs/web/features/manage-club/services/_mock/mockFundingDetail";
+import { NO_ACTIVITY_REPORT_FUNDING } from "@sparcs-clubs/web/features/manage-club/funding/constants";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
+
+interface FundingInfoListProps {
+  data: IFundingResponse;
+}
 
 export const ListItem = styled.div`
   font-family: ${({ theme }) => theme.fonts.FAMILY.PRETENDARD};
@@ -19,7 +26,7 @@ export const ListItem = styled.div`
   }
 `;
 
-const FundingInfoList = () => (
+const FundingInfoList: React.FC<FundingInfoListProps> = ({ data }) => (
   <FlexWrapper direction="column" gap={16}>
     <Typography
       ff="PRETENDARD"
@@ -31,15 +38,12 @@ const FundingInfoList = () => (
     >
       지원금 정보
     </Typography>
-    <ListItem>항목명: {mockFundingDetail.name}</ListItem>
-    {/* TODO: purposeId 연결하기 */}
-    <ListItem>지출 목적: ~~~~</ListItem>
+    <ListItem>항목명: {data.name}</ListItem>
     <ListItem>
-      지출 일자: {formatDate(mockFundingDetail.expenditureDate)}
+      지출 목적: {data.purposeActivity?.name ?? NO_ACTIVITY_REPORT_FUNDING}
     </ListItem>
-    <ListItem>
-      지출 금액: {mockFundingDetail.expenditureAmount.toLocaleString()}원
-    </ListItem>
+    <ListItem>지출 일자: {formatDate(data.expenditureDate)}</ListItem>
+    <ListItem>지출 금액: {data.expenditureAmount.toLocaleString()}원</ListItem>
   </FlexWrapper>
 );
 

@@ -85,6 +85,7 @@ const ExecutiveClubActivitiesTable: React.FC<
       [ActivityStatusEnum.Applied]: 0,
       [ActivityStatusEnum.Rejected]: 1,
       [ActivityStatusEnum.Approved]: 2,
+      [ActivityStatusEnum.Committee]: 3,
     };
 
     return [...data.items].sort((a, b) => {

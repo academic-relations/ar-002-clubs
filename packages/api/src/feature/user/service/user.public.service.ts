@@ -1,14 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { IExecutiveSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
+import {
+  IExecutiveSummary,
+  IStudentSummary,
+} from "@sparcs-clubs/interface/api/user/type/user.type";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 
-import { MStudent } from "../model/student.model";
 import ExecutiveRepository from "../repository/executive.repository";
 import ProfessorRepository from "../repository/professor.repository";
-import { StudentRepository } from "../repository/student.repository";
+import StudentRepository from "../repository/student.repository";
 
 @Injectable()
 export default class UserPublicService {
@@ -164,18 +166,6 @@ export default class UserPublicService {
   }
 
   /**
-   * 학생의 studentID Array를 통해 학생 정보를 반환합니다.
-   * */
-  async getStudentsByIds(studentIds: number[]): Promise<MStudent[]> {
-    const students =
-      await this.studentRepository.selectStudentsByIds(studentIds);
-    if (students.length === 0) {
-      throw new HttpException("Student Doesn't exist", HttpStatus.NOT_FOUND);
-    }
-    return students;
-  }
-
-  /**
    * 현재 모든 집행부원의 ExecutiveSummary를 가져옵니다.
    * Entity 적용 버전
    * */
@@ -185,5 +175,26 @@ export default class UserPublicService {
       await this.executiveRepository.selectExecutiveSummary(today);
 
     return executives;
+  }
+
+  async fetchStudentSummaries(
+    studentIds: number[],
+  ): Promise<IStudentSummary[]> {
+    const students =
+      await this.studentRepository.fetchStudentSummaries(studentIds);
+    return students;
+  }
+
+  async fetchExecutiveSummaries(
+    executiveIds: number[],
+  ): Promise<IExecutiveSummary[]> {
+    const executives =
+      await this.executiveRepository.fetchSummaries(executiveIds);
+    return executives;
+  }
+
+  async fetchExecutiveSummary(executiveId: number): Promise<IExecutiveSummary> {
+    const executive = await this.executiveRepository.fetchSummary(executiveId);
+    return executive;
   }
 }

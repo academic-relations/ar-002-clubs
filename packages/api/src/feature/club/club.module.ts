@@ -39,4 +39,4 @@ import { ClubService } from "./service/club.service";
   ],
   exports: [ClubPublicService],
 })
-export class ClubModule {}
+export default class ClubModule {}
