@@ -1,7 +1,7 @@
-// 시간을 제회한 날짜만 KST로 변경
+// 시간을 제외한 날짜만 KST로 변경
 // 예시: 입력 date가 2024-10-18 15:00 일 경우 getKSTDate 씌워서 api 요청 보내면
 // 2024.10.18 00:00 으로 요청 보내짐 (백에서도 그대로 받아서 그대로 프론트에 데이터 보냄)
-// 즉 항상 시간은 00:00 이어야 함
+// 즉 항상 시간은 00:00 이게 됨
 export function getKSTDate(date: Date): Date {
   const localDateOnly = new Date(
     date.getFullYear(),
