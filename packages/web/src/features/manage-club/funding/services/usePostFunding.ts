@@ -14,7 +14,7 @@ const usePostFunding = () =>
     mutationFn: async ({ body }): Promise<ApiFnd001ResponseCreated> => {
       const { data } = await axiosClientWithAuth.post(apiFnd001.url(), body);
 
-      return apiFnd001.responseBodyMap[201].parse(data);
+      return data;
     },
   });
 

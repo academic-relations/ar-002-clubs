@@ -162,10 +162,10 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
         <AsyncBoundary isLoading={isLoading} isError={isError}>
           <FundingInfoList data={funding} />
           <BasicEvidenceList data={funding} />
-          {funding.purposeActivity &&
-            isActivityReportUnverifiable(funding.purposeActivity.id) && (
-              <FixtureEvidenceList data={funding} />
-            )}
+          {(!funding.purposeActivity ||
+            isActivityReportUnverifiable(funding.purposeActivity.id)) && (
+            <FixtureEvidenceList data={funding} />
+          )}
           {funding.isFixture && (
             <FixtureEvidenceList isFixture data={funding} />
           )}

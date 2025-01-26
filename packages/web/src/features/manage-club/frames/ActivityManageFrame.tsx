@@ -11,6 +11,7 @@ import CurrentActivityReportTable from "@sparcs-clubs/web/features/activity-repo
 import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/services/getMyManageClub";
 
 import NewFundingListTable from "../funding/components/_atomic/NewFundingListTable";
+import { FUNDING_TABLE_NO_ACTIVITY_NAME } from "../funding/constants";
 import useGetNewFundingList from "../funding/services/useGetNewFundingList";
 
 const ActivityManageFrame: React.FC = () => {
@@ -53,7 +54,9 @@ const ActivityManageFrame: React.FC = () => {
               newFundingList={newFundingList?.fundings
                 .map(funding => ({
                   ...funding,
-                  activityName: funding.purposeActivity?.name ?? "",
+                  activityName:
+                    funding.purposeActivity?.name ??
+                    FUNDING_TABLE_NO_ACTIVITY_NAME,
                 }))
                 .sort((a, b) => a.fundingStatusEnum - b.fundingStatusEnum)}
             />

@@ -36,9 +36,11 @@ export const useCreateFunding = (clubId: number) => {
         {
           body: {
             clubId,
-            purposeActivity: purposeActivity
-              ? { id: purposeActivity.id }
-              : undefined,
+            purposeActivity:
+              purposeActivity &&
+              !isActivityReportUnverifiable(purposeActivity.id)
+                ? { id: purposeActivity.id }
+                : undefined,
             name,
             expenditureDate: getKSTDate(data.expenditureDate),
             expenditureAmount: Number(expenditureAmount),
