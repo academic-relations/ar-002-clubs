@@ -93,14 +93,14 @@ const FundingInfoFrame: React.FC<{ clubId: number }> = ({ clubId }) => {
               name="expenditureAmount"
               required
               control={control}
-              renderItem={({ value, onChange }) => (
+              renderItem={({ value, onChange, errorMessage }) => (
                 <UnitInput
                   label="지출 금액"
                   placeholder="금액을 입력해주세요"
                   unit="원"
                   value={value?.toString()}
                   handleChange={onChange}
-                  setErrorStatus={() => {}}
+                  errorMessage={errorMessage}
                 />
               )}
             />
