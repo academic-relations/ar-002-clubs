@@ -1,7 +1,5 @@
 import React, { useMemo } from "react";
 
-import { IActivitySummaryExecutiveResponse } from "@sparcs-clubs/interface/api/activity/type/activity.type";
-
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import {
   createColumnHelper,
@@ -19,6 +17,8 @@ import {
 } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
+import type { IActivitySummaryExecutiveResponse } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 
 const columnHelper =
   createColumnHelper<IActivitySummaryExecutiveResponse[][number]>();

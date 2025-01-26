@@ -1,9 +1,10 @@
 import React from "react";
 
-import { IActivitySummaryExecutiveResponse } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import ActivityReportStatisticContent from "./_atomic/ActivityReportStatisticContent";
+
+import type { IActivitySummaryExecutiveResponse } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 
 const ActivityReportChargedStatistic: React.FC<{
   activities: IActivitySummaryExecutiveResponse[];
