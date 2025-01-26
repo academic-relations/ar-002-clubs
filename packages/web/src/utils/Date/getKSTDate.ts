@@ -4,9 +4,9 @@
 // 즉 항상 시간은 00:00 이게 됨
 export function getKSTDate(date: Date): Date {
   const localDateOnly = new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate(),
+    new Date(date).getFullYear(),
+    new Date(date).getMonth(),
+    new Date(date).getDate(),
   );
 
   const kstOffset = 9 * 60; // KST: UTC+9
