@@ -120,7 +120,6 @@ export default class ActivityActivityTermService {
     const semesters = await this.clubPublicService.getClubsExistedSemesters({
       clubId: query.clubId,
     });
-    console.log("asdfAsdf", semesters);
     const activityTerms: ApiAct009ResponseOk["terms"] = [];
     await Promise.all(
       semesters.map(async semester => {
