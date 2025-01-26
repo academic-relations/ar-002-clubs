@@ -1,13 +1,12 @@
 import React from "react";
 
+import { ApiAct028ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct028";
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import ActivityReportStatisticContent from "./_atomic/ActivityReportStatisticContent";
 
-import type { IActivitySummaryExecutiveResponse } from "@sparcs-clubs/interface/api/activity/type/activity.type";
-
 const ActivityReportChargedStatistic: React.FC<{
-  activities: IActivitySummaryExecutiveResponse[];
+  activities: ApiAct028ResponseOk["activities"];
 }> = ({ activities }) => {
   const pendingTotalCount = activities.filter(
     activity => activity.activityStatusEnum === ActivityStatusEnum.Applied,
