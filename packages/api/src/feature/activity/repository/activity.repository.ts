@@ -655,7 +655,7 @@ export default class ActivityRepository {
         .update(Activity)
         .set({
           activityStatusEnumId: param.activityStatusEnumId,
-          commentedAt: new Date(),
+          commentedAt: getKSTDate(),
         })
         .where(
           and(eq(Activity.id, param.activityId), isNull(Activity.deletedAt)),
