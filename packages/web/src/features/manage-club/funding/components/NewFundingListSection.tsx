@@ -18,7 +18,6 @@ import {
   newFundingOrderButtonText,
 } from "@sparcs-clubs/web/constants/manageClubFunding";
 
-import { fundingDeadlineEnumToString } from "../constants/fundingDeadlineEnumToString";
 import useGetFundingDeadline from "../services/useGetFundingDeadline";
 import useGetNewFundingList from "../services/useGetNewFundingList";
 
@@ -72,15 +71,7 @@ const NewFundingListSection: React.FC<NewFundingListSectionProps> = ({
           isLoading={isLoadingFundingDeadline}
           isError={isErrorFundingDeadline}
         >
-          <Info
-            text={newFundingListSectionInfoText(
-              `${fundingDeadline?.targetDuration.year}년 ${fundingDeadline?.targetDuration.name}`,
-              fundingDeadlineEnumToString(
-                fundingDeadline?.deadline.deadlineEnum,
-              ),
-              fundingDeadline?.deadline.endDate,
-            )}
-          />
+          <Info text={newFundingListSectionInfoText(fundingDeadline)} />
         </AsyncBoundary>
         <NewFundingOrderButtonRow>
           <IconButton icon="add" type="default" onClick={createFundingClick}>

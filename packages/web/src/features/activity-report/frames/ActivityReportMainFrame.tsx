@@ -17,7 +17,6 @@ import { useGetMyManageClub } from "@sparcs-clubs/web/features/manage-club/servi
 import CurrentActivityReportTable from "../components/CurrentActivityReportTable";
 import PastActivityReportList from "../components/PastActivityReportTable";
 import {
-  activityDeadlineEnumToString,
   MAX_ACTIVITY_REPORT_COUNT,
   newActivityReportListSectionInfoText,
 } from "../constants";
@@ -77,13 +76,7 @@ const ActivityReportMainFrame: React.FC<ActivityReportMainFrameProps> = ({
         <FoldableSectionTitle childrenMargin="20px" title="신규 활동 보고서">
           <FlexWrapper direction="column" gap={20}>
             <Info
-              text={newActivityReportListSectionInfoText(
-                `${activityDeadline?.targetTerm.year}년 ${activityDeadline?.targetTerm.name}`,
-                activityDeadlineEnumToString(
-                  activityDeadline?.deadline.activityDeadlineEnum,
-                ),
-                activityDeadline?.deadline.duration.endTerm,
-              )}
+              text={newActivityReportListSectionInfoText(activityDeadline)}
             />
             <FlexWrapper
               direction="row"
