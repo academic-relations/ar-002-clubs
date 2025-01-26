@@ -268,13 +268,17 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
                 labels={
                   getActivityReportProgress(
                     data.activityStatusEnumId,
-                    data.updatedAt,
+                    data.activityStatusEnumId === 1
+                      ? data.editedAt
+                      : data.commentedAt || data.editedAt,
                   ).labels
                 }
                 progress={
                   getActivityReportProgress(
                     data.activityStatusEnumId,
-                    data.updatedAt,
+                    data.activityStatusEnumId === 1
+                      ? data.editedAt
+                      : data.commentedAt || data.editedAt,
                   ).progress
                 }
                 optional={

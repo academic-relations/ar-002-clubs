@@ -56,6 +56,7 @@ const columns = [
     size: 300,
   }),
   columnHelper.accessor("updatedAt", {
+    // TODO: act024 수정 후 commentedAt으로 수정
     header: "검토 일시",
     cell: info => formatDateTime(info.getValue()),
     size: 220,
