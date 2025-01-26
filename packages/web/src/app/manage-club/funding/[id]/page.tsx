@@ -50,8 +50,7 @@ const FundingDetail = () => {
           title="지원금 신청"
           enableLast
         />
-        {/* TODO: 기간 맞춰서 isNow 설정 */}
-        <FundingDetailFrame isNow clubId={data.clubId} />
+        <FundingDetailFrame clubId={data.clubId} />
       </FlexWrapper>
     </AsyncBoundary>
   );
