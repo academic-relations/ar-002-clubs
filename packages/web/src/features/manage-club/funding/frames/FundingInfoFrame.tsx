@@ -15,6 +15,8 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 import useGetActivityAvailable from "@sparcs-clubs/web/features/activity-report/services/useGetActivityAvailable";
 import { FundingInfo } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
 
+import { NO_ACTIVITY_REPORT_FUNDING } from "../constants";
+
 const RowWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -39,7 +41,7 @@ const FundingInfoFrame: React.FC<{ clubId: number }> = ({ clubId }) => {
       value: activity.id,
       label: activity.name,
     })) ?? []),
-    { value: Infinity, label: "활동보고서로 증빙 불가" },
+    { value: Infinity, label: NO_ACTIVITY_REPORT_FUNDING },
   ];
 
   return (

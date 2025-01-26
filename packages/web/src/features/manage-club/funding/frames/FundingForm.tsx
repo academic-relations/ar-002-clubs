@@ -6,6 +6,7 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 
+import { NO_ACTIVITY_REPORT_FUNDING } from "../constants";
 import { FundingFormData } from "../types/funding";
 
 import AddEvidenceFrame from "./AddEvidenceFrame";
@@ -34,7 +35,7 @@ const FundingForm: React.FC<FundingFormProps> = ({
           ? initialData.purposeActivity?.id ?? Infinity
           : undefined,
         name: initialData
-          ? initialData.purposeActivity?.name ?? "활동보고서로 증빙 불가"
+          ? initialData.purposeActivity?.name ?? NO_ACTIVITY_REPORT_FUNDING
           : undefined,
       },
     },

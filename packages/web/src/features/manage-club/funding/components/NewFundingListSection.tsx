@@ -18,6 +18,7 @@ import {
   newFundingOrderButtonText,
 } from "@sparcs-clubs/web/constants/manageClubFunding";
 
+import { FUNDING_TABLE_NO_ACTIVITY_NAME } from "../constants";
 import useGetFundingDeadline from "../services/useGetFundingDeadline";
 import useGetNewFundingList from "../services/useGetNewFundingList";
 
@@ -86,7 +87,9 @@ const NewFundingListSection: React.FC<NewFundingListSectionProps> = ({
             newFundingList={newFundingList?.fundings
               .map(funding => ({
                 ...funding,
-                activityName: funding.purposeActivity?.name ?? "",
+                activityName:
+                  funding.purposeActivity?.name ??
+                  FUNDING_TABLE_NO_ACTIVITY_NAME,
               }))
               .sort((a, b) => a.fundingStatusEnum - b.fundingStatusEnum)}
           />
