@@ -5,13 +5,9 @@ import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity
 
 import ActivityReportStatisticContent from "./_atomic/ActivityReportStatisticContent";
 
-interface ActivityReportStatisticProps {
+const ActivityReportChargedStatistic: React.FC<{
   activities: IActivitySummaryExecutiveResponse[];
-}
-
-const ActivityReportChargedStatistic: React.FC<
-  ActivityReportStatisticProps
-> = ({ activities }) => {
+}> = ({ activities }) => {
   const pendingTotalCount = activities.filter(
     activity => activity.activityStatusEnum === ActivityStatusEnum.Applied,
   ).length;

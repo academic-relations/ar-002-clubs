@@ -6,6 +6,7 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
+import ActivityReportChargedOtherTable from "../components/ActivityReportChargedOtherTable";
 import ActivityReportChargedStatistic from "../components/ActivityReportChargedStatistic";
 import useGetExecutiveChargedActivities from "../services/useGetExecutiveChargedActivities";
 
@@ -14,6 +15,10 @@ const ExecutiveActivityReportChargedFrame: React.FC = () => {
   const { data, isLoading, isError } = useGetExecutiveChargedActivities({
     executiveId: Number(executiveId),
   });
+
+  const otherActivities = data?.activities.filter(
+    activity => activity.chargedExecutive?.id !== data.chargedExecutive.id,
+  );
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
@@ -30,6 +35,9 @@ const ExecutiveActivityReportChargedFrame: React.FC = () => {
           enableLast
         />
         <ActivityReportChargedStatistic activities={data?.activities ?? []} />
+        {otherActivities && otherActivities.length > 0 && (
+          <ActivityReportChargedOtherTable activities={otherActivities} />
+        )}
       </FlexWrapper>
     </AsyncBoundary>
   );
