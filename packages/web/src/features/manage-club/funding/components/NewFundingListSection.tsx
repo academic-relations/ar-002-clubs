@@ -92,10 +92,12 @@ const NewFundingListSection: React.FC<NewFundingListSectionProps> = ({
           isError={isErrorNewFundingList}
         >
           <NewFundingListTable
-            newFundingList={newFundingList?.fundings.map(funding => ({
-              ...funding,
-              activityName: funding.purposeActivity?.name ?? "",
-            }))}
+            newFundingList={newFundingList?.fundings
+              .map(funding => ({
+                ...funding,
+                activityName: funding.purposeActivity?.name ?? "",
+              }))
+              .sort((a, b) => a.fundingStatusEnum - b.fundingStatusEnum)}
           />
         </AsyncBoundary>
       </FlexWrapper>
