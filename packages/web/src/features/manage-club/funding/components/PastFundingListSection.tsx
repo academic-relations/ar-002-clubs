@@ -10,6 +10,8 @@ import { pastFundingListSectionTitle } from "@sparcs-clubs/web/constants/manageC
 
 import useGetActivityTerms from "@sparcs-clubs/web/features/activity-report/services/useGetActivityTerms";
 
+import useGetFundingDeadline from "../services/useGetFundingDeadline";
+
 import PastSingleSemesterFundingListSection from "./_atomic/PastSingleSemesterFundingListSection";
 
 const PastFundingListSectionInner = styled.div`
@@ -53,6 +55,12 @@ const PastFundingListSection: React.FC<{ clubId: number }> = ({ clubId }) => {
     isError,
   } = useGetActivityTerms({ clubId });
 
+  const {
+    data: fundingDeadline,
+    isLoading: isLoadingFundingDeadline,
+    isError: isErrorFundingDeadline,
+  } = useGetFundingDeadline();
+
   if (!activityTerms) {
     return null;
   }
@@ -60,15 +68,32 @@ const PastFundingListSection: React.FC<{ clubId: number }> = ({ clubId }) => {
   return (
     <PastFundingListSectionInner>
       <FoldableSectionTitle title={pastFundingListSectionTitle}>
-        <AsyncBoundary isLoading={isLoading} isError={isError}>
+        <AsyncBoundary
+          isLoading={isLoading || isLoadingFundingDeadline}
+          isError={isError || isErrorFundingDeadline}
+        >
           <PastFundingListSectionContents>
-            {activityTerms.terms.toReversed().map(term => (
-              <PastSingleSemesterFundingListSection
-                key={term.id}
-                termId={term.id}
-                clubId={clubId}
-              />
-            ))}
+            {activityTerms.terms
+              .toReversed()
+              .filter(term => {
+                if (!fundingDeadline) return true;
+
+                return (
+                  new Date(term.startTerm).getTime() !==
+                    new Date(
+                      fundingDeadline.targetDuration.startTerm,
+                    ).getTime() &&
+                  new Date(term.endTerm).getTime() !==
+                    new Date(fundingDeadline.targetDuration.endTerm).getTime()
+                );
+              })
+              .map(term => (
+                <PastSingleSemesterFundingListSection
+                  key={term.id}
+                  termId={term.id}
+                  clubId={clubId}
+                />
+              ))}
           </PastFundingListSectionContents>
         </AsyncBoundary>
       </FoldableSectionTitle>

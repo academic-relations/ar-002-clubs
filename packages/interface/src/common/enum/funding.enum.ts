@@ -6,7 +6,7 @@ export enum FundingStatusEnum {
 }
 
 export enum FundingDeadlineEnum {
-  Writing, // 작성
+  Writing = 1, // 작성
   Revision, // 수정
   Review, // 검토
   Exception, // 예외
