@@ -73,7 +73,7 @@ export default class ActivityRepository {
   // 작성에 성공하면 True, 실패하면 False를 리턴합니다.
   async deleteActivity(contents: { activityId: number }): Promise<boolean> {
     const isDeletionSucceed = await this.db.transaction(async tx => {
-      const deletedAt = new Date();
+      const deletedAt = getKSTDate();
       const [activitySetResult] = await tx
         .update(Activity)
         .set({
@@ -470,7 +470,7 @@ export default class ActivityRepository {
           evidence: param.evidence,
           activityDId: param.activityDId,
           activityStatusEnumId: Number(param.activityStatusEnumId),
-          editedAt: deletedAt,
+          editedAt: getKSTDate(),
         })
         .where(eq(Activity.id, param.activityId));
       if (activitySetResult.affectedRows !== 1) {

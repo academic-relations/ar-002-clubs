@@ -34,7 +34,9 @@ const responseBodyMap = {
         activityId: zId,
         activityStatusEnum: z.nativeEnum(ActivityStatusEnum),
         activityName: z.string().max(255),
-        finalReviewedExecutive: z
+        commentedAt: z.coerce.date().nullable(),
+        editedAt: z.coerce.date().nullable(),
+        commentedExecutive: z
           .object({
             id: zId,
             name: z.string().max(30),
