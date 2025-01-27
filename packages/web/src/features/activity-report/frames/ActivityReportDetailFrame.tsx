@@ -226,6 +226,10 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     return null;
   };
 
+  const filteredComments = data.comments.filter(
+    comment => comment.content !== "활동이 승인되었습니다",
+  );
+
   return (
     <FlexWrapper direction="column" gap={60}>
       <PageHead
@@ -263,19 +267,13 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
                 }
                 optional={
                   isCommentsVisible &&
-                  data.comments &&
-                  data.comments.length > 0 && (
+                  filteredComments.length > 0 && (
                     <RejectReasonToast
                       title="반려 사유"
-                      reasons={data.comments
-                        .filter(
-                          comment =>
-                            comment.content !== "활동이 승인되었습니다",
-                        )
-                        .map(comment => ({
-                          datetime: comment.createdAt,
-                          reason: comment.content,
-                        }))}
+                      reasons={filteredComments.map(comment => ({
+                        datetime: comment.createdAt,
+                        reason: comment.content,
+                      }))}
                     />
                   )
                 }
@@ -376,7 +374,11 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
             )}
           </Card>
 
-          <ExecutiveActivityReportApprovalSection />
+          {profile.type === "executive" && (
+            <ExecutiveActivityReportApprovalSection
+              comments={filteredComments}
+            />
+          )}
 
           <FlexWrapper gap={20} justify="space-between">
             <Button type="default" onClick={navigateToActivityReportList}>

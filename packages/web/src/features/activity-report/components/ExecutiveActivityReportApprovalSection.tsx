@@ -4,7 +4,6 @@ import { useParams } from "next/navigation";
 
 import { overlay } from "overlay-kit";
 
-import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -12,23 +11,17 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import { formatSlashDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import useExecutiveApproveActivityReport from "../hooks/useExecutiveApproveActivityReport";
 import useExecutiveRejectActivityReport from "../hooks/useExecutiveRejectActivityReport";
-import useGetActivityReportComments from "../hooks/useGetActivityReportComments";
+import { Comment } from "../types/activityReport";
 
-const ExecutiveActivityReportApprovalSection: React.FC = () => {
+const ExecutiveActivityReportApprovalSection: React.FC<{
+  comments: Comment[];
+}> = ({ comments }) => {
   const { id } = useParams<{ id: string }>();
   const activityId = Number(id);
-
-  const { profile } = useAuth();
-  const {
-    data: comments,
-    isLoading,
-    isError,
-  } = useGetActivityReportComments(activityId);
 
   const { mutate: approveActivityReport } =
     useExecutiveApproveActivityReport(activityId);
@@ -75,14 +68,6 @@ const ExecutiveActivityReportApprovalSection: React.FC = () => {
       },
     });
   };
-
-  if (profile?.type !== "executive") {
-    return null;
-  }
-
-  if (isLoading || isError) {
-    return <AsyncBoundary isLoading={isLoading} isError={isError} />;
-  }
 
   return (
     <Card outline padding="32px" gap={20}>
