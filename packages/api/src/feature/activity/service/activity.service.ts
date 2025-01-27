@@ -1316,6 +1316,8 @@ export default class ActivityService {
           commentedExecutive,
           chargedExecutive,
           updatedAt: activity.updatedAt,
+          commentedAt: activity.commentedAt,
+          editedAt: activity.editedAt,
         };
       }),
     );
