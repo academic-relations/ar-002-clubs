@@ -51,7 +51,7 @@ const ExecutiveActivityReportChargedFrame: React.FC = () => {
               path: `/executive/activity-report`,
             },
           ]}
-          title={`활동 보고서 검토 내역 (${data?.chargedExecutive.name})`}
+          title={`활동 보고서 검토 내역 (${data?.chargedExecutive.name.trim()})`}
           enableLast
         />
         <ActivityReportChargedStatistic activities={data?.activities ?? []} />
