@@ -457,7 +457,7 @@ export default class ActivityRepository {
     activityStatusEnumId: ActivityStatusEnum;
   }) {
     const isUpdateSucceed = await this.db.transaction(async tx => {
-      const deletedAt = new Date();
+      const deletedAt = getKSTDate();
 
       const [activitySetResult] = await tx
         .update(Activity)
@@ -470,7 +470,7 @@ export default class ActivityRepository {
           evidence: param.evidence,
           activityDId: param.activityDId,
           activityStatusEnumId: Number(param.activityStatusEnumId),
-          editedAt: getKSTDate(),
+          editedAt: deletedAt,
         })
         .where(eq(Activity.id, param.activityId));
       if (activitySetResult.affectedRows !== 1) {
