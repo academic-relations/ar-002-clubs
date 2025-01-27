@@ -55,10 +55,12 @@ const columns = [
     cell: info => info.getValue(),
     size: 300,
   }),
-  columnHelper.accessor("updatedAt", {
-    // TODO: act024 수정 후 commentedAt으로 수정
+  columnHelper.accessor("commentedAt", {
     header: "검토 일시",
-    cell: info => formatDateTime(info.getValue()),
+    cell: info => {
+      const date = info.getValue();
+      return date ? formatDateTime(date) : "-";
+    },
     size: 220,
   }),
   columnHelper.accessor("commentedExecutive.name", {
