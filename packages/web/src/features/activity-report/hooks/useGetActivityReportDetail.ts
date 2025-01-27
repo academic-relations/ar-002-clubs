@@ -13,6 +13,7 @@ const useGetActivityReportDetail = (
   data: CurrentActivityReport;
   isLoading: boolean;
   isError: boolean;
+  clubId: number;
 } => {
   const { profile } = useAuth();
   const {
@@ -64,6 +65,7 @@ const useGetActivityReportDetail = (
 
   return {
     data: memoizedData,
+    clubId: activityReport?.clubId ?? 0,
     isLoading,
     isError,
   };

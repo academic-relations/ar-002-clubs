@@ -19,14 +19,19 @@ import { Comment } from "../types/activityReport";
 
 const ExecutiveActivityReportApprovalSection: React.FC<{
   comments: Comment[];
-}> = ({ comments }) => {
+  clubId: number;
+}> = ({ comments, clubId }) => {
   const { id } = useParams<{ id: string }>();
   const activityId = Number(id);
 
-  const { mutate: approveActivityReport } =
-    useExecutiveApproveActivityReport(activityId);
-  const { mutate: rejectActivityReport } =
-    useExecutiveRejectActivityReport(activityId);
+  const { mutate: approveActivityReport } = useExecutiveApproveActivityReport(
+    activityId,
+    clubId,
+  );
+  const { mutate: rejectActivityReport } = useExecutiveRejectActivityReport(
+    activityId,
+    clubId,
+  );
   const [rejectionDetail, setRejectionDetail] = useState("");
 
   const handleApprove = () => {
