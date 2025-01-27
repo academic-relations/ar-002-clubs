@@ -63,7 +63,7 @@ const columns = [
     },
     size: 220,
   }),
-  columnHelper.accessor("commentedExecutive.name", {
+  columnHelper.accessor(row => row.commentedExecutive?.name, {
     header: "최종 검토자",
     cell: info => info.getValue() || "-",
     size: 120,
