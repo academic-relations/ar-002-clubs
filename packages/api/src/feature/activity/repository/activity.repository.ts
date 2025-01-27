@@ -73,7 +73,7 @@ export default class ActivityRepository {
   // 작성에 성공하면 True, 실패하면 False를 리턴합니다.
   async deleteActivity(contents: { activityId: number }): Promise<boolean> {
     const isDeletionSucceed = await this.db.transaction(async tx => {
-      const deletedAt = new Date();
+      const deletedAt = getKSTDate();
       const [activitySetResult] = await tx
         .update(Activity)
         .set({
@@ -457,7 +457,7 @@ export default class ActivityRepository {
     activityStatusEnumId: ActivityStatusEnum;
   }) {
     const isUpdateSucceed = await this.db.transaction(async tx => {
-      const deletedAt = new Date();
+      const deletedAt = getKSTDate();
 
       const [activitySetResult] = await tx
         .update(Activity)
@@ -655,7 +655,7 @@ export default class ActivityRepository {
         .update(Activity)
         .set({
           activityStatusEnumId: param.activityStatusEnumId,
-          commentedAt: new Date(),
+          commentedAt: getKSTDate(),
         })
         .where(
           and(eq(Activity.id, param.activityId), isNull(Activity.deletedAt)),

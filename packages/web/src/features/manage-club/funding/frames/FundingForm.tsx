@@ -6,6 +6,7 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 
+import { NO_ACTIVITY_REPORT_FUNDING } from "../constants";
 import { FundingFormData } from "../types/funding";
 
 import AddEvidenceFrame from "./AddEvidenceFrame";
@@ -13,12 +14,14 @@ import BasicEvidenceFrame from "./BasicEvidenceFrame";
 import FundingInfoFrame from "./FundingInfoFrame";
 
 interface FundingFormProps {
+  clubId: number;
   initialData?: FundingFormData;
   onCancel: VoidFunction;
   onSubmit: (data: FundingFormData) => void;
 }
 
 const FundingForm: React.FC<FundingFormProps> = ({
+  clubId,
   initialData = undefined,
   onCancel,
   onSubmit,
@@ -28,8 +31,12 @@ const FundingForm: React.FC<FundingFormProps> = ({
     defaultValues: {
       ...initialData,
       purposeActivity: {
-        id: initialData?.purposeActivity?.id,
-        name: initialData?.purposeActivity?.name,
+        id: initialData
+          ? initialData.purposeActivity?.id ?? Infinity
+          : undefined,
+        name: initialData
+          ? initialData.purposeActivity?.name ?? NO_ACTIVITY_REPORT_FUNDING
+          : undefined,
       },
     },
   });
@@ -43,7 +50,7 @@ const FundingForm: React.FC<FundingFormProps> = ({
     <FormProvider {...formCtx}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FlexWrapper direction="column" gap={60}>
-          <FundingInfoFrame />
+          <FundingInfoFrame clubId={clubId} />
           <BasicEvidenceFrame />
           <AddEvidenceFrame />
           <StyledBottom>

@@ -57,7 +57,7 @@ function FormController<
   defaultValue,
   ...props
 }: FormControllerProps<TFieldValues, TName>) {
-  const requiredMessage = "필수값입니다.";
+  const requiredMessage = "필수로 채워야 하는 항목입니다";
   const maxLengthMessage = `최대 ${props.maxLength}자까지 가능합니다.`;
   const minLengthMessage = `최소 ${props.minLength}자 이상이어야 합니다.`;
   const patternMessage = "정해진 형식에 맞지 않습니다.";

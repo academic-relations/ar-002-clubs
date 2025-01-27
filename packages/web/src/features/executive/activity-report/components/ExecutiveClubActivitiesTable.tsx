@@ -61,7 +61,7 @@ const columns = [
     cell: info => formatDateTime(info.getValue()),
     size: 220,
   }),
-  columnHelper.accessor("finalReviewedExecutive.name", {
+  columnHelper.accessor("commentedExecutive.name", {
     header: "최종 검토자",
     cell: info => info.getValue() || "-",
     size: 120,
