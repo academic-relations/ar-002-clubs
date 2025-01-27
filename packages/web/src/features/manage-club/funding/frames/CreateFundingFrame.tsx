@@ -69,7 +69,11 @@ const CreateFundingFrame: React.FC<CreateFundingFrameProps> = ({ clubId }) => {
         title="지원금 신청"
         enableLast
       />
-      <FundingForm onCancel={fundingCancelClick} onSubmit={handleSubmit} />
+      <FundingForm
+        clubId={clubId}
+        onCancel={fundingCancelClick}
+        onSubmit={handleSubmit}
+      />
     </FlexWrapper>
   );
 };

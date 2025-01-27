@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import useEasterEgg from "@sparcs-clubs/web/common/hooks/useEasteregg";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import ClubDetailPublicFrame from "@sparcs-clubs/web/features/clubs/frames/ClubDetailPublicFrame";
 import ClubDetailStudentFrame from "@sparcs-clubs/web/features/clubs/frames/ClubDetailStudentFrame";
@@ -10,6 +11,9 @@ import { useGetClubDetail } from "@sparcs-clubs/web/features/clubs/services/getC
 import isStudent from "@sparcs-clubs/web/utils/isStudent";
 
 const ClubDetail = () => {
+  // 이스터에그_리크루팅
+  useEasterEgg();
+
   const { id } = useParams();
   const { data, isLoading, isError } = useGetClubDetail(id as string);
   const { isLoggedIn, profile } = useAuth();
