@@ -3,7 +3,7 @@ import { z } from "zod";
 
 /**
  * @version v0.1
- * @description 투표 전, 특정 회의에 속한 안건에 달리는 투표를 열람합니다.
+ * @description 투표와 관련한 모든 정보(투표 제목, 설명, 선택지, 유저가 선택한 항목, 최종 결과)를 받아옵니다.
  */
 
 const url = (meetingId: number, agendaId: number, voteId: number) =>
@@ -28,6 +28,13 @@ const responseBodyMap = {
       z.object({
         id: z.coerce.number().int().min(1), // CHACHA: choiceId.
         choice: z.coerce.string().max(255),
+      }),
+    ),
+    choiceId: z.coerce.number().int().min(1), // CHACHA: what user chose, choiceId
+    results: z.array(
+      z.object({
+        id: z.coerce.number().int().min(1), // CHACHA: choiceId.
+        votes: z.coerce.number().int().min(0),
       }),
     ),
   }),

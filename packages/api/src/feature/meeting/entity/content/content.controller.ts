@@ -4,8 +4,8 @@ import {
   Delete,
   // Get,
   Param,
-  Patch,
   Post,
+  Put,
   UsePipes,
 } from "@nestjs/common";
 
@@ -57,7 +57,7 @@ export default class ContentController {
   }
 
   @Executive()
-  @Patch(
+  @Put(
     "/executive/meetings/meeting/:meetingId/agendas/agenda/:agendaId/contents/content/:contentId",
   )
   @UsePipes(new ZodPipe(apiMee014))

@@ -7,7 +7,7 @@ import { z } from "zod";
  */
 
 const url = (meetingId: number, agendaId: number, voteId: number) =>
-  `/executive/meetings/meeting/${meetingId}/agendas/agenda/${agendaId}/votes/vote/${voteId}`;
+  `/executive/meetings/meeting/${meetingId}/agendas/agenda/${agendaId}/votes/vote/${voteId}/choice`;
 const method = "PUT";
 
 const requestParam = z.object({

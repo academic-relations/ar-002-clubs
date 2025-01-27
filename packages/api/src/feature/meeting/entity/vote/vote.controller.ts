@@ -55,16 +55,6 @@ import apiMee024, {
   ApiMee024ResponseOk,
 } from "@sparcs-clubs/interface/api/meeting/apiMee024";
 
-import apiMee025, {
-  ApiMee025RequestParam,
-  ApiMee025ResponseOk,
-} from "@sparcs-clubs/interface/api/meeting/apiMee025";
-
-import apiMee026, {
-  ApiMee026RequestParam,
-  ApiMee026ResponseOk,
-} from "@sparcs-clubs/interface/api/meeting/apiMee026";
-
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Executive } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 import { GetExecutive } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
@@ -99,7 +89,7 @@ export default class VoteController {
 
   @Executive()
   @Post(
-    "/executive/meetings/meeting/:meetingId/agendas/agenda/:agendaId/votes/vote/:voteId",
+    "/executive/meetings/meeting/:meetingId/agendas/agenda/:agendaId/votes/vote/:voteId/results",
   )
   @UsePipes(new ZodPipe(apiMee017))
   async postExecutiveMeetingAgendaVoteResult(
@@ -142,7 +132,7 @@ export default class VoteController {
 
   @Executive()
   @Put(
-    "/executive/meetings/meeting/:meetingId/agendas/agenda/:agendaId/votes/vote/:voteId",
+    "/executive/meetings/meeting/:meetingId/agendas/agenda/:agendaId/votes/vote/:voteId/choices",
   )
   @UsePipes(new ZodPipe(apiMee019))
   async putExecutiveMeetingAgendaVoteChoices(
@@ -163,7 +153,7 @@ export default class VoteController {
 
   @Executive()
   @Put(
-    "/executive/meetings/meeting/:meetingId/agendas/agenda/:agendaId/votes/vote/:voteId",
+    "/executive/meetings/meeting/:meetingId/agendas/agenda/:agendaId/votes/vote/:voteId/choice",
   )
   @UsePipes(new ZodPipe(apiMee020))
   async putExecutiveMeetingAgendaVoteUserChoice(
@@ -232,45 +222,6 @@ export default class VoteController {
     @Param() { meetingId, agendaId, voteId }: ApiMee024RequestParam,
   ): Promise<ApiMee024ResponseOk> {
     const result = await this.voteService.getExecutiveMeetingAgendaVote(
-      user.executiveId,
-      meetingId,
-      agendaId,
-      voteId,
-    );
-
-    return result;
-  }
-
-  @Executive()
-  @Get(
-    "/executive/meetings/meeting/:meetingId/agendas/agenda/:agendaId/votes/vote/:voteId/results",
-  )
-  @UsePipes(new ZodPipe(apiMee025))
-  async getExecutiveMeetingAgendaVoteWithResults(
-    @GetExecutive() user: GetExecutive,
-    @Param() { meetingId, agendaId, voteId }: ApiMee025RequestParam,
-  ): Promise<ApiMee025ResponseOk> {
-    const result =
-      await this.voteService.getExecutiveMeetingAgendaVoteWithResults(
-        user.executiveId,
-        meetingId,
-        agendaId,
-        voteId,
-      );
-
-    return result;
-  }
-
-  @Executive()
-  @Get(
-    "/executive/meetings/meeting/:meetingId/agendas/agenda/:agendaId/votes/vote/:voteId/results/final",
-  )
-  @UsePipes(new ZodPipe(apiMee026))
-  async getExecutiveMeetingAgendaVoteFinal(
-    @GetExecutive() user: GetExecutive,
-    @Param() { meetingId, agendaId, voteId }: ApiMee026RequestParam,
-  ): Promise<ApiMee026ResponseOk> {
-    const result = await this.voteService.getExecutiveMeetingAgendaVoteFinal(
       user.executiveId,
       meetingId,
       agendaId,

@@ -35,7 +35,7 @@ export class EntityRepository {
         ({ id, meetingAgendaEntityType }, index) =>
           tx
             .update(MeetingMapping)
-            .set({ meetingAgendaEntityPosition: index })
+            .set({ meetingAgendaEntityPosition: index + 1 })
             .where(
               or(
                 and(

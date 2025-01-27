@@ -86,7 +86,8 @@ export class VoteRepository {
             eq(MeetingMapping.meetingId, meetingId),
             eq(MeetingMapping.meetingAgendaId, agendaId),
           ),
-        );
+        )
+        .groupBy(MeetingMapping.meetingAgendaPosition);
 
       const maxAgendaEntityPosition = getPositions[0]?.maxEntityPosition ?? 0;
       const agendaPosition = getPositions[0]?.agendaPosition ?? 0;
@@ -96,7 +97,7 @@ export class VoteRepository {
         meetingAgendaId: agendaId,
         meetingAgendaPosition: agendaPosition,
         meetingAgendaEntityType: 2, // TODO: vote enum으로 교체
-        meetingAgendaContentId: voteId,
+        meetingAgendaVoteId: voteId,
         meetingAgendaEntityPosition: maxAgendaEntityPosition + 1,
       });
 
@@ -130,7 +131,15 @@ export class VoteRepository {
       const [isChoiceIdValid] = await tx
         .select()
         .from(MeetingVoteChoice)
-        .where(eq(MeetingVoteChoice.id, choiceId));
+        .where(
+          and(
+            eq(MeetingVoteChoice.id, choiceId),
+            eq(MeetingVoteChoice.voteId, voteId),
+          ),
+        );
+
+      logger.debug(choiceId);
+      logger.debug(voteId);
 
       if (!isChoiceIdValid) {
         // CHACHA: 상응하는 choice id가 없을 때 isChoiceIdValid가 어떻게 오는지 확인 필요
@@ -143,7 +152,7 @@ export class VoteRepository {
         .insert(MeetingVoteResult)
         .values({
           voteId,
-          userId,
+          userId: 39,
           choiceId,
         });
 
@@ -291,7 +300,7 @@ export class VoteRepository {
         .where(
           and(
             eq(MeetingVoteResult.voteId, voteId),
-            eq(MeetingVoteResult.userId, userId),
+            eq(MeetingVoteResult.userId, 39),
           ),
         );
 
@@ -353,7 +362,25 @@ export class VoteRepository {
         `[EntityRepository] Soft deleted meeting agenda vote mapping: ${meetingId}, ${agendaId}, ${voteId}`,
       );
 
-      return deleteFromMappingResult;
+      await tx
+        .update(MeetingVoteChoice)
+        .set({ deletedAt: sql<Date>`NOW()` })
+        .where(and(eq(MeetingVoteChoice.voteId, voteId)));
+
+      logger.debug(
+        `[EntityRepository] Soft deleted meeting agenda vote choices: ${voteId}`,
+      );
+
+      const [deleteChoicesResultsResult] = await tx
+        .update(MeetingVoteResult)
+        .set({ deletedAt: sql<Date>`NOW()` })
+        .where(and(eq(MeetingVoteResult.voteId, voteId)));
+
+      logger.debug(
+        `[EntityRepository] Soft deleted meeting agenda vote choice results: ${voteId}`,
+      );
+
+      return deleteChoicesResultsResult;
     });
 
     return isDeleteVoteSuccess;
@@ -371,8 +398,8 @@ export class VoteRepository {
         .set({ deletedAt: sql<Date>`Now()` })
         .where(
           and(
-            eq(MeetingVoteResult.id, voteId),
-            eq(MeetingVoteResult.id, userId),
+            eq(MeetingVoteResult.voteId, voteId),
+            eq(MeetingVoteResult.userId, userId),
           ),
         );
 
@@ -433,49 +460,6 @@ export class VoteRepository {
         ),
       );
 
-    return { title, description, choices };
-  }
-
-  async getMeetingAgendaVoteWithResults(
-    userId: number,
-    meetingId: number,
-    agendaId: number,
-    voteId: number,
-  ) {
-    const isGetVoteSuccess = await this.db
-      .select({
-        title: MeetingAgendaVote.title,
-        description: MeetingAgendaVote.description,
-      })
-      .from(MeetingAgendaVote)
-      .where(
-        and(
-          eq(MeetingAgendaVote.id, voteId),
-          isNull(MeetingAgendaVote.deletedAt),
-        ),
-      );
-
-    if (isGetVoteSuccess.length !== 1) {
-      logger.debug("[EntityRepository] Failed to retrieve one vote from table");
-      return false;
-    }
-
-    const title = isGetVoteSuccess[0]?.title;
-    const description = isGetVoteSuccess[0]?.description;
-
-    const choices = await this.db
-      .select({
-        id: MeetingVoteChoice.id,
-        choice: MeetingVoteChoice.choice,
-      })
-      .from(MeetingVoteChoice)
-      .where(
-        and(
-          eq(MeetingVoteChoice.voteId, voteId),
-          isNull(MeetingVoteChoice.deletedAt),
-        ),
-      );
-
     const getChoiceForUser = await this.db
       .select({
         id: MeetingVoteResult.choiceId,
@@ -490,38 +474,6 @@ export class VoteRepository {
       );
 
     const choiceId = getChoiceForUser[0]?.id;
-
-    // if getChoiceForUser.length === 0: user cancelled vote.
-
-    return { title, description, choices, choiceId };
-  }
-
-  async getMeetingAgendaVoteFinal(
-    userId: number,
-    meetingId: number,
-    agendaId: number,
-    voteId: number,
-  ) {
-    const isGetVoteSuccess = await this.db
-      .select({
-        title: MeetingAgendaVote.title,
-        description: MeetingAgendaVote.description,
-      })
-      .from(MeetingAgendaVote)
-      .where(
-        and(
-          eq(MeetingAgendaVote.id, voteId),
-          isNull(MeetingAgendaVote.deletedAt),
-        ),
-      );
-
-    if (isGetVoteSuccess.length !== 1) {
-      logger.debug("[EntityRepository] Failed to retrieve one vote from table");
-      return false;
-    }
-
-    const title = isGetVoteSuccess[0]?.title;
-    const description = isGetVoteSuccess[0]?.description;
 
     const getChoices = await this.db
       .select({
@@ -538,7 +490,7 @@ export class VoteRepository {
 
     const choiceArray = getChoices.map(e => e.id);
 
-    const results = await this.db
+    const votedResults = await this.db
       .select({
         id: MeetingVoteResult.choiceId,
         votes: countDistinct(MeetingVoteResult.userId),
@@ -550,8 +502,14 @@ export class VoteRepository {
           isNull(MeetingVoteResult.deletedAt),
         ),
       )
-      .groupBy(MeetingVoteResult.choiceId); // choiceId 별 그룹화
+      .groupBy(MeetingVoteResult.choiceId);
 
-    return { title, description, results };
+    // CHACHA: 투표 내역이 없는 것은 0을 직접 넣어 주어야 함.
+    const results = choiceArray.map(e => ({
+      id: e,
+      votes: votedResults.find(r => r.id === e)?.votes ?? 0,
+    }));
+
+    return { title, description, choices, choiceId, results };
   }
 }

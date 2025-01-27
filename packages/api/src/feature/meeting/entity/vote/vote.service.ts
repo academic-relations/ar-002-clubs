@@ -221,7 +221,7 @@ export class VoteService {
     return result;
   }
 
-  // CHACHA: 투표 실행 전 Vote 내용 가져오기
+  // CHACHA: 투표와 관련한 모든 정보 가져오기
   async getExecutiveMeetingAgendaVote(
     userId: number,
     meetingId: number,
@@ -244,65 +244,6 @@ export class VoteService {
     );
     if (!result) {
       throw new HttpException("Failed get vote", HttpStatus.BAD_REQUEST);
-    }
-    return result;
-  }
-
-  // CHACHA: 투표 중에, 유저의 투표 결과 및 투표 정보를 가져오기
-  async getExecutiveMeetingAgendaVoteWithResults(
-    userId: number,
-    meetingId: number,
-    agendaId: number,
-    voteId: number,
-  ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: userId,
-    });
-
-    if (!user) {
-      throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
-    }
-
-    const result = await this.voteRepository.getMeetingAgendaVoteWithResults(
-      userId,
-      meetingId,
-      agendaId,
-      voteId,
-    );
-    if (!result) {
-      throw new HttpException(
-        "Failed get vote with results",
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-    return result;
-  }
-
-  async getExecutiveMeetingAgendaVoteFinal(
-    userId: number,
-    meetingId: number,
-    agendaId: number,
-    voteId: number,
-  ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: userId,
-    });
-
-    if (!user) {
-      throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
-    }
-
-    const result = await this.voteRepository.getMeetingAgendaVoteFinal(
-      userId,
-      meetingId,
-      agendaId,
-      voteId,
-    );
-    if (!result) {
-      throw new HttpException(
-        "Failed get vote with final results",
-        HttpStatus.BAD_REQUEST,
-      );
     }
     return result;
   }

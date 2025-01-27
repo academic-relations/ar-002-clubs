@@ -58,7 +58,8 @@ export class ContentRepository {
             eq(MeetingMapping.meetingId, meetingId),
             eq(MeetingMapping.meetingAgendaId, agendaId),
           ),
-        );
+        )
+        .groupBy(MeetingMapping.meetingAgendaPosition);
 
       const maxAgendaEntityPosition = getPositions[0]?.maxEntityPosition ?? 0;
       const agendaPosition = getPositions[0]?.agendaPosition ?? 0;
