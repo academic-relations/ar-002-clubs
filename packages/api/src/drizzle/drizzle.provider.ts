@@ -1,6 +1,12 @@
 // dizzle.provider.ts
 
-import { drizzle } from "drizzle-orm/mysql2";
+import { ExtractTablesWithRelations } from "drizzle-orm";
+import { MySqlTransaction } from "drizzle-orm/mysql-core";
+import {
+  drizzle,
+  MySql2PreparedQueryHKT,
+  MySql2QueryResultHKT,
+} from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 
 import logger from "../common/util/logger";
@@ -83,3 +89,11 @@ export const drizzleProvider = [
     exports: [DrizzleAsyncProvider],
   },
 ];
+
+// transaction의 type
+export type DrizzleTransaction = MySqlTransaction<
+  MySql2QueryResultHKT,
+  MySql2PreparedQueryHKT,
+  Record<string, never>,
+  ExtractTablesWithRelations<Record<string, never>>
+>;

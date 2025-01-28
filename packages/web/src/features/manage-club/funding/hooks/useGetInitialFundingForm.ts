@@ -67,6 +67,8 @@ const useGetInitialFundingFormData = (
       traderName: funding.nonCorporateTransaction?.traderName,
       traderAccountNumber: funding.nonCorporateTransaction?.traderAccountNumber,
       wasteExplanation: funding.nonCorporateTransaction?.wasteExplanation,
+      nonCorporateTransactionFiles:
+        funding.nonCorporateTransaction?.files ?? [],
 
       // 식비, 근로 계약, 외부 행사 참가비, 발간물, 수익 사업, 공동 경비, 기타 증빙
       foodExpenseExplanation: funding.foodExpense?.explanation,

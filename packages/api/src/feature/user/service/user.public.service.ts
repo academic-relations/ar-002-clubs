@@ -193,6 +193,26 @@ export default class UserPublicService {
     return executives;
   }
 
+  /**
+   * 현재 해당id의 집행부원이 유효한 지 확인합니다.
+   * 만약 유효하지 않으면 403 Forbidden 에러를 던집니다.
+   * 유효하면 아무런 일도 일어나지 않습니다.
+   * */
+  async checkCurrentExecutive(executiveId: number): Promise<void> {
+    const today = getKSTDate();
+    const executives = await this.executiveRepository.selectExecutiveByDate({
+      date: today,
+    });
+
+    // TODO: 레포지토리 메서드 정상화 필요
+    if (!executives.some(executive => executive.executive.id === executiveId)) {
+      throw new HttpException(
+        `Forbidden: Not current Executive id: ${executiveId}`,
+        HttpStatus.FORBIDDEN,
+      );
+    }
+  }
+
   async fetchExecutiveSummary(executiveId: number): Promise<IExecutiveSummary> {
     const executive = await this.executiveRepository.fetchSummary(executiveId);
     return executive;
