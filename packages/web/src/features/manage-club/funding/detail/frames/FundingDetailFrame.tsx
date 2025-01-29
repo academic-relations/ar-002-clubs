@@ -121,7 +121,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
     return <NotFound />;
   }
 
-  if (!funding || !("clubId" in funding)) {
+  if (!funding || !clubId) {
     return <AsyncBoundary isLoading={isLoading} isError={isError} />;
   }
 
