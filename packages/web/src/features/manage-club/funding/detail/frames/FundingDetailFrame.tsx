@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 
+import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
@@ -57,6 +58,11 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
   };
 
   const openEditModal = () => {
+    if (funding?.fundingStatusEnum === FundingStatusEnum.Applied) {
+      router.push(`/manage-club/funding/${id}/edit`);
+      return;
+    }
+
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <CancellableModalContent
@@ -68,7 +74,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
         >
           지원금 신청 내역을 수정하면 신청 상태가 모두 초기화 됩니다.
           <br />
-          ㄱㅊ?
+          수정하시겠습니까?
         </CancellableModalContent>
       </Modal>
     ));
@@ -96,7 +102,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
         >
           지원금 신청 내역을 삭제하면 복구할 수 없습니다.
           <br />
-          ㄱㅊ?
+          삭제하시겠습니까?
         </CancellableModalContent>
       </Modal>
     ));
