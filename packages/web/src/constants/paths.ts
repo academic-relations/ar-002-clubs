@@ -4,10 +4,6 @@
  * @author andy@sparcs.org (Sangwoo Ye)
  */
 
-import { MeetingEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
-
-import { MEETING_PATH } from "../features/meeting/constants";
-
 const externalLinks = {
   allClubRepresentativeMeeting:
     "https://cafe.naver.com/ArticleList.nhn?search.clubid=26985838&search.menuid=14&search.boardtype=L",
@@ -54,7 +50,7 @@ export const productionReadyPaths: {
     "/executive/activity-report",
     // 지원금
     "/manage-club/funding",
-    "/executive/funding",
+    // "/executive/funding",
     // 동아리 / 회원 등록
     "/register-club",
     "/my/register-club",
@@ -69,6 +65,12 @@ export const productionReadyPaths: {
 // authority가 "all"을 포함하면 권한 상관 없이 보이는 메뉴
 const paths = {
   HOME: { name: "홈", path: "/", featureFlag: "DEFAULT", authority: ["all"] },
+  NOTICE: {
+    name: "공지사항",
+    path: "/notice",
+    authority: ["all"],
+    featureFlag: "DEFAULT",
+  },
   CLUBS: {
     name: "동아리",
     featureFlag: "DEFAULT",
@@ -76,12 +78,6 @@ const paths = {
       {
         name: "동아리 목록",
         path: "/clubs",
-        authority: ["all"],
-        featureFlag: "DEFAULT",
-      },
-      {
-        name: "공지사항",
-        path: "/notice",
         authority: ["all"],
         featureFlag: "DEFAULT",
       },
@@ -110,32 +106,36 @@ const paths = {
     name: "의결기구",
     featureFlag: "DEFAULT",
     sub: [
-      {
-        name: "최근 회의",
-        path: "/meeting",
-        featureFlag: "NO_RELEASE",
-      },
+      // {
+      //   name: "최근 회의",
+      //   path: "/meeting",
+      //   featureFlag: "DEFAULT",
+      // },
       {
         name: "전동대회",
-        path: MEETING_PATH(MeetingEnum.clubRepresentativesCouncilMeeting),
+        // path: MEETING_PATH(MeetingEnum.clubRepresentativesCouncilMeeting),
+        path: externalLinks.allClubRepresentativeMeeting,
         authority: ["all"],
         featureFlag: "DEFAULT",
       },
       {
         name: "확대운영위원회",
-        path: MEETING_PATH(MeetingEnum.expansiveOperativeCommittee),
+        // path: MEETING_PATH(MeetingEnum.expansiveOperativeCommittee),
+        path: externalLinks.expandedOperatingCommittee,
         authority: ["all"],
         featureFlag: "DEFAULT",
       },
       {
         name: "운영위원회",
-        path: MEETING_PATH(MeetingEnum.operativeCommittee),
+        // path: MEETING_PATH(MeetingEnum.operativeCommittee),
+        path: externalLinks.operatingCommittee,
         authority: ["all"],
         featureFlag: "DEFAULT",
       },
       {
         name: "분과회의",
-        path: MEETING_PATH(MeetingEnum.divisionMeeting),
+        // path: MEETING_PATH(MeetingEnum.divisionMeeting),
+        path: externalLinks.divisionMeeting,
         authority: ["all"],
         featureFlag: "DEFAULT",
       },
@@ -220,6 +220,12 @@ const paths = {
         authority: ["executive"],
         featureFlag: "DEFAULT",
       },
+      // {
+      //   name: "지원금",
+      //   path: "/executive/funding",
+      //   authority: ["executive"],
+      //   featureFlag: "DEFAULT",
+      // },
     ],
     authority: ["executive"],
   },
