@@ -52,6 +52,9 @@ export const productionReadyPaths: {
     // 활동 보고서
     "/manage-club/activity-report",
     "/executive/activity-report",
+    // 지원금
+    "/manage-club/funding",
+    "/executive/funding",
     // 동아리 / 회원 등록
     "/register-club",
     "/my/register-club",
