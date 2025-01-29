@@ -147,11 +147,11 @@ const paths = {
     featureFlag: "DEFAULT",
     // TODO: 임시 링크
     sub: [
-      {
-        name: "소통채널 안내",
-        path: "/communication-channel",
-        featureFlag: "NO_RELEASE",
-      },
+      // {
+      //   name: "소통채널 안내",
+      //   path: "/communication-channel",
+      //   featureFlag: "NO_RELEASE",
+      // },
       {
         name: "카카오톡 문의하기",
         path: externalLinks.kakaotalk,
