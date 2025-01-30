@@ -1,14 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
-
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { FormProvider, useForm } from "react-hook-form";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
-import { FileDetail } from "@sparcs-clubs/web/common/components/File/attachment";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
@@ -16,6 +13,7 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
 
+import saveLocalStorage from "@sparcs-clubs/web/common/services/saveLocalStorage";
 import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
 
 import useGetParticipants from "../services/useGetParticipants";
@@ -27,19 +25,6 @@ interface ActivityReportFormProps {
   clubId: number;
   initialData?: ActivityReportFormData;
 
-  temporaryStorageName?: string;
-  temporaryStorageActivityTypeEnumId?: ActivityTypeEnum;
-  temporaryStorageDurations?: {
-    startTerm: Date;
-    endTerm: Date;
-  }[];
-  temporaryStorageLocation?: string;
-  temporaryStoragePurpose?: string;
-  temporaryStorageDetail?: string;
-  temporaryStorageEvidence?: string;
-  temporaryStorageEvidenceFiles?: FileDetail[];
-  temporaryStorageParticipants?: IStudentSummary[];
-
   onSubmit: (data: ActivityReportFormData) => void;
 }
 
@@ -47,31 +32,11 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   clubId,
   initialData = undefined,
 
-  temporaryStorageName = undefined,
-  temporaryStorageActivityTypeEnumId = undefined,
-  temporaryStorageDurations = undefined,
-  temporaryStorageLocation = undefined,
-  temporaryStoragePurpose = undefined,
-  temporaryStorageDetail = undefined,
-  temporaryStorageEvidence = undefined,
-  temporaryStorageEvidenceFiles = undefined,
-  temporaryStorageParticipants = undefined,
-
   onSubmit,
 }) => {
   const formCtx = useForm<ActivityReportFormData>({
     mode: "all",
-    defaultValues: initialData || {
-      name: temporaryStorageName,
-      activityTypeEnumId: temporaryStorageActivityTypeEnumId,
-      durations: temporaryStorageDurations,
-      location: temporaryStorageLocation,
-      purpose: temporaryStoragePurpose,
-      detail: temporaryStorageDetail,
-      evidence: temporaryStorageEvidence,
-      evidenceFiles: temporaryStorageEvidenceFiles,
-      participants: temporaryStorageParticipants,
-    },
+    defaultValues: initialData,
   });
 
   const {
@@ -127,55 +92,17 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   });
 
   useEffect(() => {
-    localStorage.setItem(
-      "durations",
-      JSON.stringify(durations) === undefined
-        ? "null"
-        : JSON.stringify(durations),
-    );
-    localStorage.setItem(
-      "participants",
-      JSON.stringify(participants) === undefined
-        ? "null"
-        : JSON.stringify(participants),
-    );
-    localStorage.setItem(
-      "evidenceFiles",
-      JSON.stringify(evidenceFiles) === undefined
-        ? "null"
-        : JSON.stringify(evidenceFiles),
-    );
-
-    localStorage.setItem(
-      "name",
-      JSON.stringify(name) === undefined ? "null" : JSON.stringify(name),
-    );
-    localStorage.setItem(
-      "activityTypeEnumId",
-      JSON.stringify(activityTypeEnumId) === undefined
-        ? "null"
-        : JSON.stringify(activityTypeEnumId),
-    );
-    localStorage.setItem(
-      "location",
-      JSON.stringify(location) === undefined
-        ? "null"
-        : JSON.stringify(location),
-    );
-    localStorage.setItem(
-      "purpose",
-      JSON.stringify(purpose) === undefined ? "null" : JSON.stringify(purpose),
-    );
-    localStorage.setItem(
-      "detail",
-      JSON.stringify(detail) === undefined ? "null" : JSON.stringify(detail),
-    );
-    localStorage.setItem(
-      "evidence",
-      JSON.stringify(evidence) === undefined
-        ? "null"
-        : JSON.stringify(evidence),
-    );
+    saveLocalStorage("activity-report", {
+      name,
+      activityTypeEnumId,
+      durations,
+      location,
+      purpose,
+      detail,
+      evidence,
+      evidenceFiles,
+      participants,
+    });
   }, [
     durations,
     participants,

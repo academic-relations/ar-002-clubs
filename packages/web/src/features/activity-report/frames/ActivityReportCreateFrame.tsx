@@ -9,6 +9,8 @@ import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/Confi
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import getLocalStorage from "@sparcs-clubs/web/common/services/getLocalStorage";
+
 import ActivityReportForm from "../components/ActivityReportForm";
 import { useCreateActivityReport } from "../hooks/useCreateActivityReport";
 import { ActivityReportFormData } from "../types/form";
@@ -30,16 +32,7 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
           <Modal isOpen={isOpen}>
             <ConfirmModalContent
               onConfirm={() => {
-                localStorage.removeItem("durations");
-                localStorage.removeItem("participants");
-                localStorage.removeItem("evidenceFiles");
-                localStorage.removeItem("name");
-                localStorage.removeItem("activityTypeEnumId");
-                localStorage.removeItem("location");
-                localStorage.removeItem("purpose");
-                localStorage.removeItem("detail");
-                localStorage.removeItem("evidence");
-
+                localStorage.removeItem("activity-report");
                 close();
                 router.push("/manage-club/activity-report");
               }}
@@ -77,34 +70,7 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
       <ActivityReportForm
         clubId={clubId}
         onSubmit={handleSubmit}
-        temporaryStorageName={
-          JSON.parse(localStorage.getItem("name") || '""') || undefined
-        }
-        temporaryStorageActivityTypeEnumId={
-          JSON.parse(localStorage.getItem("activityTypeEnumId") || '""') ||
-          undefined
-        }
-        temporaryStorageDurations={
-          JSON.parse(localStorage.getItem("durations") || '""') || undefined
-        }
-        temporaryStorageLocation={
-          JSON.parse(localStorage.getItem("location") || '""') || undefined
-        }
-        temporaryStoragePurpose={
-          JSON.parse(localStorage.getItem("purpose") || '""') || undefined
-        }
-        temporaryStorageDetail={
-          JSON.parse(localStorage.getItem("detail") || '""') || undefined
-        }
-        temporaryStorageEvidence={
-          JSON.parse(localStorage.getItem("evidence") || '""') || undefined
-        }
-        temporaryStorageEvidenceFiles={
-          JSON.parse(localStorage.getItem("evidenceFiles") || '""') || undefined
-        }
-        temporaryStorageParticipants={
-          JSON.parse(localStorage.getItem("participants") || '""') || undefined
-        }
+        initialData={getLocalStorage<ActivityReportFormData>("activity-report")}
       />
     </FlexWrapper>
   );
