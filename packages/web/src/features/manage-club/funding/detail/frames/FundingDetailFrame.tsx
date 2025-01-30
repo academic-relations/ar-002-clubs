@@ -13,6 +13,7 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
+import PartialApproveReasonToast from "@sparcs-clubs/web/common/components/PartialApproveReasonToast";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 
@@ -135,7 +136,6 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
     <FlexWrapper direction="column" gap={40}>
       <Card outline>
         {!isPastFunding && (
-          // TODO.  부분 승인 케이스 추가
           <ProgressStatus
             labels={
               getFundingProgress(
@@ -153,7 +153,16 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
             }
             optional={
               funding.comments &&
-              funding.comments.length > 0 && (
+              funding.comments.length > 0 &&
+              (funding.fundingStatusEnum === FundingStatusEnum.Partial ? (
+                <PartialApproveReasonToast
+                  title="부분 승인 사유"
+                  reasons={funding.comments.map(comment => ({
+                    datetime: comment.createdAt,
+                    reason: comment.content,
+                  }))}
+                />
+              ) : (
                 <RejectReasonToast
                   title="반려 사유"
                   reasons={funding.comments.map(comment => ({
@@ -161,7 +170,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
                     reason: comment.content,
                   }))}
                 />
-              )
+              ))
             }
           />
         )}
