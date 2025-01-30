@@ -27,7 +27,7 @@ export const useGetFunding = (fundingId: number) =>
   });
 
 defineAxiosMock(mock => {
-  const fundingStatus = FundingStatusEnum.Partial;
+  const fundingStatus = FundingStatusEnum.Approved;
   const mockFundingDetail = {
     id: 1,
     club: {
@@ -107,8 +107,26 @@ defineAxiosMock(mock => {
         id: 1,
         funding: { id: 1 },
         chargedExecutive: { id: 123 },
+        content: "대충 어떤 반려 사유",
+        fundingStatusEnum: FundingStatusEnum.Rejected,
+        approvedAmount: 1230,
+        createdAt: new Date(2024, 11, 10),
+      },
+      {
+        id: 1,
+        funding: { id: 1 },
+        chargedExecutive: { id: 123 },
         content: "대충 어떤 부분 승인 사유",
-        fundingStatusEnum: fundingStatus,
+        fundingStatusEnum: FundingStatusEnum.Partial,
+        approvedAmount: 1230,
+        createdAt: new Date(2024, 12, 20),
+      },
+      {
+        id: 1,
+        funding: { id: 1 },
+        chargedExecutive: { id: 123 },
+        content: "대충 어떤 승인 사유",
+        fundingStatusEnum: FundingStatusEnum.Approved,
         approvedAmount: 1230,
         createdAt: new Date(),
       },

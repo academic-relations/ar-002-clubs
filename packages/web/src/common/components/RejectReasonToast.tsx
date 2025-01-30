@@ -13,6 +13,7 @@ import Typography from "./Typography";
 interface Reason {
   datetime: Date;
   reason: React.ReactNode;
+  status?: string;
 }
 
 interface RejectReasonToastProps {
@@ -90,7 +91,8 @@ const RejectReasonToast: React.FC<RejectReasonToastProps> = ({
             key={formatDotDetailDate(reason.datetime)}
           >
             <Typography fs={14} lh={16} fw="REGULAR" color="GRAY.600">
-              {formatDotDetailDate(reason.datetime)}
+              {formatDotDetailDate(reason.datetime)}{" "}
+              {reason.status && `• ${reason.status} 사유`}
             </Typography>
             <Typography fs={16} lh={24} fw="REGULAR">
               {reason.reason}

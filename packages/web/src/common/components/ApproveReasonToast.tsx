@@ -13,9 +13,10 @@ import Typography from "./Typography";
 interface Reason {
   datetime: Date;
   reason: React.ReactNode;
+  status?: string;
 }
 
-interface PartialApproveReasonToastProps {
+interface ApproveReasonToastProps {
   title: string;
   reasons: Reason[];
 }
@@ -31,7 +32,7 @@ const ForceBorderRadius = styled.div`
   z-index: ${({ theme }) => theme.zIndices.toast};
 `;
 
-const PartialApproveReasonToastInner = styled.div`
+const ApproveReasonToastInner = styled.div`
   color: ${({ theme }) => theme.colors.BLACK};
   display: flex;
   flex-direction: column;
@@ -41,7 +42,7 @@ const PartialApproveReasonToastInner = styled.div`
   max-height: 300px;
   overflow-y: auto;
 
-  .PartialApproveReasonToast-title {
+  .ApproveReasonToast-title {
     padding: 12px 16px 0 16px;
 
     position: sticky;
@@ -53,7 +54,7 @@ const PartialApproveReasonToastInner = styled.div`
     z-index: ${({ theme }) => theme.zIndices.toast + 1};
   }
 
-  .PartialApproveReasonToast-reasons {
+  .ApproveReasonToast-reasons {
     display: flex;
     width: 100%;
     padding: 0 16px 12px 44px;
@@ -62,7 +63,7 @@ const PartialApproveReasonToastInner = styled.div`
     flex: 1 0 0;
   }
 
-  .PartialApproveReasonToast-sticky-title {
+  .ApproveReasonToast-sticky-title {
     position: sticky;
     top: 0;
     background: ${({ theme }) => theme.colors.GREEN[100]};
@@ -70,19 +71,19 @@ const PartialApproveReasonToastInner = styled.div`
   }
 `;
 
-const PartialApproveReasonToast: React.FC<PartialApproveReasonToastProps> = ({
+const ApproveReasonToast: React.FC<ApproveReasonToastProps> = ({
   title,
   reasons,
 }) => (
   <ForceBorderRadius>
-    <PartialApproveReasonToastInner>
-      <div className="PartialApproveReasonToast-title">
+    <ApproveReasonToastInner>
+      <div className="ApproveReasonToast-title">
         <Icon type="error" size={20} color={colors.GREEN[600]} />
         <Typography fs={16} lh={24} fw="MEDIUM">
           {title}
         </Typography>
       </div>
-      <div className="PartialApproveReasonToast-reasons">
+      <div className="ApproveReasonToast-reasons">
         {reasons.map(reason => (
           <FlexWrapper
             direction="column"
@@ -90,7 +91,8 @@ const PartialApproveReasonToast: React.FC<PartialApproveReasonToastProps> = ({
             key={formatDotDetailDate(reason.datetime)}
           >
             <Typography fs={14} lh={16} fw="REGULAR" color="GRAY.600">
-              {formatDotDetailDate(reason.datetime)}
+              {formatDotDetailDate(reason.datetime)}{" "}
+              {reason.status && `• ${reason.status}`}
             </Typography>
             <Typography fs={16} lh={24} fw="REGULAR">
               {reason.reason}
@@ -98,8 +100,8 @@ const PartialApproveReasonToast: React.FC<PartialApproveReasonToastProps> = ({
           </FlexWrapper>
         ))}
       </div>
-    </PartialApproveReasonToastInner>
+    </ApproveReasonToastInner>
   </ForceBorderRadius>
 );
 
-export default PartialApproveReasonToast;
+export default ApproveReasonToast;
