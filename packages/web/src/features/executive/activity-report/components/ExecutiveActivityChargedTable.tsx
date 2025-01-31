@@ -183,7 +183,11 @@ const ExecutiveActivityChargedTable: React.FC<
       <Typography fs={16} lh={20} style={{ flex: 1, textAlign: "right" }}>
         {countString}
       </Typography>
-      <Table table={table} minWidth={800} />
+      <Table
+        table={table}
+        minWidth={800}
+        rowLink={row => `/executive/activity-report/charged/${row.executiveId}`}
+      />
     </FlexWrapper>
   );
 };
