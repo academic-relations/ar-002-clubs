@@ -34,6 +34,7 @@ interface PastActivityReportModalProps {
   isOpen: boolean;
   close: VoidFunction;
   viewOnly?: boolean;
+  clubId: number;
 }
 
 const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
@@ -42,6 +43,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   isOpen,
   close,
   viewOnly = false,
+  clubId,
 }) => {
   const { data, isLoading, isError, refetch } = useGetActivityReport(
     profile,
@@ -113,10 +115,12 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
     }
   }, [isDeleteSuccess, isDeleteError]);
 
-  const { mutate: patchActivityExecutive } =
-    useExecutiveApproveActivityReport(activityId);
+  const { mutate: patchActivityExecutive } = useExecutiveApproveActivityReport(
+    activityId,
+    clubId,
+  );
   const { mutate: patchActivityExecutiveSendBack } =
-    useExecutiveRejectActivityReport(activityId);
+    useExecutiveRejectActivityReport(activityId, clubId);
   const handleApprove = async () => {
     await patchActivityExecutive();
     close();

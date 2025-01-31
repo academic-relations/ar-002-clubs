@@ -30,6 +30,7 @@ const MyRegisterClubActFrame: React.FC<MyRegisterClubActFrameProps> = ({
           <MyRegisterClubActTable
             clubRegisterActList={data}
             profile={profile}
+            clubId={clubId}
           />
         )}
       </FlexWrapper>

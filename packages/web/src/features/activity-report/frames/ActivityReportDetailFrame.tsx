@@ -95,7 +95,9 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
 
-  const { data, isLoading, isError } = useGetActivityReportDetail(Number(id));
+  const { data, isLoading, isError, clubId } = useGetActivityReportDetail(
+    Number(id),
+  );
   const {
     data: activityDeadline,
     isLoading: isLoadingDeadline,
@@ -226,6 +228,10 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     return null;
   };
 
+  const filteredComments = data.comments.filter(
+    comment => comment.content !== "활동이 승인되었습니다",
+  );
+
   return (
     <FlexWrapper direction="column" gap={60}>
       <PageHead
@@ -248,30 +254,28 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
                 labels={
                   getActivityReportProgress(
                     data.activityStatusEnumId,
-                    data.updatedAt,
+                    data.activityStatusEnumId === 1
+                      ? data.editedAt
+                      : data.commentedAt || data.editedAt,
                   ).labels
                 }
                 progress={
                   getActivityReportProgress(
                     data.activityStatusEnumId,
-                    data.updatedAt,
+                    data.activityStatusEnumId === 1
+                      ? data.editedAt
+                      : data.commentedAt || data.editedAt,
                   ).progress
                 }
                 optional={
                   isCommentsVisible &&
-                  data.comments &&
-                  data.comments.length > 0 && (
+                  filteredComments.length > 0 && (
                     <RejectReasonToast
                       title="반려 사유"
-                      reasons={data.comments
-                        .filter(
-                          comment =>
-                            comment.content !== "활동이 승인되었습니다",
-                        )
-                        .map(comment => ({
-                          datetime: comment.createdAt,
-                          reason: comment.content,
-                        }))}
+                      reasons={filteredComments.map(comment => ({
+                        datetime: comment.createdAt,
+                        reason: comment.content,
+                      }))}
                     />
                   )
                 }
@@ -372,7 +376,12 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
             )}
           </Card>
 
-          <ExecutiveActivityReportApprovalSection />
+          {profile.type === "executive" && (
+            <ExecutiveActivityReportApprovalSection
+              comments={filteredComments}
+              clubId={clubId}
+            />
+          )}
 
           <FlexWrapper gap={20} justify="space-between">
             <Button type="default" onClick={navigateToActivityReportList}>
