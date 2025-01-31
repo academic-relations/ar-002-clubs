@@ -61,7 +61,6 @@ const getFundingProgress = (
           },
         ],
       };
-    // TODO. 부분 승인 케이스 수정 필요
     case FundingStatusEnum.Partial:
       return {
         labels: ["신청 완료", "동아리 연합회 부분 승인"],

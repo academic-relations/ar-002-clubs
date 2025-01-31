@@ -22,7 +22,7 @@ defineAxiosMock(mock => {
   mock.onGet(apiFnd007.url()).reply(() => [
     200,
     {
-      targetTerm: {
+      targetDuration: {
         id: 1,
         year: 2023,
         name: "여름가을",
@@ -31,7 +31,7 @@ defineAxiosMock(mock => {
       },
       deadline: {
         id: 1,
-        activityDeadlineEnum: FundingDeadlineEnum.Revision,
+        deadlineEnum: FundingDeadlineEnum.Revision,
         startDate: new Date("2024-07-01"),
         endDate: new Date("2024-12-30"),
       },
