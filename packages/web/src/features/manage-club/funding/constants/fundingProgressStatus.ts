@@ -49,6 +49,30 @@ const getFundingProgress = (
           },
         ],
       };
+    // TODO. 운위 승인 필요 케이스 수정 필요
+    case FundingStatusEnum.Committee:
+      return {
+        labels: ["신청 완료", "운위 승인 필요"],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Approved, date: undefined },
+          {
+            status: ProgressCheckSectionStatusEnum.Pending,
+            date: commentedAt,
+          },
+        ],
+      };
+    // TODO. 부분 승인 케이스 수정 필요
+    case FundingStatusEnum.Partial:
+      return {
+        labels: ["신청 완료", "동아리 연합회 부분 승인"],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Approved, date: undefined },
+          {
+            status: ProgressCheckSectionStatusEnum.Approved,
+            date: commentedAt,
+          },
+        ],
+      };
     default:
       throw new Error("Invalid funding status");
   }

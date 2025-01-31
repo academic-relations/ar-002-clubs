@@ -1,3 +1,5 @@
+import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+
 import {
   boolean,
   datetime,
@@ -21,7 +23,9 @@ export const Funding = mysqlTable(
     activityDId: int("activity_d_id")
       .notNull()
       .references(() => ActivityD.id),
-    fundingStatusEnum: int("funding_status_enum").notNull(),
+    fundingStatusEnum: int("funding_status_enum")
+      .notNull()
+      .default(FundingStatusEnum.Applied),
     purposeActivityId: int("purpose_activity_id"),
     name: varchar("name", { length: 255 }).notNull(),
     expenditureDate: datetime("expenditure_date").notNull(),
@@ -128,6 +132,24 @@ export const FundingTradeDetailFile = mysqlTable(
   table => ({
     fundingForeignKey: foreignKey({
       name: "trade_detail_file_funding_id_fk",
+      columns: [table.fundingId],
+      foreignColumns: [Funding.id],
+    }),
+  }),
+);
+
+export const FundingNonCorporateTransactionFile = mysqlTable(
+  "funding_non_corporate_transaction_file",
+  {
+    id: int("id").autoincrement().primaryKey().notNull(),
+    fundingId: int("funding_id").notNull(),
+    fileId: varchar("file_id", { length: 128 }).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    deletedAt: timestamp("deleted_at"),
+  },
+  table => ({
+    fundingForeignKey: foreignKey({
+      name: "non_corporate_transaction_file_funding_id_fk",
       columns: [table.fundingId],
       foreignColumns: [Funding.id],
     }),
@@ -362,6 +384,8 @@ export const FundingFeedback = mysqlTable(
     fundingId: int("funding_id").notNull(),
     chargedExecutiveId: int("charged_executive_id").notNull(),
     feedback: text("feedback").notNull(),
+    fundingStatusEnum: int("funding_status_enum").notNull(), // Funding 에서 이관
+    approvedAmount: int("approved_amount").notNull(), // Funding 에서 이관
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
