@@ -164,15 +164,15 @@ export class AuthService {
     email: string;
     undergraduate?: {
       id: number;
-      number: number;
+      number: string;
     };
     master?: {
       id: number;
-      number: number;
+      number: string;
     };
     doctor?: {
       id: number;
-      number: number;
+      number: string;
     };
     executive?: {
       id: number;

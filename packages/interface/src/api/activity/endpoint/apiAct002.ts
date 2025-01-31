@@ -5,6 +5,7 @@ import {
   ActivityStatusEnum,
   ActivityTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
+import { zStudentNumber } from "@sparcs-clubs/interface/common/type/user.type";
 
 /**
  * @version v0.1
@@ -51,7 +52,7 @@ const responseBodyMap = {
     participants: z.array(
       z.object({
         studentId: z.coerce.number().int().min(1),
-        studentNumber: z.coerce.number().int().min(20000000),
+        studentNumber: zStudentNumber,
         name: z.string().max(255),
       }),
     ),

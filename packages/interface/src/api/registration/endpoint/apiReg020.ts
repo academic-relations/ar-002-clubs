@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { zUserName } from "@sparcs-clubs/interface/common/commonString";
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
+import { zStudentNumber } from "@sparcs-clubs/interface/common/type/user.type";
 
 /**
  * @version v0.1
@@ -41,7 +42,7 @@ const responseBodyMap = {
         isRegularMemberRegistration: z.coerce.boolean(),
         student: z.object({
           id: z.coerce.number().int().min(1),
-          studentNumber: z.coerce.number().int().min(1),
+          studentNumber: zStudentNumber,
           name: zUserName,
           phoneNumber: zKrPhoneNumber.optional(),
           email: z.string().email(),

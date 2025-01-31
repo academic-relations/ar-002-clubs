@@ -3,7 +3,7 @@ import type { ApiUsr001ResponseOK } from "@sparcs-clubs/interface/api/user/endpo
 const mockupUserProfile: ApiUsr001ResponseOK = {
   id: 1234,
   name: "넙죽이",
-  studentNumber: 23456789,
+  studentNumber: "23456789",
   clubs: [
     { id: 1, name_kr: "술박스", name_en: "술박스" },
     { id: 2, name_kr: "동연", name_en: "동연" },
