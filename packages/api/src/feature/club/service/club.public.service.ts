@@ -170,6 +170,15 @@ export default class ClubPublicService {
     return true;
   }
 
+  async checkStudentDelegate(studentId: number, clubId: number) {
+    if (!(await this.isStudentDelegate(studentId, clubId))) {
+      throw new HttpException(
+        "It seems that you are not the delegate of the club.",
+        HttpStatus.FORBIDDEN,
+      );
+    }
+  }
+
   /**
    * @param clubStatusEnumId 동아리 상태 enum id의 배열
    * @param studentId 사용중인 학생 id
