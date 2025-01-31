@@ -10,3 +10,9 @@ export enum MeetingStatusEnum {
   Agenda, // 안건 공개
   Complete, // 회의 종료
 }
+
+export enum MeetingAgendaEntityTypeEnum {
+  Content = 1, // Mapping Table에서 Content가 mapping된 경우
+  Vote, // Mapping Table에서 Vote mapping된 경우
+  AgendaOnly, // Mapping Table에서 Agenda까지만 mapping된 경우
+}
