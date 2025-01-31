@@ -9,6 +9,8 @@ import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/Confi
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import getLocalStorage from "@sparcs-clubs/web/common/services/getLocalStorage";
+
 import ActivityReportForm from "../components/ActivityReportForm";
 import { useCreateActivityReport } from "../hooks/useCreateActivityReport";
 import { ActivityReportFormData } from "../types/form";
@@ -30,6 +32,7 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
           <Modal isOpen={isOpen}>
             <ConfirmModalContent
               onConfirm={() => {
+                localStorage.removeItem("activity-report");
                 close();
                 router.push("/manage-club/activity-report");
               }}
@@ -64,7 +67,11 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
         title="활동 보고서 작성"
         enableLast
       />
-      <ActivityReportForm clubId={clubId} onSubmit={handleSubmit} />
+      <ActivityReportForm
+        clubId={clubId}
+        onSubmit={handleSubmit}
+        initialData={getLocalStorage<ActivityReportFormData>("activity-report")}
+      />
     </FlexWrapper>
   );
 };

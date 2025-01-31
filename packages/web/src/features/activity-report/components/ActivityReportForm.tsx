@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-
 import { FormProvider, useForm } from "react-hook-form";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -14,6 +13,7 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
 
+import saveLocalStorage from "@sparcs-clubs/web/common/services/saveLocalStorage";
 import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
 
 import useGetParticipants from "../services/useGetParticipants";
@@ -24,12 +24,14 @@ import SelectParticipant from "./SelectParticipant";
 interface ActivityReportFormProps {
   clubId: number;
   initialData?: ActivityReportFormData;
+
   onSubmit: (data: ActivityReportFormData) => void;
 }
 
 const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   clubId,
   initialData = undefined,
+
   onSubmit,
 }) => {
   const formCtx = useForm<ActivityReportFormData>({
@@ -60,6 +62,13 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   const participants = watch("participants");
   const evidenceFiles = watch("evidenceFiles");
 
+  const name = watch("name");
+  const activityTypeEnumId = watch("activityTypeEnumId");
+  const location = watch("location");
+  const purpose = watch("purpose");
+  const detail = watch("detail");
+  const evidence = watch("evidence");
+
   const [startTerm, setStartTerm] = useState<Date>(
     durations
       ?.map(d => d.startTerm)
@@ -81,6 +90,30 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
     startTerm,
     endTerm,
   });
+
+  useEffect(() => {
+    saveLocalStorage("activity-report", {
+      name,
+      activityTypeEnumId,
+      durations,
+      location,
+      purpose,
+      detail,
+      evidence,
+      evidenceFiles,
+      participants,
+    });
+  }, [
+    durations,
+    participants,
+    evidenceFiles,
+    name,
+    activityTypeEnumId,
+    location,
+    purpose,
+    detail,
+    evidence,
+  ]);
 
   useEffect(() => {
     if (startTerm && endTerm) {
