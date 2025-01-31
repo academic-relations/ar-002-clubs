@@ -106,7 +106,7 @@ export class MFunding implements IFunding {
 
   fundingStatusEnum: FundingStatusEnum;
 
-  purposeActivity?: Pick<IActivitySummary, "id">;
+  purposeActivity: Pick<IActivitySummary, "id">;
 
   name: string;
 
