@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 
+import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
@@ -12,10 +13,7 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
-import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
-import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 
-import { getFundingProgress } from "@sparcs-clubs/web/features/manage-club/funding/constants/fundingProgressStatus";
 import { useDeleteFunding } from "@sparcs-clubs/web/features/manage-club/funding/services/useDeleteFunding";
 import { useGetFunding } from "@sparcs-clubs/web/features/manage-club/funding/services/useGetFunding";
 import useGetFundingDeadline from "@sparcs-clubs/web/features/manage-club/funding/services/useGetFundingDeadline";
@@ -25,6 +23,7 @@ import { isActivityReportUnverifiable } from "@sparcs-clubs/web/features/manage-
 import BasicEvidenceList from "../components/BasicEvidenceList";
 import FixtureEvidenceList from "../components/FixtureEvidenceList";
 import FundingInfoList from "../components/FundingInfoList";
+import FundingStatusSection from "../components/FundingStatusSection";
 import NonCorpEvidenceList from "../components/NonCorpEvidenceList";
 import OtherEvidenceList from "../components/OtherEvidenceList";
 import TransportationEvidenceList from "../components/TransportationEvidenceList";
@@ -57,6 +56,11 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
   };
 
   const openEditModal = () => {
+    if (funding?.fundingStatusEnum === FundingStatusEnum.Applied) {
+      router.push(`/manage-club/funding/${id}/edit`);
+      return;
+    }
+
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <CancellableModalContent
@@ -68,7 +72,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
         >
           지원금 신청 내역을 수정하면 신청 상태가 모두 초기화 됩니다.
           <br />
-          ㄱㅊ?
+          수정하시겠습니까?
         </CancellableModalContent>
       </Modal>
     ));
@@ -96,7 +100,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
         >
           지원금 신청 내역을 삭제하면 복구할 수 없습니다.
           <br />
-          ㄱㅊ?
+          삭제하시겠습니까?
         </CancellableModalContent>
       </Modal>
     ));
@@ -121,7 +125,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
     return <NotFound />;
   }
 
-  if (!funding || !("clubId" in funding)) {
+  if (!funding || !clubId) {
     return <AsyncBoundary isLoading={isLoading} isError={isError} />;
   }
 
@@ -129,34 +133,11 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
     <FlexWrapper direction="column" gap={40}>
       <Card outline>
         {!isPastFunding && (
-          // TODO.  부분 승인 케이스 추가
-          <ProgressStatus
-            labels={
-              getFundingProgress(
-                funding.fundingStatusEnum,
-                funding.editedAt,
-                funding.commentedAt,
-              ).labels
-            }
-            progress={
-              getFundingProgress(
-                funding.fundingStatusEnum,
-                funding.editedAt,
-                funding.commentedAt,
-              ).progress
-            }
-            optional={
-              funding.comments &&
-              funding.comments.length > 0 && (
-                <RejectReasonToast
-                  title="반려 사유"
-                  reasons={funding.comments.map(comment => ({
-                    datetime: comment.createdAt,
-                    reason: comment.content,
-                  }))}
-                />
-              )
-            }
+          <FundingStatusSection
+            status={funding.fundingStatusEnum}
+            editedAt={funding.editedAt}
+            commentedAt={funding.commentedAt}
+            comments={funding.comments.toReversed()}
           />
         )}
         <AsyncBoundary isLoading={isLoading} isError={isError}>

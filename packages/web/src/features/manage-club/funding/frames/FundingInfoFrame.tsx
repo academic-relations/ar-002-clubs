@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import { useFormContext } from "react-hook-form";
 
@@ -15,7 +15,10 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 import useGetActivityAvailable from "@sparcs-clubs/web/features/activity-report/services/useGetActivityAvailable";
 import { FundingInfo } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
 
+import { getLocalDateOnly } from "@sparcs-clubs/web/utils/Date/getKSTDate";
+
 import { NO_ACTIVITY_REPORT_FUNDING } from "../constants";
+import useGetFundingDeadline from "../services/useGetFundingDeadline";
 
 const RowWrapper = styled.div`
   display: flex;
@@ -35,6 +38,11 @@ const FundingInfoFrame: React.FC<{ clubId: number }> = ({ clubId }) => {
     isLoading,
     isError,
   } = useGetActivityAvailable({ clubId });
+  const {
+    data: fundingDeadline,
+    isLoading: isLoadingFundingDeadline,
+    isError: isErrorFundingDeadline,
+  } = useGetFundingDeadline();
 
   const purposeItems = [
     ...(purposeActivity?.activities.map(activity => ({
@@ -44,9 +52,39 @@ const FundingInfoFrame: React.FC<{ clubId: number }> = ({ clubId }) => {
     { value: Infinity, label: NO_ACTIVITY_REPORT_FUNDING },
   ];
 
+  const isValidDateRange = useCallback(
+    (targeDate: Date) => {
+      if (!fundingDeadline) {
+        return false;
+      }
+
+      const localTargetDate = getLocalDateOnly(targeDate);
+
+      return (
+        getLocalDateOnly(fundingDeadline.targetDuration.startTerm) <=
+          localTargetDate &&
+        localTargetDate <=
+          getLocalDateOnly(fundingDeadline.targetDuration.endTerm)
+      );
+    },
+    [fundingDeadline],
+  );
+
+  if (!fundingDeadline) {
+    return (
+      <AsyncBoundary
+        isLoading={isLoadingFundingDeadline}
+        isError={isErrorFundingDeadline}
+      />
+    );
+  }
+
   return (
     <FoldableSectionTitle title="지원금 정보">
-      <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <AsyncBoundary
+        isLoading={isLoading || isLoadingFundingDeadline}
+        isError={isError || isErrorFundingDeadline}
+      >
         <Card outline gap={32}>
           <FormController
             name="name"
@@ -78,10 +116,19 @@ const FundingInfoFrame: React.FC<{ clubId: number }> = ({ clubId }) => {
               name="expenditureDate"
               required
               control={control}
+              rules={{
+                validate: value =>
+                  (value != null && isValidDateRange(value)) ||
+                  "활동 기간에 포함되도록 입력해주세요",
+              }}
               renderItem={({ value, onChange, errorMessage }) => (
                 <DateInput
                   label="지출 일자"
                   placeholder="20XX.XX.XX"
+                  minDate={
+                    fundingDeadline.targetDuration.startTerm ?? undefined
+                  }
+                  maxDate={fundingDeadline.targetDuration.endTerm ?? undefined}
                   selected={value}
                   onChange={(data: Date | null) => {
                     onChange(data);

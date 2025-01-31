@@ -37,12 +37,12 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
         {
           fundingId,
           body: {
-            clubId,
-            purposeActivity:
-              purposeActivity &&
-              !isActivityReportUnverifiable(purposeActivity.id)
-                ? { id: purposeActivity.id }
-                : undefined,
+            club: {
+              id: clubId,
+            },
+            purposeActivity: purposeActivity
+              ? { id: purposeActivity.id }
+              : undefined,
             name,
             expenditureDate: getKSTDate(data.expenditureDate),
             expenditureAmount: Number(expenditureAmount),
@@ -129,6 +129,9 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
                   traderName: data.traderName,
                   traderAccountNumber: data.traderAccountNumber,
                   wasteExplanation: data.wasteExplanation,
+                  files: data.nonCorporateTransactionFiles.map(file => ({
+                    id: file.id,
+                  })),
                 }
               : undefined,
 
