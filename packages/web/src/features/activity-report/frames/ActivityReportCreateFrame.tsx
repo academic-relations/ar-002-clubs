@@ -9,7 +9,7 @@ import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/Confi
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import getLocalStorage from "@sparcs-clubs/web/common/services/getLocalStorage";
+import LocalStorageUtil from "@sparcs-clubs/web/common/services/localStorageUtil";
 
 import ActivityReportForm from "../components/ActivityReportForm";
 import { useCreateActivityReport } from "../hooks/useCreateActivityReport";
@@ -22,6 +22,8 @@ interface ActivityReportCreateFrameProps {
 const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
   clubId,
 }) => {
+  const localStorageName = "activity-report"; // fix: 추후에 prefix로 userId 넣는 것 구현 예정
+
   const router = useRouter();
   const { mutate: createActivityReport } = useCreateActivityReport(clubId);
 
@@ -32,7 +34,7 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
           <Modal isOpen={isOpen}>
             <ConfirmModalContent
               onConfirm={() => {
-                localStorage.removeItem("activity-report");
+                LocalStorageUtil.remove(localStorageName);
                 close();
                 router.push("/manage-club/activity-report");
               }}
@@ -70,7 +72,10 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
       <ActivityReportForm
         clubId={clubId}
         onSubmit={handleSubmit}
-        initialData={getLocalStorage<ActivityReportFormData>("activity-report")}
+        initialData={LocalStorageUtil.get<ActivityReportFormData>(
+          "activity-report",
+        )}
+        localStorageName={localStorageName}
       />
     </FlexWrapper>
   );
