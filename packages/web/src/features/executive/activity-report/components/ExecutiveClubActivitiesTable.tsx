@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import { ApiAct024ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
-import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -19,6 +18,8 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { ActStatusTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
+import { sortActivitiesByStatusAndActivityId } from "../utils/sortActivities";
 
 interface ExecutiveClubActivitiesTableProps {
   data: ApiAct024ResponseOk;
@@ -80,25 +81,10 @@ const columns = [
 const ExecutiveClubActivitiesTable: React.FC<
   ExecutiveClubActivitiesTableProps
 > = ({ data, searchText, selectedActivityIds, setSelectedActivityIds }) => {
-  const sortedActivities = useMemo(() => {
-    const statusOrder = {
-      [ActivityStatusEnum.Applied]: 0,
-      [ActivityStatusEnum.Rejected]: 1,
-      [ActivityStatusEnum.Approved]: 2,
-      [ActivityStatusEnum.Committee]: 3,
-    };
-
-    return [...data.items].sort((a, b) => {
-      if (
-        statusOrder[a.activityStatusEnum] !== statusOrder[b.activityStatusEnum]
-      ) {
-        return (
-          statusOrder[a.activityStatusEnum] - statusOrder[b.activityStatusEnum]
-        );
-      }
-      return a.activityId < b.activityId ? -1 : 1;
-    });
-  }, [data.items]);
+  const sortedActivities = useMemo(
+    () => sortActivitiesByStatusAndActivityId(data.items),
+    [data.items],
+  );
 
   const initialRowValues = useMemo(
     () =>

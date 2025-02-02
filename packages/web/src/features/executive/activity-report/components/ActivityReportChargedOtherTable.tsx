@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 
 import { ApiAct028ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct028";
-import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -18,6 +17,8 @@ import {
 } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
+import { sortActivitiesByStatusAndCommentedDate } from "../utils/sortActivities";
 
 const columnHelper =
   createColumnHelper<ApiAct028ResponseOk["activities"][number]>();
@@ -72,33 +73,11 @@ const ActivityReportChargedOtherTable: React.FC<{
   activities: ApiAct028ResponseOk["activities"];
 }> = ({ activities }) => {
   const { length } = activities;
-  const sortedActivities = useMemo(() => {
-    const statusOrder = {
-      [ActivityStatusEnum.Applied]: 0,
-      [ActivityStatusEnum.Rejected]: 1,
-      [ActivityStatusEnum.Approved]: 2,
-      [ActivityStatusEnum.Committee]: 3,
-    };
 
-    return activities.sort((a, b) => {
-      if (
-        statusOrder[a.activityStatusEnum] !== statusOrder[b.activityStatusEnum]
-      ) {
-        return (
-          statusOrder[a.activityStatusEnum] - statusOrder[b.activityStatusEnum]
-        );
-      }
-      if (a.commentedAt !== b.commentedAt) {
-        if (!a.commentedAt) return -1;
-        if (!b.commentedAt) return 1;
-        return (
-          new Date(b.commentedAt ?? b.updatedAt).getTime() -
-          new Date(a.commentedAt ?? a.updatedAt).getTime()
-        );
-      }
-      return 0;
-    });
-  }, [activities]);
+  const sortedActivities = useMemo(
+    () => sortActivitiesByStatusAndCommentedDate(activities),
+    [activities],
+  );
 
   const table = useReactTable({
     data: sortedActivities,
