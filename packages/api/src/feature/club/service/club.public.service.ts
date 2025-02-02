@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import { IClubSummary } from "@sparcs-clubs/interface/api/club/type/club.type";
 import { ISemester } from "@sparcs-clubs/interface/api/club/type/semester.type";
 import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
@@ -169,6 +170,15 @@ export default class ClubPublicService {
     return true;
   }
 
+  async checkStudentDelegate(studentId: number, clubId: number) {
+    if (!(await this.isStudentDelegate(studentId, clubId))) {
+      throw new HttpException(
+        "It seems that you are not the delegate of the club.",
+        HttpStatus.FORBIDDEN,
+      );
+    }
+  }
+
   /**
    * @param clubStatusEnumId 동아리 상태 enum id의 배열
    * @param studentId 사용중인 학생 id
@@ -326,5 +336,15 @@ export default class ClubPublicService {
   async fetchSemester(date?: Date): Promise<ISemester> {
     const targetDate = date || getKSTDate();
     return this.semesterDRepository.fetch(targetDate);
+  }
+
+  async fetchSummary(id: number): Promise<IClubSummary> {
+    const result = await this.clubRepository.fetchSummary(id);
+    return result;
+  }
+
+  async fetchSummaries(ids: number[]): Promise<IClubSummary[]> {
+    const results = await this.clubRepository.fetchSummaries(ids);
+    return results;
   }
 }

@@ -18,6 +18,6 @@ export const usePutFunding = () =>
         body,
       );
 
-      return apiFnd003.responseBodyMap[200].parse(data);
+      return data;
     },
   });

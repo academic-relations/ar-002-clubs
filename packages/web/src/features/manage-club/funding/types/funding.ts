@@ -93,9 +93,10 @@ export interface AddEvidence {
   profitMakingActivityFiles: FileDetail[];
   jointExpenseFiles: FileDetail[];
   etcExpenseFiles: FileDetail[];
+  nonCorporateTransactionFiles: FileDetail[];
 }
 
 export type FundingFormData = FundingInfo & BasicEvidence & AddEvidence;
 
 export const isActivityReportUnverifiable = (purposeId?: number) =>
-  purposeId === 0;
+  purposeId === Infinity;

@@ -1,5 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import { IActivityDuration } from "@sparcs-clubs/interface/api/activity/type/activity.duration.type";
+import { IFileSummary } from "@sparcs-clubs/interface/api/file/type/file.type";
 import {
   ApiFnd001RequestBody,
   ApiFnd001ResponseCreated,
@@ -27,11 +29,20 @@ import {
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
 import { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
+import { ApiFnd012ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd012";
+import { ApiFnd013ResponseCreated } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd013";
 
 import {
-  IFundingCommentResponse,
+  IFunding,
+  IFundingComment,
+  IFundingCommentRequestCreate,
   IFundingResponse,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
+import { IExecutive } from "@sparcs-clubs/interface/api/user/type/user.type";
+import {
+  FundingDeadlineEnum,
+  FundingStatusEnum,
+} from "@sparcs-clubs/interface/common/enum/funding.enum";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ActivityPublicService from "@sparcs-clubs/api/feature/activity/service/activity.public.service";
@@ -39,6 +50,7 @@ import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.publi
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
+import { MFunding } from "../model/funding.model";
 import FundingCommentRepository from "../repository/funding.comment.repository";
 import FundingDeadlineRepository from "../repository/funding.deadline.repository";
 import FundingRepository from "../repository/funding.repository";
@@ -59,23 +71,21 @@ export default class FundingService {
     body: ApiFnd001RequestBody,
     studentId: number,
   ): Promise<ApiFnd001ResponseCreated> {
-    const user = await this.userPublicService.getStudentById({ id: studentId });
-    if (!user) {
-      throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
-    }
-    if (
-      !(await this.clubPublicService.isStudentDelegate(studentId, body.clubId))
-    ) {
-      throw new HttpException("Student is not delegate", HttpStatus.FORBIDDEN);
-    }
+    await this.clubPublicService.checkStudentDelegate(studentId, body.club.id);
+    await this.checkDeadline([
+      FundingDeadlineEnum.Writing,
+      FundingDeadlineEnum.Exception,
+    ]);
 
     const now = getKSTDate();
     const activityD = await this.activityPublicService.fetchLastActivityD(now);
+    await this.validateExpenditureDate(body.expenditureDate, activityD);
+
     const fundingStatusEnum = 1;
     const approvedAmount = 0;
 
     return this.fundingRepository.insert(body, {
-      activityDId: activityD.id,
+      activityD,
       fundingStatusEnum,
       approvedAmount,
     });
@@ -102,10 +112,9 @@ export default class FundingService {
     );
 
     if (funding.purposeActivity) {
-      funding.purposeActivity =
-        await this.activityPublicService.getActivitySummary(
-          funding.purposeActivity.id,
-        );
+      funding.purposeActivity = await this.activityPublicService.fetchSummary(
+        funding.purposeActivity.id,
+      );
     }
 
     if (funding.clubSupplies?.imageFiles) {
@@ -194,9 +203,7 @@ export default class FundingService {
       );
     }
 
-    const comments = (await this.fundingCommentRepository.fetchAll(
-      funding.id,
-    )) as IFundingCommentResponse[];
+    const comments = await this.fundingCommentRepository.fetchAll(funding.id);
 
     const chargedExecutive =
       await this.userPublicService.fetchExecutiveSummaries(
@@ -209,10 +216,140 @@ export default class FundingService {
         executive => executive.id === comment.chargedExecutive.id,
       );
     });
-
-    funding.comments = comments;
+    funding.comments = comments.map(comment => ({
+      ...comment,
+      chargedExecutive: chargedExecutive.find(
+        executive => executive.id === comment.chargedExecutive.id,
+      ),
+    }));
 
     return funding;
+  }
+
+  private async transformFundingToResponse(
+    funding: MFunding,
+  ): Promise<IFundingResponse> {
+    const purposeActivity = funding.purposeActivity
+      ? await this.activityPublicService.fetchSummary(
+          funding.purposeActivity.id,
+        )
+      : undefined;
+
+    // 채울 곳
+    const resolvedFiles = {
+      tradeEvidenceFiles: await this.resolveFilesOrNull(
+        funding.tradeEvidenceFiles,
+      ),
+      tradeDetailFiles: await this.resolveFilesOrNull(funding.tradeDetailFiles),
+
+      foodExpense: await this.resolveFilesOrNull(funding.foodExpense),
+      laborContract: await this.resolveFilesOrNull(funding.laborContract),
+      externalEventParticipationFee: await this.resolveFilesOrNull(
+        funding.externalEventParticipationFee,
+      ),
+      publication: await this.resolveFilesOrNull(funding.publication),
+      profitMakingActivity: await this.resolveFilesOrNull(
+        funding.profitMakingActivity,
+      ),
+      jointExpense: await this.resolveFilesOrNull(funding.jointExpense),
+      etcExpense: await this.resolveFilesOrNull(funding.etcExpense),
+      nonCorporateTransaction: await this.resolveFilesOrNull(
+        funding.nonCorporateTransaction,
+      ),
+      // 구분선
+
+      clubSupplies: funding.clubSupplies
+        ? {
+            ...funding.clubSupplies,
+            imageFiles: await this.resolveFilesOrNull(
+              funding.clubSupplies.imageFiles,
+            ),
+            softwareEvidenceFiles: await this.resolveFilesOrNull(
+              funding.clubSupplies.softwareEvidenceFiles,
+            ),
+          }
+        : undefined,
+      fixture: funding.fixture
+        ? {
+            ...funding.fixture,
+            imageFiles: await this.resolveFilesOrNull(
+              funding.fixture.imageFiles,
+            ),
+            softwareEvidenceFiles: await this.resolveFilesOrNull(
+              funding.fixture.softwareEvidenceFiles,
+            ),
+          }
+        : undefined,
+    };
+
+    let transportation;
+    if (funding.transportation && funding.transportation.passengers) {
+      transportation = {
+        ...funding.transportation,
+        passengers: await this.userPublicService.fetchStudentSummaries(
+          funding.transportation.passengers.map(passenger => passenger.id),
+        ),
+      };
+    }
+
+    const comments = await this.fundingCommentRepository.fetchAll(funding.id);
+
+    const chargedExecutive =
+      await this.userPublicService.fetchExecutiveSummaries(
+        comments.map(comment => comment.chargedExecutive.id),
+      );
+
+    const commentResponses = comments.map(comment => ({
+      ...comment,
+      chargedExecutive: chargedExecutive.find(
+        executive => executive.id === comment.chargedExecutive.id,
+      ),
+    }));
+
+    return {
+      ...funding,
+      purposeActivity,
+      ...resolvedFiles,
+      transportation,
+      comments: commentResponses,
+    };
+  }
+
+  // 메서드 오버로딩 선언부
+  private async resolveFilesOrNull(items: undefined): Promise<undefined>;
+  private async resolveFilesOrNull(
+    items: { id: string }[],
+  ): Promise<IFileSummary[]>;
+  private async resolveFilesOrNull<T extends { files: { id: string }[] }>(
+    items: T,
+  ): Promise<Omit<T, "files"> & { files: IFileSummary[] }>;
+
+  // 구현부
+  private async resolveFilesOrNull<T extends { files: { id: string }[] }>(
+    items: T | undefined | { id: string }[],
+  ): Promise<
+    undefined | IFileSummary[] | (Omit<T, "files"> & { files: IFileSummary[] })
+  > {
+    if (!items) {
+      return undefined; // items가 undefined이면 undefined 반환
+    }
+
+    if (Array.isArray(items)) {
+      // items가 배열인 경우 처리
+      const resolvedFiles = await this.filePublicService.getFilesByIds(
+        items.map(file => file.id),
+      );
+      return resolvedFiles; // FileSummary[] 반환
+    }
+
+    if ("files" in items) {
+      // items에 files 속성이 있는 경우 처리
+      const resolvedFiles = await this.filePublicService.getFilesByIds(
+        items.files.map(file => file.id),
+      );
+      return { ...items, files: resolvedFiles }; // files가 IFileSummary[]로 변환된 객체 반환
+    }
+    return undefined;
   }
 
   async putStudentFunding(
@@ -220,23 +357,22 @@ export default class FundingService {
     param: ApiFnd003RequestParam,
     studentId: number,
   ): Promise<ApiFnd003ResponseOk> {
-    const user = await this.userPublicService.getStudentById({ id: studentId });
-    if (!user) {
-      throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
-    }
-    if (
-      !(await this.clubPublicService.isStudentDelegate(studentId, body.clubId))
-    ) {
-      throw new HttpException("Student is not delegate", HttpStatus.FORBIDDEN);
-    }
+    await this.clubPublicService.checkStudentDelegate(studentId, body.club.id);
+    await this.checkDeadline([
+      FundingDeadlineEnum.Writing,
+      FundingDeadlineEnum.Revision,
+      FundingDeadlineEnum.Exception,
+    ]);
 
     const now = getKSTDate();
     const activityD = await this.activityPublicService.fetchLastActivityD(now);
+    await this.validateExpenditureDate(body.expenditureDate, activityD);
+
     const fundingStatusEnum = 1;
     const approvedAmount = 0;
 
     return this.fundingRepository.put(param.id, body, {
-      activityDId: activityD.id,
+      activityD,
       fundingStatusEnum,
       approvedAmount,
     });
@@ -246,10 +382,16 @@ export default class FundingService {
     studentId: number,
     param: ApiFnd004RequestParam,
   ): Promise<ApiFnd004ResponseOk> {
-    const user = await this.userPublicService.getStudentById({ id: studentId });
-    if (!user) {
-      throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
-    }
+    const funding = await this.fundingRepository.fetch(param.id);
+    await this.clubPublicService.checkStudentDelegate(
+      studentId,
+      funding.club.id,
+    );
+    await this.checkDeadline([
+      FundingDeadlineEnum.Writing,
+      FundingDeadlineEnum.Revision,
+      FundingDeadlineEnum.Exception,
+    ]);
     await this.fundingRepository.delete(param.id);
     return {};
   }
@@ -263,12 +405,11 @@ export default class FundingService {
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
     }
 
-    const now = getKSTDate();
-    const thisSemester = await this.clubPublicService.dateToSemesterId(now);
+    const activityD = await this.activityPublicService.fetchLastActivityD();
 
     const fundings = await this.fundingRepository.fetchSummaries(
       query.clubId,
-      thisSemester,
+      activityD.id,
     );
 
     const activities = await this.activityPublicService.fetchSummaries(
@@ -338,5 +479,137 @@ export default class FundingService {
       targetDuration,
       deadline,
     };
+  }
+
+  /**
+   * @description 집행부원이 검토를 위해 지원금 신청을 조회합니다.
+   * @returns 집행부원 검토를 위한 지원금 신청 정보를 리턴합니다.
+   * 들어온 executive Id가 현재 집행부원인지 확인합니다.
+   */
+  async getExecutiveFunding(
+    executiveId: IExecutive["id"],
+    id: IFunding["id"],
+  ): Promise<ApiFnd012ResponseOk> {
+    await this.userPublicService.checkCurrentExecutive(executiveId);
+
+    const funding = await this.fundingRepository.fetch(id); // TODO: 이거 이래도 되나? comments 필드가 없는데. 에러 안나나?
+
+    const fundingResponse = await this.transformFundingToResponse(funding);
+    return fundingResponse;
+  }
+
+  /**
+   * @description 집행부원으로서 지원금 신청에 comment를 남깁니다.
+   * @returns
+   */
+  async postExecutiveFundingComment(
+    executiveId: IExecutive["id"],
+    id: IFunding["id"],
+    fundingStatusEnum: IFundingComment["fundingStatusEnum"],
+    approvedAmount: IFundingComment["approvedAmount"],
+    content: IFundingComment["content"],
+  ): Promise<ApiFnd013ResponseCreated> {
+    if (approvedAmount < 0) {
+      throw new HttpException(
+        "승인 금액은 0 이상이어야 합니다.",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (fundingStatusEnum === FundingStatusEnum.Applied) {
+      throw new HttpException(
+        "대기 상태로는 바꿀 수 없습니다.",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (
+      fundingStatusEnum === FundingStatusEnum.Rejected &&
+      approvedAmount !== 0
+    ) {
+      throw new HttpException(
+        "반려 상태에서는 승인 금액을 0으로 설정해야 합니다.",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const { expenditureAmount } = await this.fundingRepository.fetch(id);
+    if (approvedAmount > expenditureAmount) {
+      throw new HttpException(
+        "승인 금액이 지출 금액보다 많을 수 없습니다.",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (
+      fundingStatusEnum === FundingStatusEnum.Approved &&
+      expenditureAmount !== approvedAmount
+    ) {
+      throw new HttpException(
+        "승인을 위해선 전체 금액의 전부가 승인되어야 합니다. 부분 승인을 이용해 주세요.",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (
+      fundingStatusEnum === FundingStatusEnum.Partial &&
+      (approvedAmount === 0 || approvedAmount === expenditureAmount)
+    ) {
+      throw new HttpException(
+        "승인 상태에서는 승인 금액이 0이 될 수 없습니다.",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const fundingComment = await this.fundingCommentRepository.withTransaction(
+      async tx => {
+        const comment = await this.fundingCommentRepository.insertTx(tx, {
+          fundingStatusEnum,
+          approvedAmount,
+          funding: { id },
+          chargedExecutive: { id: executiveId },
+          content,
+        } as IFundingCommentRequestCreate);
+        const funding = await this.fundingRepository.patchStatusTx(tx, {
+          id,
+          fundingStatusEnum,
+          approvedAmount,
+          commentedAt: comment.createdAt,
+        });
+
+        // funding 이랑 comment 의 값들이 다르면 에러
+        if (!comment.isFinalComment(funding)) {
+          throw new HttpException(
+            "Funding and Comment Has Different Value",
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
+
+        return comment;
+      },
+    );
+
+    return fundingComment;
+  }
+
+  private async checkDeadline(enums: Array<FundingDeadlineEnum>) {
+    const today = getKSTDate();
+    const todayDeadline = await this.fundingDeadlineRepository.fetch(today);
+    if (enums.find(e => Number(e) === todayDeadline.deadlineEnum) === undefined)
+      throw new HttpException(
+        "Today is not a day for funding",
+        HttpStatus.BAD_REQUEST,
+      );
+  }
+
+  private async validateExpenditureDate(
+    expenditureDate: Date,
+    activityD: IActivityDuration,
+  ) {
+    if (
+      expenditureDate < activityD.startTerm ||
+      expenditureDate > activityD.endTerm
+    ) {
+      throw new HttpException(
+        "Expenditure date is not in the range of activity deadline",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }

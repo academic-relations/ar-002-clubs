@@ -18,6 +18,6 @@ export const useDeleteFunding = () =>
         {},
       );
 
-      return apiFnd004.responseBodyMap[200].parse(data);
+      return data;
     },
   });

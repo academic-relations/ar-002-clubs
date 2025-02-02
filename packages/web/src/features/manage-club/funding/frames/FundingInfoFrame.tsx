@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import { useFormContext } from "react-hook-form";
 
 import styled from "styled-components";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
@@ -11,7 +12,13 @@ import DateInput from "@sparcs-clubs/web/common/components/Forms/DateInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import UnitInput from "@sparcs-clubs/web/common/components/Forms/UnitInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
+import useGetActivityAvailable from "@sparcs-clubs/web/features/activity-report/services/useGetActivityAvailable";
 import { FundingInfo } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
+
+import { getLocalDateOnly } from "@sparcs-clubs/web/utils/Date/getKSTDate";
+
+import { NO_ACTIVITY_REPORT_FUNDING } from "../constants";
+import useGetFundingDeadline from "../services/useGetFundingDeadline";
 
 const RowWrapper = styled.div`
   display: flex;
@@ -22,81 +29,133 @@ const RowWrapper = styled.div`
     flex: 1;
   }
 `;
-const FundingInfoFrame: React.FC = () => {
+const FundingInfoFrame: React.FC<{ clubId: number }> = ({ clubId }) => {
   const formCtx = useFormContext<FundingInfo>();
   const { control } = formCtx;
 
-  // TODO. purposeActivity 데이터로 변경
+  const {
+    data: purposeActivity,
+    isLoading,
+    isError,
+  } = useGetActivityAvailable({ clubId });
+  const {
+    data: fundingDeadline,
+    isLoading: isLoadingFundingDeadline,
+    isError: isErrorFundingDeadline,
+  } = useGetFundingDeadline();
+
   const purposeItems = [
-    { value: 32, label: "활동보고서 1" },
-    { value: 111, label: "활동보고서 2" },
-    { value: 115, label: "활동보고서 3" },
-    { value: "0", label: "활동보고서로 증빙 불가" },
+    ...(purposeActivity?.activities.map(activity => ({
+      value: activity.id,
+      label: activity.name,
+    })) ?? []),
+    { value: Infinity, label: NO_ACTIVITY_REPORT_FUNDING },
   ];
+
+  const isValidDateRange = useCallback(
+    (targeDate: Date) => {
+      if (!fundingDeadline) {
+        return false;
+      }
+
+      const localTargetDate = getLocalDateOnly(targeDate);
+
+      return (
+        getLocalDateOnly(fundingDeadline.targetDuration.startTerm) <=
+          localTargetDate &&
+        localTargetDate <=
+          getLocalDateOnly(fundingDeadline.targetDuration.endTerm)
+      );
+    },
+    [fundingDeadline],
+  );
+
+  if (!fundingDeadline) {
+    return (
+      <AsyncBoundary
+        isLoading={isLoadingFundingDeadline}
+        isError={isErrorFundingDeadline}
+      />
+    );
+  }
 
   return (
     <FoldableSectionTitle title="지원금 정보">
-      <Card outline gap={32}>
-        <FormController
-          name="name"
-          required
-          control={control}
-          renderItem={props => (
-            <TextInput
-              {...props}
-              label="항목명"
-              placeholder="항목명을 입력하세요"
-            />
-          )}
-        />
-        <RowWrapper>
+      <AsyncBoundary
+        isLoading={isLoading || isLoadingFundingDeadline}
+        isError={isError || isErrorFundingDeadline}
+      >
+        <Card outline gap={32}>
           <FormController
-            name="purposeActivity.id"
+            name="name"
             required
             control={control}
             renderItem={props => (
-              <Select
+              <TextInput
                 {...props}
-                items={purposeItems}
-                label="지출 목적"
-                placeholder="지출 목적을 선택해주세요"
+                label="항목명"
+                placeholder="항목명을 입력하세요"
               />
             )}
           />
-          <FormController
-            name="expenditureDate"
-            required
-            control={control}
-            renderItem={({ value, onChange, errorMessage }) => (
-              <DateInput
-                label="지출 일자"
-                placeholder="20XX.XX.XX"
-                selected={value}
-                onChange={(data: Date | null) => {
-                  onChange(data);
-                }}
-                errorMessage={errorMessage}
-                showIcon
-              />
-            )}
-          />
-          <FormController
-            name="expenditureAmount"
-            required
-            control={control}
-            renderItem={({ value, onChange }) => (
-              <UnitInput
-                label="지출 금액"
-                placeholder="금액을 입력해주세요"
-                unit="원"
-                value={value?.toString()}
-                handleChange={onChange}
-                setErrorStatus={() => {}}
-              />
-            )}
-          />
-        </RowWrapper>
-      </Card>
+          <RowWrapper>
+            <FormController
+              name="purposeActivity.id"
+              required
+              control={control}
+              renderItem={props => (
+                <Select
+                  {...props}
+                  items={purposeItems}
+                  label="지출 목적"
+                  placeholder="지출 목적을 선택해주세요"
+                />
+              )}
+            />
+            <FormController
+              name="expenditureDate"
+              required
+              control={control}
+              rules={{
+                validate: value =>
+                  (value != null && isValidDateRange(value)) ||
+                  "활동 기간에 포함되도록 입력해주세요",
+              }}
+              renderItem={({ value, onChange, errorMessage }) => (
+                <DateInput
+                  label="지출 일자"
+                  placeholder="20XX.XX.XX"
+                  minDate={
+                    fundingDeadline.targetDuration.startTerm ?? undefined
+                  }
+                  maxDate={fundingDeadline.targetDuration.endTerm ?? undefined}
+                  selected={value}
+                  onChange={(data: Date | null) => {
+                    onChange(data);
+                  }}
+                  errorMessage={errorMessage}
+                  showIcon
+                />
+              )}
+            />
+            <FormController
+              name="expenditureAmount"
+              required
+              control={control}
+              renderItem={({ value, onChange, errorMessage }) => (
+                <UnitInput
+                  label="지출 금액"
+                  placeholder="금액을 입력해주세요"
+                  unit="원"
+                  value={value?.toString()}
+                  handleChange={onChange}
+                  errorMessage={errorMessage}
+                />
+              )}
+            />
+          </RowWrapper>
+        </Card>
+      </AsyncBoundary>
     </FoldableSectionTitle>
   );
 };

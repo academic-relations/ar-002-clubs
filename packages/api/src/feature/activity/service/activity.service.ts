@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { ApiAct021ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct021";
 import { ApiAct022ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct022";
+import { ApiAct028ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct028";
 import {
   ActivityDeadlineEnum,
   ActivityStatusEnum,
@@ -1283,7 +1284,7 @@ export default class ActivityService {
             }, undefined),
           );
 
-        const lastReviewedExecutive =
+        const commentedExecutive =
           lastFeedback === undefined
             ? undefined
             : await this.userPublicService
@@ -1312,9 +1313,11 @@ export default class ActivityService {
           activityId: activity.id,
           activityStatusEnum: activity.activityStatusEnumId,
           activityName: activity.name,
-          finalReviewedExecutive: lastReviewedExecutive,
+          commentedExecutive,
           chargedExecutive,
           updatedAt: activity.updatedAt,
+          commentedAt: activity.commentedAt,
+          editedAt: activity.editedAt,
         };
       }),
     );
@@ -1396,10 +1399,10 @@ export default class ActivityService {
       );
     }
 
-    const activityDId = (await this.getLastActivityD()).id;
+    const activityD = await this.getLastActivityD();
     const activities = await this.activityRepository.fetchAvailableSummaries(
       clubId,
-      activityDId,
+      activityD.id,
     );
 
     return {
@@ -1415,6 +1418,52 @@ export default class ActivityService {
     return {
       participants:
         await this.userPublicService.fetchStudentSummaries(participantIds),
+    };
+  }
+
+  async getExecutiveActivitiesExecutiveBrief(
+    executiveId: number,
+  ): Promise<ApiAct028ResponseOk> {
+    const [executive, activities] = await Promise.all([
+      this.userPublicService.fetchExecutiveSummary(executiveId),
+      this.activityRepository.fetchCommentedSummaries(executiveId),
+    ]);
+
+    // 필요한 모든 ID들을 수집
+    const clubIds = new Set(activities.map(activity => activity.club.id));
+    const executiveIds = new Set(
+      activities.flatMap(activity =>
+        [activity.chargedExecutive?.id, activity.commentedExecutive?.id].filter(
+          Boolean,
+        ),
+      ),
+    );
+
+    // 한 번에 모든 데이터 가져오기
+    const [clubs, executives] = await Promise.all([
+      this.clubPublicService.fetchSummaries(Array.from(clubIds)),
+      this.userPublicService.fetchExecutiveSummaries(Array.from(executiveIds)),
+    ]);
+
+    // 조회를 위한 Map 생성
+    const clubMap = new Map(clubs.map(club => [club.id, club]));
+    const executiveMap = new Map(executives.map(exec => [exec.id, exec]));
+
+    // 데이터 매핑
+    const activitiesWithDetails = activities.map(activity => ({
+      ...activity,
+      club: clubMap.get(activity.club.id),
+      chargedExecutive: activity.chargedExecutive?.id
+        ? executiveMap.get(activity.chargedExecutive.id)
+        : null,
+      commentedExecutive: activity.commentedExecutive?.id
+        ? executiveMap.get(activity.commentedExecutive.id)
+        : null,
+    }));
+
+    return {
+      chargedExecutive: executive,
+      activities: activitiesWithDetails,
     };
   }
 }

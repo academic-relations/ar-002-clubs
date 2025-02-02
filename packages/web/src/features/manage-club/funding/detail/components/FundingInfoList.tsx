@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { NO_ACTIVITY_REPORT_FUNDING } from "@sparcs-clubs/web/features/manage-club/funding/constants";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 interface FundingInfoListProps {
@@ -38,7 +39,9 @@ const FundingInfoList: React.FC<FundingInfoListProps> = ({ data }) => (
       지원금 정보
     </Typography>
     <ListItem>항목명: {data.name}</ListItem>
-    <ListItem>지출 목적: {data.purposeActivity?.name}</ListItem>
+    <ListItem>
+      지출 목적: {data.purposeActivity?.name ?? NO_ACTIVITY_REPORT_FUNDING}
+    </ListItem>
     <ListItem>지출 일자: {formatDate(data.expenditureDate)}</ListItem>
     <ListItem>지출 금액: {data.expenditureAmount.toLocaleString()}원</ListItem>
   </FlexWrapper>

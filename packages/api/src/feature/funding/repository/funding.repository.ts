@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
 import {
+  IFunding,
   IFundingExtra,
   IFundingRequest,
   IFundingSummary,
@@ -8,7 +9,10 @@ import {
 import { and, eq, isNull } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
-import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
+import {
+  DrizzleAsyncProvider,
+  DrizzleTransaction,
+} from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   Funding,
   FundingClubSuppliesImageFile,
@@ -21,6 +25,7 @@ import {
   FundingFoodExpenseFile,
   FundingJointExpenseFile,
   FundingLaborContractFile,
+  FundingNonCorporateTransactionFile,
   FundingProfitMakingActivityFile,
   FundingPublicationFile,
   FundingTradeDetailFile,
@@ -31,6 +36,10 @@ import {
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 import { MFunding } from "../model/funding.model";
+import {
+  FundingSummaryDBResult,
+  VFundingSummary,
+} from "../model/funding.summary.model";
 
 @Injectable()
 export default class FundingRepository {
@@ -63,6 +72,7 @@ export default class FundingRepository {
       clubSuppliesSoftwareEvidenceFiles,
       fixtureImageFiles,
       fixtureSoftwareEvidenceFiles,
+      nonCorporateTransactionFiles,
       foodExpenseFiles,
       laborContractFiles,
       externalEventParticipationFeeFiles,
@@ -124,6 +134,15 @@ export default class FundingRepository {
           and(
             eq(FundingFixtureSoftwareEvidenceFile.fundingId, id),
             isNull(FundingFixtureSoftwareEvidenceFile.deletedAt),
+          ),
+        ),
+      this.db
+        .select()
+        .from(FundingNonCorporateTransactionFile)
+        .where(
+          and(
+            eq(FundingNonCorporateTransactionFile.fundingId, id),
+            isNull(FundingNonCorporateTransactionFile.deletedAt),
           ),
         ),
       this.db
@@ -231,6 +250,9 @@ export default class FundingRepository {
       fixtureSoftwareEvidenceFiles: fixtureSoftwareEvidenceFiles.map(file => ({
         id: file.fileId,
       })),
+      nonCorporateTransactionFiles: nonCorporateTransactionFiles.map(file => ({
+        id: file.fileId,
+      })),
       foodExpenseFiles: foodExpenseFiles.map(file => ({
         id: file.fileId,
       })),
@@ -300,9 +322,9 @@ export default class FundingRepository {
     const result = await this.db.transaction(async tx => {
       // 1. Insert funding order
       const [fundingOrder] = await tx.insert(Funding).values({
-        clubId: funding.clubId,
+        clubId: funding.club.id,
         purposeActivityId: funding.purposeActivity.id,
-        activityDId: extra.activityDId,
+        activityDId: extra.activityD.id,
         fundingStatusEnum: extra.fundingStatusEnum,
         name: funding.name,
         expenditureDate: funding.expenditureDate,
@@ -406,6 +428,16 @@ export default class FundingRepository {
         ...(funding.isFixture && funding.fixture.softwareEvidenceFiles
           ? funding.fixture.softwareEvidenceFiles.map(file =>
               tx.insert(FundingFixtureSoftwareEvidenceFile).values({
+                fundingId,
+                fileId: file.id,
+              }),
+            )
+          : []),
+
+        // NonCorporateTransaction files
+        ...(funding.isNonCorporateTransaction && funding.nonCorporateTransaction
+          ? funding.nonCorporateTransaction.files.map(file =>
+              tx.insert(FundingNonCorporateTransactionFile).values({
                 fundingId,
                 fileId: file.id,
               }),
@@ -540,6 +572,11 @@ export default class FundingRepository {
           .set({ deletedAt: now })
           .where(eq(FundingFixtureSoftwareEvidenceFile.fundingId, id)),
         tx
+          .update(FundingNonCorporateTransactionFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingNonCorporateTransactionFile.fundingId, id)),
+
+        tx
           .update(FundingFoodExpenseFile)
           .set({ deletedAt: now })
           .where(eq(FundingFoodExpenseFile.fundingId, id)),
@@ -672,6 +709,10 @@ export default class FundingRepository {
           .set({ deletedAt: now })
           .where(eq(FundingFixtureSoftwareEvidenceFile.fundingId, id)),
         tx
+          .update(FundingNonCorporateTransactionFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingNonCorporateTransactionFile.fundingId, id)),
+        tx
           .update(FundingFoodExpenseFile)
           .set({ deletedAt: now })
           .where(eq(FundingFoodExpenseFile.fundingId, id)),
@@ -750,6 +791,16 @@ export default class FundingRepository {
           : []),
         ...(funding.isFixture && funding.fixture.softwareEvidenceFiles
           ? funding.fixture.softwareEvidenceFiles.map(file =>
+              tx.insert(FundingFixtureSoftwareEvidenceFile).values({
+                fundingId: id,
+                fileId: file.id,
+              }),
+            )
+          : []),
+
+        // NonCorporateTransaction files
+        ...(funding.isNonCorporateTransaction && funding.nonCorporateTransaction
+          ? funding.nonCorporateTransaction.files.map(file =>
               tx.insert(FundingFixtureSoftwareEvidenceFile).values({
                 fundingId: id,
                 fileId: file.id,
@@ -841,5 +892,58 @@ export default class FundingRepository {
 
       return this.fetch(id);
     });
+  }
+
+  async fetchSummary(id: number): Promise<VFundingSummary> {
+    return this.db.transaction(async tx => this.fetchSummaryTx(tx, id));
+  }
+
+  async fetchSummaryTx(
+    tx: DrizzleTransaction,
+    id: number,
+  ): Promise<VFundingSummary> {
+    const result = (await tx
+      .select()
+      .from(Funding)
+      .where(eq(Funding.id, id))) as FundingSummaryDBResult[];
+
+    if (result.length === 0) {
+      throw new NotFoundException(`Funding: ${id} not found`);
+    }
+
+    return VFundingSummary.fromDBResult(result[0]);
+  }
+
+  async patchStatus(param: {
+    id: IFunding["id"];
+    fundingStatusEnum: IFunding["fundingStatusEnum"];
+    approvedAmount: IFunding["approvedAmount"];
+    commentedAt: IFunding["commentedAt"];
+  }): Promise<VFundingSummary> {
+    return this.db.transaction(async tx => this.patchStatusTx(tx, param));
+  }
+
+  async patchStatusTx(
+    tx: DrizzleTransaction,
+    param: {
+      id: IFunding["id"];
+      fundingStatusEnum: IFunding["fundingStatusEnum"];
+      approvedAmount: IFunding["approvedAmount"];
+      commentedAt: IFunding["commentedAt"];
+    },
+  ): Promise<VFundingSummary> {
+    const now = new Date();
+
+    await tx
+      .update(Funding)
+      .set({
+        fundingStatusEnum: param.fundingStatusEnum,
+        approvedAmount: param.approvedAmount,
+        commentedAt: param.commentedAt,
+        editedAt: now,
+      })
+      .where(eq(Funding.id, param.id));
+
+    return this.fetchSummaryTx(tx, param.id);
   }
 }

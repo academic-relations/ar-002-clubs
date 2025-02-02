@@ -99,6 +99,7 @@ const FundingTagList: {
   [FundingStatusEnum.Committee]: { text: "운위", color: "YELLOW" },
   [FundingStatusEnum.Approved]: { text: "승인", color: "GREEN" },
   [FundingStatusEnum.Rejected]: { text: "반려", color: "RED" },
+  [FundingStatusEnum.Partial]: { text: "부분", color: "PURPLE" },
 };
 
 // TODO: interface enum 사용

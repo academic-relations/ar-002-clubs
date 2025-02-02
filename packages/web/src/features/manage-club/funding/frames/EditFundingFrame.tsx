@@ -86,6 +86,7 @@ const EditFundingFrame: React.FC<EditFundingFrameProps> = ({ clubId }) => {
       />
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         <FundingForm
+          clubId={clubId}
           onCancel={cancelClick}
           onSubmit={handleSubmit}
           initialData={funding ?? []}

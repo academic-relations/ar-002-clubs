@@ -2,6 +2,7 @@ import type { Paths } from "./paths";
 
 const headerPaths: (keyof Paths)[] = [
   "CLUBS",
+  "NOTICE",
   "VOTING",
   "COMMUNITY",
   "SERVICE",
