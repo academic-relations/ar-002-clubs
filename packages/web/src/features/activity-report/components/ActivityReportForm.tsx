@@ -16,6 +16,8 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 import LocalStorageUtil from "@sparcs-clubs/web/common/services/localStorageUtil";
 import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
 
+import { isObjectEmpty } from "@sparcs-clubs/web/utils";
+
 import { ACTIVITY_REPORT_LOCAL_STORAGE_KEY } from "../constants";
 import useGetParticipants from "../services/useGetParticipants";
 import { ActivityReportFormData } from "../types/form";
@@ -82,18 +84,8 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   });
 
   useEffect(() => {
-    if (formValues != null) {
-      LocalStorageUtil.save(ACTIVITY_REPORT_LOCAL_STORAGE_KEY, {
-        name: formValues.name,
-        activityTypeEnumId: formValues.activityTypeEnumId,
-        durations: formValues.durations,
-        location: formValues.location,
-        purpose: formValues.purpose,
-        detail: formValues.detail,
-        evidence: formValues.evidence,
-        evidenceFiles: formValues.evidenceFiles,
-        participants: formValues.participants,
-      });
+    if (!isObjectEmpty(formValues)) {
+      LocalStorageUtil.save(ACTIVITY_REPORT_LOCAL_STORAGE_KEY, formValues);
     }
   }, [formValues]);
 
@@ -160,7 +152,6 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
                   />
                 )}
               />
-
               <SelectActivityTerm
                 initialData={formValues.durations ?? []}
                 onChange={_durations => {

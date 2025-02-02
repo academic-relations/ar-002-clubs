@@ -6,9 +6,11 @@ import { overlay } from "overlay-kit";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
+import RestoreDraftModal from "@sparcs-clubs/web/common/components/Modal/RestoreDraftModal";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import useTemporaryStorage from "@sparcs-clubs/web/common/hooks/useTemporaryStorage";
 import LocalStorageUtil from "@sparcs-clubs/web/common/services/localStorageUtil";
 
 import ActivityReportForm from "../components/ActivityReportForm";
@@ -24,6 +26,11 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
   clubId,
 }) => {
   const router = useRouter();
+
+  const { savedData, isModalOpen, handleConfirm, handleClose } =
+    useTemporaryStorage<ActivityReportFormData>(
+      ACTIVITY_REPORT_LOCAL_STORAGE_KEY,
+    );
   const { mutate: createActivityReport } = useCreateActivityReport(clubId);
 
   const handleSubmit = (data: ActivityReportFormData) => {
@@ -68,13 +75,19 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
         title="활동 보고서 작성"
         enableLast
       />
-      <ActivityReportForm
-        clubId={clubId}
-        onSubmit={handleSubmit}
-        initialData={LocalStorageUtil.get<ActivityReportFormData>(
-          ACTIVITY_REPORT_LOCAL_STORAGE_KEY,
-        )}
-      />
+      {isModalOpen ? (
+        <RestoreDraftModal
+          isOpen={isModalOpen}
+          onConfirm={handleConfirm}
+          onClose={handleClose}
+        />
+      ) : (
+        <ActivityReportForm
+          clubId={clubId}
+          onSubmit={handleSubmit}
+          initialData={savedData}
+        />
+      )}
     </FlexWrapper>
   );
 };

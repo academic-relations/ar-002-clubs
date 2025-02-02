@@ -17,7 +17,7 @@ class LocalStorageUtil {
    * tempData: 저장할 데이터 (추후 getLocalStorage를 통해 불러올 최종 데이터 구조와 똑같거나 typecasting 가능할 정도로 구조가 유사해야 함)
    *
    */
-  public static get = <T>(name: string) => {
+  public static get = <T>(name: string): T | undefined => {
     try {
       const rawData = localStorage.getItem(name);
       if (rawData != null) {
