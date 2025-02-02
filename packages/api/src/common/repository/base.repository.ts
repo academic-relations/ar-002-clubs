@@ -9,6 +9,7 @@ import {
 } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 
 import { MEntity } from "../model/entity.model";
+import { getKSTDate } from "../util/util";
 
 interface TableWithId {
   id: MySqlColumn<ColumnBaseConfig<ColumnDataType, string>>;
@@ -128,7 +129,7 @@ export abstract class BaseRepository<
   async deleteTx(tx: DrizzleTransaction, id: number): Promise<void> {
     await tx
       .update(this.table)
-      .set({ deletedAt: new Date() })
+      .set({ deletedAt: getKSTDate() })
       .where(eq(this.table.id, id))
       .execute();
   }
