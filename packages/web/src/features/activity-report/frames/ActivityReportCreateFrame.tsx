@@ -9,6 +9,8 @@ import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/Confi
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
+import LocalStorageUtil from "@sparcs-clubs/web/common/services/localStorageUtil";
+
 import ActivityReportForm from "../components/ActivityReportForm";
 import { useCreateActivityReport } from "../hooks/useCreateActivityReport";
 import { ActivityReportFormData } from "../types/form";
@@ -20,6 +22,8 @@ interface ActivityReportCreateFrameProps {
 const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
   clubId,
 }) => {
+  const localStorageName = "activity-report"; // fix: 추후에 prefix로 userId 넣는 것 구현 예정
+
   const router = useRouter();
   const { mutate: createActivityReport } = useCreateActivityReport(clubId);
 
@@ -30,16 +34,7 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
           <Modal isOpen={isOpen}>
             <ConfirmModalContent
               onConfirm={() => {
-                localStorage.removeItem("durations");
-                localStorage.removeItem("participants");
-                localStorage.removeItem("evidenceFiles");
-                localStorage.removeItem("name");
-                localStorage.removeItem("activityTypeEnumId");
-                localStorage.removeItem("location");
-                localStorage.removeItem("purpose");
-                localStorage.removeItem("detail");
-                localStorage.removeItem("evidence");
-
+                LocalStorageUtil.remove(localStorageName);
                 close();
                 router.push("/manage-club/activity-report");
               }}
@@ -77,34 +72,10 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
       <ActivityReportForm
         clubId={clubId}
         onSubmit={handleSubmit}
-        temporaryStorageName={
-          JSON.parse(localStorage.getItem("name") || '""') || undefined
-        }
-        temporaryStorageActivityTypeEnumId={
-          JSON.parse(localStorage.getItem("activityTypeEnumId") || '""') ||
-          undefined
-        }
-        temporaryStorageDurations={
-          JSON.parse(localStorage.getItem("durations") || '""') || undefined
-        }
-        temporaryStorageLocation={
-          JSON.parse(localStorage.getItem("location") || '""') || undefined
-        }
-        temporaryStoragePurpose={
-          JSON.parse(localStorage.getItem("purpose") || '""') || undefined
-        }
-        temporaryStorageDetail={
-          JSON.parse(localStorage.getItem("detail") || '""') || undefined
-        }
-        temporaryStorageEvidence={
-          JSON.parse(localStorage.getItem("evidence") || '""') || undefined
-        }
-        temporaryStorageEvidenceFiles={
-          JSON.parse(localStorage.getItem("evidenceFiles") || '""') || undefined
-        }
-        temporaryStorageParticipants={
-          JSON.parse(localStorage.getItem("participants") || '""') || undefined
-        }
+        initialData={LocalStorageUtil.get<ActivityReportFormData>(
+          "activity-report",
+        )}
+        localStorageName={localStorageName}
       />
     </FlexWrapper>
   );
