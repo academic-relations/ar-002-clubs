@@ -17,6 +17,8 @@ const ExecutiveActivityReportChargedFrame: React.FC = () => {
     executiveId: Number(executiveId),
   });
 
+  window.history.replaceState({ isClubView: false }, "");
+
   const clubsActivities = data?.activities.reduce(
     (acc, activity) => {
       if (!activity.club?.id || !activity.chargedExecutive?.id) {
