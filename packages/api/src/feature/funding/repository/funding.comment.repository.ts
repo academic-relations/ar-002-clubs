@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-import { IFundingCommentRequest } from "@sparcs-clubs/interface/api/funding/type/funding.type";
+import { IFundingCommentRequest } from "@sparcs-clubs/interface/api/funding/type/funding.comment.type";
 import { eq } from "drizzle-orm";
 
 import { BaseRepository } from "@sparcs-clubs/api/common/repository/base.repository";

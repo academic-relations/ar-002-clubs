@@ -32,9 +32,11 @@ import { ApiFnd012ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoin
 import { ApiFnd013ResponseCreated } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd013";
 
 import {
-  IFunding,
   IFundingComment,
   IFundingCommentRequest,
+} from "@sparcs-clubs/interface/api/funding/type/funding.comment.type";
+import {
+  IFunding,
   IFundingResponse,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 import { IExecutive } from "@sparcs-clubs/interface/api/user/type/user.type";

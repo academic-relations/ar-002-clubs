@@ -1,7 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zFunding, zFundingCommentRequest } from "../type/funding.type";
+import { zFundingCommentRequest } from "../type/funding.comment.type";
+import { zFunding } from "../type/funding.common.type";
 
 /**
  * @version v0.1
