@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import { IActivityDuration } from "@sparcs-clubs/interface/api/activity/type/activity.duration.type";
 import { IFileSummary } from "@sparcs-clubs/interface/api/file/type/file.type";
 import {
   ApiFnd001RequestBody,
@@ -38,7 +39,10 @@ import {
   IFundingResponse,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 import { IExecutive } from "@sparcs-clubs/interface/api/user/type/user.type";
-import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+import {
+  FundingDeadlineEnum,
+  FundingStatusEnum,
+} from "@sparcs-clubs/interface/common/enum/funding.enum";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ActivityPublicService from "@sparcs-clubs/api/feature/activity/service/activity.public.service";
@@ -67,18 +71,16 @@ export default class FundingService {
     body: ApiFnd001RequestBody,
     studentId: number,
   ): Promise<ApiFnd001ResponseCreated> {
-    const user = await this.userPublicService.getStudentById({ id: studentId });
-    if (!user) {
-      throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
-    }
-    if (
-      !(await this.clubPublicService.isStudentDelegate(studentId, body.club.id))
-    ) {
-      throw new HttpException("Student is not delegate", HttpStatus.FORBIDDEN);
-    }
+    await this.clubPublicService.checkStudentDelegate(studentId, body.club.id);
+    await this.checkDeadline([
+      FundingDeadlineEnum.Writing,
+      FundingDeadlineEnum.Exception,
+    ]);
 
     const now = getKSTDate();
     const activityD = await this.activityPublicService.fetchLastActivityD(now);
+    await this.validateExpenditureDate(body.expenditureDate, activityD);
+
     const fundingStatusEnum = 1;
     const approvedAmount = 0;
 
@@ -355,18 +357,17 @@ export default class FundingService {
     param: ApiFnd003RequestParam,
     studentId: number,
   ): Promise<ApiFnd003ResponseOk> {
-    const user = await this.userPublicService.getStudentById({ id: studentId });
-    if (!user) {
-      throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
-    }
-    if (
-      !(await this.clubPublicService.isStudentDelegate(studentId, body.club.id))
-    ) {
-      throw new HttpException("Student is not delegate", HttpStatus.FORBIDDEN);
-    }
+    await this.clubPublicService.checkStudentDelegate(studentId, body.club.id);
+    await this.checkDeadline([
+      FundingDeadlineEnum.Writing,
+      FundingDeadlineEnum.Revision,
+      FundingDeadlineEnum.Exception,
+    ]);
 
     const now = getKSTDate();
     const activityD = await this.activityPublicService.fetchLastActivityD(now);
+    await this.validateExpenditureDate(body.expenditureDate, activityD);
+
     const fundingStatusEnum = 1;
     const approvedAmount = 0;
 
@@ -381,10 +382,16 @@ export default class FundingService {
     studentId: number,
     param: ApiFnd004RequestParam,
   ): Promise<ApiFnd004ResponseOk> {
-    const user = await this.userPublicService.getStudentById({ id: studentId });
-    if (!user) {
-      throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
-    }
+    const funding = await this.fundingRepository.fetch(param.id);
+    await this.clubPublicService.checkStudentDelegate(
+      studentId,
+      funding.club.id,
+    );
+    await this.checkDeadline([
+      FundingDeadlineEnum.Writing,
+      FundingDeadlineEnum.Revision,
+      FundingDeadlineEnum.Exception,
+    ]);
     await this.fundingRepository.delete(param.id);
     return {};
   }
@@ -579,5 +586,30 @@ export default class FundingService {
     );
 
     return fundingComment;
+  }
+
+  private async checkDeadline(enums: Array<FundingDeadlineEnum>) {
+    const today = getKSTDate();
+    const todayDeadline = await this.fundingDeadlineRepository.fetch(today);
+    if (enums.find(e => Number(e) === todayDeadline.deadlineEnum) === undefined)
+      throw new HttpException(
+        "Today is not a day for funding",
+        HttpStatus.BAD_REQUEST,
+      );
+  }
+
+  private async validateExpenditureDate(
+    expenditureDate: Date,
+    activityD: IActivityDuration,
+  ) {
+    if (
+      expenditureDate < activityD.startTerm ||
+      expenditureDate > activityD.endTerm
+    ) {
+      throw new HttpException(
+        "Expenditure date is not in the range of activity deadline",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }

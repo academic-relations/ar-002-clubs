@@ -2,6 +2,10 @@ import apiFnd006, {
   ApiFnd006RequestQuery,
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
+import {
+  ActivityStatusEnum,
+  ActivityTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import { useQuery } from "@tanstack/react-query";
 
@@ -35,7 +39,7 @@ const useGetTermFundingList = (
 
 export default useGetTermFundingList;
 
-const baseUrl = `/student/fundings/semesters/semester/`;
+const baseUrl = `/student/fundings/activity-durations/activity-duration/`;
 
 defineAxiosMock(mock => {
   mock.onGet(new RegExp(`^${baseUrl}\\d+$`)).reply(() => [
@@ -48,7 +52,13 @@ defineAxiosMock(mock => {
           name: "개발개발한 어떠한 활동",
           expenditureAmount: 300000,
           approvedAmount: 200000,
-          purposeActivity: { id: 1, name: "지출목적" },
+          purposeActivity: {
+            id: 1,
+            name: "지출목적",
+            activityStatusEnum: ActivityStatusEnum.Applied,
+            activityTypeEnum: ActivityTypeEnum.matchedExternalActivity,
+            club: { id: 1 },
+          },
         },
         {
           id: 2,
@@ -56,7 +66,13 @@ defineAxiosMock(mock => {
           name: "개발개발한 어떠한 활동",
           expenditureAmount: 300000,
           approvedAmount: 200000,
-          purposeActivity: { id: 1, name: "지출목적" },
+          purposeActivity: {
+            id: 1,
+            name: "지출목적",
+            activityStatusEnum: ActivityStatusEnum.Applied,
+            activityTypeEnum: ActivityTypeEnum.matchedExternalActivity,
+            club: { id: 1 },
+          },
         },
         {
           id: 3,
@@ -64,31 +80,13 @@ defineAxiosMock(mock => {
           name: "개발개발한 어떠한 활동",
           expenditureAmount: 300000,
           approvedAmount: 200000,
-          purposeActivity: { id: 1, name: "지출목적" },
-        },
-        {
-          id: 4,
-          fundingStatusEnum: FundingStatusEnum.Rejected,
-          name: "개발개발한 어떠한 활동",
-          expenditureAmount: 300000,
-          approvedAmount: 200000,
-          purposeActivity: { id: 1, name: "지출목적" },
-        },
-        {
-          id: 5,
-          fundingStatusEnum: FundingStatusEnum.Rejected,
-          name: "개발개발한 어떠한 활동",
-          expenditureAmount: 300000,
-          approvedAmount: 200000,
-          purposeActivity: { id: 1, name: "지출목적" },
-        },
-        {
-          id: 6,
-          fundingStatusEnum: FundingStatusEnum.Approved,
-          name: "개발개발한 어떠한 활동",
-          expenditureAmount: 300000,
-          approvedAmount: 200000,
-          purposeActivity: { id: 1, name: "지출목적" },
+          purposeActivity: {
+            id: 1,
+            name: "지출목적",
+            activityStatusEnum: ActivityStatusEnum.Applied,
+            activityTypeEnum: ActivityTypeEnum.matchedExternalActivity,
+            club: { id: 1 },
+          },
         },
       ],
     },
