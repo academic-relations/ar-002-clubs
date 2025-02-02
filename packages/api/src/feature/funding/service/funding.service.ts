@@ -224,7 +224,7 @@ export default class FundingService {
     return funding;
   }
 
-  private async transformFundingToResponse(
+  private async buildFundingResponse(
     funding: MFunding,
   ): Promise<IFundingResponse> {
     const purposeActivity = funding.purposeActivity
@@ -235,23 +235,19 @@ export default class FundingService {
 
     // 채울 곳
     const resolvedFiles = {
-      tradeEvidenceFiles: await this.resolveFilesOrNull(
-        funding.tradeEvidenceFiles,
-      ),
-      tradeDetailFiles: await this.resolveFilesOrNull(funding.tradeDetailFiles),
+      tradeEvidenceFiles: await this.fetchFiles(funding.tradeEvidenceFiles),
+      tradeDetailFiles: await this.fetchFiles(funding.tradeDetailFiles),
 
-      foodExpense: await this.resolveFilesOrNull(funding.foodExpense),
-      laborContract: await this.resolveFilesOrNull(funding.laborContract),
-      externalEventParticipationFee: await this.resolveFilesOrNull(
+      foodExpense: await this.fetchFiles(funding.foodExpense),
+      laborContract: await this.fetchFiles(funding.laborContract),
+      externalEventParticipationFee: await this.fetchFiles(
         funding.externalEventParticipationFee,
       ),
-      publication: await this.resolveFilesOrNull(funding.publication),
-      profitMakingActivity: await this.resolveFilesOrNull(
-        funding.profitMakingActivity,
-      ),
-      jointExpense: await this.resolveFilesOrNull(funding.jointExpense),
-      etcExpense: await this.resolveFilesOrNull(funding.etcExpense),
-      nonCorporateTransaction: await this.resolveFilesOrNull(
+      publication: await this.fetchFiles(funding.publication),
+      profitMakingActivity: await this.fetchFiles(funding.profitMakingActivity),
+      jointExpense: await this.fetchFiles(funding.jointExpense),
+      etcExpense: await this.fetchFiles(funding.etcExpense),
+      nonCorporateTransaction: await this.fetchFiles(
         funding.nonCorporateTransaction,
       ),
       // 구분선
@@ -259,10 +255,8 @@ export default class FundingService {
       clubSupplies: funding.clubSupplies
         ? {
             ...funding.clubSupplies,
-            imageFiles: await this.resolveFilesOrNull(
-              funding.clubSupplies.imageFiles,
-            ),
-            softwareEvidenceFiles: await this.resolveFilesOrNull(
+            imageFiles: await this.fetchFiles(funding.clubSupplies.imageFiles),
+            softwareEvidenceFiles: await this.fetchFiles(
               funding.clubSupplies.softwareEvidenceFiles,
             ),
           }
@@ -270,10 +264,8 @@ export default class FundingService {
       fixture: funding.fixture
         ? {
             ...funding.fixture,
-            imageFiles: await this.resolveFilesOrNull(
-              funding.fixture.imageFiles,
-            ),
-            softwareEvidenceFiles: await this.resolveFilesOrNull(
+            imageFiles: await this.fetchFiles(funding.fixture.imageFiles),
+            softwareEvidenceFiles: await this.fetchFiles(
               funding.fixture.softwareEvidenceFiles,
             ),
           }
@@ -314,16 +306,14 @@ export default class FundingService {
   }
 
   // 메서드 오버로딩 선언부
-  private async resolveFilesOrNull(items: undefined): Promise<undefined>;
-  private async resolveFilesOrNull(
-    items: { id: string }[],
-  ): Promise<IFileSummary[]>;
-  private async resolveFilesOrNull<T extends { files: { id: string }[] }>(
+  private async fetchFiles(items: undefined): Promise<undefined>;
+  private async fetchFiles(items: { id: string }[]): Promise<IFileSummary[]>;
+  private async fetchFiles<T extends { files: { id: string }[] }>(
     items: T,
   ): Promise<Omit<T, "files"> & { files: IFileSummary[] }>;
 
   // 구현부
-  private async resolveFilesOrNull<T extends { files: { id: string }[] }>(
+  private async fetchFiles<T extends { files: { id: string }[] }>(
     items: T | undefined | { id: string }[],
   ): Promise<
     undefined | IFileSummary[] | (Omit<T, "files"> & { files: IFileSummary[] })
@@ -334,18 +324,18 @@ export default class FundingService {
 
     if (Array.isArray(items)) {
       // items가 배열인 경우 처리
-      const resolvedFiles = await this.filePublicService.getFilesByIds(
+      const files = await this.filePublicService.getFilesByIds(
         items.map(file => file.id),
       );
-      return resolvedFiles; // FileSummary[] 반환
+      return files; // FileSummary[] 반환
     }
 
     if ("files" in items) {
       // items에 files 속성이 있는 경우 처리
-      const resolvedFiles = await this.filePublicService.getFilesByIds(
+      const files = await this.filePublicService.getFilesByIds(
         items.files.map(file => file.id),
       );
-      return { ...items, files: resolvedFiles }; // files가 IFileSummary[]로 변환된 객체 반환
+      return { ...items, files }; // files가 IFileSummary[]로 변환된 객체 반환
     }
     return undefined;
   }
@@ -487,7 +477,7 @@ export default class FundingService {
 
     const funding = await this.fundingRepository.fetch(id); // TODO: 이거 이래도 되나? comments 필드가 없는데. 에러 안나나?
 
-    const fundingResponse = await this.transformFundingToResponse(funding);
+    const fundingResponse = await this.buildFundingResponse(funding);
     return fundingResponse;
   }
 
