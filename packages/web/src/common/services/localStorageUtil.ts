@@ -5,6 +5,8 @@ type StorageValue<T> = {
   expireTime: number | undefined;
 };
 class LocalStorageUtil {
+  private static PREFIX = "temp_";
+
   /**
    * 임시저장을 할 때 호출해야 하는 함수. 로컬 스토리지에 임시 데이터를 저장함.
    *
@@ -16,13 +18,13 @@ class LocalStorageUtil {
   public static save = <T>(
     name: string,
     tempData: T,
-    ttl: number = 60 * 1000,
+    ttl: number = 24 * 60 * 60 * 1000,
   ): void => {
     const data: StorageValue<T> = {
       value: tempData,
       expireTime: Date.now() + ttl,
     };
-    localStorage.setItem(name, JSON.stringify(data));
+    localStorage.setItem(this.PREFIX + name, JSON.stringify(data));
   };
 
   /**
@@ -33,7 +35,7 @@ class LocalStorageUtil {
    *
    */
   public static get = <T>(name: string): T | undefined => {
-    const rawData = localStorage.getItem(name);
+    const rawData = localStorage.getItem(this.PREFIX + name);
 
     if (!rawData) return undefined;
 
@@ -59,7 +61,18 @@ class LocalStorageUtil {
    *
    */
   public static remove = (name: string) => {
-    localStorage.removeItem(name);
+    localStorage.removeItem(this.PREFIX + name);
+  };
+
+  /**
+   * 로컬 스토리지에 저장되어 있는 PREFIX(="temp_")로 시작하는 모든 features의 임시 데이터를 삭제함.
+   */
+  public static removeAll = () => {
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith(this.PREFIX)) {
+        localStorage.removeItem(key);
+      }
+    });
   };
 
   /**
