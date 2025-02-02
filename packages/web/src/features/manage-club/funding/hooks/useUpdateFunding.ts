@@ -42,7 +42,7 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
             },
             purposeActivity: purposeActivity
               ? { id: purposeActivity.id }
-              : undefined,
+              : { id: null },
             name,
             expenditureDate: getKSTDate(data.expenditureDate),
             expenditureAmount: Number(expenditureAmount),

@@ -67,7 +67,9 @@ export const zFunding = z.object({
   club: zClub.pick({ id: true }),
   activityD: zActivityD.pick({ id: true }),
   fundingStatusEnum: z.nativeEnum(FundingStatusEnum),
-  purposeActivity: zActivitySummary.pick({ id: true }).optional(),
+  purposeActivity: z.object({
+    id: zId.nullable(),
+  }),
   name: z.string().max(255).min(1),
   expenditureDate: z.coerce.date(),
   expenditureAmount: z.coerce.number().int().min(0),
