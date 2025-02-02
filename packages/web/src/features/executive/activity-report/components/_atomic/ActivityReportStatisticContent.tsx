@@ -18,7 +18,7 @@ interface ActivityReportStatisticContentProps {
 const ActivityReportStatisticContent: React.FC<
   ActivityReportStatisticContentProps
 > = ({ pendingTotalCount, approvedTotalCount, rejectedTotalCount }) => {
-  const reviewdTotalCount = approvedTotalCount + rejectedTotalCount;
+  const reviewedTotalCount = approvedTotalCount + rejectedTotalCount;
   const totalCount =
     pendingTotalCount + approvedTotalCount + rejectedTotalCount;
 
@@ -31,10 +31,10 @@ const ActivityReportStatisticContent: React.FC<
               검토율
             </Typography>
             <Typography>
-              {reviewdTotalCount}개 / {totalCount}개 (
+              {reviewedTotalCount}개 / {totalCount}개 (
               {totalCount === 0
                 ? "-"
-                : ((reviewdTotalCount / totalCount) * 100).toFixed(1)}
+                : ((reviewedTotalCount / totalCount) * 100).toFixed(1)}
               %)
             </Typography>
           </FlexWrapper>

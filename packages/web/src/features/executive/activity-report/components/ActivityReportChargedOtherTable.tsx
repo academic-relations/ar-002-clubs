@@ -40,7 +40,6 @@ const columns = [
     },
     size: 248,
   }),
-  // TODO: 검토 일시 시간대 확인
   columnHelper.accessor("commentedAt", {
     header: "검토 일시",
     cell: info => {
