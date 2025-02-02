@@ -18,7 +18,6 @@ import List from "@sparcs-clubs/web/common/components/List";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
-import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
@@ -240,157 +239,143 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
   );
 
   return (
-    <FlexWrapper direction="column" gap={60}>
-      <PageHead
-        items={[
-          { name: "대표 동아리 관리", path: "/manage-club" },
-          { name: "활동 보고서", path: "/manage-club/activity-report" },
-        ]}
-        title="활동 보고서"
-        enableLast
-      />
-      <AsyncBoundary isLoading={isLoading} isError={isError}>
-        <FlexWrapper
-          direction="column"
-          gap={40}
-          style={{ alignSelf: "stretch" }}
-        >
-          <Card outline padding="32px" gap={20}>
-            {isProgressVisible && (
-              <ProgressStatus
-                labels={activityReportProgress.labels}
-                progress={activityReportProgress.progress}
-                optional={
-                  isCommentsVisible &&
-                  filteredComments.length > 0 && (
-                    <RejectReasonToast
-                      title="반려 사유"
-                      reasons={filteredComments.map(comment => ({
-                        datetime: comment.createdAt,
-                        reason: comment.content,
-                      }))}
-                    />
-                  )
-                }
-              />
-            )}
-
-            <ActivitySection label="활동 정보">
-              <List
-                dataList={[
-                  `활동명: ${data.name}`,
-                  `활동 분류: ${getActivityTypeLabel(data.activityTypeEnumId)}`,
-                  "활동 기간:",
-                ]}
-                listType="bullet"
-                gap={16}
-              />
-
-              <FlexWrapper
-                direction="column"
-                gap={12}
-                style={{ paddingLeft: 24 }}
-              >
-                {data.durations.map((duration, index) => (
-                  <Typography key={index}>
-                    {`${formatDate(duration.startTerm)} ~ ${formatDate(duration.endTerm)}`}
-                  </Typography>
-                ))}
-              </FlexWrapper>
-              <List
-                dataList={[
-                  `활동 장소: ${data.location}`,
-                  `활동 목적: ${data.purpose}`,
-                  `활동 내용: ${data.detail}`,
-                ]}
-                listType="bullet"
-                gap={16}
-              />
-            </ActivitySection>
-            <ActivitySection label={`활동 인원(${data.participants.length}명)`}>
-              <List
-                dataList={data.participants.map(
-                  participant =>
-                    `${participant.studentNumber} ${participant.name}`,
-                )}
-                listType="bullet"
-                gap={16}
-                startIndex={0}
-                fw="REGULAR"
-                fs={16}
-                lh={20}
-              />
-            </ActivitySection>
-            <ActivitySection label="활동 증빙">
-              <List
-                dataList={[
-                  "첨부 파일",
-                  <FilePreviewContainer key="file-preview">
-                    <ThumbnailPreviewList
-                      fileList={data.evidenceFiles}
-                      disabled
-                    />
-                  </FilePreviewContainer>,
-                  `부가 설명: ${data.evidence}`,
-                ]}
-                listType="bullet"
-                gap={16}
-              />
-            </ActivitySection>
-            {data.professorApproval !== null && (
-              <FlexWrapper
-                direction="row"
-                gap={16}
-                justify="space-between"
-                style={{
-                  alignItems: "center",
-                  alignSelf: "stretch",
-                  width: "100%",
-                }}
-              >
-                <ActivitySection label="지도교수 승인" />
-                <FlexWrapper
-                  direction="row"
-                  gap={8}
-                  style={{ alignItems: "center" }}
-                >
-                  {data.professorApprovedAt && (
-                    <Typography fs={14} lh={16} color="GRAY.300">
-                      {formatDotDetailDate(data.professorApprovedAt)}
-                    </Typography>
-                  )}
-                  <Tag
-                    color={getProfessorApprovalTagColor(data.professorApproval)}
-                  >
-                    {getProfessorApprovalLabel(data.professorApproval)}
-                  </Tag>
-                </FlexWrapper>
-              </FlexWrapper>
-            )}
-          </Card>
-
-          {profile.type === "executive" && (
-            <ExecutiveActivityReportApprovalSection
-              comments={filteredComments}
-              clubId={clubId}
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <FlexWrapper direction="column" gap={40} style={{ alignSelf: "stretch" }}>
+        <Card outline padding="32px" gap={20}>
+          {isProgressVisible && (
+            <ProgressStatus
+              labels={activityReportProgress.labels}
+              progress={activityReportProgress.progress}
+              optional={
+                isCommentsVisible &&
+                filteredComments.length > 0 && (
+                  <RejectReasonToast
+                    title="반려 사유"
+                    reasons={filteredComments.map(comment => ({
+                      datetime: comment.createdAt,
+                      reason: comment.content,
+                    }))}
+                  />
+                )
+              }
             />
           )}
 
-          <FlexWrapper gap={20} justify="space-between">
-            <Button type="default" onClick={navigateToActivityReportList}>
-              목록으로 돌아가기
-            </Button>
+          <ActivitySection label="활동 정보">
+            <List
+              dataList={[
+                `활동명: ${data.name}`,
+                `활동 분류: ${getActivityTypeLabel(data.activityTypeEnumId)}`,
+                "활동 기간:",
+              ]}
+              listType="bullet"
+              gap={16}
+            />
 
-            <AsyncBoundary
-              isLoading={isLoadingDeadline}
-              isError={isErrorDeadline}
+            <FlexWrapper
+              direction="column"
+              gap={12}
+              style={{ paddingLeft: 24 }}
             >
-              {isPastActivity ? null : additionalButtons()}
-            </AsyncBoundary>
-          </FlexWrapper>
+              {data.durations.map((duration, index) => (
+                <Typography key={index}>
+                  {`${formatDate(duration.startTerm)} ~ ${formatDate(duration.endTerm)}`}
+                </Typography>
+              ))}
+            </FlexWrapper>
+            <List
+              dataList={[
+                `활동 장소: ${data.location}`,
+                `활동 목적: ${data.purpose}`,
+                `활동 내용: ${data.detail}`,
+              ]}
+              listType="bullet"
+              gap={16}
+            />
+          </ActivitySection>
+          <ActivitySection label={`활동 인원(${data.participants.length}명)`}>
+            <List
+              dataList={data.participants.map(
+                participant =>
+                  `${participant.studentNumber} ${participant.name}`,
+              )}
+              listType="bullet"
+              gap={16}
+              startIndex={0}
+              fw="REGULAR"
+              fs={16}
+              lh={20}
+            />
+          </ActivitySection>
+          <ActivitySection label="활동 증빙">
+            <List
+              dataList={[
+                "첨부 파일",
+                <FilePreviewContainer key="file-preview">
+                  <ThumbnailPreviewList
+                    fileList={data.evidenceFiles}
+                    disabled
+                  />
+                </FilePreviewContainer>,
+                `부가 설명: ${data.evidence}`,
+              ]}
+              listType="bullet"
+              gap={16}
+            />
+          </ActivitySection>
+          {data.professorApproval !== null && (
+            <FlexWrapper
+              direction="row"
+              gap={16}
+              justify="space-between"
+              style={{
+                alignItems: "center",
+                alignSelf: "stretch",
+                width: "100%",
+              }}
+            >
+              <ActivitySection label="지도교수 승인" />
+              <FlexWrapper
+                direction="row"
+                gap={8}
+                style={{ alignItems: "center" }}
+              >
+                {data.professorApprovedAt && (
+                  <Typography fs={14} lh={16} color="GRAY.300">
+                    {formatDotDetailDate(data.professorApprovedAt)}
+                  </Typography>
+                )}
+                <Tag
+                  color={getProfessorApprovalTagColor(data.professorApproval)}
+                >
+                  {getProfessorApprovalLabel(data.professorApproval)}
+                </Tag>
+              </FlexWrapper>
+            </FlexWrapper>
+          )}
+        </Card>
+
+        {profile.type === "executive" && (
+          <ExecutiveActivityReportApprovalSection
+            comments={filteredComments}
+            clubId={clubId}
+          />
+        )}
+
+        <FlexWrapper gap={20} justify="space-between">
+          <Button type="default" onClick={navigateToActivityReportList}>
+            목록으로 돌아가기
+          </Button>
+
+          <AsyncBoundary
+            isLoading={isLoadingDeadline}
+            isError={isErrorDeadline}
+          >
+            {isPastActivity ? null : additionalButtons()}
+          </AsyncBoundary>
         </FlexWrapper>
-      </AsyncBoundary>
-    </FlexWrapper>
+      </FlexWrapper>
+    </AsyncBoundary>
   );
 };
 
