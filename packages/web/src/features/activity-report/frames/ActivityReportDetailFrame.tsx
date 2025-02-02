@@ -2,6 +2,7 @@
 
 import React, { useCallback, useMemo } from "react";
 
+import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
@@ -42,6 +43,7 @@ import useGetActivityReportDetail from "../hooks/useGetActivityReportDetail";
 import useProfessorApproveSingleActivityReport from "../hooks/useProfessorApproveSingleActivityReport";
 import { useDeleteActivityReport } from "../services/useDeleteActivityReport";
 import useGetActivityDeadline from "../services/useGetActivityDeadline";
+import { filterActivityComments } from "../utils/filterComment";
 
 interface ActivitySectionProps extends React.PropsWithChildren {
   label: string;
@@ -196,7 +198,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     return <NotFound />;
   }
 
-  if (!data || !("clubId" in data)) {
+  if (!data || clubId === 0) {
     return <AsyncBoundary isLoading={isLoading} isError={isError} />;
   }
 
@@ -228,8 +230,13 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     return null;
   };
 
-  const filteredComments = data.comments.filter(
-    comment => comment.content !== "활동이 승인되었습니다",
+  const filteredComments = filterActivityComments(data.comments);
+
+  const activityReportProgress = getActivityReportProgress(
+    data.activityStatusEnumId,
+    data.activityStatusEnumId === ActivityStatusEnum.Applied
+      ? data.editedAt
+      : data.commentedAt || data.updatedAt,
   );
 
   return (
@@ -251,22 +258,8 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
           <Card outline padding="32px" gap={20}>
             {isProgressVisible && (
               <ProgressStatus
-                labels={
-                  getActivityReportProgress(
-                    data.activityStatusEnumId,
-                    data.activityStatusEnumId === 1
-                      ? data.editedAt
-                      : data.commentedAt || data.editedAt,
-                  ).labels
-                }
-                progress={
-                  getActivityReportProgress(
-                    data.activityStatusEnumId,
-                    data.activityStatusEnumId === 1
-                      ? data.editedAt
-                      : data.commentedAt || data.editedAt,
-                  ).progress
-                }
+                labels={activityReportProgress.labels}
+                progress={activityReportProgress.progress}
                 optional={
                   isCommentsVisible &&
                   filteredComments.length > 0 && (
