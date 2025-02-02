@@ -34,7 +34,7 @@ import { ApiFnd013ResponseCreated } from "@sparcs-clubs/interface/api/funding/en
 import {
   IFunding,
   IFundingComment,
-  IFundingCommentRequestCreate,
+  IFundingCommentRequest,
   IFundingResponse,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 import { IExecutive } from "@sparcs-clubs/interface/api/user/type/user.type";
@@ -558,7 +558,7 @@ export default class FundingService {
           funding: { id },
           chargedExecutive: { id: executiveId },
           content,
-        } as IFundingCommentRequestCreate);
+        } as IFundingCommentRequest);
         const funding = await this.fundingRepository.patchStatusTx(tx, {
           id,
           fundingStatusEnum,

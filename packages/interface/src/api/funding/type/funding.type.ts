@@ -300,7 +300,7 @@ export const zFundingCommentResponse = zFundingComment.extend({
   chargedExecutive: zExecutiveSummary,
 });
 
-export const zFundingCommentRequestCreate = zFundingComment.omit({
+export const zFundingCommentRequest = zFundingComment.omit({
   id: true,
   createdAt: true,
 });
@@ -402,6 +402,4 @@ export type IFundingResponseSummary = z.infer<typeof zFundingResponseSummary>;
 export type IFundingExtra = z.infer<typeof zFundingExtra>;
 export type IFundingComment = z.infer<typeof zFundingComment>;
 export type IFundingCommentResponse = z.infer<typeof zFundingCommentResponse>;
-export type IFundingCommentRequestCreate = z.infer<
-  typeof zFundingCommentRequestCreate
->;
+export type IFundingCommentRequest = z.infer<typeof zFundingCommentRequest>;
