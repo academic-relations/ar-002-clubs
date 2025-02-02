@@ -8,7 +8,7 @@ import { axiosClientWithAuth } from "@sparcs-clubs/web/lib/axios";
 
 const useGetExecutiveChargedActivities = (query: ApiAct028RequestParam) =>
   useQuery<ApiAct028ResponseOk, Error>({
-    queryKey: ["executiveChargedActivities"], // 활동보고서 승인/반려 후 query invalidate를 위해 queryKey에 executiveId를 넣지 않음
+    queryKey: ["executiveChargedActivities", query.executiveId],
     queryFn: async (): Promise<ApiAct028ResponseOk> => {
       const { data } = await axiosClientWithAuth.get(
         apiAct028.url(query.executiveId),
