@@ -43,7 +43,7 @@ export default class FundingCommentRepository extends BaseRepository<
       .from(FundingFeedback)
       .where(eq(FundingFeedback.fundingId, arg1));
 
-    return result.map(row => MFundingComment.fromDbResult(row));
+    return result.map(row => MFundingComment.from(row));
   }
 
   async fetchAll(fundingId: number): Promise<MFundingComment[]>;

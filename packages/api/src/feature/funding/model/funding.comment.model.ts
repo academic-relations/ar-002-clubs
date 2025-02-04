@@ -38,7 +38,7 @@ export class MFundingComment extends MEntity implements IFundingComment {
     );
   }
 
-  static fromDbResult(result: FundingCommentDbResult): MFundingComment {
+  static from(result: FundingCommentDbResult): MFundingComment {
     return new MFundingComment({
       id: result.id,
       funding: { id: result.fundingId },

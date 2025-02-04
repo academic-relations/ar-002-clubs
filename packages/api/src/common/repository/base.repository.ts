@@ -15,8 +15,8 @@ interface TableWithId {
   id: MySqlColumn<ColumnBaseConfig<ColumnDataType, string>>;
 }
 
-interface ModelStatic<T extends MEntity, D> {
-  fromDbResult(result: D): T;
+interface ModelWithFrom<T extends MEntity, D> {
+  from(result: D): T;
 }
 
 @Injectable()
@@ -30,7 +30,7 @@ export abstract class BaseRepository<
 
   constructor(
     protected table: T,
-    protected modelClass: ModelStatic<M, D>,
+    protected modelClass: ModelWithFrom<M, D>,
   ) {}
 
   async withTransaction<Result>(
@@ -44,7 +44,7 @@ export abstract class BaseRepository<
       .select()
       .from(this.table)
       .where(eq(this.table.id, id))
-      .then(rows => rows.map(row => this.modelClass.fromDbResult(row as D)));
+      .then(rows => rows.map(row => this.modelClass.from(row as D)));
 
     return (result[0] as M) ?? null;
   }
@@ -75,7 +75,7 @@ export abstract class BaseRepository<
       .from(this.table)
       .where(inArray(this.table.id, ids));
 
-    return result.map(row => this.modelClass.fromDbResult(row as D));
+    return result.map(row => this.modelClass.from(row as D));
   }
 
   async fetchAll(ids: number[]): Promise<M[]> {
