@@ -21,6 +21,7 @@ interface UnitInputProps
   value?: string;
   handleChange?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
+  required?: boolean;
 }
 
 const errorBorderStyle = css`
@@ -93,6 +94,7 @@ const UnitInput: React.FC<UnitInputProps> = ({
   value = "",
   handleChange = () => {},
   setErrorStatus = () => {},
+  required = true,
   ...props
 }) => {
   const [error, setError] = useState(errorMessage);
@@ -102,8 +104,13 @@ const UnitInput: React.FC<UnitInputProps> = ({
     const isValidFormat = /^\d+$/g.test(value);
 
     if (touched && !value) {
-      setError("필수로 채워야 하는 항목입니다");
-      setErrorStatus(true);
+      if (required) {
+        setError("필수로 채워야 하는 항목입니다");
+        setErrorStatus(true);
+      } else {
+        setError("");
+        setErrorStatus(false);
+      }
     } else if (touched && !isValidFormat) {
       setError("숫자만 입력 가능합니다.");
       setErrorStatus(true);
@@ -111,7 +118,7 @@ const UnitInput: React.FC<UnitInputProps> = ({
       setError("");
       setErrorStatus(false);
     }
-  }, [value, touched]);
+  }, [value, touched, required]);
 
   const handleBlur = () => {
     setTouched(true);
