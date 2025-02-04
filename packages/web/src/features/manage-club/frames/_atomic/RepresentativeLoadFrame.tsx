@@ -1,5 +1,7 @@
 import React from "react";
 
+import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubs/services/getClubDetail";
 import ChangeRepresentativeCard from "@sparcs-clubs/web/features/manage-club/components/ChangeRepresentativeCard";
@@ -19,7 +21,10 @@ const RepresentativeLoadFrame: React.FC<{
     data: clubMembers,
     isLoading: clubMembersIsLoading,
     isError: clubMembersIsError,
-  } = useGetDelegateCandidates({ clubId, delegateEnumId: 1 });
+  } = useGetDelegateCandidates({
+    clubId,
+    delegateEnumId: ClubDelegateEnum.Representative,
+  });
 
   const {
     data: clubInfo,
