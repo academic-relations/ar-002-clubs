@@ -27,12 +27,16 @@ const FundingStatusSection: React.FC<FundingStatusSectionProps> = ({
 }) => {
   const progressStatus = getFundingProgress(status, editedAt, commentedAt);
 
+  const filteredComments = comments.filter(
+    comment => comment.content.trim() !== "",
+  );
+
   const ToastSection = useMemo(() => {
     if (status === FundingStatusEnum.Rejected) {
       return (
         <RejectReasonToast
           title="코멘트"
-          reasons={comments.map(comment => ({
+          reasons={filteredComments.map(comment => ({
             datetime: comment.createdAt,
             reason: comment.content,
             status: getTagDetail(comment.fundingStatusEnum, FundingTagList)
@@ -45,7 +49,7 @@ const FundingStatusSection: React.FC<FundingStatusSectionProps> = ({
     return (
       <ApproveReasonToast
         title="코멘트"
-        reasons={comments.map(comment => ({
+        reasons={filteredComments.map(comment => ({
           datetime: comment.createdAt,
           reason: comment.content,
           status:
@@ -55,13 +59,13 @@ const FundingStatusSection: React.FC<FundingStatusSectionProps> = ({
         }))}
       />
     );
-  }, [comments, status]);
+  }, [filteredComments, status]);
 
   return (
     <ProgressStatus
       labels={progressStatus.labels}
       progress={progressStatus.progress}
-      optional={comments && comments.length > 0 && ToastSection}
+      optional={filteredComments && filteredComments.length > 0 && ToastSection}
     />
   );
 };

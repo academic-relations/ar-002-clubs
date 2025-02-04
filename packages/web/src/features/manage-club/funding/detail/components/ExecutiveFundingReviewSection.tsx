@@ -111,11 +111,15 @@ const ExecutiveFundingReviewSection: React.FC<{
     return true;
   };
 
+  const filteredComments = funding.comments.filter(
+    comment => comment.content.trim() !== "",
+  );
+
   return (
     <Card outline padding="32px" gap={20}>
-      {funding.comments.length > 0 && (
+      {filteredComments.length > 0 && (
         <FlexWrapper direction="column" gap={8}>
-          {funding.comments.map((comment, index) => (
+          {filteredComments.map((comment, index) => (
             <FlexWrapper direction="column" gap={4} key={`${index.toString()}`}>
               <Typography fs={14} lh={16} color="GRAY.600">
                 {formatSlashDateTime(comment.createdAt)}
