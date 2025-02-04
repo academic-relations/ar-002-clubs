@@ -42,6 +42,7 @@ import useGetActivityReportDetail from "../hooks/useGetActivityReportDetail";
 import useProfessorApproveSingleActivityReport from "../hooks/useProfessorApproveSingleActivityReport";
 import { useDeleteActivityReport } from "../services/useDeleteActivityReport";
 import useGetActivityDeadline from "../services/useGetActivityDeadline";
+import { CurrentActivityReport } from "../types/activityReport";
 import { filterActivityComments } from "../utils/filterComment";
 
 interface ActivitySectionProps extends React.PropsWithChildren {
@@ -227,14 +228,13 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     return null;
   };
 
-  const filteredComments = filterActivityComments(data.comments);
-
-  const activityReportProgress = getActivityReportProgress(
-    data.activityStatusEnumId,
-    data.activityStatusEnumId === ActivityStatusEnum.Applied
-      ? data.editedAt
-      : data.commentedAt || data.updatedAt,
-  );
+  const activityReportProgress = (activityData: CurrentActivityReport) =>
+    getActivityReportProgress(
+      activityData.activityStatusEnumId,
+      activityData.activityStatusEnumId === ActivityStatusEnum.Applied
+        ? activityData.editedAt
+        : activityData.commentedAt || activityData.updatedAt,
+    );
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
@@ -242,17 +242,19 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
         <Card outline padding="32px" gap={20}>
           {isProgressVisible && (
             <ProgressStatus
-              labels={activityReportProgress.labels}
-              progress={activityReportProgress.progress}
+              labels={activityReportProgress(data).labels}
+              progress={activityReportProgress(data).progress}
               optional={
                 isCommentsVisible &&
-                filteredComments.length > 0 && (
+                filterActivityComments(data.comments).length > 0 && (
                   <RejectReasonToast
                     title="반려 사유"
-                    reasons={filteredComments.map(comment => ({
-                      datetime: comment.createdAt,
-                      reason: comment.content,
-                    }))}
+                    reasons={filterActivityComments(data.comments).map(
+                      comment => ({
+                        datetime: comment.createdAt,
+                        reason: comment.content,
+                      }),
+                    )}
                   />
                 )
               }
@@ -355,7 +357,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
 
         {profile.type === "executive" && (
           <ExecutiveActivityReportApprovalSection
-            comments={filteredComments}
+            comments={filterActivityComments(data.comments)}
             clubId={data.clubId}
           />
         )}
