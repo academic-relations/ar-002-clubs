@@ -56,12 +56,15 @@ const columns = [
     cell: info => info.getValue(),
     size: 300,
   }),
-  columnHelper.accessor("updatedAt", {
+  columnHelper.accessor("commentedAt", {
     header: "검토 일시",
-    cell: info => formatDateTime(info.getValue()),
+    cell: info => {
+      const date = info.getValue();
+      return date ? formatDateTime(date) : "-";
+    },
     size: 220,
   }),
-  columnHelper.accessor("commentedExecutive.name", {
+  columnHelper.accessor(row => row.commentedExecutive?.name, {
     header: "최종 검토자",
     cell: info => info.getValue() || "-",
     size: 120,

@@ -37,6 +37,7 @@ const useGetActivityReportDetail = (
     return {
       ...activityReport,
       id: activityId,
+      clubId: activityReport.clubId,
       evidenceFiles: activityReport.evidenceFiles.map(file => ({
         id: file.fileId,
         name: file.name,

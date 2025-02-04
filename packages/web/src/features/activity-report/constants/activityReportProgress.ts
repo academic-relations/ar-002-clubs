@@ -40,7 +40,17 @@ const getActivityReportProgress = (
           { status: ProgressCheckSectionStatusEnum.Canceled, date },
         ],
       };
-    // TODO: Committee 케이스 추가
+    case ActivityStatusEnum.Committee:
+      return {
+        labels: ["신청 완료", "운위 승인 필요"],
+        progress: [
+          { status: ProgressCheckSectionStatusEnum.Approved, date: undefined },
+          {
+            status: ProgressCheckSectionStatusEnum.Pending,
+            date,
+          },
+        ],
+      };
     default:
       throw new Error("Invalid activity report status");
   }
