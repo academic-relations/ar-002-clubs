@@ -1,6 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { zFundingCommentResponse } from "../type/funding.comment.type";
 import { zFundingResponse } from "../type/funding.type";
 
 /**
@@ -23,7 +24,10 @@ const requestQuery = z.object({});
 const requestBody = z.object({});
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: zFundingResponse,
+  [HttpStatusCode.Ok]: z.object({
+    funding: zFundingResponse,
+    comments: z.array(zFundingCommentResponse),
+  }),
 };
 
 const responseErrorMap = {};

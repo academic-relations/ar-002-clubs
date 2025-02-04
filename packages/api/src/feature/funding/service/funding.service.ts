@@ -216,14 +216,14 @@ export default class FundingService {
         executive => executive.id === comment.chargedExecutive.id,
       );
     });
-    funding.comments = comments.map(comment => ({
+    const commentResponses = comments.map(comment => ({
       ...comment,
       chargedExecutive: chargedExecutive.find(
         executive => executive.id === comment.chargedExecutive.id,
       ),
     }));
 
-    return funding;
+    return { funding, comments: commentResponses };
   }
 
   private async buildFundingResponse(
@@ -284,26 +284,11 @@ export default class FundingService {
       };
     }
 
-    const comments = await this.fundingCommentRepository.fetchAll(funding.id);
-
-    const chargedExecutive =
-      await this.userPublicService.fetchExecutiveSummaries(
-        comments.map(comment => comment.chargedExecutive.id),
-      );
-
-    const commentResponses = comments.map(comment => ({
-      ...comment,
-      chargedExecutive: chargedExecutive.find(
-        executive => executive.id === comment.chargedExecutive.id,
-      ),
-    }));
-
     return {
       ...funding,
       purposeActivity,
       ...resolvedFiles,
       transportation,
-      comments: commentResponses,
     };
   }
 
@@ -480,7 +465,7 @@ export default class FundingService {
     const funding = await this.fundingRepository.fetch(id); // TODO: 이거 이래도 되나? comments 필드가 없는데. 에러 안나나?
 
     const fundingResponse = await this.buildFundingResponse(funding);
-    return fundingResponse;
+    return { funding: fundingResponse, comments: [] };
   }
 
   /**

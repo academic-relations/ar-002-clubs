@@ -4,7 +4,7 @@ import { zExecutiveSummary } from "@sparcs-clubs/interface/api/user/type/user.ty
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import zId from "@sparcs-clubs/interface/common/type/id.type";
 
-import { zFunding } from "./funding.common.type";
+import { zFunding } from "./funding.type";
 
 export const zFundingComment = z.object({
   id: zId,
