@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 
+import { ApiFnd012ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd012";
+
+import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import { useParams } from "next/navigation";
 
 import { overlay } from "overlay-kit";
@@ -13,76 +16,106 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
-import useExecutiveApproveActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveApproveActivityReport";
-import useExecutiveRejectActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveRejectActivityReport";
-import { Comment } from "@sparcs-clubs/web/features/activity-report/types/activityReport";
+import useExecutiveReviewFunding from "@sparcs-clubs/web/features/manage-club/funding/services/useExecutiveReviewFunding";
 import { formatSlashDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 const ExecutiveFundingReviewSection: React.FC<{
-  comments: Comment[];
-  expenditureAmount: number;
-}> = ({ comments, expenditureAmount }) => {
+  funding: ApiFnd012ResponseOk;
+}> = ({ funding }) => {
   const { id } = useParams<{ id: string }>();
-  const activityId = Number(id);
+  const fundingId = Number(id);
 
   const { profile } = useAuth();
 
-  const { mutate: approveFunding } =
-    useExecutiveApproveActivityReport(activityId);
-  const { mutate: rejectFunding } =
-    useExecutiveRejectActivityReport(activityId);
+  const { mutate: reviewFunding } = useExecutiveReviewFunding(fundingId);
   const [rejectionDetail, setRejectionDetail] = useState("");
-  const [approveAmount, setApproveAmount] = useState("");
+  const [approveAmount, setApproveAmount] = useState(
+    funding.approvedAmount !== 0 ? funding.approvedAmount?.toString() : "",
+  );
 
   const handleApprove = () => {
-    approveFunding(undefined, {
-      onSuccess: () => {
-        overlay.open(({ isOpen, close }) => (
-          <Modal isOpen={isOpen}>
-            <ConfirmModalContent onConfirm={close}>
-              지원금 신청 승인이 완료되었습니다.
-            </ConfirmModalContent>
-          </Modal>
-        ));
+    reviewFunding(
+      {
+        approvedAmount: Number(approveAmount),
+        fundingStatusEnum:
+          Number(approveAmount) === funding.expenditureAmount
+            ? FundingStatusEnum.Approved
+            : FundingStatusEnum.Partial,
+        content: rejectionDetail,
       },
-      onError: () => {
-        overlay.open(({ isOpen, close }) => (
-          <Modal isOpen={isOpen}>
-            <ConfirmModalContent onConfirm={close}>
-              지원금 신청 승인에 실패했습니다.
-            </ConfirmModalContent>
-          </Modal>
-        ));
+      {
+        onSuccess: () => {
+          overlay.open(({ isOpen, close }) => (
+            <Modal isOpen={isOpen}>
+              <ConfirmModalContent onConfirm={close}>
+                지원금 신청{" "}
+                {Number(approveAmount) === funding.expenditureAmount
+                  ? "승인"
+                  : "부분 승인"}
+                이 완료되었습니다.
+              </ConfirmModalContent>
+            </Modal>
+          ));
+        },
+        onError: () => {
+          overlay.open(({ isOpen, close }) => (
+            <Modal isOpen={isOpen}>
+              <ConfirmModalContent onConfirm={close}>
+                지원금 신청{" "}
+                {Number(approveAmount) === funding.expenditureAmount
+                  ? "승인"
+                  : "부분 승인"}
+                에 실패했습니다.
+              </ConfirmModalContent>
+            </Modal>
+          ));
+        },
       },
-    });
+    );
   };
 
   const handleReject = () => {
-    rejectFunding(rejectionDetail, {
-      onSuccess: () => {
-        setRejectionDetail("");
+    reviewFunding(
+      {
+        approvedAmount: 0,
+        fundingStatusEnum: FundingStatusEnum.Rejected,
+        content: rejectionDetail,
       },
-      onError: () => {
-        overlay.open(({ isOpen, close }) => (
-          <Modal isOpen={isOpen}>
-            <ConfirmModalContent onConfirm={close}>
-              지원금 신청 반려에 실패했습니다.
-            </ConfirmModalContent>
-          </Modal>
-        ));
+      {
+        onSuccess: () => {
+          setRejectionDetail("");
+        },
+        onError: () => {
+          overlay.open(({ isOpen, close }) => (
+            <Modal isOpen={isOpen}>
+              <ConfirmModalContent onConfirm={close}>
+                지원금 신청 반려에 실패했습니다.
+              </ConfirmModalContent>
+            </Modal>
+          ));
+        },
       },
-    });
+    );
   };
 
   if (profile?.type !== "executive") {
     return null;
   }
 
+  const availableToApprove: () => boolean = () => {
+    if (Number(approveAmount) === 0) return false;
+    if (Number(approveAmount) > funding.expenditureAmount) return false;
+    if (Number(approveAmount) === funding.approvedAmount) return false;
+    if (Number(approveAmount) === funding.expenditureAmount) return true;
+    if (rejectionDetail === "") return false;
+    return true;
+  };
+
   return (
     <Card outline padding="32px" gap={20}>
-      {comments.length > 0 && (
+      {funding.comments.length > 0 && (
         <FlexWrapper direction="column" gap={8}>
-          {comments.map((comment, index) => (
+          {funding.comments.map((comment, index) => (
             <FlexWrapper direction="column" gap={4} key={`${index.toString()}`}>
               <Typography fs={14} lh={16} color="GRAY.600">
                 {formatSlashDateTime(comment.createdAt)}
@@ -115,16 +148,12 @@ const ExecutiveFundingReviewSection: React.FC<{
         <UnitInput
           value={approveAmount}
           handleChange={setApproveAmount}
-          unit={`/ ${expenditureAmount}원`}
+          unit={`/ ${funding.expenditureAmount}원`}
           placeholder="금액을 입력해주세요"
           required={false}
         />
         <Button
-          type={
-            approveAmount === "" || Number(approveAmount) > expenditureAmount
-              ? "disabled"
-              : "default"
-          }
+          type={availableToApprove() ? "default" : "disabled"}
           onClick={handleApprove}
         >
           신청 승인
