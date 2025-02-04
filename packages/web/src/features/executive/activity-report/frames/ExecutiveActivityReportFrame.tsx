@@ -15,7 +15,9 @@ import ExecutiveActivityClubTable from "../components/ExecutiveActivityClubTable
 import useGetExecutiveActivities from "../services/useGetExecutiveActivities";
 
 const ExecutiveActivityReportFrame = () => {
-  const [isClubView, setIsClubView] = useState<boolean>(true);
+  const [isClubView, setIsClubView] = useState<boolean>(
+    window.history.state.isClubView ?? true,
+  );
   const [searchText, setSearchText] = useState<string>("");
   const { data, isLoading, isError } = useGetExecutiveActivities();
 
@@ -23,6 +25,10 @@ const ExecutiveActivityReportFrame = () => {
   const [selectedClubInfos, setSelectedClubInfos] = useState<
     ChargedChangeClubProps[]
   >([]);
+
+  useEffect(() => {
+    window.history.replaceState({ isClubView }, "");
+  }, [isClubView]);
 
   useEffect(() => {
     if (data) {
