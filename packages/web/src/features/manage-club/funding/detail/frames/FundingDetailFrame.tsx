@@ -44,7 +44,8 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
   const queryClient = useQueryClient();
   const { id } = useParams<{ id: string }>();
 
-  const { data: funding, isLoading, isError } = useGetFunding(+id);
+  const { data, isLoading, isError } = useGetFunding(+id);
+  const { funding, comments } = data ?? {};
   const { mutate: deleteFunding } = useDeleteFunding();
 
   const {
@@ -152,11 +153,11 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
               ).progress
             }
             optional={
-              funding.comments &&
-              funding.comments.length > 0 && (
+              comments &&
+              comments.length > 0 && (
                 <RejectReasonToast
                   title="반려 사유"
-                  reasons={funding.comments.map(comment => ({
+                  reasons={comments.map(comment => ({
                     datetime: comment.createdAt,
                     reason: comment.content,
                   }))}

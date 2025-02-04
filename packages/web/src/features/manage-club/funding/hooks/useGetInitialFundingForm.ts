@@ -11,7 +11,8 @@ const useGetInitialFundingFormData = (
   isError: boolean;
 } => {
   const { profile } = useAuth();
-  const { data: funding, isLoading, isError } = useGetFunding(fundingId);
+  const { data, isLoading, isError } = useGetFunding(fundingId);
+  const { funding } = data ?? {};
 
   if (profile?.type !== "undergraduate") {
     return {
