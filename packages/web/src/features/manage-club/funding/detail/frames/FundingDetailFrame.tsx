@@ -21,6 +21,7 @@ import { newFundingListQueryKey } from "@sparcs-clubs/web/features/manage-club/f
 import { isActivityReportUnverifiable } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
 
 import BasicEvidenceList from "../components/BasicEvidenceList";
+import ExecutiveFundingReviewSection from "../components/ExecutiveFundingReviewSection";
 import FixtureEvidenceList from "../components/FixtureEvidenceList";
 import FundingInfoList from "../components/FundingInfoList";
 import FundingStatusSection from "../components/FundingStatusSection";
@@ -215,6 +216,10 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ profile }) => {
           )}
         </AsyncBoundary>
       </Card>
+      <ExecutiveFundingReviewSection
+        comments={funding.comments}
+        expenditureAmount={funding.expenditureAmount}
+      />
       <ButtonWrapper>
         <Button type="default" onClick={navigateToFundingList}>
           목록으로 돌아가기
