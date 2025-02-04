@@ -174,7 +174,12 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
   }, [approveActivityReport, id]);
 
   const isPastActivity = useMemo(() => {
-    if (!activityDeadline || !activityDeadline.targetTerm || !data.durations) {
+    if (
+      !activityDeadline ||
+      !activityDeadline.targetTerm ||
+      !data.durations ||
+      data.durations.length === 0
+    ) {
       return false;
     }
 
@@ -196,7 +201,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     return <NotFound />;
   }
 
-  if (!data) {
+  if (!data || isLoading) {
     return <AsyncBoundary isLoading={isLoading} isError={isError} />;
   }
 
