@@ -8,7 +8,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
-// import FundingDetailFrame from "@sparcs-clubs/web/features/manage-club/funding/detail/frames/FundingDetailFrame";
+import FundingDetailFrame from "@sparcs-clubs/web/features/manage-club/funding/detail/frames/FundingDetailFrame";
 
 const ExecutiveFundingDetail = () => {
   const { isLoggedIn, login, profile } = useAuth();
@@ -42,7 +42,7 @@ const ExecutiveFundingDetail = () => {
         title="지원금 검토"
         enableLast
       />
-      {/* <FundingDetailFrame clubId={data.clubId} /> */}
+      <FundingDetailFrame profile={profile} />
     </FlexWrapper>
   );
 };

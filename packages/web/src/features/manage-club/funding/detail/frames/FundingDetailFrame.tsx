@@ -13,7 +13,7 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
-
+import { Profile } from "@sparcs-clubs/web/common/providers/AuthContext";
 import { useDeleteFunding } from "@sparcs-clubs/web/features/manage-club/funding/services/useDeleteFunding";
 import { useGetFunding } from "@sparcs-clubs/web/features/manage-club/funding/services/useGetFunding";
 import useGetFundingDeadline from "@sparcs-clubs/web/features/manage-club/funding/services/useGetFundingDeadline";
@@ -29,7 +29,7 @@ import OtherEvidenceList from "../components/OtherEvidenceList";
 import TransportationEvidenceList from "../components/TransportationEvidenceList";
 
 interface FundingDetailFrameProps {
-  clubId: number;
+  profile: Profile;
 }
 
 const ButtonWrapper = styled.div`
@@ -37,12 +37,16 @@ const ButtonWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
+const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ profile }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { id } = useParams<{ id: string }>();
 
-  const { data: funding, isLoading, isError } = useGetFunding(+id);
+  const {
+    data: funding,
+    isLoading,
+    isError,
+  } = useGetFunding(profile.type, +id);
   const { mutate: deleteFunding } = useDeleteFunding();
 
   const {
@@ -51,8 +55,12 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
     isError: isErrorFundingDeadline,
   } = useGetFundingDeadline();
 
-  const onClick = () => {
-    router.push("/manage-club/funding");
+  const navigateToFundingList = () => {
+    if (profile.type === "executive") {
+      router.back();
+    } else {
+      router.push("/manage-club/funding");
+    }
   };
 
   const openEditModal = () => {
@@ -78,7 +86,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
     ));
   };
 
-  const openDeleteModal = () => {
+  const openDeleteModal = (clubId: number) => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <CancellableModalContent
@@ -125,7 +133,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
     return <NotFound />;
   }
 
-  if (!funding || !clubId) {
+  if (!funding) {
     return <AsyncBoundary isLoading={isLoading} isError={isError} />;
   }
 
@@ -208,16 +216,19 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
         </AsyncBoundary>
       </Card>
       <ButtonWrapper>
-        <Button type="default" onClick={onClick}>
+        <Button type="default" onClick={navigateToFundingList}>
           목록으로 돌아가기
         </Button>
         <AsyncBoundary
           isLoading={isLoadingFundingDeadline}
           isError={isErrorFundingDeadline}
         >
-          {!isPastFunding && (
+          {!isPastFunding && profile.type === "undergraduate" && (
             <FlexWrapper direction="row" gap={10}>
-              <Button type="default" onClick={openDeleteModal}>
+              <Button
+                type="default"
+                onClick={() => openDeleteModal(funding.club.id)}
+              >
                 삭제
               </Button>
               <Button type="default" onClick={openEditModal}>
