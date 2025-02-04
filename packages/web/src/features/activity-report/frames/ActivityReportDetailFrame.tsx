@@ -96,9 +96,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
 
-  const { data, isLoading, isError, clubId } = useGetActivityReportDetail(
-    Number(id),
-  );
+  const { data, isLoading, isError } = useGetActivityReportDetail(Number(id));
   const {
     data: activityDeadline,
     isLoading: isLoadingDeadline,
@@ -197,7 +195,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     return <NotFound />;
   }
 
-  if (!data || clubId === 0) {
+  if (!data) {
     return <AsyncBoundary isLoading={isLoading} isError={isError} />;
   }
 
@@ -358,7 +356,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
         {profile.type === "executive" && (
           <ExecutiveActivityReportApprovalSection
             comments={filteredComments}
-            clubId={clubId}
+            clubId={data.clubId}
           />
         )}
 

@@ -13,7 +13,6 @@ const useGetActivityReportDetail = (
   data: CurrentActivityReport;
   isLoading: boolean;
   isError: boolean;
-  clubId: number;
 } => {
   const { profile } = useAuth();
   const {
@@ -38,6 +37,7 @@ const useGetActivityReportDetail = (
     return {
       ...activityReport,
       id: activityId,
+      clubId: activityReport.clubId,
       evidenceFiles: activityReport.evidenceFiles.map(file => ({
         id: file.fileId,
         name: file.name,
@@ -65,7 +65,6 @@ const useGetActivityReportDetail = (
 
   return {
     data: memoizedData,
-    clubId: activityReport?.clubId ?? 0,
     isLoading,
     isError,
   };
