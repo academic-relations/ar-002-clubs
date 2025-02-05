@@ -6,11 +6,10 @@
  * @author night@sparcs.org (Jiho Park)
  */
 
-import React from "react";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { OverlayProvider } from "overlay-kit";
+import React from "react";
 import { ThemeProvider as StyledProvider } from "styled-components";
 
 import theme from "@sparcs-clubs/web/styles/themes";

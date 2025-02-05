@@ -1,18 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import {
-  ClubDelegateChangeRequestStatusEnum,
-  ClubDelegateEnum,
-} from "@sparcs-clubs/interface/common/enum/club.enum";
-
-import logger from "@sparcs-clubs/api/common/util/logger";
-import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
-
-import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
-import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
-
-import { ClubDelegateDRepository } from "./club.club-delegate-d.repository";
-
 import type {
   ApiClb006RequestParam,
   ApiClb006ResponseOK,
@@ -35,6 +22,17 @@ import type {
   ApiClb015ResponseNoContent,
   ApiClb015ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
+import {
+  ClubDelegateChangeRequestStatusEnum,
+  ClubDelegateEnum,
+} from "@sparcs-clubs/interface/common/enum/club.enum";
+
+import logger from "@sparcs-clubs/api/common/util/logger";
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
+import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
+import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
+
+import { ClubDelegateDRepository } from "./club.club-delegate-d.repository";
 
 interface ApiClb015ResponseType {
   status: number;

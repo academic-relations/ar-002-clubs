@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 
 import { ApiClb006ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb006";
 import { ApiClb008ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb008";
@@ -6,7 +7,6 @@ import {
   ClubDelegateChangeRequestStatusEnum,
   ClubDelegateEnum,
 } from "@sparcs-clubs/interface/common/enum/club.enum";
-import styled from "styled-components";
 
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -17,7 +17,6 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { deleteChangeDelegateRequest } from "../services/deleteChangeDelegateRequest";
 import { useGetChangeDelegateRequests } from "../services/getChangeDelegateRequests";
 import { updateClubDelegates } from "../services/updateClubDelegate";
-
 import ChangeRepresentativeInfo from "./ChangeRepresentativeInfo";
 
 const LabelWrapper = styled.div`
@@ -84,22 +83,22 @@ const ChangeRepresentativeCard: React.FC<{
       delegate => delegate.delegateEnumId === ClubDelegateEnum.Delegate1,
     )?.studentId === 0
       ? ""
-      : delegatesNow?.delegates
+      : (delegatesNow?.delegates
           .find(
             delegate => delegate.delegateEnumId === ClubDelegateEnum.Delegate1,
           )
-          ?.studentId.toString() ?? "",
+          ?.studentId.toString() ?? ""),
   );
   const [delegate2, setDelegate2] = useState<string>(
     delegatesNow?.delegates.find(
       delegate => delegate.delegateEnumId === ClubDelegateEnum.Delegate2,
     )?.studentId === 0
       ? ""
-      : delegatesNow?.delegates
+      : (delegatesNow?.delegates
           .find(
             delegate => delegate.delegateEnumId === ClubDelegateEnum.Delegate2,
           )
-          ?.studentId.toString() ?? "",
+          ?.studentId.toString() ?? ""),
   );
 
   const [type, setType] = useState<

@@ -1,9 +1,8 @@
 import React from "react";
+import { useFormContext } from "react-hook-form";
 
 import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-
-import { useFormContext } from "react-hook-form";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";

@@ -1,5 +1,7 @@
-import apiClb016 from "@sparcs-clubs/interface/api/club/endpoint/apiClb016";
 import { useQuery } from "@tanstack/react-query";
+
+import type { ApiClb016ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb016";
+import apiClb016 from "@sparcs-clubs/interface/api/club/endpoint/apiClb016";
 
 import {
   axiosClientWithAuth,
@@ -7,8 +9,6 @@ import {
 } from "@sparcs-clubs/web/lib/axios";
 
 import mockMyClubList from "./_mock/mockMyClubList";
-
-import type { ApiClb016ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb016";
 
 const useGetMyClubProfessor = () =>
   useQuery<ApiClb016ResponseOk, Error>({

@@ -6,8 +6,8 @@ import ClubStudentTRepository from "@sparcs-clubs/api/feature/club/repository/cl
 import UserModule from "@sparcs-clubs/api/feature/user/user.module";
 
 import { CommonSpaceController } from "./controller/common-space.controller";
-import { CommonSpaceUsageOrderDRepository } from "./repository/common-space-usage-order-d.repository";
 import { CommonSpaceRepository } from "./repository/common-space.repository";
+import { CommonSpaceUsageOrderDRepository } from "./repository/common-space-usage-order-d.repository";
 import { GetCommonSpacesUsageOrderRepository } from "./repository/getCommonSpacesUsageOrder.repository";
 import { GetCommonSpacesUsageOrderMyRepository } from "./repository/getCommonSpacesUsageOrderMy.repository";
 import { GetCommonSpaceUsageOrderRepository } from "./repository/getCommonSpaceUsageOrder.repository";

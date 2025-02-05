@@ -1,3 +1,4 @@
+import isPropValid from "@emotion/is-prop-valid";
 import React, {
   ChangeEvent,
   ChangeEventHandler,
@@ -5,13 +6,9 @@ import React, {
   useEffect,
   useState,
 } from "react";
-
-import isPropValid from "@emotion/is-prop-valid";
-
 import styled, { css } from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
-
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 import FormError from "../FormError";

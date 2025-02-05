@@ -11,7 +11,6 @@ import mysql from "mysql2/promise";
 
 import logger from "../common/util/logger";
 import { env } from "../env";
-
 import * as activitySchema from "./schema/activity.schema";
 import * as commonSpaceSchema from "./schema/common-space.schema";
 import * as divisionSchema from "./schema/division.schema";

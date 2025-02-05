@@ -1,6 +1,7 @@
+import React from "react";
+
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import NotificationCard from "@sparcs-clubs/web/common/components/NotificationCard";
-
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   ChangeDivisionPresidentMessageContext,

@@ -1,9 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-
 import { WsException } from "@nestjs/websockets";
 
 import UserPublicService from "../user/service/user.public.service";
-
 import { MeetingRepository } from "./meeting.repository";
 
 @Injectable()

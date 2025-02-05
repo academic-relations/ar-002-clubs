@@ -1,12 +1,10 @@
-import React from "react";
-
 import { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 
 import Button, { ButtonProps } from "../common/components/Button";
 import AgreementModal, {
   AgreementModalProps,
 } from "../common/components/Modal/AgreeModal";
-
 import CancellableModalContent from "../common/components/Modal/CancellableModalContent";
 import ConfirmModalContent from "../common/components/Modal/ConfirmModalContent";
 import ErrorModal from "../common/components/Modal/ErrorModal";

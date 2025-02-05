@@ -1,4 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { and, eq, isNull } from "drizzle-orm";
+import { MySql2Database } from "drizzle-orm/mysql2";
 
 import {
   IFunding,
@@ -6,8 +8,6 @@ import {
   IFundingRequest,
   IFundingSummary,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
-import { and, eq, isNull } from "drizzle-orm";
-import { MySql2Database } from "drizzle-orm/mysql2";
 
 import {
   DrizzleAsyncProvider,
@@ -32,7 +32,6 @@ import {
   FundingTradeEvidenceFile,
   FundingTransportationPassenger,
 } from "@sparcs-clubs/api/drizzle/schema/funding.schema";
-
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 import { MFunding } from "../model/funding.model";

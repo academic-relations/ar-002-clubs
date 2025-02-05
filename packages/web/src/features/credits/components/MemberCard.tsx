@@ -1,6 +1,5 @@
-import { useState } from "react";
-
 import Image from "next/image";
+import { useState } from "react";
 import styled from "styled-components";
 
 import SparcsLogo from "@sparcs-clubs/web/assets/sparcs-orange.svg";

@@ -15,7 +15,7 @@ const mockInterceptor = {
         return responseConfig;
       }
       // eslint-disable-next-line no-empty
-    } catch (error) {}
+    } catch (error) {} // eslint-disable-line @typescript-eslint/no-unused-vars
 
     if (env.NEXT_PUBLIC_API_MOCK_MODE) {
       const method = config?.method;

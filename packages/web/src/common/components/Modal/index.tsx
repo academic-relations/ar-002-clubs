@@ -1,6 +1,5 @@
-import React, { FC, useRef } from "react";
-
 import isPropValid from "@emotion/is-prop-valid";
+import React, { FC, useRef } from "react";
 import styled from "styled-components";
 
 export interface ModalProps {

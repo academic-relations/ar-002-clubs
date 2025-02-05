@@ -1,6 +1,7 @@
+import { InferSelectModel } from "drizzle-orm";
+
 import { IFundingComment } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
-import { InferSelectModel } from "drizzle-orm";
 
 import { FundingFeedback } from "@sparcs-clubs/api/drizzle/schema/funding.schema";
 

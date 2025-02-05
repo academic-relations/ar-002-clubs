@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Patch, Query, UsePipes } from "@nestjs/common";
+
 import apiUsr001 from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
 import apiUsr002, {
   ApiUsr002RequestQuery,
@@ -9,7 +10,6 @@ import apiUsr003, {
 } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr003";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
-
 import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 import {
   GetStudent,

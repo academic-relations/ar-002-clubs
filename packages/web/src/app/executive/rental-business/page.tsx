@@ -1,16 +1,14 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
-
-import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
-
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
+import React, { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+
+import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";

@@ -11,7 +11,6 @@ import { ClubDelegateDRepository } from "../delegate/club.club-delegate-d.reposi
 import ClubStudentTRepository from "../repository/club.club-student-t.repository";
 import ClubTRepository from "../repository/club.club-t.repository";
 import ClubRepository from "../repository/club.repository";
-
 import SemesterDRepository from "../repository/club.semester-d.repository";
 
 @Injectable()

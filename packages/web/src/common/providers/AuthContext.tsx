@@ -1,5 +1,8 @@
 "use client";
 
+import * as ChannelService from "@channel.io/channel-web-sdk-loader";
+import { jwtDecode } from "jwt-decode";
+import { overlay } from "overlay-kit";
 import React, {
   createContext,
   ReactNode,
@@ -8,11 +11,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-
-import * as ChannelService from "@channel.io/channel-web-sdk-loader";
-
-import { jwtDecode } from "jwt-decode";
-import { overlay } from "overlay-kit";
 import { Cookies } from "react-cookie";
 
 import {
@@ -119,6 +117,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       const cookies = new Cookies();
       cookies.remove("accessToken");
       console.log("Logged out successfully.");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setIsLoggedIn(false);
       removeLocalStorageItem("accessToken");
@@ -147,6 +146,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
                 await postUserAgree();
                 setIsAgreed(true);
                 close();
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
               } catch (error) {
                 window.location.reload();
               }

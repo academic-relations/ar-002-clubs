@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-
 import isPropValid from "@emotion/is-prop-valid";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import Icon from "./Icon";

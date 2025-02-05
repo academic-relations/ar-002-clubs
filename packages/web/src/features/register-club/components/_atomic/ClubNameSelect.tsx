@@ -1,11 +1,9 @@
 import React, { useState } from "react";
+import { useFormContext } from "react-hook-form";
 
 import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 
-import { useFormContext } from "react-hook-form";
-
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
-
 import { ClubRegistrationInfo } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 
 interface ClubNameSelectProps {

@@ -5,11 +5,6 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
-import {
-  ActivityStatusEnum,
-  ActivityTypeEnum,
-} from "@sparcs-clubs/interface/common/enum/activity.enum";
 import {
   and,
   asc,
@@ -23,6 +18,12 @@ import {
   or,
 } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
+
+import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
+import {
+  ActivityStatusEnum,
+  ActivityTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";

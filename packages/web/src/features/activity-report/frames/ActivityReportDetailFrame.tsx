@@ -1,14 +1,13 @@
 "use client";
 
-import React, { useCallback, useMemo } from "react";
-
-import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
+import React, { useCallback, useMemo } from "react";
 import styled from "styled-components";
 
-import NotFound from "@sparcs-clubs/web/app/not-found";
+import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
+import NotFound from "@sparcs-clubs/web/app/not-found";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -22,15 +21,12 @@ import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
 import { Profile } from "@sparcs-clubs/web/common/providers/AuthContext";
-
 import { getActivityTypeLabel } from "@sparcs-clubs/web/types/activityType";
 import {
   getProfessorApprovalLabel,
   getProfessorApprovalTagColor,
 } from "@sparcs-clubs/web/types/professorApproval";
-
 import {
   formatDate,
   formatDotDetailDate,

@@ -1,5 +1,4 @@
 import React from "react";
-
 import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
@@ -9,7 +8,6 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
 import { AddEvidence } from "../types/funding";
-
 import EvidenceBlockTitle from "./EvidenceBlockTitle";
 
 const FixedWidthWrapper = styled.div`

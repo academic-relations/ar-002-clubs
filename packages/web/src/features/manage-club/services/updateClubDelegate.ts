@@ -1,14 +1,13 @@
+import type {
+  ApiClb007RequestBody,
+  ApiClb007RequestParam,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb007";
 import apiClb007 from "@sparcs-clubs/interface/api/club/endpoint/apiClb007";
 
 import {
   axiosClientWithAuth,
   defineAxiosMock,
 } from "@sparcs-clubs/web/lib/axios";
-
-import type {
-  ApiClb007RequestBody,
-  ApiClb007RequestParam,
-} from "@sparcs-clubs/interface/api/club/endpoint/apiClb007";
 
 export const updateClubDelegates = async (
   requestParam: ApiClb007RequestParam,

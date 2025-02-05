@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, gte, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
+import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { SemesterD } from "@sparcs-clubs/api/drizzle/schema/club.schema";
@@ -16,8 +17,6 @@ import {
   StudentT,
   User,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
-
-import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 interface FindOrCreateUserReturn {
   id: number;
@@ -128,9 +127,9 @@ export class AuthRepository {
         .from(Student)
         .where(eq(Student.userId, user.id));
 
-      // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-shadow
+      /* eslint-disable no-shadow */
+      // eslint-disable-next-line no-restricted-syntax
       for (const student of students) {
-        // eslint-disable-next-line @typescript-eslint/no-shadow
         let studentEnum = 3;
         if (student.number % 10000 < 2000) studentEnum = 1;
         else if (student.number % 10000 < 6000) studentEnum = 2;
@@ -153,8 +152,8 @@ export class AuthRepository {
           };
         }
       }
+      /* eslint-enable no-shadow */
 
-      // eslint-disable-next-line prefer-destructuring
       await this.db
         .insert(StudentT)
         .values({
@@ -347,7 +346,7 @@ export class AuthRepository {
       .from(Student)
       .where(eq(Student.userId, id));
 
-    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-shadow
+    // eslint-disable-next-line no-restricted-syntax
     for (const student of await students) {
       let studentEnum = 3;
       if (student.number % 10000 < 2000) studentEnum = 1;

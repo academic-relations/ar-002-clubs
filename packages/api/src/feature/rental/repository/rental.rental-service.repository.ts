@@ -1,8 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
 import { and, count, eq, gte, isNull, lte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
-
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { Club } from "src/drizzle/schema/club.schema";
 import {
@@ -12,6 +10,8 @@ import {
   RentalOrderItemD,
 } from "src/drizzle/schema/rental.schema";
 import { Student } from "src/drizzle/schema/user.schema";
+
+import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
 
 interface Period {
   desiredStart?: Date;
@@ -108,7 +108,6 @@ export class RentalServiceRepository {
         const groupedByObjectId = results.reduce<Record<number, Period[]>>(
           (acc, curr) => {
             if (!acc[curr.objectId]) {
-              // eslint-disable-next-line no-param-reassign
               acc[curr.objectId] = [];
             }
             acc[curr.objectId].push({

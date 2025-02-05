@@ -1,9 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React from "react";
 
 import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
-import { useRouter } from "next/navigation";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";

@@ -1,7 +1,6 @@
+import axios, { AxiosResponse } from "axios";
 import * as crypto from "crypto";
 import * as querystring from "querystring";
-
-import axios, { AxiosResponse } from "axios";
 
 import { SSOUser } from "../dto/sparcs-sso.dto";
 
@@ -15,6 +14,8 @@ interface Urls {
 interface Params {
   [key: string]: string;
 }
+
+/* eslint-disable camelcase */
 export class Client {
   private readonly SERVER_DOMAIN: string = "https://sparcssso.kaist.ac.kr/";
 
@@ -55,10 +56,8 @@ export class Client {
     this.DOMAIN = is_beta ? this.BETA_DOMAIN : this.SERVER_DOMAIN;
     this.DOMAIN = server_addr || this.DOMAIN;
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const base_url = `${this.DOMAIN}${this.API_PREFIX}${this.VERSION_PREFIX}`;
     this.URLS = Object.entries(this.URLS).reduce((acc, [key, value]) => {
-      // eslint-disable-next-line no-param-reassign
       acc[key] = `${base_url}${value}`;
       return acc;
     }, {} as Urls);
@@ -91,7 +90,7 @@ export class Client {
     timestamp: string,
     sign: string,
   ): boolean {
-    // eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
+    // eslint-disable-next-line no-underscore-dangle
     const [sign_client, time_client]: [string, number] = this._sign_payload(
       payload,
       false,
@@ -229,7 +228,7 @@ export class Client {
     :returns: the user's service id
     :raises RuntimeError: raise iff the request is invalid
     */
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+
     const client_id: string = data_dict.clietn_id || "";
     const sid: string = data_dict.sid || "";
     const timestamp: string = data_dict.timestamp || "";

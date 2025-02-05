@@ -1,6 +1,5 @@
-import React from "react";
-
 import { useRouter } from "next/navigation";
+import React from "react";
 import styled from "styled-components";
 
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";

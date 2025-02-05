@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { IFundingCommentRequestCreate } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 import { eq } from "drizzle-orm";
-
 import { MySql2Database } from "drizzle-orm/mysql2";
+
+import { IFundingCommentRequestCreate } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 
 import {
   DrizzleAsyncProvider,

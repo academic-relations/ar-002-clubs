@@ -4,7 +4,6 @@ import { IActivityDuration } from "@sparcs-clubs/interface/api/activity/type/act
 import { IActivityResponseSummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
-
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 
 import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";

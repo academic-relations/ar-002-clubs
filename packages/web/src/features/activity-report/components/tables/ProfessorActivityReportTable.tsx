@@ -1,5 +1,3 @@
-import React from "react";
-
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -7,6 +5,7 @@ import {
 } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
+import React from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -16,20 +15,15 @@ import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/C
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
 import {
   ActTypeTagList,
   ApplyTagList,
   ProfessorApprovalTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
-
 import useGetProfessorActivityReportList from "@sparcs-clubs/web/features/activity-report/hooks/useGetProfessorActivityReportList";
 import usePostProfessorApproveActivityReport from "@sparcs-clubs/web/features/activity-report/services/useProfessorApproveActivityReport";
-
 import { ProfessorActivityReportTableData } from "@sparcs-clubs/web/features/activity-report/types/table";
-
 import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
-
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 

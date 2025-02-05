@@ -1,6 +1,10 @@
 import React, { useCallback, useState } from "react";
-
 import styled from "styled-components";
+
+import type {
+  ApiPrt002RequestBody,
+  ApiPrt002RequestParam,
+} from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt002";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -10,11 +14,6 @@ import { printingBusinessOrderSteps } from "@sparcs-clubs/web/constants/printing
 import PrintingBusinessFormFirst from "./PrintingBusinessFormFirst";
 import PrintingBusinessFormSecond from "./PrintingBusinessFormSecond";
 import PrintingBusinessFormThird from "./PrintingBusinessFormThird";
-
-import type {
-  ApiPrt002RequestBody,
-  ApiPrt002RequestParam,
-} from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt002";
 
 interface PrintingBusinessFormProps {
   username: string;

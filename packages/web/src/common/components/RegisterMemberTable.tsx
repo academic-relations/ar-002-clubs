@@ -1,12 +1,11 @@
-import React from "react";
-
-import { ApiReg019ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg019";
-
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import React from "react";
+
+import { ApiReg019ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg019";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";

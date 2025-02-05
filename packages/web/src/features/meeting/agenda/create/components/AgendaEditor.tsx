@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { React, useState } from "react";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -8,7 +8,6 @@ import Markdown from "@sparcs-clubs/web/common/components/Markdown";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import AgendaContent from "@sparcs-clubs/web/features/meeting/agenda/constants/agendaContent";
-
 import {
   AgendaTypeEnum,
   AgendaTypeName,
