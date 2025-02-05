@@ -42,7 +42,8 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
   const queryClient = useQueryClient();
   const { id } = useParams<{ id: string }>();
 
-  const { data: funding, isLoading, isError } = useGetFunding(+id);
+  const { data, isLoading, isError } = useGetFunding(+id);
+  const { funding, comments } = data ?? {};
   const { mutate: deleteFunding } = useDeleteFunding();
 
   const {
@@ -137,7 +138,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
             status={funding.fundingStatusEnum}
             editedAt={funding.editedAt}
             commentedAt={funding.commentedAt}
-            comments={funding.comments.toReversed()}
+            comments={comments?.toReversed() ?? []}
           />
         )}
         <AsyncBoundary isLoading={isLoading} isError={isError}>
