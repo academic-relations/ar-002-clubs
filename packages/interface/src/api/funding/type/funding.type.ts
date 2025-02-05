@@ -358,7 +358,7 @@ export const zFundingSummary = zFunding.pick({
   purposeActivity: true,
 });
 
-export const zFundingResponseSummary = zFundingResponse.pick({
+export const zFundingSummaryResponse = zFundingResponse.pick({
   id: true,
   fundingStatusEnum: true,
   name: true,
@@ -377,5 +377,5 @@ export type IFunding = z.infer<typeof zFunding>;
 export type IFundingRequest = z.infer<typeof zFundingRequest>;
 export type IFundingSummary = z.infer<typeof zFundingSummary>;
 export type IFundingResponse = z.infer<typeof zFundingResponse>;
-export type IFundingResponseSummary = z.infer<typeof zFundingResponseSummary>;
+export type IFundingSummaryResponse = z.infer<typeof zFundingSummaryResponse>;
 export type IFundingExtra = z.infer<typeof zFundingExtra>;
