@@ -42,6 +42,18 @@ import { ApiFnd012ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoin
 import { ApiFnd013ResponseCreated } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd013";
 
 import {
+  ApiFnd014RequestBody,
+  ApiFnd014ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd014";
+import {
+  ApiFnd015RequestBody,
+  ApiFnd015ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd015";
+import {
+  ApiFnd016RequestQuery,
+  ApiFnd016ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd016";
+import {
   IFundingComment,
   IFundingCommentRequest,
 } from "@sparcs-clubs/interface/api/funding/type/funding.comment.type";
@@ -895,6 +907,77 @@ export default class FundingService {
     );
 
     return fundingComment;
+  }
+
+  async patchExecutiveFundingsChargedExecutive(
+    executiveId: IExecutive["id"],
+    body: ApiFnd014RequestBody,
+  ): Promise<ApiFnd014ResponseOk> {
+    await this.userPublicService.checkCurrentExecutive(executiveId);
+
+    const fundings = await this.fundingRepository.fetchSummaries(
+      body.fundingIds,
+    );
+    this.fundingRepository.withTransaction(async tx => {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const funding of fundings) {
+        this.fundingRepository.patchSummaryTx(tx, funding, f => ({
+          ...f,
+          chargedExecutiveId: body.executiveId,
+        }));
+      }
+    });
+
+    return {};
+  }
+
+  async patchExecutiveFundingsClubsChargedExecutive(
+    executiveId: IExecutive["id"],
+    body: ApiFnd015RequestBody,
+  ): Promise<ApiFnd015ResponseOk> {
+    await this.userPublicService.checkCurrentExecutive(executiveId);
+
+    const activityDId = (await this.activityPublicService.fetchLastActivityD())
+      .id;
+
+    const fundings = await this.fundingRepository.fetchSummaries(
+      body.clubIds,
+      activityDId,
+    );
+    this.fundingRepository.withTransaction(async tx => {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const funding of fundings) {
+        this.fundingRepository.patchSummaryTx(tx, funding, f => ({
+          ...f,
+          chargedExecutiveId: body.executiveId,
+        }));
+      }
+    });
+
+    return {};
+  }
+
+  async getExecutiveFundingsClubExecutives(
+    executiveId: IExecutive["id"],
+    query: ApiFnd016RequestQuery,
+  ): Promise<ApiFnd016ResponseOk> {
+    await this.userPublicService.checkCurrentExecutive(executiveId);
+
+    const nowKST = getKSTDate();
+    const semester = await this.clubPublicService.fetchSemester(nowKST);
+    const { clubIds } = query;
+
+    // TODO: 지금은 entity로 불러오는데, id만 들고 오는 public service 및 repository 를 만들어서 한다면 좀더 효율이 높아질 수 있음
+    const [clubMembers, executives] = await Promise.all([
+      this.clubPublicService.getUnionMemberSummaries(semester.id, clubIds),
+      this.userPublicService.getCurrentExecutiveSummaries(),
+    ]);
+
+    const clubMemberUserIds = clubMembers.map(e => e.userId);
+    // clubMemberUserIds에 없는 executive만 필터링
+    return {
+      executives: executives.filter(e => !clubMemberUserIds.includes(e.userId)),
+    };
   }
 
   private async checkDeadline(enums: Array<FundingDeadlineEnum>) {
