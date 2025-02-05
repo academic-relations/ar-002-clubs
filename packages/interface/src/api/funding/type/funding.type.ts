@@ -6,7 +6,10 @@ import {
 } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 import { zClub } from "@sparcs-clubs/interface/api/club/type/club.type";
 import { zFileSummary } from "@sparcs-clubs/interface/api/file/type/file.type";
-import { zStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
+import {
+  zExecutiveSummary,
+  zStudentSummary,
+} from "@sparcs-clubs/interface/api/user/type/user.type";
 import {
   FixtureClassEnum,
   FixtureEvidenceEnum,
@@ -107,6 +110,7 @@ export const zFunding = z.object({
   isEtcExpense: z.coerce.boolean(),
   etcExpense: zMinorExpense.optional(),
 
+  chargedExecutive: zExecutiveSummary.pick({ id: true }).optional(),
   editedAt: z.coerce.date(),
   commentedAt: z.coerce.date().optional(),
   createdAt: z.coerce.date(),
@@ -356,6 +360,8 @@ export const zFundingSummary = zFunding.pick({
   expenditureAmount: true,
   approvedAmount: true,
   purposeActivity: true,
+  club: true,
+  chargedExecutive: true,
 });
 
 export const zFundingSummaryResponse = zFundingResponse.pick({
@@ -365,6 +371,8 @@ export const zFundingSummaryResponse = zFundingResponse.pick({
   expenditureAmount: true,
   approvedAmount: true,
   purposeActivity: true,
+  club: true,
+  chargedExecutive: true,
 });
 
 export type IClubSupplies = z.infer<typeof zClubSupplies>;

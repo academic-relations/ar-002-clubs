@@ -29,6 +29,7 @@ import {
   ApiFnd006ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
 import { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
+import { ApiFnd008ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd008";
 import { ApiFnd012ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd012";
 import { ApiFnd013ResponseCreated } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd013";
 
@@ -58,7 +59,7 @@ import FundingDeadlineRepository from "../repository/funding.deadline.repository
 import FundingRepository from "../repository/funding.repository";
 
 @Injectable()
-export default class FundingService {
+export class FundingService {
   constructor(
     private readonly fundingRepository: FundingRepository,
     private readonly fundingCommentRepository: FundingCommentRepository,
@@ -403,6 +404,8 @@ export default class FundingService {
         name: funding.name,
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,
+        club: funding.club,
+        chargedExecutive: funding.chargedExecutive,
       })),
     };
   }
@@ -436,6 +439,8 @@ export default class FundingService {
         name: funding.name,
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,
+        club: funding.club,
+        chargedExecutive: funding.chargedExecutive,
       })),
     };
   }
@@ -457,6 +462,152 @@ export default class FundingService {
       deadline,
     };
   }
+
+  async getExecutiveFundings(
+    executiveId: IExecutive["id"],
+  ): Promise<ApiFnd008ResponseOk> {
+    await this.userPublicService.checkCurrentExecutive(executiveId);
+
+    const activityD = await this.activityPublicService.fetchLastActivityD();
+    const fundings = await this.fundingRepository.fetchSummaries(activityD.id);
+
+    const clubs = await this.clubPublicService.fetchSummaries(
+      fundings.map(funding => funding.club.id),
+    );
+    const devisions = await this.clubPublicService.fetchDivisionSummaries(
+      clubs.map(club => club.division.id),
+    );
+    const professors = await this.userPublicService.fetchProfessorSummaries(
+      clubs.map(club => club.professor.id),
+    );
+    const executives =
+      await this.userPublicService.fetchCurrentExecutiveSummaries();
+
+    const clubsWithCounts = clubs.map(club => ({
+      ...club,
+      division: devisions.find(division => division.id === club.division.id),
+      professor: professors.find(
+        professor => professor.id === club.professor.id,
+      ),
+      appliedCount: fundings.filter(
+        funding =>
+          funding.club.id === club.id &&
+          funding.fundingStatusEnum === FundingStatusEnum.Applied,
+      ).length,
+      approvedCount: fundings.filter(
+        funding =>
+          funding.club.id === club.id &&
+          funding.fundingStatusEnum === FundingStatusEnum.Approved,
+      ).length,
+      partialCount: fundings.filter(
+        funding =>
+          funding.club.id === club.id &&
+          funding.fundingStatusEnum === FundingStatusEnum.Partial,
+      ).length,
+      rejectedCount: fundings.filter(
+        funding =>
+          funding.club.id === club.id &&
+          funding.fundingStatusEnum === FundingStatusEnum.Rejected,
+      ).length,
+      committeeCount: fundings.filter(
+        funding => funding.fundingStatusEnum === FundingStatusEnum.Committee,
+      ).length,
+      chargedExecutive:
+        executives.find(
+          executive =>
+            executive.id ===
+            fundings
+              .filter(funding => funding.club.id === club.id)
+              .filter(funding => funding.chargedExecutive)
+              .reduce(
+                (acc, curr) => {
+                  const count = fundings.filter(
+                    f =>
+                      f.club.id === club.id &&
+                      f.chargedExecutive?.id === curr.chargedExecutive?.id,
+                  ).length;
+                  return count > acc.count
+                    ? { id: curr.chargedExecutive.id, count }
+                    : acc;
+                },
+                { id: 0, count: 0 },
+              ).id,
+        ) ?? null,
+    }));
+
+    const executivesWithCounts = executives.map(executive => ({
+      ...executive,
+      appliedCount: fundings.filter(
+        funding =>
+          funding.chargedExecutive.id === executive.id &&
+          funding.fundingStatusEnum === FundingStatusEnum.Applied,
+      ).length,
+      approvedCount: fundings.filter(
+        funding =>
+          funding.chargedExecutive.id === executive.id &&
+          funding.fundingStatusEnum === FundingStatusEnum.Approved,
+      ).length,
+      partialCount: fundings.filter(
+        funding =>
+          funding.chargedExecutive.id === executive.id &&
+          funding.fundingStatusEnum === FundingStatusEnum.Partial,
+      ).length,
+      rejectedCount: fundings.filter(
+        funding =>
+          funding.chargedExecutive.id === executive.id &&
+          funding.fundingStatusEnum === FundingStatusEnum.Rejected,
+      ).length,
+      committeeCount: fundings.filter(
+        funding => funding.fundingStatusEnum === FundingStatusEnum.Committee,
+      ).length,
+      chargedClubs: clubs.filter(club =>
+        fundings.some(
+          funding =>
+            funding.chargedExecutive?.id === executive.id &&
+            funding.club.id === club.id,
+        ),
+      ),
+    }));
+
+    return {
+      totalCount: fundings.length,
+      appliedCount: fundings.filter(
+        funding => funding.fundingStatusEnum === FundingStatusEnum.Applied,
+      ).length,
+      approvedCount: fundings.filter(
+        funding => funding.fundingStatusEnum === FundingStatusEnum.Approved,
+      ).length,
+      partialCount: fundings.filter(
+        funding => funding.fundingStatusEnum === FundingStatusEnum.Partial,
+      ).length,
+      rejectedCount: fundings.filter(
+        funding => funding.fundingStatusEnum === FundingStatusEnum.Rejected,
+      ).length,
+      committeeCount: fundings.filter(
+        funding => funding.fundingStatusEnum === FundingStatusEnum.Committee,
+      ).length,
+      clubs: clubsWithCounts,
+      executives: executivesWithCounts,
+    };
+  }
+
+  // async getExecutiveFundingsClubBreif(
+  //   executiveId: IExecutive["id"],
+  //   param: ApiFnd009RequestParam,
+  // ): Promise<ApiFnd009ResponseOk> {
+  //   await this.userPublicService.checkCurrentExecutive(executiveId);
+
+  //   return {};
+  // }
+
+  // async getExecutiveFundingsExecutiveBreif(
+  //   executiveId: IExecutive["id"],
+  //   param: ApiFnd010RequestParam,
+  // ): Promise<ApiFnd010ResponseOk> {
+  //   await this.userPublicService.checkCurrentExecutive(executiveId);
+
+  //   return {};
+  // }
 
   /**
    * @description 집행부원이 검토를 위해 지원금 신청을 조회합니다.

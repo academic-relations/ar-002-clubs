@@ -1,7 +1,10 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zClubSummary } from "@sparcs-clubs/interface/api/club/type/club.type";
+import {
+  zClubSummary,
+  zClubSummaryResponse,
+} from "@sparcs-clubs/interface/api/club/type/club.type";
 import { zExecutiveSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 
 /**
@@ -29,7 +32,7 @@ const responseBodyMap = {
     partialCount: z.number().min(0),
     rejectedCount: z.number().min(0),
     committeeCount: z.number().min(0),
-    clubs: zClubSummary
+    clubs: zClubSummaryResponse
       .extend({
         appliedCount: z.number().min(0),
         approvedCount: z.number().min(0),
