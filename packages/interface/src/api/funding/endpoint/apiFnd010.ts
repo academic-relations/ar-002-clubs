@@ -14,7 +14,7 @@ import { zFundingSummaryResponse } from "../type/funding.type";
 
 const url = (id: number) => `/executive/fundings/funding/${id}`;
 const method = "GET";
-export const ApiFnd012RequestUrl = "/executive/fundings/funding/:id";
+export const ApiFnd010RequestUrl = "/executive/fundings/funding/:id";
 
 const requestParam = z.object({
   id: z.coerce.number().int().min(1),
@@ -43,7 +43,7 @@ const responseBodyMap = {
 
 const responseErrorMap = {};
 
-const apiFnd012 = {
+const apiFnd010 = {
   url,
   method,
   requestParam,
@@ -53,16 +53,16 @@ const apiFnd012 = {
   responseErrorMap,
 };
 
-type ApiFnd012RequestParam = z.infer<typeof apiFnd012.requestParam>;
-type ApiFnd012RequestQuery = z.infer<typeof apiFnd012.requestQuery>;
-type ApiFnd012RequestBody = z.infer<typeof apiFnd012.requestBody>;
-type ApiFnd012ResponseOk = z.infer<(typeof apiFnd012.responseBodyMap)[200]>;
+type ApiFnd010RequestParam = z.infer<typeof apiFnd010.requestParam>;
+type ApiFnd010RequestQuery = z.infer<typeof apiFnd010.requestQuery>;
+type ApiFnd010RequestBody = z.infer<typeof apiFnd010.requestBody>;
+type ApiFnd010ResponseOk = z.infer<(typeof apiFnd010.responseBodyMap)[200]>;
 
-export default apiFnd012;
+export default apiFnd010;
 
 export type {
-  ApiFnd012RequestParam,
-  ApiFnd012RequestQuery,
-  ApiFnd012RequestBody,
-  ApiFnd012ResponseOk,
+  ApiFnd010RequestParam,
+  ApiFnd010RequestQuery,
+  ApiFnd010RequestBody,
+  ApiFnd010ResponseOk,
 };
