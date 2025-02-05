@@ -16,6 +16,7 @@ const useGetInitialFundingFormData = (
     isLoading,
     isError,
   } = useGetFunding("undergraduate", fundingId);
+  const { funding } = data ?? {};
 
   if (profile?.type !== "undergraduate") {
     return {

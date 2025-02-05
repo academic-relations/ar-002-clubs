@@ -22,6 +22,7 @@ import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 interface MyRegisterClubActTableProps {
   clubRegisterActList: ApiAct011ResponseOk;
   profile: string;
+  clubId: number;
 }
 
 const TableWrapper = styled.div`
@@ -76,6 +77,7 @@ const columns = [
 const MyRegisterClubActTable: React.FC<MyRegisterClubActTableProps> = ({
   clubRegisterActList,
   profile,
+  clubId,
 }) => {
   const table = useReactTable({
     columns,
@@ -92,6 +94,7 @@ const MyRegisterClubActTable: React.FC<MyRegisterClubActTableProps> = ({
         isOpen={isOpen}
         close={close}
         viewOnly
+        clubId={clubId}
       />
     ));
   };

@@ -38,7 +38,10 @@ const openAssignModal = (data: ExecutiveProgresses) => {
           <Typography fs={16} lh={28} fw="MEDIUM" style={{ textAlign: "left" }}>
             {data.executiveName} 활동 보고서 검토 현황 상세
           </Typography>
-          <ChargedActivityModalTable data={data.chargedClubsAndProgresses} />
+          <ChargedActivityModalTable
+            data={data.chargedClubsAndProgresses}
+            closeModal={close}
+          />
         </FlexWrapper>
       </ConfirmModalContent>
     </Modal>

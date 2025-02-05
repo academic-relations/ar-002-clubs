@@ -54,38 +54,51 @@ const ChangeRepresentativeCard: React.FC<{
       item =>
         item.value !==
         delegatesNow?.delegates
-          .find(delegate => delegate.delegateEnumId === 1)
+          .find(
+            delegate =>
+              delegate.delegateEnumId === ClubDelegateEnum.Representative,
+          )
           ?.studentId?.toString(),
     ),
   );
 
   const representative =
     delegatesNow?.delegates
-      .find(delegate => delegate.delegateEnumId === 1)
+      .find(
+        delegate => delegate.delegateEnumId === ClubDelegateEnum.Representative,
+      )
       ?.studentId?.toString() ?? "";
 
   const representativeName =
-    delegatesNow?.delegates.find(delegate => delegate.delegateEnumId === 1)
-      ?.name ?? "";
+    delegatesNow?.delegates.find(
+      delegate => delegate.delegateEnumId === ClubDelegateEnum.Representative,
+    )?.name ?? "";
 
   const representativeStudentNumber =
-    delegatesNow?.delegates.find(delegate => delegate.delegateEnumId === 1)
-      ?.studentNumber ?? "";
+    delegatesNow?.delegates.find(
+      delegate => delegate.delegateEnumId === ClubDelegateEnum.Representative,
+    )?.studentNumber ?? "";
 
   const [delegate1, setDelegate1] = useState<string>(
-    delegatesNow?.delegates.find(delegate => delegate.delegateEnumId === 2)
-      ?.studentId === 0
+    delegatesNow?.delegates.find(
+      delegate => delegate.delegateEnumId === ClubDelegateEnum.Delegate1,
+    )?.studentId === 0
       ? ""
       : delegatesNow?.delegates
-          .find(delegate => delegate.delegateEnumId === 2)
+          .find(
+            delegate => delegate.delegateEnumId === ClubDelegateEnum.Delegate1,
+          )
           ?.studentId.toString() ?? "",
   );
   const [delegate2, setDelegate2] = useState<string>(
-    delegatesNow?.delegates.find(delegate => delegate.delegateEnumId === 3)
-      ?.studentId === 0
+    delegatesNow?.delegates.find(
+      delegate => delegate.delegateEnumId === ClubDelegateEnum.Delegate2,
+    )?.studentId === 0
       ? ""
       : delegatesNow?.delegates
-          .find(delegate => delegate.delegateEnumId === 3)
+          .find(
+            delegate => delegate.delegateEnumId === ClubDelegateEnum.Delegate2,
+          )
           ?.studentId.toString() ?? "",
   );
 
@@ -138,7 +151,9 @@ const ChangeRepresentativeCard: React.FC<{
     if (
       delegate1 !==
         delegatesNow?.delegates
-          .find(delegate => delegate.delegateEnumId === 2)
+          .find(
+            delegate => delegate.delegateEnumId === ClubDelegateEnum.Delegate1,
+          )
           ?.studentId?.toString() &&
       type !== "Applied" &&
       delegate1 !== ""
@@ -158,7 +173,9 @@ const ChangeRepresentativeCard: React.FC<{
     if (
       delegate2 !==
         delegatesNow?.delegates
-          .find(delegate => delegate.delegateEnumId === 3)
+          .find(
+            delegate => delegate.delegateEnumId === ClubDelegateEnum.Delegate2,
+          )
           ?.studentId?.toString() &&
       type !== "Applied" &&
       delegate2 !== ""

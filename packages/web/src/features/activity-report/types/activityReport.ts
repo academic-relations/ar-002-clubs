@@ -32,9 +32,12 @@ export interface BaseActivityReport {
 
 export interface CurrentActivityReport extends BaseActivityReport {
   id: number;
+  clubId: number;
   updatedAt: Date;
   activityStatusEnumId: ActivityStatusEnum;
   professorApproval: ProfessorApprovalEnum | null;
   professorApprovedAt?: Date;
   comments: Comment[];
+  editedAt: Date;
+  commentedAt: Date | null;
 }

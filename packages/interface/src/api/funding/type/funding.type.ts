@@ -6,10 +6,7 @@ import {
 } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 import { zClub } from "@sparcs-clubs/interface/api/club/type/club.type";
 import { zFileSummary } from "@sparcs-clubs/interface/api/file/type/file.type";
-import {
-  zExecutiveSummary,
-  zStudentSummary,
-} from "@sparcs-clubs/interface/api/user/type/user.type";
+import { zStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 import {
   FixtureClassEnum,
   FixtureEvidenceEnum,
@@ -288,25 +285,6 @@ export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {
   }
 });
 
-export const zFundingComment = z.object({
-  id: zId,
-  funding: zFunding.pick({ id: true }),
-  chargedExecutive: zExecutiveSummary.pick({ id: true }),
-  content: z.string(),
-  fundingStatusEnum: z.nativeEnum(FundingStatusEnum),
-  approvedAmount: z.coerce.number().int().min(0),
-  createdAt: z.coerce.date(),
-});
-
-export const zFundingCommentResponse = zFundingComment.extend({
-  chargedExecutive: zExecutiveSummary,
-});
-
-export const zFundingCommentRequestCreate = zFundingComment.omit({
-  id: true,
-  createdAt: true,
-});
-
 export const zFundingResponse = zFunding.extend({
   id: zId,
   tradeEvidenceFiles: z.array(zFileSummary),
@@ -369,7 +347,6 @@ export const zFundingResponse = zFunding.extend({
       files: z.array(zFileSummary),
     })
     .optional(),
-  comments: z.array(zFundingCommentResponse),
 });
 
 export const zFundingSummary = zFunding.pick({
@@ -402,8 +379,3 @@ export type IFundingSummary = z.infer<typeof zFundingSummary>;
 export type IFundingResponse = z.infer<typeof zFundingResponse>;
 export type IFundingResponseSummary = z.infer<typeof zFundingResponseSummary>;
 export type IFundingExtra = z.infer<typeof zFundingExtra>;
-export type IFundingComment = z.infer<typeof zFundingComment>;
-export type IFundingCommentResponse = z.infer<typeof zFundingCommentResponse>;
-export type IFundingCommentRequestCreate = z.infer<
-  typeof zFundingCommentRequestCreate
->;

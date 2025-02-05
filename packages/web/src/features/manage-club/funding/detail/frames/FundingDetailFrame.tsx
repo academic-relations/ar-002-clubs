@@ -44,10 +44,11 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ profile }) => {
   const { id } = useParams<{ id: string }>();
 
   const {
-    data: funding,
+    data,
     isLoading,
     isError,
   } = useGetFunding(profile.type, +id);
+  const { funding, comments } = data ?? {};
   const { mutate: deleteFunding } = useDeleteFunding();
 
   const {
@@ -146,7 +147,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ profile }) => {
             status={funding.fundingStatusEnum}
             editedAt={funding.editedAt}
             commentedAt={funding.commentedAt}
-            comments={funding.comments.toReversed()}
+            comments={comments?.toReversed() ?? []}
           />
         )}
         <AsyncBoundary isLoading={isLoading} isError={isError}>
