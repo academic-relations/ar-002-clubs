@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import { ApiFnd012ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd012";
-
+import { IFundingCommentResponse } from "@sparcs-clubs/interface/api/funding/type/funding.comment.type";
+import { IFundingResponse } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import { useParams } from "next/navigation";
 
@@ -20,8 +20,9 @@ import useExecutiveReviewFunding from "@sparcs-clubs/web/features/manage-club/fu
 import { formatSlashDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 const ExecutiveFundingReviewSection: React.FC<{
-  funding: ApiFnd012ResponseOk;
-}> = ({ funding }) => {
+  funding: IFundingResponse;
+  comments: IFundingCommentResponse[];
+}> = ({ funding, comments }) => {
   const { id } = useParams<{ id: string }>();
   const fundingId = Number(id);
 
@@ -111,7 +112,7 @@ const ExecutiveFundingReviewSection: React.FC<{
     return true;
   };
 
-  const filteredComments = funding.comments.filter(
+  const filteredComments = comments.filter(
     comment => comment.content.trim() !== "",
   );
 
