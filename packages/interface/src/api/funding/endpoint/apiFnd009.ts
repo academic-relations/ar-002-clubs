@@ -16,7 +16,9 @@ const method = "GET";
 export const ApiFnd009RequestUrl =
   "/executive/fundings/clubs/club/:clubId/brief";
 
-const requestParam = z.object({});
+const requestParam = z.object({
+  clubId: z.number().min(1),
+});
 
 const requestQuery = z.object({});
 
@@ -25,7 +27,7 @@ const requestBody = z.object({});
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     totalCount: z.number().min(0),
-    applyCount: z.number().min(0),
+    appliedCount: z.number().min(0),
     approvedCount: z.number().min(0),
     partialCount: z.number().min(0),
     rejectedCount: z.number().min(0),

@@ -7,17 +7,19 @@ import { zFundingSummaryResponse } from "../type/funding.type";
 
 /**
  * @version v0.1
- * @description 집행부원이 코멘트를 위해 지원금 신청의 항목을 조회합니다.
+ * @description 집행부원을 위한 해당 집행부원이 맡은 지원금 신청 내역을 조회합니다.
  */
 
 // TODO: 변경 필요
 
-const url = (id: number) => `/executive/fundings/funding/${id}`;
+const url = (executiveId: number) =>
+  `/executive/fundings/executives/executive/${executiveId}`;
 const method = "GET";
-export const ApiFnd010RequestUrl = "/executive/fundings/funding/:id";
+export const ApiFnd010RequestUrl =
+  "/executive/fundings/executives/executive/:executiveId";
 
 const requestParam = z.object({
-  id: z.coerce.number().int().min(1),
+  executiveId: z.coerce.number().int().min(1),
 });
 
 const requestQuery = z.object({});
@@ -27,7 +29,7 @@ const requestBody = z.object({});
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     totalCount: z.number().min(0),
-    applyCount: z.number().min(0),
+    appliedCount: z.number().min(0),
     approvedCount: z.number().min(0),
     partialCount: z.number().min(0),
     rejectedCount: z.number().min(0),

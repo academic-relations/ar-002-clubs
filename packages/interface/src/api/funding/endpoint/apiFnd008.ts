@@ -4,8 +4,6 @@ import { z } from "zod";
 import { zClubSummary } from "@sparcs-clubs/interface/api/club/type/club.type";
 import { zExecutiveSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 
-import { zFundingSummaryResponse } from "../type/funding.type";
-
 /**
  * @version v0.1
  * @description 집행부원을 위한 동아리별 지원금 내역을 조회합니다.
@@ -26,21 +24,29 @@ const requestBody = z.object({});
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     totalCount: z.number().min(0),
-    applyCount: z.number().min(0),
+    appliedCount: z.number().min(0),
     approvedCount: z.number().min(0),
     partialCount: z.number().min(0),
     rejectedCount: z.number().min(0),
     committeeCount: z.number().min(0),
-    clubCount: z.number().min(0),
-    fundings: zFundingSummaryResponse
+    clubs: zClubSummary
       .extend({
+        appliedCount: z.number().min(0),
+        approvedCount: z.number().min(0),
+        partialCount: z.number().min(0),
+        rejectedCount: z.number().min(0),
+        committeeCount: z.number().min(0),
         chargedExecutive: zExecutiveSummary.nullable(),
-        commentedExecutive: zExecutiveSummary.nullable(),
       })
       .array(),
     executives: zExecutiveSummary
       .extend({
-        clubs: z.array(zClubSummary),
+        appliedCount: z.number().min(0),
+        approvedCount: z.number().min(0),
+        partialCount: z.number().min(0),
+        rejectedCount: z.number().min(0),
+        committeeCount: z.number().min(0),
+        chargedClubs: zClubSummary.array(),
       })
       .array(),
   }),
