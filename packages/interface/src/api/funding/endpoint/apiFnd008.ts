@@ -34,6 +34,7 @@ const responseBodyMap = {
     committeeCount: z.number().min(0),
     clubs: zClubSummaryResponse
       .extend({
+        totalCount: z.number().min(0),
         appliedCount: z.number().min(0),
         approvedCount: z.number().min(0),
         partialCount: z.number().min(0),
@@ -44,6 +45,7 @@ const responseBodyMap = {
       .array(),
     executives: zExecutiveSummary
       .extend({
+        totalCount: z.number().min(0),
         appliedCount: z.number().min(0),
         approvedCount: z.number().min(0),
         partialCount: z.number().min(0),

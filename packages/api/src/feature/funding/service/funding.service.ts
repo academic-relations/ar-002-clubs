@@ -497,6 +497,8 @@ export default class FundingService {
       professor: professors.find(
         professor => professor.id === club.professor?.id,
       ),
+      totalCount: fundings.filter(funding => funding.club.id === club.id)
+        .length,
       appliedCount: fundings.filter(
         funding =>
           funding.club.id === club.id &&
@@ -518,7 +520,9 @@ export default class FundingService {
           funding.fundingStatusEnum === FundingStatusEnum.Rejected,
       ).length,
       committeeCount: fundings.filter(
-        funding => funding.fundingStatusEnum === FundingStatusEnum.Committee,
+        funding =>
+          funding.club.id === club.id &&
+          funding.fundingStatusEnum === FundingStatusEnum.Committee,
       ).length,
       chargedExecutive:
         executives.find(
@@ -545,6 +549,9 @@ export default class FundingService {
 
     const executivesWithCounts = executives.map(executive => ({
       ...executive,
+      totalCount: fundings.filter(
+        funding => funding.chargedExecutive.id === executive.id,
+      ).length,
       appliedCount: fundings.filter(
         funding =>
           funding.chargedExecutive.id === executive.id &&
@@ -566,7 +573,9 @@ export default class FundingService {
           funding.fundingStatusEnum === FundingStatusEnum.Rejected,
       ).length,
       committeeCount: fundings.filter(
-        funding => funding.fundingStatusEnum === FundingStatusEnum.Committee,
+        funding =>
+          funding.chargedExecutive.id === executive.id &&
+          funding.fundingStatusEnum === FundingStatusEnum.Committee,
       ).length,
       chargedClubs: clubs.filter(club =>
         fundings.some(
@@ -631,27 +640,34 @@ export default class FundingService {
     const chargedExecutive =
       await this.userPublicService.findExecutiveSummary(chargedExecutiveId);
 
-    const executives = await this.userPublicService.fetchExecutiveSummaries(
-      fundings
-        .filter(funding => funding.club.id === param.clubId)
-        .map(funding => funding.chargedExecutive?.id),
+    const fundingsWithCommentedExecutive = await Promise.all(
+      fundings.map(async funding => {
+        const comments = await this.fundingCommentRepository.fetchAll(
+          funding.id,
+        );
+        return {
+          ...funding,
+          commentedExecutive: comments[0]?.executive,
+        };
+      }),
     );
-
-    const fundingsWithCommentedExecutive = fundings.map(funding => {
-      const comments = this.fundingCommentRepository.fetchAll(funding.id);
-      return {
-        ...funding,
-        commentedExecutive:
-          executives.find(
-            executive => executive.id === comments[0]?.commentedExecutive?.id,
-          ) ?? null,
-      };
-    });
 
     const activities = await this.activityPublicService.fetchSummaries(
       fundingsWithCommentedExecutive.map(
         funding => funding.purposeActivity?.id,
       ),
+    );
+
+    const executiveIds = new Set([
+      ...fundingsWithCommentedExecutive.map(
+        funding => funding.chargedExecutive?.id,
+      ),
+      ...fundingsWithCommentedExecutive.map(
+        funding => funding.commentedExecutive?.id,
+      ),
+    ]);
+    const executives = await this.userPublicService.fetchExecutiveSummaries(
+      Array.from(executiveIds),
     );
 
     return {
@@ -692,6 +708,10 @@ export default class FundingService {
           executives.find(
             executive => executive.id === funding.chargedExecutive?.id,
           ) ?? null,
+        commentedExecutive:
+          executives.find(
+            executive => executive.id === funding.commentedExecutive?.id,
+          ) ?? null,
       })),
     };
   }
@@ -706,23 +726,34 @@ export default class FundingService {
       param.executiveId,
     );
 
-    const executives = await this.userPublicService.fetchExecutiveSummaries(
-      fundings.map(funding => funding.chargedExecutive?.id),
+    const fundingsWithCommentedExecutive = await Promise.all(
+      fundings.map(async funding => {
+        const comments = await this.fundingCommentRepository.fetchAll(
+          funding.id,
+        );
+        return {
+          ...funding,
+          commentedExecutive: comments[0]?.executive,
+        };
+      }),
     );
-
-    const fundingsWithCommentedExecutive = fundings.map(funding => {
-      const comments = this.fundingCommentRepository.fetchAll(funding.id);
-      return {
-        ...funding,
-        commentedExecutive: comments[0]?.executive ?? { id: null },
-      };
-    });
-    console.log(fundingsWithCommentedExecutive);
 
     const activities = await this.activityPublicService.fetchSummaries(
       fundingsWithCommentedExecutive.map(
         funding => funding.purposeActivity?.id,
       ),
+    );
+
+    const executiveIds = new Set([
+      ...fundingsWithCommentedExecutive.map(
+        funding => funding.chargedExecutive?.id,
+      ),
+      ...fundingsWithCommentedExecutive.map(
+        funding => funding.commentedExecutive?.id,
+      ),
+    ]);
+    const executives = await this.userPublicService.fetchExecutiveSummaries(
+      Array.from(executiveIds),
     );
 
     return {
@@ -750,6 +781,10 @@ export default class FundingService {
         chargedExecutive:
           executives.find(
             executive => executive.id === funding.chargedExecutive?.id,
+          ) ?? null,
+        commentedExecutive:
+          executives.find(
+            executive => executive.id === funding.commentedExecutive?.id,
           ) ?? null,
       })),
     };
