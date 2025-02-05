@@ -30,6 +30,10 @@ import {
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd006";
 import { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
 import { ApiFnd008ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd008";
+import {
+  ApiFnd009RequestParam,
+  ApiFnd009ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd009";
 import { ApiFnd012ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd012";
 import { ApiFnd013ResponseCreated } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd013";
 
@@ -591,14 +595,102 @@ export class FundingService {
     };
   }
 
-  // async getExecutiveFundingsClubBreif(
-  //   executiveId: IExecutive["id"],
-  //   param: ApiFnd009RequestParam,
-  // ): Promise<ApiFnd009ResponseOk> {
-  //   await this.userPublicService.checkCurrentExecutive(executiveId);
+  async getExecutiveFundingsClubBreif(
+    executiveId: IExecutive["id"],
+    param: ApiFnd009RequestParam,
+  ): Promise<ApiFnd009ResponseOk> {
+    await this.userPublicService.checkCurrentExecutive(executiveId);
+    const activityD = await this.activityPublicService.fetchLastActivityD();
 
-  //   return {};
-  // }
+    const fundings = await this.fundingRepository.fetchSummaries(
+      param.clubId,
+      activityD.id,
+    );
+
+    const chargedExecutiveId = fundings
+      .filter(funding => funding.club.id === param.clubId)
+      .filter(funding => funding.chargedExecutive)
+      .reduce(
+        (acc, curr) => {
+          const count = fundings.filter(
+            f =>
+              f.club.id === param.clubId &&
+              f.chargedExecutive?.id === curr.chargedExecutive?.id,
+          ).length;
+          return count > acc.count
+            ? { id: curr.chargedExecutive.id, count }
+            : acc;
+        },
+        { id: 0, count: 0 },
+      ).id;
+
+    const chargedExecutive =
+      await this.userPublicService.fetchExecutiveSummary(chargedExecutiveId);
+
+    const executives = await this.userPublicService.fetchExecutiveSummaries(
+      fundings
+        .filter(funding => funding.club.id === param.clubId)
+        .map(funding => funding.chargedExecutive?.id),
+    );
+
+    const fundingsWithCommentedExecutive = fundings.map(funding => {
+      const comments = this.fundingCommentRepository.fetchAll(funding.id);
+      return {
+        ...funding,
+        commentedExecutive:
+          executives.find(
+            executive => executive.id === comments[0]?.commentedExecutive?.id,
+          ) ?? null,
+      };
+    });
+
+    const activities = await this.activityPublicService.fetchSummaries(
+      fundingsWithCommentedExecutive.map(
+        funding => funding.purposeActivity?.id,
+      ),
+    );
+
+    return {
+      totalCount: fundings.filter(funding => funding.club.id === param.clubId)
+        .length,
+      appliedCount: fundings.filter(
+        funding =>
+          funding.club.id === param.clubId &&
+          funding.fundingStatusEnum === FundingStatusEnum.Applied,
+      ).length,
+      approvedCount: fundings.filter(
+        funding =>
+          funding.club.id === param.clubId &&
+          funding.fundingStatusEnum === FundingStatusEnum.Approved,
+      ).length,
+      partialCount: fundings.filter(
+        funding =>
+          funding.club.id === param.clubId &&
+          funding.fundingStatusEnum === FundingStatusEnum.Partial,
+      ).length,
+      rejectedCount: fundings.filter(
+        funding =>
+          funding.club.id === param.clubId &&
+          funding.fundingStatusEnum === FundingStatusEnum.Rejected,
+      ).length,
+      committeeCount: fundings.filter(
+        funding =>
+          funding.club.id === param.clubId &&
+          funding.fundingStatusEnum === FundingStatusEnum.Committee,
+      ).length,
+      chargedExecutive,
+      fundings: fundingsWithCommentedExecutive.map(funding => ({
+        ...funding,
+        purposeActivity: activities.find(
+          activity => activity.id === funding.purposeActivity?.id,
+        ),
+        chargedExecutive:
+          executives.find(
+            executive => executive.id === funding.chargedExecutive?.id,
+          ) ?? null,
+      })),
+    };
+  }
 
   // async getExecutiveFundingsExecutiveBreif(
   //   executiveId: IExecutive["id"],
