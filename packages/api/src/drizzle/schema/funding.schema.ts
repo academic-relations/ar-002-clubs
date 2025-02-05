@@ -382,7 +382,7 @@ export const FundingFeedback = mysqlTable(
   {
     id: int("id").autoincrement().primaryKey().notNull(),
     fundingId: int("funding_id").notNull(),
-    chargedExecutiveId: int("charged_executive_id").notNull(),
+    executiveId: int("executive_id").notNull(),
     feedback: text("feedback").notNull(),
     fundingStatusEnum: int("funding_status_enum").notNull(), // Funding 에서 이관
     approvedAmount: int("approved_amount").notNull(), // Funding 에서 이관
@@ -397,7 +397,7 @@ export const FundingFeedback = mysqlTable(
     }),
     executiveForeignKey: foreignKey({
       name: "funding_feedback_executive_id_fk",
-      columns: [table.chargedExecutiveId],
+      columns: [table.executiveId],
       foreignColumns: [Executive.id],
     }),
   }),

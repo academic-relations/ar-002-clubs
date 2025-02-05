@@ -9,7 +9,7 @@ import { zFunding } from "./funding.type";
 export const zFundingComment = z.object({
   id: zId,
   funding: zFunding.pick({ id: true }),
-  chargedExecutive: zExecutiveSummary.pick({ id: true }),
+  executive: zExecutiveSummary.pick({ id: true }),
   content: z.string(),
   fundingStatusEnum: z.nativeEnum(FundingStatusEnum),
   approvedAmount: z.coerce.number().int().min(0),
@@ -17,7 +17,7 @@ export const zFundingComment = z.object({
 });
 
 export const zFundingCommentResponse = zFundingComment.extend({
-  chargedExecutive: zExecutiveSummary,
+  executive: zExecutiveSummary,
 });
 
 export const zFundingCommentRequest = zFundingComment.omit({

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 import { IFundingCommentRequest } from "@sparcs-clubs/interface/api/funding/type/funding.comment.type";
 
@@ -41,7 +41,8 @@ export default class FundingCommentRepository extends BaseRepository<
     const result = await tx
       .select()
       .from(FundingFeedback)
-      .where(eq(FundingFeedback.fundingId, arg1));
+      .where(eq(FundingFeedback.fundingId, arg1))
+      .orderBy(desc(FundingFeedback.createdAt));
 
     return result.map(row => MFundingComment.from(row));
   }
@@ -63,7 +64,7 @@ export default class FundingCommentRepository extends BaseRepository<
     const comment = {
       ...param,
       fundingId: param.funding.id,
-      chargedExecutiveId: param.chargedExecutive.id,
+      executiveId: param.executive.id,
       feedback: param.content,
     };
     return super.insertTx(tx, comment);

@@ -5,6 +5,7 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
+import { IDivisionSummary } from "@sparcs-clubs/interface/api/club/type/club.type";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
@@ -459,11 +460,26 @@ export default class ClubRepository {
   }
 
   async fetchSummary(clubId: number): Promise<VClubSummary> {
-    const result = await this.db.select().from(Club).where(eq(Club.id, clubId));
+    const cur = getKSTDate();
+    const result = await this.db
+      .select()
+      .from(Club)
+      .leftJoin(
+        ClubT,
+        and(
+          eq(Club.id, ClubT.clubId),
+          and(
+            lte(ClubT.startTerm, cur),
+            or(gte(ClubT.endTerm, cur), isNull(ClubT.endTerm)),
+          ),
+        ),
+      )
+      .where(eq(Club.id, clubId));
 
     if (result.length !== 1) {
       throw new NotFoundException("Club not found");
     }
+
     return VClubSummary.fromDBResult(result[0]);
   }
 
@@ -472,11 +488,37 @@ export default class ClubRepository {
       return [];
     }
 
+    const cur = getKSTDate();
     const result = await this.db
       .select()
       .from(Club)
+      .leftJoin(
+        ClubT,
+        and(
+          eq(Club.id, ClubT.clubId),
+          and(
+            lte(ClubT.startTerm, cur),
+            or(gte(ClubT.endTerm, cur), isNull(ClubT.endTerm)),
+          ),
+        ),
+      )
       .where(inArray(Club.id, clubIds));
 
-    return result.map(VClubSummary.fromDBResult);
+    return result.map(club => VClubSummary.fromDBResult(club));
+  }
+
+  async fetchDivisionSummaries(ids: number[]): Promise<IDivisionSummary[]> {
+    if (ids.length === 0) {
+      return [];
+    }
+
+    const result = await this.db
+      .select({
+        id: Division.id,
+        name: Division.name,
+      })
+      .from(Division)
+      .where(inArray(Division.id, ids));
+    return result;
   }
 }
