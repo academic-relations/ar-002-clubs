@@ -6,7 +6,7 @@ import {
   IFundingRequest,
   IFundingSummary,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, exists, isNull, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import {
@@ -352,6 +352,72 @@ export default class FundingRepository {
     if (fundings.length === 0) {
       return [];
     }
+
+    return fundings.map(funding => ({
+      ...funding,
+      purposeActivity: {
+        id: funding.purposeActivityId,
+      },
+      club: {
+        id: funding.clubId,
+      },
+      chargedExecutive: {
+        id: funding.chargedExecutiveId,
+      },
+    }));
+  }
+
+  async fetchCommentedSummaries(
+    executiveId: number,
+  ): Promise<IFundingSummary[]> {
+    const latestFeedbacks = this.db
+      .select({
+        fundingId: FundingFeedback.fundingId,
+        chargedExecutiveId: FundingFeedback.chargedExecutiveId,
+      })
+      .from(FundingFeedback)
+      .where(
+        and(
+          eq(FundingFeedback.chargedExecutiveId, executiveId),
+          isNull(FundingFeedback.deletedAt),
+        ),
+      )
+      .orderBy(desc(FundingFeedback.createdAt))
+      .as("latest_feedbacks");
+
+    const fundings = await this.db
+      .select({
+        id: Funding.id,
+        fundingStatusEnum: Funding.fundingStatusEnum,
+        name: Funding.name,
+        expenditureAmount: Funding.expenditureAmount,
+        approvedAmount: Funding.approvedAmount,
+        purposeActivityId: Funding.purposeActivityId,
+        clubId: Funding.clubId,
+        chargedExecutiveId: Funding.chargedExecutiveId,
+      })
+      .from(Funding)
+      .leftJoin(latestFeedbacks, eq(latestFeedbacks.fundingId, Funding.id))
+      .where(
+        and(
+          isNull(Funding.deletedAt),
+          or(
+            eq(Funding.chargedExecutiveId, executiveId),
+            exists(
+              this.db
+                .select()
+                .from(FundingFeedback)
+                .where(
+                  and(
+                    eq(FundingFeedback.fundingId, Funding.id),
+                    eq(FundingFeedback.chargedExecutiveId, executiveId),
+                    isNull(FundingFeedback.deletedAt),
+                  ),
+                ),
+            ),
+          ),
+        ),
+      );
 
     return fundings.map(funding => ({
       ...funding,

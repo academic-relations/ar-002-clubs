@@ -34,6 +34,10 @@ import {
   ApiFnd009RequestParam,
   ApiFnd009ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd009";
+import {
+  ApiFnd010RequestParam,
+  ApiFnd010ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd010";
 import { ApiFnd012ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd012";
 import { ApiFnd013ResponseCreated } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd013";
 
@@ -692,14 +696,63 @@ export class FundingService {
     };
   }
 
-  // async getExecutiveFundingsExecutiveBreif(
-  //   executiveId: IExecutive["id"],
-  //   param: ApiFnd010RequestParam,
-  // ): Promise<ApiFnd010ResponseOk> {
-  //   await this.userPublicService.checkCurrentExecutive(executiveId);
+  async getExecutiveFundingsExecutiveBreif(
+    executiveId: IExecutive["id"],
+    param: ApiFnd010RequestParam,
+  ): Promise<ApiFnd010ResponseOk> {
+    await this.userPublicService.checkCurrentExecutive(executiveId);
 
-  //   return {};
-  // }
+    const fundings = await this.fundingRepository.fetchCommentedSummaries(
+      param.executiveId,
+    );
+
+    const executives = await this.userPublicService.fetchExecutiveSummaries(
+      fundings.map(funding => funding.chargedExecutive?.id),
+    );
+
+    const fundingsWithCommentedExecutive = fundings.map(funding => {
+      const comments = this.fundingCommentRepository.fetchAll(funding.id);
+      return {
+        ...funding,
+        commentedExecutive: comments[0]?.commentedExecutive ?? null,
+      };
+    });
+
+    const activities = await this.activityPublicService.fetchSummaries(
+      fundingsWithCommentedExecutive.map(
+        funding => funding.purposeActivity?.id,
+      ),
+    );
+
+    return {
+      totalCount: fundings.length,
+      appliedCount: fundings.filter(
+        funding => funding.fundingStatusEnum === FundingStatusEnum.Applied,
+      ).length,
+      approvedCount: fundings.filter(
+        funding => funding.fundingStatusEnum === FundingStatusEnum.Approved,
+      ).length,
+      partialCount: fundings.filter(
+        funding => funding.fundingStatusEnum === FundingStatusEnum.Partial,
+      ).length,
+      rejectedCount: fundings.filter(
+        funding => funding.fundingStatusEnum === FundingStatusEnum.Rejected,
+      ).length,
+      committeeCount: fundings.filter(
+        funding => funding.fundingStatusEnum === FundingStatusEnum.Committee,
+      ).length,
+      fundings: fundingsWithCommentedExecutive.map(funding => ({
+        ...funding,
+        purposeActivity: activities.find(
+          activity => activity.id === funding.purposeActivity?.id,
+        ),
+        chargedExecutive:
+          executives.find(
+            executive => executive.id === funding.chargedExecutive?.id,
+          ) ?? null,
+      })),
+    };
+  }
 
   /**
    * @description 집행부원이 검토를 위해 지원금 신청을 조회합니다.
