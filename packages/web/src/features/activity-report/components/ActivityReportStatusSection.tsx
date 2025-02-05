@@ -5,8 +5,6 @@ import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity
 import ApproveReasonToast from "@sparcs-clubs/web/common/components/ApproveReasonToast";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
-import { ActStatusTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 import { getActivityReportProgress } from "../constants/activityReportProgress";
 import { Comment } from "../types/activityReport";
@@ -35,7 +33,6 @@ const ActivityReportStatusSection: React.FC<
           reasons={comments.map(comment => ({
             datetime: comment.createdAt,
             reason: comment.content,
-            status: getTagDetail(status, ActStatusTagList).text,
           }))}
         />
       );
@@ -47,7 +44,6 @@ const ActivityReportStatusSection: React.FC<
         reasons={comments.map(comment => ({
           datetime: comment.createdAt,
           reason: comment.content,
-          status: getTagDetail(status, ActStatusTagList).text, // TODO: status 수정
         }))}
       />
     );
