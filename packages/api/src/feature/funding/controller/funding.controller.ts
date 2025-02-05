@@ -38,6 +38,20 @@ import apiFnd006, {
 import apiFnd007, {
   ApiFnd007ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
+import apiFnd008, {
+  ApiFnd008RequestUrl,
+  ApiFnd008ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd008";
+import apiFnd009, {
+  ApiFnd009RequestParam,
+  ApiFnd009RequestUrl,
+  ApiFnd009ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd009";
+import apiFnd010, {
+  ApiFnd010RequestParam,
+  ApiFnd010RequestUrl,
+  ApiFnd010ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd010";
 import apiFnd012, {
   ApiFnd012RequestParam,
   ApiFnd012RequestUrl,
@@ -175,6 +189,41 @@ export default class FundingController {
       body.fundingStatusEnum,
       body.approvedAmount,
       body.content,
+    );
+  }
+
+  @Executive()
+  @Get(ApiFnd008RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd008))
+  async getExecutiveFundings(
+    @GetExecutive() executive: GetExecutive,
+  ): Promise<ApiFnd008ResponseOk> {
+    return this.fundingService.getExecutiveFundings(executive.executiveId);
+  }
+
+  @Executive()
+  @Get(ApiFnd009RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd009))
+  async getExecutiveFundingsClubBreif(
+    @GetExecutive() executive: GetExecutive,
+    @Param() param: ApiFnd009RequestParam,
+  ): Promise<ApiFnd009ResponseOk> {
+    return this.fundingService.getExecutiveFundingsClubBreif(
+      executive.executiveId,
+      param,
+    );
+  }
+
+  @Executive()
+  @Get(ApiFnd010RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd010))
+  async getExecutiveFundingsExecutiveBreif(
+    @GetExecutive() executive: GetExecutive,
+    @Param() param: ApiFnd010RequestParam,
+  ): Promise<ApiFnd010ResponseOk> {
+    return this.fundingService.getExecutiveFundingsExecutiveBreif(
+      executive.executiveId,
+      param,
     );
   }
 }

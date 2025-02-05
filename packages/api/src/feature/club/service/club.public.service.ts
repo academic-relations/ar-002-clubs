@@ -1,6 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { IClubSummary } from "@sparcs-clubs/interface/api/club/type/club.type";
+import {
+  IClubSummary,
+  IDivisionSummary,
+} from "@sparcs-clubs/interface/api/club/type/club.type";
 import { ISemester } from "@sparcs-clubs/interface/api/club/type/semester.type";
 import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
@@ -345,6 +348,11 @@ export default class ClubPublicService {
 
   async fetchSummaries(ids: number[]): Promise<IClubSummary[]> {
     const results = await this.clubRepository.fetchSummaries(ids);
+    return results;
+  }
+
+  async fetchDivisionSummaries(ids: number[]): Promise<IDivisionSummary[]> {
+    const results = await this.clubRepository.fetchDivisionSummaries(ids);
     return results;
   }
 }
