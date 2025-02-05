@@ -111,6 +111,8 @@ export const zFunding = z.object({
   etcExpense: zMinorExpense.optional(),
 
   chargedExecutive: zExecutiveSummary.pick({ id: true }).optional(),
+  commentedExecutive: zExecutiveSummary.pick({ id: true }).optional(),
+
   editedAt: z.coerce.date(),
   commentedAt: z.coerce.date().optional(),
   createdAt: z.coerce.date(),

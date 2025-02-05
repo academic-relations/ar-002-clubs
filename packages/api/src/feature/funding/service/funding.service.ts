@@ -67,7 +67,7 @@ import FundingDeadlineRepository from "../repository/funding.deadline.repository
 import FundingRepository from "../repository/funding.repository";
 
 @Injectable()
-export class FundingService {
+export default class FundingService {
   constructor(
     private readonly fundingRepository: FundingRepository,
     private readonly fundingCommentRepository: FundingCommentRepository,
@@ -218,19 +218,19 @@ export class FundingService {
 
     const chargedExecutive =
       await this.userPublicService.fetchExecutiveSummaries(
-        comments.map(comment => comment.chargedExecutive.id),
+        comments.map(comment => comment.executive.id),
       );
 
     comments.forEach(comment => {
       // eslint-disable-next-line no-param-reassign
-      comment.chargedExecutive = chargedExecutive.find(
-        executive => executive.id === comment.chargedExecutive.id,
+      comment.executive = chargedExecutive.find(
+        executive => executive.id === comment.executive.id,
       );
     });
     const commentResponses = comments.map(comment => ({
       ...comment,
-      chargedExecutive: chargedExecutive.find(
-        executive => executive.id === comment.chargedExecutive.id,
+      executive: chargedExecutive.find(
+        executive => executive.id === comment.executive.id,
       ),
     }));
 
@@ -486,7 +486,7 @@ export class FundingService {
       clubs.map(club => club.division.id),
     );
     const professors = await this.userPublicService.fetchProfessorSummaries(
-      clubs.map(club => club.professor.id),
+      clubs.map(club => club.professor?.id),
     );
     const executives =
       await this.userPublicService.fetchCurrentExecutiveSummaries();
@@ -495,7 +495,7 @@ export class FundingService {
       ...club,
       division: devisions.find(division => division.id === club.division.id),
       professor: professors.find(
-        professor => professor.id === club.professor.id,
+        professor => professor.id === club.professor?.id,
       ),
       appliedCount: fundings.filter(
         funding =>
@@ -629,7 +629,7 @@ export class FundingService {
       ).id;
 
     const chargedExecutive =
-      await this.userPublicService.fetchExecutiveSummary(chargedExecutiveId);
+      await this.userPublicService.findExecutiveSummary(chargedExecutiveId);
 
     const executives = await this.userPublicService.fetchExecutiveSummaries(
       fundings
@@ -714,9 +714,10 @@ export class FundingService {
       const comments = this.fundingCommentRepository.fetchAll(funding.id);
       return {
         ...funding,
-        commentedExecutive: comments[0]?.commentedExecutive ?? null,
+        commentedExecutive: comments[0]?.executive ?? { id: null },
       };
     });
+    console.log(fundingsWithCommentedExecutive);
 
     const activities = await this.activityPublicService.fetchSummaries(
       fundingsWithCommentedExecutive.map(
@@ -836,7 +837,7 @@ export class FundingService {
           fundingStatusEnum,
           approvedAmount,
           funding: { id },
-          chargedExecutive: { id: executiveId },
+          executive: { id: executiveId },
           content,
         } as IFundingCommentRequest);
         const funding = await this.fundingRepository.patchStatusTx(tx, {

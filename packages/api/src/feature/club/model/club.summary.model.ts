@@ -10,37 +10,43 @@ export class VClubSummary implements IClubSummary {
 
   division: {
     id: number;
-    name: string;
   };
 
   professor: {
     id: number;
-  };
+  } | null;
 
   constructor(result: VClubSummary) {
     this.id = result.id;
     this.name = result.name;
+    this.typeEnum = result.typeEnum;
+    this.division = result.division;
+    this.professor = result.professor;
   }
 
   static fromDBResult(result: {
-    id: number;
-    name_kr: string;
-    type_enum: ClubTypeEnum;
-    division_id: number;
-    division_name: string;
-    professor_id: number;
+    club: {
+      id: number;
+      name_kr: string;
+      divisionId: number;
+    };
+    club_t: {
+      clubStatusEnumId: ClubTypeEnum;
+      professorId: number | null;
+    };
   }): VClubSummary {
     return new VClubSummary({
-      id: result.id,
-      name: result.name_kr,
-      typeEnum: result.type_enum,
+      id: result.club.id,
+      name: result.club.name_kr,
+      typeEnum: result.club_t.clubStatusEnumId,
       division: {
-        id: result.division_id,
-        name: result.division_name,
+        id: result.club.divisionId,
       },
-      professor: {
-        id: result.professor_id,
-      },
+      professor: result.club_t.professorId
+        ? {
+            id: result.club_t.professorId,
+          }
+        : null,
     });
   }
 }

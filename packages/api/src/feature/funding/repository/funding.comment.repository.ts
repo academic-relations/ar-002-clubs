@@ -64,7 +64,7 @@ export default class FundingCommentRepository extends BaseRepository<
     const comment = {
       ...param,
       fundingId: param.funding.id,
-      chargedExecutiveId: param.chargedExecutive.id,
+      executiveId: param.executive.id,
       feedback: param.content,
     };
     return super.insertTx(tx, comment);

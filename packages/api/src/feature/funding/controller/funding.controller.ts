@@ -76,7 +76,7 @@ import {
   GetStudent,
 } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
 
-import { FundingService } from "../service/funding.service";
+import FundingService from "../service/funding.service";
 
 @Controller()
 export default class FundingController {

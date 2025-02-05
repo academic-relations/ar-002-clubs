@@ -476,21 +476,13 @@ export default class ClubRepository {
           ),
         ),
       )
-      .leftJoin(Division, eq(Club.divisionId, Division.id))
-      .leftJoin(Professor, eq(ClubT.professorId, Professor.id))
       .where(eq(Club.id, clubId));
 
     if (result.length !== 1) {
       throw new NotFoundException("Club not found");
     }
-    return VClubSummary.fromDBResult({
-      id: result[0].club.id,
-      name_kr: result[0].club.name_kr,
-      type_enum: result[0].club_t.clubStatusEnumId,
-      division_id: result[0].division.id,
-      division_name: result[0].division.name,
-      professor_id: result[0].professor.id,
-    });
+
+    return VClubSummary.fromDBResult(result[0]);
   }
 
   async fetchSummaries(clubIds: number[]): Promise<VClubSummary[]> {
@@ -512,20 +504,9 @@ export default class ClubRepository {
           ),
         ),
       )
-      .leftJoin(Division, eq(Club.divisionId, Division.id))
-      .leftJoin(Professor, eq(ClubT.professorId, Professor.id))
       .where(inArray(Club.id, clubIds));
 
-    return result.map(club =>
-      VClubSummary.fromDBResult({
-        id: club.club.id,
-        name_kr: club.club.name_kr,
-        type_enum: club.club_t.clubStatusEnumId,
-        division_id: club.division.id,
-        division_name: club.division.name,
-        professor_id: club.professor.id,
-      }),
-    );
+    return result.map(club => VClubSummary.fromDBResult(club));
   }
 
   async fetchDivisionSummaries(ids: number[]): Promise<IDivisionSummary[]> {
@@ -534,7 +515,10 @@ export default class ClubRepository {
     }
 
     const result = await this.db
-      .select()
+      .select({
+        id: Division.id,
+        name: Division.name,
+      })
       .from(Division)
       .where(inArray(Division.id, ids));
     return result;

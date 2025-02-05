@@ -17,7 +17,7 @@ export const ApiFnd009RequestUrl =
   "/executive/fundings/clubs/club/:clubId/brief";
 
 const requestParam = z.object({
-  clubId: z.number().min(1),
+  clubId: z.coerce.number().int().min(1),
 });
 
 const requestQuery = z.object({});

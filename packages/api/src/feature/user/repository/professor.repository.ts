@@ -65,7 +65,10 @@ export default class ProfessorRepository {
     }
 
     const professors = await this.db
-      .select()
+      .select({
+        id: Professor.id,
+        name: Professor.name,
+      })
       .from(Professor)
       .where(inArray(Professor.id, ids));
     return professors;

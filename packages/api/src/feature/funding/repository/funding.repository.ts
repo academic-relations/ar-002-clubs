@@ -6,7 +6,7 @@ import {
   IFundingRequest,
   IFundingSummary,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
-import { and, desc, eq, exists, isNull, or } from "drizzle-orm";
+import { and, eq, exists, isNull, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import {
@@ -303,13 +303,7 @@ export default class FundingRepository {
           chargedExecutiveId: Funding.chargedExecutiveId,
         })
         .from(Funding)
-        .where(
-          and(
-            eq(Funding.clubId, arg1),
-            eq(Funding.activityDId, arg2),
-            isNull(Funding.deletedAt),
-          ),
-        );
+        .where(and(eq(Funding.activityDId, arg1), isNull(Funding.deletedAt)));
 
       if (fundings.length === 0) {
         return [];
@@ -370,21 +364,6 @@ export default class FundingRepository {
   async fetchCommentedSummaries(
     executiveId: number,
   ): Promise<IFundingSummary[]> {
-    const latestFeedbacks = this.db
-      .select({
-        fundingId: FundingFeedback.fundingId,
-        chargedExecutiveId: FundingFeedback.chargedExecutiveId,
-      })
-      .from(FundingFeedback)
-      .where(
-        and(
-          eq(FundingFeedback.chargedExecutiveId, executiveId),
-          isNull(FundingFeedback.deletedAt),
-        ),
-      )
-      .orderBy(desc(FundingFeedback.createdAt))
-      .as("latest_feedbacks");
-
     const fundings = await this.db
       .select({
         id: Funding.id,
@@ -397,7 +376,6 @@ export default class FundingRepository {
         chargedExecutiveId: Funding.chargedExecutiveId,
       })
       .from(Funding)
-      .leftJoin(latestFeedbacks, eq(latestFeedbacks.fundingId, Funding.id))
       .where(
         and(
           isNull(Funding.deletedAt),
@@ -410,7 +388,7 @@ export default class FundingRepository {
                 .where(
                   and(
                     eq(FundingFeedback.fundingId, Funding.id),
-                    eq(FundingFeedback.chargedExecutiveId, executiveId),
+                    eq(FundingFeedback.executiveId, executiveId),
                     isNull(FundingFeedback.deletedAt),
                   ),
                 ),

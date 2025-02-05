@@ -17,7 +17,7 @@ export const zClub = z.object({
   name: z.string().max(255).min(1),
   typeEnum: z.nativeEnum(ClubTypeEnum),
   division: zDivision.pick({ id: true }),
-  professor: zProfessor.pick({ id: true }),
+  professor: zProfessor.pick({ id: true }).nullable(),
 });
 
 // TODO: 수정 필요

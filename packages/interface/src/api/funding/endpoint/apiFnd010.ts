@@ -13,10 +13,10 @@ import { zFundingSummaryResponse } from "../type/funding.type";
 // TODO: 변경 필요
 
 const url = (executiveId: number) =>
-  `/executive/fundings/executives/executive/${executiveId}`;
+  `/executive/fundings/executives/executive/${executiveId}/brief`;
 const method = "GET";
 export const ApiFnd010RequestUrl =
-  "/executive/fundings/executives/executive/:executiveId";
+  "/executive/fundings/executives/executive/:executiveId/brief";
 
 const requestParam = z.object({
   executiveId: z.coerce.number().int().min(1),
