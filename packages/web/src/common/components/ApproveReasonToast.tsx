@@ -16,7 +16,7 @@ interface Reason {
   status?: string;
 }
 
-interface RejectReasonToastProps {
+interface ApproveReasonToastProps {
   title: string;
   reasons: Reason[];
 }
@@ -27,12 +27,12 @@ const ForceBorderRadius = styled.div`
   border-radius: 8px;
   width: 100%;
   overflow: hidden;
-  border: 1px solid ${({ theme }) => theme.colors.RED[600]};
-  background: ${({ theme }) => theme.colors.RED[100]};
+  border: 1px solid ${({ theme }) => theme.colors.GREEN[600]};
+  background: ${({ theme }) => theme.colors.GREEN[100]};
   z-index: ${({ theme }) => theme.zIndices.toast};
 `;
 
-const RejectReasonToastInner = styled.div`
+const ApproveReasonToastInner = styled.div`
   color: ${({ theme }) => theme.colors.BLACK};
   display: flex;
   flex-direction: column;
@@ -42,7 +42,7 @@ const RejectReasonToastInner = styled.div`
   max-height: 300px;
   overflow-y: auto;
 
-  .RejectReasonToast-title {
+  .ApproveReasonToast-title {
     padding: 12px 16px 0 16px;
 
     position: sticky;
@@ -50,11 +50,11 @@ const RejectReasonToastInner = styled.div`
     display: flex;
     align-items: center;
     gap: 8px;
-    background: ${({ theme }) => theme.colors.RED[100]};
+    background: ${({ theme }) => theme.colors.GREEN[100]};
     z-index: ${({ theme }) => theme.zIndices.toast + 1};
   }
 
-  .RejectReasonToast-reasons {
+  .ApproveReasonToast-reasons {
     display: flex;
     width: 100%;
     padding: 0 16px 12px 44px;
@@ -63,27 +63,27 @@ const RejectReasonToastInner = styled.div`
     flex: 1 0 0;
   }
 
-  .RejectReasonToast-sticky-title {
+  .ApproveReasonToast-sticky-title {
     position: sticky;
     top: 0;
-    background: ${({ theme }) => theme.colors.RED[100]};
+    background: ${({ theme }) => theme.colors.GREEN[100]};
     z-index: ${({ theme }) => theme.zIndices.toast + 1};
   }
 `;
 
-const RejectReasonToast: React.FC<RejectReasonToastProps> = ({
+const ApproveReasonToast: React.FC<ApproveReasonToastProps> = ({
   title,
   reasons,
 }) => (
   <ForceBorderRadius>
-    <RejectReasonToastInner>
-      <div className="RejectReasonToast-title">
-        <Icon type="error" size={20} color={colors.RED[600]} />
+    <ApproveReasonToastInner>
+      <div className="ApproveReasonToast-title">
+        <Icon type="error" size={20} color={colors.GREEN[600]} />
         <Typography fs={16} lh={24} fw="MEDIUM">
           {title}
         </Typography>
       </div>
-      <div className="RejectReasonToast-reasons">
+      <div className="ApproveReasonToast-reasons">
         {reasons.map(reason => (
           <FlexWrapper
             direction="column"
@@ -92,7 +92,7 @@ const RejectReasonToast: React.FC<RejectReasonToastProps> = ({
           >
             <Typography fs={14} lh={16} fw="REGULAR" color="GRAY.600">
               {formatDotDetailDate(reason.datetime)}{" "}
-              {reason.status && `• ${reason.status} 사유`}
+              {reason.status && `• ${reason.status}`}
             </Typography>
             <Typography fs={16} lh={24} fw="REGULAR">
               {reason.reason}
@@ -100,8 +100,8 @@ const RejectReasonToast: React.FC<RejectReasonToastProps> = ({
           </FlexWrapper>
         ))}
       </div>
-    </RejectReasonToastInner>
+    </ApproveReasonToastInner>
   </ForceBorderRadius>
 );
 
-export default RejectReasonToast;
+export default ApproveReasonToast;

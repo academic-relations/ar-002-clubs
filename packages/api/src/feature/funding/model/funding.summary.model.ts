@@ -24,7 +24,7 @@ export class VFundingSummary implements IFundingSummary {
 
   expenditureAmount: IFundingSummary["expenditureAmount"];
 
-  purposeActivity?: IFundingSummary["purposeActivity"];
+  purposeActivity: IFundingSummary["purposeActivity"];
 
   approvedAmount?: IFundingSummary["approvedAmount"];
 

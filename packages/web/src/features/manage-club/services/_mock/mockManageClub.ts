@@ -233,6 +233,14 @@ const mockupManageFunding: NewFundingData[] = [
     expenditureAmount: 300000,
     approvedAmount: 100000,
   },
+  {
+    id: 6,
+    fundingStatusEnum: FundingStatusEnum.Partial,
+    name: "개발개발한 어떠한 활동",
+    activityName: "모니터",
+    expenditureAmount: 300000,
+    approvedAmount: 100000,
+  },
 ];
 
 const mockupPastManageFunding: Funding[] = [

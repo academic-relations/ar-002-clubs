@@ -28,6 +28,7 @@ interface ActivityReportListProps {
   data: ActivityReport[];
   profile: string;
   refetch?: () => void;
+  clubId: number;
 }
 
 const columnHelper =
@@ -81,6 +82,7 @@ const ActivityReportList: React.FC<ActivityReportListProps> = ({
   data,
   profile,
   refetch = () => {},
+  clubId,
 }) => {
   const table = useReactTable({
     columns,
@@ -99,6 +101,7 @@ const ActivityReportList: React.FC<ActivityReportListProps> = ({
           close();
           refetch();
         }}
+        clubId={clubId}
       />
     ));
   };

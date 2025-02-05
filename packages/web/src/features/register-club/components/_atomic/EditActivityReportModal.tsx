@@ -10,7 +10,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import { useGetActivityReport } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
-
+import { filterActivityComments } from "@sparcs-clubs/web/features/activity-report/utils/filterComment";
 import usePutActivityReportForNewClub from "@sparcs-clubs/web/features/register-club/services/usePutActivityReportForNewClub";
 
 import ActivityReportForm from "./ActivityReportForm";
@@ -98,14 +98,10 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
             data.comments.length > 0 && (
               <RejectReasonToast
                 title="반려 사유"
-                reasons={data.comments
-                  .filter(
-                    comment => comment.content !== "활동이 승인되었습니다",
-                  )
-                  .map(comment => ({
-                    datetime: comment.createdAt,
-                    reason: comment.content,
-                  }))}
+                reasons={filterActivityComments(data.comments).map(comment => ({
+                  datetime: comment.createdAt,
+                  reason: comment.content,
+                }))}
               />
             )}
 
