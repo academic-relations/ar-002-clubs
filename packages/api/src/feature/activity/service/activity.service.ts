@@ -327,11 +327,7 @@ export default class ActivityService {
           await this.activityRepository.selectDurationByActivityId(row.id);
         return {
           ...row,
-          durations: duration.sort((a, b) =>
-            a.startTerm.getTime() === b.startTerm.getTime()
-              ? a.endTerm.getTime() - b.endTerm.getTime()
-              : a.startTerm.getTime() - b.startTerm.getTime(),
-          ),
+          durations: duration,
         };
       }),
     );

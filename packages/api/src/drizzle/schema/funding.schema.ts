@@ -13,7 +13,7 @@ import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.e
 
 import { Activity, ActivityD } from "./activity.schema";
 import { Club } from "./club.schema";
-import { ExecutiveT, StudentT } from "./user.schema";
+import { Executive, StudentT } from "./user.schema";
 
 export const Funding = mysqlTable(
   "funding",
@@ -97,7 +97,7 @@ export const Funding = mysqlTable(
     executiveForeignKey: foreignKey({
       name: "funding_charged_executive_id_fk",
       columns: [table.chargedExecutiveId],
-      foreignColumns: [ExecutiveT.id],
+      foreignColumns: [Executive.id],
     }),
   }),
 );
@@ -398,7 +398,7 @@ export const FundingFeedback = mysqlTable(
     executiveForeignKey: foreignKey({
       name: "funding_feedback_executive_id_fk",
       columns: [table.chargedExecutiveId],
-      foreignColumns: [ExecutiveT.id],
+      foreignColumns: [Executive.id],
     }),
   }),
 );
