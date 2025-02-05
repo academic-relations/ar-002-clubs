@@ -3,8 +3,8 @@
 
 It closes #issue_number
 
-- [x] 작업요약1
-- [x] 작업요약2
+- 작업요약1
+- 작업요약2
 
 ## ⭐문서 링크⭐
 1. API sheet: 
@@ -13,12 +13,11 @@ It closes #issue_number
 
 ## 디펜던시 있는 변경사항(혹은 리뷰어가 알아야 할 참고사항)
 <!-- 이슈에 관련된 변경사항 외에 주의 깊게 봐야 할 변경사항(예: /common 쪽 코드 변경) -->
-
 - 없음
 
 ## 이후 작업해야 할 todo list
 <!-- pr이 머지된 후 후속 작업, 혹은 draft pr의 경우 남아있는 todo  -->
-- [ ] todo1
+- 없음
 
 
 # 🔴 리뷰 Due Date: x월 x일 (x요일)
@@ -26,4 +25,6 @@ It closes #issue_number
 
 # 📸 스크린샷 
 <!-- PR 변경 사항에 대한 스크린샷이나 .gif 파일 -->
-프론트의 경우 리뷰가 필요한 화면 URL도 알려줘: http://localhost:3000/
+프론트의 경우 리뷰가 필요한 화면 URL 목록도 알려줘: 
+
+1. (무슨무슨 페이지) http://localhost:3000/
