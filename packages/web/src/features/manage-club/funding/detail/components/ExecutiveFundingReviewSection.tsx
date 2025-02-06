@@ -139,7 +139,7 @@ const ExecutiveFundingReviewSection: React.FC<{
       )}
 
       <TextInput
-        label="부분 승인 / 반려 사유 (부분 승인 / 반려 시에만 입력)"
+        label="코멘트 (부분 승인 / 반려 시에는 필수)"
         value={reviewDetail}
         handleChange={setReviewDetail}
         placeholder="내용"
