@@ -10,11 +10,11 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 
-import ChargedChangeFundingModalContent from "@sparcs-clubs/web/features/executive/funding/components/ChargedChangeFundingModalContent";
 import { ChargedChangeFundingProps } from "@sparcs-clubs/web/features/executive/funding/components/ChargedChangeFundingModalTable";
 import ExecutiveClubFundingsTable from "@sparcs-clubs/web/features/executive/funding/components/ExecutiveClubFundingsTable";
 import FundingClubStatistic from "@sparcs-clubs/web/features/executive/funding/components/FundingClubStatistic";
 
+import ChargedChangeFundingModalContent from "../components/ChargedChangeFundingModalContent";
 import useGetClubFundings from "../services/useGetClubFundings";
 
 const ExecutiveFundingClubFrame = () => {
@@ -49,8 +49,8 @@ const ExecutiveFundingClubFrame = () => {
       <ChargedChangeFundingModalContent
         isOpen={isOpen}
         close={close}
-        selectedClubIds={[Number(clubId)]}
-        selectedClubInfos={selectedFundingInfos}
+        selectedFundingIds={selectedFundingIds}
+        selectedFundingInfos={selectedFundingInfos}
       />
     ));
   };

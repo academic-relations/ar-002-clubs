@@ -1,10 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import apiFnd008 from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd008";
-import apiFnd009 from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd009";
-import apiFnd010 from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd010";
+import { ApiFnd016ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd016";
 import { useQueryClient } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
 
 import { overlay } from "overlay-kit";
 
@@ -18,7 +16,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import useGetFundingClubChargeAvailableExecutives from "../services/useGetFundingClubChargeAvailableExecutives";
 
-import usePatchFundingStatus from "../services/usePatchFundingStatus";
+import usePatchFundingChargedExecutive from "../services/usePatchFundingChargedExecutive";
 
 import ChargedChangeFundingModalTable, {
   ChargedChangeFundingProps,
@@ -26,9 +24,9 @@ import ChargedChangeFundingModalTable, {
 
 interface ChargedChangeFundingModalContentProps {
   isOpen: boolean;
-  close: VoidFunction;
-  selectedFundingIds: number[];
-  selectedFundingInfos: ChargedChangeFundingProps[];
+  close: () => void;
+  selectedClubIds: number[];
+  selectedClubInfos: ChargedChangeFundingProps[];
 }
 
 interface ChargeableExecutive {
@@ -36,45 +34,47 @@ interface ChargeableExecutive {
   value: number;
 }
 
-const ChargedChangeFundingModalContent: React.FC<
-  ChargedChangeFundingModalContentProps
-> = ({ isOpen, close, selectedFundingIds, selectedFundingInfos }) => {
+const ChargedChangeFundingClubModalContent = ({
+  isOpen,
+  close,
+  selectedClubIds,
+  selectedClubInfos,
+}: ChargedChangeFundingModalContentProps) => {
   const queryClient = useQueryClient();
-  const { id } = useParams();
-
-  const { data, isLoading, isError } =
-    useGetFundingClubChargeAvailableExecutives({
-      clubIds: [Number(id)],
-    });
-  const { mutate: patchFundingChargedExecutive } = usePatchFundingStatus();
-
   const [selectedExecutiveId, setSelectedExecutiveId] = useState<number | null>(
     null,
   );
-
   const [chargeableExecutives, setChargeableExecutives] = useState<
     ChargeableExecutive[]
   >([]);
+
+  const { data, isLoading, isError } =
+    useGetFundingClubChargeAvailableExecutives({
+      clubIds: selectedClubIds,
+    });
+  const { mutate } = usePatchFundingChargedExecutive();
 
   useEffect(() => {
     if (data) {
       setChargeableExecutives(
         data.executives
-          .map(executive => ({
+          .map((executive: ApiFnd016ResponseOk["executives"][number]) => ({
             label: `${executive.name} (${executive.studentNumber})`,
             value: executive.id,
           }))
-          .sort((a, b) => a.label.localeCompare(b.label)),
+          .sort((a: ChargeableExecutive, b: ChargeableExecutive) =>
+            a.label.localeCompare(b.label),
+          ),
       );
     }
   }, [data]);
 
   const handleSubmit = useCallback(() => {
     if (selectedExecutiveId === null) return;
-    patchFundingChargedExecutive(
+    mutate(
       {
         body: {
-          fundingIds: selectedFundingIds,
+          clubIds: selectedClubIds,
           executiveId: selectedExecutiveId,
         },
       },
@@ -83,14 +83,8 @@ const ChargedChangeFundingModalContent: React.FC<
           queryClient.invalidateQueries({
             queryKey: [apiFnd008.url()],
           });
-          queryClient.invalidateQueries({
-            queryKey: [apiFnd009.url(Number(id))],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [apiFnd010.url(selectedExecutiveId)],
-          });
-          setSelectedExecutiveId(null);
           close();
+          setSelectedExecutiveId(null);
         },
         onError: () => {
           overlay.open(({ isOpen: opened, close: closeOverlay }) => (
@@ -103,14 +97,7 @@ const ChargedChangeFundingModalContent: React.FC<
         },
       },
     );
-  }, [
-    selectedExecutiveId,
-    patchFundingChargedExecutive,
-    selectedFundingIds,
-    queryClient,
-    id,
-    close,
-  ]);
+  }, [selectedClubIds, selectedExecutiveId, queryClient, close, mutate]);
 
   const handleClose = useCallback(() => {
     setSelectedExecutiveId(null);
@@ -135,11 +122,11 @@ const ChargedChangeFundingModalContent: React.FC<
               items={chargeableExecutives}
               value={selectedExecutiveId}
               onChange={setSelectedExecutiveId}
-              label="개별 활동 보고서 담당자"
+              label="동아리별 지원금 담당자"
               isTextAlignStart
             />
             <ChargedChangeFundingModalTable
-              selectedClubInfos={selectedFundingInfos}
+              selectedClubInfos={selectedClubInfos}
               newExecutiveName={
                 chargeableExecutives
                   .find(executive => executive.value === selectedExecutiveId)
@@ -152,8 +139,8 @@ const ChargedChangeFundingModalContent: React.FC<
               fw="MEDIUM"
               style={{ textAlign: "left" }}
             >
-              * 개별 활동 보고서 담당자를 변경할 경우, 해당 동아리의 활동 보고서
-              담당자와 개별 활동 보고서 담당자가 달라질 수 있습니다.
+              * 동아리별 지원금 담당자를 변경할 경우, 해당 동아리가 작성한
+              지원금의 담당자가 모두 해당 담당자로 변경됩니다.
             </Typography>
           </FlexWrapper>
         </AsyncBoundary>
@@ -162,4 +149,4 @@ const ChargedChangeFundingModalContent: React.FC<
   );
 };
 
-export default ChargedChangeFundingModalContent;
+export default ChargedChangeFundingClubModalContent;

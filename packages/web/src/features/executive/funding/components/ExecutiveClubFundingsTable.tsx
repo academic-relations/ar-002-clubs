@@ -10,8 +10,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Table from "@sparcs-clubs/web/common/components/Table";
+import CheckboxCenterPlacerStopPropagation from "@sparcs-clubs/web/common/components/Table/CheckboxCenterPlacerStopPropagation";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
@@ -28,6 +30,19 @@ type FundingSummary = ApiFnd009ResponseOk["fundings"][number];
 
 const columnHelper = createColumnHelper<FundingSummary>();
 const columns = [
+  columnHelper.display({
+    id: "multiSelect",
+    cell: ({ row }) => (
+      <CheckboxCenterPlacerStopPropagation
+        onClick={e => {
+          row.getToggleSelectedHandler()(e);
+        }}
+      >
+        <Checkbox checked={row.getIsSelected()} />
+      </CheckboxCenterPlacerStopPropagation>
+    ),
+    size: 56,
+  }),
   columnHelper.accessor("fundingStatusEnum", {
     header: "상태",
     cell: info => {

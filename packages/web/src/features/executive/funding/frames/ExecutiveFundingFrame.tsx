@@ -7,7 +7,7 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
 
-import ChargedChangeFundingModalContent from "../components/ChargedChangeFundingModalContent";
+import ChargedChangeFundingModalContent from "../components/ChargedChangeFundingClubModalContent";
 import { ChargedChangeFundingProps } from "../components/ChargedChangeFundingModalTable";
 import ExecutiveFundingChargedTable from "../components/ExecutiveFundingChargedTable";
 import ExecutiveFundingClubTable from "../components/ExecutiveFundingClubTable";
