@@ -55,35 +55,31 @@ const ExecutiveFundingClubFrame = () => {
     ));
   };
 
+  const defaultData = {
+    club: {
+      id: Number(clubId),
+      name: "",
+      typeEnum: ClubTypeEnum.Regular,
+      division: {
+        id: 0,
+      },
+      professor: {
+        id: 0,
+      },
+    },
+    totalCount: 0,
+    appliedCount: 0,
+    approvedCount: 0,
+    rejectedCount: 0,
+    committeeCount: 0,
+    partialCount: 0,
+    fundings: [],
+    chargedExecutive: null,
+  };
+
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <FundingClubStatistic
-        data={
-          data ?? {
-            club: {
-              id: Number(clubId),
-              name: "",
-              typeEnum: ClubTypeEnum.Regular,
-              division: {
-                id: 0,
-                name: "",
-              },
-              professor: {
-                id: 0,
-                name: "",
-              },
-            },
-            totalCount: 0,
-            appliedCount: 0,
-            approvedCount: 0,
-            rejectedCount: 0,
-            committeeCount: 0,
-            partialCount: 0,
-            fundings: [],
-            chargedExecutive: null,
-          }
-        }
-      />
+      <FundingClubStatistic data={data ?? defaultData} />
       <FlexWrapper direction="row" gap={16}>
         <SearchInput
           searchText={searchText}
@@ -98,31 +94,7 @@ const ExecutiveFundingClubFrame = () => {
         </Button>
       </FlexWrapper>
       <ExecutiveClubFundingsTable
-        data={
-          data ?? {
-            club: {
-              id: Number(clubId),
-              name: "",
-              typeEnum: ClubTypeEnum.Regular,
-              division: {
-                id: 0,
-                name: "",
-              },
-              professor: {
-                id: 0,
-                name: "",
-              },
-            },
-            totalCount: 0,
-            appliedCount: 0,
-            approvedCount: 0,
-            rejectedCount: 0,
-            committeeCount: 0,
-            partialCount: 0,
-            fundings: [],
-            chargedExecutive: null,
-          }
-        }
+        fundings={data ?? defaultData}
         searchText={searchText}
         selectedFundingIds={selectedFundingIds}
         setSelectedFundingIds={setSelectedFundingIds}

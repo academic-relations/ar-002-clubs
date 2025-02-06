@@ -38,7 +38,7 @@ const columns = [
   }),
   columnHelper.accessor(row => row.purposeActivity?.name, {
     header: "활동명",
-    cell: info => info.getValue() || "-",
+    cell: info => info.getValue() || "활동보고서로 증빙 불가",
     size: 200,
   }),
   columnHelper.accessor("name", {
@@ -129,7 +129,7 @@ const ExecutiveClubFundingsTable: React.FC<ExecutiveClubFundingsTableProps> = ({
   };
 
   const table = useReactTable({
-    data: fundings.fundings,
+    data: sortedFundings,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
