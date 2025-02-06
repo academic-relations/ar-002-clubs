@@ -215,25 +215,19 @@ export default class FundingService {
 
     const comments = await this.fundingCommentRepository.fetchAll(funding.id);
 
-    const chargedExecutive =
+    const commentedExecutive =
       await this.userPublicService.fetchExecutiveSummaries(
         comments.map(comment => comment.executive.id),
       );
 
-    comments.forEach(comment => {
-      // eslint-disable-next-line no-param-reassign
-      comment.executive = chargedExecutive.find(
-        executive => executive.id === comment.executive.id,
-      );
-    });
-    const commentResponses = comments.map(comment => ({
+    const updatedComments = comments.map(comment => ({
       ...comment,
-      executive: chargedExecutive.find(
+      executive: commentedExecutive.find(
         executive => executive.id === comment.executive.id,
       ),
     }));
 
-    return { funding, comments: commentResponses };
+    return { funding, comments: updatedComments };
   }
 
   private async buildFundingResponse(

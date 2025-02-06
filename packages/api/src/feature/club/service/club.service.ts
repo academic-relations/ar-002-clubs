@@ -60,12 +60,13 @@ export class ClubService {
   async getClubs(): Promise<ApiClb001ResponseOK> {
     const result = await this.clubRepository.getClubs();
 
-    result.divisions.forEach(division => {
-      // eslint-disable-next-line no-param-reassign
-      division.clubs = division.clubs.filter(
+    result.divisions = result.divisions.map(division => ({
+      ...division,
+      clubs: division.clubs.filter(
         club => !this.EXCLUDED_CLUB_IDS.includes(club.id),
-      );
-    });
+      ),
+    }));
+
     return result;
   }
 
