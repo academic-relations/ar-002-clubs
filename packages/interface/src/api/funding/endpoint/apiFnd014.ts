@@ -11,7 +11,7 @@ import { zFunding } from "../type/funding.type";
  */
 
 const url = () => `/executive/fundings/executives/charged-executive`;
-const method = "POST";
+const method = "PATCH";
 export const ApiFnd014RequestUrl =
   "/executive/fundings/executives/charged-executive";
 
