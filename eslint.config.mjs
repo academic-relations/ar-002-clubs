@@ -177,6 +177,7 @@ export default tseslint.config(
       globals: eslintPluginJest.environments.globals.globals,
     },
     rules: {
+      "max-classes-per-file": "off",
       "no-useless-constructor": "off",
       "no-empty-function": "off",
       "no-dupe-class-members": "off",
