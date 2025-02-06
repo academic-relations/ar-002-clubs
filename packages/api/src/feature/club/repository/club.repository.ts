@@ -1,5 +1,4 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { IDivisionSummary } from "@sparcs-clubs/interface/api/club/type/club.type";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { and, eq, gt, gte, inArray, isNull, lte, or, sql } from "drizzle-orm";
 import { union } from "drizzle-orm/mysql-core";
@@ -507,20 +506,5 @@ export default class ClubRepository {
       .where(inArray(Club.id, clubIds));
 
     return result.map(club => VClubSummary.fromDBResult(club));
-  }
-
-  async fetchDivisionSummaries(ids: number[]): Promise<IDivisionSummary[]> {
-    if (ids.length === 0) {
-      return [];
-    }
-
-    const result = await this.db
-      .select({
-        id: Division.id,
-        name: Division.name,
-      })
-      .from(Division)
-      .where(inArray(Division.id, ids));
-    return result;
   }
 }

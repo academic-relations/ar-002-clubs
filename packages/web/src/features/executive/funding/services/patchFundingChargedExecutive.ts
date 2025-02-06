@@ -7,7 +7,10 @@ import type { ApiFnd015RequestBody } from "@sparcs-clubs/interface/api/funding/e
 export const patchFundingChargedExecutive = async (
   requestBody: ApiFnd015RequestBody,
 ) => {
-  const { data } = await axiosClientWithAuth.post(apiFnd015.url(), requestBody);
+  const { data } = await axiosClientWithAuth.patch(
+    apiFnd015.url(),
+    requestBody,
+  );
 
   return apiFnd015.responseBodyMap[200].parse(data);
 };

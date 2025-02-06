@@ -672,6 +672,8 @@ export default class FundingService {
       activityD.id,
     );
 
+    const club = await this.clubPublicService.fetchSummary(param.clubId);
+
     const chargedExecutiveId = fundings
       .filter(funding => funding.club.id === param.clubId)
       .filter(funding => funding.chargedExecutive)
@@ -723,6 +725,7 @@ export default class FundingService {
     );
 
     return {
+      club,
       totalCount: fundings.filter(funding => funding.club.id === param.clubId)
         .length,
       appliedCount: fundings.filter(
