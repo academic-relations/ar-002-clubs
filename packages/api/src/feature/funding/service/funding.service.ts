@@ -616,31 +616,36 @@ export default class FundingService {
           totalCount: fundings.filter(
             funding =>
               funding.club.id === club.id &&
-              funding.fundingStatusEnum === FundingStatusEnum.Applied,
+              funding.chargedExecutive?.id === executive.id,
           ).length,
           appliedCount: fundings.filter(
             funding =>
               funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id &&
               funding.fundingStatusEnum === FundingStatusEnum.Applied,
           ).length,
           approvedCount: fundings.filter(
             funding =>
               funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id &&
               funding.fundingStatusEnum === FundingStatusEnum.Approved,
           ).length,
           partialCount: fundings.filter(
             funding =>
               funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id &&
               funding.fundingStatusEnum === FundingStatusEnum.Partial,
           ).length,
           rejectedCount: fundings.filter(
             funding =>
               funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id &&
               funding.fundingStatusEnum === FundingStatusEnum.Rejected,
           ).length,
           committeeCount: fundings.filter(
             funding =>
               funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id &&
               funding.fundingStatusEnum === FundingStatusEnum.Committee,
           ).length,
         })),
