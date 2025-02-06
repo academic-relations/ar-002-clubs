@@ -29,7 +29,7 @@ const ExecutiveFundingReviewSection: React.FC<{
   const { profile } = useAuth();
 
   const { mutate: reviewFunding } = useExecutiveReviewFunding(fundingId);
-  const [rejectionDetail, setRejectionDetail] = useState("");
+  const [reviewDetail, setReviewDetail] = useState("");
   const [approveAmount, setApproveAmount] = useState(
     funding.approvedAmount !== 0 ? funding.approvedAmount?.toString() : "",
   );
@@ -42,7 +42,7 @@ const ExecutiveFundingReviewSection: React.FC<{
           Number(approveAmount) === funding.expenditureAmount
             ? FundingStatusEnum.Approved
             : FundingStatusEnum.Partial,
-        content: rejectionDetail,
+        content: reviewDetail,
       },
       {
         onSuccess: () => {
@@ -80,11 +80,12 @@ const ExecutiveFundingReviewSection: React.FC<{
       {
         approvedAmount: 0,
         fundingStatusEnum: FundingStatusEnum.Rejected,
-        content: rejectionDetail,
+        content: reviewDetail,
       },
       {
         onSuccess: () => {
-          setRejectionDetail("");
+          setReviewDetail("");
+          setApproveAmount("");
         },
         onError: () => {
           overlay.open(({ isOpen, close }) => (
@@ -108,7 +109,7 @@ const ExecutiveFundingReviewSection: React.FC<{
     if (Number(approveAmount) > funding.expenditureAmount) return false;
     if (Number(approveAmount) === funding.approvedAmount) return false;
     if (Number(approveAmount) === funding.expenditureAmount) return true;
-    if (rejectionDetail === "") return false;
+    if (reviewDetail === "") return false;
     return true;
   };
 
@@ -123,7 +124,9 @@ const ExecutiveFundingReviewSection: React.FC<{
           {filteredComments.map((comment, index) => (
             <FlexWrapper direction="column" gap={4} key={`${index.toString()}`}>
               <Typography fs={14} lh={16} color="GRAY.600">
-                {formatSlashDateTime(comment.createdAt)}
+                {formatSlashDateTime(comment.createdAt)}{" "}
+                {comment.fundingStatusEnum && `• ${comment.fundingStatusEnum}`}
+                {/* TODO: status enum 대신 텍스트로 표시 */}
               </Typography>
               <Typography fs={16} lh={24}>
                 {comment.content}
@@ -135,8 +138,8 @@ const ExecutiveFundingReviewSection: React.FC<{
 
       <TextInput
         label="부분 승인 / 반려 사유 (부분 승인 / 반려 시에만 입력)"
-        value={rejectionDetail}
-        handleChange={setRejectionDetail}
+        value={reviewDetail}
+        handleChange={setReviewDetail}
         placeholder="내용"
         area
       />
@@ -165,7 +168,7 @@ const ExecutiveFundingReviewSection: React.FC<{
         </Button>
         <Button
           onClick={handleReject}
-          type={rejectionDetail === "" ? "disabled" : "default"}
+          type={reviewDetail === "" ? "disabled" : "default"}
         >
           신청 반려
         </Button>

@@ -54,7 +54,7 @@ const FundingStatusSection: React.FC<FundingStatusSectionProps> = ({
           reason: comment.content,
           status:
             comment.fundingStatusEnum === FundingStatusEnum.Partial
-              ? `${getTagDetail(comment.fundingStatusEnum, FundingTagList).text}승인`
+              ? `${getTagDetail(comment.fundingStatusEnum, FundingTagList).text} 승인`
               : getTagDetail(comment.fundingStatusEnum, FundingTagList).text,
         }))}
       />
