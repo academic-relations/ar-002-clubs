@@ -2,7 +2,6 @@
 
 import React, { useCallback, useMemo } from "react";
 
-import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
 import styled from "styled-components";
@@ -18,31 +17,25 @@ import List from "@sparcs-clubs/web/common/components/List";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
-import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
-import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
 import { Profile } from "@sparcs-clubs/web/common/providers/AuthContext";
-
 import { getActivityTypeLabel } from "@sparcs-clubs/web/types/activityType";
 import {
   getProfessorApprovalLabel,
   getProfessorApprovalTagColor,
 } from "@sparcs-clubs/web/types/professorApproval";
-
 import {
   formatDate,
   formatDotDetailDate,
 } from "@sparcs-clubs/web/utils/Date/formatDate";
 
+import ActivityReportStatusSection from "../components/ActivityReportStatusSection";
 import ExecutiveActivityReportApprovalSection from "../components/ExecutiveActivityReportApprovalSection";
-import { getActivityReportProgress } from "../constants/activityReportProgress";
 import useGetActivityReportDetail from "../hooks/useGetActivityReportDetail";
 import useProfessorApproveSingleActivityReport from "../hooks/useProfessorApproveSingleActivityReport";
 import { useDeleteActivityReport } from "../services/useDeleteActivityReport";
 import useGetActivityDeadline from "../services/useGetActivityDeadline";
-import { CurrentActivityReport } from "../types/activityReport";
 import { filterActivityComments } from "../utils/filterComment";
 
 interface ActivitySectionProps extends React.PropsWithChildren {
@@ -108,8 +101,6 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     useProfessorApproveSingleActivityReport();
 
   const isProgressVisible =
-    profile.type === "undergraduate" || profile.type === "executive";
-  const isCommentsVisible =
     profile.type === "undergraduate" || profile.type === "executive";
 
   const navigateToActivityReportList = () => {
@@ -233,36 +224,16 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     return null;
   };
 
-  const activityReportProgress = (activityData: CurrentActivityReport) =>
-    getActivityReportProgress(
-      activityData.activityStatusEnumId,
-      activityData.activityStatusEnumId === ActivityStatusEnum.Applied
-        ? activityData.editedAt
-        : activityData.commentedAt || activityData.updatedAt,
-    );
-
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       <FlexWrapper direction="column" gap={40} style={{ alignSelf: "stretch" }}>
         <Card outline padding="32px" gap={20}>
           {isProgressVisible && (
-            <ProgressStatus
-              labels={activityReportProgress(data).labels}
-              progress={activityReportProgress(data).progress}
-              optional={
-                isCommentsVisible &&
-                filterActivityComments(data.comments).length > 0 && (
-                  <RejectReasonToast
-                    title="반려 사유"
-                    reasons={filterActivityComments(data.comments).map(
-                      comment => ({
-                        datetime: comment.createdAt,
-                        reason: comment.content,
-                      }),
-                    )}
-                  />
-                )
-              }
+            <ActivityReportStatusSection
+              status={data.activityStatusEnumId}
+              editedAt={data.editedAt}
+              commentedAt={data.commentedAt ?? undefined}
+              comments={data.comments.toReversed()}
             />
           )}
 
