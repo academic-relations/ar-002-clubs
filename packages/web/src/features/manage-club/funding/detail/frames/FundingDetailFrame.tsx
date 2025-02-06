@@ -142,7 +142,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ profile }) => {
             status={data.funding.fundingStatusEnum}
             editedAt={data.funding.editedAt}
             commentedAt={data.funding.commentedAt}
-            comments={data.comments.toReversed() ?? []}
+            comments={data.comments ?? []}
           />
         )}
         <AsyncBoundary isLoading={isLoading} isError={isError}>
