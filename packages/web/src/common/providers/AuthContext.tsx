@@ -20,6 +20,7 @@ import {
   subscribeLocalStorageSet,
   unsubscribeLocalStorageSet,
 } from "@sparcs-clubs/web/utils/localStorage";
+import logger from "@sparcs-clubs/web/utils/logger";
 
 import AgreementModal from "../components/Modal/AgreeModal";
 import getLogin from "../services/getLogin";
@@ -93,7 +94,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
           );
           setIsLoggedIn(true);
           cookies.remove("accessToken");
-          console.log("Logged in successfully.");
+          logger.log("Logged in successfully.");
         }
       }
     }
@@ -104,7 +105,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       const response = await getLogin();
       window.location.href = response.url;
     } catch (error) {
-      console.error("Login failed", error);
+      logger.error("Login failed", error);
     }
   };
 
@@ -116,15 +117,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       removeLocalStorageItem("responseToken");
       const cookies = new Cookies();
       cookies.remove("accessToken");
-      console.log("Logged out successfully.");
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
+      logger.log("Logged out successfully.");
+    } catch (_) {
       setIsLoggedIn(false);
       removeLocalStorageItem("accessToken");
       removeLocalStorageItem("responseToken");
       const cookies = new Cookies();
       cookies.remove("accessToken");
-      console.log("Logged out.");
+      logger.log("Logged out.");
     }
   };
 
@@ -146,8 +146,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
                 await postUserAgree();
                 setIsAgreed(true);
                 close();
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              } catch (error) {
+              } catch (_) {
                 window.location.reload();
               }
             }}

@@ -44,7 +44,7 @@ const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
   const [phoneNumberError, setPhoneNumberError] = useState<boolean>(false);
 
   useEffect(() => {
-    // console.log("[PrintingBusinessFormFirst] state changed to", clubId, phoneNumber);
+    // logger.log("[PrintingBusinessFormFirst] state changed to", clubId, phoneNumber);
     setRequestParam({ clubId: Number(clubId) });
     setRequestForm({ ...requestForm, krPhoneNumber: phoneNumber });
   }, [clubId, phoneNumber, requestForm, setRequestForm, setRequestParam]);

@@ -12,6 +12,7 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 import PrintingBusinessNotice from "@sparcs-clubs/web/features/printing-business/component/PrintingBusinessNotice";
+import logger from "@sparcs-clubs/web/utils/logger";
 
 import PrintingBusinessForm from "../component/PrintingBusinessForm";
 
@@ -45,7 +46,7 @@ const PrintingBusinessMainFrame: React.FC = () => {
 
   // 디버깅용 출력입니다
   useEffect(() => {
-    console.log(
+    logger.log(
       "[PrintingBusinessMainFrame]some state is changed to\n",
       agreement,
       activeStep,
