@@ -67,6 +67,7 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
   return (
     <Modal isOpen={isOpen} width="full">
       <ActivityReportForm
+        // TODO. 리팩토링 해야 함
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         clubId={clubId}
         formCtx={formCtx as any}

@@ -105,6 +105,7 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
             )}
 
           <ActivityReportForm
+            // TODO. 리팩토링 해야 함
             /* eslint-disable  @typescript-eslint/no-explicit-any */
             clubId={data.clubId}
             formCtx={formCtx as any}
