@@ -226,7 +226,7 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   const submitHandler = useCallback(
     (data: ApiReg009RequestBody) => {
-      // logger.log("debug", data);
+      // logger.debug(data);
       mutate({ requestParam: { applyId }, body: data });
     },
     [mutate, applyId],

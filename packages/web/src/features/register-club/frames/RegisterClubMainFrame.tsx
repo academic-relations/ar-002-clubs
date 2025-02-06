@@ -202,7 +202,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   const submitHandler = useCallback(
     (data: ApiReg001RequestBody) => {
-      // logger.log("debug", "submit", data);
+      // logger.debug("submit", data);
       registerClubApi({
         body: data,
       });

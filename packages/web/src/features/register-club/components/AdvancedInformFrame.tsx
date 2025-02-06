@@ -109,7 +109,7 @@ const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({
             downloadFileName="[양식] 활동 계획서.docx"
             initialFile={files.activityPlanFile}
             onChange={data => {
-              logger.log("debug", "activityPlanFileId", data);
+              logger.debug("activityPlanFileId", data);
               updateSingleFile("activityPlanFileId", data);
             }}
           />
