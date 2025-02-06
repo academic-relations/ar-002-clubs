@@ -589,13 +589,53 @@ export default class FundingService {
           funding.chargedExecutive.id === executive.id &&
           funding.fundingStatusEnum === FundingStatusEnum.Committee,
       ).length,
-      chargedClubs: clubs.filter(club =>
-        fundings.some(
-          funding =>
-            funding.chargedExecutive?.id === executive.id &&
-            funding.club.id === club.id,
-        ),
-      ),
+      chargedClubs: clubs
+        .filter(club =>
+          fundings.some(
+            funding =>
+              funding.chargedExecutive?.id === executive.id &&
+              funding.club.id === club.id,
+          ),
+        )
+        .map(club => ({
+          ...club,
+          division: devisions.find(
+            division => division.id === club.division.id,
+          ),
+          professor: professors.find(
+            professor => professor.id === club.professor?.id,
+          ),
+          totalCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Applied,
+          ).length,
+          appliedCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Applied,
+          ).length,
+          approvedCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Approved,
+          ).length,
+          partialCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Partial,
+          ).length,
+          rejectedCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Rejected,
+          ).length,
+          committeeCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Committee,
+          ).length,
+        })),
     }));
 
     return {

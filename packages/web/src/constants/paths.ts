@@ -50,7 +50,7 @@ export const productionReadyPaths: {
     "/executive/activity-report",
     // 지원금
     "/manage-club/funding",
-    // "/executive/funding",
+    "/executive/funding",
     // 동아리 / 회원 등록
     "/register-club",
     "/my/register-club",
