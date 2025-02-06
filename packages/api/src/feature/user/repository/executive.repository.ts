@@ -115,7 +115,7 @@ export default class ExecutiveRepository {
     return result;
   }
 
-  async selectExecutiveSummary(date: Date): Promise<VExecutiveSummary[]> {
+  async fetchExecutiveSummaries(date: Date): Promise<VExecutiveSummary[]> {
     const result = await this.db
       .select()
       .from(ExecutiveT)

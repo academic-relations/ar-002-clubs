@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import {
   IExecutiveSummary,
+  IProfessorSummary,
   IStudentSummary,
 } from "@sparcs-clubs/interface/api/user/type/user.type";
 
@@ -172,7 +173,7 @@ export default class UserPublicService {
   async getCurrentExecutiveSummaries(): Promise<IExecutiveSummary[]> {
     const today = getKSTDate();
     const executives =
-      await this.executiveRepository.selectExecutiveSummary(today);
+      await this.executiveRepository.fetchExecutiveSummaries(today);
 
     return executives;
   }
@@ -185,12 +186,27 @@ export default class UserPublicService {
     return students;
   }
 
+  async fetchCurrentExecutiveSummaries(): Promise<IExecutiveSummary[]> {
+    const today = getKSTDate();
+    const executives =
+      await this.executiveRepository.fetchExecutiveSummaries(today);
+    return executives;
+  }
+
   async fetchExecutiveSummaries(
     executiveIds: number[],
   ): Promise<IExecutiveSummary[]> {
     const executives =
       await this.executiveRepository.fetchSummaries(executiveIds);
     return executives;
+  }
+
+  async fetchProfessorSummaries(
+    professorIds: number[],
+  ): Promise<IProfessorSummary[]> {
+    const professors =
+      await this.professorRepository.fetchSummaries(professorIds);
+    return professors;
   }
 
   /**
@@ -215,6 +231,11 @@ export default class UserPublicService {
 
   async fetchExecutiveSummary(executiveId: number): Promise<IExecutiveSummary> {
     const executive = await this.executiveRepository.fetchSummary(executiveId);
+    return executive;
+  }
+
+  async findExecutiveSummary(executiveId: number): Promise<IExecutiveSummary> {
+    const executive = await this.executiveRepository.findSummary(executiveId);
     return executive;
   }
 }

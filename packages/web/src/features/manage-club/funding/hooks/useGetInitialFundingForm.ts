@@ -11,7 +11,10 @@ const useGetInitialFundingFormData = (
   isError: boolean;
 } => {
   const { profile } = useAuth();
-  const { data: funding, isLoading, isError } = useGetFunding(fundingId);
+  const { data, isLoading, isError } = useGetFunding(
+    "undergraduate",
+    fundingId,
+  );
 
   if (profile?.type !== "undergraduate") {
     return {
@@ -21,7 +24,7 @@ const useGetInitialFundingFormData = (
     };
   }
 
-  if (isLoading || isError || !funding) {
+  if (isLoading || isError || !data?.funding) {
     return {
       data: {} as FundingFormData,
       isLoading,
@@ -31,64 +34,67 @@ const useGetInitialFundingFormData = (
 
   return {
     data: {
-      ...funding,
+      ...data?.funding,
       // 동아리 용품 증빙
-      clubSuppliesName: funding.clubSupplies?.name,
-      clubSuppliesEvidenceEnum: funding.clubSupplies?.evidenceEnum,
-      clubSuppliesClassEnum: funding.clubSupplies?.classEnum,
-      clubSuppliesPurpose: funding.clubSupplies?.purpose,
-      clubSuppliesImageFiles: funding.clubSupplies?.imageFiles ?? [],
-      clubSuppliesSoftwareEvidence: funding.clubSupplies?.softwareEvidence,
+      clubSuppliesName: data?.funding.clubSupplies?.name,
+      clubSuppliesEvidenceEnum: data?.funding.clubSupplies?.evidenceEnum,
+      clubSuppliesClassEnum: data?.funding.clubSupplies?.classEnum,
+      clubSuppliesPurpose: data?.funding.clubSupplies?.purpose,
+      clubSuppliesImageFiles: data?.funding.clubSupplies?.imageFiles ?? [],
+      clubSuppliesSoftwareEvidence:
+        data?.funding.clubSupplies?.softwareEvidence,
       clubSuppliesSoftwareEvidenceFiles:
-        funding.clubSupplies?.softwareEvidenceFiles ?? [],
-      numberOfClubSupplies: funding.clubSupplies?.number,
-      priceOfClubSupplies: funding.clubSupplies?.price,
+        data?.funding.clubSupplies?.softwareEvidenceFiles ?? [],
+      numberOfClubSupplies: data?.funding.clubSupplies?.number,
+      priceOfClubSupplies: data?.funding.clubSupplies?.price,
 
       // 비품 증빙
-      fixtureName: funding.fixture?.name,
-      fixtureEvidenceEnum: funding.fixture?.evidenceEnum,
-      fixtureClassEnum: funding.fixture?.classEnum,
-      fixturePurpose: funding.fixture?.purpose,
-      fixtureImageFiles: funding.fixture?.imageFiles ?? [],
-      fixtureSoftwareEvidence: funding.fixture?.softwareEvidence,
+      fixtureName: data?.funding.fixture?.name,
+      fixtureEvidenceEnum: data?.funding.fixture?.evidenceEnum,
+      fixtureClassEnum: data?.funding.fixture?.classEnum,
+      fixturePurpose: data?.funding.fixture?.purpose,
+      fixtureImageFiles: data?.funding.fixture?.imageFiles ?? [],
+      fixtureSoftwareEvidence: data?.funding.fixture?.softwareEvidence,
       fixtureSoftwareEvidenceFiles:
-        funding.fixture?.softwareEvidenceFiles ?? [],
-      numberOfFixture: funding.fixture?.number,
-      priceOfFixture: funding.fixture?.price,
+        data?.funding.fixture?.softwareEvidenceFiles ?? [],
+      numberOfFixture: data?.funding.fixture?.number,
+      priceOfFixture: data?.funding.fixture?.price,
 
       // 교통비 증빙
-      transportationEnum: funding.transportation?.enum,
-      origin: funding.transportation?.origin,
-      destination: funding.transportation?.destination,
-      purposeOfTransportation: funding.transportation?.purpose,
-      transportationPassengers: funding.transportation?.passengers ?? [],
+      transportationEnum: data?.funding.transportation?.enum,
+      origin: data?.funding.transportation?.origin,
+      destination: data?.funding.transportation?.destination,
+      purposeOfTransportation: data?.funding.transportation?.purpose,
+      transportationPassengers: data?.funding.transportation?.passengers ?? [],
 
       // 비법인 거래 증빙
-      traderName: funding.nonCorporateTransaction?.traderName,
-      traderAccountNumber: funding.nonCorporateTransaction?.traderAccountNumber,
-      wasteExplanation: funding.nonCorporateTransaction?.wasteExplanation,
+      traderName: data?.funding.nonCorporateTransaction?.traderName,
+      traderAccountNumber:
+        data?.funding.nonCorporateTransaction?.traderAccountNumber,
+      wasteExplanation: data?.funding.nonCorporateTransaction?.wasteExplanation,
       nonCorporateTransactionFiles:
-        funding.nonCorporateTransaction?.files ?? [],
+        data?.funding.nonCorporateTransaction?.files ?? [],
 
       // 식비, 근로 계약, 외부 행사 참가비, 발간물, 수익 사업, 공동 경비, 기타 증빙
-      foodExpenseExplanation: funding.foodExpense?.explanation,
-      laborContractExplanation: funding.laborContract?.explanation,
+      foodExpenseExplanation: data?.funding.foodExpense?.explanation,
+      laborContractExplanation: data?.funding.laborContract?.explanation,
       externalEventParticipationFeeExplanation:
-        funding.externalEventParticipationFee?.explanation,
-      publicationExplanation: funding.publication?.explanation,
+        data?.funding.externalEventParticipationFee?.explanation,
+      publicationExplanation: data?.funding.publication?.explanation,
       profitMakingActivityExplanation:
-        funding.profitMakingActivity?.explanation,
-      jointExpenseExplanation: funding.jointExpense?.explanation,
-      etcExpenseExplanation: funding.etcExpense?.explanation,
+        data?.funding.profitMakingActivity?.explanation,
+      jointExpenseExplanation: data?.funding.jointExpense?.explanation,
+      etcExpenseExplanation: data?.funding.etcExpense?.explanation,
 
-      foodExpenseFiles: funding.foodExpense?.files ?? [],
-      laborContractFiles: funding.laborContract?.files ?? [],
+      foodExpenseFiles: data?.funding.foodExpense?.files ?? [],
+      laborContractFiles: data?.funding.laborContract?.files ?? [],
       externalEventParticipationFeeFiles:
-        funding.externalEventParticipationFee?.files ?? [],
-      publicationFiles: funding.publication?.files ?? [],
-      profitMakingActivityFiles: funding.profitMakingActivity?.files ?? [],
-      jointExpenseFiles: funding.jointExpense?.files ?? [],
-      etcExpenseFiles: funding.etcExpense?.files ?? [],
+        data?.funding.externalEventParticipationFee?.files ?? [],
+      publicationFiles: data?.funding.publication?.files ?? [],
+      profitMakingActivityFiles:
+        data?.funding.profitMakingActivity?.files ?? [],
+      jointExpenseFiles: data?.funding.jointExpense?.files ?? [],
+      etcExpenseFiles: data?.funding.etcExpense?.files ?? [],
     },
     isLoading,
     isError,

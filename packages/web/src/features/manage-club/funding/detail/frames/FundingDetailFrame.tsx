@@ -13,7 +13,7 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
-
+import { Profile } from "@sparcs-clubs/web/common/providers/AuthContext";
 import { useDeleteFunding } from "@sparcs-clubs/web/features/manage-club/funding/services/useDeleteFunding";
 import { useGetFunding } from "@sparcs-clubs/web/features/manage-club/funding/services/useGetFunding";
 import useGetFundingDeadline from "@sparcs-clubs/web/features/manage-club/funding/services/useGetFundingDeadline";
@@ -21,6 +21,7 @@ import { newFundingListQueryKey } from "@sparcs-clubs/web/features/manage-club/f
 import { isActivityReportUnverifiable } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
 
 import BasicEvidenceList from "../components/BasicEvidenceList";
+import ExecutiveFundingReviewSection from "../components/ExecutiveFundingReviewSection";
 import FixtureEvidenceList from "../components/FixtureEvidenceList";
 import FundingInfoList from "../components/FundingInfoList";
 import FundingStatusSection from "../components/FundingStatusSection";
@@ -29,7 +30,7 @@ import OtherEvidenceList from "../components/OtherEvidenceList";
 import TransportationEvidenceList from "../components/TransportationEvidenceList";
 
 interface FundingDetailFrameProps {
-  clubId: number;
+  profile: Profile;
 }
 
 const ButtonWrapper = styled.div`
@@ -37,12 +38,12 @@ const ButtonWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
+const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ profile }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { id } = useParams<{ id: string }>();
 
-  const { data: funding, isLoading, isError } = useGetFunding(+id);
+  const { data, isLoading, isError } = useGetFunding(profile.type, +id);
   const { mutate: deleteFunding } = useDeleteFunding();
 
   const {
@@ -51,12 +52,16 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
     isError: isErrorFundingDeadline,
   } = useGetFundingDeadline();
 
-  const onClick = () => {
-    router.push("/manage-club/funding");
+  const navigateToFundingList = () => {
+    if (profile.type === "executive") {
+      router.back();
+    } else {
+      router.push("/manage-club/funding");
+    }
   };
 
   const openEditModal = () => {
-    if (funding?.fundingStatusEnum === FundingStatusEnum.Applied) {
+    if (data?.funding.fundingStatusEnum === FundingStatusEnum.Applied) {
       router.push(`/manage-club/funding/${id}/edit`);
       return;
     }
@@ -78,7 +83,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
     ));
   };
 
-  const openDeleteModal = () => {
+  const openDeleteModal = (clubId: number) => {
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <CancellableModalContent
@@ -110,22 +115,22 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
     if (
       !fundingDeadline ||
       !fundingDeadline.targetDuration ||
-      !funding?.expenditureDate
+      !data?.funding.expenditureDate
     ) {
       return false;
     }
 
     return (
-      new Date(funding.expenditureDate) <
+      new Date(data.funding.expenditureDate) <
       new Date(fundingDeadline.targetDuration.startTerm)
     );
-  }, [fundingDeadline, funding?.expenditureDate]);
+  }, [fundingDeadline, data?.funding.expenditureDate]);
 
   if (isError) {
     return <NotFound />;
   }
 
-  if (!funding || !clubId) {
+  if (!data?.funding) {
     return <AsyncBoundary isLoading={isLoading} isError={isError} />;
   }
 
@@ -134,90 +139,99 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ clubId }) => {
       <Card outline>
         {!isPastFunding && (
           <FundingStatusSection
-            status={funding.fundingStatusEnum}
-            editedAt={funding.editedAt}
-            commentedAt={funding.commentedAt}
-            comments={funding.comments.toReversed()}
+            status={data.funding.fundingStatusEnum}
+            editedAt={data.funding.editedAt}
+            commentedAt={data.funding.commentedAt}
+            comments={data.comments ?? []}
           />
         )}
         <AsyncBoundary isLoading={isLoading} isError={isError}>
-          <FundingInfoList data={funding} />
-          <BasicEvidenceList data={funding} />
-          {(!funding.purposeActivity ||
-            isActivityReportUnverifiable(funding.purposeActivity.id)) && (
-            <FixtureEvidenceList data={funding} />
+          <FundingInfoList data={data.funding} />
+          <BasicEvidenceList data={data.funding} />
+          {(!data.funding.purposeActivity ||
+            isActivityReportUnverifiable(data.funding.purposeActivity.id)) && (
+            <FixtureEvidenceList data={data.funding} />
           )}
-          {funding.isFixture && (
-            <FixtureEvidenceList isFixture data={funding} />
+          {data.funding.isFixture && (
+            <FixtureEvidenceList isFixture data={data.funding} />
           )}
-          {funding.isTransportation && (
-            <TransportationEvidenceList data={funding} />
+          {data.funding.isTransportation && (
+            <TransportationEvidenceList data={data.funding} />
           )}
-          {funding.isNonCorporateTransaction && (
-            <NonCorpEvidenceList data={funding} />
+          {data.funding.isNonCorporateTransaction && (
+            <NonCorpEvidenceList data={data.funding} />
           )}
-          {funding.isFoodExpense && (
+          {data.funding.isFoodExpense && (
             <OtherEvidenceList
               content="식비"
-              explanation={funding.foodExpense?.explanation}
-              fileList={funding.foodExpense?.files}
+              explanation={data.funding.foodExpense?.explanation}
+              fileList={data.funding.foodExpense?.files}
             />
           )}
-          {funding.isLaborContract && (
+          {data.funding.isLaborContract && (
             <OtherEvidenceList
               content="근로 계약"
-              explanation={funding.laborContract?.explanation}
-              fileList={funding.laborContract?.files}
+              explanation={data.funding.laborContract?.explanation}
+              fileList={data.funding.laborContract?.files}
             />
           )}
-          {funding.isExternalEventParticipationFee && (
+          {data.funding.isExternalEventParticipationFee && (
             <OtherEvidenceList
               content="외부 행사 참가비"
-              explanation={funding.externalEventParticipationFee?.explanation}
-              fileList={funding.externalEventParticipationFee?.files}
+              explanation={
+                data.funding.externalEventParticipationFee?.explanation
+              }
+              fileList={data.funding.externalEventParticipationFee?.files}
             />
           )}
-          {funding.isPublication && (
+          {data.funding.isPublication && (
             <OtherEvidenceList
               content="발간물"
-              explanation={funding.publication?.explanation}
-              fileList={funding.publication?.files}
+              explanation={data.funding.publication?.explanation}
+              fileList={data.funding.publication?.files}
             />
           )}
-          {funding.isProfitMakingActivity && (
+          {data.funding.isProfitMakingActivity && (
             <OtherEvidenceList
               content="수익 사업"
-              explanation={funding.profitMakingActivity?.explanation}
-              fileList={funding.profitMakingActivity?.files}
+              explanation={data.funding.profitMakingActivity?.explanation}
+              fileList={data.funding.profitMakingActivity?.files}
             />
           )}
-          {funding.isJointExpense && (
+          {data.funding.isJointExpense && (
             <OtherEvidenceList
               content="공동 경비"
-              explanation={funding.jointExpense?.explanation}
-              fileList={funding.jointExpense?.files}
+              explanation={data.funding.jointExpense?.explanation}
+              fileList={data.funding.jointExpense?.files}
             />
           )}
-          {funding.isEtcExpense && (
+          {data.funding.isEtcExpense && (
             <OtherEvidenceList
               content="기타"
-              explanation={funding.etcExpense?.explanation}
-              fileList={funding.etcExpense?.files}
+              explanation={data.funding.etcExpense?.explanation}
+              fileList={data.funding.etcExpense?.files}
             />
           )}
         </AsyncBoundary>
       </Card>
+      <ExecutiveFundingReviewSection
+        funding={data.funding}
+        comments={data.comments}
+      />
       <ButtonWrapper>
-        <Button type="default" onClick={onClick}>
+        <Button type="default" onClick={navigateToFundingList}>
           목록으로 돌아가기
         </Button>
         <AsyncBoundary
           isLoading={isLoadingFundingDeadline}
           isError={isErrorFundingDeadline}
         >
-          {!isPastFunding && (
+          {!isPastFunding && profile.type === "undergraduate" && (
             <FlexWrapper direction="row" gap={10}>
-              <Button type="default" onClick={openDeleteModal}>
+              <Button
+                type="default"
+                onClick={() => openDeleteModal(data.funding.club.id)}
+              >
                 삭제
               </Button>
               <Button type="default" onClick={openEditModal}>

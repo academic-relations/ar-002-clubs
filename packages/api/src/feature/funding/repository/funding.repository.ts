@@ -6,7 +6,7 @@ import {
   IFundingRequest,
   IFundingSummary,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, exists, inArray, isNull, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import {
@@ -44,6 +44,12 @@ import {
 @Injectable()
 export default class FundingRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
+
+  async withTransaction<Result>(
+    callback: (tx: DrizzleTransaction) => Promise<Result>,
+  ): Promise<Result> {
+    return this.db.transaction(callback);
+  }
 
   async fetch(id: number): Promise<MFunding> {
     const funding = await this.find(id);
@@ -281,10 +287,121 @@ export default class FundingRepository {
     });
   }
 
+  async fetchSummaries(ids: number[]): Promise<IFundingSummary[]>;
+  async fetchSummaries(activityDId: number): Promise<IFundingSummary[]>;
   async fetchSummaries(
     clubId: number,
     activityDId: number,
+  ): Promise<IFundingSummary[]>;
+  async fetchSummaries(
+    clubIds: number[],
+    activityDId: number,
+  ): Promise<IFundingSummary[]>;
+  async fetchSummaries(
+    arg1: number | number[],
+    arg2?: number,
   ): Promise<IFundingSummary[]> {
+    if (Array.isArray(arg1)) {
+      if (arg1.length === 0) {
+        return [];
+      }
+
+      if (arg2 === undefined) {
+        const fundings = await this.db
+          .select({
+            id: Funding.id,
+            name: Funding.name,
+            expenditureAmount: Funding.expenditureAmount,
+            approvedAmount: Funding.approvedAmount,
+            fundingStatusEnum: Funding.fundingStatusEnum,
+            purposeActivityId: Funding.purposeActivityId,
+            clubId: Funding.clubId,
+            chargedExecutiveId: Funding.chargedExecutiveId,
+          })
+          .from(Funding)
+          .where(and(inArray(Funding.id, arg1), isNull(Funding.deletedAt)));
+
+        return fundings.map(funding => ({
+          ...funding,
+          purposeActivity: {
+            id: funding.purposeActivityId,
+          },
+          club: {
+            id: funding.clubId,
+          },
+          chargedExecutive: {
+            id: funding.chargedExecutiveId,
+          },
+        }));
+      }
+
+      const fundings = await this.db
+        .select({
+          id: Funding.id,
+          name: Funding.name,
+          expenditureAmount: Funding.expenditureAmount,
+          approvedAmount: Funding.approvedAmount,
+          fundingStatusEnum: Funding.fundingStatusEnum,
+          purposeActivityId: Funding.purposeActivityId,
+          clubId: Funding.clubId,
+          chargedExecutiveId: Funding.chargedExecutiveId,
+        })
+        .from(Funding)
+        .where(
+          and(
+            inArray(Funding.id, arg1),
+            eq(Funding.activityDId, arg2),
+            isNull(Funding.deletedAt),
+          ),
+        );
+
+      return fundings.map(funding => ({
+        ...funding,
+        purposeActivity: {
+          id: funding.purposeActivityId,
+        },
+        club: {
+          id: funding.clubId,
+        },
+        chargedExecutive: {
+          id: funding.chargedExecutiveId,
+        },
+      }));
+    }
+
+    if (arg2 === undefined) {
+      const fundings = await this.db
+        .select({
+          id: Funding.id,
+          name: Funding.name,
+          expenditureAmount: Funding.expenditureAmount,
+          approvedAmount: Funding.approvedAmount,
+          fundingStatusEnum: Funding.fundingStatusEnum,
+          purposeActivityId: Funding.purposeActivityId,
+          clubId: Funding.clubId,
+          chargedExecutiveId: Funding.chargedExecutiveId,
+        })
+        .from(Funding)
+        .where(and(eq(Funding.activityDId, arg1), isNull(Funding.deletedAt)));
+
+      if (fundings.length === 0) {
+        return [];
+      }
+
+      return fundings.map(funding => ({
+        ...funding,
+        purposeActivity: {
+          id: funding.purposeActivityId,
+        },
+        club: {
+          id: funding.clubId,
+        },
+        chargedExecutive: {
+          id: funding.chargedExecutiveId,
+        },
+      }));
+    }
+
     const fundings = await this.db
       .select({
         id: Funding.id,
@@ -293,12 +410,14 @@ export default class FundingRepository {
         approvedAmount: Funding.approvedAmount,
         fundingStatusEnum: Funding.fundingStatusEnum,
         purposeActivityId: Funding.purposeActivityId,
+        clubId: Funding.clubId,
+        chargedExecutiveId: Funding.chargedExecutiveId,
       })
       .from(Funding)
       .where(
         and(
-          eq(Funding.clubId, clubId),
-          eq(Funding.activityDId, activityDId),
+          eq(Funding.clubId, arg1),
+          eq(Funding.activityDId, arg2),
           isNull(Funding.deletedAt),
         ),
       );
@@ -311,6 +430,62 @@ export default class FundingRepository {
       ...funding,
       purposeActivity: {
         id: funding.purposeActivityId,
+      },
+      club: {
+        id: funding.clubId,
+      },
+      chargedExecutive: {
+        id: funding.chargedExecutiveId,
+      },
+    }));
+  }
+
+  async fetchCommentedSummaries(
+    executiveId: number,
+  ): Promise<IFundingSummary[]> {
+    const fundings = await this.db
+      .select({
+        id: Funding.id,
+        fundingStatusEnum: Funding.fundingStatusEnum,
+        name: Funding.name,
+        expenditureAmount: Funding.expenditureAmount,
+        approvedAmount: Funding.approvedAmount,
+        purposeActivityId: Funding.purposeActivityId,
+        clubId: Funding.clubId,
+        chargedExecutiveId: Funding.chargedExecutiveId,
+      })
+      .from(Funding)
+      .where(
+        and(
+          isNull(Funding.deletedAt),
+          or(
+            eq(Funding.chargedExecutiveId, executiveId),
+            exists(
+              this.db
+                .select()
+                .from(FundingFeedback)
+                .where(
+                  and(
+                    eq(FundingFeedback.fundingId, Funding.id),
+                    eq(FundingFeedback.executiveId, executiveId),
+                    isNull(FundingFeedback.deletedAt),
+                  ),
+                ),
+            ),
+          ),
+        ),
+      );
+
+    return fundings.map(funding => ({
+      ...funding,
+      purposeActivity: {
+        id: funding.purposeActivityId,
+      },
+      club: {
+        id: funding.clubId,
+      },
+      chargedExecutive: {
+        id: funding.chargedExecutiveId,
       },
     }));
   }
@@ -892,6 +1067,30 @@ export default class FundingRepository {
 
       return this.fetch(id);
     });
+  }
+
+  async patchSummaryTx(
+    tx: DrizzleTransaction,
+    oldbie: IFundingSummary,
+    consumer: (oldbie: IFundingSummary) => IFundingSummary,
+  ): Promise<IFundingSummary> {
+    const param = consumer(oldbie);
+    await tx
+      .update(Funding)
+      .set(param)
+      .where(eq(Funding.id, oldbie.id))
+      .execute();
+
+    return this.fetch(oldbie.id);
+  }
+
+  async patchSummary(
+    oldbie: IFundingSummary,
+    consumer: (oldbie: IFundingSummary) => IFundingSummary,
+  ): Promise<IFundingSummary> {
+    return this.db.transaction(async tx =>
+      this.patchSummaryTx(tx, oldbie, consumer),
+    );
   }
 
   async fetchSummary(id: number): Promise<VFundingSummary> {

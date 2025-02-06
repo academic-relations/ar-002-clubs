@@ -16,6 +16,17 @@ export const zStudentSummary = zStudent.pick({
   studentNumber: true,
 });
 
+export const zProfessor = z.object({
+  id: z.number(),
+  name: z.string(),
+  email: z.string().optional(),
+});
+
+export const zProfessorSummary = zProfessor.pick({
+  id: true,
+  name: true,
+});
+
 export const zExecutive = z.object({
   id: z.number(),
   userId: z.number().optional(),
@@ -41,3 +52,4 @@ export type IStudent = z.infer<typeof zStudent>;
 export type IStudentSummary = z.infer<typeof zStudentSummary>;
 export type IExecutive = z.infer<typeof zExecutive>;
 export type IExecutiveSummary = z.infer<typeof zExecutiveSummary>;
+export type IProfessorSummary = z.infer<typeof zProfessorSummary>;

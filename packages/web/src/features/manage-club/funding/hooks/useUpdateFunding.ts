@@ -202,7 +202,7 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
         {
           onSuccess: () => {
             queryClient.invalidateQueries({
-              queryKey: fundingDetailQueryKey(fundingId),
+              queryKey: fundingDetailQueryKey("undergraduate", fundingId),
             });
             queryClient.invalidateQueries({
               queryKey: newFundingListQueryKey(clubId),

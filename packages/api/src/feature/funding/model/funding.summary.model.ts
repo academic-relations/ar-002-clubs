@@ -13,6 +13,8 @@ export type FundingSummaryDBResult = Pick<
   | "expenditureAmount"
   | "purposeActivityId"
   | "approvedAmount"
+  | "clubId"
+  | "chargedExecutiveId"
 >;
 
 export class VFundingSummary implements IFundingSummary {
@@ -27,6 +29,10 @@ export class VFundingSummary implements IFundingSummary {
   purposeActivity: IFundingSummary["purposeActivity"];
 
   approvedAmount?: IFundingSummary["approvedAmount"];
+
+  club: IFundingSummary["club"];
+
+  chargedExecutive: IFundingSummary["chargedExecutive"];
 
   // 첫 번째 생성자: IFundingSummary로부터 초기화
   constructor(fundingSummary: IFundingSummary);
@@ -57,6 +63,10 @@ export class VFundingSummary implements IFundingSummary {
         ? { id: result.purposeActivityId }
         : undefined,
       approvedAmount: result.approvedAmount,
+      club: result.clubId ? { id: result.clubId } : undefined,
+      chargedExecutive: result.chargedExecutiveId
+        ? { id: result.chargedExecutiveId }
+        : undefined,
     });
   }
 }
