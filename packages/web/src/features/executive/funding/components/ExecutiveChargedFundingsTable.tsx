@@ -1,12 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 
-import { ApiFnd009ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd009";
+import { ApiFnd010ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd010";
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import {
   createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,
-  RowSelectionState,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -17,14 +16,12 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-interface ExecutiveClubFundingsTableProps {
-  fundings: ApiFnd009ResponseOk;
+interface ExecutiveChargedFundingsTableProps {
+  data: ApiFnd010ResponseOk;
   searchText: string;
-  selectedFundingIds: number[];
-  setSelectedFundingIds: (fundingIds: number[]) => void;
 }
 
-type FundingSummary = ApiFnd009ResponseOk["fundings"][number];
+type FundingSummary = ApiFnd010ResponseOk["fundings"][number];
 
 const columnHelper = createColumnHelper<FundingSummary>();
 const columns = [
@@ -34,11 +31,16 @@ const columns = [
       const { color, text } = getTagDetail(info.getValue(), FundingTagList);
       return <Tag color={color}>{text}</Tag>;
     },
-    size: 120,
+    size: 90,
+  }),
+  columnHelper.accessor(row => row.club?.name, {
+    header: "동아리명",
+    cell: info => info.getValue() || "-",
+    size: 140,
   }),
   columnHelper.accessor(row => row.purposeActivity?.name, {
     header: "활동명",
-    cell: info => info.getValue() || "-",
+    cell: info => info.getValue() || "활동보고서로 증빙 불가",
     size: 200,
   }),
   columnHelper.accessor("name", {
@@ -62,17 +64,7 @@ const columns = [
   columnHelper.accessor(row => row.commentedExecutive?.name, {
     header: "최종 검토자",
     cell: info => info.getValue() || "-",
-    size: 140,
-  }),
-  columnHelper.accessor(row => row.chargedExecutive?.name, {
-    header: "담당자",
-    cell: info =>
-      info.getValue() || (
-        <Typography color="GRAY.300" fs={16} lh={24}>
-          (미정)
-        </Typography>
-      ),
-    size: 140,
+    size: 120,
   }),
 ];
 
@@ -93,56 +85,21 @@ const sortFundingsByStatusAndId = (fundings: FundingSummary[]) => {
   });
 };
 
-const ExecutiveClubFundingsTable: React.FC<ExecutiveClubFundingsTableProps> = ({
-  fundings,
-  searchText,
-  selectedFundingIds,
-  setSelectedFundingIds,
-}) => {
+const ExecutiveChargedFundingsTable: React.FC<
+  ExecutiveChargedFundingsTableProps
+> = ({ data, searchText }) => {
   const sortedFundings = useMemo(
-    () => sortFundingsByStatusAndId(fundings.fundings),
-    [fundings.fundings],
+    () => sortFundingsByStatusAndId(data.fundings),
+    [data.fundings],
   );
-
-  const initialRowValues = useMemo(
-    () =>
-      selectedFundingIds.reduce((acc, fundingId) => {
-        const index = sortedFundings.findIndex(
-          funding => funding.id === fundingId,
-        );
-        return { ...acc, [index]: true };
-      }, {}),
-    [selectedFundingIds, sortedFundings],
-  );
-
-  const [rowValues, setRowValues] =
-    useState<RowSelectionState>(initialRowValues);
-
-  useEffect(() => {
-    setRowValues(initialRowValues);
-  }, [initialRowValues]);
-
-  const handleRowClick = (rowState: RowSelectionState) => {
-    setRowValues(rowState);
-    const newSelected = sortedFundings.filter((_, i) => rowState?.[i]);
-    setSelectedFundingIds(newSelected.map(funding => funding.id));
-  };
 
   const table = useReactTable({
-    data: fundings.fundings,
+    data: sortedFundings,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     state: {
-      rowSelection: rowValues,
       globalFilter: searchText,
-    },
-    onRowSelectionChange: updaterOrValue => {
-      if (typeof updaterOrValue === "function") {
-        handleRowClick(updaterOrValue(rowValues));
-      } else {
-        handleRowClick(updaterOrValue);
-      }
     },
     enableSorting: false,
   });
@@ -150,9 +107,7 @@ const ExecutiveClubFundingsTable: React.FC<ExecutiveClubFundingsTableProps> = ({
   const totalCount = sortedFundings.length;
 
   let countString = `총 ${totalCount}개`;
-  if (selectedFundingIds.length !== 0) {
-    countString = `선택 항목 ${selectedFundingIds.length}개 / 총 ${totalCount}개`;
-  } else if (table.getRowModel().rows.length !== totalCount) {
+  if (table.getRowModel().rows.length !== totalCount) {
     countString = `검색 결과 ${table.getRowModel().rows.length}개 / 총 ${totalCount}개`;
   }
 
@@ -166,4 +121,4 @@ const ExecutiveClubFundingsTable: React.FC<ExecutiveClubFundingsTableProps> = ({
   );
 };
 
-export default ExecutiveClubFundingsTable;
+export default ExecutiveChargedFundingsTable;
