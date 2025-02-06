@@ -829,10 +829,12 @@ export default class FundingService {
       fundings.map(funding => funding.club.id),
     );
 
+    const chargedExecutive = await this.userPublicService.findExecutiveSummary(
+      param.executiveId,
+    );
+
     return {
-      chargedExecutive: executives.find(
-        executive => executive.id === param.executiveId,
-      ),
+      chargedExecutive,
       totalCount: fundings.length,
       appliedCount: fundings.filter(
         funding => funding.fundingStatusEnum === FundingStatusEnum.Applied,
