@@ -13,8 +13,9 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useTemporaryStorage from "@sparcs-clubs/web/common/hooks/useTemporaryStorage";
 import LocalStorageUtil from "@sparcs-clubs/web/common/services/localStorageUtil";
 
+import { LOCAL_STORAGE_KEY } from "@sparcs-clubs/web/constants/localStorage";
+
 import ActivityReportForm from "../components/ActivityReportForm";
-import { ACTIVITY_REPORT_LOCAL_STORAGE_KEY } from "../constants";
 import { useCreateActivityReport } from "../hooks/useCreateActivityReport";
 import { ActivityReportFormData } from "../types/form";
 
@@ -29,7 +30,7 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
 
   const { savedData, isModalOpen, handleConfirm, handleClose } =
     useTemporaryStorage<ActivityReportFormData>(
-      ACTIVITY_REPORT_LOCAL_STORAGE_KEY,
+      LOCAL_STORAGE_KEY.ACTIVITY_REPORT,
     );
   const { mutate: createActivityReport } = useCreateActivityReport(clubId);
 
@@ -40,7 +41,7 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
           <Modal isOpen={isOpen}>
             <ConfirmModalContent
               onConfirm={() => {
-                LocalStorageUtil.remove(ACTIVITY_REPORT_LOCAL_STORAGE_KEY);
+                LocalStorageUtil.remove(LOCAL_STORAGE_KEY.ACTIVITY_REPORT);
                 close();
                 router.push("/manage-club/activity-report");
               }}

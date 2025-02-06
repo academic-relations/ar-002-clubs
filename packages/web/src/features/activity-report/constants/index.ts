@@ -3,7 +3,6 @@ import { ActivityDeadlineEnum } from "@sparcs-clubs/interface/common/enum/activi
 import { getDate, getMonth, getYear } from "date-fns";
 
 export const MAX_ACTIVITY_REPORT_COUNT = 20;
-export const ACTIVITY_REPORT_LOCAL_STORAGE_KEY = "activity-report";
 
 export const activityDeadlineEnumToString = (
   deadline?: ActivityDeadlineEnum,

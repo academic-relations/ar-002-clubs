@@ -14,11 +14,11 @@ import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
 
 import LocalStorageUtil from "@sparcs-clubs/web/common/services/localStorageUtil";
+import { LOCAL_STORAGE_KEY } from "@sparcs-clubs/web/constants/localStorage";
 import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
 
 import { isObjectEmpty } from "@sparcs-clubs/web/utils";
 
-import { ACTIVITY_REPORT_LOCAL_STORAGE_KEY } from "../constants";
 import useGetParticipants from "../services/useGetParticipants";
 import { ActivityReportFormData } from "../types/form";
 
@@ -85,7 +85,7 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
 
   useEffect(() => {
     if (!isObjectEmpty(formValues)) {
-      LocalStorageUtil.save(ACTIVITY_REPORT_LOCAL_STORAGE_KEY, formValues);
+      LocalStorageUtil.save(LOCAL_STORAGE_KEY.ACTIVITY_REPORT, formValues);
     }
   }, [formValues]);
 

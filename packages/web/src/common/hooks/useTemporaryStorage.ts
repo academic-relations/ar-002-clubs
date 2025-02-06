@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 
+import { LocalStorageKeys } from "@sparcs-clubs/web/types/localStorageType";
 import { isObjectEmpty } from "@sparcs-clubs/web/utils";
 
 import LocalStorageUtil from "../services/localStorageUtil";
 
-function useTemporaryStorage<T extends object>(storageKey: string) {
+function useTemporaryStorage<T extends object>(storageKey: LocalStorageKeys) {
   const [savedData, setSavedData] = useState<T | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
