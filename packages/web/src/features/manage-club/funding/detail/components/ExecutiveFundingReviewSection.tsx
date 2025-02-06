@@ -16,8 +16,10 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import useExecutiveReviewFunding from "@sparcs-clubs/web/features/manage-club/funding/services/useExecutiveReviewFunding";
 import { formatSlashDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
+import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 const ExecutiveFundingReviewSection: React.FC<{
   funding: IFundingResponse;
@@ -124,9 +126,8 @@ const ExecutiveFundingReviewSection: React.FC<{
           {filteredComments.map((comment, index) => (
             <FlexWrapper direction="column" gap={4} key={`${index.toString()}`}>
               <Typography fs={14} lh={16} color="GRAY.600">
-                {formatSlashDateTime(comment.createdAt)}{" "}
-                {comment.fundingStatusEnum && `• ${comment.fundingStatusEnum}`}
-                {/* TODO: status enum 대신 텍스트로 표시 */}
+                {formatSlashDateTime(comment.createdAt)} •{" "}
+                {getTagDetail(comment.fundingStatusEnum, FundingTagList).text}
               </Typography>
               <Typography fs={16} lh={24}>
                 {comment.content}
