@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -38,6 +39,20 @@ import apiFnd006, {
 import apiFnd007, {
   ApiFnd007ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
+import apiFnd008, {
+  ApiFnd008RequestUrl,
+  ApiFnd008ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd008";
+import apiFnd009, {
+  ApiFnd009RequestParam,
+  ApiFnd009RequestUrl,
+  ApiFnd009ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd009";
+import apiFnd010, {
+  ApiFnd010RequestParam,
+  ApiFnd010RequestUrl,
+  ApiFnd010ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd010";
 import apiFnd012, {
   ApiFnd012RequestParam,
   ApiFnd012RequestUrl,
@@ -49,6 +64,21 @@ import apiFnd013, {
   ApiFnd013RequestUrl,
   ApiFnd013ResponseCreated,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd013";
+import apiFnd014, {
+  ApiFnd014RequestBody,
+  ApiFnd014RequestUrl,
+  ApiFnd014ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd014";
+import apiFnd015, {
+  ApiFnd015RequestBody,
+  ApiFnd015RequestUrl,
+  ApiFnd015ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd015";
+import apiFnd016, {
+  ApiFnd016RequestQuery,
+  ApiFnd016RequestUrl,
+  ApiFnd016ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd016";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 
@@ -175,6 +205,80 @@ export default class FundingController {
       body.fundingStatusEnum,
       body.approvedAmount,
       body.content,
+    );
+  }
+
+  @Executive()
+  @Get(ApiFnd008RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd008))
+  async getExecutiveFundings(
+    @GetExecutive() executive: GetExecutive,
+  ): Promise<ApiFnd008ResponseOk> {
+    return this.fundingService.getExecutiveFundings(executive.executiveId);
+  }
+
+  @Executive()
+  @Get(ApiFnd009RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd009))
+  async getExecutiveFundingsClubBreif(
+    @GetExecutive() executive: GetExecutive,
+    @Param() param: ApiFnd009RequestParam,
+  ): Promise<ApiFnd009ResponseOk> {
+    return this.fundingService.getExecutiveFundingsClubBreif(
+      executive.executiveId,
+      param,
+    );
+  }
+
+  @Executive()
+  @Get(ApiFnd010RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd010))
+  async getExecutiveFundingsExecutiveBreif(
+    @GetExecutive() executive: GetExecutive,
+    @Param() param: ApiFnd010RequestParam,
+  ): Promise<ApiFnd010ResponseOk> {
+    return this.fundingService.getExecutiveFundingsExecutiveBreif(
+      executive.executiveId,
+      param,
+    );
+  }
+
+  @Executive()
+  @Patch(ApiFnd014RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd014))
+  async patchExecutiveFundingsChargedExecutive(
+    @GetExecutive() executive: GetExecutive,
+    @Body() body: ApiFnd014RequestBody,
+  ): Promise<ApiFnd014ResponseOk> {
+    return this.fundingService.patchExecutiveFundingsChargedExecutive(
+      executive.executiveId,
+      body,
+    );
+  }
+
+  @Executive()
+  @Patch(ApiFnd015RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd015))
+  async patchExecutiveFundingsClubChargedExecutive(
+    @GetExecutive() executive: GetExecutive,
+    @Body() body: ApiFnd015RequestBody,
+  ): Promise<ApiFnd015ResponseOk> {
+    return this.fundingService.patchExecutiveFundingsClubsChargedExecutive(
+      executive.executiveId,
+      body,
+    );
+  }
+
+  @Executive()
+  @Get(ApiFnd016RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd016))
+  async getExecutiveFundingsClubExecutives(
+    @GetExecutive() executive: GetExecutive,
+    @Query() query: ApiFnd016RequestQuery,
+  ): Promise<ApiFnd016ResponseOk> {
+    return this.fundingService.getExecutiveFundingsClubExecutives(
+      executive.executiveId,
+      query,
     );
   }
 }
