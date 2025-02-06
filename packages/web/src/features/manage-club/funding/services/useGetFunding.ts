@@ -1,6 +1,4 @@
-import apiFnd002, {
-  ApiFnd002ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
+import { ApiFnd002ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd002";
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import { useQuery } from "@tanstack/react-query";
 
@@ -9,16 +7,18 @@ import {
   defineAxiosMock,
 } from "@sparcs-clubs/web/lib/axios";
 
-export const fundingDetailQueryKey = (fundingId: number) => [
-  apiFnd002.url(fundingId),
+import { fundingDetailGet } from "./_atomic/fndApiList";
+
+export const fundingDetailQueryKey = (profile: string, fundingId: number) => [
+  fundingDetailGet(profile, fundingId),
 ];
 
-export const useGetFunding = (fundingId: number) =>
+export const useGetFunding = (profile: string, fundingId: number) =>
   useQuery<ApiFnd002ResponseOk, Error>({
-    queryKey: fundingDetailQueryKey(fundingId),
+    queryKey: fundingDetailQueryKey(profile, fundingId),
     queryFn: async (): Promise<ApiFnd002ResponseOk> => {
       const { data } = await axiosClientWithAuth.get(
-        apiFnd002.url(fundingId),
+        fundingDetailGet(profile, fundingId),
         {},
       );
 

@@ -878,10 +878,20 @@ export default class FundingService {
   ): Promise<ApiFnd012ResponseOk> {
     await this.userPublicService.checkCurrentExecutive(executiveId);
 
-    const funding = await this.fundingRepository.fetch(id); // TODO: 이거 이래도 되나? comments 필드가 없는데. 에러 안나나?
+    const funding = await this.fundingRepository.fetch(id);
 
     const fundingResponse = await this.buildFundingResponse(funding);
-    return { funding: fundingResponse, comments: [] };
+    const comments = await this.fundingCommentRepository.fetchAll(id);
+    const executives = await this.userPublicService.fetchExecutiveSummaries(
+      comments.map(comment => comment.executive.id),
+    );
+    const commentsWithExecutives = comments.map(comment => ({
+      ...comment,
+      executive: executives.find(
+        executive => executive.id === comment.executive.id,
+      ),
+    }));
+    return { funding: fundingResponse, comments: commentsWithExecutives };
   }
 
   /**
