@@ -27,7 +27,7 @@ const requestQuery = z.object({});
 
 const requestBody = zFundingCommentRequest.omit({
   funding: true,
-  chargedExecutive: true,
+  executive: true,
 });
 
 const responseBodyMap = {
