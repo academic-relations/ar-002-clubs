@@ -21,6 +21,8 @@ interface UnitInputProps
   value?: string;
   handleChange?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
+  required?: boolean;
+  unitOnClick?: () => void;
 }
 
 const errorBorderStyle = css`
@@ -76,12 +78,15 @@ const UnitWrapper = styled.div`
   align-items: center;
 `;
 
-const UnitLabel = styled.span`
+const UnitLabel = styled.span.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ clickable: boolean }>`
   position: absolute;
   right: 12px;
   color: ${({ theme }) => theme.colors.BLACK};
   font-size: 16px;
   line-height: 20px;
+  cursor: ${({ clickable }) => (clickable ? "pointer" : "default")};
 `;
 
 const UnitInput: React.FC<UnitInputProps> = ({
@@ -93,6 +98,8 @@ const UnitInput: React.FC<UnitInputProps> = ({
   value = "",
   handleChange = () => {},
   setErrorStatus = () => {},
+  required = true,
+  unitOnClick = undefined,
   ...props
 }) => {
   const [error, setError] = useState(errorMessage);
@@ -102,8 +109,13 @@ const UnitInput: React.FC<UnitInputProps> = ({
     const isValidFormat = /^\d+$/g.test(value);
 
     if (touched && !value) {
-      setError("필수로 채워야 하는 항목입니다");
-      setErrorStatus(true);
+      if (required) {
+        setError("필수로 채워야 하는 항목입니다");
+        setErrorStatus(true);
+      } else {
+        setError("");
+        setErrorStatus(false);
+      }
     } else if (touched && !isValidFormat) {
       setError("숫자만 입력 가능합니다.");
       setErrorStatus(true);
@@ -111,7 +123,7 @@ const UnitInput: React.FC<UnitInputProps> = ({
       setError("");
       setErrorStatus(false);
     }
-  }, [value, touched]);
+  }, [value, touched, required]);
 
   const handleBlur = () => {
     setTouched(true);
@@ -148,7 +160,14 @@ const UnitInput: React.FC<UnitInputProps> = ({
           onChange={handleValueChange}
           {...props}
         />
-        {unit && <UnitLabel>{unit}</UnitLabel>}
+        {unit && (
+          <UnitLabel
+            clickable={unitOnClick !== undefined}
+            onClick={unitOnClick}
+          >
+            {unit}
+          </UnitLabel>
+        )}
       </UnitWrapper>
       {error && <FormError>{error}</FormError>}
     </InputWrapper>

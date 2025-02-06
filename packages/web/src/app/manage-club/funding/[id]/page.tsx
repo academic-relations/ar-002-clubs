@@ -50,7 +50,7 @@ const FundingDetail = () => {
           title="지원금 신청"
           enableLast
         />
-        <FundingDetailFrame clubId={data.clubId} />
+        <FundingDetailFrame profile={profile} />
       </FlexWrapper>
     </AsyncBoundary>
   );
