@@ -48,6 +48,7 @@ const ExecutiveFundingReviewSection: React.FC<{
       },
       {
         onSuccess: () => {
+          setReviewDetail("");
           overlay.open(({ isOpen, close }) => (
             <Modal isOpen={isOpen}>
               <ConfirmModalContent onConfirm={close}>
@@ -160,6 +161,9 @@ const ExecutiveFundingReviewSection: React.FC<{
           unit={`/ ${funding.expenditureAmount}원`}
           placeholder="금액을 입력해주세요"
           required={false}
+          unitOnClick={() =>
+            setApproveAmount(funding.expenditureAmount.toString())
+          }
         />
         <Button
           type={availableToApprove() ? "default" : "disabled"}

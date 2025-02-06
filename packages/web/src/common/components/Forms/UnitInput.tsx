@@ -22,6 +22,7 @@ interface UnitInputProps
   handleChange?: (value: string) => void;
   setErrorStatus?: (hasError: boolean) => void;
   required?: boolean;
+  unitOnClick?: () => void;
 }
 
 const errorBorderStyle = css`
@@ -77,12 +78,15 @@ const UnitWrapper = styled.div`
   align-items: center;
 `;
 
-const UnitLabel = styled.span`
+const UnitLabel = styled.span.withConfig({
+  shouldForwardProp: prop => isPropValid(prop),
+})<{ clickable: boolean }>`
   position: absolute;
   right: 12px;
   color: ${({ theme }) => theme.colors.BLACK};
   font-size: 16px;
   line-height: 20px;
+  cursor: ${({ clickable }) => (clickable ? "pointer" : "default")};
 `;
 
 const UnitInput: React.FC<UnitInputProps> = ({
@@ -95,6 +99,7 @@ const UnitInput: React.FC<UnitInputProps> = ({
   handleChange = () => {},
   setErrorStatus = () => {},
   required = true,
+  unitOnClick = undefined,
   ...props
 }) => {
   const [error, setError] = useState(errorMessage);
@@ -155,7 +160,14 @@ const UnitInput: React.FC<UnitInputProps> = ({
           onChange={handleValueChange}
           {...props}
         />
-        {unit && <UnitLabel>{unit}</UnitLabel>}
+        {unit && (
+          <UnitLabel
+            clickable={unitOnClick !== undefined}
+            onClick={unitOnClick}
+          >
+            {unit}
+          </UnitLabel>
+        )}
       </UnitWrapper>
       {error && <FormError>{error}</FormError>}
     </InputWrapper>
