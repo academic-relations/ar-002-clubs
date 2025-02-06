@@ -25,12 +25,18 @@ const ActivityReportStatusSection: React.FC<
     commentedAt,
   );
 
+  const sortedComments = useMemo(
+    () =>
+      comments.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()),
+    [comments],
+  );
+
   const ToastSection = useMemo(() => {
     if (status === ActivityStatusEnum.Rejected) {
       return (
         <RejectReasonToast
           title="코멘트"
-          reasons={comments.map(comment => ({
+          reasons={sortedComments.map(comment => ({
             datetime: comment.createdAt,
             reason: comment.content,
           }))}
@@ -41,13 +47,13 @@ const ActivityReportStatusSection: React.FC<
     return (
       <ApproveReasonToast
         title="코멘트"
-        reasons={comments.map(comment => ({
+        reasons={sortedComments.map(comment => ({
           datetime: comment.createdAt,
           reason: comment.content,
         }))}
       />
     );
-  }, [comments, status]);
+  }, [sortedComments, status]);
 
   return (
     <ProgressStatus
