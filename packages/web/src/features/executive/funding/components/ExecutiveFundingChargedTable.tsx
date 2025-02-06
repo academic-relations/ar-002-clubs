@@ -45,12 +45,12 @@ const openAssignModal = (data: ApiFnd008ResponseOk["executives"][number]) => {
       clubTypeEnum: club.typeEnum,
       divisionName: club.division.name,
       clubName: club.name,
-      totalCount: club.totalCount,
-      appliedCount: club.appliedCount,
-      approvedCount: club.approvedCount,
-      rejectedCount: club.rejectedCount,
-      committeeCount: club.committeeCount,
-      partialCount: club.partialCount,
+      totalCount: data.totalCount,
+      appliedCount: data.appliedCount,
+      approvedCount: data.approvedCount,
+      rejectedCount: data.rejectedCount,
+      committeeCount: data.committeeCount,
+      partialCount: data.partialCount,
     }),
   );
 
@@ -63,7 +63,7 @@ const openAssignModal = (data: ApiFnd008ResponseOk["executives"][number]) => {
           style={{ width: "min(900px, 80vw)" }}
         >
           <Typography fs={16} lh={28} fw="MEDIUM" style={{ textAlign: "left" }}>
-            {data.name} 지원금 검토 현황 상.partialCou{" "}
+            {data.name} 지원금 검토 현황 상세
           </Typography>
           <ChargedFundingModalTable
             data={chargedClubsData}
