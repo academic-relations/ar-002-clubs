@@ -32,6 +32,9 @@ const columns = [
     header: "상태",
     cell: info => {
       const { color, text } = getTagDetail(info.getValue(), FundingTagList);
+      if (info.getValue() === FundingStatusEnum.Applied) {
+        return <Tag color="GRAY">대기</Tag>;
+      }
       return <Tag color={color}>{text}</Tag>;
     },
     size: 120,

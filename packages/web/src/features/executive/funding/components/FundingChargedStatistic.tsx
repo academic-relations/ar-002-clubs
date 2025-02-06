@@ -10,6 +10,7 @@ import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Toggle from "@sparcs-clubs/web/common/components/Toggle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { TotalContentsContainer } from "@sparcs-clubs/web/features/executive/register-member/components/StatusInfoFrame";
+import { formatCurrency } from "@sparcs-clubs/web/utils/format";
 
 interface FundingChargedStatisticProps {
   data: ApiFnd010ResponseOk;
@@ -31,9 +32,19 @@ const FundingChargedStatistic: React.FC<FundingChargedStatisticProps> = ({
     data.committeeCount +
     data.partialCount;
 
+  const totalApprovedAmount = data.fundings.reduce(
+    (sum, funding) => sum + (funding.approvedAmount ?? 0),
+    0,
+  );
+
+  const totalExpenditureAmount = data.fundings.reduce(
+    (sum, funding) => sum + (funding.expenditureAmount ?? 0),
+    0,
+  );
+
   return (
     <Card gap={16} padding="16px" outline>
-      <Toggle label={<Typography>지원금 신청 통계</Typography>}>
+      <Toggle label={<Typography>지원금 통계</Typography>}>
         <FlexWrapper direction="column" gap={8} style={{ width: "100%" }}>
           <FlexWrapper direction="row" gap={40}>
             <StatisticWrapper>
@@ -88,23 +99,42 @@ const FundingChargedStatistic: React.FC<FundingChargedStatisticProps> = ({
               </TotalContentsContainer>
             </StatisticWrapper>
             <StatisticWrapper>
+              <Tag color="PURPLE">부분 승인</Tag>
+              <TotalContentsContainer>
+                {data.partialCount}개
+              </TotalContentsContainer>
+            </StatisticWrapper>
+            <StatisticWrapper>
               <Tag color="RED">반려</Tag>
               <TotalContentsContainer>
                 {data.rejectedCount}개
               </TotalContentsContainer>
             </StatisticWrapper>
             <StatisticWrapper>
-              <Tag color="BLUE">운위</Tag>
+              <Tag color="YELLOW">운위</Tag>
               <TotalContentsContainer>
                 {data.committeeCount}개
               </TotalContentsContainer>
             </StatisticWrapper>
-            <StatisticWrapper>
-              <Tag color="YELLOW">부분 승인</Tag>
-              <TotalContentsContainer>
-                {data.partialCount}개
-              </TotalContentsContainer>
-            </StatisticWrapper>
+          </FlexWrapper>
+          <Divider />
+          <FlexWrapper direction="row" gap={40}>
+            <FlexWrapper direction="row" gap={20}>
+              <Typography fw="MEDIUM" fs={16} lh={20}>
+                승인 금액
+              </Typography>
+              <Typography fs={16} lh={20}>
+                {formatCurrency(totalApprovedAmount)}원
+              </Typography>
+            </FlexWrapper>
+            <FlexWrapper direction="row" gap={20}>
+              <Typography fw="MEDIUM" fs={16} lh={20}>
+                신청 금액
+              </Typography>
+              <Typography fs={16} lh={20}>
+                {formatCurrency(totalExpenditureAmount)}원
+              </Typography>
+            </FlexWrapper>
           </FlexWrapper>
         </FlexWrapper>
       </Toggle>

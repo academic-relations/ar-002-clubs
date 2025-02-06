@@ -10,12 +10,15 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import { useGetClubDetail } from "@sparcs-clubs/web/features/clubs/services/getClubDetail";
 import ExecutiveFundingClubFrame from "@sparcs-clubs/web/features/executive/funding/frames/ExecutiveFundingClubFrame";
 
 const ExecutiveFundingClub = () => {
   const { isLoggedIn, login, profile } = useAuth();
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
+
+  const { data, isLoading, isError } = useGetClubDetail(id as string);
 
   useEffect(() => {
     if (isLoggedIn !== undefined || profile !== undefined) {
@@ -36,20 +39,19 @@ const ExecutiveFundingClub = () => {
   }
 
   return (
-    <FlexWrapper direction="column" gap={20}>
-      <PageHead
-        items={[
-          { name: "집행부원 대시보드", path: "/executive" },
-          { name: "지원금 신청 내역", path: `/executive/funding` },
-          {
-            name: "동아리별 지원금 내역",
-            path: `/executive/funding/club/${id}`,
-          },
-        ]}
-        title="동아리별 지원금 내역"
-      />
-      <ExecutiveFundingClubFrame />
-    </FlexWrapper>
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
+      <FlexWrapper direction="column" gap={20}>
+        <PageHead
+          items={[
+            { name: "집행부원 대시보드", path: "/executive" },
+            { name: "지원금 신청 내역", path: `/executive/funding` },
+          ]}
+          title={`지원금 신청 내역 (${data?.name_kr})`}
+          enableLast
+        />
+        <ExecutiveFundingClubFrame />
+      </FlexWrapper>
+    </AsyncBoundary>
   );
 };
 

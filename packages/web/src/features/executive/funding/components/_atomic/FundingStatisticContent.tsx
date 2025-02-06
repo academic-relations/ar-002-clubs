@@ -29,7 +29,7 @@ const FundingStatisticContent = ({
 
   return (
     <Card gap={16} padding="16px" outline>
-      <Toggle label={<Typography>지원금 신청 통계</Typography>}>
+      <Toggle label={<Typography>지원금 통계</Typography>}>
         <FlexWrapper direction="column" gap={8} style={{ width: "100%" }}>
           <FlexWrapper direction="row" gap={20}>
             <Typography fw="MEDIUM" fs={16} lh={20}>
@@ -58,13 +58,13 @@ const FundingStatisticContent = ({
               <TotalContentsContainer>{rejectedCount}개</TotalContentsContainer>
             </FlexWrapper>
             <FlexWrapper direction="row" gap={20}>
-              <Tag color="BLUE">운위</Tag>
+              <Tag color="YELLOW">운위</Tag>
               <TotalContentsContainer>
                 {committeeCount}개
               </TotalContentsContainer>
             </FlexWrapper>
             <FlexWrapper direction="row" gap={20}>
-              <Tag color="YELLOW">부분 승인</Tag>
+              <Tag color="PURPLE">부분 승인</Tag>
               <TotalContentsContainer>{partialCount}개</TotalContentsContainer>
             </FlexWrapper>
           </FlexWrapper>

@@ -785,7 +785,7 @@ export default class FundingService {
     };
   }
 
-  async getExecutiveFundingsExecutiveBreif(
+  async getExecutiveFundingsExecutiveBrief(
     executiveId: IExecutive["id"],
     param: ApiFnd010RequestParam,
   ): Promise<ApiFnd010ResponseOk> {
