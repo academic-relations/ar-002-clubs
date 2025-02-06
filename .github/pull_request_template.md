@@ -31,4 +31,4 @@ It closes #issue_number
 <!-- PR 변경 사항에 대한 스크린샷이나 .gif 파일 -->
 프론트의 경우 리뷰가 필요한 화면 URL 목록: 
 
-1. (무슨무슨 페이지) http://localhost:3000/
+1. 동아리 상세조회 페이지: http://localhost:3000/clubs/1
