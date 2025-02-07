@@ -2,6 +2,7 @@ import React from "react";
 
 import { IFundingResponse } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 
+import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
@@ -26,9 +27,15 @@ const NonCorpEvidenceList: React.FC<{ data: IFundingResponse }> = ({
     <ListItem>
       거래자 계좌번호: {data.nonCorporateTransaction?.traderAccountNumber}
     </ListItem>
-    <ListItem>
-      낭비가 아니라는 소명: {data.nonCorporateTransaction?.wasteExplanation}
-    </ListItem>
+    <ListItem>낭비가 아니라는 소명</ListItem>
+    <FlexWrapper direction="column" gap={12} style={{ paddingLeft: 24 }}>
+      <Typography ff="PRETENDARD" fw="REGULAR" fs={14} lh={16} color="BLACK">
+        {data.nonCorporateTransaction?.wasteExplanation}
+      </Typography>
+      <ThumbnailPreviewList
+        fileList={data.nonCorporateTransaction?.files ?? []}
+      />
+    </FlexWrapper>
   </FlexWrapper>
 );
 

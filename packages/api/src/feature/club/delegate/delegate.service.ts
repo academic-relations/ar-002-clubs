@@ -436,14 +436,16 @@ export default class ClubDelegateService {
         HttpStatus.BAD_REQUEST,
       );
 
-    if (
-      param.body.clubDelegateChangeRequestStatusEnum ===
-      ClubDelegateChangeRequestStatusEnum.Applied
-    )
-      throw new HttpException(
-        "you cannot change status to applied",
-        HttpStatus.BAD_REQUEST,
-      );
+    // gb: zod 에서 refine으로 걸러서 Applied 값이 안들어오도록 했는데 같은지 확인해서 에러 발생하길래 주석처리
+    // 아니 근데 3달전(24.11)에 만든 코드가 왜 이제서(25.2) 말썽인지... lint 바꾼거 때문인가?
+    // if (
+    //   param.body.clubDelegateChangeRequestStatusEnum ===
+    //   ClubDelegateChangeRequestStatusEnum.Applied
+    // )
+    //   throw new HttpException(
+    //     "you cannot change status to applied",
+    //     HttpStatus.BAD_REQUEST,
+    //   );
 
     // 대표자 변경 요청을 승인의 경우, 대표자 변경을 수행합니다.
     if (

@@ -60,7 +60,10 @@ import {
   IFunding,
   IFundingResponse,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
-import { IExecutive } from "@sparcs-clubs/interface/api/user/type/user.type";
+import {
+  IExecutive,
+  IStudent,
+} from "@sparcs-clubs/interface/api/user/type/user.type";
 import {
   FundingDeadlineEnum,
   FundingStatusEnum,
@@ -240,6 +243,33 @@ export default class FundingService {
     }));
 
     return { funding, comments: updatedComments };
+  }
+
+  // gb: 위의 getStudentFunding이 옛날에 짠거, 함수화를 시켜서 아래 getExecutiveFunding에서 쓰는 것으로 변경한 버전
+  // 만약 문제 생기면 원래꺼 보려고 원래 코드 남기고 아래에 추가
+  // TODO: 지원금 기간을 잘 넘기면 위 코드 삭제하고 이름 그냥 getStudentFunding으로 바꾸기
+  async getStudentFunding2(
+    studentId: IStudent["id"],
+    id: IFunding["id"],
+  ): Promise<ApiFnd002ResponseOk> {
+    const user = await this.userPublicService.getStudentById({ id: studentId });
+    if (!user) {
+      throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
+    }
+    const funding = await this.fundingRepository.fetch(id);
+
+    const fundingResponse = await this.buildFundingResponse(funding);
+    const comments = await this.fundingCommentRepository.fetchAll(id);
+    const executives = await this.userPublicService.fetchExecutiveSummaries(
+      comments.map(comment => comment.executive.id),
+    );
+    const commentsWithExecutives = comments.map(comment => ({
+      ...comment,
+      executive: executives.find(
+        executive => executive.id === comment.executive.id,
+      ),
+    }));
+    return { funding: fundingResponse, comments: commentsWithExecutives };
   }
 
   private async buildFundingResponse(
