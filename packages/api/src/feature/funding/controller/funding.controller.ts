@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -64,6 +65,21 @@ import apiFnd013, {
   ApiFnd013RequestUrl,
   ApiFnd013ResponseCreated,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd013";
+import apiFnd014, {
+  ApiFnd014RequestBody,
+  ApiFnd014RequestUrl,
+  ApiFnd014ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd014";
+import apiFnd015, {
+  ApiFnd015RequestBody,
+  ApiFnd015RequestUrl,
+  ApiFnd015ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd015";
+import apiFnd016, {
+  ApiFnd016RequestQuery,
+  ApiFnd016RequestUrl,
+  ApiFnd016ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd016";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import {
@@ -224,6 +240,45 @@ export default class FundingController {
     return this.fundingService.getExecutiveFundingsExecutiveBreif(
       executive.executiveId,
       param,
+    );
+  }
+
+  @Executive()
+  @Patch(ApiFnd014RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd014))
+  async patchExecutiveFundingsChargedExecutive(
+    @GetExecutive() executive: GetExecutive,
+    @Body() body: ApiFnd014RequestBody,
+  ): Promise<ApiFnd014ResponseOk> {
+    return this.fundingService.patchExecutiveFundingsChargedExecutive(
+      executive.executiveId,
+      body,
+    );
+  }
+
+  @Executive()
+  @Patch(ApiFnd015RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd015))
+  async patchExecutiveFundingsClubChargedExecutive(
+    @GetExecutive() executive: GetExecutive,
+    @Body() body: ApiFnd015RequestBody,
+  ): Promise<ApiFnd015ResponseOk> {
+    return this.fundingService.patchExecutiveFundingsClubsChargedExecutive(
+      executive.executiveId,
+      body,
+    );
+  }
+
+  @Executive()
+  @Get(ApiFnd016RequestUrl)
+  @UsePipes(new ZodPipe(apiFnd016))
+  async getExecutiveFundingsClubExecutives(
+    @GetExecutive() executive: GetExecutive,
+    @Query() query: ApiFnd016RequestQuery,
+  ): Promise<ApiFnd016ResponseOk> {
+    return this.fundingService.getExecutiveFundingsClubExecutives(
+      executive.executiveId,
+      query,
     );
   }
 }

@@ -14,7 +14,7 @@ const FlexWrapper = styled.div.withConfig({
   display: flex;
   position: relative;
   flex-direction: ${({ direction }) => direction ?? "row"};
-  gap: ${({ gap }) => `${gap}px`};
+  gap: ${({ gap }) => (gap ? `${gap}px` : 0)};
   justify-content: ${({ justify }) => justify ?? "flex-start"};
   padding: ${({ padding }) => padding ?? 0};
 `;

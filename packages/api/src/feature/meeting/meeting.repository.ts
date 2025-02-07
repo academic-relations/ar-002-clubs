@@ -637,6 +637,10 @@ export class MeetingRepository {
       await this.db
         .select({ count: count() })
         .from(Meeting)
+        .leftJoin(
+          MeetingAnnouncement,
+          eq(Meeting.announcementId, MeetingAnnouncement.id),
+        )
         .where(and(...conditions))
     ).at(0).count;
 
