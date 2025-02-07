@@ -116,9 +116,9 @@ export default class FundingController {
     @GetStudent() user: GetStudent,
     @Param() param: ApiFnd002RequestParam,
   ): Promise<ApiFnd002ResponseOk> {
-    const result = await this.fundingService.getStudentFunding(
-      param,
+    const result = await this.fundingService.getStudentFunding2(
       user.studentId,
+      param.id,
     );
     return result;
   }
