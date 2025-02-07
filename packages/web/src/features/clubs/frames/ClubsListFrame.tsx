@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-
 import { hangulIncludes } from "es-hangul";
+import React, { useMemo, useState } from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";

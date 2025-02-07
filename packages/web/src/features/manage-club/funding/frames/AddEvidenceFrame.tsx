@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-
 import { useFormContext } from "react-hook-form";
 
 import Card from "@sparcs-clubs/web/common/components/Card";

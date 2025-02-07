@@ -1,5 +1,4 @@
 import React from "react";
-
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -8,7 +7,6 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubs/services/getClubDetail";
 import {
   getTagColorFromClubType,

@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from "react";
-
 import { useFieldArray, useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
@@ -12,7 +11,6 @@ import DateInput from "@sparcs-clubs/web/common/components/Forms/DateInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 import Info from "@sparcs-clubs/web/common/components/Info";
-
 import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import {
   ActivityCertificateInfo,

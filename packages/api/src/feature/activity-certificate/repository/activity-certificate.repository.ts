@@ -1,8 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import { and, count, desc, eq, gte, lte } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
-
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
   ActivityCertificate,
@@ -11,6 +9,7 @@ import {
 
 import type { ApiAcf003RequestQuery } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf003";
 import type { ApiAcf007RequestQuery } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf007";
+import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 
 @Injectable()
 export class ActivityCertificateRepository {

@@ -1,9 +1,12 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { IDivisionSummary } from "@sparcs-clubs/interface/api/club/type/club.type";
-import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { and, eq, gt, gte, inArray, isNull, lte, or, sql } from "drizzle-orm";
 import { union } from "drizzle-orm/mysql-core";
 import { MySql2Database } from "drizzle-orm/mysql2";
+import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
+
+import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
+import { IDivisionSummary } from "@sparcs-clubs/interface/api/club/type/club.type";
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import {
@@ -22,11 +25,7 @@ import {
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
-import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-
 import { VClubSummary } from "../model/club.summary.model";
-
-import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 
 interface IClubs {
   id: number;
@@ -176,7 +175,6 @@ export default class ClubRepository {
       const club = row.clubs;
 
       if (!acc[divId]) {
-        // eslint-disable-next-line no-param-reassign
         acc[divId] = { id: divId, name: divName, clubs: [] };
       }
 

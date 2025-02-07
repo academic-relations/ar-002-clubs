@@ -1,7 +1,8 @@
+import { Cookies } from "react-cookie";
+
 import apiAut001, {
   ApiAut001ResponseOk,
 } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut001";
-import { Cookies } from "react-cookie";
 
 import { axiosClient, defineAxiosMock } from "@sparcs-clubs/web/lib/axios";
 

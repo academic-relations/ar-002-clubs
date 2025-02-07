@@ -1,17 +1,14 @@
 "use client";
 
 import React from "react";
-
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import { pastFundingListSectionTitle } from "@sparcs-clubs/web/constants/manageClubFunding";
-
 import useGetActivityTerms from "@sparcs-clubs/web/features/activity-report/services/useGetActivityTerms";
 
 import useGetFundingDeadline from "../services/useGetFundingDeadline";
-
 import PastSingleSemesterFundingListSection from "./_atomic/PastSingleSemesterFundingListSection";
 
 const PastFundingListSectionInner = styled.div`

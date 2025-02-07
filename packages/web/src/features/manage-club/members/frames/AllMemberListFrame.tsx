@@ -1,16 +1,13 @@
 import React, { useState } from "react";
-
 import styled from "styled-components";
 
 // import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
-
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import AllMemberList from "../components/AllMemberList";
 import MemberSearchAndFilter from "../components/MemberSearchAndFilter";
-
 import { useGetClubSemesters } from "../services/getClubSemesters";
 import { SemesterProps } from "../types/semesterList";
 

@@ -1,11 +1,11 @@
-import apiCms001 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
 import { useQuery } from "@tanstack/react-query";
+
+import type { ApiCms001ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
+import apiCms001 from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
 
 import { axiosClient, defineAxiosMock } from "@sparcs-clubs/web/lib/axios";
 
 import mockupCommonSpaces from "./_mock/mockupCommonSpaces";
-
-import type { ApiCms001ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
 
 const useGetCommonSpaces = () =>
   useQuery<ApiCms001ResponseOK, Error>({

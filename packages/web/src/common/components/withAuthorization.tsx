@@ -1,11 +1,9 @@
+import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/navigation";
 import { ComponentType } from "react";
+import styled from "styled-components";
 
 import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
-import { jwtDecode } from "jwt-decode";
-
-import { useRouter } from "next/navigation";
-
-import styled from "styled-components";
 
 import { getUserTypeEnumKeyByValue } from "@sparcs-clubs/web/utils/getUserType";
 import { getLocalStorageItem } from "@sparcs-clubs/web/utils/localStorage";

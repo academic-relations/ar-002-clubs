@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 import { ApiAct008RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-
-import { useForm } from "react-hook-form";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -106,6 +105,7 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
             )}
 
           <ActivityReportForm
+            // TODO. 리팩토링 해야 함
             /* eslint-disable  @typescript-eslint/no-explicit-any */
             clubId={data.clubId}
             formCtx={formCtx as any}

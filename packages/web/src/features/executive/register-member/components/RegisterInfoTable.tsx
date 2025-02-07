@@ -1,23 +1,19 @@
-import React from "react";
-
-import { ApiReg020ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg020";
-
 // import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import React from "react";
+
+import { ApiReg020ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg020";
 
 // import styled from "styled-components";
-
 // import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 // import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { MemTagList } from "@sparcs-clubs/web/constants/tableTagList";
-
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface RegisterInfoTableProps {

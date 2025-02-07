@@ -1,19 +1,17 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
-
-import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import Link from "next/link";
-
 import { useRouter } from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
+
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorModal";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-
 import { withAuthorization } from "@sparcs-clubs/web/common/components/withAuthorization";
 import MeetingAnnouncementFrame from "@sparcs-clubs/web/features/meeting/components/MeetingAnnouncementFrame";
 import MeetingInformationFrame from "@sparcs-clubs/web/features/meeting/components/MeetingInformationFrame";

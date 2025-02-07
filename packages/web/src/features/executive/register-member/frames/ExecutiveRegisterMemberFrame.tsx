@@ -1,9 +1,7 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-
 import { hangulIncludes } from "es-hangul";
-
+import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -14,11 +12,8 @@ import { CategoryProps } from "@sparcs-clubs/web/common/components/MultiFilter/t
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import RegistrationMemberTable from "@sparcs-clubs/web/common/components/RegisterMemberTable";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
-
 import { DivisionTypeTagList } from "@sparcs-clubs/web/constants/tableTagList";
-
 import { useGetMemberRegistration } from "@sparcs-clubs/web/features/executive/register-member/services/getMemberRegistration";
-
 import {
   getDisplayNameDivisions,
   getEnumDivisions,

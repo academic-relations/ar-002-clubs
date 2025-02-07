@@ -3,7 +3,6 @@
 
 import React, { useRef } from "react";
 // import React, { useEffect, useRef, useState } from "react";
-
 import styled from "styled-components";
 
 import fonts from "@sparcs-clubs/web/styles/themes/fonts";

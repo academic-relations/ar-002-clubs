@@ -1,7 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+
 import apiAct022, {
   ApiAct022ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct022";
-import { useQuery } from "@tanstack/react-query";
 
 import {
   axiosClientWithAuth,

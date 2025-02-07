@@ -1,10 +1,11 @@
-import React from "react";
-
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import React from "react";
+
+import type { ApiPrt001ResponseOk } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
@@ -12,8 +13,6 @@ import { PrtTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 import getPrintSize from "@sparcs-clubs/web/utils/getPrintSize";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
-
-import type { ApiPrt001ResponseOk } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
 
 interface PrintingTableProps {
   printingList: ApiPrt001ResponseOk;

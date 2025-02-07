@@ -4,9 +4,8 @@ import React from "react";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
-import ClubListGrid from "@sparcs-clubs/web/features/clubs/components/ClubListGrid";
-
 import type { ClubProps } from "@sparcs-clubs/web/features/clubs/components/ClubCard";
+import ClubListGrid from "@sparcs-clubs/web/features/clubs/components/ClubListGrid";
 
 type ClubsSectionFrameProps = {
   showLength?: boolean; // section title에 길이 보여줄지 여부

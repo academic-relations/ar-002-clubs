@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
-
 import isPropValid from "@emotion/is-prop-valid";
+import React from "react";
 import styled from "styled-components";
+
+// import ScrollingText from "./_atomic/ScrollingText";
+import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -19,9 +21,6 @@ import {
 import isStudent from "@sparcs-clubs/web/utils/isStudent";
 
 import ClubRegistrationButtonWrapper from "./_atomic/ClubRegistrationButtonWrapper";
-// import ScrollingText from "./_atomic/ScrollingText";
-
-import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 
 export interface ClubProps {
   club: ApiClb001ResponseOK["divisions"][number]["clubs"][number];

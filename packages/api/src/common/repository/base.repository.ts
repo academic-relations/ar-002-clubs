@@ -110,7 +110,7 @@ export abstract class BaseRepository<
   async patchTx(
     tx: DrizzleTransaction,
     oldbie: M,
-    consumer: (oldbie: M) => M,
+    consumer: (oldbie: M) => M, // eslint-disable-line no-shadow
   ): Promise<M> {
     const param = consumer(oldbie);
     await tx
@@ -122,6 +122,7 @@ export abstract class BaseRepository<
     return this.fetchTx(tx, oldbie.id);
   }
 
+  // eslint-disable-next-line no-shadow
   async patch(oldbie: M, consumer: (oldbie: M) => M): Promise<M> {
     return this.withTransaction(async tx => this.patchTx(tx, oldbie, consumer));
   }

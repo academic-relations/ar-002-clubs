@@ -1,8 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
+
 import apiReg015, {
   ApiReg015RequestParam,
   ApiReg015ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg015";
-import { useQuery } from "@tanstack/react-query";
 
 import {
   axiosClientWithAuth,

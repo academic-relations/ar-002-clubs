@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useCallback, useMemo } from "react";
-
 import Link from "next/link";
-
 import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
+import React, { useCallback, useMemo } from "react";
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -16,7 +14,6 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorModal";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   dateTime,

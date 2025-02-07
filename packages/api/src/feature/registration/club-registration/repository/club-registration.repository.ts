@@ -1,5 +1,21 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import {
+  and,
+  count,
+  desc,
+  eq,
+  gt,
+  gte,
+  inArray,
+  isNull,
+  lte,
+  or,
+  sql,
+} from "drizzle-orm";
+import { alias } from "drizzle-orm/mysql-core";
+import { MySql2Database } from "drizzle-orm/mysql2";
+
+import {
   ApiReg001RequestBody,
   ApiReg001ResponseCreated,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
@@ -19,21 +35,6 @@ import {
   RegistrationStatusEnum,
   RegistrationTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
-import {
-  and,
-  count,
-  desc,
-  eq,
-  gt,
-  gte,
-  inArray,
-  isNull,
-  lte,
-  or,
-  sql,
-} from "drizzle-orm";
-import { alias } from "drizzle-orm/mysql-core";
-import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";

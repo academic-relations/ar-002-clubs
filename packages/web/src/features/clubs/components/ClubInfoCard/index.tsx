@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
 import styled, { useTheme } from "styled-components";
+
+import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
@@ -13,8 +14,6 @@ import {
 } from "@sparcs-clubs/web/types/clubdetail.types";
 
 import ClubInfoItem from "./ClubInfoItem";
-
-import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
 export interface ClubInfoCardProps {
   club: ApiClb002ResponseOK;

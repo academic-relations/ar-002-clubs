@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 
-import SemesterRepository from "./semester.repository";
-
 import type {
   ApiSem001RequestQuery,
   ApiSem001ResponseOK,
 } from "@sparcs-clubs/interface/api/semester/apiSem001";
+
+import SemesterRepository from "./semester.repository";
 
 @Injectable()
 export default class SemesterService {

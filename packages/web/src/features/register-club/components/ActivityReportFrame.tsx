@@ -1,6 +1,5 @@
-import React from "react";
-
 import { overlay } from "overlay-kit";
+import React from "react";
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -9,11 +8,9 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 
 import { useGetActivityReportsForPromotional } from "../services/useGetActivityReportsForPromotional";
-
 import CreateActivityReportModal from "./_atomic/CreateActivityReportModal";
 import ActivityReportList from "./ActivityReportList";
 

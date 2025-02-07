@@ -1,5 +1,4 @@
 import { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
-
 import {
   RegistrationStatusEnum,
   RegistrationTypeEnum,

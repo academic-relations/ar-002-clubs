@@ -1,5 +1,5 @@
 // 예시코드입니다.
-// eslint-disable-next-line max-classes-per-file
+
 import { HttpException } from "@nestjs/common";
 
 // example

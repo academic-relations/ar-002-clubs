@@ -1,6 +1,5 @@
 import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
-
 import {
   FixtureClassEnum,
   FixtureEvidenceEnum,

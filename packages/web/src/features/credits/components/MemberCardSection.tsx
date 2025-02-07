@@ -1,9 +1,7 @@
 import React from "react";
-
 import styled from "styled-components";
 
 import { Member, SemesterCredit } from "../credits";
-
 import MemberCard from "./MemberCard";
 
 interface MemberCardSectionProps {

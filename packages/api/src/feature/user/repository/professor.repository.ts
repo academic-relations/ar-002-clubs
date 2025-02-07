@@ -1,12 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-
-import { IProfessorSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 import { and, eq, gte, inArray, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
+import { IProfessorSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
+
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
-
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   Professor,

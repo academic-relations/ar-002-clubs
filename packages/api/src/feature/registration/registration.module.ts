@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 
 import { ClubRegistrationModule } from "./club-registration/club-registration.module";
