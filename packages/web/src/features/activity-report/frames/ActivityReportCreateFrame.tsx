@@ -6,8 +6,14 @@ import { overlay } from "overlay-kit";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
+import RestoreDraftModal from "@sparcs-clubs/web/common/components/Modal/RestoreDraftModal";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+
+import useTemporaryStorage from "@sparcs-clubs/web/common/hooks/useTemporaryStorage";
+import LocalStorageUtil from "@sparcs-clubs/web/common/services/localStorageUtil";
+
+import { LOCAL_STORAGE_KEY } from "@sparcs-clubs/web/constants/localStorage";
 
 import ActivityReportForm from "../components/ActivityReportForm";
 import { useCreateActivityReport } from "../hooks/useCreateActivityReport";
@@ -21,6 +27,11 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
   clubId,
 }) => {
   const router = useRouter();
+
+  const { savedData, isModalOpen, handleConfirm, handleClose } =
+    useTemporaryStorage<ActivityReportFormData>(
+      LOCAL_STORAGE_KEY.ACTIVITY_REPORT,
+    );
   const { mutate: createActivityReport } = useCreateActivityReport(clubId);
 
   const handleSubmit = (data: ActivityReportFormData) => {
@@ -30,6 +41,7 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
           <Modal isOpen={isOpen}>
             <ConfirmModalContent
               onConfirm={() => {
+                LocalStorageUtil.remove(LOCAL_STORAGE_KEY.ACTIVITY_REPORT);
                 close();
                 router.push("/manage-club/activity-report");
               }}
@@ -64,7 +76,19 @@ const ActivityReportCreateFrame: React.FC<ActivityReportCreateFrameProps> = ({
         title="활동 보고서 작성"
         enableLast
       />
-      <ActivityReportForm clubId={clubId} onSubmit={handleSubmit} />
+      {isModalOpen ? (
+        <RestoreDraftModal
+          isOpen={isModalOpen}
+          onConfirm={handleConfirm}
+          onClose={handleClose}
+        />
+      ) : (
+        <ActivityReportForm
+          clubId={clubId}
+          onSubmit={handleSubmit}
+          initialData={savedData}
+        />
+      )}
     </FlexWrapper>
   );
 };
