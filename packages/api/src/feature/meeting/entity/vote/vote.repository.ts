@@ -300,7 +300,7 @@ export class VoteRepository {
         .where(
           and(
             eq(MeetingVoteResult.voteId, voteId),
-            eq(MeetingVoteResult.userId, 39),
+            eq(MeetingVoteResult.userId, userId),
           ),
         );
 

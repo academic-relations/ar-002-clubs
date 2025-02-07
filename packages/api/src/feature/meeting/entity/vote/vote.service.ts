@@ -14,23 +14,23 @@ export class VoteService {
   ) {}
 
   async postExecutiveMeetingAgendaVote(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     title: string,
     description: string,
     choices: Array<{ id: number; choice: string }>,
   ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: userId,
+    const executive = await this.userPublicService.getExecutiveById({
+      id: executiveId,
     });
 
-    if (!user) {
+    if (!executive) {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
     const result = await this.voteRepository.postMeetingAgendaVote(
-      userId,
+      executiveId,
       meetingId,
       agendaId,
       title,
@@ -44,22 +44,22 @@ export class VoteService {
   }
 
   async postExecutiveMeetingAgendaVoteResult(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
     choiceId: number,
   ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: userId,
+    const executive = await this.userPublicService.getExecutiveById({
+      id: executiveId,
     });
 
-    if (!user) {
+    if (!executive) {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
     const result = await this.voteRepository.postMeetingAgendaVoteResult(
-      userId,
+      executiveId,
       meetingId,
       agendaId,
       voteId,
@@ -75,23 +75,23 @@ export class VoteService {
   }
 
   async putExecutiveMeetingAgendaVote(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
     title: string,
     description: string,
   ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: userId,
+    const executive = await this.userPublicService.getExecutiveById({
+      id: executiveId,
     });
 
-    if (!user) {
+    if (!executive) {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
     const result = await this.voteRepository.putMeetingAgendaVote(
-      userId,
+      executiveId,
       meetingId,
       agendaId,
       voteId,
@@ -105,22 +105,22 @@ export class VoteService {
   }
 
   async putExecutiveMeetingAgendaVoteChoices(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
     choices: Array<{ id: number; choice: string }>,
   ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: userId,
+    const executive = await this.userPublicService.getExecutiveById({
+      id: executiveId,
     });
 
-    if (!user) {
+    if (!executive) {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
     const result = await this.voteRepository.putMeetingAgendaVoteChoices(
-      userId,
+      executiveId,
       meetingId,
       agendaId,
       voteId,
@@ -136,22 +136,22 @@ export class VoteService {
   }
 
   async putExecutiveMeetingAgendaVoteUserChoice(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
     choiceId: number,
   ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: userId,
+    const executive = await this.userPublicService.getExecutiveById({
+      id: executiveId,
     });
 
-    if (!user) {
+    if (!executive) {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
     const result = await this.voteRepository.putMeetingAgendaVoteUserChoice(
-      userId,
+      executiveId,
       meetingId,
       agendaId,
       voteId,
@@ -167,21 +167,21 @@ export class VoteService {
   }
 
   async deleteExecutiveMeetingAgendaVote(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
   ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: userId,
+    const executive = await this.userPublicService.getExecutiveById({
+      id: executiveId,
     });
 
-    if (!user) {
+    if (!executive) {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
     const result = await this.voteRepository.deleteMeetingAgendaVote(
-      userId,
+      executiveId,
       meetingId,
       agendaId,
       voteId,
@@ -193,21 +193,21 @@ export class VoteService {
   }
 
   async deleteExecutiveMeetingAgendaVoteForUser(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
   ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: userId,
+    const executive = await this.userPublicService.getExecutiveById({
+      id: executiveId,
     });
 
-    if (!user) {
+    if (!executive) {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
     const result = await this.voteRepository.deleteMeetingAgendaVoteForUser(
-      userId,
+      executiveId,
       meetingId,
       agendaId,
       voteId,
@@ -223,21 +223,21 @@ export class VoteService {
 
   // CHACHA: 투표와 관련한 모든 정보 가져오기
   async getExecutiveMeetingAgendaVote(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
   ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: userId,
+    const executive = await this.userPublicService.getExecutiveById({
+      id: executiveId,
     });
 
-    if (!user) {
+    if (!executive) {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
     const result = await this.voteRepository.getMeetingAgendaVote(
-      userId,
+      executiveId,
       meetingId,
       agendaId,
       voteId,

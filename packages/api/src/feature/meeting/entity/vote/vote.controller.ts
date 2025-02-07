@@ -71,12 +71,12 @@ export default class VoteController {
   )
   @UsePipes(new ZodPipe(apiMee016))
   async postExecutiveMeetingAgendaVote(
-    @GetExecutive() user: GetExecutive,
+    @GetExecutive() executive: GetExecutive,
     @Param() { meetingId, agendaId }: ApiMee016RequestParam,
     @Body() { title, description, choices }: ApiMee016RequestBody,
   ): Promise<ApiMee016ResponseOk> {
     const result = await this.voteService.postExecutiveMeetingAgendaVote(
-      user.executiveId,
+      executive.executiveId,
       meetingId,
       agendaId,
       title,
@@ -93,12 +93,12 @@ export default class VoteController {
   )
   @UsePipes(new ZodPipe(apiMee017))
   async postExecutiveMeetingAgendaVoteResult(
-    @GetExecutive() user: GetExecutive,
+    @GetExecutive() executive: GetExecutive,
     @Param() { meetingId, agendaId, voteId }: ApiMee017RequestParam,
     @Body() { choiceId }: ApiMee017RequestBody,
   ): Promise<ApiMee017ResponseOk> {
     const result = await this.voteService.postExecutiveMeetingAgendaVoteResult(
-      user.executiveId,
+      executive.executiveId,
       meetingId,
       agendaId,
       voteId,
@@ -114,12 +114,12 @@ export default class VoteController {
   )
   @UsePipes(new ZodPipe(apiMee018))
   async putExecutiveMeetingAgendaVote(
-    @GetExecutive() user: GetExecutive,
+    @GetExecutive() executive: GetExecutive,
     @Param() { meetingId, agendaId, voteId }: ApiMee018RequestParam,
     @Body() { title, description }: ApiMee018RequestBody,
   ): Promise<ApiMee018ResponseOk> {
     const result = await this.voteService.putExecutiveMeetingAgendaVote(
-      user.executiveId,
+      executive.executiveId,
       meetingId,
       agendaId,
       voteId,
@@ -136,12 +136,12 @@ export default class VoteController {
   )
   @UsePipes(new ZodPipe(apiMee019))
   async putExecutiveMeetingAgendaVoteChoices(
-    @GetExecutive() user: GetExecutive,
+    @GetExecutive() executive: GetExecutive,
     @Param() { meetingId, agendaId, voteId }: ApiMee019RequestParam,
     @Body() { choices }: ApiMee019RequestBody,
   ): Promise<ApiMee019ResponseOk> {
     const result = await this.voteService.putExecutiveMeetingAgendaVoteChoices(
-      user.executiveId,
+      executive.executiveId,
       meetingId,
       agendaId,
       voteId,
@@ -157,13 +157,13 @@ export default class VoteController {
   )
   @UsePipes(new ZodPipe(apiMee020))
   async putExecutiveMeetingAgendaVoteUserChoice(
-    @GetExecutive() user: GetExecutive,
+    @GetExecutive() executive: GetExecutive,
     @Param() { meetingId, agendaId, voteId }: ApiMee020RequestParam,
     @Body() { choiceId }: ApiMee020RequestBody,
   ): Promise<ApiMee020ResponseOk> {
     const result =
       await this.voteService.putExecutiveMeetingAgendaVoteUserChoice(
-        user.executiveId,
+        executive.executiveId,
         meetingId,
         agendaId,
         voteId,
@@ -179,11 +179,11 @@ export default class VoteController {
   )
   @UsePipes(new ZodPipe(apiMee022))
   async deleteExecutiveMeetingAgendaVote(
-    @GetExecutive() user: GetExecutive,
+    @GetExecutive() executive: GetExecutive,
     @Param() { meetingId, agendaId, voteId }: ApiMee022RequestParam,
   ): Promise<ApiMee022ResponseOk> {
     const result = await this.voteService.deleteExecutiveMeetingAgendaVote(
-      user.executiveId,
+      executive.executiveId,
       meetingId,
       agendaId,
       voteId,
@@ -198,12 +198,12 @@ export default class VoteController {
   )
   @UsePipes(new ZodPipe(apiMee023))
   async deleteExecutiveMeetingAgendaVoteForUser(
-    @GetExecutive() user: GetExecutive,
+    @GetExecutive() executive: GetExecutive,
     @Param() { meetingId, agendaId, voteId }: ApiMee023RequestParam,
   ): Promise<ApiMee023ResponseOk> {
     const result =
       await this.voteService.deleteExecutiveMeetingAgendaVoteForUser(
-        user.executiveId,
+        executive.executiveId,
         meetingId,
         agendaId,
         voteId,
@@ -218,11 +218,11 @@ export default class VoteController {
   )
   @UsePipes(new ZodPipe(apiMee024))
   async getExecutiveMeetingAgendaVote(
-    @GetExecutive() user: GetExecutive,
+    @GetExecutive() executive: GetExecutive,
     @Param() { meetingId, agendaId, voteId }: ApiMee024RequestParam,
   ): Promise<ApiMee024ResponseOk> {
     const result = await this.voteService.getExecutiveMeetingAgendaVote(
-      user.executiveId,
+      executive.executiveId,
       meetingId,
       agendaId,
       voteId,

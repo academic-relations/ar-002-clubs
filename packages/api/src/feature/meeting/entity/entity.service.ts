@@ -14,21 +14,21 @@ export class EntityService {
   ) {}
 
   async putExecutiveMeetingAgendaEntities(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     entityIdList: Array<{ id: number; meetingAgendaEntityType: number }>,
   ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: userId,
+    const executive = await this.userPublicService.getExecutiveById({
+      id: executiveId,
     });
 
-    if (!user) {
+    if (!executive) {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
     const result = await this.entityRepository.putMeetingAgendaEntities(
-      userId,
+      executiveId,
       meetingId,
       agendaId,
       entityIdList,
@@ -43,20 +43,20 @@ export class EntityService {
   }
 
   async getExecutiveMeetingAgendaEntities(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
   ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: userId,
+    const executive = await this.userPublicService.getExecutiveById({
+      id: executiveId,
     });
 
-    if (!user) {
+    if (!executive) {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
     const result = await this.entityRepository.getMeetingAgendaEntities(
-      userId,
+      executiveId,
       meetingId,
       agendaId,
     );

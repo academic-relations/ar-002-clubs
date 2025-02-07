@@ -4,6 +4,8 @@ import {
   Injectable,
 } from "@nestjs/common";
 
+import { MeetingAgendaEntityTypeEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
+
 import { and, eq, max, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -68,7 +70,7 @@ export class ContentRepository {
         meetingId,
         meetingAgendaId: agendaId,
         meetingAgendaPosition: agendaPosition,
-        meetingAgendaEntityType: 1, // TODO: content enum으로 교체
+        meetingAgendaEntityType: MeetingAgendaEntityTypeEnum.Content,
         meetingAgendaContentId: contentId,
         meetingAgendaEntityPosition: maxAgendaEntityPosition + 1,
       });

@@ -12,21 +12,21 @@ export class ContentService {
   ) {}
 
   async postExecutiveMeetingAgendaContent(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     content: string,
   ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: userId,
+    const executive = await this.userPublicService.getExecutiveById({
+      id: executiveId,
     });
 
-    if (!user) {
+    if (!executive) {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
     const result = await this.contentRepository.postMeetingAgendaContent(
-      userId,
+      executiveId,
       meetingId,
       agendaId,
       content,
@@ -41,22 +41,22 @@ export class ContentService {
   }
 
   async putExecutiveMeetingAgendaContent(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     contentId: number,
     content: string,
   ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: userId,
+    const executive = await this.userPublicService.getExecutiveById({
+      id: executiveId,
     });
 
-    if (!user) {
+    if (!executive) {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
     const result = await this.contentRepository.putMeetingAgendaContent(
-      userId,
+      executiveId,
       meetingId,
       agendaId,
       contentId,
@@ -72,21 +72,21 @@ export class ContentService {
   }
 
   async deleteExecutiveMeetingAgendaContent(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     contentId: number,
   ) {
-    const user = await this.userPublicService.getExecutiveById({
-      id: userId,
+    const executive = await this.userPublicService.getExecutiveById({
+      id: executiveId,
     });
 
-    if (!user) {
+    if (!executive) {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
 
     const result = await this.contentRepository.deleteMeetingAgendaContent(
-      userId,
+      executiveId,
       meetingId,
       agendaId,
       contentId,
