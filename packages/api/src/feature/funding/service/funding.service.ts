@@ -69,6 +69,7 @@ import {
   FundingStatusEnum,
 } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
+import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ActivityPublicService from "@sparcs-clubs/api/feature/activity/service/activity.public.service";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
@@ -1019,6 +1020,7 @@ export default class FundingService {
     body: ApiFnd014RequestBody,
   ): Promise<ApiFnd014ResponseOk> {
     await this.userPublicService.checkCurrentExecutive(executiveId);
+    await this.userPublicService.checkCurrentExecutive(body.executiveId);
 
     const fundings = await this.fundingRepository.fetchSummaries(
       body.fundingIds,
@@ -1027,7 +1029,7 @@ export default class FundingService {
       // eslint-disable-next-line no-restricted-syntax
       for (const funding of fundings) {
         this.fundingRepository.patchSummaryTx(tx, funding, f => ({
-          ...f,
+          id: f.id,
           chargedExecutiveId: body.executiveId,
         }));
       }
@@ -1041,6 +1043,7 @@ export default class FundingService {
     body: ApiFnd015RequestBody,
   ): Promise<ApiFnd015ResponseOk> {
     await this.userPublicService.checkCurrentExecutive(executiveId);
+    await this.userPublicService.checkCurrentExecutive(body.executiveId);
 
     const activityDId = (await this.activityPublicService.fetchLastActivityD())
       .id;
@@ -1049,11 +1052,12 @@ export default class FundingService {
       body.clubIds,
       activityDId,
     );
+    logger.info(fundings);
     this.fundingRepository.withTransaction(async tx => {
       // eslint-disable-next-line no-restricted-syntax
       for (const funding of fundings) {
         this.fundingRepository.patchSummaryTx(tx, funding, f => ({
-          ...f,
+          id: f.id,
           chargedExecutiveId: body.executiveId,
         }));
       }

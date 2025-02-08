@@ -269,6 +269,9 @@ export default class FundingController {
     );
   }
 
+  // TODO: club이 하나만 오면 zod Error가 나는 버그 있음
+  // 이 API 뿐만 아니라, number array를 query param으로 받는 API 전부에 영향이 있음
+  // zod 단에서 수정 필요
   @Executive()
   @Get(ApiFnd016RequestUrl)
   @UsePipes(new ZodPipe(apiFnd016))
