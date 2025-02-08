@@ -6,9 +6,9 @@ import Custom404 from "@sparcs-clubs/web/app/not-found";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
-import ExecutiveActivityReportChargedFrame from "@sparcs-clubs/web/features/executive/activity-report/frames/ExecutiveActivityReportChargedFrame";
+import ExecutiveFundingChargedFrame from "@sparcs-clubs/web/features/executive/funding/frames/ExecutiveFundingChargedFrame";
 
-const ExecutiveActivityReport = () => {
+const ExecutiveFundingCharged = () => {
   const { isLoggedIn, login, profile } = useAuth();
   const [loading, setLoading] = useState(true);
 
@@ -30,7 +30,7 @@ const ExecutiveActivityReport = () => {
     return <Custom404 />;
   }
 
-  return <ExecutiveActivityReportChargedFrame />;
+  return <ExecutiveFundingChargedFrame />;
 };
 
-export default ExecutiveActivityReport;
+export default ExecutiveFundingCharged;

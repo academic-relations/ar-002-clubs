@@ -1,6 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { zClubSummary } from "@sparcs-clubs/interface/api/club/type/club.type";
 import { zExecutiveSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 
 import { zFundingSummaryResponse } from "../type/funding.type";
@@ -26,6 +27,7 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
+    club: zClubSummary,
     totalCount: z.number().min(0),
     appliedCount: z.number().min(0),
     approvedCount: z.number().min(0),

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { and, eq, gte, inArray, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
@@ -71,5 +71,21 @@ export default class ProfessorRepository {
       .from(Professor)
       .where(inArray(Professor.id, ids));
     return professors;
+  }
+
+  async fetchSummary(id: number): Promise<IProfessorSummary> {
+    const result = await this.db
+      .select({
+        id: Professor.id,
+        name: Professor.name,
+      })
+      .from(Professor)
+      .where(and(eq(Professor.id, id), isNull(Professor.deletedAt)));
+
+    if (result.length !== 1) {
+      throw new NotFoundException("Professor not found");
+    }
+
+    return result[0];
   }
 }
