@@ -20,8 +20,8 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
-import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import RejectReasonToast from "@sparcs-clubs/web/common/components/Toast/RejectReasonToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   DivisionTypeTagList,
