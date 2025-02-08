@@ -220,12 +220,12 @@ const paths = {
         authority: ["executive"],
         featureFlag: "DEFAULT",
       },
-      // {
-      //   name: "지원금",
-      //   path: "/executive/funding",
-      //   authority: ["executive"],
-      //   featureFlag: "DEFAULT",
-      // },
+      {
+        name: "지원금",
+        path: "/executive/funding",
+        authority: ["executive"],
+        featureFlag: "DEFAULT",
+      },
     ],
     authority: ["executive"],
   },
