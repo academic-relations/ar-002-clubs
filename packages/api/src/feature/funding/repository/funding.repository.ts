@@ -1,4 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { and, eq, exists, inArray, isNull, or } from "drizzle-orm";
+import { MySql2Database } from "drizzle-orm/mysql2";
 
 import {
   IFunding,
@@ -6,8 +8,6 @@ import {
   IFundingRequest,
   IFundingSummary,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
-import { and, eq, exists, inArray, isNull, or } from "drizzle-orm";
-import { MySql2Database } from "drizzle-orm/mysql2";
 
 import {
   DrizzleAsyncProvider,
@@ -32,10 +32,9 @@ import {
   FundingTradeEvidenceFile,
   FundingTransportationPassenger,
 } from "@sparcs-clubs/api/drizzle/schema/funding.schema";
-
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
-import { MFunding } from "../model/funding.model";
+import { FundingDBResult, MFunding } from "../model/funding.model";
 import {
   FundingSummaryDBResult,
   VFundingSummary,
@@ -349,7 +348,7 @@ export default class FundingRepository {
         .from(Funding)
         .where(
           and(
-            inArray(Funding.id, arg1),
+            inArray(Funding.clubId, arg1),
             eq(Funding.activityDId, arg2),
             isNull(Funding.deletedAt),
           ),
@@ -1072,13 +1071,15 @@ export default class FundingRepository {
   async patchSummaryTx(
     tx: DrizzleTransaction,
     oldbie: IFundingSummary,
-    consumer: (oldbie: IFundingSummary) => IFundingSummary,
+    consumer: (
+      _oldbie: IFundingSummary,
+    ) => Partial<FundingDBResult> & { id: number },
   ): Promise<IFundingSummary> {
     const param = consumer(oldbie);
     await tx
       .update(Funding)
       .set(param)
-      .where(eq(Funding.id, oldbie.id))
+      .where(eq(Funding.id, param.id))
       .execute();
 
     return this.fetch(oldbie.id);
@@ -1086,7 +1087,7 @@ export default class FundingRepository {
 
   async patchSummary(
     oldbie: IFundingSummary,
-    consumer: (oldbie: IFundingSummary) => IFundingSummary,
+    consumer: (_oldbie: IFundingSummary) => IFundingSummary,
   ): Promise<IFundingSummary> {
     return this.db.transaction(async tx =>
       this.patchSummaryTx(tx, oldbie, consumer),

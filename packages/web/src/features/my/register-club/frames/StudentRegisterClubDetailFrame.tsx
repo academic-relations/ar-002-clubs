@@ -1,6 +1,5 @@
-import React from "react";
-
 import { useParams } from "next/navigation";
+import React from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import useGetClubRegistration from "@sparcs-clubs/web/features/my/services/useGetClubRegistration";

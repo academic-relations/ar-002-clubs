@@ -1,5 +1,6 @@
-import apiAct024 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import apiAct024 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
 
 import usePatchActivityExecutive from "../services/patchActivityExecutive";
 import { activityReportDetailQueryKey } from "../services/useGetActivityReport";

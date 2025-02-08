@@ -2,14 +2,14 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, between, desc, eq, isNull, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
+import type { ApiCms007ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
+
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   CommonSpace,
   CommonSpaceUsageOrderD,
 } from "@sparcs-clubs/api/drizzle/schema/common-space.schema";
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
-
-import type { ApiCms007ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
 
 @Injectable()
 export class GetCommonSpacesUsageOrderMyRepository {

@@ -1,7 +1,6 @@
-import React, { useRef } from "react";
-
-import DatePicker, { DatePickerProps } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import React, { useRef } from "react";
+import DatePicker, { DatePickerProps } from "react-datepicker";
 import styled from "styled-components";
 
 import FlexWrapper from "../FlexWrapper";

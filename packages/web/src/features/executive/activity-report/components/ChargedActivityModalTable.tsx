@@ -1,11 +1,11 @@
-import React from "react";
-
-import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import React from "react";
+
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";

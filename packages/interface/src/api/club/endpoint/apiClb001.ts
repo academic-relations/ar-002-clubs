@@ -2,7 +2,6 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import { zClubName } from "@sparcs-clubs/interface/common/commonString";
-
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 /**

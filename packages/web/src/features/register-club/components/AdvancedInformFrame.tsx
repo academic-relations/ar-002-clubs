@@ -1,15 +1,15 @@
 import React from "react";
+import { useFormContext } from "react-hook-form";
 
 import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-
-import { useFormContext } from "react-hook-form";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
+import logger from "@sparcs-clubs/web/utils/logger";
 
 import SingleUploadWithTextAndTemplate from "./SingleUploadWithTextAndTemplate";
 
@@ -109,7 +109,7 @@ const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({
             downloadFileName="[양식] 활동 계획서.docx"
             initialFile={files.activityPlanFile}
             onChange={data => {
-              // console.log("debug", "activityPlanFileId", data);
+              logger.debug("activityPlanFileId", data);
               updateSingleFile("activityPlanFileId", data);
             }}
           />
@@ -130,7 +130,7 @@ const AdvancedInformFrame: React.FC<AdvancedInformFrameProps> = ({
             downloadFileName="[양식] 동아리 회칙.docx"
             initialFile={files.clubRuleFile}
             onChange={data => {
-              // console.log("debug", "clubRuleFileId", data);
+              logger.log("debug", "clubRuleFileId", data);
               updateSingleFile("clubRuleFileId", data);
             }}
           />

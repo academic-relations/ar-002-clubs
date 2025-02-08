@@ -7,14 +7,12 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
+import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import Select from "@sparcs-clubs/web/common/components/Select";
-
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 import useGetMyClub from "@sparcs-clubs/web/features/my/clubs/service/useGetMyClub";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
-
-import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 const RentalInfoFirstFrame: React.FC<
   RentalFrameProps & { setNextEnabled: (enabled: boolean) => void }
@@ -111,7 +109,7 @@ const RentalInfoFirstFrame: React.FC<
               label="신청자 전화번호"
               placeholder={
                 /^(\d{3}-\d{4}-\d{4})$/.test(userPhone ?? "")
-                  ? userPhone ?? ""
+                  ? (userPhone ?? "")
                   : ""
               }
             />

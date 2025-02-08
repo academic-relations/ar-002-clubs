@@ -1,15 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
-
 import { addMinutes } from "date-fns";
-
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
+import type { TimetableCellType } from "./_atomic/TimetableCell";
 import TimetableDateList from "./_atomic/TimetableDateList";
 import TimetableTable from "./_atomic/TimetableTable";
 import TimetableTimeList from "./_atomic/TimetableTimeList";
 import WeekNavigator from "./_atomic/WeekNavigator";
-
-import type { TimetableCellType } from "./_atomic/TimetableCell";
 
 interface TimetableProps {
   data: boolean[];

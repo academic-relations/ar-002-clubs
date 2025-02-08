@@ -1,5 +1,4 @@
 import React from "react";
-
 import styled from "styled-components";
 
 import noPreview from "@sparcs-clubs/web/assets/no-preview.png";

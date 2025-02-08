@@ -1,12 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import logger from "@sparcs-clubs/api/common/util/logger";
-
-import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
-
-import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
-import ActivityRepository from "../repository/activity.repository";
-
 import type {
   ApiAct006RequestParam,
   ApiAct006RequestQuery,
@@ -16,6 +9,12 @@ import type {
   ApiAct009RequestQuery,
   ApiAct009ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct009";
+
+import logger from "@sparcs-clubs/api/common/util/logger";
+import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
+
+import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
+import ActivityRepository from "../repository/activity.repository";
 
 @Injectable()
 export default class ActivityActivityTermService {

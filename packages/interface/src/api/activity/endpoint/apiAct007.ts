@@ -1,5 +1,4 @@
 import { HttpStatusCode } from "axios";
-
 import { z } from "zod";
 
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";

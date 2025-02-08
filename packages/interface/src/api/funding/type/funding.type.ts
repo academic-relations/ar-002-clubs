@@ -4,7 +4,10 @@ import {
   zActivityD,
   zActivitySummary,
 } from "@sparcs-clubs/interface/api/activity/type/activity.type";
-import { zClub } from "@sparcs-clubs/interface/api/club/type/club.type";
+import {
+  zClub,
+  zClubSummary,
+} from "@sparcs-clubs/interface/api/club/type/club.type";
 import { zFileSummary } from "@sparcs-clubs/interface/api/file/type/file.type";
 import {
   zExecutiveSummary,
@@ -120,6 +123,7 @@ export const zFunding = z.object({
   deletedAt: z.coerce.date().optional(),
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const zFundingExtra = zFunding.pick({
   activityD: true,
   fundingStatusEnum: true,
@@ -366,15 +370,9 @@ export const zFundingSummary = zFunding.pick({
   chargedExecutive: true,
 });
 
-export const zFundingSummaryResponse = zFundingResponse.pick({
-  id: true,
-  fundingStatusEnum: true,
-  name: true,
-  expenditureAmount: true,
-  approvedAmount: true,
-  purposeActivity: true,
-  club: true,
-  chargedExecutive: true,
+export const zFundingSummaryResponse = zFundingSummary.extend({
+  club: zClubSummary,
+  purposeActivity: zActivitySummary.optional(),
 });
 
 export type IClubSupplies = z.infer<typeof zClubSupplies>;

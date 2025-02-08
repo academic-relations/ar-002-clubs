@@ -10,6 +10,7 @@ import {
   Query,
   UsePipes,
 } from "@nestjs/common";
+
 import apiFnd001, {
   ApiFnd001RequestBody,
   ApiFnd001ResponseCreated,
@@ -81,7 +82,6 @@ import apiFnd016, {
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd016";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
-
 import {
   Executive,
   Public,
@@ -116,9 +116,9 @@ export default class FundingController {
     @GetStudent() user: GetStudent,
     @Param() param: ApiFnd002RequestParam,
   ): Promise<ApiFnd002ResponseOk> {
-    const result = await this.fundingService.getStudentFunding(
-      param,
+    const result = await this.fundingService.getStudentFunding2(
       user.studentId,
+      param.id,
     );
     return result;
   }
@@ -220,11 +220,11 @@ export default class FundingController {
   @Executive()
   @Get(ApiFnd009RequestUrl)
   @UsePipes(new ZodPipe(apiFnd009))
-  async getExecutiveFundingsClubBreif(
+  async getExecutiveFundingsClubBrief(
     @GetExecutive() executive: GetExecutive,
     @Param() param: ApiFnd009RequestParam,
   ): Promise<ApiFnd009ResponseOk> {
-    return this.fundingService.getExecutiveFundingsClubBreif(
+    return this.fundingService.getExecutiveFundingsClubBrief(
       executive.executiveId,
       param,
     );
@@ -233,11 +233,11 @@ export default class FundingController {
   @Executive()
   @Get(ApiFnd010RequestUrl)
   @UsePipes(new ZodPipe(apiFnd010))
-  async getExecutiveFundingsExecutiveBreif(
+  async getExecutiveFundingsExecutiveBrief(
     @GetExecutive() executive: GetExecutive,
     @Param() param: ApiFnd010RequestParam,
   ): Promise<ApiFnd010ResponseOk> {
-    return this.fundingService.getExecutiveFundingsExecutiveBreif(
+    return this.fundingService.getExecutiveFundingsExecutiveBrief(
       executive.executiveId,
       param,
     );
@@ -269,6 +269,9 @@ export default class FundingController {
     );
   }
 
+  // TODO: club이 하나만 오면 zod Error가 나는 버그 있음
+  // 이 API 뿐만 아니라, number array를 query param으로 받는 API 전부에 영향이 있음
+  // zod 단에서 수정 필요
   @Executive()
   @Get(ApiFnd016RequestUrl)
   @UsePipes(new ZodPipe(apiFnd016))

@@ -1,11 +1,10 @@
+import { useParams } from "next/navigation";
+import { overlay } from "overlay-kit";
 import React, { useState } from "react";
 
 import { IFundingCommentResponse } from "@sparcs-clubs/interface/api/funding/type/funding.comment.type";
 import { IFundingResponse } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
-import { useParams } from "next/navigation";
-
-import { overlay } from "overlay-kit";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -139,7 +138,7 @@ const ExecutiveFundingReviewSection: React.FC<{
       )}
 
       <TextInput
-        label="부분 승인 / 반려 사유 (부분 승인 / 반려 시에만 입력)"
+        label="코멘트 (부분 승인 / 반려 시에는 필수)"
         value={reviewDetail}
         handleChange={setReviewDetail}
         placeholder="내용"

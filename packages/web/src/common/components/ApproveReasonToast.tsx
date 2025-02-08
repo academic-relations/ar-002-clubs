@@ -1,5 +1,4 @@
 import React from "react";
-
 import styled from "styled-components";
 
 import colors from "@sparcs-clubs/web/styles/themes/colors";
@@ -7,7 +6,6 @@ import { formatDotDetailDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import FlexWrapper from "./FlexWrapper";
 import Icon from "./Icon";
-
 import Typography from "./Typography";
 
 interface Reason {

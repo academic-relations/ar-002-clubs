@@ -1,12 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-
 import isPropValid from "@emotion/is-prop-valid";
+import { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import FormError from "../FormError";
 import Label from "../FormLabel";
 import Icon from "../Icon";
-
 import NoOption from "./_atomic/NoOption";
 import Dropdown from "./Dropdown";
 import SelectOption from "./SelectOption";

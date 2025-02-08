@@ -40,7 +40,6 @@ import {
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd010";
 import { ApiFnd012ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd012";
 import { ApiFnd013ResponseCreated } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd013";
-
 import {
   ApiFnd014RequestBody,
   ApiFnd014ResponseOk,
@@ -61,12 +60,16 @@ import {
   IFunding,
   IFundingResponse,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
-import { IExecutive } from "@sparcs-clubs/interface/api/user/type/user.type";
+import {
+  IExecutive,
+  IStudent,
+} from "@sparcs-clubs/interface/api/user/type/user.type";
 import {
   FundingDeadlineEnum,
   FundingStatusEnum,
 } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
+import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ActivityPublicService from "@sparcs-clubs/api/feature/activity/service/activity.public.service";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
@@ -228,25 +231,46 @@ export default class FundingService {
 
     const comments = await this.fundingCommentRepository.fetchAll(funding.id);
 
-    const chargedExecutive =
+    const commentedExecutive =
       await this.userPublicService.fetchExecutiveSummaries(
         comments.map(comment => comment.executive.id),
       );
 
-    comments.forEach(comment => {
-      // eslint-disable-next-line no-param-reassign
-      comment.executive = chargedExecutive.find(
-        executive => executive.id === comment.executive.id,
-      );
-    });
-    const commentResponses = comments.map(comment => ({
+    const updatedComments = comments.map(comment => ({
       ...comment,
-      executive: chargedExecutive.find(
+      executive: commentedExecutive.find(
         executive => executive.id === comment.executive.id,
       ),
     }));
 
-    return { funding, comments: commentResponses };
+    return { funding, comments: updatedComments };
+  }
+
+  // gb: 위의 getStudentFunding이 옛날에 짠거, 함수화를 시켜서 아래 getExecutiveFunding에서 쓰는 것으로 변경한 버전
+  // 만약 문제 생기면 원래꺼 보려고 원래 코드 남기고 아래에 추가
+  // TODO: 지원금 기간을 잘 넘기면 위 코드 삭제하고 이름 그냥 getStudentFunding으로 바꾸기
+  async getStudentFunding2(
+    studentId: IStudent["id"],
+    id: IFunding["id"],
+  ): Promise<ApiFnd002ResponseOk> {
+    const user = await this.userPublicService.getStudentById({ id: studentId });
+    if (!user) {
+      throw new HttpException("Student not found", HttpStatus.NOT_FOUND);
+    }
+    const funding = await this.fundingRepository.fetch(id);
+
+    const fundingResponse = await this.buildFundingResponse(funding);
+    const comments = await this.fundingCommentRepository.fetchAll(id);
+    const executives = await this.userPublicService.fetchExecutiveSummaries(
+      comments.map(comment => comment.executive.id),
+    );
+    const commentsWithExecutives = comments.map(comment => ({
+      ...comment,
+      executive: executives.find(
+        executive => executive.id === comment.executive.id,
+      ),
+    }));
+    return { funding: fundingResponse, comments: commentsWithExecutives };
   }
 
   private async buildFundingResponse(
@@ -414,6 +438,10 @@ export default class FundingService {
       fundings.map(funding => funding.purposeActivity.id),
     );
 
+    const clubs = await this.clubPublicService.fetchSummaries(
+      fundings.map(funding => funding.club.id),
+    );
+
     return {
       fundings: fundings.map(funding => ({
         id: funding.id,
@@ -424,7 +452,7 @@ export default class FundingService {
         name: funding.name,
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,
-        club: funding.club,
+        club: clubs.find(club => club.id === funding.club.id),
         chargedExecutive: funding.chargedExecutive,
       })),
     };
@@ -449,6 +477,10 @@ export default class FundingService {
       fundings.map(funding => funding.purposeActivity.id),
     );
 
+    const clubs = await this.clubPublicService.fetchSummaries(
+      fundings.map(funding => funding.club.id),
+    );
+
     return {
       fundings: fundings.map(funding => ({
         id: funding.id,
@@ -459,7 +491,7 @@ export default class FundingService {
         name: funding.name,
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,
-        club: funding.club,
+        club: clubs.find(club => club.id === funding.club.id),
         chargedExecutive: funding.chargedExecutive,
       })),
     };
@@ -589,13 +621,58 @@ export default class FundingService {
           funding.chargedExecutive.id === executive.id &&
           funding.fundingStatusEnum === FundingStatusEnum.Committee,
       ).length,
-      chargedClubs: clubs.filter(club =>
-        fundings.some(
-          funding =>
-            funding.chargedExecutive?.id === executive.id &&
-            funding.club.id === club.id,
-        ),
-      ),
+      chargedClubs: clubs
+        .filter(club =>
+          fundings.some(
+            funding =>
+              funding.chargedExecutive?.id === executive.id &&
+              funding.club.id === club.id,
+          ),
+        )
+        .map(club => ({
+          ...club,
+          division: devisions.find(
+            division => division.id === club.division.id,
+          ),
+          professor: professors.find(
+            professor => professor.id === club.professor?.id,
+          ),
+          totalCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id,
+          ).length,
+          appliedCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Applied,
+          ).length,
+          approvedCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Approved,
+          ).length,
+          partialCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Partial,
+          ).length,
+          rejectedCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Rejected,
+          ).length,
+          committeeCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Committee,
+          ).length,
+        })),
     }));
 
     return {
@@ -620,7 +697,7 @@ export default class FundingService {
     };
   }
 
-  async getExecutiveFundingsClubBreif(
+  async getExecutiveFundingsClubBrief(
     executiveId: IExecutive["id"],
     param: ApiFnd009RequestParam,
   ): Promise<ApiFnd009ResponseOk> {
@@ -631,6 +708,8 @@ export default class FundingService {
       param.clubId,
       activityD.id,
     );
+
+    const club = await this.clubPublicService.fetchSummary(param.clubId);
 
     const chargedExecutiveId = fundings
       .filter(funding => funding.club.id === param.clubId)
@@ -678,11 +757,17 @@ export default class FundingService {
         funding => funding.commentedExecutive?.id,
       ),
     ]);
+
     const executives = await this.userPublicService.fetchExecutiveSummaries(
       Array.from(executiveIds),
     );
 
+    const clubs = await this.clubPublicService.fetchSummaries(
+      fundings.map(funding => funding.club.id),
+    );
+
     return {
+      club,
       totalCount: fundings.filter(funding => funding.club.id === param.clubId)
         .length,
       appliedCount: fundings.filter(
@@ -713,6 +798,7 @@ export default class FundingService {
       chargedExecutive,
       fundings: fundingsWithCommentedExecutive.map(funding => ({
         ...funding,
+        club: clubs.find(c => c.id === funding.club.id),
         purposeActivity: activities.find(
           activity => activity.id === funding.purposeActivity?.id,
         ),
@@ -728,7 +814,7 @@ export default class FundingService {
     };
   }
 
-  async getExecutiveFundingsExecutiveBreif(
+  async getExecutiveFundingsExecutiveBrief(
     executiveId: IExecutive["id"],
     param: ApiFnd010RequestParam,
   ): Promise<ApiFnd010ResponseOk> {
@@ -768,7 +854,16 @@ export default class FundingService {
       Array.from(executiveIds),
     );
 
+    const clubs = await this.clubPublicService.fetchSummaries(
+      fundings.map(funding => funding.club.id),
+    );
+
+    const chargedExecutive = await this.userPublicService.findExecutiveSummary(
+      param.executiveId,
+    );
+
     return {
+      chargedExecutive,
       totalCount: fundings.length,
       appliedCount: fundings.filter(
         funding => funding.fundingStatusEnum === FundingStatusEnum.Applied,
@@ -787,6 +882,7 @@ export default class FundingService {
       ).length,
       fundings: fundingsWithCommentedExecutive.map(funding => ({
         ...funding,
+        club: clubs.find(club => club.id === funding.club.id),
         purposeActivity: activities.find(
           activity => activity.id === funding.purposeActivity?.id,
         ),
@@ -924,6 +1020,7 @@ export default class FundingService {
     body: ApiFnd014RequestBody,
   ): Promise<ApiFnd014ResponseOk> {
     await this.userPublicService.checkCurrentExecutive(executiveId);
+    await this.userPublicService.checkCurrentExecutive(body.executiveId);
 
     const fundings = await this.fundingRepository.fetchSummaries(
       body.fundingIds,
@@ -932,7 +1029,7 @@ export default class FundingService {
       // eslint-disable-next-line no-restricted-syntax
       for (const funding of fundings) {
         this.fundingRepository.patchSummaryTx(tx, funding, f => ({
-          ...f,
+          id: f.id,
           chargedExecutiveId: body.executiveId,
         }));
       }
@@ -946,6 +1043,7 @@ export default class FundingService {
     body: ApiFnd015RequestBody,
   ): Promise<ApiFnd015ResponseOk> {
     await this.userPublicService.checkCurrentExecutive(executiveId);
+    await this.userPublicService.checkCurrentExecutive(body.executiveId);
 
     const activityDId = (await this.activityPublicService.fetchLastActivityD())
       .id;
@@ -954,11 +1052,12 @@ export default class FundingService {
       body.clubIds,
       activityDId,
     );
+    logger.info(fundings);
     this.fundingRepository.withTransaction(async tx => {
       // eslint-disable-next-line no-restricted-syntax
       for (const funding of fundings) {
         this.fundingRepository.patchSummaryTx(tx, funding, f => ({
-          ...f,
+          id: f.id,
           chargedExecutiveId: body.executiveId,
         }));
       }

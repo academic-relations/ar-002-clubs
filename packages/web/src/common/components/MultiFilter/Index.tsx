@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-
 import styled from "styled-components";
 
 import MultiFilterButton from "./_atomic/MultiFilterButton";
-
 import MultiFilterDropdown from "./_atomic/MultiFilterDropdown";
-
 import { CategoryProps } from "./types/FilterCategories";
 
 interface MultiFilterProps {

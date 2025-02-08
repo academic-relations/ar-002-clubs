@@ -1,11 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import styled from "styled-components";
 
 import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-import { useRouter } from "next/navigation";
-
-import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";

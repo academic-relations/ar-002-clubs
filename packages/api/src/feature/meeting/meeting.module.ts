@@ -1,9 +1,7 @@
 import { Module } from "@nestjs/common";
-
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 
 import UserModule from "../user/user.module";
-
 import { AgendaModule } from "./agenda/agenda.module";
 import { AnnouncementModule } from "./announcement/announcement.module";
 import MeetingController from "./meeting.controller";

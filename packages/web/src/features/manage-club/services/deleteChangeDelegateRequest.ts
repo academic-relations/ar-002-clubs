@@ -1,11 +1,10 @@
+import type { ApiClb012RequestParam } from "@sparcs-clubs/interface/api/club/endpoint/apiClb012";
 import apiClb012 from "@sparcs-clubs/interface/api/club/endpoint/apiClb012";
 
 import {
   axiosClientWithAuth,
   defineAxiosMock,
 } from "@sparcs-clubs/web/lib/axios";
-
-import type { ApiClb012RequestParam } from "@sparcs-clubs/interface/api/club/endpoint/apiClb012";
 
 export const deleteChangeDelegateRequest = async (
   requestParam: ApiClb012RequestParam,

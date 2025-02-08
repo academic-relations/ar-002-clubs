@@ -1,14 +1,12 @@
 import React from "react";
-
 import { FormProvider, useForm } from "react-hook-form";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
+import type { CommonSpaceInterface } from "../types/commonSpace";
 import CommonSpaceInfoFrame from "./CommonSpaceInfoFrame";
 import CommonSpaceNoticeFrame from "./CommonSpaceNoticeFrame";
-
-import type { CommonSpaceInterface } from "../types/commonSpace";
 
 const CommonSpaceMainFrame: React.FC = () => {
   const formCtx = useForm<CommonSpaceInterface>({

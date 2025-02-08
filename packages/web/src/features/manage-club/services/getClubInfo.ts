@@ -1,5 +1,10 @@
-import apiClb004 from "@sparcs-clubs/interface/api/club/endpoint/apiClb004";
 import { useQuery } from "@tanstack/react-query";
+
+import type {
+  ApiClb004RequestParam,
+  ApiClb004ResponseOK,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb004";
+import apiClb004 from "@sparcs-clubs/interface/api/club/endpoint/apiClb004";
 
 import {
   axiosClientWithAuth,
@@ -7,11 +12,6 @@ import {
 } from "@sparcs-clubs/web/lib/axios";
 
 import { mockClubDescription } from "./_mock/mockManageClub";
-
-import type {
-  ApiClb004RequestParam,
-  ApiClb004ResponseOK,
-} from "@sparcs-clubs/interface/api/club/endpoint/apiClb004";
 
 export const useGetClubInfo = (requestParam: ApiClb004RequestParam) =>
   useQuery<ApiClb004ResponseOK, Error>({

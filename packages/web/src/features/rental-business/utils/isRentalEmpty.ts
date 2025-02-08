@@ -1,7 +1,6 @@
 import { ApiRnt001ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
 
 import { RentalInterface } from "../types/rental";
-
 import { getMaxRental } from "./getMaxRental";
 
 export const getRentalList = (

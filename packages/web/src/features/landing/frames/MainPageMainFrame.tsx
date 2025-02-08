@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-
 import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -10,7 +9,6 @@ import useEasterEgg from "@sparcs-clubs/web/common/hooks/useEasteregg";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 import Banner from "../components/Banner";
-
 import NoticeSectionFrame from "./NoticeSectionFrame";
 // import ServiceSectionFrame from "./ServiceSectionFrame";
 

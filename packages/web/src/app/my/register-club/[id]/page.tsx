@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 
 import NotFound from "@sparcs-clubs/web/app/not-found";
-
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import NotForExecutive from "@sparcs-clubs/web/common/frames/NotForExecutive";

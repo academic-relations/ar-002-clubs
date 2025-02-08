@@ -1,5 +1,3 @@
-import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
-
 import {
   boolean,
   datetime,
@@ -10,6 +8,8 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
+
+import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
 import { Activity, ActivityD } from "./activity.schema";
 import { Club } from "./club.schema";

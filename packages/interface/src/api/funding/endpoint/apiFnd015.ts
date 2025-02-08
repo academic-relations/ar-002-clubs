@@ -10,7 +10,7 @@ import { zExecutive } from "@sparcs-clubs/interface/api/user/type/user.type";
  */
 
 const url = () => `/executive/fundings/clubs/executives/charged-executive`;
-const method = "POST";
+const method = "PATCH";
 export const ApiFnd015RequestUrl =
   "/executive/fundings/clubs/executives/charged-executive";
 
@@ -47,8 +47,8 @@ type ApiFnd015ResponseOk = z.infer<(typeof apiFnd015.responseBodyMap)[200]>;
 export default apiFnd015;
 
 export type {
+  ApiFnd015RequestBody,
   ApiFnd015RequestParam,
   ApiFnd015RequestQuery,
-  ApiFnd015RequestBody,
   ApiFnd015ResponseOk,
 };

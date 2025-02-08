@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 
 import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";

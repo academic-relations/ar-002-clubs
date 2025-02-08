@@ -1,14 +1,21 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
+import type { ApiCms001ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
+import type { ApiCms002ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
+import type { ApiCms003ResponseCreated } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms003";
+import type { ApiCms004ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms004";
+import type { ApiCms005ResponseCreated } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms005";
+import type { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
+import type { ApiCms007ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
+
 import { getKSTDate, isEmptyObject } from "@sparcs-clubs/api/common/util/util";
 import ClubStudentTRepository from "@sparcs-clubs/api/feature/club/repository/club.club-student-t.repository";
-
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import { Reservation, TermList } from "../dto/common-space.dto";
-import { CommonSpaceUsageOrderDRepository } from "../repository/common-space-usage-order-d.repository";
 import { CommonSpaceRepository } from "../repository/common-space.repository";
+import { CommonSpaceUsageOrderDRepository } from "../repository/common-space-usage-order-d.repository";
 import { GetCommonSpacesUsageOrderRepository } from "../repository/getCommonSpacesUsageOrder.repository";
 import { GetCommonSpacesUsageOrderMyRepository } from "../repository/getCommonSpacesUsageOrderMy.repository";
 import { GetCommonSpaceUsageOrderRepository } from "../repository/getCommonSpaceUsageOrder.repository";
@@ -17,14 +24,6 @@ import {
   getWeekRange,
   periodicScheduleMake,
 } from "../util/common-space.util";
-
-import type { ApiCms001ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms001";
-import type { ApiCms002ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms002";
-import type { ApiCms003ResponseCreated } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms003";
-import type { ApiCms004ResponseOK } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms004";
-import type { ApiCms005ResponseCreated } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms005";
-import type { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
-import type { ApiCms007ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms007";
 
 @Injectable()
 export class CommonSpaceService {

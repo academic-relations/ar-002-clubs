@@ -1,7 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+
 import apiReg004, {
   ApiReg004ResponseOK,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg004";
-import { useQuery } from "@tanstack/react-query";
 
 import mockupData from "@sparcs-clubs/web/features/clubs/services/_mock/mockupRegisTermData";
 import {

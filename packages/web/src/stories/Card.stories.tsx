@@ -1,6 +1,6 @@
-import Card from "../common/components/Card";
-
 import type { Meta, StoryObj } from "@storybook/react";
+
+import Card from "../common/components/Card";
 
 interface StoryCardProps {
   outline: boolean;

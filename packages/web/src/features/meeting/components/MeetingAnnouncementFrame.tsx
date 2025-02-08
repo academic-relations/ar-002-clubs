@@ -3,7 +3,6 @@ import React from "react";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
-
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import MeetingAnnouncementForm from "./MeetingAnnouncementForm";

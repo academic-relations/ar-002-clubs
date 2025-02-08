@@ -1,12 +1,12 @@
 "use client";
 
+import { overlay } from "overlay-kit";
 import React from "react";
+import styled from "styled-components";
 
 import { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 import { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-import { overlay } from "overlay-kit";
-import styled from "styled-components";
 
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import Modal from "@sparcs-clubs/web/common/components/Modal";

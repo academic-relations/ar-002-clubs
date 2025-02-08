@@ -10,6 +10,7 @@ import {
   Query,
   UsePipes,
 } from "@nestjs/common";
+
 import apiReg001, {
   ApiReg001RequestBody,
   ApiReg001ResponseCreated,
@@ -54,7 +55,16 @@ import apiReg017, {
 import apiReg018, {
   ApiReg018ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg018";
+import type { ApiReg021ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg021";
+import type {
+  ApiReg022RequestParam,
+  ApiReg022ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg022";
 import apiReg022 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg022";
+import type {
+  ApiReg023RequestParam,
+  ApiReg023ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg023";
 import apiReg023 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg023";
 import apiReg024, {
   ApiReg024RequestQuery,
@@ -67,26 +77,14 @@ import {
   Professor,
   Student,
 } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
-
 import {
   GetExecutive,
   GetProfessor,
   GetStudent,
 } from "@sparcs-clubs/api/common/util/decorators/param-decorator";
-
 import logger from "@sparcs-clubs/api/common/util/logger";
 
 import { ClubRegistrationService } from "../service/club-registration.service";
-
-import type { ApiReg021ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg021";
-import type {
-  ApiReg022RequestParam,
-  ApiReg022ResponseOk,
-} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg022";
-import type {
-  ApiReg023RequestParam,
-  ApiReg023ResponseOk,
-} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg023";
 
 @Controller()
 export class ClubRegistrationController {

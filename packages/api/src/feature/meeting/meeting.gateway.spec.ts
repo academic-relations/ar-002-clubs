@@ -15,6 +15,7 @@ describe("SocketGateway", () => {
   });
 
   it("should be defined", () => {
+    // eslint-disable-next-line jest/valid-expect
     expect(gateway);
   });
 });

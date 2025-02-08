@@ -1,8 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
+
 import apiMee012, {
   ApiMee012RequestQuery,
   ApiMee012ResponseOk,
 } from "@sparcs-clubs/interface/api/meeting/apiMee012";
-import { useQuery } from "@tanstack/react-query";
 
 import {
   axiosClientWithAuth,
@@ -10,7 +11,6 @@ import {
 } from "@sparcs-clubs/web/lib/axios";
 
 import { getMeetingEnumFromValue } from "../types/meeting";
-
 import { mockupMeetings } from "./_mock/mockupMeetings";
 
 const useGetMeetings = (query: ApiMee012RequestQuery) =>

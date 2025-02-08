@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-
-import { FormProvider, useForm } from "react-hook-form";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -13,12 +12,10 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
-
 import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
 
 import useGetParticipants from "../services/useGetParticipants";
 import { ActivityReportFormData } from "../types/form";
-
 import SelectParticipant from "./SelectParticipant";
 
 interface ActivityReportFormProps {
