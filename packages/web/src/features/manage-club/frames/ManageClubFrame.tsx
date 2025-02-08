@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 
 import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
-
 import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";

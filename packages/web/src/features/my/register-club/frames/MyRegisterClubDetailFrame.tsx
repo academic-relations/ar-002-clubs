@@ -1,13 +1,12 @@
 "use client";
 
+import { useParams, useRouter } from "next/navigation";
+import { overlay } from "overlay-kit";
 import React from "react";
+import styled from "styled-components";
 
 import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-import { useParams, useRouter } from "next/navigation";
-
-import { overlay } from "overlay-kit";
-import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";

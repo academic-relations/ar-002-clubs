@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import styled, { useTheme } from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";

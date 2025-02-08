@@ -123,6 +123,7 @@ export const zFunding = z.object({
   deletedAt: z.coerce.date().optional(),
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const zFundingExtra = zFunding.pick({
   activityD: true,
   fundingStatusEnum: true,

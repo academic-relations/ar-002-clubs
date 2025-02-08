@@ -1,6 +1,8 @@
 import { Controller, Get, Post, UsePipes } from "@nestjs/common";
 
+import type { ApiUsr004ResponseCreated } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr004";
 import apiUsr004 from "@sparcs-clubs/interface/api/user/endpoint/apiUsr004";
+import type { ApiUsr005ResponseOk } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr005";
 import apiUsr005 from "@sparcs-clubs/interface/api/user/endpoint/apiUsr005";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
@@ -8,9 +10,6 @@ import { GetUser } from "@sparcs-clubs/api/common/util/decorators/param-decorato
 import logger from "@sparcs-clubs/api/common/util/logger";
 
 import PrivacyPolicyService from "./privacy-policy.service";
-
-import type { ApiUsr004ResponseCreated } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr004";
-import type { ApiUsr005ResponseOk } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr005";
 
 @Controller()
 export default class PrivacyPolicyController {

@@ -1,8 +1,7 @@
+import { overlay } from "overlay-kit";
 import React, { useEffect, useState } from "react";
 
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-
-import { overlay } from "overlay-kit";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -16,11 +15,9 @@ import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonT
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useExecutiveApproveActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveApproveActivityReport";
 import useExecutiveRejectActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveRejectActivityReport";
-
 import { useDeleteActivityReportProvisional } from "@sparcs-clubs/web/features/activity-report/services/useDeleteActivityReportProvisional";
 import { useGetActivityReport } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
 import { getActivityTypeLabel } from "@sparcs-clubs/web/types/activityType";
-
 import {
   formatDate,
   formatSlashDateTime,

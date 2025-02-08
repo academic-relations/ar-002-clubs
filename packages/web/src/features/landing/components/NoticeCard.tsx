@@ -1,15 +1,14 @@
 "use client";
 
 import React from "react";
-
 import styled from "styled-components";
+
+import type { ApiNtc001ResponseOK } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 
 import {
   formatDotDate,
   formatDotSimpleDate,
 } from "@sparcs-clubs/web/utils/Date/formatDate";
-
-import type { ApiNtc001ResponseOK } from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 
 const NoticeCardInner = styled.div`
   display: flex;

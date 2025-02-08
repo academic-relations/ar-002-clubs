@@ -1,5 +1,10 @@
-import apiAcf007 from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf007";
 import { useQuery } from "@tanstack/react-query";
+
+import type {
+  ApiAcf007RequestQuery,
+  ApiAcf007ResponseOk,
+} from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf007";
+import apiAcf007 from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf007";
 
 import {
   axiosClientWithAuth,
@@ -7,11 +12,6 @@ import {
 } from "@sparcs-clubs/web/lib/axios";
 
 import { mockupMyAcf } from "./_mock/mockMyClub";
-
-import type {
-  ApiAcf007RequestQuery,
-  ApiAcf007ResponseOk,
-} from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf007";
 
 export const useGetMyActivityCertificate = (
   startDate: Date,

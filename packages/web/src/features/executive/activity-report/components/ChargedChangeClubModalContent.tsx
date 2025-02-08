@@ -1,8 +1,7 @@
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 
 import apiAct023 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
-
-import { useQueryClient } from "@tanstack/react-query";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -13,7 +12,6 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { putClubActivitiesChargedExecutive } from "../services/putClubActivitiesChargedExecutive";
 import useGetActivityClubChargeAvailableExecutives from "../services/useGetActivityClubChargeAvailableExecutives";
-
 import ChargedChangeClubModalTable, {
   ChargedChangeClubProps,
 } from "./ChargedChangeClubModalTable";

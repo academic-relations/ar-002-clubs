@@ -1,5 +1,4 @@
 import React from "react";
-
 import styled from "styled-components";
 
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";

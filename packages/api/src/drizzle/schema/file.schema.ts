@@ -5,8 +5,6 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core";
-
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { v4 as uuidv4 } from "uuid";
 
 import { User } from "./user.schema";

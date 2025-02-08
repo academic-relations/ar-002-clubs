@@ -1,4 +1,9 @@
 import { Controller, Get, Query, UsePipes } from "@nestjs/common";
+
+import type {
+  ApiNtc001RequestQuery,
+  ApiNtc001ResponseOK,
+} from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 import apiNtc001 from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
@@ -6,11 +11,6 @@ import { Public } from "@sparcs-clubs/api/common/util/decorators/method-decorato
 import logger from "@sparcs-clubs/api/common/util/logger";
 
 import { NoticeService } from "../service/notice.service";
-
-import type {
-  ApiNtc001RequestQuery,
-  ApiNtc001ResponseOK,
-} from "@sparcs-clubs/interface/api/notice/endpoint/apiNtc001";
 
 @Controller()
 export class NoticeController {

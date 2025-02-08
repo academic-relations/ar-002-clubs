@@ -1,5 +1,4 @@
 import React from "react";
-
 import { FormProvider, useForm } from "react-hook-form";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -8,7 +7,6 @@ import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 
 import { NO_ACTIVITY_REPORT_FUNDING } from "../constants";
 import { FundingFormData } from "../types/funding";
-
 import AddEvidenceFrame from "./AddEvidenceFrame";
 import BasicEvidenceFrame from "./BasicEvidenceFrame";
 import FundingInfoFrame from "./FundingInfoFrame";
@@ -32,10 +30,10 @@ const FundingForm: React.FC<FundingFormProps> = ({
       ...initialData,
       purposeActivity: {
         id: initialData
-          ? initialData.purposeActivity?.id ?? Infinity
+          ? (initialData.purposeActivity?.id ?? Infinity)
           : undefined,
         name: initialData
-          ? initialData.purposeActivity?.name ?? NO_ACTIVITY_REPORT_FUNDING
+          ? (initialData.purposeActivity?.name ?? NO_ACTIVITY_REPORT_FUNDING)
           : undefined,
       },
     },

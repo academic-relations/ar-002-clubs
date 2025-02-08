@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
-
 import isPropValid from "@emotion/is-prop-valid";
+import React from "react";
 import styled from "styled-components";
 
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
@@ -52,7 +51,7 @@ const FoldableSectionTitle: React.FC<{
           fs={14}
           fw="REGULAR"
           color="BLACK"
-          text={toggle ?? open ? `접기` : `펼치기`}
+          text={(toggle ?? open) ? `접기` : `펼치기`}
           onClick={toggleHandler ?? openHandler}
         />
       </FoldableSectionTitleInner>

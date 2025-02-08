@@ -1,8 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
+
 import apiSem001, {
   ApiSem001RequestQuery,
   ApiSem001ResponseOK,
 } from "@sparcs-clubs/interface/api/semester/apiSem001";
-import { useQuery } from "@tanstack/react-query";
 
 import { axiosClientWithAuth } from "@sparcs-clubs/web/lib/axios";
 

@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";

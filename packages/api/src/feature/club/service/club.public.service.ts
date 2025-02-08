@@ -9,13 +9,12 @@ import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
-import { ClubDelegateDRepository } from "@sparcs-clubs/api/feature/club/delegate/club.club-delegate-d.repository";
-import ClubStudentTRepository from "@sparcs-clubs/api/feature/club/repository/club.club-student-t.repository";
-import ClubTRepository from "@sparcs-clubs/api/feature/club/repository/club.club-t.repository";
-import ClubRepository from "@sparcs-clubs/api/feature/club/repository/club.repository";
-
 import DivisionRepository from "@sparcs-clubs/api/feature/division/repository/division.repository";
 
+import { ClubDelegateDRepository } from "../delegate/club.club-delegate-d.repository";
+import ClubStudentTRepository from "../repository/club.club-student-t.repository";
+import ClubTRepository from "../repository/club.club-t.repository";
+import ClubRepository from "../repository/club.repository";
 import SemesterDRepository from "../repository/club.semester-d.repository";
 
 @Injectable()

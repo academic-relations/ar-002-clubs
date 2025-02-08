@@ -1,8 +1,5 @@
 /* scss is only used for extra cases. (e.g. this case, using Tiptap editor) */
 import "./styles.scss";
-
-import React, { useCallback } from "react";
-
 import { Node } from "@tiptap/core";
 import Bold from "@tiptap/extension-bold";
 import Document from "@tiptap/extension-document";
@@ -15,28 +12,26 @@ import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import Text from "@tiptap/extension-text";
-
 import { EditorContent, useEditor } from "@tiptap/react";
-
+import React, { useCallback } from "react";
 import styled from "styled-components";
 
-import tableColumnPlusAfterDisabledSvg from "@sparcs-clubs/web/assets/table-column-plus-after-disabled.svg";
 import tableColumnPlusAfterSvg from "@sparcs-clubs/web/assets/table-column-plus-after.svg";
-import tableColumnPlusBeforeDisabledSvg from "@sparcs-clubs/web/assets/table-column-plus-before-disabled.svg";
+import tableColumnPlusAfterDisabledSvg from "@sparcs-clubs/web/assets/table-column-plus-after-disabled.svg";
 import tableColumnPlusBeforeSvg from "@sparcs-clubs/web/assets/table-column-plus-before.svg";
-import tableColumnRemoveDisabledSvg from "@sparcs-clubs/web/assets/table-column-remove-disabled.svg";
+import tableColumnPlusBeforeDisabledSvg from "@sparcs-clubs/web/assets/table-column-plus-before-disabled.svg";
 import tableColumnRemoveSvg from "@sparcs-clubs/web/assets/table-column-remove.svg";
-import tableMergeCellsDisabledSvg from "@sparcs-clubs/web/assets/table-merge-cells-disabled.svg";
+import tableColumnRemoveDisabledSvg from "@sparcs-clubs/web/assets/table-column-remove-disabled.svg";
 import tableMergeCellsSvg from "@sparcs-clubs/web/assets/table-merge-cells.svg";
-import tableRowPlusAfterDisabledSvg from "@sparcs-clubs/web/assets/table-row-plus-after-disabled.svg";
+import tableMergeCellsDisabledSvg from "@sparcs-clubs/web/assets/table-merge-cells-disabled.svg";
 import tableRowPlusAfterSvg from "@sparcs-clubs/web/assets/table-row-plus-after.svg";
-import tableRowPlusBeforeDisabledSvg from "@sparcs-clubs/web/assets/table-row-plus-before-disabled.svg";
+import tableRowPlusAfterDisabledSvg from "@sparcs-clubs/web/assets/table-row-plus-after-disabled.svg";
 import tableRowPlusBeforeSvg from "@sparcs-clubs/web/assets/table-row-plus-before.svg";
-import tableRowRemoveDisabledSvg from "@sparcs-clubs/web/assets/table-row-remove-disabled.svg";
+import tableRowPlusBeforeDisabledSvg from "@sparcs-clubs/web/assets/table-row-plus-before-disabled.svg";
 import tableRowRemoveSvg from "@sparcs-clubs/web/assets/table-row-remove.svg";
-import tableSplitCellDisabledSvg from "@sparcs-clubs/web/assets/table-split-cell-disabled.svg";
+import tableRowRemoveDisabledSvg from "@sparcs-clubs/web/assets/table-row-remove-disabled.svg";
 import tableSplitCellSvg from "@sparcs-clubs/web/assets/table-split-cell.svg";
-
+import tableSplitCellDisabledSvg from "@sparcs-clubs/web/assets/table-split-cell-disabled.svg";
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 

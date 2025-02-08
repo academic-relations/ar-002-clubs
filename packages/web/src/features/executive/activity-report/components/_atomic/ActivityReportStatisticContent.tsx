@@ -1,6 +1,5 @@
-import React from "react";
-
 import { Divider } from "@mui/material";
+import React from "react";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";

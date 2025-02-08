@@ -1,15 +1,13 @@
 "use client";
 
 import React from "react";
-
 import styled from "styled-components";
 
-import Card from "@sparcs-clubs/web/common/components/Card";
+import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
+import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
-import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
 export interface ClubDetailFrameProps {
   club: ApiClb002ResponseOK;

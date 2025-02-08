@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-
 import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";

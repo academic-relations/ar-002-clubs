@@ -1,16 +1,16 @@
-import apiRnt001 from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
 import { useQuery } from "@tanstack/react-query";
+
+import type {
+  ApiRnt001RequestQuery,
+  ApiRnt001ResponseOK,
+} from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
+import apiRnt001 from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
 
 import mockupAvailableRental from "@sparcs-clubs/web/features/rental-business/service/_mock/mockAvailableRental";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
 } from "@sparcs-clubs/web/lib/axios";
-
-import type {
-  ApiRnt001RequestQuery,
-  ApiRnt001ResponseOK,
-} from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
 
 export const useGetAvailableRentals = (startDate: Date, endDate: Date) => {
   const requestQuery: ApiRnt001RequestQuery = { startDate, endDate };

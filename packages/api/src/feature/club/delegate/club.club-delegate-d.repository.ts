@@ -1,10 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
 import {
-  ClubDelegateChangeRequestStatusEnum,
-  ClubDelegateEnum,
-} from "@sparcs-clubs/interface/common/enum/club.enum";
-
-import {
   and,
   count,
   desc,
@@ -18,9 +13,6 @@ import {
   or,
 } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
-
-import logger from "@sparcs-clubs/api/common/util/logger";
-
 import { getKSTDate, takeUnique } from "src/common/util/util";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
@@ -30,6 +22,13 @@ import {
   ClubStudentT,
 } from "src/drizzle/schema/club.schema";
 import { Student } from "src/drizzle/schema/user.schema";
+
+import {
+  ClubDelegateChangeRequestStatusEnum,
+  ClubDelegateEnum,
+} from "@sparcs-clubs/interface/common/enum/club.enum";
+
+import logger from "@sparcs-clubs/api/common/util/logger";
 
 @Injectable()
 export class ClubDelegateDRepository {

@@ -1,9 +1,9 @@
+import { addHours } from "date-fns";
 import React, { useEffect, useMemo, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
 import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { addHours } from "date-fns";
-import { FormProvider, useForm } from "react-hook-form";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -14,7 +14,6 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
 import SelectParticipant from "@sparcs-clubs/web/features/activity-report/components/SelectParticipant";
 import useGetParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetParticipants";
 import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";

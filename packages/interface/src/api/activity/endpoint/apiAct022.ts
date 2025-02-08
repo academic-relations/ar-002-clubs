@@ -1,8 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-// eslint-disable-next-line no-restricted-imports
-import { zStudentSummary } from "../../user/type/user.type";
+import { zStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 
 /**
  * @version v0.1

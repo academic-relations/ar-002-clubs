@@ -1,12 +1,9 @@
 import React from "react";
-
 import styled from "styled-components";
 
 import FlexWrapper from "../FlexWrapper";
-
 import Icon from "../Icon";
 import Typography from "../Typography";
-
 import ImagePreview from "./_atomic/ImagePreview";
 import UnsupportedPreview from "./_atomic/UnsupportedPreview";
 import { FileDetail, isPreviewSupported } from "./attachment";

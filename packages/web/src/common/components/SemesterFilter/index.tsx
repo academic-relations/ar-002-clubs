@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-
 import styled from "styled-components";
 
 import { SemesterListProps } from "@sparcs-clubs/web/features/manage-club/members/types/semesterList";

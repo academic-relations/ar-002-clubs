@@ -1,13 +1,11 @@
 "use client";
 
-import React, { useCallback, useMemo } from "react";
-
 import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
+import React, { useCallback, useMemo } from "react";
 import styled from "styled-components";
 
 import NotFound from "@sparcs-clubs/web/app/not-found";
-
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";

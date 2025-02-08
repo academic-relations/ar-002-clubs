@@ -129,9 +129,11 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
                   traderName: data.traderName,
                   traderAccountNumber: data.traderAccountNumber,
                   wasteExplanation: data.wasteExplanation,
-                  files: data.nonCorporateTransactionFiles.map(file => ({
-                    id: file.id,
-                  })),
+                  files: data.nonCorporateTransactionFiles
+                    ? data.nonCorporateTransactionFiles.map(file => ({
+                        id: file.id,
+                      }))
+                    : [],
                 }
               : undefined,
 

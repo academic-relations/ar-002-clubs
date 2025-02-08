@@ -5,9 +5,7 @@ import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.e
 
 import ApproveReasonToast from "@sparcs-clubs/web/common/components/ApproveReasonToast";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
-
 import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
-
 import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { getFundingProgress } from "@sparcs-clubs/web/features/manage-club/funding/constants/fundingProgressStatus";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";

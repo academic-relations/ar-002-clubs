@@ -1,12 +1,10 @@
 "use client";
 
+import type { NextPage } from "next";
 import { useRouter } from "next/navigation";
-
 import styled from "styled-components";
 
 import ErrorPageTemplate from "@sparcs-clubs/web/common/frames/ErrorPageTemplate";
-
-import type { NextPage } from "next";
 
 const ErrorMessage = styled.div`
   color: ${({ theme }) => theme.colors.BLACK};

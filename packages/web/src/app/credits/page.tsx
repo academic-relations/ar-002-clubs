@@ -1,13 +1,11 @@
 "use client";
 
 import React from "react";
-
 import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import MemberCardSection from "@sparcs-clubs/web/features/credits/components/MemberCardSection";
 import credits from "@sparcs-clubs/web/features/credits/credits";

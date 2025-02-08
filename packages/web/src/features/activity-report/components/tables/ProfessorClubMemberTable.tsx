@@ -4,9 +4,9 @@ interface ProfessorClubMemberTableProps {
   clubId: number;
 }
 
+// TODO. 구현 중
 const ProfessorClubMemberTable: React.FC<ProfessorClubMemberTableProps> = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   clubId,
-}) => <>ProfessorClubMemberTable</>;
+}) => <>ProfessorClubMemberTable {clubId}</>;
 
 export default ProfessorClubMemberTable;

@@ -1,15 +1,13 @@
+import { overlay } from "overlay-kit";
 import React, { useMemo, useRef, useState } from "react";
+import styled from "styled-components";
 
 import { ApiFil001RequestBody } from "@sparcs-clubs/interface/api/file/apiFil001";
-import { overlay } from "overlay-kit";
-import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 
 import useFileUpload from "../services/postFileUpload";
-
 import usePutFileS3 from "../services/putFileS3";
-
 import { FileDetail } from "./File/attachment";
 import ThumbnailPreviewList from "./File/ThumbnailPreviewList";
 import FlexWrapper from "./FlexWrapper";

@@ -1,6 +1,3 @@
-import React, { useEffect, useMemo, useState } from "react";
-
-import { ApiAct023ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -8,6 +5,9 @@ import {
   RowSelectionState,
   useReactTable,
 } from "@tanstack/react-table";
+import React, { useEffect, useMemo, useState } from "react";
+
+import { ApiAct023ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 
 import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";

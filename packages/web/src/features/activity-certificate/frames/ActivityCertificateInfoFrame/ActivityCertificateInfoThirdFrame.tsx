@@ -1,6 +1,5 @@
-import React from "react";
-
 import { useRouter } from "next/navigation";
+import React from "react";
 import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
@@ -11,13 +10,10 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorModal";
 import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
 import usePostActivityCertificate from "@sparcs-clubs/web/features/activity-certificate/services/usePostActivityCertificate";
 import { ActivityCertificateInfo } from "@sparcs-clubs/web/features/activity-certificate/types/activityCertificate";
 import { formatActivityDuration } from "@sparcs-clubs/web/features/activity-certificate/utils/formatActivityDuration";
-
 import { useGetClubDetail } from "@sparcs-clubs/web/features/clubs/services/getClubDetail";
-
 import { formatMonth } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 interface ActivityCertificateInfoThirdFrameProps {

@@ -1,5 +1,7 @@
-import apiUsr001 from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
 import { useQuery } from "@tanstack/react-query";
+
+import type { ApiUsr001ResponseOK } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
+import apiUsr001 from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
 
 import {
   axiosClientWithAuth,
@@ -7,8 +9,6 @@ import {
 } from "@sparcs-clubs/web/lib/axios";
 
 import mockupUserProfile from "./_mock/mockupUserProfile";
-
-import type { ApiUsr001ResponseOK } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
 
 const useGetUserProfile = () =>
   useQuery<ApiUsr001ResponseOK, Error>({
