@@ -3,9 +3,10 @@ import React, { useMemo } from "react";
 import { IFundingCommentResponse } from "@sparcs-clubs/interface/api/funding/type/funding.comment.type";
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
-import ApproveReasonToast from "@sparcs-clubs/web/common/components/ApproveReasonToast";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
-import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
+import Toast from "@sparcs-clubs/web/common/components/Toast";
+import ApproveReasonToast from "@sparcs-clubs/web/common/components/Toast/ApproveReasonToast";
+import RejectReasonToast from "@sparcs-clubs/web/common/components/Toast/RejectReasonToast";
 import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { getFundingProgress } from "@sparcs-clubs/web/features/manage-club/funding/constants/fundingProgressStatus";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
@@ -30,33 +31,24 @@ const FundingStatusSection: React.FC<FundingStatusSectionProps> = ({
   );
 
   const ToastSection = useMemo(() => {
+    const reasons = filteredComments.map(comment => ({
+      datetime: comment.createdAt,
+      reason: comment.content,
+      status:
+        comment.fundingStatusEnum === FundingStatusEnum.Partial
+          ? `${getTagDetail(comment.fundingStatusEnum, FundingTagList).text} 승인`
+          : getTagDetail(comment.fundingStatusEnum, FundingTagList).text,
+    }));
+
     if (status === FundingStatusEnum.Rejected) {
-      return (
-        <RejectReasonToast
-          title="코멘트"
-          reasons={filteredComments.map(comment => ({
-            datetime: comment.createdAt,
-            reason: comment.content,
-            status: getTagDetail(comment.fundingStatusEnum, FundingTagList)
-              .text,
-          }))}
-        />
-      );
+      return <RejectReasonToast title="코멘트" reasons={reasons} />;
     }
 
-    return (
-      <ApproveReasonToast
-        title="코멘트"
-        reasons={filteredComments.map(comment => ({
-          datetime: comment.createdAt,
-          reason: comment.content,
-          status:
-            comment.fundingStatusEnum === FundingStatusEnum.Partial
-              ? `${getTagDetail(comment.fundingStatusEnum, FundingTagList).text} 승인`
-              : getTagDetail(comment.fundingStatusEnum, FundingTagList).text,
-        }))}
-      />
-    );
+    if (status === FundingStatusEnum.Committee) {
+      return <Toast title="코멘트" color="yellow" reasons={reasons} />;
+    }
+
+    return <ApproveReasonToast title="코멘트" reasons={reasons} />;
   }, [filteredComments, status]);
 
   return (

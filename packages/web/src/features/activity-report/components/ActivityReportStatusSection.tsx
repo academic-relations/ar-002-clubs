@@ -2,9 +2,9 @@ import React, { useMemo } from "react";
 
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
-import ApproveReasonToast from "@sparcs-clubs/web/common/components/ApproveReasonToast";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
-import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
+import ApproveReasonToast from "@sparcs-clubs/web/common/components/Toast/ApproveReasonToast";
+import RejectReasonToast from "@sparcs-clubs/web/common/components/Toast/RejectReasonToast";
 
 import { getActivityReportProgress } from "../constants/activityReportProgress";
 import { Comment } from "../types/activityReport";

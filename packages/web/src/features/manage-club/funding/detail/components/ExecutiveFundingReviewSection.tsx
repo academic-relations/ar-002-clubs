@@ -77,6 +77,37 @@ const ExecutiveFundingReviewSection: React.FC<{
     );
   };
 
+  const handleCommittee = () => {
+    reviewFunding(
+      {
+        approvedAmount: Number(approveAmount),
+        fundingStatusEnum: FundingStatusEnum.Committee,
+        content: reviewDetail,
+      },
+      {
+        onSuccess: () => {
+          setReviewDetail("");
+          overlay.open(({ isOpen, close }) => (
+            <Modal isOpen={isOpen}>
+              <ConfirmModalContent onConfirm={close}>
+                운영위원회 승인이 필요한 항목으로 검토가 완료되었습니다
+              </ConfirmModalContent>
+            </Modal>
+          ));
+        },
+        onError: () => {
+          overlay.open(({ isOpen, close }) => (
+            <Modal isOpen={isOpen}>
+              <ConfirmModalContent onConfirm={close}>
+                검토 내용 저장에 실패하였습니다
+              </ConfirmModalContent>
+            </Modal>
+          ));
+        },
+      },
+    );
+  };
+
   const handleReject = () => {
     reviewFunding(
       {
@@ -138,7 +169,7 @@ const ExecutiveFundingReviewSection: React.FC<{
       )}
 
       <TextInput
-        label="코멘트 (부분 승인 / 반려 시에는 필수)"
+        label="코멘트 (부분 승인 / 반려 / 운위 상정 시에는 필수)"
         value={reviewDetail}
         handleChange={setReviewDetail}
         placeholder="내용"
@@ -175,6 +206,12 @@ const ExecutiveFundingReviewSection: React.FC<{
           type={reviewDetail === "" ? "disabled" : "default"}
         >
           신청 반려
+        </Button>
+        <Button
+          type={availableToApprove() ? "default" : "disabled"}
+          onClick={handleCommittee}
+        >
+          운위 상정
         </Button>
       </FlexWrapper>
     </Card>
