@@ -917,6 +917,7 @@ export default class FundingService {
     body: ApiFnd014RequestBody,
   ): Promise<ApiFnd014ResponseOk> {
     await this.userPublicService.checkCurrentExecutive(executiveId);
+    await this.userPublicService.checkCurrentExecutive(body.executiveId);
 
     const fundings = await this.fundingRepository.fetchSummaries(
       body.fundingIds,
@@ -939,6 +940,7 @@ export default class FundingService {
     body: ApiFnd015RequestBody,
   ): Promise<ApiFnd015ResponseOk> {
     await this.userPublicService.checkCurrentExecutive(executiveId);
+    await this.userPublicService.checkCurrentExecutive(body.executiveId);
 
     const activityDId = (await this.activityPublicService.fetchLastActivityD())
       .id;
