@@ -437,6 +437,10 @@ export default class FundingService {
       fundings.map(funding => funding.purposeActivity.id),
     );
 
+    const clubs = await this.clubPublicService.fetchSummaries(
+      fundings.map(funding => funding.club.id),
+    );
+
     return {
       fundings: fundings.map(funding => ({
         id: funding.id,
@@ -447,7 +451,7 @@ export default class FundingService {
         name: funding.name,
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,
-        club: funding.club,
+        club: clubs.find(club => club.id === funding.club.id),
         chargedExecutive: funding.chargedExecutive,
       })),
     };
@@ -472,6 +476,10 @@ export default class FundingService {
       fundings.map(funding => funding.purposeActivity.id),
     );
 
+    const clubs = await this.clubPublicService.fetchSummaries(
+      fundings.map(funding => funding.club.id),
+    );
+
     return {
       fundings: fundings.map(funding => ({
         id: funding.id,
@@ -482,7 +490,7 @@ export default class FundingService {
         name: funding.name,
         expenditureAmount: funding.expenditureAmount,
         approvedAmount: funding.approvedAmount,
-        club: funding.club,
+        club: clubs.find(club => club.id === funding.club.id),
         chargedExecutive: funding.chargedExecutive,
       })),
     };
@@ -612,13 +620,58 @@ export default class FundingService {
           funding.chargedExecutive.id === executive.id &&
           funding.fundingStatusEnum === FundingStatusEnum.Committee,
       ).length,
-      chargedClubs: clubs.filter(club =>
-        fundings.some(
-          funding =>
-            funding.chargedExecutive?.id === executive.id &&
-            funding.club.id === club.id,
-        ),
-      ),
+      chargedClubs: clubs
+        .filter(club =>
+          fundings.some(
+            funding =>
+              funding.chargedExecutive?.id === executive.id &&
+              funding.club.id === club.id,
+          ),
+        )
+        .map(club => ({
+          ...club,
+          division: devisions.find(
+            division => division.id === club.division.id,
+          ),
+          professor: professors.find(
+            professor => professor.id === club.professor?.id,
+          ),
+          totalCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id,
+          ).length,
+          appliedCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Applied,
+          ).length,
+          approvedCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Approved,
+          ).length,
+          partialCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Partial,
+          ).length,
+          rejectedCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Rejected,
+          ).length,
+          committeeCount: fundings.filter(
+            funding =>
+              funding.club.id === club.id &&
+              funding.chargedExecutive?.id === executive.id &&
+              funding.fundingStatusEnum === FundingStatusEnum.Committee,
+          ).length,
+        })),
     }));
 
     return {
@@ -643,7 +696,7 @@ export default class FundingService {
     };
   }
 
-  async getExecutiveFundingsClubBreif(
+  async getExecutiveFundingsClubBrief(
     executiveId: IExecutive["id"],
     param: ApiFnd009RequestParam,
   ): Promise<ApiFnd009ResponseOk> {
@@ -654,6 +707,8 @@ export default class FundingService {
       param.clubId,
       activityD.id,
     );
+
+    const club = await this.clubPublicService.fetchSummary(param.clubId);
 
     const chargedExecutiveId = fundings
       .filter(funding => funding.club.id === param.clubId)
@@ -701,11 +756,17 @@ export default class FundingService {
         funding => funding.commentedExecutive?.id,
       ),
     ]);
+
     const executives = await this.userPublicService.fetchExecutiveSummaries(
       Array.from(executiveIds),
     );
 
+    const clubs = await this.clubPublicService.fetchSummaries(
+      fundings.map(funding => funding.club.id),
+    );
+
     return {
+      club,
       totalCount: fundings.filter(funding => funding.club.id === param.clubId)
         .length,
       appliedCount: fundings.filter(
@@ -736,6 +797,7 @@ export default class FundingService {
       chargedExecutive,
       fundings: fundingsWithCommentedExecutive.map(funding => ({
         ...funding,
+        club: clubs.find(c => c.id === funding.club.id),
         purposeActivity: activities.find(
           activity => activity.id === funding.purposeActivity?.id,
         ),
@@ -751,7 +813,7 @@ export default class FundingService {
     };
   }
 
-  async getExecutiveFundingsExecutiveBreif(
+  async getExecutiveFundingsExecutiveBrief(
     executiveId: IExecutive["id"],
     param: ApiFnd010RequestParam,
   ): Promise<ApiFnd010ResponseOk> {
@@ -791,7 +853,16 @@ export default class FundingService {
       Array.from(executiveIds),
     );
 
+    const clubs = await this.clubPublicService.fetchSummaries(
+      fundings.map(funding => funding.club.id),
+    );
+
+    const chargedExecutive = await this.userPublicService.findExecutiveSummary(
+      param.executiveId,
+    );
+
     return {
+      chargedExecutive,
       totalCount: fundings.length,
       appliedCount: fundings.filter(
         funding => funding.fundingStatusEnum === FundingStatusEnum.Applied,
@@ -810,6 +881,7 @@ export default class FundingService {
       ).length,
       fundings: fundingsWithCommentedExecutive.map(funding => ({
         ...funding,
+        club: clubs.find(club => club.id === funding.club.id),
         purposeActivity: activities.find(
           activity => activity.id === funding.purposeActivity?.id,
         ),

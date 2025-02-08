@@ -28,6 +28,7 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
+    chargedExecutive: zExecutiveSummary,
     totalCount: z.number().min(0),
     appliedCount: z.number().min(0),
     approvedCount: z.number().min(0),

@@ -209,6 +209,11 @@ export default class UserPublicService {
     return professors;
   }
 
+  async fetchProfessorSummary(professorId: number): Promise<IProfessorSummary> {
+    const professor = await this.professorRepository.fetchSummary(professorId);
+    return professor;
+  }
+
   /**
    * 현재 해당id의 집행부원이 유효한 지 확인합니다.
    * 만약 유효하지 않으면 403 Forbidden 에러를 던집니다.

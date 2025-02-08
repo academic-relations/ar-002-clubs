@@ -5,7 +5,6 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
-import { IDivisionSummary } from "@sparcs-clubs/interface/api/club/type/club.type";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
@@ -505,20 +504,5 @@ export default class ClubRepository {
       .where(inArray(Club.id, clubIds));
 
     return result.map(club => VClubSummary.fromDBResult(club));
-  }
-
-  async fetchDivisionSummaries(ids: number[]): Promise<IDivisionSummary[]> {
-    if (ids.length === 0) {
-      return [];
-    }
-
-    const result = await this.db
-      .select({
-        id: Division.id,
-        name: Division.name,
-      })
-      .from(Division)
-      .where(inArray(Division.id, ids));
-    return result;
   }
 }

@@ -1,0 +1,28 @@
+import apiFnd015 from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd015";
+
+import { useMutation } from "@tanstack/react-query";
+
+import {
+  axiosClientWithAuth,
+  defineAxiosMock,
+} from "@sparcs-clubs/web/lib/axios";
+
+import type {
+  ApiFnd015RequestBody,
+  ApiFnd015ResponseOk,
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd015";
+
+const usePatchFundingChargedExecutive = () =>
+  useMutation<ApiFnd015ResponseOk, Error, { body: ApiFnd015RequestBody }>({
+    mutationFn: async ({ body }): Promise<ApiFnd015ResponseOk> => {
+      const { data } = await axiosClientWithAuth.patch(apiFnd015.url(), body);
+
+      return apiFnd015.responseBodyMap[200].parse(data);
+    },
+  });
+
+export default usePatchFundingChargedExecutive;
+
+defineAxiosMock(mock => {
+  mock.onPatch(apiFnd015.url()).reply(() => [200, {}]);
+});

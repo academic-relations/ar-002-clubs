@@ -1,6 +1,7 @@
 import { forwardRef, Module } from "@nestjs/common";
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 
+import DivisionRepository from "../division/repository/division.repository";
 import UserModule from "../user/user.module";
 import { ClubController } from "./controller/club.controller";
 import { ClubDelegateDRepository } from "./delegate/club.club-delegate-d.repository";
@@ -32,6 +33,7 @@ import { ClubService } from "./service/club.service";
     ClubGetStudentClubBrief,
     ClubPutStudentClubBrief,
     ClubDelegateDRepository,
+    DivisionRepository,
   ],
   exports: [ClubPublicService],
 })

@@ -220,11 +220,11 @@ export default class FundingController {
   @Executive()
   @Get(ApiFnd009RequestUrl)
   @UsePipes(new ZodPipe(apiFnd009))
-  async getExecutiveFundingsClubBreif(
+  async getExecutiveFundingsClubBrief(
     @GetExecutive() executive: GetExecutive,
     @Param() param: ApiFnd009RequestParam,
   ): Promise<ApiFnd009ResponseOk> {
-    return this.fundingService.getExecutiveFundingsClubBreif(
+    return this.fundingService.getExecutiveFundingsClubBrief(
       executive.executiveId,
       param,
     );
@@ -233,11 +233,11 @@ export default class FundingController {
   @Executive()
   @Get(ApiFnd010RequestUrl)
   @UsePipes(new ZodPipe(apiFnd010))
-  async getExecutiveFundingsExecutiveBreif(
+  async getExecutiveFundingsExecutiveBrief(
     @GetExecutive() executive: GetExecutive,
     @Param() param: ApiFnd010RequestParam,
   ): Promise<ApiFnd010ResponseOk> {
-    return this.fundingService.getExecutiveFundingsExecutiveBreif(
+    return this.fundingService.getExecutiveFundingsExecutiveBrief(
       executive.executiveId,
       param,
     );
