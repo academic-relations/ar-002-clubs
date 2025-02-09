@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
@@ -46,7 +48,7 @@ const My: React.FC = () => {
         items={[{ name: "마이페이지", path: "/my" }]}
         title="마이페이지"
       />
-      {profile?.type === "undergraduate" && <MyChangesFrame />}
+      {profile?.type === UserTypeEnum.Undergraduate && <MyChangesFrame />}
       <MyInfoFrame profile={profile?.type as string} />
       {profile?.type !== "executive" &&
         (profile?.type === "professor" ? (

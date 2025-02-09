@@ -1,3 +1,5 @@
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 
 import { useGetFunding } from "../services/useGetFunding";
@@ -16,7 +18,7 @@ const useGetInitialFundingFormData = (
     fundingId,
   );
 
-  if (profile?.type !== "undergraduate") {
+  if (profile?.type !== UserTypeEnum.Undergraduate) {
     return {
       data: {} as FundingFormData,
       isLoading: false,

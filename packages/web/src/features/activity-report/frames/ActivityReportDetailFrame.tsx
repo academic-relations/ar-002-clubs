@@ -5,6 +5,8 @@ import { overlay } from "overlay-kit";
 import React, { useCallback, useMemo } from "react";
 import styled from "styled-components";
 
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+
 import NotFound from "@sparcs-clubs/web/app/not-found";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -99,7 +101,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     useProfessorApproveSingleActivityReport();
 
   const isProgressVisible =
-    profile.type === "undergraduate" || profile.type === "executive";
+    profile.type === UserTypeEnum.Undergraduate || profile.type === "executive";
 
   const navigateToActivityReportList = () => {
     if (profile.type === "executive") {
@@ -195,7 +197,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
   }
 
   const additionalButtons = () => {
-    if (profile.type === "undergraduate") {
+    if (profile.type === UserTypeEnum.Undergraduate) {
       return (
         <FlexWrapper gap={12}>
           <Button type="default" onClick={handleDelete}>

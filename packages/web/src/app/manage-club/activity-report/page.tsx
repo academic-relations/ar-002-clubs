@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
@@ -34,7 +36,7 @@ const ActivityReport = () => {
   if (profile?.type === "professor") {
     router.replace("/manage-club");
   }
-  if (profile?.type !== "undergraduate") {
+  if (profile?.type !== UserTypeEnum.Undergraduate) {
     return <NoManageClub />;
   }
 
