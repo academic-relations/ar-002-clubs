@@ -101,10 +101,11 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
     useProfessorApproveSingleActivityReport();
 
   const isProgressVisible =
-    profile.type === UserTypeEnum.Undergraduate || profile.type === "executive";
+    profile.type === UserTypeEnum.Undergraduate ||
+    profile.type === UserTypeEnum.Executive;
 
   const navigateToActivityReportList = () => {
-    if (profile.type === "executive") {
+    if (profile.type === UserTypeEnum.Executive) {
       router.back();
     } else {
       router.push("/manage-club/activity-report");
@@ -331,7 +332,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
           )}
         </Card>
 
-        {profile.type === "executive" && (
+        {profile.type === UserTypeEnum.Executive && (
           <ExecutiveActivityReportApprovalSection
             comments={filterActivityComments(data.comments)}
             clubId={data.clubId}

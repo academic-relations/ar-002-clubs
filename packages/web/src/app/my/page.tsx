@@ -50,13 +50,13 @@ const My: React.FC = () => {
       />
       {profile?.type === UserTypeEnum.Undergraduate && <MyChangesFrame />}
       <MyInfoFrame profile={profile?.type as string} />
-      {profile?.type !== "executive" &&
+      {profile?.type !== UserTypeEnum.Executive &&
         (profile?.type === "professor" ? (
           <ProfessorMyClubFrame />
         ) : (
           <MyClubFrame />
         ))}
-      {profile && profile.type !== "executive" && (
+      {profile && profile.type !== UserTypeEnum.Executive && (
         <MyRegisterFrame profile={profile.type} />
       )}
       {/* {isStudent(profile) && <MyServiceFrame />} */}

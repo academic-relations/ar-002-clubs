@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { IFundingCommentResponse } from "@sparcs-clubs/interface/api/funding/type/funding.comment.type";
 import { IFundingResponse } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -133,7 +134,7 @@ const ExecutiveFundingReviewSection: React.FC<{
     );
   };
 
-  if (profile?.type !== "executive") {
+  if (profile?.type !== UserTypeEnum.Executive) {
     return null;
   }
 

@@ -14,7 +14,7 @@ const useGetInitialFundingFormData = (
 } => {
   const { profile } = useAuth();
   const { data, isLoading, isError } = useGetFunding(
-    "undergraduate",
+    UserTypeEnum.Undergraduate,
     fundingId,
   );
 

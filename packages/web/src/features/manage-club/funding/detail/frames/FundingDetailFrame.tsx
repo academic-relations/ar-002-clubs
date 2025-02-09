@@ -54,7 +54,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ profile }) => {
   } = useGetFundingDeadline();
 
   const navigateToFundingList = () => {
-    if (profile.type === "executive") {
+    if (profile.type === UserTypeEnum.Executive) {
       router.back();
     } else {
       router.push("/manage-club/funding");
