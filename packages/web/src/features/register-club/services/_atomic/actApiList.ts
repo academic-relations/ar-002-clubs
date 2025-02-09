@@ -7,7 +7,7 @@ import apiAct015 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct015";
 import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 const activitiesGet = (profile: string) => {
-  if (profile === "professor") {
+  if (profile === UserTypeEnum.Professor) {
     return apiAct013.url();
   }
   if (profile === UserTypeEnum.Executive) {
@@ -17,7 +17,7 @@ const activitiesGet = (profile: string) => {
 };
 
 const activityDetailGet = (profile: string, id: number) => {
-  if (profile === "professor") {
+  if (profile === UserTypeEnum.Professor) {
     return apiAct015.url(id);
   }
   if (profile === UserTypeEnum.Executive) {

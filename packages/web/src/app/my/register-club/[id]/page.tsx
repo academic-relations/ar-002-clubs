@@ -38,7 +38,7 @@ const MyRegisterClubDetail = () => {
     return <NotFound />;
   }
 
-  return profile?.type === "professor" ? (
+  return profile?.type === UserTypeEnum.Professor ? (
     <ProfessorRegisterClubDetailFrame profile={profile.type} />
   ) : (
     <StudentRegisterClubDetailFrame profile={profile.type} />

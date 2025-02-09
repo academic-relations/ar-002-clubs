@@ -29,7 +29,7 @@ const ManageClub: React.FC = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile?.type === "professor") {
+  if (profile?.type === UserTypeEnum.Professor) {
     return <ProfessorManageClubFrame />;
   }
 

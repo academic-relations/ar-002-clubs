@@ -211,7 +211,7 @@ const ActivityReportDetailFrame: React.FC<ActivityReportDetailFrameProps> = ({
       );
     }
 
-    if (profile.type === "professor") {
+    if (profile.type === UserTypeEnum.Professor) {
       return (
         <Button
           type={data.professorApprovedAt ? "disabled" : "default"}

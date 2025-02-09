@@ -33,7 +33,7 @@ const ActivityReport = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile?.type === "professor") {
+  if (profile?.type === UserTypeEnum.Professor) {
     router.replace("/manage-club");
   }
   if (profile?.type !== UserTypeEnum.Undergraduate) {

@@ -44,7 +44,7 @@ const MyClubs = () => {
         ]}
         title="나의 동아리"
       />
-      {profile?.type === "professor" ? (
+      {profile?.type === UserTypeEnum.Professor ? (
         <MyClubsProfessorFrame />
       ) : (
         <MyClubsMainFrame />
