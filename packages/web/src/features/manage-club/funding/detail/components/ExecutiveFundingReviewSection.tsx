@@ -158,7 +158,6 @@ const ExecutiveFundingReviewSection: React.FC<{
       Number(approveAmount) === funding.approvedAmount
     )
       return false;
-    if (Number(approveAmount) === funding.expenditureAmount) return true;
     if (reviewDetail === "") return false;
     return true;
   };
