@@ -137,14 +137,13 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ profile }) => {
   return (
     <FlexWrapper direction="column" gap={40}>
       <Card outline>
-        {!isPastFunding && (
-          <FundingStatusSection
-            status={data.funding.fundingStatusEnum}
-            editedAt={data.funding.editedAt}
-            commentedAt={data.funding.commentedAt}
-            comments={data.comments ?? []}
-          />
-        )}
+        <FundingStatusSection
+          status={data.funding.fundingStatusEnum}
+          editedAt={data.funding.editedAt}
+          commentedAt={data.funding.commentedAt}
+          comments={data.comments ?? []}
+        />
+
         <AsyncBoundary isLoading={isLoading} isError={isError}>
           <FundingInfoList data={data.funding} />
           <BasicEvidenceList data={data.funding} />

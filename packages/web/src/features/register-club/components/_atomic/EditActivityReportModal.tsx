@@ -7,7 +7,7 @@ import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
-import RejectReasonToast from "@sparcs-clubs/web/common/components/Toast/RejectReasonToast";
+import CommentToast from "@sparcs-clubs/web/common/components/Toast/CommentToast";
 import { useGetActivityReport } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
 import { filterActivityComments } from "@sparcs-clubs/web/features/activity-report/utils/filterComment";
 import usePutActivityReportForNewClub from "@sparcs-clubs/web/features/register-club/services/usePutActivityReportForNewClub";
@@ -95,12 +95,13 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
         <FlexWrapper gap={20} direction="column">
           {data.activityStatusEnumId === ActivityStatusEnum.Rejected &&
             data.comments.length > 0 && (
-              <RejectReasonToast
+              <CommentToast
                 title="반려 사유"
                 reasons={filterActivityComments(data.comments).map(comment => ({
                   datetime: comment.createdAt,
                   reason: comment.content,
                 }))}
+                color="red"
               />
             )}
 

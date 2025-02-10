@@ -21,7 +21,7 @@ import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/C
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import RejectReasonToast from "@sparcs-clubs/web/common/components/Toast/RejectReasonToast";
+import CommentToast from "@sparcs-clubs/web/common/components/Toast/CommentToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   DivisionTypeTagList,
@@ -165,12 +165,13 @@ const MyRegisterClubDetailFrame: React.FC<{
             optional={
               clubDetail.comments &&
               clubDetail.comments.length > 0 && (
-                <RejectReasonToast
+                <CommentToast
                   title="반려 사유"
                   reasons={clubDetail.comments.map(comment => ({
                     datetime: comment.createdAt,
                     reason: comment.content,
                   }))}
+                  color="red"
                 />
               )
             }

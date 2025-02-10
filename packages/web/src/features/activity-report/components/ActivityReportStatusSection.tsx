@@ -3,8 +3,7 @@ import React, { useMemo } from "react";
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
-import ApproveReasonToast from "@sparcs-clubs/web/common/components/Toast/ApproveReasonToast";
-import RejectReasonToast from "@sparcs-clubs/web/common/components/Toast/RejectReasonToast";
+import CommentToast from "@sparcs-clubs/web/common/components/Toast/CommentToast";
 
 import { getActivityReportProgress } from "../constants/activityReportProgress";
 import { Comment } from "../types/activityReport";
@@ -28,23 +27,25 @@ const ActivityReportStatusSection: React.FC<
   const ToastSection = useMemo(() => {
     if (status === ActivityStatusEnum.Rejected) {
       return (
-        <RejectReasonToast
+        <CommentToast
           title="코멘트"
           reasons={comments.map(comment => ({
             datetime: comment.createdAt,
             reason: comment.content,
           }))}
+          color={"red"}
         />
       );
     }
 
     return (
-      <ApproveReasonToast
+      <CommentToast
         title="코멘트"
         reasons={comments.map(comment => ({
           datetime: comment.createdAt,
           reason: comment.content,
         }))}
+        color="green"
       />
     );
   }, [comments, status]);

@@ -5,7 +5,6 @@ import {
 } from "@tanstack/react-table";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
-
 import getChargedExecutiveContent from "@sparcs-clubs/web/utils/getChargedExecutiveContent";
 
 export interface ChargedChangeFundingProps {
