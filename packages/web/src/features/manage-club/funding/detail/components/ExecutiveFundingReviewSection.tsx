@@ -140,7 +140,24 @@ const ExecutiveFundingReviewSection: React.FC<{
   const availableToApprove: () => boolean = () => {
     if (Number(approveAmount) === 0) return false;
     if (Number(approveAmount) > funding.expenditureAmount) return false;
-    if (Number(approveAmount) === funding.approvedAmount) return false;
+    if (
+      funding.fundingStatusEnum !== FundingStatusEnum.Committee &&
+      Number(approveAmount) === funding.approvedAmount
+    )
+      return false;
+    if (Number(approveAmount) === funding.expenditureAmount) return true;
+    if (reviewDetail === "") return false;
+    return true;
+  };
+
+  const availableToCommittee: () => boolean = () => {
+    if (Number(approveAmount) === 0) return false;
+    if (Number(approveAmount) > funding.expenditureAmount) return false;
+    if (
+      funding.fundingStatusEnum === FundingStatusEnum.Committee &&
+      Number(approveAmount) === funding.approvedAmount
+    )
+      return false;
     if (Number(approveAmount) === funding.expenditureAmount) return true;
     if (reviewDetail === "") return false;
     return true;
@@ -208,7 +225,7 @@ const ExecutiveFundingReviewSection: React.FC<{
           신청 반려
         </Button>
         <Button
-          type={availableToApprove() ? "default" : "disabled"}
+          type={availableToCommittee() ? "default" : "disabled"}
           onClick={handleCommittee}
         >
           운위 상정
