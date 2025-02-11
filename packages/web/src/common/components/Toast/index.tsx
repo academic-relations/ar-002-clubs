@@ -45,7 +45,7 @@ const ApproveReasonToastInner = styled.div<{ color: ToastColorType }>`
 
   .ApproveReasonToast-title {
     padding: 12px 16px 0 16px;
-
+    width: 100%;
     position: sticky;
     top: 0;
     display: flex;
