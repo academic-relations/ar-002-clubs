@@ -1,5 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+
 import { getKSTDate } from "@sparcs-clubs/web/utils/Date/getKSTDate";
 import { isParticipantsRequired } from "@sparcs-clubs/web/utils/isTransportation";
 
@@ -204,7 +206,10 @@ const useUpdateFunding = (fundingId: number, clubId: number) => {
         {
           onSuccess: () => {
             queryClient.invalidateQueries({
-              queryKey: fundingDetailQueryKey("undergraduate", fundingId),
+              queryKey: fundingDetailQueryKey(
+                UserTypeEnum.Undergraduate,
+                fundingId,
+              ),
             });
             queryClient.invalidateQueries({
               queryKey: newFundingListQueryKey(clubId),

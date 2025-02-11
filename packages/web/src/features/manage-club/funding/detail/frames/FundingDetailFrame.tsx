@@ -5,6 +5,7 @@ import React, { useMemo } from "react";
 import styled from "styled-components";
 
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import NotFound from "@sparcs-clubs/web/app/not-found";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -53,7 +54,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ profile }) => {
   } = useGetFundingDeadline();
 
   const navigateToFundingList = () => {
-    if (profile.type === "executive") {
+    if (profile.type === UserTypeEnum.Executive) {
       router.back();
     } else {
       router.push("/manage-club/funding");
@@ -226,7 +227,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ profile }) => {
           isLoading={isLoadingFundingDeadline}
           isError={isErrorFundingDeadline}
         >
-          {!isPastFunding && profile.type === "undergraduate" && (
+          {!isPastFunding && profile.type === UserTypeEnum.Undergraduate && (
             <FlexWrapper direction="row" gap={10}>
               <Button
                 type="default"

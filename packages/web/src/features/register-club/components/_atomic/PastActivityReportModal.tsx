@@ -2,6 +2,7 @@ import { overlay } from "overlay-kit";
 import React, { useEffect, useState } from "react";
 
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -52,7 +53,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
     isError: isDeleteError,
   } = useDeleteActivityReportProvisional();
 
-  const isExecutive = profile === "executive";
+  const isExecutive = profile === UserTypeEnum.Executive;
 
   const [rejectionDetail, setRejectionDetail] = useState("");
 
