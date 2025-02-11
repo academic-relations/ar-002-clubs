@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
@@ -29,7 +31,7 @@ const MyClubs = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile?.type === "executive") {
+  if (profile?.type === UserTypeEnum.Executive) {
     return <NotForExecutive />;
   }
 
@@ -42,7 +44,7 @@ const MyClubs = () => {
         ]}
         title="나의 동아리"
       />
-      {profile?.type === "professor" ? (
+      {profile?.type === UserTypeEnum.Professor ? (
         <MyClubsProfessorFrame />
       ) : (
         <MyClubsMainFrame />

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import { fundingDetailQueryKey } from "./useGetFunding";
 import usePostFundingReview from "./usePostFundingReview";
@@ -27,7 +28,10 @@ const useExecutiveReviewFunding = (fundingId: number) => {
         {
           onSuccess: () => {
             queryClient.invalidateQueries({
-              queryKey: fundingDetailQueryKey("executive", fundingId),
+              queryKey: fundingDetailQueryKey(
+                UserTypeEnum.Executive,
+                fundingId,
+              ),
             });
           },
         },

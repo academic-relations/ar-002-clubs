@@ -1,10 +1,12 @@
 import { useParams } from "next/navigation";
 import { overlay } from "overlay-kit";
 import React, { useState } from "react";
+import styled from "styled-components";
 
 import { IFundingCommentResponse } from "@sparcs-clubs/interface/api/funding/type/funding.comment.type";
 import { IFundingResponse } from "@sparcs-clubs/interface/api/funding/type/funding.type";
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -19,6 +21,18 @@ import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import useExecutiveReviewFunding from "@sparcs-clubs/web/features/manage-club/funding/services/useExecutiveReviewFunding";
 import { formatSlashDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
+const FundingInputWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  width: 100%;
+
+  @media (max-width: ${({ theme }) => theme.responsive.BREAKPOINT.lg}) {
+    flex-direction: column;
+    gap: 20px;
+  }
+`;
 
 const ExecutiveFundingReviewSection: React.FC<{
   funding: IFundingResponse;
@@ -133,15 +147,31 @@ const ExecutiveFundingReviewSection: React.FC<{
     );
   };
 
-  if (profile?.type !== "executive") {
+  if (profile?.type !== UserTypeEnum.Executive) {
     return null;
   }
 
   const availableToApprove: () => boolean = () => {
     if (Number(approveAmount) === 0) return false;
     if (Number(approveAmount) > funding.expenditureAmount) return false;
-    if (Number(approveAmount) === funding.approvedAmount) return false;
+    if (
+      funding.fundingStatusEnum !== FundingStatusEnum.Committee &&
+      Number(approveAmount) === funding.approvedAmount
+    )
+      return false;
     if (Number(approveAmount) === funding.expenditureAmount) return true;
+    if (reviewDetail === "") return false;
+    return true;
+  };
+
+  const availableToCommittee: () => boolean = () => {
+    if (Number(approveAmount) === 0) return false;
+    if (Number(approveAmount) > funding.expenditureAmount) return false;
+    if (
+      funding.fundingStatusEnum === FundingStatusEnum.Committee &&
+      Number(approveAmount) === funding.approvedAmount
+    )
+      return false;
     if (reviewDetail === "") return false;
     return true;
   };
@@ -175,45 +205,56 @@ const ExecutiveFundingReviewSection: React.FC<{
         placeholder="내용"
         area
       />
-
-      <FlexWrapper direction="row" gap={16} style={{ height: "36px" }}>
-        <Typography
-          fs={16}
-          lh={36}
-          fw="MEDIUM"
-          style={{ whiteSpace: "nowrap" }}
+      <FundingInputWrapper>
+        <FlexWrapper
+          direction="row"
+          gap={16}
+          style={{ height: "36px", flex: 1 }}
         >
-          승인 금액
-        </Typography>
-        <UnitInput
-          value={approveAmount}
-          handleChange={setApproveAmount}
-          unit={`/ ${funding.expenditureAmount}원`}
-          placeholder="금액을 입력해주세요"
-          required={false}
-          unitOnClick={() =>
-            setApproveAmount(funding.expenditureAmount.toString())
-          }
-        />
-        <Button
-          type={availableToApprove() ? "default" : "disabled"}
-          onClick={handleApprove}
+          <Typography
+            fs={16}
+            lh={36}
+            fw="MEDIUM"
+            style={{ whiteSpace: "nowrap" }}
+          >
+            승인 금액
+          </Typography>
+          <UnitInput
+            value={approveAmount}
+            handleChange={setApproveAmount}
+            unit={`/ ${funding.expenditureAmount}원`}
+            placeholder="금액을 입력해주세요"
+            required={false}
+            unitOnClick={() =>
+              setApproveAmount(funding.expenditureAmount.toString())
+            }
+          />
+        </FlexWrapper>
+        <FlexWrapper
+          direction="row"
+          gap={16}
+          style={{ height: "36px", justifyContent: "flex-end" }}
         >
-          신청 승인
-        </Button>
-        <Button
-          onClick={handleReject}
-          type={reviewDetail === "" ? "disabled" : "default"}
-        >
-          신청 반려
-        </Button>
-        <Button
-          type={availableToApprove() ? "default" : "disabled"}
-          onClick={handleCommittee}
-        >
-          운위 상정
-        </Button>
-      </FlexWrapper>
+          <Button
+            type={availableToApprove() ? "default" : "disabled"}
+            onClick={handleApprove}
+          >
+            신청 승인
+          </Button>
+          <Button
+            onClick={handleReject}
+            type={reviewDetail === "" ? "disabled" : "default"}
+          >
+            신청 반려
+          </Button>
+          <Button
+            type={availableToCommittee() ? "default" : "disabled"}
+            onClick={handleCommittee}
+          >
+            운위 상정
+          </Button>
+        </FlexWrapper>
+      </FundingInputWrapper>
     </Card>
   );
 };

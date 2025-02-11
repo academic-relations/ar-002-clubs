@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -75,7 +76,7 @@ const MyRegisterClubDetailFrame: React.FC<{
   const router = useRouter();
   const { id } = useParams();
 
-  const isProfessor = profile === "professor";
+  const isProfessor = profile === UserTypeEnum.Professor;
 
   const deleteHandler = () => {
     overlay.open(({ isOpen, close }) => (

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import NotFound from "@sparcs-clubs/web/app/not-found";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -28,7 +29,7 @@ const ProvisionalRegisterClub = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile?.type !== "undergraduate") {
+  if (profile?.type !== UserTypeEnum.Undergraduate) {
     return <NotFound />;
   }
 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
@@ -28,7 +29,7 @@ const RenewalRegisterClub = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile?.type !== "undergraduate") {
+  if (profile?.type !== UserTypeEnum.Undergraduate) {
     return <NoManageClub />;
   }
   return <RegisterClubAuthFrame type={RegistrationTypeEnum.Renewal} />;

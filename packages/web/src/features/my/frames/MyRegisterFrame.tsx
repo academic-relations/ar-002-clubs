@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -68,7 +69,7 @@ const MyRegisterFrame: React.FC<{ profile: string }> = ({ profile }) => {
                 moreDetail=""
                 moreDetailPath=""
               />
-              {profile === "professor" ? (
+              {profile === UserTypeEnum.Professor ? (
                 <RegisterClubProfFrame />
               ) : (
                 <RegisterClubFrame />
@@ -76,7 +77,7 @@ const MyRegisterFrame: React.FC<{ profile: string }> = ({ profile }) => {
             </FlexWrapper>
             {registrationStatus ===
               RegistrationDeadlineEnum.StudentRegistrationApplication &&
-              profile !== "professor" && <MyMemberRegisterFrame />}
+              profile !== UserTypeEnum.Professor && <MyMemberRegisterFrame />}
           </FlexWrapper>
         </AsyncBoundary>
       </FoldableSectionTitle>

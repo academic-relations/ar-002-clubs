@@ -1,5 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+
 import { activityReportDetailQueryKey } from "../services/useGetActivityReport";
 import { usePutActivityReport } from "../services/usePutActivityReport";
 import { ActivityReportFormData } from "../types/form";
@@ -27,7 +29,7 @@ const useUpdateActivityReport = (activityId: number) => {
           onSuccess: () => {
             queryClient.invalidateQueries({
               queryKey: activityReportDetailQueryKey(
-                "undergraduate",
+                UserTypeEnum.Undergraduate,
                 activityId,
               ),
             });
