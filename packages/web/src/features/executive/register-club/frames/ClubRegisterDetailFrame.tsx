@@ -1,6 +1,7 @@
 import React from "react";
 
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -206,7 +207,10 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
         {data &&
           data.registrationTypeEnumId === RegistrationTypeEnum.Promotional &&
           data.clubId && (
-            <MyRegisterClubActFrame profile="executive" clubId={data.clubId} />
+            <MyRegisterClubActFrame
+              profile={UserTypeEnum.Executive}
+              clubId={data.clubId}
+            />
           )}
         {data?.professor && (
           <FlexWrapper gap={20} direction="row">
