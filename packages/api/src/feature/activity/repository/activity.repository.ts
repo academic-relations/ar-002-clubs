@@ -1,11 +1,29 @@
-import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  exists,
+  gt,
+  inArray,
+  isNull,
+  lte,
+  or,
+} from "drizzle-orm";
+import { MySql2Database } from "drizzle-orm/mysql2";
+
 import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 import {
   ActivityStatusEnum,
   ActivityTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { and, asc, eq, gt, inArray, isNull, lte } from "drizzle-orm";
-import { MySql2Database } from "drizzle-orm/mysql2";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
@@ -26,6 +44,8 @@ import {
   Professor,
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
+
+import { VActivitySummary } from "../model/activity.summary.model";
 
 @Injectable()
 export default class ActivityRepository {
@@ -54,11 +74,12 @@ export default class ActivityRepository {
   // 작성에 성공하면 True, 실패하면 False를 리턴합니다.
   async deleteActivity(contents: { activityId: number }): Promise<boolean> {
     const isDeletionSucceed = await this.db.transaction(async tx => {
-      const deletedAt = new Date();
+      const deletedAt = getKSTDate();
       const [activitySetResult] = await tx
         .update(Activity)
         .set({
           deletedAt,
+          editedAt: deletedAt,
         })
         .where(
           and(eq(Activity.id, contents.activityId), isNull(Activity.deletedAt)),
@@ -437,7 +458,7 @@ export default class ActivityRepository {
     activityStatusEnumId: ActivityStatusEnum;
   }) {
     const isUpdateSucceed = await this.db.transaction(async tx => {
-      const deletedAt = new Date();
+      const deletedAt = getKSTDate();
 
       const [activitySetResult] = await tx
         .update(Activity)
@@ -450,6 +471,7 @@ export default class ActivityRepository {
           evidence: param.evidence,
           activityDId: param.activityDId,
           activityStatusEnumId: Number(param.activityStatusEnumId),
+          editedAt: deletedAt,
         })
         .where(eq(Activity.id, param.activityId));
       if (activitySetResult.affectedRows !== 1) {
@@ -586,15 +608,26 @@ export default class ActivityRepository {
     return result[0];
   }
 
-  async selectActivityById(id: number): Promise<IActivitySummary> {
+  async fetchSummary(id: number): Promise<IActivitySummary> {
     const result = await this.db
-      .select({
-        name: Activity.name,
-        id: Activity.id,
-      })
+      .select()
       .from(Activity)
       .where(eq(Activity.id, id));
-    return result[0];
+
+    if (result.length !== 1) {
+      throw new NotFoundException("Activity not found");
+    }
+
+    return VActivitySummary.fromDBResult(result[0]);
+  }
+
+  async fetchSummaries(activityIds: number[]): Promise<IActivitySummary[]> {
+    if (activityIds.length === 0) return [];
+    const results = await this.db
+      .select()
+      .from(Activity)
+      .where(inArray(Activity.id, activityIds));
+    return results.map(result => VActivitySummary.fromDBResult(result));
   }
 
   /**
@@ -624,6 +657,7 @@ export default class ActivityRepository {
         .update(Activity)
         .set({
           activityStatusEnumId: param.activityStatusEnumId,
+          commentedAt: getKSTDate(),
         })
         .where(
           and(eq(Activity.id, param.activityId), isNull(Activity.deletedAt)),
@@ -709,18 +743,104 @@ export default class ActivityRepository {
     return result;
   }
 
-  async fetchActivitySummaries(
-    activityIds: number[],
-  ): Promise<IActivitySummary[]> {
-    const result = await this.db
+  async fetchCommentedSummaries(
+    executiveId: number,
+  ): Promise<VActivitySummary[]> {
+    const latestFeedbacks = this.db
+      .select({
+        activityId: ActivityFeedback.activityId,
+        executiveId: ActivityFeedback.executiveId,
+      })
+      .from(ActivityFeedback)
+      .where(
+        and(
+          eq(ActivityFeedback.executiveId, executiveId),
+          isNull(ActivityFeedback.deletedAt),
+        ),
+      )
+      .orderBy(desc(ActivityFeedback.createdAt))
+      .as("latest_feedbacks");
+
+    const results = await this.db
       .select({
         id: Activity.id,
+        activityStatusEnumId: Activity.activityStatusEnumId,
+        activityTypeEnumId: Activity.activityTypeEnumId,
+        clubId: Activity.clubId,
         name: Activity.name,
+        commentedAt: Activity.commentedAt,
+        editedAt: Activity.editedAt,
+        updatedAt: Activity.updatedAt,
+        chargedExecutiveId: Activity.chargedExecutiveId,
+        commentedExecutiveId: latestFeedbacks.executiveId,
       })
       .from(Activity)
+      .leftJoin(latestFeedbacks, eq(latestFeedbacks.activityId, Activity.id))
       .where(
-        and(inArray(Activity.id, activityIds), isNull(Activity.deletedAt)),
+        and(
+          isNull(Activity.deletedAt),
+          or(
+            eq(Activity.chargedExecutiveId, executiveId),
+            exists(
+              this.db
+                .select()
+                .from(ActivityFeedback)
+                .where(
+                  and(
+                    eq(ActivityFeedback.activityId, Activity.id),
+                    eq(ActivityFeedback.executiveId, executiveId),
+                    isNull(ActivityFeedback.deletedAt),
+                  ),
+                ),
+            ),
+          ),
+        ),
       );
-    return result;
+
+    return results.map(result => VActivitySummary.fromDBResult(result));
+  }
+
+  /**
+   * @param clubId
+   * @param semesterId
+   * @description 해당학기의 선택가능한 ActivitySummary를 반환합니다.
+   * 선택가능한 활동이란, 승인되거나 운위로 넘겨진 경우를 의미합니다.
+   */
+
+  async fetchAvailableSummaries(
+    clubId: number,
+    activityDId: number,
+  ): Promise<VActivitySummary[]> {
+    const results = await this.db
+      .select()
+      .from(Activity)
+      .where(
+        and(
+          eq(Activity.clubId, clubId),
+          eq(Activity.activityDId, activityDId),
+          or(
+            eq(Activity.activityStatusEnumId, ActivityStatusEnum.Approved),
+            eq(Activity.activityStatusEnumId, ActivityStatusEnum.Committee),
+          ),
+          isNull(Activity.deletedAt),
+        ),
+      );
+    return results.map(result => VActivitySummary.fromDBResult(result));
+  }
+
+  async fetchParticipantIds(activityId: number): Promise<number[]> {
+    const result = await this.db
+      .select({
+        id: ActivityParticipant.studentId,
+      })
+      .from(ActivityParticipant)
+      .where(
+        and(
+          eq(ActivityParticipant.activityId, activityId),
+          isNull(ActivityParticipant.deletedAt),
+        ),
+      );
+
+    return result.map(participant => participant.id);
   }
 }

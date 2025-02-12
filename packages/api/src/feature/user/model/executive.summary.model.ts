@@ -26,4 +26,22 @@ export class VExecutiveSummary implements IExecutiveSummary {
       Object.assign(this, param);
     }
   }
+
+  static fromDBResult(result: {
+    executive: {
+      id: number;
+      name: string;
+      userId: number;
+    };
+    student: {
+      number: number;
+    };
+  }): VExecutiveSummary {
+    return new VExecutiveSummary({
+      id: result.executive.id,
+      name: result.executive.name,
+      studentNumber: result.student.number.toString(),
+      userId: result.executive.userId,
+    });
+  }
 }

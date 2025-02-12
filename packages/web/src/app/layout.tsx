@@ -1,7 +1,8 @@
+import "@sparcs-clubs/web/styles/globals.css";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import classNames from "classnames";
-
-import "@sparcs-clubs/web/styles/globals.css";
+import type { Metadata } from "next";
+import React from "react";
 
 import Footer from "@sparcs-clubs/web/common/components/Footer";
 import Header from "@sparcs-clubs/web/common/components/Header";
@@ -17,8 +18,6 @@ import {
 import DebugBadge from "../common/components/DebugBadge";
 import PageContent from "../common/components/PageContent";
 import { AuthProvider } from "../common/providers/AuthContext";
-
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "SPARCS Clubs for ClubsUA",

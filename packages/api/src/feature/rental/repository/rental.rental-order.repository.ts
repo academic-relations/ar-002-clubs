@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
-
 import { count, eq } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
+import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 import { Club } from "@sparcs-clubs/api/drizzle/schema/club.schema";
 import {
@@ -11,8 +11,6 @@ import {
   RentalOrderItemD,
 } from "@sparcs-clubs/api/drizzle/schema/rental.schema";
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
-
-import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 @Injectable()
 export class RentalOrderRepository {

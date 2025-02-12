@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 
-import DivisionRepository from "../repository/division.repository";
-
 import type { ApiDiv001ResponseOk } from "@sparcs-clubs/interface/api/division/apiDiv001";
+
+import DivisionRepository from "../repository/division.repository";
 
 @Injectable()
 export default class DivisionService {

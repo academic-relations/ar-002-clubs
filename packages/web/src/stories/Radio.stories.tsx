@@ -1,9 +1,8 @@
 import { action } from "@storybook/addon-actions";
 import { useArgs } from "@storybook/preview-api";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import Radio from "../common/components/Radio";
-
-import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Radio> = {
   component: Radio,

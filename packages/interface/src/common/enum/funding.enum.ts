@@ -3,11 +3,11 @@ export enum FundingStatusEnum {
   Approved, // 승인
   Rejected, // 반려
   Committee, // 운위
+  Partial, // 부분 승인
 }
 
 export enum FundingDeadlineEnum {
-  Activity = 1, // 활동
-  Writing, // 작성
+  Writing = 1, // 작성
   Revision, // 수정
   Review, // 검토
   Exception, // 예외

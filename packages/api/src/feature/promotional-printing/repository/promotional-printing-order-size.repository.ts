@@ -1,7 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { eq } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
-
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { PromotionalPrintingOrderSize } from "src/drizzle/schema/promotional-printing.schema";
 

@@ -1,14 +1,12 @@
 import { Module } from "@nestjs/common";
-
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 
-import { ClubModule } from "../club/club.module";
+import ClubModule from "../club/club.module";
 import ClubTRepository from "../club/repository/club.club-t.repository";
 import DivisionModule from "../division/division.module";
-import { FileModule } from "../file/file.module";
+import FileModule from "../file/file.module";
 import { ClubRegistrationModule } from "../registration/club-registration/club-registration.module";
 import UserModule from "../user/user.module";
-
 import ActivityActivityTermController from "./controller/activity.activity-term.controller";
 import ActivityController from "./controller/activity.controller";
 import ActivityClubChargedExecutiveRepository from "./repository/activity.activity-club-charged-executive.repository";

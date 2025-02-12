@@ -1,5 +1,4 @@
 import React, { MouseEvent } from "react";
-
 import styled from "styled-components";
 
 import colors from "@sparcs-clubs/web/styles/themes/colors";

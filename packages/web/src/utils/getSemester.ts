@@ -20,5 +20,5 @@ export const getFullSemester = (date?: Date, inEnglish: boolean = false) => {
   const year = targetDate.getFullYear();
   const month = targetDate.getMonth() + 1;
 
-  return `${year} ${inEnglish ? getSemester(month)?.en ?? "" : getSemester(month)?.ko ?? ""}`;
+  return `${year} ${inEnglish ? (getSemester(month)?.en ?? "") : (getSemester(month)?.ko ?? "")}`;
 };

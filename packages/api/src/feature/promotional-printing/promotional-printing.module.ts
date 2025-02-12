@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
-
-import { ClubModule } from "@sparcs-clubs/api/feature/club/club.module";
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 
+import ClubModule from "@sparcs-clubs/api/feature/club/club.module";
+
 import { PromotionalPrintingController } from "./controller/promotional-printing.controller";
-import { PromotionalPrintingOrderSizeRepository } from "./repository/promotional-printing-order-size.repository";
 import { PromotionalPrintingOrderRepository } from "./repository/promotional-printing-order.repository";
+import { PromotionalPrintingOrderSizeRepository } from "./repository/promotional-printing-order-size.repository";
 import { PromotionalPrintingService } from "./service/promotional-printing.service";
 
 @Module({

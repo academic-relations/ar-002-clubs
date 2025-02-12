@@ -5,7 +5,6 @@ import {
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import { FileDetail } from "@sparcs-clubs/web/common/components/File/attachment";
-
 import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
 type Duration = {
@@ -32,9 +31,12 @@ export interface BaseActivityReport {
 
 export interface CurrentActivityReport extends BaseActivityReport {
   id: number;
+  clubId: number;
   updatedAt: Date;
   activityStatusEnumId: ActivityStatusEnum;
   professorApproval: ProfessorApprovalEnum | null;
   professorApprovedAt?: Date;
   comments: Comment[];
+  editedAt: Date;
+  commentedAt: Date | null;
 }

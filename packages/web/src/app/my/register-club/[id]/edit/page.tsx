@@ -1,8 +1,9 @@
 "use client";
 
+import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-import { useParams } from "next/navigation";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
@@ -29,7 +30,7 @@ const MyRegisterClubEdit = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile?.type === "executive") {
+  if (profile?.type === UserTypeEnum.Executive) {
     return <NotForExecutive />;
   }
 

@@ -1,6 +1,5 @@
-import React from "react";
-
 import { jwtDecode, JwtPayload } from "jwt-decode";
+import React from "react";
 import styled from "styled-components";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";

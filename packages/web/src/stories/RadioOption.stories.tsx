@@ -1,6 +1,5 @@
 import { action } from "@storybook/addon-actions";
 import { useArgs } from "@storybook/preview-api";
-
 import { Meta, StoryObj } from "@storybook/react";
 
 import RadioOption from "../common/components/Radio/RadioOption";

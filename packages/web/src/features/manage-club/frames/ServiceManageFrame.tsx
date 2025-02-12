@@ -7,7 +7,6 @@ import ActivityCertificateTable from "@sparcs-clubs/web/features/manage-club/com
 import CommonSpaceTable from "@sparcs-clubs/web/features/manage-club/components/CommonSpaceTable";
 import PrintingTable from "@sparcs-clubs/web/features/manage-club/components/PrintingTable";
 import RentalTable from "@sparcs-clubs/web/features/manage-club/components/RentalTable";
-
 import {
   mockupManageAcf,
   mockupManageCms,

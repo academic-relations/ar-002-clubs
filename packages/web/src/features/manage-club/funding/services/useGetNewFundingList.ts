@@ -1,8 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
+
 import apiFnd005, {
   ApiFnd005RequestQuery,
   ApiFnd005ResponseOk,
-} from "@sparcs-clubs/interface/api/funding/apiFnd005";
-import { useQuery } from "@tanstack/react-query";
+} from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd005";
 
 import { mockupManageFunding } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
 import {
@@ -23,7 +24,7 @@ const useGetNewFundingList = (query: ApiFnd005RequestQuery) =>
         params: query,
       });
 
-      return apiFnd005.responseBodyMap[200].parse(data);
+      return data;
     },
   });
 

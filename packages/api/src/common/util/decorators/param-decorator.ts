@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-redeclare */
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 
 interface UserProfile {

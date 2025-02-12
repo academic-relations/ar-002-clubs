@@ -4,6 +4,7 @@ import {
   removeLocalStorageItem,
   setLocalStorageItem,
 } from "@sparcs-clubs/web/utils/localStorage";
+import logger from "@sparcs-clubs/web/utils/logger";
 
 import postRefresh from "./postRefresh";
 
@@ -32,10 +33,10 @@ const errorInterceptor = {
                 response.accessToken.executive ??
                 "",
             );
-            console.log("Logged in successfully.");
+            logger.log("Logged in successfully.");
           }
         } catch (refreshError) {
-          console.error("Login failed", refreshError);
+          logger.error("Login failed", refreshError);
           removeLocalStorageItem("accessToken");
           removeLocalStorageItem("responseToken");
           window.location.href = "/";

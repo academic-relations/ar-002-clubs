@@ -1,9 +1,7 @@
 "use client";
 
-import React from "react";
-
 import Image from "next/image";
-
+import React from "react";
 import styled from "styled-components";
 
 import logoImg from "@sparcs-clubs/web/assets/only-logo.svg";

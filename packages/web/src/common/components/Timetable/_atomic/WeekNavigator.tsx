@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-
 import { addWeeks, getWeekOfMonth, subWeeks } from "date-fns";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";

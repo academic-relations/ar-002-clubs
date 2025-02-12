@@ -1,3 +1,4 @@
+import isPropValid from "@emotion/is-prop-valid";
 import React, {
   ChangeEvent,
   ChangeEventHandler,
@@ -5,8 +6,6 @@ import React, {
   InputHTMLAttributes,
   useEffect,
 } from "react";
-
-import isPropValid from "@emotion/is-prop-valid";
 import styled, { css } from "styled-components";
 
 import FormError from "../FormError";

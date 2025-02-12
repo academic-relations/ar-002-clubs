@@ -1,13 +1,10 @@
+import "viewerjs/dist/viewer.css";
 import React, { useRef } from "react";
-
 import Viewer from "viewerjs";
 
 import FlexWrapper from "../FlexWrapper";
-
 import { FileDetail } from "./attachment";
 import ThumbnailPreview from "./ThumbnailPreview";
-
-import "viewerjs/dist/viewer.css";
 
 interface ThumbnailPreviewListProps {
   fileList: FileDetail[];

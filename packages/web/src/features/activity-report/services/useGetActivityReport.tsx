@@ -1,9 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
+import { z } from "zod";
+
 import apiAct002, {
   ApiAct002ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import { useQuery } from "@tanstack/react-query";
-import { z } from "zod";
 
 import { activityDetailGet } from "@sparcs-clubs/web/features/register-club/services/_atomic/actApiList";
 import {
@@ -80,6 +81,8 @@ defineAxiosMock(mock => {
       ],
       updatedAt: new Date(),
       professorApprovedAt: new Date(),
+      editedAt: new Date(),
+      commentedAt: null,
     };
     return [200, dummy];
   });

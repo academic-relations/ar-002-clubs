@@ -1,16 +1,15 @@
 import React, { useCallback, useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 import { ApiAct008RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
-import { useForm } from "react-hook-form";
-
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
-import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
+import RejectReasonToast from "@sparcs-clubs/web/common/components/Toast/RejectReasonToast";
 import { useGetActivityReport } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
-
+import { filterActivityComments } from "@sparcs-clubs/web/features/activity-report/utils/filterComment";
 import usePutActivityReportForNewClub from "@sparcs-clubs/web/features/register-club/services/usePutActivityReportForNewClub";
 
 import ActivityReportForm from "./ActivityReportForm";
@@ -98,7 +97,7 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
             data.comments.length > 0 && (
               <RejectReasonToast
                 title="반려 사유"
-                reasons={data.comments.map(comment => ({
+                reasons={filterActivityComments(data.comments).map(comment => ({
                   datetime: comment.createdAt,
                   reason: comment.content,
                 }))}
@@ -106,6 +105,7 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
             )}
 
           <ActivityReportForm
+            // TODO. 리팩토링 해야 함
             /* eslint-disable  @typescript-eslint/no-explicit-any */
             clubId={data.clubId}
             formCtx={formCtx as any}

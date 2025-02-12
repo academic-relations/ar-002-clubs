@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-
 import { overlay } from "overlay-kit";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
@@ -28,7 +27,6 @@ import {
 } from "@sparcs-clubs/web/features/rental-business/utils/isRentalEmpty";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
-
 import { mockExistDates } from "./_atomic/mockExistDate";
 
 const StyledCardInner = styled.div`

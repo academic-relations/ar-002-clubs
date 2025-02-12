@@ -1,14 +1,18 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { and, eq, exists, inArray, isNull, or } from "drizzle-orm";
+import { MySql2Database } from "drizzle-orm/mysql2";
 
 import {
+  IFunding,
   IFundingExtra,
   IFundingRequest,
   IFundingSummary,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
-import { and, eq, isNull } from "drizzle-orm";
-import { MySql2Database } from "drizzle-orm/mysql2";
 
-import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
+import {
+  DrizzleAsyncProvider,
+  DrizzleTransaction,
+} from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   Funding,
   FundingClubSuppliesImageFile,
@@ -21,20 +25,30 @@ import {
   FundingFoodExpenseFile,
   FundingJointExpenseFile,
   FundingLaborContractFile,
+  FundingNonCorporateTransactionFile,
   FundingProfitMakingActivityFile,
   FundingPublicationFile,
   FundingTradeDetailFile,
   FundingTradeEvidenceFile,
   FundingTransportationPassenger,
 } from "@sparcs-clubs/api/drizzle/schema/funding.schema";
-
 import { Student } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
-import { MFunding } from "../model/funding.model";
+import { FundingDBResult, MFunding } from "../model/funding.model";
+import {
+  FundingSummaryDBResult,
+  VFundingSummary,
+} from "../model/funding.summary.model";
 
 @Injectable()
 export default class FundingRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
+
+  async withTransaction<Result>(
+    callback: (tx: DrizzleTransaction) => Promise<Result>,
+  ): Promise<Result> {
+    return this.db.transaction(callback);
+  }
 
   async fetch(id: number): Promise<MFunding> {
     const funding = await this.find(id);
@@ -63,6 +77,7 @@ export default class FundingRepository {
       clubSuppliesSoftwareEvidenceFiles,
       fixtureImageFiles,
       fixtureSoftwareEvidenceFiles,
+      nonCorporateTransactionFiles,
       foodExpenseFiles,
       laborContractFiles,
       externalEventParticipationFeeFiles,
@@ -124,6 +139,15 @@ export default class FundingRepository {
           and(
             eq(FundingFixtureSoftwareEvidenceFile.fundingId, id),
             isNull(FundingFixtureSoftwareEvidenceFile.deletedAt),
+          ),
+        ),
+      this.db
+        .select()
+        .from(FundingNonCorporateTransactionFile)
+        .where(
+          and(
+            eq(FundingNonCorporateTransactionFile.fundingId, id),
+            isNull(FundingNonCorporateTransactionFile.deletedAt),
           ),
         ),
       this.db
@@ -197,7 +221,12 @@ export default class FundingRepository {
           name: Student.name,
         })
         .from(FundingTransportationPassenger)
-        .where(and(isNull(FundingTransportationPassenger.deletedAt)))
+        .where(
+          and(
+            eq(FundingTransportationPassenger.fundingId, id),
+            isNull(FundingTransportationPassenger.deletedAt),
+          ),
+        )
         .innerJoin(
           Student,
           eq(Student.id, FundingTransportationPassenger.studentId),
@@ -224,6 +253,9 @@ export default class FundingRepository {
         id: file.fileId,
       })),
       fixtureSoftwareEvidenceFiles: fixtureSoftwareEvidenceFiles.map(file => ({
+        id: file.fileId,
+      })),
+      nonCorporateTransactionFiles: nonCorporateTransactionFiles.map(file => ({
         id: file.fileId,
       })),
       foodExpenseFiles: foodExpenseFiles.map(file => ({
@@ -254,36 +286,205 @@ export default class FundingRepository {
     });
   }
 
-  async selectAll(
+  async fetchSummaries(ids: number[]): Promise<IFundingSummary[]>;
+  async fetchSummaries(activityDId: number): Promise<IFundingSummary[]>;
+  async fetchSummaries(
     clubId: number,
-    semesterId: number,
+    activityDId: number,
+  ): Promise<IFundingSummary[]>;
+  async fetchSummaries(
+    clubIds: number[],
+    activityDId: number,
+  ): Promise<IFundingSummary[]>;
+  async fetchSummaries(
+    arg1: number | number[],
+    arg2?: number,
   ): Promise<IFundingSummary[]> {
-    const fundingOrders = await this.db
+    if (Array.isArray(arg1)) {
+      if (arg1.length === 0) {
+        return [];
+      }
+
+      if (arg2 === undefined) {
+        const fundings = await this.db
+          .select({
+            id: Funding.id,
+            name: Funding.name,
+            expenditureAmount: Funding.expenditureAmount,
+            approvedAmount: Funding.approvedAmount,
+            fundingStatusEnum: Funding.fundingStatusEnum,
+            purposeActivityId: Funding.purposeActivityId,
+            clubId: Funding.clubId,
+            chargedExecutiveId: Funding.chargedExecutiveId,
+          })
+          .from(Funding)
+          .where(and(inArray(Funding.id, arg1), isNull(Funding.deletedAt)));
+
+        return fundings.map(funding => ({
+          ...funding,
+          purposeActivity: {
+            id: funding.purposeActivityId,
+          },
+          club: {
+            id: funding.clubId,
+          },
+          chargedExecutive: {
+            id: funding.chargedExecutiveId,
+          },
+        }));
+      }
+
+      const fundings = await this.db
+        .select({
+          id: Funding.id,
+          name: Funding.name,
+          expenditureAmount: Funding.expenditureAmount,
+          approvedAmount: Funding.approvedAmount,
+          fundingStatusEnum: Funding.fundingStatusEnum,
+          purposeActivityId: Funding.purposeActivityId,
+          clubId: Funding.clubId,
+          chargedExecutiveId: Funding.chargedExecutiveId,
+        })
+        .from(Funding)
+        .where(
+          and(
+            inArray(Funding.clubId, arg1),
+            eq(Funding.activityDId, arg2),
+            isNull(Funding.deletedAt),
+          ),
+        );
+
+      return fundings.map(funding => ({
+        ...funding,
+        purposeActivity: {
+          id: funding.purposeActivityId,
+        },
+        club: {
+          id: funding.clubId,
+        },
+        chargedExecutive: {
+          id: funding.chargedExecutiveId,
+        },
+      }));
+    }
+
+    if (arg2 === undefined) {
+      const fundings = await this.db
+        .select({
+          id: Funding.id,
+          name: Funding.name,
+          expenditureAmount: Funding.expenditureAmount,
+          approvedAmount: Funding.approvedAmount,
+          fundingStatusEnum: Funding.fundingStatusEnum,
+          purposeActivityId: Funding.purposeActivityId,
+          clubId: Funding.clubId,
+          chargedExecutiveId: Funding.chargedExecutiveId,
+        })
+        .from(Funding)
+        .where(and(eq(Funding.activityDId, arg1), isNull(Funding.deletedAt)));
+
+      if (fundings.length === 0) {
+        return [];
+      }
+
+      return fundings.map(funding => ({
+        ...funding,
+        purposeActivity: {
+          id: funding.purposeActivityId,
+        },
+        club: {
+          id: funding.clubId,
+        },
+        chargedExecutive: {
+          id: funding.chargedExecutiveId,
+        },
+      }));
+    }
+
+    const fundings = await this.db
       .select({
         id: Funding.id,
         name: Funding.name,
         expenditureAmount: Funding.expenditureAmount,
         approvedAmount: Funding.approvedAmount,
         fundingStatusEnum: Funding.fundingStatusEnum,
-        purposeActivity: Funding.purposeActivityId,
+        purposeActivityId: Funding.purposeActivityId,
+        clubId: Funding.clubId,
+        chargedExecutiveId: Funding.chargedExecutiveId,
       })
       .from(Funding)
       .where(
         and(
-          eq(Funding.clubId, clubId),
-          eq(Funding.semesterId, semesterId),
+          eq(Funding.clubId, arg1),
+          eq(Funding.activityDId, arg2),
           isNull(Funding.deletedAt),
         ),
       );
 
-    if (fundingOrders.length === 0) {
+    if (fundings.length === 0) {
       return [];
     }
 
-    return fundingOrders.map(fundingOrder => ({
-      ...fundingOrder,
+    return fundings.map(funding => ({
+      ...funding,
       purposeActivity: {
-        id: fundingOrder.purposeActivity,
+        id: funding.purposeActivityId,
+      },
+      club: {
+        id: funding.clubId,
+      },
+      chargedExecutive: {
+        id: funding.chargedExecutiveId,
+      },
+    }));
+  }
+
+  async fetchCommentedSummaries(
+    executiveId: number,
+  ): Promise<IFundingSummary[]> {
+    const fundings = await this.db
+      .select({
+        id: Funding.id,
+        fundingStatusEnum: Funding.fundingStatusEnum,
+        name: Funding.name,
+        expenditureAmount: Funding.expenditureAmount,
+        approvedAmount: Funding.approvedAmount,
+        purposeActivityId: Funding.purposeActivityId,
+        clubId: Funding.clubId,
+        chargedExecutiveId: Funding.chargedExecutiveId,
+      })
+      .from(Funding)
+      .where(
+        and(
+          isNull(Funding.deletedAt),
+          or(
+            eq(Funding.chargedExecutiveId, executiveId),
+            exists(
+              this.db
+                .select()
+                .from(FundingFeedback)
+                .where(
+                  and(
+                    eq(FundingFeedback.fundingId, Funding.id),
+                    eq(FundingFeedback.executiveId, executiveId),
+                    isNull(FundingFeedback.deletedAt),
+                  ),
+                ),
+            ),
+          ),
+        ),
+      );
+
+    return fundings.map(funding => ({
+      ...funding,
+      purposeActivity: {
+        id: funding.purposeActivityId,
+      },
+      club: {
+        id: funding.clubId,
+      },
+      chargedExecutive: {
+        id: funding.chargedExecutiveId,
       },
     }));
   }
@@ -295,9 +496,9 @@ export default class FundingRepository {
     const result = await this.db.transaction(async tx => {
       // 1. Insert funding order
       const [fundingOrder] = await tx.insert(Funding).values({
-        clubId: funding.clubId,
+        clubId: funding.club.id,
         purposeActivityId: funding.purposeActivity.id,
-        semesterId: extra.semesterId,
+        activityDId: extra.activityD.id,
         fundingStatusEnum: extra.fundingStatusEnum,
         name: funding.name,
         expenditureDate: funding.expenditureDate,
@@ -336,7 +537,6 @@ export default class FundingRepository {
         origin: funding.transportation?.origin,
         destination: funding.transportation?.destination,
         purposeOfTransportation: funding.transportation?.purpose,
-        placeValidity: funding.transportation?.placeValidity,
         // Trader fields
         traderName: funding.nonCorporateTransaction?.traderName,
         traderAccountNumber:
@@ -402,6 +602,16 @@ export default class FundingRepository {
         ...(funding.isFixture && funding.fixture.softwareEvidenceFiles
           ? funding.fixture.softwareEvidenceFiles.map(file =>
               tx.insert(FundingFixtureSoftwareEvidenceFile).values({
+                fundingId,
+                fileId: file.id,
+              }),
+            )
+          : []),
+
+        // NonCorporateTransaction files
+        ...(funding.isNonCorporateTransaction && funding.nonCorporateTransaction
+          ? funding.nonCorporateTransaction.files.map(file =>
+              tx.insert(FundingNonCorporateTransactionFile).values({
                 fundingId,
                 fileId: file.id,
               }),
@@ -503,7 +713,10 @@ export default class FundingRepository {
 
       // Soft delete funding order and all related records
       await Promise.all([
-        tx.update(Funding).set({ deletedAt: now }).where(eq(Funding.id, id)),
+        tx
+          .update(Funding)
+          .set({ deletedAt: now, editedAt: now })
+          .where(eq(Funding.id, id)),
         tx
           .update(FundingFeedback)
           .set({ deletedAt: now })
@@ -532,6 +745,11 @@ export default class FundingRepository {
           .update(FundingFixtureSoftwareEvidenceFile)
           .set({ deletedAt: now })
           .where(eq(FundingFixtureSoftwareEvidenceFile.fundingId, id)),
+        tx
+          .update(FundingNonCorporateTransactionFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingNonCorporateTransactionFile.fundingId, id)),
+
         tx
           .update(FundingFoodExpenseFile)
           .set({ deletedAt: now })
@@ -619,7 +837,6 @@ export default class FundingRepository {
           origin: funding.transportation?.origin,
           destination: funding.transportation?.destination,
           purposeOfTransportation: funding.transportation?.purpose,
-          placeValidity: funding.transportation?.placeValidity,
           // Trader fields
           traderName: funding.nonCorporateTransaction?.traderName,
           traderAccountNumber:
@@ -635,6 +852,7 @@ export default class FundingRepository {
             funding.profitMakingActivity?.explanation,
           jointExpenseExplanation: funding.jointExpense?.explanation,
           etcExpenseExplanation: funding.etcExpense?.explanation,
+          editedAt: now,
         })
         .where(eq(Funding.id, id));
 
@@ -664,6 +882,10 @@ export default class FundingRepository {
           .update(FundingFixtureSoftwareEvidenceFile)
           .set({ deletedAt: now })
           .where(eq(FundingFixtureSoftwareEvidenceFile.fundingId, id)),
+        tx
+          .update(FundingNonCorporateTransactionFile)
+          .set({ deletedAt: now })
+          .where(eq(FundingNonCorporateTransactionFile.fundingId, id)),
         tx
           .update(FundingFoodExpenseFile)
           .set({ deletedAt: now })
@@ -744,6 +966,16 @@ export default class FundingRepository {
         ...(funding.isFixture && funding.fixture.softwareEvidenceFiles
           ? funding.fixture.softwareEvidenceFiles.map(file =>
               tx.insert(FundingFixtureSoftwareEvidenceFile).values({
+                fundingId: id,
+                fileId: file.id,
+              }),
+            )
+          : []),
+
+        // NonCorporateTransaction files
+        ...(funding.isNonCorporateTransaction && funding.nonCorporateTransaction
+          ? funding.nonCorporateTransaction.files.map(file =>
+              tx.insert(FundingNonCorporateTransactionFile).values({
                 fundingId: id,
                 fileId: file.id,
               }),
@@ -834,5 +1066,84 @@ export default class FundingRepository {
 
       return this.fetch(id);
     });
+  }
+
+  async patchSummaryTx(
+    tx: DrizzleTransaction,
+    oldbie: IFundingSummary,
+    consumer: (
+      _oldbie: IFundingSummary,
+    ) => Partial<FundingDBResult> & { id: number },
+  ): Promise<IFundingSummary> {
+    const param = consumer(oldbie);
+    await tx
+      .update(Funding)
+      .set(param)
+      .where(eq(Funding.id, param.id))
+      .execute();
+
+    return this.fetch(oldbie.id);
+  }
+
+  async patchSummary(
+    oldbie: IFundingSummary,
+    consumer: (_oldbie: IFundingSummary) => IFundingSummary,
+  ): Promise<IFundingSummary> {
+    return this.db.transaction(async tx =>
+      this.patchSummaryTx(tx, oldbie, consumer),
+    );
+  }
+
+  async fetchSummary(id: number): Promise<VFundingSummary> {
+    return this.db.transaction(async tx => this.fetchSummaryTx(tx, id));
+  }
+
+  async fetchSummaryTx(
+    tx: DrizzleTransaction,
+    id: number,
+  ): Promise<VFundingSummary> {
+    const result = (await tx
+      .select()
+      .from(Funding)
+      .where(eq(Funding.id, id))) as FundingSummaryDBResult[];
+
+    if (result.length === 0) {
+      throw new NotFoundException(`Funding: ${id} not found`);
+    }
+
+    return VFundingSummary.fromDBResult(result[0]);
+  }
+
+  async patchStatus(param: {
+    id: IFunding["id"];
+    fundingStatusEnum: IFunding["fundingStatusEnum"];
+    approvedAmount: IFunding["approvedAmount"];
+    commentedAt: IFunding["commentedAt"];
+  }): Promise<VFundingSummary> {
+    return this.db.transaction(async tx => this.patchStatusTx(tx, param));
+  }
+
+  async patchStatusTx(
+    tx: DrizzleTransaction,
+    param: {
+      id: IFunding["id"];
+      fundingStatusEnum: IFunding["fundingStatusEnum"];
+      approvedAmount: IFunding["approvedAmount"];
+      commentedAt: IFunding["commentedAt"];
+    },
+  ): Promise<VFundingSummary> {
+    const now = new Date();
+
+    await tx
+      .update(Funding)
+      .set({
+        fundingStatusEnum: param.fundingStatusEnum,
+        approvedAmount: param.approvedAmount,
+        commentedAt: param.commentedAt,
+        editedAt: now,
+      })
+      .where(eq(Funding.id, param.id));
+
+    return this.fetchSummaryTx(tx, param.id);
   }
 }

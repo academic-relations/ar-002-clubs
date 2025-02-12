@@ -1,12 +1,10 @@
 import React from "react";
-
 import styled from "styled-components";
 
 import Dropdown from "@sparcs-clubs/web/common/components/Select/Dropdown";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { CategoryProps } from "../types/FilterCategories";
-
 import { DetailFilter } from "./DetailFilter";
 
 const CategoryNameWithContent = styled.div`

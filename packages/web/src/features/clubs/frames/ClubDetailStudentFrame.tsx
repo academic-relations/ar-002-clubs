@@ -15,7 +15,6 @@ import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/service
 import { ClubDetailProps } from "../components/ClubDetailCard";
 import { RegisterInfo } from "../components/RegisterInfo";
 import { useGetMyMemberRegistration } from "../services/getMyMemberRegistration";
-
 import ClubDetailInfoFrame from "./ClubDetailInfoFrame";
 
 const ClubDetailStudentFrame: React.FC<ClubDetailProps> = ({ club }) => {

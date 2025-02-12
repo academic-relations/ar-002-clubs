@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 import {
   addDays,
   eachWeekOfInterval,
@@ -8,6 +6,7 @@ import {
   isSameMonth,
   startOfMonth,
 } from "date-fns";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import { CalendarDateProps } from "./_atomic/CalendarDate";

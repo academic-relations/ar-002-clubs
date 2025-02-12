@@ -1,6 +1,7 @@
-import apiFnd003 from "@sparcs-clubs/interface/api/funding/apiFnd003";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
+
+import apiFnd003 from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd003";
 
 import { axiosClientWithAuth } from "@sparcs-clubs/web/lib/axios";
 
@@ -18,6 +19,6 @@ export const usePutFunding = () =>
         body,
       );
 
-      return apiFnd003.responseBodyMap[200].parse(data);
+      return data;
     },
   });

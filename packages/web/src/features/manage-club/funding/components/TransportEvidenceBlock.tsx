@@ -1,29 +1,30 @@
 import React from "react";
-
-import { TransportationEnum as E } from "@sparcs-clubs/interface/common/enum/funding.enum";
-
 import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
+import { TransportationEnum as E } from "@sparcs-clubs/interface/common/enum/funding.enum";
+
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
-import { mockParticipantData } from "@sparcs-clubs/web/features/activity-report/_mock/mock";
 import SelectParticipant from "@sparcs-clubs/web/features/activity-report/components/SelectParticipant";
-
+import useGetActivityParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetActivityParticipants";
 import {
   isParticipantsRequired,
   isPurposeInfoRequired,
 } from "@sparcs-clubs/web/utils/isTransportation";
 
 import { AddEvidence } from "../types/funding";
-
 import EvidenceBlockTitle from "./EvidenceBlockTitle";
 
+interface TransportEvidenceBlockProps {
+  activityId: number;
+  required?: boolean;
+}
 const FixedWidthWrapper = styled.div`
   min-width: 200px;
 `;
@@ -58,7 +59,8 @@ const purposeInfo = (type: E | undefined) => {
   }
 };
 
-const TransportEvidenceBlock: React.FC<{ required?: boolean }> = ({
+const TransportEvidenceBlock: React.FC<TransportEvidenceBlockProps> = ({
+  activityId,
   required = false,
 }) => {
   const formCtx = useFormContext<AddEvidence>();
@@ -66,6 +68,8 @@ const TransportEvidenceBlock: React.FC<{ required?: boolean }> = ({
 
   const transportationEnum = watch("transportationEnum");
   const participants = watch("transportationPassengers");
+
+  const { data, isLoading, isError } = useGetActivityParticipants(activityId);
 
   return (
     <FlexWrapper direction="column" gap={8}>
@@ -112,22 +116,24 @@ const TransportEvidenceBlock: React.FC<{ required?: boolean }> = ({
               )}
             />
           </FlexWrapper>
-          {isParticipantsRequired(transportationEnum) && (
-            <FlexWrapper direction="column" gap={4}>
-              <Typography fs={16} fw="MEDIUM" lh={20}>
-                탑승자 명단
-              </Typography>
-              <SelectParticipant
-                data={mockParticipantData}
-                value={participants}
-                onChange={_participants => {
-                  setValue("transportationPassengers", _participants, {
-                    shouldValidate: true,
-                  });
-                }}
-              />
-            </FlexWrapper>
-          )}
+          <AsyncBoundary isLoading={isLoading} isError={isError}>
+            {isParticipantsRequired(transportationEnum) && (
+              <FlexWrapper direction="column" gap={4}>
+                <Typography fs={16} fw="MEDIUM" lh={20}>
+                  탑승자 명단
+                </Typography>
+                <SelectParticipant
+                  data={data?.participants ?? []}
+                  value={participants}
+                  onChange={_participants => {
+                    setValue("transportationPassengers", _participants, {
+                      shouldValidate: true,
+                    });
+                  }}
+                />
+              </FlexWrapper>
+            )}
+          </AsyncBoundary>
           <FlexWrapper direction="column" gap={4}>
             <Typography
               fw="MEDIUM"

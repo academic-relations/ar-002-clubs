@@ -1,9 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import apiAct024 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+
 import usePatchActivityExecutiveSendBack from "../services/patchActivityExecutiveSendBack";
 import { activityReportDetailQueryKey } from "../services/useGetActivityReport";
 
-const useExecutiveRejectActivityReport = (activityId: number) => {
+const useExecutiveRejectActivityReport = (
+  activityId: number,
+  clubId: number,
+) => {
   const queryClient = useQueryClient();
   const { mutateAsync: rejectActivityReport } =
     usePatchActivityExecutiveSendBack({ activityId });
@@ -15,7 +21,16 @@ const useExecutiveRejectActivityReport = (activityId: number) => {
         {
           onSuccess: () => {
             queryClient.invalidateQueries({
-              queryKey: activityReportDetailQueryKey("executive", activityId),
+              queryKey: activityReportDetailQueryKey(
+                UserTypeEnum.Executive,
+                activityId,
+              ),
+            });
+            queryClient.invalidateQueries({
+              queryKey: ["executiveChargedActivities"],
+            });
+            queryClient.invalidateQueries({
+              queryKey: [apiAct024.url(), clubId],
             });
           },
         },

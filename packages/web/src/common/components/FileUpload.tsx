@@ -1,15 +1,13 @@
-import React, { useMemo, useState } from "react";
+import { overlay } from "overlay-kit";
+import React, { useMemo, useRef, useState } from "react";
+import styled from "styled-components";
 
 import { ApiFil001RequestBody } from "@sparcs-clubs/interface/api/file/apiFil001";
-import { overlay } from "overlay-kit";
-import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 
 import useFileUpload from "../services/postFileUpload";
-
 import usePutFileS3 from "../services/putFileS3";
-
 import { FileDetail } from "./File/attachment";
 import ThumbnailPreviewList from "./File/ThumbnailPreviewList";
 import FlexWrapper from "./FlexWrapper";
@@ -116,6 +114,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   const { mutate: putFileS3Mutation } = usePutFileS3();
 
   const [files, setFiles] = useState<FileDetail[]>(initialFiles);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const updateFiles = (_files: FileDetail[]) => {
     setFiles(_files);
@@ -126,7 +125,6 @@ const FileUpload: React.FC<FileUploadProps> = ({
     const newFiles = _files.filter(file => !files.find(f => f.id === file.id));
     const updatedFiles = multiple ? [...files, ...newFiles] : newFiles;
     updateFiles(updatedFiles);
-    onChange(updatedFiles);
   };
   const removeFile = (_file: FileDetail) => {
     const updatedFiles = files.filter(file => file.id !== _file.id);
@@ -208,6 +206,10 @@ const FileUpload: React.FC<FileUploadProps> = ({
       file => ({ file, previewUrl: URL.createObjectURL(file) }),
     );
     onSubmit(newFiles);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const handleClick = () => {
@@ -243,6 +245,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
           <Icon type="file_upload_outlined" size={20} color="white" />
         </UploadIcon>
         <HiddenInput
+          ref={fileInputRef}
           type="file"
           accept={allowedTypes.join(",")}
           multiple={multiple}

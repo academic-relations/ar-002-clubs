@@ -2,16 +2,16 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import {
   IExecutiveSummary,
+  IProfessorSummary,
   IStudentSummary,
 } from "@sparcs-clubs/interface/api/user/type/user.type";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 
-import { MStudent } from "../model/student.model";
 import ExecutiveRepository from "../repository/executive.repository";
 import ProfessorRepository from "../repository/professor.repository";
-import { StudentRepository } from "../repository/student.repository";
+import StudentRepository from "../repository/student.repository";
 
 @Injectable()
 export default class UserPublicService {
@@ -167,25 +167,13 @@ export default class UserPublicService {
   }
 
   /**
-   * 학생의 studentID Array를 통해 학생 정보를 반환합니다.
-   * */
-  async getStudentsByIds(studentIds: number[]): Promise<MStudent[]> {
-    const students =
-      await this.studentRepository.selectStudentsByIds(studentIds);
-    if (students.length === 0) {
-      throw new HttpException("Student Doesn't exist", HttpStatus.NOT_FOUND);
-    }
-    return students;
-  }
-
-  /**
    * 현재 모든 집행부원의 ExecutiveSummary를 가져옵니다.
    * Entity 적용 버전
    * */
   async getCurrentExecutiveSummaries(): Promise<IExecutiveSummary[]> {
     const today = getKSTDate();
     const executives =
-      await this.executiveRepository.selectExecutiveSummary(today);
+      await this.executiveRepository.fetchExecutiveSummaries(today);
 
     return executives;
   }
@@ -198,12 +186,61 @@ export default class UserPublicService {
     return students;
   }
 
+  async fetchCurrentExecutiveSummaries(): Promise<IExecutiveSummary[]> {
+    const today = getKSTDate();
+    const executives =
+      await this.executiveRepository.fetchExecutiveSummaries(today);
+    return executives;
+  }
+
   async fetchExecutiveSummaries(
     executiveIds: number[],
   ): Promise<IExecutiveSummary[]> {
     const executives =
-      await this.executiveRepository.fetchExecutiveSummaries(executiveIds);
-
+      await this.executiveRepository.fetchSummaries(executiveIds);
     return executives;
+  }
+
+  async fetchProfessorSummaries(
+    professorIds: number[],
+  ): Promise<IProfessorSummary[]> {
+    const professors =
+      await this.professorRepository.fetchSummaries(professorIds);
+    return professors;
+  }
+
+  async fetchProfessorSummary(professorId: number): Promise<IProfessorSummary> {
+    const professor = await this.professorRepository.fetchSummary(professorId);
+    return professor;
+  }
+
+  /**
+   * 현재 해당id의 집행부원이 유효한 지 확인합니다.
+   * 만약 유효하지 않으면 403 Forbidden 에러를 던집니다.
+   * 유효하면 아무런 일도 일어나지 않습니다.
+   * */
+  async checkCurrentExecutive(executiveId: number): Promise<void> {
+    const today = getKSTDate();
+    const executives = await this.executiveRepository.selectExecutiveByDate({
+      date: today,
+    });
+
+    // TODO: 레포지토리 메서드 정상화 필요
+    if (!executives.some(executive => executive.executive.id === executiveId)) {
+      throw new HttpException(
+        `Forbidden: Not current Executive id: ${executiveId}`,
+        HttpStatus.FORBIDDEN,
+      );
+    }
+  }
+
+  async fetchExecutiveSummary(executiveId: number): Promise<IExecutiveSummary> {
+    const executive = await this.executiveRepository.fetchSummary(executiveId);
+    return executive;
+  }
+
+  async findExecutiveSummary(executiveId: number): Promise<IExecutiveSummary> {
+    const executive = await this.executiveRepository.findSummary(executiveId);
+    return executive;
   }
 }

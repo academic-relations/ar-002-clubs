@@ -1,10 +1,8 @@
+import { overlay } from "overlay-kit";
 import React from "react";
 
-import { overlay } from "overlay-kit";
-
-import ConfirmModalContent from "./ConfirmModalContent";
-
 import Modal from ".";
+import ConfirmModalContent from "./ConfirmModalContent";
 
 export interface ErrorModalProps {
   isOpen: boolean;

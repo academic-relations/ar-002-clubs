@@ -7,19 +7,23 @@ import {
   INonCorporateTransaction,
   ITransportation,
 } from "@sparcs-clubs/interface/api/funding/type/funding.type";
+import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
 export type FundingDBResult = {
   funding: {
     id: number;
     clubId: number;
     purposeActivityId?: number;
-    semesterId?: number;
+    activityDId: number;
     fundingStatusEnum?: number;
     name: string;
     expenditureDate: Date;
     expenditureAmount: number;
     approvedAmount?: number;
-    createdAt?: Date;
+    editedAt: Date;
+    commentedAt?: Date;
+    createdAt: Date;
+    updatedAt?: Date;
     deletedAt?: Date;
     isFixture: boolean;
     isTransportation: boolean;
@@ -60,7 +64,6 @@ export type FundingDBResult = {
     origin: string;
     destination: string;
     purposeOfTransportation: string;
-    placeValidity: string;
   };
   fundingFeedback?: {
     feedback?: string;
@@ -77,6 +80,7 @@ export type FundingDBResult = {
   fixtureSoftwareEvidenceFiles?: Array<{
     id: string;
   }>;
+  nonCorporateTransactionFiles?: Array<{ id: string }>;
   foodExpenseFiles?: Array<{ id: string }>;
   laborContractFiles?: Array<{ id: string }>;
   externalEventParticipationFeeFiles?: Array<{
@@ -96,13 +100,13 @@ export type FundingDBResult = {
 export class MFunding implements IFunding {
   id: number;
 
-  clubId: number;
+  club: { id: number };
 
-  semesterId: number;
+  activityD: { id: number };
 
-  fundingStatusEnum: number;
+  fundingStatusEnum: FundingStatusEnum;
 
-  purposeActivity?: Pick<IActivitySummary, "id">;
+  purposeActivity: Pick<IActivitySummary, "id">;
 
   name: string;
 
@@ -160,6 +164,14 @@ export class MFunding implements IFunding {
 
   etcExpense?: IMinorExpense;
 
+  editedAt: Date;
+
+  commentedAt?: Date;
+
+  createdAt: Date;
+
+  updatedAt?: Date;
+
   constructor(data: MFunding) {
     Object.assign(this, data);
   }
@@ -167,9 +179,9 @@ export class MFunding implements IFunding {
   static fromDBResult(result: FundingDBResult) {
     return new MFunding({
       id: result.funding.id,
-      clubId: result.funding.clubId,
+      club: { id: result.funding.clubId },
       name: result.funding.name,
-      semesterId: result.funding.semesterId,
+      activityD: { id: result.funding.activityDId },
       fundingStatusEnum: result.funding.fundingStatusEnum,
       purposeActivity: result.funding.purposeActivityId
         ? {
@@ -241,7 +253,6 @@ export class MFunding implements IFunding {
             origin: result.funding.origin,
             destination: result.funding.destination,
             purpose: result.funding.purposeOfTransportation,
-            placeValidity: result.funding.placeValidity,
             passengers: result.transportationPassengers.map(passenger => ({
               id: passenger.id,
             })),
@@ -252,6 +263,9 @@ export class MFunding implements IFunding {
             traderName: result.funding.traderName,
             traderAccountNumber: result.funding.traderAccountNumber,
             wasteExplanation: result.funding.wasteExplanation,
+            files: result.nonCorporateTransactionFiles.map(file => ({
+              id: file.id,
+            })),
           }
         : undefined,
       foodExpense: result.funding.isFoodExpense
@@ -312,6 +326,10 @@ export class MFunding implements IFunding {
             })),
           }
         : undefined,
+      editedAt: result.funding.editedAt,
+      commentedAt: result.funding.commentedAt,
+      createdAt: result.funding.createdAt,
+      updatedAt: result.funding.updatedAt,
     });
   }
 }
