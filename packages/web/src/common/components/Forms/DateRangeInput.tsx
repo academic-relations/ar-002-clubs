@@ -18,6 +18,7 @@ interface DateRangeInputProps
   limitStartValue: string;
   limitEndValue: string;
   onChange: (value: string) => void;
+  isTextAlignCenter?: boolean;
   useDays?: boolean; // New prop to include days
 }
 
@@ -30,7 +31,7 @@ const DateRangeInputErrorFrameInner = styled.div`
 
 const DateRangeInputFrameInner = styled.div`
   justify-content: flex-start;
-  align-items: center;
+  align-items: end;
   gap: 12px;
   display: flex;
 `;
@@ -43,6 +44,7 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
   limitEndValue,
   onChange,
   useDays = false, // Default to false
+  isTextAlignCenter = false,
   ...props
 }) => {
   const maxLength = useDays ? 10 : 7;
@@ -142,13 +144,14 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
           onChange={e => handleChange(e, "start")}
           errorMessage={error ? " " : ""}
           onBlur={handleBlur}
+          isTextAlignCenter={isTextAlignCenter}
           {...props}
         />
 
         <Typography
           style={error ? { marginBottom: "4px" } : {}}
           fs={16}
-          lh={20}
+          lh={38}
           fw="REGULAR"
         >
           ~
@@ -160,6 +163,7 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
           onChange={e => handleChange(e, "end")}
           errorMessage={error ? " " : ""}
           onBlur={handleBlur}
+          isTextAlignCenter={isTextAlignCenter}
           {...props}
         />
       </DateRangeInputFrameInner>
