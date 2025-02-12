@@ -99,16 +99,17 @@ const FundingTagList: {
   [FundingStatusEnum.Committee]: { text: "운위", color: "YELLOW" },
   [FundingStatusEnum.Approved]: { text: "승인", color: "GREEN" },
   [FundingStatusEnum.Rejected]: { text: "반려", color: "RED" },
+  [FundingStatusEnum.Partial]: { text: "부분", color: "PURPLE" },
 };
 
 // TODO: interface enum 사용
 const ApplyTagList: {
   [key in ActivityStatusEnum]: StatusDetail;
 } = {
-  // [ActivityStatusEnum.Committee]: { text: "운위", color: "ORANGE" },
   [ActivityStatusEnum.Applied]: { text: "신청", color: "BLUE" },
   [ActivityStatusEnum.Approved]: { text: "승인", color: "GREEN" },
   [ActivityStatusEnum.Rejected]: { text: "반려", color: "RED" },
+  [ActivityStatusEnum.Committee]: { text: "운위", color: "ORANGE" },
 };
 
 const ProfessorApprovalTagList: {
@@ -150,6 +151,7 @@ const ActStatusTagList: {
   [ActivityStatusEnum.Applied]: { text: "대기", color: "GRAY" },
   [ActivityStatusEnum.Approved]: { text: "승인", color: "GREEN" },
   [ActivityStatusEnum.Rejected]: { text: "반려", color: "RED" },
+  [ActivityStatusEnum.Committee]: { text: "운위", color: "ORANGE" },
 };
 
 const RegistrationStatusTagList: {

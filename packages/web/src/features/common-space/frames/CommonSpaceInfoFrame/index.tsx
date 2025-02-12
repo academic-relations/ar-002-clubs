@@ -1,6 +1,5 @@
-import React, { useCallback, useState } from "react";
-
 import { overlay } from "overlay-kit";
+import React, { useCallback, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
@@ -8,7 +7,6 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepProcess";
-
 import { CommonSpaceInterface } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
 
 import CommonSpaceInfoFirstFrame from "./CommonSpaceInfoFirstFrame";

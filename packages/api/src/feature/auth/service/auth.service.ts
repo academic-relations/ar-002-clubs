@@ -1,5 +1,6 @@
 import { HttpException, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+
 import { ApiAut001RequestQuery } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut001";
 import { ApiAut002ResponseCreated } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut002";
 import { ApiAut003ResponseOk } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut003";
@@ -32,10 +33,9 @@ export class AuthService {
    * @returns SPRACS SSO의 로그인 url을 리턴합니다.
    */
   public async getAuthSignIn(query: ApiAut001RequestQuery, req: Request) {
-    // eslint-disable-next-line no-param-reassign
     req.session.next = query.next ?? "/";
     const { url, state } = this.ssoClient.get_login_params();
-    // eslint-disable-next-line no-param-reassign
+
     req.session.ssoState = state;
     return url;
   }
@@ -62,7 +62,9 @@ export class AuthService {
     const ssoProfile: SSOUser = await this.ssoClient.get_user_info(query.code);
 
     let studentNumber = ssoProfile.kaist_info.ku_std_no || "00000000";
-    let email = ssoProfile.email || "unknown@kaist.ac.kr";
+    let email =
+      ssoProfile.kaist_info.mail?.replace("mailto:", "") ||
+      "unknown@kaist.ac.kr";
     let sid = ssoProfile.sid || "00000000";
     let name = ssoProfile.kaist_info.ku_kname || "unknown";
     let type = ssoProfile.kaist_info.ku_person_type || "Student";

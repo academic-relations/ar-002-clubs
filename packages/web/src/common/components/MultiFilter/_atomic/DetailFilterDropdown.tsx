@@ -1,5 +1,4 @@
 import React from "react";
-
 import styled from "styled-components";
 
 import Dropdown from "@sparcs-clubs/web/common/components/Select/Dropdown";

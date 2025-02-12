@@ -5,19 +5,9 @@ import {
   ApiReg006ResponseNoContent,
   ApiReg006ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
-
 import { ApiReg007ResponseNoContent } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg007";
 import { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
 import { ApiReg013ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg013";
-import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-
-import logger from "@sparcs-clubs/api/common/util/logger";
-import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
-import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
-import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
-
-import { MemberRegistrationRepository } from "../repository/member-registration.repository";
-
 import type {
   ApiReg019RequestQuery,
   ApiReg019ResponseOk,
@@ -26,6 +16,14 @@ import type {
   ApiReg020RequestQuery,
   ApiReg020ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg020";
+import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+
+import logger from "@sparcs-clubs/api/common/util/logger";
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
+import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
+import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
+
+import { MemberRegistrationRepository } from "../repository/member-registration.repository";
 
 interface ApiReg006ResponseType {
   status: number;

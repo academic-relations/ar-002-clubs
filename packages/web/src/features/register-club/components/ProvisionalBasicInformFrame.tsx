@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-import { useFormContext } from "react-hook-form";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -12,13 +12,10 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
-
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 
 import useGetClubsForReProvisional from "../services/useGetClubsForReProvisional";
-
 import ClubNameField from "./_atomic/ClubNameField";
 import DivisionSelect from "./_atomic/DivisionSelect";
 import MonthSelect from "./_atomic/MonthSelect";

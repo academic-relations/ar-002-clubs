@@ -1,5 +1,4 @@
 import React from "react";
-
 import styled from "styled-components";
 
 import { Theme } from "@sparcs-clubs/web/styles/themes";

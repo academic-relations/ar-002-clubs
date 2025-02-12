@@ -1,9 +1,9 @@
-import React from "react";
-
 import { Divider } from "@mui/material";
+import React from "react";
+import styled from "styled-components";
+
 import { ApiAct024ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -41,7 +41,7 @@ const ActivityReportClubStatistic: React.FC<
       acc + (item.activityStatusEnum === ActivityStatusEnum.Rejected ? 1 : 0),
     0,
   );
-  const reviewdTotalCount = approvedTotalCount + rejectedTotalCount;
+  const reviewedTotalCount = approvedTotalCount + rejectedTotalCount;
   const totalCount =
     pendingTotalCount + approvedTotalCount + rejectedTotalCount;
 
@@ -67,8 +67,8 @@ const ActivityReportClubStatistic: React.FC<
                 검토율
               </Typography>
               <Typography fs={16} lh={20}>
-                {reviewdTotalCount}개 / {totalCount}개 (
-                {((reviewdTotalCount / totalCount) * 100).toFixed(1)}%)
+                {reviewedTotalCount}개 / {totalCount}개 (
+                {((reviewedTotalCount / totalCount) * 100).toFixed(1)}%)
               </Typography>
             </FlexWrapper>
             <FlexWrapper direction="row" gap={20}>

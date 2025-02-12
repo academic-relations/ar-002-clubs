@@ -1,5 +1,10 @@
-import apiRnt006 from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt006";
 import { useQuery } from "@tanstack/react-query";
+
+import type {
+  ApiRnt006RequestQuery,
+  ApiRnt006ResponseOK,
+} from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt006";
+import apiRnt006 from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt006";
 
 import {
   axiosClientWithAuth,
@@ -7,11 +12,6 @@ import {
 } from "@sparcs-clubs/web/lib/axios";
 
 import { mockupMyRental } from "./_mock/mockMyClub";
-
-import type {
-  ApiRnt006RequestQuery,
-  ApiRnt006ResponseOK,
-} from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt006";
 
 export const useGetMyRentals = (
   startDate: Date,

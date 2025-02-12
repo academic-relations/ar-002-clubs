@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import PrivacyPolicyRepository from "./privacy-policy.repository";
-
 import type { ApiUsr004ResponseCreated } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr004";
 import type { ApiUsr005ResponseOk } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr005";
+
+import PrivacyPolicyRepository from "./privacy-policy.repository";
 
 @Injectable()
 export default class PrivacyPolicyService {

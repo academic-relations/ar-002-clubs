@@ -1,12 +1,22 @@
-import { getDate, getHours, getMinutes, getMonth, getYear } from "date-fns";
+import { subSeconds } from "date-fns";
+
+import { ApiFnd007ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd007";
+
+import { fundingDeadlineEnumToString } from "../features/manage-club/funding/constants/fundingDeadlineEnumToString";
+import { formatSimpleDateTime } from "../utils/Date/formatDate";
 
 const manageClubFundingPageBreadCrumbName = "지원금";
 const manageClubFundingPageName = "지원금";
 const manageClubFundingPagePath = "/manage-club/funding";
 
 const newFundingListSectionTitle = "신규 지원금 신청";
-const newFundingListSectionInfoText = (semester: string, deadline: Date) =>
-  `현재는 ${semester}학기 지원금 신청 기간입니다 (신청 마감 : ${getYear(deadline)}년 ${getMonth(deadline)}월 ${getDate(deadline)}일 ${getHours(deadline)}:${getMinutes(deadline)})`;
+const newFundingListSectionInfoText = (data?: ApiFnd007ResponseOk) => {
+  const targetDuration = data?.targetDuration;
+  const status = fundingDeadlineEnumToString(data?.deadline.deadlineEnum);
+  const endDate = data?.deadline.endDate;
+  return `현재는 ${targetDuration?.year}년 ${targetDuration?.name}학기 지원금 ${status} 기간입니다 (${status} 마감 : ${endDate ? formatSimpleDateTime(subSeconds(endDate, 1)) : "-"})`;
+};
+
 const newFundingOrderButtonText = "지원금 신청 내역 추가";
 
 const tableRowCountText = (count: number) => `총 ${count}개`;
@@ -22,9 +32,10 @@ const numberToKrWon = (amount: number) => `${amount.toLocaleString("ko-KR")}원`
 
 const pastFundingListSectionTitle = "과거 지원금 내역";
 const singleSemesterFundingListSectionTitleText = (
+  year: number,
   semester: string,
   itemCount: number,
-) => `${semester} (총 ${itemCount}개)`;
+) => `${year}년 ${semester}학기 (총 ${itemCount}개)`;
 
 export {
   manageClubFundingPageBreadCrumbName,

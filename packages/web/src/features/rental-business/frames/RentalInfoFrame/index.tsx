@@ -1,7 +1,6 @@
-import React, { useCallback, useState } from "react";
-
 import { useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -13,7 +12,6 @@ import StepProcess from "@sparcs-clubs/web/common/components/StepProcess/StepPro
 import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
-
 import RentalInfoFirstFrame from "./RentalInfoFirstFrame";
 import RentalInfoSecondFrame from "./RentalInfoSecondFrame";
 import RentalInfoThirdFrame from "./RentalInfoThirdFrame";

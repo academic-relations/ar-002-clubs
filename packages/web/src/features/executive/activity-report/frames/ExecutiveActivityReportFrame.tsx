@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-
 import { overlay } from "overlay-kit";
+import React, { useEffect, useState } from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -15,7 +14,9 @@ import ExecutiveActivityClubTable from "../components/ExecutiveActivityClubTable
 import useGetExecutiveActivities from "../services/useGetExecutiveActivities";
 
 const ExecutiveActivityReportFrame = () => {
-  const [isClubView, setIsClubView] = useState<boolean>(true);
+  const [isClubView, setIsClubView] = useState<boolean>(
+    window.history.state.isClubView ?? true,
+  );
   const [searchText, setSearchText] = useState<string>("");
   const { data, isLoading, isError } = useGetExecutiveActivities();
 
@@ -23,6 +24,10 @@ const ExecutiveActivityReportFrame = () => {
   const [selectedClubInfos, setSelectedClubInfos] = useState<
     ChargedChangeClubProps[]
   >([]);
+
+  useEffect(() => {
+    window.history.replaceState({ isClubView }, "");
+  }, [isClubView]);
 
   useEffect(() => {
     if (data) {

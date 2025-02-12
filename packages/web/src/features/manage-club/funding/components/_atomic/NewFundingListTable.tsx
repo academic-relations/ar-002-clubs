@@ -1,18 +1,16 @@
-import React from "react";
-
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
+import React from "react";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import TableCell from "@sparcs-clubs/web/common/components/Table/TableCell";
 import { TableRow } from "@sparcs-clubs/web/common/components/Table/TableWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-
 import { numberToKrWon } from "@sparcs-clubs/web/constants/manageClubFunding";
-
 import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { NewFundingData } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
@@ -60,6 +58,7 @@ const columns = [
 const NewFundingListTable: React.FC<NewFundingListTableProps> = ({
   newFundingList = [],
 }) => {
+  const router = useRouter();
   const table = useReactTable({
     columns,
     data: newFundingList,
@@ -71,6 +70,7 @@ const NewFundingListTable: React.FC<NewFundingListTableProps> = ({
     <Table
       table={table}
       count={newFundingList.length}
+      onClick={row => router.push(`/manage-club/funding/${row.id}`)}
       footer={
         <TableRow>
           <TableCell type="Default" width="70%">

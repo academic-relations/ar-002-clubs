@@ -7,7 +7,7 @@ import UserRepository from "@sparcs-clubs/api/feature/user/repository/user.repos
 
 import ExecutiveRepository from "../repository/executive.repository";
 import ProfessorRepository from "../repository/professor.repository";
-import { StudentRepository } from "../repository/student.repository";
+import StudentRepository from "../repository/student.repository";
 
 @Injectable()
 export class UserService {

@@ -6,9 +6,7 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Select from "@sparcs-clubs/web/common/components/Select";
-
 import NoManageClubForProfessor from "@sparcs-clubs/web/common/frames/NoManageClubForProfessor";
-
 import { useGetProfessorManageClubList } from "@sparcs-clubs/web/hooks/getManageClubList";
 
 import ClubActivitySection from "./ClubActivitySection";

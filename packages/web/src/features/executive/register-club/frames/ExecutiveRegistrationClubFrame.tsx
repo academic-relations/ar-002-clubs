@@ -1,15 +1,13 @@
 "use client";
 
+import { hangulIncludes } from "es-hangul";
 import React, { useMemo, useState } from "react";
+import styled from "styled-components";
 
 import {
   getDisplayNameRegistration,
   getEnumRegistration,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
-
-import { hangulIncludes } from "es-hangul";
-
-import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";

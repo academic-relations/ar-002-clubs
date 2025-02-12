@@ -1,12 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { and, desc, eq, gte, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
-
-import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
-
-import { Professor } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { ClubT, SemesterD } from "src/drizzle/schema/club.schema";
+
+import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
+import { Professor } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
 @Injectable()
 export default class ClubTRepository {

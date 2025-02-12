@@ -1,8 +1,7 @@
 import React from "react";
+import styled from "styled-components";
 
 import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-
-import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Tag from "@sparcs-clubs/web/common/components/Tag";

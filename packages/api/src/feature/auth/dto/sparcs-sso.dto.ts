@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-classes-per-file
 export class SSOUser {
   /** 사용자가 SSO 전체에서 고유하게 받은 ID입니다. 30자를 초과하지 않습니다. */
   uid!: string;

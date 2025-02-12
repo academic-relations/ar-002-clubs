@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import AgendaContent from "@sparcs-clubs/web/features/meeting/agenda/constants/agendaContent";
-
 import { AgendaTypeEnum } from "@sparcs-clubs/web/features/meeting/agenda/constants/agendaType";
 import AgendaBlock from "@sparcs-clubs/web/features/meeting/agenda/create/components/AgendaBlock";
 import { mockUpMeetingAgenda } from "@sparcs-clubs/web/features/meeting/services/_mock/mockupMeetingAgenda";

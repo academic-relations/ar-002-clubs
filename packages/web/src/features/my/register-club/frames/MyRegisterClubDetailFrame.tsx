@@ -1,13 +1,13 @@
 "use client";
 
+import { useParams, useRouter } from "next/navigation";
+import { overlay } from "overlay-kit";
 import React from "react";
+import styled from "styled-components";
 
 import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-import { useParams, useRouter } from "next/navigation";
-
-import { overlay } from "overlay-kit";
-import styled from "styled-components";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -21,8 +21,8 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
-import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import RejectReasonToast from "@sparcs-clubs/web/common/components/Toast/RejectReasonToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import {
   DivisionTypeTagList,
@@ -76,7 +76,7 @@ const MyRegisterClubDetailFrame: React.FC<{
   const router = useRouter();
   const { id } = useParams();
 
-  const isProfessor = profile === "professor";
+  const isProfessor = profile === UserTypeEnum.Professor;
 
   const deleteHandler = () => {
     overlay.open(({ isOpen, close }) => (

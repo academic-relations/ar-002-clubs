@@ -1,10 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
 import {
-  ClubDelegateChangeRequestStatusEnum,
-  ClubDelegateEnum,
-} from "@sparcs-clubs/interface/common/enum/club.enum";
-
-import {
   and,
   count,
   desc,
@@ -18,9 +13,6 @@ import {
   or,
 } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
-
-import logger from "@sparcs-clubs/api/common/util/logger";
-
 import { getKSTDate, takeUnique } from "src/common/util/util";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
@@ -31,6 +23,13 @@ import {
 } from "src/drizzle/schema/club.schema";
 import { Student } from "src/drizzle/schema/user.schema";
 
+import {
+  ClubDelegateChangeRequestStatusEnum,
+  ClubDelegateEnum,
+} from "@sparcs-clubs/interface/common/enum/club.enum";
+
+import logger from "@sparcs-clubs/api/common/util/logger";
+
 @Injectable()
 export class ClubDelegateDRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
@@ -38,7 +37,7 @@ export class ClubDelegateDRepository {
   /**
    * @param id 삭제할 변경 요청의 id
    */
-  async deleteDelegatChangeRequestById(param: {
+  async deleteDelegateChangeRequestById(param: {
     id: number;
   }): Promise<boolean> {
     const [result] = await this.db
@@ -77,18 +76,13 @@ export class ClubDelegateDRepository {
    * 3일 이내에 신청된 요청만을 조회합니다.
    * 최근에 신청된 요청이 가장 위에 위치합니다.
    */
-  // TODO: 만료 enum 추가
   async findDelegateChangeRequestByClubId(param: { clubId: number }) {
-    const threeDaysAgo = new Date();
-    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-
     const result = await this.db
       .select()
       .from(ClubDelegateChangeRequest)
       .where(
         and(
           eq(ClubDelegateChangeRequest.clubId, param.clubId),
-          gte(ClubDelegateChangeRequest.createdAt, threeDaysAgo),
           isNull(ClubDelegateChangeRequest.deletedAt),
         ),
       )

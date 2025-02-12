@@ -1,3 +1,10 @@
+import type { ApiAcf003ResponseOk } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf003";
+import type { ApiClb004ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb004";
+import type { ApiClb010ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
+import type { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
+import type { ApiPrt001ResponseOk } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
+import type { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
+import type { ApiRnt003ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt003";
 import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import { CommonSpaceUsageOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/commonSpace.enum";
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
@@ -9,14 +16,6 @@ import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interfac
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
 
 import { NewFundingData } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
-
-import type { ApiAcf003ResponseOk } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf003";
-import type { ApiClb004ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb004";
-import type { ApiClb010ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
-import type { ApiCms006ResponseOk } from "@sparcs-clubs/interface/api/common-space/endpoint/apiCms006";
-import type { ApiPrt001ResponseOk } from "@sparcs-clubs/interface/api/promotional-printing/endpoint/apiPrt001";
-import type { ApiReg008ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg008";
-import type { ApiRnt003ResponseOK } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt003";
 
 export interface Activity {
   id: number;
@@ -228,6 +227,14 @@ const mockupManageFunding: NewFundingData[] = [
   {
     id: 6,
     fundingStatusEnum: FundingStatusEnum.Approved,
+    name: "개발개발한 어떠한 활동",
+    activityName: "모니터",
+    expenditureAmount: 300000,
+    approvedAmount: 100000,
+  },
+  {
+    id: 6,
+    fundingStatusEnum: FundingStatusEnum.Partial,
     name: "개발개발한 어떠한 활동",
     activityName: "모니터",
     expenditureAmount: 300000,

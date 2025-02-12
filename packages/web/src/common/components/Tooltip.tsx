@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-
 import styled from "styled-components";
 
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
 import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 import Icon from "./Icon";

@@ -1,6 +1,3 @@
-import React, { useEffect, useMemo, useState } from "react";
-
-import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -9,7 +6,10 @@ import {
   RowSelectionState,
   useReactTable,
 } from "@tanstack/react-table";
+import React, { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+
+import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";

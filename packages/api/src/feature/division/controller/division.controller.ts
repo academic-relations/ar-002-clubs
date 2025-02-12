@@ -1,13 +1,12 @@
 import { Controller, Get, UsePipes } from "@nestjs/common";
 
+import type { ApiDiv001ResponseOk } from "@sparcs-clubs/interface/api/division/apiDiv001";
 import apiDiv001 from "@sparcs-clubs/interface/api/division/apiDiv001";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Public } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
 
 import DivisionService from "../service/division.service";
-
-import type { ApiDiv001ResponseOk } from "@sparcs-clubs/interface/api/division/apiDiv001";
 
 @Controller()
 export default class DivisionController {

@@ -1,14 +1,12 @@
 "use client";
 
 import React from "react";
-
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 
 import { ActivityCertificateInfo } from "../types/activityCertificate";
-
 import ActivityCertificateInfoFrame from "./ActivityCertificateInfoFrame";
 import ActivityCertificateNoticeFrame from "./ActivityCertificateNoticeFrame";
 

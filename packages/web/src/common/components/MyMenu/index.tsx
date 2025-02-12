@@ -1,17 +1,14 @@
-import React from "react";
-
 import { useRouter } from "next/navigation";
+import React from "react";
 import styled from "styled-components";
 
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import colors from "@sparcs-clubs/web/styles/themes/colors";
-
 import { getUserType } from "@sparcs-clubs/web/utils/getUserType";
 
 import Button from "../Button";
 import FlexWrapper from "../FlexWrapper";
 import Icon from "../Icon";
-
 import ProfileList from "./_atomic/ProfileList";
 
 interface MyMenuProps {

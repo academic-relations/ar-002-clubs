@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
-
 import isPropValid from "@emotion/is-prop-valid";
+import React from "react";
 import styled from "styled-components";
+
+// import ScrollingText from "./_atomic/ScrollingText";
+import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -20,8 +22,6 @@ import isStudent from "@sparcs-clubs/web/utils/isStudent";
 
 import ClubRegistrationButtonWrapper from "./_atomic/ClubRegistrationButtonWrapper";
 
-import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
-
 export interface ClubProps {
   club: ApiClb001ResponseOK["divisions"][number]["clubs"][number];
 }
@@ -37,7 +37,7 @@ const ClubCardRow = styled.div.withConfig({
 })<{ isMobile: boolean }>`
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 16px;
   justify-content: space-between;
   align-items: center;
 `;
@@ -58,13 +58,13 @@ const ClubCardNameWithTag = styled.div`
   align-items: center;
   gap: 4px;
   flex: 1 0 0;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const ClubName = styled.div.withConfig({
   shouldForwardProp: prop => isPropValid(prop),
 })<{ isMobile: boolean }>`
-  display: flex;
-  flex-direction: column;
   flex: 1 0 0;
   width: 100%;
   font-size: ${({ isMobile }) => (isMobile ? "16px" : "20px")};
@@ -92,6 +92,8 @@ const ClubCard: React.FC<ClubCardProps> = ({
             </Tag>
           )}
           <ClubName isMobile={isMobile}>{club.name_kr}</ClubName>
+          {/* 돌아가는 텍스트를 만들 수 있어요
+             <ScrollingText isMobile={isMobile} >{club.name_kr}</ScrollingText> */}
         </ClubCardNameWithTag>
         <FlexWrapper direction="row" gap={4}>
           <Icon type="person" size={16} />
@@ -101,7 +103,7 @@ const ClubCard: React.FC<ClubCardProps> = ({
         </FlexWrapper>
       </ClubCardRow>
       {!isMobile && (
-        <Typography fs={16} lh={20}>
+        <ClubCardLongText isMobile={isMobile}>
           {club.advisor === "null" ||
           club.advisor === "undefined" ||
           club.advisor === undefined ||
@@ -109,7 +111,7 @@ const ClubCard: React.FC<ClubCardProps> = ({
           club.advisor === ""
             ? `회장 ${club.representative}`
             : `회장 ${club.representative} | 지도교수 ${club.advisor}`}
-        </Typography>
+        </ClubCardLongText>
       )}
       {!isMobile && (
         <ClubCardLongText isMobile={isMobile}>

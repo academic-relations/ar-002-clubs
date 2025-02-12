@@ -1,8 +1,7 @@
+import type { ApiAct026RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct026";
 import apiAct026 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct026";
 
 import { axiosClientWithAuth } from "@sparcs-clubs/web/lib/axios";
-
-import type { ApiAct026RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct026";
 
 export const putClubActivitiesChargedExecutive = async (
   requestBody: ApiAct026RequestBody,

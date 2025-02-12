@@ -1,5 +1,10 @@
-import apiClb011 from "@sparcs-clubs/interface/api/club/endpoint/apiClb011";
 import { useQuery } from "@tanstack/react-query";
+
+import type {
+  ApiClb011RequestParam,
+  ApiClb011ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb011";
+import apiClb011 from "@sparcs-clubs/interface/api/club/endpoint/apiClb011";
 
 import {
   axiosClientWithAuth,
@@ -7,11 +12,6 @@ import {
 } from "@sparcs-clubs/web/lib/axios";
 
 import { mockClubDelegateRequest } from "./_mock/mockDelegate";
-
-import type {
-  ApiClb011RequestParam,
-  ApiClb011ResponseOk,
-} from "@sparcs-clubs/interface/api/club/endpoint/apiClb011";
 
 export const useGetChangeDelegateRequests = (
   requestParam: ApiClb011RequestParam,

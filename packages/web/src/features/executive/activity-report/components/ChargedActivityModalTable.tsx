@@ -1,11 +1,11 @@
-import React from "react";
-
-import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import React from "react";
+
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
@@ -100,7 +100,8 @@ const columns = [
 
 const ChargedActivityModalTable: React.FC<{
   data: ChargedClubsAndProgresses[];
-}> = ({ data }) => {
+  closeModal: () => void;
+}> = ({ data, closeModal }) => {
   const table = useReactTable({
     data,
     columns,
@@ -108,7 +109,12 @@ const ChargedActivityModalTable: React.FC<{
     enableSorting: false,
   });
 
-  return <Table table={table} />;
+  const handleRowClick = (row: ChargedClubsAndProgresses) => {
+    closeModal();
+    return `/executive/activity-report/club/${row.clubId}`;
+  };
+
+  return <Table table={table} rowLink={row => handleRowClick(row)} />;
 };
 
 export default ChargedActivityModalTable;

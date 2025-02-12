@@ -2,6 +2,7 @@ import { AxiosError, InternalAxiosRequestConfig } from "axios";
 import log from "loglevel";
 
 import { env } from "@sparcs-clubs/web/env";
+import logger from "@sparcs-clubs/web/utils/logger";
 
 export const BASE_URL = env.NEXT_PUBLIC_API_URL ?? "";
 
@@ -14,8 +15,9 @@ const mockInterceptor = {
       if (parsedUrl.host != null) {
         return responseConfig;
       }
-      // eslint-disable-next-line no-empty
-    } catch (error) {}
+    } catch (error) {
+      logger.error("Mock interceptor error", error);
+    }
 
     if (env.NEXT_PUBLIC_API_MOCK_MODE) {
       const method = config?.method;

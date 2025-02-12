@@ -1,5 +1,8 @@
 "use client";
 
+import * as ChannelService from "@channel.io/channel-web-sdk-loader";
+import { jwtDecode } from "jwt-decode";
+import { overlay } from "overlay-kit";
 import React, {
   createContext,
   ReactNode,
@@ -8,11 +11,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-
-import * as ChannelService from "@channel.io/channel-web-sdk-loader";
-
-import { jwtDecode } from "jwt-decode";
-import { overlay } from "overlay-kit";
 import { Cookies } from "react-cookie";
 
 import {
@@ -22,6 +20,7 @@ import {
   subscribeLocalStorageSet,
   unsubscribeLocalStorageSet,
 } from "@sparcs-clubs/web/utils/localStorage";
+import logger from "@sparcs-clubs/web/utils/logger";
 
 import AgreementModal from "../components/Modal/AgreeModal";
 import getLogin from "../services/getLogin";
@@ -95,7 +94,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
           );
           setIsLoggedIn(true);
           cookies.remove("accessToken");
-          console.log("Logged in successfully.");
+          logger.log("Logged in successfully.");
         }
       }
     }
@@ -106,7 +105,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       const response = await getLogin();
       window.location.href = response.url;
     } catch (error) {
-      console.error("Login failed", error);
+      logger.error("Login failed", error);
     }
   };
 
@@ -118,14 +117,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       removeLocalStorageItem("responseToken");
       const cookies = new Cookies();
       cookies.remove("accessToken");
-      console.log("Logged out successfully.");
-    } catch (error) {
+      logger.log("Logged out successfully.");
+    } catch (_) {
       setIsLoggedIn(false);
       removeLocalStorageItem("accessToken");
       removeLocalStorageItem("responseToken");
       const cookies = new Cookies();
       cookies.remove("accessToken");
-      console.log("Logged out.");
+      logger.log("Logged out.");
     }
   };
 
@@ -147,7 +146,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
                 await postUserAgree();
                 setIsAgreed(true);
                 close();
-              } catch (error) {
+              } catch (_) {
                 window.location.reload();
               }
             }}

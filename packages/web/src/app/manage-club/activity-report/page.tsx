@@ -1,8 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-import { useRouter } from "next/navigation";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
@@ -32,10 +33,10 @@ const ActivityReport = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile?.type === "professor") {
+  if (profile?.type === UserTypeEnum.Professor) {
     router.replace("/manage-club");
   }
-  if (profile?.type !== "undergraduate") {
+  if (profile?.type !== UserTypeEnum.Undergraduate) {
     return <NoManageClub />;
   }
 

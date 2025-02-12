@@ -2,7 +2,6 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-
 import zId from "@sparcs-clubs/interface/common/type/id.type";
 
 /**
@@ -34,7 +33,9 @@ const responseBodyMap = {
         activityId: zId,
         activityStatusEnum: z.nativeEnum(ActivityStatusEnum),
         activityName: z.string().max(255),
-        finalReviewedExecutive: z
+        commentedAt: z.coerce.date().nullable(),
+        editedAt: z.coerce.date().nullable(),
+        commentedExecutive: z
           .object({
             id: zId,
             name: z.string().max(30),

@@ -1,6 +1,5 @@
 import { IActivitySummary } from "@sparcs-clubs/interface/api/activity/type/activity.type";
 import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
-
 import {
   FixtureClassEnum,
   FixtureEvidenceEnum,
@@ -63,7 +62,6 @@ export interface AddEvidence {
   origin?: string;
   destination?: string;
   purposeOfTransportation?: string;
-  placeValidity?: string;
   transportationPassengers: IStudentSummary[];
   // 비법인 거래 증빙
   isNonCorporateTransaction: boolean;
@@ -94,9 +92,10 @@ export interface AddEvidence {
   profitMakingActivityFiles: FileDetail[];
   jointExpenseFiles: FileDetail[];
   etcExpenseFiles: FileDetail[];
+  nonCorporateTransactionFiles: FileDetail[];
 }
 
 export type FundingFormData = FundingInfo & BasicEvidence & AddEvidence;
 
 export const isActivityReportUnverifiable = (purposeId?: number) =>
-  purposeId === 0;
+  purposeId === Infinity;

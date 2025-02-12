@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-
 import { hangulIncludes } from "es-hangul";
+import React, { useMemo, useState } from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
+import useEasterEgg from "@sparcs-clubs/web/common/hooks/useEasteregg";
 import ClubsSectionFrame from "@sparcs-clubs/web/features/clubs/frames/ClubsSectionFrame";
 import { useGetClubsList } from "@sparcs-clubs/web/features/clubs/services/useGetClubsList";
 
@@ -15,6 +15,9 @@ interface ClubsListProps {
 }
 
 const ClubsListFrame: React.FC<ClubsListProps> = ({ isRegistrationPeriod }) => {
+  // 이스터에그_리크루팅
+  useEasterEgg();
+
   const { data, isLoading, isError } = useGetClubsList();
 
   const [searchText, setSearchText] = useState<string>("");

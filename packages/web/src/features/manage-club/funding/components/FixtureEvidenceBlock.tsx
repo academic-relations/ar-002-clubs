@@ -1,11 +1,10 @@
 import React from "react";
+import { useFormContext } from "react-hook-form";
 
 import {
   FixtureClassEnum,
   FixtureEvidenceEnum,
 } from "@sparcs-clubs/interface/common/enum/funding.enum";
-
-import { useFormContext } from "react-hook-form";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
@@ -18,7 +17,6 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { AddEvidence } from "../types/funding";
-
 import EvidenceBlockTitle from "./EvidenceBlockTitle";
 
 interface FixtureEvidenceBlockProps {
@@ -170,9 +168,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                     <TextInput
                       {...props}
                       placeholder={
-                        (isFixture
-                          ? fixtureClassEnum
-                          : clubSuppliesClassEnum) === FixtureClassEnum.Software
+                        fixtureClassEnum === FixtureClassEnum.Software
                           ? "소프트웨어 증빙을 입력하세요"
                           : `${content} 증빙을 입력하세요`
                       }
@@ -183,9 +179,9 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
               ) : (
                 <FormController
                   name={
-                    fixtureClassEnum === FixtureClassEnum.Software
-                      ? "fixtureSoftwareEvidence"
-                      : "fixturePurpose"
+                    clubSuppliesClassEnum === FixtureClassEnum.Software
+                      ? "clubSuppliesSoftwareEvidence"
+                      : "clubSuppliesPurpose"
                   }
                   required={required}
                   control={control}
@@ -193,9 +189,7 @@ const FixtureEvidenceBlock: React.FC<FixtureEvidenceBlockProps> = ({
                     <TextInput
                       {...props}
                       placeholder={
-                        (isFixture
-                          ? fixtureClassEnum
-                          : clubSuppliesClassEnum) === FixtureClassEnum.Software
+                        clubSuppliesClassEnum === FixtureClassEnum.Software
                           ? "소프트웨어 증빙을 입력하세요"
                           : `${content} 증빙을 입력하세요`
                       }

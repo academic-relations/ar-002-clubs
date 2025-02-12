@@ -1,7 +1,6 @@
 import { ApiAct002ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
 import { ApiAct011ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
 import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
-
 import {
   ActivityStatusEnum,
   ActivityTypeEnum,
@@ -281,4 +280,6 @@ export const mockActivityDetailData: ApiAct002ResponseOkTemp = {
   advisorProfessorApproval: ActivityProfessorApprovalEnum.Requested,
   updatedAt: new Date(),
   professorApprovedAt: null,
+  editedAt: new Date(),
+  commentedAt: null,
 };
