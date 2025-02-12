@@ -31,7 +31,7 @@ const DateRangeInputErrorFrameInner = styled.div`
 
 const DateRangeInputFrameInner = styled.div`
   justify-content: flex-start;
-  align-items: center;
+  align-items: end;
   gap: 12px;
   display: flex;
 `;
@@ -151,7 +151,7 @@ const DateRangeInput: React.FC<DateRangeInputProps> = ({
         <Typography
           style={error ? { marginBottom: "4px" } : {}}
           fs={16}
-          lh={20}
+          lh={38}
           fw="REGULAR"
         >
           ~
