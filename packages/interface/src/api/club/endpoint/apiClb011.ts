@@ -2,6 +2,7 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import { ClubDelegateChangeRequestStatusEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+import { zStudentNumber } from "@sparcs-clubs/interface/common/type/user.type";
 
 /**
  * @version v0.1
@@ -25,7 +26,7 @@ const responseBodyMap = {
     requests: z
       .object({
         studentId: z.coerce.number().int().min(1),
-        studentNumber: z.coerce.number().int().min(20000000).max(30000000),
+        studentNumber: zStudentNumber,
         studentName: z.coerce.string(),
         clubDelegateChangeRequestStatusEnumId: z.nativeEnum(
           ClubDelegateChangeRequestStatusEnum,

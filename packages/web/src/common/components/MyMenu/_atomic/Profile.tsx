@@ -7,7 +7,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 interface ProfileProps {
   profileName: string;
-  profileNumber: number;
+  profileNumber: string;
   email: string;
   isSelected?: boolean;
   onClick: () => void;
@@ -45,7 +45,7 @@ const Profile: React.FC<ProfileProps> = ({
   isSelected = false,
   onClick,
 }) => {
-  const profileText = (number: number, mail: string) => {
+  const profileText = (number: string, mail: string) => {
     if (number && mail) return `${number} / ${mail}`;
     if (number === undefined || number === null) return `${mail}`;
     if (mail === undefined || mail === null || mail === "") return `${number}`;

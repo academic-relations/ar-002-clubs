@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { ActivityCertificateOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/activityCertificate.enum";
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
+import { zStudentNumber } from "@sparcs-clubs/interface/common/type/user.type";
 
 /**
  * @version v0.1
@@ -25,7 +26,7 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     id: z.coerce.number().int().min(1),
     clubId: z.coerce.number().int().min(1),
-    studentNumber: z.coerce.number().int().min(1),
+    studentNumber: zStudentNumber,
     studentPhoneNumber: zKrPhoneNumber,
     issuedNumber: z.coerce.number().int().min(1),
     statusEnum: z.nativeEnum(ActivityCertificateOrderStatusEnum),

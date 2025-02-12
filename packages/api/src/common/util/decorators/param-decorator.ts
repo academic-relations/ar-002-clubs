@@ -15,7 +15,7 @@ interface StudentProfile {
   email: string;
   type: string;
   studentId: number;
-  studentNumber: number;
+  studentNumber: string;
 }
 export type GetStudent = StudentProfile;
 interface ExecutiveProfile {

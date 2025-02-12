@@ -2,6 +2,7 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import { zClubName } from "@sparcs-clubs/interface/common/commonString";
+import { zStudentNumber } from "@sparcs-clubs/interface/common/type/user.type";
 
 /**
  * @version v0.1
@@ -30,7 +31,7 @@ const responseBodyMap = {
     name: z.string().max(30),
     email: z.string().max(50),
     department: z.string().max(10),
-    studentNumber: z.number().int().min(20000000).max(30000000),
+    studentNumber: zStudentNumber,
     phoneNumber: z.string().max(20).optional(),
   }),
 };

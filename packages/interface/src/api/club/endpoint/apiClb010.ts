@@ -2,6 +2,7 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
+import { zStudentNumber } from "@sparcs-clubs/interface/common/type/user.type";
 /**
  * @version v0.1
  * @description semesterId에 해당하는 학기에 clubId의 동아리에서 활동한 모든 회원 정보를 가져옵니다.
@@ -26,7 +27,7 @@ const responseBodyMap = {
       .object({
         name: z.coerce.string().max(30),
         studentId: z.coerce.number().int().min(1),
-        studentNumber: z.coerce.number().int().min(20000000).max(30000000),
+        studentNumber: zStudentNumber,
         email: z.coerce.string().max(50),
         phoneNumber: zKrPhoneNumber.optional(),
       })
