@@ -6,13 +6,11 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import { manageRentalProgress } from "@sparcs-clubs/web/constants/manageClubProgress";
 
-interface ManageRentalProgressProps {
+interface RentalProgressProps {
   status: RentalOrderStatusEnum;
 }
 
-const ManageRentalProgress: React.FC<ManageRentalProgressProps> = ({
-  status,
-}) => {
+const RentalProgress: React.FC<RentalProgressProps> = ({ status }) => {
   const manageRental = manageRentalProgress(status);
   const onClickCancel = () => {};
   return (
@@ -31,4 +29,4 @@ const ManageRentalProgress: React.FC<ManageRentalProgressProps> = ({
   );
 };
 
-export default ManageRentalProgress;
+export default RentalProgress;
