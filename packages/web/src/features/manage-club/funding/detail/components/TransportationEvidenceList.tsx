@@ -27,23 +27,29 @@ const TransportationEvidenceList: React.FC<{ data: IFundingResponse }> = ({
     </ListItem>
     <ListItem>출발지: {data.transportation?.origin}</ListItem>
     <ListItem>도착지: {data.transportation?.destination}</ListItem>
-    <ListItem>
-      탑승자 명단 ({data.transportation?.passengers.length}명)
-    </ListItem>
-    <FlexWrapper direction="column" gap={12} style={{ paddingLeft: 24 }}>
-      {data.transportation?.passengers.map(passenger => (
-        <Typography
-          key={passenger.name}
-          ff="PRETENDARD"
-          fw="REGULAR"
-          fs={14}
-          lh={16}
-          color="BLACK"
-        >
-          {passenger.studentNumber} {passenger.name}
-        </Typography>
-      ))}
-    </FlexWrapper>
+    {data.transportation?.passengers &&
+      data.transportation?.passengers.length > 0 && (
+        <>
+          <ListItem>
+            탑승자 명단 ({data.transportation?.passengers.length}명)
+          </ListItem>
+          <FlexWrapper direction="column" gap={12} style={{ paddingLeft: 24 }}>
+            {data.transportation?.passengers.map(passenger => (
+              <Typography
+                key={passenger.name}
+                ff="PRETENDARD"
+                fw="REGULAR"
+                fs={14}
+                lh={16}
+                color="BLACK"
+              >
+                {passenger.studentNumber} {passenger.name}
+              </Typography>
+            ))}
+          </FlexWrapper>
+        </>
+      )}
+
     <ListItem>이용 목적: {data.transportation?.purpose}</ListItem>
   </FlexWrapper>
 );

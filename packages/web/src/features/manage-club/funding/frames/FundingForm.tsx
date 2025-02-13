@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -41,8 +41,22 @@ const FundingForm: React.FC<FundingFormProps> = ({
 
   const {
     handleSubmit,
+    setValue,
+    watch,
     formState: { isValid },
   } = formCtx;
+
+  useEffect(() => {
+    if (watch("purposeActivity.id") === Infinity) {
+      setValue("isTransportation", false);
+      setValue("isFoodExpense", false);
+      setValue("isLaborContract", false);
+      setValue("isExternalEventParticipationFee", false);
+      setValue("isPublication", false);
+      setValue("isProfitMakingActivity", false);
+      setValue("isJointExpense", false);
+    }
+  }, [watch("purposeActivity.id")]);
 
   return (
     <FormProvider {...formCtx}>

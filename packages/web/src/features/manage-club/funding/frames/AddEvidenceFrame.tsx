@@ -61,7 +61,7 @@ const AddEvidenceFrame: React.FC = () => {
                     optionText="(활동보고서로 증빙이 불가능한) 동아리 용품"
                     checked={isNoActivityPurpose}
                     onClick={() => {}}
-                  />{" "}
+                  />
                   <FormController
                     name="isFixture"
                     control={control}
