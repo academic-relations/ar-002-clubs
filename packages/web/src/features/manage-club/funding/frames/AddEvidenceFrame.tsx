@@ -61,14 +61,14 @@ const AddEvidenceFrame: React.FC = () => {
                     optionText="(활동보고서로 증빙이 불가능한) 동아리 용품"
                     checked={isNoActivityPurpose}
                     onClick={() => {}}
-                  />{" "}
+                  />
                   <FormController
                     name="isFixture"
                     control={control}
                     renderItem={({ value, onChange }) => (
                       <CheckboxOption
                         optionText="비품"
-                        checked={value}
+                        checked={isFixture}
                         onClick={() => onChange(!value)}
                       />
                     )}
@@ -79,7 +79,7 @@ const AddEvidenceFrame: React.FC = () => {
                     renderItem={({ value, onChange }) => (
                       <CheckboxOption
                         optionText="비법인 거래"
-                        checked={value}
+                        checked={isNonCorporateTransaction}
                         onClick={() => onChange(!value)}
                       />
                     )}
@@ -90,7 +90,7 @@ const AddEvidenceFrame: React.FC = () => {
                     renderItem={({ value, onChange }) => (
                       <CheckboxOption
                         optionText="기타"
-                        checked={value}
+                        checked={isEtcExpense}
                         onClick={() => onChange(!value)}
                       />
                     )}
