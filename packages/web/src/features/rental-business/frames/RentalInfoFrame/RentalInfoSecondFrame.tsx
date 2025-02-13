@@ -20,6 +20,7 @@ import Tool from "@sparcs-clubs/web/features/rental-business/components/Rentals/
 import Vacuum from "@sparcs-clubs/web/features/rental-business/components/Rentals/Vacuum";
 import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
 import mockupAvailableRental from "@sparcs-clubs/web/features/rental-business/service/_mock/mockAvailableRental";
+import { mockExistDates } from "@sparcs-clubs/web/features/rental-business/service/_mock/mockExistDate";
 // import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
 import {
   isCurrentItemEmpty,
@@ -27,7 +28,6 @@ import {
 } from "@sparcs-clubs/web/features/rental-business/utils/isRentalEmpty";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
-import { mockExistDates } from "./_atomic/mockExistDate";
 
 const StyledCardInner = styled.div`
   display: flex;

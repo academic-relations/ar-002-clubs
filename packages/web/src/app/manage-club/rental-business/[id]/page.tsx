@@ -9,8 +9,8 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import ManageRentalProgress from "@sparcs-clubs/web/features/manage-club/rental/components/ManageRentalProgress";
-import ManageRentalDetailFrame from "@sparcs-clubs/web/features/manage-club/rental/frames/ManageRentalDetailFrame";
+import RentalProgress from "@sparcs-clubs/web/features/rental-business/components/RentalProgress";
+import RentalDetailFrame from "@sparcs-clubs/web/features/rental-business/frames/RentalDetailFrame";
 
 const ManageRentalDetail = () => {
   const router = useRouter();
@@ -31,8 +31,8 @@ const ManageRentalDetail = () => {
         enableLast
       />
       <Card outline gap={20}>
-        <ManageRentalProgress status={RentalOrderStatusEnum.Rejected} />
-        <ManageRentalDetailFrame />
+        <RentalProgress status={RentalOrderStatusEnum.Rejected} />
+        <RentalDetailFrame />
       </Card>
       <Button style={{ width: "max-content" }} onClick={onClick}>
         목록으로 돌아가기

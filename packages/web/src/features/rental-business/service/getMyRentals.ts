@@ -6,12 +6,11 @@ import type {
 } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt006";
 import apiRnt006 from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt006";
 
+import { mockupMyRental } from "@sparcs-clubs/web/features/my/services/_mock/mockMyClub";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
 } from "@sparcs-clubs/web/lib/axios";
-
-import { mockupMyRental } from "./_mock/mockMyClub";
 
 export const useGetMyRentals = (
   startDate: Date,
