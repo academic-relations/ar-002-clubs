@@ -33,7 +33,7 @@ const ActivityReportStatusSection: React.FC<
             datetime: comment.createdAt,
             reason: comment.content,
           }))}
-          color={"red"}
+          color="red"
         />
       );
     }
