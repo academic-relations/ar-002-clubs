@@ -975,7 +975,7 @@ export default class FundingRepository {
         // NonCorporateTransaction files
         ...(funding.isNonCorporateTransaction && funding.nonCorporateTransaction
           ? funding.nonCorporateTransaction.files.map(file =>
-              tx.insert(FundingFixtureSoftwareEvidenceFile).values({
+              tx.insert(FundingNonCorporateTransactionFile).values({
                 fundingId: id,
                 fileId: file.id,
               }),

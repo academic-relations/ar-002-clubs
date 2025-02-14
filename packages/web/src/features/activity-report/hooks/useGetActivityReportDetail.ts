@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import useHasAdvisor from "@sparcs-clubs/web/features/clubs/hooks/useHasAdvisor";
 import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
@@ -19,7 +21,10 @@ const useGetActivityReportDetail = (
     data: activityReport,
     isLoading: activityReportLoading,
     isError: activityReportError,
-  } = useGetActivityReport(profile?.type ?? "undergraduate", activityId);
+  } = useGetActivityReport(
+    profile?.type ?? UserTypeEnum.Undergraduate,
+    activityId,
+  );
   const {
     data: hasProfessor,
     isLoading: hasProfessorLoading,

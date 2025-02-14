@@ -1,3 +1,5 @@
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 
 import { useGetActivityReport } from "../services/useGetActivityReport";
@@ -12,7 +14,7 @@ const useGetActivityReportComments = (
 } => {
   const { profile } = useAuth();
   const { data, isLoading, isError } = useGetActivityReport(
-    profile?.type ?? "undergraduate",
+    profile?.type ?? UserTypeEnum.Undergraduate,
     activityId,
   );
 
