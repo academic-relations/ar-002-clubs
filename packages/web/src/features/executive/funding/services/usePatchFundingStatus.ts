@@ -1,16 +1,15 @@
-import apiFnd014 from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd014";
-
 import { useMutation } from "@tanstack/react-query";
-
-import {
-  axiosClientWithAuth,
-  defineAxiosMock,
-} from "@sparcs-clubs/web/lib/axios";
 
 import type {
   ApiFnd014RequestBody,
   ApiFnd014ResponseOk,
 } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd014";
+import apiFnd014 from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd014";
+
+import {
+  axiosClientWithAuth,
+  defineAxiosMock,
+} from "@sparcs-clubs/web/lib/axios";
 
 const usePatchFundingStatus = () =>
   useMutation<ApiFnd014ResponseOk, Error, { body: ApiFnd014RequestBody }>({

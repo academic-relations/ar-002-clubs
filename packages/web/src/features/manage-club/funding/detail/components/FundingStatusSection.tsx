@@ -4,9 +4,7 @@ import { IFundingCommentResponse } from "@sparcs-clubs/interface/api/funding/typ
 import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
-import Toast from "@sparcs-clubs/web/common/components/Toast";
-import ApproveReasonToast from "@sparcs-clubs/web/common/components/Toast/ApproveReasonToast";
-import RejectReasonToast from "@sparcs-clubs/web/common/components/Toast/RejectReasonToast";
+import CommentToast from "@sparcs-clubs/web/common/components/Toast/CommentToast";
 import { FundingTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { getFundingProgress } from "@sparcs-clubs/web/features/manage-club/funding/constants/fundingProgressStatus";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
@@ -41,14 +39,14 @@ const FundingStatusSection: React.FC<FundingStatusSectionProps> = ({
     }));
 
     if (status === FundingStatusEnum.Rejected) {
-      return <RejectReasonToast title="코멘트" reasons={reasons} />;
+      return <CommentToast title="코멘트" reasons={reasons} color="red" />;
     }
 
     if (status === FundingStatusEnum.Committee) {
-      return <Toast title="코멘트" color="yellow" reasons={reasons} />;
+      return <CommentToast title="코멘트" color="yellow" reasons={reasons} />;
     }
 
-    return <ApproveReasonToast title="코멘트" reasons={reasons} />;
+    return <CommentToast title="코멘트" reasons={reasons} color="green" />;
   }, [filteredComments, status]);
 
   return (

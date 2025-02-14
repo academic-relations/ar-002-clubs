@@ -12,7 +12,7 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import { ListItem } from "@sparcs-clubs/web/common/components/ListItem";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
-import RejectReasonToast from "@sparcs-clubs/web/common/components/Toast/RejectReasonToast";
+import CommentToast from "@sparcs-clubs/web/common/components/Toast/CommentToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useExecutiveApproveActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveApproveActivityReport";
 import useExecutiveRejectActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveRejectActivityReport";
@@ -140,12 +140,13 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
           {!isExecutive &&
             data.activityStatusEnumId === ActivityStatusEnum.Rejected &&
             data.comments.length > 0 && (
-              <RejectReasonToast
+              <CommentToast
                 title="반려 사유"
                 reasons={data.comments.map(comment => ({
                   datetime: comment.createdAt,
                   reason: comment.content,
                 }))}
+                color="red"
               />
             )}
 
