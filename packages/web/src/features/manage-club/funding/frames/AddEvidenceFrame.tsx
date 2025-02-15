@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -39,6 +39,18 @@ const AddEvidenceFrame: React.FC = () => {
     () => isActivityReportUnverifiable(purposeId),
     [purposeId],
   );
+
+  useEffect(() => {
+    if (isNoActivityPurpose) {
+      setValue("isTransportation", false);
+      setValue("isFoodExpense", false);
+      setValue("isLaborContract", false);
+      setValue("isExternalEventParticipationFee", false);
+      setValue("isPublication", false);
+      setValue("isProfitMakingActivity", false);
+      setValue("isJointExpense", false);
+    }
+  }, [isNoActivityPurpose]);
 
   return (
     <FoldableSectionTitle title="추가 증빙">
