@@ -1,6 +1,5 @@
-import React, { useMemo } from "react";
-
 import { useParams } from "next/navigation";
+import React, { useMemo } from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";

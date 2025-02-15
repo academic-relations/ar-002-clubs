@@ -1,14 +1,19 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import Button from "@sparcs-clubs/web/common/components/Button";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import Icon from "@sparcs-clubs/web/common/components/Icon";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import { MeetingNoticeItem } from "@sparcs-clubs/web/features/meeting/components/MeetingNoticeItem";
 import {
   MEETING_LIST_PAGINATION_LIMIT,
@@ -20,6 +25,7 @@ import {
   meetingEnumToText,
   MeetingNoticeItemType,
 } from "@sparcs-clubs/web/features/meeting/types/meeting";
+import colors from "@sparcs-clubs/web/styles/themes/colors";
 
 const MeetingNoticeListWrapper = styled.div`
   display: flex;
@@ -78,10 +84,26 @@ const ListWithPaginationWrapper = styled.div`
   align-self: stretch;
 `;
 
+const IconWrapper = styled.div`
+  margin-top: 2px;
+`;
+
+const StyledButton = styled(Button)`
+  gap: 4px;
+`;
+
 const MeetingMainFrame: React.FC = () => {
+  const { isLoggedIn, profile } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [page, setPage] = useState<number>(1);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    if (isLoggedIn !== undefined || profile !== undefined) {
+      setAuthLoading(false);
+    }
+  }, [isLoggedIn, profile]);
 
   const meetingEnumId = getMeetingEnumFromValue(searchParams.get("type"));
 
@@ -91,8 +113,45 @@ const MeetingMainFrame: React.FC = () => {
     itemCount: MEETING_LIST_PAGINATION_LIMIT,
   });
 
+  // const {
+  //   data: divisionHeadsData,
+  //   isLoading: divisionHeadsIsLoading,
+  //   isError: divisionHeadsIsError,
+  // } = useGetDivisionHeads();
+
+  const divisionHeadsData = {
+    divisions: [
+      { id: 1, name: "주영미", presidentStudentNumber: 20221234 },
+      {
+        id: 2,
+        name: "하승종",
+        presidentStudentNumber: 20223424,
+      },
+      {
+        id: 3,
+        name: "권혁원",
+        presidentStudentNumber: 20228344,
+      },
+    ],
+  };
+  const divisionHeadsIsLoading = false;
+  const divisionHeadsIsError = false;
+  // TODO : API 호출의 문제를 해결하여 코드 대체
+
+  const isDivisionHead = divisionHeadsData?.divisions.some(
+    (head: { id: number; name: string; presidentStudentNumber: number }) =>
+      head.presidentStudentNumber === profile?.id,
+  ); // TODO : API 호출 결과는 학번이고, profile?.id는 고유 ID 아닌가?
+
+  if (authLoading) {
+    return <AsyncBoundary isLoading={authLoading} isError />;
+  }
+
   return (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
+    <AsyncBoundary
+      isLoading={isLoading || divisionHeadsIsLoading}
+      isError={isError || divisionHeadsIsError}
+    >
       <FlexWrapper gap={60} direction="column">
         <PageHead
           items={[
@@ -107,6 +166,21 @@ const MeetingMainFrame: React.FC = () => {
             meetingEnumId
               ? meetingEnumToText(meetingEnumId.toString())
               : "전체 회의"
+          }
+          action={
+            ((profile?.type === UserTypeEnum.Executive &&
+              meetingEnumId !== 4) ||
+              (isDivisionHead &&
+                meetingEnumId !== 1 &&
+                meetingEnumId !== 2 &&
+                meetingEnumId !== 3)) && (
+              <StyledButton>
+                <IconWrapper>
+                  <Icon type="add" size={16} color={colors.WHITE} />
+                </IconWrapper>
+                공고 생성
+              </StyledButton>
+            )
           }
         />
         <ListWithPaginationWrapper>
