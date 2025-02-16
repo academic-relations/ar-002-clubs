@@ -1,13 +1,13 @@
-import React, { useMemo } from "react";
-
-import { ApiFnd010ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd010";
-import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import {
   createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import React, { useMemo } from "react";
+
+import { ApiFnd010ResponseOk } from "@sparcs-clubs/interface/api/funding/endpoint/apiFnd010";
+import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Table from "@sparcs-clubs/web/common/components/Table";

@@ -144,6 +144,7 @@ const FundingDetailFrame: React.FC<FundingDetailFrameProps> = ({ profile }) => {
           commentedAt={data.funding.commentedAt}
           comments={data.comments ?? []}
         />
+
         <AsyncBoundary isLoading={isLoading} isError={isError}>
           <FundingInfoList data={data.funding} />
           <BasicEvidenceList data={data.funding} />
