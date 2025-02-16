@@ -13,7 +13,6 @@ import apiMee021, {
   ApiMee021RequestParam,
   ApiMee021ResponseOk,
 } from "@sparcs-clubs/interface/api/meeting/apiMee021";
-
 import apiMee027, {
   ApiMee027RequestParam,
   ApiMee027ResponseOk,

@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 // import { WsException } from "@nestjs/websockets";
-
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import { EntityRepository } from "./entity.repository";

@@ -3,21 +3,18 @@ import {
   Inject,
   Injectable,
 } from "@nestjs/common";
+import { and, eq, max, sql } from "drizzle-orm";
+import { MySql2Database } from "drizzle-orm/mysql2";
+import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 import { MeetingAgendaEntityTypeEnum } from "@sparcs-clubs/interface/common/enum/meeting.enum";
 
-import { and, eq, max, sql } from "drizzle-orm";
-import { MySql2Database } from "drizzle-orm/mysql2";
-
 import logger from "@sparcs-clubs/api/common/util/logger";
 // import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
-
 import {
   MeetingAgendaContent,
   MeetingMapping,
 } from "@sparcs-clubs/api/drizzle/schema/meeting.schema";
-
-import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 @Injectable()
 export class ContentRepository {
