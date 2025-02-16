@@ -24,6 +24,13 @@ const credits: SemesterCredit[] = [
     semester: "2025년 겨울",
     members: [
       {
+        nickname: "ava",
+        name: "주영미",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "겨울이다~",
+      },
+      {
         nickname: "eel",
         name: "최우정",
         role: "FE / BE",
