@@ -44,6 +44,13 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.APM_BE,
         comment: "9시에 일어나고 11시에 잡시다",
       },
+      {
+        nickname: "chacha",
+        name: "안채연",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "BE 뉴비에요",
+      },
     ],
   },
   {
