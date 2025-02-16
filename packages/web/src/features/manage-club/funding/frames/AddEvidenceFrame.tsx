@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -40,6 +40,18 @@ const AddEvidenceFrame: React.FC = () => {
     [purposeId],
   );
 
+  useEffect(() => {
+    if (isNoActivityPurpose) {
+      setValue("isTransportation", false);
+      setValue("isFoodExpense", false);
+      setValue("isLaborContract", false);
+      setValue("isExternalEventParticipationFee", false);
+      setValue("isPublication", false);
+      setValue("isProfitMakingActivity", false);
+      setValue("isJointExpense", false);
+    }
+  }, [isNoActivityPurpose]);
+
   return (
     <FoldableSectionTitle title="추가 증빙">
       <FlexWrapper direction="column" gap={40}>
@@ -61,14 +73,14 @@ const AddEvidenceFrame: React.FC = () => {
                     optionText="(활동보고서로 증빙이 불가능한) 동아리 용품"
                     checked={isNoActivityPurpose}
                     onClick={() => {}}
-                  />{" "}
+                  />
                   <FormController
                     name="isFixture"
                     control={control}
                     renderItem={({ value, onChange }) => (
                       <CheckboxOption
                         optionText="비품"
-                        checked={value}
+                        checked={isFixture}
                         onClick={() => onChange(!value)}
                       />
                     )}
@@ -79,7 +91,7 @@ const AddEvidenceFrame: React.FC = () => {
                     renderItem={({ value, onChange }) => (
                       <CheckboxOption
                         optionText="비법인 거래"
-                        checked={value}
+                        checked={isNonCorporateTransaction}
                         onClick={() => onChange(!value)}
                       />
                     )}
@@ -90,7 +102,7 @@ const AddEvidenceFrame: React.FC = () => {
                     renderItem={({ value, onChange }) => (
                       <CheckboxOption
                         optionText="기타"
-                        checked={value}
+                        checked={isEtcExpense}
                         onClick={() => onChange(!value)}
                       />
                     )}
