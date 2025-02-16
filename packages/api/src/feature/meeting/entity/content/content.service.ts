@@ -11,16 +11,24 @@ export class ContentService {
     private readonly userPublicService: UserPublicService,
   ) {}
 
+  /**
+   * @param executiveId
+   * @param meetingId
+   * @param agendaId
+   * @param content
+   * @description postExecutiveMeetingAgendaContent의 서비스 진입점
+   */
   async postExecutiveMeetingAgendaContent(
     executiveId: number,
     meetingId: number,
     agendaId: number,
     content: string,
   ) {
+    // 현재 집행부원이 맞는지 확인
+    // TODO: 국장단 권한 확인 추가하기
     const executive = await this.userPublicService.getExecutiveById({
       id: executiveId,
     });
-
     if (!executive) {
       throw new HttpException("Executive not found", HttpStatus.NOT_FOUND);
     }
