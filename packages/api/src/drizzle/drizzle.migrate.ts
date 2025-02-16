@@ -17,4 +17,6 @@ async function runMigrations() {
   }
 }
 
+console.log("Migration started");
+
 runMigrations();
