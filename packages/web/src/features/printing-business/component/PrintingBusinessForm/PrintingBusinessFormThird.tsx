@@ -5,7 +5,7 @@ import Card from "@sparcs-clubs/web/common/components/Card";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import { printingBusinessOrderSteps } from "@sparcs-clubs/web/constants/printingBusiness";
 import DesiredPickUpTimeSelection from "@sparcs-clubs/web/features/printing-business/component/DesiredPickUpTimeSelection/DesiredPickUpTimeSelection";
-import { mockExistDates } from "@sparcs-clubs/web/features/rental-business/service/_mock/mockExistDate";
+import { mockExistDates } from "@sparcs-clubs/web/features/rental-business/services/_mock/mockExistDate";
 
 import type { PrintingBusinessFormProps } from ".";
 import FormCheck from "./_atomic/FormCheck";

@@ -10,7 +10,7 @@ import MyActivityCertificateTable from "@sparcs-clubs/web/features/my/components
 import MyCommonSpaceTable from "@sparcs-clubs/web/features/my/components/MyCommonSpaceTable";
 import MyPrintingTable from "@sparcs-clubs/web/features/my/components/MyPrintingTable";
 import MyRentalTable from "@sparcs-clubs/web/features/rental-business/components/MyRentalTable";
-import { useGetMyRentals } from "@sparcs-clubs/web/features/rental-business/service/getMyRentals";
+import { useGetMyRentals } from "@sparcs-clubs/web/features/rental-business/services/useGetMyRentals";
 
 import { useGetMyActivityCertificate } from "../services/getMyActivityCertificate";
 import { useGetMyCommonSpace } from "../services/getMyCommonSpace";

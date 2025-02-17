@@ -16,7 +16,7 @@ import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { RntTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import mockupMyExeRnt from "@sparcs-clubs/web/features/rental-business/service/_mock/mockMyExeRnt";
+import mockupMyExeRnt from "@sparcs-clubs/web/features/rental-business/services/_mock/mockMyExeRnt";
 import {
   formatDate,
   formatDateTime,

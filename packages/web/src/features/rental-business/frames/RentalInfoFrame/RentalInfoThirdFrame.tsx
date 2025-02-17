@@ -11,7 +11,7 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import { ListItem } from "@sparcs-clubs/web/common/components/ListItem";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import RentalList from "@sparcs-clubs/web/features/rental-business/components/RentalList";
-import mockupAvailableRental from "@sparcs-clubs/web/features/rental-business/service/_mock/mockAvailableRental";
+import mockupAvailableRental from "@sparcs-clubs/web/features/rental-business/services/_mock/mockAvailableRental";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import { RentalFrameProps } from "../RentalNoticeFrame";
