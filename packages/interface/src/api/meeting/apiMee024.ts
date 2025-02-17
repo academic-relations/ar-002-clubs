@@ -1,6 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import zId from "@sparcs-clubs/interface/common/type/id.type";
+
 /**
  * @version v0.1
  * @description 투표와 관련한 모든 정보(투표 제목, 설명, 선택지, 유저가 선택한 항목, 최종 결과)를 받아옵니다.
@@ -11,9 +13,9 @@ const url = (meetingId: number, agendaId: number, voteId: number) =>
 const method = "GET";
 
 const requestParam = z.object({
-  meetingId: z.coerce.number().int().min(1),
-  agendaId: z.coerce.number().int().min(1),
-  voteId: z.coerce.number().int().min(1),
+  meetingId: zId,
+  agendaId: zId,
+  voteId: zId,
 });
 
 const requestQuery = z.object({});
@@ -26,14 +28,14 @@ const responseBodyMap = {
     description: z.coerce.string(),
     choices: z.array(
       z.object({
-        id: z.coerce.number().int().min(1), // CHACHA: choiceId.
+        id: zId, // CHACHA: choiceId.
         choice: z.coerce.string().max(255),
       }),
     ),
-    choiceId: z.coerce.number().int().min(1), // CHACHA: what user chose, choiceId
+    choiceId: zId, // CHACHA: what user chose, choiceId
     results: z.array(
       z.object({
-        id: z.coerce.number().int().min(1), // CHACHA: choiceId.
+        id: zId, // CHACHA: choiceId.
         votes: z.coerce.number().int().min(0),
       }),
     ),

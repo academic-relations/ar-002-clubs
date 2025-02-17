@@ -1,6 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import zId from "@sparcs-clubs/interface/common/type/id.type";
+
 /**
  * @version v0.1
  * @description 특정 회의에 속한 안건에 달리는 회의 내용을 삭제합니다.
@@ -11,9 +13,9 @@ const url = (meetingId: number, agendaId: number, contentId: number) =>
 const method = "DELETE";
 
 const requestParam = z.object({
-  meetingId: z.coerce.number().int().min(1),
-  agendaId: z.coerce.number().int().min(1),
-  contentId: z.coerce.number().int().min(1),
+  meetingId: zId,
+  agendaId: zId,
+  contentId: zId,
 });
 
 const requestQuery = z.object({});

@@ -1,6 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import zId from "@sparcs-clubs/interface/common/type/id.type";
+
 /**
  * @version v0.1
  * @description 특정 회의에 속한 안건에 달리는 회의 내용을 생성합니다.
@@ -11,8 +13,8 @@ const url = (meetingId: number, agendaId: number) =>
 const method = "POST";
 
 const requestParam = z.object({
-  meetingId: z.coerce.number().int().min(1),
-  agendaId: z.coerce.number().int().min(1),
+  meetingId: zId,
+  agendaId: zId,
 });
 
 const requestQuery = z.object({});

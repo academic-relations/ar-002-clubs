@@ -3,7 +3,6 @@ import {
   Inject,
   Injectable,
 } from "@nestjs/common";
-
 import {
   and,
   count,
@@ -15,10 +14,9 @@ import {
   sql,
 } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
+import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
-// import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
-
 import {
   MeetingAgendaVote,
   MeetingMapping,
@@ -26,15 +24,13 @@ import {
   MeetingVoteResult,
 } from "@sparcs-clubs/api/drizzle/schema/meeting.schema";
 
-import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-
 @Injectable()
 export class VoteRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
   // CHACHA: 새 Vote 삽입 뒤 Choices에도 삽입, Mapping 반영
   async postMeetingAgendaVote(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     title: string,
@@ -121,7 +117,7 @@ export class VoteRepository {
   }
 
   async postMeetingAgendaVoteResult(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
@@ -176,7 +172,7 @@ export class VoteRepository {
   }
 
   async putMeetingAgendaVote(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
@@ -222,7 +218,7 @@ export class VoteRepository {
   }
 
   async putMeetingAgendaVoteChoices(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
@@ -273,7 +269,7 @@ export class VoteRepository {
   }
 
   async putMeetingAgendaVoteUserChoice(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
@@ -300,7 +296,7 @@ export class VoteRepository {
         .where(
           and(
             eq(MeetingVoteResult.voteId, voteId),
-            eq(MeetingVoteResult.userId, userId),
+            eq(MeetingVoteResult.userId, executiveId),
           ),
         );
 
@@ -313,7 +309,7 @@ export class VoteRepository {
       }
 
       logger.debug(
-        `[EntityRepository] Inserted meeting agenda vote result ${voteId}, ${userId}`,
+        `[EntityRepository] Inserted meeting agenda vote result ${voteId}, ${executiveId}`,
       );
       return true;
     });
@@ -322,7 +318,7 @@ export class VoteRepository {
   }
 
   async deleteMeetingAgendaVote(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
@@ -387,7 +383,7 @@ export class VoteRepository {
   }
 
   async deleteMeetingAgendaVoteForUser(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
@@ -399,7 +395,7 @@ export class VoteRepository {
         .where(
           and(
             eq(MeetingVoteResult.voteId, voteId),
-            eq(MeetingVoteResult.userId, userId),
+            eq(MeetingVoteResult.userId, executiveId),
           ),
         );
 
@@ -411,7 +407,7 @@ export class VoteRepository {
       }
 
       logger.debug(
-        `[EntityRepository] Soft deleted meeting agenda vote result for user: ${meetingId}, ${agendaId}, ${voteId}, ${userId}`,
+        `[EntityRepository] Soft deleted meeting agenda vote result for user: ${meetingId}, ${agendaId}, ${voteId}, ${executiveId}`,
       );
 
       return deleteFromVoteResult;
@@ -421,7 +417,7 @@ export class VoteRepository {
   }
 
   async getMeetingAgendaVote(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     voteId: number,
@@ -467,7 +463,7 @@ export class VoteRepository {
       .from(MeetingVoteResult)
       .where(
         and(
-          eq(MeetingVoteResult.userId, userId),
+          eq(MeetingVoteResult.userId, executiveId),
           eq(MeetingVoteResult.voteId, voteId),
           isNull(MeetingVoteResult.deletedAt),
         ),

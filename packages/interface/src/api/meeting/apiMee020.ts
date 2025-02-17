@@ -1,6 +1,8 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import zId from "@sparcs-clubs/interface/common/type/id.type";
+
 /**
  * @version v0.1
  * @description 특정 회의에 속한 안건에 달리는 투표에 대한 유저의 선택지를 변경합니다.
@@ -11,15 +13,15 @@ const url = (meetingId: number, agendaId: number, voteId: number) =>
 const method = "PUT";
 
 const requestParam = z.object({
-  meetingId: z.coerce.number().int().min(1),
-  agendaId: z.coerce.number().int().min(1),
-  voteId: z.coerce.number().int().min(1),
+  meetingId: zId,
+  agendaId: zId,
+  voteId: zId,
 });
 
 const requestQuery = z.object({});
 
 const requestBody = z.object({
-  choiceId: z.coerce.number().int().min(1),
+  choiceId: zId,
 });
 
 const responseBodyMap = {

@@ -21,11 +21,12 @@ export class ContentRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
   async postMeetingAgendaContent(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     content: string,
   ) {
+    // TODO: 국장 검사 로직 추가
     const isPostContentSuccess = await this.db.transaction(async tx => {
       const [insertContentResult] = await tx
         .insert(MeetingAgendaContent)
@@ -92,12 +93,13 @@ export class ContentRepository {
   }
 
   async putMeetingAgendaContent(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     contentId: number,
     content: string,
   ) {
+    // TODO: 국장 검사 로직 추가
     const isUpdateContentSuccess = await this.db.transaction(async tx => {
       const checkDeleted = await tx
         .select({ isDeleted: MeetingAgendaContent.deletedAt })
@@ -139,11 +141,12 @@ export class ContentRepository {
   }
 
   async deleteMeetingAgendaContent(
-    userId: number,
+    executiveId: number,
     meetingId: number,
     agendaId: number,
     contentId: number,
   ) {
+    // TODO: 국장 검사 로직 추가
     const isDeleteContentSuccess = await this.db.transaction(async tx => {
       const [deleteFromContentResult] = await tx
         .update(MeetingAgendaContent)
