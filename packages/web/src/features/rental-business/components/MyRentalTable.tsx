@@ -76,7 +76,7 @@ const MyRentalTable: React.FC<RentalTableProps> = ({ rentalList }) => {
     enableSorting: false,
   });
 
-  return <Table table={table} />;
+  return <Table table={table} count={rentalList.total} />;
 };
 
 export default MyRentalTable;
