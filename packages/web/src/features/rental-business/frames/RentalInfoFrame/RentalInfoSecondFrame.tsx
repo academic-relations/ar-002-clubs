@@ -18,7 +18,7 @@ import HandCart from "@sparcs-clubs/web/features/rental-business/components/Rent
 import Mat from "@sparcs-clubs/web/features/rental-business/components/Rentals/Mat";
 import Tool from "@sparcs-clubs/web/features/rental-business/components/Rentals/Tool";
 import Vacuum from "@sparcs-clubs/web/features/rental-business/components/Rentals/Vacuum";
-import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar/SelectRangeCalendar";
+import SelectRangeCalendar from "@sparcs-clubs/web/features/rental-business/components/SelectRangeCalendar";
 import mockupAvailableRental from "@sparcs-clubs/web/features/rental-business/services/_mock/mockAvailableRental";
 import { mockExistDates } from "@sparcs-clubs/web/features/rental-business/services/_mock/mockExistDate";
 // import { useGetAvailableRentals } from "@sparcs-clubs/web/features/rental-business/service/getAvailableRentals";
