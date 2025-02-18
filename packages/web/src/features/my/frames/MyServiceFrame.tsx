@@ -9,12 +9,12 @@ import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle
 import MyActivityCertificateTable from "@sparcs-clubs/web/features/my/components/MyActivityCertificateTable";
 import MyCommonSpaceTable from "@sparcs-clubs/web/features/my/components/MyCommonSpaceTable";
 import MyPrintingTable from "@sparcs-clubs/web/features/my/components/MyPrintingTable";
-import MyRentalTable from "@sparcs-clubs/web/features/my/components/MyRentalTable";
+import MyRentalTable from "@sparcs-clubs/web/features/rental-business/components/MyRentalTable";
+import { useGetMyRentals } from "@sparcs-clubs/web/features/rental-business/services/useGetMyRentals";
 
 import { useGetMyActivityCertificate } from "../services/getMyActivityCertificate";
 import { useGetMyCommonSpace } from "../services/getMyCommonSpace";
 import { useGetMyPrinting } from "../services/getMyPrinting";
-import { useGetMyRentals } from "../services/getMyRentals";
 
 const MyServiceFrame: React.FC = () => {
   // TODO: 실제 필요한 값으로 바꾸기

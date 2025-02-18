@@ -6,7 +6,7 @@ import type {
 } from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
 import apiRnt001 from "@sparcs-clubs/interface/api/rental/endpoint/apiRnt001";
 
-import mockupAvailableRental from "@sparcs-clubs/web/features/rental-business/service/_mock/mockAvailableRental";
+import mockupAvailableRental from "@sparcs-clubs/web/features/rental-business/services/_mock/mockAvailableRental";
 import {
   axiosClientWithAuth,
   defineAxiosMock,
