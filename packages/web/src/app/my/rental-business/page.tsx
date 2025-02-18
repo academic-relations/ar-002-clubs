@@ -16,7 +16,7 @@ const MyRentalBusiness = () => (
       ]}
       title="대여 사업 신청 내역"
     />
-    <MyRentalTable rentalList={mockupMyRental} />
+    <MyRentalTable rentalList={mockupMyRental} withCount />
   </FlexWrapper>
 );
 

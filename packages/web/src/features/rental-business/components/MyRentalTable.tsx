@@ -18,6 +18,7 @@ import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
 interface RentalTableProps {
   rentalList: ApiRnt003ResponseOK;
+  withCount?: boolean;
 }
 
 const columnHelper = createColumnHelper<ApiRnt003ResponseOK["items"][number]>();
@@ -68,7 +69,10 @@ const columns = [
   ),
 ];
 
-const MyRentalTable: React.FC<RentalTableProps> = ({ rentalList }) => {
+const MyRentalTable: React.FC<RentalTableProps> = ({
+  rentalList,
+  withCount = false,
+}) => {
   const table = useReactTable({
     columns,
     data: rentalList.items,
@@ -76,7 +80,9 @@ const MyRentalTable: React.FC<RentalTableProps> = ({ rentalList }) => {
     enableSorting: false,
   });
 
-  return <Table table={table} count={rentalList.total} />;
+  return (
+    <Table table={table} count={withCount ? rentalList.total : undefined} />
+  );
 };
 
 export default MyRentalTable;
