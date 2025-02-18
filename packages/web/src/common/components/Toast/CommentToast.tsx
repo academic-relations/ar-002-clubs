@@ -8,7 +8,7 @@ import FlexWrapper from "../FlexWrapper";
 import Icon from "../Icon";
 import Typography from "../Typography";
 
-export type ToastColorType = { background: string; border: string };
+export type CommentToastColorType = { background: string; border: string };
 
 interface Reason {
   datetime: Date;
@@ -16,13 +16,13 @@ interface Reason {
   status?: string;
 }
 
-export interface ToastProps {
+export interface CommentToastProps {
   title: string;
   reasons: Reason[];
   color: "green" | "red" | "yellow";
 }
 
-const ForceBorderRadius = styled.div<{ color: ToastColorType }>`
+const ForceBorderRadius = styled.div<{ color: CommentToastColorType }>`
   position: sticky;
   top: 0px;
   border-radius: 8px;
@@ -33,7 +33,7 @@ const ForceBorderRadius = styled.div<{ color: ToastColorType }>`
   z-index: ${({ theme }) => theme.zIndices.toast};
 `;
 
-const ApproveReasonToastInner = styled.div<{ color: ToastColorType }>`
+const CommentToastInner = styled.div<{ color: CommentToastColorType }>`
   color: ${({ theme }) => theme.colors.BLACK};
   display: flex;
   flex-direction: column;
@@ -43,7 +43,7 @@ const ApproveReasonToastInner = styled.div<{ color: ToastColorType }>`
   max-height: 300px;
   overflow-y: auto;
 
-  .ApproveReasonToast-title {
+  .CommentToast-title {
     padding: 12px 16px 0 16px;
     width: 100%;
     position: sticky;
@@ -55,7 +55,7 @@ const ApproveReasonToastInner = styled.div<{ color: ToastColorType }>`
     z-index: ${({ theme }) => theme.zIndices.toast + 1};
   }
 
-  .ApproveReasonToast-reasons {
+  .CommentToast-reasons {
     display: flex;
     width: 100%;
     padding: 0 16px 12px 44px;
@@ -64,7 +64,7 @@ const ApproveReasonToastInner = styled.div<{ color: ToastColorType }>`
     flex: 1 0 0;
   }
 
-  .ApproveReasonToast-sticky-title {
+  .CommentToast-sticky-title {
     position: sticky;
     top: 0;
     background: ${({ color }) => color.background};
@@ -72,8 +72,12 @@ const ApproveReasonToastInner = styled.div<{ color: ToastColorType }>`
   }
 `;
 
-const Toast: React.FC<ToastProps> = ({ title, reasons, color }) => {
-  const toastColor: ToastColorType = useMemo(() => {
+const CommentToast: React.FC<CommentToastProps> = ({
+  title,
+  reasons,
+  color,
+}) => {
+  const toastColor: CommentToastColorType = useMemo(() => {
     switch (color) {
       case "red":
         return { background: colors.RED[100], border: colors.RED[600] };
@@ -87,14 +91,14 @@ const Toast: React.FC<ToastProps> = ({ title, reasons, color }) => {
 
   return (
     <ForceBorderRadius color={toastColor}>
-      <ApproveReasonToastInner color={toastColor}>
-        <div className="ApproveReasonToast-title">
+      <CommentToastInner color={toastColor}>
+        <div className="CommentToast-title">
           <Icon type="error" size={20} color={toastColor.border} />
           <Typography fs={16} lh={24} fw="MEDIUM">
             {title}
           </Typography>
         </div>
-        <div className="ApproveReasonToast-reasons">
+        <div className="CommentToast-reasons">
           {reasons.map(reason => (
             <FlexWrapper
               direction="column"
@@ -111,9 +115,9 @@ const Toast: React.FC<ToastProps> = ({ title, reasons, color }) => {
             </FlexWrapper>
           ))}
         </div>
-      </ApproveReasonToastInner>
+      </CommentToastInner>
     </ForceBorderRadius>
   );
 };
 
-export default Toast;
+export default CommentToast;

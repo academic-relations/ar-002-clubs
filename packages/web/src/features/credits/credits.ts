@@ -24,6 +24,13 @@ const credits: SemesterCredit[] = [
     semester: "2025년 겨울",
     members: [
       {
+        nickname: "ava",
+        name: "주영미",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "겨울이다~",
+      },
+      {
         nickname: "eel",
         name: "최우정",
         role: "FE / BE",
@@ -43,6 +50,13 @@ const credits: SemesterCredit[] = [
         role: "APM(BE)",
         roleType: RoleType.APM_BE,
         comment: "9시에 일어나고 11시에 잡시다",
+      },
+      {
+        nickname: "chacha",
+        name: "안채연",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "BE 뉴비에요",
       },
     ],
   },
