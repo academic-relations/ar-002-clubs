@@ -1,23 +1,19 @@
+import { overlay } from "overlay-kit";
 import React from "react";
+import styled from "styled-components";
 
+import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 import { ApiReg006ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg006";
 import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
-
-import { overlay } from "overlay-kit";
-
-import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CancellableModalContent from "@sparcs-clubs/web/common/components/Modal/CancellableModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
 import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
 import { useRegisterClub } from "../services/registerClub";
 import { useUnregisterClub } from "../services/unregisterClub";
-
-import type { ApiClb002ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb002";
 
 interface RegisterInfoProps {
   club: ApiClb002ResponseOK;

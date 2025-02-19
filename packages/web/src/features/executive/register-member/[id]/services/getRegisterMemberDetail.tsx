@@ -1,17 +1,16 @@
-import apiReg020 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg020";
 import { useQuery } from "@tanstack/react-query";
-
-import { mockupClubMemberRegister } from "@sparcs-clubs/web/features/executive/register-member/[id]/_mock/mockClubMemberRegister";
-
-import {
-  axiosClientWithAuth,
-  defineAxiosMock,
-} from "@sparcs-clubs/web/lib/axios";
 
 import type {
   ApiReg020RequestQuery,
   ApiReg020ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg020";
+import apiReg020 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg020";
+
+import { mockupClubMemberRegister } from "@sparcs-clubs/web/features/executive/register-member/[id]/_mock/mockClubMemberRegister";
+import {
+  axiosClientWithAuth,
+  defineAxiosMock,
+} from "@sparcs-clubs/web/lib/axios";
 
 export const useGetRegisterMemberDetail = (
   requestQuery: ApiReg020RequestQuery,

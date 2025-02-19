@@ -1,9 +1,8 @@
 import { action } from "@storybook/addon-actions";
 import { useArgs } from "@storybook/preview-api";
+import type { Meta, StoryObj } from "@storybook/react";
 
 import CheckboxOption from "../common/components/CheckboxOption";
-
-import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof CheckboxOption> = {
   component: CheckboxOption,

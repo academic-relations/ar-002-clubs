@@ -13,7 +13,7 @@ const useExampleStore = create(
       value: 0,
       increment: () =>
         set(state => {
-          state.value += 1;
+          state.value += 1; // eslint-disable-line no-param-reassign
         }),
     })),
     {

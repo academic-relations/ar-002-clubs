@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
-
 import { usePathname } from "next/navigation";
+import React from "react";
 
 import NotFound from "@sparcs-clubs/web/app/not-found";
 import { productionReadyPaths } from "@sparcs-clubs/web/constants/paths";

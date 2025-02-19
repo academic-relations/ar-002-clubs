@@ -1,8 +1,11 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import { and, eq, gt, gte, inArray, isNull, lte, or, sql } from "drizzle-orm";
 import { union } from "drizzle-orm/mysql-core";
 import { MySql2Database } from "drizzle-orm/mysql2";
+import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
+
+import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import {
@@ -21,11 +24,7 @@ import {
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
-import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-
 import { VClubSummary } from "../model/club.summary.model";
-
-import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 
 interface IClubs {
   id: number;
@@ -175,7 +174,6 @@ export default class ClubRepository {
       const club = row.clubs;
 
       if (!acc[divId]) {
-        // eslint-disable-next-line no-param-reassign
         acc[divId] = { id: divId, name: divName, clubs: [] };
       }
 
@@ -461,11 +459,26 @@ export default class ClubRepository {
   }
 
   async fetchSummary(clubId: number): Promise<VClubSummary> {
-    const result = await this.db.select().from(Club).where(eq(Club.id, clubId));
+    const cur = getKSTDate();
+    const result = await this.db
+      .select()
+      .from(Club)
+      .leftJoin(
+        ClubT,
+        and(
+          eq(Club.id, ClubT.clubId),
+          and(
+            lte(ClubT.startTerm, cur),
+            or(gte(ClubT.endTerm, cur), isNull(ClubT.endTerm)),
+          ),
+        ),
+      )
+      .where(eq(Club.id, clubId));
 
     if (result.length !== 1) {
       throw new NotFoundException("Club not found");
     }
+
     return VClubSummary.fromDBResult(result[0]);
   }
 
@@ -474,11 +487,22 @@ export default class ClubRepository {
       return [];
     }
 
+    const cur = getKSTDate();
     const result = await this.db
       .select()
       .from(Club)
+      .leftJoin(
+        ClubT,
+        and(
+          eq(Club.id, ClubT.clubId),
+          and(
+            lte(ClubT.startTerm, cur),
+            or(gte(ClubT.endTerm, cur), isNull(ClubT.endTerm)),
+          ),
+        ),
+      )
       .where(inArray(Club.id, clubIds));
 
-    return result.map(VClubSummary.fromDBResult);
+    return result.map(club => VClubSummary.fromDBResult(club));
   }
 }

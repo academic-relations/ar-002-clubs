@@ -9,6 +9,8 @@ import {
   UseGuards,
   UsePipes,
 } from "@nestjs/common";
+import { Response } from "express";
+
 import apiAut001, {
   ApiAut001RequestQuery,
   ApiAut001ResponseOk,
@@ -22,7 +24,6 @@ import apiAut003, {
 import apiAut004, {
   ApiAut004RequestQuery,
 } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut004";
-import { Response } from "express";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import {

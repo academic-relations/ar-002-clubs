@@ -1,80 +1,72 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { IFundingCommentRequestCreate } from "@sparcs-clubs/interface/api/funding/type/funding.type";
-import { eq } from "drizzle-orm";
+import { Injectable } from "@nestjs/common";
+import { desc, eq } from "drizzle-orm";
 
-import { MySql2Database } from "drizzle-orm/mysql2";
+import { IFundingCommentRequest } from "@sparcs-clubs/interface/api/funding/type/funding.comment.type";
 
-import {
-  DrizzleAsyncProvider,
-  DrizzleTransaction,
-} from "@sparcs-clubs/api/drizzle/drizzle.provider";
+import { BaseRepository } from "@sparcs-clubs/api/common/repository/base.repository";
+import { DrizzleTransaction } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import { FundingFeedback } from "@sparcs-clubs/api/drizzle/schema/funding.schema";
-import { MFundingComment } from "@sparcs-clubs/api/feature/funding/model/funding.comment.model";
+import {
+  FundingCommentDbResult,
+  MFundingComment,
+} from "@sparcs-clubs/api/feature/funding/model/funding.comment.model";
 
 @Injectable()
-export default class FundingCommentRepository {
-  constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
-
-  // WARD: Transaction
-  async withTransaction<T>(
-    callback: (tx: DrizzleTransaction) => Promise<T>,
-  ): Promise<T> {
-    return this.db.transaction(callback);
-  }
-
-  async fetchAll(fundingId: number): Promise<MFundingComment[]> {
-    return this.db.transaction(async tx => this.fetchAllTx(tx, fundingId));
+export default class FundingCommentRepository extends BaseRepository<
+  MFundingComment,
+  IFundingCommentRequest,
+  FundingCommentDbResult,
+  typeof FundingFeedback
+> {
+  constructor() {
+    super(FundingFeedback, MFundingComment);
   }
 
   async fetchAllTx(
     tx: DrizzleTransaction,
+    ids: number[],
+  ): Promise<MFundingComment[]>;
+  async fetchAllTx(
+    tx: DrizzleTransaction,
     fundingId: number,
+  ): Promise<MFundingComment[]>;
+  async fetchAllTx(
+    tx: DrizzleTransaction,
+    arg1: number | number[],
   ): Promise<MFundingComment[]> {
-    const result = await tx
-      .select()
-      .from(FundingFeedback)
-      .where(eq(FundingFeedback.fundingId, fundingId));
-
-    return result.map(row => MFundingComment.fromDBResult(row));
-  }
-
-  async fetch(id: number): Promise<MFundingComment> {
-    return this.db.transaction(async tx => this.fetchTx(tx, id));
-  }
-
-  async fetchTx(tx: DrizzleTransaction, id: number): Promise<MFundingComment> {
-    const result = await tx
-      .select()
-      .from(FundingFeedback)
-      .where(eq(FundingFeedback.id, id));
-
-    if (result.length === 0) {
-      throw new Error(`Not found: FundingComment with id: ${id}`);
+    if (Array.isArray(arg1)) {
+      return super.fetchAllTx(tx, arg1);
     }
-    return MFundingComment.fromDBResult(result[0]);
+
+    const result = await tx
+      .select()
+      .from(FundingFeedback)
+      .where(eq(FundingFeedback.fundingId, arg1))
+      .orderBy(desc(FundingFeedback.createdAt));
+
+    return result.map(row => MFundingComment.from(row));
   }
 
-  async insert(param: IFundingCommentRequestCreate): Promise<MFundingComment> {
-    return this.db.transaction(async tx => this.insertTx(tx, param));
+  async fetchAll(fundingId: number): Promise<MFundingComment[]>;
+  async fetchAll(ids: number[]): Promise<MFundingComment[]>;
+  async fetchAll(arg1: number | number[]): Promise<MFundingComment[]> {
+    if (Array.isArray(arg1)) {
+      return super.fetchAll(arg1);
+    }
+
+    return this.withTransaction(async tx => this.fetchAllTx(tx, arg1));
   }
 
   async insertTx(
     tx: DrizzleTransaction,
-    param: IFundingCommentRequestCreate,
+    param: IFundingCommentRequest,
   ): Promise<MFundingComment> {
-    const [comment] = await tx
-      .insert(FundingFeedback)
-      .values({
-        ...param,
-        fundingId: param.funding.id,
-        chargedExecutiveId: param.chargedExecutive.id,
-        feedback: param.content,
-        createdAt: new Date(),
-      })
-      .execute();
-
-    const newId = Number(comment.insertId);
-
-    return this.fetchTx(tx, newId);
+    const comment = {
+      ...param,
+      fundingId: param.funding.id,
+      executiveId: param.executive.id,
+      feedback: param.content,
+    };
+    return super.insertTx(tx, comment);
   }
 }

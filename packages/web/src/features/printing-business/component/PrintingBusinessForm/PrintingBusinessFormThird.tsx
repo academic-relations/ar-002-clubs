@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from "react";
-
 import { setHours } from "date-fns";
+import React, { useEffect, useState } from "react";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import { printingBusinessOrderSteps } from "@sparcs-clubs/web/constants/printingBusiness";
 import DesiredPickUpTimeSelection from "@sparcs-clubs/web/features/printing-business/component/DesiredPickUpTimeSelection/DesiredPickUpTimeSelection";
-import { mockExistDates } from "@sparcs-clubs/web/features/rental-business/frames/RentalInfoFrame/_atomic/mockExistDate";
-
-import FormCheck from "./_atomic/FormCheck";
+import { mockExistDates } from "@sparcs-clubs/web/features/rental-business/services/_mock/mockExistDate";
 
 import type { PrintingBusinessFormProps } from ".";
+import FormCheck from "./_atomic/FormCheck";
 
 type PrintingBusinessFormThirdProps = Pick<
   PrintingBusinessFormProps,

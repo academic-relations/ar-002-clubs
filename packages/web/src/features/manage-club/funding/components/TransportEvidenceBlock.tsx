@@ -1,9 +1,8 @@
 import React from "react";
-
-import { TransportationEnum as E } from "@sparcs-clubs/interface/common/enum/funding.enum";
-
 import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
+
+import { TransportationEnum as E } from "@sparcs-clubs/interface/common/enum/funding.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -12,9 +11,7 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
 import SelectParticipant from "@sparcs-clubs/web/features/activity-report/components/SelectParticipant";
-
 import useGetActivityParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetActivityParticipants";
 import {
   isParticipantsRequired,
@@ -22,7 +19,6 @@ import {
 } from "@sparcs-clubs/web/utils/isTransportation";
 
 import { AddEvidence } from "../types/funding";
-
 import EvidenceBlockTitle from "./EvidenceBlockTitle";
 
 interface TransportEvidenceBlockProps {

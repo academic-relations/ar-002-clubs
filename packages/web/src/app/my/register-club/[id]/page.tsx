@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 
-import NotFound from "@sparcs-clubs/web/app/not-found";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
+import NotFound from "@sparcs-clubs/web/app/not-found";
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import NotForExecutive from "@sparcs-clubs/web/common/frames/NotForExecutive";
@@ -29,7 +30,7 @@ const MyRegisterClubDetail = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile?.type === "executive") {
+  if (profile?.type === UserTypeEnum.Executive) {
     return <NotForExecutive />;
   }
 
@@ -37,7 +38,7 @@ const MyRegisterClubDetail = () => {
     return <NotFound />;
   }
 
-  return profile?.type === "professor" ? (
+  return profile?.type === UserTypeEnum.Professor ? (
     <ProfessorRegisterClubDetailFrame profile={profile.type} />
   ) : (
     <StudentRegisterClubDetailFrame profile={profile.type} />

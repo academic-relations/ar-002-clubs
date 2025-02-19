@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface SemesterProps {
   id: number;
   year: number;

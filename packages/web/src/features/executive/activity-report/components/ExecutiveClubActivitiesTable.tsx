@@ -1,7 +1,3 @@
-import React, { useEffect, useMemo, useState } from "react";
-
-import { ApiAct024ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
-import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -9,6 +5,9 @@ import {
   RowSelectionState,
   useReactTable,
 } from "@tanstack/react-table";
+import React, { useEffect, useMemo, useState } from "react";
+
+import { ApiAct024ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct024";
 
 import Checkbox from "@sparcs-clubs/web/common/components/Checkbox";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -19,6 +18,8 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { ActStatusTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
+import { sortActivitiesByStatusAndActivityId } from "../utils/sortActivities";
 
 interface ExecutiveClubActivitiesTableProps {
   data: ApiAct024ResponseOk;
@@ -55,12 +56,15 @@ const columns = [
     cell: info => info.getValue(),
     size: 300,
   }),
-  columnHelper.accessor("updatedAt", {
+  columnHelper.accessor("commentedAt", {
     header: "검토 일시",
-    cell: info => formatDateTime(info.getValue()),
+    cell: info => {
+      const date = info.getValue();
+      return date ? formatDateTime(date) : "-";
+    },
     size: 220,
   }),
-  columnHelper.accessor("commentedExecutive.name", {
+  columnHelper.accessor(row => row.commentedExecutive?.name, {
     header: "최종 검토자",
     cell: info => info.getValue() || "-",
     size: 120,
@@ -80,25 +84,10 @@ const columns = [
 const ExecutiveClubActivitiesTable: React.FC<
   ExecutiveClubActivitiesTableProps
 > = ({ data, searchText, selectedActivityIds, setSelectedActivityIds }) => {
-  const sortedActivities = useMemo(() => {
-    const statusOrder = {
-      [ActivityStatusEnum.Applied]: 0,
-      [ActivityStatusEnum.Rejected]: 1,
-      [ActivityStatusEnum.Approved]: 2,
-      [ActivityStatusEnum.Committee]: 3,
-    };
-
-    return [...data.items].sort((a, b) => {
-      if (
-        statusOrder[a.activityStatusEnum] !== statusOrder[b.activityStatusEnum]
-      ) {
-        return (
-          statusOrder[a.activityStatusEnum] - statusOrder[b.activityStatusEnum]
-        );
-      }
-      return a.activityId < b.activityId ? -1 : 1;
-    });
-  }, [data.items]);
+  const sortedActivities = useMemo(
+    () => sortActivitiesByStatusAndActivityId(data.items),
+    [data.items],
+  );
 
   const initialRowValues = useMemo(
     () =>

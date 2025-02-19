@@ -1,8 +1,6 @@
-import React from "react";
-
 import { useRouter } from "next/navigation";
-
 import { overlay } from "overlay-kit";
+import React from "react";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
@@ -12,7 +10,6 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 
 import { useCreateFunding } from "../hooks/useCreateFunding";
 import { FundingFormData } from "../types/funding";
-
 import FundingForm from "./FundingForm";
 
 interface CreateFundingFrameProps {

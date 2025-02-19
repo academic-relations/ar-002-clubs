@@ -4,7 +4,10 @@ import {
   zActivityD,
   zActivitySummary,
 } from "@sparcs-clubs/interface/api/activity/type/activity.type";
-import { zClub } from "@sparcs-clubs/interface/api/club/type/club.type";
+import {
+  zClub,
+  zClubSummary,
+} from "@sparcs-clubs/interface/api/club/type/club.type";
 import { zFileSummary } from "@sparcs-clubs/interface/api/file/type/file.type";
 import {
   zExecutiveSummary,
@@ -110,6 +113,9 @@ export const zFunding = z.object({
   isEtcExpense: z.coerce.boolean(),
   etcExpense: zMinorExpense.optional(),
 
+  chargedExecutive: zExecutiveSummary.pick({ id: true }).optional(),
+  commentedExecutive: zExecutiveSummary.pick({ id: true }).optional(),
+
   editedAt: z.coerce.date(),
   commentedAt: z.coerce.date().optional(),
   createdAt: z.coerce.date(),
@@ -117,6 +123,7 @@ export const zFunding = z.object({
   deletedAt: z.coerce.date().optional(),
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const zFundingExtra = zFunding.pick({
   activityD: true,
   fundingStatusEnum: true,
@@ -288,25 +295,6 @@ export const zFundingRequest = zFundingRequestBase.superRefine((data, ctx) => {
   }
 });
 
-export const zFundingComment = z.object({
-  id: zId,
-  funding: zFunding.pick({ id: true }),
-  chargedExecutive: zExecutiveSummary.pick({ id: true }),
-  content: z.string(),
-  fundingStatusEnum: z.nativeEnum(FundingStatusEnum),
-  approvedAmount: z.coerce.number().int().min(0),
-  createdAt: z.coerce.date(),
-});
-
-export const zFundingCommentResponse = zFundingComment.extend({
-  chargedExecutive: zExecutiveSummary,
-});
-
-export const zFundingCommentRequestCreate = zFundingComment.omit({
-  id: true,
-  createdAt: true,
-});
-
 export const zFundingResponse = zFunding.extend({
   id: zId,
   tradeEvidenceFiles: z.array(zFileSummary),
@@ -369,7 +357,6 @@ export const zFundingResponse = zFunding.extend({
       files: z.array(zFileSummary),
     })
     .optional(),
-  comments: z.array(zFundingCommentResponse),
 });
 
 export const zFundingSummary = zFunding.pick({
@@ -379,15 +366,13 @@ export const zFundingSummary = zFunding.pick({
   expenditureAmount: true,
   approvedAmount: true,
   purposeActivity: true,
+  club: true,
+  chargedExecutive: true,
 });
 
-export const zFundingResponseSummary = zFundingResponse.pick({
-  id: true,
-  fundingStatusEnum: true,
-  name: true,
-  expenditureAmount: true,
-  approvedAmount: true,
-  purposeActivity: true,
+export const zFundingSummaryResponse = zFundingSummary.extend({
+  club: zClubSummary,
+  purposeActivity: zActivitySummary.optional(),
 });
 
 export type IClubSupplies = z.infer<typeof zClubSupplies>;
@@ -400,10 +385,5 @@ export type IFunding = z.infer<typeof zFunding>;
 export type IFundingRequest = z.infer<typeof zFundingRequest>;
 export type IFundingSummary = z.infer<typeof zFundingSummary>;
 export type IFundingResponse = z.infer<typeof zFundingResponse>;
-export type IFundingResponseSummary = z.infer<typeof zFundingResponseSummary>;
+export type IFundingSummaryResponse = z.infer<typeof zFundingSummaryResponse>;
 export type IFundingExtra = z.infer<typeof zFundingExtra>;
-export type IFundingComment = z.infer<typeof zFundingComment>;
-export type IFundingCommentResponse = z.infer<typeof zFundingCommentResponse>;
-export type IFundingCommentRequestCreate = z.infer<
-  typeof zFundingCommentRequestCreate
->;

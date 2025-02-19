@@ -1,10 +1,8 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-
 import { and, eq, gte, inArray, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
-
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   Executive,
@@ -115,7 +113,7 @@ export default class ExecutiveRepository {
     return result;
   }
 
-  async selectExecutiveSummary(date: Date): Promise<VExecutiveSummary[]> {
+  async fetchExecutiveSummaries(date: Date): Promise<VExecutiveSummary[]> {
     const result = await this.db
       .select()
       .from(ExecutiveT)

@@ -1,11 +1,10 @@
+import type { ApiUsr005ResponseOk } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr005";
 import apiUsr005 from "@sparcs-clubs/interface/api/user/endpoint/apiUsr005";
 
 import {
   axiosClientWithAuth,
   defineAxiosMock,
 } from "@sparcs-clubs/web/lib/axios";
-
-import type { ApiUsr005ResponseOk } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr005";
 
 const getUserAgree = async (): Promise<ApiUsr005ResponseOk> => {
   const { data } = await axiosClientWithAuth.get(apiUsr005.url(), {});

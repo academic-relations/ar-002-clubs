@@ -1,18 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import {
-  ClubDelegateChangeRequestStatusEnum,
-  ClubDelegateEnum,
-} from "@sparcs-clubs/interface/common/enum/club.enum";
-
-import logger from "@sparcs-clubs/api/common/util/logger";
-import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
-
-import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
-import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
-
-import { ClubDelegateDRepository } from "./club.club-delegate-d.repository";
-
 import type {
   ApiClb006RequestParam,
   ApiClb006ResponseOK,
@@ -35,6 +22,17 @@ import type {
   ApiClb015ResponseNoContent,
   ApiClb015ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb015";
+import {
+  ClubDelegateChangeRequestStatusEnum,
+  ClubDelegateEnum,
+} from "@sparcs-clubs/interface/common/enum/club.enum";
+
+import logger from "@sparcs-clubs/api/common/util/logger";
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
+import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
+import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
+
+import { ClubDelegateDRepository } from "./club.club-delegate-d.repository";
 
 interface ApiClb015ResponseType {
   status: number;
@@ -47,6 +45,40 @@ export default class ClubDelegateService {
     private userPublicService: UserPublicService,
     private clubPublicService: ClubPublicService,
   ) {}
+
+  /**
+   * @param clubId 동아리 Id
+   * @description 해당 동아리의 대표자 변경 요청 중 3일이 지난 요청을 만료(soft delete)합니다.
+   * **_모든 변경 요청 조회 관련 로직에서 조회 이전에 호출되어야 합니다._**
+   */
+  private async cleanExpiredChangeRequests(param: {
+    clubId: number;
+  }): Promise<void> {
+    const requests =
+      await this.clubDelegateDRepository.findDelegateChangeRequestByClubId({
+        clubId: param.clubId,
+      });
+
+    const threeDaysAgo = getKSTDate();
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+
+    await Promise.all(
+      requests.map(async request => {
+        if (
+          request.clubDelegateChangeRequestStatusEnumId ===
+            ClubDelegateChangeRequestStatusEnum.Applied &&
+          request.createdAt < threeDaysAgo
+        ) {
+          logger.debug(
+            `Found expired change request created on ${request.createdAt}`,
+          );
+          await this.clubDelegateDRepository.deleteDelegateChangeRequestById({
+            id: request.id,
+          });
+        }
+      }),
+    );
+  }
 
   async getStudentClubDelegates(
     param: { studentId: number } & ApiClb006RequestParam,
@@ -225,6 +257,7 @@ export default class ClubDelegateService {
    *
    * @description getStudentClubDelegateRequests의 서비스 진입점입니다.
    * 동아리 대표자 변경 요청을 조회합니다.
+   * 조회한 대표자 변경 요청이 3일이 지났다면 soft delete합니다.
    */
   async getStudentClubDelegateRequests(param: {
     param: ApiClb011RequestParam;
@@ -242,6 +275,9 @@ export default class ClubDelegateService {
         "The api is allowed for delegates",
         HttpStatus.FORBIDDEN,
       );
+
+    // 3일이 지난 요청은 soft delete합니다.
+    await this.cleanExpiredChangeRequests({ clubId: param.param.clubId });
 
     const result =
       await this.clubDelegateDRepository.findDelegateChangeRequestByClubId({
@@ -360,7 +396,7 @@ export default class ClubDelegateService {
       requests.map(request => {
         if (request === undefined)
           throw new HttpException("No request", HttpStatus.BAD_REQUEST);
-        return this.clubDelegateDRepository.deleteDelegatChangeRequestById({
+        return this.clubDelegateDRepository.deleteDelegateChangeRequestById({
           id: request.id,
         });
       }),
@@ -400,14 +436,16 @@ export default class ClubDelegateService {
         HttpStatus.BAD_REQUEST,
       );
 
-    if (
-      param.body.clubDelegateChangeRequestStatusEnum ===
-      ClubDelegateChangeRequestStatusEnum.Applied
-    )
-      throw new HttpException(
-        "you cannot change status to applied",
-        HttpStatus.BAD_REQUEST,
-      );
+    // gb: zod 에서 refine으로 걸러서 Applied 값이 안들어오도록 했는데 같은지 확인해서 에러 발생하길래 주석처리
+    // 아니 근데 3달전(24.11)에 만든 코드가 왜 이제서(25.2) 말썽인지... lint 바꾼거 때문인가?
+    // if (
+    //   param.body.clubDelegateChangeRequestStatusEnum ===
+    //   ClubDelegateChangeRequestStatusEnum.Applied
+    // )
+    //   throw new HttpException(
+    //     "you cannot change status to applied",
+    //     HttpStatus.BAD_REQUEST,
+    //   );
 
     // 대표자 변경 요청을 승인의 경우, 대표자 변경을 수행합니다.
     if (
@@ -472,7 +510,7 @@ export default class ClubDelegateService {
 
     if (result.length === 0)
       return {
-        status: HttpStatus.NO_CONTENT,
+        status: HttpStatus.FORBIDDEN,
         data: {},
       };
     if (result.length > 1)

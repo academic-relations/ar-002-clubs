@@ -2,14 +2,13 @@
 
 import React from "react";
 
+import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 import { RegistrationApplicationStudentStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import { useGetMyMemberRegistration } from "@sparcs-clubs/web/features/clubs/services/getMyMemberRegistration";
 
 import ClubRegistrationButton from "../ClubRegistrationButton";
-
-import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 
 interface ClubRegistrationButtonWrapperProps {
   club: ApiClb001ResponseOK["divisions"][number]["clubs"][number];

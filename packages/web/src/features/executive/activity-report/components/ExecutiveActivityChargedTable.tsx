@@ -1,14 +1,13 @@
-import React, { useMemo } from "react";
-
-import { ApiAct023ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 import {
   createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { overlay } from "overlay-kit";
+import React, { useMemo } from "react";
+
+import { ApiAct023ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 
 import TextButton from "@sparcs-clubs/web/common/components/Buttons/TextButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -38,7 +37,10 @@ const openAssignModal = (data: ExecutiveProgresses) => {
           <Typography fs={16} lh={28} fw="MEDIUM" style={{ textAlign: "left" }}>
             {data.executiveName} 활동 보고서 검토 현황 상세
           </Typography>
-          <ChargedActivityModalTable data={data.chargedClubsAndProgresses} />
+          <ChargedActivityModalTable
+            data={data.chargedClubsAndProgresses}
+            closeModal={close}
+          />
         </FlexWrapper>
       </ConfirmModalContent>
     </Modal>
@@ -183,7 +185,11 @@ const ExecutiveActivityChargedTable: React.FC<
       <Typography fs={16} lh={20} style={{ flex: 1, textAlign: "right" }}>
         {countString}
       </Typography>
-      <Table table={table} minWidth={800} />
+      <Table
+        table={table}
+        minWidth={800}
+        rowLink={row => `/executive/activity-report/charged/${row.executiveId}`}
+      />
     </FlexWrapper>
   );
 };

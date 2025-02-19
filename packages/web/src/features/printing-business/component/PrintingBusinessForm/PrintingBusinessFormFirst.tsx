@@ -3,11 +3,10 @@ import React, { useEffect, useState } from "react";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
+import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import Select from "@sparcs-clubs/web/common/components/Select";
 
 import type { PrintingBusinessFormProps } from ".";
-
-import type { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 
 type PrintingBusinessFormFirstProps = Pick<
   PrintingBusinessFormProps,
@@ -34,9 +33,7 @@ const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
     selectable: true,
   }));
 
-  const [clubId, setClubId] = useState<string>(
-    String(requestParam.clubId) ?? "0",
-  );
+  const [clubId, setClubId] = useState<string>(String(requestParam.clubId));
   const [phoneNumber, setPhoneNumber] = useState<string>(
     requestForm.krPhoneNumber ?? "",
   );
@@ -47,7 +44,7 @@ const PrintingBusinessFormFirst: React.FC<PrintingBusinessFormFirstProps> = ({
   const [phoneNumberError, setPhoneNumberError] = useState<boolean>(false);
 
   useEffect(() => {
-    // console.log("[PrintingBusinessFormFirst] state changed to", clubId, phoneNumber);
+    // logger.log("[PrintingBusinessFormFirst] state changed to", clubId, phoneNumber);
     setRequestParam({ clubId: Number(clubId) });
     setRequestForm({ ...requestForm, krPhoneNumber: phoneNumber });
   }, [clubId, phoneNumber, requestForm, setRequestForm, setRequestParam]);

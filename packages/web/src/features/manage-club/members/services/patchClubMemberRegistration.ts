@@ -1,14 +1,13 @@
+import type {
+  ApiReg007RequestBody,
+  ApiReg007RequestParam,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg007";
 import apiReg007 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg007";
 
 import {
   axiosClientWithAuth,
   defineAxiosMock,
 } from "@sparcs-clubs/web/lib/axios";
-
-import type {
-  ApiReg007RequestBody,
-  ApiReg007RequestParam,
-} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg007";
 
 export const patchClubMemberRegistration = async (
   requestParam: ApiReg007RequestParam,

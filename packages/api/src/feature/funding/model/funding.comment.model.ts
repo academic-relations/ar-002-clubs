@@ -1,20 +1,20 @@
-import { IFundingComment } from "@sparcs-clubs/interface/api/funding/type/funding.type";
-import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
 import { InferSelectModel } from "drizzle-orm";
 
+import { IFundingComment } from "@sparcs-clubs/interface/api/funding/type/funding.comment.type";
+import { FundingStatusEnum } from "@sparcs-clubs/interface/common/enum/funding.enum";
+
+import { MEntity } from "@sparcs-clubs/api/common/model/entity.model";
 import { FundingFeedback } from "@sparcs-clubs/api/drizzle/schema/funding.schema";
 
 import { MFunding } from "./funding.model";
 import { VFundingSummary } from "./funding.summary.model";
 
-export type FundingCommentDBResult = InferSelectModel<typeof FundingFeedback>;
+export type FundingCommentDbResult = InferSelectModel<typeof FundingFeedback>;
 
-export class MFundingComment implements IFundingComment {
-  id: number;
-
+export class MFundingComment extends MEntity implements IFundingComment {
   funding: { id: number };
 
-  chargedExecutive: {
+  executive: {
     id: number;
   };
 
@@ -27,6 +27,7 @@ export class MFundingComment implements IFundingComment {
   createdAt: Date;
 
   constructor(data: IFundingComment) {
+    super();
     Object.assign(this, data);
   }
 
@@ -38,12 +39,12 @@ export class MFundingComment implements IFundingComment {
     );
   }
 
-  static fromDBResult(result: FundingCommentDBResult) {
+  static from(result: FundingCommentDbResult): MFundingComment {
     return new MFundingComment({
       id: result.id,
       funding: { id: result.fundingId },
-      chargedExecutive: {
-        id: result.chargedExecutiveId,
+      executive: {
+        id: result.executiveId,
       },
       fundingStatusEnum: result.fundingStatusEnum,
       approvedAmount: result.approvedAmount,

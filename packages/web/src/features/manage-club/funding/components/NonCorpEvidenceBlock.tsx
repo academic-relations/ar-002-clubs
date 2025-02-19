@@ -1,15 +1,14 @@
 import React from "react";
-
 import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
+import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 
 import { AddEvidence } from "../types/funding";
-
 import EvidenceBlockTitle from "./EvidenceBlockTitle";
 
 const FixedWidthWrapper = styled.div`
@@ -20,7 +19,9 @@ const NonCorpEvidenceBlock: React.FC<{ required?: boolean }> = ({
   required = false,
 }) => {
   const formCtx = useFormContext<AddEvidence>();
-  const { control } = formCtx;
+  const { control, watch, setValue } = formCtx;
+
+  const nonCorporateTransactionFiles = watch("nonCorporateTransactionFiles");
 
   return (
     <FlexWrapper direction="column" gap={4}>
@@ -54,19 +55,39 @@ const NonCorpEvidenceBlock: React.FC<{ required?: boolean }> = ({
               )}
             />
           </FlexWrapper>
-          <FormController
-            name="wasteExplanation"
-            required={required}
-            control={control}
-            renderItem={props => (
-              <TextInput
-                {...props}
-                area
-                placeholder="낭비가 아니라는 소명을 입력하세요"
-                label="낭비가 아니라는 소명"
-              />
-            )}
-          />
+          <FlexWrapper direction="column" gap={4}>
+            <FormController
+              name="wasteExplanation"
+              required={required}
+              control={control}
+              renderItem={props => (
+                <TextInput
+                  {...props}
+                  area
+                  placeholder="낭비가 아니라는 소명을 입력하세요"
+                  label="낭비가 아니라는 소명"
+                />
+              )}
+            />
+            <FormController
+              name="nonCorporateTransactionFiles"
+              required={required}
+              control={control}
+              renderItem={props => (
+                <FileUpload
+                  {...props}
+                  fileId="nonCorporateTransactionFiles"
+                  multiple
+                  initialFiles={nonCorporateTransactionFiles}
+                  onChange={files =>
+                    setValue("nonCorporateTransactionFiles", files, {
+                      shouldValidate: true,
+                    })
+                  }
+                />
+              )}
+            />
+          </FlexWrapper>
         </Card>
       </EvidenceBlockTitle>
     </FlexWrapper>

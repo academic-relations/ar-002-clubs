@@ -1,10 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, gte, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
-
-import logger from "@sparcs-clubs/api/common/util/logger";
-import { takeUnique } from "@sparcs-clubs/api/common/util/util";
-
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import {
   Department,
@@ -12,6 +8,9 @@ import {
   StudentT,
   User,
 } from "src/drizzle/schema/user.schema";
+
+import logger from "@sparcs-clubs/api/common/util/logger";
+import { takeUnique } from "@sparcs-clubs/api/common/util/util";
 
 @Injectable()
 export default class UserRepository {

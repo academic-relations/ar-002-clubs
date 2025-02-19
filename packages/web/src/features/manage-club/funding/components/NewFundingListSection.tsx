@@ -1,9 +1,7 @@
 "use client";
 
-import React from "react";
-
 import { useRouter } from "next/navigation";
-
+import React from "react";
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -11,7 +9,6 @@ import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import Info from "@sparcs-clubs/web/common/components/Info";
-
 import {
   newFundingListSectionInfoText,
   newFundingListSectionTitle,
@@ -21,7 +18,6 @@ import {
 import { FUNDING_TABLE_NO_ACTIVITY_NAME } from "../constants";
 import useGetFundingDeadline from "../services/useGetFundingDeadline";
 import useGetNewFundingList from "../services/useGetNewFundingList";
-
 import NewFundingListTable from "./_atomic/NewFundingListTable";
 
 interface NewFundingListSectionProps {

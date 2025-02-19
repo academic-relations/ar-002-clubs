@@ -1,8 +1,8 @@
+import { overlay } from "overlay-kit";
 import React, { useEffect, useState } from "react";
 
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
-
-import { overlay } from "overlay-kit";
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -12,15 +12,13 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import { ListItem } from "@sparcs-clubs/web/common/components/ListItem";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
-import RejectReasonToast from "@sparcs-clubs/web/common/components/RejectReasonToast";
+import CommentToast from "@sparcs-clubs/web/common/components/Toast/CommentToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useExecutiveApproveActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveApproveActivityReport";
 import useExecutiveRejectActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveRejectActivityReport";
-
 import { useDeleteActivityReportProvisional } from "@sparcs-clubs/web/features/activity-report/services/useDeleteActivityReportProvisional";
 import { useGetActivityReport } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
 import { getActivityTypeLabel } from "@sparcs-clubs/web/types/activityType";
-
 import {
   formatDate,
   formatSlashDateTime,
@@ -34,6 +32,7 @@ interface PastActivityReportModalProps {
   isOpen: boolean;
   close: VoidFunction;
   viewOnly?: boolean;
+  clubId: number;
 }
 
 const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
@@ -42,6 +41,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   isOpen,
   close,
   viewOnly = false,
+  clubId,
 }) => {
   const { data, isLoading, isError, refetch } = useGetActivityReport(
     profile,
@@ -53,7 +53,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
     isError: isDeleteError,
   } = useDeleteActivityReportProvisional();
 
-  const isExecutive = profile === "executive";
+  const isExecutive = profile === UserTypeEnum.Executive;
 
   const [rejectionDetail, setRejectionDetail] = useState("");
 
@@ -113,10 +113,12 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
     }
   }, [isDeleteSuccess, isDeleteError]);
 
-  const { mutate: patchActivityExecutive } =
-    useExecutiveApproveActivityReport(activityId);
+  const { mutate: patchActivityExecutive } = useExecutiveApproveActivityReport(
+    activityId,
+    clubId,
+  );
   const { mutate: patchActivityExecutiveSendBack } =
-    useExecutiveRejectActivityReport(activityId);
+    useExecutiveRejectActivityReport(activityId, clubId);
   const handleApprove = async () => {
     await patchActivityExecutive();
     close();
@@ -138,12 +140,13 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
           {!isExecutive &&
             data.activityStatusEnumId === ActivityStatusEnum.Rejected &&
             data.comments.length > 0 && (
-              <RejectReasonToast
+              <CommentToast
                 title="반려 사유"
                 reasons={data.comments.map(comment => ({
                   datetime: comment.createdAt,
                   reason: comment.content,
                 }))}
+                color="red"
               />
             )}
 

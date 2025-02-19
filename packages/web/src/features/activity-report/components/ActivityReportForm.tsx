@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { FormProvider, useForm } from "react-hook-form";
 
@@ -12,16 +11,15 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
-
 import LocalStorageUtil from "@sparcs-clubs/web/common/services/localStorageUtil";
 import { LOCAL_STORAGE_KEY } from "@sparcs-clubs/web/constants/localStorage";
+
 import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
 
 import { isObjectEmpty } from "@sparcs-clubs/web/utils";
 
 import useGetParticipants from "../services/useGetParticipants";
 import { ActivityReportFormData } from "../types/form";
-
 import SelectParticipant from "./SelectParticipant";
 
 interface ActivityReportFormProps {

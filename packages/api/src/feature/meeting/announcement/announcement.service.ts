@@ -14,7 +14,6 @@ import {
   ApiMee004RequestParam,
   ApiMee004ResponseOk,
 } from "@sparcs-clubs/interface/api/meeting/apiMee004";
-
 import { ApiMee012RequestQuery } from "@sparcs-clubs/interface/api/meeting/apiMee012";
 
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";

@@ -23,7 +23,6 @@ const MyClubFrame: React.FC = () => {
         isLoading={isLoading || semesterLoading}
         isError={isError || semesterError}
       >
-        {" "}
         <FlexWrapper direction="column" gap={20}>
           <MoreDetailTitle
             title={`${semesterInfo?.year}년 ${semesterInfo?.name}학기`}

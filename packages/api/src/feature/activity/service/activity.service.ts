@@ -1,26 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { ApiAct021ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct021";
-import { ApiAct022ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct022";
-import { ApiAct028ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct028";
-import {
-  ActivityDeadlineEnum,
-  ActivityStatusEnum,
-} from "@sparcs-clubs/interface/common/enum/activity.enum";
-
-import logger from "@sparcs-clubs/api/common/util/logger";
-
-import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
-import ClubTRepository from "@sparcs-clubs/api/feature/club/repository/club.club-t.repository";
-import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
-import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
-import { ClubRegistrationPublicService } from "@sparcs-clubs/api/feature/registration/club-registration/service/club-registration.public.service";
-import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
-
-import ActivityClubChargedExecutiveRepository from "../repository/activity.activity-club-charged-executive.repository";
-import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
-import ActivityRepository from "../repository/activity.repository";
-
 import type { ApiAct001RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct001";
 import type { ApiAct002ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct002";
 import type {
@@ -60,6 +39,8 @@ import type {
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct017";
 import type { ApiAct018ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct018";
 import type { ApiAct019ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct019";
+import { ApiAct021ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct021";
+import { ApiAct022ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct022";
 import type { ApiAct023ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct023";
 import type {
   ApiAct024RequestQuery,
@@ -77,6 +58,23 @@ import type {
   ApiAct027RequestQuery,
   ApiAct027ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct027";
+import { ApiAct028ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct028";
+import {
+  ActivityDeadlineEnum,
+  ActivityStatusEnum,
+} from "@sparcs-clubs/interface/common/enum/activity.enum";
+
+import logger from "@sparcs-clubs/api/common/util/logger";
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
+import ClubTRepository from "@sparcs-clubs/api/feature/club/repository/club.club-t.repository";
+import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
+import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
+import { ClubRegistrationPublicService } from "@sparcs-clubs/api/feature/registration/club-registration/service/club-registration.public.service";
+import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
+
+import ActivityClubChargedExecutiveRepository from "../repository/activity.activity-club-charged-executive.repository";
+import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
+import ActivityRepository from "../repository/activity.repository";
 
 @Injectable()
 export default class ActivityService {
@@ -329,11 +327,7 @@ export default class ActivityService {
           await this.activityRepository.selectDurationByActivityId(row.id);
         return {
           ...row,
-          durations: duration.sort((a, b) =>
-            a.startTerm.getTime() === b.startTerm.getTime()
-              ? a.endTerm.getTime() - b.endTerm.getTime()
-              : a.startTerm.getTime() - b.startTerm.getTime(),
-          ),
+          durations: duration,
         };
       }),
     );
@@ -992,7 +986,6 @@ export default class ActivityService {
     if (!isInsertionSucceed)
       throw new HttpException("unreachable", HttpStatus.INTERNAL_SERVER_ERROR);
 
-    return {};
     return {};
   }
 

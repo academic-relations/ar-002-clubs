@@ -1,7 +1,5 @@
 import React, { useCallback } from "react";
-
 import { useFormContext } from "react-hook-form";
-
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -14,7 +12,6 @@ import UnitInput from "@sparcs-clubs/web/common/components/Forms/UnitInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import useGetActivityAvailable from "@sparcs-clubs/web/features/activity-report/services/useGetActivityAvailable";
 import { FundingInfo } from "@sparcs-clubs/web/features/manage-club/funding/types/funding";
-
 import { getLocalDateOnly } from "@sparcs-clubs/web/utils/Date/getKSTDate";
 
 import { NO_ACTIVITY_REPORT_FUNDING } from "../constants";

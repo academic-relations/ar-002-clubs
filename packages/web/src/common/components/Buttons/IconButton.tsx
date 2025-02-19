@@ -1,9 +1,6 @@
-import React from "react";
-
 import isPropValid from "@emotion/is-prop-valid";
-
 import Image from "next/image";
-
+import React from "react";
 import styled from "styled-components";
 
 import Icon from "../Icon";

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
@@ -31,7 +33,7 @@ const FundingDetail = () => {
     return <LoginRequired login={login} />;
   }
 
-  if (profile?.type !== "undergraduate") {
+  if (profile?.type !== UserTypeEnum.Undergraduate) {
     return <NoManageClub />;
   }
 
@@ -50,7 +52,7 @@ const FundingDetail = () => {
           title="지원금 신청"
           enableLast
         />
-        <FundingDetailFrame clubId={data.clubId} />
+        <FundingDetailFrame profile={profile} />
       </FlexWrapper>
     </AsyncBoundary>
   );

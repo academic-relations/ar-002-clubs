@@ -1,5 +1,4 @@
 import React from "react";
-
 import styled from "styled-components";
 
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -8,6 +7,7 @@ import FlexWrapper from "../FlexWrapper";
 import Typography from "../Typography";
 
 interface CancellableModalContentProps {
+  confirmDisabled?: boolean;
   onClose: () => void;
   onConfirm: () => void;
   closeButtonText?: string;
@@ -21,6 +21,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const CancellableModalContent: React.FC<CancellableModalContentProps> = ({
+  confirmDisabled = false,
   onClose,
   onConfirm,
   children,
@@ -35,7 +36,12 @@ const CancellableModalContent: React.FC<CancellableModalContentProps> = ({
       <Button type="outlined" onClick={onClose}>
         {closeButtonText}
       </Button>
-      <Button onClick={onConfirm}>{confirmButtonText}</Button>
+      <Button
+        type={confirmDisabled ? "disabled" : "default"}
+        onClick={onConfirm}
+      >
+        {confirmButtonText}
+      </Button>
     </ButtonWrapper>
   </FlexWrapper>
 );

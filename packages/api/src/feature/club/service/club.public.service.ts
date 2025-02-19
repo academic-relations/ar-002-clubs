@@ -1,17 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { IClubSummary } from "@sparcs-clubs/interface/api/club/type/club.type";
+import {
+  IClubSummary,
+  IDivisionSummary,
+} from "@sparcs-clubs/interface/api/club/type/club.type";
 import { ISemester } from "@sparcs-clubs/interface/api/club/type/semester.type";
 import { IStudentSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
+import DivisionRepository from "@sparcs-clubs/api/feature/division/repository/division.repository";
 
 import { ClubDelegateDRepository } from "../delegate/club.club-delegate-d.repository";
 import ClubStudentTRepository from "../repository/club.club-student-t.repository";
 import ClubTRepository from "../repository/club.club-t.repository";
 import ClubRepository from "../repository/club.repository";
-
 import SemesterDRepository from "../repository/club.semester-d.repository";
 
 @Injectable()
@@ -22,6 +25,7 @@ export default class ClubPublicService {
     private clubTRepository: ClubTRepository,
     private clubStudentTRepository: ClubStudentTRepository,
     private semesterDRepository: SemesterDRepository,
+    private divisionRepository: DivisionRepository,
   ) {}
 
   // semester common repositoryf를 제거하는 과정에서 발생한 프록시입니다. 사용하지 않는 것을 권장합니다.
@@ -345,6 +349,11 @@ export default class ClubPublicService {
 
   async fetchSummaries(ids: number[]): Promise<IClubSummary[]> {
     const results = await this.clubRepository.fetchSummaries(ids);
+    return results;
+  }
+
+  async fetchDivisionSummaries(ids: number[]): Promise<IDivisionSummary[]> {
+    const results = await this.divisionRepository.fetchSummaries(ids);
     return results;
   }
 }

@@ -1,7 +1,8 @@
+import axios from "axios";
+
 import apiAut002, {
   ApiAut002ResponseCreated,
 } from "@sparcs-clubs/interface/api/auth/endpoint/apiAut002";
-import axios from "axios";
 
 import { env } from "@sparcs-clubs/web/env";
 

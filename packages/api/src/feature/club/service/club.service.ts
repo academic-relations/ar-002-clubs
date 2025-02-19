@@ -5,27 +5,6 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 
-import {
-  ApiClb009RequestParam,
-  ApiClb009ResponseOk,
-} from "@sparcs-clubs/interface/api/club/endpoint/apiClb009";
-import {
-  ApiClb010RequestParam,
-  ApiClb010ResponseOk,
-} from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
-
-import { ClubRoomTRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-room-t.repository";
-
-import { ClubDelegateDRepository } from "../delegate/club.club-delegate-d.repository";
-import ClubStudentTRepository from "../repository/club.club-student-t.repository";
-import ClubTRepository from "../repository/club.club-t.repository";
-import { DivisionPermanentClubDRepository } from "../repository/club.division-permanent-club-d.repository";
-import { ClubGetStudentClubBrief } from "../repository/club.get-student-club-brief";
-import { ClubPutStudentClubBrief } from "../repository/club.put-student-club-brief";
-import ClubRepository from "../repository/club.repository";
-
-import ClubPublicService from "./club.public.service";
-
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
 import type {
   ApiClb002RequestParam,
@@ -41,7 +20,26 @@ import type {
   ApiClb005RequestParam,
   ApiClb005ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb005";
+import {
+  ApiClb009RequestParam,
+  ApiClb009ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb009";
+import {
+  ApiClb010RequestParam,
+  ApiClb010ResponseOk,
+} from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
 import type { ApiClb016ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb016";
+
+import { ClubRoomTRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-room-t.repository";
+
+import { ClubDelegateDRepository } from "../delegate/club.club-delegate-d.repository";
+import ClubStudentTRepository from "../repository/club.club-student-t.repository";
+import ClubTRepository from "../repository/club.club-t.repository";
+import { DivisionPermanentClubDRepository } from "../repository/club.division-permanent-club-d.repository";
+import { ClubGetStudentClubBrief } from "../repository/club.get-student-club-brief";
+import { ClubPutStudentClubBrief } from "../repository/club.put-student-club-brief";
+import ClubRepository from "../repository/club.repository";
+import ClubPublicService from "./club.public.service";
 
 @Injectable()
 export class ClubService {
@@ -57,8 +55,18 @@ export class ClubService {
     private clubPublicService: ClubPublicService,
   ) {}
 
+  private readonly EXCLUDED_CLUB_IDS: number[] = [112, 113, 121];
+
   async getClubs(): Promise<ApiClb001ResponseOK> {
     const result = await this.clubRepository.getClubs();
+
+    result.divisions = result.divisions.map(division => ({
+      ...division,
+      clubs: division.clubs.filter(
+        club => !this.EXCLUDED_CLUB_IDS.includes(club.id),
+      ),
+    }));
+
     return result;
   }
 

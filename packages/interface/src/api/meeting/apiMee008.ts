@@ -24,7 +24,7 @@ const requestBody = z.object({
 });
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({}),
+  [HttpStatusCode.Created]: z.object({}),
 };
 
 const responseErrorMap = {};
@@ -42,7 +42,7 @@ const apiMee008 = {
 type ApiMee008RequestParam = z.infer<typeof apiMee008.requestParam>;
 type ApiMee008RequestQuery = z.infer<typeof apiMee008.requestQuery>;
 type ApiMee008RequestBody = z.infer<typeof apiMee008.requestBody>;
-type ApiMee008ResponseOk = z.infer<(typeof apiMee008.responseBodyMap)[200]>;
+type ApiMee008ResponseOk = z.infer<(typeof apiMee008.responseBodyMap)[201]>;
 
 export default apiMee008;
 

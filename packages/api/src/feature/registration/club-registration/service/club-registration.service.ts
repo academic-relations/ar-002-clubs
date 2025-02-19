@@ -1,22 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
-import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
-import {
-  RegistrationDeadlineEnum,
-  RegistrationTypeEnum,
-} from "@sparcs-clubs/interface/common/enum/registration.enum";
-
-import logger from "@sparcs-clubs/api/common/util/logger";
-import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
-import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
-import DivisionPublicService from "@sparcs-clubs/api/feature/division/service/division.public.service";
-
-import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
-
-import { ClubRegistrationRepository } from "../repository/club-registration.repository";
-
-import { ClubRegistrationPublicService } from "./club-registration.public.service";
-
 import type {
   ApiReg001RequestBody,
   ApiReg001ResponseCreated,
@@ -30,7 +13,6 @@ import type {
 import type { ApiReg010ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg010";
 import type { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import type { ApiReg012ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
-
 import type { ApiReg014ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg014";
 import type { ApiReg015ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg015";
 import type { ApiReg016ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg016";
@@ -43,6 +25,20 @@ import type {
   ApiReg023ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg023";
 import type { ApiReg024ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg024";
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+import {
+  RegistrationDeadlineEnum,
+  RegistrationTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/registration.enum";
+
+import logger from "@sparcs-clubs/api/common/util/logger";
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
+import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
+import DivisionPublicService from "@sparcs-clubs/api/feature/division/service/division.public.service";
+import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
+
+import { ClubRegistrationRepository } from "../repository/club-registration.repository";
+import { ClubRegistrationPublicService } from "./club-registration.public.service";
 
 @Injectable()
 export class ClubRegistrationService {

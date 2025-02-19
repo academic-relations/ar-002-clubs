@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-
 import Image from "next/image";
+import React, { useEffect, useState } from "react";
 import styled, { useTheme } from "styled-components";
 
 import clubsLogoSvg from "@sparcs-clubs/web/assets/logo-icon.svg";
