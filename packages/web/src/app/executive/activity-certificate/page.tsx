@@ -6,8 +6,8 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
-import { mockExecutiveAcf } from "@sparcs-clubs/web/features/executive/_mock/mockExecutiveAcf";
-import ExecutiveAcfTable from "@sparcs-clubs/web/features/executive/activity-certificate/components/ExecutiveAcfTable";
+import ExecutiveAcfTable from "@sparcs-clubs/web/features/activity-certificate/components/ExecutiveAcfTable";
+import { mockExecutiveAcf } from "@sparcs-clubs/web/features/activity-certificate/services/_mock/mockExecutiveAcf";
 
 const ActivityCertificate = () => {
   const [currentPage, setCurrentPage] = useState(1);
