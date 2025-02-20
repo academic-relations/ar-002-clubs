@@ -85,8 +85,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
               control={control}
               defaultValue={profile?.phoneNumber}
               minLength={13}
-              // TODO: phoneNumber validation
-              // pattern={/^010-\d{4}-\d{4}$/}
+              pattern={/^010-\d{4}-\d{4}$/}
               renderItem={props => (
                 <PhoneInput
                   {...props}
