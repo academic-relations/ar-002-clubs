@@ -1,6 +1,6 @@
 "use client";
 
-import ManageClubTableMainFrame from "@sparcs-clubs/web/features/manageClubTable/frames/ManageClubTableMainFrame";
+import ManageClubTableMainFrame from "@sparcs-clubs/web/features/clubServices/frames/ManageClubTableMainFrame";
 
 const ManageClubPrintingBusiness = () => (
   <ManageClubTableMainFrame pageType="printing-business" />
