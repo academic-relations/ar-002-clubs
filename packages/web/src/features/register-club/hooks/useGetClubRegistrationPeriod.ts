@@ -1,3 +1,4 @@
+import { subSeconds } from "date-fns";
 import { useEffect, useState } from "react";
 
 import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
@@ -36,7 +37,9 @@ const useGetClubRegistrationPeriod = () => {
   return {
     data: {
       isClubRegistrationPeriod: clubRegistrationPeriodEnd != null,
-      deadline: clubRegistrationPeriodEnd,
+      deadline: clubRegistrationPeriodEnd
+        ? subSeconds(clubRegistrationPeriodEnd, 1)
+        : null,
     },
     isLoading: isLoadingTerm,
     isError: isErrorTerm,

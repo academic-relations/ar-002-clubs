@@ -2,14 +2,11 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
-import React, { useMemo } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
-import {
-  RegistrationDeadlineEnum,
-  RegistrationTypeEnum,
-} from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -32,10 +29,10 @@ import {
   DivisionTypeTagList,
   RegistrationTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
-import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 import { deleteMyClubRegistration } from "@sparcs-clubs/web/features/my/services/deleteMyClubRegistration";
 import patchClubRegProfessorApprove from "@sparcs-clubs/web/features/my/services/patchClubRegProfessorApprove";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
+import useGetClubRegistrationPeriod from "@sparcs-clubs/web/features/register-club/hooks/useGetClubRegistrationPeriod";
 import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
 import {
   getActualMonth,
@@ -82,10 +79,10 @@ const MyRegisterClubDetailFrame: React.FC<{
   const { id } = useParams();
 
   const {
-    data: termData,
-    isLoading: isLoadingTerm,
-    isError: isErrorTerm,
-  } = useGetRegistrationTerm();
+    data: deadlineData,
+    isLoading: isLoadingDeadline,
+    isError: isErrorDeadline,
+  } = useGetClubRegistrationPeriod();
 
   const isProfessor = profile === UserTypeEnum.Professor;
 
@@ -146,23 +143,6 @@ const MyRegisterClubDetailFrame: React.FC<{
       </Modal>
     ));
   };
-
-  const isClubRegistrationPeriodEnd = useMemo(() => {
-    const now = new Date();
-    const currentEvents = termData?.events.filter(
-      event => now >= event.startTerm && now <= event.endTerm,
-    );
-
-    if (!currentEvents || currentEvents.length === 0) return false;
-
-    const hasClubRegistrationEvent = currentEvents.some(
-      event =>
-        event.registrationEventEnumId ===
-        RegistrationDeadlineEnum.ClubRegistrationApplication,
-    );
-
-    return hasClubRegistrationEvent;
-  }, [termData]);
 
   return (
     <FlexWrapper direction="column" gap={60}>
@@ -369,8 +349,8 @@ const MyRegisterClubDetailFrame: React.FC<{
         >
           목록으로 돌아가기
         </Button>
-        <AsyncBoundary isLoading={isLoadingTerm} isError={isErrorTerm}>
-          {isClubRegistrationPeriodEnd &&
+        <AsyncBoundary isLoading={isLoadingDeadline} isError={isErrorDeadline}>
+          {deadlineData.isClubRegistrationPeriod &&
             (isProfessor ? (
               <FlexWrapper direction="row" gap={10}>
                 <Button
