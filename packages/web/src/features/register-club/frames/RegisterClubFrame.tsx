@@ -1,10 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
-
-import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
@@ -13,8 +11,6 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import WarningInfo from "@sparcs-clubs/web/common/components/WarningInfo";
-import NotRegistrationPeriod from "@sparcs-clubs/web/common/frames/NotRegistrationPeriod";
-import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/my/services/getMyClubRegistration";
 import ClubButton from "@sparcs-clubs/web/features/register-club/components/ClubButton";
 import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
@@ -23,6 +19,7 @@ import {
   registerClubDeadlineInfoText,
   registerClubOptions,
 } from "../constants";
+import useGetClubRegistrationPeriod from "../hooks/useGetClubRegistrationPeriod";
 import { RegistrationType } from "../types/registerClub";
 
 const ClubButtonWrapper = styled.div`
@@ -42,8 +39,6 @@ const RegisterClubFrame: React.FC = () => {
   const [selectedType, setSelectedType] = useState<RegistrationType | null>(
     null,
   );
-  const [clubRegistrationPeriodEnd, setClubRegistrationPeriodEnd] =
-    useState<Date | null>(null);
 
   const {
     data: myClubRegistrationData,
@@ -52,10 +47,10 @@ const RegisterClubFrame: React.FC = () => {
   } = useGetMyClubRegistration();
 
   const {
-    data: termData,
-    isLoading: isLoadingTerm,
-    isError: isErrorTerm,
-  } = useGetRegistrationTerm();
+    data: deadlineData,
+    isLoading: isLoadingDeadline,
+    isError: isErrorDeadline,
+  } = useGetClubRegistrationPeriod();
 
   const {
     semester: semesterInfo,
@@ -71,26 +66,6 @@ const RegisterClubFrame: React.FC = () => {
     [myClubRegistrationData],
   );
 
-  useEffect(() => {
-    if (termData) {
-      const now = new Date();
-      const currentEvents = termData.events.filter(
-        event => now >= event.startTerm && now <= event.endTerm,
-      );
-
-      if (currentEvents.length === 0) return;
-
-      const registrationEvent = currentEvents.filter(
-        event =>
-          event.registrationEventEnumId ===
-          RegistrationDeadlineEnum.ClubRegistrationApplication,
-      );
-      if (registrationEvent.length > 0) {
-        setClubRegistrationPeriodEnd(registrationEvent[0].endTerm);
-      }
-    }
-  }, [termData]);
-
   const onClickRegisterClub = useCallback(() => {
     if (selectedType === RegistrationType.Renewal)
       router.push(`register-club/renewal`);
@@ -100,9 +75,10 @@ const RegisterClubFrame: React.FC = () => {
       router.push(`register-club/provisional`);
   }, [selectedType]);
 
-  if (clubRegistrationPeriodEnd == null) {
-    return <NotRegistrationPeriod />;
-  }
+  const isRegisterButtonDisabled =
+    selectedType === null ||
+    hasMyClubRegistration ||
+    !deadlineData.isClubRegistrationPeriod;
 
   return (
     <FlexWrapper direction="column" gap={60}>
@@ -127,13 +103,13 @@ const RegisterClubFrame: React.FC = () => {
         )}
       </AsyncBoundary>
       <AsyncBoundary
-        isLoading={isLoadingTerm || semesterLoading}
-        isError={isErrorTerm || semesterError}
+        isLoading={isLoadingDeadline || semesterLoading}
+        isError={isErrorDeadline || semesterError}
       >
-        {clubRegistrationPeriodEnd != null ? (
+        {deadlineData.isClubRegistrationPeriod ? (
           <Info
             text={registerClubDeadlineInfoText(
-              clubRegistrationPeriodEnd,
+              deadlineData.deadline!,
               semesterInfo,
             )}
           />
@@ -153,11 +129,7 @@ const RegisterClubFrame: React.FC = () => {
         ))}
       </ClubButtonWrapper>
       <Button
-        type={
-          selectedType === null || hasMyClubRegistration
-            ? "disabled"
-            : "default"
-        }
+        type={isRegisterButtonDisabled ? "disabled" : "default"}
         onClick={onClickRegisterClub}
         style={{ alignSelf: "end" }}
       >

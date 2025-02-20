@@ -8,7 +8,6 @@ import { ApiReg009RequestBody } from "@sparcs-clubs/interface/api/registration/e
 import apiReg011 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
 import {
   getDisplayNameRegistration,
-  RegistrationDeadlineEnum,
   RegistrationTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
@@ -19,7 +18,6 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import WarningInfo from "@sparcs-clubs/web/common/components/WarningInfo";
-import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 import useGetClubRegistration from "@sparcs-clubs/web/features/my/services/useGetClubRegistration";
 import usePutClubRegistration from "@sparcs-clubs/web/features/my/services/usePutClubRegistration";
 import ActivityReportFrame from "@sparcs-clubs/web/features/register-club/components/activity-report/ActivityReportFrame";
@@ -27,6 +25,7 @@ import AdvancedInformFrame from "@sparcs-clubs/web/features/register-club/compon
 import BasicInformFrame from "@sparcs-clubs/web/features/register-club/components/basic-info/BasicInformFrame";
 import ProvisionalBasicInformFrame from "@sparcs-clubs/web/features/register-club/components/basic-info/ProvisionalBasicInformFrame";
 import ClubRulesFrame from "@sparcs-clubs/web/features/register-club/components/compliance/ClubRulesFrame";
+import useGetClubRegistrationPeriod from "@sparcs-clubs/web/features/register-club/hooks/useGetClubRegistrationPeriod";
 import { RegisterClubModel } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 import computeErrorMessage from "@sparcs-clubs/web/features/register-club/utils/computeErrorMessage";
 import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
@@ -51,37 +50,10 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
   const [isAgreed, setIsAgreed] = useState(false);
 
   const {
-    data: termData,
-    isLoading: isLoadingTerm,
-    isError: isErrorTerm,
-  } = useGetRegistrationTerm();
-  // const [isRegistrationPeriod, setIsRegistrationPeriod] = useState<boolean>();
-  const [clubRegistrationPeriodEnd, setClubRegistrationPeriodEnd] =
-    useState<Date>(new Date());
-
-  useEffect(() => {
-    if (termData) {
-      const now = new Date();
-      const currentEvents = termData.events.filter(
-        event => now >= event.startTerm && now <= event.endTerm,
-      );
-      if (currentEvents.length === 0) {
-        // setIsRegistrationPeriod(false);
-        return;
-      }
-      const registrationEvent = currentEvents.filter(
-        event =>
-          event.registrationEventEnumId ===
-          RegistrationDeadlineEnum.ClubRegistrationApplication,
-      );
-      if (registrationEvent.length > 0) {
-        // setIsRegistrationPeriod(true);
-        setClubRegistrationPeriodEnd(registrationEvent[0].endTerm);
-      } else {
-        // setIsRegistrationPeriod(false);
-      }
-    }
-  }, [termData]);
+    data: deadlineData,
+    isLoading: isLoadingDeadline,
+    isError: isErrorDeadline,
+  } = useGetClubRegistrationPeriod();
 
   const formCtx = useForm<RegisterClubModel>({
     mode: "all",
@@ -269,11 +241,11 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
             />
             <FlexWrapper direction="column" gap={20}>
               <AsyncBoundary
-                isLoading={isLoadingTerm || semesterLoading}
-                isError={isErrorTerm || semesterError}
+                isLoading={isLoadingDeadline || semesterLoading}
+                isError={isErrorDeadline || semesterError}
               >
                 <Info
-                  text={`현재는 ${semesterInfo?.year}년 ${semesterInfo?.name}학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
+                  text={`현재는 ${semesterInfo?.year}년 ${semesterInfo?.name}학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(deadlineData.deadline!)})`}
                 />
               </AsyncBoundary>
               <WarningInfo>
