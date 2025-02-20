@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 
@@ -154,7 +154,12 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
     ],
   );
 
-  const { data: registrationData, mutate: registerClubApi } = useRegisterClub();
+  const {
+    data: registrationData,
+    mutate: registerClubApi,
+    isSuccess,
+    isError,
+  } = useRegisterClub();
 
   const {
     semester: semesterInfo,
@@ -169,63 +174,63 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   const submitHandler = useCallback(
     (data: RegisterClubModel) => {
       // logger.debug("submit", data);
-      registerClubApi(
-        {
-          body: {
-            ...data,
-            clubRuleFileId: data.clubRuleFile?.id,
-            activityPlanFileId: data.activityPlanFile?.id,
-            externalInstructionFileId: data.externalInstructionFile?.id,
-          },
+      registerClubApi({
+        body: {
+          ...data,
+          clubRuleFileId: data.clubRuleFile?.id,
+          activityPlanFileId: data.activityPlanFile?.id,
+          externalInstructionFileId: data.externalInstructionFile?.id,
         },
-        {
-          onSuccess: () => {
-            overlay.open(({ isOpen, close }) => (
-              <Modal isOpen={isOpen}>
-                <ConfirmModalContent
-                  onConfirm={() => {
-                    close();
-                    router.push(`/my/register-club/${registrationData?.id}`);
-                  }}
-                >
-                  신청이 완료되었습니다.
-                  <br />
-                  확인을 누르면 신청 내역 화면으로 이동합니다.
-                </ConfirmModalContent>
-              </Modal>
-            ));
-          },
-          onError: () => {
-            /* 
-              TODO: (@dora)
-              원래 useGetClubDetail()을 통해 clubName을 가져와서 
-              "{clubName} 동아리 등록 신청이 이미 존재하여 등록 신청을 할 수 없습니다."라고 표시해주었는데,
-              해당 API 호출에 이슈가 있어서 clubName에 대한 부분을 임시로 빼둔 상태
-              그리고 에러 케이스가 다양해지면서 그냥 문구를 퉁쳐버림...
-            */
-            overlay.open(({ isOpen, close }) => (
-              <Modal isOpen={isOpen}>
-                <ConfirmModalContent
-                  onConfirm={() => {
-                    close();
-                  }}
-                >
-                  해당 동아리에 대한 등록 신청이 이미 존재하거나,
-                  <br />
-                  이미 등록 신청 기록이 있거나,
-                  <br />
-                  지도교수를 입력하지 않아
-                  <br />
-                  등록 신청을 할 수 없습니다.
-                </ConfirmModalContent>
-              </Modal>
-            ));
-          },
-        },
-      );
+      });
     },
-    [registerClubApi],
+    [registrationData, isSuccess, isError],
   );
+
+  useEffect(() => {
+    if (isSuccess) {
+      overlay.open(({ isOpen, close }) => (
+        <Modal isOpen={isOpen}>
+          <ConfirmModalContent
+            onConfirm={() => {
+              close();
+              router.push(`/my/register-club/${registrationData.id}`);
+            }}
+          >
+            신청이 완료되었습니다.
+            <br />
+            확인을 누르면 신청 내역 화면으로 이동합니다.
+          </ConfirmModalContent>
+        </Modal>
+      ));
+      return;
+    }
+    if (isError) {
+      /* 
+        TODO: (@dora)
+        원래 useGetClubDetail()을 통해 clubName을 가져와서 
+        "{clubName} 동아리 등록 신청이 이미 존재하여 등록 신청을 할 수 없습니다."라고 표시해주었는데,
+        해당 API 호출에 이슈가 있어서 clubName에 대한 부분을 임시로 빼둔 상태
+        그리고 에러 케이스가 다양해지면서 그냥 문구를 퉁쳐버림...
+      */
+      overlay.open(({ isOpen, close }) => (
+        <Modal isOpen={isOpen}>
+          <ConfirmModalContent
+            onConfirm={() => {
+              close();
+            }}
+          >
+            해당 동아리에 대한 등록 신청이 이미 존재하거나,
+            <br />
+            이미 등록 신청 기록이 있거나,
+            <br />
+            지도교수를 입력하지 않아
+            <br />
+            등록 신청을 할 수 없습니다.
+          </ConfirmModalContent>
+        </Modal>
+      ));
+    }
+  }, [isSuccess, isError]);
 
   return (
     <FormProvider {...formCtx}>

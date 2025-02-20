@@ -69,24 +69,7 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   useEffect(() => {
     if (detail) {
-      formCtx.reset({
-        registrationTypeEnumId: detail.registrationTypeEnumId,
-        clubId: detail.clubId,
-        clubNameKr: detail.newClubNameKr,
-        clubNameEn: detail.newClubNameEn,
-        phoneNumber: detail.representative?.phoneNumber,
-        foundedAt: detail.foundedAt,
-        divisionId: detail.divisionId,
-        activityFieldKr: detail.activityFieldKr,
-        activityFieldEn: detail.activityFieldEn,
-        professor: detail.professor,
-        divisionConsistency: detail.divisionConsistency,
-        foundationPurpose: detail.foundationPurpose,
-        activityPlan: detail.activityPlan,
-        activityPlanFile: detail.activityPlanFile,
-        clubRuleFile: detail.clubRuleFile,
-        externalInstructionFile: detail.externalInstructionFile,
-      });
+      formCtx.reset(detail);
     }
   }, [detail, formCtx]);
 
