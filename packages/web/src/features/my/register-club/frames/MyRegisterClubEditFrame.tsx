@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 
-import { ApiReg009RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg009";
 import apiReg011, {
   ApiReg011ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
@@ -96,9 +95,11 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
     type === RegistrationTypeEnum.ReProvisional;
 
   const submitHandler = useCallback(
-    (data: ApiReg009RequestBody) => {
-      // logger.debug(data);
-      mutate({ requestParam: { applyId }, body: data });
+    (data: RegisterClubModel) => {
+      mutate({
+        requestParam: { applyId },
+        body: data,
+      });
     },
     [mutate, applyId],
   );
@@ -121,10 +122,17 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
   if (!initialData) return null;
 
   useEffect(() => {
+    // 현재 신청 할 때엔 clubName만 사용하고 상세조회로 받을 때엔 clubName, newClubName 나눠서 받아서 야매로 처리함
+    // hook form에 동아리명, 신규 동아리명 모두 clubName으로 되어 있어서 발생한 문제
+    // 프론트에서 정의한 타입 RegisterClubModel에 newClubName 을 추가하든, 신청 api에서 두개 나눠서 보내도록 변경하든 해야 함
+    // 첫번째 조건: 신규가등록일 때 데이터가 newClubName으로 옴
+    // 두번째 조건: 그 외의 타입에서 만약 동아리명 변경 체크박스를 선택한 경우(newClubName이 존재할 경우)
     if (
-      initialData &&
-      registrationTypeEnumId === RegistrationTypeEnum.NewProvisional &&
-      initialData.clubNameKr == null
+      (initialData &&
+        registrationTypeEnumId === RegistrationTypeEnum.NewProvisional &&
+        initialData.clubNameKr == null) ||
+      (initialData.newClubNameKr != null &&
+        initialData.newClubNameKr.length > 0)
     ) {
       resetField("clubNameKr", { defaultValue: initialData.newClubNameKr });
       resetField("clubNameEn", { defaultValue: initialData.newClubNameEn });

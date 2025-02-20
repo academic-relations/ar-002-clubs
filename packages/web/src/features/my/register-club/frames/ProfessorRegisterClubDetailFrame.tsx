@@ -15,7 +15,6 @@ const ProfessorRegisterClubDetailFrame: React.FC<{ userType: string }> = ({
     data: clubDetail,
     isLoading,
     isError,
-    refetch,
   } = useGetClubRegistrationProfessor({ applyId: +id });
 
   return (
@@ -24,7 +23,6 @@ const ProfessorRegisterClubDetailFrame: React.FC<{ userType: string }> = ({
         <MyRegisterClubDetailFrame
           userType={userType}
           clubDetail={clubDetail}
-          refetch={refetch}
         />
       )}
     </AsyncBoundary>
