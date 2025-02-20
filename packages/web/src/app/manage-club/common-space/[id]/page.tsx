@@ -9,8 +9,8 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import ManageCommonSpaceProgress from "@sparcs-clubs/web/features/manage-club/common-space/components/ManageCommonSpaceProgress";
-import ManageCommonSpaceDetailFrame from "@sparcs-clubs/web/features/manage-club/common-space/frames/ManageCommonSpaceDetailFrame";
+import CommonSpaceProgress from "@sparcs-clubs/web/features/common-space/components/CommonSpaceProgress";
+import CommonSpaceDetailFrame from "@sparcs-clubs/web/features/common-space/frames/CommonSpaceDetailFrame";
 
 const ManageCommonSpaceDetail = () => {
   const router = useRouter();
@@ -31,10 +31,8 @@ const ManageCommonSpaceDetail = () => {
         enableLast
       />
       <Card outline gap={20}>
-        <ManageCommonSpaceProgress
-          status={CommonSpaceUsageOrderStatusEnum.Applied}
-        />
-        <ManageCommonSpaceDetailFrame />
+        <CommonSpaceProgress status={CommonSpaceUsageOrderStatusEnum.Applied} />
+        <CommonSpaceDetailFrame />
       </Card>
       <Button style={{ width: "max-content" }} onClick={onClick}>
         목록으로 돌아가기
