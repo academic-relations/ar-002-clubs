@@ -61,10 +61,8 @@ const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
         <OptionOuter>
           <Typography
             fs={14}
-            fw="REGULAR"
             lh={20}
             color="GRAY.300"
-            ff="PRETENDARD"
           >
             활동 보고서는 최대 20개까지 작성 가능합니다
           </Typography>
