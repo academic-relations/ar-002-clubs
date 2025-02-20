@@ -5,9 +5,12 @@ import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/regist
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import HasClubRegistration from "@sparcs-clubs/web/common/frames/HasClubRegistration";
 import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
+import NotRegistrationPeriod from "@sparcs-clubs/web/common/frames/NotClubRegistrationPeriod";
 import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/my/services/getMyClubRegistration";
 import RegisterClubMainFrame from "@sparcs-clubs/web/features/register-club/frames/RegisterClubMainFrame";
 import { useCheckManageClub } from "@sparcs-clubs/web/hooks/checkManageClub";
+
+import useGetClubRegistrationPeriod from "../hooks/useGetClubRegistrationPeriod";
 
 const RegisterClubAuthFrame: React.FC<{
   type: RegistrationTypeEnum;
@@ -20,6 +23,12 @@ const RegisterClubAuthFrame: React.FC<{
     isError,
   } = useGetMyClubRegistration();
 
+  const {
+    data: deadlineData,
+    isLoading: isLoadingDeadline,
+    isError: isErrorDeadline,
+  } = useGetClubRegistrationPeriod();
+
   const hasMyClubRegistration = useMemo<boolean>(
     () =>
       myClubRegistrationData
@@ -28,9 +37,12 @@ const RegisterClubAuthFrame: React.FC<{
     [myClubRegistrationData],
   );
 
-  if (isLoading || checkLoading) {
+  if (isLoading || checkLoading || isLoadingDeadline) {
     return (
-      <AsyncBoundary isLoading={isLoading || checkLoading} isError={isError} />
+      <AsyncBoundary
+        isLoading={isLoading || checkLoading || isLoadingDeadline}
+        isError={isError || isErrorDeadline}
+      />
     );
   }
 
@@ -40,15 +52,17 @@ const RegisterClubAuthFrame: React.FC<{
 
   if (hasMyClubRegistration) {
     return (
-      myClubRegistrationData && (
-        <HasClubRegistration
-          applyId={myClubRegistrationData?.registrations[0].id}
-        />
-      )
+      <HasClubRegistration
+        applyId={myClubRegistrationData!.registrations[0].id}
+      />
     );
   }
 
-  return <RegisterClubMainFrame type={type} />;
+  if (!deadlineData.isClubRegistrationPeriod) {
+    return <NotRegistrationPeriod />;
+  }
+
+  return <RegisterClubMainFrame type={type} deadline={deadlineData.deadline} />;
 };
 
 export default RegisterClubAuthFrame;

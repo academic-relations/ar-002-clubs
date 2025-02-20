@@ -1,10 +1,8 @@
 import React from "react";
 
 import Typography from "../Typography";
-
-import CancellableModalContent from "./CancellableModalContent";
-
 import Modal from ".";
+import CancellableModalContent from "./CancellableModalContent";
 
 interface RestoreDraftModalProps {
   isOpen: boolean;

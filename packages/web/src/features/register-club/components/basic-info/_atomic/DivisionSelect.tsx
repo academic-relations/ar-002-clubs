@@ -1,11 +1,10 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
-import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
-
 import FormController from "@sparcs-clubs/web/common/components/FormController";
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import { DivisionTypeTagList } from "@sparcs-clubs/web/constants/tableTagList";
+import { RegisterClubModel } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 import { DivisionType } from "@sparcs-clubs/web/types/divisions.types";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
@@ -16,7 +15,7 @@ interface DivisionSelectProps {
 const DivisionSelect: React.FC<DivisionSelectProps> = ({
   isRenewal = false,
 }) => {
-  const { control } = useFormContext<ApiReg001RequestBody>();
+  const { control } = useFormContext<RegisterClubModel>();
 
   const divisionItems: SelectItem<number>[] = Object.values(DivisionType)
     .filter(value => typeof value === "number")

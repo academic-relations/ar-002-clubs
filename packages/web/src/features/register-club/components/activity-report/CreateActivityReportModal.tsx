@@ -1,19 +1,19 @@
-import { addHours } from "date-fns";
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useCallback } from "react";
-import { useForm } from "react-hook-form";
 
-import { ApiAct007RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct007";
+import apiAct011 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
 
 import Modal from "@sparcs-clubs/web/common/components/Modal";
+import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorModal";
+import { ActivityReportFormData } from "@sparcs-clubs/web/features/activity-report/types/form";
 import usePostActivityReportForNewClub from "@sparcs-clubs/web/features/register-club/services/usePostActivityReportForNewClub";
 
-import ActivityReportForm from "./ActivityReportForm";
+import ActivityReportForm from "./_atomic/ActivityReportForm";
 
 interface CreateActivityReportModalProps {
   clubId: number;
   isOpen: boolean;
   close: VoidFunction;
-  refetch: () => void;
 }
 
 // TODO. 활동기간 리스트 추가, 파일업로드 추가
@@ -21,35 +21,34 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
   clubId,
   isOpen,
   close,
-  refetch,
 }) => {
-  const formCtx = useForm<ApiAct007RequestBody>({ mode: "all" });
+  const queryClient = useQueryClient();
 
   const { mutate } = usePostActivityReportForNewClub();
 
   const submitHandler = useCallback(
-    (_data: ApiAct007RequestBody, e: React.BaseSyntheticEvent) => {
-      e.preventDefault();
+    (data: ActivityReportFormData) => {
+      console.log(data);
       mutate(
         {
           body: {
-            ..._data,
+            ...data,
             clubId,
-            durations: _data.durations.map(({ startTerm, endTerm }) => ({
-              startTerm: addHours(startTerm, 9),
-              endTerm: addHours(endTerm, 9),
+            evidence: data.evidence ?? "", // NOTE: (@dora) evidence is optional
+            evidenceFiles: data.evidenceFiles.map(({ id }) => ({
+              fileId: id,
             })),
-            evidence: _data.evidence ?? "", // NOTE: (@dora) evidence is optional
-            participants: _data.participants.map(({ studentId }) => ({
-              studentId,
+            participants: data.participants.map(({ id }) => ({
+              studentId: id,
             })),
           },
         },
         {
           onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [apiAct011.url()] });
             close();
-            refetch();
           },
+          onError: () => errorHandler("생성에 실패하였습니다"),
         },
       );
     },
@@ -60,19 +59,12 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
     close();
   };
 
-  const handleSubmit = (e: React.BaseSyntheticEvent) => {
-    formCtx.handleSubmit(_data => submitHandler(_data, e))();
-  };
-
   return (
     <Modal isOpen={isOpen} width="full">
       <ActivityReportForm
-        // TODO. 리팩토링 해야 함
-        /* eslint-disable  @typescript-eslint/no-explicit-any */
         clubId={clubId}
-        formCtx={formCtx as any}
         onCancel={handleCancel}
-        onSubmit={handleSubmit}
+        onSubmit={submitHandler}
       />
     </Modal>
   );

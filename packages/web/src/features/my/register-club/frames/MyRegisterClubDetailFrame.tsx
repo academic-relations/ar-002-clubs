@@ -9,6 +9,7 @@ import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/en
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
@@ -31,6 +32,7 @@ import {
 import { deleteMyClubRegistration } from "@sparcs-clubs/web/features/my/services/deleteMyClubRegistration";
 import patchClubRegProfessorApprove from "@sparcs-clubs/web/features/my/services/patchClubRegProfessorApprove";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
+import useGetClubRegistrationPeriod from "@sparcs-clubs/web/features/register-club/hooks/useGetClubRegistrationPeriod";
 import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
 import {
   getActualMonth,
@@ -75,6 +77,12 @@ const MyRegisterClubDetailFrame: React.FC<{
 }> = ({ clubDetail, profile, refetch }) => {
   const router = useRouter();
   const { id } = useParams();
+
+  const {
+    data: deadlineData,
+    isLoading: isLoadingDeadline,
+    isError: isErrorDeadline,
+  } = useGetClubRegistrationPeriod();
 
   const isProfessor = profile === UserTypeEnum.Professor;
 
@@ -341,26 +349,32 @@ const MyRegisterClubDetailFrame: React.FC<{
         >
           목록으로 돌아가기
         </Button>
-        {isProfessor ? (
-          <FlexWrapper direction="row" gap={10}>
-            <Button
-              style={{ width: "max-content" }}
-              onClick={professorApproveHandler}
-              type={clubDetail.isProfessorSigned ? "disabled" : "default"}
-            >
-              {clubDetail.isProfessorSigned ? "승인 완료" : "승인"}
-            </Button>
-          </FlexWrapper>
-        ) : (
-          <FlexWrapper direction="row" gap={10}>
-            <Button style={{ width: "max-content" }} onClick={deleteHandler}>
-              삭제
-            </Button>
-            <Button style={{ width: "max-content" }} onClick={editHandler}>
-              수정
-            </Button>
-          </FlexWrapper>
-        )}
+        <AsyncBoundary isLoading={isLoadingDeadline} isError={isErrorDeadline}>
+          {deadlineData.isClubRegistrationPeriod &&
+            (isProfessor ? (
+              <FlexWrapper direction="row" gap={10}>
+                <Button
+                  style={{ width: "max-content" }}
+                  onClick={professorApproveHandler}
+                  type={clubDetail.isProfessorSigned ? "disabled" : "default"}
+                >
+                  {clubDetail.isProfessorSigned ? "승인 완료" : "승인"}
+                </Button>
+              </FlexWrapper>
+            ) : (
+              <FlexWrapper direction="row" gap={10}>
+                <Button
+                  style={{ width: "max-content" }}
+                  onClick={deleteHandler}
+                >
+                  삭제
+                </Button>
+                <Button style={{ width: "max-content" }} onClick={editHandler}>
+                  수정
+                </Button>
+              </FlexWrapper>
+            ))}
+        </AsyncBoundary>
       </ButtonWrapper>
     </FlexWrapper>
   );

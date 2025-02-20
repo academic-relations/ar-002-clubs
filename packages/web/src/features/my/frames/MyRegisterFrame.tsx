@@ -57,31 +57,29 @@ const MyRegisterFrame: React.FC<{ profile: string }> = ({ profile }) => {
   }, [termData]);
 
   return (
-    registrationStatus !== RegistrationDeadlineEnum.Finish && (
-      <FoldableSectionTitle title="동아리 신청 내역">
-        <AsyncBoundary isLoading={isLoadingTerm} isError={isErrorTerm}>
-          <FlexWrapper direction="column" gap={40}>
-            {/* NOTE: (@dora) 동아리 등록 신청은 동아리 등록 신청 기간에만 보이는 게 아니라, 학기 단위로 항상 보임 */}
-            {/* TODO: (@dora) 동아리 등록 신청 history 볼 수 있는 화면이 필요할지도..? */}
-            <FlexWrapper direction="column" gap={20}>
-              <MoreDetailTitle
-                title="동아리 등록"
-                moreDetail=""
-                moreDetailPath=""
-              />
-              {profile === UserTypeEnum.Professor ? (
-                <RegisterClubProfFrame />
-              ) : (
-                <RegisterClubFrame />
-              )}
-            </FlexWrapper>
-            {registrationStatus ===
-              RegistrationDeadlineEnum.StudentRegistrationApplication &&
-              profile !== UserTypeEnum.Professor && <MyMemberRegisterFrame />}
+    <FoldableSectionTitle title="동아리 신청 내역">
+      <AsyncBoundary isLoading={isLoadingTerm} isError={isErrorTerm}>
+        <FlexWrapper direction="column" gap={40}>
+          {/* NOTE: (@dora) 동아리 등록 신청은 동아리 등록 신청 기간에만 보이는 게 아니라, 학기 단위로 항상 보임 */}
+          {/* TODO: (@dora) 동아리 등록 신청 history 볼 수 있는 화면이 필요할지도..? */}
+          <FlexWrapper direction="column" gap={20}>
+            <MoreDetailTitle
+              title="동아리 등록"
+              moreDetail=""
+              moreDetailPath=""
+            />
+            {profile === UserTypeEnum.Professor ? (
+              <RegisterClubProfFrame />
+            ) : (
+              <RegisterClubFrame />
+            )}
           </FlexWrapper>
-        </AsyncBoundary>
-      </FoldableSectionTitle>
-    )
+          {registrationStatus ===
+            RegistrationDeadlineEnum.StudentRegistrationApplication &&
+            profile !== UserTypeEnum.Professor && <MyMemberRegisterFrame />}
+        </FlexWrapper>
+      </AsyncBoundary>
+    </FoldableSectionTitle>
   );
 };
 

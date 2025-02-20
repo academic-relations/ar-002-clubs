@@ -8,10 +8,8 @@ import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/Confi
 import RestoreDraftModal from "@sparcs-clubs/web/common/components/Modal/RestoreDraftModal";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
 import useTemporaryStorage from "@sparcs-clubs/web/common/hooks/useTemporaryStorage";
 import LocalStorageUtil from "@sparcs-clubs/web/common/services/localStorageUtil";
-
 import { LOCAL_STORAGE_KEY } from "@sparcs-clubs/web/constants/localStorage";
 
 import ActivityReportForm from "../components/ActivityReportForm";
