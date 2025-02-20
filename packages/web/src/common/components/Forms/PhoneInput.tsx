@@ -62,9 +62,9 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
           parts.length === 3 &&
           parts[0].length <= 3 && // (010) 최대 3자리
           parts[1].length <= 4 && // (xxxx) 최대 4자리
-          parts[2].length <= 4 // (xxxx) 최대 4자리
+          parts[2].length < 4 // (xxxx) 최대 4자리
         ) {
-          return nums;
+          return `${parts[0].replace(/\D/g, "")}-${parts[1].replace(/\D/g, "")}-${parts[2].replace(/\D/g, "")}`;
         }
       }
 
