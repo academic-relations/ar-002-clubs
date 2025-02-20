@@ -56,7 +56,16 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
   const formatValue = useCallback(
     (nums: string) => {
       if (nums.match(/-/g)?.length === 2) {
-        return nums;
+        const parts = nums.split("-");
+
+        if (
+          parts.length === 3 &&
+          parts[0].length <= 3 && // (010) 최대 3자리
+          parts[1].length <= 4 && // (xxxx) 최대 4자리
+          parts[2].length <= 4 // (xxxx) 최대 4자리
+        ) {
+          return nums;
+        }
       }
 
       const digits = nums.replace(/\D/g, "");
