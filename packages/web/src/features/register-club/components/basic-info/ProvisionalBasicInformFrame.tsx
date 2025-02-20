@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { ApiUsr001ResponseOK } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -24,7 +23,7 @@ import ProfessorInformFrame from "./ProfessorInformFrame";
 
 interface ProvisionalBasicInformFrameProps {
   editMode?: boolean;
-  profile?: ApiUsr001ResponseOK;
+  profile?: { name: string; phoneNumber?: string };
 }
 
 const ProvisionalBasicInformFrame: React.FC<
@@ -47,6 +46,19 @@ const ProvisionalBasicInformFrame: React.FC<
   const updateRegistrationType = (type: RegistrationTypeEnum) => {
     setValue("registrationTypeEnumId", type, { shouldValidate: true });
   };
+
+  const buttonType = useCallback(
+    (type: RegistrationTypeEnum) => {
+      if (type === registrationType) {
+        return "default";
+      }
+      if (editMode) {
+        return "disabled";
+      }
+      return "outlined";
+    },
+    [registrationType],
+  );
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
@@ -88,11 +100,7 @@ const ProvisionalBasicInformFrame: React.FC<
             </FlexWrapper>
             <FlexWrapper direction="row" gap={16} style={{ width: "100%" }}>
               <Button
-                type={
-                  registrationType === RegistrationTypeEnum.NewProvisional
-                    ? "default"
-                    : "outlined"
-                }
+                type={buttonType(RegistrationTypeEnum.NewProvisional)}
                 onClick={() =>
                   updateRegistrationType(RegistrationTypeEnum.NewProvisional)
                 }
@@ -101,11 +109,7 @@ const ProvisionalBasicInformFrame: React.FC<
                 가등록(신규)
               </Button>
               <Button
-                type={
-                  registrationType === RegistrationTypeEnum.ReProvisional
-                    ? "default"
-                    : "outlined"
-                }
+                type={buttonType(RegistrationTypeEnum.ReProvisional)}
                 onClick={() =>
                   updateRegistrationType(RegistrationTypeEnum.ReProvisional)
                 }

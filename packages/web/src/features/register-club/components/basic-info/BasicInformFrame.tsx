@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { ApiUsr001ResponseOK } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -24,7 +23,7 @@ import ProfessorInformFrame from "./ProfessorInformFrame";
 interface BasicInformSectionProps {
   type: RegistrationTypeEnum;
   editMode?: boolean;
-  profile?: ApiUsr001ResponseOK;
+  profile?: { name: string; phoneNumber?: string };
 }
 
 const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
@@ -85,8 +84,6 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
               control={control}
               defaultValue={profile?.phoneNumber}
               minLength={13}
-              // TODO: phoneNumber validation
-              // pattern={/^010-\d{4}-\d{4}$/}
               renderItem={props => (
                 <PhoneInput
                   {...props}
