@@ -24,7 +24,7 @@ const ErrorMessage = styled.div`
   }
 `;
 
-const NotRegistrationPeriod: NextPage = () => {
+const NotClubRegistrationPeriod: NextPage = () => {
   const router = useRouter();
 
   const Message = (
@@ -43,4 +43,4 @@ const NotRegistrationPeriod: NextPage = () => {
   );
 };
 
-export default NotRegistrationPeriod;
+export default NotClubRegistrationPeriod;

@@ -5,7 +5,7 @@ import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/regist
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import HasClubRegistration from "@sparcs-clubs/web/common/frames/HasClubRegistration";
 import NoManageClub from "@sparcs-clubs/web/common/frames/NoManageClub";
-import NotRegistrationPeriod from "@sparcs-clubs/web/common/frames/NotRegistrationPeriod";
+import NotRegistrationPeriod from "@sparcs-clubs/web/common/frames/NotClubRegistrationPeriod";
 import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/my/services/getMyClubRegistration";
 import RegisterClubMainFrame from "@sparcs-clubs/web/features/register-club/frames/RegisterClubMainFrame";
 import { useCheckManageClub } from "@sparcs-clubs/web/hooks/checkManageClub";
