@@ -29,7 +29,6 @@ import { registerClubDeadlineInfoText } from "../constants";
 import useRegisterClub from "../services/useRegisterClub";
 import { RegisterClubModel } from "../types/registerClub";
 import computeErrorMessage from "../utils/computeErrorMessage";
-import { isProvisional } from "../utils/registrationType";
 
 interface RegisterClubMainFrameProps {
   type: RegistrationTypeEnum;
@@ -65,93 +64,29 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   const {
     watch,
     handleSubmit,
-    // formState: { isValid },
+    formState: { isValid },
   } = formCtx;
+
+  const formData = watch();
 
   const clubId = watch("clubId");
   const registrationTypeEnumId = watch("registrationTypeEnumId");
-  const phoneNumber = watch("phoneNumber");
   const foundedAt = watch("foundedAt");
   const divisionId = watch("divisionId");
-  const activityFieldKr = watch("activityFieldKr");
-  const activityFieldEn = watch("activityFieldEn");
-  const divisionConsistency = watch("divisionConsistency");
-  const foundationPurpose = watch("foundationPurpose");
-  const activityPlan = watch("activityPlan");
-  const activityPlanFile = watch("activityPlanFile");
-  const clubRuleFile = watch("clubRuleFile");
-  const formIsValid = useMemo(() => {
-    const isValid =
-      registrationTypeEnumId !== undefined &&
-      phoneNumber !== "" &&
-      foundedAt !== undefined &&
-      divisionId !== undefined &&
-      activityFieldKr !== "" &&
-      activityFieldEn !== "" &&
-      divisionConsistency !== "" &&
-      foundationPurpose !== "" &&
-      activityPlan !== "";
 
-    if (type === RegistrationTypeEnum.Renewal) {
-      return isValid;
-    }
-
-    if (registrationTypeEnumId === RegistrationTypeEnum.Promotional) {
-      return (
-        isValid && activityPlanFile !== undefined && clubRuleFile !== undefined
-      );
-    }
-
-    if (isProvisional(registrationTypeEnumId)) {
-      return isValid && activityPlanFile !== undefined;
-    }
-
-    return false;
-  }, [
-    type,
-    registrationTypeEnumId,
-    phoneNumber,
-    foundedAt,
-    divisionId,
-    activityFieldKr,
-    activityFieldEn,
-    divisionConsistency,
-    foundationPurpose,
-    activityPlan,
-    activityPlanFile,
-    clubRuleFile,
-  ]);
+  const isFormValid =
+    registrationTypeEnumId !== undefined &&
+    foundedAt !== undefined &&
+    divisionId !== undefined &&
+    isValid;
 
   const errorMessage = useMemo(
     () =>
       computeErrorMessage({
-        registrationTypeEnumId: type,
-        phoneNumber,
-        activityFieldKr,
-        activityFieldEn,
-        foundedAt,
-        divisionId,
-        divisionConsistency,
-        foundationPurpose,
-        activityPlan,
-        activityPlanFile,
-        clubRuleFile,
+        ...formData,
         isAgreed,
       }),
-    [
-      type,
-      phoneNumber,
-      activityFieldKr,
-      activityFieldEn,
-      foundedAt,
-      divisionId,
-      divisionConsistency,
-      foundationPurpose,
-      activityPlan,
-      activityPlanFile,
-      clubRuleFile,
-      isAgreed,
-    ],
+    [formData, isAgreed],
   );
 
   const {
@@ -293,7 +228,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
               <Button
                 buttonType="submit"
                 type={
-                  formIsValid && isAgreed && errorMessage === ""
+                  isFormValid && isAgreed && errorMessage === ""
                     ? "default"
                     : "disabled"
                 }
