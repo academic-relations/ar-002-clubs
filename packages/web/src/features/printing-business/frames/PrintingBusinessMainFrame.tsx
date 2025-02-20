@@ -11,7 +11,7 @@ import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
-import PrintingBusinessNotice from "@sparcs-clubs/web/features/printing-business/component/PrintingBusinessNotice";
+import PrintingBusinessNotice from "@sparcs-clubs/web/features/printing-business/components/PrintingBusinessNotice";
 import logger from "@sparcs-clubs/web/utils/logger";
 
 import PrintingBusinessForm from "../component/PrintingBusinessForm";
