@@ -21,8 +21,7 @@ import { AuthProvider } from "../common/providers/AuthContext";
 
 export const metadata: Metadata = {
   title: "SPARCS Clubs for ClubsUA",
-  description:
-    "Created by SPARCS Academic Relations AR-002 TF Team, Copyright 2024. 학술협력팀 최고!",
+  description: "Created by SPARCS Clubs Team, Copyright 2024. 클럽스 최고!",
 };
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => (
