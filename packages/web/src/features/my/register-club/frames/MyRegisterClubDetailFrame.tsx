@@ -72,9 +72,9 @@ const TagWrapper = styled.div`
 
 const MyRegisterClubDetailFrame: React.FC<{
   clubDetail: ApiReg011ResponseOk;
-  profile: string;
+  userType: string;
   refetch: () => void;
-}> = ({ clubDetail, profile, refetch }) => {
+}> = ({ clubDetail, userType, refetch }) => {
   const router = useRouter();
   const { id } = useParams();
 
@@ -84,7 +84,7 @@ const MyRegisterClubDetailFrame: React.FC<{
     isError: isErrorDeadline,
   } = useGetClubRegistrationPeriod();
 
-  const isProfessor = profile === UserTypeEnum.Professor;
+  const isProfessor = userType === UserTypeEnum.Professor;
 
   const deleteHandler = () => {
     overlay.open(({ isOpen, close }) => (
@@ -322,7 +322,7 @@ const MyRegisterClubDetailFrame: React.FC<{
           RegistrationTypeEnum.Promotional &&
           clubDetail.clubId && (
             <MyRegisterClubActFrame
-              profile={profile}
+              profile={userType}
               clubId={clubDetail.clubId}
             />
           )}

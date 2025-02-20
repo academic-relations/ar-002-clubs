@@ -6,8 +6,8 @@ import useGetClubRegistration from "@sparcs-clubs/web/features/my/services/useGe
 
 import MyRegisterClubDetailFrame from "./MyRegisterClubDetailFrame";
 
-const StudentRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
-  profile,
+const StudentRegisterClubDetailFrame: React.FC<{ userType: string }> = ({
+  userType,
 }) => {
   const { id } = useParams();
 
@@ -22,7 +22,7 @@ const StudentRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       {clubDetail && (
         <MyRegisterClubDetailFrame
-          profile={profile}
+          userType={userType}
           clubDetail={clubDetail}
           refetch={refetch}
         />
