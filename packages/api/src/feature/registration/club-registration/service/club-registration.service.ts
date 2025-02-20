@@ -69,17 +69,26 @@ export class ClubRegistrationService {
     // - 신규 가동아리 신청을 제외하곤 기존 동아리 id를 제출해야 합니다.
     // 위 검사는 REG-001 인터페이스에서 검사합니다
     // - 이미 해당 동아리 id로 신청이 진행중일 경우 신청이 불가합니다.
-    const registrationList = await this.clubRegistrationRepository.findByClubId(
-      body.clubId,
-    );
-    if (registrationList.length !== 0) {
+
+    // const cur = getKSTDate();
+    const cur = new Date("2025-03-01"); // TODO: 테스트용으로 날짜를 지정해뒀는데, 실제 배포 시엔 getKSTDate() 사용
+    const semesterId = await this.clubPublicService.dateToSemesterId(cur);
+    const clubRegistrationList =
+      await this.clubRegistrationRepository.findByClubAndSemesterId(
+        body.clubId,
+        semesterId,
+      );
+    if (clubRegistrationList.length !== 0) {
       throw new HttpException(
         "your club request already exists",
         HttpStatus.BAD_REQUEST,
       );
     }
     const myRegistrationList =
-      await this.clubRegistrationRepository.findByStudentId(studentId);
+      await this.clubRegistrationRepository.findByStudentAndSemesterId(
+        studentId,
+        semesterId,
+      );
     if (myRegistrationList.length !== 0) {
       throw new HttpException(
         "your request already exists",
@@ -87,7 +96,7 @@ export class ClubRegistrationService {
       );
     }
     logger.debug(
-      `[postRegistration] registration existence checked. ${registrationList}`,
+      `[postRegistration] registration existence checked. ${clubRegistrationList} ${myRegistrationList}`,
     );
     // - foundedAt의 경우 가동아리 신청인 경우 설립연월의 정보가 처리됩니다. 신규등록|재등록인 경우 설립연도만을 처리합니다.
     const transformedBody = {
@@ -121,6 +130,7 @@ export class ClubRegistrationService {
 
     const result = await this.clubRegistrationRepository.createRegistration(
       studentId,
+      semesterId,
       transformedBody,
     );
     return result;
@@ -395,9 +405,15 @@ export class ClubRegistrationService {
     //     // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
     //   ],
     // });
+
+    // const cur = getKSTDate();
+    const cur = new Date("2025-03-01"); // TODO: 테스트용으로 날짜를 지정해뒀는데, 실제 배포 시엔 getKSTDate() 사용
+    const semesterId = await this.clubPublicService.dateToSemesterId(cur);
+
     const result =
       await this.clubRegistrationRepository.getStudentRegistrationsClubRegistrationsMy(
         studentId,
+        semesterId,
       );
     return result;
   }
