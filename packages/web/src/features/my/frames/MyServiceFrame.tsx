@@ -8,7 +8,7 @@ import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSe
 import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
 import MyActivityCertificateTable from "@sparcs-clubs/web/features/activity-certificate/components/MyActivityCertificateTable";
 import MyCommonSpaceTable from "@sparcs-clubs/web/features/common-space/components/MyCommonSpaceTable";
-import MyPrintingTable from "@sparcs-clubs/web/features/my/components/MyPrintingTable";
+import MyPrintingTable from "@sparcs-clubs/web/features/printing-business/components/MyPrintingTable";
 import MyRentalTable from "@sparcs-clubs/web/features/rental-business/components/MyRentalTable";
 import { useGetMyRentals } from "@sparcs-clubs/web/features/rental-business/services/useGetMyRentals";
 

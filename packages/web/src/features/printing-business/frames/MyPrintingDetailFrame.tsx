@@ -12,7 +12,7 @@ import {
 } from "@sparcs-clubs/web/common/components/ListItem";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import MyPrintingProgress from "@sparcs-clubs/web/features/my/printing-business/components/MyPrintingProgress";
+import MyPrintingProgress from "@sparcs-clubs/web/features/printing-business/components/MyPrintingProgress";
 
 const MyPrintingDetailFrame = () => {
   const router = useRouter();
