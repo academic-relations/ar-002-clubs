@@ -1,14 +1,18 @@
-import React, { useCallback, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
+import React, { useCallback } from "react";
 
-import { ApiAct008RequestBody } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct008";
+import apiAct011 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import CommentToast from "@sparcs-clubs/web/common/components/Toast/CommentToast";
-import { useGetActivityReport } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
+import {
+  activityReportDetailQueryKey,
+  useGetActivityReport,
+} from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
+import { ActivityReportFormData } from "@sparcs-clubs/web/features/activity-report/types/form";
 import { filterActivityComments } from "@sparcs-clubs/web/features/activity-report/utils/filterComment";
 import usePutActivityReportForNewClub from "@sparcs-clubs/web/features/register-club/services/usePutActivityReportForNewClub";
 
@@ -28,37 +32,16 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
   isOpen,
   close,
 }) => {
-  const formCtx = useForm<ApiAct008RequestBody>({ mode: "all" });
-
+  const queryClient = useQueryClient();
   const { data, isLoading, isError } = useGetActivityReport(
     profile,
     activityId,
   );
 
-  useEffect(() => {
-    if (data) {
-      /* NOTE: (@dora) request body of put should not include clubId */
-      formCtx.reset({
-        name: data.name,
-        activityTypeEnumId: data.activityTypeEnumId,
-        durations: data.durations,
-        location: data.location,
-        purpose: data.purpose,
-        detail: data.detail,
-        evidence: data.evidence,
-        evidenceFiles: data.evidenceFiles,
-        participants: data.participants,
-      });
-      /* TODO: (@dora) refactor to use lodash */
-      // formCtx.reset(_.omit(activityReportData, "clubId"));
-    }
-  }, [data, formCtx]);
-
   const { mutate } = usePutActivityReportForNewClub();
 
   const submitHandler = useCallback(
-    (_data: ApiAct008RequestBody, e: React.BaseSyntheticEvent) => {
-      e.preventDefault();
+    (_data: ActivityReportFormData) => {
       mutate(
         {
           params: { activityId },
@@ -68,12 +51,23 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
               startTerm,
               endTerm,
             })),
-            participants: _data.participants.map(({ studentId }) => ({
-              studentId,
+            participants: _data.participants.map(({ id }) => ({
+              studentId: id,
+            })),
+            evidenceFiles: _data.evidenceFiles.map(file => ({
+              fileId: file.id,
             })),
           },
         },
-        { onSuccess: close },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: [activityReportDetailQueryKey],
+            });
+            queryClient.invalidateQueries({ queryKey: [apiAct011.url()] });
+            close();
+          },
+        },
       );
     },
     [activityId, close, mutate],
@@ -81,10 +75,6 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
 
   const handleCancel = () => {
     close();
-  };
-
-  const handleSubmit = (e: React.BaseSyntheticEvent) => {
-    formCtx.handleSubmit(_data => submitHandler(_data, e))();
   };
 
   if (!data) return null;
@@ -107,8 +97,25 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
 
           <ActivityReportForm
             clubId={data.clubId}
+            initialData={{
+              ...data,
+              durations: data.durations.map(({ startTerm, endTerm }) => ({
+                startTerm,
+                endTerm,
+              })),
+              evidenceFiles: data.evidenceFiles.map(file => ({
+                id: file.fileId,
+                name: file.name,
+                url: file.url,
+              })),
+              participants: data.participants.map(participant => ({
+                id: participant.studentId,
+                name: participant.name,
+                studentNumber: participant.studentNumber.toString(),
+              })),
+            }}
             onCancel={handleCancel}
-            onSubmit={handleSubmit}
+            onSubmit={submitHandler}
           />
         </FlexWrapper>
       </AsyncBoundary>

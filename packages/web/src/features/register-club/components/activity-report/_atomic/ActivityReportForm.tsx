@@ -19,18 +19,23 @@ import SelectActivityTerm from "./SelectActivityTerm";
 
 interface ActivityReportFormProps {
   clubId: number;
+  initialData?: ActivityReportFormData;
   onCancel: () => void;
-  onSubmit: (e: React.BaseSyntheticEvent) => void;
+  onSubmit: (data: ActivityReportFormData) => void;
   canCancel?: boolean;
 }
 
 const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   clubId,
+  initialData = undefined,
   onCancel,
   onSubmit,
   canCancel = true,
 }) => {
-  const formCtx = useForm<ActivityReportFormData>({ mode: "all" });
+  const formCtx = useForm<ActivityReportFormData>({
+    mode: "all",
+    defaultValues: initialData,
+  });
   const {
     control,
     watch,
@@ -75,205 +80,194 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
     [durations, participants, evidenceFiles, isValid],
   );
 
-  if (durations.length === 0) {
-    return (
-      <AsyncBoundary isLoading isError={false}>
-        <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
-          활동 기간을 선택해주세요
-        </Typography>
-      </AsyncBoundary>
-    );
-  }
-
   return (
     <FormProvider {...formCtx}>
-      <form onSubmit={onSubmit}>
-        <FlexWrapper direction="column" gap={32}>
+      <FlexWrapper direction="column" gap={32}>
+        <FormController
+          name="name"
+          required
+          control={control}
+          renderItem={props => (
+            <TextInput
+              {...props}
+              label="활동명"
+              placeholder="활동명을 입력해주세요"
+            />
+          )}
+        />
+
+        <FlexWrapper direction="row" gap={32}>
           <FormController
-            name="name"
+            name="activityTypeEnumId"
             required
             control={control}
             renderItem={props => (
-              <TextInput
+              <Select
                 {...props}
-                label="활동명"
-                placeholder="활동명을 입력해주세요"
+                label="활동 분류"
+                items={[
+                  {
+                    value: ActivityTypeEnum.matchedInternalActivity,
+                    label: "동아리 성격에 합치하는 내부 활동",
+                    selectable: true,
+                  },
+                  {
+                    value: ActivityTypeEnum.matchedExternalActivity,
+                    label: "동아리 성격에 합치하는 외부 활동",
+                    selectable: true,
+                  },
+                  {
+                    value: ActivityTypeEnum.notMatchedActivity,
+                    label: "동아리 성격에 합치하지 않는 활동",
+                    selectable: true,
+                  },
+                ]}
               />
             )}
           />
 
-          <FlexWrapper direction="row" gap={32}>
-            <FormController
-              name="activityTypeEnumId"
-              required
-              control={control}
-              renderItem={props => (
-                <Select
-                  {...props}
-                  label="활동 분류"
-                  items={[
-                    {
-                      value: ActivityTypeEnum.matchedInternalActivity,
-                      label: "동아리 성격에 합치하는 내부 활동",
-                      selectable: true,
-                    },
-                    {
-                      value: ActivityTypeEnum.matchedExternalActivity,
-                      label: "동아리 성격에 합치하는 외부 활동",
-                      selectable: true,
-                    },
-                    {
-                      value: ActivityTypeEnum.notMatchedActivity,
-                      label: "동아리 성격에 합치하지 않는 활동",
-                      selectable: true,
-                    },
-                  ]}
-                />
-              )}
-            />
+          <SelectActivityTerm
+            initialData={durations}
+            onChange={terms => {
+              setValue("durations", terms, {
+                shouldValidate: true,
+              });
+              if (terms.length > 0) {
+                setStartTerm(
+                  terms.map(d => d.startTerm).reduce((a, b) => (a < b ? a : b)),
+                );
+                setEndTerm(
+                  terms.map(d => d.endTerm).reduce((a, b) => (a > b ? a : b)),
+                );
+              }
 
-            <SelectActivityTerm
-              initialData={durations}
-              onChange={terms => {
-                setValue("durations", terms, {
-                  shouldValidate: true,
-                });
-                if (terms.length > 0) {
-                  setStartTerm(
-                    terms
-                      .map(d => d.startTerm)
-                      .reduce((a, b) => (a < b ? a : b)),
-                  );
-                  setEndTerm(
-                    terms.map(d => d.endTerm).reduce((a, b) => (a > b ? a : b)),
-                  );
+              setValue("participants", []);
+            }}
+          />
+        </FlexWrapper>
+        <FormController
+          name="location"
+          required
+          control={control}
+          renderItem={props => (
+            <TextInput
+              {...props}
+              label="활동 장소"
+              placeholder="활동 장소를 입력해주세요"
+            />
+          )}
+        />
+        <FormController
+          name="purpose"
+          required
+          control={control}
+          renderItem={props => (
+            <TextInput
+              {...props}
+              label="활동 목적"
+              placeholder="활동 목적을 입력해주세요"
+            />
+          )}
+        />
+        <FormController
+          name="detail"
+          required
+          control={control}
+          renderItem={props => (
+            <TextInput
+              {...props}
+              area
+              label="활동 내용"
+              placeholder="활동 내용을 입력해주세요"
+            />
+          )}
+        />
+        {durations && (
+          <FlexWrapper direction="column" gap={4}>
+            <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
+              활동 인원
+            </Typography>
+            <AsyncBoundary isLoading={isLoading} isError={isError}>
+              <SelectParticipant
+                data={
+                  participantData?.students.map(student => ({
+                    id: student.id,
+                    name: student.name,
+                    studentNumber: student.studentNumber.toString(),
+                  })) ?? []
                 }
-
-                setValue("participants", []);
-              }}
-            />
+                value={participants}
+                onChange={_participants => {
+                  setValue("participants", _participants, {
+                    shouldValidate: true,
+                  });
+                }}
+              />
+            </AsyncBoundary>
           </FlexWrapper>
+        )}
+        <FlexWrapper direction="column" gap={4}>
+          <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
+            활동 증빙
+          </Typography>
           <FormController
-            name="location"
-            required
-            control={control}
-            renderItem={props => (
-              <TextInput
-                {...props}
-                label="활동 장소"
-                placeholder="활동 장소를 입력해주세요"
-              />
-            )}
-          />
-          <FormController
-            name="purpose"
-            required
-            control={control}
-            renderItem={props => (
-              <TextInput
-                {...props}
-                label="활동 목적"
-                placeholder="활동 목적을 입력해주세요"
-              />
-            )}
-          />
-          <FormController
-            name="detail"
+            name="evidence"
             required
             control={control}
             renderItem={props => (
               <TextInput
                 {...props}
                 area
-                label="활동 내용"
-                placeholder="활동 내용을 입력해주세요"
+                placeholder="활동 증빙에 대해서 작성하고 싶은 것이 있다면 입력해주세요"
               />
             )}
           />
-          {durations && (
-            <FlexWrapper direction="column" gap={4}>
-              <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
-                활동 인원
-              </Typography>
-              <AsyncBoundary isLoading={isLoading} isError={isError}>
-                <SelectParticipant
-                  data={
-                    participantData?.students.map(student => ({
-                      id: student.id,
-                      name: student.name,
-                      studentNumber: student.studentNumber.toString(),
-                    })) ?? []
-                  }
-                  value={participants}
-                  onChange={_participants => {
-                    setValue("participants", _participants, {
-                      shouldValidate: true,
-                    });
-                  }}
-                />
-              </AsyncBoundary>
-            </FlexWrapper>
-          )}
-          <FlexWrapper direction="column" gap={4}>
-            <Typography fs={16} lh={20} fw="MEDIUM" color="BLACK">
-              활동 증빙
-            </Typography>
-            <FormController
-              name="evidence"
-              required
-              control={control}
-              renderItem={props => (
-                <TextInput
-                  {...props}
-                  area
-                  placeholder="활동 증빙에 대해서 작성하고 싶은 것이 있다면 입력해주세요"
-                />
-              )}
-            />
-            {evidenceFiles && (
-              <FormController
-                name="evidenceFiles"
-                required
-                control={control}
-                renderItem={props => (
-                  <FileUpload
-                    {...props}
-                    multiple
-                    initialFiles={evidenceFiles}
-                    onChange={files => {
-                      setValue("evidenceFiles", files, {
-                        shouldValidate: true,
-                      });
-                    }}
-                  />
-                )}
+
+          <FormController
+            name="evidenceFiles"
+            required
+            control={control}
+            renderItem={props => (
+              <FileUpload
+                {...props}
+                multiple
+                initialFiles={evidenceFiles}
+                onChange={files => {
+                  setValue("evidenceFiles", files, {
+                    shouldValidate: true,
+                  });
+                }}
               />
             )}
-          </FlexWrapper>
-          <FlexWrapper
-            direction="row"
-            gap={0}
-            style={
-              canCancel
-                ? { justifyContent: "space-between" }
-                : { justifyContent: "flex-end" }
-            }
-          >
-            {canCancel && (
-              <Button type="outlined" onClick={onCancel}>
-                취소
-              </Button>
-            )}
-
-            <Button
-              buttonType="submit"
-              type={validInput ? "default" : "disabled"}
-            >
-              저장
-            </Button>
-          </FlexWrapper>
+          />
         </FlexWrapper>
-      </form>
+        <FlexWrapper
+          direction="row"
+          gap={0}
+          style={
+            canCancel
+              ? { justifyContent: "space-between" }
+              : { justifyContent: "flex-end" }
+          }
+        >
+          {canCancel && (
+            <Button type="outlined" onClick={onCancel}>
+              취소
+            </Button>
+          )}
+
+          <Button
+            buttonType="submit"
+            type={validInput ? "default" : "disabled"}
+            onClick={e => {
+              e.preventDefault();
+              onSubmit(watch());
+            }}
+          >
+            저장
+          </Button>
+        </FlexWrapper>
+      </FlexWrapper>
     </FormProvider>
   );
 };

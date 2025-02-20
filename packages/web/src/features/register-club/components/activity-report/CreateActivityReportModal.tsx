@@ -1,7 +1,10 @@
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useCallback } from "react";
-import { useForm } from "react-hook-form";
+
+import apiAct011 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
 
 import Modal from "@sparcs-clubs/web/common/components/Modal";
+import { errorHandler } from "@sparcs-clubs/web/common/components/Modal/ErrorModal";
 import { ActivityReportFormData } from "@sparcs-clubs/web/features/activity-report/types/form";
 import usePostActivityReportForNewClub from "@sparcs-clubs/web/features/register-club/services/usePostActivityReportForNewClub";
 
@@ -11,7 +14,6 @@ interface CreateActivityReportModalProps {
   clubId: number;
   isOpen: boolean;
   close: VoidFunction;
-  refetch: () => void;
 }
 
 // TODO. 활동기간 리스트 추가, 파일업로드 추가
@@ -19,14 +21,14 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
   clubId,
   isOpen,
   close,
-  refetch,
 }) => {
-  const formCtx = useForm<ActivityReportFormData>({ mode: "all" });
+  const queryClient = useQueryClient();
 
   const { mutate } = usePostActivityReportForNewClub();
 
   const submitHandler = useCallback(
     (data: ActivityReportFormData) => {
+      console.log(data);
       mutate(
         {
           body: {
@@ -43,9 +45,10 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
         },
         {
           onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [apiAct011.url()] });
             close();
-            refetch();
           },
+          onError: () => errorHandler("생성에 실패하였습니다"),
         },
       );
     },
@@ -61,7 +64,7 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
       <ActivityReportForm
         clubId={clubId}
         onCancel={handleCancel}
-        onSubmit={() => formCtx.handleSubmit(submitHandler)}
+        onSubmit={submitHandler}
       />
     </Modal>
   );

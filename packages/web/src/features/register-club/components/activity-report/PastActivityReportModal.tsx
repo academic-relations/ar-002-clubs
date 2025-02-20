@@ -1,6 +1,8 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { overlay } from "overlay-kit";
 import React, { useEffect, useState } from "react";
 
+import apiAct011 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
@@ -17,14 +19,17 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useExecutiveApproveActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveApproveActivityReport";
 import useExecutiveRejectActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveRejectActivityReport";
 import { useDeleteActivityReportProvisional } from "@sparcs-clubs/web/features/activity-report/services/useDeleteActivityReportProvisional";
-import { useGetActivityReport } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
+import {
+  activityReportDetailQueryKey,
+  useGetActivityReport,
+} from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
 import { getActivityTypeLabel } from "@sparcs-clubs/web/types/activityType";
 import {
   formatDate,
   formatSlashDateTime,
 } from "@sparcs-clubs/web/utils/Date/formatDate";
 
-import EditActivityReportModal from "./_atomic/EditActivityReportModal";
+import EditActivityReportModal from "./EditActivityReportModal";
 
 interface PastActivityReportModalProps {
   activityId: number;
@@ -43,6 +48,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   viewOnly = false,
   clubId,
 }) => {
+  const queryClient = useQueryClient();
   const { data, isLoading, isError, refetch } = useGetActivityReport(
     profile,
     activityId,
@@ -62,6 +68,10 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
       { requestParam: { activityId } },
       {
         onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: [activityReportDetailQueryKey],
+          });
+          queryClient.invalidateQueries({ queryKey: [apiAct011.url()] });
           close();
         },
       },
