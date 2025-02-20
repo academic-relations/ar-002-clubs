@@ -36,7 +36,7 @@ import {
   RegistrationTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
 import { deleteMyClubRegistration } from "@sparcs-clubs/web/features/my/services/deleteMyClubRegistration";
-import patchClubRegProfessorApprove from "@sparcs-clubs/web/features/my/services/patchClubRegProfessorApprove";
+import usePatchClubRegProfessorApprove from "@sparcs-clubs/web/features/my/services/usePatchClubRegProfessorApprove";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
 import useGetClubRegistrationPeriod from "@sparcs-clubs/web/features/register-club/hooks/useGetClubRegistrationPeriod";
 import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
@@ -89,6 +89,7 @@ const MyRegisterClubDetailFrame: React.FC<{
     isLoading: isLoadingDeadline,
     isError: isErrorDeadline,
   } = useGetClubRegistrationPeriod();
+  const { mutate } = usePatchClubRegProfessorApprove();
 
   const isProfessor = userType === UserTypeEnum.Professor;
 
@@ -136,12 +137,18 @@ const MyRegisterClubDetailFrame: React.FC<{
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <CancellableModalContent
-          onConfirm={async () => {
-            await patchClubRegProfessorApprove({ applyId: +id });
-            queryClient.invalidateQueries({
-              queryKey: [apiReg011.url(String(id))],
-            });
-            close();
+          onConfirm={() => {
+            mutate(
+              { param: { applyId: +id } },
+              {
+                onSuccess: () => {
+                  queryClient.invalidateQueries({
+                    queryKey: [apiReg011.url(String(id))],
+                  });
+                  close();
+                },
+              },
+            );
           }}
           onClose={close}
           confirmButtonText="승인"
