@@ -58,6 +58,13 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.member,
         comment: "BE 뉴비에요",
       },
+      {
+        nickname: "daystar",
+        name: "권진현",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "겨울엔 팥붕이냐 슈붕이냐.. 둘 다 먹으면 됩니다",
+      },
     ],
   },
   {
