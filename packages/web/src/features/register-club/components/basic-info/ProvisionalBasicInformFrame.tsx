@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
@@ -13,56 +13,55 @@ import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
+import useGetClubsForReProvisional from "@sparcs-clubs/web/features/register-club/services/useGetClubsForReProvisional";
 
-import useGetClubsForReProvisional from "../services/useGetClubsForReProvisional";
 import ClubNameField from "./_atomic/ClubNameField";
 import DivisionSelect from "./_atomic/DivisionSelect";
 import MonthSelect from "./_atomic/MonthSelect";
 import YearSelect from "./_atomic/YearSelect";
 import ProfessorInformFrame from "./ProfessorInformFrame";
 
-const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
-  editMode = false,
-}) => {
-  const { control, resetField, setValue, watch } = useFormContext();
+interface ProvisionalBasicInformFrameProps {
+  editMode?: boolean;
+  profile?: { name: string; phoneNumber?: string };
+}
 
-  const [registrationType, setRegistrationType] =
-    useState<RegistrationTypeEnum>(RegistrationTypeEnum.NewProvisional);
+const ProvisionalBasicInformFrame: React.FC<
+  ProvisionalBasicInformFrameProps
+> = ({ editMode = false, profile = undefined }) => {
+  const { control, setValue, watch } = useFormContext();
 
-  const registrationTypeEnumId = watch("registrationTypeEnumId");
-  useEffect(() => {
-    if (registrationTypeEnumId) setRegistrationType(registrationTypeEnumId);
-  }, [registrationTypeEnumId]);
-
-  const updateRegistrationType = (type: RegistrationTypeEnum) => {
-    setRegistrationType(type);
-    setValue("registrationTypeEnumId", type, { shouldValidate: true });
-  };
+  const registrationType = watch("registrationTypeEnumId");
 
   const { data, isLoading, isError } = useGetClubsForReProvisional();
-  const {
-    data: profile,
-    isLoading: isLoadingProfile,
-    isError: isErrorProfile,
-  } = useGetUserProfile();
 
   const [isCheckedProfessor, setIsCheckedProfessor] = useState(false);
 
   useEffect(() => {
     if (!isCheckedProfessor) {
-      resetField("professor.email");
-      resetField("professor.name");
-      resetField("professor.professorEnumId");
       setValue("professor", undefined, { shouldValidate: true });
     }
-  }, [resetField, setValue, isCheckedProfessor]);
+  }, [setValue, isCheckedProfessor]);
+
+  const updateRegistrationType = (type: RegistrationTypeEnum) => {
+    setValue("registrationTypeEnumId", type, { shouldValidate: true });
+  };
+
+  const buttonType = useCallback(
+    (type: RegistrationTypeEnum) => {
+      if (type === registrationType) {
+        return "default";
+      }
+      if (editMode) {
+        return "disabled";
+      }
+      return "outlined";
+    },
+    [registrationType],
+  );
 
   return (
-    <AsyncBoundary
-      isLoading={isLoading || isLoadingProfile}
-      isError={isError || isErrorProfile}
-    >
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
       <FlexWrapper direction="column" gap={40}>
         <SectionTitle>기본 정보</SectionTitle>
         <Card outline gap={32} style={{ marginLeft: 20 }}>
@@ -78,8 +77,12 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
               control={control}
               defaultValue={profile?.phoneNumber}
               minLength={13}
-              // TODO: phoneNumber validation
-              // pattern={/^010-\d{4}-\d{4}$/}
+              rules={{
+                validate: value =>
+                  /^010-\d{4}-\d{4}$/.test(value.trim())
+                    ? undefined
+                    : "올바른 전화번호 형식이 아닙니다.",
+              }}
               renderItem={props => (
                 <PhoneInput
                   {...props}
@@ -101,11 +104,7 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
             </FlexWrapper>
             <FlexWrapper direction="row" gap={16} style={{ width: "100%" }}>
               <Button
-                type={
-                  registrationType === RegistrationTypeEnum.NewProvisional
-                    ? "default"
-                    : "outlined"
-                }
+                type={buttonType(RegistrationTypeEnum.NewProvisional)}
                 onClick={() =>
                   updateRegistrationType(RegistrationTypeEnum.NewProvisional)
                 }
@@ -114,11 +113,7 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
                 가등록(신규)
               </Button>
               <Button
-                type={
-                  registrationType === RegistrationTypeEnum.ReProvisional
-                    ? "default"
-                    : "outlined"
-                }
+                type={buttonType(RegistrationTypeEnum.ReProvisional)}
                 onClick={() =>
                   updateRegistrationType(RegistrationTypeEnum.ReProvisional)
                 }

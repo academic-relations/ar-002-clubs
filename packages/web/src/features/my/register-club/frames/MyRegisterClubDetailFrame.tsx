@@ -1,14 +1,21 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
 import React from "react";
 import styled from "styled-components";
 
-import { ApiReg011ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
-import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import apiReg011, {
+  ApiReg011ResponseOk,
+} from "@sparcs-clubs/interface/api/registration/endpoint/apiReg011";
+import {
+  RegistrationStatusEnum,
+  RegistrationTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
+import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
 import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import ThumbnailPreviewList from "@sparcs-clubs/web/common/components/File/ThumbnailPreviewList";
@@ -29,8 +36,9 @@ import {
   RegistrationTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
 import { deleteMyClubRegistration } from "@sparcs-clubs/web/features/my/services/deleteMyClubRegistration";
-import patchClubRegProfessorApprove from "@sparcs-clubs/web/features/my/services/patchClubRegProfessorApprove";
+import usePatchClubRegProfessorApprove from "@sparcs-clubs/web/features/my/services/usePatchClubRegProfessorApprove";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
+import useGetClubRegistrationPeriod from "@sparcs-clubs/web/features/register-club/hooks/useGetClubRegistrationPeriod";
 import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
 import {
   getActualMonth,
@@ -70,13 +78,20 @@ const TagWrapper = styled.div`
 
 const MyRegisterClubDetailFrame: React.FC<{
   clubDetail: ApiReg011ResponseOk;
-  profile: string;
-  refetch: () => void;
-}> = ({ clubDetail, profile, refetch }) => {
+  userType: string;
+}> = ({ clubDetail, userType }) => {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { id } = useParams();
 
-  const isProfessor = profile === UserTypeEnum.Professor;
+  const {
+    data: deadlineData,
+    isLoading: isLoadingDeadline,
+    isError: isErrorDeadline,
+  } = useGetClubRegistrationPeriod();
+  const { mutate } = usePatchClubRegProfessorApprove();
+
+  const isProfessor = userType === UserTypeEnum.Professor;
 
   const deleteHandler = () => {
     overlay.open(({ isOpen, close }) => (
@@ -122,10 +137,18 @@ const MyRegisterClubDetailFrame: React.FC<{
     overlay.open(({ isOpen, close }) => (
       <Modal isOpen={isOpen}>
         <CancellableModalContent
-          onConfirm={async () => {
-            await patchClubRegProfessorApprove({ applyId: +id });
-            close();
-            refetch();
+          onConfirm={() => {
+            mutate(
+              { param: { applyId: +id } },
+              {
+                onSuccess: () => {
+                  queryClient.invalidateQueries({
+                    queryKey: [apiReg011.url(String(id))],
+                  });
+                  close();
+                },
+              },
+            );
           }}
           onClose={close}
           confirmButtonText="승인"
@@ -167,12 +190,18 @@ const MyRegisterClubDetailFrame: React.FC<{
               clubDetail.comments &&
               clubDetail.comments.length > 0 && (
                 <CommentToast
-                  title="반려 사유"
+                  title="코멘트"
                   reasons={clubDetail.comments.map(comment => ({
                     datetime: comment.createdAt,
                     reason: comment.content,
+                    status: "반려 사유",
                   }))}
-                  color="red"
+                  color={
+                    clubDetail.registrationStatusEnumId ===
+                    RegistrationStatusEnum.Approved
+                      ? "green"
+                      : "red"
+                  }
                 />
               )
             }
@@ -314,7 +343,7 @@ const MyRegisterClubDetailFrame: React.FC<{
           RegistrationTypeEnum.Promotional &&
           clubDetail.clubId && (
             <MyRegisterClubActFrame
-              profile={profile}
+              profile={userType}
               clubId={clubDetail.clubId}
             />
           )}
@@ -341,26 +370,32 @@ const MyRegisterClubDetailFrame: React.FC<{
         >
           목록으로 돌아가기
         </Button>
-        {isProfessor ? (
-          <FlexWrapper direction="row" gap={10}>
-            <Button
-              style={{ width: "max-content" }}
-              onClick={professorApproveHandler}
-              type={clubDetail.isProfessorSigned ? "disabled" : "default"}
-            >
-              {clubDetail.isProfessorSigned ? "승인 완료" : "승인"}
-            </Button>
-          </FlexWrapper>
-        ) : (
-          <FlexWrapper direction="row" gap={10}>
-            <Button style={{ width: "max-content" }} onClick={deleteHandler}>
-              삭제
-            </Button>
-            <Button style={{ width: "max-content" }} onClick={editHandler}>
-              수정
-            </Button>
-          </FlexWrapper>
-        )}
+        <AsyncBoundary isLoading={isLoadingDeadline} isError={isErrorDeadline}>
+          {deadlineData.isClubRegistrationPeriod &&
+            (isProfessor ? (
+              <FlexWrapper direction="row" gap={10}>
+                <Button
+                  style={{ width: "max-content" }}
+                  onClick={professorApproveHandler}
+                  type={clubDetail.isProfessorSigned ? "disabled" : "default"}
+                >
+                  {clubDetail.isProfessorSigned ? "승인 완료" : "승인"}
+                </Button>
+              </FlexWrapper>
+            ) : (
+              <FlexWrapper direction="row" gap={10}>
+                <Button
+                  style={{ width: "max-content" }}
+                  onClick={deleteHandler}
+                >
+                  삭제
+                </Button>
+                <Button style={{ width: "max-content" }} onClick={editHandler}>
+                  수정
+                </Button>
+              </FlexWrapper>
+            ))}
+        </AsyncBoundary>
       </ButtonWrapper>
     </FlexWrapper>
   );

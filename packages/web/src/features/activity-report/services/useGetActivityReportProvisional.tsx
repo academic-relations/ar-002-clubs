@@ -8,7 +8,7 @@ import {
   // defineAxiosMock,
 } from "@sparcs-clubs/web/lib/axios";
 
-export const activityReportDetailQueryKey = (activityId: number) => [
+export const activityReportProvisionalDetailQueryKey = (activityId: number) => [
   activityReportProvisionalGet(activityId),
 ];
 
@@ -17,7 +17,7 @@ export const useGetActivityReportProvisional = (
   activityId: number,
 ) =>
   useQuery<ApiAct029ResponseOk, Error>({
-    queryKey: activityReportDetailQueryKey(activityId),
+    queryKey: activityReportProvisionalDetailQueryKey(activityId),
     queryFn: async (): Promise<ApiAct029ResponseOk> => {
       const { data } = await axiosClientWithAuth.get(
         activityReportProvisionalGet(activityId),

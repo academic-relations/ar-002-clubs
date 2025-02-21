@@ -24,11 +24,11 @@ const ErrorMessage = styled.div`
   }
 `;
 
-const NotRegistrationPeriod: NextPage = () => {
+const NotClubRegistrationPeriod: NextPage = () => {
   const router = useRouter();
 
   const Message = (
-    <ErrorMessage>현재는 회원 등록 신청 기간이 아닙니다</ErrorMessage>
+    <ErrorMessage>현재는 동아리 등록 신청 기간이 아닙니다</ErrorMessage>
   );
 
   const goToMain = () => {
@@ -43,4 +43,4 @@ const NotRegistrationPeriod: NextPage = () => {
   );
 };
 
-export default NotRegistrationPeriod;
+export default NotClubRegistrationPeriod;

@@ -38,7 +38,7 @@ const responseBodyMap = {
         }),
         clubNameKr: zClubName.optional(),
         newClubNameKr: zClubName,
-        clubNameEm: zClubName.optional(),
+        clubNameEn: zClubName.optional(),
         newClubNameEn: zClubName,
         student: z.object({
           id: z.coerce.number().int().min(1),

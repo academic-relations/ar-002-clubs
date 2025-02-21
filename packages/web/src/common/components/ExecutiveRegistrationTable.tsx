@@ -70,7 +70,7 @@ const columns = [
     },
     size: 120,
   }),
-  columnHelper.accessor("clubNameKr", {
+  columnHelper.accessor(row => row.clubNameKr ?? row.newClubNameKr, {
     id: "clubName",
     header: "동아리",
     cell: info => info.getValue(),
@@ -89,7 +89,7 @@ const columns = [
   columnHelper.accessor("professorName", {
     id: "advisorProfessor",
     header: "지도교수",
-    cell: info => info.getValue(),
+    cell: info => info.getValue() ?? "-",
   }),
 ];
 

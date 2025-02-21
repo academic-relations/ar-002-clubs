@@ -1,6 +1,8 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { overlay } from "overlay-kit";
 import React, { useEffect, useState } from "react";
 
+import apiAct011 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct011";
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
@@ -17,7 +19,10 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useExecutiveApproveActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveApproveActivityReport";
 import useExecutiveRejectActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveRejectActivityReport";
 import { useDeleteActivityReportProvisional } from "@sparcs-clubs/web/features/activity-report/services/useDeleteActivityReportProvisional";
-import { useGetActivityReportProvisional } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReportProvisional";
+import {
+  activityReportDetailQueryKey,
+  useGetActivityReport,
+} from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
 import { getActivityTypeLabel } from "@sparcs-clubs/web/types/activityType";
 import {
   formatDate,
@@ -43,7 +48,8 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   viewOnly = false,
   clubId,
 }) => {
-  const { data, isLoading, isError, refetch } = useGetActivityReportProvisional(
+  const queryClient = useQueryClient();
+  const { data, isLoading, isError, refetch } = useGetActivityReport(
     profile,
     activityId,
   );
@@ -62,6 +68,10 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
       { requestParam: { activityId } },
       {
         onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: [activityReportDetailQueryKey],
+          });
+          queryClient.invalidateQueries({ queryKey: [apiAct011.url()] });
           close();
         },
       },
@@ -138,7 +148,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         <FlexWrapper gap={20} direction="column">
           {!isExecutive &&
-            data.activityStatusEnum === ActivityStatusEnum.Rejected &&
+            data.activityStatusEnumId === ActivityStatusEnum.Rejected &&
             data.comments.length > 0 && (
               <CommentToast
                 title="반려 사유"
@@ -157,7 +167,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
             <FlexWrapper gap={12} direction="column">
               <ListItem>활동명: {data.name}</ListItem>
               <ListItem>
-                활동 분류: {getActivityTypeLabel(data.activityTypeEnum)}
+                활동 분류: {getActivityTypeLabel(data.activityTypeEnumId)}
               </ListItem>
               <ListItem>활동 기간: </ListItem>
               <FlexWrapper
@@ -182,7 +192,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
             </Typography>
 
             {data.participants.map(participant => (
-              <ListItem key={participant.id}>
+              <ListItem key={participant.studentId}>
                 {participant.studentNumber} {participant.name}
               </ListItem>
             ))}
@@ -203,7 +213,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
                 >
                   <ThumbnailPreviewList
                     fileList={data.evidenceFiles.map(_file => ({
-                      id: _file.id,
+                      id: _file.fileId,
                       name: _file.name,
                       url: _file.url,
                     }))}
