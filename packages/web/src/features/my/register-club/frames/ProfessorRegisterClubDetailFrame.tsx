@@ -6,8 +6,8 @@ import useGetClubRegistrationProfessor from "@sparcs-clubs/web/features/my/servi
 
 import MyRegisterClubDetailFrame from "./MyRegisterClubDetailFrame";
 
-const ProfessorRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
-  profile,
+const ProfessorRegisterClubDetailFrame: React.FC<{ userType: string }> = ({
+  userType,
 }) => {
   const { id } = useParams();
 
@@ -15,16 +15,14 @@ const ProfessorRegisterClubDetailFrame: React.FC<{ profile: string }> = ({
     data: clubDetail,
     isLoading,
     isError,
-    refetch,
   } = useGetClubRegistrationProfessor({ applyId: +id });
 
   return (
     <AsyncBoundary isLoading={isLoading} isError={isError}>
       {clubDetail && (
         <MyRegisterClubDetailFrame
-          profile={profile}
+          userType={userType}
           clubDetail={clubDetail}
-          refetch={refetch}
         />
       )}
     </AsyncBoundary>

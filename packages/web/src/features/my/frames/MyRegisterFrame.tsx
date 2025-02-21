@@ -33,26 +33,26 @@ const MyRegisterFrame: React.FC<{ profile: string }> = ({ profile }) => {
         setRegistrationStatus(RegistrationDeadlineEnum.Finish);
         return;
       }
-      const memberRegistrationEvent = currentEvents.filter(
-        event =>
+
+      currentEvents.forEach(event => {
+        if (
           event.registrationEventEnumId ===
-          RegistrationDeadlineEnum.StudentRegistrationApplication,
-      );
-      if (memberRegistrationEvent.length > 0) {
-        setRegistrationStatus(
-          RegistrationDeadlineEnum.StudentRegistrationApplication,
-        );
-      }
-      const clubRegistrationEvent = currentEvents.filter(
-        event =>
+          RegistrationDeadlineEnum.StudentRegistrationApplication
+        ) {
+          setRegistrationStatus(
+            RegistrationDeadlineEnum.StudentRegistrationApplication,
+          );
+          return;
+        }
+        if (
           event.registrationEventEnumId ===
-          RegistrationDeadlineEnum.ClubRegistrationApplication,
-      );
-      if (clubRegistrationEvent.length > 0) {
-        setRegistrationStatus(
-          RegistrationDeadlineEnum.ClubRegistrationApplication,
-        );
-      }
+          RegistrationDeadlineEnum.ClubRegistrationApplication
+        ) {
+          setRegistrationStatus(
+            RegistrationDeadlineEnum.ClubRegistrationApplication,
+          );
+        }
+      });
     }
   }, [termData]);
 

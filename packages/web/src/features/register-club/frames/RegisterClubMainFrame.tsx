@@ -192,9 +192,22 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
           </AsyncBoundary>
           <AsyncBoundary isLoading={isLoadingProfile} isError={isErrorProfile}>
             {isProvisionalClub ? (
-              <ProvisionalBasicInformFrame profile={profile} />
+              <ProvisionalBasicInformFrame
+                profile={
+                  profile
+                    ? { name: profile.name, phoneNumber: profile.phoneNumber }
+                    : undefined
+                }
+              />
             ) : (
-              <BasicInformFrame type={type} profile={profile} />
+              <BasicInformFrame
+                type={type}
+                profile={
+                  profile
+                    ? { name: profile.name, phoneNumber: profile.phoneNumber }
+                    : undefined
+                }
+              />
             )}
           </AsyncBoundary>
           <AdvancedInformFrame type={type} />
