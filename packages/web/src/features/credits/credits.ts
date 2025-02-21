@@ -65,6 +65,13 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.member,
         comment: "겨울엔 팥붕이냐 슈붕이냐.. 둘 다 먹으면 됩니다",
       },
+      {
+        nickname: "david",
+        name: "정동윤",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "1년차 뉴비 납시오~",
+      },
     ],
   },
   {
@@ -140,6 +147,13 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.APM_FE,
         comment: "25년이 되어서야 만드는 24년 크레딧",
       },
+      {
+        nickname: "david",
+        name: "정동윤",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "연구하면서 개발하기 힘든데 그래도 재밌어염",
+      },
     ],
   },
   {
@@ -199,6 +213,7 @@ const credits: SemesterCredit[] = [
         name: "정동윤",
         role: "FE",
         roleType: RoleType.member,
+        comment: "너무 덥다 ㅠ",
       },
       {
         nickname: "dudu",
@@ -328,6 +343,7 @@ const credits: SemesterCredit[] = [
         name: "정동윤",
         role: "FE",
         roleType: RoleType.member,
+        comment: "히히 재미따",
       },
       {
         nickname: "tom",

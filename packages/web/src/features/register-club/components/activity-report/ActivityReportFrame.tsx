@@ -59,11 +59,7 @@ const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
       <SectionTitle>가등록 / 등록 취소 기간 활동 보고서</SectionTitle>
       <StyledCard outline gap={32}>
         <OptionOuter>
-          <Typography
-            fs={14}
-            lh={20}
-            color="GRAY.300"
-          >
+          <Typography fs={14} lh={20} color="GRAY.300">
             활동 보고서는 최대 20개까지 작성 가능합니다
           </Typography>
           <IconButton
