@@ -1,7 +1,7 @@
 "use client";
 
 import { hangulIncludes } from "es-hangul";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import styled from "styled-components";
 
 import {
@@ -142,8 +142,12 @@ export const ExecutiveRegistrationClubFrame = () => {
   const filterClubsWithSearch = useMemo(() => {
     const filteredRowsWithSearch = data?.items.filter(
       item =>
-        (item.newClubNameKr.toLowerCase().includes(searchText.toLowerCase()) ||
-          item.newClubNameEn.toLowerCase().includes(searchText.toLowerCase()) ||
+        ((item.clubNameKr ?? item.newClubNameKr)
+          .toLowerCase()
+          .includes(searchText.toLowerCase()) ||
+          (item.clubNameEn ?? item.newClubNameEn)
+            .toLowerCase()
+            .includes(searchText.toLowerCase()) ||
           hangulIncludes(item.newClubNameKr, searchText)) &&
         convertedCategories[0].selectedContent.includes(
           item.registrationTypeEnumId,
