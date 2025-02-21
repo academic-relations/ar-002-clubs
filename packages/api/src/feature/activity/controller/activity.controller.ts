@@ -134,6 +134,11 @@ import apiAct028, {
   ApiAct028RequestUrl,
   type ApiAct028ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct028";
+import apiAct029, {
+  ApiAct029RequestParam,
+  ApiAct029RequestUrl,
+  ApiAct029ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct029";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import {
@@ -516,5 +521,14 @@ export default class ActivityController {
     return this.activityService.getExecutiveActivitiesExecutiveBrief(
       param.executiveId,
     );
+  }
+
+  @Student()
+  @Get(ApiAct029RequestUrl)
+  @UsePipes(new ZodPipe(apiAct029))
+  async getStudentActivityProvisional(
+    @Param() param: ApiAct029RequestParam,
+  ): Promise<ApiAct029ResponseOk> {
+    return this.activityService.getStudentActivityProvisional(param.activityId);
   }
 }

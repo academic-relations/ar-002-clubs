@@ -28,7 +28,6 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
 
   const submitHandler = useCallback(
     (data: ActivityReportFormData) => {
-      console.log(data);
       mutate(
         {
           body: {
