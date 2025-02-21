@@ -2,7 +2,6 @@ import React from "react";
 import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
-import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import Card from "@sparcs-clubs/web/common/components/Card";
@@ -11,6 +10,7 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
+import { RegisterClubModel } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 import { EmailValidator } from "@sparcs-clubs/web/utils/validator";
 
 const RowWrapper = styled.div`
@@ -21,7 +21,7 @@ const RowWrapper = styled.div`
 `;
 
 const ProfessorInformFrame: React.FC = () => {
-  const { control } = useFormContext<ApiReg001RequestBody>();
+  const { control } = useFormContext<RegisterClubModel>();
 
   return (
     <FlexWrapper direction="column" gap={40}>

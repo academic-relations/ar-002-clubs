@@ -1,19 +1,24 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import { FileDetail } from "@sparcs-clubs/web/common/components/File/attachment";
 import FileUpload from "@sparcs-clubs/web/common/components/FileUpload";
+import FormController from "@sparcs-clubs/web/common/components/FormController";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import {
+  FileIdType,
+  RegisterClubModel,
+} from "@sparcs-clubs/web/features/register-club/types/registerClub";
 
 interface SingleUploadWithTextAndTemplateProps {
-  fileId: string;
+  fileId: FileIdType;
   title: string;
   content?: string;
   downloadUrl: string;
   downloadFileName: string;
   initialFile?: FileDetail;
-  onChange?: (string: string[]) => void;
 }
 
 const SingleUploadWithTextAndTemplateInner = styled.div`
@@ -34,14 +39,27 @@ const SingleUploadWithTextAndTemplate: React.FC<
   downloadUrl,
   downloadFileName,
   initialFile = undefined,
-  onChange = () => {},
 }) => {
-  const onDownload = () => {
+  const formCtx = useFormContext<RegisterClubModel>();
+  const { control, setValue } = formCtx;
+
+  const onDownload = useCallback(() => {
     const a = document.createElement("a");
     a.href = downloadUrl;
     a.download = downloadFileName;
     a.click();
-  };
+  }, [downloadFileName, downloadUrl]);
+
+  const updateSingleFile = useCallback(
+    (data: FileDetail[]) => {
+      if (data.length === 0) {
+        setValue(fileId, undefined, { shouldValidate: true });
+        return;
+      }
+      setValue(fileId, data[0], { shouldValidate: true });
+    },
+    [fileId],
+  );
 
   return (
     <SingleUploadWithTextAndTemplateInner>
@@ -53,12 +71,18 @@ const SingleUploadWithTextAndTemplate: React.FC<
           {content}
         </Typography>
       )}
-      <FileUpload
-        fileId={fileId}
-        initialFiles={initialFile ? [initialFile] : []}
-        onChange={files => {
-          onChange(files.map(file => file.id));
-        }}
+      <FormController
+        name={fileId}
+        required={fileId !== "externalInstructionFile"}
+        control={control}
+        renderItem={props => (
+          <FileUpload
+            {...props}
+            fileId={fileId}
+            initialFiles={initialFile ? [initialFile] : []}
+            onChange={files => updateSingleFile(files)}
+          />
+        )}
       />
       <IconButton
         style={{ marginTop: 4 }}

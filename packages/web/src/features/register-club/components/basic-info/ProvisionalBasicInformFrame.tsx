@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
+import { ApiUsr001ResponseOK } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -13,56 +14,42 @@ import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
+import useGetClubsForReProvisional from "@sparcs-clubs/web/features/register-club/services/useGetClubsForReProvisional";
 
-import useGetClubsForReProvisional from "../services/useGetClubsForReProvisional";
 import ClubNameField from "./_atomic/ClubNameField";
 import DivisionSelect from "./_atomic/DivisionSelect";
 import MonthSelect from "./_atomic/MonthSelect";
 import YearSelect from "./_atomic/YearSelect";
 import ProfessorInformFrame from "./ProfessorInformFrame";
 
-const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
-  editMode = false,
-}) => {
-  const { control, resetField, setValue, watch } = useFormContext();
+interface ProvisionalBasicInformFrameProps {
+  editMode?: boolean;
+  profile?: ApiUsr001ResponseOK;
+}
 
-  const [registrationType, setRegistrationType] =
-    useState<RegistrationTypeEnum>(RegistrationTypeEnum.NewProvisional);
+const ProvisionalBasicInformFrame: React.FC<
+  ProvisionalBasicInformFrameProps
+> = ({ editMode = false, profile = undefined }) => {
+  const { control, setValue, watch } = useFormContext();
 
-  const registrationTypeEnumId = watch("registrationTypeEnumId");
-  useEffect(() => {
-    if (registrationTypeEnumId) setRegistrationType(registrationTypeEnumId);
-  }, [registrationTypeEnumId]);
-
-  const updateRegistrationType = (type: RegistrationTypeEnum) => {
-    setRegistrationType(type);
-    setValue("registrationTypeEnumId", type, { shouldValidate: true });
-  };
+  const registrationType = watch("registrationTypeEnumId");
 
   const { data, isLoading, isError } = useGetClubsForReProvisional();
-  const {
-    data: profile,
-    isLoading: isLoadingProfile,
-    isError: isErrorProfile,
-  } = useGetUserProfile();
 
   const [isCheckedProfessor, setIsCheckedProfessor] = useState(false);
 
   useEffect(() => {
     if (!isCheckedProfessor) {
-      resetField("professor.email");
-      resetField("professor.name");
-      resetField("professor.professorEnumId");
       setValue("professor", undefined, { shouldValidate: true });
     }
-  }, [resetField, setValue, isCheckedProfessor]);
+  }, [setValue, isCheckedProfessor]);
+
+  const updateRegistrationType = (type: RegistrationTypeEnum) => {
+    setValue("registrationTypeEnumId", type, { shouldValidate: true });
+  };
 
   return (
-    <AsyncBoundary
-      isLoading={isLoading || isLoadingProfile}
-      isError={isError || isErrorProfile}
-    >
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
       <FlexWrapper direction="column" gap={40}>
         <SectionTitle>기본 정보</SectionTitle>
         <Card outline gap={32} style={{ marginLeft: 20 }}>
@@ -78,8 +65,12 @@ const ProvisionalBasicInformFrame: React.FC<{ editMode?: boolean }> = ({
               control={control}
               defaultValue={profile?.phoneNumber}
               minLength={13}
-              // TODO: phoneNumber validation
-              // pattern={/^010-\d{4}-\d{4}$/}
+              rules={{
+                validate: value =>
+                  /^010-\d{4}-\d{4}$/.test(value.trim())
+                    ? undefined
+                    : "올바른 전화번호 형식이 아닙니다.",
+              }}
               renderItem={props => (
                 <PhoneInput
                   {...props}

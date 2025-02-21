@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
+import { ApiUsr001ResponseOK } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -12,10 +12,10 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
-import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
+import useGetClubsForPromotional from "@sparcs-clubs/web/features/register-club/services/useGetClubsForPromotional";
+import useGetClubsForRenewal from "@sparcs-clubs/web/features/register-club/services/useGetClubsForRenewal";
+import { RegisterClubModel } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 
-import useGetClubsForPromotional from "../services/useGetClubsForPromotional";
-import useGetClubsForRenewal from "../services/useGetClubsForRenewal";
 import ClubNameField from "./_atomic/ClubNameField";
 import DivisionSelect from "./_atomic/DivisionSelect";
 import YearSelect from "./_atomic/YearSelect";
@@ -24,16 +24,19 @@ import ProfessorInformFrame from "./ProfessorInformFrame";
 interface BasicInformSectionProps {
   type: RegistrationTypeEnum;
   editMode?: boolean;
+  profile?: ApiUsr001ResponseOK;
 }
 
 const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
   type,
   editMode = false,
+  profile = undefined,
 }) => {
   const isRenewal = type === RegistrationTypeEnum.Renewal;
 
-  const { watch, control, resetField, setValue } =
-    useFormContext<ApiReg001RequestBody>();
+  const [isCheckedProfessor, setIsCheckedProfessor] = useState(true);
+
+  const { watch, control, setValue } = useFormContext<RegisterClubModel>();
   const clubId = watch("clubId");
 
   const {
@@ -46,11 +49,6 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
     isLoading: isLoadingRenewal,
     isError: isErrorRenewal,
   } = useGetClubsForRenewal();
-  const {
-    data: profile,
-    isLoading: isLoadingProfile,
-    isError: isErrorProfile,
-  } = useGetUserProfile();
 
   const isLoading = isRenewal ? isLoadingRenewal : isLoadingPromotional;
   const isError = isRenewal ? isErrorRenewal : isErrorPromotional;
@@ -60,25 +58,17 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
     if (clubId === null) return undefined;
     return clubList?.clubs.find(club => club.id === clubId)?.professor;
   }, [clubId, clubList]);
-  const [isCheckedProfessor, setIsCheckedProfessor] = useState(true);
 
   useEffect(() => {
     if (professorInfo === undefined || !isCheckedProfessor) {
-      resetField("professor.email");
-      resetField("professor.name");
-      resetField("professor.professorEnumId");
       setValue("professor", undefined, { shouldValidate: true });
-
       return;
     }
     setValue("professor", professorInfo, { shouldValidate: true });
-  }, [professorInfo, resetField, setValue, isCheckedProfessor]);
+  }, [professorInfo, isCheckedProfessor]);
 
   return (
-    <AsyncBoundary
-      isLoading={isLoading || isLoadingProfile}
-      isError={isError || isErrorProfile}
-    >
+    <AsyncBoundary isLoading={isLoading} isError={isError}>
       <FlexWrapper direction="column" gap={40}>
         <SectionTitle>기본 정보</SectionTitle>
 
@@ -95,8 +85,12 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
               control={control}
               defaultValue={profile?.phoneNumber}
               minLength={13}
-              // TODO: phoneNumber validation
-              // pattern={/^010-\d{4}-\d{4}$/}
+              rules={{
+                validate: value =>
+                  /^010-\d{4}-\d{4}$/.test(value.trim())
+                    ? undefined
+                    : "올바른 전화번호 형식이 아닙니다.",
+              }}
               renderItem={props => (
                 <PhoneInput
                   {...props}
@@ -153,7 +147,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
               />
             )}
         </Card>
-        {(!isRenewal || (isCheckedProfessor && clubId !== null)) && (
+        {(!isRenewal || (isCheckedProfessor && clubId != null)) && (
           <ProfessorInformFrame />
         )}
       </FlexWrapper>

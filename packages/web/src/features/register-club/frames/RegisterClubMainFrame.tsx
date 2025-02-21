@@ -4,10 +4,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 
-import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import {
   getDisplayNameRegistration,
-  RegistrationDeadlineEnum,
   RegistrationTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
@@ -19,21 +17,22 @@ import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
-import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
+import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
-import ActivityReportFrame from "../components/ActivityReportFrame";
-import AdvancedInformFrame from "../components/AdvancedInformFrame";
-import BasicInformFrame from "../components/BasicInformFrame";
-import ClubRulesFrame from "../components/ClubRulesFrame";
-import ProvisionalBasicInformFrame from "../components/ProvisionalBasicInformFrame";
+import ActivityReportFrame from "../components/activity-report/ActivityReportFrame";
+import AdvancedInformFrame from "../components/advanced-info/AdvancedInformFrame";
+import BasicInformFrame from "../components/basic-info/BasicInformFrame";
+import ProvisionalBasicInformFrame from "../components/basic-info/ProvisionalBasicInformFrame";
+import ClubRulesFrame from "../components/compliance/ClubRulesFrame";
+import { registerClubDeadlineInfoText } from "../constants";
 import useRegisterClub from "../services/useRegisterClub";
+import { RegisterClubModel } from "../types/registerClub";
 import computeErrorMessage from "../utils/computeErrorMessage";
-import { isProvisional } from "../utils/registrationType";
 
 interface RegisterClubMainFrameProps {
   type: RegistrationTypeEnum;
+  deadline: Date | null;
 }
 
 const ButtonWrapper = styled.div`
@@ -43,139 +42,51 @@ const ButtonWrapper = styled.div`
 
 const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   type,
+  deadline = undefined,
 }) => {
   const router = useRouter();
   const [isAgreed, setIsAgreed] = useState(false);
 
   const {
-    data: termData,
-    isLoading: isLoadingTerm,
-    isError: isErrorTerm,
-  } = useGetRegistrationTerm();
-  // const [isRegistrationPeriod, setIsRegistrationPeriod] = useState<boolean>();
-  const [clubRegistrationPeriodEnd, setClubRegistrationPeriodEnd] =
-    useState<Date>(new Date());
+    data: profile,
+    isLoading: isLoadingProfile,
+    isError: isErrorProfile,
+  } = useGetUserProfile();
 
-  useEffect(() => {
-    if (termData) {
-      const now = new Date();
-      const currentEvents = termData.events.filter(
-        event => now >= event.startTerm && now <= event.endTerm,
-      );
-      if (currentEvents.length === 0) {
-        // setIsRegistrationPeriod(false);
-        return;
-      }
-      const registrationEvent = currentEvents.filter(
-        event =>
-          event.registrationEventEnumId ===
-          RegistrationDeadlineEnum.ClubRegistrationApplication,
-      );
-      if (registrationEvent.length > 0) {
-        // setIsRegistrationPeriod(true);
-        setClubRegistrationPeriodEnd(registrationEvent[0].endTerm);
-      } else {
-        // setIsRegistrationPeriod(false);
-      }
-    }
-  }, [termData]);
-
-  const formCtx = useForm<ApiReg001RequestBody>({
+  const formCtx = useForm<RegisterClubModel>({
     mode: "all",
+    defaultValues: {
+      registrationTypeEnumId: type,
+      phoneNumber: profile?.phoneNumber,
+    },
   });
 
   const {
     watch,
     handleSubmit,
-    // formState: { isValid },
+    formState: { isValid },
   } = formCtx;
+
+  const formData = watch();
 
   const clubId = watch("clubId");
   const registrationTypeEnumId = watch("registrationTypeEnumId");
-  const phoneNumber = watch("phoneNumber");
   const foundedAt = watch("foundedAt");
   const divisionId = watch("divisionId");
-  const activityFieldKr = watch("activityFieldKr");
-  const activityFieldEn = watch("activityFieldEn");
-  const divisionConsistency = watch("divisionConsistency");
-  const foundationPurpose = watch("foundationPurpose");
-  const activityPlan = watch("activityPlan");
-  const activityPlanFileId = watch("activityPlanFileId");
-  const clubRuleFileId = watch("clubRuleFileId");
-  const formIsValid = useMemo(() => {
-    const isValid =
-      registrationTypeEnumId !== undefined &&
-      phoneNumber !== "" &&
-      foundedAt !== undefined &&
-      divisionId !== undefined &&
-      activityFieldKr !== "" &&
-      activityFieldEn !== "" &&
-      divisionConsistency !== "" &&
-      foundationPurpose !== "" &&
-      activityPlan !== "";
 
-    if (type === RegistrationTypeEnum.Renewal) {
-      return isValid;
-    }
-
-    if (registrationTypeEnumId === RegistrationTypeEnum.Promotional) {
-      return (
-        isValid &&
-        activityPlanFileId !== undefined &&
-        clubRuleFileId !== undefined
-      );
-    }
-
-    if (isProvisional(registrationTypeEnumId)) {
-      return isValid && activityPlanFileId !== undefined;
-    }
-
-    return false;
-  }, [
-    type,
-    registrationTypeEnumId,
-    phoneNumber,
-    foundedAt,
-    divisionId,
-    activityFieldKr,
-    activityFieldEn,
-    divisionConsistency,
-    foundationPurpose,
-    activityPlan,
-    activityPlanFileId,
-    clubRuleFileId,
-  ]);
+  const isFormValid =
+    registrationTypeEnumId !== undefined &&
+    foundedAt !== undefined &&
+    divisionId !== undefined &&
+    isValid;
 
   const errorMessage = useMemo(
     () =>
       computeErrorMessage({
-        registrationTypeEnumId: type,
-        phoneNumber,
-        activityFieldKr,
-        activityFieldEn,
-        foundedAt,
-        divisionId,
-        divisionConsistency,
-        foundationPurpose,
-        activityPlan,
-        activityPlanFileId,
-        clubRuleFileId,
+        ...formData,
         isAgreed,
       }),
-    [
-      type,
-      phoneNumber,
-      activityFieldKr,
-      activityFieldEn,
-      foundedAt,
-      divisionId,
-      divisionConsistency,
-      foundationPurpose,
-      activityPlan,
-      activityPlanFileId,
-      clubRuleFileId,
-      isAgreed,
-    ],
+    [formData, isAgreed],
   );
 
   const {
@@ -191,23 +102,23 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
     isError: semesterError,
   } = useGetSemesterNow();
 
-  const title = useMemo(() => {
-    formCtx.setValue("registrationTypeEnumId", type);
-    return getDisplayNameRegistration(type);
-  }, [formCtx, type]);
-
   const isProvisionalClub =
     type === RegistrationTypeEnum.NewProvisional ||
     type === RegistrationTypeEnum.ReProvisional;
 
   const submitHandler = useCallback(
-    (data: ApiReg001RequestBody) => {
+    (data: RegisterClubModel) => {
       // logger.debug("submit", data);
       registerClubApi({
-        body: data,
+        body: {
+          ...data,
+          clubRuleFileId: data.clubRuleFile?.id,
+          activityPlanFileId: data.activityPlanFile?.id,
+          externalInstructionFileId: data.externalInstructionFile?.id,
+        },
       });
     },
-    [registerClubApi],
+    [registrationData, isSuccess, isError],
   );
 
   useEffect(() => {
@@ -267,28 +178,31 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
                 path: `/register-club`,
               },
             ]}
-            title={`동아리 ${title} 신청`}
+            title={`동아리 ${getDisplayNameRegistration(type)} 신청`}
             enableLast
           />
-          <AsyncBoundary
-            isLoading={isLoadingTerm || semesterLoading}
-            isError={isErrorTerm || semesterError}
-          >
-            <Info
-              text={`현재는 ${semesterInfo?.year}년 ${semesterInfo?.name}학기 동아리 등록 기간입니다 (신청 마감 : ${formatDateTime(clubRegistrationPeriodEnd)})`}
-            />
+          <AsyncBoundary isLoading={semesterLoading} isError={semesterError}>
+            {deadline ? (
+              <Info
+                text={registerClubDeadlineInfoText(deadline, semesterInfo)}
+              />
+            ) : (
+              <Info text="현재는 동아리 등록 기간이 아닙니다" />
+            )}
           </AsyncBoundary>
-          {isProvisionalClub ? (
-            <ProvisionalBasicInformFrame />
-          ) : (
-            <BasicInformFrame type={type} />
-          )}
-          <AdvancedInformFrame type={type} formCtx={formCtx} />
+          <AsyncBoundary isLoading={isLoadingProfile} isError={isErrorProfile}>
+            {isProvisionalClub ? (
+              <ProvisionalBasicInformFrame profile={profile} />
+            ) : (
+              <BasicInformFrame type={type} profile={profile} />
+            )}
+          </AsyncBoundary>
+          <AdvancedInformFrame type={type} />
           {type === RegistrationTypeEnum.Promotional && clubId && (
             <ActivityReportFrame clubId={clubId} />
           )}
           <ClubRulesFrame
-            isProvisional={type === RegistrationTypeEnum.NewProvisional}
+            isNewProvisional={type === RegistrationTypeEnum.NewProvisional}
             isAgreed={isAgreed}
             setIsAgreed={setIsAgreed}
           />
@@ -314,7 +228,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
               <Button
                 buttonType="submit"
                 type={
-                  formIsValid && isAgreed && errorMessage === ""
+                  isFormValid && isAgreed && errorMessage === ""
                     ? "default"
                     : "disabled"
                 }

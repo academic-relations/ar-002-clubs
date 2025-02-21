@@ -12,7 +12,7 @@ import { ApiAct011ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoi
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { ActStatusTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import PastActivityReportModal from "@sparcs-clubs/web/features/register-club/components/_atomic/PastActivityReportModal";
+import { ActivityReport } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 import {
   getActivityTypeLabel,
   getActivityTypeTagColor,
@@ -20,7 +20,7 @@ import {
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 
-import { ActivityReport } from "../types/registerClub";
+import PastActivityReportModal from "./PastActivityReportModal";
 
 interface ActivityReportListProps {
   data: ActivityReport[];
