@@ -65,7 +65,12 @@ const ProvisionalBasicInformFrame: React.FC<
               control={control}
               defaultValue={profile?.phoneNumber}
               minLength={13}
-              pattern={/^010-\d{4}-\d{4}$/}
+              rules={{
+                validate: value =>
+                  /^010-\d{4}-\d{4}$/.test(value.trim())
+                    ? undefined
+                    : "올바른 전화번호 형식이 아닙니다.",
+              }}
               renderItem={props => (
                 <PhoneInput
                   {...props}
