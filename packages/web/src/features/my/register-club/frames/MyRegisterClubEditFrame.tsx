@@ -37,6 +37,7 @@ const ButtonWrapper = styled.div`
   justify-content: space-between;
 `;
 
+// TODO. (refactor) RegisterClubForm 사용
 const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
   applyId,
   initialData,
