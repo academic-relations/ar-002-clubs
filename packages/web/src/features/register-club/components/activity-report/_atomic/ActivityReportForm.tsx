@@ -11,9 +11,12 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select from "@sparcs-clubs/web/common/components/Select";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import LocalStorageUtil from "@sparcs-clubs/web/common/services/localStorageUtil";
+import { LOCAL_STORAGE_KEY } from "@sparcs-clubs/web/constants/localStorage";
 import SelectParticipant from "@sparcs-clubs/web/features/activity-report/components/SelectParticipant";
 import useGetParticipants from "@sparcs-clubs/web/features/activity-report/services/useGetParticipants";
 import { ActivityReportFormData } from "@sparcs-clubs/web/features/activity-report/types/form";
+import { isObjectEmpty } from "@sparcs-clubs/web/utils";
 
 import SelectActivityTerm from "./SelectActivityTerm";
 
@@ -42,6 +45,8 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
     setValue,
     formState: { isValid },
   } = formCtx;
+
+  const formData = watch();
 
   const durations = watch("durations");
   const evidenceFiles = watch("evidenceFiles");
@@ -79,6 +84,15 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
     () => isValid && durations && participants.length > 0 && evidenceFiles,
     [durations, participants, evidenceFiles, isValid],
   );
+
+  useEffect(() => {
+    if (!isObjectEmpty(formData)) {
+      LocalStorageUtil.save(
+        LOCAL_STORAGE_KEY.REGISTER_CLUB_ACTIVITY_REPORT_MODAL,
+        formData,
+      );
+    }
+  }, [formData]);
 
   return (
     <FormProvider {...formCtx}>
