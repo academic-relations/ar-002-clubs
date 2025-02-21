@@ -60,6 +60,10 @@ import type {
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct027";
 import { ApiAct028ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct028";
 import {
+  ApiAct029RequestParam,
+  ApiAct029ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct029";
+import {
   ActivityDeadlineEnum,
   ActivityStatusEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
@@ -1457,6 +1461,36 @@ export default class ActivityService {
     return {
       chargedExecutive: executive,
       activities: activitiesWithDetails,
+    };
+  }
+
+  async getStudentActivityProvisional(
+    activityId: ApiAct029RequestParam["activityId"],
+  ): Promise<ApiAct029ResponseOk> {
+    const activity = await this.activityRepository.fetch(activityId);
+    const comments =
+      await this.activityRepository.selectActivityFeedbackByActivityId({
+        activityId: activity.id,
+      });
+    const evidenceFiles = await this.filePublicService.getFilesByIds(
+      activity.evidenceFiles.map(e => e.id),
+    );
+    const participants = await this.userPublicService.fetchStudentSummaries(
+      activity.participants.map(e => e.id),
+    );
+    const club = await this.clubPublicService.fetchSummary(activity.club.id);
+    return {
+      activity: {
+        ...activity,
+        club,
+        comments: comments.map(e => ({
+          id: e.id,
+          createdAt: e.createdAt,
+          content: e.comment,
+        })),
+        evidenceFiles,
+        participants,
+      },
     };
   }
 }
