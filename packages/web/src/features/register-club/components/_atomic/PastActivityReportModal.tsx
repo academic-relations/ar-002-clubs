@@ -17,7 +17,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useExecutiveApproveActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveApproveActivityReport";
 import useExecutiveRejectActivityReport from "@sparcs-clubs/web/features/activity-report/hooks/useExecutiveRejectActivityReport";
 import { useDeleteActivityReportProvisional } from "@sparcs-clubs/web/features/activity-report/services/useDeleteActivityReportProvisional";
-import { useGetActivityReport } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReport";
+import { useGetActivityReportProvisional } from "@sparcs-clubs/web/features/activity-report/services/useGetActivityReportProvisional";
 import { getActivityTypeLabel } from "@sparcs-clubs/web/types/activityType";
 import {
   formatDate,
@@ -43,7 +43,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
   viewOnly = false,
   clubId,
 }) => {
-  const { data, isLoading, isError, refetch } = useGetActivityReport(
+  const { data, isLoading, isError, refetch } = useGetActivityReportProvisional(
     profile,
     activityId,
   );
@@ -138,7 +138,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
       <AsyncBoundary isLoading={isLoading} isError={isError}>
         <FlexWrapper gap={20} direction="column">
           {!isExecutive &&
-            data.activityStatusEnumId === ActivityStatusEnum.Rejected &&
+            data.activityStatusEnum === ActivityStatusEnum.Rejected &&
             data.comments.length > 0 && (
               <CommentToast
                 title="반려 사유"
@@ -157,7 +157,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
             <FlexWrapper gap={12} direction="column">
               <ListItem>활동명: {data.name}</ListItem>
               <ListItem>
-                활동 분류: {getActivityTypeLabel(data.activityTypeEnumId)}
+                활동 분류: {getActivityTypeLabel(data.activityTypeEnum)}
               </ListItem>
               <ListItem>활동 기간: </ListItem>
               <FlexWrapper
@@ -182,7 +182,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
             </Typography>
 
             {data.participants.map(participant => (
-              <ListItem key={participant.studentId}>
+              <ListItem key={participant.id}>
                 {participant.studentNumber} {participant.name}
               </ListItem>
             ))}
@@ -203,7 +203,7 @@ const PastActivityReportModal: React.FC<PastActivityReportModalProps> = ({
                 >
                   <ThumbnailPreviewList
                     fileList={data.evidenceFiles.map(_file => ({
-                      id: _file.fileId,
+                      id: _file.id,
                       name: _file.name,
                       url: _file.url,
                     }))}

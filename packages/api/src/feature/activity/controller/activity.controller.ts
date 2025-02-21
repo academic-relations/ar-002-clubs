@@ -527,7 +527,6 @@ export default class ActivityController {
   @Get(ApiAct029RequestUrl)
   @UsePipes(new ZodPipe(apiAct029))
   async getStudentActivityProvisional(
-    @GetStudent() user: GetStudent,
     @Param() param: ApiAct029RequestParam,
   ): Promise<ApiAct029ResponseOk> {
     return this.activityService.getStudentActivityProvisional(param.activityId);

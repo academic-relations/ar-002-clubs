@@ -68,7 +68,9 @@ export class MActivity implements IActivity {
       evidenceFiles: dbResult.activityEvidenceFile.map(e => ({
         id: e.fileId,
       })),
-      participants: dbResult.activityParticipant,
+      participants: dbResult.activityParticipant.map(p => ({
+        id: p.studentId,
+      })),
       chargedExecutive:
         dbResult.activityClubChargedExecutive.length > 0
           ? {

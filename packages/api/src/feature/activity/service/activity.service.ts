@@ -1480,17 +1480,15 @@ export default class ActivityService {
     );
     const club = await this.clubPublicService.fetchSummary(activity.club.id);
     return {
-      activity: {
-        ...activity,
-        club,
-        comments: comments.map(e => ({
-          id: e.id,
-          createdAt: e.createdAt,
-          content: e.comment,
-        })),
-        evidenceFiles,
-        participants,
-      },
+      ...activity,
+      club,
+      comments: comments.map(e => ({
+        id: e.id,
+        createdAt: e.createdAt,
+        content: e.comment,
+      })),
+      evidenceFiles,
+      participants,
     };
   }
 }

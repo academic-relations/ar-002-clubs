@@ -25,11 +25,9 @@ const requestQuery = z.object({});
 const requestBody = z.object({});
 
 const responseBodyMap = {
-  [HttpStatusCode.Ok]: z.object({
-    activity: zActivityResponse.omit({
-      chargedExecutive: true,
-      commentedExecutive: true,
-    }),
+  [HttpStatusCode.Ok]: zActivityResponse.omit({
+    chargedExecutive: true,
+    commentedExecutive: true,
   }),
 };
 

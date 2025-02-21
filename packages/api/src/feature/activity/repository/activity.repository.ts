@@ -861,7 +861,7 @@ export default class ActivityRepository {
     const activity = await tx
       .select()
       .from(Activity)
-      .where(eq(Activity.id, activityId));
+      .where(and(eq(Activity.id, activityId), isNull(Activity.deletedAt)));
 
     if (activity.length !== 1) {
       throw new NotFoundException("Activity not found");
@@ -870,27 +870,49 @@ export default class ActivityRepository {
     const activityT = await tx
       .select()
       .from(ActivityT)
-      .where(eq(ActivityT.activityId, activityId));
+      .where(
+        and(eq(ActivityT.activityId, activityId), isNull(ActivityT.deletedAt)),
+      );
 
     const activityParticipant = await tx
       .select()
       .from(ActivityParticipant)
-      .where(eq(ActivityParticipant.activityId, activityId));
+      .where(
+        and(
+          eq(ActivityParticipant.activityId, activityId),
+          isNull(ActivityParticipant.deletedAt),
+        ),
+      );
 
     const activityEvidenceFile = await tx
       .select()
       .from(ActivityEvidenceFile)
-      .where(eq(ActivityEvidenceFile.activityId, activityId));
+      .where(
+        and(
+          eq(ActivityEvidenceFile.activityId, activityId),
+          isNull(ActivityEvidenceFile.deletedAt),
+        ),
+      );
 
     const activityFeedback = await tx
       .select()
       .from(ActivityFeedback)
-      .where(eq(ActivityFeedback.activityId, activityId));
+      .where(
+        and(
+          eq(ActivityFeedback.activityId, activityId),
+          isNull(ActivityFeedback.deletedAt),
+        ),
+      );
 
     const activityClubChargedExecutive = await tx
       .select()
       .from(ActivityClubChargedExecutive)
-      .where(eq(ActivityClubChargedExecutive.activityDId, activityId));
+      .where(
+        and(
+          eq(ActivityClubChargedExecutive.activityDId, activityId),
+          isNull(ActivityClubChargedExecutive.deletedAt),
+        ),
+      );
 
     const result = {
       activity: activity[0],
