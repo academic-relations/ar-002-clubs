@@ -62,7 +62,7 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
 
   const {
     watch,
-    resetField,
+    setValue,
     handleSubmit,
     formState: { isValid },
   } = formCtx;
@@ -131,13 +131,17 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
       (initialData &&
         registrationTypeEnumId === RegistrationTypeEnum.NewProvisional &&
         initialData.clubNameKr == null) ||
-      (initialData.newClubNameKr != null &&
+      (initialData.newClubNameKr !== null &&
         initialData.newClubNameKr.length > 0)
     ) {
-      resetField("clubNameKr", { defaultValue: initialData.newClubNameKr });
-      resetField("clubNameEn", { defaultValue: initialData.newClubNameEn });
+      setValue("clubNameKr", initialData.newClubNameKr);
+      setValue("clubNameEn", initialData.newClubNameEn);
     }
-  }, [initialData, registrationTypeEnumId]);
+  }, [
+    initialData.clubNameKr,
+    initialData.newClubNameKr,
+    registrationTypeEnumId,
+  ]);
 
   return (
     <FormProvider {...formCtx}>
