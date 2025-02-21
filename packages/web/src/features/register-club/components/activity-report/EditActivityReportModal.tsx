@@ -62,7 +62,7 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
         {
           onSuccess: () => {
             queryClient.invalidateQueries({
-              queryKey: [activityReportDetailQueryKey],
+              queryKey: [activityReportDetailQueryKey(profile, activityId)],
             });
             queryClient.invalidateQueries({ queryKey: [apiAct011.url()] });
             close();

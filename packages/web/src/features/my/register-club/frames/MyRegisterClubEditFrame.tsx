@@ -98,7 +98,12 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
     (data: RegisterClubModel) => {
       mutate({
         requestParam: { applyId },
-        body: data,
+        body: {
+          ...data,
+          clubRuleFileId: data.clubRuleFile?.id,
+          activityPlanFileId: data.activityPlanFile?.id,
+          externalInstructionFileId: data.externalInstructionFile?.id,
+        },
       });
     },
     [mutate, applyId],
