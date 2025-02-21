@@ -15,7 +15,7 @@ import {
   ActStatusTagList,
   ActTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
-import PastActivityReportModal from "@sparcs-clubs/web/features/register-club/components/_atomic/PastActivityReportModal";
+import PastActivityReportModal from "@sparcs-clubs/web/features/register-club/components/activity-report/PastActivityReportModal";
 import { formatDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 

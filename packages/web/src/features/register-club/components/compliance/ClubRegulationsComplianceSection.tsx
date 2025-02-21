@@ -3,8 +3,7 @@ import styled from "styled-components";
 
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
-import { CLUBS_COMPLIANCE_LIST } from "../constants/registerClub";
+import { CLUBS_COMPLIANCE_LIST } from "@sparcs-clubs/web/features/register-club/constants/registerClub";
 
 interface ClubRegulationsComplianceSectionProps {
   isProvisional?: boolean;

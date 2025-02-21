@@ -14,6 +14,7 @@ const ActivityTermRow: React.FC<{
 }> = ({ startDate, endDate, onDateChange, onDelete, onError, index }) => {
   const [startMonth, setStartMonth] = useState<string>(startDate);
   const [endMonth, setEndMonth] = useState<string>(endDate);
+
   const handleDateChange = (monthString: string) => {
     const start = monthString.split("|")[0];
     const end = monthString.split("|")[1];
@@ -21,6 +22,7 @@ const ActivityTermRow: React.FC<{
     setEndMonth(end);
     onDateChange(index, start, end);
   };
+
   const deleteRow = () => {
     onDelete(index);
   };
