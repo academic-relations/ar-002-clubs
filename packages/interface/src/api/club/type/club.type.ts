@@ -1,15 +1,12 @@
 import { z } from "zod";
 
+import {
+  zDivision,
+  zDivisionSummary,
+} from "@sparcs-clubs/interface/api/division/type/division.type";
 import { zProfessor } from "@sparcs-clubs/interface/api/user/type/user.type";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import zId from "@sparcs-clubs/interface/common/type/id.type";
-
-export const zDivision = z.object({
-  id: zId,
-  name: z.string().max(255).min(1),
-});
-
-export const zDivisionSummary = zDivision.pick({ id: true, name: true });
 
 // TODO: 수정 필요
 export const zClub = z.object({
