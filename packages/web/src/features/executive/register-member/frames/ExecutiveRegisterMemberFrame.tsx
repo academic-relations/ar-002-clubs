@@ -1,7 +1,7 @@
 "use client";
 
 import { hangulIncludes } from "es-hangul";
-import React, { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -12,12 +12,8 @@ import { CategoryProps } from "@sparcs-clubs/web/common/components/MultiFilter/t
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import RegistrationMemberTable from "@sparcs-clubs/web/common/components/RegisterMemberTable";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
-import { DivisionTypeTagList } from "@sparcs-clubs/web/constants/tableTagList";
+import useGetDivisionType from "@sparcs-clubs/web/common/hooks/useGetDivisionType";
 import { useGetMemberRegistration } from "@sparcs-clubs/web/features/executive/register-member/services/getMemberRegistration";
-import {
-  getDisplayNameDivisions,
-  getEnumDivisions,
-} from "@sparcs-clubs/web/types/divisions.types";
 
 interface ConvertedSelectedCategories {
   name: string;
@@ -56,10 +52,6 @@ const TableWithPaginationWrapper = styled.div`
   align-self: stretch;
 `;
 
-const DivisionTypeList = Object.keys(DivisionTypeTagList).map(key =>
-  parseInt(key),
-);
-
 export const ExecutiveRegisterMember = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const limit = 10;
@@ -67,6 +59,22 @@ export const ExecutiveRegisterMember = () => {
     pageOffset: currentPage,
     itemCount: limit,
   });
+
+  const {
+    data: divisionData,
+    isLoading: divisionLoading,
+    isError: divisionError,
+  } = useGetDivisionType();
+
+  const DivisionNameList = useMemo(
+    () => divisionData?.divisions?.map(item => item.name) ?? [],
+    [divisionData],
+  );
+
+  const DivisionIdList = useMemo(
+    () => divisionData?.divisions?.map(item => item.id.toString()) ?? [],
+    [divisionData],
+  );
 
   const [searchText, setSearchText] = useState<string>("");
 
@@ -86,10 +94,8 @@ export const ExecutiveRegisterMember = () => {
     },
     {
       name: "분과",
-      content: DivisionTypeList.map(item => getDisplayNameDivisions(item)),
-      selectedContent: DivisionTypeList.map(item =>
-        getDisplayNameDivisions(item),
-      ),
+      content: DivisionNameList,
+      selectedContent: DivisionIdList,
     },
   ]);
 
@@ -102,7 +108,7 @@ export const ExecutiveRegisterMember = () => {
     },
     {
       name: "분과",
-      selectedContent: DivisionTypeList,
+      selectedContent: DivisionIdList.map(item => parseInt(item)),
     },
   ]);
 
@@ -121,7 +127,7 @@ export const ExecutiveRegisterMember = () => {
     });
 
     const convertedDivisionId = categories[1].selectedContent.map(item =>
-      getEnumDivisions(item),
+      parseInt(item),
     );
 
     setConvertedCategories([
@@ -190,8 +196,24 @@ export const ExecutiveRegisterMember = () => {
   const filteredClubs =
     searchText === "" ? filterClubsWithoutSearch : filterClubsWithSearch;
 
+  useEffect(() => {
+    if (categories[1].content.length === 0 && divisionData) {
+      setCategories([
+        ...categories.slice(0, 1),
+        {
+          name: "분과",
+          content: DivisionNameList,
+          selectedContent: DivisionIdList,
+        },
+      ]);
+    }
+  }, [categories, DivisionIdList, DivisionNameList]);
+
   return (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
+    <AsyncBoundary
+      isLoading={isLoading || divisionLoading}
+      isError={isError || divisionError}
+    >
       {data && filteredClubs && (
         <>
           <ClubSearchAndFilterWrapper>
@@ -219,12 +241,8 @@ export const ExecutiveRegisterMember = () => {
                     },
                     {
                       name: "분과",
-                      content: DivisionTypeList.map(item =>
-                        getDisplayNameDivisions(item),
-                      ),
-                      selectedContent: DivisionTypeList.map(item =>
-                        getDisplayNameDivisions(item),
-                      ),
+                      content: DivisionNameList,
+                      selectedContent: DivisionIdList,
                     },
                   ]);
                 }}

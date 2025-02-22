@@ -31,10 +31,8 @@ import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import CommentToast from "@sparcs-clubs/web/common/components/Toast/CommentToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import {
-  DivisionTypeTagList,
-  RegistrationTypeTagList,
-} from "@sparcs-clubs/web/constants/tableTagList";
+import useGetDivisionType from "@sparcs-clubs/web/common/hooks/useGetDivisionType";
+import { RegistrationTypeTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { deleteMyClubRegistration } from "@sparcs-clubs/web/features/my/services/deleteMyClubRegistration";
 import usePatchClubRegProfessorApprove from "@sparcs-clubs/web/features/my/services/usePatchClubRegProfessorApprove";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
@@ -90,6 +88,12 @@ const MyRegisterClubDetailFrame: React.FC<{
     isError: isErrorDeadline,
   } = useGetClubRegistrationPeriod();
   const { mutate } = usePatchClubRegProfessorApprove();
+
+  const {
+    data: divisionData,
+    isLoading: divisionLoading,
+    isError: divisionError,
+  } = useGetDivisionType();
 
   const isProfessor = userType === UserTypeEnum.Professor;
 
@@ -231,49 +235,58 @@ const MyRegisterClubDetailFrame: React.FC<{
           <Typography fw="MEDIUM" fs={16} lh={20}>
             기본 정보
           </Typography>
-          <FlexWrapper gap={12} direction="column">
-            <ListItem>
-              동아리명 (국문):{" "}
-              {clubDetail.clubNameKr ?? clubDetail.newClubNameKr}
-            </ListItem>
-            <ListItem>
-              동아리명 (영문):{" "}
-              {clubDetail.clubNameEn ?? clubDetail.newClubNameEn}
-            </ListItem>
-            {clubDetail.clubNameKr && clubDetail.newClubNameKr !== "" && (
+          <AsyncBoundary isLoading={divisionLoading} isError={divisionError}>
+            <FlexWrapper gap={12} direction="column">
               <ListItem>
-                신규 동아리명 (국문): {clubDetail.newClubNameKr}
+                동아리명 (국문):{" "}
+                {clubDetail.clubNameKr ?? clubDetail.newClubNameKr}
               </ListItem>
-            )}
-            {clubDetail.clubNameEn && clubDetail.newClubNameEn !== "" && (
               <ListItem>
-                신규 동아리명 (영문): {clubDetail.newClubNameEn}
+                동아리명 (영문):{" "}
+                {clubDetail.clubNameEn ?? clubDetail.newClubNameEn}
               </ListItem>
-            )}
-            <ListItem>대표자 이름: {clubDetail.representative?.name}</ListItem>
-            <ListItem>
-              대표자 전화번호: {clubDetail.representative?.phoneNumber}
-            </ListItem>
-            {clubDetail &&
-              (isProvisional(clubDetail.registrationTypeEnumId) ? (
+              {clubDetail.clubNameKr && clubDetail.newClubNameKr !== "" && (
                 <ListItem>
-                  설립 연월: {getActualYear(clubDetail.foundedAt)}년{" "}
-                  {getActualMonth(clubDetail?.foundedAt)}월
+                  신규 동아리명 (국문): {clubDetail.newClubNameKr}
                 </ListItem>
-              ) : (
+              )}
+              {clubDetail.clubNameEn && clubDetail.newClubNameEn !== "" && (
                 <ListItem>
-                  설립 연도: {getActualYear(clubDetail.foundedAt)}
+                  신규 동아리명 (영문): {clubDetail.newClubNameEn}
                 </ListItem>
-              ))}
-            <ListItem>
-              소속 분과:{" "}
+              )}
+              <ListItem>
+                대표자 이름: {clubDetail.representative?.name}
+              </ListItem>
+              <ListItem>
+                대표자 전화번호: {clubDetail.representative?.phoneNumber}
+              </ListItem>
               {clubDetail &&
-                getTagDetail(clubDetail.divisionId, DivisionTypeTagList).text}
-            </ListItem>
-            <ListItem>활동 분야 (국문): {clubDetail.activityFieldKr}</ListItem>
-            <ListItem>활동 분야 (영문): {clubDetail.activityFieldEn}</ListItem>
-          </FlexWrapper>
+                (isProvisional(clubDetail.registrationTypeEnumId) ? (
+                  <ListItem>
+                    설립 연월: {getActualYear(clubDetail.foundedAt)}년{" "}
+                    {getActualMonth(clubDetail?.foundedAt)}월
+                  </ListItem>
+                ) : (
+                  <ListItem>
+                    설립 연도: {getActualYear(clubDetail.foundedAt)}
+                  </ListItem>
+                ))}
+              <ListItem>
+                소속 분과:{" "}
+                {clubDetail &&
+                  divisionData?.divisionTagList[clubDetail.divisionId]?.text}
+              </ListItem>
+              <ListItem>
+                활동 분야 (국문): {clubDetail.activityFieldKr}
+              </ListItem>
+              <ListItem>
+                활동 분야 (영문): {clubDetail.activityFieldEn}
+              </ListItem>
+            </FlexWrapper>
+          </AsyncBoundary>
         </FlexWrapper>
+
         {clubDetail.professor && (
           <FlexWrapper gap={12} direction="column">
             <Typography fw="MEDIUM" fs={16} lh={20}>
