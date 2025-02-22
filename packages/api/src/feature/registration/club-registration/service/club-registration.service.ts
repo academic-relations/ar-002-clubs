@@ -786,11 +786,11 @@ export class ClubRegistrationService {
       renewalList.some(e => e.id === club.id)
         ? RegistrationTypeEnum.Renewal
         : null,
-      provisionalRenewalList.some(e => e.id === club.id)
-        ? RegistrationTypeEnum.ReProvisional
-        : null,
       promotionalList.some(e => e.id === club.id)
         ? RegistrationTypeEnum.Promotional
+        : null,
+      provisionalRenewalList.some(e => e.id === club.id)
+        ? RegistrationTypeEnum.ReProvisional
         : null,
     ].filter(Boolean);
 
