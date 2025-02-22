@@ -1,5 +1,16 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { and, eq, gt, gte, inArray, isNull, lte, or, sql } from "drizzle-orm";
+import {
+  and,
+  desc,
+  eq,
+  gt,
+  gte,
+  inArray,
+  isNull,
+  lte,
+  or,
+  sql,
+} from "drizzle-orm";
 import { union } from "drizzle-orm/mysql-core";
 import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
@@ -459,21 +470,13 @@ export default class ClubRepository {
   }
 
   async fetchSummary(clubId: number): Promise<VClubSummary> {
-    const cur = getKSTDate();
     const result = await this.db
       .select()
       .from(Club)
-      .leftJoin(
-        ClubT,
-        and(
-          eq(Club.id, ClubT.clubId),
-          and(
-            lte(ClubT.startTerm, cur),
-            or(gte(ClubT.endTerm, cur), isNull(ClubT.endTerm)),
-          ),
-        ),
-      )
-      .where(eq(Club.id, clubId));
+      .innerJoin(ClubT, eq(Club.id, ClubT.clubId))
+      .where(eq(Club.id, clubId))
+      .orderBy(desc(ClubT.startTerm))
+      .limit(1);
 
     if (result.length !== 1) {
       throw new NotFoundException("Club not found");
