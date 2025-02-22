@@ -1,27 +1,12 @@
+import { randomInt } from "node:crypto";
+
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
-
-import { DivisionType } from "@sparcs-clubs/web/types/divisions.types";
-
-const divisionType = [
-  DivisionType.LifeCulture,
-  DivisionType.PerformingArts,
-  DivisionType.ExhibitionCreation,
-  DivisionType.BandMusic,
-  DivisionType.VocalMusic,
-  DivisionType.InstrumentalMusic,
-  DivisionType.Society,
-  DivisionType.Religion,
-  DivisionType.BallSports,
-  DivisionType.LifeSports,
-  DivisionType.ScienceEngineeringAcademics,
-  DivisionType.HumanitiesAcademics,
-];
 
 const clubType = [ClubTypeEnum.Provisional, ClubTypeEnum.Regular];
 
 const isClubPermanent = [true, false];
 const items = Array.from({ length: 120 }, (_, index) => ({
-  division: divisionType[index % divisionType.length], // 랜덤 상태 선택
+  division: randomInt(1, 15), // 랜덤 상태 선택
   id: index + 1,
   type: clubType[index % clubType.length],
   approvedAll: 120,
