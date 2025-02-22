@@ -12,7 +12,8 @@ import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/regist
  * 이미 등록 신청을 한 경우: availableRegistrationTypeEnums가 []
  */
 
-const url = () => `/student/registrations/club-registrations`;
+const url = () => `/student/registrations/available-clubs`;
+export const ApiReg025RequestUrl = `/student/registrations/available-clubs`;
 const method = "GET";
 
 const requestParam = z.object({});
