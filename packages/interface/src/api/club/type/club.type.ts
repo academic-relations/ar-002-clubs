@@ -3,8 +3,12 @@ import { z } from "zod";
 import {
   zDivision,
   zDivisionSummary,
+  zDivisionSummaryResponse,
 } from "@sparcs-clubs/interface/api/division/type/division.type";
-import { zProfessor } from "@sparcs-clubs/interface/api/user/type/user.type";
+import {
+  zProfessor,
+  zProfessorSummary,
+} from "@sparcs-clubs/interface/api/user/type/user.type";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import zId from "@sparcs-clubs/interface/common/type/id.type";
 
@@ -27,8 +31,8 @@ export const zClubSummary = zClub.pick({
 });
 
 export const zClubSummaryResponse = zClubSummary.extend({
-  division: zDivision,
-  professor: zProfessor,
+  division: zDivisionSummaryResponse,
+  professor: zProfessorSummary,
 });
 
 export type IClubSummary = z.infer<typeof zClubSummary>;

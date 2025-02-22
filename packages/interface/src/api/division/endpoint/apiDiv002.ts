@@ -10,6 +10,7 @@ import { zDivisionSummaryResponse } from "../type/division.type";
  */
 
 const url = () => `/divisions/current`;
+export const ApiDiv002RequestUrl = `/divisions/current`;
 const method = "GET";
 
 const requestParam = z.object({});
