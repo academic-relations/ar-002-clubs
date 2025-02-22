@@ -1,9 +1,12 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { overlay } from "overlay-kit";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 
+import apiReg012 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg012";
+import apiReg025 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg025";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -40,6 +43,8 @@ const RegisterClubForm: React.FC<RegisterClubFormProps> = ({
   type,
   initialData = undefined,
 }) => {
+  const queryClient = useQueryClient();
+
   const router = useRouter();
   const [isAgreed, setIsAgreed] = useState(false);
 
@@ -53,7 +58,7 @@ const RegisterClubForm: React.FC<RegisterClubFormProps> = ({
     mode: "all",
     defaultValues: {
       ...initialData,
-      registrationTypeEnumId: initialData?.registrationTypeEnumId ?? type,
+      registrationTypeEnumId: type,
       phoneNumber: initialData?.phoneNumber ?? profile?.phoneNumber,
     },
   });
@@ -124,6 +129,12 @@ const RegisterClubForm: React.FC<RegisterClubFormProps> = ({
         <Modal isOpen={isOpen}>
           <ConfirmModalContent
             onConfirm={() => {
+              queryClient.invalidateQueries({
+                queryKey: [apiReg012.url()],
+              });
+              queryClient.invalidateQueries({
+                queryKey: [apiReg025.url()],
+              });
               close();
               router.push(`/my/register-club/${registrationData.id}`);
               LocalStorageUtil.remove(LOCAL_STORAGE_KEY.REGISTER_CLUB);

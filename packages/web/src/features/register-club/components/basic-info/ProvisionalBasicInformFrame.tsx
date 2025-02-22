@@ -17,6 +17,7 @@ import {
   notAllowKrRegx,
   regxErrorMessage,
 } from "@sparcs-clubs/web/features/register-club/constants";
+import useGetAvailableRegistrationInfo from "@sparcs-clubs/web/features/register-club/hooks/useGetAvailableRegistrationInfo";
 import useGetClubsForReProvisional from "@sparcs-clubs/web/features/register-club/services/useGetClubsForReProvisional";
 
 import ClubNameField from "./_atomic/ClubNameField";
@@ -38,6 +39,11 @@ const ProvisionalBasicInformFrame: React.FC<
   const registrationType = watch("registrationTypeEnumId");
 
   const { data, isLoading, isError } = useGetClubsForReProvisional();
+  const {
+    data: availableRegistrationInfo,
+    isLoading: isLoadingAvailableRegistrationInfo,
+    isError: isErrorAvailableRegistrationInfo,
+  } = useGetAvailableRegistrationInfo();
 
   const [isCheckedProfessor, setIsCheckedProfessor] = useState(false);
 
@@ -53,6 +59,18 @@ const ProvisionalBasicInformFrame: React.FC<
 
   const buttonType = useCallback(
     (type: RegistrationTypeEnum) => {
+      if (type === RegistrationTypeEnum.ReProvisional) {
+        if (
+          !availableRegistrationInfo.haveAvailableRegistration ||
+          availableRegistrationInfo.noManageClub ||
+          !availableRegistrationInfo.availableRegistrations.includes(
+            RegistrationTypeEnum.ReProvisional,
+          )
+        ) {
+          return "disabled";
+        }
+      }
+
       if (type === registrationType) {
         return "default";
       }
@@ -65,7 +83,10 @@ const ProvisionalBasicInformFrame: React.FC<
   );
 
   return (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
+    <AsyncBoundary
+      isLoading={isLoading || isLoadingAvailableRegistrationInfo}
+      isError={isError || isErrorAvailableRegistrationInfo}
+    >
       <FlexWrapper direction="column" gap={40}>
         <SectionTitle>기본 정보</SectionTitle>
         <Card outline gap={32} style={{ marginLeft: 20 }}>
