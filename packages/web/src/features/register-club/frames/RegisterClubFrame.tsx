@@ -13,13 +13,14 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import WarningInfo from "@sparcs-clubs/web/common/components/WarningInfo";
 import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/my/services/getMyClubRegistration";
 import ClubButton from "@sparcs-clubs/web/features/register-club/components/ClubButton";
-import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
-
 import {
   registerClubDeadlineInfoText,
   registerClubOptions,
-} from "../constants";
+} from "@sparcs-clubs/web/features/register-club/constants";
+import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
+
 import useGetClubRegistrationPeriod from "../hooks/useGetClubRegistrationPeriod";
+import useGetRegistrationAvailableClubs from "../services/useGetRegistrationAvailableClubs";
 import { RegistrationType } from "../types/registerClub";
 
 const ClubButtonWrapper = styled.div`
@@ -42,9 +43,15 @@ const RegisterClubFrame: React.FC = () => {
 
   const {
     data: myClubRegistrationData,
+    isLoading: isLoadingMyClubRegistration,
+    isError: isErrorMyClubRegistration,
+  } = useGetMyClubRegistration();
+
+  const {
+    data: availableClubRegistrationData,
     isLoading,
     isError,
-  } = useGetMyClubRegistration();
+  } = useGetRegistrationAvailableClubs();
 
   const {
     data: deadlineData,
@@ -58,13 +65,19 @@ const RegisterClubFrame: React.FC = () => {
     isError: semesterError,
   } = useGetSemesterNow();
 
-  const hasMyClubRegistration = useMemo<boolean>(
-    () =>
-      myClubRegistrationData
-        ? myClubRegistrationData.registrations.length > 0
-        : false,
-    [myClubRegistrationData],
-  );
+  const canRegisterClub = useMemo<boolean>(() => {
+    // 대표자/대의원으로 관리하던 동아리가 있는 경우:
+    // 1. 동아리 등록 신청 내역이 없으면 재등록, 신규등록, 가등록 모두 가능 2. 신청 내역 있으면 가등록(신규)만 가능 3. 내가 이미 신청했으면 셋 다 불가능
+    if (availableClubRegistrationData?.club) {
+      return (
+        availableClubRegistrationData?.club.availableRegistrationTypeEnums
+          .length > 0
+      );
+    }
+
+    // 관리하던 동아리 신청내역과는 상관없이 가등록(신규)의 경우 항상 가능
+    return selectedType === RegistrationType.Provisional;
+  }, [availableClubRegistrationData, selectedType]);
 
   const onClickRegisterClub = useCallback(() => {
     if (selectedType === RegistrationType.Renewal)
@@ -77,7 +90,7 @@ const RegisterClubFrame: React.FC = () => {
 
   const isRegisterButtonDisabled =
     selectedType === null ||
-    hasMyClubRegistration ||
+    !canRegisterClub ||
     !deadlineData.isClubRegistrationPeriod;
 
   return (
@@ -86,14 +99,21 @@ const RegisterClubFrame: React.FC = () => {
         items={[{ name: "동아리 등록", path: "/register-club" }]}
         title="동아리 등록"
       />
-      <AsyncBoundary isLoading={isLoading} isError={isError}>
-        {hasMyClubRegistration && (
+      <AsyncBoundary
+        isLoading={isLoading || isLoadingMyClubRegistration}
+        isError={isError || isErrorMyClubRegistration}
+      >
+        {!canRegisterClub && (
           <WarningInfo
             linkText="동아리 등록 신청 내역 바로가기"
-            onClickLink={() =>
-              router.push(
-                `my/register-club/${myClubRegistrationData?.registrations[0].id}`,
-              )
+            onClickLink={
+              myClubRegistrationData &&
+              myClubRegistrationData.registrations.length > 0
+                ? () =>
+                    router.push(
+                      `my/register-club/${myClubRegistrationData?.registrations[0].id}`,
+                    )
+                : undefined
             }
           >
             <Typography fs={16} lh={24}>
