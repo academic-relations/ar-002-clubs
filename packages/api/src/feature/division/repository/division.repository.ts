@@ -1,20 +1,31 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { and, eq, gte, inArray, isNull, lte } from "drizzle-orm";
+import { and, eq, gte, inArray, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { IDivisionSummary } from "@sparcs-clubs/interface/api/club/type/club.type";
+import { IDivision } from "@sparcs-clubs/interface/api/division/type/division.type";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
-import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
+import {
+  DrizzleAsyncProvider,
+  DrizzleTransaction,
+} from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   Division,
   DivisionPresidentD,
 } from "@sparcs-clubs/api/drizzle/schema/division.schema";
 
+import { MDivision } from "../model/division.model";
+
 @Injectable()
 export default class DivisionRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
 
+  async withTransaction<Result>(
+    callback: (tx: DrizzleTransaction) => Promise<Result>,
+  ): Promise<Result> {
+    return this.db.transaction(callback);
+  }
   async selectDivisionsAndDivisionPresidents() {
     const today = getKSTDate();
 
@@ -80,5 +91,52 @@ export default class DivisionRepository {
     }
 
     return result[0];
+  }
+
+  async fetchAllTx(
+    tx: DrizzleTransaction,
+    arg1: Date | number[],
+  ): Promise<IDivision[]> {
+    // find part
+    const whereCondition = [];
+
+    if (arg1 instanceof Date) {
+      whereCondition.push(lte(Division.startTerm, arg1));
+      whereCondition.push(
+        or(gte(Division.endTerm, arg1), isNull(Division.endTerm)),
+      );
+    }
+
+    if (arg1 instanceof Array) {
+      whereCondition.push(inArray(Division.id, arg1));
+    }
+    whereCondition.push(isNull(Division.deletedAt));
+
+    const result = await tx
+      .select()
+      .from(Division)
+      .where(and(...whereCondition));
+
+    // fetch validation part
+    if (arg1 instanceof Date) {
+      // Date인 경우 결과가 없으면 예외 발생
+      if (result.length === 0) {
+        throw new NotFoundException("Division not found");
+      }
+    }
+
+    if (arg1 instanceof Array) {
+      // ID Array의 경우 주어진 값이 모두 나오지 않으면 예외 발생
+      if (result.length !== Array.from(new Set(arg1)).length) {
+        throw new NotFoundException("Division not found");
+      }
+    }
+    return result.map(e => MDivision.fromDB(e));
+  }
+
+  async fetchAll(date: Date): Promise<IDivision[]>;
+  async fetchAll(ids: IDivision["id"][]): Promise<IDivision[]>;
+  async fetchAll(arg1: Date | number[]): Promise<IDivision[]> {
+    return this.withTransaction(tx => this.fetchAllTx(tx, arg1));
   }
 }
