@@ -9,6 +9,7 @@
 .vscode/*
 !.vscode/extensions.json
 !.vscode/*.code-snippets
+.zed/*
 
 # File system
 **/.DS_Store 
