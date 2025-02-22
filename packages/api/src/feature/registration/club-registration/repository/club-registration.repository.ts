@@ -547,7 +547,7 @@ export class ClubRegistrationRepository {
     const result = await this.db
       .select({
         id: Registration.id,
-        registrationTypeEnumId: Registration.registrationApplicationTypeEnumId,
+        registrationTypeEnum: Registration.registrationApplicationTypeEnumId,
         divisionName: Division.name,
         clubNameKr: Club.name_kr,
         clubNameEn: Club.name_en,
@@ -558,7 +558,7 @@ export class ClubRegistrationRepository {
         activityFieldKr: Registration.activityFieldKr,
         activityFieldEn: Registration.activityFieldEn,
         professorName: Professor.name,
-        registrationStatusEnumId:
+        registrationStatusEnum:
           Registration.registrationApplicationStatusEnumId,
       })
       .from(Registration)

@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import {
   IClubSummary,
+  IClubSummaryResponse,
   IDivisionSummary,
 } from "@sparcs-clubs/interface/api/club/type/club.type";
 import { ISemester } from "@sparcs-clubs/interface/api/club/type/semester.type";
@@ -10,6 +11,8 @@ import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import DivisionRepository from "@sparcs-clubs/api/feature/division/repository/division.repository";
+import DivisionPublicService from "@sparcs-clubs/api/feature/division/service/division.public.service";
+import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import { ClubDelegateDRepository } from "../delegate/club.club-delegate-d.repository";
 import ClubStudentTRepository from "../repository/club.club-student-t.repository";
@@ -26,6 +29,8 @@ export default class ClubPublicService {
     private clubStudentTRepository: ClubStudentTRepository,
     private semesterDRepository: SemesterDRepository,
     private divisionRepository: DivisionRepository,
+    private divisionPublicService: DivisionPublicService,
+    private userPublicService: UserPublicService,
   ) {}
 
   // semester common repositoryf를 제거하는 과정에서 발생한 프록시입니다. 사용하지 않는 것을 권장합니다.
@@ -355,5 +360,38 @@ export default class ClubPublicService {
   async fetchDivisionSummaries(ids: number[]): Promise<IDivisionSummary[]> {
     const results = await this.divisionRepository.fetchSummaries(ids);
     return results;
+  }
+
+  /**
+   * @param studentId 신청자 학생 Id
+   * @returns 학생이 대표자 또는 대의원으로 있는 동아리의 clubId를 반환합니다. 대표자 또는 대의원이 아닐 경우 null을 반환합니다.
+   * TODO: IClub로 변경 필요
+   */
+
+  async findStudentClubDelegate(
+    studentId: number,
+  ): Promise<IClubSummary | null> {
+    const result =
+      await this.clubDelegateDRepository.findDelegateByStudentId(studentId);
+
+    if (result.length === 0) return null;
+    const club = await this.clubRepository.fetchSummary(result[0].clubId);
+    return club;
+  }
+
+  async makeClubSummaryResponse(
+    club: IClubSummary,
+  ): Promise<IClubSummaryResponse> {
+    const division = await this.divisionPublicService.getDivisionById({
+      id: club.division.id,
+    });
+    const professor = await this.userPublicService.getProfessorById({
+      id: club.professor.id,
+    });
+    return {
+      ...club,
+      division: division[0],
+      professor,
+    };
   }
 }

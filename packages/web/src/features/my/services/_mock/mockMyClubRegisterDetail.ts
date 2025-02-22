@@ -11,8 +11,8 @@ const mockMyClubRegisterList = {
   registrations: [
     {
       id: 1,
-      registrationTypeEnumId: RegistrationTypeEnum.Promotional,
-      registrationStatusEnumId: RegistrationStatusEnum.Pending,
+      registrationTypeEnum: RegistrationTypeEnum.Promotional,
+      registrationStatusEnum: RegistrationStatusEnum.Pending,
       krName: "스팍스",
       enName: "SPACRS",
     },

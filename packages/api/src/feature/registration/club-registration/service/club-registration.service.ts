@@ -25,6 +25,8 @@ import type {
   ApiReg023ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg023";
 import type { ApiReg024ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg024";
+import { ApiReg025ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg025";
+import { IStudent } from "@sparcs-clubs/interface/api/user/type/user.type";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import {
   RegistrationDeadlineEnum,
@@ -729,5 +731,74 @@ export class ClubRegistrationService {
     );
 
     return {};
+  }
+
+  async getStudentRegistrationsAvailableClub(
+    studentId: IStudent["id"],
+  ): Promise<ApiReg025ResponseOk> {
+    // student 가 delegate 인 동아리 가져오기
+    const club =
+      await this.clubPublicService.findStudentClubDelegate(studentId);
+
+    const semester = await this.clubPublicService.fetchSemester(
+      new Date("2025-03-01"), // TODO: 학기 변경 시 없애는 것으로 수정 필요
+    );
+    // 없을 경우 return null
+    if (!club) return { club: null };
+
+    // 있을 경우 해당 동아리의 이번 등록 여부 조회
+    const registrations =
+      await this.clubRegistrationRepository.findByClubAndSemesterId(
+        club.id,
+        semester.id,
+      );
+
+    const clubSummaryResponse =
+      await this.clubPublicService.makeClubSummaryResponse(club);
+
+    if (registrations.length > 0) {
+      return {
+        club: {
+          ...clubSummaryResponse,
+          availableRegistrationTypeEnums: [],
+        },
+      };
+    }
+
+    // 이번 등록이 없을 경우 해당 동아리의 등록 가능한 타입 조회
+    const renewalList = (
+      await this.getStudentRegistrationClubRegistrationQualificationRenewal(
+        studentId,
+      )
+    ).clubs;
+    const provisionalRenewalList = (
+      await this.getStudentRegistrationClubRegistrationQualificationProvisionalRenewal(
+        studentId,
+      )
+    ).clubs;
+    const promotionalList = (
+      await this.getStudentRegistrationClubRegistrationQualificationPromotional(
+        studentId,
+      )
+    ).clubs;
+
+    const availableRegistrationTypeEnums = [
+      renewalList.some(e => e.id === club.id)
+        ? RegistrationTypeEnum.Renewal
+        : null,
+      promotionalList.some(e => e.id === club.id)
+        ? RegistrationTypeEnum.Promotional
+        : null,
+      provisionalRenewalList.some(e => e.id === club.id)
+        ? RegistrationTypeEnum.ReProvisional
+        : null,
+    ].filter(Boolean);
+
+    return {
+      club: {
+        ...clubSummaryResponse,
+        availableRegistrationTypeEnums,
+      },
+    };
   }
 }
