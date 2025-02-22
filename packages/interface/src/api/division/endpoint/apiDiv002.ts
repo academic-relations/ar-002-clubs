@@ -1,7 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import { zDivisionResponse } from "../type/division.type";
+import { zDivisionSummaryResponse } from "../type/division.type";
 
 /**
  * @version v0.1
@@ -20,7 +20,7 @@ const requestBody = z.object({});
 
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
-    divisions: z.array(zDivisionResponse),
+    divisions: z.array(zDivisionSummaryResponse),
   }),
 };
 
