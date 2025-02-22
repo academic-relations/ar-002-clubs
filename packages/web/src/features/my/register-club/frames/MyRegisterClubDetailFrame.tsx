@@ -36,6 +36,7 @@ import {
   RegistrationTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
 import { deleteMyClubRegistration } from "@sparcs-clubs/web/features/my/services/deleteMyClubRegistration";
+import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/my/services/getMyClubRegistration";
 import usePatchClubRegProfessorApprove from "@sparcs-clubs/web/features/my/services/usePatchClubRegProfessorApprove";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
 import useGetClubRegistrationPeriod from "@sparcs-clubs/web/features/register-club/hooks/useGetClubRegistrationPeriod";
@@ -83,6 +84,12 @@ const MyRegisterClubDetailFrame: React.FC<{
   const queryClient = useQueryClient();
   const router = useRouter();
   const { id } = useParams();
+
+  const {
+    data: myClubRegistrationData,
+    isLoading: isLoadingMyClubRegistration,
+    isError: isErrorMyClubRegistration,
+  } = useGetMyClubRegistration();
 
   const {
     data: deadlineData,
@@ -370,7 +377,10 @@ const MyRegisterClubDetailFrame: React.FC<{
         >
           목록으로 돌아가기
         </Button>
-        <AsyncBoundary isLoading={isLoadingDeadline} isError={isErrorDeadline}>
+        <AsyncBoundary
+          isLoading={isLoadingDeadline || isLoadingMyClubRegistration}
+          isError={isErrorDeadline || isErrorMyClubRegistration}
+        >
           {deadlineData.isClubRegistrationPeriod &&
             (isProfessor ? (
               <FlexWrapper direction="row" gap={10}>
@@ -383,17 +393,23 @@ const MyRegisterClubDetailFrame: React.FC<{
                 </Button>
               </FlexWrapper>
             ) : (
-              <FlexWrapper direction="row" gap={10}>
-                <Button
-                  style={{ width: "max-content" }}
-                  onClick={deleteHandler}
-                >
-                  삭제
-                </Button>
-                <Button style={{ width: "max-content" }} onClick={editHandler}>
-                  수정
-                </Button>
-              </FlexWrapper>
+              myClubRegistrationData &&
+              myClubRegistrationData.registrations.length > 0 && (
+                <FlexWrapper direction="row" gap={10}>
+                  <Button
+                    style={{ width: "max-content" }}
+                    onClick={deleteHandler}
+                  >
+                    삭제
+                  </Button>
+                  <Button
+                    style={{ width: "max-content" }}
+                    onClick={editHandler}
+                  >
+                    수정
+                  </Button>
+                </FlexWrapper>
+              )
             ))}
         </AsyncBoundary>
       </ButtonWrapper>
