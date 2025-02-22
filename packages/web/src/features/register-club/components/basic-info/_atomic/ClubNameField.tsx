@@ -8,6 +8,10 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
 import {
+  notAllowKrRegx,
+  regxErrorMessage,
+} from "@sparcs-clubs/web/features/register-club/constants";
+import {
   ClubRegistrationInfo,
   RegisterClubModel,
 } from "@sparcs-clubs/web/features/register-club/types/registerClub";
@@ -28,11 +32,6 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({
   const clubId = watch("clubId");
   const krName = watch("clubNameKr");
   const enName = watch("clubNameEn");
-
-  // 영문, 숫자, 특수문자, 공백이 허용되는 정규식(한글 안됨)
-  const notAllowKrRegx = /^[\x20-\x7E]+$/;
-  const regxErrorMessage =
-    "영어 대소문자, 숫자, 특수문자, 공백만 입력 가능합니다.";
 
   /*  NOTE: 2025 봄학기만 일괄로 동아리명 영문을 입력받기 위해 잠시 주석처리 */
   // const [isCheckedClubName, setIsCheckedClubName] = useState(
