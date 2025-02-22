@@ -11,6 +11,10 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
+import {
+  notAllowKrRegx,
+  regxErrorMessage,
+} from "@sparcs-clubs/web/features/register-club/constants";
 import useGetClubsForPromotional from "@sparcs-clubs/web/features/register-club/services/useGetClubsForPromotional";
 import useGetClubsForRenewal from "@sparcs-clubs/web/features/register-club/services/useGetClubsForRenewal";
 import { RegisterClubModel } from "@sparcs-clubs/web/features/register-club/types/registerClub";
@@ -124,6 +128,10 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
             name="activityFieldEn"
             required
             control={control}
+            rules={{
+              validate: value =>
+                notAllowKrRegx.test(value) ? undefined : regxErrorMessage,
+            }}
             renderItem={props => (
               <TextInput
                 {...props}

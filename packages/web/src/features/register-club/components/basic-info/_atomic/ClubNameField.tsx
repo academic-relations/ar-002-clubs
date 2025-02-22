@@ -1,13 +1,16 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
-import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
+import {
+  notAllowKrRegx,
+  regxErrorMessage,
+} from "@sparcs-clubs/web/features/register-club/constants";
 import {
   ClubRegistrationInfo,
   RegisterClubModel,
@@ -24,15 +27,16 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({
   clubList = [],
   editMode = false,
 }) => {
-  const { control, resetField, setValue, watch } =
-    useFormContext<RegisterClubModel>();
+  const { control, setValue, watch } = useFormContext<RegisterClubModel>();
 
+  const clubId = watch("clubId");
   const krName = watch("clubNameKr");
   const enName = watch("clubNameEn");
 
-  const [isCheckedClubName, setIsCheckedClubName] = useState(
-    !(krName === undefined || krName === ""),
-  );
+  /*  NOTE: 2025 봄학기만 일괄로 동아리명 영문을 입력받기 위해 잠시 주석처리 */
+  // const [isCheckedClubName, setIsCheckedClubName] = useState(
+  //   !(krName === undefined || krName === ""),
+  // );
 
   const clubOptions = useMemo(
     () =>
@@ -47,13 +51,24 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({
   );
 
   useEffect(() => {
-    if (clubList.length > 0 && !isCheckedClubName) {
-      resetField("clubNameKr", { keepError: false });
-      resetField("clubNameEn", { keepError: false });
-      setValue("clubNameKr", "", { shouldValidate: true });
-      setValue("clubNameEn", "", { shouldValidate: true });
+    if (type !== RegistrationTypeEnum.NewProvisional && clubId != null) {
+      const clubInfo = clubList.find(club => club.id === clubId);
+      setValue("clubNameKr", clubInfo?.clubNameKr ?? "");
+      if (clubInfo && notAllowKrRegx.test(clubInfo.clubNameEn)) {
+        setValue("clubNameEn", clubInfo?.clubNameEn ?? "");
+      }
     }
-  }, [clubList.length, isCheckedClubName]);
+  }, [clubId, clubList]);
+
+  /*  NOTE: 2025 봄학기만 일괄로 동아리명 영문을 입력받기 위해 잠시 주석처리 */
+  // useEffect(() => {
+  //   if (clubList.length > 0 && !isCheckedClubName) {
+  //     resetField("clubNameKr", { keepError: false });
+  //     resetField("clubNameEn", { keepError: false });
+  //     setValue("clubNameKr", "", { shouldValidate: true });
+  //     setValue("clubNameEn", "", { shouldValidate: true });
+  //   }
+  // }, [clubList.length, isCheckedClubName]);
 
   if (type === RegistrationTypeEnum.NewProvisional) {
     return (
@@ -75,6 +90,10 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({
           name="clubNameEn"
           required
           control={control}
+          rules={{
+            validate: value =>
+              notAllowKrRegx.test(value) ? undefined : regxErrorMessage,
+          }}
           renderItem={props => (
             <TextInput
               {...props}
@@ -104,41 +123,45 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({
           />
         )}
       />
-      <CheckboxOption
+      {/*  NOTE: 2025 봄학기만 일괄로 동아리명 영문을 입력받기 위해 잠시 주석처리 */}
+      {/* <CheckboxOption
         optionText="동아리명을 변경하고 싶어요"
         checked={isCheckedClubName}
         onClick={() => {
           setIsCheckedClubName(!isCheckedClubName);
         }}
-      />
-      {isCheckedClubName && (
-        <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
-          <FormController
-            name="clubNameKr"
-            required={isCheckedClubName}
-            control={control}
-            renderItem={props => (
-              <TextInput
-                {...props}
-                label="신규 동아리명 (국문)"
-                placeholder="국문 동아리명을 입력해주세요"
-              />
-            )}
-          />
-          <FormController
-            name="clubNameEn"
-            required={isCheckedClubName}
-            control={control}
-            renderItem={props => (
-              <TextInput
-                {...props}
-                label="신규 동아리명 (영문)"
-                placeholder="영문 동아리명을 입력해주세요"
-              />
-            )}
-          />
-        </FlexWrapper>
-      )}
+      /> */}
+      <FlexWrapper direction="row" gap={32} style={{ width: "100%" }}>
+        <FormController
+          name="clubNameKr"
+          required
+          control={control}
+          renderItem={props => (
+            <TextInput
+              {...props}
+              label="동아리명 (국문)"
+              placeholder="국문 동아리명을 입력해주세요"
+            />
+          )}
+        />
+        <FormController
+          name="clubNameEn"
+          required
+          defaultValue=""
+          control={control}
+          rules={{
+            validate: value =>
+              notAllowKrRegx.test(value) ? undefined : regxErrorMessage,
+          }}
+          renderItem={props => (
+            <TextInput
+              {...props}
+              label="동아리명 (영문)"
+              placeholder="영문 동아리명을 입력해주세요"
+            />
+          )}
+        />
+      </FlexWrapper>
     </>
   );
 };

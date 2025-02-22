@@ -3,6 +3,11 @@ import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import { RegistrationType } from "../types/registerClub";
 
+// 영문, 숫자, 특수문자, 공백이 허용되는 정규식(한글 안됨)
+export const notAllowKrRegx = /^[\x20-\x7E]+$/;
+export const regxErrorMessage =
+  "영어 대소문자, 숫자, 특수문자, 공백만 입력 가능합니다.";
+
 export const registerClubDeadlineInfoText = (
   date: Date,
   targetSemester?: Semester,

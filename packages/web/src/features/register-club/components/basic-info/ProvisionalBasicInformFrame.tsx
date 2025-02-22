@@ -13,6 +13,10 @@ import PhoneInput from "@sparcs-clubs/web/common/components/Forms/PhoneInput";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import {
+  notAllowKrRegx,
+  regxErrorMessage,
+} from "@sparcs-clubs/web/features/register-club/constants";
 import useGetClubsForReProvisional from "@sparcs-clubs/web/features/register-club/services/useGetClubsForReProvisional";
 
 import ClubNameField from "./_atomic/ClubNameField";
@@ -155,6 +159,10 @@ const ProvisionalBasicInformFrame: React.FC<
                 name="activityFieldEn"
                 required
                 control={control}
+                rules={{
+                  validate: value =>
+                    notAllowKrRegx.test(value) ? undefined : regxErrorMessage,
+                }}
                 renderItem={props => (
                   <TextInput
                     {...props}
