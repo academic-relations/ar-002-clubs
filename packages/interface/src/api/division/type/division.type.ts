@@ -21,9 +21,7 @@ export const zDivisionResponse = zDivision.extend({
 
 export const zDivisionSummary = zDivision.pick({ id: true, name: true });
 
-export const zDivisionSummaryResponse = zDivisionSummary.extend({
-  district: zDistrict,
-});
+export const zDivisionSummaryResponse = zDivisionSummary;
 
 export type IDistrict = z.infer<typeof zDistrict>;
 export type IDivision = z.infer<typeof zDivision>;
