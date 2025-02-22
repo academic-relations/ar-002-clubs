@@ -10,6 +10,7 @@ import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/my/services
 import RegisterClubMainFrame from "@sparcs-clubs/web/features/register-club/frames/RegisterClubMainFrame";
 import { useCheckManageClub } from "@sparcs-clubs/web/hooks/checkManageClub";
 
+import useGetAvailableRegistrationInfo from "../hooks/useGetAvailableRegistrationInfo";
 import useGetClubRegistrationPeriod from "../hooks/useGetClubRegistrationPeriod";
 
 const RegisterClubAuthFrame: React.FC<{
@@ -22,6 +23,12 @@ const RegisterClubAuthFrame: React.FC<{
     isLoading,
     isError,
   } = useGetMyClubRegistration();
+
+  const {
+    data: availableRegistrationInfo,
+    isLoading: isLoadingAvailableRegistrationInfo,
+    isError: isErrorAvailableRegistrationInfo,
+  } = useGetAvailableRegistrationInfo();
 
   const {
     data: deadlineData,
@@ -37,11 +44,21 @@ const RegisterClubAuthFrame: React.FC<{
     [myClubRegistrationData],
   );
 
-  if (isLoading || checkLoading || isLoadingDeadline) {
+  if (
+    isLoading ||
+    checkLoading ||
+    isLoadingDeadline ||
+    isLoadingAvailableRegistrationInfo
+  ) {
     return (
       <AsyncBoundary
-        isLoading={isLoading || checkLoading || isLoadingDeadline}
-        isError={isError || isErrorDeadline}
+        isLoading={
+          isLoading ||
+          checkLoading ||
+          isLoadingDeadline ||
+          isLoadingAvailableRegistrationInfo
+        }
+        isError={isError || isErrorDeadline || isErrorAvailableRegistrationInfo}
       />
     );
   }
@@ -54,6 +71,18 @@ const RegisterClubAuthFrame: React.FC<{
     return (
       <HasClubRegistration
         applyId={myClubRegistrationData!.registrations[0].id}
+      />
+    );
+  }
+
+  if (
+    availableRegistrationInfo &&
+    !availableRegistrationInfo.availableRegistrations.includes(type) &&
+    type !== RegistrationTypeEnum.NewProvisional
+  ) {
+    return (
+      <HasClubRegistration
+        errorMessage={`관리하고 있는 동아리의 동아리 신청 내역이 존재하거나 \n 동아리 등록 신청 조건에 만족하지 않아 신청할 수 없습니다.`}
       />
     );
   }
