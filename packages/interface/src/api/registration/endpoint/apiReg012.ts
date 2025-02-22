@@ -1,6 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
+import { zClub } from "@sparcs-clubs/interface/api/club/type/club.type";
 import { zClubName } from "@sparcs-clubs/interface/common/commonString";
 import {
   RegistrationStatusEnum,
@@ -8,8 +9,8 @@ import {
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 /**
- * @version v0.1
- * @description 자신의 동아리 등록 목록을 조회합니다.
+ * @version v0.2
+ * @description 자신이 관리하는 동아리의 동아리 등록 목록을 조회합니다.
  */
 
 const url = () => `/student/registrations/club-registrations/my`;
@@ -25,15 +26,16 @@ const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     registrations: z.array(
       z.object({
+        // 나중에 registrationSummaryResponse로 변경 필요
         id: z.coerce.number().int().min(1),
-        registrationStatusEnumId: z.nativeEnum(RegistrationStatusEnum),
-        registrationTypeEnumId: z.nativeEnum(RegistrationTypeEnum),
+        registrationStatusEnum: z.nativeEnum(RegistrationStatusEnum),
+        registrationTypeEnum: z.nativeEnum(RegistrationTypeEnum),
         divisionName: z.string().max(128),
         clubNameKr: zClubName.optional(),
         newClubNameKr: zClubName,
         clubNameEn: zClubName.optional(),
         newClubNameEn: zClubName,
-        clubId: z.coerce.number().int().min(1),
+        clubId: zClub.pick({ id: true }).shape.id,
         activityFieldKr: z.string().max(255),
         activityFieldEn: z.string().max(255),
         professorName: z.string().max(255),

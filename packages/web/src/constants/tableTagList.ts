@@ -183,7 +183,7 @@ const DivisionTypeTagList: { [key in DivisionType]: StatusDetail } = {
   },
   [DivisionType.PerformingArts]: { text: "연행예술", color: "BLUE" },
   [DivisionType.ExhibitionCreation]: { text: "전시창작", color: "BLUE" },
-  [DivisionType.LifeCulture]: { text: "생활문화", color: "GREEN" },
+  [DivisionType.Culture]: { text: "생활문화", color: "GREEN" },
   [DivisionType.Society]: { text: "사회", color: "PURPLE" },
   [DivisionType.Religion]: { text: "종교", color: "PURPLE" },
 };
