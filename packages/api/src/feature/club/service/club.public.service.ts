@@ -385,9 +385,12 @@ export default class ClubPublicService {
     const division = await this.divisionPublicService.getDivisionById({
       id: club.division.id,
     });
-    const professor = await this.userPublicService.getProfessorById({
-      id: club.professor.id,
-    });
+    const professor =
+      club.professor !== null
+        ? await this.userPublicService.getProfessorById({
+            id: club.professor.id,
+          })
+        : null;
     return {
       ...club,
       division: division[0],
