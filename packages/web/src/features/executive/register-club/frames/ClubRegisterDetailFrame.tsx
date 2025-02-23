@@ -1,6 +1,9 @@
 import React from "react";
 
-import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
+import {
+  RegistrationStatusEnum,
+  RegistrationTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -11,8 +14,9 @@ import {
   IndentedItem,
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
-import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
+import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import CommentToast from "@sparcs-clubs/web/common/components/Toast/CommentToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useGetDivisionType from "@sparcs-clubs/web/common/hooks/useGetDivisionType";
 import {
@@ -55,27 +59,41 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
       isError={isError || divisionError}
     >
       <Card padding="32px" gap={20} outline>
-        <FlexWrapper gap={16} direction="column">
-          <Typography fw="MEDIUM" lh={20} fs={16}>
-            신청 상태
-          </Typography>
-          {data && (
-            <ProgressCheckSection
-              labels={
-                getRegisterClubProgress(
-                  data?.registrationStatusEnumId,
-                  data?.updatedAt,
-                ).labels
-              }
-              progress={
-                getRegisterClubProgress(
-                  data?.registrationStatusEnumId,
-                  data?.updatedAt,
-                ).progress
-              }
-            />
-          )}
-        </FlexWrapper>
+        {data && (
+          <ProgressStatus
+            labels={
+              getRegisterClubProgress(
+                data?.registrationStatusEnumId,
+                data?.updatedAt,
+              ).labels
+            }
+            progress={
+              getRegisterClubProgress(
+                data?.registrationStatusEnumId,
+                data?.updatedAt,
+              ).progress
+            }
+            optional={
+              data.comments &&
+              data.comments.length > 0 && (
+                <CommentToast
+                  title="코멘트"
+                  reasons={data.comments.map(comment => ({
+                    datetime: comment.createdAt,
+                    reason: comment.content,
+                    status: "반려 사유",
+                  }))}
+                  color={
+                    data.registrationStatusEnumId ===
+                    RegistrationStatusEnum.Approved
+                      ? "green"
+                      : "red"
+                  }
+                />
+              )
+            }
+          />
+        )}
         <FlexWrapper gap={20} direction="row">
           <Typography fw="MEDIUM" lh={20} fs={16} style={{ flex: 1 }}>
             등록 구분
@@ -162,7 +180,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                     <ThumbnailPreviewList
                       fileList={[
                         {
-                          id: "1",
+                          id: data?.activityPlanFile?.id,
                           name: data?.activityPlanFile?.name,
                           url: data?.activityPlanFile?.url,
                         },
@@ -182,7 +200,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                   <ThumbnailPreviewList
                     fileList={[
                       {
-                        id: "1",
+                        id: data?.clubRuleFile?.id,
                         name: data?.clubRuleFile?.name,
                         url: data?.clubRuleFile?.url,
                       },
@@ -201,7 +219,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                   <ThumbnailPreviewList
                     fileList={[
                       {
-                        id: "1",
+                        id: data?.externalInstructionFile?.id,
                         name: data?.externalInstructionFile?.name,
                         url: data?.externalInstructionFile?.url,
                       },
