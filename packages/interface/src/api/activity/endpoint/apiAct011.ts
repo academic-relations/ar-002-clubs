@@ -1,10 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
-import {
-  ActivityStatusEnum,
-  ActivityTypeEnum,
-} from "@sparcs-clubs/interface/common/enum/activity.enum";
+import { zActivitySummary } from "../type/activity.type";
 
 /**
  * @version v0.1
@@ -23,17 +20,9 @@ const requestBody = z.object({});
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     activities: z.array(
-      z.object({
-        id: z.coerce.number().int().min(1),
-        name: z.string(),
-        activityTypeEnumId: z.nativeEnum(ActivityTypeEnum),
-        activityStatusEnumId: z.nativeEnum(ActivityStatusEnum),
-        durations: z.array(
-          z.object({
-            startTerm: z.coerce.date(),
-            endTerm: z.coerce.date(),
-          }),
-        ),
+      zActivitySummary.omit({
+        chargedExecutive: true,
+        commentedExecutive: true,
       }),
     ),
   }),

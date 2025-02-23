@@ -67,6 +67,7 @@ import {
   ActivityDeadlineEnum,
   ActivityStatusEnum,
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
@@ -733,54 +734,96 @@ export default class ActivityService {
    * @description REG-011, 012, 013에서 공통적으로 이용하는 동아리 활동 전체조회 입니다.
    * @returns 해당 동아리가 작성한 모든 활동을 REG-011의 리턴 타입에 맞추어 가져옵니다.
    */
-  private async getProvisionalActivities(param: { clubId: number }) {
-    const result = await this.activityRepository.selectActivityByClubId({
-      clubId: param.clubId,
-    });
-
-    const activities = await Promise.all(
-      result.map(async activity => {
-        const durations = (
-          await this.activityRepository.selectDurationByActivityId(activity.id)
-        ).map(e => ({
-          startTerm: e.startTerm,
-          endTerm: e.endTerm,
-        }));
-
-        // 가장 빠른 startTerm을 추출
-        const earliestStartTerm = durations[0]?.startTerm;
-
-        // 가장 늦은 endTerm을 추출 (startTerm이 같을 경우 대비)
-        const latestEndTerm = durations[0]?.endTerm;
-
+  private async getProvisionalActivities(param: {
+    clubId: number;
+  }): Promise<ApiAct011ResponseOk> {
+    // 해당 동아리가 가동아리로 활동한 학기
+    const provisionalSemesters =
+      await this.clubPublicService.getSemesterByClubIdAndTypes(param.clubId, [
+        ClubTypeEnum.Provisional,
+      ]);
+    // 학기 -> activityD로 변환
+    const activityDIds = await Promise.all(
+      provisionalSemesters.map(async semester => {
+        const prevActivityD = await this.getActivityD({
+          date: semester.startTerm,
+        });
+        const nextActivityD = await this.getActivityD({
+          date: semester.endTerm,
+        });
         return {
-          id: activity.id,
-          name: activity.name,
-          activityTypeEnumId: activity.activityTypeEnumId,
-          activityStatusEnumId: activity.activityStatusEnumId,
-          durations,
-          earliestStartTerm, // 추후 정렬을 위해 추가
-          latestEndTerm, // 추후 정렬을 위해 추가
+          prevActivityD,
+          nextActivityD,
         };
       }),
+    ).then(arr =>
+      arr.reduce((acc, { prevActivityD, nextActivityD }) => {
+        if (!acc.some(e => e === prevActivityD.id)) acc.push(prevActivityD.id);
+        if (!acc.some(e => e === nextActivityD.id)) acc.push(nextActivityD.id);
+        return acc;
+      }, [] as number[]),
     );
 
-    // activities를 duration의 가장 빠른 startTerm 기준으로 오름차순 정렬
-    // startTerm이 같으면 가장 늦은 endTerm 기준으로 내림차순 정렬
-    activities.sort((a, b) => {
-      if (a.earliestStartTerm === b.earliestStartTerm) {
-        return a.latestEndTerm > b.latestEndTerm ? -1 : 1; // endTerm 내림차순
-      }
-      return a.earliestStartTerm < b.earliestStartTerm ? -1 : 1; // startTerm 오름차순
-    });
+    const result = await Promise.all(
+      activityDIds.map(async activityDId => {
+        const activities =
+          await this.activityRepository.fetchAvailableSummaries(
+            param.clubId,
+            activityDId,
+          );
+        return activities;
+      }),
+    ).then(arr => arr.flat());
 
-    return activities.map(activity => ({
-      id: activity.id,
-      name: activity.name,
-      activityTypeEnumId: activity.activityTypeEnumId,
-      activityStatusEnumId: activity.activityStatusEnumId,
-      durations: activity.durations,
-    }));
+    return { activities: result };
+
+    // const result = await this.activityRepository.selectActivityByClubId({
+    //   clubId: param.clubId,
+    // });
+
+    // const activities = await Promise.all(
+    //   result.map(async activity => {
+    //     const durations = (
+    //       await this.activityRepository.selectDurationByActivityId(activity.id)
+    //     ).map(e => ({
+    //       startTerm: e.startTerm,
+    //       endTerm: e.endTerm,
+    //     }));
+
+    //     // 가장 빠른 startTerm을 추출
+    //     const earliestStartTerm = durations[0]?.startTerm;
+
+    //     // 가장 늦은 endTerm을 추출 (startTerm이 같을 경우 대비)
+    //     const latestEndTerm = durations[0]?.endTerm;
+
+    //     return {
+    //       id: activity.id,
+    //       name: activity.name,
+    //       activityTypeEnumId: activity.activityTypeEnumId,
+    //       activityStatusEnumId: activity.activityStatusEnumId,
+    //       durations,
+    //       earliestStartTerm, // 추후 정렬을 위해 추가
+    //       latestEndTerm, // 추후 정렬을 위해 추가
+    //     };
+    //   }),
+    // );
+
+    // // activities를 duration의 가장 빠른 startTerm 기준으로 오름차순 정렬
+    // // startTerm이 같으면 가장 늦은 endTerm 기준으로 내림차순 정렬
+    // activities.sort((a, b) => {
+    //   if (a.earliestStartTerm === b.earliestStartTerm) {
+    //     return a.latestEndTerm > b.latestEndTerm ? -1 : 1; // endTerm 내림차순
+    //   }
+    //   return a.earliestStartTerm < b.earliestStartTerm ? -1 : 1; // startTerm 오름차순
+    // });
+
+    // return activities.map(activity => ({
+    //   id: activity.id,
+    //   name: activity.name,
+    //   activityTypeEnumId: activity.activityTypeEnumId,
+    //   activityStatusEnumId: activity.activityStatusEnumId,
+    //   durations: activity.durations,
+    // }));
   }
 
   async deleteStudentActivityProvisional(
@@ -815,7 +858,7 @@ export default class ActivityService {
     const activities = await this.getProvisionalActivities({
       clubId: param.query.clubId,
     });
-    return { activities };
+    return activities;
   }
 
   /**
@@ -829,7 +872,7 @@ export default class ActivityService {
     const activities = await this.getProvisionalActivities({
       clubId: param.query.clubId,
     });
-    return { activities };
+    return activities;
   }
 
   async getProfessorProvisionalActivities(param: {
@@ -839,7 +882,7 @@ export default class ActivityService {
     const activities = await this.getProvisionalActivities({
       clubId: param.query.clubId,
     });
-    return { activities };
+    return activities;
   }
 
   async getExecutiveActivity(activityId: number): Promise<ApiAct002ResponseOk> {

@@ -72,6 +72,7 @@ export const zActivitySummary = zActivity.pick({
   id: true,
   activityStatusEnum: true,
   activityTypeEnum: true,
+  activityDuration: true,
   club: true,
   name: true,
   chargedExecutive: true,

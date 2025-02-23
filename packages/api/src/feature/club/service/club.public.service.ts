@@ -394,4 +394,20 @@ export default class ClubPublicService {
       professor,
     };
   }
+
+  /*
+   * @param clubId 동아리 id
+   * @param clubTypeEnums 동아리 타입 enum 배열 (가동아리, 정동아리)
+   * @description 동아리가 해당 타입으로 활동했던 학기 id들을 리턴합니다.
+   */
+  async getSemesterByClubIdAndTypes(
+    clubId: number,
+    clubTypeEnums: Array<ClubTypeEnum>,
+  ): Promise<Array<ISemester>> {
+    const semesters = await this.semesterDRepository.selectByClubIdAndTypes({
+      clubId,
+      clubTypeEnums,
+    });
+    return semesters;
+  }
 }

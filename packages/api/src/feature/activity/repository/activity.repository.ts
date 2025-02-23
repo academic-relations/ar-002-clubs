@@ -776,6 +776,7 @@ export default class ActivityRepository {
         id: Activity.id,
         activityStatusEnumId: Activity.activityStatusEnumId,
         activityTypeEnumId: Activity.activityTypeEnumId,
+        activityDId: Activity.activityDId,
         clubId: Activity.clubId,
         name: Activity.name,
         commentedAt: Activity.commentedAt,
@@ -816,7 +817,6 @@ export default class ActivityRepository {
    * @description 해당학기의 선택가능한 ActivitySummary를 반환합니다.
    * 선택가능한 활동이란, 승인되거나 운위로 넘겨진 경우를 의미합니다.
    */
-
   async fetchAvailableSummaries(
     clubId: number,
     activityDId: number,
