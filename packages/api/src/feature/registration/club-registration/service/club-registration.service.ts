@@ -151,7 +151,7 @@ export class ClubRegistrationService {
       await this.clubPublicService.getClubIdByClubStatusEnumId(
         studentId,
         [ClubTypeEnum.Regular],
-        semesterId,
+        semesterId - 1,
       ); // 현재 학기 기준 정동아리 list
     logger.debug(`[getReRegistrationAbleList] semester Id is ${semesterId}`);
     return {
