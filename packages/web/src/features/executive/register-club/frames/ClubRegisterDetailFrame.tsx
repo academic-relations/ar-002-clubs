@@ -1,9 +1,6 @@
 import React from "react";
 
-import {
-  RegistrationStatusEnum,
-  RegistrationTypeEnum,
-} from "@sparcs-clubs/interface/common/enum/registration.enum";
+import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -14,9 +11,7 @@ import {
   IndentedItem,
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
-import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import CommentToast from "@sparcs-clubs/web/common/components/Toast/CommentToast";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useGetDivisionType from "@sparcs-clubs/web/common/hooks/useGetDivisionType";
 import {
@@ -25,7 +20,6 @@ import {
 } from "@sparcs-clubs/web/constants/tableTagList";
 import MyRegisterClubActFrame from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubActFrame";
 import { FilePreviewContainer } from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubDetailFrame";
-import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
 import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
 import {
   getActualMonth,
@@ -34,6 +28,7 @@ import {
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 import { professorEnumToText } from "@sparcs-clubs/web/utils/getUserType";
 
+import RegisterClubStatusSection from "../components/RegisterClubStatusSection";
 import useRegisterClubDetail from "../services/getRegisterClubDetail";
 
 export interface ClubRegisterDetail {
@@ -60,38 +55,10 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
     >
       <Card padding="32px" gap={20} outline>
         {data && (
-          <ProgressStatus
-            labels={
-              getRegisterClubProgress(
-                data?.registrationStatusEnumId,
-                data?.updatedAt,
-              ).labels
-            }
-            progress={
-              getRegisterClubProgress(
-                data?.registrationStatusEnumId,
-                data?.updatedAt,
-              ).progress
-            }
-            optional={
-              data.comments &&
-              data.comments.length > 0 && (
-                <CommentToast
-                  title="코멘트"
-                  reasons={data.comments.map(comment => ({
-                    datetime: comment.createdAt,
-                    reason: comment.content,
-                    status: "반려 사유",
-                  }))}
-                  color={
-                    data.registrationStatusEnumId ===
-                    RegistrationStatusEnum.Approved
-                      ? "green"
-                      : "red"
-                  }
-                />
-              )
-            }
+          <RegisterClubStatusSection
+            status={data.registrationStatusEnumId}
+            editedAt={data.updatedAt}
+            comments={data.comments}
           />
         )}
         <FlexWrapper gap={20} direction="row">
