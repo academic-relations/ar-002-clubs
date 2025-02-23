@@ -9,7 +9,7 @@ import { ApiReg019ResponseOk } from "@sparcs-clubs/interface/api/registration/en
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
-import mockupRegistrationMember from "@sparcs-clubs/web/features/executive/_mock/mockupMemberRegistration";
+import mockupRegistrationMember from "@sparcs-clubs/web/features/executive/register-member/_mock/mockupMemberRegistration";
 import {
   getTagColorFromClubType,
   getTagColorFromDivision,
