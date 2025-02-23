@@ -1,7 +1,12 @@
 import { Controller, Get, UsePipes } from "@nestjs/common";
 
-import type { ApiDiv001ResponseOk } from "@sparcs-clubs/interface/api/division/apiDiv001";
-import apiDiv001 from "@sparcs-clubs/interface/api/division/apiDiv001";
+import apiDiv001, {
+  ApiDiv001ResponseOk,
+} from "@sparcs-clubs/interface/api/division/endpoint/apiDiv001";
+import apiDiv002, {
+  ApiDiv002RequestUrl,
+  ApiDiv002ResponseOk,
+} from "@sparcs-clubs/interface/api/division/endpoint/apiDiv002";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Public } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
@@ -18,6 +23,14 @@ export default class DivisionController {
   async getDivisions(): Promise<ApiDiv001ResponseOk> {
     const divisions = await this.divisionService.getDivisions();
 
+    return divisions;
+  }
+
+  @Public()
+  @Get(ApiDiv002RequestUrl)
+  @UsePipes(new ZodPipe(apiDiv002))
+  async getCurrentDivisions(): Promise<ApiDiv002ResponseOk> {
+    const divisions = await this.divisionService.getDivisionsCurrent();
     return divisions;
   }
 }

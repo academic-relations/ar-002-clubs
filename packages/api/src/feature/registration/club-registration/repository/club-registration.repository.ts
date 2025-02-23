@@ -79,33 +79,38 @@ export class ClubRegistrationRepository {
     return result;
   }
 
-  async findByClubId(clubId: number) {
-    const clubs = await this.db
+  async findByClubAndSemesterId(clubId: number, semesterId: number) {
+    const registration = await this.db
       .select()
       .from(Registration)
       .where(
-        and(eq(Registration.clubId, clubId), isNull(Registration.deletedAt)),
+        and(
+          eq(Registration.clubId, clubId),
+          eq(Registration.semesterId, semesterId),
+          isNull(Registration.deletedAt),
+        ),
       );
-
-    return clubs;
+    return registration;
   }
 
-  async findByStudentId(studentId: number) {
-    const clubs = await this.db
+  async findByStudentAndSemesterId(studentId: number, semesterId: number) {
+    const registration = await this.db
       .select()
       .from(Registration)
       .where(
         and(
           eq(Registration.studentId, studentId),
+          eq(Registration.semesterId, semesterId),
           isNull(Registration.deletedAt),
         ),
       );
 
-    return clubs;
+    return registration;
   }
 
   async createRegistration(
     studentId: number,
+    semesterId: number,
     body: ApiReg001RequestBody,
   ): Promise<ApiReg001ResponseCreated> {
     const cur = getKSTDate();
@@ -186,6 +191,7 @@ export class ClubRegistrationRepository {
       const [registrationInsertResult] = await tx.insert(Registration).values({
         clubId: body.clubId,
         registrationApplicationTypeEnumId: body.registrationTypeEnumId,
+        semesterId,
         clubNameKr: body.clubNameKr,
         clubNameEn: body.clubNameEn,
         studentId,
@@ -536,21 +542,23 @@ export class ClubRegistrationRepository {
 
   async getStudentRegistrationsClubRegistrationsMy(
     studentId: number,
+    semesterId: number,
   ): Promise<ApiReg012ResponseOk> {
     const result = await this.db
       .select({
         id: Registration.id,
-        registrationTypeEnumId: Registration.registrationApplicationTypeEnumId,
+        registrationTypeEnum: Registration.registrationApplicationTypeEnumId,
         divisionName: Division.name,
         clubNameKr: Club.name_kr,
         clubNameEn: Club.name_en,
         newClubNameKr: Registration.clubNameKr,
         newClubNameEn: Registration.clubNameEn,
         clubId: Registration.clubId,
+        semesterId: Registration.semesterId,
         activityFieldKr: Registration.activityFieldKr,
         activityFieldEn: Registration.activityFieldEn,
         professorName: Professor.name,
-        registrationStatusEnumId:
+        registrationStatusEnum:
           Registration.registrationApplicationStatusEnumId,
       })
       .from(Registration)
@@ -575,6 +583,7 @@ export class ClubRegistrationRepository {
       .where(
         and(
           eq(Registration.studentId, studentId),
+          eq(Registration.semesterId, semesterId),
           isNull(Registration.deletedAt),
         ),
       );

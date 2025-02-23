@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
@@ -39,9 +39,9 @@ const MyRegisterClubDetail = () => {
   }
 
   return profile?.type === UserTypeEnum.Professor ? (
-    <ProfessorRegisterClubDetailFrame profile={profile.type} />
+    <ProfessorRegisterClubDetailFrame userType={profile.type} />
   ) : (
-    <StudentRegisterClubDetailFrame profile={profile.type} />
+    <StudentRegisterClubDetailFrame userType={profile.type} />
   );
 };
 export default MyRegisterClubDetail;

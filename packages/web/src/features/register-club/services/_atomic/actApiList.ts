@@ -4,6 +4,7 @@ import apiAct012 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct012";
 import apiAct013 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct013";
 import apiAct014 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct014";
 import apiAct015 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct015";
+import apiAct029 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct029";
 import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 const activitiesGet = (profile: string) => {
@@ -26,4 +27,6 @@ const activityDetailGet = (profile: string, id: number) => {
   return apiAct002.url(id);
 };
 
-export { activitiesGet, activityDetailGet };
+const activityReportProvisionalGet = (id: number) => apiAct029.url(id);
+
+export { activitiesGet, activityDetailGet, activityReportProvisionalGet };

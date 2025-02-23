@@ -8,7 +8,7 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-import { Club } from "./club.schema";
+import { Club, SemesterD } from "./club.schema";
 import { Division } from "./division.schema";
 import { File } from "./file.schema";
 import { Executive, Professor, Student } from "./user.schema";
@@ -33,6 +33,7 @@ export const Registration = mysqlTable(
   {
     id: int("id").autoincrement().primaryKey(),
     clubId: int("club_id").references(() => Club.id),
+    semesterId: int("semester_d_id").references(() => SemesterD.id),
     registrationApplicationTypeEnumId: int(
       "registration_application_type_enum_id",
     ).notNull(),
@@ -75,6 +76,11 @@ export const Registration = mysqlTable(
     deletedAt: timestamp("deleted_at"),
   },
   table => ({
+    semesterIdFk: foreignKey({
+      name: "registration_semester_d_id_fk",
+      columns: [table.semesterId],
+      foreignColumns: [SemesterD.id],
+    }),
     registrationApplicationTypeEnumIdFk: foreignKey({
       name: "registration_registration_type_enum_id_fk",
       columns: [table.registrationApplicationTypeEnumId],
@@ -176,6 +182,7 @@ export const RegistrationDeadlineD = mysqlTable(
   "registration_deadline_d",
   {
     id: int("id").autoincrement().primaryKey(),
+    semesterId: int("semester_d_id").references(() => SemesterD.id),
     registrationDeadlineEnumId: int("registration_deadline_enum_id").notNull(),
     startDate: date("start_date"),
     endDate: date("end_date"),

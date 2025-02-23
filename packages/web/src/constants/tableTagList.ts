@@ -13,8 +13,6 @@ import {
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { RentalOrderStatusEnum } from "@sparcs-clubs/interface/common/enum/rental.enum";
 
-import { DivisionType } from "@sparcs-clubs/web/types/divisions.types";
-
 import { TagColor } from "../common/components/Tag";
 import {
   ActivityProfessorApprovalEnum,
@@ -170,24 +168,6 @@ const RegistrationTypeTagList: { [key in RegistrationTypeEnum]: StatusDetail } =
     [RegistrationTypeEnum.ReProvisional]: { text: "가등록", color: "BLUE" },
   };
 
-const DivisionTypeTagList: { [key in DivisionType]: StatusDetail } = {
-  [DivisionType.InstrumentalMusic]: { text: "연주음악", color: "ORANGE" },
-  [DivisionType.VocalMusic]: { text: "보컬음악", color: "ORANGE" },
-  [DivisionType.BandMusic]: { text: "밴드음악", color: "ORANGE" },
-  [DivisionType.LifeSports]: { text: "생활체육", color: "PINK" },
-  [DivisionType.BallSports]: { text: "구기체육", color: "PINK" },
-  [DivisionType.HumanitiesAcademics]: { text: "인문학술", color: "YELLOW" },
-  [DivisionType.ScienceEngineeringAcademics]: {
-    text: "이공학술",
-    color: "YELLOW",
-  },
-  [DivisionType.PerformingArts]: { text: "연행예술", color: "BLUE" },
-  [DivisionType.ExhibitionCreation]: { text: "전시창작", color: "BLUE" },
-  [DivisionType.LifeCulture]: { text: "생활문화", color: "GREEN" },
-  [DivisionType.Society]: { text: "사회", color: "PURPLE" },
-  [DivisionType.Religion]: { text: "종교", color: "PURPLE" },
-};
-
 const ClubTypeTagList: {
   [key in ClubTypeEnum]: StatusDetail;
 } = {
@@ -202,7 +182,6 @@ export {
   ApplyTagList,
   ClubTypeTagList,
   CmsTagList,
-  DivisionTypeTagList,
   FundingTagList,
   MemTagList,
   ProfessorApprovalTagList,

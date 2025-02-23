@@ -14,8 +14,8 @@ import {
 import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import useGetDivisionType from "@sparcs-clubs/web/common/hooks/useGetDivisionType";
 import {
-  DivisionTypeTagList,
   ProfessorIsApprovedTagList,
   RegistrationTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
@@ -43,8 +43,17 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
     applyId: +applyId,
   });
 
+  const {
+    data: divisionData,
+    isLoading: divisionLoading,
+    isError: divisionError,
+  } = useGetDivisionType();
+
   return (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
+    <AsyncBoundary
+      isLoading={isLoading || divisionLoading}
+      isError={isError || divisionError}
+    >
       <Card padding="32px" gap={20} outline>
         <FlexWrapper gap={16} direction="column">
           <Typography fw="MEDIUM" lh={20} fs={16}>
@@ -114,7 +123,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                 <ListItem>설립 연도: {getActualYear(data.foundedAt)}</ListItem>
               ))}
             <ListItem>
-              {`소속 분과: ${data && getTagDetail(data?.divisionId, DivisionTypeTagList).text}`}
+              {`소속 분과: ${data && divisionData?.divisionTagList[data?.divisionId]?.text}`}
             </ListItem>
             <ListItem>{`활동 분야 (국문): ${data?.activityFieldKr}`}</ListItem>
             <ListItem>{`활동 분야 (영문): ${data?.activityFieldEn}`}</ListItem>

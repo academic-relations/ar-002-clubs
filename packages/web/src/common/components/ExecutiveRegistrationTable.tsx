@@ -8,12 +8,13 @@ import React from "react";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import {
-  DivisionTypeTagList,
   RegistrationStatusTagList,
   RegistrationTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
 import { RegisterClubList } from "@sparcs-clubs/web/features/executive/register-club/services/_mock/mockRegisterClub";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
+
+import useGetDivisionType from "../hooks/useGetDivisionType";
 
 interface ExecutiveRegistrationTableProps {
   registerList: RegisterClubList;
@@ -58,10 +59,9 @@ const columns = [
     id: "division",
     header: "분과",
     cell: info => {
-      const { color, text } = getTagDetail(
-        info.getValue(),
-        DivisionTypeTagList,
-      );
+      const { data: divisionData } = useGetDivisionType();
+      const { color, text } = divisionData.divisionTagList[info.getValue()];
+
       return (
         <Tag color={color} width="80px">
           {text}
@@ -70,7 +70,7 @@ const columns = [
     },
     size: 120,
   }),
-  columnHelper.accessor("clubNameKr", {
+  columnHelper.accessor(row => row.clubNameKr ?? row.newClubNameKr, {
     id: "clubName",
     header: "동아리",
     cell: info => info.getValue(),
@@ -89,7 +89,7 @@ const columns = [
   columnHelper.accessor("professorName", {
     id: "advisorProfessor",
     header: "지도교수",
-    cell: info => info.getValue(),
+    cell: info => info.getValue() ?? "-",
   }),
 ];
 

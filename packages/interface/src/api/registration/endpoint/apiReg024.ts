@@ -34,7 +34,7 @@ const responseBodyMap = {
         divisionId: z.coerce.number().int().min(1),
         clubNameKr: zClubName.optional(),
         newClubNameKr: zClubName,
-        clubNameEm: zClubName.optional(),
+        clubNameEn: zClubName.optional(),
         newClubNameEn: zClubName,
         representativeName: z.string(),
         activityFieldKr: z.string().max(255),

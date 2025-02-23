@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   date,
   int,
@@ -10,6 +11,7 @@ import {
 import { Club } from "./club.schema";
 import { Student } from "./user.schema";
 
+// 분과구
 export const District = mysqlTable("district", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 10 }).notNull(),
@@ -17,9 +19,14 @@ export const District = mysqlTable("district", {
   deletedAt: timestamp("deleted_at"),
 });
 
+// 분과
 export const Division = mysqlTable("division", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 10 }).notNull(),
+  startTerm: date("start_term")
+    .notNull()
+    .default(sql`'2017-03-01'`),
+  endTerm: date("end_term"),
   districtId: int("district_id")
     .notNull()
     .references(() => District.id),

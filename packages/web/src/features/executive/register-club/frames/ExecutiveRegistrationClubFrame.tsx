@@ -1,7 +1,7 @@
 "use client";
 
 import { hangulIncludes } from "es-hangul";
-import React, { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 
 import {
@@ -17,15 +17,9 @@ import MultiFilter from "@sparcs-clubs/web/common/components/MultiFilter/Index";
 import { CategoryProps } from "@sparcs-clubs/web/common/components/MultiFilter/types/FilterCategories";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
 import SearchInput from "@sparcs-clubs/web/common/components/SearchInput";
-import {
-  DivisionTypeTagList,
-  RegistrationTypeTagList,
-} from "@sparcs-clubs/web/constants/tableTagList";
+import useGetDivisionType from "@sparcs-clubs/web/common/hooks/useGetDivisionType";
+import { RegistrationTypeTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { useGetRegisterClub } from "@sparcs-clubs/web/features/executive/register-club/services/useGetRegisterClub";
-import {
-  getDisplayNameDivisions,
-  getEnumDivisions,
-} from "@sparcs-clubs/web/types/divisions.types";
 
 interface ConvertedSelectedCategories {
   name: string;
@@ -68,10 +62,6 @@ const RegistrationTypeList = Object.keys(RegistrationTypeTagList).map(key =>
   parseInt(key),
 );
 
-const DivisionTypeList = Object.keys(DivisionTypeTagList).map(key =>
-  parseInt(key),
-);
-
 export const ExecutiveRegistrationClubFrame = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
@@ -81,6 +71,22 @@ export const ExecutiveRegistrationClubFrame = () => {
     pageOffset: currentPage,
     itemCount: limit,
   });
+
+  const {
+    data: divisionData,
+    isLoading: divisionLoading,
+    isError: divisionError,
+  } = useGetDivisionType();
+
+  const DivisionNameList = useMemo(
+    () => divisionData?.divisions?.map(item => item.name) ?? [],
+    [divisionData],
+  );
+
+  const DivisionIdList = useMemo(
+    () => divisionData?.divisions?.map(item => item.id.toString()) ?? [],
+    [divisionData],
+  );
 
   const [categories, setCategories] = useState<CategoryProps[]>([
     {
@@ -98,10 +104,8 @@ export const ExecutiveRegistrationClubFrame = () => {
     },
     {
       name: "분과",
-      content: DivisionTypeList.map(item => getDisplayNameDivisions(item)),
-      selectedContent: DivisionTypeList.map(item =>
-        getDisplayNameDivisions(item),
-      ),
+      content: DivisionNameList,
+      selectedContent: DivisionIdList,
     },
   ]);
 
@@ -114,17 +118,17 @@ export const ExecutiveRegistrationClubFrame = () => {
     },
     {
       name: "분과",
-      selectedContent: DivisionTypeList,
+      selectedContent: divisionData?.divisions?.map(item => item.id) ?? [],
     },
   ]);
 
-  useMemo(() => {
+  useEffect(() => {
     const convertedRegistrationType = categories[0].selectedContent.flatMap(
       item => getEnumRegistration(item),
     );
 
     const convertedDivisionId = categories[1].selectedContent.map(item =>
-      getEnumDivisions(item),
+      parseInt(item),
     );
 
     setConvertedCategories([
@@ -142,8 +146,12 @@ export const ExecutiveRegistrationClubFrame = () => {
   const filterClubsWithSearch = useMemo(() => {
     const filteredRowsWithSearch = data?.items.filter(
       item =>
-        (item.newClubNameKr.toLowerCase().includes(searchText.toLowerCase()) ||
-          item.newClubNameEn.toLowerCase().includes(searchText.toLowerCase()) ||
+        ((item.clubNameKr ?? item.newClubNameKr)
+          .toLowerCase()
+          .includes(searchText.toLowerCase()) ||
+          (item.clubNameEn ?? item.newClubNameEn)
+            .toLowerCase()
+            .includes(searchText.toLowerCase()) ||
           hangulIncludes(item.newClubNameKr, searchText)) &&
         convertedCategories[0].selectedContent.includes(
           item.registrationTypeEnumId,
@@ -188,8 +196,24 @@ export const ExecutiveRegistrationClubFrame = () => {
     setCurrentPage(page);
   };
 
+  useEffect(() => {
+    if (categories[1].content.length === 0 && divisionData) {
+      setCategories([
+        ...categories.slice(0, 1),
+        {
+          name: "분과",
+          content: DivisionNameList,
+          selectedContent: DivisionIdList,
+        },
+      ]);
+    }
+  }, [categories, DivisionIdList, DivisionNameList]);
+
   return (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
+    <AsyncBoundary
+      isLoading={isLoading || divisionLoading}
+      isError={isError || divisionError}
+    >
       <ClubSearchAndFilterWrapper>
         <ClubSearchAndFilter>
           <SearchInput
@@ -224,12 +248,8 @@ export const ExecutiveRegistrationClubFrame = () => {
                 },
                 {
                   name: "분과",
-                  content: DivisionTypeList.map(item =>
-                    getDisplayNameDivisions(item),
-                  ),
-                  selectedContent: DivisionTypeList.map(item =>
-                    getDisplayNameDivisions(item),
-                  ),
+                  content: DivisionNameList,
+                  selectedContent: DivisionIdList,
                 },
               ]);
             }}
