@@ -27,7 +27,10 @@ import {
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
-import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
+import {
+  DrizzleAsyncProvider,
+  DrizzleTransaction,
+} from "@sparcs-clubs/api/drizzle/drizzle.provider";
 import {
   Activity,
   ActivityClubChargedExecutive,
@@ -45,11 +48,18 @@ import {
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
+import { MActivity } from "../model/activity.model";
 import { VActivitySummary } from "../model/activity.summary.model";
 
 @Injectable()
 export default class ActivityRepository {
   constructor(@Inject(DrizzleAsyncProvider) private db: MySql2Database) {}
+
+  async withTransaction<Result>(
+    callback: (tx: DrizzleTransaction) => Promise<Result>,
+  ): Promise<Result> {
+    return this.db.transaction(callback);
+  }
 
   selectActivityByIds(activityIds: number[]) {
     return this.db
@@ -842,5 +852,81 @@ export default class ActivityRepository {
       );
 
     return result.map(participant => participant.id);
+  }
+
+  async fetchTx(
+    tx: DrizzleTransaction,
+    activityId: number,
+  ): Promise<MActivity> {
+    const activity = await tx
+      .select()
+      .from(Activity)
+      .where(and(eq(Activity.id, activityId), isNull(Activity.deletedAt)));
+
+    if (activity.length !== 1) {
+      throw new NotFoundException("Activity not found");
+    }
+
+    const activityT = await tx
+      .select()
+      .from(ActivityT)
+      .where(
+        and(eq(ActivityT.activityId, activityId), isNull(ActivityT.deletedAt)),
+      );
+
+    const activityParticipant = await tx
+      .select()
+      .from(ActivityParticipant)
+      .where(
+        and(
+          eq(ActivityParticipant.activityId, activityId),
+          isNull(ActivityParticipant.deletedAt),
+        ),
+      );
+
+    const activityEvidenceFile = await tx
+      .select()
+      .from(ActivityEvidenceFile)
+      .where(
+        and(
+          eq(ActivityEvidenceFile.activityId, activityId),
+          isNull(ActivityEvidenceFile.deletedAt),
+        ),
+      );
+
+    const activityFeedback = await tx
+      .select()
+      .from(ActivityFeedback)
+      .where(
+        and(
+          eq(ActivityFeedback.activityId, activityId),
+          isNull(ActivityFeedback.deletedAt),
+        ),
+      );
+
+    const activityClubChargedExecutive = await tx
+      .select()
+      .from(ActivityClubChargedExecutive)
+      .where(
+        and(
+          eq(ActivityClubChargedExecutive.activityDId, activityId),
+          isNull(ActivityClubChargedExecutive.deletedAt),
+        ),
+      );
+
+    const result = {
+      activity: activity[0],
+      activityT,
+      activityParticipant,
+      activityEvidenceFile,
+      activityFeedback,
+      activityClubChargedExecutive,
+    };
+
+    return MActivity.fromDBResult(result);
+  }
+
+  async fetch(activityId: number): Promise<MActivity> {
+    return this.withTransaction(tx => this.fetchTx(tx, activityId));
   }
 }

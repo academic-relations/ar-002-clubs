@@ -1,6 +1,7 @@
 import { forwardRef, Module } from "@nestjs/common";
 import { DrizzleModule } from "src/drizzle/drizzle.module";
 
+import DivisionModule from "../division/division.module";
 import DivisionRepository from "../division/repository/division.repository";
 import UserModule from "../user/user.module";
 import { ClubController } from "./controller/club.controller";
@@ -18,7 +19,12 @@ import ClubPublicService from "./service/club.public.service";
 import { ClubService } from "./service/club.service";
 
 @Module({
-  imports: [DrizzleModule, UserModule, forwardRef(() => DelegateModule)],
+  imports: [
+    DrizzleModule,
+    UserModule,
+    forwardRef(() => DelegateModule),
+    DivisionModule,
+  ],
   controllers: [ClubController],
   providers: [
     ClubService,

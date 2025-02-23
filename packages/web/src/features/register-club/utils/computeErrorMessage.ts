@@ -1,5 +1,7 @@
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
+import { FileDetail } from "@sparcs-clubs/web/common/components/File/attachment";
+
 interface ValidationData {
   registrationTypeEnumId: RegistrationTypeEnum;
   phoneNumber: string;
@@ -10,8 +12,8 @@ interface ValidationData {
   divisionConsistency: string;
   foundationPurpose: string;
   activityPlan: string;
-  activityPlanFileId?: string;
-  clubRuleFileId?: string;
+  activityPlanFile?: FileDetail;
+  clubRuleFile?: FileDetail;
   isAgreed: boolean;
 }
 
@@ -26,8 +28,8 @@ const computeErrorMessage = (data: ValidationData) => {
     divisionConsistency,
     foundationPurpose,
     activityPlan,
-    activityPlanFileId,
-    clubRuleFileId,
+    activityPlanFile,
+    clubRuleFile,
     isAgreed,
   } = data;
 
@@ -63,11 +65,11 @@ const computeErrorMessage = (data: ValidationData) => {
   }
   if (type !== RegistrationTypeEnum.Renewal) {
     // 활동 계획서는 신규 등록, 가등록에서만 받음
-    if (!activityPlanFileId) return "활동 계획서 파일을 업로드해주세요";
+    if (!activityPlanFile) return "활동 계획서 파일을 업로드해주세요";
   }
   if (type === RegistrationTypeEnum.Promotional) {
     // 동아리 회칙은 신규 등록에서만 받음
-    if (!clubRuleFileId) return "동아리 회칙 파일을 업로드해주세요";
+    if (!clubRuleFile) return "동아리 회칙 파일을 업로드해주세요";
   }
   if (!isAgreed) {
     return "동아리 연합 회칙 확인 후 동의해주세요";

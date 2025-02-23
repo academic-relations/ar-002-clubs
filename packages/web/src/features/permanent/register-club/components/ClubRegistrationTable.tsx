@@ -9,8 +9,8 @@ import { ApiReg014ResponseOk } from "@sparcs-clubs/interface/api/registration/en
 
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
+import useGetDivisionType from "@sparcs-clubs/web/common/hooks/useGetDivisionType";
 import {
-  DivisionTypeTagList,
   RegistrationStatusTagList,
   RegistrationTypeTagList,
 } from "@sparcs-clubs/web/constants/tableTagList";
@@ -55,10 +55,9 @@ const columns = [
     id: "division",
     header: "분과",
     cell: info => {
-      const { color, text } = getTagDetail(
-        info.getValue(),
-        DivisionTypeTagList,
-      );
+      const { data: divisionData } = useGetDivisionType();
+      const { color, text } =
+        divisionData?.divisionTagList[info.getValue()] ?? {};
       return (
         <Tag color={color} width="80px">
           {text}

@@ -25,6 +25,8 @@ import type {
   ApiReg023ResponseOk,
 } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg023";
 import type { ApiReg024ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg024";
+import { ApiReg025ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg025";
+import { IStudent } from "@sparcs-clubs/interface/api/user/type/user.type";
 import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import {
   RegistrationDeadlineEnum,
@@ -69,17 +71,26 @@ export class ClubRegistrationService {
     // - 신규 가동아리 신청을 제외하곤 기존 동아리 id를 제출해야 합니다.
     // 위 검사는 REG-001 인터페이스에서 검사합니다
     // - 이미 해당 동아리 id로 신청이 진행중일 경우 신청이 불가합니다.
-    const registrationList = await this.clubRegistrationRepository.findByClubId(
-      body.clubId,
-    );
-    if (registrationList.length !== 0) {
+
+    // const cur = getKSTDate();
+    const cur = new Date("2025-03-01"); // TODO: 테스트용으로 날짜를 지정해뒀는데, 실제 배포 시엔 getKSTDate() 사용
+    const semesterId = await this.clubPublicService.dateToSemesterId(cur);
+    const clubRegistrationList =
+      await this.clubRegistrationRepository.findByClubAndSemesterId(
+        body.clubId,
+        semesterId,
+      );
+    if (clubRegistrationList.length !== 0) {
       throw new HttpException(
         "your club request already exists",
         HttpStatus.BAD_REQUEST,
       );
     }
     const myRegistrationList =
-      await this.clubRegistrationRepository.findByStudentId(studentId);
+      await this.clubRegistrationRepository.findByStudentAndSemesterId(
+        studentId,
+        semesterId,
+      );
     if (myRegistrationList.length !== 0) {
       throw new HttpException(
         "your request already exists",
@@ -87,7 +98,7 @@ export class ClubRegistrationService {
       );
     }
     logger.debug(
-      `[postRegistration] registration existence checked. ${registrationList}`,
+      `[postRegistration] registration existence checked. ${clubRegistrationList} ${myRegistrationList}`,
     );
     // - foundedAt의 경우 가동아리 신청인 경우 설립연월의 정보가 처리됩니다. 신규등록|재등록인 경우 설립연도만을 처리합니다.
     const transformedBody = {
@@ -121,6 +132,7 @@ export class ClubRegistrationService {
 
     const result = await this.clubRegistrationRepository.createRegistration(
       studentId,
+      semesterId,
       transformedBody,
     );
     return result;
@@ -139,7 +151,7 @@ export class ClubRegistrationService {
       await this.clubPublicService.getClubIdByClubStatusEnumId(
         studentId,
         [ClubTypeEnum.Regular],
-        semesterId,
+        semesterId - 1,
       ); // 현재 학기 기준 정동아리 list
     logger.debug(`[getReRegistrationAbleList] semester Id is ${semesterId}`);
     return {
@@ -395,9 +407,15 @@ export class ClubRegistrationService {
     //     // RegistrationDeadlineEnum.ClubRegistrationExecutiveFeedback,
     //   ],
     // });
+
+    // const cur = getKSTDate();
+    const cur = new Date("2025-03-01"); // TODO: 테스트용으로 날짜를 지정해뒀는데, 실제 배포 시엔 getKSTDate() 사용
+    const semesterId = await this.clubPublicService.dateToSemesterId(cur);
+
     const result =
       await this.clubRegistrationRepository.getStudentRegistrationsClubRegistrationsMy(
         studentId,
+        semesterId,
       );
     return result;
   }
@@ -713,5 +731,74 @@ export class ClubRegistrationService {
     );
 
     return {};
+  }
+
+  async getStudentRegistrationsAvailableClub(
+    studentId: IStudent["id"],
+  ): Promise<ApiReg025ResponseOk> {
+    // student 가 delegate 인 동아리 가져오기
+    const club =
+      await this.clubPublicService.findStudentClubDelegate(studentId);
+
+    const semester = await this.clubPublicService.fetchSemester(
+      new Date("2025-03-01"), // TODO: 학기 변경 시 없애는 것으로 수정 필요
+    );
+    // 없을 경우 return null
+    if (!club) return { club: null };
+
+    // 있을 경우 해당 동아리의 이번 등록 여부 조회
+    const registrations =
+      await this.clubRegistrationRepository.findByClubAndSemesterId(
+        club.id,
+        semester.id,
+      );
+
+    const clubSummaryResponse =
+      await this.clubPublicService.makeClubSummaryResponse(club);
+
+    if (registrations.length > 0) {
+      return {
+        club: {
+          ...clubSummaryResponse,
+          availableRegistrationTypeEnums: [],
+        },
+      };
+    }
+
+    // 이번 등록이 없을 경우 해당 동아리의 등록 가능한 타입 조회
+    const renewalList = (
+      await this.getStudentRegistrationClubRegistrationQualificationRenewal(
+        studentId,
+      )
+    ).clubs;
+    const provisionalRenewalList = (
+      await this.getStudentRegistrationClubRegistrationQualificationProvisionalRenewal(
+        studentId,
+      )
+    ).clubs;
+    const promotionalList = (
+      await this.getStudentRegistrationClubRegistrationQualificationPromotional(
+        studentId,
+      )
+    ).clubs;
+
+    const availableRegistrationTypeEnums = [
+      renewalList.some(e => e.id === club.id)
+        ? RegistrationTypeEnum.Renewal
+        : null,
+      promotionalList.some(e => e.id === club.id)
+        ? RegistrationTypeEnum.Promotional
+        : null,
+      provisionalRenewalList.some(e => e.id === club.id)
+        ? RegistrationTypeEnum.ReProvisional
+        : null,
+    ].filter(Boolean);
+
+    return {
+      club: {
+        ...clubSummaryResponse,
+        availableRegistrationTypeEnums,
+      },
+    };
   }
 }

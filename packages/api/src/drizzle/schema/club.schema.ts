@@ -17,7 +17,7 @@ export const Club = mysqlTable("club", {
   id: int("id").autoincrement().primaryKey(),
   name_kr: varchar("name_kr", { length: 30 }).unique(),
   name_en: varchar("name_en", { length: 30 }).unique(),
-  divisionId: int("division_id")
+  divisionId: int("division_id") // 제일 최신의 분과
     .notNull()
     .references(() => Division.id),
   description: text("description"),
@@ -57,6 +57,21 @@ export const ClubT = mysqlTable("club_t", {
   semesterId: int("semester_id")
     .notNull()
     .references(() => SemesterD.id),
+  startTerm: date("start_term").notNull(),
+  endTerm: date("end_term"),
+  createdAt: timestamp("created_at").defaultNow(),
+  deletedAt: timestamp("deleted_at"),
+});
+
+// 동아리의 분과 변경 이력
+export const ClubDivisionT = mysqlTable("club_division_t", {
+  id: int("id").autoincrement().primaryKey(),
+  clubId: int("club_id")
+    .notNull()
+    .references(() => Club.id),
+  divisionId: int("division_id")
+    .notNull()
+    .references(() => Division.id),
   startTerm: date("start_term").notNull(),
   endTerm: date("end_term"),
   createdAt: timestamp("created_at").defaultNow(),

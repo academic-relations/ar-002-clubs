@@ -1,15 +1,19 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
+import { getDisplayNameRegistration } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { UserTypeEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
+import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
+import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import LoginRequired from "@sparcs-clubs/web/common/frames/LoginRequired";
 import NotForExecutive from "@sparcs-clubs/web/common/frames/NotForExecutive";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
 import MyRegisterClubEditFrame from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubEditFrame";
+import useGetClubRegistration from "@sparcs-clubs/web/features/my/services/useGetClubRegistration";
 
 const MyRegisterClubEdit = () => {
   const { isLoggedIn, login, profile } = useAuth();
@@ -20,7 +24,15 @@ const MyRegisterClubEdit = () => {
       setLoading(false);
     }
   }, [isLoggedIn, profile]);
+
   const { id: applyId } = useParams();
+  const {
+    data: detail,
+    isLoading,
+    isError,
+  } = useGetClubRegistration({
+    applyId: +applyId,
+  });
 
   if (loading) {
     return <AsyncBoundary isLoading={loading} isError />;
@@ -34,6 +46,26 @@ const MyRegisterClubEdit = () => {
     return <NotForExecutive />;
   }
 
-  return <MyRegisterClubEditFrame applyId={+applyId} />;
+  return (
+    <FlexWrapper direction="column" gap={60}>
+      <PageHead
+        items={[
+          {
+            name: `마이페이지`,
+            path: `/my`,
+          },
+          {
+            name: `동아리 등록`,
+            path: `/my/register-club/${applyId}`,
+          },
+        ]}
+        title={`동아리 ${getDisplayNameRegistration(detail?.registrationTypeEnumId)} 신청 수정`}
+        enableLast
+      />
+      <AsyncBoundary isLoading={isLoading} isError={isError}>
+        <MyRegisterClubEditFrame applyId={+applyId} initialData={detail} />
+      </AsyncBoundary>
+    </FlexWrapper>
+  );
 };
 export default MyRegisterClubEdit;

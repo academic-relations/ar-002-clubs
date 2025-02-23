@@ -22,8 +22,8 @@ interface MyClubTableProps {
 const columnHelper =
   createColumnHelper<ApiReg012ResponseOk["registrations"][number]>();
 const columns = [
-  columnHelper.accessor("registrationStatusEnumId", {
-    id: "registrationStatusEnumId",
+  columnHelper.accessor("registrationStatusEnum", {
+    id: "registrationStatusEnum",
     header: "상태",
     cell: info => {
       const { color, text } = getTagDetail(
@@ -34,8 +34,8 @@ const columns = [
     },
     size: 10,
   }),
-  columnHelper.accessor("registrationTypeEnumId", {
-    id: "registrationTypeEnumId",
+  columnHelper.accessor("registrationTypeEnum", {
+    id: "registrationTypeEnum",
     header: "구분",
     cell: info => {
       const { color, text } = getTagDetail(
@@ -56,7 +56,7 @@ const columns = [
     ),
     size: 10,
   }),
-  columnHelper.accessor("clubNameKr", {
+  columnHelper.accessor(row => row.clubNameKr ?? row.newClubNameKr, {
     id: "clubNameKr",
     header: "동아리",
     cell: info => info.getValue(),
@@ -71,7 +71,7 @@ const columns = [
   columnHelper.accessor("professorName", {
     id: "professorName",
     header: "지도교수",
-    cell: info => info.getValue(),
+    cell: info => info.getValue() ?? "-",
     size: 128,
   }),
 ];
