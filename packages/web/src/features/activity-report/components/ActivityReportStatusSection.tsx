@@ -4,9 +4,9 @@ import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity
 
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import CommentToast from "@sparcs-clubs/web/common/components/Toast/CommentToast";
+import { Comment } from "@sparcs-clubs/web/types/comment";
 
 import { getActivityReportProgress } from "../constants/activityReportProgress";
-import { Comment } from "../types/activityReport";
 
 interface ActivityReportStatusSectionProps {
   status: ActivityStatusEnum;
