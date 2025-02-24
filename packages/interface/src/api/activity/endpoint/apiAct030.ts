@@ -9,6 +9,7 @@ import { zActivityDuration } from "../type/activity.duration.type";
  * 동아리 대표자 및 대의원만 접근이 가능합니다.
  * 프로필을 이용하여 자동으로 동아리 대표자 및 대의원 여부를 판단합니다.
  * 기간에 제한을 두지 않습니다.
+ * 중복된 activityDuration 은 제거합니다.
  */
 
 const url = () =>

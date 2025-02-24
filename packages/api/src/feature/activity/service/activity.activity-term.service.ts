@@ -9,9 +9,13 @@ import type {
   ApiAct009RequestQuery,
   ApiAct009ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct009";
+import { ApiAct030ResponseOk } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct030";
+import { IStudent } from "@sparcs-clubs/interface/api/user/type/user.type";
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
+import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import ActivityActivityTermRepository from "../repository/activity.activity-term.repository";
 import ActivityRepository from "../repository/activity.repository";
@@ -22,6 +26,7 @@ export default class ActivityActivityTermService {
     private activityRepository: ActivityRepository,
     private activityActivityTermRepository: ActivityActivityTermRepository,
     private clubPublicService: ClubPublicService,
+    private userPublicService: UserPublicService,
   ) {}
 
   /**
@@ -158,6 +163,51 @@ export default class ActivityActivityTermService {
       terms: activityTerms.sort(
         (a, b) => a.startTerm.getTime() - b.startTerm.getTime(),
       ),
+    };
+  }
+
+  async getStudentActivitiesProvisionalAvailableDurations(
+    studentId: IStudent["id"],
+  ): Promise<ApiAct030ResponseOk> {
+    const club =
+      await this.clubPublicService.findStudentClubDelegate(studentId);
+
+    if (!club)
+      throw new HttpException(
+        "Student is not a delegate of any club",
+        HttpStatus.FORBIDDEN,
+      );
+    const semesters = await this.clubPublicService.getSemesterByClubIdAndTypes(
+      club.id,
+      [ClubTypeEnum.Provisional],
+    );
+
+    // 가등록 기간 확인 로직
+    /* TODO: 지금은 가등록 기간이 있는지만 판단하는데, 더 세분화한 검토 필요
+     * 가등록 기간이 최근에서 세서 2번인건 지 같은 것들
+     */
+    if (semesters.length === 0)
+      throw new HttpException(
+        `Student's club's provisional duration is only ${semesters.length} semester`,
+        HttpStatus.NOT_FOUND,
+      );
+
+    // 가등록 기간
+    const dates = semesters.flatMap(e => [e.startTerm, e.endTerm]);
+    const activityDurations = (
+      await Promise.all(
+        dates.map(date =>
+          this.activityActivityTermRepository.selectActivityDByDate(date),
+        ),
+      )
+    ).flatMap(x => x);
+    const uniqueActivityDurations = activityDurations.filter(
+      (duration, index, self) =>
+        index === self.findIndex(d => d.id === duration.id),
+    );
+
+    return {
+      activityDurations: uniqueActivityDurations,
     };
   }
 }
