@@ -1,4 +1,3 @@
-import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
 import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 
@@ -6,12 +5,6 @@ export enum RegistrationType {
   Renewal = "renewalRegistration",
   Promotional = "promotionalRegistration",
   Provisional = "provisionalRegistration",
-}
-
-export interface RegisterClubInterface extends ApiReg001RequestBody {
-  foundedMonthAt?: string;
-  foundedYearAt: string;
-  isAgreed: boolean;
 }
 
 export interface ClubRegistrationInfo {

@@ -17,7 +17,7 @@ import RulesButton from "./_atomic/RulesButton";
 import ClubRegulationsComplianceSection from "./ClubRegulationsComplianceSection";
 
 interface ClubRulesFrameProps {
-  isProvisional?: boolean;
+  isNewProvisional?: boolean;
   isAgreed: boolean;
   setIsAgreed: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -28,7 +28,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const ClubRulesFrame: React.FC<ClubRulesFrameProps> = ({
-  isProvisional = false,
+  isNewProvisional = false,
   isAgreed,
   setIsAgreed,
 }) => {
@@ -60,11 +60,11 @@ const ClubRulesFrame: React.FC<ClubRulesFrameProps> = ({
           title="동아리연합회칙"
           onClick={() => window.open(CLUB_ASSOCIATION_RULES)}
         />
-        {!isProvisional && (
+        {!isNewProvisional && (
           <RulesButton title="분과자치규칙" onClick={openModal} />
         )}
         <ClubRegulationsComplianceSection
-          isProvisional={isProvisional}
+          isProvisional={isNewProvisional}
           isAgreed={isAgreed}
           setIsAgreed={setIsAgreed}
         />

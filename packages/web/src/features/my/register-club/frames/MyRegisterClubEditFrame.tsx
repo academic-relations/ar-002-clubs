@@ -24,9 +24,9 @@ import useGetClubRegistration from "@sparcs-clubs/web/features/my/services/useGe
 import usePutClubRegistration from "@sparcs-clubs/web/features/my/services/usePutClubRegistration";
 import ActivityReportFrame from "@sparcs-clubs/web/features/register-club/components/ActivityReportFrame";
 import AdvancedInformFrame from "@sparcs-clubs/web/features/register-club/components/AdvancedInformFrame";
-import BasicInformFrame from "@sparcs-clubs/web/features/register-club/components/BasicInformFrame";
+import BasicInformFrame from "@sparcs-clubs/web/features/register-club/components/basic-info/BasicInformFrame";
+import ProvisionalBasicInformFrame from "@sparcs-clubs/web/features/register-club/components/basic-info/ProvisionalBasicInformFrame";
 import ClubRulesFrame from "@sparcs-clubs/web/features/register-club/components/ClubRulesFrame";
-import ProvisionalBasicInformFrame from "@sparcs-clubs/web/features/register-club/components/ProvisionalBasicInformFrame";
 import computeErrorMessage from "@sparcs-clubs/web/features/register-club/utils/computeErrorMessage";
 import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";

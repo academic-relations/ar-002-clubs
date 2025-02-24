@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
@@ -32,7 +32,7 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({
     !(krName === undefined || krName === ""),
   );
 
-  const clubOptions = useCallback(
+  const clubOptions = useMemo(
     () =>
       clubList?.map(
         data =>
@@ -51,7 +51,7 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({
       setValue("clubNameKr", "", { shouldValidate: true });
       setValue("clubNameEn", "", { shouldValidate: true });
     }
-  }, [clubList.length, isCheckedClubName, resetField, setValue]);
+  }, [clubList.length, isCheckedClubName]);
 
   if (type === RegistrationTypeEnum.NewProvisional) {
     return (
@@ -97,7 +97,7 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({
             {...props}
             label="동아리명 (국문)"
             placeholder="동아리명을 선택해주세요"
-            items={clubOptions()}
+            items={clubOptions}
             disabled={editMode}
           />
         )}
