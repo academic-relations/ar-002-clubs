@@ -84,7 +84,7 @@ const credits: SemesterCredit[] = [
         name: "권혁원",
         role: "BE",
         roleType: RoleType.member,
-        comment: "분명 외주를 맡겼는데 내가 만들고 있다...",
+        comment: "21시에 일어나서 12시에 잡시다",
       },
     ],
   },
