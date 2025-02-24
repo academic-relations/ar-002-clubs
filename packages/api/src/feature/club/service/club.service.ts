@@ -29,8 +29,11 @@ import {
   ApiClb010ResponseOk,
 } from "@sparcs-clubs/interface/api/club/endpoint/apiClb010";
 import type { ApiClb016ResponseOk } from "@sparcs-clubs/interface/api/club/endpoint/apiClb016";
+import { RegistrationDeadlineEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
+import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import { ClubRoomTRepository } from "@sparcs-clubs/api/feature/club/repository/club.club-room-t.repository";
+import { ClubRegistrationPublicService } from "@sparcs-clubs/api/feature/registration/club-registration/service/club-registration.public.service";
 
 import { ClubDelegateDRepository } from "../delegate/club.club-delegate-d.repository";
 import ClubStudentTRepository from "../repository/club.club-student-t.repository";
@@ -53,6 +56,7 @@ export class ClubService {
     private clubGetStudentClubBrief: ClubGetStudentClubBrief,
     private clubPutStudentClubBrief: ClubPutStudentClubBrief,
     private clubPublicService: ClubPublicService,
+    private clubRegistrationPublicService: ClubRegistrationPublicService,
   ) {}
 
   private readonly EXCLUDED_CLUB_IDS: number[] = [112, 113, 121];
@@ -72,6 +76,17 @@ export class ClubService {
 
   async getClub(param: ApiClb002RequestParam): Promise<ApiClb002ResponseOK> {
     const { clubId } = param;
+    const today = getKSTDate();
+    const currentSemester = await this.clubPublicService.fetchSemester(today);
+    let targetSemesterId = currentSemester.id;
+    try {
+      this.clubRegistrationPublicService.checkDeadline({
+        enums: [RegistrationDeadlineEnum.ClubRegistrationApplication],
+      });
+      targetSemesterId -= 1;
+    } catch {
+      // do nothing
+    }
     const [
       clubDetails,
       totalMemberCnt,
@@ -80,7 +95,7 @@ export class ClubService {
       isPermanent,
     ] = await Promise.all([
       this.clubRepository.findClubDetail(clubId),
-      this.clubStudentTRepository.findTotalMemberCnt(clubId),
+      this.clubStudentTRepository.findTotalMemberCnt(clubId, targetSemesterId),
       this.clubDelegateDRepository.findRepresentativeName(clubId),
       this.clubRoomTRepository.findClubLocationById(clubId),
       this.divisionPermanentClubDRepository.findPermenantClub(clubId),

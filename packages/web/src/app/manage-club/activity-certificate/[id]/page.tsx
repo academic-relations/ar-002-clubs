@@ -9,8 +9,8 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import ManageActivityCertificateProgress from "@sparcs-clubs/web/features/manage-club/activity-certificate/components/ManageActivityCertificate";
-import ManageCertificateDetailFrame from "@sparcs-clubs/web/features/manage-club/activity-certificate/frames/ManageCertificateDetailFrame";
+import ManageActivityCertificateProgress from "@sparcs-clubs/web/features/activity-certificate/components/ManageActivityCertificate";
+import ActivityCertificateDetailFrame from "@sparcs-clubs/web/features/activity-certificate/frames/ActivityCertificateDetailFrame";
 
 const ManageAcfDetail = () => {
   const router = useRouter();
@@ -34,7 +34,7 @@ const ManageAcfDetail = () => {
         <ManageActivityCertificateProgress
           status={ActivityCertificateOrderStatusEnum.Rejected}
         />
-        <ManageCertificateDetailFrame />
+        <ActivityCertificateDetailFrame />
       </Card>
       <Button style={{ width: "max-content" }} onClick={onClick}>
         목록으로 돌아가기

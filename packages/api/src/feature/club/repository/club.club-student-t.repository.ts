@@ -50,7 +50,7 @@ export default class ClubStudentTRepository {
   // 아래는 common 폴더에 있던 club.club-student-t.repository.ts를 그대로 옮겨온 메소드들입니다.
   async findTotalMemberCnt(
     clubId: number,
-    semesterId?: number,
+    semesterId: number,
   ): Promise<number> {
     const today = new Date();
 

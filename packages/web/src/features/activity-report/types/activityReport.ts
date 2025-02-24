@@ -5,16 +5,12 @@ import {
 } from "@sparcs-clubs/interface/common/enum/activity.enum";
 
 import { FileDetail } from "@sparcs-clubs/web/common/components/File/attachment";
+import { Comment } from "@sparcs-clubs/web/types/comment";
 import ProfessorApprovalEnum from "@sparcs-clubs/web/types/professorApproval";
 
 type Duration = {
   startTerm: Date;
   endTerm: Date;
-};
-
-export type Comment = {
-  content: string;
-  createdAt: Date;
 };
 
 export interface BaseActivityReport {

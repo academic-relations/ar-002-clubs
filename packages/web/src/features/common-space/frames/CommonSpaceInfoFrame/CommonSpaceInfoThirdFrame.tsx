@@ -14,8 +14,8 @@ import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/Confi
 import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
-import useGetCommonSpaces from "@sparcs-clubs/web/features/common-space/service/getCommonSpaces";
-import postCommonSpaceUsageOrder from "@sparcs-clubs/web/features/common-space/service/postCommonSpaceUsageOrder";
+import useGetCommonSpaces from "@sparcs-clubs/web/features/common-space/services/getCommonSpaces";
+import postCommonSpaceUsageOrder from "@sparcs-clubs/web/features/common-space/services/postCommonSpaceUsageOrder";
 import { CommonSpaceInterface } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
 import {
   formatSimpleSlashDate,

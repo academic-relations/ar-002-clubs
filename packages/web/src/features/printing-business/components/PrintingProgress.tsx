@@ -6,18 +6,20 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import { managePrintingProgress } from "@sparcs-clubs/web/constants/manageClubProgress";
 
-interface MyPrintingProgressProps {
+interface ManagePrintingProgressProps {
   status: PromotionalPrintingOrderStatusEnum;
 }
 
-const MyPrintingProgress: React.FC<MyPrintingProgressProps> = ({ status }) => {
-  const myPrinting = managePrintingProgress(status);
+const PrintingProgress: React.FC<ManagePrintingProgressProps> = ({
+  status,
+}) => {
+  const managePrinting = managePrintingProgress(status);
   const onClickCancel = () => {};
   return (
     <ProgressStatus
-      labels={myPrinting.labels}
-      progress={myPrinting.progress}
-      infoText={myPrinting.infoText}
+      labels={managePrinting.labels}
+      progress={managePrinting.progress}
+      infoText={managePrinting.infoText}
       optional={
         status === PromotionalPrintingOrderStatusEnum.Applied && (
           <Button onClick={onClickCancel} style={{ width: "max-content" }}>
@@ -29,4 +31,4 @@ const MyPrintingProgress: React.FC<MyPrintingProgressProps> = ({ status }) => {
   );
 };
 
-export default MyPrintingProgress;
+export default PrintingProgress;

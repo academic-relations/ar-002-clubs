@@ -72,8 +72,7 @@ export class ClubRegistrationService {
     // 위 검사는 REG-001 인터페이스에서 검사합니다
     // - 이미 해당 동아리 id로 신청이 진행중일 경우 신청이 불가합니다.
 
-    // const cur = getKSTDate();
-    const cur = new Date("2025-03-01"); // TODO: 테스트용으로 날짜를 지정해뒀는데, 실제 배포 시엔 getKSTDate() 사용
+    const cur = getKSTDate();
     const semesterId = await this.clubPublicService.dateToSemesterId(cur);
     const clubRegistrationList =
       await this.clubRegistrationRepository.findByClubAndSemesterId(
@@ -151,7 +150,7 @@ export class ClubRegistrationService {
       await this.clubPublicService.getClubIdByClubStatusEnumId(
         studentId,
         [ClubTypeEnum.Regular],
-        semesterId,
+        semesterId - 1,
       ); // 현재 학기 기준 정동아리 list
     logger.debug(`[getReRegistrationAbleList] semester Id is ${semesterId}`);
     return {
@@ -408,8 +407,7 @@ export class ClubRegistrationService {
     //   ],
     // });
 
-    // const cur = getKSTDate();
-    const cur = new Date("2025-03-01"); // TODO: 테스트용으로 날짜를 지정해뒀는데, 실제 배포 시엔 getKSTDate() 사용
+    const cur = getKSTDate();
     const semesterId = await this.clubPublicService.dateToSemesterId(cur);
 
     const result =
@@ -740,9 +738,7 @@ export class ClubRegistrationService {
     const club =
       await this.clubPublicService.findStudentClubDelegate(studentId);
 
-    const semester = await this.clubPublicService.fetchSemester(
-      new Date("2025-03-01"), // TODO: 학기 변경 시 없애는 것으로 수정 필요
-    );
+    const semester = await this.clubPublicService.fetchSemester();
     // 없을 경우 return null
     if (!club) return { club: null };
 

@@ -3,6 +3,7 @@ import { DrizzleModule } from "src/drizzle/drizzle.module";
 
 import DivisionModule from "../division/division.module";
 import DivisionRepository from "../division/repository/division.repository";
+import { ClubRegistrationModule } from "../registration/club-registration/club-registration.module";
 import UserModule from "../user/user.module";
 import { ClubController } from "./controller/club.controller";
 import { ClubDelegateDRepository } from "./delegate/club.club-delegate-d.repository";
@@ -20,6 +21,7 @@ import { ClubService } from "./service/club.service";
 
 @Module({
   imports: [
+    forwardRef(() => ClubRegistrationModule),
     DrizzleModule,
     UserModule,
     forwardRef(() => DelegateModule),

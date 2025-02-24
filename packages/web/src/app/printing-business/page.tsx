@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import PrintingBusinessMainFrame from "@sparcs-clubs/web/features/printing-business/frame/PrintingBusinessMainFrame";
+import PrintingBusinessMainFrame from "@sparcs-clubs/web/features/printing-business/frames/PrintingBusinessMainFrame";
 
 const PrintingBusiness = () => <PrintingBusinessMainFrame />;
 

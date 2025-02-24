@@ -1,5 +1,8 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
+import apiReg014 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg014";
+import apiReg015 from "@sparcs-clubs/interface/api/registration/endpoint/apiReg015";
 import { RegistrationStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
@@ -15,9 +18,18 @@ import { patchClubRegistrationExecutive } from "../services/patchClubRegistratio
 import { postClubRegistrationSendBack } from "../services/postClubRegistrationSendBack";
 
 const ClubRegisterApproveFrame = ({ applyId }: { applyId: number }) => {
+  const queryClient = useQueryClient();
+
+  const invalidateClubRegisterStatus = () => {
+    queryClient.invalidateQueries({ queryKey: [apiReg014.url()] });
+    queryClient.invalidateQueries({
+      queryKey: [apiReg015.url(applyId.toString())],
+    });
+  };
+
   const [rejectionDetail, setRejectionDetail] = useState("");
 
-  const { data, isLoading, isError, refetch } = useRegisterClubDetail({
+  const { data, isLoading, isError } = useRegisterClubDetail({
     applyId,
   });
 
@@ -65,26 +77,21 @@ const ClubRegisterApproveFrame = ({ applyId }: { applyId: number }) => {
                 ? "default"
                 : "disabled"
             }
-            onClick={() => {
-              patchClubRegistrationExecutive({ applyId });
-              refetch();
+            onClick={async () => {
+              await patchClubRegistrationExecutive({ applyId });
+              invalidateClubRegisterStatus();
             }}
           >
             신청 승인
           </Button>
           <Button
-            type={
-              rejectionDetail &&
-              data?.registrationStatusEnumId !== RegistrationStatusEnum.Approved
-                ? "default"
-                : "disabled"
-            }
+            type={rejectionDetail ? "default" : "disabled"}
             onClick={async () => {
               await postClubRegistrationSendBack(
                 { applyId },
                 { comment: rejectionDetail },
               );
-              refetch();
+              invalidateClubRegisterStatus();
               setRejectionDetail("");
             }}
           >

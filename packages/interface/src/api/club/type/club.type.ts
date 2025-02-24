@@ -32,7 +32,7 @@ export const zClubSummary = zClub.pick({
 
 export const zClubSummaryResponse = zClubSummary.extend({
   division: zDivisionSummaryResponse,
-  professor: zProfessorSummary,
+  professor: zProfessorSummary.nullable(),
 });
 
 export type IClubSummary = z.infer<typeof zClubSummary>;
