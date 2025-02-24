@@ -72,6 +72,13 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.member,
         comment: "1년차 뉴비 납시오~",
       },
+      {
+        nickname: "chan",
+        name: "박병찬",
+        role: "PM",
+        roleType: RoleType.PM,
+        comment: "은퇴한 PM은 자러갑니다",
+      },
     ],
   },
   {
@@ -153,6 +160,13 @@ const credits: SemesterCredit[] = [
         role: "FE",
         roleType: RoleType.member,
         comment: "연구하면서 개발하기 힘든데 그래도 재밌어염",
+      },
+      {
+        nickname: "chan",
+        name: "박병찬",
+        role: "PM",
+        roleType: RoleType.PM,
+        comment: "회사에서는 애기 개발자인 내가, 퇴근하면 PM",
       },
     ],
   },
