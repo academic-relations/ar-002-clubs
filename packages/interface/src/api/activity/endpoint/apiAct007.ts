@@ -2,10 +2,13 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
+import zId from "@sparcs-clubs/interface/common/type/id.type";
 
 /**
  * @version v0.1
  * @description 활동보고서의 활동을 생성합니다.(가동아리 동아리 신규등록 신청을 위한 예외적 활동보고서 작성 기능입니다.)
+ * @version v0.2
+ * @description 활동보고서의 활동 기록에 가동아리 기간의 activityDId를 전달하도록 수정하였습니다.
  */
 
 const url = () => `/student/activities/activity/provisional`;
@@ -19,6 +22,7 @@ const requestBody = z.object({
   clubId: z.coerce.number().int().min(1),
   name: z.coerce.string().max(255),
   activityTypeEnumId: z.nativeEnum(ActivityTypeEnum),
+  activityDId: zId,
   durations: z.array(
     z.object({
       startTerm: z.coerce.date(),
