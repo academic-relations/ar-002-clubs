@@ -9,8 +9,8 @@ import Button from "@sparcs-clubs/web/common/components/Button";
 import Card from "@sparcs-clubs/web/common/components/Card";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
-import ManagePrintingProgress from "@sparcs-clubs/web/features/manage-club/printing/components/ManagePrintingProgress";
-import ManagePrintingDetailFrame from "@sparcs-clubs/web/features/manage-club/printing/frames/ManagePrintingDetailFrame";
+import PrintingProgress from "@sparcs-clubs/web/features/printing-business/components/PrintingProgress";
+import ManagePrintingDetailFrame from "@sparcs-clubs/web/features/printing-business/frames/PrintingDetailFrame";
 
 const ManagePrintingDetail = () => {
   const router = useRouter();
@@ -31,7 +31,7 @@ const ManagePrintingDetail = () => {
         enableLast
       />
       <Card outline gap={20}>
-        <ManagePrintingProgress
+        <PrintingProgress
           status={PromotionalPrintingOrderStatusEnum.Received}
         />
         <ManagePrintingDetailFrame />

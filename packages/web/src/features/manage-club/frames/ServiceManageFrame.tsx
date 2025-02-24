@@ -3,16 +3,16 @@ import React from "react";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FoldableSectionTitle from "@sparcs-clubs/web/common/components/FoldableSectionTitle";
 import MoreDetailTitle from "@sparcs-clubs/web/common/components/MoreDetailTitle";
-import ActivityCertificateTable from "@sparcs-clubs/web/features/manage-club/components/ActivityCertificateTable";
-import CommonSpaceTable from "@sparcs-clubs/web/features/manage-club/components/CommonSpaceTable";
-import PrintingTable from "@sparcs-clubs/web/features/manage-club/components/PrintingTable";
-import RentalTable from "@sparcs-clubs/web/features/manage-club/components/RentalTable";
+import ActivityCertificateTable from "@sparcs-clubs/web/features/activity-certificate/components/ActivityCertificateTable";
+import CommonSpaceTable from "@sparcs-clubs/web/features/common-space/components/CommonSpaceTable";
 import {
   mockupManageAcf,
   mockupManageCms,
   mockupManagePrint,
   mockupManageRental,
 } from "@sparcs-clubs/web/features/manage-club/services/_mock/mockManageClub";
+import PrintingTable from "@sparcs-clubs/web/features/printing-business/components/PrintingTable";
+import RentalTable from "@sparcs-clubs/web/features/rental-business/components/RentalTable";
 
 const ServiceManageFrame: React.FC = () => (
   <FoldableSectionTitle title="서비스 신청">

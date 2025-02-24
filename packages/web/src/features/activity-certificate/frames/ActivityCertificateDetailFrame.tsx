@@ -15,7 +15,7 @@ const ActivityWrapper = styled.div`
   padding: 0 24px;
 `;
 
-const ManageCertificateDetailFrame = () => (
+const ActivityCertificateDetailFrame = () => (
   <FlexWrapper direction="column" gap={20}>
     {/* TODO: 아래 정보들 백 연결하기 */}
     <FlexWrapper direction="column" gap={16}>
@@ -55,4 +55,4 @@ const ManageCertificateDetailFrame = () => (
     </FlexWrapper>
   </FlexWrapper>
 );
-export default ManageCertificateDetailFrame;
+export default ActivityCertificateDetailFrame;

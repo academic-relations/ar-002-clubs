@@ -8,7 +8,7 @@ import React from "react";
 import Table from "@sparcs-clubs/web/common/components/Table";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import { PrtTagList } from "@sparcs-clubs/web/constants/tableTagList";
-import mockupPrint from "@sparcs-clubs/web/features/printing-business/service/_mock/mockPrinting";
+import mockupPrint from "@sparcs-clubs/web/features/printing-business/services/_mock/mockPrinting";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 import getPrintSize from "@sparcs-clubs/web/utils/getPrintSize";
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
