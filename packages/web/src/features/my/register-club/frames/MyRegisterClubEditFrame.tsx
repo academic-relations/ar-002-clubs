@@ -23,10 +23,11 @@ import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/service
 import useGetClubRegistration from "@sparcs-clubs/web/features/my/services/useGetClubRegistration";
 import usePutClubRegistration from "@sparcs-clubs/web/features/my/services/usePutClubRegistration";
 import ActivityReportFrame from "@sparcs-clubs/web/features/register-club/components/ActivityReportFrame";
-import AdvancedInformFrame from "@sparcs-clubs/web/features/register-club/components/AdvancedInformFrame";
+import AdvancedInformFrame from "@sparcs-clubs/web/features/register-club/components/advanced-info/AdvancedInformFrame";
 import BasicInformFrame from "@sparcs-clubs/web/features/register-club/components/basic-info/BasicInformFrame";
 import ProvisionalBasicInformFrame from "@sparcs-clubs/web/features/register-club/components/basic-info/ProvisionalBasicInformFrame";
 import ClubRulesFrame from "@sparcs-clubs/web/features/register-club/components/ClubRulesFrame";
+import { RegisterClubModel } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 import computeErrorMessage from "@sparcs-clubs/web/features/register-club/utils/computeErrorMessage";
 import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
 import { formatDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
@@ -82,7 +83,7 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
     }
   }, [termData]);
 
-  const formCtx = useForm<ApiReg009RequestBody>({
+  const formCtx = useForm<RegisterClubModel>({
     mode: "all",
   });
 
@@ -110,9 +111,9 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
         divisionConsistency: detail.divisionConsistency,
         foundationPurpose: detail.foundationPurpose,
         activityPlan: detail.activityPlan,
-        activityPlanFileId: detail.activityPlanFile?.id,
-        clubRuleFileId: detail.clubRuleFile?.id,
-        externalInstructionFileId: detail.externalInstructionFile?.id,
+        activityPlanFile: detail.activityPlanFile,
+        clubRuleFile: detail.clubRuleFile,
+        externalInstructionFile: detail.externalInstructionFile,
       });
     }
   }, [detail, formCtx]);
@@ -133,8 +134,8 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
   const divisionConsistency = watch("divisionConsistency");
   const foundationPurpose = watch("foundationPurpose");
   const activityPlan = watch("activityPlan");
-  const activityPlanFileId = watch("activityPlanFileId");
-  const clubRuleFileId = watch("clubRuleFileId");
+  const activityPlanFile = watch("activityPlanFile");
+  const clubRuleFile = watch("clubRuleFile");
   const formIsValid = useMemo(() => {
     const isValid =
       registrationTypeEnumId !== undefined &&
@@ -153,14 +154,12 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
 
     if (registrationTypeEnumId === RegistrationTypeEnum.Promotional) {
       return (
-        isValid &&
-        activityPlanFileId !== undefined &&
-        clubRuleFileId !== undefined
+        isValid && activityPlanFile !== undefined && clubRuleFile !== undefined
       );
     }
 
     if (isProvisional(registrationTypeEnumId)) {
-      return isValid && activityPlanFileId !== undefined;
+      return isValid && activityPlanFile !== undefined;
     }
 
     return false;
@@ -174,8 +173,8 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
     divisionConsistency,
     foundationPurpose,
     activityPlan,
-    activityPlanFileId,
-    clubRuleFileId,
+    activityPlanFile,
+    clubRuleFile,
   ]);
 
   const errorMessage = useMemo(
@@ -190,8 +189,8 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
         divisionConsistency,
         foundationPurpose,
         activityPlan,
-        activityPlanFileId,
-        clubRuleFileId,
+        activityPlanFile,
+        clubRuleFile,
         isAgreed,
       }),
     [
@@ -204,8 +203,8 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
       divisionConsistency,
       foundationPurpose,
       activityPlan,
-      activityPlanFileId,
-      clubRuleFileId,
+      activityPlanFile,
+      clubRuleFile,
       isAgreed,
     ],
   );
@@ -292,7 +291,6 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
             )}
             <AdvancedInformFrame
               type={type}
-              formCtx={formCtx}
               files={{
                 activityPlanFile: detail?.activityPlanFile,
                 clubRuleFile: detail?.clubRuleFile,
@@ -303,7 +301,7 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
               <ActivityReportFrame clubId={clubId} />
             )}
             <ClubRulesFrame
-              isProvisional={type === RegistrationTypeEnum.NewProvisional}
+              isNewProvisional={type === RegistrationTypeEnum.NewProvisional}
               isAgreed={isAgreed}
               setIsAgreed={setIsAgreed}
             />

@@ -4,7 +4,6 @@ import React, { useCallback, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import styled from "styled-components";
 
-import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import {
   getDisplayNameRegistration,
   RegistrationTypeEnum,
@@ -22,12 +21,13 @@ import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile"
 import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
 import ActivityReportFrame from "../components/ActivityReportFrame";
-import AdvancedInformFrame from "../components/AdvancedInformFrame";
+import AdvancedInformFrame from "../components/advanced-info/AdvancedInformFrame";
 import BasicInformFrame from "../components/basic-info/BasicInformFrame";
 import ProvisionalBasicInformFrame from "../components/basic-info/ProvisionalBasicInformFrame";
 import ClubRulesFrame from "../components/ClubRulesFrame";
 import { registerClubDeadlineInfoText } from "../constants";
 import useRegisterClub from "../services/useRegisterClub";
+import { RegisterClubModel } from "../types/registerClub";
 import computeErrorMessage from "../utils/computeErrorMessage";
 import { isProvisional } from "../utils/registrationType";
 
@@ -54,7 +54,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
     isError: isErrorProfile,
   } = useGetUserProfile();
 
-  const formCtx = useForm<ApiReg001RequestBody>({
+  const formCtx = useForm<RegisterClubModel>({
     mode: "all",
     defaultValues: {
       registrationTypeEnumId: type,
@@ -78,8 +78,8 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
   const divisionConsistency = watch("divisionConsistency");
   const foundationPurpose = watch("foundationPurpose");
   const activityPlan = watch("activityPlan");
-  const activityPlanFileId = watch("activityPlanFileId");
-  const clubRuleFileId = watch("clubRuleFileId");
+  const activityPlanFile = watch("activityPlanFile");
+  const clubRuleFile = watch("clubRuleFile");
   const formIsValid = useMemo(() => {
     const isValid =
       registrationTypeEnumId !== undefined &&
@@ -98,14 +98,12 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
 
     if (registrationTypeEnumId === RegistrationTypeEnum.Promotional) {
       return (
-        isValid &&
-        activityPlanFileId !== undefined &&
-        clubRuleFileId !== undefined
+        isValid && activityPlanFile !== undefined && clubRuleFile !== undefined
       );
     }
 
     if (isProvisional(registrationTypeEnumId)) {
-      return isValid && activityPlanFileId !== undefined;
+      return isValid && activityPlanFile !== undefined;
     }
 
     return false;
@@ -120,8 +118,8 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
     divisionConsistency,
     foundationPurpose,
     activityPlan,
-    activityPlanFileId,
-    clubRuleFileId,
+    activityPlanFile,
+    clubRuleFile,
   ]);
 
   const errorMessage = useMemo(
@@ -136,8 +134,8 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
         divisionConsistency,
         foundationPurpose,
         activityPlan,
-        activityPlanFileId,
-        clubRuleFileId,
+        activityPlanFile,
+        clubRuleFile,
         isAgreed,
       }),
     [
@@ -150,8 +148,8 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
       divisionConsistency,
       foundationPurpose,
       activityPlan,
-      activityPlanFileId,
-      clubRuleFileId,
+      activityPlanFile,
+      clubRuleFile,
       isAgreed,
     ],
   );
@@ -164,21 +162,21 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
     isError: semesterError,
   } = useGetSemesterNow();
 
-  const title = useMemo(() => {
-    formCtx.setValue("registrationTypeEnumId", type);
-    return getDisplayNameRegistration(type);
-  }, [formCtx, type]);
-
   const isProvisionalClub =
     type === RegistrationTypeEnum.NewProvisional ||
     type === RegistrationTypeEnum.ReProvisional;
 
   const submitHandler = useCallback(
-    (data: ApiReg001RequestBody) => {
+    (data: RegisterClubModel) => {
       // logger.debug("submit", data);
       registerClubApi(
         {
-          body: data,
+          body: {
+            ...data,
+            clubRuleFileId: data.clubRuleFile?.id,
+            activityPlanFileId: data.activityPlanFile?.id,
+            externalInstructionFileId: data.externalInstructionFile?.id,
+          },
         },
         {
           onSuccess: () => {
@@ -240,7 +238,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
                 path: `/register-club`,
               },
             ]}
-            title={`동아리 ${title} 신청`}
+            title={`동아리 ${getDisplayNameRegistration(type)} 신청`}
             enableLast
           />
           <AsyncBoundary isLoading={semesterLoading} isError={semesterError}>
@@ -259,7 +257,7 @@ const RegisterClubMainFrame: React.FC<RegisterClubMainFrameProps> = ({
               <BasicInformFrame type={type} profile={profile} />
             )}
           </AsyncBoundary>
-          <AdvancedInformFrame type={type} formCtx={formCtx} />
+          <AdvancedInformFrame type={type} />
           {type === RegistrationTypeEnum.Promotional && clubId && (
             <ActivityReportFrame clubId={clubId} />
           )}

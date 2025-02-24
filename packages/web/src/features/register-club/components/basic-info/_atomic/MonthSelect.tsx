@@ -1,16 +1,15 @@
 import React, { useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
-
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
+import { RegisterClubModel } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 import {
   getActualMonth,
   getActualYear,
 } from "@sparcs-clubs/web/utils/Date/extractDate";
 
 const MonthSelect: React.FC = () => {
-  const { setValue, watch } = useFormContext<ApiReg001RequestBody>();
+  const { setValue, watch } = useFormContext<RegisterClubModel>();
 
   const foundedAt = watch("foundedAt");
   const initialValue = useMemo(

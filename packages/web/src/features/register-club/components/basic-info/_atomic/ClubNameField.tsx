@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import CheckboxOption from "@sparcs-clubs/web/common/components/CheckboxOption";
@@ -9,7 +8,10 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Select, { SelectItem } from "@sparcs-clubs/web/common/components/Select";
-import { ClubRegistrationInfo } from "@sparcs-clubs/web/features/register-club/types/registerClub";
+import {
+  ClubRegistrationInfo,
+  RegisterClubModel,
+} from "@sparcs-clubs/web/features/register-club/types/registerClub";
 
 interface ClubNameFieldProps {
   type: RegistrationTypeEnum;
@@ -23,7 +25,7 @@ const ClubNameField: React.FC<ClubNameFieldProps> = ({
   editMode = false,
 }) => {
   const { control, resetField, setValue, watch } =
-    useFormContext<ApiReg001RequestBody>();
+    useFormContext<RegisterClubModel>();
 
   const krName = watch("clubNameKr");
   const enName = watch("clubNameEn");

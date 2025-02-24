@@ -23,12 +23,12 @@ const InfoChildWrapper = styled.div`
   margin-left: 28px;
 `;
 
-const InfoInner = styled.div<{ gap: boolean }>`
+const InfoInner = styled.div<{ value: string }>`
   display: flex;
   flex-direction: column;
   padding: 12px 16px;
   align-items: flex-start;
-  gap: ${({ gap }) => (gap ? "8px" : "0px")};
+  gap: ${({ value }) => value};
   align-self: stretch;
   border-radius: 8px;
   border: 1px solid ${({ theme }) => theme.colors.GRAY[200]};
@@ -70,7 +70,7 @@ const Info: React.FC<InfoProps> = ({ text, children = null }) => {
     return child;
   });
   return (
-    <InfoInner gap={!!transformedChildren}>
+    <InfoInner value={transformedChildren ? "8px" : "0px"}>
       <InfoTextWrapper>
         <IconWrapper>
           <ResponsiveIcon type="info_outlined" size={20} />

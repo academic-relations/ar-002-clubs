@@ -23,6 +23,8 @@ export const useGetMyManageClub = () =>
         return {};
       }
 
+      console.log(data);
+
       return apiClb015.responseBodyMap[200].parse(data);
     },
   });

@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { ApiReg001RequestBody } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg001";
 import { ApiUsr001ResponseOK } from "@sparcs-clubs/interface/api/user/endpoint/apiUsr001";
 import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
@@ -15,6 +14,7 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import useGetClubsForPromotional from "@sparcs-clubs/web/features/register-club/services/useGetClubsForPromotional";
 import useGetClubsForRenewal from "@sparcs-clubs/web/features/register-club/services/useGetClubsForRenewal";
+import { RegisterClubModel } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 
 import ClubNameField from "./_atomic/ClubNameField";
 import DivisionSelect from "./_atomic/DivisionSelect";
@@ -36,7 +36,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
 
   const [isCheckedProfessor, setIsCheckedProfessor] = useState(true);
 
-  const { watch, control, setValue } = useFormContext<ApiReg001RequestBody>();
+  const { watch, control, setValue } = useFormContext<RegisterClubModel>();
   const clubId = watch("clubId");
 
   const {
