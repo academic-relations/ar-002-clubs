@@ -79,6 +79,13 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.PM,
         comment: "은퇴한 PM은 자러갑니다",
       },
+      {
+        nickname: "gb",
+        name: "권혁원",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "21시에 일어나서 12시에 잡시다",
+      },
     ],
   },
   {
