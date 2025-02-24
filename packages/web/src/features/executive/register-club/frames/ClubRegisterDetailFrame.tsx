@@ -11,7 +11,6 @@ import {
   IndentedItem,
   ListItem,
 } from "@sparcs-clubs/web/common/components/ListItem";
-import ProgressCheckSection from "@sparcs-clubs/web/common/components/ProgressCheckSection";
 import Tag from "@sparcs-clubs/web/common/components/Tag";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useGetDivisionType from "@sparcs-clubs/web/common/hooks/useGetDivisionType";
@@ -21,7 +20,6 @@ import {
 } from "@sparcs-clubs/web/constants/tableTagList";
 import MyRegisterClubActFrame from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubActFrame";
 import { FilePreviewContainer } from "@sparcs-clubs/web/features/my/register-club/frames/MyRegisterClubDetailFrame";
-import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
 import { isProvisional } from "@sparcs-clubs/web/features/register-club/utils/registrationType";
 import {
   getActualMonth,
@@ -30,6 +28,7 @@ import {
 import { getTagDetail } from "@sparcs-clubs/web/utils/getTagDetail";
 import { professorEnumToText } from "@sparcs-clubs/web/utils/getUserType";
 
+import RegisterClubStatusSection from "../components/RegisterClubStatusSection";
 import useRegisterClubDetail from "../services/getRegisterClubDetail";
 
 export interface ClubRegisterDetail {
@@ -55,27 +54,13 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
       isError={isError || divisionError}
     >
       <Card padding="32px" gap={20} outline>
-        <FlexWrapper gap={16} direction="column">
-          <Typography fw="MEDIUM" lh={20} fs={16}>
-            신청 상태
-          </Typography>
-          {data && (
-            <ProgressCheckSection
-              labels={
-                getRegisterClubProgress(
-                  data?.registrationStatusEnumId,
-                  data?.updatedAt,
-                ).labels
-              }
-              progress={
-                getRegisterClubProgress(
-                  data?.registrationStatusEnumId,
-                  data?.updatedAt,
-                ).progress
-              }
-            />
-          )}
-        </FlexWrapper>
+        {data && (
+          <RegisterClubStatusSection
+            status={data.registrationStatusEnumId}
+            editedAt={data.updatedAt}
+            comments={data.comments}
+          />
+        )}
         <FlexWrapper gap={20} direction="row">
           <Typography fw="MEDIUM" lh={20} fs={16} style={{ flex: 1 }}>
             등록 구분
@@ -162,7 +147,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                     <ThumbnailPreviewList
                       fileList={[
                         {
-                          id: "1",
+                          id: data?.activityPlanFile?.id,
                           name: data?.activityPlanFile?.name,
                           url: data?.activityPlanFile?.url,
                         },
@@ -182,7 +167,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                   <ThumbnailPreviewList
                     fileList={[
                       {
-                        id: "1",
+                        id: data?.clubRuleFile?.id,
                         name: data?.clubRuleFile?.name,
                         url: data?.clubRuleFile?.url,
                       },
@@ -201,7 +186,7 @@ const ClubRegisterDetailFrame: React.FC<ClubRegisterDetail> = ({
                   <ThumbnailPreviewList
                     fileList={[
                       {
-                        id: "1",
+                        id: data?.externalInstructionFile?.id,
                         name: data?.externalInstructionFile?.name,
                         url: data?.externalInstructionFile?.url,
                       },

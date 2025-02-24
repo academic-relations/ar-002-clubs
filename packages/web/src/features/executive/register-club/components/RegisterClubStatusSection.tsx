@@ -1,31 +1,27 @@
 import React, { useMemo } from "react";
 
-import { ActivityStatusEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
+import { RegistrationStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
 import ProgressStatus from "@sparcs-clubs/web/common/components/ProgressStatus";
 import CommentToast from "@sparcs-clubs/web/common/components/Toast/CommentToast";
+import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
 import { Comment } from "@sparcs-clubs/web/types/comment";
 
-import { getActivityReportProgress } from "../constants/activityReportProgress";
-
-interface ActivityReportStatusSectionProps {
-  status: ActivityStatusEnum;
+interface RegisterClubStatusSectionProps {
+  status: RegistrationStatusEnum;
   editedAt: Date;
-  commentedAt?: Date;
   comments: Comment[];
 }
 
-const ActivityReportStatusSection: React.FC<
-  ActivityReportStatusSectionProps
-> = ({ status, editedAt, commentedAt = undefined, comments }) => {
-  const progressStatus = getActivityReportProgress(
-    status,
-    editedAt,
-    commentedAt,
-  );
+const RegisterClubStatusSection: React.FC<RegisterClubStatusSectionProps> = ({
+  status,
+  editedAt,
+  comments,
+}) => {
+  const progressStatus = getRegisterClubProgress(status, editedAt);
 
   const ToastSection = useMemo(() => {
-    if (status === ActivityStatusEnum.Rejected) {
+    if (status === RegistrationStatusEnum.Rejected) {
       return (
         <CommentToast
           title="코멘트"
@@ -59,4 +55,4 @@ const ActivityReportStatusSection: React.FC<
   );
 };
 
-export default ActivityReportStatusSection;
+export default RegisterClubStatusSection;
