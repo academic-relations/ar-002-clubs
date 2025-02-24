@@ -609,7 +609,6 @@ export default class ActivityService {
 
     // 오늘이 활동보고서 작성기간이거나, 예외적 작성기간인지 확인하지 않습니다.
 
-    const activityD = await this.getLastActivityD();
     // 현재학기에 동아리원이 아니였던 참가자가 있는지 검사합니다.
     const participantIds = await Promise.all(
       body.participants.map(
@@ -645,7 +644,7 @@ export default class ActivityService {
       ...body,
       evidenceFileIds: evidenceFiles.map(row => row.id),
       participantIds,
-      activityDId: activityD.id,
+      activityDId: body.activityDId,
       duration: body.durations,
     });
 
@@ -715,7 +714,7 @@ export default class ActivityService {
       evidence: body.evidence,
       evidenceFileIds: evidenceFiles.map(e => e.id),
       participantIds: body.participants.map(e => e.studentId),
-      activityDId: activity.activityDId,
+      activityDId: body.activityDId,
       activityStatusEnumId: ActivityStatusEnum.Applied,
     });
     if (!isUpdateSucceed)
