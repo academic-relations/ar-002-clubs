@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 
 import { DrizzleModule } from "@sparcs-clubs/api/drizzle/drizzle.module";
 import ClubModule from "@sparcs-clubs/api/feature/club/club.module";
@@ -11,7 +11,12 @@ import { ClubRegistrationPublicService } from "./service/club-registration.publi
 import { ClubRegistrationService } from "./service/club-registration.service";
 
 @Module({
-  imports: [DrizzleModule, ClubModule, DivisionModule, FileModule],
+  imports: [
+    DrizzleModule,
+    forwardRef(() => ClubModule),
+    DivisionModule,
+    FileModule,
+  ],
   controllers: [ClubRegistrationController],
   providers: [
     ClubRegistrationRepository,
