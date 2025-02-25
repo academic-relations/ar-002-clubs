@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import styled from "styled-components";
 
@@ -21,7 +21,17 @@ const RowWrapper = styled.div`
 `;
 
 const ProfessorInformFrame: React.FC = () => {
-  const { control } = useFormContext<RegisterClubModel>();
+  const {
+    control,
+    trigger,
+    formState: { isValid },
+  } = useFormContext<RegisterClubModel>();
+
+  useEffect(() => {
+    if (!isValid) {
+      trigger();
+    }
+  }, [isValid]);
 
   return (
     <FlexWrapper direction="column" gap={40}>

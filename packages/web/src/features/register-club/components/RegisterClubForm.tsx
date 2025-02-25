@@ -183,6 +183,7 @@ const RegisterClubForm: React.FC<RegisterClubFormProps> = ({
           <AsyncBoundary isLoading={isLoadingProfile} isError={isErrorProfile}>
             {isProvisionalClub ? (
               <ProvisionalBasicInformFrame
+                isInitialCheckedProfessor={initialData?.professor != null}
                 profile={
                   profile
                     ? { name: profile.name, phoneNumber: profile.phoneNumber }

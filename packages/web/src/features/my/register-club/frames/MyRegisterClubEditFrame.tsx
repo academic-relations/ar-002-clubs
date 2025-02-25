@@ -175,6 +175,7 @@ const MyRegisterClubEditFrame: React.FC<RegisterClubMainFrameProps> = ({
           </FlexWrapper>
           {isProvisionalClub ? (
             <ProvisionalBasicInformFrame
+              isInitialCheckedProfessor={initialData.professor != null}
               editMode
               profile={{
                 name: initialData.representative.name,

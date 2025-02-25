@@ -27,13 +27,18 @@ import YearSelect from "./_atomic/YearSelect";
 import ProfessorInformFrame from "./ProfessorInformFrame";
 
 interface ProvisionalBasicInformFrameProps {
+  isInitialCheckedProfessor?: boolean;
   editMode?: boolean;
   profile?: { name: string; phoneNumber?: string };
 }
 
 const ProvisionalBasicInformFrame: React.FC<
   ProvisionalBasicInformFrameProps
-> = ({ editMode = false, profile = undefined }) => {
+> = ({
+  isInitialCheckedProfessor = false,
+  editMode = false,
+  profile = undefined,
+}) => {
   const { control, setValue, watch } = useFormContext();
 
   const registrationType = watch("registrationTypeEnumId");
@@ -45,7 +50,9 @@ const ProvisionalBasicInformFrame: React.FC<
     isError: isErrorAvailableRegistrationInfo,
   } = useGetAvailableRegistrationInfo();
 
-  const [isCheckedProfessor, setIsCheckedProfessor] = useState(false);
+  const [isCheckedProfessor, setIsCheckedProfessor] = useState(
+    isInitialCheckedProfessor,
+  );
 
   useEffect(() => {
     if (!isCheckedProfessor) {
