@@ -141,6 +141,7 @@ export default class ClubRepository {
             gte(ClubT.endTerm, crt),
           ),
           or(eq(ClubT.clubStatusEnumId, 1), eq(ClubT.clubStatusEnumId, 2)),
+          isNull(ClubT.deletedAt),
         ),
       )
       .leftJoin(Professor, eq(ClubT.professorId, Professor.id))
