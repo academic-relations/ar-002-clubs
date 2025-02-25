@@ -11,10 +11,6 @@ export class VActivitySummary implements IActivitySummary {
 
   activityTypeEnum: ActivityTypeEnum;
 
-  activityDuration: {
-    id: number;
-  };
-
   club: {
     id: number;
   };
@@ -43,7 +39,6 @@ export class VActivitySummary implements IActivitySummary {
     id: number;
     activityStatusEnumId: ActivityStatusEnum;
     activityTypeEnumId: ActivityTypeEnum;
-    activityDId: number;
     clubId: number;
     name: string;
     commentedAt: Date | null;
@@ -56,9 +51,6 @@ export class VActivitySummary implements IActivitySummary {
       id: activity.id,
       activityStatusEnum: activity.activityStatusEnumId,
       activityTypeEnum: activity.activityTypeEnumId,
-      activityDuration: {
-        id: activity.activityDId,
-      },
       club: {
         id: activity.clubId,
       },

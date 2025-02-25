@@ -7,8 +7,8 @@ import { RegistrationTypeEnum } from "@sparcs-clubs/interface/common/enum/regist
 /**
  * @version v0.1
  * @description 학생이 자신이 등록 신청이 가능한 동아리의 목록 및 현황을 조회합니다.
- * availableClub이 null: 신규 가등록만 가능
- * availableClub이 있는 경우: 해당 availableRegistrationTypeEnums에 가능한 타입 명시
+ * club이 null: 신규 가등록만 가능
+ * club이 있는 경우: 해당 availableRegistrationTypeEnums에 가능한 타입 명시
  * 이미 등록 신청을 한 경우: availableRegistrationTypeEnums가 []
  */
 
