@@ -28,7 +28,7 @@ const NotRegistrationPeriod: NextPage = () => {
   const router = useRouter();
 
   const Message = (
-    <ErrorMessage>현재는 회원 등록 신청 기간이 아닙니다</ErrorMessage>
+    <ErrorMessage>현재는 동아리 등록 신청 기간이 아닙니다</ErrorMessage>
   );
 
   const goToMain = () => {

@@ -13,6 +13,7 @@ import Info from "@sparcs-clubs/web/common/components/Info";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import WarningInfo from "@sparcs-clubs/web/common/components/WarningInfo";
+import NotRegistrationPeriod from "@sparcs-clubs/web/common/frames/NotRegistrationPeriod";
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/my/services/getMyClubRegistration";
 import ClubButton from "@sparcs-clubs/web/features/register-club/components/ClubButton";
@@ -98,6 +99,10 @@ const RegisterClubFrame: React.FC = () => {
     else if (selectedType === RegistrationType.Provisional)
       router.push(`register-club/provisional`);
   }, [selectedType]);
+
+  if (clubRegistrationPeriodEnd == null) {
+    return <NotRegistrationPeriod />;
+  }
 
   return (
     <FlexWrapper direction="column" gap={60}>
