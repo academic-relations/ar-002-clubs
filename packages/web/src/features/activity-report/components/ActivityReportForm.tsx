@@ -12,7 +12,10 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
+import LocalStorageUtil from "@sparcs-clubs/web/common/services/localStorageUtil";
+import { LOCAL_STORAGE_KEY } from "@sparcs-clubs/web/constants/localStorage";
 import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/activity-report/_atomic/SelectActivityTerm";
+import { isObjectEmpty } from "@sparcs-clubs/web/utils";
 
 import useGetParticipants from "../services/useGetParticipants";
 import { ActivityReportFormData } from "../types/form";
@@ -53,17 +56,15 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
     formCtx.handleSubmit(_data => submitHandler(_data, e))();
   };
 
-  const durations = watch("durations");
-  const participants = watch("participants");
-  const evidenceFiles = watch("evidenceFiles");
+  const formValues = watch();
 
   const [startTerm, setStartTerm] = useState<Date>(
-    durations
+    formValues.durations
       ?.map(d => d.startTerm)
       .reduce((a, b) => (a < b ? a : b), new Date()),
   );
   const [endTerm, setEndTerm] = useState<Date>(
-    durations
+    formValues.durations
       ?.map(d => d.endTerm)
       .reduce((a, b) => (a > b ? a : b), new Date()),
   );
@@ -80,6 +81,12 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
   });
 
   useEffect(() => {
+    if (!isObjectEmpty(formValues)) {
+      LocalStorageUtil.save(LOCAL_STORAGE_KEY.ACTIVITY_REPORT, formValues);
+    }
+  }, [formValues]);
+
+  useEffect(() => {
     if (startTerm && endTerm) {
       refetch();
     }
@@ -87,12 +94,12 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
 
   const validInput =
     isValid &&
-    durations &&
-    durations.length > 0 &&
-    participants &&
-    participants.length > 0 &&
-    evidenceFiles &&
-    evidenceFiles.length > 0;
+    formValues.durations &&
+    formValues.durations.length > 0 &&
+    formValues.participants &&
+    formValues.participants.length > 0 &&
+    formValues.evidenceFiles &&
+    formValues.evidenceFiles.length > 0;
 
   return (
     <FormProvider {...formCtx}>
@@ -142,9 +149,8 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
                   />
                 )}
               />
-
               <SelectActivityTerm
-                initialData={durations ?? []}
+                initialData={formValues.durations ?? []}
                 onChange={_durations => {
                   setValue("durations", _durations, { shouldValidate: true });
                   if (_durations.length > 0) {
@@ -206,7 +212,7 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
             </Card>
           </FlexWrapper>
 
-          {durations && (
+          {formValues.durations && (
             <AsyncBoundary
               isLoading={isLoadingParticipants}
               isError={isErrorParticipants}
@@ -221,7 +227,7 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
                       studentNumber: student.studentNumber.toString(),
                     })) ?? []
                   }
-                  value={participants}
+                  value={formValues.participants}
                   onChange={_participants => {
                     setValue("participants", _participants, {
                       shouldValidate: true,
@@ -255,7 +261,7 @@ const ActivityReportForm: React.FC<ActivityReportFormProps> = ({
                 <FileUpload
                   {...props}
                   multiple
-                  initialFiles={evidenceFiles}
+                  initialFiles={formValues.evidenceFiles}
                   onChange={files =>
                     setValue("evidenceFiles", files, { shouldValidate: true })
                   }

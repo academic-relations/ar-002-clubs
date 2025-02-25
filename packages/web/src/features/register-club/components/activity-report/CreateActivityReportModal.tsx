@@ -1,4 +1,3 @@
-import { addHours } from "date-fns";
 import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
 
@@ -33,10 +32,6 @@ const CreateActivityReportModal: React.FC<CreateActivityReportModalProps> = ({
           body: {
             ...data,
             clubId,
-            durations: data.durations.map(({ startTerm, endTerm }) => ({
-              startTerm: addHours(startTerm, 9),
-              endTerm: addHours(endTerm, 9),
-            })),
             evidence: data.evidence ?? "", // NOTE: (@dora) evidence is optional
             evidenceFiles: data.evidenceFiles.map(({ id }) => ({
               fileId: id,
