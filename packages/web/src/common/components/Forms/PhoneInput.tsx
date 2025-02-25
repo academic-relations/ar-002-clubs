@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 
 import TextInput, {
   TextInputProps,
@@ -53,20 +53,28 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
     }
   };
 
-  const formatValue = (nums: string) => {
-    const digits = nums.replace(/\D/g, "");
-    let formattedInput = "";
+  const formatValue = useCallback(
+    (nums: string) => {
+      if (nums.match(/-/g)?.length === 2) {
+        return nums;
+      }
 
-    if (digits.length <= 3) {
-      formattedInput = digits;
-    } else if (digits.length <= 7) {
-      formattedInput = `${digits.slice(0, 3)}-${digits.slice(3)}`;
-    } else if (digits.length <= 11) {
-      formattedInput = `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
-    }
+      const digits = nums.replace(/\D/g, "");
 
-    return formattedInput;
-  };
+      let formattedInput = "";
+
+      if (digits.length <= 3) {
+        formattedInput = digits;
+      } else if (digits.length <= 7) {
+        formattedInput = `${digits.slice(0, 3)}-${digits.slice(3)}`;
+      } else if (digits.length <= 11) {
+        formattedInput = `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+      }
+
+      return formattedInput;
+    },
+    [value],
+  );
 
   return (
     <TextInput
