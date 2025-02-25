@@ -15,7 +15,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import WarningInfo from "@sparcs-clubs/web/common/components/WarningInfo";
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/my/services/getMyClubRegistration";
-import ClubButton from "@sparcs-clubs/web/features/register-club/components/_atomic/ClubButton";
+import ClubButton from "@sparcs-clubs/web/features/register-club/components/ClubButton";
 import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
 import {

@@ -8,13 +8,13 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-
 import {
   CLUB_ASSOCIATION_RULES,
   DEPARTMENT_AUTONOMY_RULES,
-} from "../constants/registerClub";
-import RulesButton from "./_atomic/RulesButton";
+} from "@sparcs-clubs/web/features/register-club/constants/registerClub";
+
 import ClubRegulationsComplianceSection from "./ClubRegulationsComplianceSection";
+import RulesButton from "./RulesButton";
 
 interface ClubRulesFrameProps {
   isNewProvisional?: boolean;

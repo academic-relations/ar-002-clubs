@@ -24,7 +24,7 @@ import ActivityReportFrame from "../components/activity-report/ActivityReportFra
 import AdvancedInformFrame from "../components/advanced-info/AdvancedInformFrame";
 import BasicInformFrame from "../components/basic-info/BasicInformFrame";
 import ProvisionalBasicInformFrame from "../components/basic-info/ProvisionalBasicInformFrame";
-import ClubRulesFrame from "../components/ClubRulesFrame";
+import ClubRulesFrame from "../components/compliance/ClubRulesFrame";
 import { registerClubDeadlineInfoText } from "../constants";
 import useRegisterClub from "../services/useRegisterClub";
 import { RegisterClubModel } from "../types/registerClub";
