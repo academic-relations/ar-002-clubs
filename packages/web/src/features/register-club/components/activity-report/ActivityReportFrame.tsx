@@ -9,10 +9,10 @@ import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { useAuth } from "@sparcs-clubs/web/common/providers/AuthContext";
+import ActivityReportList from "@sparcs-clubs/web/features/register-club/components/activity-report/ActivityReportList";
+import { useGetActivityReportsForPromotional } from "@sparcs-clubs/web/features/register-club/services/useGetActivityReportsForPromotional";
 
-import { useGetActivityReportsForPromotional } from "../services/useGetActivityReportsForPromotional";
-import CreateActivityReportModal from "./_atomic/CreateActivityReportModal";
-import ActivityReportList from "./ActivityReportList";
+import CreateActivityReportModal from "./CreateActivityReportModal";
 
 interface ActivityReportFrameProps {
   clubId: number;
@@ -57,37 +57,37 @@ const ActivityReportFrame: React.FC<ActivityReportFrameProps> = ({
   };
 
   return (
-    <AsyncBoundary isLoading={isLoading} isError={isError}>
-      <FlexWrapper direction="column" gap={40}>
-        <SectionTitle>가등록 / 등록 취소 기간 활동 보고서</SectionTitle>
-        <StyledCard outline gap={32}>
-          <OptionOuter>
-            <Typography
-              fs={14}
-              fw="REGULAR"
-              lh={20}
-              color="GRAY.300"
-              ff="PRETENDARD"
-            >
-              활동 보고서는 최대 20개까지 작성 가능합니다
-            </Typography>
-            <IconButton
-              type="default"
-              icon="add"
-              onClick={openCreateActivityReportModal}
-            >
-              활동 보고서 작성
-            </IconButton>
-          </OptionOuter>
+    <FlexWrapper direction="column" gap={40}>
+      <SectionTitle>가등록 / 등록 취소 기간 활동 보고서</SectionTitle>
+      <StyledCard outline gap={32}>
+        <OptionOuter>
+          <Typography
+            fs={14}
+            fw="REGULAR"
+            lh={20}
+            color="GRAY.300"
+            ff="PRETENDARD"
+          >
+            활동 보고서는 최대 20개까지 작성 가능합니다
+          </Typography>
+          <IconButton
+            type="default"
+            icon="add"
+            onClick={openCreateActivityReportModal}
+          >
+            활동 보고서 작성
+          </IconButton>
+        </OptionOuter>
+        <AsyncBoundary isLoading={isLoading} isError={isError}>
           <ActivityReportList
             data={data?.activities ?? []}
             profile={profile?.type ?? ""}
             refetch={refetch}
             clubId={clubId}
           />
-        </StyledCard>
-      </FlexWrapper>
-    </AsyncBoundary>
+        </AsyncBoundary>
+      </StyledCard>
+    </FlexWrapper>
   );
 };
 

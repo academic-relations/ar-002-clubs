@@ -24,7 +24,7 @@ import {
   formatSlashDateTime,
 } from "@sparcs-clubs/web/utils/Date/formatDate";
 
-import EditActivityReportModal from "./EditActivityReportModal";
+import EditActivityReportModal from "./_atomic/EditActivityReportModal";
 
 interface PastActivityReportModalProps {
   activityId: number;

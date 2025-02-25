@@ -4,10 +4,10 @@ import styled from "styled-components";
 
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
-import { Duration } from "../types/registerClub";
-import EditActivityTermModal from "./_atomic/EditActivityTermModal";
+import EditActivityTermModal from "../EditActivityTermModal";
 
 interface SelectActivityTermProps {
   initialData?: Duration[];

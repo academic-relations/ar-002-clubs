@@ -22,7 +22,7 @@ import WarningInfo from "@sparcs-clubs/web/common/components/WarningInfo";
 import { useGetRegistrationTerm } from "@sparcs-clubs/web/features/clubs/services/useGetRegistrationTerm";
 import useGetClubRegistration from "@sparcs-clubs/web/features/my/services/useGetClubRegistration";
 import usePutClubRegistration from "@sparcs-clubs/web/features/my/services/usePutClubRegistration";
-import ActivityReportFrame from "@sparcs-clubs/web/features/register-club/components/ActivityReportFrame";
+import ActivityReportFrame from "@sparcs-clubs/web/features/register-club/components/activity-report/ActivityReportFrame";
 import AdvancedInformFrame from "@sparcs-clubs/web/features/register-club/components/advanced-info/AdvancedInformFrame";
 import BasicInformFrame from "@sparcs-clubs/web/features/register-club/components/basic-info/BasicInformFrame";
 import ProvisionalBasicInformFrame from "@sparcs-clubs/web/features/register-club/components/basic-info/ProvisionalBasicInformFrame";

@@ -12,7 +12,7 @@ import { useGetActivityReport } from "@sparcs-clubs/web/features/activity-report
 import { filterActivityComments } from "@sparcs-clubs/web/features/activity-report/utils/filterComment";
 import usePutActivityReportForNewClub from "@sparcs-clubs/web/features/register-club/services/usePutActivityReportForNewClub";
 
-import ActivityReportForm from "./ActivityReportForm";
+import ActivityReportForm from "./_atomic/ActivityReportForm";
 
 interface EditActivityReportModalProps {
   activityId: number;
@@ -106,10 +106,7 @@ const EditActivityReportModal: React.FC<EditActivityReportModalProps> = ({
             )}
 
           <ActivityReportForm
-            // TODO. 리팩토링 해야 함
-            /* eslint-disable  @typescript-eslint/no-explicit-any */
             clubId={data.clubId}
-            formCtx={formCtx as any}
             onCancel={handleCancel}
             onSubmit={handleSubmit}
           />

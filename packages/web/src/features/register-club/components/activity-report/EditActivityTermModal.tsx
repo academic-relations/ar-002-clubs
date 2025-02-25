@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import IconButton from "@sparcs-clubs/web/common/components/Buttons/IconButton";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
@@ -8,7 +8,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import { Duration } from "@sparcs-clubs/web/features/register-club/types/registerClub";
 import { formatDotDate } from "@sparcs-clubs/web/utils/Date/formatDate";
 
-import ActivityTermRow from "./ActivityTermRow";
+import ActivityTermRow from "./_atomic/ActivityTermRow";
 
 export interface ActivityTermProps {
   startDate: string;
@@ -38,55 +38,70 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
     Array.from({ length: initialData.length }, () => false),
   );
 
-  const addRow = () => {
+  const addRow = useCallback(() => {
     setActivityTermList(prevList => [
       ...prevList,
       { startDate: "", endDate: "" },
     ]);
     setHasErrorList(prevList => [...prevList, false]);
-  };
+  }, []);
 
-  const handleDelete = (index: number) => {
-    const updatedTerms = activityTermList.filter((_, i) => i !== index);
-    const updatedErrorList = hasErrorList.filter((_, i) => i !== index);
-    setActivityTermList(updatedTerms);
-    setHasErrorList(updatedErrorList);
-  };
+  const handleDelete = useCallback(
+    (index: number) => {
+      const updatedTerms = activityTermList.filter((_, i) => i !== index);
+      const updatedErrorList = hasErrorList.filter((_, i) => i !== index);
+      setActivityTermList(updatedTerms);
+      setHasErrorList(updatedErrorList);
+    },
+    [activityTermList, hasErrorList],
+  );
 
-  const handleDateChange = (index: number, start: string, end: string) => {
-    const updatedTerms = activityTermList.map((term, i) =>
-      i === index ? { startDate: start, endDate: end } : term,
-    );
-    setActivityTermList(updatedTerms);
-  };
+  const handleDateChange = useCallback(
+    (index: number, start: string, end: string) => {
+      const updatedTerms = activityTermList.map((term, i) =>
+        i === index ? { startDate: start, endDate: end } : term,
+      );
+      setActivityTermList(updatedTerms);
+    },
+    [activityTermList],
+  );
 
-  const handleHasErrorList = (index: number, hasError: boolean) => {
-    setHasErrorList(prevErrorList => {
-      if (prevErrorList[index] !== hasError) {
-        const updatedErrorList = prevErrorList.map((error, i) =>
-          i === index ? hasError : error,
-        );
-        return updatedErrorList;
-      }
-      return prevErrorList;
-    });
-  };
+  const handleHasErrorList = useCallback(
+    (index: number, hasError: boolean) => {
+      setHasErrorList(prevErrorList => {
+        if (prevErrorList[index] !== hasError) {
+          const updatedErrorList = prevErrorList.map((error, i) =>
+            i === index ? hasError : error,
+          );
+          return updatedErrorList;
+        }
+        return prevErrorList;
+      });
+    },
+    [hasErrorList],
+  );
 
-  const isEmpty = () => activityTermList.length === 0;
+  const isEmpty = useMemo(
+    () => activityTermList.length === 0,
+    [activityTermList],
+  );
 
-  const isSomethingEmpty = () => {
+  const isSomethingEmpty = useMemo(() => {
     if (activityTermList.length === 0) {
       return false;
     }
     return activityTermList.some(
       term => term.startDate === "" || term.endDate === "",
     );
-  };
+  }, [activityTermList]);
 
-  const checkError = () => hasErrorList.some(error => error);
+  const checkError = useMemo(
+    () => hasErrorList.some(error => error),
+    [hasErrorList],
+  );
 
-  const handleConfirm = () => {
-    if (isEmpty() || isSomethingEmpty() || checkError()) return;
+  const handleConfirm = useCallback(() => {
+    if (isEmpty || isSomethingEmpty || checkError) return;
 
     onConfirm(
       activityTermList.map(term => ({
@@ -94,7 +109,8 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
         endTerm: new Date(`${term.endDate.replaceAll(".", "-")}T00:00:00Z`),
       })),
     );
-  };
+  }, [activityTermList, isEmpty, isSomethingEmpty, checkError, onConfirm]);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <CancellableModalContent onClose={onClose} onConfirm={handleConfirm}>
@@ -122,12 +138,12 @@ const EditActivityTermModal: React.FC<EditActivityTermModalProps> = ({
           >
             활동 기간 추가
           </IconButton>
-          {isEmpty() && (
+          {isEmpty && (
             <Typography fw="MEDIUM" fs={12} lh={18} color="RED.600">
               기간을 하나 이상 추가해주세요.
             </Typography>
           )}
-          {isSomethingEmpty() && (
+          {isSomethingEmpty && (
             <Typography fw="MEDIUM" fs={12} lh={18} color="RED.600">
               기간을 입력하거나 해당 항목을 삭제해주세요.
             </Typography>

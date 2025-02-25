@@ -20,7 +20,7 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useGetUserProfile from "@sparcs-clubs/web/common/services/getUserProfile";
 import useGetSemesterNow from "@sparcs-clubs/web/utils/getSemesterNow";
 
-import ActivityReportFrame from "../components/ActivityReportFrame";
+import ActivityReportFrame from "../components/activity-report/ActivityReportFrame";
 import AdvancedInformFrame from "../components/advanced-info/AdvancedInformFrame";
 import BasicInformFrame from "../components/basic-info/BasicInformFrame";
 import ProvisionalBasicInformFrame from "../components/basic-info/ProvisionalBasicInformFrame";

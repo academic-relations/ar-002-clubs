@@ -12,7 +12,7 @@ import FormController from "@sparcs-clubs/web/common/components/FormController";
 import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import SectionTitle from "@sparcs-clubs/web/common/components/SectionTitle";
 import Select from "@sparcs-clubs/web/common/components/Select";
-import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/SelectActivityTerm";
+import SelectActivityTerm from "@sparcs-clubs/web/features/register-club/components/activity-report/_atomic/SelectActivityTerm";
 
 import useGetParticipants from "../services/useGetParticipants";
 import { ActivityReportFormData } from "../types/form";
