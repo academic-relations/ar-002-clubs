@@ -83,32 +83,22 @@ const RegisterClubFrame: React.FC = () => {
   );
 
   const canRegisterClub = useMemo<boolean>(() => {
-    // 대표자/대의원으로 관리하던 동아리가 있는 경우:
-    // 1. 동아리 등록 신청 내역이 없으면 재등록, 신규등록, 가등록 모두 가능 2. 신청 내역 있으면 가등록(신규)만 가능 3. 내가 이미 신청했으면 셋 다 불가능
-    if (availableRegistrationInfo && selectedType) {
+    if (availableRegistrationInfo) {
       if (
-        availableRegistrationInfo.availableRegistrations.includes(selectedType)
+        availableRegistrationInfo.noManageClub &&
+        selectedType === RegistrationTypeEnum.NewProvisional
       ) {
         return true;
       }
 
-      if (
-        selectedType === RegistrationTypeEnum.NewProvisional &&
-        availableRegistrationInfo.availableRegistrations.includes(
-          RegistrationTypeEnum.ReProvisional,
-        )
-      ) {
-        return true;
+      if (availableRegistrationInfo.haveAvailableRegistration && selectedType) {
+        return availableRegistrationInfo.availableRegistrations.includes(
+          selectedType,
+        );
       }
     }
 
-    // 관리하는 동아리가 있고 나의 신청 내역에 데이터가 있으면 모든 타입 비활성화
-    if (!availableRegistrationInfo.noManageClub && showWarningInfoLinkedText) {
-      return false;
-    }
-
-    // 관리하던 동아리 신청 내역과는 상관없이 가등록(신규)의 경우 항상 가능
-    return selectedType === RegistrationTypeEnum.NewProvisional;
+    return false;
   }, [availableRegistrationInfo, selectedType]);
 
   const isRegisterButtonDisabled =
