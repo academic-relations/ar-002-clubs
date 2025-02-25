@@ -57,6 +57,7 @@ const ExecutiveFundingClubFrame = () => {
     club: {
       id: Number(clubId),
       name: "",
+      nameEn: "",
       typeEnum: ClubTypeEnum.Regular,
       division: {
         id: 0,
