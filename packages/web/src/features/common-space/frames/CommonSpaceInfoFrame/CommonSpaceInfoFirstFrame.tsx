@@ -34,7 +34,7 @@ const CommonSpaceInfoFirstFrame: React.FC<CommonSpaceInfoFirstFrameProps> = ({
     if (data) {
       reset({
         agreement: true,
-        clubName: data.clubs[0]?.name_kr || "",
+        clubName: data.clubs[0]?.nameKr || "",
         name: data.name || "",
         phoneNumber: data.phoneNumber || "",
       });
@@ -48,7 +48,7 @@ const CommonSpaceInfoFirstFrame: React.FC<CommonSpaceInfoFirstFrameProps> = ({
           name="clubName"
           control={control}
           required
-          defaultValue={data?.clubs[0].name_kr || ""}
+          defaultValue={data?.clubs[0].nameKr || ""}
           renderItem={({ onChange, value }) => (
             <Select
               onChange={selectedValue => {
@@ -57,7 +57,7 @@ const CommonSpaceInfoFirstFrame: React.FC<CommonSpaceInfoFirstFrameProps> = ({
               }}
               items={
                 data?.clubs.map(club => ({
-                  label: club.name_kr,
+                  label: club.nameKr,
                   value: club.id.toString(),
                   selectable: true,
                 })) || []

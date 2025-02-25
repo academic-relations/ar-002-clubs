@@ -38,6 +38,7 @@ import { getKSTDate } from "@sparcs-clubs/api/common/util/util";
 import ClubPublicService from "@sparcs-clubs/api/feature/club/service/club.public.service";
 import DivisionPublicService from "@sparcs-clubs/api/feature/division/service/division.public.service";
 import FilePublicService from "@sparcs-clubs/api/feature/file/service/file.public.service";
+import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import { ClubRegistrationRepository } from "../repository/club-registration.repository";
 import { ClubRegistrationPublicService } from "./club-registration.public.service";
@@ -50,6 +51,7 @@ export class ClubRegistrationService {
     private divisionPublicService: DivisionPublicService,
     private filePublicService: FilePublicService,
     private clubRegistrationPublicService: ClubRegistrationPublicService,
+    private userPublicService: UserPublicService,
   ) {}
 
   /**
@@ -144,57 +146,191 @@ export class ClubRegistrationService {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [RegistrationDeadlineEnum.ClubRegistrationApplication],
     });
-    const cur = getKSTDate();
-    const semesterId = await this.clubPublicService.dateToSemesterId(cur);
-    const reRegAbleList =
-      await this.clubPublicService.getClubIdByClubStatusEnumId(
-        studentId,
-        [ClubTypeEnum.Regular],
-        semesterId - 1,
-      ); // 현재 학기 기준 정동아리 list
-    logger.debug(`[getReRegistrationAbleList] semester Id is ${semesterId}`);
+
+    // student 가 delegate 저번 학기 인 동아리 가져오기
+    const clubTemp =
+      await this.clubPublicService.findStudentClubDelegate(studentId);
+
+    const semester = await this.clubPublicService.fetchSemester();
+
+    // delegate 인 동아리가 없을 경우
+    if (!clubTemp) return { clubs: [] };
+
+    const club = await this.clubPublicService.fetch(clubTemp.id, {
+      id: semester.id - 1,
+    });
+
+    // 정동아리가 아닐 경우 return []
+    if (club.typeEnum !== ClubTypeEnum.Regular) return { clubs: [] };
+
+    // 데이터 조립
+    const professor = club.professor
+      ? await this.userPublicService.findProfessor(club.professor.id)
+      : null;
+
     return {
-      clubs: reRegAbleList,
+      clubs: [
+        {
+          id: club.id,
+          clubNameKr: club.nameKr,
+          clubNameEn: club.nameEn,
+          professor: professor
+            ? {
+                ...professor,
+                professorEnumId: professor.professorEnum,
+              }
+            : null,
+        },
+      ],
     };
   }
 
-  // 가동아리 재등록 신청
+  // 가동아리 재등록 신청 확인을 위해 저번 학기 동아리 가져오기
   async getStudentRegistrationClubRegistrationQualificationProvisionalRenewal(
     studentId: number,
   ): Promise<ApiReg018ResponseOk> {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [RegistrationDeadlineEnum.ClubRegistrationApplication],
     });
-    const cur = getKSTDate();
-    const semesterId = await this.clubPublicService.dateToSemesterId(cur);
-    const reRegAbleList =
-      await this.clubPublicService.getClubIdByClubStatusEnumId(
-        studentId,
-        [ClubTypeEnum.Regular, ClubTypeEnum.Provisional],
-        semesterId,
-      );
+
+    // student 가 delegate 저번 학기 인 동아리 가져오기
+    const clubTemp =
+      await this.clubPublicService.findStudentClubDelegate(studentId);
+    const registeredSemesters =
+      await this.clubPublicService.getClubsExistedSemesters({
+        clubId: clubTemp.id,
+      });
+
+    const maxSemesterId = Math.max(...registeredSemesters.map(e => e.id));
+    const club = await this.clubPublicService.fetch(clubTemp.id, {
+      id: maxSemesterId,
+    });
+
+    // 없을 경우 return null
+    if (!club) return { clubs: [] };
+
+    // 데이터 조립
+    const professor = club.professor
+      ? await this.userPublicService.findProfessor(club.professor.id)
+      : null;
+
     return {
-      clubs: reRegAbleList,
+      clubs: [
+        {
+          id: club.id,
+          clubNameKr: club.nameKr,
+          clubNameEn: club.nameEn,
+          professor: professor
+            ? {
+                ...professor,
+                professorEnumId: professor.professorEnum,
+              }
+            : null,
+        },
+      ],
     };
   }
 
-  // 정동아리 신규 등록 신청
+  // 정동아리 신규 등록 신청을 위해 지난 동아리의 가장 최근의 정보를 받아옴
   async getStudentRegistrationClubRegistrationQualificationPromotional(
     studentId: number,
   ): Promise<ApiReg003ResponseOk> {
     await this.clubRegistrationPublicService.checkDeadline({
       enums: [RegistrationDeadlineEnum.ClubRegistrationApplication],
     });
-    const cur = getKSTDate();
-    const semesterId = await this.clubPublicService.dateToSemesterId(cur);
-    const promAbleList =
-      await this.clubPublicService.getEligibleClubsForRegistration(
-        studentId,
-        semesterId,
-      ); // 2학기 연속 가동아리, 3학기 이내 정동아리 list
+    // student 가 delegate 인 동아리 가져오기
+    const clubTmp =
+      await this.clubPublicService.findStudentClubDelegate(studentId);
+    const semester = await this.clubPublicService.fetchSemester();
+    // 없을 경우 return null
+    if (!clubTmp) return { clubs: [] };
 
+    const clubId = clubTmp.id;
+
+    const clubSummaryResponse =
+      await this.clubPublicService.makeClubSummaryResponse({ id: clubId });
+
+    const registeredSemesters =
+      await this.clubPublicService.getClubsExistedSemesters({
+        clubId,
+      });
+
+    const semesterMinusOne = registeredSemesters.some(
+      e => e.id === semester.id - 1,
+    )
+      ? (
+          await this.clubPublicService.getClubSummariesByClubIdAndSemesterIds(
+            clubId,
+            [semester.id - 1],
+          )
+        )[0]
+      : null;
+
+    const semesterMinusTwo = registeredSemesters.some(
+      e => e.id === semester.id - 2,
+    )
+      ? (
+          await this.clubPublicService.getClubSummariesByClubIdAndSemesterIds(
+            clubId,
+            [semester.id - 2],
+          )
+        )[0]
+      : null;
+
+    const semesterMinusThree = registeredSemesters.some(
+      e => e.id === semester.id - 3,
+    )
+      ? (
+          await this.clubPublicService.getClubSummariesByClubIdAndSemesterIds(
+            clubId,
+            [semester.id - 3],
+          )
+        )[0]
+      : null;
+
+    const promotionalProvisionalSemesters = [
+      semesterMinusOne,
+      semesterMinusTwo,
+    ];
+
+    // 정동아리였던 기록으로 신규등록
+    const promotionalRegularSemesters = [semesterMinusTwo, semesterMinusThree];
+
+    if (
+      promotionalRegularSemesters.some(
+        e => e && e.typeEnum === ClubTypeEnum.Regular,
+      ) ||
+      promotionalProvisionalSemesters.every(
+        e => e && e.typeEnum === ClubTypeEnum.Provisional,
+      )
+    ) {
+      // 데이터 조립
+      const maxSemesterId = Math.max(...registeredSemesters.map(e => e.id));
+      const club = await this.clubPublicService.fetch(clubId, {
+        id: maxSemesterId,
+      });
+      const professor = club.professor
+        ? await this.userPublicService.findProfessor(club.professor.id)
+        : null;
+
+      return {
+        clubs: [
+          {
+            id: clubId,
+            clubNameKr: clubSummaryResponse.name,
+            clubNameEn: clubSummaryResponse.nameEn,
+            professor: professor
+              ? {
+                  ...professor,
+                  professorEnumId: professor.professorEnum,
+                }
+              : null,
+          },
+        ],
+      };
+    }
     return {
-      clubs: promAbleList,
+      clubs: [],
     };
   }
 
@@ -538,9 +674,9 @@ export class ClubRegistrationService {
           id: e.registration.divisionId,
           name: e.division.name,
         },
-        clubNameKr: e.club.name_kr,
+        clubNameKr: e.club.nameKr,
         newClubNameKr: e.registration.clubNameKr,
-        clubNameEn: e.club.name_en,
+        clubNameEn: e.club.nameEn,
         newClubNameEn: e.registration.clubNameEn,
         student: {
           id: e.student.id,
@@ -623,8 +759,8 @@ export class ClubRegistrationService {
       registrationStatusEnumId:
         result.registration.registrationApplicationStatusEnumId,
       clubId: result.registration.clubId,
-      clubNameKr: result.club.name_kr,
-      clubNameEn: result.club.name_en,
+      clubNameKr: result.club.nameKr,
+      clubNameEn: result.club.nameEn,
       newClubNameKr: result.registration.clubNameKr,
       newClubNameEn: result.registration.clubNameEn,
       representative: {
@@ -735,22 +871,22 @@ export class ClubRegistrationService {
     studentId: IStudent["id"],
   ): Promise<ApiReg025ResponseOk> {
     // student 가 delegate 인 동아리 가져오기
-    const club =
+    const clubTmp =
       await this.clubPublicService.findStudentClubDelegate(studentId);
-
     const semester = await this.clubPublicService.fetchSemester();
     // 없을 경우 return null
-    if (!club) return { club: null };
+    if (!clubTmp) return { club: null };
 
     // 있을 경우 해당 동아리의 이번 등록 여부 조회
+    const clubId = clubTmp.id;
     const registrations =
       await this.clubRegistrationRepository.findByClubAndSemesterId(
-        club.id,
+        clubId,
         semester.id,
       );
 
     const clubSummaryResponse =
-      await this.clubPublicService.makeClubSummaryResponse(club);
+      await this.clubPublicService.makeClubSummaryResponse({ id: clubId });
 
     if (registrations.length > 0) {
       return {
@@ -761,33 +897,65 @@ export class ClubRegistrationService {
       };
     }
 
-    // 이번 등록이 없을 경우 해당 동아리의 등록 가능한 타입 조회
-    const renewalList = (
-      await this.getStudentRegistrationClubRegistrationQualificationRenewal(
-        studentId,
-      )
-    ).clubs;
-    const provisionalRenewalList = (
-      await this.getStudentRegistrationClubRegistrationQualificationProvisionalRenewal(
-        studentId,
-      )
-    ).clubs;
-    const promotionalList = (
-      await this.getStudentRegistrationClubRegistrationQualificationPromotional(
-        studentId,
-      )
-    ).clubs;
+    const registeredSemesters =
+      await this.clubPublicService.getClubsExistedSemesters({
+        clubId,
+      });
+
+    const semesterMinusOne = registeredSemesters.some(
+      e => e.id === semester.id - 1,
+    )
+      ? (
+          await this.clubPublicService.getClubSummariesByClubIdAndSemesterIds(
+            clubId,
+            [semester.id - 1],
+          )
+        )[0]
+      : null;
+
+    const semesterMinusTwo = registeredSemesters.some(
+      e => e.id === semester.id - 2,
+    )
+      ? (
+          await this.clubPublicService.getClubSummariesByClubIdAndSemesterIds(
+            clubId,
+            [semester.id - 2],
+          )
+        )[0]
+      : null;
+
+    const semesterMinusThree = registeredSemesters.some(
+      e => e.id === semester.id - 3,
+    )
+      ? (
+          await this.clubPublicService.getClubSummariesByClubIdAndSemesterIds(
+            clubId,
+            [semester.id - 3],
+          )
+        )[0]
+      : null;
+
+    const promotionalProvisionalSemesters = [
+      semesterMinusOne,
+      semesterMinusTwo,
+    ];
+
+    // 정동아리였던 기록으로 신규등록
+    const promotionalRegularSemesters = [semesterMinusTwo, semesterMinusThree];
 
     const availableRegistrationTypeEnums = [
-      renewalList.some(e => e.id === club.id)
+      semesterMinusOne && semesterMinusOne.typeEnum === ClubTypeEnum.Regular
         ? RegistrationTypeEnum.Renewal
         : null,
-      promotionalList.some(e => e.id === club.id)
+      promotionalRegularSemesters.some(
+        e => e && e.typeEnum === ClubTypeEnum.Regular,
+      ) ||
+      promotionalProvisionalSemesters.every(
+        e => e && e.typeEnum === ClubTypeEnum.Provisional,
+      )
         ? RegistrationTypeEnum.Promotional
         : null,
-      provisionalRenewalList.some(e => e.id === club.id)
-        ? RegistrationTypeEnum.ReProvisional
-        : null,
+      semesterMinusOne ? RegistrationTypeEnum.ReProvisional : null,
     ].filter(Boolean);
 
     return {

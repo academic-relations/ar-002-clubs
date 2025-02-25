@@ -139,8 +139,8 @@ export default class ClubStudentTRepository {
     const clubs = await this.db
       .select({
         id: ClubStudentT.clubId,
-        name_kr: Club.name_kr,
-        name_en: Club.name_en,
+        nameKr: Club.nameKr,
+        nameEn: Club.nameEn,
       })
       .from(ClubStudentT)
       .leftJoin(Club, eq(Club.id, ClubStudentT.clubId))

@@ -64,20 +64,27 @@ export default class SemesterDRepository {
     return result;
   }
 
-  async fetch(date: Date): Promise<ISemester> {
+  async fetch(date: Date): Promise<ISemester>;
+  async fetch(id: number): Promise<ISemester>;
+  async fetch(arg: Date | number): Promise<ISemester> {
+    const whereClause = [];
+    if (typeof arg === "number") {
+      whereClause.push(eq(SemesterD.id, arg));
+    }
+    if (arg instanceof Date) {
+      whereClause.push(
+        and(lte(SemesterD.startTerm, arg), gt(SemesterD.endTerm, arg)),
+      );
+    }
+    whereClause.push(isNull(SemesterD.deletedAt));
+
     const result = await this.db
       .select()
       .from(SemesterD)
-      .where(
-        and(
-          lte(SemesterD.startTerm, date),
-          gt(SemesterD.endTerm, date),
-          isNull(SemesterD.deletedAt),
-        ),
-      );
+      .where(and(...whereClause));
 
     if (result.length !== 1) {
-      throw new NotFoundException(`No semester found for ${date}`);
+      throw new NotFoundException(`No semester found for ${arg}`);
     }
 
     return result[0];

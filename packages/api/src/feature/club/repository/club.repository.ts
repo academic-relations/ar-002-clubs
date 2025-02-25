@@ -16,12 +16,17 @@ import { MySql2Database } from "drizzle-orm/mysql2";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 
 import type { ApiClb001ResponseOK } from "@sparcs-clubs/interface/api/club/endpoint/apiClb001";
-import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+import { ISemester } from "@sparcs-clubs/interface/api/club/type/semester.type";
+import {
+  ClubDelegateEnum,
+  ClubTypeEnum,
+} from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
 import {
   Club,
   ClubDelegateD,
+  ClubRoomT,
   ClubStudentT,
   ClubT,
 } from "@sparcs-clubs/api/drizzle/schema/club.schema";
@@ -35,6 +40,7 @@ import {
   Student,
 } from "@sparcs-clubs/api/drizzle/schema/user.schema";
 
+import { MClub } from "../model/club.model";
 import { VClubSummary } from "../model/club.summary.model";
 
 interface IClubs {
@@ -43,8 +49,8 @@ interface IClubs {
   clubs: {
     type: number;
     id: number;
-    name_kr: string;
-    name_en: string;
+    nameKr: string;
+    nameEn: string;
     isPermanent: boolean;
     characteristic: string;
     representative: string;
@@ -73,8 +79,8 @@ export default class ClubRepository {
     const clubInfo = await this.db
       .select({
         id: Club.id,
-        name_kr: Club.name_kr,
-        name_en: Club.name_en,
+        nameKr: Club.nameKr,
+        nameEn: Club.nameEn,
         type: ClubT.clubStatusEnumId,
         characteristic: ClubT.characteristicKr,
         advisor: Professor.name,
@@ -115,8 +121,8 @@ export default class ClubRepository {
         clubs: {
           type: ClubT.clubStatusEnumId,
           id: Club.id,
-          name_kr: Club.name_kr,
-          name_en: Club.name_en,
+          nameKr: Club.nameKr,
+          nameEn: Club.nameEn,
           isPermanent: DivisionPermanentClubD.id,
           characteristic: ClubT.characteristicKr,
           representative: Student.name,
@@ -171,8 +177,8 @@ export default class ClubRepository {
         Division.id,
         Division.name,
         Club.id,
-        Club.name_kr,
-        Club.name_en,
+        Club.nameKr,
+        Club.nameEn,
         ClubT.clubStatusEnumId,
         ClubT.characteristicKr,
         Student.name,
@@ -205,8 +211,8 @@ export default class ClubRepository {
   async findClubActivities(studentId: number): Promise<{
     clubs: {
       id: number;
-      name_kr: string;
-      name_en: string;
+      nameKr: string;
+      nameEn: string;
       dateRange: { startMonth: Date; endMonth: Date | undefined }[];
     }[];
   }> {
@@ -218,8 +224,8 @@ export default class ClubRepository {
       .then(rows =>
         rows.map(row => ({
           id: row.club_student_t.clubId,
-          name_kr: row.club.name_kr,
-          name_en: row.club.name_en,
+          nameKr: row.club.nameKr,
+          nameEn: row.club.nameEn,
           startMonth: row.club_student_t.startTerm,
           endMonth: row.club_student_t.endTerm,
         })),
@@ -227,20 +233,14 @@ export default class ClubRepository {
 
     const groupedActivities = clubActivities.reduce(
       (acc, activity) => {
-        const {
-          id,
-          name_kr: nameKr,
-          name_en: nameEn,
-          startMonth,
-          endMonth,
-        } = activity;
+        const { id, nameKr, nameEn, startMonth, endMonth } = activity;
 
         const updatedAcc = { ...acc };
         if (!updatedAcc[id]) {
           updatedAcc[id] = {
             id,
-            name_kr: nameKr,
-            name_en: nameEn,
+            nameKr,
+            nameEn,
             dateRange: [{ startMonth, endMonth }],
           };
           return updatedAcc;
@@ -271,8 +271,8 @@ export default class ClubRepository {
       {} as {
         [key: number]: {
           id: number;
-          name_kr: string;
-          name_en: string;
+          nameKr: string;
+          nameEn: string;
           dateRange: { startMonth: Date; endMonth: Date | undefined }[];
         };
       },
@@ -282,14 +282,14 @@ export default class ClubRepository {
 
   async findClubName(
     clubId: number,
-  ): Promise<{ name_kr: string; name_en: string }> {
+  ): Promise<{ nameKr: string; nameEn: string }> {
     return this.db
-      .select({ name_kr: Club.name_kr, name_en: Club.name_en })
+      .select({ nameKr: Club.nameKr, nameEn: Club.nameEn })
       .from(Club)
       .where(eq(Club.id, clubId))
       .then(result =>
         result[0]
-          ? { name_kr: result[0].name_kr, name_en: result[0].name_en }
+          ? { nameKr: result[0].nameKr, nameEn: result[0].nameEn }
           : undefined,
       );
   }
@@ -336,8 +336,8 @@ export default class ClubRepository {
       const club = await tx
         .selectDistinct({
           id: Club.id,
-          clubNameKr: Club.name_kr,
-          clubNameEn: Club.name_en,
+          clubNameKr: Club.nameKr,
+          clubNameEn: Club.nameEn,
           professor: {
             name: professor.name,
             email: professor.email,
@@ -443,8 +443,8 @@ export default class ClubRepository {
       const response = await tx
         .selectDistinct({
           id: Club.id,
-          clubNameKr: Club.name_kr,
-          clubNameEn: Club.name_en,
+          clubNameKr: Club.nameKr,
+          clubNameEn: Club.nameEn,
           professor: {
             name: professor.name,
             email: professor.email,
@@ -485,27 +485,105 @@ export default class ClubRepository {
     return VClubSummary.fromDBResult(result[0]);
   }
 
-  async fetchSummaries(clubIds: number[]): Promise<VClubSummary[]> {
+  async fetchSummaries(
+    clubIds: number[],
+    semesterIds?: number[],
+  ): Promise<VClubSummary[]> {
     if (clubIds.length === 0) {
       return [];
     }
 
-    const cur = getKSTDate();
+    const whereClause = [];
+
+    if (clubIds.length > 0) {
+      whereClause.push(inArray(Club.id, clubIds));
+    }
+
+    if (semesterIds && semesterIds.length > 0) {
+      whereClause.push(inArray(ClubT.semesterId, semesterIds));
+    } else {
+      const cur = getKSTDate();
+      whereClause.push(
+        and(
+          lte(ClubT.startTerm, cur),
+          or(gte(ClubT.endTerm, cur), isNull(ClubT.endTerm)),
+        ),
+      );
+    }
+
+    whereClause.push(isNull(ClubT.deletedAt));
+
     const result = await this.db
       .select()
       .from(Club)
-      .leftJoin(
-        ClubT,
-        and(
-          eq(Club.id, ClubT.clubId),
-          and(
-            lte(ClubT.startTerm, cur),
-            or(gte(ClubT.endTerm, cur), isNull(ClubT.endTerm)),
-          ),
-        ),
-      )
-      .where(inArray(Club.id, clubIds));
+      .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
+      .where(and(...whereClause));
 
     return result.map(club => VClubSummary.fromDBResult(club));
+  }
+
+  async fetch(clubId: number, semester: ISemester, date?: Date) {
+    const day = date ?? getKSTDate(semester.endTerm);
+
+    // club 조건
+    const whereClause = [];
+
+    whereClause.push(eq(Club.id, clubId));
+
+    whereClause.push(eq(ClubT.semesterId, semester.id));
+
+    whereClause.push(isNull(ClubT.deletedAt));
+
+    // delegate 조건
+    const delegateWhereClause = [];
+
+    delegateWhereClause.push(eq(ClubDelegateD.clubId, clubId));
+
+    delegateWhereClause.push(
+      and(
+        lte(ClubDelegateD.startTerm, day),
+        or(gte(ClubDelegateD.endTerm, day), isNull(ClubDelegateD.endTerm)),
+      ),
+    );
+
+    delegateWhereClause.push(isNull(ClubDelegateD.deletedAt));
+
+    const [clubResult, delegateResult] = await Promise.all([
+      this.db
+        .select()
+        .from(Club)
+        .innerJoin(ClubT, eq(Club.id, ClubT.clubId))
+        .leftJoin(
+          ClubRoomT,
+          and(
+            eq(Club.id, ClubRoomT.clubId),
+            eq(ClubT.semesterId, ClubRoomT.semesterId),
+          ),
+        )
+        .where(and(...whereClause)),
+      this.db
+        .select()
+        .from(ClubDelegateD)
+        .where(and(...delegateWhereClause)),
+    ]);
+
+    if (clubResult.length !== 1) {
+      throw new NotFoundException("Club not found");
+    }
+
+    const club = clubResult[0];
+
+    if (
+      !delegateResult.some(
+        e => e.ClubDelegateEnumId === ClubDelegateEnum.Representative,
+      )
+    ) {
+      throw new NotFoundException("Delegate not found");
+    }
+
+    return MClub.fromDBResult({
+      ...club,
+      club_delegate_d: delegateResult,
+    });
   }
 }

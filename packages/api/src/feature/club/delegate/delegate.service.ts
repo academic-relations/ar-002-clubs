@@ -340,7 +340,7 @@ export default class ClubDelegateService {
           clubDelegateChangeRequestStatusEnumId:
             e.clubDelegateChangeRequestStatusEnumId,
           prevStudentId: e.prevStudentId,
-          clubName: club.name_kr,
+          clubName: club.nameKr,
         };
       }),
     );

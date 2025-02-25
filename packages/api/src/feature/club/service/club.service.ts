@@ -112,8 +112,8 @@ export class ClubService {
 
     return {
       id: clubDetails.id,
-      name_kr: clubDetails.name_kr,
-      name_en: clubDetails.name_en,
+      nameKr: clubDetails.nameKr,
+      nameEn: clubDetails.nameEn,
       type: clubDetails.type,
       characteristic: clubDetails.characteristic,
       advisor: clubDetails.advisor,
@@ -161,8 +161,8 @@ export class ClubService {
             return {
               type: clubInfo.clubStatusEnumId,
               id: club.id,
-              name_kr: clubName.name_kr,
-              name_en: clubName.name_en,
+              nameKr: clubName.nameKr,
+              nameEn: clubName.nameEn,
               isPermanent,
               characteristic: clubInfo.characteristicKr,
               representative: representative
@@ -324,8 +324,8 @@ export class ClubService {
             return {
               type: clubInfo.clubStatusEnumId,
               id: club.id,
-              name_kr: clubName.name_kr,
-              name_en: clubName.name_en,
+              nameKr: clubName.nameKr,
+              nameEn: clubName.nameEn,
               isPermanent,
               characteristic: clubInfo.characteristicKr,
               representative: representative

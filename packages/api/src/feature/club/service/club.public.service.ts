@@ -380,21 +380,47 @@ export default class ClubPublicService {
   }
 
   async makeClubSummaryResponse(
-    club: IClubSummary,
+    club: IClubSummary | { id: IClubSummary["id"] },
   ): Promise<IClubSummaryResponse> {
+    const clubParam =
+      "name" in club ? club : await this.clubRepository.fetchSummary(club.id);
+
     const division = await this.divisionPublicService.getDivisionById({
-      id: club.division.id,
+      id: clubParam.division.id,
     });
-    const professor =
-      club.professor !== null
-        ? await this.userPublicService.getProfessorById({
-            id: club.professor.id,
-          })
-        : null;
     return {
-      ...club,
+      ...clubParam,
       division: division[0],
-      professor,
     };
+  }
+
+  async fetch(
+    clubId: number,
+    semester: Pick<ISemester, "id"> | ISemester,
+    date?: Date,
+  ) {
+    const semesterParam =
+      "endTerm" in semester
+        ? semester
+        : await this.semesterDRepository.fetch(semester.id);
+    const result = await this.clubRepository.fetch(clubId, semesterParam, date);
+    return result;
+  }
+
+  /**
+   * @param clubId 동아리 id
+   * @param semesterIds 학기 id 배열
+   * @returns 동아리의 학기별 상태를 리턴합니다.
+   */
+  async getClubSummariesByClubIdAndSemesterIds(
+    clubId: number,
+    semesterIds: number[],
+  ): Promise<IClubSummary[]> {
+    const clubs = await this.clubRepository.fetchSummaries(
+      [clubId],
+      semesterIds,
+    );
+
+    return clubs;
   }
 }

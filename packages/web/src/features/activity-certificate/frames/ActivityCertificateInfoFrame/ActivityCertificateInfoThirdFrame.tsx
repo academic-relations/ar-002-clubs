@@ -141,7 +141,7 @@ const ActivityCertificateInfoThirdFrame: React.FC<
               fw="REGULAR"
               style={{ whiteSpace: "pre-wrap" }}
             >
-              {`  •  동아리: ${clubData?.name_kr}`}{" "}
+              {`  •  동아리: ${clubData?.nameKr}`}{" "}
             </Typography>
             <Typography
               key="orderInfoDuration"

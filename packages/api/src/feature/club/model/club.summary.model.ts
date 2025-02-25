@@ -1,52 +1,41 @@
+import { InferSelectModel } from "drizzle-orm";
+
 import { IClubSummary } from "@sparcs-clubs/interface/api/club/type/club.type";
-import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
+
+import { Club, ClubT } from "@sparcs-clubs/api/drizzle/schema/club.schema";
+
+type ClubSummaryDBResult = {
+  club: InferSelectModel<typeof Club>;
+  club_t: InferSelectModel<typeof ClubT>;
+};
 
 export class VClubSummary implements IClubSummary {
-  id: number;
+  id: IClubSummary["id"];
 
-  name: string;
+  name: IClubSummary["name"];
 
-  typeEnum: ClubTypeEnum;
+  nameEn: IClubSummary["nameEn"];
 
-  division: {
-    id: number;
-  };
+  typeEnum: IClubSummary["typeEnum"];
 
-  professor: {
-    id: number;
-  } | null;
+  division: IClubSummary["division"];
 
   constructor(result: VClubSummary) {
     this.id = result.id;
     this.name = result.name;
     this.typeEnum = result.typeEnum;
     this.division = result.division;
-    this.professor = result.professor;
   }
 
-  static fromDBResult(result: {
-    club: {
-      id: number;
-      name_kr: string;
-      divisionId: number;
-    };
-    club_t: {
-      clubStatusEnumId: ClubTypeEnum;
-      professorId: number | null;
-    };
-  }): VClubSummary {
+  static fromDBResult(result: ClubSummaryDBResult): VClubSummary {
     return new VClubSummary({
       id: result.club.id,
-      name: result.club.name_kr,
+      name: result.club.nameKr,
+      nameEn: result.club.nameEn,
       typeEnum: result.club_t.clubStatusEnumId,
       division: {
         id: result.club.divisionId,
       },
-      professor: result.club_t.professorId
-        ? {
-            id: result.club_t.professorId,
-          }
-        : null,
     });
   }
 }

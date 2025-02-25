@@ -1,8 +1,8 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, gte, inArray, isNull, lte, or } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
-import { IProfessorSummary } from "@sparcs-clubs/interface/api/user/type/user.type";
+import { IProfessor } from "@sparcs-clubs/interface/api/user/type/user.type";
 
 import logger from "@sparcs-clubs/api/common/util/logger";
 import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
@@ -58,7 +58,7 @@ export default class ProfessorRepository {
     return isUpdateSucceed;
   }
 
-  async fetchSummaries(ids: number[]): Promise<IProfessorSummary[]> {
+  async findAll(ids: number[]): Promise<IProfessor[]> {
     if (ids.length === 0) {
       return [];
     }
@@ -67,23 +67,34 @@ export default class ProfessorRepository {
       .select({
         id: Professor.id,
         name: Professor.name,
+        userId: Professor.userId,
+        email: Professor.email,
+        professorEnum: ProfessorT.professorEnum,
+        department: ProfessorT.department,
+        phoneNumber: Professor.phoneNumber,
       })
       .from(Professor)
+      .leftJoin(ProfessorT, eq(ProfessorT.professorId, Professor.id))
       .where(inArray(Professor.id, ids));
     return professors;
   }
 
-  async fetchSummary(id: number): Promise<IProfessorSummary> {
+  async find(id: number): Promise<IProfessor> {
     const result = await this.db
       .select({
         id: Professor.id,
         name: Professor.name,
+        userId: Professor.userId,
+        email: Professor.email,
+        professorEnum: ProfessorT.professorEnum,
+        department: ProfessorT.department,
+        phoneNumber: Professor.phoneNumber,
       })
       .from(Professor)
       .where(and(eq(Professor.id, id), isNull(Professor.deletedAt)));
 
     if (result.length !== 1) {
-      throw new NotFoundException("Professor not found");
+      return null;
     }
 
     return result[0];

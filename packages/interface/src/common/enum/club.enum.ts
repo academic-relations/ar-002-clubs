@@ -1,4 +1,4 @@
-enum ClubTypeEnum {
+export enum ClubTypeEnum {
   Regular = 1, // 정동아리
   Provisional, // 가동아리
 }
@@ -15,4 +15,9 @@ export enum ClubDelegateChangeRequestStatusEnum {
   Rejected, // 반려
 }
 
-export { ClubTypeEnum };
+export enum ClubBuildingEnum {
+  Taeul = 1, // 태울관(N13)
+  Store, // 매점건물, 학부학생회관별관(N12)
+  Post, // 우체국건물, 학부학생회관(N11)
+  Sports, // 스포츠컴플렉스(N10)
+}

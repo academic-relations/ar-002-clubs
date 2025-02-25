@@ -19,8 +19,8 @@ interface PrintingBusinessFormProps {
   username: string;
   clubs: Array<{
     id: ApiPrt002RequestParam["clubId"];
-    name_kr: string;
-    name_en: string;
+    nameKr: string;
+    nameEn: string;
   }>;
   setAgreement: React.Dispatch<React.SetStateAction<boolean>>;
   step: number;

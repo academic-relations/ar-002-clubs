@@ -47,7 +47,7 @@ const ExecutiveFundingClub = () => {
             { name: "집행부원 대시보드", path: "/executive" },
             { name: "지원금 신청 내역", path: `/executive/funding` },
           ]}
-          title={`지원금 신청 내역 (${data?.name_kr})`}
+          title={`지원금 신청 내역 (${data?.nameKr})`}
           enableLast
         />
         <ExecutiveFundingClubFrame />
