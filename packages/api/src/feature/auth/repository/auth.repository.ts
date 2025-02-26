@@ -193,9 +193,12 @@ export class AuthRepository {
               gte(ExecutiveT.endTerm, currentDate),
               isNull(ExecutiveT.endTerm),
             ),
+            isNull(ExecutiveT.deletedAt),
           ),
         )
-        .where(eq(Executive.studentId, student.id))
+        .where(
+          and(eq(Executive.studentId, student.id), isNull(Executive.deletedAt)),
+        )
         .then(takeUnique);
       if (executive) {
         result.executive = {
