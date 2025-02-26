@@ -21,7 +21,7 @@ export interface SemesterCredit {
 
 const credits: SemesterCredit[] = [
   {
-    semester: "2026년 봄",
+    semester: "2025년 봄",
     members: [
       {
         nickname: "hama",
