@@ -33,7 +33,7 @@ export const Registration = mysqlTable(
   {
     id: int("id").autoincrement().primaryKey(),
     clubId: int("club_id").references(() => Club.id),
-    semesterId: int("semester_d_id").references(() => SemesterD.id),
+    semesterId: int("semester_d_id"), //.references(() => SemesterD.id),
     registrationApplicationTypeEnumId: int(
       "registration_application_type_enum_id",
     ).notNull(),

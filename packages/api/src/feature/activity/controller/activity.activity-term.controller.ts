@@ -11,6 +11,10 @@ import type {
   ApiAct009ResponseOk,
 } from "@sparcs-clubs/interface/api/activity/endpoint/apiAct009";
 import apiAct009 from "@sparcs-clubs/interface/api/activity/endpoint/apiAct009";
+import apiAct030, {
+  ApiAct030RequestUrl,
+  ApiAct030ResponseOk,
+} from "@sparcs-clubs/interface/api/activity/endpoint/apiAct030";
 
 import { ZodPipe } from "@sparcs-clubs/api/common/pipe/zod-pipe";
 import { Student } from "@sparcs-clubs/api/common/util/decorators/method-decorator";
@@ -54,5 +58,16 @@ export default class ActivityActivityTermController {
         user.studentId,
       );
     return result;
+  }
+
+  @Student()
+  @Get(ApiAct030RequestUrl)
+  @UsePipes(new ZodPipe(apiAct030))
+  async getStudentActivitiesProvisionalAvailableDurations(
+    @GetStudent() user: GetStudent,
+  ): Promise<ApiAct030ResponseOk> {
+    return this.activityActivityTermService.getStudentActivitiesProvisionalAvailableDurations(
+      user.studentId,
+    );
   }
 }

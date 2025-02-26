@@ -1,8 +1,9 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { and, between, eq, gt, isNull, lte, sql } from "drizzle-orm";
+import { and, between, eq, gt, inArray, isNull, lte, sql } from "drizzle-orm";
 import { MySql2Database } from "drizzle-orm/mysql2";
 
 import { ISemester } from "@sparcs-clubs/interface/api/club/type/semester.type";
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import { takeUnique } from "@sparcs-clubs/api/common/util/util";
 import { DrizzleAsyncProvider } from "@sparcs-clubs/api/drizzle/drizzle.provider";
@@ -60,6 +61,31 @@ export default class SemesterDRepository {
       .from(SemesterD)
       .innerJoin(ClubT, eq(SemesterD.id, ClubT.semesterId))
       .where(and(eq(ClubT.clubId, param.clubId), isNull(ClubT.deletedAt)))
+      .then(e => e.map(({ semester_d }) => semester_d)); // eslint-disable-line camelcase
+    return result;
+  }
+
+  /**
+   * @param clubId 동아리 id
+
+   * @returns 해당 동아리가 등록했던 학기들의 정보를 리턴합니다.
+   * 동아리가 등록했던 학기의 구분은 ClubT 테이블을 기준으로 합니다.
+   */
+  async selectByClubIdAndTypes(param: {
+    clubId: number;
+    clubTypeEnums: Array<ClubTypeEnum>;
+  }) {
+    const result = await this.db
+      .select()
+      .from(SemesterD)
+      .innerJoin(ClubT, eq(SemesterD.id, ClubT.semesterId))
+      .where(
+        and(
+          eq(ClubT.clubId, param.clubId),
+          inArray(ClubT.clubStatusEnumId, param.clubTypeEnums),
+          isNull(ClubT.deletedAt),
+        ),
+      )
       .then(e => e.map(({ semester_d }) => semester_d)); // eslint-disable-line camelcase
     return result;
   }

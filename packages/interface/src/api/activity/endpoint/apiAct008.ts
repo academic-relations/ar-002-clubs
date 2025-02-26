@@ -2,6 +2,7 @@ import { HttpStatusCode } from "axios";
 import { z } from "zod";
 
 import { ActivityTypeEnum } from "@sparcs-clubs/interface/common/enum/activity.enum";
+import zId from "@sparcs-clubs/interface/common/type/id.type";
 
 /**
  * @version v0.1
@@ -28,6 +29,7 @@ const requestQuery = z.object({});
 const requestBody = z.object({
   name: z.string().max(255),
   activityTypeEnumId: z.nativeEnum(ActivityTypeEnum),
+  activityDId: zId,
   durations: z
     .array(
       z.object({
