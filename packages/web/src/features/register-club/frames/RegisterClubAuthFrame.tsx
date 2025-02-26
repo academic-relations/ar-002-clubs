@@ -44,6 +44,32 @@ const RegisterClubAuthFrame: React.FC<{
     [myClubRegistrationData],
   );
 
+  const canRegisterClub = useMemo<boolean>(() => {
+    if (availableRegistrationInfo) {
+      if (
+        availableRegistrationInfo.noManageClub &&
+        type === RegistrationTypeEnum.NewProvisional
+      ) {
+        return true;
+      }
+
+      if (availableRegistrationInfo.haveAvailableRegistration && type) {
+        if (
+          type === RegistrationTypeEnum.NewProvisional &&
+          availableRegistrationInfo.availableRegistrations.includes(
+            RegistrationTypeEnum.ReProvisional,
+          )
+        ) {
+          return true;
+        }
+
+        return availableRegistrationInfo.availableRegistrations.includes(type);
+      }
+    }
+
+    return false;
+  }, [availableRegistrationInfo, type]);
+
   if (
     isLoading ||
     checkLoading ||
@@ -75,12 +101,7 @@ const RegisterClubAuthFrame: React.FC<{
     );
   }
 
-  if (
-    (availableRegistrationInfo.haveAvailableRegistration &&
-      !availableRegistrationInfo.availableRegistrations.includes(type)) ||
-    (availableRegistrationInfo.noManageClub &&
-      type !== RegistrationTypeEnum.NewProvisional)
-  ) {
+  if (!canRegisterClub) {
     return (
       <HasClubRegistration
         errorMessage={`관리하고 있는 동아리의 동아리 신청 내역이 존재하거나 \n 동아리 등록 신청 조건에 만족하지 않아 신청할 수 없습니다.`}

@@ -719,8 +719,8 @@ export default class ActivityRepository {
         clubId: Club.id,
         clubTypeEnum: ClubT.clubStatusEnumId,
         divisionName: Division.name,
-        clubNameKr: Club.name_kr,
-        clubNameEn: Club.name_en,
+        clubNameKr: Club.nameKr,
+        clubNameEn: Club.nameEn,
         advisor: Professor.name,
         chargedExecutiveId: ActivityClubChargedExecutive.executiveId,
       })

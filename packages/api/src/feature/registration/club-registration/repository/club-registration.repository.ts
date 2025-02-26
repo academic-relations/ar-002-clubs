@@ -418,8 +418,8 @@ export class ClubRegistrationRepository {
           registrationStatusEnumId:
             Registration.registrationApplicationStatusEnumId,
           clubId: Registration.clubId,
-          clubNameKr: Club.name_kr,
-          clubNameEn: Club.name_en,
+          clubNameKr: Club.nameKr,
+          clubNameEn: Club.nameEn,
           newClubNameKr: Registration.clubNameKr,
           newClubNameEn: Registration.clubNameEn,
           representative: {
@@ -549,8 +549,8 @@ export class ClubRegistrationRepository {
         id: Registration.id,
         registrationTypeEnum: Registration.registrationApplicationTypeEnumId,
         divisionName: Division.name,
-        clubNameKr: Club.name_kr,
-        clubNameEn: Club.name_en,
+        clubNameKr: Club.nameKr,
+        clubNameEn: Club.nameEn,
         newClubNameKr: Registration.clubNameKr,
         newClubNameEn: Registration.clubNameEn,
         clubId: Registration.clubId,
@@ -610,8 +610,8 @@ export class ClubRegistrationRepository {
         registrationStatusEnumId:
           Registration.registrationApplicationStatusEnumId,
         divisionId: Registration.divisionId,
-        clubNameKr: Club.name_kr,
-        clubNameEn: Club.name_en,
+        clubNameKr: Club.nameKr,
+        clubNameEn: Club.nameEn,
         newClubNameKr: Registration.clubNameKr,
         newClubNameEn: Registration.clubNameEn,
         representativeName: Student.name,
@@ -702,8 +702,8 @@ export class ClubRegistrationRepository {
           registrationStatusEnumId:
             Registration.registrationApplicationStatusEnumId,
           clubId: Registration.clubId,
-          clubNameKr: Club.name_kr,
-          clubNameEn: Club.name_en,
+          clubNameKr: Club.nameKr,
+          clubNameEn: Club.nameEn,
           newClubNameKr: Registration.clubNameKr,
           newClubNameEn: Registration.clubNameEn,
           representative: {

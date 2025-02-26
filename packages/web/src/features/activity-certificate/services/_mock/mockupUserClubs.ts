@@ -4,8 +4,8 @@ const mockupUserClubs: ApiAcf002ResponseOk = {
   clubs: [
     {
       id: 1,
-      name_kr: "동아리1",
-      name_en: "club1",
+      nameKr: "동아리1",
+      nameEn: "club1",
       dateRange: [
         {
           startMonth: new Date(2024, 3, 1),

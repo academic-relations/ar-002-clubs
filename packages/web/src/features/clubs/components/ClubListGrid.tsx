@@ -60,7 +60,7 @@ const ClubListGrid: React.FC<ClubListGridItemProps> = ({
           style={{ display: "flex", flexDirection: "column" }}
         >
           <ClubCard
-            key={club.name_kr}
+            key={club.nameKr}
             club={club}
             isRegistrationPeriod={isRegistrationPeriod}
             isMobile={isMobileView}

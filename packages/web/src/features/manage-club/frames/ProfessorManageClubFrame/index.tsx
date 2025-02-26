@@ -48,7 +48,7 @@ const ProfessorManageClubFrame: React.FC = () => {
           label="동아리"
           placeholder="동아리를 선택해주세요"
           items={manageClubList.map(club => ({
-            label: club.name_kr,
+            label: club.nameKr,
             value: club.id,
             selectable: true,
           }))}

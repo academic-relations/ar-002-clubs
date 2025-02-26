@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import {
   IExecutiveSummary,
-  IProfessorSummary,
+  IProfessor,
   IStudentSummary,
 } from "@sparcs-clubs/interface/api/user/type/user.type";
 
@@ -201,16 +201,13 @@ export default class UserPublicService {
     return executives;
   }
 
-  async fetchProfessorSummaries(
-    professorIds: number[],
-  ): Promise<IProfessorSummary[]> {
-    const professors =
-      await this.professorRepository.fetchSummaries(professorIds);
+  async findProfessorAll(professorIds: number[]): Promise<IProfessor[]> {
+    const professors = await this.professorRepository.findAll(professorIds);
     return professors;
   }
 
-  async fetchProfessorSummary(professorId: number): Promise<IProfessorSummary> {
-    const professor = await this.professorRepository.fetchSummary(professorId);
+  async findProfessor(professorId: number): Promise<IProfessor | null> {
+    const professor = await this.professorRepository.find(professorId);
     return professor;
   }
 

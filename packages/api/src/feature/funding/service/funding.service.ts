@@ -529,18 +529,12 @@ export default class FundingService {
     const devisions = await this.clubPublicService.fetchDivisionSummaries(
       clubs.map(club => club.division.id),
     );
-    const professors = await this.userPublicService.fetchProfessorSummaries(
-      clubs.map(club => club.professor?.id),
-    );
     const executives =
       await this.userPublicService.fetchCurrentExecutiveSummaries();
 
     const clubsWithCounts = clubs.map(club => ({
       ...club,
       division: devisions.find(division => division.id === club.division.id),
-      professor: professors.find(
-        professor => professor.id === club.professor?.id,
-      ),
       totalCount: fundings.filter(funding => funding.club.id === club.id)
         .length,
       appliedCount: fundings.filter(
@@ -634,9 +628,7 @@ export default class FundingService {
           division: devisions.find(
             division => division.id === club.division.id,
           ),
-          professor: professors.find(
-            professor => professor.id === club.professor?.id,
-          ),
+
           totalCount: fundings.filter(
             funding =>
               funding.club.id === club.id &&

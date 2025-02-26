@@ -87,7 +87,7 @@ export const RegisterInfo: React.FC<RegisterInfoProps> = ({
           >
             {semester?.year}년도 {semester?.name}학기
             <ResponsiveBr /> {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-            {club.name_kr}의<br />
+            {club.nameKr}의<br />
             회원 등록을 취소합니다.
           </CancellableModalContent>
         ) : (
@@ -99,7 +99,7 @@ export const RegisterInfo: React.FC<RegisterInfoProps> = ({
           >
             {semester?.year}년도 {semester?.name}학기
             <ResponsiveBr /> {club.type === 1 ? "정동아리" : "가동아리"}{" "}
-            {club.name_kr}의<br />
+            {club.nameKr}의<br />
             회원 등록 신청을 진행합니다.
           </CancellableModalContent>
         )}

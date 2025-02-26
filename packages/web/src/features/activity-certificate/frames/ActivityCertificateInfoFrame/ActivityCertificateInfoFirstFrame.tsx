@@ -46,7 +46,7 @@ const ActivityCertificateInfoFirstFrame: React.FC<
 
   const clubList: SelectItem<number>[] =
     clubData?.clubs.map(club => ({
-      label: club.name_kr,
+      label: club.nameKr,
       value: club.id,
     })) ?? [];
 

@@ -29,14 +29,14 @@ const ClubsListFrame: React.FC<ClubsListProps> = ({ isRegistrationPeriod }) => {
           const filteredClubs = division.clubs
             .filter(
               item =>
-                item.name_kr.toLowerCase().includes(searchText.toLowerCase()) ||
-                item.name_en.toLowerCase().includes(searchText.toLowerCase()) ||
-                hangulIncludes(item.name_kr, searchText),
+                item.nameKr.toLowerCase().includes(searchText.toLowerCase()) ||
+                item.nameEn.toLowerCase().includes(searchText.toLowerCase()) ||
+                hangulIncludes(item.nameKr, searchText),
             )
             .sort((a, b) => {
               if (a.isPermanent && !b.isPermanent) return -1;
               if (!a.isPermanent && b.isPermanent) return 1;
-              return a.type - b.type || a.name_kr.localeCompare(b.name_kr);
+              return a.type - b.type || a.nameKr.localeCompare(b.nameKr);
             });
 
           return { ...division, clubs: filteredClubs };

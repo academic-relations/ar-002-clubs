@@ -140,7 +140,7 @@ export class MemberRegistrationRepository {
       .select({
         id: RegistrationApplicationStudent.id,
         clubId: RegistrationApplicationStudent.clubId,
-        clubNameKr: Club.name_kr,
+        clubNameKr: Club.nameKr,
         type: ClubT.clubStatusEnumId,
         isPermanent: DivisionPermanentClubD.id,
         divisionName: Division.name,
@@ -312,7 +312,7 @@ export class MemberRegistrationRepository {
       .select({
         id: RegistrationApplicationStudent.id,
         clubId: RegistrationApplicationStudent.clubId,
-        clubName: Club.name_kr,
+        clubName: Club.nameKr,
         clubTypeEnumId: ClubT.clubStatusEnumId,
         division: {
           id: Division.id,
@@ -401,7 +401,7 @@ export class MemberRegistrationRepository {
     const result = await this.db
       .select({
         clubId: RegistrationApplicationStudent.clubId,
-        clubName: Club.name_kr,
+        clubName: Club.nameKr,
         clubTypeEnumId: ClubT.clubStatusEnumId,
         division: {
           id: Division.id,

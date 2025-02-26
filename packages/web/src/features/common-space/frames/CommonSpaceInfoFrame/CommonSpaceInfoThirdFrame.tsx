@@ -114,7 +114,7 @@ const CommonSpaceInfoThirdFrame: React.FC<
                 동아리:{" "}
                 {
                   userProfileData?.clubs.filter(club => club.id === clubId)[0]
-                    ?.name_kr
+                    ?.nameKr
                 }
               </li>
               <li>담당자: {userProfileData?.name}</li>
