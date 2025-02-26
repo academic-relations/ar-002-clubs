@@ -510,7 +510,7 @@ export default class ClubDelegateService {
 
     if (result.length === 0)
       return {
-        status: HttpStatus.FORBIDDEN,
+        status: HttpStatus.NOT_FOUND,
         data: {},
       };
     if (result.length > 1)

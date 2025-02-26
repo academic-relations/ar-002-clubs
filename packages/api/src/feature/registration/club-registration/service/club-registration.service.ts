@@ -196,6 +196,10 @@ export class ClubRegistrationService {
     // student 가 delegate 저번 학기 인 동아리 가져오기
     const clubTemp =
       await this.clubPublicService.findStudentClubDelegate(studentId);
+    if (!clubTemp) {
+      // 대표자 대의원이 아닌 경우에도 값을 보내주기 위한 처리
+      return { clubs: [] };
+    }
     const registeredSemesters =
       await this.clubPublicService.getClubsExistedSemesters({
         clubId: clubTemp.id,
