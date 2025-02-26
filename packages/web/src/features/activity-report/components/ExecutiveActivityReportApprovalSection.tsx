@@ -9,11 +9,11 @@ import TextInput from "@sparcs-clubs/web/common/components/Forms/TextInput";
 import Modal from "@sparcs-clubs/web/common/components/Modal";
 import ConfirmModalContent from "@sparcs-clubs/web/common/components/Modal/ConfirmModalContent";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
+import { Comment } from "@sparcs-clubs/web/types/comment";
 import { formatSlashDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
 import useExecutiveApproveActivityReport from "../hooks/useExecutiveApproveActivityReport";
 import useExecutiveRejectActivityReport from "../hooks/useExecutiveRejectActivityReport";
-import { Comment } from "../types/activityReport";
 
 const ExecutiveActivityReportApprovalSection: React.FC<{
   comments: Comment[];

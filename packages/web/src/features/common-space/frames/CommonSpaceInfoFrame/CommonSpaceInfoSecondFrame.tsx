@@ -22,8 +22,8 @@ import Select from "@sparcs-clubs/web/common/components/Select";
 import StyledBottom from "@sparcs-clubs/web/common/components/StyledBottom";
 import Timetable from "@sparcs-clubs/web/common/components/Timetable";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
-import useGetCommonSpaces from "@sparcs-clubs/web/features/common-space/service/getCommonSpaces";
-import useGetCommonSpaceUsageOrders from "@sparcs-clubs/web/features/common-space/service/getCommonSpaceUsageOrders";
+import useGetCommonSpaces from "@sparcs-clubs/web/features/common-space/services/getCommonSpaces";
+import useGetCommonSpaceUsageOrders from "@sparcs-clubs/web/features/common-space/services/getCommonSpaceUsageOrders";
 import { CommonSpaceInfoProps } from "@sparcs-clubs/web/features/common-space/types/commonSpace";
 import {
   formatSimpleSlashDate,

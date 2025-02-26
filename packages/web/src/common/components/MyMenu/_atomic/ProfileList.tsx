@@ -42,7 +42,6 @@ const ProfileList: React.FC<ProfileListProps> = ({
     setSelectedToken(profile.token);
     setLocalStorageItem("accessToken", profile.token);
     setIsMenuOpen(false);
-    window.location.href = "/";
   };
 
   return (

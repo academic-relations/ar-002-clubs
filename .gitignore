@@ -12,7 +12,7 @@
 .zed/*
 
 # File system
-**/.DS_Store 
+**/.DS_Store
 
 # Git Submodules
 .clubs-secrets

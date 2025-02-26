@@ -7,7 +7,7 @@ import {
 } from "@sparcs-clubs/web/common/components/ListItem";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-const ManageCommonSpaceDetailFrame = () => (
+const CommonSpaceDetailFrame = () => (
   <FlexWrapper direction="column" gap={20}>
     {/* TODO: 아래 정보들 백 연결하기 */}
     <FlexWrapper direction="column" gap={16}>
@@ -30,4 +30,4 @@ const ManageCommonSpaceDetailFrame = () => (
     </FlexWrapper>
   </FlexWrapper>
 );
-export default ManageCommonSpaceDetailFrame;
+export default CommonSpaceDetailFrame;

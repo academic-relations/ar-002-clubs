@@ -3,11 +3,11 @@
 import React, { useState } from "react";
 
 import AsyncBoundary from "@sparcs-clubs/web/common/components/AsyncBoundary";
-import ExecutivePrintingTable from "@sparcs-clubs/web/common/components/ExecutivePrintingTable";
 import FlexWrapper from "@sparcs-clubs/web/common/components/FlexWrapper";
 import PageHead from "@sparcs-clubs/web/common/components/PageHead";
 import Pagination from "@sparcs-clubs/web/common/components/Pagination";
-import mockupPrint from "@sparcs-clubs/web/features/printing-business/service/_mock/mockPrinting";
+import ExecutivePrintingTable from "@sparcs-clubs/web/features/printing-business/components/ExecutivePrintingTable";
+import mockupPrint from "@sparcs-clubs/web/features/printing-business/services/_mock/mockPrinting";
 
 const PrintingBusiness = () => {
   const [currentPage, setCurrentPage] = useState(1);
