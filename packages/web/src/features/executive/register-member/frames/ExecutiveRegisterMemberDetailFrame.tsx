@@ -89,7 +89,7 @@ const ExecutiveRegisterMemberDetail = () => {
 
   const club = useGetClubDetail(id as string);
 
-  const GetPageTitle = () => `회원 등록 신청 내역 (${club.data?.name_kr})`;
+  const GetPageTitle = () => `회원 등록 신청 내역 (${club.data?.nameKr})`;
 
   return (
     <AsyncBoundary

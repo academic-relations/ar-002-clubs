@@ -63,11 +63,11 @@ const columns = [
     cell: info => info.getValue(),
     size: 140,
   }),
-  columnHelper.accessor(row => row.professor?.name, {
-    header: "지도교수",
-    cell: info => info.getValue() || "-",
-    size: 140,
-  }),
+  // columnHelper.accessor(row => row.professor?.name, {
+  //   header: "지도교수",
+  //   cell: info => info.getValue() || "-",
+  //   size: 140,
+  // }),
   columnHelper.accessor(
     row => {
       const total = row.totalCount;

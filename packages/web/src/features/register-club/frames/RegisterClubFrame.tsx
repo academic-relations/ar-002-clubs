@@ -92,6 +92,15 @@ const RegisterClubFrame: React.FC = () => {
       }
 
       if (availableRegistrationInfo.haveAvailableRegistration && selectedType) {
+        if (
+          selectedType === RegistrationTypeEnum.NewProvisional &&
+          availableRegistrationInfo.availableRegistrations.includes(
+            RegistrationTypeEnum.ReProvisional,
+          )
+        ) {
+          return true;
+        }
+
         return availableRegistrationInfo.availableRegistrations.includes(
           selectedType,
         );

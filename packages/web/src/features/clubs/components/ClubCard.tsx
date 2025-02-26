@@ -91,9 +91,9 @@ const ClubCard: React.FC<ClubCardProps> = ({
               {getShortClubType(club)}
             </Tag>
           )}
-          <ClubName isMobile={isMobile}>{club.name_kr}</ClubName>
+          <ClubName isMobile={isMobile}>{club.nameKr}</ClubName>
           {/* 돌아가는 텍스트를 만들 수 있어요
-             <ScrollingText isMobile={isMobile} >{club.name_kr}</ScrollingText> */}
+             <ScrollingText isMobile={isMobile} >{club.nameKr}</ScrollingText> */}
         </ClubCardNameWithTag>
         <FlexWrapper direction="row" gap={4}>
           <Icon type="person" size={16} />

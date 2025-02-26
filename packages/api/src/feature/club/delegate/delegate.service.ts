@@ -340,7 +340,7 @@ export default class ClubDelegateService {
           clubDelegateChangeRequestStatusEnumId:
             e.clubDelegateChangeRequestStatusEnumId,
           prevStudentId: e.prevStudentId,
-          clubName: club.name_kr,
+          clubName: club.nameKr,
         };
       }),
     );
@@ -510,7 +510,7 @@ export default class ClubDelegateService {
 
     if (result.length === 0)
       return {
-        status: HttpStatus.FORBIDDEN,
+        status: HttpStatus.NOT_FOUND,
         data: {},
       };
     if (result.length > 1)

@@ -130,7 +130,7 @@ const RegistrationManageFrame: React.FC = () => {
 
               <MembersTable
                 memberList={memberData.applies}
-                clubName={clubData.name_kr}
+                clubName={clubData.nameKr}
                 clubId={idData.clubId}
                 refetch={memberRefetch}
                 delegates={delegatesNow.delegates}

@@ -22,8 +22,8 @@ const responseBodyMap = {
     clubs: z.array(
       z.object({
         id: z.number().int().min(1),
-        name_kr: zClubName,
-        name_en: zClubName,
+        nameKr: zClubName,
+        nameEn: zClubName,
       }),
     ),
     id: z.number().int().min(1),

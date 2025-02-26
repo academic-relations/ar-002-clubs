@@ -23,8 +23,8 @@ const requestBody = z.object({});
 const responseBodyMap = {
   [HttpStatusCode.Ok]: z.object({
     id: z.coerce.number().int().min(1),
-    name_kr: zClubName,
-    name_en: zClubName,
+    nameKr: zClubName,
+    nameEn: zClubName,
     type: z.nativeEnum(ClubTypeEnum), // 동아리 유형(정동아리 | 가동아리)
     isPermanent: z.coerce.boolean(), // 상임동아리 여부
     characteristic: z.coerce.string().max(50), // 동아리 소개
