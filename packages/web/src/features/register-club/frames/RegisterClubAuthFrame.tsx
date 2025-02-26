@@ -76,9 +76,10 @@ const RegisterClubAuthFrame: React.FC<{
   }
 
   if (
-    availableRegistrationInfo &&
-    !availableRegistrationInfo.availableRegistrations.includes(type) &&
-    type !== RegistrationTypeEnum.NewProvisional
+    (availableRegistrationInfo.haveAvailableRegistration &&
+      !availableRegistrationInfo.availableRegistrations.includes(type)) ||
+    (availableRegistrationInfo.noManageClub &&
+      type !== RegistrationTypeEnum.NewProvisional)
   ) {
     return (
       <HasClubRegistration
