@@ -13,9 +13,9 @@ const ClubDetailStudentFrame: React.FC<ClubDetailProps> = ({ club }) => (
     <PageHead
       items={[
         { name: "동아리 목록", path: "/clubs" },
-        { name: club.name_kr, path: `/clubs/${club.id}` },
+        { name: club.nameKr, path: `/clubs/${club.id}` },
       ]}
-      title={club.name_kr}
+      title={club.nameKr}
     />
     <ClubDetailInfoFrame club={club} isRegistrationPeriod={false} />
   </FlexWrapper>

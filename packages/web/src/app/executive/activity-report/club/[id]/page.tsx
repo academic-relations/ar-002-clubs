@@ -51,7 +51,7 @@ const ExecutiveActivityReportClub = () => {
               path: `/executive/activity-report`,
             },
           ]}
-          title={`활동 보고서 작성 내역 (${data?.name_kr})`}
+          title={`활동 보고서 작성 내역 (${data?.nameKr})`}
           enableLast
         />
         <ExecutiveActivityReportClubFrame clubId={id} />

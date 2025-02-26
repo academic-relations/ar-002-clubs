@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+
 export const zStudent = z.object({
   id: z.number(),
   userId: z.number().optional(),
@@ -18,13 +20,12 @@ export const zStudentSummary = zStudent.pick({
 
 export const zProfessor = z.object({
   id: z.number(),
+  userId: z.number().nullable(),
   name: z.string(),
-  email: z.string().optional(),
-});
-
-export const zProfessorSummary = zProfessor.pick({
-  id: true,
-  name: true,
+  email: z.string(),
+  phoneNumber: z.string().optional(),
+  professorEnum: z.nativeEnum(ProfessorEnum),
+  department: z.number(),
 });
 
 export const zExecutive = z.object({
@@ -52,4 +53,4 @@ export type IStudent = z.infer<typeof zStudent>;
 export type IStudentSummary = z.infer<typeof zStudentSummary>;
 export type IExecutive = z.infer<typeof zExecutive>;
 export type IExecutiveSummary = z.infer<typeof zExecutiveSummary>;
-export type IProfessorSummary = z.infer<typeof zProfessorSummary>;
+export type IProfessor = z.infer<typeof zProfessor>;

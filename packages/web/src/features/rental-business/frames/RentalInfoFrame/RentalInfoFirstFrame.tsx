@@ -39,7 +39,7 @@ const RentalInfoFirstFrame: React.FC<
     if (data) {
       // setClubList(
       //   data.clubs.map(club => ({
-      //     label: club.name_kr,
+      //     label: club.nameKr,
       //     value: String(club.id),
       //     selectable: true,
       //   })),
@@ -50,7 +50,7 @@ const RentalInfoFirstFrame: React.FC<
     if (clubData) {
       setClubList(
         clubData?.semesters[0].clubs.map(club => ({
-          label: club.name_kr,
+          label: club.nameKr,
           value: String(club.id),
           selectable: true,
         })),

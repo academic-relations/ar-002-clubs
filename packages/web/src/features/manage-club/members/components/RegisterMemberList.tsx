@@ -73,7 +73,7 @@ const RegisterMemberList = () => {
         {memberData && (
           <MembersTable
             memberList={memberData.applies}
-            clubName={clubData.name_kr}
+            clubName={clubData.nameKr}
             clubId={idData.clubId}
             refetch={memberRefetch}
             delegates={delegatesNow.delegates}

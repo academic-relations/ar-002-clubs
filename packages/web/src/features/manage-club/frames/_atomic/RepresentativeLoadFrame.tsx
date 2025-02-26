@@ -39,7 +39,7 @@ const RepresentativeLoadFrame: React.FC<{
     >
       <ChangeRepresentativeCard
         clubId={clubId}
-        clubName={clubInfo?.name_kr || ""}
+        clubName={clubInfo?.nameKr || ""}
         delegatesNow={delegatesNow || { delegates: [] }}
         clubMembers={clubMembers || { students: [] }}
       />
