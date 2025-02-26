@@ -18,7 +18,7 @@ interface ProfileListProps {
 }
 
 interface DecodedToken extends JwtPayload {
-  studentNumber: number;
+  studentNumber: string;
   email: string;
 }
 

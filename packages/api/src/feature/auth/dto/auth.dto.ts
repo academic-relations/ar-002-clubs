@@ -6,7 +6,7 @@ interface User {
   name: string;
   email: string;
   studentId?: number;
-  studentNumber?: number;
+  studentNumber?: string;
   executiveId?: number;
 }
 

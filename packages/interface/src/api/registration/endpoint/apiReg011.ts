@@ -8,6 +8,7 @@ import {
 } from "@sparcs-clubs/interface/common/enum/registration.enum";
 import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
 import { zKrPhoneNumber } from "@sparcs-clubs/interface/common/type/phoneNumber.type";
+import { zStudentNumber } from "@sparcs-clubs/interface/common/type/user.type";
 
 import registrationTypeEnumChecker from "../utils/registrationTypeEnumChecker";
 
@@ -41,7 +42,7 @@ const responseBodyMap = {
       newClubNameKr: zClubName,
       newClubNameEn: zClubName,
       representative: z.object({
-        studentNumber: z.coerce.number().int().min(1),
+        studentNumber: zStudentNumber,
         name: z.string().max(30),
         phoneNumber: zKrPhoneNumber,
       }),

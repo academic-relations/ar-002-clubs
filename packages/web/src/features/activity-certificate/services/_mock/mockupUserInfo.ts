@@ -8,7 +8,7 @@ TODO - 유저 데이터를 가져오는 api가 나오면 그걸 기반으로 아
 import type { ApiAcf001ResponseCreated } from "@sparcs-clubs/interface/api/activity-certificate/endpoint/apiAcf001";
 
 const mockupUserInfo: ApiAcf001ResponseCreated = {
-  studentNumber: 20239999,
+  studentNumber: "20239999",
   krPhoneNumber: "01012345678",
   department: "Department of Computing",
   issuedNumber: 1234, // 이건 무슨 넘버죠?

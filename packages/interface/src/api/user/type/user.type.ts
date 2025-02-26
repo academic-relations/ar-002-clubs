@@ -1,9 +1,11 @@
 import { z } from "zod";
 
+import { zStudentNumber } from "@sparcs-clubs/interface/common/type/user.type";
+
 export const zStudent = z.object({
   id: z.number(),
   userId: z.number().optional(),
-  studentNumber: z.string(),
+  studentNumber: zStudentNumber,
   name: z.string(),
   email: z.string().optional(),
   phoneNumber: z.string().optional(),
@@ -30,7 +32,7 @@ export const zProfessorSummary = zProfessor.pick({
 export const zExecutive = z.object({
   id: z.number(),
   userId: z.number().optional(),
-  studentNumber: z.string(),
+  studentNumber: zStudentNumber,
   name: z.string(),
   email: z.string().optional(),
   phoneNumber: z.string().optional(),

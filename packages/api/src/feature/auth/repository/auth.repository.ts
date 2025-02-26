@@ -25,15 +25,15 @@ interface FindOrCreateUserReturn {
   email: string;
   undergraduate?: {
     id: number;
-    number: number;
+    number: string;
   };
   master?: {
     id: number;
-    number: number;
+    number: string;
   };
   doctor?: {
     id: number;
-    number: number;
+    number: string;
   };
   executive?: {
     id: number;
@@ -100,7 +100,7 @@ export class AuthRepository {
         .insert(Student)
         .values({
           name,
-          number: parseInt(studentNumber),
+          number: studentNumber,
           userId: user.id,
           email,
         })
@@ -108,7 +108,7 @@ export class AuthRepository {
       const student = await this.db
         .select()
         .from(Student)
-        .where(eq(Student.number, parseInt(studentNumber)))
+        .where(eq(Student.number, studentNumber))
         .then(takeUnique);
 
       // studentNumber의 뒤 네자리가 2000 미만일 경우 studentEnum을 1, 5000미만일 경우 2, 6000미만일 경우 1, 나머지는 3으로 설정
@@ -131,9 +131,9 @@ export class AuthRepository {
       // eslint-disable-next-line no-restricted-syntax
       for (const student of students) {
         let studentEnum = 3;
-        if (student.number % 10000 < 2000) studentEnum = 1;
-        else if (student.number % 10000 < 6000) studentEnum = 2;
-        else if (student.number % 10000 < 7000) studentEnum = 1;
+        if (parseInt(student.number.slice(-4)) < 2000) studentEnum = 1;
+        else if (parseInt(student.number.slice(-4)) < 6000) studentEnum = 2;
+        else if (parseInt(student.number.slice(-4)) < 7000) studentEnum = 1;
 
         if (studentEnum === 1) {
           result = {
@@ -279,15 +279,15 @@ export class AuthRepository {
     email: string;
     undergraduate?: {
       id: number;
-      number: number;
+      number: string;
     };
     master?: {
       id: number;
-      number: number;
+      number: string;
     };
     doctor?: {
       id: number;
-      number: number;
+      number: string;
     };
     executive?: {
       id: number;
@@ -315,15 +315,15 @@ export class AuthRepository {
       email: string;
       undergraduate?: {
         id: number;
-        number: number;
+        number: string;
       };
       master?: {
         id: number;
-        number: number;
+        number: string;
       };
       doctor?: {
         id: number;
-        number: number;
+        number: string;
       };
       executive?: {
         id: number;
@@ -352,9 +352,9 @@ export class AuthRepository {
     // eslint-disable-next-line no-restricted-syntax
     for (const student of await students) {
       let studentEnum = 3;
-      if (student.number % 10000 < 2000) studentEnum = 1;
-      else if (student.number % 10000 < 6000) studentEnum = 2;
-      else if (student.number % 10000 < 7000) studentEnum = 1;
+      if (parseInt(student.number.slice(-4)) < 2000) studentEnum = 1;
+      else if (parseInt(student.number.slice(-4)) < 6000) studentEnum = 2;
+      else if (parseInt(student.number.slice(-4)) < 7000) studentEnum = 1;
 
       if (studentEnum === 1) {
         result.undergraduate = { id: student.id, number: student.number };

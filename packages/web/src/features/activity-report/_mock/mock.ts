@@ -10,7 +10,7 @@ import { ActivityProfessorApprovalEnum } from "@sparcs-clubs/web/features/manage
 
 export interface ParticipantTemp {
   id: number; // 고유 ID
-  studentNumber: number; // 학번
+  studentNumber: string; // 학번
   name: string; // 이름
 }
 
@@ -252,22 +252,22 @@ export const mockActivityDetailData: ApiAct002ResponseOkTemp = {
   participants: [
     {
       id: 1,
-      studentNumber: 20200510,
+      studentNumber: "20200510",
       name: "이지윤",
     },
     {
       id: 2,
-      studentNumber: 20200511,
+      studentNumber: "20200511",
       name: "박병찬",
     },
     {
       id: 3,
-      studentNumber: 20230510,
+      studentNumber: "20230510",
       name: "이도라",
     },
     {
       id: 4,
-      studentNumber: 20240510,
+      studentNumber: "20240510",
       name: "스팍스",
     },
   ],

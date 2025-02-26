@@ -28,7 +28,7 @@ const mockMyClubRegisterDetail: MyClubRegistrationDetail = {
   clubNameEn: "sparcs",
   clubId: 1,
   representative: {
-    studentNumber: 1,
+    studentNumber: "20200000",
     name: "넙죽이",
   },
   phoneNumber: "010-1234-1234",
