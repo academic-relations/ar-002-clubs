@@ -34,7 +34,6 @@ import Typography from "@sparcs-clubs/web/common/components/Typography";
 import useGetDivisionType from "@sparcs-clubs/web/common/hooks/useGetDivisionType";
 import { RegistrationTypeTagList } from "@sparcs-clubs/web/constants/tableTagList";
 import { deleteMyClubRegistration } from "@sparcs-clubs/web/features/my/services/deleteMyClubRegistration";
-import { useGetMyClubRegistration } from "@sparcs-clubs/web/features/my/services/getMyClubRegistration";
 import usePatchClubRegProfessorApprove from "@sparcs-clubs/web/features/my/services/usePatchClubRegProfessorApprove";
 import { getRegisterClubProgress } from "@sparcs-clubs/web/features/register-club/constants/registerClubProgress";
 import useGetClubRegistrationPeriod from "@sparcs-clubs/web/features/register-club/hooks/useGetClubRegistrationPeriod";
@@ -78,16 +77,11 @@ const TagWrapper = styled.div`
 const MyRegisterClubDetailFrame: React.FC<{
   clubDetail: ApiReg011ResponseOk;
   userType: string;
-}> = ({ clubDetail, userType }) => {
+  isMyRegistration?: boolean;
+}> = ({ clubDetail, userType, isMyRegistration = false }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { id } = useParams();
-
-  const {
-    data: myClubRegistrationData,
-    isLoading: isLoadingMyClubRegistration,
-    isError: isErrorMyClubRegistration,
-  } = useGetMyClubRegistration();
 
   const {
     data: deadlineData,
@@ -390,10 +384,7 @@ const MyRegisterClubDetailFrame: React.FC<{
         >
           목록으로 돌아가기
         </Button>
-        <AsyncBoundary
-          isLoading={isLoadingDeadline || isLoadingMyClubRegistration}
-          isError={isErrorDeadline || isErrorMyClubRegistration}
-        >
+        <AsyncBoundary isLoading={isLoadingDeadline} isError={isErrorDeadline}>
           {deadlineData.isClubRegistrationPeriod &&
             (isProfessor ? (
               <FlexWrapper direction="row" gap={10}>
@@ -406,8 +397,7 @@ const MyRegisterClubDetailFrame: React.FC<{
                 </Button>
               </FlexWrapper>
             ) : (
-              myClubRegistrationData &&
-              myClubRegistrationData.registrations.length > 0 && (
+              isMyRegistration && (
                 <FlexWrapper direction="row" gap={10}>
                   <Button
                     style={{ width: "max-content" }}
