@@ -30,6 +30,13 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.PM,
         comment: "Make Clubs Great Again!",
       },
+      {
+        nickname: "edge",
+        name: "정재현",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "Clubs를 만난 건 행운입니다.",
+      },
     ],
   },
   {
