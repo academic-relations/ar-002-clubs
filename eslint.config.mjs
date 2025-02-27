@@ -76,6 +76,12 @@ export default tseslint.config(
       ],
       "import/no-unresolved": "off",
       "import/prefer-default-export": "off",
+      "prettier/prettier": [
+        "error",
+        {
+          endOfLine: "auto",
+        },
+      ],
       "radix": ["error", "as-needed"],
     },
   },
