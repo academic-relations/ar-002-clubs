@@ -148,7 +148,7 @@ const MyRegisterClubDetailFrame: React.FC<{
               {
                 onSuccess: () => {
                   queryClient.invalidateQueries({
-                    queryKey: [apiReg011.url(String(id))],
+                    queryKey: [apiReg011.url(String(id)), id],
                   });
                   close();
                 },
