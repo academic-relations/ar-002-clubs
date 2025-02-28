@@ -40,12 +40,18 @@ const columns = [
     ),
     size: 10,
   }),
-  columnHelper.accessor("clubNameKr", {
-    id: "clubNameKr",
-    header: "동아리",
-    cell: info => info.getValue(),
-    size: 128,
-  }),
+  columnHelper.accessor(
+    row =>
+      row.clubNameKr && row.clubNameKr !== ""
+        ? row.clubNameKr
+        : row.newClubNameKr,
+    {
+      id: "clubNameKr",
+      header: "동아리",
+      cell: info => info.getValue(),
+      size: 128,
+    },
+  ),
   columnHelper.accessor("student.studentNumber", {
     id: "student.studentNumber",
     header: "학번",
@@ -83,6 +89,7 @@ const MyClubProfTable: React.FC<MyClubTableProps> = ({
   const getRowLink = (row: ApiReg021ResponseOk["items"][number]) => ({
     pathname: `/my/register-club/${row.id.toString()}`,
   });
+
   return (
     <Table
       table={table}

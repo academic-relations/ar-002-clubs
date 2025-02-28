@@ -41,6 +41,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
 
   const { watch, control, setValue } = useFormContext<RegisterClubModel>();
   const clubId = watch("clubId");
+  const professor = watch("professor");
 
   const {
     data: promotionalList,
@@ -63,6 +64,7 @@ const BasicInformFrame: React.FC<BasicInformSectionProps> = ({
   }, [clubId, clubList]);
 
   useEffect(() => {
+    if (professor) return;
     if (professorInfo === undefined || !isCheckedProfessor) {
       setValue("professor", undefined, { shouldValidate: true });
       return;

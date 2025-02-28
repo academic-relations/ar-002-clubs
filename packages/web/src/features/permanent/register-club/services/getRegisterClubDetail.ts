@@ -12,7 +12,10 @@ import {
 
 const useRegisterClubDetail = (requestParam: ApiReg011RequestParam) =>
   useQuery<ApiReg011ResponseOk, Error>({
-    queryKey: [apiReg011.url(requestParam.applyId.toString())],
+    queryKey: [
+      apiReg011.url(requestParam.applyId.toString()),
+      requestParam.applyId,
+    ],
     queryFn: async (): Promise<ApiReg011ResponseOk> => {
       const { data } = await axiosClientWithAuth.get(
         apiReg011.url(requestParam.applyId.toString()),
