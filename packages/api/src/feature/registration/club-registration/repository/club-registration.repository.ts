@@ -149,10 +149,6 @@ export class ClubRegistrationRepository {
         }
       } else {
         // 신규 가동아리의 경우, club을 생성해줍니다.
-        console.log("aaa");
-        console.log(body);
-        console.log("bbb");
-        console.log(studentId);
 
         // 신규 가동아리의 경우, 해당 학생이 동아리 대표자 및 대의원이 아니어야 합니다.
         const delegate = await tx
@@ -169,8 +165,6 @@ export class ClubRegistrationRepository {
               isNull(ClubDelegateD.deletedAt),
             ),
           );
-        console.log("ccc");
-        console.log(delegate);
         if (delegate.length > 0) {
           throw new HttpException(
             "Student is delegate of the club",
