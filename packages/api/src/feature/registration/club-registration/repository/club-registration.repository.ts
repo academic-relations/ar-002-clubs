@@ -151,6 +151,7 @@ export class ClubRegistrationRepository {
         // 신규 가동아리의 경우, club을 생성해줍니다.
 
         // 신규 가동아리의 경우, 해당 학생이 동아리 대표자 및 대의원이 아니어야 합니다.
+        // TODO: Service layer로 이동 필요
         const delegate = await tx
           .select()
           .from(ClubDelegateD)
@@ -173,6 +174,7 @@ export class ClubRegistrationRepository {
         }
 
         // 동아리 및 대표자를 생성합니다.
+        // TODO: Service layer로 이동 및 club & delegate public service 로 이동 필요
         const result = await tx.insert(Club).values({
           nameKr: body.clubNameKr,
           nameEn: body.clubNameEn,
@@ -419,6 +421,7 @@ export class ClubRegistrationRepository {
           ),
         );
       // 만약 신규 가등록의 경우, 동아리 및 동아리 대표자 기록을 삭제합니다.
+      // TODO: Service layer로 이동 및 club & delegate public service 로 이동 필요
       if (
         registration.registrationApplicationTypeEnumId ===
         RegistrationTypeEnum.NewProvisional

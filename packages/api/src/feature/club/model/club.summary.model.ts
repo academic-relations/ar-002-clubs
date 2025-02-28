@@ -1,12 +1,13 @@
 import { InferSelectModel } from "drizzle-orm";
 
 import { IClubSummary } from "@sparcs-clubs/interface/api/club/type/club.type";
+import { ClubTypeEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 
 import { Club, ClubT } from "@sparcs-clubs/api/drizzle/schema/club.schema";
 
 type ClubSummaryDBResult = {
   club: InferSelectModel<typeof Club>;
-  club_t: InferSelectModel<typeof ClubT>;
+  club_t?: InferSelectModel<typeof ClubT>;
 };
 
 export class VClubSummary implements IClubSummary {
@@ -32,7 +33,9 @@ export class VClubSummary implements IClubSummary {
       id: result.club.id,
       name: result.club.nameKr,
       nameEn: result.club.nameEn,
-      typeEnum: result.club_t.clubStatusEnumId,
+      typeEnum: result.club_t // left join 및 기본값 처리로 club_t 가 없을 때 가등록 상태로 처리하게 함 -> reg025 이슈
+        ? result.club_t.clubStatusEnumId
+        : ClubTypeEnum.Provisional,
       division: {
         id: result.club.divisionId,
       },
