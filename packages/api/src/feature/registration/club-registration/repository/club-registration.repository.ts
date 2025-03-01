@@ -30,6 +30,7 @@ import { ApiReg014ResponseOk } from "@sparcs-clubs/interface/api/registration/en
 import { ApiReg015ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg015";
 import { ApiReg016ResponseOk } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg016";
 import { ApiReg017ResponseCreated } from "@sparcs-clubs/interface/api/registration/endpoint/apiReg017";
+import { ClubDelegateEnum } from "@sparcs-clubs/interface/common/enum/club.enum";
 import {
   RegistrationDeadlineEnum,
   RegistrationStatusEnum,
@@ -115,6 +116,7 @@ export class ClubRegistrationRepository {
   ): Promise<ApiReg001ResponseCreated> {
     const cur = getKSTDate();
     let registrationId: number;
+    let clubId: number;
     await this.db.transaction(async tx => {
       // - 신규 가동아리 신청을 제외하곤 기존 동아리 대표자의 신청인지 검사합니다.
       // 한 학생이 여러 동아리의 대표자나 대의원일 수 없기 때문에, 1개 또는 0개의 지위를 가지고 있다고 가정합니다.
@@ -142,6 +144,61 @@ export class ClubRegistrationRepository {
         if (!delegate) {
           throw new HttpException(
             "Student is not delegate of the club",
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      } else {
+        // 신규 가동아리의 경우, club을 생성해줍니다.
+
+        // 신규 가동아리의 경우, 해당 학생이 동아리 대표자 및 대의원이 아니어야 합니다.
+        // TODO: Service layer로 이동 필요
+        const delegate = await tx
+          .select()
+          .from(ClubDelegateD)
+          .where(
+            and(
+              eq(ClubDelegateD.studentId, studentId),
+              lte(ClubDelegateD.startTerm, cur),
+              or(
+                gte(ClubDelegateD.endTerm, cur),
+                isNull(ClubDelegateD.endTerm),
+              ),
+              isNull(ClubDelegateD.deletedAt),
+            ),
+          );
+        if (delegate.length > 0) {
+          throw new HttpException(
+            "Student is delegate of the club",
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+
+        // 동아리 및 대표자를 생성합니다.
+        // TODO: Service layer로 이동 및 club & delegate public service 로 이동 필요
+        const result = await tx.insert(Club).values({
+          nameKr: body.clubNameKr,
+          nameEn: body.clubNameEn,
+          divisionId: body.divisionId,
+          foundingYear: body.foundedAt.getFullYear(),
+          description: body.foundationPurpose,
+        });
+        clubId = result[0].insertId;
+        if (!clubId) {
+          throw new HttpException(
+            "Club creation failed",
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+
+        const delegateResult = await tx.insert(ClubDelegateD).values({
+          studentId,
+          startTerm: cur,
+          clubId,
+          ClubDelegateEnumId: ClubDelegateEnum.Representative,
+        });
+        if (!delegateResult[0].insertId) {
+          throw new HttpException(
+            "Delegate creation failed",
             HttpStatus.BAD_REQUEST,
           );
         }
@@ -189,7 +246,7 @@ export class ClubRegistrationRepository {
 
       // registration insert 후 id 가져오기
       const [registrationInsertResult] = await tx.insert(Registration).values({
-        clubId: body.clubId,
+        clubId: body.clubId ?? clubId,
         registrationApplicationTypeEnumId: body.registrationTypeEnumId,
         semesterId,
         clubNameKr: body.clubNameKr,
@@ -341,6 +398,16 @@ export class ClubRegistrationRepository {
   ): Promise<ApiReg010ResponseOk> {
     const cur = getKSTDate();
     await this.db.transaction(async tx => {
+      const [registration] = await tx
+        .select()
+        .from(Registration)
+        .where(
+          and(eq(Registration.id, applyId), isNull(Registration.deletedAt)),
+        );
+      if (!registration) {
+        throw new HttpException("Registration Not Found", HttpStatus.NOT_FOUND);
+      }
+
       const [result] = await tx
         .update(Registration)
         .set({
@@ -353,6 +420,29 @@ export class ClubRegistrationRepository {
             isNull(Registration.deletedAt),
           ),
         );
+      // 만약 신규 가등록의 경우, 동아리 및 동아리 대표자 기록을 삭제합니다.
+      // TODO: Service layer로 이동 및 club & delegate public service 로 이동 필요
+      if (
+        registration.registrationApplicationTypeEnumId ===
+        RegistrationTypeEnum.NewProvisional
+      ) {
+        const [clubResult, delegateResult] = await Promise.all([
+          tx
+            .update(Club)
+            .set({ deletedAt: cur })
+            .where(eq(Club.id, registration.clubId)),
+          tx
+            .update(ClubDelegateD)
+            .set({ deletedAt: cur })
+            .where(eq(ClubDelegateD.clubId, registration.clubId)),
+        ]);
+        if (
+          clubResult[0].affectedRows === 0 ||
+          delegateResult[0].affectedRows === 0
+        ) {
+          throw new HttpException("Club or delegate delete failed", 500);
+        }
+      }
       if (result.affectedRows > 1) {
         throw new HttpException("Registration delete failed", 500);
       } else if (result.affectedRows === 0) {
