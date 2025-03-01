@@ -15,6 +15,7 @@ import DivisionPublicService from "@sparcs-clubs/api/feature/division/service/di
 import UserPublicService from "@sparcs-clubs/api/feature/user/service/user.public.service";
 
 import { ClubDelegateDRepository } from "../delegate/club.club-delegate-d.repository";
+import { MClub } from "../model/club.model";
 import ClubStudentTRepository from "../repository/club.club-student-t.repository";
 import ClubTRepository from "../repository/club.club-t.repository";
 import ClubRepository from "../repository/club.repository";
@@ -398,12 +399,25 @@ export default class ClubPublicService {
     clubId: number,
     semester: Pick<ISemester, "id"> | ISemester,
     date?: Date,
-  ) {
+  ): Promise<MClub> {
     const semesterParam =
       "endTerm" in semester
         ? semester
         : await this.semesterDRepository.fetch(semester.id);
     const result = await this.clubRepository.fetch(clubId, semesterParam, date);
+    return result;
+  }
+
+  async find(
+    clubId: number,
+    semester: Pick<ISemester, "id"> | ISemester,
+    date?: Date,
+  ): Promise<MClub | null> {
+    const semesterParam =
+      "endTerm" in semester
+        ? semester
+        : await this.semesterDRepository.fetch(semester.id);
+    const result = await this.clubRepository.find(clubId, semesterParam, date);
     return result;
   }
 

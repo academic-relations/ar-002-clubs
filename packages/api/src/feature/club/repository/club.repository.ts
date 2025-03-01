@@ -474,7 +474,7 @@ export default class ClubRepository {
     const result = await this.db
       .select()
       .from(Club)
-      .innerJoin(ClubT, eq(Club.id, ClubT.clubId))
+      .leftJoin(ClubT, eq(Club.id, ClubT.clubId))
       .where(eq(Club.id, clubId))
       .orderBy(desc(ClubT.startTerm))
       .limit(1);
@@ -523,7 +523,11 @@ export default class ClubRepository {
     return result.map(club => VClubSummary.fromDBResult(club));
   }
 
-  async fetch(clubId: number, semester: ISemester, date?: Date) {
+  async find(
+    clubId: number,
+    semester: ISemester,
+    date?: Date,
+  ): Promise<MClub | null> {
     const day = date ?? getKSTDate(semester.endTerm);
 
     // club 조건
@@ -569,7 +573,7 @@ export default class ClubRepository {
     ]);
 
     if (clubResult.length !== 1) {
-      throw new NotFoundException("Club not found");
+      return null;
     }
 
     const club = clubResult[0];
@@ -579,12 +583,24 @@ export default class ClubRepository {
         e => e.ClubDelegateEnumId === ClubDelegateEnum.Representative,
       )
     ) {
-      throw new NotFoundException("Delegate not found");
+      return null;
     }
 
     return MClub.fromDBResult({
       ...club,
       club_delegate_d: delegateResult,
     });
+  }
+
+  async fetch(
+    clubId: number,
+    semester: ISemester,
+    date?: Date,
+  ): Promise<MClub> {
+    const result = await this.find(clubId, semester, date);
+    if (!result) {
+      throw new NotFoundException("Club not found");
+    }
+    return result;
   }
 }
