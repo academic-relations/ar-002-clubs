@@ -734,10 +734,12 @@ export default class ActivityService {
    * @returns 해당 동아리가 작성한 모든 활동을 REG-011의 리턴 타입에 맞추어 가져옵니다.
    */
   private async getProvisionalActivities(param: { clubId: number }) {
-    const result = await this.activityRepository.selectActivityByClubId({
-      clubId: param.clubId,
-    });
-
+    const activityDId = await this.getLastActivityD();
+    const result =
+      await this.activityRepository.selectActivityByClubIdAndActivityDId(
+        param.clubId,
+        activityDId.id,
+      );
     const activities = await Promise.all(
       result.map(async activity => {
         const durations = (
