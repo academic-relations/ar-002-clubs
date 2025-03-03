@@ -91,6 +91,7 @@ export default class ProfessorRepository {
         phoneNumber: Professor.phoneNumber,
       })
       .from(Professor)
+      .leftJoin(ProfessorT, eq(ProfessorT.professorId, Professor.id))
       .where(and(eq(Professor.id, id), isNull(Professor.deletedAt)));
 
     if (result.length !== 1) {
