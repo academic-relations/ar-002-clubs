@@ -2,10 +2,11 @@ import React from "react";
 import styled from "styled-components";
 
 import Info from "@sparcs-clubs/web/common/components/Info";
+import Typography from "@sparcs-clubs/web/common/components/Typography";
+
 import ProgressCheckSection, {
   StatusAndDate,
-} from "@sparcs-clubs/web/common/components/ProgressCheckSection";
-import Typography from "@sparcs-clubs/web/common/components/Typography";
+} from "./_atomic/ProgressCheckSection";
 
 interface ProgressStatusProps {
   labels: string[];
