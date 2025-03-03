@@ -9,6 +9,7 @@ import ProgressCheckSection, {
 } from "./_atomic/ProgressCheckSection";
 
 interface ProgressStatusProps {
+  title?: string;
   labels: string[];
   progress: StatusAndDate[];
   infoText?: string;
@@ -24,6 +25,7 @@ const ProgressCheckSectionWrapper = styled.div`
 `;
 
 const ProgressStatus: React.FC<ProgressStatusProps> = ({
+  title,
   labels,
   progress,
   infoText = "",
@@ -31,7 +33,7 @@ const ProgressStatus: React.FC<ProgressStatusProps> = ({
 }) => (
   <ProgressCheckSectionWrapper>
     <Typography fw="MEDIUM" fs={16} lh={20} style={{ width: "100%" }}>
-      신청 상태
+      {title || "신청 상태"}
     </Typography>
     <ProgressCheckSection labels={labels} progress={progress} />
     {infoText && <Info text={infoText} />}
