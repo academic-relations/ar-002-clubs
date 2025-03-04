@@ -160,11 +160,7 @@ export const ExecutiveRegisterMember = () => {
 
     return {
       total: filteredRowsWithSearch?.length ?? 0,
-      items:
-        filteredRowsWithSearch?.slice(
-          10 * (currentPage - 1),
-          10 * currentPage,
-        ) ?? [],
+      items: filteredRowsWithSearch ?? [],
       offset: data?.offset ?? 0,
     };
   }, [searchText, convertedCategories, currentPage, data]);
@@ -184,11 +180,7 @@ export const ExecutiveRegisterMember = () => {
 
     return {
       total: filteredRowsWithoutSearch?.length ?? 0,
-      items:
-        filteredRowsWithoutSearch?.slice(
-          10 * (currentPage - 1),
-          10 * currentPage,
-        ) ?? [],
+      items: filteredRowsWithoutSearch ?? [],
       offset: data?.offset ?? 0,
     };
   }, [convertedCategories, currentPage, data]);
@@ -253,7 +245,7 @@ export const ExecutiveRegisterMember = () => {
             <RegistrationMemberTable registerMemberList={filteredClubs} />
             <FlexWrapper direction="row" gap={16} justify="center">
               <Pagination
-                totalPage={Math.ceil(filteredClubs.total / limit)}
+                totalPage={Math.ceil(data.total / limit)}
                 currentPage={currentPage}
                 limit={limit}
                 setPage={handlePageChange}
