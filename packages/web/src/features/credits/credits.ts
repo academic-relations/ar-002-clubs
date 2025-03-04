@@ -77,7 +77,7 @@ const credits: SemesterCredit[] = [
         name: "최민성",
         role: "FE",
         roleType: RoleType.member,
-        comment: "봄학기는 설레요😋",
+        comment: "봄학기는 설레요🍓😋",
       },
     ],
   },
