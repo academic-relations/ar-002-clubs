@@ -22,7 +22,7 @@ import {
   ClubTypeEnum,
 } from "@sparcs-clubs/interface/common/enum/club.enum";
 
-import { getKSTDate, takeUnique } from "@sparcs-clubs/api/common/util/util";
+import { getKSTDate, takeOne } from "@sparcs-clubs/api/common/util/util";
 import {
   Club,
   ClubDelegateD,
@@ -101,14 +101,14 @@ export default class ClubRepository {
         ),
       )
       .limit(1)
-      .then(takeUnique);
+      .then(takeOne);
 
     const divisionName = await this.db
       .select({ name: Division.name })
       .from(Club)
       .leftJoin(Division, eq(Division.id, Club.divisionId))
       .where(eq(Club.id, clubId))
-      .then(takeUnique);
+      .then(takeOne);
     return { ...clubInfo, divisionName };
   }
 
