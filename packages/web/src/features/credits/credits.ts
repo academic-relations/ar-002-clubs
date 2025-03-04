@@ -45,6 +45,13 @@ const credits: SemesterCredit[] = [
         comment: "Clubs를 만난 건 행운입니다.",
       },
       {
+        nickname: "eel",
+        name: "최우정",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "벌써 1년이나",
+      },
+      {
         nickname: "default",
         name: "김현수",
         role: "BE",
