@@ -65,6 +65,13 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.member,
         comment: "이번엔 진짜 열심히 해보겠습니당",
       },
+      {
+        nickname: "chan",
+        name: "박병찬",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "도비는 자유에요",
+      },
     ],
   },
   {
