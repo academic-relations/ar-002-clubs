@@ -1,7 +1,9 @@
 import { RegistrationStatusEnum } from "@sparcs-clubs/interface/common/enum/registration.enum";
 
-import { StatusAndDate } from "@sparcs-clubs/web/common/components/ProgressStatus/_atomic/ProgressCheckSection";
-import { ProgressCheckSectionStatusEnum } from "@sparcs-clubs/web/common/components/ProgressStatus/_atomic/progressCheckStationStatus";
+import {
+  ProgressCheckSectionStatusEnum,
+  StatusAndDate,
+} from "@sparcs-clubs/web/common/components/ProgressStatus/_atomic/progressCheckStationStatus";
 
 interface RegisterClubProgressDetail {
   labels: string[];
