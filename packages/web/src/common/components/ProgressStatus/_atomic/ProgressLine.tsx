@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { ProgressCheckSectionStatusEnum } from "../progressCheckStationStatus";
+import { ProgressCheckSectionStatusEnum } from "./progressCheckStationStatus";
 
 const ProgressLine = styled.div<{ status: ProgressCheckSectionStatusEnum }>`
   display: flex;

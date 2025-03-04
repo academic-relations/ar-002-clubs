@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import Icon from "@sparcs-clubs/web/common/components/Icon";
 
-import { ProgressCheckSectionStatusEnum } from "../progressCheckStationStatus";
+import { ProgressCheckSectionStatusEnum } from "./progressCheckStationStatus";
 
 const ProgressDotBack = styled.div<{ status: ProgressCheckSectionStatusEnum }>`
   display: flex;
