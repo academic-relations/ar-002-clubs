@@ -31,6 +31,13 @@ const credits: SemesterCredit[] = [
         comment: "Make Clubs Great Again!",
       },
       {
+        nickname: "ava",
+        name: "주영미",
+        role: "APM(FE)",
+        roleType: RoleType.APM_FE,
+        comment: "다시 봄! APM 화이팅!",
+      },
+      {
         nickname: "edge",
         name: "정재현",
         role: "FE",
