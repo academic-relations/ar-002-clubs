@@ -89,6 +89,7 @@ registry.registerPath({
   method: "get",
   path: "/user",
   description: "나의 유저 정보를 가져옵니다",
+  summary: "나의 유저 정보를 가져옵니다",
   responses: {
     200: {
       description: "성공",
