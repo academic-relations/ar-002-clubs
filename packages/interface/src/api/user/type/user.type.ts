@@ -1,6 +1,36 @@
+import {
+  extendZodWithOpenApi,
+  OpenApiGeneratorV31,
+} from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 
 import { ProfessorEnum } from "@sparcs-clubs/interface/common/enum/user.enum";
+import zId from "@sparcs-clubs/interface/common/type/id.type";
+import { registry } from "@sparcs-clubs/interface/open-api";
+
+extendZodWithOpenApi(z);
+
+const zUser = z
+  .object({
+    id: zId.openapi({ description: "user ID", example: 1 }),
+    sid: z
+      .string()
+      .max(30)
+      .openapi({ description: "sparcs sso ID", example: "sparcs21" }),
+    name: z
+      .string()
+      .max(30)
+      .openapi({ description: "user name", example: "홍길동" }),
+    email: z.string().email().openapi({
+      description: "kaist email",
+      example: "sparcs@kaist.ac.kr",
+    }),
+    phoneNumber: z.string().max(30).openapi({
+      description: "korean phone number",
+      example: "010-0000-0000",
+    }),
+  })
+  .openapi("User");
 
 export const zStudent = z.object({
   id: z.number(),
@@ -54,3 +84,21 @@ export type IStudentSummary = z.infer<typeof zStudentSummary>;
 export type IExecutive = z.infer<typeof zExecutive>;
 export type IExecutiveSummary = z.infer<typeof zExecutiveSummary>;
 export type IProfessor = z.infer<typeof zProfessor>;
+
+registry.registerPath({
+  method: "get",
+  path: "/user",
+  description: "나의 유저 정보를 가져옵니다",
+  responses: {
+    200: {
+      description: "성공",
+      content: {
+        "application/json": {
+          schema: zUser,
+        },
+      },
+    },
+  },
+});
+const generator = new OpenApiGeneratorV31([zUser]);
+generator.generateComponents();
