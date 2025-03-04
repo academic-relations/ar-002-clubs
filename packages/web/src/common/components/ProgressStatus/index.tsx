@@ -4,9 +4,8 @@ import styled from "styled-components";
 import Info from "@sparcs-clubs/web/common/components/Info";
 import Typography from "@sparcs-clubs/web/common/components/Typography";
 
-import ProgressCheckSection, {
-  StatusAndDate,
-} from "./_atomic/ProgressCheckSection";
+import ProgressCheckSection from "./_atomic/ProgressCheckSection";
+import { StatusAndDate } from "./_atomic/progressCheckStationStatus";
 
 interface ProgressStatusProps {
   title?: string;
@@ -25,7 +24,7 @@ const ProgressCheckSectionWrapper = styled.div`
 `;
 
 const ProgressStatus: React.FC<ProgressStatusProps> = ({
-  title,
+  title = "신청 상태",
   labels,
   progress,
   infoText = "",
@@ -33,7 +32,7 @@ const ProgressStatus: React.FC<ProgressStatusProps> = ({
 }) => (
   <ProgressCheckSectionWrapper>
     <Typography fw="MEDIUM" fs={16} lh={20} style={{ width: "100%" }}>
-      {title || "신청 상태"}
+      {title}
     </Typography>
     <ProgressCheckSection labels={labels} progress={progress} />
     {infoText && <Info text={infoText} />}
