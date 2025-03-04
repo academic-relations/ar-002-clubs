@@ -3,3 +3,8 @@ export enum ProgressCheckSectionStatusEnum {
   Canceled, // X
   Pending, // 빈 원
 }
+
+export interface StatusAndDate {
+  status: ProgressCheckSectionStatusEnum;
+  date: Date | undefined;
+}
