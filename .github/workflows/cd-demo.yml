@@ -1,4 +1,4 @@
-name: AR-002 Main Push Demo
+name: Main Push Demo
 
 permissions:
   contents: read
@@ -24,9 +24,9 @@ jobs:
       matrix:
         include:
           - dockerfile: ./.docker/dockerfile/web.Dockerfile
-            image: ghcr.io/academic-relations/ar-002-clubs-demo-web
+            image: ghcr.io/sparcs-kaist/clubs-web
           - dockerfile: ./.docker/dockerfile/api.Dockerfile
-            image: ghcr.io/academic-relations/ar-002-clubs-demo-api
+            image: ghcr.io/sparcs-kaist/clubs-api
 
     steps:
       - name: Checkout code

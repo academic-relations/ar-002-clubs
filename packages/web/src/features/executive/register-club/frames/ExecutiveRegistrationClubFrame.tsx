@@ -161,11 +161,7 @@ export const ExecutiveRegistrationClubFrame = () => {
 
     return {
       total: filteredRowsWithSearch?.length ?? 0,
-      items:
-        filteredRowsWithSearch?.slice(
-          10 * (currentPage - 1),
-          10 * currentPage,
-        ) ?? [],
+      items: filteredRowsWithSearch ?? [],
       offset: data?.offset ?? 0,
     };
   }, [searchText, convertedCategories, currentPage, data]);
@@ -180,21 +176,16 @@ export const ExecutiveRegistrationClubFrame = () => {
 
     return {
       total: filteredRowsWithoutSearch?.length ?? 0,
-      items:
-        filteredRowsWithoutSearch?.slice(
-          10 * (currentPage - 1),
-          10 * currentPage,
-        ) ?? [],
+      items: filteredRowsWithoutSearch ?? [],
       offset: data?.offset ?? 0,
     };
   }, [convertedCategories, currentPage, data]);
 
-  const filteredClubs =
-    searchText === "" ? filterClubsWithoutSearch : filterClubsWithSearch;
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  const filteredClubs = useMemo(
+    () =>
+      searchText === "" ? filterClubsWithoutSearch : filterClubsWithSearch,
+    [searchText, filterClubsWithoutSearch, filterClubsWithSearch],
+  );
 
   useEffect(() => {
     if (categories[1].content.length === 0 && divisionData) {
@@ -262,10 +253,10 @@ export const ExecutiveRegistrationClubFrame = () => {
         />
         <FlexWrapper direction="row" gap={16} justify="center">
           <Pagination
-            totalPage={Math.ceil((filteredClubs?.total ?? 0) / limit)}
+            totalPage={Math.ceil((data?.total ?? 0) / limit)}
             currentPage={currentPage}
             limit={limit}
-            setPage={handlePageChange}
+            setPage={setCurrentPage}
           />
         </FlexWrapper>
       </TableWithPaginationWrapper>
