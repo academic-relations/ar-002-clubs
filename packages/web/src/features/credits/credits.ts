@@ -51,6 +51,13 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.member,
         comment: "현실에서는 화석인 내가 이세계는 신입사원?",
       },
+      {
+        nickname: "tom",
+        name: "양지웅",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "이번엔 진짜 열심히 해보겠습니당",
+      },
     ],
   },
   {
