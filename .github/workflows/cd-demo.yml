@@ -24,9 +24,9 @@ jobs:
       matrix:
         include:
           - dockerfile: ./.docker/dockerfile/web.Dockerfile
-            image: ghcr.io/sparcs-kaist/clubs-demo-web
+            image: ghcr.io/sparcs-kaist/clubs-web
           - dockerfile: ./.docker/dockerfile/api.Dockerfile
-            image: ghcr.io/sparcs-kaist/clubs-demo-api
+            image: ghcr.io/sparcs-kaist/clubs-api
 
     steps:
       - name: Checkout code
