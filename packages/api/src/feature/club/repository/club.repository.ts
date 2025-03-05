@@ -125,7 +125,7 @@ export default class ClubRepository {
           id: Club.id,
           nameKr: Club.nameKr,
           nameEn: Club.nameEn,
-          isPermanent: DivisionPermanentClubD.id,
+          isPermanent: sql<boolean>`DivisionPermanentClubD.id IS NOT NULL`,
           characteristic: ClubT.characteristicKr,
           representative: Student.name,
           advisor: Professor.name,
@@ -194,20 +194,15 @@ export default class ClubRepository {
         acc,
         { id: divId, name: divName, club: divClub, districtId: divDistrictId },
       ) => {
-        if (!acc[divId]) {
-          acc[divId] = {
-            id: divId,
-            name: divName,
-            clubs: [],
-            districtId: divDistrictId,
-          };
-        }
+        acc[divId] ??= {
+          id: divId,
+          name: divName,
+          clubs: [],
+          districtId: divDistrictId,
+        };
 
         if (divClub) {
-          acc[divId].clubs.push({
-            ...divClub,
-            isPermanent: divClub.isPermanent !== null,
-          });
+          acc[divId].clubs.push(divClub);
         }
         return acc;
       },
@@ -217,15 +212,16 @@ export default class ClubRepository {
     const sortedClubs = Object.values(stackedClubs)
       .sort((a, b) => {
         if (a.districtId !== b.districtId) {
-          return a.districtId - b.districtId; // districtId 기준 정렬
+          return a.districtId - b.districtId;
         }
-        return a.name.localeCompare(b.name); // 같은 districtId 내에서 name 기준 정렬
+        return a.name.localeCompare(b.name);
       })
       .map(({ districtId: _districtId, ...rest }) => rest);
 
     const result = {
       divisions: sortedClubs,
     };
+
     return result;
   }
 
