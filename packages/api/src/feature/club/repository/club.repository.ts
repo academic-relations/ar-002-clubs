@@ -125,7 +125,7 @@ export default class ClubRepository {
           id: Club.id,
           nameKr: Club.nameKr,
           nameEn: Club.nameEn,
-          isPermanent: sql<boolean>`DivisionPermanentClubD.id IS NOT NULL`,
+          isPermanent: DivisionPermanentClubD.id,
           characteristic: ClubT.characteristicKr,
           representative: Student.name,
           advisor: Professor.name,
@@ -202,7 +202,10 @@ export default class ClubRepository {
         };
 
         if (divClub) {
-          acc[divId].clubs.push(divClub);
+          acc[divId].clubs.push({
+            ...divClub,
+            isPermanent: divClub.isPermanent !== null,
+          });
         }
         return acc;
       },
