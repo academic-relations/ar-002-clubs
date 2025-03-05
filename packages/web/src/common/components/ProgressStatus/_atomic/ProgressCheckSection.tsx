@@ -1,14 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 
-import Progress from "./_atomic/Progress";
-import ProgressLine from "./_atomic/ProgressLine";
-import { ProgressCheckSectionStatusEnum } from "./progressCheckStationStatus";
+import Progress from "./Progress";
+import {
+  ProgressCheckSectionStatusEnum,
+  StatusAndDate,
+} from "./progressCheckStationStatus";
+import ProgressLine from "./ProgressLine";
 
-export interface StatusAndDate {
-  status: ProgressCheckSectionStatusEnum;
-  date: Date | undefined;
-}
 interface ProgressCheckSectionProps {
   labels: string[];
   progress: StatusAndDate[];

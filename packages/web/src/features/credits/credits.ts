@@ -45,6 +45,13 @@ const credits: SemesterCredit[] = [
         comment: "Clubs를 만난 건 행운입니다.",
       },
       {
+        nickname: "eel",
+        name: "최우정",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "벌써 1년이나",
+      },
+      {
         nickname: "default",
         name: "김현수",
         role: "BE",
@@ -57,6 +64,28 @@ const credits: SemesterCredit[] = [
         role: "BE",
         roleType: RoleType.member,
         comment: "이번엔 진짜 열심히 해보겠습니당",
+      },
+      {
+        nickname: "chan",
+        name: "박병찬",
+        role: "BE",
+        roleType: RoleType.member,
+        comment: "도비는 자유에요",
+      },
+      {
+        nickname: "choemseong",
+        name: "최민성",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "봄학기는 설레요🍓😋",
+      },
+
+      {
+        nickname: "gb",
+        name: "권혁원",
+        role: "APM(BE)",
+        roleType: RoleType.APM_BE,
+        comment: "바로 Clubs 정상화~",
       },
     ],
   },

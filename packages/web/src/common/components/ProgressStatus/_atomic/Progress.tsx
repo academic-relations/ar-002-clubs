@@ -5,7 +5,7 @@ import Typography, {
 } from "@sparcs-clubs/web/common/components/Typography";
 import { formatSlashDateTime } from "@sparcs-clubs/web/utils/Date/formatDate";
 
-import { ProgressCheckSectionStatusEnum } from "../progressCheckStationStatus";
+import { ProgressCheckSectionStatusEnum } from "./progressCheckStationStatus";
 import ProgressDot from "./ProgressDot";
 
 interface ProgressProps {
