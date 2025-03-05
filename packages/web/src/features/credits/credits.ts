@@ -87,6 +87,13 @@ const credits: SemesterCredit[] = [
         roleType: RoleType.APM_BE,
         comment: "바로 Clubs 정상화~",
       },
+      {
+        nickname: "david",
+        name: "정동윤",
+        role: "FE",
+        roleType: RoleType.member,
+        comment: "1년차 뉴비 납시오~",
+      },
     ],
   },
   {
@@ -139,7 +146,7 @@ const credits: SemesterCredit[] = [
         name: "정동윤",
         role: "FE",
         roleType: RoleType.member,
-        comment: "1년차 뉴비 납시오~",
+        comment: "추운 겨울도 Clubs와 함께라면!",
       },
       {
         nickname: "chan",
